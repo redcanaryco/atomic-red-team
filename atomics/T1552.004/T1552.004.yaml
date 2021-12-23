@@ -125,8 +125,8 @@ atomic_tests:
       Get-ChildItem | Where-Object {$_ -like "ADFS*"}
       Write-Host "`nCertificates retrieved successfully"
     cleanup_command: |
-      Remove-Item -Path ".\ADFS_encryption.pfx"
-      Remove-Item -Path ".\ADFS_signing.pfx"
+      Remove-Item -Path ".\ADFS_encryption.pfx" -ErrorAction Ignore
+      Remove-Item -Path ".\ADFS_signing.pfx" -ErrorAction Ignore
     name: powershell
 - name: ADFS token signing and encryption certificates theft - Remote
   auto_generated_guid: cab413d8-9e4a-4b8d-9b84-c985bd73a442
@@ -194,6 +194,6 @@ atomic_tests:
       Get-ChildItem | Where-Object {$_ -like "ADFS*"}
       Write-Host "`nCertificates retrieved successfully"
     cleanup_command: |
-      Remove-Item -Path ".\ADFS_encryption.pfx"
-      Remove-Item -Path ".\ADFS_signing.pfx"
+      Remove-Item -Path ".\ADFS_encryption.pfx" -ErrorAction Ignore
+      Remove-Item -Path ".\ADFS_signing.pfx" -ErrorAction Ignore
     name: powershell

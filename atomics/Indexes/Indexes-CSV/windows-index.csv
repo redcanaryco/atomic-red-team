@@ -17,6 +17,7 @@ credential-access,T1003.006,DCSync,1,DCSync (Active Directory),129efd28-8497-4c8
 credential-access,T1187,Forced Authentication,1,PetitPotam,485ce873-2e65-4706-9c7e-ae3ab9e14213,powershell
 credential-access,T1056.002,GUI Input Capture,2,PowerShell - Prompt User for Password,2b162bfd-0928-4d4c-9ec3-4d9f88374b52,powershell
 credential-access,T1558.001,Golden Ticket,1,Crafting Active Directory golden tickets with mimikatz,9726592a-dabc-4d4d-81cd-44070008b3af,powershell
+credential-access,T1558.001,Golden Ticket,2,Crafting Active Directory golden tickets with Rubeus,e42d33cd-205c-4acf-ab59-a9f38f6bad9c,powershell
 credential-access,T1552.006,Group Policy Preferences,1,GPP Passwords (findstr),870fe8fb-5e23-4f5f-b89d-dd7fe26f3b5f,command_prompt
 credential-access,T1552.006,Group Policy Preferences,2,GPP Passwords (Get-GPPPassword),e9584f82-322c-474a-b831-940fd8b4455c,powershell
 credential-access,T1558.003,Kerberoasting,1,Request for service tickets,3f987809-3681-43c8-bcd8-b3ff3a28533a,powershell
@@ -30,14 +31,15 @@ credential-access,T1003.001,LSASS Memory,1,Windows Credential Editor,0f7c5301-68
 credential-access,T1003.001,LSASS Memory,2,Dump LSASS.exe Memory using ProcDump,0be2230c-9ab3-4ac2-8826-3199b9a0ebf8,command_prompt
 credential-access,T1003.001,LSASS Memory,3,Dump LSASS.exe Memory using comsvcs.dll,2536dee2-12fb-459a-8c37-971844fa73be,powershell
 credential-access,T1003.001,LSASS Memory,4,Dump LSASS.exe Memory using direct system calls and API unhooking,7ae7102c-a099-45c8-b985-4c7a2d05790d,command_prompt
-credential-access,T1003.001,LSASS Memory,5,Dump LSASS.exe Memory using Windows Task Manager,dea6c349-f1c6-44f3-87a1-1ed33a59a607,manual
-credential-access,T1003.001,LSASS Memory,6,Offline Credential Theft With Mimikatz,453acf13-1dbd-47d7-b28a-172ce9228023,command_prompt
-credential-access,T1003.001,LSASS Memory,7,LSASS read with pypykatz,c37bc535-5c62-4195-9cc3-0517673171d8,command_prompt
-credential-access,T1003.001,LSASS Memory,8,Dump LSASS.exe Memory using Out-Minidump.ps1,6502c8f0-b775-4dbd-9193-1298f56b6781,powershell
-credential-access,T1003.001,LSASS Memory,9,Create Mini Dump of LSASS.exe using ProcDump,7cede33f-0acd-44ef-9774-15511300b24b,command_prompt
-credential-access,T1003.001,LSASS Memory,10,Powershell Mimikatz,66fb0bc1-3c3f-47e9-a298-550ecfefacbc,powershell
-credential-access,T1003.001,LSASS Memory,11,Dump LSASS with .Net 5 createdump.exe,9d0072c8-7cca-45c4-bd14-f852cfa35cf0,powershell
-credential-access,T1003.001,LSASS Memory,12,Dump LSASS.exe using imported Microsoft DLLs,86fc3f40-237f-4701-b155-81c01c48d697,powershell
+credential-access,T1003.001,LSASS Memory,5,Dump LSASS.exe Memory using NanoDump,dddd4aca-bbed-46f0-984d-e4c5971c51ea,command_prompt
+credential-access,T1003.001,LSASS Memory,6,Dump LSASS.exe Memory using Windows Task Manager,dea6c349-f1c6-44f3-87a1-1ed33a59a607,manual
+credential-access,T1003.001,LSASS Memory,7,Offline Credential Theft With Mimikatz,453acf13-1dbd-47d7-b28a-172ce9228023,command_prompt
+credential-access,T1003.001,LSASS Memory,8,LSASS read with pypykatz,c37bc535-5c62-4195-9cc3-0517673171d8,command_prompt
+credential-access,T1003.001,LSASS Memory,9,Dump LSASS.exe Memory using Out-Minidump.ps1,6502c8f0-b775-4dbd-9193-1298f56b6781,powershell
+credential-access,T1003.001,LSASS Memory,10,Create Mini Dump of LSASS.exe using ProcDump,7cede33f-0acd-44ef-9774-15511300b24b,command_prompt
+credential-access,T1003.001,LSASS Memory,11,Powershell Mimikatz,66fb0bc1-3c3f-47e9-a298-550ecfefacbc,powershell
+credential-access,T1003.001,LSASS Memory,12,Dump LSASS with .Net 5 createdump.exe,9d0072c8-7cca-45c4-bd14-f852cfa35cf0,powershell
+credential-access,T1003.001,LSASS Memory,13,Dump LSASS.exe using imported Microsoft DLLs,86fc3f40-237f-4701-b155-81c01c48d697,powershell
 credential-access,T1003.003,NTDS,1,Create Volume Shadow Copy with vssadmin,dcebead7-6c28-4b4b-bf3c-79deb1b1fc7f,command_prompt
 credential-access,T1003.003,NTDS,2,Copy NTDS.dit from Volume Shadow Copy,c6237146-9ea6-4711-85c9-c56d263a6b03,command_prompt
 credential-access,T1003.003,NTDS,3,Dump Active Directory Database with NTDSUtil,2364e33d-ceab-4641-8468-bfb1d7cc2723,command_prompt
@@ -52,7 +54,7 @@ credential-access,T1003,OS Credential Dumping,2,Credential Dumping with NPPSpy,9
 credential-access,T1003,OS Credential Dumping,3,Dump svchost.exe to gather RDP credentials,d400090a-d8ca-4be0-982e-c70598a23de9,powershell
 credential-access,T1110.002,Password Cracking,1,Password Cracking with Hashcat,6d27df5d-69d4-4c91-bc33-5983ffe91692,command_prompt
 credential-access,T1556.002,Password Filter DLL,1,Install and Register Password Filter DLL,a7961770-beb5-4134-9674-83d7e1fa865c,powershell
-credential-access,T1110.001,Password Guessing,1,Brute Force Credentials of all Active Directory domain users via SMB,09480053-2f98-4854-be6e-71ae5f672224,command_prompt
+credential-access,T1110.001,Password Guessing,1,Brute Force Credentials of single Active Directory domain users via SMB,09480053-2f98-4854-be6e-71ae5f672224,command_prompt
 credential-access,T1110.001,Password Guessing,2,Brute Force Credentials of single Active Directory domain user via LDAP against domain controller (NTLM or Kerberos),c2969434-672b-4ec8-8df0-bbb91f40e250,powershell
 credential-access,T1110.003,Password Spraying,1,Password Spray all Domain Users,90bc2e54-6c84-47a5-9439-0a2a92b4b175,command_prompt
 credential-access,T1110.003,Password Spraying,2,Password Spray (DomainPasswordSpray),263ae743-515f-4786-ac7d-41ef3a0d4b2b,powershell
@@ -243,6 +245,7 @@ defense-evasion,T1562.001,Disable or Modify Tools,21,Uninstall Crowdstrike Falco
 defense-evasion,T1562.001,Disable or Modify Tools,22,Tamper with Windows Defender Evade Scanning -Folder,0b19f4ee-de90-4059-88cb-63c800c683ed,powershell
 defense-evasion,T1562.001,Disable or Modify Tools,23,Tamper with Windows Defender Evade Scanning -Extension,315f4be6-2240-4552-b3e1-d1047f5eecea,powershell
 defense-evasion,T1562.001,Disable or Modify Tools,24,Tamper with Windows Defender Evade Scanning -Process,a123ce6a-3916-45d6-ba9c-7d4081315c27,powershell
+defense-evasion,T1562.001,Disable or Modify Tools,26,Disable Windows Defender with DISM,871438ac-7d6e-432a-b27d-3e7db69faf58,command_prompt
 defense-evasion,T1055.001,Dynamic-link Library Injection,1,Process Injection via mavinject.exe,74496461-11a1-4982-b439-4d87a550d254,powershell
 defense-evasion,T1070.004,File Deletion,4,Delete a single file - Windows cmd,861ea0b4-708a-4d17-848d-186c9c7f17e3,command_prompt
 defense-evasion,T1070.004,File Deletion,5,Delete an entire folder - Windows cmd,ded937c4-2add-42f7-9c2c-c742b7a98698,command_prompt
@@ -459,6 +462,7 @@ impact,T1531,Account Access Removal,1,Change User Password - Windows,1b99ef28-f8
 impact,T1531,Account Access Removal,2,Delete User - Windows,f21a1d7d-a62f-442a-8c3a-2440d43b19e5,command_prompt
 impact,T1531,Account Access Removal,3,Remove Account From Domain Admin Group,43f71395-6c37-498e-ab17-897d814a0947,powershell
 impact,T1485,Data Destruction,1,Windows - Overwrite file with Sysinternals SDelete,476419b5-aebf-4366-a131-ae3e8dae5fc2,powershell
+impact,T1485,Data Destruction,3,Overwrite deleted data on C drive,321fd25e-0007-417f-adec-33232252be19,command_prompt
 impact,T1486,Data Encrypted for Impact,5,PureLocker Ransom Note,649349c7-9abf-493b-a7a2-b1aa4d141528,command_prompt
 impact,T1490,Inhibit System Recovery,1,Windows - Delete Volume Shadow Copies,43819286-91a9-4369-90ed-d31fb4da2c01,command_prompt
 impact,T1490,Inhibit System Recovery,2,Windows - Delete Volume Shadow Copies via WMI,6a3ff8dd-f49c-4272-a658-11c2fe58bd88,command_prompt
@@ -467,7 +471,7 @@ impact,T1490,Inhibit System Recovery,4,Windows - Disable Windows Recovery Consol
 impact,T1490,Inhibit System Recovery,5,Windows - Delete Volume Shadow Copies via WMI with PowerShell,39a295ca-7059-4a88-86f6-09556c1211e7,powershell
 impact,T1490,Inhibit System Recovery,6,Windows - Delete Backup Files,6b1dbaf6-cc8a-4ea6-891f-6058569653bf,command_prompt
 impact,T1490,Inhibit System Recovery,7,Windows - wbadmin Delete systemstatebackup,584331dd-75bc-4c02-9e0b-17f5fd81c748,command_prompt
-impact,T1490,Inhibit System Recovery,8,Windows - Disable the SR scheduled task,1c68c68d-83a4-4981-974e-8993055fa034,powershell
+impact,T1490,Inhibit System Recovery,8,Windows - Disable the SR scheduled task,1c68c68d-83a4-4981-974e-8993055fa034,command_prompt
 impact,T1491.001,Internal Defacement,1,Replace Desktop Wallpaper,30558d53-9d76-41c4-9267-a7bd5184bed3,powershell
 impact,T1489,Service Stop,1,Windows - Stop service using Service Controller,21dfb440-830d-4c86-a3e5-2a491d5a8d04,command_prompt
 impact,T1489,Service Stop,2,Windows - Stop service using net.exe,41274289-ec9c-4213-bea4-e43c4aa57954,command_prompt
@@ -509,7 +513,6 @@ discovery,T1083,File and Directory Discovery,2,File and Directory Discovery (Pow
 discovery,T1087.001,Local Account,8,Enumerate all accounts on Windows (Local),80887bec-5a9b-4efc-a81d-f83eb2eb32ab,command_prompt
 discovery,T1087.001,Local Account,9,Enumerate all accounts via PowerShell (Local),ae4b6361-b5f8-46cb-a3f9-9cf108ccfe7b,powershell
 discovery,T1087.001,Local Account,10,Enumerate logged on users via CMD (Local),a138085e-bfe5-46ba-a242-74a6fb884af3,command_prompt
-discovery,T1087.001,Local Account,11,Enumerate logged on users via PowerShell,2bdc42c7-8907-40c2-9c2b-42919a00fe03,powershell
 discovery,T1069.001,Local Groups,2,Basic Permission Groups Discovery Windows (Local),1f454dd6-e134-44df-bebb-67de70fb6cd8,command_prompt
 discovery,T1069.001,Local Groups,3,Permission Groups Discovery PowerShell (Local),a580462d-2c19-4bc7-8b9a-57a41b7d3ba4,powershell
 discovery,T1069.001,Local Groups,4,SharpHound3 - LocalAdmin,e03ada14-0980-4107-aff1-7783b2b59bb1,powershell
@@ -521,6 +524,7 @@ discovery,T1135,Network Share Discovery,3,Network Share Discovery command prompt
 discovery,T1135,Network Share Discovery,4,Network Share Discovery PowerShell,1b0814d1-bb24-402d-9615-1b20c50733fb,powershell
 discovery,T1135,Network Share Discovery,5,View available share drives,ab39a04f-0c93-4540-9ff2-83f862c385ae,command_prompt
 discovery,T1135,Network Share Discovery,6,Share Discovery with PowerView,b1636f0a-ba82-435c-b699-0d78794d8bfd,powershell
+discovery,T1135,Network Share Discovery,7,PowerView ShareFinder,d07e4cc1-98ae-447e-9d31-36cb430d28c4,powershell
 discovery,T1040,Network Sniffing,3,Packet Capture Windows Command Prompt,a5b2f6a0-24b4-493e-9590-c699f75723ca,command_prompt
 discovery,T1040,Network Sniffing,4,Windows Internal Packet Capture,b5656f67-d67f-4de8-8e62-b5581630f528,command_prompt
 discovery,T1201,Password Policy Discovery,5,Examine local password policy - Windows,4588d243-f24e-4549-b2e3-e627acc089f6,command_prompt
@@ -579,6 +583,8 @@ command-and-control,T1105,Ingress Tool Transfer,13,Download a File with Windows 
 command-and-control,T1105,Ingress Tool Transfer,15,File Download via PowerShell,54a4daf1-71df-4383-9ba7-f1a295d8b6d2,powershell
 command-and-control,T1105,Ingress Tool Transfer,16,File download with finger.exe on Windows,5f507e45-8411-4f99-84e7-e38530c45d01,command_prompt
 command-and-control,T1105,Ingress Tool Transfer,17,Download a file with IMEWDBLD.exe,1a02df58-09af-4064-a765-0babe1a0d1e2,powershell
+command-and-control,T1105,Ingress Tool Transfer,18,Curl Download File,2b080b99-0deb-4d51-af0f-833d37c4ca6a,command_prompt
+command-and-control,T1105,Ingress Tool Transfer,19,Curl Upload File,635c9a38-6cbf-47dc-8615-3810bc1167cf,command_prompt
 command-and-control,T1090.001,Internal Proxy,3,portproxy reg key,b8223ea9-4be2-44a6-b50a-9657a3d4e72a,powershell
 command-and-control,T1095,Non-Application Layer Protocol,1,ICMP C2,0268e63c-e244-42db-bef7-72a9e59fc1fc,powershell
 command-and-control,T1095,Non-Application Layer Protocol,2,Netcat C2,bcf0d1c1-3f6a-4847-b1c9-7ed4ea321f37,powershell
@@ -656,10 +662,12 @@ execution,T1047,Windows Management Instrumentation,8,Create a Process using obfu
 execution,T1047,Windows Management Instrumentation,9,WMI Execute rundll32,00738d2a-4651-4d76-adf2-c43a41dfb243,powershell
 exfiltration,T1020,Automated Exfiltration,1,IcedID Botnet HTTP PUT,9c780d3d-3a14-4278-8ee5-faaeb2ccfbe0,powershell
 exfiltration,T1048,Exfiltration Over Alternative Protocol,3,DNSExfiltration (doh),c943d285-ada3-45ca-b3aa-7cd6500c6a48,powershell
+exfiltration,T1048.002,Exfiltration Over Asymmetric Encrypted Non-C2 Protocol,1,Exfiltrate data HTTPS using curl,4a4f31e2-46ea-4c26-ad89-f09ad1d5fe01,bash
 exfiltration,T1041,Exfiltration Over C2 Channel,1,C2 Data Exfiltration,d1253f6e-c29b-49dc-b466-2147a6191932,powershell
 exfiltration,T1048.003,Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,2,Exfiltration Over Alternative Protocol - ICMP,dd4b4421-2e25-4593-90ae-7021947ad12e,powershell
 exfiltration,T1048.003,Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,4,Exfiltration Over Alternative Protocol - HTTP,6aa58451-1121-4490-a8e9-1dada3f1c68c,powershell
 exfiltration,T1048.003,Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,5,Exfiltration Over Alternative Protocol - SMTP,ec3a835e-adca-4c7c-88d2-853b69c11bb9,powershell
+exfiltration,T1567,Exfiltration Over Web Service,1,Data Exfiltration with ConfigSecurityPolicy,5568a8f4-a8b1-4c40-9399-4969b642f122,powershell
 lateral-movement,T1021.003,Distributed Component Object Model,1,PowerShell Lateral Movement using MMC20,6dc74eb1-c9d6-4c53-b3b5-6f50ae339673,powershell
 lateral-movement,T1550.002,Pass the Hash,1,Mimikatz Pass the Hash,ec23cef9-27d9-46e4-a68d-6f75f7b86908,command_prompt
 lateral-movement,T1550.002,Pass the Hash,2,crackmapexec Pass the Hash,eb05b028-16c8-4ad8-adea-6f5b219da9a9,command_prompt

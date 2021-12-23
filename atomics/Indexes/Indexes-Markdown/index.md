@@ -3,6 +3,8 @@
 - [T1003.008 /etc/passwd and /etc/shadow](../../T1003.008/T1003.008.md)
   - Atomic Test #1: Access /etc/shadow (Local) [linux]
   - Atomic Test #2: Access /etc/passwd (Local) [linux]
+  - Atomic Test #3: Access /etc/{shadow,passwd} with a standard bin that's not cat [linux]
+  - Atomic Test #4: Access /etc/{shadow,passwd} with shell builtins [linux]
 - T1557.002 ARP Cache Poisoning [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1558.004 AS-REP Roasting](../../T1558.004/T1558.004.md)
   - Atomic Test #1: Rubeus asreproast [windows]
@@ -51,6 +53,7 @@
   - Atomic Test #2: PowerShell - Prompt User for Password [windows]
 - [T1558.001 Golden Ticket](../../T1558.001/T1558.001.md)
   - Atomic Test #1: Crafting Active Directory golden tickets with mimikatz [windows]
+  - Atomic Test #2: Crafting Active Directory golden tickets with Rubeus [windows]
 - [T1552.006 Group Policy Preferences](../../T1552.006/T1552.006.md)
   - Atomic Test #1: GPP Passwords (findstr) [windows]
   - Atomic Test #2: GPP Passwords (Get-GPPPassword) [windows]
@@ -78,14 +81,15 @@
   - Atomic Test #2: Dump LSASS.exe Memory using ProcDump [windows]
   - Atomic Test #3: Dump LSASS.exe Memory using comsvcs.dll [windows]
   - Atomic Test #4: Dump LSASS.exe Memory using direct system calls and API unhooking [windows]
-  - Atomic Test #5: Dump LSASS.exe Memory using Windows Task Manager [windows]
-  - Atomic Test #6: Offline Credential Theft With Mimikatz [windows]
-  - Atomic Test #7: LSASS read with pypykatz [windows]
-  - Atomic Test #8: Dump LSASS.exe Memory using Out-Minidump.ps1 [windows]
-  - Atomic Test #9: Create Mini Dump of LSASS.exe using ProcDump [windows]
-  - Atomic Test #10: Powershell Mimikatz [windows]
-  - Atomic Test #11: Dump LSASS with .Net 5 createdump.exe [windows]
-  - Atomic Test #12: Dump LSASS.exe using imported Microsoft DLLs [windows]
+  - Atomic Test #5: Dump LSASS.exe Memory using NanoDump [windows]
+  - Atomic Test #6: Dump LSASS.exe Memory using Windows Task Manager [windows]
+  - Atomic Test #7: Offline Credential Theft With Mimikatz [windows]
+  - Atomic Test #8: LSASS read with pypykatz [windows]
+  - Atomic Test #9: Dump LSASS.exe Memory using Out-Minidump.ps1 [windows]
+  - Atomic Test #10: Create Mini Dump of LSASS.exe using ProcDump [windows]
+  - Atomic Test #11: Powershell Mimikatz [windows]
+  - Atomic Test #12: Dump LSASS with .Net 5 createdump.exe [windows]
+  - Atomic Test #13: Dump LSASS.exe using imported Microsoft DLLs [windows]
 - T1557 Man-in-the-Middle [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1003.003 NTDS](../../T1003.003/T1003.003.md)
@@ -111,7 +115,7 @@
 - [T1556.002 Password Filter DLL](../../T1556.002/T1556.002.md)
   - Atomic Test #1: Install and Register Password Filter DLL [windows]
 - [T1110.001 Password Guessing](../../T1110.001/T1110.001.md)
-  - Atomic Test #1: Brute Force Credentials of all Active Directory domain users via SMB [windows]
+  - Atomic Test #1: Brute Force Credentials of single Active Directory domain users via SMB [windows]
   - Atomic Test #2: Brute Force Credentials of single Active Directory domain user via LDAP against domain controller (NTLM or Kerberos) [windows]
   - Atomic Test #3: Brute Force Credentials of single Azure AD user [azure-ad]
 - T1555.005 Password Managers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -300,7 +304,8 @@
   - Atomic Test #2: Activate Guest Account [windows]
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1484 Domain Policy Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1484.002 Domain Trust Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1484.002 Domain Trust Modification](../../T1484.002/T1484.002.md)
+  - Atomic Test #1: Add Federation to Azure AD [azure-ad]
 - T1574.004 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1574.006 Dynamic Linker Hijacking](../../T1574.006/T1574.006.md)
   - Atomic Test #1: Shared Library Injection via /etc/ld.so.preload [linux]
@@ -421,6 +426,8 @@
   - Atomic Test #2: Create Systemd Service file,  Enable the service , Modify and Reload the service. [linux]
 - [T1053.006 Systemd Timers](../../T1053.006/T1053.006.md)
   - Atomic Test #1: Create Systemd Service and Timer [linux]
+  - Atomic Test #2: Create a user level transient systemd service and timer [linux]
+  - Atomic Test #3: Create a system level transient systemd service and timer [linux]
 - T1055.003 Thread Execution Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1055.005 Thread Local Storage [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1547.003 Time Providers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -512,6 +519,9 @@
 - [T1027.004 Compile After Delivery](../../T1027.004/T1027.004.md)
   - Atomic Test #1: Compile After Delivery using csc.exe [windows]
   - Atomic Test #2: Dynamic C# Compile [windows]
+  - Atomic Test #3: C compile [linux, macos]
+  - Atomic Test #4: CC compile [linux, macos]
+  - Atomic Test #5: Go compile [linux, macos]
 - [T1218.001 Compiled HTML File](../../T1218.001/T1218.001.md)
   - Atomic Test #1: Compiled HTML Help Local Payload [windows]
   - Atomic Test #2: Compiled HTML Help Remote Payload [windows]
@@ -598,10 +608,12 @@
   - Atomic Test #23: Tamper with Windows Defender Evade Scanning -Extension [windows]
   - Atomic Test #24: Tamper with Windows Defender Evade Scanning -Process [windows]
   - Atomic Test #25: office-365-Disable-AntiPhishRule [office-365]
+  - Atomic Test #26: Disable Windows Defender with DISM [windows]
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1556.001 Domain Controller Authentication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1484 Domain Policy Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1484.002 Domain Trust Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1484.002 Domain Trust Modification](../../T1484.002/T1484.002.md)
+  - Atomic Test #1: Add Federation to Azure AD [azure-ad]
 - T1601.002 Downgrade System Image [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.004 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1574.006 Dynamic Linker Hijacking](../../T1574.006/T1574.006.md)
@@ -861,7 +873,8 @@
   - Atomic Test #3: Binary simply packed by UPX [macos]
   - Atomic Test #4: Binary packed by UPX, with modified headers [macos]
 - [T1036.006 Space after Filename](../../T1036.006/T1036.006.md)
-  - Atomic Test #1: Space After Filename [macos]
+  - Atomic Test #1: Space After Filename (Manual) [macos]
+  - Atomic Test #2: Space After Filename [macos, linux]
 - T1027.003 Steganography [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1553 Subvert Trust Controls [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1548.003 Sudo and Sudo Caching](../../T1548.003/T1548.003.md)
@@ -1111,6 +1124,8 @@
   - Atomic Test #2: Create Systemd Service file,  Enable the service , Modify and Reload the service. [linux]
 - [T1053.006 Systemd Timers](../../T1053.006/T1053.006.md)
   - Atomic Test #1: Create Systemd Service and Timer [linux]
+  - Atomic Test #2: Create a user level transient systemd service and timer [linux]
+  - Atomic Test #3: Create a system level transient systemd service and timer [linux]
 - T1542.005 TFTP Boot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1547.003 Time Providers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -1146,6 +1161,7 @@
 - [T1485 Data Destruction](../../T1485/T1485.md)
   - Atomic Test #1: Windows - Overwrite file with Sysinternals SDelete [windows]
   - Atomic Test #2: macOS/Linux - Overwrite file with DD [linux, macos]
+  - Atomic Test #3: Overwrite deleted data on C drive [windows]
 - [T1486 Data Encrypted for Impact](../../T1486/T1486.md)
   - Atomic Test #1: Encrypt files using gpg (Linux) [linux]
   - Atomic Test #2: Encrypt files using 7z (Linux) [linux]
@@ -1260,7 +1276,6 @@
   - Atomic Test #8: Enumerate all accounts on Windows (Local) [windows]
   - Atomic Test #9: Enumerate all accounts via PowerShell (Local) [windows]
   - Atomic Test #10: Enumerate logged on users via CMD (Local) [windows]
-  - Atomic Test #11: Enumerate logged on users via PowerShell [windows]
 - [T1069.001 Local Groups](../../T1069.001/T1069.001.md)
   - Atomic Test #1: Permission Groups Discovery (Local) [macos, linux]
   - Atomic Test #2: Basic Permission Groups Discovery Windows (Local) [windows]
@@ -1280,6 +1295,7 @@
   - Atomic Test #4: Network Share Discovery PowerShell [windows]
   - Atomic Test #5: View available share drives [windows]
   - Atomic Test #6: Share Discovery with PowerView [windows]
+  - Atomic Test #7: PowerView ShareFinder [windows]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #1: Packet Capture Linux [linux]
   - Atomic Test #2: Packet Capture macOS [macos]
@@ -1365,6 +1381,7 @@
 - [T1124 System Time Discovery](../../T1124/T1124.md)
   - Atomic Test #1: System Time Discovery [windows]
   - Atomic Test #2: System Time Discovery - PowerShell [windows]
+  - Atomic Test #3: System Time Discovery in macOS [macos]
 - T1497.003 Time Based Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1497.002 User Activity Based Checks [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -1545,6 +1562,8 @@
 - T1569 System Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.006 Systemd Timers](../../T1053.006/T1053.006.md)
   - Atomic Test #1: Create Systemd Service and Timer [linux]
+  - Atomic Test #2: Create a user level transient systemd service and timer [linux]
+  - Atomic Test #3: Create a system level transient systemd service and timer [linux]
 - [T1059.004 Unix Shell](../../T1059.004/T1059.004.md)
   - Atomic Test #1: Create and Execute Bash Shell Script [macos, linux]
   - Atomic Test #2: Command-Line Interface [macos, linux]
@@ -1652,6 +1671,8 @@
   - Atomic Test #15: File Download via PowerShell [windows]
   - Atomic Test #16: File download with finger.exe on Windows [windows]
   - Atomic Test #17: Download a file with IMEWDBLD.exe [windows]
+  - Atomic Test #18: Curl Download File [windows]
+  - Atomic Test #19: Curl Upload File [windows]
 - [T1090.001 Internal Proxy](../../T1090.001/T1090.001.md)
   - Atomic Test #1: Connection Proxy [macos, linux]
   - Atomic Test #2: Connection Proxy for macOS UI [macos]
@@ -1704,7 +1725,8 @@
   - Atomic Test #1: Exfiltration Over Alternative Protocol - SSH [macos, linux]
   - Atomic Test #2: Exfiltration Over Alternative Protocol - SSH [macos, linux]
   - Atomic Test #3: DNSExfiltration (doh) [windows]
-- T1048.002 Exfiltration Over Asymmetric Encrypted Non-C2 Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1048.002 Exfiltration Over Asymmetric Encrypted Non-C2 Protocol](../../T1048.002/T1048.002.md)
+  - Atomic Test #1: Exfiltrate data HTTPS using curl [windows, macos, linux]
 - T1011.001 Exfiltration Over Bluetooth [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1041 Exfiltration Over C2 Channel](../../T1041/T1041.md)
   - Atomic Test #1: C2 Data Exfiltration [windows]
@@ -1717,7 +1739,8 @@
   - Atomic Test #3: Exfiltration Over Alternative Protocol - DNS [linux]
   - Atomic Test #4: Exfiltration Over Alternative Protocol - HTTP [windows]
   - Atomic Test #5: Exfiltration Over Alternative Protocol - SMTP [windows]
-- T1567 Exfiltration Over Web Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1567 Exfiltration Over Web Service](../../T1567/T1567.md)
+  - Atomic Test #1: Data Exfiltration with ConfigSecurityPolicy [windows]
 - T1052.001 Exfiltration over USB [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1567.002 Exfiltration to Cloud Storage [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1567.001 Exfiltration to Code Repository [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
