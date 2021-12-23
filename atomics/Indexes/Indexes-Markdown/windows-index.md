@@ -524,6 +524,8 @@
   - Atomic Test #1: Add Network Share [windows]
   - Atomic Test #2: Remove Network Share [windows]
   - Atomic Test #3: Remove Network Share PowerShell [windows]
+  - Atomic Test #4: Disable Administrative Share Creation at Startup [windows]
+  - Atomic Test #5: Remove Administrative Shares [windows]
 - [T1027 Obfuscated Files or Information](../../T1027/T1027.md)
   - Atomic Test #2: Execute base64-encoded PowerShell [windows]
   - Atomic Test #3: Execute base64-encoded PowerShell from Windows Registry [windows]

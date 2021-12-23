@@ -31945,6 +31945,43 @@ defense-evasion:
           Remove-SmbShare -Name #{share_name}
           Remove-FileShare -Name #{share_name}
         name: powershell
+    - name: Disable Administrative Share Creation at Startup
+      auto_generated_guid: 99c657aa-ebeb-4179-a665-69288fdd12b8
+      description: "Administrative shares are hidden network shares created by Microsoft’s
+        Windows NT operating systems that grant system administrators \nremote access
+        to every disk volume on a network-connected system. These shares are automatically
+        created at started unless they have been\npurposefully disabled and is done
+        in this Atomic test. As Microsoft puts it, \"Missing administrative shares
+        typically \nindicate that the computer in question has been compromised by
+        malicious software.\"\nhttps://threatpost.com/conti-ransomware-gang-has-full-log4shell-attack-chain/177173/\n"
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v AutoShareServer /t REG_DWORD /d 0 /f
+          reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v AutoShareWks /t REG_DWORD /d 0 /f
+        cleanup_command: |
+          reg delete "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v AutoShareServer /f
+          reg delete "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v AutoShareWks /f
+        name: command_prompt
+        elevation_required: true
+    - name: Remove Administrative Shares
+      auto_generated_guid: 4299eff5-90f1-4446-b2f3-7f4f5cfd5d62
+      description: "Administrative shares are hidden network shares created by Microsoft’s
+        Windows NT operating systems that grant system administrators \nremote access
+        to every disk volume on a network-connected system. As Microsoft puts it,
+        “Missing administrative shares typically \nindicate that the computer in question
+        has been compromised by malicious software.\nhttps://threatpost.com/conti-ransomware-gang-has-full-log4shell-attack-chain/177173/\n"
+      supported_platforms:
+      - windows
+      executor:
+        command: for %i in (C$ IPC$ ADMIN$) do net share %i /delete
+        cleanup_command: |
+          net share ADMIN$ /UNLIMITED >nul 2>&1
+          net share C$=C:\ >nul 2>&1
+          net share IPC$ >nul 2>&1
+        name: command_prompt
+        elevation_required: true
   T1027:
     technique:
       object_marking_refs:
