@@ -48,11 +48,19 @@ atomic_tests:
       Remove-SmbShare -Name #{share_name}
       Remove-FileShare -Name #{share_name}
     name: powershell
- - name: Remove Admin$ share
-   description: Remove Admin$ share (net share Admin$ /delete)
+ - name: Remove Administrative Shares
+   description: |
+     Administrative shares are hidden network shares created by Microsoft’s Windows NT operating systems that grant system administrators 
+     remote access to every disk volume on a network-connected system. As Microsoft puts it, “Missing administrative shares typically 
+     indicate that the computer in question has been compromised by malicious software.
+     https://threatpost.com/conti-ransomware-gang-has-full-log4shell-attack-chain/177173/
    supported_platforms:
    - windows
    executor:
      command: for %i in (C$ IPC$ ADMIN$) do net share %i /delete
+     cleanup_command: |
+       net share ADMIN$ /UNLIMITED >nul 2>&1
+       net share C$=C:\ >nul 2>&1
+       net share IPC$ >nul 2>&1
      name: command_prompt
      elevation_required: true
