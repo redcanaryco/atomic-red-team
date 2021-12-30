@@ -31,7 +31,8 @@ atomic_tests:
     command: |
       Set-Location -path "#{file_path}\Sysinternals";
       ./accesschk.exe -accepteula .;
-    cleanup_command: 'Remove-Item #{file_path}\Sysinternals -Force -Recurse -ErrorAction Ignore'
+    cleanup_command: |
+      Remove-Item #{file_path}\Sysinternals -Force -Recurse -ErrorAction Ignore
     name: powershell
 - name: Search macOS Safari Cookies
   auto_generated_guid: c1402f7b-67ca-43a8-b5f3-3143abedc01b
