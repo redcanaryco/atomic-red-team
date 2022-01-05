@@ -864,7 +864,7 @@
 - [T1010 Application Window Discovery](../../T1010/T1010.md)
   - Atomic Test #1: List Process Main Windows - C# .NET [windows]
 - [T1217 Browser Bookmark Discovery](../../T1217/T1217.md)
-  - Atomic Test #4: List Google Chrome Bookmarks on Windows with powershell [windows]
+  - Atomic Test #4: List Google Chrome / Opera Bookmarks on Windows with powershell [windows]
   - Atomic Test #5: List Google Chrome / Edge Chromium Bookmarks on Windows with command prompt [windows]
   - Atomic Test #6: List Mozilla Firefox bookmarks on Windows with command prompt [windows]
   - Atomic Test #7: List Internet Explorer Bookmarks using the command prompt [windows]

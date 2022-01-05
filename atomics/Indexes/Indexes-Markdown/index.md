@@ -1224,7 +1224,7 @@
   - Atomic Test #1: List Mozilla Firefox Bookmark Database Files on Linux [linux]
   - Atomic Test #2: List Mozilla Firefox Bookmark Database Files on macOS [macos]
   - Atomic Test #3: List Google Chrome Bookmark JSON Files on macOS [macos]
-  - Atomic Test #4: List Google Chrome Bookmarks on Windows with powershell [windows]
+  - Atomic Test #4: List Google Chrome / Opera Bookmarks on Windows with powershell [windows]
   - Atomic Test #5: List Google Chrome / Edge Chromium Bookmarks on Windows with command prompt [windows]
   - Atomic Test #6: List Mozilla Firefox bookmarks on Windows with command prompt [windows]
   - Atomic Test #7: List Internet Explorer Bookmarks using the command prompt [windows]
