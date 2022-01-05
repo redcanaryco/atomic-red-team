@@ -888,6 +888,7 @@
   - Atomic Test #1: Detect Virtualization Environment (Linux) [linux]
   - Atomic Test #2: Detect Virtualization Environment (Windows) [windows]
   - Atomic Test #3: Detect Virtualization Environment (MacOS) [macos]
+  - Atomic Test #4: Detect Virtualization Environment via WMI Manufacturer/Model Listing (Windows) [windows]
 - T1542.001 System Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1542.005 TFTP Boot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1221 Template Injection](../../T1221/T1221.md)
@@ -1347,6 +1348,7 @@
   - Atomic Test #1: Detect Virtualization Environment (Linux) [linux]
   - Atomic Test #2: Detect Virtualization Environment (Windows) [windows]
   - Atomic Test #3: Detect Virtualization Environment (MacOS) [macos]
+  - Atomic Test #4: Detect Virtualization Environment via WMI Manufacturer/Model Listing (Windows) [windows]
 - [T1082 System Information Discovery](../../T1082/T1082.md)
   - Atomic Test #1: System Information Discovery [windows]
   - Atomic Test #2: System Information Discovery [macos]
