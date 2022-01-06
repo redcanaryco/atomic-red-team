@@ -27,9 +27,9 @@ atomic_tests:
   auto_generated_guid: 8b34a448-40d9-4fc3-a8c8-4bb286faf7dc
   description: |
     forfiles.exe may invoke the execution of programs and commands from a Command-Line Interface.
-    [Reference](https://github.com/api0cradle/LOLBAS/blob/master/OSBinaries/Forfiles.md)
+    [Reference](https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSBinaries/Forfiles.yml)
     "This is basically saying for each occurrence of notepad.exe in c:\windows\system32 run calc.exe"
-    Upon execution calc.exe will be opened
+    Upon execution calc.exe will be opened.
   supported_platforms:
   - windows
   input_arguments:
@@ -40,7 +40,6 @@ atomic_tests:
   executor:
     command: |
       forfiles /p c:\windows\system32 /m notepad.exe /c #{process}
-      forfiles /p c:\windows\system32 /m notepad.exe /c "c:\folder\normal.dll:evil.exe"
     name: command_prompt
 - name: Indirect Command Execution - conhost.exe
   auto_generated_guid: cf3391e0-b482-4b02-87fc-ca8362269b29

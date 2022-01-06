@@ -5,6 +5,7 @@ atomic_tests:
   description: |
     Establishes persistence using a custom authentication package for the Local Security Authority (LSA).
     After a reboot, Notepad.exe will be executed as child process of lsass.exe.
+    Payload source code: https://github.com/tr4cefl0w/payloads/tree/master/T1547.002/package
   supported_platforms:
   - windows
   executor:
@@ -13,5 +14,6 @@ atomic_tests:
       reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /v "Authentication Packages" /t REG_MULTI_SZ /d "msv1_0"\0"package.dll" /f
     cleanup_command: |
       reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /v "Authentication Packages" /t REG_MULTI_SZ /d "msv1_0" /f
+      rm -force C:\windows\system32\package.dll
     name: powershell
     elevation_required: true
