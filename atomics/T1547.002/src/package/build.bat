@@ -1,0 +1,1 @@
+cl.exe /W1 package.c package.def /MT /link /DLL /OUT:package.dll
