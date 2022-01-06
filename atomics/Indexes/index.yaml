@@ -1407,7 +1407,9 @@ credential-access:
           Set-Location -path "#{file_path}\Sysinternals";
           ./accesschk.exe -accepteula .;
         cleanup_command: 'Remove-Item #{file_path}\Sysinternals -Force -Recurse -ErrorAction
-          Ignore'
+          Ignore
+
+'
         name: powershell
     - name: Search macOS Safari Cookies
       auto_generated_guid: c1402f7b-67ca-43a8-b5f3-3143abedc01b
@@ -1483,6 +1485,45 @@ credential-access:
         cleanup_command: |
           Remove-Item -Path "$env:temp\Login Data" -Force -ErrorAction Ignore
           Remove-Item -Path "$env:temp\Login Data For Account" -Force -ErrorAction Ignore
+    - name: Simulating access to Opera Login Data
+      auto_generated_guid: 28498c17-57e4-495a-b0be-cc1e36de408b
+      description: "Simulates an adversary accessing encrypted credentials from Opera
+        web browser's login database. \n"
+      supported_platforms:
+      - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Opera must be installed
+
+'
+        prereq_command: if (((Test-Path "$env:LOCALAPPDATA\Programs\Opera\launcher.exe")
+          -Or (Test-Path "C:\Program Files\Opera\launcher.exe") -Or (Test-Path "C:\Program
+          Files (x86)\Opera\launcher.exe"))) {exit 0} else {exit 1}
+        get_prereq_command: |
+          $installer = "$env:temp\OperaStandaloneInstaller.exe"
+          Invoke-WebRequest -OutFile $env:temp\OperaStandaloneInstaller.exe https://get.geo.opera.com/pub/opera/desktop/82.0.4227.43/win/Opera_82.0.4227.43_Setup.exe
+          Start-Process $installer -ArgumentList '/install /silent /launchopera=1 /setdefaultbrowser=0'
+          Start-Sleep -s 180
+          Stop-Process -Name "opera"
+      - description: 'Opera login data file must exist
+
+'
+        prereq_command: if (Test-Path "$env:APPDATA\Opera Software\Opera Stable\Login
+          Data") {exit 0} else {exit 1}
+        get_prereq_command: 'New-Item -Path "$env:APPDATA\Opera Software\Opera Stable\Login
+          Data" -ItemType File
+
+'
+      executor:
+        name: powershell
+        command: 'Copy-Item "$env:APPDATA\Opera Software\Opera Stable\Login Data"
+          -Destination $env:temp
+
+'
+        cleanup_command: 'Remove-Item -Path "$env:temp\Login Data" -Force -ErrorAction
+          Ignore
+
+'
   T1552.002:
     technique:
       created: '2020-02-04T12:58:40.678Z'
@@ -4256,9 +4297,9 @@ credential-access:
         drive_letter:
           description: Drive letter to source VSC (including colon)
           type: String
-          default: 'C:'
+          default: C:\
       executor:
-        command: "(gwmi -list win32_shadowcopy).Create(#{drive_letter},'ClientAccessible')\n"
+        command: "(gwmi -list win32_shadowcopy).Create('#{drive_letter}','ClientAccessible')\n"
         name: powershell
         elevation_required: true
     - name: Create Symlink to Volume Shadow Copy
@@ -37488,6 +37529,21 @@ defense-evasion:
           detected''; fi;
 
 '
+    - name: Detect Virtualization Environment via WMI Manufacturer/Model Listing (Windows)
+      auto_generated_guid: 4a41089a-48e0-47aa-82cb-5b81a463bc78
+      description: "Windows Management Instrumentation(WMI) objects contain system
+        information which helps to detect virtualization. This test will get the model
+        and manufacturer of the machine to determine if it is a virtual machine, such
+        as through VMware or VirtualBox. \n"
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $Manufacturer = Get-WmiObject -Class Win32_ComputerSystem | select-object -expandproperty "Manufacturer"
+          $Model = Get-WmiObject -Class Win32_ComputerSystem | select-object -expandproperty "Model"
+          if((($Manufacturer.ToLower() -eq "microsoft corporation") -and ($Model.ToLower().contains("virtual"))) -or ($Manufacturer.ToLower().contains("vmware")) -or ($Model.ToLower() -eq "virtualbox")) {write-host "Virtualization environment detected!"} else {write-host "No virtualization environment detected!"}
   T1542.001:
     technique:
       id: attack-pattern--16ab6452-c3c1-497c-a47d-206018ca1ada
@@ -52906,10 +52962,10 @@ discovery:
 
 '
         name: sh
-    - name: List Google Chrome Bookmarks on Windows with powershell
+    - name: List Google Chrome / Opera Bookmarks on Windows with powershell
       auto_generated_guid: faab755e-4299-48ec-8202-fc7885eb6545
       description: |
-        Searches for Google Chromes's Bookmarks file (on Windows distributions) that contains bookmarks.
+        Searches for Google Chrome's and Opera's Bookmarks file (on Windows distributions) that contains bookmarks.
         Upon execution, paths that contain bookmark files will be displayed.
       supported_platforms:
       - windows
@@ -56306,6 +56362,21 @@ discovery:
           detected''; fi;
 
 '
+    - name: Detect Virtualization Environment via WMI Manufacturer/Model Listing (Windows)
+      auto_generated_guid: 4a41089a-48e0-47aa-82cb-5b81a463bc78
+      description: "Windows Management Instrumentation(WMI) objects contain system
+        information which helps to detect virtualization. This test will get the model
+        and manufacturer of the machine to determine if it is a virtual machine, such
+        as through VMware or VirtualBox. \n"
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $Manufacturer = Get-WmiObject -Class Win32_ComputerSystem | select-object -expandproperty "Manufacturer"
+          $Model = Get-WmiObject -Class Win32_ComputerSystem | select-object -expandproperty "Model"
+          if((($Manufacturer.ToLower() -eq "microsoft corporation") -and ($Model.ToLower().contains("virtual"))) -or ($Manufacturer.ToLower().contains("vmware")) -or ($Model.ToLower() -eq "virtualbox")) {write-host "Virtualization environment detected!"} else {write-host "No virtualization environment detected!"}
   T1082:
     technique:
       object_marking_refs:

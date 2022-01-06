@@ -21,6 +21,7 @@
   - Atomic Test #1: Run Chrome-password Collector [windows]
   - Atomic Test #3: LaZagne - Credentials from Browser [windows]
   - Atomic Test #4: Simulating access to Chrome Login Data [windows]
+  - Atomic Test #5: Simulating access to Opera Login Data [windows]
 - [T1552.002 Credentials in Registry](../../T1552.002/T1552.002.md)
   - Atomic Test #1: Enumeration for Credentials in Registry [windows]
   - Atomic Test #2: Enumeration for PuTTY Credentials in Registry [windows]
@@ -623,6 +624,7 @@
 - T1553 Subvert Trust Controls [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1497.001 System Checks](../../T1497.001/T1497.001.md)
   - Atomic Test #2: Detect Virtualization Environment (Windows) [windows]
+  - Atomic Test #4: Detect Virtualization Environment via WMI Manufacturer/Model Listing (Windows) [windows]
 - T1542.001 System Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1221 Template Injection](../../T1221/T1221.md)
   - Atomic Test #1: WINWORD Remote Template Injection [windows]
@@ -862,7 +864,7 @@
 - [T1010 Application Window Discovery](../../T1010/T1010.md)
   - Atomic Test #1: List Process Main Windows - C# .NET [windows]
 - [T1217 Browser Bookmark Discovery](../../T1217/T1217.md)
-  - Atomic Test #4: List Google Chrome Bookmarks on Windows with powershell [windows]
+  - Atomic Test #4: List Google Chrome / Opera Bookmarks on Windows with powershell [windows]
   - Atomic Test #5: List Google Chrome / Edge Chromium Bookmarks on Windows with command prompt [windows]
   - Atomic Test #6: List Mozilla Firefox bookmarks on Windows with command prompt [windows]
   - Atomic Test #7: List Internet Explorer Bookmarks using the command prompt [windows]
@@ -951,6 +953,7 @@
   - Atomic Test #2: Applications Installed [windows]
 - [T1497.001 System Checks](../../T1497.001/T1497.001.md)
   - Atomic Test #2: Detect Virtualization Environment (Windows) [windows]
+  - Atomic Test #4: Detect Virtualization Environment via WMI Manufacturer/Model Listing (Windows) [windows]
 - [T1082 System Information Discovery](../../T1082/T1082.md)
   - Atomic Test #1: System Information Discovery [windows]
   - Atomic Test #6: Hostname Discovery (Windows) [windows]
