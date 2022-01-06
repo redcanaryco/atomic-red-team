@@ -187,7 +187,8 @@
   - Atomic Test #1: Process Injection via C# [windows]
 - [T1053.002 At (Windows)](../../T1053.002/T1053.002.md)
   - Atomic Test #1: At.exe Scheduled task [windows]
-- T1547.002 Authentication Package [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1547.002 Authentication Package](../../T1547.002/T1547.002.md)
+  - Atomic Test #1: Authentication Package [windows]
 - T1547 Boot or Logon Autostart Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1548.002 Bypass User Account Control](../../T1548.002/T1548.002.md)
@@ -678,7 +679,8 @@
   - Atomic Test #3: Registry key creation and/or modification events for SDB [windows]
 - [T1053.002 At (Windows)](../../T1053.002/T1053.002.md)
   - Atomic Test #1: At.exe Scheduled task [windows]
-- T1547.002 Authentication Package [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1547.002 Authentication Package](../../T1547.002/T1547.002.md)
+  - Atomic Test #1: Authentication Package [windows]
 - [T1197 BITS Jobs](../../T1197/T1197.md)
   - Atomic Test #1: Bitsadmin Download (cmd) [windows]
   - Atomic Test #2: Bitsadmin Download (PowerShell) [windows]

