@@ -1733,7 +1733,8 @@
   - Atomic Test #2: Exfiltration Over Alternative Protocol - SSH [macos, linux]
   - Atomic Test #3: DNSExfiltration (doh) [windows]
 - [T1048.002 Exfiltration Over Asymmetric Encrypted Non-C2 Protocol](../../T1048.002/T1048.002.md)
-  - Atomic Test #1: Exfiltrate data HTTPS using curl [windows, macos, linux]
+  - Atomic Test #1: Exfiltrate data HTTPS using curl windows [windows]
+  - Atomic Test #2: Exfiltrate data HTTPS using curl linux [macos, linux]
 - T1011.001 Exfiltration Over Bluetooth [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1041 Exfiltration Over C2 Channel](../../T1041/T1041.md)
   - Atomic Test #1: C2 Data Exfiltration [windows]
