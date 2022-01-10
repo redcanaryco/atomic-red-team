@@ -1616,7 +1616,8 @@
   - Atomic Test #4: Changing RDP Port to Non Standard Port via Command_Prompt [windows]
 - T1563 Remote Service Session Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1021 Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1091 Replication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1091 Replication Through Removable Media](../../T1091/T1091.md)
+  - Atomic Test #1: USB Malware Spread Simulation [windows]
 - [T1021.002 SMB/Windows Admin Shares](../../T1021.002/T1021.002.md)
   - Atomic Test #1: Map admin share [windows]
   - Atomic Test #2: Map Admin Share PowerShell [windows]
@@ -1773,7 +1774,8 @@
 - [T1078.003 Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #1: Create local account with admin privileges [windows]
 - T1566 Phishing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1091 Replication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1091 Replication Through Removable Media](../../T1091/T1091.md)
+  - Atomic Test #1: USB Malware Spread Simulation [windows]
 - [T1566.001 Spearphishing Attachment](../../T1566.001/T1566.001.md)
   - Atomic Test #1: Download Phishing Attachment - VBScript [windows]
   - Atomic Test #2: Word spawned a command shell and used an IP address in the command line [windows]
