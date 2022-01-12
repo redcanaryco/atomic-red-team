@@ -80,6 +80,8 @@ credential-access,T1556.002,Password Filter DLL,1,Install and Register Password 
 credential-access,T1110.001,Password Guessing,1,Brute Force Credentials of single Active Directory domain users via SMB,09480053-2f98-4854-be6e-71ae5f672224,command_prompt
 credential-access,T1110.001,Password Guessing,2,Brute Force Credentials of single Active Directory domain user via LDAP against domain controller (NTLM or Kerberos),c2969434-672b-4ec8-8df0-bbb91f40e250,powershell
 credential-access,T1110.001,Password Guessing,3,Brute Force Credentials of single Azure AD user,5a51ef57-299e-4d62-8e11-2d440df55e69,powershell
+credential-access,T1110.001,Password Guessing,4,SUDO brute force Debian,464b63e8-bf1f-422e-9e2c-2aa5080b6f9a,sh
+credential-access,T1110.001,Password Guessing,5,SUDO brute force Redhat,b72958a7-53e3-4809-9ee1-58f6ecd99ade,sh
 credential-access,T1110.003,Password Spraying,1,Password Spray all Domain Users,90bc2e54-6c84-47a5-9439-0a2a92b4b175,command_prompt
 credential-access,T1110.003,Password Spraying,2,Password Spray (DomainPasswordSpray),263ae743-515f-4786-ac7d-41ef3a0d4b2b,powershell
 credential-access,T1110.003,Password Spraying,3,Password spray all Active Directory domain users with a single password via LDAP against domain controller (NTLM or Kerberos),f14d956a-5b6e-4a93-847f-0c415142f07d,powershell
@@ -494,6 +496,7 @@ defense-evasion,T1134.004,Parent PID Spoofing,5,Parent PID Spoofing - Spawn from
 defense-evasion,T1550.002,Pass the Hash,1,Mimikatz Pass the Hash,ec23cef9-27d9-46e4-a68d-6f75f7b86908,command_prompt
 defense-evasion,T1550.002,Pass the Hash,2,crackmapexec Pass the Hash,eb05b028-16c8-4ad8-adea-6f5b219da9a9,command_prompt
 defense-evasion,T1550.003,Pass the Ticket,1,Mimikatz Kerberos Ticket Attack,dbf38128-7ba7-4776-bedf-cc2eed432098,command_prompt
+defense-evasion,T1550.003,Pass the Ticket,2,Rubeus Kerberos Pass The Ticket,a2fc4ec5-12c6-4fb4-b661-961f23f359cb,powershell
 defense-evasion,T1556.002,Password Filter DLL,1,Install and Register Password Filter DLL,a7961770-beb5-4134-9674-83d7e1fa865c,powershell
 defense-evasion,T1574.009,Path Interception by Unquoted Path,1,Execution of program.exe as service with unquoted service path,2770dea7-c50f-457b-84c4-c40a47460d9f,command_prompt
 defense-evasion,T1556.003,Pluggable Authentication Modules,1,Malicious PAM rule,4b9dde80-ae22-44b1-a82a-644bf009eb9c,sh
@@ -818,6 +821,9 @@ discovery,T1018,Remote System Discovery,8,Remote System Discovery - nslookup,baa
 discovery,T1018,Remote System Discovery,9,Remote System Discovery - adidnsdump,95e19466-469e-4316-86d2-1dc401b5a959,command_prompt
 discovery,T1018,Remote System Discovery,10,Adfind - Enumerate Active Directory Computer Objects,a889f5be-2d54-4050-bd05-884578748bb4,command_prompt
 discovery,T1018,Remote System Discovery,11,Adfind - Enumerate Active Directory Domain Controller Objects,5838c31e-a0e2-4b9f-b60a-d79d2cb7995e,command_prompt
+discovery,T1018,Remote System Discovery,12,Remote System Discovery - ip neighbour,158bd4dd-6359-40ab-b13c-285b9ef6fa25,sh
+discovery,T1018,Remote System Discovery,13,Remote System Discovery - ip route,1a4ebe70-31d0-417b-ade2-ef4cb3e7d0e1,sh
+discovery,T1018,Remote System Discovery,14,Remote System Discovery - ip tcp_metrics,6c2da894-0b57-43cb-87af-46ea3b501388,sh
 discovery,T1518.001,Security Software Discovery,1,Security Software Discovery,f92a380f-ced9-491f-b338-95a991418ce2,command_prompt
 discovery,T1518.001,Security Software Discovery,2,Security Software Discovery - powershell,7f566051-f033-49fb-89de-b6bacab730f0,powershell
 discovery,T1518.001,Security Software Discovery,3,Security Software Discovery - ps (macOS),ba62ce11-e820-485f-9c17-6f3c857cd840,sh
@@ -944,6 +950,7 @@ lateral-movement,T1021.003,Distributed Component Object Model,1,PowerShell Later
 lateral-movement,T1550.002,Pass the Hash,1,Mimikatz Pass the Hash,ec23cef9-27d9-46e4-a68d-6f75f7b86908,command_prompt
 lateral-movement,T1550.002,Pass the Hash,2,crackmapexec Pass the Hash,eb05b028-16c8-4ad8-adea-6f5b219da9a9,command_prompt
 lateral-movement,T1550.003,Pass the Ticket,1,Mimikatz Kerberos Ticket Attack,dbf38128-7ba7-4776-bedf-cc2eed432098,command_prompt
+lateral-movement,T1550.003,Pass the Ticket,2,Rubeus Kerberos Pass The Ticket,a2fc4ec5-12c6-4fb4-b661-961f23f359cb,powershell
 lateral-movement,T1563.002,RDP Hijacking,1,RDP hijacking,a37ac520-b911-458e-8aed-c5f1576d9f46,command_prompt
 lateral-movement,T1021.001,Remote Desktop Protocol,1,RDP to DomainController,355d4632-8cb9-449d-91ce-b566d0253d3e,powershell
 lateral-movement,T1021.001,Remote Desktop Protocol,2,RDP to Server,7382a43e-f19c-46be-8f09-5c63af7d3e2b,powershell

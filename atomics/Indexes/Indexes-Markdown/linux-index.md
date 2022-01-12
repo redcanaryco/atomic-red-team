@@ -38,6 +38,8 @@
 - T1110.002 Password Cracking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1110.001 Password Guessing](../../T1110.001/T1110.001.md)
   - Atomic Test #3: Brute Force Credentials of single Azure AD user [azure-ad]
+  - Atomic Test #4: SUDO brute force Debian [linux]
+  - Atomic Test #5: SUDO brute force Redhat [linux]
 - T1555.005 Password Managers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1110.003 Password Spraying](../../T1110.003/T1110.003.md)
   - Atomic Test #4: Password spray all Azure AD users with a single password [azure-ad]
@@ -427,6 +429,9 @@
 - [T1018 Remote System Discovery](../../T1018/T1018.md)
   - Atomic Test #6: Remote System Discovery - arp nix [linux, macos]
   - Atomic Test #7: Remote System Discovery - sweep [linux, macos]
+  - Atomic Test #12: Remote System Discovery - ip neighbour [linux]
+  - Atomic Test #13: Remote System Discovery - ip route [linux]
+  - Atomic Test #14: Remote System Discovery - ip tcp_metrics [linux]
 - [T1518.001 Security Software Discovery](../../T1518.001/T1518.001.md)
   - Atomic Test #4: Security Software Discovery - ps (Linux) [linux]
 - T1518 Software Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
