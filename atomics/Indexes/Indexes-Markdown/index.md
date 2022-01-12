@@ -782,6 +782,7 @@
   - Atomic Test #2: crackmapexec Pass the Hash [windows]
 - [T1550.003 Pass the Ticket](../../T1550.003/T1550.003.md)
   - Atomic Test #1: Mimikatz Kerberos Ticket Attack [windows]
+  - Atomic Test #2: Rubeus Kerberos Pass The Ticket [windows]
 - [T1556.002 Password Filter DLL](../../T1556.002/T1556.002.md)
   - Atomic Test #1: Install and Register Password Filter DLL [windows]
 - T1601.001 Patch System Image [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -1607,6 +1608,7 @@
   - Atomic Test #2: crackmapexec Pass the Hash [windows]
 - [T1550.003 Pass the Ticket](../../T1550.003/T1550.003.md)
   - Atomic Test #1: Mimikatz Kerberos Ticket Attack [windows]
+  - Atomic Test #2: Rubeus Kerberos Pass The Ticket [windows]
 - [T1563.002 RDP Hijacking](../../T1563.002/T1563.002.md)
   - Atomic Test #1: RDP hijacking [windows]
 - [T1021.001 Remote Desktop Protocol](../../T1021.001/T1021.001.md)
