@@ -38,6 +38,8 @@
 - T1110.002 Password Cracking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1110.001 Password Guessing](../../T1110.001/T1110.001.md)
   - Atomic Test #3: Brute Force Credentials of single Azure AD user [azure-ad]
+  - Atomic Test #4: SUDO brute force Debian [linux]
+  - Atomic Test #5: SUDO brute force Redhat [linux]
 - T1555.005 Password Managers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1110.003 Password Spraying](../../T1110.003/T1110.003.md)
   - Atomic Test #4: Password spray all Azure AD users with a single password [azure-ad]
