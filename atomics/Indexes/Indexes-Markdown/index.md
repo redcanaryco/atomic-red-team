@@ -1338,6 +1338,9 @@
   - Atomic Test #9: Remote System Discovery - adidnsdump [windows]
   - Atomic Test #10: Adfind - Enumerate Active Directory Computer Objects [windows]
   - Atomic Test #11: Adfind - Enumerate Active Directory Domain Controller Objects [windows]
+  - Atomic Test #12: Remote System Discovery - ip neighbour [linux]
+  - Atomic Test #13: Remote System Discovery - ip route [linux]
+  - Atomic Test #14: Remote System Discovery - ip tcp_metrics [linux]
 - [T1518.001 Security Software Discovery](../../T1518.001/T1518.001.md)
   - Atomic Test #1: Security Software Discovery [windows]
   - Atomic Test #2: Security Software Discovery - powershell [windows]
