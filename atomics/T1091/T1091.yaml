@@ -1,0 +1,25 @@
+attack_technique: T1091
+display_name: "Replication Through Removable Media"
+atomic_tests:
+- name: USB Malware Spread Simulation
+  auto_generated_guid: d44b7297-622c-4be8-ad88-ec40d7563c75
+  description: |
+    Simulates an adversary copying malware to all connected removable drives. 
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    command: |
+      $RemovableDrives=@()
+      $RemovableDrives = Get-WmiObject -Class Win32_LogicalDisk -filter "drivetype=2" | select-object -expandproperty DeviceID
+      ForEach ($Drive in $RemovableDrives)
+      {
+      write-host "Removable Drive Found:" $Drive
+      New-Item -Path $Drive/T1091Test1.txt -ItemType "file" -Force -Value "T1091 Test 1 has created this file to simulate malware spread to removable drives."
+      }
+    cleanup_command: |
+      $RemovableDrives = Get-WmiObject -Class Win32_LogicalDisk -filter "drivetype=2" | select-object -expandproperty DeviceID
+      ForEach ($Drive in $RemovableDrives)
+      {
+      Remove-Item -Path $Drive\T1091Test1.txt -Force -ErrorAction Ignore
+      }
