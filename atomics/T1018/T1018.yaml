@@ -226,3 +226,61 @@ atomic_tests:
     command: |
       #{adfind_path} -sc dclist
     name: command_prompt
+
+- name: Remote System Discovery - ip neighbour
+  auto_generated_guid: 158bd4dd-6359-40ab-b13c-285b9ef6fa25
+  description: |
+    Use the ip neighbour command to display the known link layer (ARP table) addresses for hosts sharing the same network segment. 
+  supported_platforms:
+  - linux
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Check if ip command exists on the machine
+    prereq_command: |
+      if [ -x "$(command -v ip)" ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      apt-get install iproute2 -y
+  executor:
+    command: |
+      ip neighbour show
+    name: sh
+
+- name: Remote System Discovery - ip route
+  auto_generated_guid: 1a4ebe70-31d0-417b-ade2-ef4cb3e7d0e1
+  description: |
+    Use the ip route command to display the kernels routing tables. 
+  supported_platforms:
+  - linux
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Check if ip command exists on the machine
+    prereq_command: |
+      if [ -x "$(command -v ip)" ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      apt-get install iproute2 -y
+  executor:
+    command: |
+      ip route show
+    name: sh
+
+- name: Remote System Discovery - ip tcp_metrics
+  auto_generated_guid: 6c2da894-0b57-43cb-87af-46ea3b501388
+  description: |
+    Use the ip tcp_metrics command to display the recent cached entries for IPv4 and IPv6 source and destination addresses. 
+  supported_platforms:
+  - linux
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Check if ip command exists on the machine
+    prereq_command: |
+      if [ -x "$(command -v ip)" ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      apt-get install iproute2 -y
+  executor:
+    command: |
+      ip tcp_metrics show |grep --invert-match "^127\."
+    name: sh
+

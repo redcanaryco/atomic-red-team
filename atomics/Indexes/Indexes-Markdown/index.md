@@ -119,6 +119,8 @@
   - Atomic Test #1: Brute Force Credentials of single Active Directory domain users via SMB [windows]
   - Atomic Test #2: Brute Force Credentials of single Active Directory domain user via LDAP against domain controller (NTLM or Kerberos) [windows]
   - Atomic Test #3: Brute Force Credentials of single Azure AD user [azure-ad]
+  - Atomic Test #4: SUDO brute force Debian [linux]
+  - Atomic Test #5: SUDO brute force Redhat [linux]
 - T1555.005 Password Managers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1110.003 Password Spraying](../../T1110.003/T1110.003.md)
   - Atomic Test #1: Password Spray all Domain Users [windows]
@@ -782,6 +784,7 @@
   - Atomic Test #2: crackmapexec Pass the Hash [windows]
 - [T1550.003 Pass the Ticket](../../T1550.003/T1550.003.md)
   - Atomic Test #1: Mimikatz Kerberos Ticket Attack [windows]
+  - Atomic Test #2: Rubeus Kerberos Pass The Ticket [windows]
 - [T1556.002 Password Filter DLL](../../T1556.002/T1556.002.md)
   - Atomic Test #1: Install and Register Password Filter DLL [windows]
 - T1601.001 Patch System Image [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -1335,6 +1338,9 @@
   - Atomic Test #9: Remote System Discovery - adidnsdump [windows]
   - Atomic Test #10: Adfind - Enumerate Active Directory Computer Objects [windows]
   - Atomic Test #11: Adfind - Enumerate Active Directory Domain Controller Objects [windows]
+  - Atomic Test #12: Remote System Discovery - ip neighbour [linux]
+  - Atomic Test #13: Remote System Discovery - ip route [linux]
+  - Atomic Test #14: Remote System Discovery - ip tcp_metrics [linux]
 - [T1518.001 Security Software Discovery](../../T1518.001/T1518.001.md)
   - Atomic Test #1: Security Software Discovery [windows]
   - Atomic Test #2: Security Software Discovery - powershell [windows]
@@ -1607,6 +1613,7 @@
   - Atomic Test #2: crackmapexec Pass the Hash [windows]
 - [T1550.003 Pass the Ticket](../../T1550.003/T1550.003.md)
   - Atomic Test #1: Mimikatz Kerberos Ticket Attack [windows]
+  - Atomic Test #2: Rubeus Kerberos Pass The Ticket [windows]
 - [T1563.002 RDP Hijacking](../../T1563.002/T1563.002.md)
   - Atomic Test #1: RDP hijacking [windows]
 - [T1021.001 Remote Desktop Protocol](../../T1021.001/T1021.001.md)
