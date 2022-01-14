@@ -5144,7 +5144,8 @@ credential-access:
       - description: 'AzureAD module must be installed.
 
 '
-        prereq_command: 'if (Get-Module AzureAD) {exit 0} else {exit 1}
+        prereq_command: 'try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue)
+          {exit 0} else {exit 1}} catch {exit 1}
 
 '
         get_prereq_command: 'Install-Module -Name AzureAD -Force
@@ -5535,7 +5536,8 @@ credential-access:
       - description: 'AzureAD module must be installed.
 
 '
-        prereq_command: 'if (Get-Module AzureAD) {exit 0} else {exit 1}
+        prereq_command: 'try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue)
+          {exit 0} else {exit 1}} catch {exit 1}
 
 '
         get_prereq_command: 'Install-Module -Name AzureAD -Force
@@ -40431,7 +40433,8 @@ persistence:
       - description: 'AzureAD module must be installed.
 
 '
-        prereq_command: 'if (Get-Module AzureAD) {exit 0} else {exit 1}
+        prereq_command: 'try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue)
+          {exit 0} else {exit 1}} catch {exit 1}
 
 '
         get_prereq_command: 'Install-Module -Name AzureAD -Force
@@ -40510,7 +40513,8 @@ persistence:
       - description: 'AzureAD module must be installed.
 
 '
-        prereq_command: 'if (Get-Module AzureAD) {exit 0} else {exit 1}
+        prereq_command: 'try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue)
+          {exit 0} else {exit 1}} catch {exit 1}
 
 '
         get_prereq_command: 'Install-Module -Name AzureAD -Force
