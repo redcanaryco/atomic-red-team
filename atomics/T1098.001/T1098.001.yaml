@@ -35,7 +35,7 @@ atomic_tests:
   - description: |
       AzureAD module must be installed.
     prereq_command: |
-      if (Get-Module AzureAD) {exit 0} else {exit 1}
+      try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
     get_prereq_command: |
       Install-Module -Name AzureAD -Force
   executor:
@@ -119,7 +119,7 @@ atomic_tests:
   - description: |
       AzureAD module must be installed.
     prereq_command: |
-      if (Get-Module AzureAD) {exit 0} else {exit 1}
+      try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
     get_prereq_command: |
       Install-Module -Name AzureAD -Force
   executor:
