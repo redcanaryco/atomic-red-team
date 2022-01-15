@@ -89,7 +89,7 @@
 |  |  |  |  | [Rename System Utilities](../../T1036.003/T1036.003.md) |  |  |  |  |  |  |  |
 |  |  |  |  | Right-to-Left Override [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |  |
 |  |  |  |  | [Rogue Domain Controller](../../T1207/T1207.md) |  |  |  |  |  |  |  |
-|  |  |  |  | [Rootkit](../../T1014/T1014.md) |  |  |  |  |  |  |  |
+|  |  |  |  | Rootkit [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |  |
 |  |  |  |  | Run Virtual Instance [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |  |
 |  |  |  |  | [Rundll32](../../T1218.011/T1218.011.md) |  |  |  |  |  |  |  |
 |  |  |  |  | SID-History Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |  |
