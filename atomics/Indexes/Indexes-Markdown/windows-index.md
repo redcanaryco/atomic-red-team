@@ -590,8 +590,7 @@
 - T1036.002 Right-to-Left Override [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1207 Rogue Domain Controller](../../T1207/T1207.md)
   - Atomic Test #1: DCShadow (Active Directory) [windows]
-- [T1014 Rootkit](../../T1014/T1014.md)
-  - Atomic Test #3: Windows Signed Driver Rootkit Test [windows]
+- T1014 Rootkit [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1564.006 Run Virtual Instance [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1218.011 Rundll32](../../T1218.011/T1218.011.md)
   - Atomic Test #1: Rundll32 execute JavaScript Remote Payload With GetObject [windows]
