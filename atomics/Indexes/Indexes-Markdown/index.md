@@ -1783,7 +1783,7 @@
 - [T1091 Replication Through Removable Media](../../T1091/T1091.md)
   - Atomic Test #1: USB Malware Spread Simulation [windows]
 - [T1566.001 Spearphishing Attachment](../../T1566.001/T1566.001.md)
-  - Atomic Test #1: Download Phishing Attachment - VBScript [windows]
+  - Atomic Test #1: Download Macro-Enabled Phishing Attachment [windows]
   - Atomic Test #2: Word spawned a command shell and used an IP address in the command line [windows]
 - T1566.002 Spearphishing Link [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1566.003 Spearphishing via Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
