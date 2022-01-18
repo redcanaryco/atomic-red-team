@@ -60,7 +60,7 @@ class AtomicRedTeam
       "[#{link_display}](../../#{technique_identifier}/#{technique_identifier}.md)"
     else
       # we don't have a file for this technique, or there are not tests for the given platform, so link to an edit page
-      "#{link_display} [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)"
+      "#{link_display} [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)"
     end
   end
 
