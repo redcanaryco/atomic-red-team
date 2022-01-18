@@ -168,16 +168,22 @@ atomic_tests:
   - windows
   input_arguments:
     remote_file:
-      description: URL of file to copy
+      description: URL of file to download
       type: Url
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
     local_path:
-      description: Local path to place file
+      description: Local path/filename to save the dowloaded file to
       type: Path
       default: Atomic-license.txt
   executor:
-    command: |
-      cmd /c certutil —ૹu૰rlࢰca࣢c෯he  –‮spli؅t‮‭ −"൏ᶠ൸" #{remote_file} #{local_path}
-    cleanup_command: |
-      del #{local_path} >nul 2>&1
-    name: command_prompt
+    executor:
+    steps: |
+      1. Copy the following command into the command prompt after replacing #{remote_file} and #{local_path} with your desired URL and filename.
+
+
+        certutil —ૹu૰rlࢰca࣢c෯he  –‮spli؅t‮‭ −"൏ᶠ൸" #{remote_file} #{local_path}
+
+
+      2. Press enter to execute the command. You will find the file or webpage you specified saved to the file you specified in the command.
+
+    name: manual
