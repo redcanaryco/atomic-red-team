@@ -27,7 +27,7 @@ atomic_tests:
   executor:
     command: |
       cp /bin/sh /tmp/crond;
-      /tmp/crond
+      echo 'sleep 5' | /tmp/crond
     cleanup_command: |
       rm /tmp/crond
     name: sh
