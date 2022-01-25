@@ -11,7 +11,7 @@ atomic_tests:
     command: |
       Invoke-WebRequest -OutFile C:\Users\$env:username\Desktop\TeamViewer_Setup.exe https://download.teamviewer.com/download/TeamViewer_Setup.exe
       $file1 = "C:\Users\" + $env:username + "\Desktop\TeamViewer_Setup.exe"
-      Start-Process $file1 /S;
+      Start-Process -Wait $file1 /S; 
       Start-Process 'C:\Program Files (x86)\TeamViewer\TeamViewer.exe'
     cleanup_command: |-
       $file = 'C:\Program Files (x86)\TeamViewer\uninstall.exe'
@@ -46,8 +46,8 @@ atomic_tests:
     command: |
       Invoke-WebRequest -OutFile C:\Users\$env:username\Desktop\LogMeInIgnition.msi https://secure.logmein.com/LogMeInIgnition.msi
       $file1 = "C:\Users\" + $env:username + "\Desktop\LogMeInIgnition.msi"
-      Start-Process $file1 /S;
-      Start-Process 'C:\Program Files (x86)\LogMeInIgnition\LMIIgnition.exe' "/S"
+      Start-Process -Wait $file1 /quiet;
+      Start-Process 'C:\Program Files (x86)\LogMeIn Ignition\LMIIgnition.exe' "/S"
     cleanup_command: |-
       get-package *'LogMeIn Client'* -ErrorAction Ignore | uninstall-package 
       $file1 = "C:\Users\" + $env:username + "\Desktop\LogMeInIgnition.msi"

