@@ -1602,6 +1602,7 @@
   - Atomic Test #7: Create a Process using WMI Query and an Encoded Command [windows]
   - Atomic Test #8: Create a Process using obfuscated Win32_Process [windows]
   - Atomic Test #9: WMI Execute rundll32 [windows]
+  - Atomic Test #10: Application uninstall using WMIC [windows]
 
 # lateral-movement
 - T1550.001 Application Access Token [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
