@@ -199,12 +199,12 @@ atomic_tests:
   - description: TightVNC must be installed.
     prereq_command: if ((Test-Path "C:\Program Files\TightVNC\tvnviewer.exe")-Or (Test-Path "C:\Program Files (x86)\TightVNC\tvnviewer.exe")) {exit 0} else {exit 1}
     get_prereq_command: |-
-      Invoke-WebRequest 'https://www.tightvnc.com/download/2.8.63/tightvnc-2.8.63-gpl-setup-64bit.msi' -OutFile C:\AtomicRedTeam\atomics\T1047\bin\tightvncinstaller.msi
+      Invoke-WebRequest 'https://www.tightvnc.com/download/2.8.63/tightvnc-2.8.63-gpl-setup-64bit.msi' -OutFile PathToAtomicsFolder\T1047\bin\tightvncinstaller.msi
       start-sleep -s 10
-      msiexec /i C:\AtomicRedTeam\atomics\T1047\bin\tightvncinstaller.msi /qn /norestart
+      msiexec /i PathToAtomicsFolder\T1047\bin\tightvncinstaller.msi /qn /norestart
       start-sleep -s 15
   executor:
     command: wmic /node:"#{node}" product where "name like '#{product}%%'" call uninstall
-    cleanup_command: msiexec /i C:\AtomicRedTeam\atomics\T1047\bin\tightvncinstaller.msi /qn /norestart
+    cleanup_command: msiexec /i PathToAtomicsFolder\T1047\bin\tightvncinstaller.msi /qn /norestart
     name: command_prompt
     elevation_required: true
