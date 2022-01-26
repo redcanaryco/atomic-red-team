@@ -180,3 +180,31 @@ atomic_tests:
     cleanup_command: |-
       taskkill /f /im calculator.exe
     name: powershell
+- name: Application uninstall using WMIC
+  auto_generated_guid: c510d25b-1667-467d-8331-a56d3e9bc4ff
+  description: Emulates uninstalling  applications using WMIC.  This method only works if the product was installed with an msi file.  APTs have been seen using this to uninstall security products.
+  supported_platforms:
+  - windows
+  input_arguments:
+    node:
+      description: Computer the action is being executed against but defaults to the localhost.
+      type: string
+      default: 127.0.0.1
+    product:
+      description: Enter the product name being uninstalled.  This will default to TightVNC.
+      type: String
+      default: Tightvnc
+  dependency_executor_name: powershell
+  dependencies:
+  - description: TightVNC must be installed.
+    prereq_command: if ((Test-Path "C:\Program Files\TightVNC\tvnviewer.exe")-Or (Test-Path "C:\Program Files (x86)\TightVNC\tvnviewer.exe")) {exit 0} else {exit 1}
+    get_prereq_command: |-
+      Invoke-WebRequest 'https://www.tightvnc.com/download/2.8.63/tightvnc-2.8.63-gpl-setup-64bit.msi' -OutFile PathToAtomicsFolder\T1047\bin\tightvncinstaller.msi
+      start-sleep -s 10
+      msiexec /i PathToAtomicsFolder\T1047\bin\tightvncinstaller.msi /qn /norestart
+      start-sleep -s 15
+  executor:
+    command: wmic /node:"#{node}" product where "name like '#{product}%%'" call uninstall
+    cleanup_command: msiexec /i PathToAtomicsFolder\T1047\bin\tightvncinstaller.msi /qn /norestart
+    name: command_prompt
+    elevation_required: true
