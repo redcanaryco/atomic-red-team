@@ -74,7 +74,8 @@
   - Atomic Test #4: Bash session based keylogger [linux]
   - Atomic Test #5: SSHD PAM keylogger [linux]
   - Atomic Test #6: Auditd keylogger [linux]
-- T1557.001 LLMNR/NBT-NS Poisoning and SMB Relay [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1557.001 LLMNR/NBT-NS Poisoning and SMB Relay](../../T1557.001/T1557.001.md)
+  - Atomic Test #1: LLMNR Poisoning with Inveigh (PowerShell) [windows]
 - [T1003.004 LSA Secrets](../../T1003.004/T1003.004.md)
   - Atomic Test #1: Dumping LSA Secrets [windows]
 - [T1003.001 LSASS Memory](../../T1003.001/T1003.001.md)
@@ -215,7 +216,8 @@
   - Atomic Test #4: Bash session based keylogger [linux]
   - Atomic Test #5: SSHD PAM keylogger [linux]
   - Atomic Test #6: Auditd keylogger [linux]
-- T1557.001 LLMNR/NBT-NS Poisoning and SMB Relay [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1557.001 LLMNR/NBT-NS Poisoning and SMB Relay](../../T1557.001/T1557.001.md)
+  - Atomic Test #1: LLMNR Poisoning with Inveigh (PowerShell) [windows]
 - [T1074.001 Local Data Staging](../../T1074.001/T1074.001.md)
   - Atomic Test #1: Stage data from Discovery.bat [windows]
   - Atomic Test #2: Stage data from Discovery.sh [linux, macos]
