@@ -212,8 +212,7 @@
   - Atomic Test #4: Base64 decoding with Perl [linux, macos]
   - Atomic Test #5: Base64 decoding with shell utilities [linux, macos]
   - Atomic Test #6: Hex decoding with shell utilities [linux, macos]
-- [T1610 Deploy Container](../../T1610/T1610.md)
-  - Atomic Test #1: Deploy container using nsenter container escape [linux]
+- T1610 Deploy Container [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1562.008 Disable Cloud Logs](../../T1562.008/T1562.008.md)
   - Atomic Test #1: AWS CloudTrail Changes [iaas:aws]
 - T1600.002 Disable Crypto Hardware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -710,8 +709,7 @@
   - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
   - Atomic Test #2: Cron - Add script to all cron subfolders [macos, linux]
   - Atomic Test #3: Cron - Add script to /var/spool/cron/crontabs/ folder [linux]
-- [T1610 Deploy Container](../../T1610/T1610.md)
-  - Atomic Test #1: Deploy container using nsenter container escape [linux]
+- T1610 Deploy Container [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1203 Exploitation for Client Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1061 Graphical User Interface [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1059.007 JavaScript [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
