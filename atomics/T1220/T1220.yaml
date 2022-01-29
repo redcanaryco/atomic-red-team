@@ -44,7 +44,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{msxsl_exe}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://web.archive.org/web/20200803205229/https://download.microsoft.com/download/f/2/6/f263ac46-1fe9-4ae9-8fd3-21102100ebf5/msxsl.exe" -OutFile "#{msxsl_exe}"
+      Invoke-WebRequest "https://web.archive.org/web/20200803205229if_/https://download.microsoft.com/download/f/2/6/f263ac46-1fe9-4ae9-8fd3-21102100ebf5/msxsl.exe" -OutFile "#{msxsl_exe}"
   executor:
     command: |
       #{msxsl_exe} #{xmlfile} #{xslfile}
@@ -80,7 +80,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{msxsl_exe}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://web.archive.org/web/20200803205229/https://download.microsoft.com/download/f/2/6/f263ac46-1fe9-4ae9-8fd3-21102100ebf5/msxsl.exe" -OutFile "#{msxsl_exe}"
+      Invoke-WebRequest "https://web.archive.org/web/20200803205229if_/https://download.microsoft.com/download/f/2/6/f263ac46-1fe9-4ae9-8fd3-21102100ebf5/msxsl.exe" -OutFile "#{msxsl_exe}"
   executor:
     command: |
       #{msxsl_exe} #{xmlfile} #{xslfile}
