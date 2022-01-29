@@ -1026,6 +1026,7 @@
   - Atomic Test #17: Download a file with IMEWDBLD.exe [windows]
   - Atomic Test #18: Curl Download File [windows]
   - Atomic Test #19: Curl Upload File [windows]
+  - Atomic Test #20: Download a file with Microsoft Connection Manager Auto-Download [windows]
 - [T1090.001 Internal Proxy](../../T1090.001/T1090.001.md)
   - Atomic Test #3: portproxy reg key [windows]
 - T1001.001 Junk Data [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
