@@ -233,13 +233,16 @@ class AtomicRedTeamDocs
           "techniqueID" => atomic_yaml['attack_technique'],
           "score" => 100,
           "enabled" => true,
-          "comment" => "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/" + atomic_yaml['attack_technique'] + "/" + atomic_yaml['attack_technique'] + ".md"
+#          "comment" => "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/" + atomic_yaml['attack_technique'] + "/" + atomic_yaml['attack_technique'] + ".md"
+          "links" => ["label" => "View Atomic", "url" => "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/" + atomic_yaml['attack_technique'] + "/" + atomic_yaml['attack_technique'] + ".md"]
         }
+
         techniqueParent =  {
           "techniqueID" => atomic_yaml['attack_technique'].split('.')[0],
           "score" => 100,
           "enabled" => true,
-          "comment" => "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/" + atomic_yaml['attack_technique'] + "/" + atomic_yaml['attack_technique'] + ".md"
+#          "comment" => "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/" + atomic_yaml['attack_technique'] + "/" + atomic_yaml['attack_technique'] + ".md"
+          "links" => ["label" => "View Atomic", "url" => "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/" + atomic_yaml['attack_technique'] + "/" + atomic_yaml['attack_technique'] + ".md"]
         }
 
         techniques.push(technique)
