@@ -39,6 +39,7 @@
   - Atomic Test #3: LaZagne - Credentials from Browser [windows]
   - Atomic Test #4: Simulating access to Chrome Login Data [windows]
   - Atomic Test #5: Simulating access to Opera Login Data [windows]
+  - Atomic Test #6: Simulating access to Windows Firefox Login Data [windows]
 - [T1552.002 Credentials in Registry](../../T1552.002/T1552.002.md)
   - Atomic Test #1: Enumeration for Credentials in Registry [windows]
   - Atomic Test #2: Enumeration for PuTTY Credentials in Registry [windows]

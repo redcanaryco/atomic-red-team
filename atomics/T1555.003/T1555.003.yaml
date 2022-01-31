@@ -131,3 +131,35 @@ atomic_tests:
       Copy-Item "$env:APPDATA\Opera Software\Opera Stable\Login Data" -Destination $env:temp
     cleanup_command: |
       Remove-Item -Path "$env:temp\Login Data" -Force -ErrorAction Ignore
+- name: Simulating access to Windows Firefox Login Data
+  auto_generated_guid: eb8da98a-2e16-4551-b3dd-83de49baa14c
+  description: |
+    Simulates an adversary accessing encrypted credentials from firefox web browser's login database.
+    more info in https://support.mozilla.org/en-US/kb/profiles-where-firefox-stores-user-data
+  supported_platforms:
+    - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Firefox must be installed
+    prereq_command: 'if ((Test-Path "C:\Program Files\Mozilla Firefox\firefox.exe") -Or (Test-Path "C:\Program Files (x86)\Mozilla Firefox\firefox.exe")) {exit 0} else {exit 1}'      
+    get_prereq_command: |
+      if ($env:PROCESSOR_ARCHITECTURE -eq 'AMD64') {$url="https://download.mozilla.org/?product=firefox-latest-ssl&os=win64&lang=en-US"}else {$url="https://download.mozilla.org/?product=firefox-latest-ssl&os=win&lang=en-US"}
+      $installer = "$env:temp\firefoxsetup.exe"
+      (New-Object Net.WebClient).DownloadFile($url,$installer)
+      Start-Process $installer -ArgumentList '/S' -Wait
+  - description: |
+      Firefox login data file must exist
+    prereq_command: 'if (Test-Path "$env:APPDATA\Mozilla\Firefox\Profiles\") {exit 0} else {exit 1}'    
+    get_prereq_command: | 
+      if ($env:PROCESSOR_ARCHITECTURE -eq 'AMD64') {$firefox="C:\Program Files\Mozilla Firefox\firefox.exe"}else {$firefox="C:\Program Files (x86)\Mozilla Firefox\firefox.exe"}
+      Start-Process $firefox -ArgumentList '-CreateProfile Atomic' -Wait
+      Start-Process $firefox -NoNewWindow
+      Start-Sleep -s 20
+      Stop-Process -Name firefox
+  executor:
+    name: powershell
+    command: |
+      Copy-Item "$env:APPDATA\Mozilla\Firefox\Profiles\" -Destination $env:temp -Force
+    cleanup_command: |
+      Remove-Item -Path "$env:temp\Profiles" -Force -ErrorAction Ig
