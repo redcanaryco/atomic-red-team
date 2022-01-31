@@ -233,7 +233,6 @@ class AtomicRedTeamDocs
           "techniqueID" => atomic_yaml['attack_technique'],
           "score" => 100,
           "enabled" => true,
-#          "comment" => "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/" + atomic_yaml['attack_technique'] + "/" + atomic_yaml['attack_technique'] + ".md"
           "links" => ["label" => "View Atomic", "url" => "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/" + atomic_yaml['attack_technique'] + "/" + atomic_yaml['attack_technique'] + ".md"]
         }
 
@@ -241,11 +240,30 @@ class AtomicRedTeamDocs
           "techniqueID" => atomic_yaml['attack_technique'].split('.')[0],
           "score" => 100,
           "enabled" => true,
-#          "comment" => "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/" + atomic_yaml['attack_technique'] + "/" + atomic_yaml['attack_technique'] + ".md"
           "links" => ["label" => "View Atomic", "url" => "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/" + atomic_yaml['attack_technique'] + "/" + atomic_yaml['attack_technique'] + ".md"]
         }
 
         techniques.push(technique)
+
+        for technique in techniques
+          if not technique['techniqueID'].include?(".") then 
+            techniqueParent =  {
+              "techniqueID" => atomic_yaml['attack_technique'].split('.')[0],
+              "score" => 100,
+              "enabled" => true,
+#             "comment" => "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/" + atomic_yaml['attack_technique'] + "/" + atomic_yaml['attack_technique'] + ".md"
+              "links" => ["label" => "View Atomics", "url" => "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/" + atomic_yaml['attack_technique'].split('.')[0] + "/" + atomic_yaml['attack_technique'].split('.')[0] + ".md"]
+            }
+          else
+            techniqueParent =  {
+              "techniqueID" => atomic_yaml['attack_technique'].split('.')[0],
+              "score" => 100,
+              "enabled" => true
+#             "comment" => "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/" + atomic_yaml['attack_technique'] + "/" + atomic_yaml['attack_technique'] + ".md"
+            }
+          end 
+        end
+
         techniques.push(techniqueParent) unless techniques.include?(techniqueParent)
         has_windows_tests = false
         has_macos_tests = false
