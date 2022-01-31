@@ -85,9 +85,9 @@ atomic_tests:
   - description: |
       Check if lastlog command exists on the machine
     prereq_command: |
-      if [ -x "$(command -v lastlog)" ]; then exit 0; else exit 1;
+      if [ -x "$(command -v lastlog)" ]; then exit 0; else exit 1; fi
     get_prereq_command: |
-      echo "Install lastlog on the machine to run the test."; exit 1;
+      sudo apt-get install login; exit 1;
   executor:
     command: |
       lastlog > #{output_file}
