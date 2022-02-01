@@ -20,7 +20,7 @@ atomic_tests:
     domain:
       description: domain
       type: String
-      default: atomic.local
+      default: '%userdnsdomain%'
     mimikatz_path:
       description: mimikatz windows executable
       type: Path
@@ -69,16 +69,16 @@ atomic_tests:
     domain:
       description: domain
       type: String
-      default: atomic.local
+      default: '%userdnsdomain%'
   dependency_executor_name: powershell
   dependencies:
   - description: |
       CrackMapExec executor must exist on disk at specified location (#{crackmapexec_exe})
     prereq_command: |
-      if(Test-Path #{crackmapexec_exe}) { 0 } else { -1 }
+      if(Test-Path #{crackmapexec_exe}) {exit 0} else {exit 1}
     get_prereq_command: |
       Write-Host Automated installer not implemented yet, please install crackmapexec manually at this location: #{crackmapexec_exe}
   executor:
     command: |
-      crackmapexec #{domain} -u #{user_name} -H #{ntlm} -x #{command}
+      #{crackmapexec_exe} #{domain} -u #{user_name} -H #{ntlm} -x #{command}
     name: command_prompt

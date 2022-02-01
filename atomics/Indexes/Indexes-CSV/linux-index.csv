@@ -1,6 +1,8 @@
 Tactic,Technique #,Technique Name,Test #,Test Name,Test GUID,Executor Name
 credential-access,T1003.008,/etc/passwd and /etc/shadow,1,Access /etc/shadow (Local),3723ab77-c546-403c-8fb4-bb577033b235,bash
 credential-access,T1003.008,/etc/passwd and /etc/shadow,2,Access /etc/passwd (Local),60e860b6-8ae6-49db-ad07-5e73edd88f5d,sh
+credential-access,T1003.008,/etc/passwd and /etc/shadow,3,"Access /etc/{shadow,passwd} with a standard bin that's not cat",df1a55ae-019d-4120-bc35-94f4bc5c4b0a,bash
+credential-access,T1003.008,/etc/passwd and /etc/shadow,4,"Access /etc/{shadow,passwd} with shell builtins",f5aa6543-6cb2-4fae-b9c2-b96e14721713,bash
 credential-access,T1552.003,Bash History,1,Search Through Bash History,3cfde62b-7c33-4b26-a61e-755d6131c8ce,sh
 credential-access,T1552.007,Container API,1,ListSecrets,43c3a49d-d15c-45e6-b303-f6e177e44a9a,bash
 credential-access,T1552.007,Container API,2,Cat the contents of a Kubernetes service account token file,788e0019-a483-45da-bcfe-96353d46820f,sh
@@ -14,6 +16,8 @@ credential-access,T1056.001,Keylogging,5,SSHD PAM keylogger,81d7d2ad-d644-4b6a-b
 credential-access,T1056.001,Keylogging,6,Auditd keylogger,a668edb9-334e-48eb-8c2e-5413a40867af,sh
 credential-access,T1040,Network Sniffing,1,Packet Capture Linux,7fe741f7-b265-4951-a7c7-320889083b3e,bash
 credential-access,T1110.001,Password Guessing,3,Brute Force Credentials of single Azure AD user,5a51ef57-299e-4d62-8e11-2d440df55e69,powershell
+credential-access,T1110.001,Password Guessing,4,SUDO brute force Debian,464b63e8-bf1f-422e-9e2c-2aa5080b6f9a,sh
+credential-access,T1110.001,Password Guessing,5,SUDO brute force Redhat,b72958a7-53e3-4809-9ee1-58f6ecd99ade,sh
 credential-access,T1110.003,Password Spraying,4,Password spray all Azure AD users with a single password,a8aa2d3e-1c52-4016-bc73-0f8854cfa80a,powershell
 credential-access,T1556.003,Pluggable Authentication Modules,1,Malicious PAM rule,4b9dde80-ae22-44b1-a82a-644bf009eb9c,sh
 credential-access,T1556.003,Pluggable Authentication Modules,2,Malicious PAM module,65208808-3125-4a2e-8389-a0a00e9ab326,sh
@@ -41,6 +45,7 @@ collection,T1074.001,Local Data Staging,2,Stage data from Discovery.sh,39ce0303-
 collection,T1113,Screen Capture,3,X Windows Capture,8206dd0c-faf6-4d74-ba13-7fbe13dce6ac,bash
 collection,T1113,Screen Capture,4,Capture Linux Desktop using Import Tool,9cd1cccb-91e4-4550-9139-e20a586fcea1,bash
 privilege-escalation,T1053.001,At (Linux),1,At - Schedule a job,7266d898-ac82-4ec0-97c7-436075d0d08e,sh
+privilege-escalation,T1078.004,Cloud Accounts,1,Creating GCP Service Account and Service Account Key,9fdd83fd-bd53-46e5-a716-9dec89c8ae8e,gcloud
 privilege-escalation,T1053.007,Container Orchestration Job,1,ListCronjobs,ddfb0bc1-3c3f-47e9-a298-550ecfefacbd,bash
 privilege-escalation,T1053.007,Container Orchestration Job,2,CreateCronjob,f2fa019e-fb2a-4d28-9dc6-fd1a9b7f68c3,bash
 privilege-escalation,T1053.003,Cron,1,Cron - Replace crontab with referenced file,435057fb-74b1-410e-9403-d81baf194f75,bash
@@ -82,11 +87,14 @@ defense-evasion,T1070.003,Clear Command History,9,Disable Bash History Logging w
 defense-evasion,T1070.002,Clear Linux or Mac System Logs,1,rm -rf,989cc1b1-3642-4260-a809-54f9dd559683,sh
 defense-evasion,T1070.002,Clear Linux or Mac System Logs,2,Overwrite Linux Mail Spool,1602ff76-ed7f-4c94-b550-2f727b4782d4,bash
 defense-evasion,T1070.002,Clear Linux or Mac System Logs,3,Overwrite Linux Log,d304b2dc-90b4-4465-a650-16ddd503f7b5,bash
+defense-evasion,T1078.004,Cloud Accounts,1,Creating GCP Service Account and Service Account Key,9fdd83fd-bd53-46e5-a716-9dec89c8ae8e,gcloud
+defense-evasion,T1027.004,Compile After Delivery,3,C compile,d0377aa6-850a-42b2-95f0-de558d80be57,bash
+defense-evasion,T1027.004,Compile After Delivery,4,CC compile,da97bb11-d6d0-4fc1-b445-e443d1346efe,bash
+defense-evasion,T1027.004,Compile After Delivery,5,Go compile,78bd3fa7-773c-449e-a978-dc1f1500bc52,bash
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,3,Base64 decoding with Python,356dc0e8-684f-4428-bb94-9313998ad608,sh
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,4,Base64 decoding with Perl,6604d964-b9f6-4d4b-8ce8-499829a14d0a,sh
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,5,Base64 decoding with shell utilities,b4f6a567-a27a-41e5-b8ef-ac4b4008bb7e,sh
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,6,Hex decoding with shell utilities,005943f9-8dd5-4349-8b46-0313c0a9f973,sh
-defense-evasion,T1610,Deploy Container,1,Deploy container using nsenter container escape,58004e22-022c-4c51-b4a8-2b85ac5c596b,sh
 defense-evasion,T1562.008,Disable Cloud Logs,1,AWS CloudTrail Changes,9c10dc6b-20bd-403a-8e67-50ef7d07ed4e,sh
 defense-evasion,T1562.004,Disable or Modify System Firewall,7,Stop/Start UFW firewall,fe135572-edcd-49a2-afe6-1d39521c5a9a,sh
 defense-evasion,T1562.004,Disable or Modify System Firewall,8,Stop/Start UFW firewall systemctl,9fd99609-1854-4f3c-b47b-97d9a5972bd1,sh
@@ -137,6 +145,7 @@ defense-evasion,T1548.001,Setuid and Setgid,2,Set a SetUID flag on file,759055b3
 defense-evasion,T1548.001,Setuid and Setgid,3,Set a SetGID flag on file,db55f666-7cba-46c6-9fe6-205a05c3242c,sh
 defense-evasion,T1548.001,Setuid and Setgid,4,Make and modify capabilities of a binary,db53959c-207d-4000-9e7a-cd8eb417e072,sh
 defense-evasion,T1548.001,Setuid and Setgid,5,Provide the SetUID capability to a file,1ac3272f-9bcf-443a-9888-4b1d3de785c1,sh
+defense-evasion,T1036.006,Space after Filename,2,Space After Filename,b95ce2eb-a093-4cd8-938d-5258cef656ea,bash
 defense-evasion,T1548.003,Sudo and Sudo Caching,1,Sudo usage,150c3a08-ee6e-48a6-aeaf-3659d24ceb4e,sh
 defense-evasion,T1548.003,Sudo and Sudo Caching,2,Unlimited sudo cache timeout,a7b17659-dd5e-46f7-b7d1-e6792c91d0bc,sh
 defense-evasion,T1548.003,Sudo and Sudo Caching,3,Disable tty_tickets for sudo caching,91a60b03-fb75-4d24-a42e-2eb8956e8de1,sh
@@ -159,7 +168,7 @@ impact,T1529,System Shutdown/Reboot,7,Reboot System via `halt` - Linux,78f92e14-
 impact,T1529,System Shutdown/Reboot,8,Shutdown System via `poweroff` - Linux,73a90cd2-48a2-4ac5-8594-2af35fa909fa,bash
 impact,T1529,System Shutdown/Reboot,9,Reboot System via `poweroff` - Linux,61303105-ff60-427b-999e-efb90b314e41,bash
 discovery,T1217,Browser Bookmark Discovery,1,List Mozilla Firefox Bookmark Database Files on Linux,3a41f169-a5ab-407f-9269-abafdb5da6c2,sh
-discovery,T1083,File and Directory Discovery,3,Nix File and Diectory Discovery,ffc8b249-372a-4b74-adcd-e4c0430842de,sh
+discovery,T1083,File and Directory Discovery,3,Nix File and Directory Discovery,ffc8b249-372a-4b74-adcd-e4c0430842de,sh
 discovery,T1083,File and Directory Discovery,4,Nix File and Directory Discovery 2,13c5e1ae-605b-46c4-a79f-db28c77ff24e,sh
 discovery,T1087.001,Local Account,1,Enumerate all accounts (Local),f8aab3dd-5990-4bf8-b8ab-2226c951696f,sh
 discovery,T1087.001,Local Account,2,View sudoers access,fed9be70-0186-4bde-9f8a-20945f9370c2,sh
@@ -179,6 +188,9 @@ discovery,T1201,Password Policy Discovery,4,Examine password expiration policy -
 discovery,T1057,Process Discovery,1,Process Discovery - ps,4ff64f0b-aaf2-4866-b39d-38d9791407cc,sh
 discovery,T1018,Remote System Discovery,6,Remote System Discovery - arp nix,acb6b1ff-e2ad-4d64-806c-6c35fe73b951,sh
 discovery,T1018,Remote System Discovery,7,Remote System Discovery - sweep,96db2632-8417-4dbb-b8bb-a8b92ba391de,sh
+discovery,T1018,Remote System Discovery,12,Remote System Discovery - ip neighbour,158bd4dd-6359-40ab-b13c-285b9ef6fa25,sh
+discovery,T1018,Remote System Discovery,13,Remote System Discovery - ip route,1a4ebe70-31d0-417b-ade2-ef4cb3e7d0e1,sh
+discovery,T1018,Remote System Discovery,14,Remote System Discovery - ip tcp_metrics,6c2da894-0b57-43cb-87af-46ea3b501388,sh
 discovery,T1518.001,Security Software Discovery,4,Security Software Discovery - ps (Linux),23b91cd2-c99c-4002-9e41-317c63e024a2,sh
 discovery,T1497.001,System Checks,1,Detect Virtualization Environment (Linux),dfbd1a21-540d-4574-9731-e852bd6fe840,sh
 discovery,T1082,System Information Discovery,3,List OS Information,cccb070c-df86-4216-a5bc-9fb60c74e27c,sh
@@ -198,6 +210,7 @@ persistence,T1176,Browser Extensions,1,Chrome (Developer Mode),3ecd790d-2617-4ab
 persistence,T1176,Browser Extensions,2,Chrome (Chrome Web Store),4c83940d-8ca5-4bb2-8100-f46dc914bc3f,manual
 persistence,T1176,Browser Extensions,3,Firefox,cb790029-17e6-4c43-b96f-002ce5f10938,manual
 persistence,T1136.003,Cloud Account,1,AWS - Create a new IAM user,8d1c2368-b503-40c9-9057-8e42f21c58ad,sh
+persistence,T1078.004,Cloud Accounts,1,Creating GCP Service Account and Service Account Key,9fdd83fd-bd53-46e5-a716-9dec89c8ae8e,gcloud
 persistence,T1053.007,Container Orchestration Job,1,ListCronjobs,ddfb0bc1-3c3f-47e9-a298-550ecfefacbd,bash
 persistence,T1053.007,Container Orchestration Job,2,CreateCronjob,f2fa019e-fb2a-4d28-9dc6-fd1a9b7f68c3,bash
 persistence,T1053.003,Cron,1,Cron - Replace crontab with referenced file,435057fb-74b1-410e-9403-d81baf194f75,bash
@@ -239,7 +252,6 @@ execution,T1053.007,Container Orchestration Job,2,CreateCronjob,f2fa019e-fb2a-4d
 execution,T1053.003,Cron,1,Cron - Replace crontab with referenced file,435057fb-74b1-410e-9403-d81baf194f75,bash
 execution,T1053.003,Cron,2,Cron - Add script to all cron subfolders,b7d42afa-9086-4c8a-b7b0-8ea3faa6ebb0,bash
 execution,T1053.003,Cron,3,Cron - Add script to /var/spool/cron/crontabs/ folder,2d943c18-e74a-44bf-936f-25ade6cccab4,bash
-execution,T1610,Deploy Container,1,Deploy container using nsenter container escape,58004e22-022c-4c51-b4a8-2b85ac5c596b,sh
 execution,T1059.006,Python,1,Execute shell script via python's command mode arguement,3a95cdb2-c6ea-4761-b24e-02b71889b8bb,sh
 execution,T1059.006,Python,2,Execute Python via scripts (Linux),6c4d1dcb-33c7-4c36-a8df-c6cfd0408be8,sh
 execution,T1059.006,Python,3,Execute Python via Python executables (Linux),0b44d79b-570a-4b27-a31f-3bf2156e5eaa,sh
@@ -251,5 +263,7 @@ execution,T1059.004,Unix Shell,2,Command-Line Interface,d0c88567-803d-4dca-99b4-
 exfiltration,T1030,Data Transfer Size Limits,1,Data Transfer Size Limits,ab936c51-10f4-46ce-9144-e02137b2016a,sh
 exfiltration,T1048,Exfiltration Over Alternative Protocol,1,Exfiltration Over Alternative Protocol - SSH,f6786cc8-beda-4915-a4d6-ac2f193bb988,sh
 exfiltration,T1048,Exfiltration Over Alternative Protocol,2,Exfiltration Over Alternative Protocol - SSH,7c3cb337-35ae-4d06-bf03-3032ed2ec268,sh
+exfiltration,T1048.002,Exfiltration Over Asymmetric Encrypted Non-C2 Protocol,2,Exfiltrate data HTTPS using curl linux,4a4f31e2-46ea-4c26-ad89-f09ad1d5fe01,bash
 exfiltration,T1048.003,Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,1,Exfiltration Over Alternative Protocol - HTTP,1d1abbd6-a3d3-4b2e-bef5-c59293f46eff,manual
 exfiltration,T1048.003,Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,3,Exfiltration Over Alternative Protocol - DNS,c403b5a4-b5fc-49f2-b181-d1c80d27db45,manual
+initial-access,T1078.004,Cloud Accounts,1,Creating GCP Service Account and Service Account Key,9fdd83fd-bd53-46e5-a716-9dec89c8ae8e,gcloud

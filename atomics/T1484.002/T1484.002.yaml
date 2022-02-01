@@ -64,11 +64,13 @@ atomic_tests:
       Get-AzureADExternalDomainFederation -ExternalDomainName "#{domain_name}"
       Write-Host "End of federation configuration."
     cleanup_command: |
-      Import-Module AzureADPreview
+      try {
+      Import-Module AzureADPreview -ErrorAction Ignore
       $PWord = ConvertTo-SecureString -String "#{azure_password}" -AsPlainText -Force
       $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{azure_username}", $Pword
-      Connect-AzureAD -Credential $Credential > $null
+      Connect-AzureAD -Credential $Credential -ErrorAction Ignore
       Remove-AzureADExternalFederationDomain -ExternalDomainName "#{domain_name}"
+      } catch {}
     name: powershell
     
     
