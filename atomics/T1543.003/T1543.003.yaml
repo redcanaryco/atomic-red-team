@@ -91,7 +91,7 @@ atomic_tests:
       Stop-Service -Name "#{service_name}" 2>&1 | Out-Null
       try {(Get-WmiObject Win32_Service -filter "name='#{service_name}'").Delete()}
       catch {}
-  - name: TinyTurla backdoor service w64time
+- name: TinyTurla backdoor service w64time
   description: It's running Dll as service to emulate the tine turla backdoor
   supported_platforms:
   - windows
