@@ -92,7 +92,10 @@ atomic_tests:
       try {(Get-WmiObject Win32_Service -filter "name='#{service_name}'").Delete()}
       catch {}
 - name: TinyTurla backdoor service w64time
-  description: It's running Dll as service to emulate the tine turla backdoor
+  description: |
+    It's running Dll as service to emulate the tine turla backdoor
+    
+    [Related Talos Blog](https://blog.talosintelligence.com/2021/09/tinyturla.html)
   supported_platforms:
   - windows
   input_arguments:
