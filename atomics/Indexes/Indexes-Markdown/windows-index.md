@@ -318,6 +318,7 @@
   - Atomic Test #1: Modify Fax service to run PowerShell [windows]
   - Atomic Test #2: Service Installation CMD [windows]
   - Atomic Test #3: Service Installation PowerShell [windows]
+  - Atomic Test #4: TinyTurla backdoor service w64time [windows]
 - [T1547.004 Winlogon Helper DLL](../../T1547.004/T1547.004.md)
   - Atomic Test #1: Winlogon Shell Key Persistence - PowerShell [windows]
   - Atomic Test #2: Winlogon Userinit Key Persistence - PowerShell [windows]
@@ -811,6 +812,7 @@
   - Atomic Test #1: Modify Fax service to run PowerShell [windows]
   - Atomic Test #2: Service Installation CMD [windows]
   - Atomic Test #3: Service Installation PowerShell [windows]
+  - Atomic Test #4: TinyTurla backdoor service w64time [windows]
 - [T1547.004 Winlogon Helper DLL](../../T1547.004/T1547.004.md)
   - Atomic Test #1: Winlogon Shell Key Persistence - PowerShell [windows]
   - Atomic Test #2: Winlogon Userinit Key Persistence - PowerShell [windows]
