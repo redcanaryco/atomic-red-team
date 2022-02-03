@@ -1,4 +1,4 @@
-# Contributor Covenant Code of Conduct
+# Contributor Code of Conduct
 
 Welcome to the [Atomic Red Team online community](https://atomicredteam.io/). Our goal is to foster an open, safe, and welcoming environment. As a collective, we—as contributors, maintainers, and the Open Source Projects team of Red Canary—pledge to encourage our project and community to be a harassment-free space. We invite you to collaborate, exchange thoughts or information, and engage with one another. Atomic Red Team is meant for everyone, regardless of age, personal appearance, body size, disability, nationality, race, ethnicity, gender identity and expression, level of experience or academics, religion, or sexual identity and orientation. 
 
