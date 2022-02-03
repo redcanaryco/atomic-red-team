@@ -458,6 +458,10 @@
 # persistence
 - [T1098 Account Manipulation](../../T1098/T1098.md)
   - Atomic Test #3: AWS - Create a group and add a user to that group [iaas:aws]
+  - Atomic Test #4: Azure - adding user to Azure AD role [azure-ad]
+  - Atomic Test #5: Azure - adding service principal to Azure AD role [azure-ad]
+  - Atomic Test #6: Azure - adding user to Azure role in subscription [iaas:azure]
+  - Atomic Test #7: Azure - adding service principal to Azure role in subscription [iaas:azure]
 - T1098.003 Add Office 365 Global Administrator Role [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1137.006 Add-ins [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1098.001 Additional Cloud Credentials](../../T1098.001/T1098.001.md)
