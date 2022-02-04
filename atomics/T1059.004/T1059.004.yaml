@@ -43,7 +43,7 @@ atomic_tests:
   description: |
     AutoSUID application is the Open-Source project, the main idea of which is to automate harvesting the SUID executable files and to find a way for further escalating the privileges. 
   supported_platforms:
-  - macos 
+  - linux 
   input_arguments:
     autosuid:
       description: Path to the autosuid shell script
@@ -53,10 +53,16 @@ atomic_tests:
       description: Path to download autosuid shell script
       type: Url
       default: https://raw.githubusercontent.com/IvanGlinkin/AutoSUID/main/AutoSUID.sh
+  dependency_executor_name: bash
+  dependencies:
+  - description: |
+      AutoSUID must exist on disk at specified location (#{autosuid})
+    prereq_command: |
+      if [ -f #{autosuid} ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      curl #{autosuid_url} --output #{autosuid}
   executor:
     command: |
-      curl #{autosuid_url} --output #{autosuid}
       chmod +x #{autosuid}
       bash #{autosuid}
-    name: bash
-    
+    name: sh
