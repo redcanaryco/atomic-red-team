@@ -162,7 +162,7 @@ atomic_tests:
     command: |
       Copy-Item "$env:APPDATA\Mozilla\Firefox\Profiles\" -Destination $env:temp -Force -Recurse
     cleanup_command: |
-      Remove-Item -Path "$env:temp\Profiles" -Force -ErrorAction Ignore
+      Remove-Item -Path "$env:temp\Profiles" -Force -ErrorAction Ignore -Recurse
 - name: Simulating access to Windows Edge Login Data
   description: |
     Simulates an adversary accessing encrypted credentials from Edge web browser's login database.
@@ -189,4 +189,4 @@ atomic_tests:
     command: |
       Copy-Item "$env:LOCALAPPDATA\Microsoft\Edge\User Data\Default" -Destination $env:temp\Edge -Force -Recurse
     cleanup_command: |
-      Remove-Item -Path "$env:temp\Edge" -Force -ErrorAction Ignore
+      Remove-Item -Path "$env:temp\Edge" -Force -ErrorAction Ignore -Recurse
