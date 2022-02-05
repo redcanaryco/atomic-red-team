@@ -3,7 +3,7 @@ display_name: "Masquerading"
 atomic_tests:
 - name: System File Copied to Unusual Location
   auto_generated_guid: 51005ac7-52e2-45e0-bdab-d17c6d4916cd
-  description: It may be suspicious seeing a file copy of an EXE in System32 or SysWOW64 to a non-system directory or executing from a non-system directory.
+  description: It may be suspicious seeing a file copy of an EXE in System32 or SysWOW64 to a non-system directory or executing from a non-system directory. As seen https://twitter.com/ffforward/status/1481672378639912960.
   supported_platforms:
   - windows
   executor:
@@ -21,20 +21,18 @@ atomic_tests:
       description: Location of zip file
       type: Url
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1036/bin/T1036.zip
-    file:
-      description: cmd file that performs execution
-      type: Path
-      default: C:\Users\$env:username\Downloads\T1036\README.cmd
-  prereq_command: |
-    Invoke-WebRequest -outputFile "C:\Users\$env:username\Downloads\T1036.zip" #{url}
-    Expand-Archive -Path C:\Users\$env:username\Downloads\T1036.zip -DestinationPath C:\Users\$env:username\Downloads
-  get_prereq_command: |
-    if (Test-Path C:\Users\$env:username\Downloads\T1036.zip) {exit 0} else {exit 1}
+  dependencies:
+  - description: Zip file must be present.
+    prereq_command: |
+      if (Test-Path $env:userprofile\Downloads\T1036.zip) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest -outputFile "$env:userprofile\Downloads\T1036.zip" #{url}
   executor:
     command: |-
-      cd $(split-path -path #{file})
-      cmd /c #{file}
+      Expand-Archive -Path $env:userprofile\Downloads\T1036.zip -DestinationPath $env:userprofile\Downloads\T1036
+      cd $env:userprofile\Downloads\T1036
+      cmd /c $env:userprofile\Downloads\T1036\README.cmd >$null 2>$null
     cleanup_command: |-
-      taskkill /IM Calculator.exe /f
-      Remove-Item C:\Users\$env:username\Downloads\T1036 -recurse -ErrorAction Ignore
+      taskkill /IM Calculator.exe /f >$null 2>$null
+      Remove-Item $env:userprofile\Downloads\T1036 -recurse -ErrorAction Ignore
     name: powershell
