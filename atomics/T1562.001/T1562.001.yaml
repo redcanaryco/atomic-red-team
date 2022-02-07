@@ -557,10 +557,6 @@ atomic_tests:
       description: Path to Defender Control software version 1.6. 
       type: String
       default: $env:temp\DefenderControl\DefenderControl\DefenderControl.exe
-    PathtoBinParentFolder:
-      description: Path to parent folder of DefenderControl executable
-      type: String
-      default: $env:temp\DefenderControl\DefenderControl
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -572,10 +568,8 @@ atomic_tests:
       expand-archive -LiteralPath "$env:temp\defendercontrol.zip" -DestinationPath "$env:temp\DefenderControl"
   executor:
     command: |
-      cd #{PathtoBinParentFolder}
-      ./DefenderControl.exe /D #{DefenderID} | Out-Null
+      cmd /c #{DefenderControlExe} /D #{DefenderID} | Out-Null
     cleanup_command: |
-      cd #{PathtoBinParentFolder}
-      ./DefenderControl.exe /E | Out-Null
+      cmd /c #{DefenderControlExe} /E | Out-Null
     name: powershell
-    elevation_required: true     
+    elevation_required: true  
