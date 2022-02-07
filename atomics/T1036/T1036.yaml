@@ -26,7 +26,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path $env:userprofile\Downloads\T1036.zip) {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest -outputFile "$env:userprofile\Downloads\T1036.zip" #{url}
+      Invoke-WebRequest -OutFile "$env:userprofile\Downloads\T1036.zip" #{url}
   executor:
     command: |-
       Expand-Archive -Path $env:userprofile\Downloads\T1036.zip -DestinationPath $env:userprofile\Downloads\T1036
