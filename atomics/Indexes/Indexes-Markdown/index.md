@@ -40,11 +40,13 @@
   - Atomic Test #4: Simulating access to Chrome Login Data [windows]
   - Atomic Test #5: Simulating access to Opera Login Data [windows]
   - Atomic Test #6: Simulating access to Windows Firefox Login Data [windows]
+  - Atomic Test #7: Simulating access to Windows Edge Login Data [windows]
 - [T1552.002 Credentials in Registry](../../T1552.002/T1552.002.md)
   - Atomic Test #1: Enumeration for Credentials in Registry [windows]
   - Atomic Test #2: Enumeration for PuTTY Credentials in Registry [windows]
 - [T1003.006 DCSync](../../T1003.006/T1003.006.md)
   - Atomic Test #1: DCSync (Active Directory) [windows]
+  - Atomic Test #2: Run DSInternals Get-ADReplAccount [windows]
 - T1556.001 Domain Controller Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1212 Exploitation for Credential Access [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1187 Forced Authentication](../../T1187/T1187.md)
@@ -574,6 +576,7 @@
   - Atomic Test #3: Impair Windows Audit Log Policy [windows]
   - Atomic Test #4: Clear Windows Audit Policy Config [windows]
   - Atomic Test #5: Disable Event Logging with wevtutil [windows]
+  - Atomic Test #6: Makes Eventlog blind with Phant0m [windows]
 - T1562.007 Disable or Modify Cloud Firewall [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1562.004 Disable or Modify System Firewall](../../T1562.004/T1562.004.md)
   - Atomic Test #1: Disable Microsoft Defender Firewall [windows]
@@ -853,6 +856,7 @@
   - Atomic Test #6: Rundll32 setupapi.dll Execution [windows]
   - Atomic Test #7: Execution of HTA and VBS Files using Rundll32 and URL.dll [windows]
   - Atomic Test #8: Launches an executable using Rundll32 and pcwutl.dll [windows]
+  - Atomic Test #9: Execution of non-dll using rundll32.exe [windows]
 - T1134.005 SID-History Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1553.003 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1064 Scripting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
