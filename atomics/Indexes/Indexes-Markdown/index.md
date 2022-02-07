@@ -294,7 +294,8 @@
   - Atomic Test #1: Change Default File Association [windows]
 - [T1078.004 Cloud Accounts](../../T1078.004/T1078.004.md)
   - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, windows, linux, macos]
-- T1546.015 Component Object Model Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1546.015 Component Object Model Hijacking](../../T1546.015/T1546.015.md)
+  - Atomic Test #1: COM Hijacking - InprocServer32 [windows]
 - [T1053.007 Container Orchestration Job](../../T1053.007/T1053.007.md)
   - Atomic Test #1: ListCronjobs [containers]
   - Atomic Test #2: CreateCronjob [containers]
@@ -621,6 +622,7 @@
   - Atomic Test #24: Tamper with Windows Defender Evade Scanning -Process [windows]
   - Atomic Test #25: office-365-Disable-AntiPhishRule [office-365]
   - Atomic Test #26: Disable Windows Defender with DISM [windows]
+  - Atomic Test #27: Disable Defender with Defender Control [windows]
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1556.001 Domain Controller Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1484 Domain Policy Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -729,6 +731,7 @@
   - Atomic Test #2: Creating W32Time similar named service using sc [windows]
 - [T1036 Masquerading](../../T1036/T1036.md)
   - Atomic Test #1: System File Copied to Unusual Location [windows]
+  - Atomic Test #2: Malware Masquerading and Execution from Zip File [windows]
 - [T1036.005 Match Legitimate Name or Location](../../T1036.005/T1036.005.md)
   - Atomic Test #1: Execute a process from a directory masquerading as the current parent directory. [macos, linux]
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -856,6 +859,7 @@
   - Atomic Test #6: Rundll32 setupapi.dll Execution [windows]
   - Atomic Test #7: Execution of HTA and VBS Files using Rundll32 and URL.dll [windows]
   - Atomic Test #8: Launches an executable using Rundll32 and pcwutl.dll [windows]
+  - Atomic Test #9: Execution of non-dll using rundll32.exe [windows]
 - T1134.005 SID-History Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1553.003 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1064 Scripting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1000,7 +1004,8 @@
 - [T1078.004 Cloud Accounts](../../T1078.004/T1078.004.md)
   - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, windows, linux, macos]
 - T1542.002 Component Firmware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1546.015 Component Object Model Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1546.015 Component Object Model Hijacking](../../T1546.015/T1546.015.md)
+  - Atomic Test #1: COM Hijacking - InprocServer32 [windows]
 - T1554 Compromise Client Software Binary [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1053.007 Container Orchestration Job](../../T1053.007/T1053.007.md)
   - Atomic Test #1: ListCronjobs [containers]
