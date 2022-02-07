@@ -29,7 +29,7 @@ atomic_tests:
       Invoke-WebRequest -OutFile "$env:userprofile\Downloads\T1036.zip" #{url}
   executor:
     command: |-
-      Expand-Archive -Path $env:userprofile\Downloads\T1036.zip -DestinationPath $env:userprofile\Downloads\T1036
+      Expand-Archive -Path $env:userprofile\Downloads\T1036.zip -DestinationPath $env:userprofile\Downloads\T1036 -Force
       cd $env:userprofile\Downloads\T1036
       cmd /c $env:userprofile\Downloads\T1036\README.cmd >$null 2>$null
     cleanup_command: |-
