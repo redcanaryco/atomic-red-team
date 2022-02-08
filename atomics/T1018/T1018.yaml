@@ -283,4 +283,29 @@ atomic_tests:
     command: |
       ip tcp_metrics show |grep --invert-match "^127\."
     name: sh
-
+- name: Enumerate domain computers within Active Directory using DirectorySearcher
+  description: |
+    This test is a Powershell script that enumerates Active Directory to determine computers that are joined to the domain. 
+    This test is designed to mimic how SessionGopher can determine the additional systems within a domain, which has been used before by threat actors to aid in lateral movement. 
+    Reference: [Head Fake: Tackling Disruptive Ransomware Attacks](https://www.mandiant.com/resources/head-fake-tackling-disruptive-ransomware-attacks). 
+    Upon successful execution, this test will output the names of the computers that reside on the domain to the console window. 
+  supported_platforms:
+  - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: This PC must be joined to a domain. 
+    prereq_command: |-
+     if ((Get-WmiObject -Class Win32_ComputerSystem).partofdomain -eq $true) {exit 0} else {exit 1}		
+    get_prereq_command: |-
+      write-host "This PC must be manually added to a domain." 
+  executor:
+    command: |
+      $DirectorySearcher = New-Object System.DirectoryServices.DirectorySearcher("(ObjectCategory=Computer)")
+      $DirectorySearcher.PropertiesToLoad.Add("Name")
+      $Computers = $DirectorySearcher.findall()
+      foreach ($Computer in $Computers) {
+        $Computer = $Computer.Properties.name
+        if (!$Computer) { Continue }
+        Write-Host $Computer}
+    name: powershell
+    elevation_required: false
