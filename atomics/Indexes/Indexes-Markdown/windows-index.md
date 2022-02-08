@@ -958,6 +958,7 @@
   - Atomic Test #9: Remote System Discovery - adidnsdump [windows]
   - Atomic Test #10: Adfind - Enumerate Active Directory Computer Objects [windows]
   - Atomic Test #11: Adfind - Enumerate Active Directory Domain Controller Objects [windows]
+  - Atomic Test #15: Enumerate domain computers within Active Directory using DirectorySearcher [windows]
 - [T1518.001 Security Software Discovery](../../T1518.001/T1518.001.md)
   - Atomic Test #1: Security Software Discovery [windows]
   - Atomic Test #2: Security Software Discovery - powershell [windows]
