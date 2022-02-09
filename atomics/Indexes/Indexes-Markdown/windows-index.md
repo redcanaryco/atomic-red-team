@@ -78,8 +78,9 @@
   - Atomic Test #3: Dump Active Directory Database with NTDSUtil [windows]
   - Atomic Test #4: Create Volume Shadow Copy with WMI [windows]
   - Atomic Test #5: Create Volume Shadow Copy remotely with WMI [windows]
-  - Atomic Test #6: Create Volume Shadow Copy with Powershell [windows]
-  - Atomic Test #7: Create Symlink to Volume Shadow Copy [windows]
+  - Atomic Test #6: Create Volume Shadow Copy remotely (WMI) with esentutl [windows]
+  - Atomic Test #7: Create Volume Shadow Copy with Powershell [windows]
+  - Atomic Test #8: Create Symlink to Volume Shadow Copy [windows]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #3: Packet Capture Windows Command Prompt [windows]
   - Atomic Test #4: Windows Internal Packet Capture [windows]

