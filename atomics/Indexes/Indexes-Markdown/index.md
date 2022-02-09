@@ -862,6 +862,7 @@
   - Atomic Test #8: Launches an executable using Rundll32 and pcwutl.dll [windows]
   - Atomic Test #9: Execution of non-dll using rundll32.exe [windows]
   - Atomic Test #10: Rundll32 with Ordinal Value [windows]
+  - Atomic Test #11: Rundll32 with Control_RunDLL [windows]
 - T1134.005 SID-History Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1553.003 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1064 Scripting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
