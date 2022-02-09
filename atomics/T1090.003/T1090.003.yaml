@@ -1,0 +1,36 @@
+attack_technique: T1090.003
+display_name: 'Proxy: Multi-hop Proxy'
+atomic_tests:
+- name: Psiphon
+  description: |
+    Psiphon 3 is a circumvention tool from Psiphon Inc. that utilizes VPN, SSH and HTTP Proxy technology to provide you with uncensored access to Internet.
+    Note that this test may conflict with pre-existing system configuration.
+  supported_platforms:
+    - windows
+  input_arguments:
+    Psiphon_file:
+      description: backup of the pre-existing system proxy configuration
+      type: Path
+      default: PathToAtomicsFolder\T1090.003\src\Psiphon.bat
+  dependency_executor_name: powershell 
+  dependencies:
+    - description: |
+        the registry backup file must exist on disk at specified location $env:Temp\proxy-backup.txt 
+      prereq_command: | 
+        if (Test-Path $env:Temp\proxy-backup.txt) {exit 0} else {exit 1}
+      get_prereq_command: |
+        Invoke-WebRequest -OutFile "C:\Users\$env:username\Downloads\psiphon3.exe" "https://s3.amazonaws.com/0ubz-2q11-gi9y/psiphon3.exe"
+        if(-not (test-path $env:Temp\proxy-backup.txt)){
+        $Proxy = (Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Name "ProxyServer" -ErrorAction Ignore).ProxyServer
+        Set-Content $env:Temp\proxy-backup.txt $Proxy}
+  executor:
+    name: powershell
+    command: |
+      #{Psiphon_file}
+    cleanup_command: |
+      Taskkill /IM msedge.exe /f >$null 2>$null
+      Taskkill /IM psiphon3.exe /f >$null 2>$null
+      Taskkill /IM psiphon-tunnel-core.exe /f >$null 2>$null 
+      $Proxy = Get-Content $env:Temp\proxy-backup.txt
+      if($null -ne $Proxy) 
+      {Set-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Name "ProxyServer" -Value $Proxy}
