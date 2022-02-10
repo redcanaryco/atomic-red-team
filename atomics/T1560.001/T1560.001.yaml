@@ -175,7 +175,7 @@ atomic_tests:
       prereq_command: |
         if [ $(ls #{input_files} | wc -l) > 0 ] && [ -x $(which zip) ] ; then exit 0; else exit 1; fi;
       get_prereq_command: |
-        (which yum && yum -y epel-release zip)||(which apt-get && apt-get install -y zip)
+        (which yum && yum -y install epel-release zip)||(which apt-get && apt-get install -y zip)
         echo Please set input_files argument to include files that exist
   executor:
     name: sh
@@ -263,7 +263,7 @@ atomic_tests:
       prereq_command: |
         if [ ! -x "$(command -v gpg)" ] || [ ! -x "$(command -v zip)" ]; then exit 1; fi;
       get_prereq_command: |
-        (which yum && yum -y epel-release zip gpg)||(which apt-get && apt-get install -y zip gpg)
+        (which yum && yum -y install epel-release zip gpg)||(which apt-get && apt-get install -y zip gpg)
   executor:
     name: sh
     elevation_required: false

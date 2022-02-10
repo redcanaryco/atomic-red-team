@@ -32,7 +32,7 @@ atomic_tests:
       prereq_command: |
         which_gpg=`which gpg`
       get_prereq_command: |
-        (which yum && yum -y epel-release gpg)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y gpg)
+        (which yum && yum -y install epel-release gpg)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y gpg)
   executor:
     name: bash
     elevation_required: false
@@ -110,7 +110,7 @@ atomic_tests:
         which_ccdecrypt=`which ccdecrypt`
         if [[ $USER == "root" ]]; then cp #{root_input_file_path} #{cped_file_path}; else cp #{user_input_file_path} #{cped_file_path}; fi
       get_prereq_command: |
-        (which yum && yum -y epel-release ccrypt)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y ccrypt)
+        (which yum && yum -y install epel-release ccrypt)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y ccrypt)
   executor:
     name: bash
     elevation_required: false
