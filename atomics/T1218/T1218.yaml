@@ -223,3 +223,30 @@ atomic_tests:
   executor:
     command: 'Invoke-ATHRemoteFXvGPUDisablementCommand -ModuleName #{module_name} -ModulePath #{module_path}'
     name: powershell
+- name: DiskShadow Command Execution
+  description: |
+    Emulates attack with a DiskShadow.exe being used to execute arbitrary commands
+  supported_platforms:
+    - windows
+  input_arguments:
+    txt_payload:
+      description: txt to execute
+      type: Path
+      default: PathToAtomicsFolder\T1218\src\T1218.txt
+    dspath:
+      description: Default location of DiskShadow.exe
+      type: Path
+      default: C:\Windows\System32\diskshadow.exe
+  dependency_executor_name: powershell 
+  dependencies: 
+    - description: txt file must exist on disk at specified location (#{txt_payload})
+      prereq_command: |
+        if (Test-Path #{txt_payload}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{txt_payload}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/T1218.txt" -OutFile "#{txt_payload}"
+  executor:
+    command: |
+      #{dspath} -S #{txt_payload} 
+    name: powershell
+    elevation_required: false
