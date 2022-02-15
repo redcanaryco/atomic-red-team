@@ -103,8 +103,9 @@
   - Atomic Test #3: Dump Active Directory Database with NTDSUtil [windows]
   - Atomic Test #4: Create Volume Shadow Copy with WMI [windows]
   - Atomic Test #5: Create Volume Shadow Copy remotely with WMI [windows]
-  - Atomic Test #6: Create Volume Shadow Copy with Powershell [windows]
-  - Atomic Test #7: Create Symlink to Volume Shadow Copy [windows]
+  - Atomic Test #6: Create Volume Shadow Copy remotely (WMI) with esentutl [windows]
+  - Atomic Test #7: Create Volume Shadow Copy with Powershell [windows]
+  - Atomic Test #8: Create Symlink to Volume Shadow Copy [windows]
 - T1556.004 Network Device Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #1: Packet Capture Linux [linux]
@@ -849,7 +850,8 @@
 - [T1014 Rootkit](../../T1014/T1014.md)
   - Atomic Test #1: Loadable Kernel Module based Rootkit [linux]
   - Atomic Test #2: Loadable Kernel Module based Rootkit [linux]
-- T1564.006 Run Virtual Instance [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1564.006 Run Virtual Instance](../../T1564.006/T1564.006.md)
+  - Atomic Test #1: Register Portable Virtualbox [windows]
 - [T1218.011 Rundll32](../../T1218.011/T1218.011.md)
   - Atomic Test #1: Rundll32 execute JavaScript Remote Payload With GetObject [windows]
   - Atomic Test #2: Rundll32 execute VBscript command [windows]
@@ -861,6 +863,7 @@
   - Atomic Test #8: Launches an executable using Rundll32 and pcwutl.dll [windows]
   - Atomic Test #9: Execution of non-dll using rundll32.exe [windows]
   - Atomic Test #10: Rundll32 with Ordinal Value [windows]
+  - Atomic Test #11: Rundll32 with Control_RunDLL [windows]
 - T1134.005 SID-History Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1553.003 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1064 Scripting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

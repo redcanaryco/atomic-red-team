@@ -69,6 +69,14 @@ atomic_tests:
     command: |
       username=$(id -u -n) && lsof -u $username
     name: sh
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      check if lsof exists
+    prereq_command: |
+      which lsof
+    get_prereq_command: |
+      (which yum && yum -y install lsof)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y lsof)
 - name: Show if a user account has ever logged in remotely
   auto_generated_guid: 0f0b6a29-08c3-44ad-a30b-47fd996b2110
   description: |

@@ -90,7 +90,7 @@
 |  |  |  |  | Right-to-Left Override [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
 |  |  |  |  | [Rogue Domain Controller](../../T1207/T1207.md) |  |  |  |  |  |  |  |
 |  |  |  |  | Rootkit [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
-|  |  |  |  | Run Virtual Instance [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
+|  |  |  |  | [Run Virtual Instance](../../T1564.006/T1564.006.md) |  |  |  |  |  |  |  |
 |  |  |  |  | [Rundll32](../../T1218.011/T1218.011.md) |  |  |  |  |  |  |  |
 |  |  |  |  | SID-History Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
 |  |  |  |  | SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
