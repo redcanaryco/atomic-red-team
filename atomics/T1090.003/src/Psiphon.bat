@@ -1,5 +1,5 @@
 @echo off
-start C:\Users\%USERNAME%\Downloads\psiphon3.exe
+start %USERPROFILE%\Downloads\psiphon3.exe
 timeout /t 20 >nul 2>&1
 Taskkill /IM msedge.exe /F >nul 2>&1
 Taskkill /IM psiphon3.exe /F >nul 2>&1
