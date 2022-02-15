@@ -70863,7 +70863,51 @@ command-and-control:
       - macOS
       - Windows
       - Network
-    atomic_tests: []
+      identifier: T1090.003
+    atomic_tests:
+    - name: Psiphon
+      auto_generated_guid: 14d55ca0-920e-4b44-8425-37eedd72b173
+      description: |
+        Psiphon 3 is a circumvention tool from Psiphon Inc. that utilizes VPN, SSH and HTTP Proxy technology to provide you
+        with uncensored access to Internet.
+        This process will launch Psiphon 3 and establish a connection. Shortly after it will be shut down via process kill commands.
+        More information can be found about Psiphon using the following urls
+        http://s3.amazonaws.com/0ubz-2q11-gi9y/en.html
+        https://psiphon.ca/faq.html
+      supported_platforms:
+      - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'The proxy settings backup file must exist on disk at $env:Temp\proxy-backup.txt
+
+'
+        prereq_command: 'if (Test-Path $env:Temp\proxy-backup.txt) {exit 0} else {exit
+          1}
+
+'
+        get_prereq_command: |
+          if(-not (test-path $env:Temp\proxy-backup.txt)){
+          $Proxy = (Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Name "ProxyServer" -ErrorAction Ignore).ProxyServer
+          Set-Content $env:Temp\proxy-backup.txt $Proxy}
+      - description: 'The Psiphon executable must exist in the Downloads folder
+
+'
+        prereq_command: 'if (Test-Path $env:UserProfile\Downloads\psiphon3.exe) {exit
+          0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest -OutFile "$env:UserProfile\Downloads\psiphon3.exe"
+          "https://s3.amazonaws.com/0ubz-2q11-gi9y/psiphon3.exe"
+
+'
+      executor:
+        name: powershell
+        command: 'PathToAtomicsFolder\T1090.003\src\Psiphon.bat
+
+'
+        cleanup_command: "$Proxy = Get-Content $env:Temp\\proxy-backup.txt -ErrorAction
+          Ignore\nif($null -ne $Proxy) \n{Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet
+          Settings' -Name \"ProxyServer\" -Value $Proxy}\n"
   T1026:
     technique:
       id: attack-pattern--99709758-2b96-48f2-a68a-ad7fbd828091
