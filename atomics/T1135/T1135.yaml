@@ -32,7 +32,7 @@ atomic_tests:
     package_installer:
       description: Package installer command. Debian - apt install samba
       type: String
-      default: (which yum && yum -y epel-release samba)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y samba)
+      default: (which yum && yum -y install epel-release samba)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y samba)
   dependency_executor_name: bash
   dependencies:
   - description: |
