@@ -225,7 +225,7 @@ atomic_tests:
     name: powershell
 - name: DiskShadow Command Execution
   description: |
-    Emulates attack with a DiskShadow.exe being used to execute arbitrary commands Reference: https://bohops.com/2018/03/26/diskshadow-the-return-of-vss-evasion-persistence-and-active-directory-database-extraction/
+    Emulates attack with a DiskShadow.exe (LOLBIN installed by default on Windows) being used to execute arbitrary commands Reference: https://bohops.com/2018/03/26/diskshadow-the-return-of-vss-evasion-persistence-and-active-directory-database-extraction/
   supported_platforms:
     - windows
   input_arguments:
@@ -245,6 +245,11 @@ atomic_tests:
       get_prereq_command: |
         New-Item -Type Directory (split-path #{txt_payload}) -ErrorAction ignore | Out-Null
         Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/T1218.txt" -OutFile "#{txt_payload}"
+    - description: DiskShadow.exe must exist on disk at specified location (#{dspath})
+      prereq_command: |
+        if (Test-Path #{dspath}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        echo "DiskShadow.exe not found on disk at expected location"
   executor:
     command: |
       #{dspath} -S #{txt_payload} 
