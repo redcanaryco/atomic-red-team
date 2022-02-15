@@ -5,19 +5,23 @@ atomic_tests:
   description: |
     Psiphon 3 is a circumvention tool from Psiphon Inc. that utilizes VPN, SSH and HTTP Proxy technology to provide you with uncensored access to Internet.
     Note that this test may conflict with pre-existing system configuration.
+    This process will launch Psiphon 3 and establish a connection. Shortly after it will be shut down via kill command
+    more information can be found about Psiphon using the following urls
+    http://s3.amazonaws.com/0ubz-2q11-gi9y/en.html
+    https://psiphon.ca/faq.html
   supported_platforms:
     - windows
   input_arguments:
     Psiphon_file:
-      description: backup of the pre-existing system proxy configuration
+      description: Batch script to execute Psiphon
       type: Path
       default: PathToAtomicsFolder\T1090.003\src\Psiphon.bat
   dependency_executor_name: powershell 
   dependencies:
     - description: |
-        the registry backup file must exist on disk at specified location $env:Temp\proxy-backup.txt 
+        the registry backup file must exist on disk at specified location $env:Temp\proxy-backup.txt and the Psiphon must exist in the users download folder
       prereq_command: | 
-        if (Test-Path $env:Temp\proxy-backup.txt) {exit 0} else {exit 1}
+        if ((Test-Path $env:Temp\proxy-backup.txt) -and (Test-Path C:\Users\$env:username\Downloads\psiphon3.exe)) {exit 0} else {exit 1}
       get_prereq_command: |
         Invoke-WebRequest -OutFile "C:\Users\$env:username\Downloads\psiphon3.exe" "https://s3.amazonaws.com/0ubz-2q11-gi9y/psiphon3.exe"
         if(-not (test-path $env:Temp\proxy-backup.txt)){
@@ -28,9 +32,6 @@ atomic_tests:
     command: |
       #{Psiphon_file}
     cleanup_command: |
-      Taskkill /IM msedge.exe /f >$null 2>$null
-      Taskkill /IM psiphon3.exe /f >$null 2>$null
-      Taskkill /IM psiphon-tunnel-core.exe /f >$null 2>$null 
       $Proxy = Get-Content $env:Temp\proxy-backup.txt
       if($null -ne $Proxy) 
       {Set-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Name "ProxyServer" -Value $Proxy}
