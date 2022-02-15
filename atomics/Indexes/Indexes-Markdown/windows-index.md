@@ -1050,6 +1050,7 @@
 - T1104 Multi-Stage Channels [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1090.003 Multi-hop Proxy](../../T1090.003/T1090.003.md)
   - Atomic Test #1: Psiphon [windows]
+  - Atomic Test #2: Tor Proxy Usage - Windows [windows]
 - T1026 Multiband Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1095 Non-Application Layer Protocol](../../T1095/T1095.md)
   - Atomic Test #1: ICMP C2 [windows]
