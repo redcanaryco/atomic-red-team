@@ -95,3 +95,31 @@ atomic_tests:
       chmod +x #{linenum}
       bash #{linenum}
     name: sh
+
+- name: Linpeas tool execution
+  description: |
+    LinPEAS is a script that search for possible paths to escalate privileges on Linux/Unix*/MacOS hosts. The checks are explained on book.hacktricks.xyz
+  supported_platforms:
+  - linux 
+  input_arguments:
+    linpeas:
+      description: Path to the linpeas shell script
+      type: Path
+      default: PathToAtomicsFolder/T1059.004/src/linpeas.sh
+    linpeas_url:
+      description: Path to download linPeas shell script
+      type: Url
+      default: https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh
+  dependency_executor_name: bash
+  dependencies:
+  - description: |
+      Linpeas must exist on disk at specified location (#{linpeas})
+    prereq_command: |
+      if [ -f #{linpeas} ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      curl -L #{linpeas_url} --output #{linpeas}
+  executor:
+    command: |
+      chmod +x #{linpeas}
+      bash #{linpeas}
+    name: sh
