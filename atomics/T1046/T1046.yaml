@@ -47,6 +47,12 @@ atomic_tests:
       if [ -x "$(command -v nmap)" ]; then exit 0; else exit 1; fi;
     get_prereq_command: |
       (which yum && yum -y install epel-release nmap)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y nmap)
+  - description: |
+      Check if nc command exists on the machine
+    prereq_command: |
+      if [ -x "$(command -v nc)" ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      (which yum && yum -y install epel-release nc)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y netcat)
   executor:
     command: |
       nmap -sS #{network_range} -p #{port}
