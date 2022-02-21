@@ -187,6 +187,7 @@
   - Atomic Test #8: Data Encrypted with zip and gpg symmetric [macos, linux]
 - [T1123 Audio Capture](../../T1123/T1123.md)
   - Atomic Test #1: using device audio capture commandlet [windows]
+  - Atomic Test #2: Registry artefact when application use microphone [windows]
 - [T1119 Automated Collection](../../T1119/T1119.md)
   - Atomic Test #1: Automated Collection Command Prompt [windows]
   - Atomic Test #2: Automated Collection PowerShell [windows]
@@ -242,7 +243,8 @@
   - Atomic Test #5: Windows Screencapture [windows]
   - Atomic Test #6: Windows Screen Capture (CopyFromScreen) [windows]
 - T1213.002 Sharepoint [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1125 Video Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1125 Video Capture](../../T1125/T1125.md)
+  - Atomic Test #1: Registry artefact when application use webcam [windows]
 - T1056.003 Web Portal Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 
 # privilege-escalation
