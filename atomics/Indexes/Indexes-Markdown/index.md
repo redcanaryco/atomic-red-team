@@ -746,6 +746,7 @@
   - Atomic Test #4: Add domain to Trusted sites Zone [windows]
   - Atomic Test #5: Javascript in registry [windows]
   - Atomic Test #6: Change Powershell Execution Policy to Bypass [windows]
+  - Atomic Test #7: BlackByte Ransomware Registry Changes - CMD [windows]
 - T1601 Modify System Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1218.005 Mshta](../../T1218.005/T1218.005.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
