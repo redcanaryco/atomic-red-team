@@ -108,8 +108,7 @@ atomic_tests:
     cleanup_command: |
       try { Set-ExecutionPolicy -ExecutionPolicy #{default_execution_policy} -Scope LocalMachine -Force } catch {}
     name: powershell
-- name: BlackByte Ransomware Registry Changes
-  auto_generated_guid: 
+- name: BlackByte Ransomware Registry Changes - CMD
   description: |
     This task recreates the steps taken by BlackByte ransomware before it worms to other machines.  See "Preparing to Worm" section: https://redcanary.com/blog/blackbyte-ransomware/
     The steps are as follows:
@@ -132,3 +131,4 @@ atomic_tests:
       reg delete HKLM\SYSTEM\CurrentControlSet\Control\FileSystem\ /v LongPathsEnabled /f 2>&1
     name: command_prompt
     elevation_required: true
+    
