@@ -65,3 +65,23 @@ atomic_tests:
      stop-process -name "tor" | out-null
     name: powershell
     elevation_required: false
+- name: Tor Proxy Usage - Debian/Ubuntu
+  description: |
+    This test is designed to launch the tor proxy service, which is what is utilized in the background by the Tor Browser and other applications with add-ons in order to provide onion routing functionality.
+    Upon successful execution, the tor proxy service will be launched. 
+  supported_platforms:
+  - linux
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+     Tor must be installed on the machine 
+    prereq_command: |
+     if [ -x "$(command -v tor --version)" ]; then exit 0; else exit 1; fi
+    get_prereq_command: |
+     sudo apt-get -y install tor
+  executor:
+    command: |
+     sudo systemctl start tor 
+    cleanup_command: |
+     sudo systemctl stop tor
+    name: sh    
