@@ -1728,6 +1728,7 @@
 - [T1090.003 Multi-hop Proxy](../../T1090.003/T1090.003.md)
   - Atomic Test #1: Psiphon [windows]
   - Atomic Test #2: Tor Proxy Usage - Windows [windows]
+  - Atomic Test #3: Tor Proxy Usage - Debian/Ubuntu [linux]
 - T1026 Multiband Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1095 Non-Application Layer Protocol](../../T1095/T1095.md)
   - Atomic Test #1: ICMP C2 [windows]
