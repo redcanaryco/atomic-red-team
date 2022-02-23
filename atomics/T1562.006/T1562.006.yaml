@@ -79,3 +79,26 @@ atomic_tests:
       fi
     name: bash
     elevation_required: true
+- name: 'Telemetry Sourcerer Tool - Windows'
+  description: |
+    This test was created to launch Telemetry Sourcerer v.0.10.0. This tool is capable of enumerating and disabling commons sources of telemetry used by AV/EDR on Windows. This allows attackers/red-teamers to identify blind spots, determine particular events created, and validate whether the tool's tampering abilities can lead to detection. Upon completion, the tool will open and you will have access to disabling ETW providers and sessions. A popup box will appear explaining that user-mode hooks and kernel-mode callbacks are not enabled. This test does not enable user-mode hooks or kernel-mode callbacks.
+  supported_platforms:
+  - windows
+  input_arguments:
+    TelemetrySourcererExe:
+        description: Location of telemetrysourcerer.exe file.
+        type: string
+        default: $env:temp\TelemetrySourcerer\TelemetrySourcerer-v0.10.0\TelemetrySourcerer.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: 'Telemetry Sourcerer-v0.10.0 must be installed on the machine '
+    prereq_command: |
+        if (Test-Path #{TelemetrySourcererExe}) {exit 0} else {exit 1}
+    get_prereq_command: |-
+      Start-BitsTransfer -Source "https://github.com/jthuraisamy/TelemetrySourcerer/releases/download/v0.10.0/TelemetrySourcerer-v0.10.0.zip" -Destination "$env:temp\TelemetrySourcerer.zip" -dynamic
+      expand-archive -LiteralPath "$env:temp\TelemetrySourcerer.zip" -DestinationPath "$env:temp\TelemetrySourcerer"
+  executor:
+    command: Start-Process -FilePath "$env:temp\TelemetrySourcerer\TelemetrySourcerer-v0.10.0\TelemetrySourcerer.exe"
+    cleanup_command: Stop-Process -Name "TelemetrySourcerer"
+    name: powershell
+    elevation_required: false
