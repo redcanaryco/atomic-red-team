@@ -141,3 +141,19 @@ atomic_tests:
       Invoke-CimMethod -ClassName PS_ScheduledTask -NameSpace "Root\Microsoft\Windows\TaskScheduler" -MethodName "RegisterByXml" -Arguments @{ Force = $true; Xml =$xml; }
     cleanup_command: |
       Unregister-ScheduledTask -TaskName "T1053_005_WMI" -confirm:$false >$null 2>&1
+- name: Creation of Scheduled Task Scheduling Powershell Decoding and Executing Base64 Encoded Registry Value
+  description: 'Upon successful execution, cmd will create a scheduled task to where Powershell decodes a Base64 value stored in a registry key (ping 127.0.0.1) at 07:45AM daily.  This is a persistence mechanism recently seen in Qakbot.  For further information please see: https://thedfirreport.com/2022/02/07/qbot-likes-to-move-it-move-it/'
+  supported_platforms:
+  - windows
+  input_arguments:
+    time:
+      description: What time in a 24 hour period
+      type: string
+      default: 07:45
+  executor:
+    command: "reg add HKCU\\SOFTWARE\\ATOMIC-T1053.005 /v test /t REG_SZ /d cGluZyAxMjcuMC4wLjE= /f \nschtasks.exe  /Create /F /TN \"ATOMIC-T1053.005\" /TR \"cmd /c start /min \\\"\\\" powershell.exe -Command IEX([System.Text.Encoding]::ASCII.GetString([System.Convert]::FromBase64String((Get-ItemProperty -Path HKCU:\\SOFTWARE\\ATOMIC-T1053.005).test)))\" /sc daily /st #{time}"
+    cleanup_command: |-
+      schtasks /delete /tn "ATOMIC-T1053.005" /F 2>&1
+      reg delete HKCU\SOFTWARE\ATOMIC-T1053.005 /F 2>&1
+    name: command_prompt
+    elevation_required: true
