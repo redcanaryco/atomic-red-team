@@ -97,3 +97,20 @@ atomic_tests:
     command: |
       dir /s /b %USERPROFILE%\Favorites
     name: command_prompt
+- name: List Safari Bookmarks on MacOS
+  description: |
+    This test searches for Safari's Bookmarks file (on macOS) and lists any found instances to a text file.
+  supported_platforms:
+  - macos
+  input_arguments:
+    output_file:
+      description: Path where captured results will be placed.
+      type: Path
+      default: /tmp/T1217-Safari.txt
+  executor:
+    command: |
+      find / -path "*/Safari/Bookmarks.plist" 2>/dev/null >> #{output_file} 
+      cat #{output_file} 
+    cleanup_command: |
+      rm -f #{output_file} 2>/dev/null
+    name: sh
