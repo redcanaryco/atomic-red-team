@@ -54232,6 +54232,26 @@ discovery:
 
 '
         name: command_prompt
+    - name: List Safari Bookmarks on MacOS
+      auto_generated_guid: 5fc528dd-79de-47f5-8188-25572b7fafe0
+      description: 'This test searches for Safari''s Bookmarks file (on macOS) and
+        lists any found instances to a text file.
+
+'
+      supported_platforms:
+      - macos
+      input_arguments:
+        output_file:
+          description: Path where captured results will be placed.
+          type: Path
+          default: "/tmp/T1217-Safari.txt"
+      executor:
+        command: "find / -path \"*/Safari/Bookmarks.plist\" 2>/dev/null >> #{output_file}
+          \ncat #{output_file} \n"
+        cleanup_command: 'rm -f #{output_file} 2>/dev/null
+
+'
+        name: sh
   T1087.004:
     technique:
       external_references:
