@@ -142,6 +142,7 @@ atomic_tests:
     cleanup_command: |
       Unregister-ScheduledTask -TaskName "T1053_005_WMI" -confirm:$false >$null 2>&1
 - name: Scheduled Task Executing Base64 Encoded Commands From Registry
+  auto_generated_guid: e895677d-4f06-49ab-91b6-ae3742d0a2ba
   description: |
     A Base64 Encoded command will be stored in the registry (ping 127.0.0.1) and then a scheduled task will be created.
     The scheduled task will launch powershell to decode and run the command in the rgistry daily.
