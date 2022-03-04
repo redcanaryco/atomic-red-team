@@ -738,6 +738,7 @@
   - Atomic Test #2: Malware Masquerading and Execution from Zip File [windows]
 - [T1036.005 Match Legitimate Name or Location](../../T1036.005/T1036.005.md)
   - Atomic Test #1: Execute a process from a directory masquerading as the current parent directory. [macos, linux]
+  - Atomic Test #2: Masquerade as a built-in system executable [windows]
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1578 Modify Cloud Compute Infrastructure [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1112 Modify Registry](../../T1112/T1112.md)
