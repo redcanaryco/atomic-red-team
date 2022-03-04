@@ -411,6 +411,7 @@
   - Atomic Test #4: Powershell Cmdlet Scheduled Task [windows]
   - Atomic Test #5: Task Scheduler via VBA [windows]
   - Atomic Test #6: WMI Invoke-CimMethod Scheduled Task [windows]
+  - Atomic Test #7: Scheduled Task Executing Base64 Encoded Commands From Registry [windows]
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.002 Screensaver](../../T1546.002/T1546.002.md)
   - Atomic Test #1: Set Arbitrary Binary as Screensaver [windows]
@@ -1137,6 +1138,7 @@
   - Atomic Test #4: Powershell Cmdlet Scheduled Task [windows]
   - Atomic Test #5: Task Scheduler via VBA [windows]
   - Atomic Test #6: WMI Invoke-CimMethod Scheduled Task [windows]
+  - Atomic Test #7: Scheduled Task Executing Base64 Encoded Commands From Registry [windows]
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.002 Screensaver](../../T1546.002/T1546.002.md)
   - Atomic Test #1: Set Arbitrary Binary as Screensaver [windows]
@@ -1259,6 +1261,7 @@
   - Atomic Test #5: List Google Chrome / Edge Chromium Bookmarks on Windows with command prompt [windows]
   - Atomic Test #6: List Mozilla Firefox bookmarks on Windows with command prompt [windows]
   - Atomic Test #7: List Internet Explorer Bookmarks using the command prompt [windows]
+  - Atomic Test #8: List Safari Bookmarks on MacOS [macos]
 - T1087.004 Cloud Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1069.003 Cloud Groups [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1580 Cloud Infrastructure Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1590,6 +1593,7 @@
   - Atomic Test #4: Powershell Cmdlet Scheduled Task [windows]
   - Atomic Test #5: Task Scheduler via VBA [windows]
   - Atomic Test #6: WMI Invoke-CimMethod Scheduled Task [windows]
+  - Atomic Test #7: Scheduled Task Executing Base64 Encoded Commands From Registry [windows]
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1064 Scripting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1569.002 Service Execution](../../T1569.002/T1569.002.md)

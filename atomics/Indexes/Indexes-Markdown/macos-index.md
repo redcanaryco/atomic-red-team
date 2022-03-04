@@ -294,6 +294,7 @@
 - [T1217 Browser Bookmark Discovery](../../T1217/T1217.md)
   - Atomic Test #2: List Mozilla Firefox Bookmark Database Files on macOS [macos]
   - Atomic Test #3: List Google Chrome Bookmark JSON Files on macOS [macos]
+  - Atomic Test #8: List Safari Bookmarks on MacOS [macos]
 - T1087.002 Domain Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1069.002 Domain Groups [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1083 File and Directory Discovery](../../T1083/T1083.md)
