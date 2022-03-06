@@ -411,3 +411,91 @@ atomic_tests:
       Write-Host "Service Principal $($sp.DisplayName) was removed from $($role.Name) role in subscriptions $($subscriptions.Name)"
     name: powershell
     elevation_required: false
+
+- name: Azure - adding permission to application
+  description: |
+    The adversarie want to add service principal to some Azure role, also called Azure resource role. Threat actor 
+  supported_platforms:
+  - azure-ad
+  input_arguments:
+    username:
+      description: Azure AD username
+      type: String
+      default: jonh@contoso.com
+    password:
+      description: Azure AD password
+      type: String
+      default: p4sswd
+    application_name:
+      description: Name of the targed application
+      type: String
+      default: test_app
+    application_permission:
+      description: Permission from Microsoft Graph Resource API that will be add to application
+      type: String
+      default: DirectoryRecommendations.Read.All
+  dependencies:
+  - description: |
+      AzureAD module must be installed.
+    prereq_command: |
+      try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
+    get_prereq_command: |
+      Install-Module -Name AzureAD -Force
+  executor:
+    command: |
+      Import-Module -Name AzureAD
+      $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+      $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+      Connect-AzureAD -Credential $Credential
+
+      $aadApplication = New-AzureADApplication -DisplayName "#{application_name}"
+      $servicePrincipal = New-AzureADServicePrincipal -AppId $aadApplication.AppId
+      #$aadApplication = Get-AzureADApplication | Where-Object {$_.DisplayName -eq "#{application_name}"}
+
+      #Get Service Principal of Microsoft Graph Resource API 
+      $graphSP =  Get-AzureADServicePrincipal -All $true | Where-Object {$_.DisplayName -eq "Microsoft Graph"}
+
+      #Initialize RequiredResourceAccess for Microsoft Graph Resource API 
+      $requiredGraphAccess = New-Object Microsoft.Open.AzureAD.Model.RequiredResourceAccess
+      $requiredGraphAccess.ResourceAppId = $graphSP.AppId
+      $requiredGraphAccess.ResourceAccess = New-Object System.Collections.Generic.List[Microsoft.Open.AzureAD.Model.ResourceAccess]
+
+      #Set Application Permissions
+      $ApplicationPermissions = @('#{application_permission}')
+
+      $reqPermission = $graphSP.AppRoles | Where-Object {$_.Value -eq $ApplicationPermissions}
+      if($reqPermission)
+      {
+      $resourceAccess = New-Object Microsoft.Open.AzureAD.Model.ResourceAccess
+      $resourceAccess.Type = "Role"
+      $resourceAccess.Id = $reqPermission.Id    
+      #Add required app permission
+      $requiredGraphAccess.ResourceAccess.Add($resourceAccess)
+      }
+      else
+      {
+      Write-Host "App permission $permission not found in the Graph Resource API" -ForegroundColor Red
+      }
+
+      #Add required resource accesses
+      $requiredResourcesAccess = New-Object System.Collections.Generic.List[Microsoft.Open.AzureAD.Model.RequiredResourceAccess]
+      $requiredResourcesAccess.Add($requiredGraphAccess)
+
+      #Set permissions in existing Azure AD App
+      Set-AzureADApplication -ObjectId $aadApplication.ObjectId -RequiredResourceAccess $requiredResourcesAccess
+
+      $servicePrincipal = Get-AzureADServicePrincipal -All $true | Where-Object {$_.AppId -eq $aadApplication.AppId}
+
+      New-AzureADServiceAppRoleAssignment -ObjectId $servicePrincipal.ObjectId -PrincipalId $servicePrincipal.ObjectId -ResourceId $graphSP.ObjectId -Id $reqPermission.Id
+
+    cleanup_command: |
+      Import-Module -Name AzureAD
+      $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+      $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+      Connect-AzureAD -Credential $Credential
+
+      $aadApplication = Get-AzureADApplication | Where-Object {$_.DisplayName -eq "#{application_name}"}
+      Remove-AzureADApplication -ObjectId $aadApplication.ObjectId
+      
+    name: powershell
+    elevation_required: false
