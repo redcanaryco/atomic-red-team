@@ -19,13 +19,11 @@ atomic_tests:
   - description: Sample script must exist on disk at specified location (#{vbscript})
     prereq_command: 'if (Test-Path #{vbscript}) {exit 0} else {exit 1} '
     get_prereq_command: |-
-      Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.005/src/sys_info.vbs" -OutFile "$env:TEMP\sys_info.vbs"
       New-Item -ItemType Directory (Split-Path #{vbscript}) -Force | Out-Null
-      Copy-Item $env:TEMP\sys_info.vbs #{vbscript} -Force
+      Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.005/src/sys_info.vbs" -OutFile "#{vbscript}"
   executor:
     command: 'cscript #{vbscript} > $env:TEMP\T1059.005.out.txt'
     cleanup_command: |-
-      Remove-Item $env:TEMP\sys_info.vbs -ErrorAction Ignore
       Remove-Item $env:TEMP\T1059.005.out.txt -ErrorAction Ignore
     name: powershell
 
