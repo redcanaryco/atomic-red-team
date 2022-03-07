@@ -31192,6 +31192,36 @@ defense-evasion:
         cleanup_command: |
           rm -f $HOME/.../sh
           rmdir $HOME/.../
+    - name: Masquerade as a built-in system executable
+      auto_generated_guid: 35eb8d16-9820-4423-a2a1-90c4f5edd9ca
+      description: 'Launch an executable that attempts to masquerade as a legitimate
+        executable.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        executable_filepath:
+          description: File path where the generated executable will be dropped and
+            executed from. The filename should be the name of a built-in system utility.
+          type: String
+          default: "$Env:windir\\Temp\\svchost.exe"
+      executor:
+        command: |
+          Add-Type -TypeDefinition @'
+          public class Test {
+              public static void Main(string[] args) {
+                  System.Console.WriteLine("tweet, tweet");
+              }
+          }
+          '@ -OutputAssembly "#{executable_filepath}"
+
+          Start-Process -FilePath "#{executable_filepath}"
+        cleanup_command: 'Remove-Item -Path "#{executable_filepath}" -ErrorAction
+          Ignore
+
+'
+        name: powershell
   T1556:
     technique:
       external_references:
@@ -66508,14 +66538,11 @@ execution:
       - description: Sample script must exist on disk at specified location (#{vbscript})
         prereq_command: 'if (Test-Path #{vbscript}) {exit 0} else {exit 1} '
         get_prereq_command: |-
-          Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.005/src/sys_info.vbs" -OutFile "$env:TEMP\sys_info.vbs"
           New-Item -ItemType Directory (Split-Path #{vbscript}) -Force | Out-Null
-          Copy-Item $env:TEMP\sys_info.vbs #{vbscript} -Force
+          Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.005/src/sys_info.vbs" -OutFile "#{vbscript}"
       executor:
         command: 'cscript #{vbscript} > $env:TEMP\T1059.005.out.txt'
-        cleanup_command: |-
-          Remove-Item $env:TEMP\sys_info.vbs -ErrorAction Ignore
-          Remove-Item $env:TEMP\T1059.005.out.txt -ErrorAction Ignore
+        cleanup_command: Remove-Item $env:TEMP\T1059.005.out.txt -ErrorAction Ignore
         name: powershell
     - name: Encoded VBS code execution
       auto_generated_guid: e8209d5f-e42d-45e6-9c2f-633ac4f1eefa
@@ -66718,6 +66745,45 @@ execution:
         command: "%LOCALAPPDATA:~-3,1%md /c echo #{input_message} > #{output_file}
           & type #{output_file}\n"
         name: command_prompt
+    - name: Simulate BlackByte Ransomware Print Bombing
+      auto_generated_guid: 6b2903ac-8f36-450d-9ad5-b220e8a2dcb9
+      description: "This test attempts to open a file a specified number of times
+        in Wordpad, then prints the contents. \nIt is designed to mimic BlackByte
+        ransomware's print bombing technique, where tree.dll, which contains the ransom
+        note, is opened in Wordpad 75 times and then printed. \nSee https://redcanary.com/blog/blackbyte-ransomware/.
+        \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_to_print:
+          description: File to be opened/printed by Wordpad.
+          type: String
+          default: "$env:temp\\T1059_003note.txt"
+        max_to_print:
+          description: The maximum number of Wordpad windows the test will open/print.
+          type: String
+          default: 75
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'File to print must exist on disk at specified location (#{file_to_print})
+
+'
+        prereq_command: 'if (test-path "#{file_to_print}"){exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'new-item #{file_to_print} -value "This file has been
+          created by T1059.003 Test 4" -Force | Out-Null
+
+'
+      executor:
+        command: 'cmd /c "for /l %x in (1,1,#{max_to_print}) do start wordpad.exe
+          /p #{file_to_print}" | out-null
+
+'
+        cleanup_command: 'stop-process -name wordpad -force -erroraction silentlycontinue
+
+'
+        name: powershell
   T1047:
     technique:
       id: attack-pattern--01a5a209-b94c-450b-b7f9-946497d91055
