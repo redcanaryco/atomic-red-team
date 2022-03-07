@@ -12,10 +12,12 @@ atomic_tests:
     command_to_add:
       description: Command to add to the .bash_profile file
       type: String
-      default: /path/to/script.py
+      default: echo "Hello from Atomic Red Team T1546.004"
   executor:
     command: |
-      echo "#{command_to_add}" >> ~/.bash_profile
+      echo '#{command_to_add}' >> ~/.bash_profile
+    cleanup_command: |
+      sed -i '/#{command_to_add}/d' ~/.bash_profile
     name: sh
 - name: Add command to .bashrc
   auto_generated_guid: 0a898315-4cfa-4007-bafe-33a4646d115f
@@ -28,8 +30,10 @@ atomic_tests:
     command_to_add:
       description: Command to add to the .bashrc file
       type: String
-      default: /path/to/script.py
+      default: echo "Hello from Atomic Red Team T1546.004"
   executor:
     command: |
-      echo "#{command_to_add}" >> ~/.bashrc
+      echo '#{command_to_add}' >> ~/.bashrc
+    cleanup_command: |
+      sed -i '/#{command_to_add}/d' ~/.bashrc
     name: sh

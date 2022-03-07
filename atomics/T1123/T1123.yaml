@@ -11,4 +11,16 @@ atomic_tests:
     command: |
       powershell.exe -Command WindowsAudioDevice-Powershell-Cmdlet
     name: powershell
-
+- name: Registry artefact when application use microphone
+  auto_generated_guid: 7a21cce2-6ada-4f7c-afd9-e1e9c481e44a
+  description: |
+    [can-you-track-processes-accessing-the-camera-and-microphone](https://svch0st.medium.com/can-you-track-processes-accessing-the-camera-and-microphone-7e6885b37072)
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\microphone\NonPackaged\C:#Windows#Temp#atomic.exe /v LastUsedTimeStart /t REG_BINARY /d a273b6f07104d601 /f
+      reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\microphone\NonPackaged\C:#Windows#Temp#atomic.exe /v LastUsedTimeStop /t REG_BINARY /d 96ef514b7204d601 /f
+    cleanup_command: |
+      reg DELETE HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\microphone\NonPackaged\C:#Windows#Temp#atomic.exe /f
+    name: command_prompt

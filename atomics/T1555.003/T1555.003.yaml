@@ -160,6 +160,34 @@ atomic_tests:
   executor:
     name: powershell
     command: |
-      Copy-Item "$env:APPDATA\Mozilla\Firefox\Profiles\" -Destination $env:temp -Force
+      Copy-Item "$env:APPDATA\Mozilla\Firefox\Profiles\" -Destination $env:temp -Force -Recurse
     cleanup_command: |
-      Remove-Item -Path "$env:temp\Profiles" -Force -ErrorAction Ig
+      Remove-Item -Path "$env:temp\Profiles" -Force -ErrorAction Ignore -Recurse
+- name: Simulating access to Windows Edge Login Data
+  auto_generated_guid: a6a5ec26-a2d1-4109-9d35-58b867689329
+  description: |
+    Simulates an adversary accessing encrypted credentials from Edge web browser's login database.
+    more info in https://www.forensicfocus.com/articles/chromium-based-microsoft-edge-from-a-forensic-point-of-view/
+  supported_platforms:
+    - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Edge must be installed
+    prereq_command: 'if (Test-Path "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe") {exit 0} else {exit 1}'      
+    get_prereq_command: |
+      "Installation is not implemented as Edge is a part of windows"
+  - description: |
+      Edge login data file must exist
+    prereq_command: 'if (Test-Path "$env:LOCALAPPDATA\Microsoft\Edge\User Data\Default") {exit 0} else {exit 1}'    
+    get_prereq_command: | 
+      $edge="C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
+      Start-Process $edge 
+      Start-Sleep -s 20
+      Stop-Process -Name msedge
+  executor:
+    name: powershell
+    command: |
+      Copy-Item "$env:LOCALAPPDATA\Microsoft\Edge\User Data\Default" -Destination $env:temp\Edge -Force -Recurse
+    cleanup_command: |
+      Remove-Item -Path "$env:temp\Edge" -Force -ErrorAction Ignore -Recurse

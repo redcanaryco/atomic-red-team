@@ -458,6 +458,10 @@
 # persistence
 - [T1098 Account Manipulation](../../T1098/T1098.md)
   - Atomic Test #3: AWS - Create a group and add a user to that group [iaas:aws]
+  - Atomic Test #4: Azure - adding user to Azure AD role [azure-ad]
+  - Atomic Test #5: Azure - adding service principal to Azure AD role [azure-ad]
+  - Atomic Test #6: Azure - adding user to Azure role in subscription [iaas:azure]
+  - Atomic Test #7: Azure - adding service principal to Azure role in subscription [iaas:azure]
 - T1098.003 Add Office 365 Global Administrator Role [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1137.006 Add-ins [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1098.001 Additional Cloud Credentials](../../T1098.001/T1098.001.md)
@@ -675,7 +679,8 @@
 - T1001.001 Junk Data [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1071.003 Mail Protocols [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1104 Multi-Stage Channels [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1090.003 Multi-hop Proxy [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1090.003 Multi-hop Proxy](../../T1090.003/T1090.003.md)
+  - Atomic Test #3: Tor Proxy Usage - Debian/Ubuntu [linux]
 - T1026 Multiband Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1095 Non-Application Layer Protocol [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1132.002 Non-Standard Encoding [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -733,6 +738,8 @@
 - [T1059.004 Unix Shell](../../T1059.004/T1059.004.md)
   - Atomic Test #1: Create and Execute Bash Shell Script [macos, linux]
   - Atomic Test #2: Command-Line Interface [macos, linux]
+  - Atomic Test #3: Harvest SUID executable files [linux]
+  - Atomic Test #4: LinEnum tool execution [linux]
 - T1204 User Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1059.005 Visual Basic [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 

