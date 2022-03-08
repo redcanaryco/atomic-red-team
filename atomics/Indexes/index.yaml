@@ -31586,9 +31586,9 @@ defense-evasion:
           cmd.exe /c reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLinkedConnections /t REG_DWORD /d 1 /f
           cmd.exe /c reg add HKLM\SYSTEM\CurrentControlSet\Control\FileSystem /v LongPathsEnabled /t REG_DWORD /d 1 /f
         cleanup_command: |
-          reg delete HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\ /v LocalAccountTokenFilterPolicy /f 2>&1
-          reg delete HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\ /v EnableLinkedConnections /f 2>&1
-          reg delete HKLM\SYSTEM\CurrentControlSet\Control\FileSystem\ /v LongPathsEnabled /f 2>&1
+          reg delete HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\ /v LocalAccountTokenFilterPolicy /f >nul 2>&1
+          reg delete HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\ /v EnableLinkedConnections /f >nul 2>&1
+          reg delete HKLM\SYSTEM\CurrentControlSet\Control\FileSystem\ /v LongPathsEnabled /f >nul 2>&1
         name: command_prompt
         elevation_required: true
     - name: BlackByte Ransomware Registry Changes - Powershell
@@ -31610,9 +31610,9 @@ defense-evasion:
           New-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name EnableLinkedConnections -PropertyType DWord -Value 1 -Force
           New-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name LongPathsEnabled -PropertyType DWord -Value 1 -Force
         cleanup_command: |
-          Remove-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name LocalAccountTokenFilterPolicy -Force
-          Remove-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name EnableLinkedConnections -Force
-          Remove-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name LongPathsEnabled -Force
+          Remove-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name LocalAccountTokenFilterPolicy -Force -ErrorAction Ignore
+          Remove-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name EnableLinkedConnections -Force -ErrorAction Ignore
+          Remove-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name LongPathsEnabled -Force -ErrorAction Ignore
         name: powershell
         elevation_required: true
   T1601:
