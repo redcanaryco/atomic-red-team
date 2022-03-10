@@ -146,6 +146,7 @@
 - [T1003.007 Proc Filesystem](../../T1003.007/T1003.007.md)
   - Atomic Test #1: Dump individual process memory with sh (Local) [linux]
   - Atomic Test #2: Dump individual process memory with Python (Local) [linux]
+  - Atomic Test #3: Capture Passwords with MimiPenguin [linux]
 - [T1606.002 SAML Tokens](../../T1606.002/T1606.002.md)
   - Atomic Test #1: Golden SAML [azure-ad]
 - [T1003.002 Security Account Manager](../../T1003.002/T1003.002.md)
