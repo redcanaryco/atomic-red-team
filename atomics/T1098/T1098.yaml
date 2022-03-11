@@ -416,9 +416,20 @@ atomic_tests:
     name: powershell
     elevation_required: false
 
-- name: Azure - adding permission to application
+- name: AzureAD - adding permission to application
   description: |
-    The adversarie want to add service principal to some Azure role, also called Azure resource role. Threat actor 
+    The adversarie want to add permission to new created application. Application could be then use for persistence or for further operation in the attacked infrastructure. Permissions like AppRoleAssignment.ReadWrite.All or RoleManagement.ReadWrite.Directory in particular can be a valuable target for a threat actor.
+    You can use Get-AzureADApplication instead New-AzureADServicePrincipal to use an existing application.
+    The DirectoryRecommendations.Read.All permissions have been selected as the default
+
+    The account you use to run the PowerShell command should have Global Administrator/Application Administrator/Cloud Application Administrator role in your Azure AD.
+
+    Detection hint - check Operation Name "Add app role assignment to service principal" in subscriptions Activity Logs.
+    You can also take a look at the materials:
+    https://learnsentinel.blog/2022/01/04/azuread-privesc-sentinel/
+    https://github.com/reprise99/Sentinel-Queries
+    https://docs.google.com/presentation/d/1AWx1w0Xcq8ENvOmSjAJswEgEio-il09QWZlGg9PbHqE/edit#slide=id.g10460eb209c_0_2766
+    https://gist.github.com/andyrobbins/7c3dd62e6ed8678c97df9565ff3523fb
   supported_platforms:
   - azure-ad
   input_arguments:
