@@ -86,7 +86,7 @@ atomic_tests:
     prereq_command: |
       if import -help > /dev/null 2>&1; then exit 0; else exit 1; fi
     get_prereq_command: |
-      sudo apt-get -y install graphicsmagick-imagemagick-compat
+      sudo apt install graphicsmagick-imagemagick-compat
   executor:
     command: |
       import -window root #{output_file}
