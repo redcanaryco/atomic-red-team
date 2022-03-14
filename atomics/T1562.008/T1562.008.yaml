@@ -83,10 +83,6 @@ atomic_tests:
       $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
       Connect-AzureAD -Credential $creds
       New-AzEventHub -ResourceGroupName #{resource_group} -NamespaceName #{name_space_name} -Name #{event_hub_name}
-    cleanup_command: |
-      $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
-      $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
-      Connect-AzureAD -Credential $creds
       Remove-AzEventHub -ResourceGroupName #{resource_group} -Namespace #{name_space_name} -Name #{event_hub_name}
     name: powershell
     elevation_required: false
