@@ -522,6 +522,9 @@
   - Atomic Test #6: Change Powershell Execution Policy to Bypass [windows]
   - Atomic Test #7: BlackByte Ransomware Registry Changes - CMD [windows]
   - Atomic Test #8: BlackByte Ransomware Registry Changes - Powershell [windows]
+  - Atomic Test #9: Disable Windows Registry Tool [windows]
+  - Atomic Test #10: Disable Windows CMD application [windows]
+  - Atomic Test #11: Disable Windows Task Manager application [windows]
 - [T1218.005 Mshta](../../T1218.005/T1218.005.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
   - Atomic Test #2: Mshta executes VBScript to execute malicious command [windows]
