@@ -525,6 +525,11 @@
   - Atomic Test #9: Disable Windows Registry Tool [windows]
   - Atomic Test #10: Disable Windows CMD application [windows]
   - Atomic Test #11: Disable Windows Task Manager application [windows]
+  - Atomic Test #12: Disable Windows Notification Center [windows]
+  - Atomic Test #13: Disable Windows Shutdown Button [windows]
+  - Atomic Test #14: Disable Windows LogOff Button [windows]
+  - Atomic Test #15: Disable Windows Change Password Feature [windows]
+  - Atomic Test #16: Disable Windows Lock Workstation Feature [windows]
 - [T1218.005 Mshta](../../T1218.005/T1218.005.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
   - Atomic Test #2: Mshta executes VBScript to execute malicious command [windows]
