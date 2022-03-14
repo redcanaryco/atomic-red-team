@@ -134,6 +134,7 @@ atomic_tests:
       #{adfind_path} -f (objectcategory=group)
     name: command_prompt
 - name: Enumerate Active Directory Groups with ADSISearcher
+  auto_generated_guid: 9f4e344b-8434-41b3-85b1-d38f29d148d0
   description: |
     The following Atomic test will utilize ADSISearcher to enumerate groups within Active Directory.
     Upon successful execution a listing of groups will output with their paths in AD.
@@ -146,6 +147,7 @@ atomic_tests:
     command: |
       ([adsisearcher]"objectcategory=group").FindAll(); ([adsisearcher]"objectcategory=group").FindOne()
 - name: Get-ADUser Enumeration using UserAccountControl flags (AS-REP Roasting)
+  auto_generated_guid: 43fa81fb-34bb-4b5f-867b-03c7dbe0e3d8
   description: |
     When successful, accounts that do not require kerberos pre-auth will be returned.
     Reference: https://m0chan.github.io/2019/07/31/How-To-Attack-Kerberos-101.html
@@ -171,6 +173,7 @@ atomic_tests:
     command: |
       Get-ADUser -Filter 'useraccountcontrol -band 4194304' -Properties useraccountcontrol | Format-Table name
 - name: Get-DomainGroupMember with PowerView
+  auto_generated_guid: 46352f40-f283-4fe5-b56d-d9a71750e145
   description: |
     Utilizing PowerView, run Get-DomainGroupMember to identify domain users. Upon execution, progress and info about groups within the domain being scanned will be displayed.
   supported_platforms:

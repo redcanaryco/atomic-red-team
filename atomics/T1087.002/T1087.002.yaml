@@ -215,6 +215,7 @@ atomic_tests:
     command: |
       Get-ADObject -LDAPFilter '(UserAccountControl:1.2.840.113556.1.4.803:=#{uac_prop})' -Server #{domain}
 - name: Enumerate Active Directory Users with ADSISearcher
+  auto_generated_guid: 02e8be5a-3065-4e54-8cc8-a14d138834d3
   description: |
     The following Atomic test will utilize ADSISearcher to enumerate users within Active Directory.
     Upon successful execution a listing of users will output with their paths in AD.
