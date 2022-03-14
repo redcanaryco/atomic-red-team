@@ -1,5 +1,6 @@
 Tactic,Technique #,Technique Name,Test #,Test Name,Test GUID,Executor Name
 credential-access,T1558.004,AS-REP Roasting,1,Rubeus asreproast,615bd568-2859-41b5-9aed-61f6a88e48dd,powershell
+credential-access,T1558.004,AS-REP Roasting,2,Get-DomainUser with PowerView,d6139549-7b72-4e48-9ea1-324fc9bdf88a,powershell
 credential-access,T1056.004,Credential API Hooking,1,Hook PowerShell TLS Encrypt/Decrypt Messages,de1934ea-1fbf-425b-8795-65fb27dd7e33,powershell
 credential-access,T1552.001,Credentials In Files,3,Extracting passwords with findstr,0e56bf29-ff49-4ea5-9af4-3b81283fd513,powershell
 credential-access,T1552.001,Credentials In Files,4,Access unattend.xml,367d4004-5fc0-446d-823f-960c74ae52c3,command_prompt
@@ -107,6 +108,7 @@ privilege-escalation,T1546.011,Application Shimming,3,Registry key creation and/
 privilege-escalation,T1055.004,Asynchronous Procedure Call,1,Process Injection via C#,611b39b7-e243-4c81-87a4-7145a90358b1,command_prompt
 privilege-escalation,T1053.002,At (Windows),1,At.exe Scheduled task,4a6c0dc4-0f2a-4203-9298-a5a9bdc21ed8,command_prompt
 privilege-escalation,T1547.002,Authentication Package,1,Authentication Package,be2590e8-4ac3-47ac-b4b5-945820f2fbe9,powershell
+privilege-escalation,T1547,Boot or Logon Autostart Execution,1,Add a driver,cb01b3da-b0e7-4e24-bf6d-de5223526785,command_prompt
 privilege-escalation,T1548.002,Bypass User Account Control,1,Bypass UAC using Event Viewer (cmd),5073adf8-9a50-4bd9-b298-a9bd2ead8af9,command_prompt
 privilege-escalation,T1548.002,Bypass User Account Control,2,Bypass UAC using Event Viewer (PowerShell),a6ce9acf-842a-4af6-8f79-539be7608e2b,powershell
 privilege-escalation,T1548.002,Bypass User Account Control,3,Bypass UAC using Fodhelper,58f641ea-12e3-499a-b684-44dee46bd182,command_prompt
@@ -427,6 +429,7 @@ persistence,T1197,BITS Jobs,1,Bitsadmin Download (cmd),3c73d728-75fb-4180-a12f-6
 persistence,T1197,BITS Jobs,2,Bitsadmin Download (PowerShell),f63b8bc4-07e5-4112-acba-56f646f3f0bc,powershell
 persistence,T1197,BITS Jobs,3,"Persist, Download, & Execute",62a06ec5-5754-47d2-bcfc-123d8314c6ae,command_prompt
 persistence,T1197,BITS Jobs,4,Bits download using desktopimgdownldr.exe (cmd),afb5e09e-e385-4dee-9a94-6ee60979d114,command_prompt
+persistence,T1547,Boot or Logon Autostart Execution,1,Add a driver,cb01b3da-b0e7-4e24-bf6d-de5223526785,command_prompt
 persistence,T1176,Browser Extensions,1,Chrome (Developer Mode),3ecd790d-2617-4abf-9a8c-4e8d47da9ee1,manual
 persistence,T1176,Browser Extensions,2,Chrome (Chrome Web Store),4c83940d-8ca5-4bb2-8100-f46dc914bc3f,manual
 persistence,T1176,Browser Extensions,3,Firefox,cb790029-17e6-4c43-b96f-002ce5f10938,manual
@@ -524,6 +527,8 @@ discovery,T1087.002,Domain Account,7,Adfind - Enumerate Active Directory User Ob
 discovery,T1087.002,Domain Account,8,Adfind - Enumerate Active Directory Exchange AD Objects,5e2938fb-f919-47b6-8b29-2f6a1f718e99,command_prompt
 discovery,T1087.002,Domain Account,9,Enumerate Default Domain Admin Details (Domain),c70ab9fd-19e2-4e02-a83c-9cfa8eaa8fef,command_prompt
 discovery,T1087.002,Domain Account,10,Enumerate Active Directory for Unconstrained Delegation,46f8dbe9-22a5-4770-8513-66119c5be63b,powershell
+discovery,T1087.002,Domain Account,11,Get-DomainUser with PowerView,93662494-5ed7-4454-a04c-8c8372808ac2,powershell
+discovery,T1087.002,Domain Account,12,Enumerate Active Directory Users with ADSISearcher,02e8be5a-3065-4e54-8cc8-a14d138834d3,powershell
 discovery,T1069.002,Domain Groups,1,Basic Permission Groups Discovery Windows (Domain),dd66d77d-8998-48c0-8024-df263dc2ce5d,command_prompt
 discovery,T1069.002,Domain Groups,2,Permission Groups Discovery PowerShell (Domain),6d5d8c96-3d2a-4da9-9d6d-9a9d341899a7,powershell
 discovery,T1069.002,Domain Groups,3,Elevated group enumeration using net group (Domain),0afb5163-8181-432e-9405-4322710c0c37,command_prompt
@@ -532,6 +537,11 @@ discovery,T1069.002,Domain Groups,5,Find local admins on all machines in domain 
 discovery,T1069.002,Domain Groups,6,Find Local Admins via Group Policy (PowerView),64fdb43b-5259-467a-b000-1b02c00e510a,powershell
 discovery,T1069.002,Domain Groups,7,Enumerate Users Not Requiring Pre Auth (ASRepRoast),870ba71e-6858-4f6d-895c-bb6237f6121b,powershell
 discovery,T1069.002,Domain Groups,8,Adfind - Query Active Directory Groups,48ddc687-82af-40b7-8472-ff1e742e8274,command_prompt
+discovery,T1069.002,Domain Groups,9,Enumerate Active Directory Groups with Get-AdGroup,3d1fcd2a-e51c-4cbe-8d84-9a843bad8dc8,powershell
+discovery,T1069.002,Domain Groups,10,Enumerate Active Directory Groups with ADSISearcher,9f4e344b-8434-41b3-85b1-d38f29d148d0,powershell
+discovery,T1069.002,Domain Groups,11,Get-ADUser Enumeration using UserAccountControl flags (AS-REP Roasting),43fa81fb-34bb-4b5f-867b-03c7dbe0e3d8,powershell
+discovery,T1069.002,Domain Groups,12,Get-DomainGroupMember with PowerView,46352f40-f283-4fe5-b56d-d9a71750e145,powershell
+discovery,T1069.002,Domain Groups,13,Get-DomainGroup with PowerView,5a8a181c-2c8e-478d-a943-549305a01230,powershell
 discovery,T1482,Domain Trust Discovery,1,Windows - Discover domain trusts with dsquery,4700a710-c821-4e17-a3ec-9e4c81d6845f,command_prompt
 discovery,T1482,Domain Trust Discovery,2,Windows - Discover domain trusts with nltest,2e22641d-0498-48d2-b9ff-c71e496ccdbe,command_prompt
 discovery,T1482,Domain Trust Discovery,3,Powershell enumerate domains and forests,c58fbc62-8a62-489e-8f2d-3565d7d96f30,powershell
@@ -560,6 +570,8 @@ discovery,T1040,Network Sniffing,3,Packet Capture Windows Command Prompt,a5b2f6a
 discovery,T1040,Network Sniffing,4,Windows Internal Packet Capture,b5656f67-d67f-4de8-8e62-b5581630f528,command_prompt
 discovery,T1201,Password Policy Discovery,5,Examine local password policy - Windows,4588d243-f24e-4549-b2e3-e627acc089f6,command_prompt
 discovery,T1201,Password Policy Discovery,6,Examine domain password policy - Windows,46c2c362-2679-4ef5-aec9-0e958e135be4,command_prompt
+discovery,T1201,Password Policy Discovery,8,Get-DomainPolicy with PowerView,3177f4da-3d4b-4592-8bdc-aa23d0b2e843,powershell
+discovery,T1201,Password Policy Discovery,9,Enumerate Active Directory Password Policy with get-addefaultdomainpasswordpolicy,b2698b33-984c-4a1c-93bb-e4ba72a0babb,powershell
 discovery,T1120,Peripheral Device Discovery,1,Win32_PnPEntity Hardware Inventory,2cb4dbf2-2dca-4597-8678-4d39d207a3a5,powershell
 discovery,T1057,Process Discovery,2,Process Discovery - tasklist,c5806a4f-62b8-4900-980b-c7ec004e9908,command_prompt
 discovery,T1012,Query Registry,1,Query Registry,8f7578c4-9863-4d83-875c-a565573bbdf0,command_prompt
@@ -573,6 +585,10 @@ discovery,T1018,Remote System Discovery,9,Remote System Discovery - adidnsdump,9
 discovery,T1018,Remote System Discovery,10,Adfind - Enumerate Active Directory Computer Objects,a889f5be-2d54-4050-bd05-884578748bb4,command_prompt
 discovery,T1018,Remote System Discovery,11,Adfind - Enumerate Active Directory Domain Controller Objects,5838c31e-a0e2-4b9f-b60a-d79d2cb7995e,command_prompt
 discovery,T1018,Remote System Discovery,15,Enumerate domain computers within Active Directory using DirectorySearcher,962a6017-1c09-45a6-880b-adc9c57cb22e,powershell
+discovery,T1018,Remote System Discovery,16,Enumerate Active Directory Computers with Get-AdComputer,97e89d9e-e3f5-41b5-a90f-1e0825df0fdf,powershell
+discovery,T1018,Remote System Discovery,17,Enumerate Active Directory Computers with ADSISearcher,64ede6ac-b57a-41c2-a7d1-32c6cd35397d,powershell
+discovery,T1018,Remote System Discovery,18,Get-DomainController with PowerView,b9d2e8ca-5520-4737-8076-4f08913da2c4,powershell
+discovery,T1018,Remote System Discovery,19,Get-wmiobject to Enumerate Domain Controllers,e3cf5123-f6c9-4375-bdf2-1bb3ba43a1ad,powershell
 discovery,T1518.001,Security Software Discovery,1,Security Software Discovery,f92a380f-ced9-491f-b338-95a991418ce2,command_prompt
 discovery,T1518.001,Security Software Discovery,2,Security Software Discovery - powershell,7f566051-f033-49fb-89de-b6bacab730f0,powershell
 discovery,T1518.001,Security Software Discovery,5,Security Software Discovery - Sysmon Service,fe613cf3-8009-4446-9a0f-bc78a15b66c9,command_prompt
