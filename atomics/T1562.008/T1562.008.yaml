@@ -77,6 +77,6 @@ atomic_tests:
       $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
       $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
       Connect-ExchangeOnline -Credential $creds
-	  Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $True
+      Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $True
     name: powershell
     elevation_required: false
