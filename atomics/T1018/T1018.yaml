@@ -310,3 +310,15 @@ atomic_tests:
         Write-Host $Computer}
     name: powershell
     elevation_required: false
+- name: Enumerate Active Directory Computers with ADSISearcher
+  description: |
+    The following Atomic test will utilize ADSISearcher to enumerate computers within Active Directory.
+    Upon successful execution a listing of computers will output with their paths in AD.
+    Reference: https://devblogs.microsoft.com/scripting/use-the-powershell-adsisearcher-type-accelerator-to-search-active-directory/
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      ([adsisearcher]"objectcategory=computer").FindAll(); ([adsisearcher]"objectcategory=computer").FindOne()

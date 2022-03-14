@@ -214,3 +214,15 @@ atomic_tests:
     elevation_required: false
     command: |
       Get-ADObject -LDAPFilter '(UserAccountControl:1.2.840.113556.1.4.803:=#{uac_prop})' -Server #{domain}
+- name: Enumerate Active Directory Users with ADSISearcher
+  description: |
+    The following Atomic test will utilize ADSISearcher to enumerate users within Active Directory.
+    Upon successful execution a listing of users will output with their paths in AD.
+    Reference: https://devblogs.microsoft.com/scripting/use-the-powershell-adsisearcher-type-accelerator-to-search-active-directory/
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      ([adsisearcher]"objectcategory=user").FindAll(); ([adsisearcher]"objectcategory=user").FindOne()
