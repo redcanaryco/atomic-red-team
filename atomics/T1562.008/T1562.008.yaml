@@ -39,10 +39,12 @@ atomic_tests:
        aws s3 rb s3://#{s3_bucket_name} --force 
     name: sh
     elevation_required: false
-- name: o365-exchange-audit-log-disabled
+- name: Office 365 - Exchange Audit Log Disabled
   auto_generated_guid: 1ee572f3-056c-4632-a7fc-7e7c42b1543c
   description: |
+    You can use the Exchange Management Shell to enable or disable mailbox audit logging for a mailbox.
     Unified or Admin Audit logs are disabled via the Exchange Powershell cmdline.
+    https://github.com/Azure/Azure-Sentinel/blob/master/Detections/OfficeActivity/exchange_auditlogdisabled.yaml
   supported_platforms:
   - office-365
   input_arguments:
