@@ -34,4 +34,36 @@ atomic_tests:
     command: |
       tasklist
     name: command_prompt
+- name: Process Discovery - Get-Process
+  description: |
+    Utilize Get-Process PowerShell cmdlet to identify processes.
 
+    Upon successful execution, powershell.exe will execute Get-Process to list processes. Output will be via stdout. 
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      Get-Process
+    name: powershell
+- name: Process Discovery - get-wmiObject
+  description: |
+    Utilize get-wmiObject PowerShell cmdlet to identify processes.
+
+    Upon successful execution, powershell.exe will execute get-wmiObject to list processes. Output will be via stdout. 
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      get-wmiObject -class Win32_Process
+    name: powershell
+- name: Process Discovery - wmic process
+  description: |
+    Utilize windows management instrumentation to identify processes.
+
+    Upon successful execution, WMIC will execute process to list processes. Output will be via stdout. 
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      wmic process get /format:list
+    name: command_prompt
