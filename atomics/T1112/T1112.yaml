@@ -198,3 +198,75 @@ atomic_tests:
       reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableTaskmgr /f >nul 2>&1
     name: command_prompt
     elevation_required: true
+- name: Disable Windows Notification Center
+  auto_generated_guid: c0d6d67f-1f63-42cc-95c0-5fd6b20082ad
+  description: |
+    Modify the registry of the currently logged in user using reg.exe via cmd console to disable the windows notification center.
+    See how remcos rat abuse this technique- https://tccontre.blogspot.com/2020/01/remcos-rat-evading-windows-defender-av.html
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\Explorer /v DisableNotificationCenter /t REG_DWORD /d 1 /f
+    cleanup_command: |
+      reg delete HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\Explorer /v DisableNotificationCenter /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: Disable Windows Shutdown Button
+  auto_generated_guid: 6e0d1131-2d7e-4905-8ca5-d6172f05d03d
+  description: |
+    Modify the registry of the currently logged in user using reg.exe via cmd console to disable the windows shutdown button.
+    See how ransomware abuse this technique- https://www.trendmicro.com/vinfo/us/threat-encyclopedia/malware/ransom.msil.screenlocker.a/
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v shutdownwithoutlogon /t REG_DWORD /d 0 /f
+    cleanup_command: |
+      reg delete "HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v shutdownwithoutlogon /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: Disable Windows LogOff Button 
+  auto_generated_guid: e246578a-c24d-46a7-9237-0213ff86fb0c
+  description: |
+    Modify the registry of the currently logged in user using reg.exe via cmd console to disable the windows logoff button.
+    See how ransomware abuse this technique- https://www.trendmicro.com/vinfo/be/threat-encyclopedia/search/js_noclose.e/2
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoLogOff /t REG_DWORD /d 1 /f
+      reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v StartMenuLogOff /t REG_DWORD /d 1 /f
+    cleanup_command: |
+      reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoLogOff /f >nul 2>&1
+      reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v StartMenuLogOff /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: Disable Windows Change Password Feature
+  auto_generated_guid: d4a6da40-618f-454d-9a9e-26af552aaeb0
+  description: |
+    Modify the registry of the currently logged in user using reg.exe via cmd console to disable the windows change password feature.
+    See how ransomware abuse this technique- https://www.trendmicro.com/vinfo/us/threat-encyclopedia/malware/ransom_heartbleed.thdobah
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableChangePassword /t REG_DWORD /d 1 /f
+    cleanup_command: |
+      reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableChangePassword /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: Disable Windows Lock Workstation Feature
+  auto_generated_guid: 3dacb0d2-46ee-4c27-ac1b-f9886bf91a56
+  description: |
+    Modify the registry of the currently logged in user using reg.exe via cmd console to disable the windows Lock workstation feature.
+    See how ransomware abuse this technique- https://www.bleepingcomputer.com/news/security/in-dev-ransomware-forces-you-do-to-survey-before-unlocking-computer/
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableLockWorkstation /t REG_DWORD /d 1 /f
+    cleanup_command: |
+      reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableLockWorkstation /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
