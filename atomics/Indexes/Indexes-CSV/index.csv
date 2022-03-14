@@ -4,6 +4,7 @@ credential-access,T1003.008,/etc/passwd and /etc/shadow,2,Access /etc/passwd (Lo
 credential-access,T1003.008,/etc/passwd and /etc/shadow,3,"Access /etc/{shadow,passwd} with a standard bin that's not cat",df1a55ae-019d-4120-bc35-94f4bc5c4b0a,bash
 credential-access,T1003.008,/etc/passwd and /etc/shadow,4,"Access /etc/{shadow,passwd} with shell builtins",f5aa6543-6cb2-4fae-b9c2-b96e14721713,bash
 credential-access,T1558.004,AS-REP Roasting,1,Rubeus asreproast,615bd568-2859-41b5-9aed-61f6a88e48dd,powershell
+credential-access,T1558.004,AS-REP Roasting,2,Get-DomainUser with PowerView,d6139549-7b72-4e48-9ea1-324fc9bdf88a,powershell
 credential-access,T1552.003,Bash History,1,Search Through Bash History,3cfde62b-7c33-4b26-a61e-755d6131c8ce,sh
 credential-access,T1552.007,Container API,1,ListSecrets,43c3a49d-d15c-45e6-b303-f6e177e44a9a,bash
 credential-access,T1552.007,Container API,2,Cat the contents of a Kubernetes service account token file,788e0019-a483-45da-bcfe-96353d46820f,sh
@@ -781,6 +782,7 @@ discovery,T1087.002,Domain Account,7,Adfind - Enumerate Active Directory User Ob
 discovery,T1087.002,Domain Account,8,Adfind - Enumerate Active Directory Exchange AD Objects,5e2938fb-f919-47b6-8b29-2f6a1f718e99,command_prompt
 discovery,T1087.002,Domain Account,9,Enumerate Default Domain Admin Details (Domain),c70ab9fd-19e2-4e02-a83c-9cfa8eaa8fef,command_prompt
 discovery,T1087.002,Domain Account,10,Enumerate Active Directory for Unconstrained Delegation,46f8dbe9-22a5-4770-8513-66119c5be63b,powershell
+discovery,T1087.002,Domain Account,11,Enumerate Active Directory Users with ADSISearcher,02e8be5a-3065-4e54-8cc8-a14d138834d3,powershell
 discovery,T1069.002,Domain Groups,1,Basic Permission Groups Discovery Windows (Domain),dd66d77d-8998-48c0-8024-df263dc2ce5d,command_prompt
 discovery,T1069.002,Domain Groups,2,Permission Groups Discovery PowerShell (Domain),6d5d8c96-3d2a-4da9-9d6d-9a9d341899a7,powershell
 discovery,T1069.002,Domain Groups,3,Elevated group enumeration using net group (Domain),0afb5163-8181-432e-9405-4322710c0c37,command_prompt
@@ -789,6 +791,9 @@ discovery,T1069.002,Domain Groups,5,Find local admins on all machines in domain 
 discovery,T1069.002,Domain Groups,6,Find Local Admins via Group Policy (PowerView),64fdb43b-5259-467a-b000-1b02c00e510a,powershell
 discovery,T1069.002,Domain Groups,7,Enumerate Users Not Requiring Pre Auth (ASRepRoast),870ba71e-6858-4f6d-895c-bb6237f6121b,powershell
 discovery,T1069.002,Domain Groups,8,Adfind - Query Active Directory Groups,48ddc687-82af-40b7-8472-ff1e742e8274,command_prompt
+discovery,T1069.002,Domain Groups,9,Enumerate Active Directory Groups with ADSISearcher,9f4e344b-8434-41b3-85b1-d38f29d148d0,powershell
+discovery,T1069.002,Domain Groups,10,Get-ADUser Enumeration using UserAccountControl flags (AS-REP Roasting),43fa81fb-34bb-4b5f-867b-03c7dbe0e3d8,powershell
+discovery,T1069.002,Domain Groups,11,Get-DomainGroupMember with PowerView,46352f40-f283-4fe5-b56d-d9a71750e145,powershell
 discovery,T1482,Domain Trust Discovery,1,Windows - Discover domain trusts with dsquery,4700a710-c821-4e17-a3ec-9e4c81d6845f,command_prompt
 discovery,T1482,Domain Trust Discovery,2,Windows - Discover domain trusts with nltest,2e22641d-0498-48d2-b9ff-c71e496ccdbe,command_prompt
 discovery,T1482,Domain Trust Discovery,3,Powershell enumerate domains and forests,c58fbc62-8a62-489e-8f2d-3565d7d96f30,powershell
@@ -857,6 +862,7 @@ discovery,T1018,Remote System Discovery,12,Remote System Discovery - ip neighbou
 discovery,T1018,Remote System Discovery,13,Remote System Discovery - ip route,1a4ebe70-31d0-417b-ade2-ef4cb3e7d0e1,sh
 discovery,T1018,Remote System Discovery,14,Remote System Discovery - ip tcp_metrics,6c2da894-0b57-43cb-87af-46ea3b501388,sh
 discovery,T1018,Remote System Discovery,15,Enumerate domain computers within Active Directory using DirectorySearcher,962a6017-1c09-45a6-880b-adc9c57cb22e,powershell
+discovery,T1018,Remote System Discovery,16,Enumerate Active Directory Computers with ADSISearcher,64ede6ac-b57a-41c2-a7d1-32c6cd35397d,powershell
 discovery,T1518.001,Security Software Discovery,1,Security Software Discovery,f92a380f-ced9-491f-b338-95a991418ce2,command_prompt
 discovery,T1518.001,Security Software Discovery,2,Security Software Discovery - powershell,7f566051-f033-49fb-89de-b6bacab730f0,powershell
 discovery,T1518.001,Security Software Discovery,3,Security Software Discovery - ps (macOS),ba62ce11-e820-485f-9c17-6f3c857cd840,sh

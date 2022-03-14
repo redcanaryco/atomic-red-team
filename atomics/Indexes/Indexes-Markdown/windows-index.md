@@ -3,6 +3,7 @@
 - T1557.002 ARP Cache Poisoning [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1558.004 AS-REP Roasting](../../T1558.004/T1558.004.md)
   - Atomic Test #1: Rubeus asreproast [windows]
+  - Atomic Test #2: Get-DomainUser with PowerView [windows]
 - T1110 Brute Force [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1003.005 Cached Domain Credentials [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1056.004 Credential API Hooking](../../T1056.004/T1056.004.md)
@@ -906,6 +907,7 @@
   - Atomic Test #8: Adfind - Enumerate Active Directory Exchange AD Objects [windows]
   - Atomic Test #9: Enumerate Default Domain Admin Details (Domain) [windows]
   - Atomic Test #10: Enumerate Active Directory for Unconstrained Delegation [windows]
+  - Atomic Test #11: Enumerate Active Directory Users with ADSISearcher [windows]
 - [T1069.002 Domain Groups](../../T1069.002/T1069.002.md)
   - Atomic Test #1: Basic Permission Groups Discovery Windows (Domain) [windows]
   - Atomic Test #2: Permission Groups Discovery PowerShell (Domain) [windows]
@@ -915,6 +917,9 @@
   - Atomic Test #6: Find Local Admins via Group Policy (PowerView) [windows]
   - Atomic Test #7: Enumerate Users Not Requiring Pre Auth (ASRepRoast) [windows]
   - Atomic Test #8: Adfind - Query Active Directory Groups [windows]
+  - Atomic Test #9: Enumerate Active Directory Groups with ADSISearcher [windows]
+  - Atomic Test #10: Get-ADUser Enumeration using UserAccountControl flags (AS-REP Roasting) [windows]
+  - Atomic Test #11: Get-DomainGroupMember with PowerView [windows]
 - [T1482 Domain Trust Discovery](../../T1482/T1482.md)
   - Atomic Test #1: Windows - Discover domain trusts with dsquery [windows]
   - Atomic Test #2: Windows - Discover domain trusts with nltest [windows]
@@ -971,6 +976,7 @@
   - Atomic Test #10: Adfind - Enumerate Active Directory Computer Objects [windows]
   - Atomic Test #11: Adfind - Enumerate Active Directory Domain Controller Objects [windows]
   - Atomic Test #15: Enumerate domain computers within Active Directory using DirectorySearcher [windows]
+  - Atomic Test #16: Enumerate Active Directory Computers with ADSISearcher [windows]
 - [T1518.001 Security Software Discovery](../../T1518.001/T1518.001.md)
   - Atomic Test #1: Security Software Discovery [windows]
   - Atomic Test #2: Security Software Discovery - powershell [windows]
