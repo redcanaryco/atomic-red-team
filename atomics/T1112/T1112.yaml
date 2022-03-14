@@ -156,6 +156,48 @@ atomic_tests:
       Remove-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name LongPathsEnabled -Force -ErrorAction Ignore
     name: powershell
     elevation_required: true
+- name: Disable Windows Registry Tool
+  auto_generated_guid: ac34b0f7-0f85-4ac0-b93e-3ced2bc69bb8
+  description: |
+    Modify the registry of the currently logged in user using reg.exe via cmd console to disable the windows registry tool to prevent user modifying registry entry.
+    See example how Agent Tesla malware abuse this technique: https://any.run/report/ea4ea08407d4ee72e009103a3b77e5a09412b722fdef67315ea63f22011152af/a866d7b1-c236-4f26-a391-5ae32213dfc4#registry
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\policies\system /v DisableRegistryTools /t REG_DWORD /d 1 /f
+    cleanup_command: |
+      reg delete HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\policies\system /v DisableRegistryTools /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: Disable Windows CMD application
+  auto_generated_guid: d2561a6d-72bd-408c-b150-13efe1801c2a
+  description: |
+    Modify the registry of the currently logged in user using reg.exe via cmd console to disable the windows CMD application.
+    See example how Agent Tesla malware abuse this technique: https://any.run/report/ea4ea08407d4ee72e009103a3b77e5a09412b722fdef67315ea63f22011152af/a866d7b1-c236-4f26-a391-5ae32213dfc4#registry
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\System" /v "DisableCMD" /t REG_DWORD /d "1" /f
+    cleanup_command: |
+      reg delete "HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\System" /v "DisableCMD" /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: Disable Windows Task Manager application
+  auto_generated_guid: af254e70-dd0e-4de6-9afe-a994d9ea8b62
+  description: |
+    Modify the registry of the currently logged in user using reg.exe via cmd console to disable the windows task manager application.
+    See example how Agent Tesla malware abuse this technique: https://any.run/report/ea4ea08407d4ee72e009103a3b77e5a09412b722fdef67315ea63f22011152af/a866d7b1-c236-4f26-a391-5ae32213dfc4#registry
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableTaskmgr /t REG_DWORD /d 1 /f
+    cleanup_command: |
+      reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableTaskmgr /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
 - name: Disable Windows Notification Center
   auto_generated_guid: c0d6d67f-1f63-42cc-95c0-5fd6b20082ad
   description: |

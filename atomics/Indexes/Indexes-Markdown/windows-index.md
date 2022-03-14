@@ -3,6 +3,7 @@
 - T1557.002 ARP Cache Poisoning [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1558.004 AS-REP Roasting](../../T1558.004/T1558.004.md)
   - Atomic Test #1: Rubeus asreproast [windows]
+  - Atomic Test #2: Get-DomainUser with PowerView [windows]
 - T1110 Brute Force [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1003.005 Cached Domain Credentials [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1056.004 Credential API Hooking](../../T1056.004/T1056.004.md)
@@ -197,7 +198,8 @@
   - Atomic Test #1: At.exe Scheduled task [windows]
 - [T1547.002 Authentication Package](../../T1547.002/T1547.002.md)
   - Atomic Test #1: Authentication Package [windows]
-- T1547 Boot or Logon Autostart Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1547 Boot or Logon Autostart Execution](../../T1547/T1547.md)
+  - Atomic Test #1: Add a driver [windows]
 - T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1548.002 Bypass User Account Control](../../T1548.002/T1548.002.md)
   - Atomic Test #1: Bypass UAC using Event Viewer (cmd) [windows]
@@ -291,6 +293,7 @@
   - Atomic Test #5: Suspicious jse file run from startup Folder [windows]
   - Atomic Test #6: Suspicious bat file run from startup Folder [windows]
   - Atomic Test #7: Add Executable Shortcut Link to User Startup Folder [windows]
+  - Atomic Test #8: Add persistance via Recycle bin [windows]
 - T1134.005 SID-History Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1053.005 Scheduled Task](../../T1053.005/T1053.005.md)
   - Atomic Test #1: Scheduled Task Startup Script [windows]
@@ -519,6 +522,9 @@
   - Atomic Test #6: Change Powershell Execution Policy to Bypass [windows]
   - Atomic Test #7: BlackByte Ransomware Registry Changes - CMD [windows]
   - Atomic Test #8: BlackByte Ransomware Registry Changes - Powershell [windows]
+  - Atomic Test #9: Disable Windows Registry Tool [windows]
+  - Atomic Test #10: Disable Windows CMD application [windows]
+  - Atomic Test #11: Disable Windows Task Manager application [windows]
 - [T1218.005 Mshta](../../T1218.005/T1218.005.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
   - Atomic Test #2: Mshta executes VBScript to execute malicious command [windows]
@@ -708,7 +714,8 @@
   - Atomic Test #2: Bitsadmin Download (PowerShell) [windows]
   - Atomic Test #3: Persist, Download, & Execute [windows]
   - Atomic Test #4: Bits download using desktopimgdownldr.exe (cmd) [windows]
-- T1547 Boot or Logon Autostart Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1547 Boot or Logon Autostart Execution](../../T1547/T1547.md)
+  - Atomic Test #1: Add a driver [windows]
 - T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1542.003 Bootkit [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1176 Browser Extensions](../../T1176/T1176.md)
@@ -796,6 +803,7 @@
   - Atomic Test #5: Suspicious jse file run from startup Folder [windows]
   - Atomic Test #6: Suspicious bat file run from startup Folder [windows]
   - Atomic Test #7: Add Executable Shortcut Link to User Startup Folder [windows]
+  - Atomic Test #8: Add persistance via Recycle bin [windows]
 - T1505.001 SQL Stored Procedures [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1053.005 Scheduled Task](../../T1053.005/T1053.005.md)
   - Atomic Test #1: Scheduled Task Startup Script [windows]
@@ -906,6 +914,8 @@
   - Atomic Test #8: Adfind - Enumerate Active Directory Exchange AD Objects [windows]
   - Atomic Test #9: Enumerate Default Domain Admin Details (Domain) [windows]
   - Atomic Test #10: Enumerate Active Directory for Unconstrained Delegation [windows]
+  - Atomic Test #11: Get-DomainUser with PowerView [windows]
+  - Atomic Test #12: Enumerate Active Directory Users with ADSISearcher [windows]
 - [T1069.002 Domain Groups](../../T1069.002/T1069.002.md)
   - Atomic Test #1: Basic Permission Groups Discovery Windows (Domain) [windows]
   - Atomic Test #2: Permission Groups Discovery PowerShell (Domain) [windows]
@@ -915,6 +925,11 @@
   - Atomic Test #6: Find Local Admins via Group Policy (PowerView) [windows]
   - Atomic Test #7: Enumerate Users Not Requiring Pre Auth (ASRepRoast) [windows]
   - Atomic Test #8: Adfind - Query Active Directory Groups [windows]
+  - Atomic Test #9: Enumerate Active Directory Groups with Get-AdGroup [windows]
+  - Atomic Test #10: Enumerate Active Directory Groups with ADSISearcher [windows]
+  - Atomic Test #11: Get-ADUser Enumeration using UserAccountControl flags (AS-REP Roasting) [windows]
+  - Atomic Test #12: Get-DomainGroupMember with PowerView [windows]
+  - Atomic Test #13: Get-DomainGroup with PowerView [windows]
 - [T1482 Domain Trust Discovery](../../T1482/T1482.md)
   - Atomic Test #1: Windows - Discover domain trusts with dsquery [windows]
   - Atomic Test #2: Windows - Discover domain trusts with nltest [windows]
@@ -953,6 +968,8 @@
 - [T1201 Password Policy Discovery](../../T1201/T1201.md)
   - Atomic Test #5: Examine local password policy - Windows [windows]
   - Atomic Test #6: Examine domain password policy - Windows [windows]
+  - Atomic Test #8: Get-DomainPolicy with PowerView [windows]
+  - Atomic Test #9: Enumerate Active Directory Password Policy with get-addefaultdomainpasswordpolicy [windows]
 - [T1120 Peripheral Device Discovery](../../T1120/T1120.md)
   - Atomic Test #1: Win32_PnPEntity Hardware Inventory [windows]
 - T1069 Permission Groups Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -971,6 +988,10 @@
   - Atomic Test #10: Adfind - Enumerate Active Directory Computer Objects [windows]
   - Atomic Test #11: Adfind - Enumerate Active Directory Domain Controller Objects [windows]
   - Atomic Test #15: Enumerate domain computers within Active Directory using DirectorySearcher [windows]
+  - Atomic Test #16: Enumerate Active Directory Computers with Get-AdComputer [windows]
+  - Atomic Test #17: Enumerate Active Directory Computers with ADSISearcher [windows]
+  - Atomic Test #18: Get-DomainController with PowerView [windows]
+  - Atomic Test #19: Get-wmiobject to Enumerate Domain Controllers [windows]
 - [T1518.001 Security Software Discovery](../../T1518.001/T1518.001.md)
   - Atomic Test #1: Security Software Discovery [windows]
   - Atomic Test #2: Security Software Discovery - powershell [windows]

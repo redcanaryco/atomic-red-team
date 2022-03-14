@@ -1,0 +1,18 @@
+attack_technique: T1547
+display_name: 'Boot or Logon Autostart Execution'
+atomic_tests:
+- name: Add a driver
+  auto_generated_guid: cb01b3da-b0e7-4e24-bf6d-de5223526785
+  description: |
+    Install a driver via pnputil.exe lolbin
+  supported_platforms:
+  - windows
+  input_arguments:
+    driver_inf:
+      description: A built-in, already installed windows driver inf
+      type: Path    
+      default: 'C:\Windows\INF\usbstor.inf'
+  executor:
+    command: |
+      pnputil.exe /add-driver "#{driver_inf}"
+    name: command_prompt
