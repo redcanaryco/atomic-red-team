@@ -980,6 +980,9 @@
 - T1069 Permission Groups Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1057 Process Discovery](../../T1057/T1057.md)
   - Atomic Test #2: Process Discovery - tasklist [windows]
+  - Atomic Test #3: Process Discovery - Get-Process [windows]
+  - Atomic Test #4: Process Discovery - get-wmiObject [windows]
+  - Atomic Test #5: Process Discovery - wmic process [windows]
 - [T1012 Query Registry](../../T1012/T1012.md)
   - Atomic Test #1: Query Registry [windows]
 - [T1018 Remote System Discovery](../../T1018/T1018.md)
