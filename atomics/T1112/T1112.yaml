@@ -270,3 +270,213 @@ atomic_tests:
       reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableLockWorkstation /f >nul 2>&1
     name: command_prompt
     elevation_required: true
+- name: Activate Windows NoDesktop Group Policy Feature
+  auto_generated_guid: 93386d41-525c-4a1b-8235-134a628dee17
+  description: |
+    Modify the registry of the currently logged in user using reg.exe via cmd console to Hide all icons on Desktop Group Policy. take note that some
+    Group Policy might need a restart to take effect.
+    See how Trojan abuse this technique- https://www.sophos.com/de-de/threat-center/threat-analyses/viruses-and-spyware/Troj~Krotten-N/detailed-analysis
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoDesktop /t REG_DWORD /d 1 /f
+    cleanup_command: |
+      reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoDesktop /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: Activate Windows NoRun Group Policy Feature
+  auto_generated_guid: d49ff3cc-8168-4123-b5b3-f057d9abbd55
+  description: |
+    Modify the registry of the currently logged in user using reg.exe via cmd console to Remove Run menu from Start Menu Group Policy.take note that some
+    Group Policy might need a restart to take effect.
+    See how Trojan abuse this technique- https://www.sophos.com/de-de/threat-center/threat-analyses/viruses-and-spyware/Troj~Krotten-N/detailed-analysis
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoRun /t REG_DWORD /d 1 /f
+    cleanup_command: |
+      reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoRun /f 
+    name: command_prompt
+    elevation_required: true
+- name: Activate Windows NoFind Group Policy Feature
+  auto_generated_guid: ffbb407e-7f1d-4c95-b22e-548169db1fbd
+  description: |
+    Modify the registry of the currently logged in user using reg.exe via cmd console to Remove Search menu from Start Menu Group Policy.take note that some
+    Group Policy might need a restart to take effect.
+    See how Trojan abuse this technique- https://www.sophos.com/de-de/threat-center/threat-analyses/viruses-and-spyware/Troj~Krotten-N/detailed-analysis
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoFind /t REG_DWORD /d 1 /f
+    cleanup_command: |
+      reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoFind /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: Activate Windows NoControlPanel Group Policy Feature
+  auto_generated_guid: a450e469-ba54-4de1-9deb-9023a6111690
+  description: |
+    Modify the registry of the currently logged in user using reg.exe via cmd console to Disable Control Panel Group Policy. take note that some
+    Group Policy might need a restart to take effect.
+    See how Trojan abuse this technique- https://www.sophos.com/de-de/threat-center/threat-analyses/viruses-and-spyware/Troj~Krotten-N/detailed-analysis
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoControlPanel /t REG_DWORD /d 1 /f
+    cleanup_command: |
+      reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoControlPanel /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: Activate Windows NoFileMenu Group Policy Feature
+  auto_generated_guid: 5e27bdb4-7fd9-455d-a2b5-4b4b22c9dea4
+  description: |
+    Modify the registry of the currently logged in user using reg.exe via cmd console to Remove File menu from Windows Explorer Group Policy. take note that some
+    Group Policy might need a restart to take effect.
+    See how Trojan abuse this technique- https://www.sophos.com/de-de/threat-center/threat-analyses/viruses-and-spyware/Troj~Krotten-N/detailed-analysis
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoFileMenu /t REG_DWORD /d 1 /f
+    cleanup_command: |
+      reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoFileMenu /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true  
+- name: Activate Windows NoClose Group Policy Feature
+  auto_generated_guid: 12f50e15-dbc6-478b-a801-a746e8ba1723
+  description: |
+    Modify the registry of the currently logged in user using reg.exe via cmd console to Disable and remove the Shut Down command Group Policy. take note that some
+    Group Policy might need a restart to take effect.
+    See how Trojan abuse this technique- https://www.sophos.com/de-de/threat-center/threat-analyses/viruses-and-spyware/Troj~Krotten-N/detailed-analysis
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoClose /t REG_DWORD /d 1 /f
+    cleanup_command: |
+      reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoClose /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true 
+- name: Activate Windows NoSetTaskbar Group Policy Feature
+  auto_generated_guid: d29b7faf-7355-4036-9ed3-719bd17951ed
+  description: |
+    Modify the registry of the currently logged in user using reg.exe via cmd console to Disable changes to Taskbar and Start Menu Settings Group Policy. take note that some
+    Group Policy might need a restart to take effect.
+    See how ransomware abuse this technique- https://www.virustotal.com/gui/file/2d7855bf6470aa323edf2949b54ce2a04d9e38770f1322c3d0420c2303178d91/details
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoSetTaskbar /t REG_DWORD /d 1 /f
+    cleanup_command: |
+      reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoSetTaskbar /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: Activate Windows NoTrayContextMenu Group Policy Feature
+  auto_generated_guid: 4d72d4b1-fa7b-4374-b423-0fe326da49d2
+  description: |
+    Modify the registry of the currently logged in user using reg.exe via cmd console to Disable context menu for taskbar Group Policy. take note that some
+    Group Policy might need a restart to take effect.
+    See how ransomware abuse this technique- https://www.virustotal.com/gui/file/2d7855bf6470aa323edf2949b54ce2a04d9e38770f1322c3d0420c2303178d91/details
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v StartMenuLogOff /t REG_DWORD /d 1 /f
+    cleanup_command: |
+      reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoTrayContextMenu /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: Activate Windows NoPropertiesMyDocuments Group Policy Feature
+  auto_generated_guid: 20fc9daa-bd48-4325-9aff-81b967a84b1d
+  description: |
+    Modify the registry of the currently logged in user using reg.exe via cmd console to Hide Properties from "My Documents icon" Group Policy. take note that some
+    Group Policy might need a restart to take effect.
+    See how ransomware abuse this technique- https://www.virustotal.com/gui/file/2d7855bf6470aa323edf2949b54ce2a04d9e38770f1322c3d0420c2303178d91/details
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoPropertiesMyDocuments /t REG_DWORD /d 1 
+    cleanup_command: |
+      reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoPropertiesMyDocuments /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: Hide Windows Clock Group Policy Feature
+  auto_generated_guid: 8023db1e-ad06-4966-934b-b6a0ae52689e
+  description: |
+    Modify the registry of the currently logged in user using reg.exe via cmd console to Hide Clock Group Policy. take note that some
+    Group Policy might need a restart to take effect.
+    See how ransomware abuse this technique- https://www.virustotal.com/gui/file/2d7855bf6470aa323edf2949b54ce2a04d9e38770f1322c3d0420c2303178d91/details
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v HideClock /t REG_DWORD /d 1 /f
+    cleanup_command: |
+      reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v HideClock /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: Windows HideSCAHealth Group Policy Feature
+  auto_generated_guid: 8023db1e-ad06-4966-934b-b6a0ae52689e
+  description: |
+    Modify the registry of the currently logged in user using reg.exe via cmd console to remove security and maintenance icon Group Policy. take note that some
+    Group Policy might need a restart to take effect.
+    See how ransomware abuse this technique- https://www.virustotal.com/gui/file/2d7855bf6470aa323edf2949b54ce2a04d9e38770f1322c3d0420c2303178d91/details
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v HideSCAHealth /t REG_DWORD /d 1 /f
+    cleanup_command: |
+      reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v HideSCAHealth /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: Windows HideSCANetwork Group Policy Feature
+  auto_generated_guid: 3e757ce7-eca0-411a-9583-1c33b8508d52
+  description: |
+    Modify the registry of the currently logged in user using reg.exe via cmd console to remove the networking icon Group Policy. take note that some
+    Group Policy might need a restart to take effect.
+    See how ransomware abuse this technique- https://www.virustotal.com/gui/file/2d7855bf6470aa323edf2949b54ce2a04d9e38770f1322c3d0420c2303178d91/details
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v HideSCANetwork /t REG_DWORD /d 1 /f
+    cleanup_command: |
+      reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v HideSCANetwork /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: Windows HideSCAPower Group Policy Feature
+  auto_generated_guid: 8d85a5d8-702f-436f-bc78-fcd9119496fc
+  description: |
+    Modify the registry of the currently logged in user using reg.exe via cmd console to remove the battery icon Group Policy. take note that some
+    Group Policy might need a restart to take effect.
+    See how ransomware abuse this technique- https://www.virustotal.com/gui/file/2d7855bf6470aa323edf2949b54ce2a04d9e38770f1322c3d0420c2303178d91/details
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v HideSCAPower /t REG_DWORD /d 1 /f
+    cleanup_command: |
+      reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v HideSCAPower /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: Windows HideSCAVolume Group Policy Feature
+  auto_generated_guid: 7f037590-b4c6-4f13-b3cc-e424c5ab8ade
+  description: |
+    Modify the registry of the currently logged in user using reg.exe via cmd console to remove the volume icon Group Policy. take note that some
+    Group Policy might need a restart to take effect.
+    See how ransomware abuse this technique- https://www.virustotal.com/gui/file/2d7855bf6470aa323edf2949b54ce2a04d9e38770f1322c3d0420c2303178d91/details
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v HideSCAVolume /t REG_DWORD /d 1 /f
+    cleanup_command: |
+      reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v HideSCAVolume /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
