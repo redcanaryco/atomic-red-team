@@ -294,6 +294,7 @@
   - Atomic Test #6: Suspicious bat file run from startup Folder [windows]
   - Atomic Test #7: Add Executable Shortcut Link to User Startup Folder [windows]
   - Atomic Test #8: Add persistance via Recycle bin [windows]
+  - Atomic Test #9: SystemBC Malware-as-a-Service Registry [windows]
 - T1134.005 SID-History Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1053.005 Scheduled Task](../../T1053.005/T1053.005.md)
   - Atomic Test #1: Scheduled Task Startup Script [windows]
@@ -530,6 +531,20 @@
   - Atomic Test #14: Disable Windows LogOff Button [windows]
   - Atomic Test #15: Disable Windows Change Password Feature [windows]
   - Atomic Test #16: Disable Windows Lock Workstation Feature [windows]
+  - Atomic Test #17: Activate Windows NoDesktop Group Policy Feature [windows]
+  - Atomic Test #18: Activate Windows NoRun Group Policy Feature [windows]
+  - Atomic Test #19: Activate Windows NoFind Group Policy Feature [windows]
+  - Atomic Test #20: Activate Windows NoControlPanel Group Policy Feature [windows]
+  - Atomic Test #21: Activate Windows NoFileMenu Group Policy Feature [windows]
+  - Atomic Test #22: Activate Windows NoClose Group Policy Feature [windows]
+  - Atomic Test #23: Activate Windows NoSetTaskbar Group Policy Feature [windows]
+  - Atomic Test #24: Activate Windows NoTrayContextMenu Group Policy Feature [windows]
+  - Atomic Test #25: Activate Windows NoPropertiesMyDocuments Group Policy Feature [windows]
+  - Atomic Test #26: Hide Windows Clock Group Policy Feature [windows]
+  - Atomic Test #27: Windows HideSCAHealth Group Policy Feature [windows]
+  - Atomic Test #28: Windows HideSCANetwork Group Policy Feature [windows]
+  - Atomic Test #29: Windows HideSCAPower Group Policy Feature [windows]
+  - Atomic Test #30: Windows HideSCAVolume Group Policy Feature [windows]
 - [T1218.005 Mshta](../../T1218.005/T1218.005.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
   - Atomic Test #2: Mshta executes VBScript to execute malicious command [windows]
@@ -809,6 +824,7 @@
   - Atomic Test #6: Suspicious bat file run from startup Folder [windows]
   - Atomic Test #7: Add Executable Shortcut Link to User Startup Folder [windows]
   - Atomic Test #8: Add persistance via Recycle bin [windows]
+  - Atomic Test #9: SystemBC Malware-as-a-Service Registry [windows]
 - T1505.001 SQL Stored Procedures [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1053.005 Scheduled Task](../../T1053.005/T1053.005.md)
   - Atomic Test #1: Scheduled Task Startup Script [windows]
