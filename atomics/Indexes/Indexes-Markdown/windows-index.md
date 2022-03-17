@@ -465,6 +465,7 @@
 - [T1564.001 Hidden Files and Directories](../../T1564.001/T1564.001.md)
   - Atomic Test #3: Create Windows System File with Attrib [windows]
   - Atomic Test #4: Create Windows Hidden File with Attrib [windows]
+  - Atomic Test #8: Hide Files Through Registry [windows]
 - [T1564.003 Hidden Window](../../T1564.003/T1564.003.md)
   - Atomic Test #1: Hidden Window [windows]
 - [T1564 Hide Artifacts](../../T1564/T1564.md)

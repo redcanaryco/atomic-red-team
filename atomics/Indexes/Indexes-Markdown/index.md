@@ -675,6 +675,7 @@
   - Atomic Test #5: Hidden files [macos]
   - Atomic Test #6: Hide a Directory [macos]
   - Atomic Test #7: Show all hidden files [macos]
+  - Atomic Test #8: Hide Files Through Registry [windows]
 - [T1564.002 Hidden Users](../../T1564.002/T1564.002.md)
   - Atomic Test #1: Create Hidden User using UniqueID < 500 [macos]
   - Atomic Test #2: Create Hidden User using IsHidden option [macos]
