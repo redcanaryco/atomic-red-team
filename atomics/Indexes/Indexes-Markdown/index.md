@@ -675,6 +675,7 @@
   - Atomic Test #5: Hidden files [macos]
   - Atomic Test #6: Hide a Directory [macos]
   - Atomic Test #7: Show all hidden files [macos]
+  - Atomic Test #8: Hide Files Through Registry [windows]
 - [T1564.002 Hidden Users](../../T1564.002/T1564.002.md)
   - Atomic Test #1: Create Hidden User using UniqueID < 500 [macos]
   - Atomic Test #2: Create Hidden User using IsHidden option [macos]
@@ -1257,6 +1258,7 @@
   - Atomic Test #6: Windows - Delete Backup Files [windows]
   - Atomic Test #7: Windows - wbadmin Delete systemstatebackup [windows]
   - Atomic Test #8: Windows - Disable the SR scheduled task [windows]
+  - Atomic Test #9: Disable System Restore Through Registry [windows]
 - [T1491.001 Internal Defacement](../../T1491.001/T1491.001.md)
   - Atomic Test #1: Replace Desktop Wallpaper [windows]
 - T1498 Network Denial of Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

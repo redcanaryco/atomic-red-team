@@ -119,3 +119,19 @@ atomic_tests:
     cleanup_command: |
       defaults write com.apple.finder AppleShowAllFiles NO
     name: sh
+- name: Hide Files Through Registry
+  auto_generated_guid: f650456b-bd49-4bc1-ae9d-271b5b9581e7
+  description: |
+    Disable Show Hidden files switch in registry. This technique was abused by several malware to hide their files from normal user.
+    See how this trojan abuses this technique - https://www.sophos.com/en-us/threat-center/threat-analyses/viruses-and-spyware/W32~Tiotua-P/detailed-analysis.aspx 
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced /v ShowSuperHidden /t REG_DWORD /d 0 /f
+      reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced /v Hidden /t REG_DWORD /d 0 /f
+    cleanup_command: |
+      reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v ShowSuperHidden /f >nul 2>&1
+      reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v Hidden /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
