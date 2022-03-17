@@ -779,6 +779,7 @@
   - Atomic Test #28: Windows HideSCANetwork Group Policy Feature [windows]
   - Atomic Test #29: Windows HideSCAPower Group Policy Feature [windows]
   - Atomic Test #30: Windows HideSCAVolume Group Policy Feature [windows]
+  - Atomic Test #31: Windows Modify Show Compress Color And Info Tip Registry [windows]
 - T1601 Modify System Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1218.005 Mshta](../../T1218.005/T1218.005.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
