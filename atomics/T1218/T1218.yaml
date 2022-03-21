@@ -270,7 +270,7 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      DLL to load (#{arbitrary_dll})
+      DLL to load must exist on disk as specified location (#{arbitrary_dll})
     prereq_command: |
       if (test-path "#{arbitrary_dll}"){exit 0} else {exit 1}
     get_prereq_command: |
