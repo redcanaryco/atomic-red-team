@@ -923,6 +923,7 @@
   - Atomic Test #7: Renamed Microsoft.Workflow.Compiler.exe Payload Executions [windows]
   - Atomic Test #8: Invoke-ATHRemoteFXvGPUDisablementCommand base test [windows]
   - Atomic Test #9: DiskShadow Command Execution [windows]
+  - Atomic Test #10: Load Arbitrary DLL via Wuauclt (Windows Update Client) [windows]
 - [T1216 Signed Script Proxy Execution](../../T1216/T1216.md)
   - Atomic Test #1: SyncAppvPublishingServer Signed Script PowerShell Command Execution [windows]
   - Atomic Test #2: manage-bde.wsf Signed Script Command Execution [windows]
