@@ -83,19 +83,18 @@
 - [T1003.004 LSA Secrets](../../T1003.004/T1003.004.md)
   - Atomic Test #1: Dumping LSA Secrets [windows]
 - [T1003.001 LSASS Memory](../../T1003.001/T1003.001.md)
-  - Atomic Test #1: Windows Credential Editor [windows]
-  - Atomic Test #2: Dump LSASS.exe Memory using ProcDump [windows]
-  - Atomic Test #3: Dump LSASS.exe Memory using comsvcs.dll [windows]
-  - Atomic Test #4: Dump LSASS.exe Memory using direct system calls and API unhooking [windows]
-  - Atomic Test #5: Dump LSASS.exe Memory using NanoDump [windows]
-  - Atomic Test #6: Dump LSASS.exe Memory using Windows Task Manager [windows]
-  - Atomic Test #7: Offline Credential Theft With Mimikatz [windows]
-  - Atomic Test #8: LSASS read with pypykatz [windows]
-  - Atomic Test #9: Dump LSASS.exe Memory using Out-Minidump.ps1 [windows]
-  - Atomic Test #10: Create Mini Dump of LSASS.exe using ProcDump [windows]
-  - Atomic Test #11: Powershell Mimikatz [windows]
-  - Atomic Test #12: Dump LSASS with .Net 5 createdump.exe [windows]
-  - Atomic Test #13: Dump LSASS.exe using imported Microsoft DLLs [windows]
+  - Atomic Test #1: Dump LSASS.exe Memory using ProcDump [windows]
+  - Atomic Test #2: Dump LSASS.exe Memory using comsvcs.dll [windows]
+  - Atomic Test #3: Dump LSASS.exe Memory using direct system calls and API unhooking [windows]
+  - Atomic Test #4: Dump LSASS.exe Memory using NanoDump [windows]
+  - Atomic Test #5: Dump LSASS.exe Memory using Windows Task Manager [windows]
+  - Atomic Test #6: Offline Credential Theft With Mimikatz [windows]
+  - Atomic Test #7: LSASS read with pypykatz [windows]
+  - Atomic Test #8: Dump LSASS.exe Memory using Out-Minidump.ps1 [windows]
+  - Atomic Test #9: Create Mini Dump of LSASS.exe using ProcDump [windows]
+  - Atomic Test #10: Powershell Mimikatz [windows]
+  - Atomic Test #11: Dump LSASS with .Net 5 createdump.exe [windows]
+  - Atomic Test #12: Dump LSASS.exe using imported Microsoft DLLs [windows]
 - T1557 Man-in-the-Middle [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1003.003 NTDS](../../T1003.003/T1003.003.md)
