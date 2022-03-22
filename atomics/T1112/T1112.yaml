@@ -167,7 +167,7 @@ atomic_tests:
     command: |
       reg add HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\policies\system /v DisableRegistryTools /t REG_DWORD /d 1 /f
     cleanup_command: |
-      reg delete HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\policies\system /v DisableRegistryTools /f >nul 2>&1
+      powershell Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\policies\system" -Name DisableRegistryTools -ErrorAction Ignore
     name: command_prompt
     elevation_required: true
 - name: Disable Windows CMD application
@@ -179,10 +179,10 @@ atomic_tests:
   - windows
   executor:
     command: |
-      reg add "HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\System" /v "DisableCMD" /t REG_DWORD /d "1" /f
+      New-ItemProperty -Path "HKCU:\Software\Policies\Microsoft\Windows\System" -Name DisableCMD -Value 1
     cleanup_command: |
-      reg delete "HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\System" /v "DisableCMD" /f >nul 2>&1
-    name: command_prompt
+      Remove-ItemProperty -Path "HKCU:\Software\Policies\Microsoft\Windows\System" -Name DisableCMD -ErrorAction Ignore
+    name: powershell
     elevation_required: true
 - name: Disable Windows Task Manager application
   auto_generated_guid: af254e70-dd0e-4de6-9afe-a994d9ea8b62
@@ -385,7 +385,7 @@ atomic_tests:
   - windows
   executor:
     command: |
-      reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v StartMenuLogOff /t REG_DWORD /d 1 /f
+      reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoTrayContextMenu /t REG_DWORD /d 1 /f
     cleanup_command: |
       reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoTrayContextMenu /f >nul 2>&1
     name: command_prompt
@@ -478,5 +478,41 @@ atomic_tests:
       reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v HideSCAVolume /t REG_DWORD /d 1 /f
     cleanup_command: |
       reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v HideSCAVolume /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: Windows Modify Show Compress Color And Info Tip Registry
+  auto_generated_guid: 795d3248-0394-4d4d-8e86-4e8df2a2693f
+  description: |
+    Modify the registry of the currently logged in user using reg.exe via cmd console to show compress color and show tips feature. 
+    See how hermeticwiper uses this technique - https://www.splunk.com/en_us/blog/security/detecting-hermeticwiper.html
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg  add HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced /v ShowInfoTip /t REG_DWORD /d 0 /f
+      reg  add HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced /v ShowCompColor /t REG_DWORD /d 0 /f
+    cleanup_command: |
+      reg delete HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced /v ShowInfoTip /f >nul 2>&1
+      reg delete HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced /v ShowCompColor /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: Windows Powershell Logging Disabled
+  auto_generated_guid: 95b25212-91a7-42ff-9613-124aca6845a8
+  description: |
+    Modify the registry of the currently logged in user using reg.exe via cmd console to disable Powershell Module Logging, Script Block Logging, Transcription and Script Execution
+    see https://admx.help/?Category=Windows_10_2016&Policy=Microsoft.Policies.PowerShell::EnableModuleLogging
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg  add HKCU\Software\Policies\Microsoft\Windows\PowerShell\ModuleLogging /v EnableModuleLogging /t REG_DWORD /d 0 /f
+      reg  add HKCU\Software\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging /v EnableScriptBlockLogging /t REG_DWORD /d 0 /f
+      reg  add HKCU\Software\Policies\Microsoft\Windows\PowerShell\Transcription /v EnableTranscripting /t REG_DWORD /d 0 /f
+      reg  add HKCU\Software\Policies\Microsoft\Windows\PowerShell /v EnableScripts /t REG_DWORD /d 0 /f
+    cleanup_command: |
+      reg delete HKCU\Software\Policies\Microsoft\Windows\PowerShell\ModuleLogging /v EnableModuleLogging /f >nul 2>&1
+      reg delete HKCU\Software\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging /v EnableScriptBlockLogging /f >nul 2>&1
+      reg delete HKCU\Software\Policies\Microsoft\Windows\PowerShell\Transcription /v EnableTranscripting /f >nul 2>&1
+      reg delete HKCU\Software\Policies\Microsoft\Windows\PowerShell /v EnableScripts /f >nul 2>&1
     name: command_prompt
     elevation_required: true

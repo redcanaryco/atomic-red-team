@@ -58,19 +58,18 @@
 - [T1003.004 LSA Secrets](../../T1003.004/T1003.004.md)
   - Atomic Test #1: Dumping LSA Secrets [windows]
 - [T1003.001 LSASS Memory](../../T1003.001/T1003.001.md)
-  - Atomic Test #1: Windows Credential Editor [windows]
-  - Atomic Test #2: Dump LSASS.exe Memory using ProcDump [windows]
-  - Atomic Test #3: Dump LSASS.exe Memory using comsvcs.dll [windows]
-  - Atomic Test #4: Dump LSASS.exe Memory using direct system calls and API unhooking [windows]
-  - Atomic Test #5: Dump LSASS.exe Memory using NanoDump [windows]
-  - Atomic Test #6: Dump LSASS.exe Memory using Windows Task Manager [windows]
-  - Atomic Test #7: Offline Credential Theft With Mimikatz [windows]
-  - Atomic Test #8: LSASS read with pypykatz [windows]
-  - Atomic Test #9: Dump LSASS.exe Memory using Out-Minidump.ps1 [windows]
-  - Atomic Test #10: Create Mini Dump of LSASS.exe using ProcDump [windows]
-  - Atomic Test #11: Powershell Mimikatz [windows]
-  - Atomic Test #12: Dump LSASS with .Net 5 createdump.exe [windows]
-  - Atomic Test #13: Dump LSASS.exe using imported Microsoft DLLs [windows]
+  - Atomic Test #1: Dump LSASS.exe Memory using ProcDump [windows]
+  - Atomic Test #2: Dump LSASS.exe Memory using comsvcs.dll [windows]
+  - Atomic Test #3: Dump LSASS.exe Memory using direct system calls and API unhooking [windows]
+  - Atomic Test #4: Dump LSASS.exe Memory using NanoDump [windows]
+  - Atomic Test #5: Dump LSASS.exe Memory using Windows Task Manager [windows]
+  - Atomic Test #6: Offline Credential Theft With Mimikatz [windows]
+  - Atomic Test #7: LSASS read with pypykatz [windows]
+  - Atomic Test #8: Dump LSASS.exe Memory using Out-Minidump.ps1 [windows]
+  - Atomic Test #9: Create Mini Dump of LSASS.exe using ProcDump [windows]
+  - Atomic Test #10: Powershell Mimikatz [windows]
+  - Atomic Test #11: Dump LSASS with .Net 5 createdump.exe [windows]
+  - Atomic Test #12: Dump LSASS.exe using imported Microsoft DLLs [windows]
 - T1557 Man-in-the-Middle [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1003.003 NTDS](../../T1003.003/T1003.003.md)
@@ -465,6 +464,7 @@
 - [T1564.001 Hidden Files and Directories](../../T1564.001/T1564.001.md)
   - Atomic Test #3: Create Windows System File with Attrib [windows]
   - Atomic Test #4: Create Windows Hidden File with Attrib [windows]
+  - Atomic Test #8: Hide Files Through Registry [windows]
 - [T1564.003 Hidden Window](../../T1564.003/T1564.003.md)
   - Atomic Test #1: Hidden Window [windows]
 - [T1564 Hide Artifacts](../../T1564/T1564.md)
@@ -545,6 +545,8 @@
   - Atomic Test #28: Windows HideSCANetwork Group Policy Feature [windows]
   - Atomic Test #29: Windows HideSCAPower Group Policy Feature [windows]
   - Atomic Test #30: Windows HideSCAVolume Group Policy Feature [windows]
+  - Atomic Test #31: Windows Modify Show Compress Color And Info Tip Registry [windows]
+  - Atomic Test #32: Windows Powershell Logging Disabled [windows]
 - [T1218.005 Mshta](../../T1218.005/T1218.005.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
   - Atomic Test #2: Mshta executes VBScript to execute malicious command [windows]
@@ -665,6 +667,7 @@
   - Atomic Test #7: Renamed Microsoft.Workflow.Compiler.exe Payload Executions [windows]
   - Atomic Test #8: Invoke-ATHRemoteFXvGPUDisablementCommand base test [windows]
   - Atomic Test #9: DiskShadow Command Execution [windows]
+  - Atomic Test #10: Load Arbitrary DLL via Wuauclt (Windows Update Client) [windows]
 - [T1216 Signed Script Proxy Execution](../../T1216/T1216.md)
   - Atomic Test #1: SyncAppvPublishingServer Signed Script PowerShell Command Execution [windows]
   - Atomic Test #2: manage-bde.wsf Signed Script Command Execution [windows]
@@ -897,6 +900,7 @@
   - Atomic Test #6: Windows - Delete Backup Files [windows]
   - Atomic Test #7: Windows - wbadmin Delete systemstatebackup [windows]
   - Atomic Test #8: Windows - Disable the SR scheduled task [windows]
+  - Atomic Test #9: Disable System Restore Through Registry [windows]
 - [T1491.001 Internal Defacement](../../T1491.001/T1491.001.md)
   - Atomic Test #1: Replace Desktop Wallpaper [windows]
 - T1498 Network Denial of Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

