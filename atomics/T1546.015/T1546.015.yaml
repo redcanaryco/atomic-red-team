@@ -47,7 +47,9 @@ atomic_tests:
   - windows
   executor:
     command: |
-      [System.Security.Principal.WindowsIdentity]::GetCurrent() | Out-File -FilePath .\CurrentUserObject.txt
+      $o= [activator]::CreateInstance([type]::GetTypeFromCLSID("9BA05972-F6A8-11CF-A442-00A0C90A8F39"))
+      $item = $o.Item()
+      $item.Document.Application.ShellExecute("cmd.exe","/c calc.exe","C:\windows\system32",$null,0)
     cleanup_command: |
-      Remove-Item -Path .\CurrentUserObject.txt -Force
+      Get-Process -Name "*calc" | Stop-Process
     name: powershell
