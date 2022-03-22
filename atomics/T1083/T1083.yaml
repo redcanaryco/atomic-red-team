@@ -82,3 +82,32 @@ atomic_tests:
       find . -type f -name ".*"
     cleanup_command: 'rm #{output_file}'
     name: sh
+- name: Simulating MAZE Directory Enumeration
+  auto_generated_guid: c6c34f61-1c3e-40fb-8a58-d017d88286d8
+  description: |
+    This test emulates MAZE ransomware's ability to enumerate directories using Powershell. 
+    Upon successful execution, this test will output the directory enumeration results to a specified file, as well as display them in the active window. 
+    See https://www.mandiant.com/resources/tactics-techniques-procedures-associated-with-maze-ransomware-incidents
+  supported_platforms:
+  - windows
+  input_arguments:
+    File_to_output:
+      description: File to output results to
+      type: String
+      default: $env:temp\T1083Test5.txt
+  executor:
+    command: |
+      $folderarray = @("Desktop", "Downloads", "Documents", "AppData/Local", "AppData/Roaming")
+      Get-ChildItem -Path $env:homedrive -ErrorAction SilentlyContinue | Out-File -append #{File_to_output}
+      Get-ChildItem -Path $env:programfiles -erroraction silentlycontinue | Out-File -append #{File_to_output}
+      Get-ChildItem -Path "${env:ProgramFiles(x86)}" -erroraction silentlycontinue | Out-File -append #{File_to_output}
+      $UsersFolder = "$env:homedrive\Users\"
+      foreach ($directory in Get-ChildItem -Path $UsersFolder -ErrorAction SilentlyContinue) 
+      {
+      foreach ($secondarydirectory in $folderarray)
+       {Get-ChildItem -Path "$UsersFolder/$directory/$secondarydirectory" -ErrorAction SilentlyContinue | Out-File -append #{File_to_output}}
+      }
+      cat #{File_to_output}
+    cleanup_command: |
+      remove-item #{File_to_output} -ErrorAction SilentlyContinue
+    name: powershell  

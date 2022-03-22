@@ -3,6 +3,7 @@
 - T1557.002 ARP Cache Poisoning [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1558.004 AS-REP Roasting](../../T1558.004/T1558.004.md)
   - Atomic Test #1: Rubeus asreproast [windows]
+  - Atomic Test #2: Get-DomainUser with PowerView [windows]
 - T1110 Brute Force [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1003.005 Cached Domain Credentials [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1056.004 Credential API Hooking](../../T1056.004/T1056.004.md)
@@ -57,19 +58,18 @@
 - [T1003.004 LSA Secrets](../../T1003.004/T1003.004.md)
   - Atomic Test #1: Dumping LSA Secrets [windows]
 - [T1003.001 LSASS Memory](../../T1003.001/T1003.001.md)
-  - Atomic Test #1: Windows Credential Editor [windows]
-  - Atomic Test #2: Dump LSASS.exe Memory using ProcDump [windows]
-  - Atomic Test #3: Dump LSASS.exe Memory using comsvcs.dll [windows]
-  - Atomic Test #4: Dump LSASS.exe Memory using direct system calls and API unhooking [windows]
-  - Atomic Test #5: Dump LSASS.exe Memory using NanoDump [windows]
-  - Atomic Test #6: Dump LSASS.exe Memory using Windows Task Manager [windows]
-  - Atomic Test #7: Offline Credential Theft With Mimikatz [windows]
-  - Atomic Test #8: LSASS read with pypykatz [windows]
-  - Atomic Test #9: Dump LSASS.exe Memory using Out-Minidump.ps1 [windows]
-  - Atomic Test #10: Create Mini Dump of LSASS.exe using ProcDump [windows]
-  - Atomic Test #11: Powershell Mimikatz [windows]
-  - Atomic Test #12: Dump LSASS with .Net 5 createdump.exe [windows]
-  - Atomic Test #13: Dump LSASS.exe using imported Microsoft DLLs [windows]
+  - Atomic Test #1: Dump LSASS.exe Memory using ProcDump [windows]
+  - Atomic Test #2: Dump LSASS.exe Memory using comsvcs.dll [windows]
+  - Atomic Test #3: Dump LSASS.exe Memory using direct system calls and API unhooking [windows]
+  - Atomic Test #4: Dump LSASS.exe Memory using NanoDump [windows]
+  - Atomic Test #5: Dump LSASS.exe Memory using Windows Task Manager [windows]
+  - Atomic Test #6: Offline Credential Theft With Mimikatz [windows]
+  - Atomic Test #7: LSASS read with pypykatz [windows]
+  - Atomic Test #8: Dump LSASS.exe Memory using Out-Minidump.ps1 [windows]
+  - Atomic Test #9: Create Mini Dump of LSASS.exe using ProcDump [windows]
+  - Atomic Test #10: Powershell Mimikatz [windows]
+  - Atomic Test #11: Dump LSASS with .Net 5 createdump.exe [windows]
+  - Atomic Test #12: Dump LSASS.exe using imported Microsoft DLLs [windows]
 - T1557 Man-in-the-Middle [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1003.003 NTDS](../../T1003.003/T1003.003.md)
@@ -197,7 +197,8 @@
   - Atomic Test #1: At.exe Scheduled task [windows]
 - [T1547.002 Authentication Package](../../T1547.002/T1547.002.md)
   - Atomic Test #1: Authentication Package [windows]
-- T1547 Boot or Logon Autostart Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1547 Boot or Logon Autostart Execution](../../T1547/T1547.md)
+  - Atomic Test #1: Add a driver [windows]
 - T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1548.002 Bypass User Account Control](../../T1548.002/T1548.002.md)
   - Atomic Test #1: Bypass UAC using Event Viewer (cmd) [windows]
@@ -291,6 +292,8 @@
   - Atomic Test #5: Suspicious jse file run from startup Folder [windows]
   - Atomic Test #6: Suspicious bat file run from startup Folder [windows]
   - Atomic Test #7: Add Executable Shortcut Link to User Startup Folder [windows]
+  - Atomic Test #8: Add persistance via Recycle bin [windows]
+  - Atomic Test #9: SystemBC Malware-as-a-Service Registry [windows]
 - T1134.005 SID-History Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1053.005 Scheduled Task](../../T1053.005/T1053.005.md)
   - Atomic Test #1: Scheduled Task Startup Script [windows]
@@ -461,6 +464,7 @@
 - [T1564.001 Hidden Files and Directories](../../T1564.001/T1564.001.md)
   - Atomic Test #3: Create Windows System File with Attrib [windows]
   - Atomic Test #4: Create Windows Hidden File with Attrib [windows]
+  - Atomic Test #8: Hide Files Through Registry [windows]
 - [T1564.003 Hidden Window](../../T1564.003/T1564.003.md)
   - Atomic Test #1: Hidden Window [windows]
 - [T1564 Hide Artifacts](../../T1564/T1564.md)
@@ -507,7 +511,8 @@
 - [T1036 Masquerading](../../T1036/T1036.md)
   - Atomic Test #1: System File Copied to Unusual Location [windows]
   - Atomic Test #2: Malware Masquerading and Execution from Zip File [windows]
-- T1036.005 Match Legitimate Name or Location [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1036.005 Match Legitimate Name or Location](../../T1036.005/T1036.005.md)
+  - Atomic Test #2: Masquerade as a built-in system executable [windows]
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1112 Modify Registry](../../T1112/T1112.md)
   - Atomic Test #1: Modify Registry of Current User Profile - cmd [windows]
@@ -517,6 +522,31 @@
   - Atomic Test #5: Javascript in registry [windows]
   - Atomic Test #6: Change Powershell Execution Policy to Bypass [windows]
   - Atomic Test #7: BlackByte Ransomware Registry Changes - CMD [windows]
+  - Atomic Test #8: BlackByte Ransomware Registry Changes - Powershell [windows]
+  - Atomic Test #9: Disable Windows Registry Tool [windows]
+  - Atomic Test #10: Disable Windows CMD application [windows]
+  - Atomic Test #11: Disable Windows Task Manager application [windows]
+  - Atomic Test #12: Disable Windows Notification Center [windows]
+  - Atomic Test #13: Disable Windows Shutdown Button [windows]
+  - Atomic Test #14: Disable Windows LogOff Button [windows]
+  - Atomic Test #15: Disable Windows Change Password Feature [windows]
+  - Atomic Test #16: Disable Windows Lock Workstation Feature [windows]
+  - Atomic Test #17: Activate Windows NoDesktop Group Policy Feature [windows]
+  - Atomic Test #18: Activate Windows NoRun Group Policy Feature [windows]
+  - Atomic Test #19: Activate Windows NoFind Group Policy Feature [windows]
+  - Atomic Test #20: Activate Windows NoControlPanel Group Policy Feature [windows]
+  - Atomic Test #21: Activate Windows NoFileMenu Group Policy Feature [windows]
+  - Atomic Test #22: Activate Windows NoClose Group Policy Feature [windows]
+  - Atomic Test #23: Activate Windows NoSetTaskbar Group Policy Feature [windows]
+  - Atomic Test #24: Activate Windows NoTrayContextMenu Group Policy Feature [windows]
+  - Atomic Test #25: Activate Windows NoPropertiesMyDocuments Group Policy Feature [windows]
+  - Atomic Test #26: Hide Windows Clock Group Policy Feature [windows]
+  - Atomic Test #27: Windows HideSCAHealth Group Policy Feature [windows]
+  - Atomic Test #28: Windows HideSCANetwork Group Policy Feature [windows]
+  - Atomic Test #29: Windows HideSCAPower Group Policy Feature [windows]
+  - Atomic Test #30: Windows HideSCAVolume Group Policy Feature [windows]
+  - Atomic Test #31: Windows Modify Show Compress Color And Info Tip Registry [windows]
+  - Atomic Test #32: Windows Powershell Logging Disabled [windows]
 - [T1218.005 Mshta](../../T1218.005/T1218.005.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
   - Atomic Test #2: Mshta executes VBScript to execute malicious command [windows]
@@ -637,6 +667,7 @@
   - Atomic Test #7: Renamed Microsoft.Workflow.Compiler.exe Payload Executions [windows]
   - Atomic Test #8: Invoke-ATHRemoteFXvGPUDisablementCommand base test [windows]
   - Atomic Test #9: DiskShadow Command Execution [windows]
+  - Atomic Test #10: Load Arbitrary DLL via Wuauclt (Windows Update Client) [windows]
 - [T1216 Signed Script Proxy Execution](../../T1216/T1216.md)
   - Atomic Test #1: SyncAppvPublishingServer Signed Script PowerShell Command Execution [windows]
   - Atomic Test #2: manage-bde.wsf Signed Script Command Execution [windows]
@@ -706,7 +737,8 @@
   - Atomic Test #2: Bitsadmin Download (PowerShell) [windows]
   - Atomic Test #3: Persist, Download, & Execute [windows]
   - Atomic Test #4: Bits download using desktopimgdownldr.exe (cmd) [windows]
-- T1547 Boot or Logon Autostart Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1547 Boot or Logon Autostart Execution](../../T1547/T1547.md)
+  - Atomic Test #1: Add a driver [windows]
 - T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1542.003 Bootkit [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1176 Browser Extensions](../../T1176/T1176.md)
@@ -794,6 +826,8 @@
   - Atomic Test #5: Suspicious jse file run from startup Folder [windows]
   - Atomic Test #6: Suspicious bat file run from startup Folder [windows]
   - Atomic Test #7: Add Executable Shortcut Link to User Startup Folder [windows]
+  - Atomic Test #8: Add persistance via Recycle bin [windows]
+  - Atomic Test #9: SystemBC Malware-as-a-Service Registry [windows]
 - T1505.001 SQL Stored Procedures [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1053.005 Scheduled Task](../../T1053.005/T1053.005.md)
   - Atomic Test #1: Scheduled Task Startup Script [windows]
@@ -866,6 +900,7 @@
   - Atomic Test #6: Windows - Delete Backup Files [windows]
   - Atomic Test #7: Windows - wbadmin Delete systemstatebackup [windows]
   - Atomic Test #8: Windows - Disable the SR scheduled task [windows]
+  - Atomic Test #9: Disable System Restore Through Registry [windows]
 - [T1491.001 Internal Defacement](../../T1491.001/T1491.001.md)
   - Atomic Test #1: Replace Desktop Wallpaper [windows]
 - T1498 Network Denial of Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -904,6 +939,8 @@
   - Atomic Test #8: Adfind - Enumerate Active Directory Exchange AD Objects [windows]
   - Atomic Test #9: Enumerate Default Domain Admin Details (Domain) [windows]
   - Atomic Test #10: Enumerate Active Directory for Unconstrained Delegation [windows]
+  - Atomic Test #11: Get-DomainUser with PowerView [windows]
+  - Atomic Test #12: Enumerate Active Directory Users with ADSISearcher [windows]
 - [T1069.002 Domain Groups](../../T1069.002/T1069.002.md)
   - Atomic Test #1: Basic Permission Groups Discovery Windows (Domain) [windows]
   - Atomic Test #2: Permission Groups Discovery PowerShell (Domain) [windows]
@@ -913,6 +950,11 @@
   - Atomic Test #6: Find Local Admins via Group Policy (PowerView) [windows]
   - Atomic Test #7: Enumerate Users Not Requiring Pre Auth (ASRepRoast) [windows]
   - Atomic Test #8: Adfind - Query Active Directory Groups [windows]
+  - Atomic Test #9: Enumerate Active Directory Groups with Get-AdGroup [windows]
+  - Atomic Test #10: Enumerate Active Directory Groups with ADSISearcher [windows]
+  - Atomic Test #11: Get-ADUser Enumeration using UserAccountControl flags (AS-REP Roasting) [windows]
+  - Atomic Test #12: Get-DomainGroupMember with PowerView [windows]
+  - Atomic Test #13: Get-DomainGroup with PowerView [windows]
 - [T1482 Domain Trust Discovery](../../T1482/T1482.md)
   - Atomic Test #1: Windows - Discover domain trusts with dsquery [windows]
   - Atomic Test #2: Windows - Discover domain trusts with nltest [windows]
@@ -925,6 +967,7 @@
 - [T1083 File and Directory Discovery](../../T1083/T1083.md)
   - Atomic Test #1: File and Directory Discovery (cmd.exe) [windows]
   - Atomic Test #2: File and Directory Discovery (PowerShell) [windows]
+  - Atomic Test #5: Simulating MAZE Directory Enumeration [windows]
 - T1016.001 Internet Connection Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1087.001 Local Account](../../T1087.001/T1087.001.md)
   - Atomic Test #8: Enumerate all accounts on Windows (Local) [windows]
@@ -951,11 +994,16 @@
 - [T1201 Password Policy Discovery](../../T1201/T1201.md)
   - Atomic Test #5: Examine local password policy - Windows [windows]
   - Atomic Test #6: Examine domain password policy - Windows [windows]
+  - Atomic Test #8: Get-DomainPolicy with PowerView [windows]
+  - Atomic Test #9: Enumerate Active Directory Password Policy with get-addefaultdomainpasswordpolicy [windows]
 - [T1120 Peripheral Device Discovery](../../T1120/T1120.md)
   - Atomic Test #1: Win32_PnPEntity Hardware Inventory [windows]
 - T1069 Permission Groups Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1057 Process Discovery](../../T1057/T1057.md)
   - Atomic Test #2: Process Discovery - tasklist [windows]
+  - Atomic Test #3: Process Discovery - Get-Process [windows]
+  - Atomic Test #4: Process Discovery - get-wmiObject [windows]
+  - Atomic Test #5: Process Discovery - wmic process [windows]
 - [T1012 Query Registry](../../T1012/T1012.md)
   - Atomic Test #1: Query Registry [windows]
 - [T1018 Remote System Discovery](../../T1018/T1018.md)
@@ -969,6 +1017,10 @@
   - Atomic Test #10: Adfind - Enumerate Active Directory Computer Objects [windows]
   - Atomic Test #11: Adfind - Enumerate Active Directory Domain Controller Objects [windows]
   - Atomic Test #15: Enumerate domain computers within Active Directory using DirectorySearcher [windows]
+  - Atomic Test #16: Enumerate Active Directory Computers with Get-AdComputer [windows]
+  - Atomic Test #17: Enumerate Active Directory Computers with ADSISearcher [windows]
+  - Atomic Test #18: Get-DomainController with PowerView [windows]
+  - Atomic Test #19: Get-wmiobject to Enumerate Domain Controllers [windows]
 - [T1518.001 Security Software Discovery](../../T1518.001/T1518.001.md)
   - Atomic Test #1: Security Software Discovery [windows]
   - Atomic Test #2: Security Software Discovery - powershell [windows]
@@ -1165,6 +1217,7 @@
   - Atomic Test #1: Create and Execute Batch Script [windows]
   - Atomic Test #2: Writes text to a file and displays it. [windows]
   - Atomic Test #3: Suspicious Execution via Windows Command Shell [windows]
+  - Atomic Test #4: Simulate BlackByte Ransomware Print Bombing [windows]
 - [T1047 Windows Management Instrumentation](../../T1047/T1047.md)
   - Atomic Test #1: WMI Reconnaissance Users [windows]
   - Atomic Test #2: WMI Reconnaissance Processes [windows]

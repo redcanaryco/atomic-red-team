@@ -54,6 +54,7 @@
 - [T1003.007 Proc Filesystem](../../T1003.007/T1003.007.md)
   - Atomic Test #1: Dump individual process memory with sh (Local) [linux]
   - Atomic Test #2: Dump individual process memory with Python (Local) [linux]
+  - Atomic Test #3: Capture Passwords with MimiPenguin [linux]
 - [T1606.002 SAML Tokens](../../T1606.002/T1606.002.md)
   - Atomic Test #1: Golden SAML [azure-ad]
 - T1555.002 Securityd Memory [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -215,6 +216,7 @@
 - T1610 Deploy Container [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1562.008 Disable Cloud Logs](../../T1562.008/T1562.008.md)
   - Atomic Test #1: AWS CloudTrail Changes [iaas:aws]
+  - Atomic Test #2: Azure - Eventhub Deletion [iaas:azure]
 - T1600.002 Disable Crypto Hardware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1562.007 Disable or Modify Cloud Firewall [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1562.004 Disable or Modify System Firewall](../../T1562.004/T1562.004.md)
@@ -462,6 +464,7 @@
   - Atomic Test #5: Azure - adding service principal to Azure AD role [azure-ad]
   - Atomic Test #6: Azure - adding user to Azure role in subscription [iaas:azure]
   - Atomic Test #7: Azure - adding service principal to Azure role in subscription [iaas:azure]
+  - Atomic Test #8: AzureAD - adding permission to application [azure-ad]
 - T1098.003 Add Office 365 Global Administrator Role [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1137.006 Add-ins [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1098.001 Additional Cloud Credentials](../../T1098.001/T1098.001.md)
