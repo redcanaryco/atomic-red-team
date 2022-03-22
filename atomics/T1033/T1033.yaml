@@ -63,3 +63,14 @@ atomic_tests:
     cleanup_command: |
       Remove-Item -Path .\CurrentactiveUser.txt -Force
     name: powershell
+ - name: GetCurrent User with PowerShell Script
+  auto_generated_guid: 1392bd0f-5d5a-429e-81d9-eb9d4d4d5b3b
+  description: Use the PowerShell "GetCurrent" method of the WindowsIdentity .NET class to identify the logged user.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      [System.Security.Principal.WindowsIdentity]::GetCurrent() | Out-File -FilePath .\CurrentUserObject.txt
+    cleanup_command: |
+      Remove-Item -Path .\CurrentUserObject.txt -Force
+    name: powershell
