@@ -301,6 +301,7 @@
   - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, windows, linux, macos]
 - [T1546.015 Component Object Model Hijacking](../../T1546.015/T1546.015.md)
   - Atomic Test #1: COM Hijacking - InprocServer32 [windows]
+  - Atomic Test #2: Powershell Execute COM Object [windows]
 - [T1053.007 Container Orchestration Job](../../T1053.007/T1053.007.md)
   - Atomic Test #1: ListCronjobs [containers]
   - Atomic Test #2: CreateCronjob [containers]
@@ -1050,6 +1051,7 @@
 - T1542.002 Component Firmware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.015 Component Object Model Hijacking](../../T1546.015/T1546.015.md)
   - Atomic Test #1: COM Hijacking - InprocServer32 [windows]
+  - Atomic Test #2: Powershell Execute COM Object [windows]
 - T1554 Compromise Client Software Binary [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1053.007 Container Orchestration Job](../../T1053.007/T1053.007.md)
   - Atomic Test #1: ListCronjobs [containers]
@@ -1473,6 +1475,8 @@
   - Atomic Test #1: System Owner/User Discovery [windows]
   - Atomic Test #2: System Owner/User Discovery [linux, macos]
   - Atomic Test #3: Find computers where user has session - Stealth mode (PowerView) [windows]
+  - Atomic Test #4: User Discovery With Env Vars PowerShell Script [windows]
+  - Atomic Test #5: GetCurrent User with PowerShell Script [windows]
 - [T1007 System Service Discovery](../../T1007/T1007.md)
   - Atomic Test #1: System Service Discovery [windows]
   - Atomic Test #2: System Service Discovery - net.exe [windows]
