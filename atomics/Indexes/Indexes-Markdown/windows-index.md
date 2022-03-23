@@ -226,6 +226,7 @@
   - Atomic Test #1: Change Default File Association [windows]
 - [T1546.015 Component Object Model Hijacking](../../T1546.015/T1546.015.md)
   - Atomic Test #1: COM Hijacking - InprocServer32 [windows]
+  - Atomic Test #2: Powershell Execute COM Object [windows]
 - [T1134.002 Create Process with Token](../../T1134.002/T1134.002.md)
   - Atomic Test #1: Access Token Manipulation [windows]
 - T1543 Create or Modify System Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -755,6 +756,7 @@
 - T1542.002 Component Firmware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.015 Component Object Model Hijacking](../../T1546.015/T1546.015.md)
   - Atomic Test #1: COM Hijacking - InprocServer32 [windows]
+  - Atomic Test #2: Powershell Execute COM Object [windows]
 - T1554 Compromise Client Software Binary [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1136 Create Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1543 Create or Modify System Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1053,6 +1055,8 @@
 - [T1033 System Owner/User Discovery](../../T1033/T1033.md)
   - Atomic Test #1: System Owner/User Discovery [windows]
   - Atomic Test #3: Find computers where user has session - Stealth mode (PowerView) [windows]
+  - Atomic Test #4: User Discovery With Env Vars PowerShell Script [windows]
+  - Atomic Test #5: GetCurrent User with PowerShell Script [windows]
 - [T1007 System Service Discovery](../../T1007/T1007.md)
   - Atomic Test #1: System Service Discovery [windows]
   - Atomic Test #2: System Service Discovery - net.exe [windows]

