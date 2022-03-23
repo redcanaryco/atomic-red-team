@@ -580,6 +580,7 @@
 - [T1562.008 Disable Cloud Logs](../../T1562.008/T1562.008.md)
   - Atomic Test #1: AWS CloudTrail Changes [iaas:aws]
   - Atomic Test #2: Azure - Eventhub Deletion [iaas:azure]
+  - Atomic Test #3: Office 365 - Exchange Audit Log Disabled [office-365]
 - T1600.002 Disable Crypto Hardware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1562.002 Disable Windows Event Logging](../../T1562.002/T1562.002.md)
   - Atomic Test #1: Disable Windows IIS HTTP Logging [windows]

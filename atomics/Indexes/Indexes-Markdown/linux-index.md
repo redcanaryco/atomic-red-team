@@ -217,6 +217,7 @@
 - [T1562.008 Disable Cloud Logs](../../T1562.008/T1562.008.md)
   - Atomic Test #1: AWS CloudTrail Changes [iaas:aws]
   - Atomic Test #2: Azure - Eventhub Deletion [iaas:azure]
+  - Atomic Test #3: Office 365 - Exchange Audit Log Disabled [office-365]
 - T1600.002 Disable Crypto Hardware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1562.007 Disable or Modify Cloud Firewall [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1562.004 Disable or Modify System Firewall](../../T1562.004/T1562.004.md)
