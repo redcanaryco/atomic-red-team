@@ -640,6 +640,8 @@
 - T1014 Rootkit [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1564.006 Run Virtual Instance](../../T1564.006/T1564.006.md)
   - Atomic Test #1: Register Portable Virtualbox [windows]
+  - Atomic Test #2: Create and start VirtualBox virtual machine [windows]
+  - Atomic Test #3: Create and start Hyper-V virtual machine [windows]
 - [T1218.011 Rundll32](../../T1218.011/T1218.011.md)
   - Atomic Test #1: Rundll32 execute JavaScript Remote Payload With GetObject [windows]
   - Atomic Test #2: Rundll32 execute VBscript command [windows]
