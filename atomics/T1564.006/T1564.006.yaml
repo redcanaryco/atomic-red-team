@@ -84,21 +84,21 @@ atomic_tests:
       type: String
       default: VirtualBox-6.1.32-149290-Win.exe
   dependency_executor_name: powershell
-    dependencies:
-    - description: |
-        VirtualBox must exist on disk at specified locations (#{virtualbox_exe})
-      prereq_command: |
-        if (Test-Path "#{virtualbox_exe}") {exit 0} else {exit 1}
-      get_prereq_command: |
-        Invoke-WebRequest "#{virtualbox_download}" -OutFile $env:TEMP\#{virtualbox_installer}
-        $env:TEMP\#{virtualbox_installer}
-    - description: |
-        VBoxManage must exist on disk at specified locations (#{vboxmanage_exe})
-      prereq_command: |
-        if (Test-Path "#{vboxmanage_exe}") {exit 0} else {exit 1}
-      get_prereq_command: |
-        Invoke-WebRequest "#{virtualbox_download}" -OutFile $env:TEMP\#{virtualbox_installer}
-        $env:TEMP\#{virtualbox_installer}
+  dependencies:
+  - description: |
+      VirtualBox must exist on disk at specified locations (#{virtualbox_exe})
+    prereq_command: |
+      if (Test-Path "#{virtualbox_exe}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "#{virtualbox_download}" -OutFile $env:TEMP\#{virtualbox_installer}
+      $env:TEMP\#{virtualbox_installer}
+  - description: |
+      VBoxManage must exist on disk at specified locations (#{vboxmanage_exe})
+    prereq_command: |
+      if (Test-Path "#{vboxmanage_exe}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "#{virtualbox_download}" -OutFile $env:TEMP\#{virtualbox_installer}
+      $env:TEMP\#{virtualbox_installer}
   executor:
   - name: command_prompt
     elevation_required: false
