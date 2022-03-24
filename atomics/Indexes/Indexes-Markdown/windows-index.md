@@ -5,7 +5,8 @@
   - Atomic Test #1: Rubeus asreproast [windows]
   - Atomic Test #2: Get-DomainUser with PowerView [windows]
 - T1110 Brute Force [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1003.005 Cached Domain Credentials [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1003.005 Cached Domain Credentials](../../T1003.005/T1003.005.md)
+  - Atomic Test #1: Cached Credential Dump via Cmdkey [windows]
 - [T1056.004 Credential API Hooking](../../T1056.004/T1056.004.md)
   - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
 - T1110.004 Credential Stuffing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
