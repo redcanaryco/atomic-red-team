@@ -103,13 +103,10 @@ atomic_tests:
     elevation_required: false
     command: |
       "#{vboxmanage_exe}" createvm --name "#{vm_name}" --register
-
       "#{vboxmanage_exe}" modifyvm "#{vm_name}" --firmware efi
-
       "#{vboxmanage_exe}" startvm "#{vm_name}"
     cleanup_command: |-
       "#{vboxmanage_exe}" controlvm "#{vm_name}" poweroff
-
       "#{vboxmanage_exe}" unregistervm "#{vm_name}" --delete
 - name: Create and start Hyper-V virtual machine
   description: |
@@ -139,11 +136,8 @@ atomic_tests:
     command: |-
       $VM = "#{vm_name}"
       New-VM -Name $VM -Generation 2
-
       Set-VMFirmware $VM -EnableSecureBoot Off
-
       Start-VM $VM
     cleanup_command: |-
       Stop-VM $VM -Force
-
       Remove-VM $VM -Force
