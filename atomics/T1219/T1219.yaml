@@ -105,7 +105,7 @@ atomic_tests:
     prereq_command: |
       if (test-path "#{Ammyy_Admin_Path}"){exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://github.com/Leomon5/atomic-red-team/blob/master/atomics/T1219/Bin/ammyy.exe?raw=true" -OutFile "#{Ammyy_Admin_Path}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1219/Bin/ammyy.exe?raw=true" -OutFile "#{Ammyy_Admin_Path}"
   executor:
     command: |
       Start-Process #{Ammyy_Admin_Path}
