@@ -574,7 +574,7 @@ atomic_tests:
       cmd /c #{DefenderControlExe} /E | Out-Null
     name: powershell
     elevation_required: true
- - name: Disable Windows Defender Tamper Protection
+- name: Disable Windows Defender Tamper Protection
   description: Disabling Windows Defender tamper protection to allow attacks such as [Process Doppleganging](https://medium.com/cyber-unbound/process-doppelg%C3%A4nging-684bdd6b760f). Tamper Protection will be disabled after the next reboot.
   supported_platforms:
   - windows
@@ -584,3 +584,4 @@ atomic_tests:
       New-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Feature' -name 'TamperData' -value 0
     cleanup_command: Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Feature' -name 'TamperData' -value 1
     name: powershell
+  
