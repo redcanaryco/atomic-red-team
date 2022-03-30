@@ -550,6 +550,8 @@
   - Atomic Test #30: Windows HideSCAVolume Group Policy Feature [windows]
   - Atomic Test #31: Windows Modify Show Compress Color And Info Tip Registry [windows]
   - Atomic Test #32: Windows Powershell Logging Disabled [windows]
+  - Atomic Test #33: Windows Add Registry Value to Load Service in Safe Mode without Network [windows]
+  - Atomic Test #34: Windows Add Registry Value to Load Service in Safe Mode with Network [windows]
 - [T1218.005 Mshta](../../T1218.005/T1218.005.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
   - Atomic Test #2: Mshta executes VBScript to execute malicious command [windows]
