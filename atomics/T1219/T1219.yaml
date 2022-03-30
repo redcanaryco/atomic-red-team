@@ -97,15 +97,15 @@ atomic_tests:
     Ammyy_Admin_Path:
       description: Path of Ammyy Admin executable
       type: Path
-      default: PathToAtomicsFolder\T1219\bin\ammyy.exe
+      default: $env:temp\ammyy.exe
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      Ammyy Admin must exist on disk (#{Ammyy_Admin_Path})
+      Ammyy Admin must exist on disk at the specified location (#{Ammyy_Admin_Path})
     prereq_command: |
-      if (test-path "#{Ammyy_Admin_Path}"){exit 0} else {exit 1}
+      if (Test-Path #{Ammyy_Admin_Path}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1219/Bin/ammyy.exe?raw=true" -OutFile "#{Ammyy_Admin_Path}"
+      Start-BitsTransfer -Source "https://web.archive.org/web/20140625232737/http://www.ammyy.com/AA_v3.exe" -Destination "$env:temp\ammyy.exe" -dynamic
   executor:
     command: |
       Start-Process #{Ammyy_Admin_Path}
