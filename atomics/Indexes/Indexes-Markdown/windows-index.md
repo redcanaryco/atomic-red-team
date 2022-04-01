@@ -488,6 +488,7 @@
 - [T1553.004 Install Root Certificate](../../T1553.004/T1553.004.md)
   - Atomic Test #4: Install root CA on Windows [windows]
   - Atomic Test #5: Install root CA on Windows with certutil [windows]
+  - Atomic Test #6: Add Root Certificate to CurrentUser Certificate Store [windows]
 - [T1218.004 InstallUtil](../../T1218.004/T1218.004.md)
   - Atomic Test #1: CheckIfInstallable method call [windows]
   - Atomic Test #2: InstallHelper method call [windows]

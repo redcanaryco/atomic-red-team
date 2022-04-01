@@ -709,6 +709,7 @@
   - Atomic Test #3: Install root CA on macOS [macos]
   - Atomic Test #4: Install root CA on Windows [windows]
   - Atomic Test #5: Install root CA on Windows with certutil [windows]
+  - Atomic Test #6: Add Root Certificate to CurrentUser Certificate Store [windows]
 - [T1218.004 InstallUtil](../../T1218.004/T1218.004.md)
   - Atomic Test #1: CheckIfInstallable method call [windows]
   - Atomic Test #2: InstallHelper method call [windows]
@@ -1499,8 +1500,7 @@
 - T1583 Acquire Infrastructure [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1583.005 Botnet [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1584.005 Botnet [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1587.002 Code Signing Certificates](../../T1587.002/T1587.002.md)
-  - Atomic Test #1: Add Root Certificate to CurrentUser Certificate Store [windows]
+- T1587.002 Code Signing Certificates [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1588.003 Code Signing Certificates [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1586 Compromise Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1584 Compromise Infrastructure [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
