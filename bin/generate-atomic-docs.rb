@@ -189,11 +189,21 @@ class AtomicRedTeamDocs
   end
 
   def get_layer(techniques, layer_name)
+    filters = { }
+    if layer_name.include? "Windows"
+      filters = { "platforms": [ "Windows"]}
+    elsif layer_name.include? "macOS"
+      filters = { "platforms": [ "macOS"]}
+    elsif layer_name.include? "Linux"
+      filters = { "platforms": [ "Linux"]}
+    end
+
     layer = {
-      "version" => "4.3",
       "name" => layer_name,
+      "versions" => {	"attack": "10",	"navigator": "4.5.5",	"layer": "4.3"	},
       "description" => layer_name + " MITRE ATT&CK Navigator Layer",
-      "domain" => "mitre-enterprise",
+      "domain" => "enterprise-attack",
+      "filters"=> filters,    
       "gradient" => {
                   "colors" => ["#ce232e","#ce232e"],
                   "minValue" => 0,
@@ -251,7 +261,6 @@ class AtomicRedTeamDocs
               "techniqueID" => atomic_yaml['attack_technique'].split('.')[0],
               "score" => 100,
               "enabled" => true,
-#             "comment" => "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/" + atomic_yaml['attack_technique'] + "/" + atomic_yaml['attack_technique'] + ".md"
               "links" => ["label" => "View Atomics", "url" => "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/" + atomic_yaml['attack_technique'].split('.')[0] + "/" + atomic_yaml['attack_technique'].split('.')[0] + ".md"]
             }
           else
@@ -259,7 +268,6 @@ class AtomicRedTeamDocs
               "techniqueID" => atomic_yaml['attack_technique'].split('.')[0],
               "score" => 100,
               "enabled" => true
-#             "comment" => "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/" + atomic_yaml['attack_technique'] + "/" + atomic_yaml['attack_technique'] + ".md"
             }
           end 
         end
