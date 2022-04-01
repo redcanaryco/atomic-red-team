@@ -1,0 +1,39 @@
+name: generate-docs
+on:
+  push:
+    branches:
+      - master
+jobs:
+  generate-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v2
+      
+      - name: setup ruby
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7
+          bundler-cache: true 
+
+      - name: generate markdown docs for atomics
+        run: |
+          bin/generate-atomic-docs.rb
+          echo ""
+          echo ""
+          git status
+          echo ""
+          echo ""
+          git diff-index HEAD --
+
+          if git diff-index --quiet HEAD -- ; then
+            echo "Not committing documentation because there are no changes"
+          else
+            git config credential.helper 'cache --timeout=120'
+            git config user.email "<email>"
+            git config user.name "CircleCI Atomic Red Team doc generator"
+
+            git add atomics
+            git commit -am "ci/cd generated docs from job=$GITHUB_JOB branch=$GITHUB_REF_NAME [ci skip]"
+            git push -u origin $GITHUB_REF_NAME
+          fi
