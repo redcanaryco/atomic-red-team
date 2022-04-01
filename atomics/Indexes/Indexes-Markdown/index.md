@@ -12,7 +12,8 @@
 - [T1552.003 Bash History](../../T1552.003/T1552.003.md)
   - Atomic Test #1: Search Through Bash History [linux, macos]
 - T1110 Brute Force [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1003.005 Cached Domain Credentials [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1003.005 Cached Domain Credentials](../../T1003.005/T1003.005.md)
+  - Atomic Test #1: Cached Credential Dump via Cmdkey [windows]
 - T1552.005 Cloud Instance Metadata API [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1552.007 Container API](../../T1552.007/T1552.007.md)
   - Atomic Test #1: ListSecrets [containers]
@@ -634,6 +635,7 @@
   - Atomic Test #25: office-365-Disable-AntiPhishRule [office-365]
   - Atomic Test #26: Disable Windows Defender with DISM [windows]
   - Atomic Test #27: Disable Defender with Defender Control [windows]
+  - Atomic Test #28: Disable Windows Defender Tamper Protection [windows]
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1556.001 Domain Controller Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1484 Domain Policy Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -707,6 +709,7 @@
   - Atomic Test #3: Install root CA on macOS [macos]
   - Atomic Test #4: Install root CA on Windows [windows]
   - Atomic Test #5: Install root CA on Windows with certutil [windows]
+  - Atomic Test #6: Add Root Certificate to CurrentUser Certificate Store [windows]
 - [T1218.004 InstallUtil](../../T1218.004/T1218.004.md)
   - Atomic Test #1: CheckIfInstallable method call [windows]
   - Atomic Test #2: InstallHelper method call [windows]
@@ -782,6 +785,8 @@
   - Atomic Test #30: Windows HideSCAVolume Group Policy Feature [windows]
   - Atomic Test #31: Windows Modify Show Compress Color And Info Tip Registry [windows]
   - Atomic Test #32: Windows Powershell Logging Disabled [windows]
+  - Atomic Test #33: Windows Add Registry Value to Load Service in Safe Mode without Network [windows]
+  - Atomic Test #34: Windows Add Registry Value to Load Service in Safe Mode with Network [windows]
 - T1601 Modify System Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1218.005 Mshta](../../T1218.005/T1218.005.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
@@ -890,6 +895,8 @@
   - Atomic Test #2: Loadable Kernel Module based Rootkit [linux]
 - [T1564.006 Run Virtual Instance](../../T1564.006/T1564.006.md)
   - Atomic Test #1: Register Portable Virtualbox [windows]
+  - Atomic Test #2: Create and start VirtualBox virtual machine [windows]
+  - Atomic Test #3: Create and start Hyper-V virtual machine [windows]
 - [T1218.011 Rundll32](../../T1218.011/T1218.011.md)
   - Atomic Test #1: Rundll32 execute JavaScript Remote Payload With GetObject [windows]
   - Atomic Test #2: Rundll32 execute VBscript command [windows]
@@ -1819,6 +1826,7 @@
   - Atomic Test #3: LogMeIn Files Detected Test on Windows [windows]
   - Atomic Test #4: GoToAssist Files Detected Test on Windows [windows]
   - Atomic Test #5: ScreenConnect Application Download and Install on Windows [windows]
+  - Atomic Test #6: Ammyy Admin Software Execution [windows]
 - [T1132.001 Standard Encoding](../../T1132.001/T1132.001.md)
   - Atomic Test #1: Base64 Encoded data. [macos, linux]
   - Atomic Test #2: XOR Encoded data. [windows]

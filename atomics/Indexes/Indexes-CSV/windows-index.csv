@@ -1,6 +1,7 @@
 Tactic,Technique #,Technique Name,Test #,Test Name,Test GUID,Executor Name
 credential-access,T1558.004,AS-REP Roasting,1,Rubeus asreproast,615bd568-2859-41b5-9aed-61f6a88e48dd,powershell
 credential-access,T1558.004,AS-REP Roasting,2,Get-DomainUser with PowerView,d6139549-7b72-4e48-9ea1-324fc9bdf88a,powershell
+credential-access,T1003.005,Cached Domain Credentials,1,Cached Credential Dump via Cmdkey,56506854-89d6-46a3-9804-b7fde90791f9,command_prompt
 credential-access,T1056.004,Credential API Hooking,1,Hook PowerShell TLS Encrypt/Decrypt Messages,de1934ea-1fbf-425b-8795-65fb27dd7e33,powershell
 credential-access,T1552.001,Credentials In Files,3,Extracting passwords with findstr,0e56bf29-ff49-4ea5-9af4-3b81283fd513,powershell
 credential-access,T1552.001,Credentials In Files,4,Access unattend.xml,367d4004-5fc0-446d-823f-960c74ae52c3,command_prompt
@@ -265,6 +266,7 @@ defense-evasion,T1562.001,Disable or Modify Tools,23,Tamper with Windows Defende
 defense-evasion,T1562.001,Disable or Modify Tools,24,Tamper with Windows Defender Evade Scanning -Process,a123ce6a-3916-45d6-ba9c-7d4081315c27,powershell
 defense-evasion,T1562.001,Disable or Modify Tools,26,Disable Windows Defender with DISM,871438ac-7d6e-432a-b27d-3e7db69faf58,command_prompt
 defense-evasion,T1562.001,Disable or Modify Tools,27,Disable Defender with Defender Control,178136d8-2778-4d7a-81f3-d517053a4fd6,powershell
+defense-evasion,T1562.001,Disable or Modify Tools,28,Disable Windows Defender Tamper Protection,5fde6578-9419-46ef-9258-269dc8656c3e,powershell
 defense-evasion,T1055.001,Dynamic-link Library Injection,1,Process Injection via mavinject.exe,74496461-11a1-4982-b439-4d87a550d254,powershell
 defense-evasion,T1070.004,File Deletion,4,Delete a single file - Windows cmd,861ea0b4-708a-4d17-848d-186c9c7f17e3,command_prompt
 defense-evasion,T1070.004,File Deletion,5,Delete an entire folder - Windows cmd,ded937c4-2add-42f7-9c2c-c742b7a98698,command_prompt
@@ -285,6 +287,7 @@ defense-evasion,T1202,Indirect Command Execution,2,Indirect Command Execution - 
 defense-evasion,T1202,Indirect Command Execution,3,Indirect Command Execution - conhost.exe,cf3391e0-b482-4b02-87fc-ca8362269b29,command_prompt
 defense-evasion,T1553.004,Install Root Certificate,4,Install root CA on Windows,76f49d86-5eb1-461a-a032-a480f86652f1,powershell
 defense-evasion,T1553.004,Install Root Certificate,5,Install root CA on Windows with certutil,5fdb1a7a-a93c-4fbe-aa29-ddd9ef94ed1f,powershell
+defense-evasion,T1553.004,Install Root Certificate,6,Add Root Certificate to CurrentUser Certificate Store,ca20a3f1-42b5-4e21-ad3f-1049199ec2e0,powershell
 defense-evasion,T1218.004,InstallUtil,1,CheckIfInstallable method call,ffd9c807-d402-47d2-879d-f915cf2a3a94,powershell
 defense-evasion,T1218.004,InstallUtil,2,InstallHelper method call,d43a5bde-ae28-4c55-a850-3f4c80573503,powershell
 defense-evasion,T1218.004,InstallUtil,3,InstallUtil class constructor method call,9b7a7cfc-dd2e-43f5-a885-c0a3c270dd93,powershell
@@ -336,6 +339,8 @@ defense-evasion,T1112,Modify Registry,29,Windows HideSCAPower Group Policy Featu
 defense-evasion,T1112,Modify Registry,30,Windows HideSCAVolume Group Policy Feature,7f037590-b4c6-4f13-b3cc-e424c5ab8ade,command_prompt
 defense-evasion,T1112,Modify Registry,31,Windows Modify Show Compress Color And Info Tip Registry,795d3248-0394-4d4d-8e86-4e8df2a2693f,command_prompt
 defense-evasion,T1112,Modify Registry,32,Windows Powershell Logging Disabled,95b25212-91a7-42ff-9613-124aca6845a8,command_prompt
+defense-evasion,T1112,Modify Registry,33,Windows Add Registry Value to Load Service in Safe Mode without Network,1dd59fb3-1cb3-4828-805d-cf80b4c3bbb5,command_prompt
+defense-evasion,T1112,Modify Registry,34,Windows Add Registry Value to Load Service in Safe Mode with Network,c173c948-65e5-499c-afbe-433722ed5bd4,command_prompt
 defense-evasion,T1218.005,Mshta,1,Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject,1483fab9-4f52-4217-a9ce-daa9d7747cae,command_prompt
 defense-evasion,T1218.005,Mshta,2,Mshta executes VBScript to execute malicious command,906865c3-e05f-4acc-85c4-fbc185455095,command_prompt
 defense-evasion,T1218.005,Mshta,3,Mshta Executes Remote HTML Application (HTA),c4b97eeb-5249-4455-a607-59f95485cb45,powershell
@@ -399,6 +404,8 @@ defense-evasion,T1036.003,Rename System Utilities,8,Malicious process Masqueradi
 defense-evasion,T1036.003,Rename System Utilities,9,File Extension Masquerading,c7fa0c3b-b57f-4cba-9118-863bf4e653fc,command_prompt
 defense-evasion,T1207,Rogue Domain Controller,1,DCShadow (Active Directory),0f4c5eb0-98a0-4496-9c3d-656b4f2bc8f6,powershell
 defense-evasion,T1564.006,Run Virtual Instance,1,Register Portable Virtualbox,c59f246a-34f8-4e4d-9276-c295ef9ba0dd,command_prompt
+defense-evasion,T1564.006,Run Virtual Instance,2,Create and start VirtualBox virtual machine,88b81702-a1c0-49a9-95b2-2dd53d755767,command_prompt
+defense-evasion,T1564.006,Run Virtual Instance,3,Create and start Hyper-V virtual machine,fb8d4d7e-f5a4-481c-8867-febf13f8b6d3,powershell
 defense-evasion,T1218.011,Rundll32,1,Rundll32 execute JavaScript Remote Payload With GetObject,cf3bdb9a-dd11-4b6c-b0d0-9e22b68a71be,command_prompt
 defense-evasion,T1218.011,Rundll32,2,Rundll32 execute VBscript command,638730e7-7aed-43dc-bf8c-8117f805f5bb,command_prompt
 defense-evasion,T1218.011,Rundll32,3,Rundll32 advpack.dll Execution,d91cae26-7fc1-457b-a854-34c8aad48c89,command_prompt
@@ -688,6 +695,7 @@ command-and-control,T1219,Remote Access Software,2,AnyDesk Files Detected Test o
 command-and-control,T1219,Remote Access Software,3,LogMeIn Files Detected Test on Windows,d03683ec-aae0-42f9-9b4c-534780e0f8e1,powershell
 command-and-control,T1219,Remote Access Software,4,GoToAssist Files Detected Test on Windows,1b72b3bd-72f8-4b63-a30b-84e91b9c3578,powershell
 command-and-control,T1219,Remote Access Software,5,ScreenConnect Application Download and Install on Windows,4a18cc4e-416f-4966-9a9d-75731c4684c0,powershell
+command-and-control,T1219,Remote Access Software,6,Ammyy Admin Software Execution,0ae9e327-3251-465a-a53b-485d4e3f58fa,powershell
 command-and-control,T1132.001,Standard Encoding,2,XOR Encoded data.,c3ed6d2a-e3ad-400d-ad78-bbfdbfeacc08,powershell
 command-and-control,T1071.001,Web Protocols,1,Malicious User Agents - Powershell,81c13829-f6c9-45b8-85a6-053366d55297,powershell
 command-and-control,T1071.001,Web Protocols,2,Malicious User Agents - CMD,dc3488b0-08c7-4fea-b585-905c83b48180,command_prompt
