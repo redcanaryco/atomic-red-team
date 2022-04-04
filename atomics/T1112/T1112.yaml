@@ -527,7 +527,7 @@ atomic_tests:
   - windows
   executor:
     command: |
-      REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal\AtomicSafeMode" /VE /T REG_SZ /F /D “Service”
+      REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal\AtomicSafeMode" /VE /T REG_SZ /F /D "Service"
     cleanup_command: |
       reg delete "HKLM\SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal\AtomicSafeMode" /f
     name: command_prompt
@@ -542,7 +542,7 @@ atomic_tests:
   - windows
   executor:
     command: |
-      REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\SafeBoot\Network\AtomicSafeMode" /VE /T REG_SZ /F /D “Service”
+      REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\SafeBoot\Network\AtomicSafeMode" /VE /T REG_SZ /F /D "Service"
     cleanup_command: |
       reg delete "HKLM\SYSTEM\CurrentControlSet\Control\SafeBoot\Network\AtomicSafeMode" /f
     name: command_prompt
