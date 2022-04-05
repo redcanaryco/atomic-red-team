@@ -146,3 +146,12 @@ atomic_tests:
     command: |
       env
     name: sh
+- name: Show System Integrity Protection status (MacOS)
+  description: |
+    Read and Display System Intergrety Protection status. csrutil is commonly used by malware and post-exploitation tools to determine whether certain files and directories on the system are writable or not.
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+      csrutil status
+    name: sh
