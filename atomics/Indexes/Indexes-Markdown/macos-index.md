@@ -104,7 +104,8 @@
   - Atomic Test #1: Launch Daemon [macos]
 - [T1053.004 Launchd](../../T1053.004/T1053.004.md)
   - Atomic Test #1: Event Monitor Daemon Persistence [macos]
-- T1078.003 Local Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1078.003 Local Accounts](../../T1078.003/T1078.003.md)
+  - Atomic Test #2: Create local account with admin privileges - MacOS [macos]
 - T1547.015 Login Items [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1037.002 Logon Script (Mac)](../../T1037.002/T1037.002.md)
   - Atomic Test #1: Logon Scripts - Mac [macos]
@@ -216,7 +217,8 @@
   - Atomic Test #7: chown - Change file or folder mode ownership only [macos, linux]
   - Atomic Test #8: chown - Change file or folder ownership recursively [macos, linux]
   - Atomic Test #9: chattr - Remove immutable file attribute [macos, linux]
-- T1078.003 Local Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1078.003 Local Accounts](../../T1078.003/T1078.003.md)
+  - Atomic Test #2: Create local account with admin privileges - MacOS [macos]
 - T1036.004 Masquerade Task or Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1036 Masquerading [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1036.005 Match Legitimate Name or Location](../../T1036.005/T1036.005.md)
@@ -396,7 +398,8 @@
   - Atomic Test #1: Event Monitor Daemon Persistence [macos]
 - [T1136.001 Local Account](../../T1136.001/T1136.001.md)
   - Atomic Test #2: Create a user account on a MacOS system [macos]
-- T1078.003 Local Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1078.003 Local Accounts](../../T1078.003/T1078.003.md)
+  - Atomic Test #2: Create local account with admin privileges - MacOS [macos]
 - T1547.015 Login Items [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1037.002 Logon Script (Mac)](../../T1037.002/T1037.002.md)
   - Atomic Test #1: Logon Scripts - Mac [macos]
@@ -543,7 +546,8 @@
 - T1190 Exploit Public-Facing Application [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1133 External Remote Services [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1200 Hardware Additions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1078.003 Local Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1078.003 Local Accounts](../../T1078.003/T1078.003.md)
+  - Atomic Test #2: Create local account with admin privileges - MacOS [macos]
 - T1566 Phishing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1566.001 Spearphishing Attachment [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1566.002 Spearphishing Link [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
