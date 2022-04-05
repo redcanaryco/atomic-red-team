@@ -346,6 +346,7 @@
   - Atomic Test #3: List OS Information [linux, macos]
   - Atomic Test #7: Hostname Discovery [linux, macos]
   - Atomic Test #11: Environment variables discovery on macos and linux [macos, linux]
+  - Atomic Test #12: Show System Integrity Protection status (MacOS) [macos]
 - T1614.001 System Language Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1614 System Location Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1016 System Network Configuration Discovery](../../T1016/T1016.md)
