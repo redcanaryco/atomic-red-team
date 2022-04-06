@@ -67,12 +67,12 @@ atomic_tests:
   - linux
   input_arguments:
     process_name:
-      description: Process ID of a running service, to list running processes run ps aux
+      description: PID of a running service, to list running processes run ps aux
       type: String
       default: kill
   executor:
     command: |
-      kill -9 #{process_pid}
+      kill -9 #{process_name}
     name: sh
 
 
