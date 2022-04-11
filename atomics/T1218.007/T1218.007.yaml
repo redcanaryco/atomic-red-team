@@ -2,6 +2,7 @@ attack_technique: T1218.007
 display_name: 'Signed Binary Proxy Execution: Msiexec'
 atomic_tests:
 - name: Msiexec.exe - Execute Local MSI file with embedded JScript
+  auto_generated_guid: a059b6c4-e7d6-4b2e-bcd7-9b2b33191a04
   description: |
     Executes an MSI containing embedded JScript code using msiexec.exe
   supported_platforms:
@@ -29,6 +30,7 @@ atomic_tests:
       msiexec.exe /q /#{action} "#{msi_payload}"
     name: command_prompt
 - name: Msiexec.exe - Execute Local MSI file with embedded VBScript
+  auto_generated_guid: 8d73c7b0-c2b1-4ac1-881a-4aa644f76064
   description: |
     Executes an MSI containing embedded VBScript code using msiexec.exe
   supported_platforms:
@@ -56,6 +58,7 @@ atomic_tests:
       msiexec.exe /q /#{action} "#{msi_payload}"
     name: command_prompt
 - name: Msiexec.exe - Execute Local MSI file with an embedded DLL
+  auto_generated_guid: 628fa796-76c5-44c3-93aa-b9d8214fd568
   description: |
     Executes an MSI containing an embedded DLL using msiexec.exe
   supported_platforms:
@@ -83,6 +86,7 @@ atomic_tests:
       msiexec.exe /q /#{action} "#{msi_payload}"
     name: command_prompt
 - name: Msiexec.exe - Execute Local MSI file with an embedded EXE
+  auto_generated_guid: ed3fa08a-ca18-4009-973e-03d13014d0e8
   description: |
     Executes an MSI containing an embedded EXE using msiexec.exe
   supported_platforms:
@@ -110,6 +114,7 @@ atomic_tests:
       msiexec.exe /q /#{action} "#{msi_payload}"
     name: command_prompt
 - name: WMI Win32_Product Class - Execute Local MSI file with embedded JScript
+  auto_generated_guid: 882082f0-27c6-4eec-a43c-9aa80bccdb30
   description: |
     Executes an MSI containing embedded JScript code using the WMI Win32_Product class
   supported_platforms:
@@ -137,6 +142,7 @@ atomic_tests:
       Invoke-CimMethod -ClassName Win32_Product -MethodName #{action} -Arguments @{ PackageLocation = '#{msi_payload}' }
     name: powershell
 - name: WMI Win32_Product Class - Execute Local MSI file with embedded VBScript
+  auto_generated_guid: cf470d9a-58e7-43e5-b0d2-805dffc05576
   description: |
     Executes an MSI containing embedded VBScript code using the WMI Win32_Product class
   supported_platforms:
@@ -164,6 +170,7 @@ atomic_tests:
       Invoke-CimMethod -ClassName Win32_Product -MethodName #{action} -Arguments @{ PackageLocation = '#{msi_payload}' }
     name: powershell
 - name: WMI Win32_Product Class - Execute Local MSI file with an embedded DLL
+  auto_generated_guid: 32eb3861-30da-4993-897a-42737152f5f8
   description: |
     Executes an MSI containing an embedded DLL using the WMI Win32_Product class
   supported_platforms:
@@ -191,6 +198,7 @@ atomic_tests:
       Invoke-CimMethod -ClassName Win32_Product -MethodName #{action} -Arguments @{ PackageLocation = '#{msi_payload}' }
     name: powershell
 - name: WMI Win32_Product Class - Execute Local MSI file with an embedded EXE
+  auto_generated_guid: 55080eb0-49ae-4f55-a440-4167b7974f79
   description: |
     Executes an MSI containing an embedded EXE using the WMI Win32_Product class
   supported_platforms:
@@ -218,6 +226,7 @@ atomic_tests:
       Invoke-CimMethod -ClassName Win32_Product -MethodName #{action} -Arguments @{ PackageLocation = '#{msi_payload}' }
     name: powershell
 - name: Msiexec.exe - Execute the DllRegisterServer function of a DLL
+  auto_generated_guid: 0106ffa5-fab6-4c7d-82e3-e6b8867d5e5d
   description: |
     Loads a DLL into msiexec.exe and calls its DllRegisterServer function. Note: the DLL included in the "src" folder is only built for 64-bit, so this won't work on a 32-bit OS.
   supported_platforms:
@@ -240,6 +249,7 @@ atomic_tests:
       msiexec.exe /y "#{dll_payload}"
     name: command_prompt
 - name: Msiexec.exe - Execute the DllUnregisterServer function of a DLL
+  auto_generated_guid: ab09ec85-4955-4f9c-b8e0-6851baf4d47f
   description: |
     Loads a DLL into msiexec.exe and calls its DllUnregisterServer function. Note: the DLL included in the "src" folder is only built for 64-bit, so this won't work on a 32-bit OS.
   supported_platforms:
@@ -262,6 +272,7 @@ atomic_tests:
       msiexec.exe /z "#{dll_payload}"
     name: command_prompt
 - name: Msiexec.exe - Execute Remote MSI file
+  auto_generated_guid: 44a4bedf-ffe3-452e-bee4-6925ab125662
   description: |
     Execute arbitrary MSI file retrieved remotely. Less commonly seen in application installation, commonly seen in malware execution. The MSI executes a built-in JScript payload that launches powershell.exe.
   supported_platforms:
