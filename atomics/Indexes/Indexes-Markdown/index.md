@@ -1696,6 +1696,7 @@
 - [T1569.002 Service Execution](../../T1569.002/T1569.002.md)
   - Atomic Test #1: Execute a Command as a Service [windows]
   - Atomic Test #2: Use PsExec to execute a command on a remote host [windows]
+  - Atomic Test #3: psexec.py (Impacket) [linux]
 - T1129 Shared Modules [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1072 Software Deployment Tools](../../T1072/T1072.md)
   - Atomic Test #1: Radmin Viewer Utility [windows]
