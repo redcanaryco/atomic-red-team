@@ -17,3 +17,23 @@ atomic_tests:
       net user art-test /delete >nul 2>&1
     name: command_prompt
     elevation_required: true
+    
+- name: Create local account with admin privileges - MacOS
+  auto_generated_guid: f1275566-1c26-4b66-83e3-7f9f7f964daa
+  description: After execution the new account will be active and added to the Administrators group
+  supported_platforms:
+  - macos
+  executor:
+    command: |-
+      dscl . -create /Users/AtomicUser
+      dscl . -create /Users/AtomicUser UserShell /bin/bash
+      dscl . -create /Users/AtomicUser RealName "Atomic User"
+      dscl . -create /Users/AtomicUser UniqueID 503
+      dscl . -create /Users/AtomicUser PrimaryGroupID 503
+      dscl . -create /Users/AtomicUser NFSHomeDirectory /Local/Users/AtomicUser
+      dscl . -passwd /Users/AtomicUser mySecretPassword
+      dscl . -append /Groups/admin GroupMembership AtomicUser
+    cleanup_command: |-
+      sudo dscl . -delete /Users/AtomicUser
+    name: bash
+    elevation_required: true
