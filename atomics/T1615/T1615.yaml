@@ -1,0 +1,17 @@
+attack_technique: T1615
+display_name: 'Group Policy Discovery'
+atomic_tests:
+- name: Display group policy information via gpresult
+  description: |
+    Uses the built-in Windows utility gpresult to display the Resultant Set of Policy (RSoP) information for a remote user and computer
+    The /z parameter displays all available information about Group Policy. More parameters can be found in the linked Microsoft documentation
+    https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/gpresult
+    https://unit42.paloaltonetworks.com/emissary-trojan-changelog-did-operation-lotus-blossom-cause-it-to-evolve/
+    Turla has used the /z and /v parameters: https://www.welivesecurity.com/wp-content/uploads/2020/05/ESET_Turla_ComRAT.pdf
+  supported_platforms:
+    - windows
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      gpresult /z
