@@ -1385,7 +1385,8 @@
   - Atomic Test #3: Nix File and Directory Discovery [macos, linux]
   - Atomic Test #4: Nix File and Directory Discovery 2 [macos, linux]
   - Atomic Test #5: Simulating MAZE Directory Enumeration [windows]
-- T1615 Group Policy Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1615 Group Policy Discovery](../../T1615/T1615.md)
+  - Atomic Test #1: Display group policy information via gpresult [windows]
 - T1016.001 Internet Connection Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1087.001 Local Account](../../T1087.001/T1087.001.md)
   - Atomic Test #1: Enumerate all accounts (Local) [linux]
