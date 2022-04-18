@@ -76,9 +76,9 @@ atomic_tests:
   - description: |
       the source file must exist on disk at specified location (#{input_file})
     prereq_command: |
-      if [ -e  #{input_file ]; then exit 0; else exit 1; fi
+      if [ -e  #{input_file} ]; then exit 0; else exit 1; fi
     get_prereq_command: |
-      Invoke-WebRequest https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027.004/src/T1027-004-test.c -OutFile #{input_file}
+      wget https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027.004/src/T1027-004-test.c -O #{input_file}
   executor:
     command: |
       gcc #{input_file} && ./a.out
@@ -101,9 +101,9 @@ atomic_tests:
   - description: |
       the source file must exist on disk at specified location (#{input_file})
     prereq_command: |
-      if [ -e  #{input_file ]; then exit 0; else exit 1; fi
+      if [ -e  #{input_file} ]; then exit 0; else exit 1; fi
     get_prereq_command: |
-      Invoke-WebRequest https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027.004/src/T1027-004-test.cc -OutFile #{input_file}
+      wget https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027.004/src/T1027-004-test.cc -O #{input_file}
   executor:
     command: |
       g++ #{input_file} && ./a.out
@@ -126,9 +126,9 @@ atomic_tests:
   - description: |
       the source file must exist on disk at specified location (#{input_file})
     prereq_command: |
-      if [ -e  #{input_file ]; then exit 0; else exit 1; fi
+      if [ -e  #{input_file} ]; then exit 0; else exit 1; fi
     get_prereq_command: |
-      Invoke-WebRequest https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027.004/src/T1027-004-test.go -OutFile #{input_file}
+      wget https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027.004/src/T1027-004-test.go -O #{input_file}
   executor:
     command: |
       go run #{input_file}
