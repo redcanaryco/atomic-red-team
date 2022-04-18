@@ -216,7 +216,7 @@ atomic_tests:
       Firepwd must exist at #{Firepwd_Path}
     prereq_command: 'if (Test-Path "#{Firepwd_Path}") {exit 0} else {exit 1}'      
     get_prereq_command: |
-      Invoke-WebRequest "https://github.com/lclevy/firepwd/raw/master/firepwd.py" -outfile "#{Firepwd_Path}"
+      Invoke-WebRequest "https://raw.githubusercontent.com/lclevy/firepwd/167eabf3b88d5a7ba8b8bc427283f827b6885982/firepwd.py" -outfile "#{Firepwd_Path}"
   - description: |
       Firefox profile directory must be present
     prereq_command: 'if (get-childitem -path "$env:appdata\Mozilla\Firefox\Profiles\*.default-release\" -erroraction silentlycontinue) {exit 0} else {exit 1}'      
