@@ -213,7 +213,9 @@
 - T1602 Data from Configuration Repository [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1213 Data from Information Repositories [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1005 Data from Local System [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1039 Data from Network Shared Drive [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1039 Data from Network Shared Drive](../../T1039/T1039.md)
+  - Atomic Test #1: Copy a sensitive File over Administive share with copy [windows]
+  - Atomic Test #2: Copy a sensitive File over Administive share with Powershell [windows]
 - T1025 Data from Removable Media [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1114 Email Collection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1114.003 Email Forwarding Rule [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
