@@ -68,6 +68,7 @@ atomic_tests:
       description: Specified command line to use
       type: String
       default: -Command Start-Sleep 10
+  dependency_executor_name: powershell
   dependencies:
   - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent must be exported in the module.
     prereq_command: |-
@@ -93,6 +94,7 @@ atomic_tests:
       description: Defined test GUID
       type: String
       default: 12345678-1234-1234-1234-123456789123
+  dependency_executor_name: powershell
   dependencies:
   - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent must be exported in the module.
     prereq_command: |-
@@ -118,6 +120,7 @@ atomic_tests:
       description: File path or name of process to spawn
       type: Path
       default: $Env:windir\System32\WindowsPowerShell\v1.0\powershell.exe
+  dependency_executor_name: powershell
   dependencies:
   - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent must be exported in the module.
     prereq_command: |-
@@ -147,6 +150,7 @@ atomic_tests:
       description: Parent process to spoof from
       type: Path
       default: $Env:windir\System32\notepad.exe
+  dependency_executor_name: powershell
   dependencies:
   - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent must be exported in the module.
     prereq_command: |-

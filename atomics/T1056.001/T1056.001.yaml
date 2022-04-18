@@ -32,6 +32,7 @@ atomic_tests:
     Passwords hidden by the console can also be logged, with 'log_passwd' as in this example.  If root logging is enabled, then output from any process which is later started by root is also logged, even if this policy is carefully enabled (e.g. 'disable=*' as the initial command).
    
     Use 'aureport --tty' or other audit.d reading tools to read the log output, which is binary.  Mac OS does not currently contain the pam_tty_audit.so library. 
+  dependency_executor_name: sh
   dependencies:
   - description: |
       Checking if pam_tty_audit.so is installed

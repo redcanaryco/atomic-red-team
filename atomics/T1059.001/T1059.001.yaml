@@ -187,6 +187,7 @@ atomic_tests:
     Attempts to run powershell commands in version 2.0 https://www.leeholmes.com/blog/2017/03/17/detecting-and-preventing-powershell-downgrade-attacks/
   supported_platforms:
   - windows
+  dependency_executor_name: powershell
   dependencies:
   - description: |
       PowerShell version 2 must be installed
@@ -209,6 +210,7 @@ atomic_tests:
       description: File created to store Alternate Stream Data
       type: String
       default: $env:TEMP\NTFS_ADS.txt
+  dependency_executor_name: powershell
   dependencies:
   - description: |
       Homedrive must be an NTFS drive
@@ -239,7 +241,7 @@ atomic_tests:
       description: The host to connect to, by default it will connect to the local machine
       type: String
       default: $env:COMPUTERNAME
-
+  dependency_executor_name: powershell
   dependencies:
   - description: |
        PSRemoting must be enabled
@@ -278,6 +280,7 @@ atomic_tests:
       description: The "Command" parameter variation to use
       type: String
       default: C
+  dependency_executor_name: powershell
   dependencies:
   - description: The AtomicTestHarnesses module must be installed and Out-ATHPowerShellCommandLineParameter must be exported in the module.
     prereq_command: |-
@@ -308,6 +311,7 @@ atomic_tests:
       description: The "EncodedArguments" parameter variation to use
       type: String
       default: EA
+  dependency_executor_name: powershell
   dependencies:
   - description: The AtomicTestHarnesses module must be installed and Out-ATHPowerShellCommandLineParameter must be exported in the module.
     prereq_command: |-
@@ -334,6 +338,7 @@ atomic_tests:
       description: The "EncodedCommand" parameter variation to use
       type: String
       default: E
+  dependency_executor_name: powershell
   dependencies:
   - description: The AtomicTestHarnesses module must be installed and Out-ATHPowerShellCommandLineParameter must be exported in the module.
     prereq_command: |-
@@ -364,6 +369,7 @@ atomic_tests:
       description: The "EncodedArguments" parameter variation to use
       type: String
       default: EncodedArguments
+  dependency_executor_name: powershell
   dependencies:
   - description: The AtomicTestHarnesses module must be installed and Out-ATHPowerShellCommandLineParameter must be exported in the module.
     prereq_command: |-
