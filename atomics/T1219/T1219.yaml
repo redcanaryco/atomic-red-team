@@ -114,3 +114,38 @@ atomic_tests:
       Stop-Process -Name "Ammyy" -force -erroraction silentlycontinue
     name: powershell
     elevation_required: True
+- name: RemotePC Software Execution
+  description: |
+    An adversary may attempt to trick the user into downloading RemotePC Software for use as a C2 channel. 
+    Upon successful execution, RemotePC will be executed. 
+  supported_platforms:
+  - windows
+  input_arguments:
+    RemotePC_Path:
+      description: Path of RemotePC executable
+      type: Path
+      default: $env:temp\RemotePC.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      RemotePC must exist on disk at the specified location (#{RemotePC_Path})
+    prereq_command: |
+      if (Test-Path #{RemotePC_Path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Start-BitsTransfer -Source "https://static.remotepc.com/downloads/rpc/140422/RemotePC.exe" -Destination "#{RemotePC_Path}" -dynamic
+  executor:
+    command: |
+      Start-Process #{RemotePC_Path}
+    cleanup_command: | 
+      Unregister-ScheduledTask -TaskName "RemotePC" -Confirm:$False -ErrorAction SilentlyContinue
+      Unregister-ScheduledTask -TaskName "RPCServiceHealthCheck" -Confirm:$False -ErrorAction SilentlyContinue
+      Unregister-ScheduledTask -TaskName "ServiceMonitor" -Confirm:$False -ErrorAction SilentlyContinue
+      Unregister-ScheduledTask -TaskName "StartRPCService" -Confirm:$False -ErrorAction SilentlyContinue      
+      Stop-Process -Name "RemotePCPerformance" -force -erroraction silentlycontinue
+      Stop-Process -Name "RPCPerformanceService" -force -erroraction silentlycontinue
+      Stop-Process -Name "RemotePCUIU" -force -erroraction silentlycontinue
+      Stop-Process -Name "RPCDownloader" -force -erroraction silentlycontinue
+      Stop-Process -Name "RemotePCService" -force -erroraction silentlycontinue
+      Stop-Process -Name "RPCService" -force -erroraction silentlycontinue
+    name: powershell
+    elevation_required: True
