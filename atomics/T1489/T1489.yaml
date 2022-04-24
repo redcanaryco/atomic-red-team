@@ -67,16 +67,18 @@ atomic_tests:
   - linux
   input_arguments:
     process_name:
-      description: PID of a running service, to list running processes run ps aux
+      description: PID of a running service, to list running processes run ps aux or use for macos run |
+      launchctl list |
+      or linux run |
+      systemctl list-units --type=service
       type: String
-      default: kill
+      default: kill -9 $(pgrep cron)
   executor:
     command: |
-      kill -9 #{process_name}
+      kill -9 $(pgrep #{service_name})
     name: sh
-
-
-
+    elevation_required: true
+elevation_required: true
 
 
 
