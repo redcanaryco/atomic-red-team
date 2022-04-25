@@ -29,6 +29,7 @@ credential-access,T1555.003,Credentials from Web Browsers,4,Simulating access to
 credential-access,T1555.003,Credentials from Web Browsers,5,Simulating access to Opera Login Data,28498c17-57e4-495a-b0be-cc1e36de408b,powershell
 credential-access,T1555.003,Credentials from Web Browsers,6,Simulating access to Windows Firefox Login Data,eb8da98a-2e16-4551-b3dd-83de49baa14c,powershell
 credential-access,T1555.003,Credentials from Web Browsers,7,Simulating access to Windows Edge Login Data,a6a5ec26-a2d1-4109-9d35-58b867689329,powershell
+credential-access,T1555.003,Credentials from Web Browsers,8,Decrypt Mozilla Passwords with Firepwd.py,dc9cd677-c70f-4df5-bd1c-f114af3c2381,powershell
 credential-access,T1552.002,Credentials in Registry,1,Enumeration for Credentials in Registry,b6ec082c-7384-46b3-a111-9a9b8b14e5e7,command_prompt
 credential-access,T1552.002,Credentials in Registry,2,Enumeration for PuTTY Credentials in Registry,af197fd7-e868-448e-9bd5-05d1bcd9d9e5,command_prompt
 credential-access,T1003.006,DCSync,1,DCSync (Active Directory),129efd28-8497-4c87-a1b0-73b9a870ca3e,command_prompt
@@ -108,9 +109,11 @@ credential-access,T1606.002,SAML Tokens,1,Golden SAML,b16a03bc-1089-4dcc-ad98-30
 credential-access,T1003.002,Security Account Manager,1,"Registry dump of SAM, creds, and secrets",5c2571d0-1572-416d-9676-812e64ca9f44,command_prompt
 credential-access,T1003.002,Security Account Manager,2,Registry parse with pypykatz,a96872b2-cbf3-46cf-8eb4-27e8c0e85263,command_prompt
 credential-access,T1003.002,Security Account Manager,3,esentutl.exe SAM copy,a90c2f4d-6726-444e-99d2-a00cd7c20480,command_prompt
-credential-access,T1003.002,Security Account Manager,4,PowerDump Registry dump of SAM for hashes and usernames,804f28fc-68fc-40da-b5a2-e9d0bce5c193,powershell
+credential-access,T1003.002,Security Account Manager,4,PowerDump Hashes and Usernames from Registry,804f28fc-68fc-40da-b5a2-e9d0bce5c193,powershell
 credential-access,T1003.002,Security Account Manager,5,dump volume shadow copy hives with certutil,eeb9751a-d598-42d3-b11c-c122d9c3f6c7,powershell
 credential-access,T1003.002,Security Account Manager,6,dump volume shadow copy hives with System.IO.File,9d77fed7-05f8-476e-a81b-8ff0472c64d0,powershell
+credential-access,T1539,Steal Web Session Cookie,1,Steal Firefox Cookies (Windows),4b437357-f4e9-4c84-9fa6-9bcee6f826aa,powershell
+credential-access,T1555.004,Windows Credential Manager,1,Access Saved Credentials via VaultCmd,9c2dd36d-5c8b-4b29-8d72-a11b0d5d7439,command_prompt
 collection,T1560,Archive Collected Data,1,Compress Data for Exfiltration With PowerShell,41410c60-614d-4b9d-b66e-b0192dd9c597,powershell
 collection,T1560.002,Archive via Library,1,Compressing data using GZip in Python (Linux),391f5298-b12d-4636-8482-35d9c17d53a8,bash
 collection,T1560.002,Archive via Library,2,Compressing data using bz2 in Python (Linux),c75612b2-9de0-4d7c-879c-10d7b077072d,bash
@@ -135,6 +138,8 @@ collection,T1115,Clipboard Data,2,Execute Commands from Clipboard using PowerShe
 collection,T1115,Clipboard Data,3,Execute commands from clipboard,1ac2247f-65f8-4051-b51f-b0ccdfaaa5ff,bash
 collection,T1115,Clipboard Data,4,Collect Clipboard Data via VBA,9c8d5a72-9c98-48d3-b9bf-da2cc43bdf52,powershell
 collection,T1056.004,Credential API Hooking,1,Hook PowerShell TLS Encrypt/Decrypt Messages,de1934ea-1fbf-425b-8795-65fb27dd7e33,powershell
+collection,T1039,Data from Network Shared Drive,1,Copy a sensitive File over Administive share with copy,6ed67921-1774-44ba-bac6-adb51ed60660,command_prompt
+collection,T1039,Data from Network Shared Drive,2,Copy a sensitive File over Administive share with Powershell,7762e120-5879-44ff-97f8-008b401b9a98,powershell
 collection,T1056.002,GUI Input Capture,1,AppleScript - Prompt User for Password,76628574-0bc1-4646-8fe2-8f4427b47d15,bash
 collection,T1056.002,GUI Input Capture,2,PowerShell - Prompt User for Password,2b162bfd-0928-4d4c-9ec3-4d9f88374b52,powershell
 collection,T1056.001,Keylogging,1,Input Capture,d9b633ca-8efb-45e6-b838-70f595c6ae26,powershell
@@ -213,6 +218,7 @@ privilege-escalation,T1543.001,Launch Agent,1,Launch Agent,a5983dee-bf6c-4eaf-95
 privilege-escalation,T1543.004,Launch Daemon,1,Launch Daemon,03ab8df5-3a6b-4417-b6bd-bb7a5cfd74cf,bash
 privilege-escalation,T1053.004,Launchd,1,Event Monitor Daemon Persistence,11979f23-9b9d-482a-9935-6fc9cd022c3e,bash
 privilege-escalation,T1078.003,Local Accounts,1,Create local account with admin privileges,a524ce99-86de-4db6-b4f9-e08f35a47a15,command_prompt
+privilege-escalation,T1078.003,Local Accounts,2,Create local account with admin privileges - MacOS,f1275566-1c26-4b66-83e3-7f9f7f964daa,bash
 privilege-escalation,T1037.002,Logon Script (Mac),1,Logon Scripts - Mac,f047c7de-a2d9-406e-a62b-12a09d9516f4,manual
 privilege-escalation,T1037.001,Logon Script (Windows),1,Logon Scripts,d6042746-07d4-4c92-9ad8-e644c114a231,command_prompt
 privilege-escalation,T1546.007,Netsh Helper DLL,1,Netsh Helper DLL Registration,3244697d-5a3a-4dfc-941c-550f69f91a4d,command_prompt
@@ -405,7 +411,7 @@ defense-evasion,T1562.001,Disable or Modify Tools,24,Tamper with Windows Defende
 defense-evasion,T1562.001,Disable or Modify Tools,25,office-365-Disable-AntiPhishRule,b9bbae2c-2ba6-4cf3-b452-8e8f908696f3,powershell
 defense-evasion,T1562.001,Disable or Modify Tools,26,Disable Windows Defender with DISM,871438ac-7d6e-432a-b27d-3e7db69faf58,command_prompt
 defense-evasion,T1562.001,Disable or Modify Tools,27,Disable Defender with Defender Control,178136d8-2778-4d7a-81f3-d517053a4fd6,powershell
-defense-evasion,T1562.001,Disable or Modify Tools,28,Disable Windows Defender Tamper Protection,5fde6578-9419-46ef-9258-269dc8656c3e,powershell
+defense-evasion,T1562.001,Disable or Modify Tools,28,Disable Defender Using NirSoft AdvancedRun,81ce22fd-9612-4154-918e-8a1f285d214d,powershell
 defense-evasion,T1484.002,Domain Trust Modification,1,Add Federation to Azure AD,8906c5d0-3ee5-4f63-897a-f6cafd3fdbb7,powershell
 defense-evasion,T1574.006,Dynamic Linker Hijacking,1,Shared Library Injection via /etc/ld.so.preload,39cb0e67-dd0d-4b74-a74b-c072db7ae991,bash
 defense-evasion,T1574.006,Dynamic Linker Hijacking,2,Shared Library Injection via LD_PRELOAD,bc219ff7-789f-4d51-9142-ecae3397deae,bash
@@ -448,6 +454,7 @@ defense-evasion,T1553.004,Install Root Certificate,2,Install root CA on Debian/U
 defense-evasion,T1553.004,Install Root Certificate,3,Install root CA on macOS,cc4a0b8c-426f-40ff-9426-4e10e5bf4c49,sh
 defense-evasion,T1553.004,Install Root Certificate,4,Install root CA on Windows,76f49d86-5eb1-461a-a032-a480f86652f1,powershell
 defense-evasion,T1553.004,Install Root Certificate,5,Install root CA on Windows with certutil,5fdb1a7a-a93c-4fbe-aa29-ddd9ef94ed1f,powershell
+defense-evasion,T1553.004,Install Root Certificate,6,Add Root Certificate to CurrentUser Certificate Store,ca20a3f1-42b5-4e21-ad3f-1049199ec2e0,powershell
 defense-evasion,T1218.004,InstallUtil,1,CheckIfInstallable method call,ffd9c807-d402-47d2-879d-f915cf2a3a94,powershell
 defense-evasion,T1218.004,InstallUtil,2,InstallHelper method call,d43a5bde-ae28-4c55-a850-3f4c80573503,powershell
 defense-evasion,T1218.004,InstallUtil,3,InstallUtil class constructor method call,9b7a7cfc-dd2e-43f5-a885-c0a3c270dd93,powershell
@@ -466,6 +473,7 @@ defense-evasion,T1222.002,Linux and Mac File and Directory Permissions Modificat
 defense-evasion,T1222.002,Linux and Mac File and Directory Permissions Modification,8,chown - Change file or folder ownership recursively,3b015515-b3d8-44e9-b8cd-6fa84faf30b2,bash
 defense-evasion,T1222.002,Linux and Mac File and Directory Permissions Modification,9,chattr - Remove immutable file attribute,e7469fe2-ad41-4382-8965-99b94dd3c13f,sh
 defense-evasion,T1078.003,Local Accounts,1,Create local account with admin privileges,a524ce99-86de-4db6-b4f9-e08f35a47a15,command_prompt
+defense-evasion,T1078.003,Local Accounts,2,Create local account with admin privileges - MacOS,f1275566-1c26-4b66-83e3-7f9f7f964daa,bash
 defense-evasion,T1127.001,MSBuild,1,MSBuild Bypass Using Inline Tasks (C#),58742c0f-cb01-44cd-a60b-fb26e8871c93,command_prompt
 defense-evasion,T1127.001,MSBuild,2,MSBuild Bypass Using Inline Tasks (VB),ab042179-c0c5-402f-9bc8-42741f5ce359,command_prompt
 defense-evasion,T1553.005,Mark-of-the-Web Bypass,1,Mount ISO image,002cca30-4778-4891-878a-aaffcfa502fa,powershell
@@ -473,7 +481,7 @@ defense-evasion,T1553.005,Mark-of-the-Web Bypass,2,Mount an ISO image and run ex
 defense-evasion,T1553.005,Mark-of-the-Web Bypass,3,Remove the Zone.Identifier alternate data stream,64b12afc-18b8-4d3f-9eab-7f6cae7c73f9,powershell
 defense-evasion,T1036.004,Masquerade Task or Service,1,Creating W32Time similar named service using schtasks,f9f2fe59-96f7-4a7d-ba9f-a9783200d4c9,command_prompt
 defense-evasion,T1036.004,Masquerade Task or Service,2,Creating W32Time similar named service using sc,b721c6ef-472c-4263-a0d9-37f1f4ecff66,command_prompt
-defense-evasion,T1036,Masquerading,1,System File Copied to Unusual Location,51005ac7-52e2-45e0-bdab-d17c6d4916cd,command_prompt
+defense-evasion,T1036,Masquerading,1,System File Copied to Unusual Location,51005ac7-52e2-45e0-bdab-d17c6d4916cd,powershell
 defense-evasion,T1036,Masquerading,2,Malware Masquerading and Execution from Zip File,4449c89b-ec82-43a4-89c1-91e2f1abeecc,powershell
 defense-evasion,T1036.005,Match Legitimate Name or Location,1,Execute a process from a directory masquerading as the current parent directory.,812c3ab8-94b0-4698-a9bf-9420af23ce24,sh
 defense-evasion,T1036.005,Match Legitimate Name or Location,2,Masquerade as a built-in system executable,35eb8d16-9820-4423-a2a1-90c4f5edd9ca,powershell
@@ -521,9 +529,17 @@ defense-evasion,T1218.005,Mshta,7,Invoke HTML Application - JScript Engine with 
 defense-evasion,T1218.005,Mshta,8,Invoke HTML Application - JScript Engine with Inline Protocol Handler,d3eaaf6a-cdb1-44a9-9ede-b6c337d0d840,powershell
 defense-evasion,T1218.005,Mshta,9,Invoke HTML Application - Simulate Lateral Movement over UNC Path,b8a8bdb2-7eae-490d-8251-d5e0295b2362,powershell
 defense-evasion,T1218.005,Mshta,10,Mshta used to Execute PowerShell,8707a805-2b76-4f32-b1c0-14e558205772,command_prompt
-defense-evasion,T1218.007,Msiexec,1,Msiexec.exe - Execute Local MSI file,0683e8f7-a27b-4b62-b7ab-dc7d4fed1df8,command_prompt
-defense-evasion,T1218.007,Msiexec,2,Msiexec.exe - Execute Remote MSI file,bde7d2fe-d049-458d-a362-abda32a7e649,command_prompt
-defense-evasion,T1218.007,Msiexec,3,Msiexec.exe - Execute Arbitrary DLL,66f64bd5-7c35-4c24-953a-04ca30a0a0ec,command_prompt
+defense-evasion,T1218.007,Msiexec,1,Msiexec.exe - Execute Local MSI file with embedded JScript,a059b6c4-e7d6-4b2e-bcd7-9b2b33191a04,command_prompt
+defense-evasion,T1218.007,Msiexec,2,Msiexec.exe - Execute Local MSI file with embedded VBScript,8d73c7b0-c2b1-4ac1-881a-4aa644f76064,command_prompt
+defense-evasion,T1218.007,Msiexec,3,Msiexec.exe - Execute Local MSI file with an embedded DLL,628fa796-76c5-44c3-93aa-b9d8214fd568,command_prompt
+defense-evasion,T1218.007,Msiexec,4,Msiexec.exe - Execute Local MSI file with an embedded EXE,ed3fa08a-ca18-4009-973e-03d13014d0e8,command_prompt
+defense-evasion,T1218.007,Msiexec,5,WMI Win32_Product Class - Execute Local MSI file with embedded JScript,882082f0-27c6-4eec-a43c-9aa80bccdb30,powershell
+defense-evasion,T1218.007,Msiexec,6,WMI Win32_Product Class - Execute Local MSI file with embedded VBScript,cf470d9a-58e7-43e5-b0d2-805dffc05576,powershell
+defense-evasion,T1218.007,Msiexec,7,WMI Win32_Product Class - Execute Local MSI file with an embedded DLL,32eb3861-30da-4993-897a-42737152f5f8,powershell
+defense-evasion,T1218.007,Msiexec,8,WMI Win32_Product Class - Execute Local MSI file with an embedded EXE,55080eb0-49ae-4f55-a440-4167b7974f79,powershell
+defense-evasion,T1218.007,Msiexec,9,Msiexec.exe - Execute the DllRegisterServer function of a DLL,0106ffa5-fab6-4c7d-82e3-e6b8867d5e5d,command_prompt
+defense-evasion,T1218.007,Msiexec,10,Msiexec.exe - Execute the DllUnregisterServer function of a DLL,ab09ec85-4955-4f9c-b8e0-6851baf4d47f,command_prompt
+defense-evasion,T1218.007,Msiexec,11,Msiexec.exe - Execute Remote MSI file,44a4bedf-ffe3-452e-bee4-6925ab125662,command_prompt
 defense-evasion,T1564.004,NTFS File Attributes,1,Alternate Data Streams (ADS),8822c3b0-d9f9-4daf-a043-49f4602364f4,command_prompt
 defense-evasion,T1564.004,NTFS File Attributes,2,Store file in Alternate Data Stream (ADS),2ab75061-f5d5-4c1a-b666-ba2a50df5b02,powershell
 defense-evasion,T1564.004,NTFS File Attributes,3,Create ADS command prompt,17e7637a-ddaf-4a82-8622-377e20de8fdb,command_prompt
@@ -712,6 +728,7 @@ persistence,T1136.001,Local Account,4,Create a new user in PowerShell,bc8be0ac-4
 persistence,T1136.001,Local Account,5,Create a new user in Linux with `root` UID and GID.,a1040a30-d28b-4eda-bd99-bb2861a4616c,bash
 persistence,T1136.001,Local Account,6,Create a new Windows admin user,fda74566-a604-4581-a4cc-fbbe21d66559,command_prompt
 persistence,T1078.003,Local Accounts,1,Create local account with admin privileges,a524ce99-86de-4db6-b4f9-e08f35a47a15,command_prompt
+persistence,T1078.003,Local Accounts,2,Create local account with admin privileges - MacOS,f1275566-1c26-4b66-83e3-7f9f7f964daa,bash
 persistence,T1037.002,Logon Script (Mac),1,Logon Scripts - Mac,f047c7de-a2d9-406e-a62b-12a09d9516f4,manual
 persistence,T1037.001,Logon Script (Windows),1,Logon Scripts,d6042746-07d4-4c92-9ad8-e644c114a231,command_prompt
 persistence,T1546.007,Netsh Helper DLL,1,Netsh Helper DLL Registration,3244697d-5a3a-4dfc-941c-550f69f91a4d,command_prompt
@@ -852,6 +869,7 @@ discovery,T1083,File and Directory Discovery,2,File and Directory Discovery (Pow
 discovery,T1083,File and Directory Discovery,3,Nix File and Directory Discovery,ffc8b249-372a-4b74-adcd-e4c0430842de,sh
 discovery,T1083,File and Directory Discovery,4,Nix File and Directory Discovery 2,13c5e1ae-605b-46c4-a79f-db28c77ff24e,sh
 discovery,T1083,File and Directory Discovery,5,Simulating MAZE Directory Enumeration,c6c34f61-1c3e-40fb-8a58-d017d88286d8,powershell
+discovery,T1615,Group Policy Discovery,1,Display group policy information via gpresult,0976990f-53b1-4d3f-a185-6df5be429d3b,command_prompt
 discovery,T1087.001,Local Account,1,Enumerate all accounts (Local),f8aab3dd-5990-4bf8-b8ab-2226c951696f,sh
 discovery,T1087.001,Local Account,2,View sudoers access,fed9be70-0186-4bde-9f8a-20945f9370c2,sh
 discovery,T1087.001,Local Account,3,View accounts with UID 0,c955a599-3653-4fe5-b631-f11c00eb0397,sh
@@ -942,6 +960,7 @@ discovery,T1082,System Information Discovery,8,Windows MachineGUID Discovery,224
 discovery,T1082,System Information Discovery,9,Griffon Recon,69bd4abe-8759-49a6-8d21-0f15822d6370,powershell
 discovery,T1082,System Information Discovery,10,Environment variables discovery on windows,f400d1c0-1804-4ff8-b069-ef5ddd2adbf3,command_prompt
 discovery,T1082,System Information Discovery,11,Environment variables discovery on macos and linux,fcbdd43f-f4ad-42d5-98f3-0218097e2720,sh
+discovery,T1082,System Information Discovery,12,Show System Integrity Protection status (MacOS),327cc050-9e99-4c8e-99b5-1d15f2fb6b96,sh
 discovery,T1016,System Network Configuration Discovery,1,System Network Configuration Discovery on Windows,970ab6a1-0157-4f3f-9a73-ec4166754b23,command_prompt
 discovery,T1016,System Network Configuration Discovery,2,List Windows Firewall Rules,038263cb-00f4-4b0a-98ae-0696c67e1752,command_prompt
 discovery,T1016,System Network Configuration Discovery,3,System Network Configuration Discovery,c141bbdb-7fca-4254-9fd6-f47e79447e17,sh
@@ -964,8 +983,6 @@ discovery,T1007,System Service Discovery,2,System Service Discovery - net.exe,5f
 discovery,T1124,System Time Discovery,1,System Time Discovery,20aba24b-e61f-4b26-b4ce-4784f763ca20,command_prompt
 discovery,T1124,System Time Discovery,2,System Time Discovery - PowerShell,1d5711d6-655c-4a47-ae9c-6503c74fa877,powershell
 discovery,T1124,System Time Discovery,3,System Time Discovery in macOS,f449c933-0891-407f-821e-7916a21a1a6f,sh
-resource-development,T1587.002,Code Signing Certificates,1,Add Root Certificate to CurrentUser Certificate Store,ca20a3f1-42b5-4e21-ad3f-1049199ec2e0,powershell
-resource-development,T1588.002,Tool,1,Run NirSoft AdvancedRun,f7d43d35-d628-4582-bb03-01b1c5e10d11,powershell
 execution,T1059.002,AppleScript,1,AppleScript,3600d97d-81b9-4171-ab96-e4386506e2c2,sh
 execution,T1053.001,At (Linux),1,At - Schedule a job,7266d898-ac82-4ec0-97c7-436075d0d08e,sh
 execution,T1053.002,At (Windows),1,At.exe Scheduled task,4a6c0dc4-0f2a-4203-9298-a5a9bdc21ed8,command_prompt
@@ -1023,6 +1040,7 @@ execution,T1053.005,Scheduled Task,6,WMI Invoke-CimMethod Scheduled Task,e16b3b7
 execution,T1053.005,Scheduled Task,7,Scheduled Task Executing Base64 Encoded Commands From Registry,e895677d-4f06-49ab-91b6-ae3742d0a2ba,command_prompt
 execution,T1569.002,Service Execution,1,Execute a Command as a Service,2382dee2-a75f-49aa-9378-f52df6ed3fb1,command_prompt
 execution,T1569.002,Service Execution,2,Use PsExec to execute a command on a remote host,873106b7-cfed-454b-8680-fa9f6400431c,command_prompt
+execution,T1569.002,Service Execution,3,psexec.py (Impacket),edbcd8c9-3639-4844-afad-455c91e95a35,bash
 execution,T1072,Software Deployment Tools,1,Radmin Viewer Utility,b4988cad-6ed2-434d-ace5-ea2670782129,command_prompt
 execution,T1053.006,Systemd Timers,1,Create Systemd Service and Timer,f4983098-bb13-44fb-9b2c-46149961807b,bash
 execution,T1053.006,Systemd Timers,2,Create a user level transient systemd service and timer,3de33f5b-62e5-4e63-a2a0-6fd8808c80ec,sh
@@ -1113,6 +1131,7 @@ command-and-control,T1219,Remote Access Software,3,LogMeIn Files Detected Test o
 command-and-control,T1219,Remote Access Software,4,GoToAssist Files Detected Test on Windows,1b72b3bd-72f8-4b63-a30b-84e91b9c3578,powershell
 command-and-control,T1219,Remote Access Software,5,ScreenConnect Application Download and Install on Windows,4a18cc4e-416f-4966-9a9d-75731c4684c0,powershell
 command-and-control,T1219,Remote Access Software,6,Ammyy Admin Software Execution,0ae9e327-3251-465a-a53b-485d4e3f58fa,powershell
+command-and-control,T1219,Remote Access Software,7,RemotePC Software Execution,fbff3f1f-b0bf-448e-840f-7e1687affdce,powershell
 command-and-control,T1132.001,Standard Encoding,1,Base64 Encoded data.,1164f70f-9a88-4dff-b9ff-dc70e7bf0c25,sh
 command-and-control,T1132.001,Standard Encoding,2,XOR Encoded data.,c3ed6d2a-e3ad-400d-ad78-bbfdbfeacc08,powershell
 command-and-control,T1071.001,Web Protocols,1,Malicious User Agents - Powershell,81c13829-f6c9-45b8-85a6-053366d55297,powershell
@@ -1137,6 +1156,7 @@ initial-access,T1078.001,Default Accounts,1,Enable Guest account with RDP capabi
 initial-access,T1078.001,Default Accounts,2,Activate Guest Account,aa6cb8c4-b582-4f8e-b677-37733914abda,command_prompt
 initial-access,T1133,External Remote Services,1,Running Chrome VPN Extensions via the Registry 2 vpn extension,4c8db261-a58b-42a6-a866-0a294deedde4,powershell
 initial-access,T1078.003,Local Accounts,1,Create local account with admin privileges,a524ce99-86de-4db6-b4f9-e08f35a47a15,command_prompt
+initial-access,T1078.003,Local Accounts,2,Create local account with admin privileges - MacOS,f1275566-1c26-4b66-83e3-7f9f7f964daa,bash
 initial-access,T1091,Replication Through Removable Media,1,USB Malware Spread Simulation,d44b7297-622c-4be8-ad88-ec40d7563c75,powershell
 initial-access,T1566.001,Spearphishing Attachment,1,Download Macro-Enabled Phishing Attachment,114ccff9-ae6d-4547-9ead-4cd69f687306,powershell
 initial-access,T1566.001,Spearphishing Attachment,2,Word spawned a command shell and used an IP address in the command line,cbb6799a-425c-4f83-9194-5447a909d67f,powershell

