@@ -1002,6 +1002,7 @@
   - Atomic Test #5: Simulating MAZE Directory Enumeration [windows]
 - [T1615 Group Policy Discovery](../../T1615/T1615.md)
   - Atomic Test #1: Display group policy information via gpresult [windows]
+  - Atomic Test #2: Get-DomainGPO to display group policy information via PowerView [windows]
 - T1016.001 Internet Connection Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1087.001 Local Account](../../T1087.001/T1087.001.md)
   - Atomic Test #8: Enumerate all accounts on Windows (Local) [windows]
