@@ -15,32 +15,32 @@ atomic_tests:
     rootkit_path:
       description: Path To rootkit
       type: String
-      default: PathToAtomicsFolder/T1014/bin/T1014.ko
+      default: PathToAtomicsFolder/T1014/bin
     rootkit_name:
       description: Module name
       type: String
       default: T1014
-    temp_folder:
-      description: Temp folder used to compile the code. Used when prerequistes are fetched.
-      type: Path
-      default: /tmp/T1014
   dependency_executor_name: bash
   dependencies:
   - description: |
-      The kernel module must exist on disk at specified location (#{rootkit_path})
+      The kernel module must exist on disk at specified location (#{rootkit_path}/#{rootkit_name}.ko)
     prereq_command: |
-      if [ -f #{rootkit_path} ]; then exit 0; else exit 1; fi;
+      if [ -f #{rootkit_path}/#{rootkit_name}.ko ]; then exit 0; else exit 1; fi;
     get_prereq_command: |
-      if [ ! -d #{temp_folder} ]; then mkdir #{temp_folder}; touch #{temp_folder}/safe_to_delete; fi;
-      cp #{rootkit_source_path}/* #{temp_folder}/
-      cd #{temp_folder}; make
-      mv #{temp_folder}/#{rootkit_name}.ko #{rootkit_path}
-      [ -f #{temp_folder}/safe_to_delete ] && rm -rf #{temp_folder}
+      sudo apt install make
+      sudo apt install gcc
+      if [ ! -d /tmp/T1014 ]; then mkdir /tmp/T1014; fi;
+      cp #{rootkit_source_path}/* /tmp/T1014/
+      cd /tmp/T1014; make
+      mkdir #{rootkit_path}
+      mv /tmp/T1014/#{rootkit_name}.ko #{rootkit_path}/#{rootkit_name}.ko
+      rm -rf /tmp/T1014
   executor:
     command: |
-      sudo insmod #{rootkit_path}
+      sudo insmod #{rootkit_path}/#{rootkit_name}.ko
     cleanup_command: |
       sudo rmmod #{rootkit_name}
+      sudo rm -rf #{rootkit_path}
     name: sh
     elevation_required: true
 - name: Loadable Kernel Module based Rootkit
@@ -57,27 +57,25 @@ atomic_tests:
     rootkit_path:
       description: Path To rootkit
       type: String
-      default: PathToAtomicsFolder/T1014/bin/T1014.ko
+      default: PathToAtomicsFolder/T1014/bin
     rootkit_name:
       description: Module name
       type: String
       default: T1014
-    temp_folder:
-      description: Temp folder used to compile the code. Used when prerequistes are fetched.
-      type: Path
-      default: /tmp/T1014
   dependency_executor_name: bash
   dependencies:
   - description: |
-      The kernel module must exist on disk at specified location (#{rootkit_path})
+      The kernel module must exist on disk at specified location (#{rootkit_path}/#{rootkit_name}.ko)
     prereq_command: |
       if [ -f /lib/modules/$(uname -r)/#{rootkit_name}.ko ]; then exit 0; else exit 1; fi;
     get_prereq_command: |
-      if [ ! -d #{temp_folder} ]; then mkdir #{temp_folder}; touch #{temp_folder}/safe_to_delete; fi;
-      cp #{rootkit_source_path}/* #{temp_folder}/
-      cd #{temp_folder}; make        
-      sudo cp #{temp_folder}/#{rootkit_name}.ko /lib/modules/$(uname -r)/
-      [ -f #{temp_folder}/safe_to_delete ] && rm -rf #{temp_folder}
+      sudo apt install make
+      sudo apt install gcc
+      if [ ! -d /tmp/T1014 ]; then mkdir /tmp/T1014; touch /tmp/T1014/safe_to_delete; fi;
+      cp #{rootkit_source_path}/* /tmp/T1014
+      cd /tmp/T1014; make        
+      sudo cp /tmp/T1014/#{rootkit_name}.ko /lib/modules/$(uname -r)/
+      [ -f /tmp/T1014/safe_to_delete ] && rm -rf /tmp/T1014
       sudo depmod -a
   executor:
     command: |

@@ -27,6 +27,7 @@
   - Atomic Test #5: Simulating access to Opera Login Data [windows]
   - Atomic Test #6: Simulating access to Windows Firefox Login Data [windows]
   - Atomic Test #7: Simulating access to Windows Edge Login Data [windows]
+  - Atomic Test #8: Decrypt Mozilla Passwords with Firepwd.py [windows]
 - [T1552.002 Credentials in Registry](../../T1552.002/T1552.002.md)
   - Atomic Test #1: Enumeration for Credentials in Registry [windows]
   - Atomic Test #2: Enumeration for PuTTY Credentials in Registry [windows]
@@ -110,7 +111,7 @@
   - Atomic Test #1: Registry dump of SAM, creds, and secrets [windows]
   - Atomic Test #2: Registry parse with pypykatz [windows]
   - Atomic Test #3: esentutl.exe SAM copy [windows]
-  - Atomic Test #4: PowerDump Registry dump of SAM for hashes and usernames [windows]
+  - Atomic Test #4: PowerDump Hashes and Usernames from Registry [windows]
   - Atomic Test #5: dump volume shadow copy hives with certutil [windows]
   - Atomic Test #6: dump volume shadow copy hives with System.IO.File [windows]
 - T1558.002 Silver Ticket [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -154,7 +155,9 @@
 - T1074 Data Staged [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1213 Data from Information Repositories [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1005 Data from Local System [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1039 Data from Network Shared Drive [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1039 Data from Network Shared Drive](../../T1039/T1039.md)
+  - Atomic Test #1: Copy a sensitive File over Administive share with copy [windows]
+  - Atomic Test #2: Copy a sensitive File over Administive share with Powershell [windows]
 - T1025 Data from Removable Media [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1114 Email Collection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1114.003 Email Forwarding Rule [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -444,8 +447,8 @@
   - Atomic Test #24: Tamper with Windows Defender Evade Scanning -Process [windows]
   - Atomic Test #26: Disable Windows Defender with DISM [windows]
   - Atomic Test #27: Disable Defender with Defender Control [windows]
-  - Atomic Test #28: Disable Windows Defender Tamper Protection [windows]
-  - Atomic Test #29: Disable Defender Using NirSoft AdvancedRun [windows]
+  - Atomic Test #28: Disable Defender Using NirSoft AdvancedRun [windows]
+  - Atomic Test #29: Kill antimalware protected processes using Backstab [windows]
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1556.001 Domain Controller Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1484 Domain Policy Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -575,9 +578,17 @@
   - Atomic Test #9: Invoke HTML Application - Simulate Lateral Movement over UNC Path [windows]
   - Atomic Test #10: Mshta used to Execute PowerShell [windows]
 - [T1218.007 Msiexec](../../T1218.007/T1218.007.md)
-  - Atomic Test #1: Msiexec.exe - Execute Local MSI file [windows]
-  - Atomic Test #2: Msiexec.exe - Execute Remote MSI file [windows]
-  - Atomic Test #3: Msiexec.exe - Execute Arbitrary DLL [windows]
+  - Atomic Test #1: Msiexec.exe - Execute Local MSI file with embedded JScript [windows]
+  - Atomic Test #2: Msiexec.exe - Execute Local MSI file with embedded VBScript [windows]
+  - Atomic Test #3: Msiexec.exe - Execute Local MSI file with an embedded DLL [windows]
+  - Atomic Test #4: Msiexec.exe - Execute Local MSI file with an embedded EXE [windows]
+  - Atomic Test #5: WMI Win32_Product Class - Execute Local MSI file with embedded JScript [windows]
+  - Atomic Test #6: WMI Win32_Product Class - Execute Local MSI file with embedded VBScript [windows]
+  - Atomic Test #7: WMI Win32_Product Class - Execute Local MSI file with an embedded DLL [windows]
+  - Atomic Test #8: WMI Win32_Product Class - Execute Local MSI file with an embedded EXE [windows]
+  - Atomic Test #9: Msiexec.exe - Execute the DllRegisterServer function of a DLL [windows]
+  - Atomic Test #10: Msiexec.exe - Execute the DllUnregisterServer function of a DLL [windows]
+  - Atomic Test #11: Msiexec.exe - Execute Remote MSI file [windows]
 - [T1564.004 NTFS File Attributes](../../T1564.004/T1564.004.md)
   - Atomic Test #1: Alternate Data Streams (ADS) [windows]
   - Atomic Test #2: Store file in Alternate Data Stream (ADS) [windows]
@@ -990,7 +1001,9 @@
   - Atomic Test #1: File and Directory Discovery (cmd.exe) [windows]
   - Atomic Test #2: File and Directory Discovery (PowerShell) [windows]
   - Atomic Test #5: Simulating MAZE Directory Enumeration [windows]
-- T1615 Group Policy Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1615 Group Policy Discovery](../../T1615/T1615.md)
+  - Atomic Test #1: Display group policy information via gpresult [windows]
+  - Atomic Test #2: Get-DomainGPO to display group policy information via PowerView [windows]
 - T1016.001 Internet Connection Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1087.001 Local Account](../../T1087.001/T1087.001.md)
   - Atomic Test #8: Enumerate all accounts on Windows (Local) [windows]
@@ -1158,6 +1171,7 @@
   - Atomic Test #4: GoToAssist Files Detected Test on Windows [windows]
   - Atomic Test #5: ScreenConnect Application Download and Install on Windows [windows]
   - Atomic Test #6: Ammyy Admin Software Execution [windows]
+  - Atomic Test #7: RemotePC Software Execution [windows]
 - [T1132.001 Standard Encoding](../../T1132.001/T1132.001.md)
   - Atomic Test #2: XOR Encoded data. [windows]
 - T1001.002 Steganography [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
