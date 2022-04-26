@@ -79,7 +79,7 @@ atomic_tests:
       bitsadmin.exe /addfile #{bits_job_name} #{remote_file} #{local_file}
       bitsadmin.exe /setnotifycmdline #{bits_job_name} #{command_path} NULL
       bitsadmin.exe /resume #{bits_job_name}
-      timeout 5
+      ping -n 5 127.0.0.1 >nul 2>&1
       bitsadmin.exe /complete #{bits_job_name}
     cleanup_command: |
       del #{local_file} >nul 2>&1
