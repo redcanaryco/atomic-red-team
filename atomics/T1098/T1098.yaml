@@ -515,3 +515,19 @@ atomic_tests:
       
     name: powershell
     elevation_required: false
+- name: Password Change on Directory Service Restore Mode (DSRM) Account
+  auto_generated_guid: 9726592a-dabc-4d4d-81cd-44070008b3af
+  description: |
+    Change the password on the Directory Service Restore Mode (DSRM) account using ntdsutil by syncing to existing account
+  supported_platforms:
+    - windows
+  input_arguments:
+    sync_account:
+      description: Account to sync password from
+      type: String
+      default: '%username%'
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      ntdsutil "set dsrm password" "sync from domain account #{sync_account}" "q" "q"
