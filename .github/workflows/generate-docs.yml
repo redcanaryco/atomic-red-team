@@ -9,6 +9,9 @@ jobs:
     steps:
       - name: checkout repo
         uses: actions/checkout@v2
+        with: 
+          token: ${{ secrets.PROTECTED_BRANCH_PUSH_TOKEN }}
+          ref: 'master'
       
       - name: setup ruby
         uses: ruby/setup-ruby@v1
