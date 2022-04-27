@@ -448,6 +448,7 @@
   - Atomic Test #26: Disable Windows Defender with DISM [windows]
   - Atomic Test #27: Disable Defender with Defender Control [windows]
   - Atomic Test #28: Disable Defender Using NirSoft AdvancedRun [windows]
+  - Atomic Test #29: Kill antimalware protected processes using Backstab [windows]
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1556.001 Domain Controller Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1484 Domain Policy Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -487,7 +488,8 @@
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1562.003 Impair Command History Logging [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1562 Impair Defenses [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1562.006 Indicator Blocking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1562.006 Indicator Blocking](../../T1562.006/T1562.006.md)
+  - Atomic Test #3: Disable Powershell ETW Provider - Windows [windows]
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1070 Indicator Removal on Host](../../T1070/T1070.md)
   - Atomic Test #1: Indicator Removal using FSUtil [windows]
@@ -1002,6 +1004,7 @@
   - Atomic Test #5: Simulating MAZE Directory Enumeration [windows]
 - [T1615 Group Policy Discovery](../../T1615/T1615.md)
   - Atomic Test #1: Display group policy information via gpresult [windows]
+  - Atomic Test #2: Get-DomainGPO to display group policy information via PowerView [windows]
 - T1016.001 Internet Connection Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1087.001 Local Account](../../T1087.001/T1087.001.md)
   - Atomic Test #8: Enumerate all accounts on Windows (Local) [windows]
