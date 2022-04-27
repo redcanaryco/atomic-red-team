@@ -709,6 +709,7 @@
 - [T1562.006 Indicator Blocking](../../T1562.006/T1562.006.md)
   - Atomic Test #1: Auditing Configuration Changes on Linux Host [linux]
   - Atomic Test #2: Logging Configuration Changes on Linux Host [linux]
+  - Atomic Test #3: Disable Powershell ETW Provider - Windows [windows]
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1070 Indicator Removal on Host](../../T1070/T1070.md)
   - Atomic Test #1: Indicator Removal using FSUtil [windows]
