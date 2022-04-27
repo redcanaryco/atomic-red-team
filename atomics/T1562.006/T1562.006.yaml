@@ -79,3 +79,32 @@ atomic_tests:
       fi
     name: bash
     elevation_required: true
+- name: Disable Powershell ETW Provider - Windows
+  description: This test was created to disable the Microsoft Powershell ETW provider by using the built-in Windows tool, logman.exe. This provider is used as a common source of telemetry in AV/EDR solutions. 
+  supported_platforms:
+  - windows
+  input_arguments:
+    ps_exec_location:
+      description: Location of PSExec.
+      type: string
+      default: $env:temp\pstools\PsExec.exe
+    session:
+      description: The session to disable.
+      type: string
+      default: EventLog-Application
+    provider:
+      description: The provider to disable.
+      type: string
+      default: Microsoft-Windows-Powershell
+  dependency_executor_name: powershell
+  dependencies:
+  - description: PSExec must be installed on the machine.
+    prereq_command: if (Test-Path "#{ps_exec_location}") {exit 0} else {exit 1}
+    get_prereq_command: |-
+      start-bitstransfer -source "https://download.sysinternals.com/files/PSTools.zip" -destination "$env:temp\PStools.zip"
+      expand-archive -literalpath "$env:temp\PStools.zip" -destinationpath "$env:temp\pstools" -force
+  executor:
+    command: cmd /c "#{ps_exec_location}" -accepteula -i -s cmd.exe /c logman update trace "#{session}" --p "#{provider}" -ets
+    cleanup_command: cmd /c "#{ps_exec_location}" -i -s cmd.exe /c logman update trace "#{session}" -p "#{provider}" -ets
+    name: powershell
+    elevation_required: true
