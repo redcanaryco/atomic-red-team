@@ -9,8 +9,9 @@ jobs:
     steps:
       - name: checkout repo
         uses: actions/checkout@v2
-        with:
-          persist-credentials: false
+        with: 
+          token: ${{ secrets.PROTECTED_BRANCH_PUSH_TOKEN }}
+          ref: 'master'
       
       - name: setup ruby
         uses: ruby/setup-ruby@v1
@@ -35,10 +36,9 @@ jobs:
               git config credential.helper 'cache --timeout=120'
               git config user.email "opensource@redcanary.com"
               git config user.name "Atomic Red Team GUID generator"
-
               git add atomics
               git commit -am "Generate GUIDs from job=$GITHUB_JOB branch=$GITHUB_REF_NAME [skip ci]"
-              git push -u origin $GITHUB_REF_NAME
+              git push origin $GITHUB_REF_NAME -f 
             fi
 
       - name: generate markdown docs for atomics
@@ -58,6 +58,6 @@ jobs:
             git config user.email "opensource@redcanary.com"
             git config user.name "Atomic Red Team doc generator"
             git add atomics
-            git commit -am "ci/cd generated docs from job=$GITHUB_JOB branch=$GITHUB_REF_NAME [ci skip]"
-            git push -u origin $GITHUB_REF_NAME
+            git commit -am "Generated docs from job=$GITHUB_JOB branch=$GITHUB_REF_NAME [ci skip]"
+            git push origin $GITHUB_REF_NAME -f
           fi
