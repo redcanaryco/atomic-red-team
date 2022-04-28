@@ -242,7 +242,7 @@ atomic_tests:
       invoke-webrequest "https://aka.ms/vs/17/release/vs_BuildTools.exe" -outfile "$env:temp\VS_BuildTools.exe"
       write-host "Visual Studio Build Tools (Desktop Development with C++) must be installed manually. Please run the installer from $env:temp\VS_BuildTools.exe."
   - description: |
-      Python must be install
+      Python must be installed
     prereq_command: |
       if (Test-Path "#{Python_Path}") {exit 0} else {exit 1}
     get_prereq_command: |
