@@ -109,3 +109,21 @@ atomic_tests:
     cleanup_command: cmd /c "#{ps_exec_location}" -i -s cmd.exe /c logman update trace "#{session}" -p "#{provider}" -ets
     name: powershell
     elevation_required: true
+- name: Disable .NET Event Tracing for Windows Via Registry (cmd)
+  description: Disables ETW for the .NET Framework using the reg.exe utility to update the Windows registry
+  supported_platforms:
+  - windows
+  executor:
+    command: REG ADD HKLM\Software\Microsoft\.NETFramework /v ETWEnabled /t REG_DWORD /d 0
+    cleanup_command: REG DELETE HKLM\Software\Microsoft\.NETFramework /v ETWEnabled /f > nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: Disable .NET Event Tracing for Windows Via Registry (powershell)
+  description: Disables ETW for the .NET Framework using PowerShell to update the Windows registry
+  supported_platforms:
+  - windows
+  executor:
+    command: New-ItemProperty -Path HKLM:\Software\Microsoft\.NETFramework -Name ETWEnabled -Value 0 -PropertyType "DWord" -Force
+    cleanup_command: REG DELETE HKLM\Software\Microsoft\.NETFramework /v ETWEnabled /f > $null 2>&1
+    name: powershell
+    elevation_required: true
