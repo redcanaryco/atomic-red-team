@@ -867,6 +867,7 @@
 - [T1550.002 Pass the Hash](../../T1550.002/T1550.002.md)
   - Atomic Test #1: Mimikatz Pass the Hash [windows]
   - Atomic Test #2: crackmapexec Pass the Hash [windows]
+  - Atomic Test #3: Invoke-WMIExec Pass the Hash [windows]
 - [T1550.003 Pass the Ticket](../../T1550.003/T1550.003.md)
   - Atomic Test #1: Mimikatz Kerberos Ticket Attack [windows]
   - Atomic Test #2: Rubeus Kerberos Pass The Ticket [windows]
@@ -1757,6 +1758,7 @@
 - [T1550.002 Pass the Hash](../../T1550.002/T1550.002.md)
   - Atomic Test #1: Mimikatz Pass the Hash [windows]
   - Atomic Test #2: crackmapexec Pass the Hash [windows]
+  - Atomic Test #3: Invoke-WMIExec Pass the Hash [windows]
 - [T1550.003 Pass the Ticket](../../T1550.003/T1550.003.md)
   - Atomic Test #1: Mimikatz Kerberos Ticket Attack [windows]
   - Atomic Test #2: Rubeus Kerberos Pass The Ticket [windows]
