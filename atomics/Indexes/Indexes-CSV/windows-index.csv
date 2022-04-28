@@ -77,6 +77,7 @@ credential-access,T1003.002,Security Account Manager,4,PowerDump Hashes and User
 credential-access,T1003.002,Security Account Manager,5,dump volume shadow copy hives with certutil,eeb9751a-d598-42d3-b11c-c122d9c3f6c7,powershell
 credential-access,T1003.002,Security Account Manager,6,dump volume shadow copy hives with System.IO.File,9d77fed7-05f8-476e-a81b-8ff0472c64d0,powershell
 credential-access,T1539,Steal Web Session Cookie,1,Steal Firefox Cookies (Windows),4b437357-f4e9-4c84-9fa6-9bcee6f826aa,powershell
+credential-access,T1539,Steal Web Session Cookie,2,Steal Chrome Cookies (Windows),26a6b840-4943-4965-8df5-ef1f9a282440,powershell
 credential-access,T1555.004,Windows Credential Manager,1,Access Saved Credentials via VaultCmd,9c2dd36d-5c8b-4b29-8d72-a11b0d5d7439,command_prompt
 collection,T1560,Archive Collected Data,1,Compress Data for Exfiltration With PowerShell,41410c60-614d-4b9d-b66e-b0192dd9c597,powershell
 collection,T1560.001,Archive via Utility,1,Compress Data for Exfiltration With Rar,02ea31cb-3b4c-4a2d-9bf1-e4e70ebcf5d0,command_prompt
@@ -169,6 +170,7 @@ privilege-escalation,T1547.001,Registry Run Keys / Startup Folder,6,Suspicious b
 privilege-escalation,T1547.001,Registry Run Keys / Startup Folder,7,Add Executable Shortcut Link to User Startup Folder,24e55612-85f6-4bd6-ae74-a73d02e3441d,powershell
 privilege-escalation,T1547.001,Registry Run Keys / Startup Folder,8,Add persistance via Recycle bin,bda6a3d6-7aa7-4e89-908b-306772e9662f,command_prompt
 privilege-escalation,T1547.001,Registry Run Keys / Startup Folder,9,SystemBC Malware-as-a-Service Registry,9dc7767b-30c1-4cc4-b999-50cab5e27891,powershell
+privilege-escalation,T1134.005,SID-History Injection,1,Injection SID-History with mimikatz,6bef32e5-9456-4072-8f14-35566fb85401,command_prompt
 privilege-escalation,T1053.005,Scheduled Task,1,Scheduled Task Startup Script,fec27f65-db86-4c2d-b66c-61945aee87c2,command_prompt
 privilege-escalation,T1053.005,Scheduled Task,2,Scheduled task Local,42f53695-ad4a-4546-abb6-7d837f644a71,command_prompt
 privilege-escalation,T1053.005,Scheduled Task,3,Scheduled task Remote,2e5eac3e-327b-4a88-a0c0-c4057039a8dd,command_prompt
@@ -288,6 +290,8 @@ defense-evasion,T1564,Hide Artifacts,1,Extract binary files via VBA,6afe288a-8a8
 defense-evasion,T1564,Hide Artifacts,2,"Create a Hidden User Called ""$""",2ec63cc2-4975-41a6-bf09-dffdfb610778,command_prompt
 defense-evasion,T1564,Hide Artifacts,3,"Create an ""Administrator "" user (with a space on the end)",5bb20389-39a5-4e99-9264-aeb92a55a85c,powershell
 defense-evasion,T1562.006,Indicator Blocking,3,Disable Powershell ETW Provider - Windows,6f118276-121d-4c09-bb58-a8fb4a72ee84,powershell
+defense-evasion,T1562.006,Indicator Blocking,4,Disable .NET Event Tracing for Windows Via Registry (cmd),8a4c33be-a0d3-434a-bee6-315405edbd5b,command_prompt
+defense-evasion,T1562.006,Indicator Blocking,5,Disable .NET Event Tracing for Windows Via Registry (powershell),19c07a45-452d-4620-90ed-4c34fffbe758,powershell
 defense-evasion,T1070,Indicator Removal on Host,1,Indicator Removal using FSUtil,b4115c7a-0e92-47f0-a61e-17e7218b2435,command_prompt
 defense-evasion,T1202,Indirect Command Execution,1,Indirect Command Execution - pcalua.exe,cecfea7a-5f03-4cdd-8bc8-6f7c22862440,command_prompt
 defense-evasion,T1202,Indirect Command Execution,2,Indirect Command Execution - forfiles.exe,8b34a448-40d9-4fc3-a8c8-4bb286faf7dc,command_prompt
@@ -432,6 +436,7 @@ defense-evasion,T1218.011,Rundll32,8,Launches an executable using Rundll32 and p
 defense-evasion,T1218.011,Rundll32,9,Execution of non-dll using rundll32.exe,ae3a8605-b26e-457c-b6b3-2702fd335bac,powershell
 defense-evasion,T1218.011,Rundll32,10,Rundll32 with Ordinal Value,9fd5a74b-ba89-482a-8a3e-a5feaa3697b0,command_prompt
 defense-evasion,T1218.011,Rundll32,11,Rundll32 with Control_RunDLL,e4c04b6f-c492-4782-82c7-3bf75eb8077e,command_prompt
+defense-evasion,T1134.005,SID-History Injection,1,Injection SID-History with mimikatz,6bef32e5-9456-4072-8f14-35566fb85401,command_prompt
 defense-evasion,T1574.011,Services Registry Permissions Weakness,1,Service Registry Permissions Weakness,f7536d63-7fd4-466f-89da-7e48d550752a,powershell
 defense-evasion,T1574.011,Services Registry Permissions Weakness,2,Service ImagePath Change with reg.exe,f38e9eea-e1d7-4ba6-b716-584791963827,command_prompt
 defense-evasion,T1218,Signed Binary Proxy Execution,1,mavinject - Inject DLL into running process,c426dacf-575d-4937-8611-a148a86a5e61,command_prompt
@@ -468,6 +473,7 @@ persistence,T1546.008,Accessibility Features,1,Attaches Command Prompt as a Debu
 persistence,T1546.008,Accessibility Features,2,Replace binary of sticky keys,934e90cf-29ca-48b3-863c-411737ad44e3,command_prompt
 persistence,T1098,Account Manipulation,1,Admin Account Manipulate,5598f7cb-cf43-455e-883a-f6008c5d46af,powershell
 persistence,T1098,Account Manipulation,2,Domain Account and Group Manipulate,a55a22e9-a3d3-42ce-bd48-2653adb8f7a9,powershell
+persistence,T1098,Account Manipulation,9,Password Change on Directory Service Restore Mode (DSRM) Account,d5b886d9-d1c7-4b6e-a7b0-460041bf2823,command_prompt
 persistence,T1137.006,Add-ins,1,Code Executed Via Excel Add-in File (Xll),441b1a0f-a771-428a-8af0-e99e4698cda3,powershell
 persistence,T1546.010,AppInit DLLs,1,Install AppInit Shim,a58d9386-3080-4242-ab5f-454c16503d18,command_prompt
 persistence,T1546.011,Application Shimming,1,Application Shim Installation,9ab27e22-ee62-4211-962b-d36d9a0e6a18,command_prompt

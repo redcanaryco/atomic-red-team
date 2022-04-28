@@ -163,6 +163,7 @@
 - T1528 Steal Application Access Token [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1539 Steal Web Session Cookie](../../T1539/T1539.md)
   - Atomic Test #1: Steal Firefox Cookies (Windows) [windows]
+  - Atomic Test #2: Steal Chrome Cookies (Windows) [windows]
 - T1558 Steal or Forge Kerberos Tickets [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1111 Two-Factor Authentication Interception [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1552 Unsecured Credentials [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -417,7 +418,8 @@
   - Atomic Test #7: Add Executable Shortcut Link to User Startup Folder [windows]
   - Atomic Test #8: Add persistance via Recycle bin [windows]
   - Atomic Test #9: SystemBC Malware-as-a-Service Registry [windows]
-- T1134.005 SID-History Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1134.005 SID-History Injection](../../T1134.005/T1134.005.md)
+  - Atomic Test #1: Injection SID-History with mimikatz [windows]
 - [T1053.005 Scheduled Task](../../T1053.005/T1053.005.md)
   - Atomic Test #1: Scheduled Task Startup Script [windows]
   - Atomic Test #2: Scheduled task Local [windows]
@@ -710,6 +712,8 @@
   - Atomic Test #1: Auditing Configuration Changes on Linux Host [linux]
   - Atomic Test #2: Logging Configuration Changes on Linux Host [linux]
   - Atomic Test #3: Disable Powershell ETW Provider - Windows [windows]
+  - Atomic Test #4: Disable .NET Event Tracing for Windows Via Registry (cmd) [windows]
+  - Atomic Test #5: Disable .NET Event Tracing for Windows Via Registry (powershell) [windows]
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1070 Indicator Removal on Host](../../T1070/T1070.md)
   - Atomic Test #1: Indicator Removal using FSUtil [windows]
@@ -936,7 +940,8 @@
   - Atomic Test #9: Execution of non-dll using rundll32.exe [windows]
   - Atomic Test #10: Rundll32 with Ordinal Value [windows]
   - Atomic Test #11: Rundll32 with Control_RunDLL [windows]
-- T1134.005 SID-History Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1134.005 SID-History Injection](../../T1134.005/T1134.005.md)
+  - Atomic Test #1: Injection SID-History with mimikatz [windows]
 - T1553.003 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1562.009 Safe Mode Boot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1064 Scripting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1039,6 +1044,7 @@
   - Atomic Test #6: Azure - adding user to Azure role in subscription [iaas:azure]
   - Atomic Test #7: Azure - adding service principal to Azure role in subscription [iaas:azure]
   - Atomic Test #8: AzureAD - adding permission to application [azure-ad]
+  - Atomic Test #9: Password Change on Directory Service Restore Mode (DSRM) Account [windows]
 - T1547.014 Active Setup [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1098.003 Add Office 365 Global Administrator Role [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1137.006 Add-ins](../../T1137.006/T1137.006.md)
