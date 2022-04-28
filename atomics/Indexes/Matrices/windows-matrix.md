@@ -53,7 +53,7 @@
 |  |  | Path Interception [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) | [Process Hollowing](../../T1055.012/T1055.012.md) | Impair Command History Logging [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
 |  |  | Path Interception by PATH Environment Variable [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) | [Process Injection](../../T1055/T1055.md) | Impair Defenses [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
 |  |  | Path Interception by Search Order Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) | [Registry Run Keys / Startup Folder](../../T1547.001/T1547.001.md) | [Indicator Blocking](../../T1562.006/T1562.006.md) |  |  |  |  |  |  |  |
-|  |  | [Path Interception by Unquoted Path](../../T1574.009/T1574.009.md) | SID-History Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) | Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
+|  |  | [Path Interception by Unquoted Path](../../T1574.009/T1574.009.md) | [SID-History Injection](../../T1134.005/T1134.005.md) | Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
 |  |  | Port Knocking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) | [Scheduled Task](../../T1053.005/T1053.005.md) | [Indicator Removal on Host](../../T1070/T1070.md) |  |  |  |  |  |  |  |
 |  |  | [Port Monitors](../../T1547.010/T1547.010.md) | Scheduled Task/Job [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) | [Indirect Command Execution](../../T1202/T1202.md) |  |  |  |  |  |  |  |
 |  |  | [PowerShell Profile](../../T1546.013/T1546.013.md) | [Screensaver](../../T1546.002/T1546.002.md) | [Install Root Certificate](../../T1553.004/T1553.004.md) |  |  |  |  |  |  |  |
@@ -100,7 +100,7 @@
 |  |  |  |  | Rootkit [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
 |  |  |  |  | [Run Virtual Instance](../../T1564.006/T1564.006.md) |  |  |  |  |  |  |  |
 |  |  |  |  | [Rundll32](../../T1218.011/T1218.011.md) |  |  |  |  |  |  |  |
-|  |  |  |  | SID-History Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
+|  |  |  |  | [SID-History Injection](../../T1134.005/T1134.005.md) |  |  |  |  |  |  |  |
 |  |  |  |  | SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
 |  |  |  |  | Safe Mode Boot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
 |  |  |  |  | Scripting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |

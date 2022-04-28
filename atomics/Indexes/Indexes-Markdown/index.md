@@ -418,7 +418,8 @@
   - Atomic Test #7: Add Executable Shortcut Link to User Startup Folder [windows]
   - Atomic Test #8: Add persistance via Recycle bin [windows]
   - Atomic Test #9: SystemBC Malware-as-a-Service Registry [windows]
-- T1134.005 SID-History Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1134.005 SID-History Injection](../../T1134.005/T1134.005.md)
+  - Atomic Test #1: Injection SID-History with mimikatz [windows]
 - [T1053.005 Scheduled Task](../../T1053.005/T1053.005.md)
   - Atomic Test #1: Scheduled Task Startup Script [windows]
   - Atomic Test #2: Scheduled task Local [windows]
@@ -939,7 +940,8 @@
   - Atomic Test #9: Execution of non-dll using rundll32.exe [windows]
   - Atomic Test #10: Rundll32 with Ordinal Value [windows]
   - Atomic Test #11: Rundll32 with Control_RunDLL [windows]
-- T1134.005 SID-History Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1134.005 SID-History Injection](../../T1134.005/T1134.005.md)
+  - Atomic Test #1: Injection SID-History with mimikatz [windows]
 - T1553.003 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1562.009 Safe Mode Boot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1064 Scripting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
