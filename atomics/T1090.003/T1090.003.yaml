@@ -1,0 +1,110 @@
+attack_technique: T1090.003
+display_name: 'Proxy: Multi-hop Proxy'
+atomic_tests:
+- name: Psiphon
+  auto_generated_guid: 14d55ca0-920e-4b44-8425-37eedd72b173
+  description: |
+    Psiphon 3 is a circumvention tool from Psiphon Inc. that utilizes VPN, SSH and HTTP Proxy technology to provide you
+    with uncensored access to Internet.
+    This process will launch Psiphon 3 and establish a connection. Shortly after it will be shut down via process kill commands.
+    More information can be found about Psiphon using the following urls
+    http://s3.amazonaws.com/0ubz-2q11-gi9y/en.html
+    https://psiphon.ca/faq.html
+  supported_platforms:
+    - windows
+  dependency_executor_name: powershell 
+  dependencies:
+    - description: |
+        The proxy settings backup file must exist on disk at $env:Temp\proxy-backup.txt
+      prereq_command: | 
+        if (Test-Path $env:Temp\proxy-backup.txt) {exit 0} else {exit 1}
+      get_prereq_command: |
+        if(-not (test-path $env:Temp\proxy-backup.txt)){
+        $Proxy = (Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Name "ProxyServer" -ErrorAction Ignore).ProxyServer
+        Set-Content $env:Temp\proxy-backup.txt $Proxy}
+    - description: |
+        The Psiphon executable must exist in the Downloads folder
+      prereq_command: | 
+        if (Test-Path $env:UserProfile\Downloads\psiphon3.exe) {exit 0} else {exit 1}
+      get_prereq_command: |
+        Invoke-WebRequest -OutFile "$env:UserProfile\Downloads\psiphon3.exe" "https://s3.amazonaws.com/0ubz-2q11-gi9y/psiphon3.exe"
+  executor:
+    name: powershell
+    command: |
+      PathToAtomicsFolder\T1090.003\src\Psiphon.bat
+    cleanup_command: |
+      $Proxy = Get-Content $env:Temp\proxy-backup.txt -ErrorAction Ignore
+      if($null -ne $Proxy) 
+      {Set-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Name "ProxyServer" -Value $Proxy}
+
+- name: Tor Proxy Usage - Windows
+  auto_generated_guid: 7b9d85e5-c4ce-4434-8060-d3de83595e69
+  description: |
+    This test is designed to launch the tor proxy service, which is what is utilized in the background by the Tor Browser and other applications with add-ons in order to provide onion routing functionality.
+    Upon successful execution, the tor proxy will be launched, run for 60 seconds, and then exit. 
+  supported_platforms:
+  - windows
+  input_arguments:
+    TorExe:
+      description: Location of tor.exe file.  
+      type: String
+      default: $env:temp\tor\Tor\tor.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      tor.exe must be installed on the machine 
+    prereq_command: |
+      if (Test-Path #{TorExe}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Start-BitsTransfer -Source "https://archive.torproject.org/tor-package-archive/torbrowser/11.0.6/tor-win32-0.4.6.9.zip" -Destination "$env:temp\tor.zip" -dynamic
+      expand-archive -LiteralPath "$env:temp\tor.zip" -DestinationPath "$env:temp\tor"
+  executor:
+    command: |
+     invoke-expression 'cmd /c start powershell -Command {cmd /c #{TorExe}}'
+     sleep -s 60
+     stop-process -name "tor" | out-null
+    name: powershell
+    elevation_required: false
+- name: Tor Proxy Usage - Debian/Ubuntu
+  auto_generated_guid: 5ff9d047-6e9c-4357-b39b-5cf89d9b59c7
+  description: |
+    This test is designed to launch the tor proxy service, which is what is utilized in the background by the Tor Browser and other applications with add-ons in order to provide onion routing functionality.
+    Upon successful execution, the tor proxy service will be launched. 
+  supported_platforms:
+  - linux
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+     Tor must be installed on the machine 
+    prereq_command: |
+     if [ -x "$(command -v tor --version)" ]; then exit 0; else exit 1; fi
+    get_prereq_command: |
+     sudo apt-get -y install tor
+  executor:
+    command: |
+     sudo systemctl start tor 
+    cleanup_command: |
+     sudo systemctl stop tor
+    name: sh
+- name: Tor Proxy Usage - MacOS
+  auto_generated_guid: 12631354-fdbc-4164-92be-402527e748da
+  description: |
+    This test is designed to launch the tor proxy service, which is what is utilized in the background by the Tor Browser and other applications with add-ons in order to provide onion routing functionality.
+    Upon successful execution, the tor proxy service will be launched. 
+  supported_platforms:
+  - macos
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+     Tor must be installed on the machine 
+    prereq_command: |
+     if [ -x "$(command -v tor --version)" ]; then exit 0; else exit 1; fi
+    get_prereq_command: |
+      if [ ! -x "$(command -v brew --version)" ]; then /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh keystroke return)"; fi
+      brew install tor
+  executor:
+    command: |
+     osascript -e 'tell application "Terminal" to do script "tor"'
+    cleanup_command: |
+     killall tor > /dev/null 2>&1
+    name: sh        

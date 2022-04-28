@@ -10,7 +10,7 @@ atomic_tests:
   input_arguments:
     computer_name:
       description: computer name to query
-      type: string
+      type: String
       default: localhost
   executor:
     command: |
@@ -27,4 +27,13 @@ atomic_tests:
     command: |
       Get-Date
     name: powershell
-
+- name: System Time Discovery in macOS
+  auto_generated_guid: f449c933-0891-407f-821e-7916a21a1a6f
+  description: |
+    Identify system time. Upon execution, the local computer system time and timezone will be displayed. 
+  supported_platforms:
+    - macos
+  executor:
+    command: |
+      date
+    name: sh

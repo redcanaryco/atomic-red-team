@@ -15,6 +15,6 @@ atomic_tests:
     command: |
       reg add "hklm\system\currentcontrolset\control\print\monitors\ART" /v "Atomic Red Team" /d "#{monitor_dll}" /t REG_SZ
     cleanup_command: |
-      reg delete "hklm\system\currentcontrolset\control\print\monitors\ART"
+      reg delete "hklm\system\currentcontrolset\control\print\monitors\ART" /f >nul 2>&1
     name: command_prompt
     elevation_required: true

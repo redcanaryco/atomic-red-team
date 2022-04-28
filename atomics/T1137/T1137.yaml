@@ -17,6 +17,6 @@ atomic_tests:
       mkdir  %APPDATA%\Microsoft\Outlook\ >nul 2>&1
       echo "Atomic Red Team TEST" > %APPDATA%\Microsoft\Outlook\VbaProject.OTM
     cleanup_command: |
-      reg delete "HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Outlook\Security\Level" /f
-      del %APPDATA%\Microsoft\Outlook\VbaProject.OTM
+      reg delete "HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Outlook\Security\Level" /f >nul 2>&1
+      del %APPDATA%\Microsoft\Outlook\VbaProject.OTM >nul 2>&1
     name: command_prompt

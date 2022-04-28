@@ -13,6 +13,9 @@ atomic_tests:
       if [ -x "$(command -v dscacheutil)" ]; then dscacheutil -q group; else echo "dscacheutil is missing from the machine. skipping..."; fi;
       if [ -x "$(command -v dscl)" ]; then dscl . -list /Groups; else echo "dscl is missing from the machine. skipping..."; fi;
       if [ -x "$(command -v groups)" ]; then groups; else echo "groups is missing from the machine. skipping..."; fi;
+      if [ -x "$(command -v id)" ]; then id; else echo "id is missing from the machine. skipping..."; fi;
+      if [ -x "$(command -v getent)" ]; then getent group; else echo "getent is missing from the machine. skipping..."; fi;
+      cat /etc/group
     name: sh
 - name: Basic Permission Groups Discovery Windows (Local)
   auto_generated_guid: 1f454dd6-e134-44df-bebb-67de70fb6cd8
@@ -37,4 +40,62 @@ atomic_tests:
     command: |
       get-localgroup
       Get-LocalGroupMember -Name "Administrators"
+    name: powershell
+- name: SharpHound3 - LocalAdmin
+  auto_generated_guid: e03ada14-0980-4107-aff1-7783b2b59bb1
+  description: |
+    This module runs the Windows executable of SharpHound in order to remotely list members of the local Administrators group (SAMR)
+  supported_platforms:
+  - windows
+  input_arguments:
+    domain:
+      description: FQDN of the targeted domain
+      type: string
+      default: $env:UserDnsDomain
+    sharphound_path:
+      description: SharpHound Windows executable
+      type: path
+      default: '$env:TEMP\SharpHound.exe'
+    output_path:
+      description: Output for SharpHound
+      type: path
+      default: '$env:TEMP\SharpHound\'
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      SharpHound binary must exist on disk and at specified location (#{sharphound_path}).
+      And the computer must be domain joined (implicit authentication).
+    prereq_command: |
+      if (Test-Path "#{sharphound_path}") { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      Invoke-WebRequest "https://github.com/BloodHoundAD/BloodHound/blob/e062fe73d73c015dccb37fae5089342d009b84b8/Collectors/SharpHound.exe?raw=true" -OutFile "#{sharphound_path}"
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      New-Item -Path "#{output_path}" -ItemType Directory > $null
+      & "#{sharphound_path}" -d "#{domain}" --CollectionMethod LocalAdmin --NoSaveCache --OutputDirectory "#{output_path}"
+    cleanup_command: |
+      Remove-Item -Recurse #{output_path} -ErrorAction Ignore
+
+- name: Wmic Group Discovery
+  auto_generated_guid: 7413be50-be8e-430f-ad4d-07bf197884b2
+  description: |
+    Utilizing wmic.exe to enumerate groups on the local system. Upon execution, information will be displayed of local groups on system.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      wmic.exe group get name
+    name: powershell
+
+- name: WMIObject Group Discovery
+  auto_generated_guid: 69119e58-96db-4110-ad27-954e48f3bb13
+  description: |
+    Utilizing PowerShell cmdlet - get-wmiobject, to enumerate local groups on the endpoint. Upon execution, Upon execution, information will be displayed of local groups on system.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      Get-WMIObject Win32_Group
     name: powershell

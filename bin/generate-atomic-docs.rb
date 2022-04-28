@@ -52,7 +52,16 @@ class AtomicRedTeamDocs
     generate_navigator_layer! "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer.json", \
       "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-windows.json", \
       "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-macos.json", \
-      "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-linux.json"
+      "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-linux.json", \
+      "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-iaas.json", \
+      "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-iaas-aws.json", \
+      "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-iaas-azure.json", \
+      "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-iaas-gcp.json", \
+      "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-containers.json", \
+      "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-saas.json", \
+      "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-google-workspace.json", \
+      "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-azure-ad.json", \
+      "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-office-365.json"
 
     return oks, fails
   end
@@ -180,11 +189,21 @@ class AtomicRedTeamDocs
   end
 
   def get_layer(techniques, layer_name)
+    filters = { }
+    if layer_name.include? "Windows"
+      filters = { "platforms": [ "Windows"]}
+    elsif layer_name.include? "macOS"
+      filters = { "platforms": [ "macOS"]}
+    elsif layer_name.include? "Linux"
+      filters = { "platforms": [ "Linux"]}
+    end
+
     layer = {
-      "version" => "4.1",
       "name" => layer_name,
+      "versions" => {	"attack": "10",	"navigator": "4.5.5",	"layer": "4.3"	},
       "description" => layer_name + " MITRE ATT&CK Navigator Layer",
-      "domain" => "mitre-enterprise",
+      "domain" => "enterprise-attack",
+      "filters"=> filters,    
       "gradient" => {
                   "colors" => ["#ce232e","#ce232e"],
                   "minValue" => 0,
@@ -200,12 +219,23 @@ class AtomicRedTeamDocs
   #
   # Generates a MITRE ATT&CK Navigator Layer based on contributed techniques
   #
-  def generate_navigator_layer!(output_layer_path, output_layer_path_win, output_layer_path_mac, output_layer_path_lin)
+  def generate_navigator_layer!(output_layer_path, output_layer_path_win, output_layer_path_mac, output_layer_path_lin, output_layer_path_iaas, \
+    output_layer_path_iaas_aws, output_layer_path_iaas_azure, output_layer_path_iaas_gcp, output_layer_path_containers, output_layer_path_saas, \
+    output_layer_path_google_workspace, output_layer_path_azure_ad, output_layer_path_office_365)
 
     techniques = []
     techniques_win = []
     techniques_mac = []
     techniques_lin = []
+    techniques_iaas = []
+    techniques_iaas_aws = []
+    techniques_iaas_azure = []
+    techniques_iaas_gcp = []
+    techniques_containers = []
+    techniques_saas = []
+    techniques_google_workspace = []
+    techniques_azure_ad = []
+    techniques_office_365 = []
 
     ATOMIC_RED_TEAM.atomic_tests.each do |atomic_yaml|
       begin
@@ -213,24 +243,61 @@ class AtomicRedTeamDocs
           "techniqueID" => atomic_yaml['attack_technique'],
           "score" => 100,
           "enabled" => true,
-          "comment" => "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/" + atomic_yaml['attack_technique'] + "/" + atomic_yaml['attack_technique'] + ".md"
+          "links" => ["label" => "View Atomic", "url" => "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/" + atomic_yaml['attack_technique'] + "/" + atomic_yaml['attack_technique'] + ".md"]
         }
+
         techniqueParent =  {
           "techniqueID" => atomic_yaml['attack_technique'].split('.')[0],
           "score" => 100,
           "enabled" => true,
-          "comment" => "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/" + atomic_yaml['attack_technique'] + "/" + atomic_yaml['attack_technique'] + ".md"
+          "links" => ["label" => "View Atomic", "url" => "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/" + atomic_yaml['attack_technique'] + "/" + atomic_yaml['attack_technique'] + ".md"]
         }
 
         techniques.push(technique)
+
+        for technique in techniques
+          if not technique['techniqueID'].include?(".") then 
+            techniqueParent =  {
+              "techniqueID" => atomic_yaml['attack_technique'].split('.')[0],
+              "score" => 100,
+              "enabled" => true,
+              "links" => ["label" => "View Atomics", "url" => "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/" + atomic_yaml['attack_technique'].split('.')[0] + "/" + atomic_yaml['attack_technique'].split('.')[0] + ".md"]
+            }
+          else
+            techniqueParent =  {
+              "techniqueID" => atomic_yaml['attack_technique'].split('.')[0],
+              "score" => 100,
+              "enabled" => true
+            }
+          end 
+        end
+
         techniques.push(techniqueParent) unless techniques.include?(techniqueParent)
         has_windows_tests = false
         has_macos_tests = false
         has_linux_tests = false
+        has_iaas_tests = false
+        has_iaas_aws_tests = false
+        has_iaas_azure_tests = false
+        has_iaas_gcp_tests = false
+        has_containers_tests = false
+        has_saas_tests = false
+        has_google_workspace_tests = false
+        has_azure_ad_tests = false
+        has_office_365_tests = false
+
         atomic_yaml['atomic_tests'].each do |atomic|
           if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /windows/} then has_windows_tests = true end
           if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /macos/} then has_macos_tests = true end
           if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /^(?!windows|macos).*$/} then has_linux_tests = true end
+          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /^iaas/} then has_iaas_tests = true end
+          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /^iaas:aws/} then has_iaas_aws_tests = true end
+          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /^iaas:azure/} then has_iaas_azure_tests = true end
+          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /^iaas:gcp/} then has_iaas_gcp_tests = true end
+          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /^containers/} then has_containers_tests = true end
+          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /^google-workspace/} then has_google_workspace_tests = true end
+          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /^azure-ad/} then has_azure_ad_tests = true end
+          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /^office-365/} then has_office_365_tests = true end
         end
         if has_windows_tests then
           techniques_win.push(technique)
@@ -244,6 +311,34 @@ class AtomicRedTeamDocs
           techniques_lin.push(technique)
           techniques_lin.push(techniqueParent) unless techniques_lin.include?(techniqueParent)
         end
+        if has_iaas_tests then
+          techniques_iaas.push(technique)
+          techniques_iaas.push(techniqueParent) unless techniques_iaas.include?(techniqueParent)
+        end
+        if has_iaas_azure_tests then
+          techniques_iaas_azure.push(technique)
+          techniques_iaas_azure.push(techniqueParent) unless techniques_iaas_azure.include?(techniqueParent)
+        end
+        if has_iaas_gcp_tests then
+          techniques_iaas_gcp.push(technique)
+          techniques_iaas_gcp.push(techniqueParent) unless techniques_iaas_gcp.include?(techniqueParent)
+        end
+        if has_containers_tests then
+          techniques_containers.push(technique)
+          techniques_containers.push(techniqueParent) unless techniques_containers.include?(techniqueParent)
+        end
+        if has_google_workspace_tests then
+          techniques_google_workspace.push(technique)
+          techniques_google_workspace.push(techniqueParent) unless techniques_google_workspace.include?(techniqueParent)
+        end
+        if has_azure_ad_tests then
+          techniques_azure_ad.push(technique)
+          techniques_azure_ad.push(techniqueParent) unless techniques_azure_ad.include?(techniqueParent)
+        end
+        if has_office_365_tests then
+          techniques_office_365.push(technique)
+          techniques_office_365.push(techniqueParent) unless techniques_office_365.include?(techniqueParent)
+        end
       end
     end
 
@@ -251,16 +346,41 @@ class AtomicRedTeamDocs
     layer_win = get_layer techniques_win, "Atomic Red Team (Windows)"
     layer_mac = get_layer techniques_mac, "Atomic Red Team (macOS)"
     layer_lin = get_layer techniques_lin, "Atomic Red Team (Linux)"
+    layer_iaas = get_layer techniques_iaas, "Atomic Red Team (Iaas)"
+    layer_iaas_aws = get_layer techniques_iaas_aws, "Atomic Red Team (Iaas:AWS)"
+    layer_iaas_azure = get_layer techniques_iaas_azure, "Atomic Red Team (Iaas:Azure)"
+    layer_iaas_gcp = get_layer techniques_iaas_gcp, "Atomic Red Team (Iaas:GCP)"
+    layer_containers = get_layer techniques_containers, "Atomic Red Team (Containers)"
+    layer_google_workspace = get_layer techniques_google_workspace, "Atomic Red Team (Google-Workspace)"
+    layer_azure_ad = get_layer techniques_azure_ad, "Atomic Red Team (Azure-AD)"
+    layer_office_365 = get_layer techniques_office_365, "Atomic Red Team (Office-365)"
+
 
     File.write output_layer_path,layer.to_json
     File.write output_layer_path_win,layer_win.to_json
     File.write output_layer_path_mac,layer_mac.to_json
     File.write output_layer_path_lin,layer_lin.to_json
+    File.write output_layer_path_iaas,layer_iaas.to_json
+    File.write output_layer_path_iaas_aws,layer_iaas_aws.to_json
+    File.write output_layer_path_iaas_azure,layer_iaas_azure.to_json
+    File.write output_layer_path_iaas_gcp,layer_iaas_gcp.to_json
+    File.write output_layer_path_containers,layer_containers.to_json
+    File.write output_layer_path_google_workspace,layer_google_workspace.to_json
+    File.write output_layer_path_azure_ad,layer_azure_ad.to_json
+    File.write output_layer_path_office_365,layer_office_365.to_json
 
     puts "Generated Atomic Red Team ATT&CK Navigator Layers at #{output_layer_path}"
     puts "Generated Atomic Red Team ATT&CK Navigator Layers at #{output_layer_path_win}"
     puts "Generated Atomic Red Team ATT&CK Navigator Layers at #{output_layer_path_mac}"
     puts "Generated Atomic Red Team ATT&CK Navigator Layers at #{output_layer_path_lin}"
+    puts "Generated Atomic Red Team ATT&CK Navigator Layers at #{output_layer_path_iaas}"
+    puts "Generated Atomic Red Team ATT&CK Navigator Layers at #{output_layer_path_iaas_aws}"
+    puts "Generated Atomic Red Team ATT&CK Navigator Layers at #{output_layer_path_iaas_azure}"
+    puts "Generated Atomic Red Team ATT&CK Navigator Layers at #{output_layer_path_iaas_gcp}"
+    puts "Generated Atomic Red Team ATT&CK Navigator Layers at #{output_layer_path_containers}"
+    puts "Generated Atomic Red Team ATT&CK Navigator Layers at #{output_layer_path_google_workspace}"
+    puts "Generated Atomic Red Team ATT&CK Navigator Layers at #{output_layer_path_azure_ad}"
+    puts "Generated Atomic Red Team ATT&CK Navigator Layers at #{output_layer_path_office_365}"
   end
 end
 

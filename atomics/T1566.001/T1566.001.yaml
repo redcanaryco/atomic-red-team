@@ -1,29 +1,22 @@
 attack_technique: T1566.001
 display_name: 'Phishing: Spearphishing Attachment'
 atomic_tests:
-- name: Download Phishing Attachment - VBScript
+- name: Download Macro-Enabled Phishing Attachment
   auto_generated_guid: 114ccff9-ae6d-4547-9ead-4cd69f687306
   description: |
-    The macro-enabled Excel file contains VBScript which opens your default web browser and opens it to [google.com](http://google.com).
-    The below will successfully download the macro-enabled Excel file to the current location.
-    File is downloaded to the %temp% folder.
+    This atomic test downloads a macro enabled document from the Atomic Red Team GitHub repository, simulating an end user clicking a phishing link to download the file.
+    The file "PhishingAttachment.xlsm" is downloaded to the %temp% directory.
   supported_platforms:
   - windows
   executor:
     command: |
-      if (-not(Test-Path HKLM:SOFTWARE\Classes\Excel.Application)){
-        return 'Please install Microsoft Excel before running this test.'
-      }
-      else{
-        $url = 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1566.001/bin/PhishingAttachment.xlsm'
-        $fileName = 'PhishingAttachment.xlsm'
-        New-Item -Type File -Force -Path $fileName | out-null
-        $wc = New-Object System.Net.WebClient
-        $wc.Encoding = [System.Text.Encoding]::UTF8
-        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-        Invoke-WebRequest -Uri $url -OutFile $fileName
-      }
+      $url = 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1566.001/bin/PhishingAttachment.xlsm'
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      Invoke-WebRequest -Uri $url -OutFile $env:TEMP\PhishingAttachment.xlsm
     name: powershell
+    cleanup_command: |
+      Remove-Item $env:TEMP\PhishingAttachment.xlsm -ErrorAction Ignore
+
 - name: Word spawned a command shell and used an IP address in the command line
   auto_generated_guid: cbb6799a-425c-4f83-9194-5447a909d67f
   description: |

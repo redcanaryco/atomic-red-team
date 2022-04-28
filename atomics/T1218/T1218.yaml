@@ -10,7 +10,7 @@ atomic_tests:
   input_arguments:
     process_id:
       description: PID of process receiving injection
-      type: string
+      type: String
       default: "1000"
     dll_payload:
       description: DLL to inject
@@ -39,7 +39,7 @@ atomic_tests:
   input_arguments:
     powershell_code:
       description: PowerShell code to execute
-      type: string
+      type: String
       default: Start-Process calc.exe
   executor:
     command: |
@@ -80,7 +80,7 @@ atomic_tests:
   input_arguments:
     inf_to_execute:
       description: Local location of inf file
-      type: string
+      type: String
       default: PathToAtomicsFolder\T1218\src\Infdefaultinstall.inf
   dependency_executor_name: powershell
   dependencies:
@@ -104,7 +104,7 @@ atomic_tests:
   input_arguments:
     remote_url:
       description: url to document
-      type: url
+      type: Url
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1218/src/T1218Test.docx
   dependency_executor_name: powershell 
   dependencies: 
@@ -129,7 +129,7 @@ atomic_tests:
   input_arguments:
     xml_payload:
       description: XML to execution
-      type: path
+      type: Path
       default: PathToAtomicsFolder\T1218\src\T1218.xml
     mwcpath:
       description: Default location of Microsoft.Workflow.Compiler.exe
@@ -161,11 +161,11 @@ atomic_tests:
   input_arguments:
     xml_payload:
       description: XML to execution
-      type: path
+      type: Path
       default: PathToAtomicsFolder\T1218\src\T1218.xml
     renamed_binary:
       description: renamed Microsoft.Workflow.Compiler
-      type: path
+      type: Path
       default: PathToAtomicsFolder\T1218\src\svchost.exe
     mwcpath:
       description: Default location of Microsoft.Workflow.Compiler.exe
@@ -206,11 +206,11 @@ atomic_tests:
   input_arguments:
     module_name:
       description: Specifies a temporary module name to use. If -ModuleName is not supplied, a 16-character random temporary module name is used. A PowerShell module can have any name. Because Get-VMRemoteFXPhysicalVideoAdapter abuses module load order, a module name must be specified.
-      type: string
+      type: String
       default: foo
     module_path:
       description: Specifies an alternate, non-default PowerShell module path for RemoteFXvGPUDisablement.exe. If -ModulePath is not specified, the first entry in %PSModulePath% will be used. Typically, this is %USERPROFILE%\Documents\WindowsPowerShell\Modules.
-      type: string
+      type: String
       default: $PWD
   dependencies:
   - description: The AtomicTestHarnesses module must be installed and Invoke-ATHRemoteFXvGPUDisablementCommand must be exported in the module.
@@ -223,3 +223,63 @@ atomic_tests:
   executor:
     command: 'Invoke-ATHRemoteFXvGPUDisablementCommand -ModuleName #{module_name} -ModulePath #{module_path}'
     name: powershell
+- name: DiskShadow Command Execution
+  auto_generated_guid: 0e1483ba-8f0c-425d-b8c6-42736e058eaa
+  description: |
+    Emulates attack with a DiskShadow.exe (LOLBIN installed by default on Windows) being used to execute arbitrary commands Reference: https://bohops.com/2018/03/26/diskshadow-the-return-of-vss-evasion-persistence-and-active-directory-database-extraction/
+  supported_platforms:
+    - windows
+  input_arguments:
+    txt_payload:
+      description: txt to execute
+      type: Path
+      default: PathToAtomicsFolder\T1218\src\T1218.txt
+    dspath:
+      description: Default location of DiskShadow.exe
+      type: Path
+      default: C:\Windows\System32\diskshadow.exe
+  dependency_executor_name: powershell 
+  dependencies: 
+    - description: txt file must exist on disk at specified location (#{txt_payload})
+      prereq_command: |
+        if (Test-Path #{txt_payload}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{txt_payload}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/T1218.txt" -OutFile "#{txt_payload}"
+    - description: DiskShadow.exe must exist on disk at specified location (#{dspath})
+      prereq_command: |
+        if (Test-Path #{dspath}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        echo "DiskShadow.exe not found on disk at expected location"
+  executor:
+    command: |
+      #{dspath} -S #{txt_payload} 
+    name: powershell
+    elevation_required: false
+- name: Load Arbitrary DLL via Wuauclt (Windows Update Client)
+  auto_generated_guid: 49fbd548-49e9-4bb7-94a6-3769613912b8
+  description: |
+    This test uses Wuauclt to load an arbitrary DLL. Upon execution with the default inputs, calculator.exe will be launched. 
+    See https://dtm.uk/wuauclt/
+  supported_platforms:
+  - windows
+  input_arguments:
+    arbitrary_dll:
+      description: Path of DLL to be loaded
+      type: String
+      default: PathToAtomicsFolder\T1218\bin\calc.dll
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      DLL to load must exist on disk as specified location (#{arbitrary_dll})
+    prereq_command: |
+      if (test-path "#{arbitrary_dll}"){exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{arbitrary_dll}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1218/bin/calc.dll?raw=true" -OutFile "#{arbitrary_dll}"
+  executor:
+    command: |
+      wuauclt.exe /UpdateDeploymentProvider #{arbitrary_dll} /RunHandlerComServer
+    cleanup_command: |-
+      taskkill /f /im calculator.exe > nul 2>&1
+    name: command_prompt 

