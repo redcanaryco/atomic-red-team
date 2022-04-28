@@ -753,6 +753,7 @@
 - [T1098 Account Manipulation](../../T1098/T1098.md)
   - Atomic Test #1: Admin Account Manipulate [windows]
   - Atomic Test #2: Domain Account and Group Manipulate [windows]
+  - Atomic Test #9: Password Change on Directory Service Restore Mode (DSRM) Account [windows]
 - T1547.014 Active Setup [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1137.006 Add-ins](../../T1137.006/T1137.006.md)
   - Atomic Test #1: Code Executed Via Excel Add-in File (Xll) [windows]

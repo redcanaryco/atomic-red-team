@@ -1042,6 +1042,7 @@
   - Atomic Test #6: Azure - adding user to Azure role in subscription [iaas:azure]
   - Atomic Test #7: Azure - adding service principal to Azure role in subscription [iaas:azure]
   - Atomic Test #8: AzureAD - adding permission to application [azure-ad]
+  - Atomic Test #9: Password Change on Directory Service Restore Mode (DSRM) Account [windows]
 - T1547.014 Active Setup [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1098.003 Add Office 365 Global Administrator Role [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1137.006 Add-ins](../../T1137.006/T1137.006.md)
