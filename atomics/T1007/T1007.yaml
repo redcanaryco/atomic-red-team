@@ -35,4 +35,13 @@ atomic_tests:
     cleanup_command: |
       del /f /q /s #{output_file} >nul 2>&1
     name: command_prompt
-
+- name: System Service Discovery - systemctl
+  auto_generated_guid: f4b26bce-4c2c-46c0-bcc5-fce062d38bef
+  description: |
+    Enumerates system service using systemctl
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      systemctl --type=service
+    name: bash

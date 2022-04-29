@@ -40,3 +40,18 @@ atomic_tests:
     cleanup_command: |-
       Remove-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}' -Recurse -ErrorAction Ignore
     name: powershell
+- name: Powershell Execute COM Object
+  auto_generated_guid: 752191b1-7c71-445c-9dbe-21bb031b18eb
+  description: |- 
+       Use the PowerShell to execute COM CLSID object.
+       Reference: https://pentestlab.blog/2020/05/20/persistence-com-hijacking/
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      $o= [activator]::CreateInstance([type]::GetTypeFromCLSID("9BA05972-F6A8-11CF-A442-00A0C90A8F39"))
+      $item = $o.Item()
+      $item.Document.Application.ShellExecute("cmd.exe","/c calc.exe","C:\windows\system32",$null,0)
+    cleanup_command: |
+      Get-Process -Name "*calc" | Stop-Process
+    name: powershell

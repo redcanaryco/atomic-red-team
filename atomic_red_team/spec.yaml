@@ -122,42 +122,13 @@ atomic_tests:
   # Each of these executors will have options that the executor needs to run. Possible executors we've imagined
   # at this time and their required options include:
   #
-  #   - `command_prompt` : The Windows Command Prompt, aka cmd.exe
-  #       Requires the "command" option that is a multi-line script that will be preprocessed and
-  #       then executed by cmd.exe
+  #   - command_prompt, sh, bash, powershell, manual, aws, az, gcloud, kubectl
+  #
+  #       Each of the above requires the "command" option that is a multi-line script that will be preprocessed and
+  #       then executed by cmd.exe, powershell.exe, sh or bash respectively
   #
   #       Example:
-  #       - name: command_prompt
-  #         command: |
-  #           echo "attack starting"
-  #           echo "running command 1: this is the value of the FOOBAR input_argument: #{FOOBAR}"
-  #
-  #   - `powershell` : Powershell
-  #       Requires the "`command`" option that is a multi-line script that will be preprocessed and
-  #       then executed by cmd.exe
-  #
-  #       Example:
-  #       - name: powershell
-  #         command: |
-  #           Write-Debug "attack starting"
-  #           Write-Debug "running command 1: this is the value of the FOOBAR input_argument: #{FOOBAR}"
-  #
-  #   - `sh` : Linux's bourne shell
-  #       Requires the "`command`" option that is a multi-line script that will be preprocessed and
-  #       then executed by cmd.exe
-  #
-  #       Example:
-  #       - name: sh
-  #         command: |
-  #           echo "attack starting"
-  #           echo "running command 1: this is the value of the FOOBAR input_argument: #{FOOBAR}"
-  #
-  #   - `bash` : Linux's bourne again shell
-  #       Requires the "`command`" option that is a multi-line script that will be preprocessed and
-  #       then executed by cmd.exe
-  #
-  #       Example:
-  #       - name: bash
+  #         name: command_prompt
   #         command: |
   #           echo "attack starting"
   #           echo "running command 1: this is the value of the FOOBAR input_argument: #{FOOBAR}"
@@ -169,7 +140,7 @@ atomic_tests:
   #       multi-line list of instructions (also preprocessed)
   #
   #       Example:
-  #       - name: manual
+  #         name: manual
   #         steps: |
   #           1. Navigate to [chrome://extensions](chrome://extensions) and
   #           tick 'Developer Mode'.
@@ -179,7 +150,7 @@ atomic_tests:
   #
   #           3. Click the '#{FOOBAR}' button - you can interpolate here too!
   #
-  - name: command_prompt
+    name: command_prompt
     elevation_required: true 
     # indicates whether command must be run with admin privileges. 
     #If the elevation_required attribute is not defined, the value is assumed to be false
@@ -201,5 +172,5 @@ atomic_tests:
   # in this example we have no input arguments
   input_arguments:
   executor:
-  - name: bash
+    name: bash
     command: echo "Hello world!"

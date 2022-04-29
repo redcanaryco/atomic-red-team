@@ -32,5 +32,6 @@ atomic_tests:
     command: |
       $mypid = #{process_id}
       mavinject $mypid /INJECTRUNNING #{dll_payload}
+      Stop-Process -processname notepad
     name: powershell
     elevation_required: true
