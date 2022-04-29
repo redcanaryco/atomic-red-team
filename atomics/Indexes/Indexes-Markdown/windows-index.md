@@ -1085,7 +1085,9 @@
   - Atomic Test #8: Windows MachineGUID Discovery [windows]
   - Atomic Test #9: Griffon Recon [windows]
   - Atomic Test #10: Environment variables discovery on windows [windows]
-- T1614.001 System Language Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1614.001 System Language Discovery](../../T1614.001/T1614.001.md)
+  - Atomic Test #1: Discover System Language by Registry Query [windows]
+  - Atomic Test #2: Discover System Language with chcp [windows]
 - T1614 System Location Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1016 System Network Configuration Discovery](../../T1016/T1016.md)
   - Atomic Test #1: System Network Configuration Discovery on Windows [windows]
