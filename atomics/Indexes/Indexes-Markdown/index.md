@@ -1369,6 +1369,8 @@
   - Atomic Test #10: Enumerate Active Directory for Unconstrained Delegation [windows]
   - Atomic Test #11: Get-DomainUser with PowerView [windows]
   - Atomic Test #12: Enumerate Active Directory Users with ADSISearcher [windows]
+  - Atomic Test #13: Enumerate Linked Policies In ADSISearcher Discovery [windows]
+  - Atomic Test #14: Enumerate Root Domain linked policies Discovery [windows]
 - [T1069.002 Domain Groups](../../T1069.002/T1069.002.md)
   - Atomic Test #1: Basic Permission Groups Discovery Windows (Domain) [windows]
   - Atomic Test #2: Permission Groups Discovery PowerShell (Domain) [windows]
@@ -1533,6 +1535,7 @@
 - [T1007 System Service Discovery](../../T1007/T1007.md)
   - Atomic Test #1: System Service Discovery [windows]
   - Atomic Test #2: System Service Discovery - net.exe [windows]
+  - Atomic Test #3: System Service Discovery - systemctl [linux]
 - [T1124 System Time Discovery](../../T1124/T1124.md)
   - Atomic Test #1: System Time Discovery [windows]
   - Atomic Test #2: System Time Discovery - PowerShell [windows]
