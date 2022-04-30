@@ -942,6 +942,7 @@
   - Atomic Test #9: Execution of non-dll using rundll32.exe [windows]
   - Atomic Test #10: Rundll32 with Ordinal Value [windows]
   - Atomic Test #11: Rundll32 with Control_RunDLL [windows]
+  - Atomic Test #12: Rundll32 with desk.cpl [windows]
 - [T1134.005 SID-History Injection](../../T1134.005/T1134.005.md)
   - Atomic Test #1: Injection SID-History with mimikatz [windows]
 - T1553.003 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
