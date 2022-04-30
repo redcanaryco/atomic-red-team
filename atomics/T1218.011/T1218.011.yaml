@@ -251,3 +251,26 @@ atomic_tests:
     name: command_prompt
     command: | 
       rundll32.exe shell32.dll,Control_RunDLL #{input_file}
+- name: Rundll32 with desk.cpl
+  auto_generated_guid: 83a95136-a496-423c-81d3-1c6750133917
+  description: |
+    Rundll32.exe loading an executable renamed as .scr using desk.cpl 
+    Reference: 
+      - [LOLBAS - Libraries/Desk](https://lolbas-project.github.io/lolbas/Libraries/Desk/)
+    SIGMA rules:
+      - [SCR File Write Event](https://github.com/SigmaHQ/sigma/blob/master/rules/windows/file_event/file_event_win_new_src_file.yml)
+      - [Rundll32 InstallScreenSaver Execution](https://github.com/SigmaHQ/sigma/blob/master/rules/windows/process_creation/proc_creation_win_rundll32_installscreensaver.yml)
+  supported_platforms:
+      - windows
+  input_arguments:
+    exe_to_launch:
+      description: Path of the executable to launch
+      type: Path
+      default: '%windir%\System32\calc.exe'
+  executor:
+    name: command_prompt
+    command: | 
+      copy #{exe_to_launch} not_an_scr.scr
+      rundll32.exe desk.cpl,InstallScreenSaver not_an_scr.scr
+    cleanup_command: 
+      del not_an_scr.scr
