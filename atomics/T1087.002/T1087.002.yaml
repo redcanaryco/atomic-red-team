@@ -251,7 +251,7 @@ atomic_tests:
     name: powershell
     elevation_required: false
     command: |
-      (([adsisearcher]’(objectcategory=organizationalunit)’).FindAll()).Path | %{if(([ADSI]”$_”).gPlink){Write-Host “[+] OU Path:”([ADSI]”$_”).Path;$a=((([ADSI]”$_”).gplink) -replace “[[;]” -split “]”);for($i=0;$i -lt $a.length;$i++){if($a[$i]){Write-Host “Policy Path[$i]:”([ADSI]($a[$i]).Substring(0,$a[$i].length-1)).Path;Write-Host “Policy Name[$i]:”([ADSI]($a[$i]).Substring(0,$a[$i].length-1)).DisplayName} };Write-Output “`n” }}
+      (([adsisearcher]'(objectcategory=organizationalunit)').FindAll()).Path | %{if(([ADSI]"$_").gPlink){Write-Host "[+] OU Path:"([ADSI]"$_").Path;$a=((([ADSI]"$_").gplink) -replace "[[;]" -split "]");for($i=0;$i -lt $a.length;$i++){if($a[$i]){Write-Host "Policy Path[$i]:"([ADSI]($a[$i]).Substring(0,$a[$i].length-1)).Path;Write-Host "Policy Name[$i]:"([ADSI]($a[$i]).Substring(0,$a[$i].length-1)).DisplayName} };Write-Output "`n" }}
 - name: Enumerate Root Domain linked policies Discovery
   auto_generated_guid: 00c652e2-0750-4ca6-82ff-0204684a6fe4
   description: |
@@ -264,4 +264,4 @@ atomic_tests:
     name: powershell
     elevation_required: false
     command: |
-      (([adsisearcher]’’).SearchRooT).Path | %{if(([ADSI]”$_”).gPlink){Write-Host “[+] Domain Path:”([ADSI]”$_”).Path;$a=((([ADSI]”$_”).gplink) -replace “[[;]” -split “]”);for($i=0;$i -lt $a.length;$i++){if($a[$i]){Write-Host “Policy Path[$i]:”([ADSI]($a[$i]).Substring(0,$a[$i].length-1)).Path;Write-Host “Policy Name[$i]:”([ADSI]($a[$i]).Substring(0,$a[$i].length-1)).DisplayName} };Write-Output “`n” }}
+      (([adsisearcher]'').SearchRooT).Path | %{if(([ADSI]"$_").gPlink){Write-Host "[+] Domain Path:"([ADSI]"$_").Path;$a=((([ADSI]"$_").gplink) -replace "[[;]" -split "]");for($i=0;$i -lt $a.length;$i++){if($a[$i]){Write-Host "Policy Path[$i]:"([ADSI]($a[$i]).Substring(0,$a[$i].length-1)).Path;Write-Host "Policy Name[$i]:"([ADSI]($a[$i]).Substring(0,$a[$i].length-1)).DisplayName} };Write-Output "`n" }}
