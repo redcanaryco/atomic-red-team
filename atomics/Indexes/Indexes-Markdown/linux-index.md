@@ -20,7 +20,8 @@
   - Atomic Test #2: Extract passwords with grep [macos, linux]
   - Atomic Test #5: Find and Access Github Credentials [macos, linux]
 - T1555 Credentials from Password Stores [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1555.003 Credentials from Web Browsers [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1555.003 Credentials from Web Browsers](../../T1555.003/T1555.003.md)
+  - Atomic Test #9: LaZagne.py - Dump Credentials from Firefox Browser [linux]
 - T1212 Exploitation for Credential Access [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1606 Forge Web Credentials [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1056.002 GUI Input Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

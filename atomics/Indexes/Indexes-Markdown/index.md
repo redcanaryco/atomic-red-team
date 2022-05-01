@@ -45,6 +45,7 @@
   - Atomic Test #6: Simulating access to Windows Firefox Login Data [windows]
   - Atomic Test #7: Simulating access to Windows Edge Login Data [windows]
   - Atomic Test #8: Decrypt Mozilla Passwords with Firepwd.py [windows]
+  - Atomic Test #9: LaZagne.py - Dump Credentials from Firefox Browser [linux]
 - [T1552.002 Credentials in Registry](../../T1552.002/T1552.002.md)
   - Atomic Test #1: Enumeration for Credentials in Registry [windows]
   - Atomic Test #2: Enumeration for PuTTY Credentials in Registry [windows]
