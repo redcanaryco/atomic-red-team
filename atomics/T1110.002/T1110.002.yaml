@@ -24,8 +24,8 @@ atomic_tests:
   - description: Hashcat must exist on disk at specified location (#{hashcat_exe})
     prereq_command: 'if (Test-Path  $(cmd /c echo #{hashcat_exe})) {exit 0} else {exit 1}'
     get_prereq_command: |-
-      Invoke-WebRequest "https://www.7-zip.org/a/7z1900.exe" -OutFile "$env:TEMP\7z1900.exe"
-      Start-Process -FilePath "$env:Temp\7z1900.exe" -ArgumentList "/S /D=$env:temp\7zi" -NoNewWindow
+      Invoke-WebRequest "https://webwerks.dl.sourceforge.net/project/sevenzip/7-Zip/19.00/7z1900.exe" -OutFile "$env:TEMP\7z1900.exe"
+      Start-Process -FilePath "$env:Temp\7z1900.exe" -ArgumentList "/S /D=$env:temp\7z" -NoNewWindow
       Invoke-WebRequest "https://hashcat.net/files/hashcat-6.1.1.7z" -OutFile "$env:TEMP\hashcat6.7z"
       Start-Process cmd.exe -Args  "/c %temp%\7z\7z.exe x %temp%\hashcat6.7z -aoa -o%temp%\hashcat-unzip" -Wait
       New-Item -ItemType Directory (Split-Path $(cmd /c echo #{hashcat_exe})) -Force | Out-Null
