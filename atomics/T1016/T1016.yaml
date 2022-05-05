@@ -185,4 +185,16 @@ atomic_tests:
       sudo /usr/libexec/ApplicationFirewall/socketfilterfw --getglobalstate
     name: bash
     elevation_required: true
-  
+- name: 'My new test #2'
+  description: my desc
+  supported_platforms:
+  - windows
+  input_arguments:
+    message:
+      description: the msg to echo to screen
+      type: string
+      default: default message
+  executor:
+    command: 'echo #{message}'
+    cleanup_command: echo "cleaning"
+    name: powershell  
