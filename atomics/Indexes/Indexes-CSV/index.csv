@@ -30,6 +30,7 @@ credential-access,T1555.003,Credentials from Web Browsers,5,Simulating access to
 credential-access,T1555.003,Credentials from Web Browsers,6,Simulating access to Windows Firefox Login Data,eb8da98a-2e16-4551-b3dd-83de49baa14c,powershell
 credential-access,T1555.003,Credentials from Web Browsers,7,Simulating access to Windows Edge Login Data,a6a5ec26-a2d1-4109-9d35-58b867689329,powershell
 credential-access,T1555.003,Credentials from Web Browsers,8,Decrypt Mozilla Passwords with Firepwd.py,dc9cd677-c70f-4df5-bd1c-f114af3c2381,powershell
+credential-access,T1555.003,Credentials from Web Browsers,9,LaZagne.py - Dump Credentials from Firefox Browser,87e88698-621b-4c45-8a89-4eaebdeaabb1,sh
 credential-access,T1552.002,Credentials in Registry,1,Enumeration for Credentials in Registry,b6ec082c-7384-46b3-a111-9a9b8b14e5e7,command_prompt
 credential-access,T1552.002,Credentials in Registry,2,Enumeration for PuTTY Credentials in Registry,af197fd7-e868-448e-9bd5-05d1bcd9d9e5,command_prompt
 credential-access,T1003.006,DCSync,1,DCSync (Active Directory),129efd28-8497-4c87-a1b0-73b9a870ca3e,command_prompt
@@ -617,6 +618,7 @@ defense-evasion,T1218.011,Rundll32,8,Launches an executable using Rundll32 and p
 defense-evasion,T1218.011,Rundll32,9,Execution of non-dll using rundll32.exe,ae3a8605-b26e-457c-b6b3-2702fd335bac,powershell
 defense-evasion,T1218.011,Rundll32,10,Rundll32 with Ordinal Value,9fd5a74b-ba89-482a-8a3e-a5feaa3697b0,command_prompt
 defense-evasion,T1218.011,Rundll32,11,Rundll32 with Control_RunDLL,e4c04b6f-c492-4782-82c7-3bf75eb8077e,command_prompt
+defense-evasion,T1218.011,Rundll32,12,Rundll32 with desk.cpl,83a95136-a496-423c-81d3-1c6750133917,command_prompt
 defense-evasion,T1134.005,SID-History Injection,1,Injection SID-History with mimikatz,6bef32e5-9456-4072-8f14-35566fb85401,command_prompt
 defense-evasion,T1574.011,Services Registry Permissions Weakness,1,Service Registry Permissions Weakness,f7536d63-7fd4-466f-89da-7e48d550752a,powershell
 defense-evasion,T1574.011,Services Registry Permissions Weakness,2,Service ImagePath Change with reg.exe,f38e9eea-e1d7-4ba6-b716-584791963827,command_prompt
@@ -854,6 +856,8 @@ discovery,T1087.002,Domain Account,9,Enumerate Default Domain Admin Details (Dom
 discovery,T1087.002,Domain Account,10,Enumerate Active Directory for Unconstrained Delegation,46f8dbe9-22a5-4770-8513-66119c5be63b,powershell
 discovery,T1087.002,Domain Account,11,Get-DomainUser with PowerView,93662494-5ed7-4454-a04c-8c8372808ac2,powershell
 discovery,T1087.002,Domain Account,12,Enumerate Active Directory Users with ADSISearcher,02e8be5a-3065-4e54-8cc8-a14d138834d3,powershell
+discovery,T1087.002,Domain Account,13,Enumerate Linked Policies In ADSISearcher Discovery,7ab0205a-34e4-4a44-9b04-e1541d1a57be,powershell
+discovery,T1087.002,Domain Account,14,Enumerate Root Domain linked policies Discovery,00c652e2-0750-4ca6-82ff-0204684a6fe4,powershell
 discovery,T1069.002,Domain Groups,1,Basic Permission Groups Discovery Windows (Domain),dd66d77d-8998-48c0-8024-df263dc2ce5d,command_prompt
 discovery,T1069.002,Domain Groups,2,Permission Groups Discovery PowerShell (Domain),6d5d8c96-3d2a-4da9-9d6d-9a9d341899a7,powershell
 discovery,T1069.002,Domain Groups,3,Elevated group enumeration using net group (Domain),0afb5163-8181-432e-9405-4322710c0c37,command_prompt
@@ -972,6 +976,8 @@ discovery,T1082,System Information Discovery,9,Griffon Recon,69bd4abe-8759-49a6-
 discovery,T1082,System Information Discovery,10,Environment variables discovery on windows,f400d1c0-1804-4ff8-b069-ef5ddd2adbf3,command_prompt
 discovery,T1082,System Information Discovery,11,Environment variables discovery on macos and linux,fcbdd43f-f4ad-42d5-98f3-0218097e2720,sh
 discovery,T1082,System Information Discovery,12,Show System Integrity Protection status (MacOS),327cc050-9e99-4c8e-99b5-1d15f2fb6b96,sh
+discovery,T1614.001,System Language Discovery,1,Discover System Language by Registry Query,631d4cf1-42c9-4209-8fe9-6bd4de9421be,command_prompt
+discovery,T1614.001,System Language Discovery,2,Discover System Language with chcp,d91473ca-944e-477a-b484-0e80217cd789,command_prompt
 discovery,T1016,System Network Configuration Discovery,1,System Network Configuration Discovery on Windows,970ab6a1-0157-4f3f-9a73-ec4166754b23,command_prompt
 discovery,T1016,System Network Configuration Discovery,2,List Windows Firewall Rules,038263cb-00f4-4b0a-98ae-0696c67e1752,command_prompt
 discovery,T1016,System Network Configuration Discovery,3,System Network Configuration Discovery,c141bbdb-7fca-4254-9fd6-f47e79447e17,sh
@@ -991,6 +997,7 @@ discovery,T1033,System Owner/User Discovery,4,User Discovery With Env Vars Power
 discovery,T1033,System Owner/User Discovery,5,GetCurrent User with PowerShell Script,1392bd0f-5d5a-429e-81d9-eb9d4d4d5b3b,powershell
 discovery,T1007,System Service Discovery,1,System Service Discovery,89676ba1-b1f8-47ee-b940-2e1a113ebc71,command_prompt
 discovery,T1007,System Service Discovery,2,System Service Discovery - net.exe,5f864a3f-8ce9-45c0-812c-bdf7d8aeacc3,command_prompt
+discovery,T1007,System Service Discovery,3,System Service Discovery - systemctl,f4b26bce-4c2c-46c0-bcc5-fce062d38bef,bash
 discovery,T1124,System Time Discovery,1,System Time Discovery,20aba24b-e61f-4b26-b4ce-4784f763ca20,command_prompt
 discovery,T1124,System Time Discovery,2,System Time Discovery - PowerShell,1d5711d6-655c-4a47-ae9c-6503c74fa877,powershell
 discovery,T1124,System Time Discovery,3,System Time Discovery in macOS,f449c933-0891-407f-821e-7916a21a1a6f,sh
@@ -1017,6 +1024,7 @@ execution,T1204.002,Malicious File,6,Excel 4 Macro,4ea1fc97-8a46-4b4e-ba48-af43d
 execution,T1204.002,Malicious File,7,Headless Chrome code execution via VBA,a19ee671-ed98-4e9d-b19c-d1954a51585a,powershell
 execution,T1204.002,Malicious File,8,Potentially Unwanted Applications (PUA),02f35d62-9fdc-4a97-b899-a5d9a876d295,powershell
 execution,T1204.002,Malicious File,9,Office Generic Payload Download,5202ee05-c420-4148-bf5e-fd7f7d24850c,powershell
+execution,T1204.002,Malicious File,10,LNK Payload Download,581d7521-9c4b-420e-9695-2aec5241167f,powershell
 execution,T1106,Native API,1,Execution through API - CreateProcess,99be2089-c52d-4a4a-b5c3-261ee42c8b62,command_prompt
 execution,T1059.001,PowerShell,1,Mimikatz,f3132740-55bc-48c4-bcc0-758a459cd027,command_prompt
 execution,T1059.001,PowerShell,2,Run BloodHound from local disk,a21bb23e-e677-4ee7-af90-6931b57b6350,powershell

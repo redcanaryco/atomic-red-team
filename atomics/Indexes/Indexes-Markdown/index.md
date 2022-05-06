@@ -45,6 +45,7 @@
   - Atomic Test #6: Simulating access to Windows Firefox Login Data [windows]
   - Atomic Test #7: Simulating access to Windows Edge Login Data [windows]
   - Atomic Test #8: Decrypt Mozilla Passwords with Firepwd.py [windows]
+  - Atomic Test #9: LaZagne.py - Dump Credentials from Firefox Browser [linux]
 - [T1552.002 Credentials in Registry](../../T1552.002/T1552.002.md)
   - Atomic Test #1: Enumeration for Credentials in Registry [windows]
   - Atomic Test #2: Enumeration for PuTTY Credentials in Registry [windows]
@@ -942,6 +943,7 @@
   - Atomic Test #9: Execution of non-dll using rundll32.exe [windows]
   - Atomic Test #10: Rundll32 with Ordinal Value [windows]
   - Atomic Test #11: Rundll32 with Control_RunDLL [windows]
+  - Atomic Test #12: Rundll32 with desk.cpl [windows]
 - [T1134.005 SID-History Injection](../../T1134.005/T1134.005.md)
   - Atomic Test #1: Injection SID-History with mimikatz [windows]
 - T1553.003 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1369,6 +1371,8 @@
   - Atomic Test #10: Enumerate Active Directory for Unconstrained Delegation [windows]
   - Atomic Test #11: Get-DomainUser with PowerView [windows]
   - Atomic Test #12: Enumerate Active Directory Users with ADSISearcher [windows]
+  - Atomic Test #13: Enumerate Linked Policies In ADSISearcher Discovery [windows]
+  - Atomic Test #14: Enumerate Root Domain linked policies Discovery [windows]
 - [T1069.002 Domain Groups](../../T1069.002/T1069.002.md)
   - Atomic Test #1: Basic Permission Groups Discovery Windows (Domain) [windows]
   - Atomic Test #2: Permission Groups Discovery PowerShell (Domain) [windows]
@@ -1508,7 +1512,9 @@
   - Atomic Test #10: Environment variables discovery on windows [windows]
   - Atomic Test #11: Environment variables discovery on macos and linux [macos, linux]
   - Atomic Test #12: Show System Integrity Protection status (MacOS) [macos]
-- T1614.001 System Language Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1614.001 System Language Discovery](../../T1614.001/T1614.001.md)
+  - Atomic Test #1: Discover System Language by Registry Query [windows]
+  - Atomic Test #2: Discover System Language with chcp [windows]
 - T1614 System Location Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1016 System Network Configuration Discovery](../../T1016/T1016.md)
   - Atomic Test #1: System Network Configuration Discovery on Windows [windows]
@@ -1533,6 +1539,7 @@
 - [T1007 System Service Discovery](../../T1007/T1007.md)
   - Atomic Test #1: System Service Discovery [windows]
   - Atomic Test #2: System Service Discovery - net.exe [windows]
+  - Atomic Test #3: System Service Discovery - systemctl [linux]
 - [T1124 System Time Discovery](../../T1124/T1124.md)
   - Atomic Test #1: System Time Discovery [windows]
   - Atomic Test #2: System Time Discovery - PowerShell [windows]
@@ -1666,6 +1673,7 @@
   - Atomic Test #7: Headless Chrome code execution via VBA [windows]
   - Atomic Test #8: Potentially Unwanted Applications (PUA) [windows]
   - Atomic Test #9: Office Generic Payload Download [windows]
+  - Atomic Test #10: LNK Payload Download [windows]
 - T1204.003 Malicious Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1204.001 Malicious Link [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1106 Native API](../../T1106/T1106.md)

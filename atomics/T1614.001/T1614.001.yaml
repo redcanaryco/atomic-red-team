@@ -1,0 +1,27 @@
+attack_technique: T1614.001
+display_name: 'System Location Discovery: System Language Discovery'
+atomic_tests:
+- name: Discover System Language by Registry Query
+  auto_generated_guid: 631d4cf1-42c9-4209-8fe9-6bd4de9421be
+  description: |
+    Identify System language by querying the registry on an endpoint. 
+
+    Upon successful execution, result in number format can be looked up to correlate the language.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Nls\Language
+    name: command_prompt
+- name: Discover System Language with chcp
+  auto_generated_guid: d91473ca-944e-477a-b484-0e80217cd789
+  description: |
+   Identify System language with the chcp command.
+
+   Upon successful execution, result in number format can be looked up to correlate the language.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      chcp
+    name: command_prompt
