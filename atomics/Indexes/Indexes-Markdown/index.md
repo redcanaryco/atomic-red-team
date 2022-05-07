@@ -30,6 +30,11 @@
   - Atomic Test #3: Extracting passwords with findstr [windows]
   - Atomic Test #4: Access unattend.xml [windows]
   - Atomic Test #5: Find and Access Github Credentials [macos, linux]
+  - Atomic Test #6: WinPwn - sensitivefiles [windows]
+  - Atomic Test #7: WinPwn - Snaffler [windows]
+  - Atomic Test #8: WinPwn - powershellsensitive [windows]
+  - Atomic Test #9: WinPwn - passhunt [windows]
+  - Atomic Test #10: WinPwn - SessionGopher [windows]
 - [T1555 Credentials from Password Stores](../../T1555/T1555.md)
   - Atomic Test #1: Extract Windows Credential Manager via VBA [windows]
   - Atomic Test #2: Dump credentials from Windows Credential Manager With PowerShell [windows Credentials] [windows]
