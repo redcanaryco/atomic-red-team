@@ -1091,6 +1091,13 @@
   - Atomic Test #8: Windows MachineGUID Discovery [windows]
   - Atomic Test #9: Griffon Recon [windows]
   - Atomic Test #10: Environment variables discovery on windows [windows]
+  - Atomic Test #13: WinPwn - winPEAS [windows]
+  - Atomic Test #14: WinPwn - itm4nprivesc [windows]
+  - Atomic Test #15: WinPwn - Powersploits privesc checks [windows]
+  - Atomic Test #16: WinPwn - General privesc checks [windows]
+  - Atomic Test #17: WinPwn - GeneralRecon [windows]
+  - Atomic Test #18: WinPwn - Morerecon [windows]
+  - Atomic Test #19: WinPwn - RBCD-Check [windows]
 - [T1614.001 System Language Discovery](../../T1614.001/T1614.001.md)
   - Atomic Test #1: Discover System Language by Registry Query [windows]
   - Atomic Test #2: Discover System Language with chcp [windows]
