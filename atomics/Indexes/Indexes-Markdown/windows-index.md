@@ -1035,6 +1035,10 @@
 - [T1046 Network Service Scanning](../../T1046/T1046.md)
   - Atomic Test #3: Port Scan NMap for Windows [windows]
   - Atomic Test #4: Port Scan using python [windows]
+  - Atomic Test #5: WinPwn - spoolvulnscan [windows]
+  - Atomic Test #6: WinPwn - MS17-10 [windows]
+  - Atomic Test #7: WinPwn - bluekeep [windows]
+  - Atomic Test #8: WinPwn - fruit [windows]
 - [T1135 Network Share Discovery](../../T1135/T1135.md)
   - Atomic Test #3: Network Share Discovery command prompt [windows]
   - Atomic Test #4: Network Share Discovery PowerShell [windows]
@@ -1082,6 +1086,9 @@
 - [T1518 Software Discovery](../../T1518/T1518.md)
   - Atomic Test #1: Find and Display Internet Explorer Browser Version [windows]
   - Atomic Test #2: Applications Installed [windows]
+  - Atomic Test #4: WinPwn - Dotnetsearch [windows]
+  - Atomic Test #5: WinPwn - DotNet [windows]
+  - Atomic Test #6: WinPwn - powerSQL [windows]
 - [T1497.001 System Checks](../../T1497.001/T1497.001.md)
   - Atomic Test #2: Detect Virtualization Environment (Windows) [windows]
   - Atomic Test #4: Detect Virtualization Environment via WMI Manufacturer/Model Listing (Windows) [windows]
