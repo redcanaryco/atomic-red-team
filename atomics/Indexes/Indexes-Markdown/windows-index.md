@@ -1035,6 +1035,10 @@
 - [T1046 Network Service Scanning](../../T1046/T1046.md)
   - Atomic Test #3: Port Scan NMap for Windows [windows]
   - Atomic Test #4: Port Scan using python [windows]
+  - Atomic Test #5: WinPwn - spoolvulnscan [windows]
+  - Atomic Test #6: WinPwn - MS17-10 [windows]
+  - Atomic Test #7: WinPwn - bluekeep [windows]
+  - Atomic Test #8: WinPwn - fruit [windows]
 - [T1135 Network Share Discovery](../../T1135/T1135.md)
   - Atomic Test #3: Network Share Discovery command prompt [windows]
   - Atomic Test #4: Network Share Discovery PowerShell [windows]

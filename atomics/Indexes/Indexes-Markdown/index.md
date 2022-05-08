@@ -1434,6 +1434,10 @@
   - Atomic Test #2: Port Scan Nmap [linux, macos]
   - Atomic Test #3: Port Scan NMap for Windows [windows]
   - Atomic Test #4: Port Scan using python [windows]
+  - Atomic Test #5: WinPwn - spoolvulnscan [windows]
+  - Atomic Test #6: WinPwn - MS17-10 [windows]
+  - Atomic Test #7: WinPwn - bluekeep [windows]
+  - Atomic Test #8: WinPwn - fruit [windows]
 - [T1135 Network Share Discovery](../../T1135/T1135.md)
   - Atomic Test #1: Network Share Discovery [macos]
   - Atomic Test #2: Network Share Discovery - linux [linux]
