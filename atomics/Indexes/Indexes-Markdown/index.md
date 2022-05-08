@@ -1503,6 +1503,9 @@
   - Atomic Test #1: Find and Display Internet Explorer Browser Version [windows]
   - Atomic Test #2: Applications Installed [windows]
   - Atomic Test #3: Find and Display Safari Browser Version [macos]
+  - Atomic Test #4: WinPwn - Dotnetsearch [windows]
+  - Atomic Test #5: WinPwn - DotNet [windows]
+  - Atomic Test #6: WinPwn - powerSQL [windows]
 - [T1497.001 System Checks](../../T1497.001/T1497.001.md)
   - Atomic Test #1: Detect Virtualization Environment (Linux) [linux]
   - Atomic Test #2: Detect Virtualization Environment (Windows) [windows]

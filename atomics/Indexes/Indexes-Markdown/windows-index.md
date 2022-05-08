@@ -1086,6 +1086,9 @@
 - [T1518 Software Discovery](../../T1518/T1518.md)
   - Atomic Test #1: Find and Display Internet Explorer Browser Version [windows]
   - Atomic Test #2: Applications Installed [windows]
+  - Atomic Test #4: WinPwn - Dotnetsearch [windows]
+  - Atomic Test #5: WinPwn - DotNet [windows]
+  - Atomic Test #6: WinPwn - powerSQL [windows]
 - [T1497.001 System Checks](../../T1497.001/T1497.001.md)
   - Atomic Test #2: Detect Virtualization Environment (Windows) [windows]
   - Atomic Test #4: Detect Virtualization Environment via WMI Manufacturer/Model Listing (Windows) [windows]
