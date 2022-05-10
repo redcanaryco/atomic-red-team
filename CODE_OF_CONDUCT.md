@@ -23,7 +23,7 @@ Welcome to the [Atomic Red Team online community](https://atomicredteam.io/). Ou
 
 ## Reporting
 
-If you see anything that you believe breaks our community guidelines, no matter if it’s privately or publicly witnessed, please reach out to the **Director of Open Source Programs – Adam Mashinchi** via Slack direct message or [email](mailto:opensource@redcanary.com) with screenshots of the post/text and a link to the post or comments.
+If you see anything that you believe breaks our community guidelines, no matter if it’s privately or publicly witnessed, please reach out to the **Red Canary Open Source Team** at [email](mailto:opensource@redcanary.com) with screenshots of the post/text and a link to the post or comments.
 
 ## Enforcement & Consequences
 

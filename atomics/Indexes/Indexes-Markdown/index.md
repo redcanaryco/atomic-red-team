@@ -51,6 +51,8 @@
   - Atomic Test #7: Simulating access to Windows Edge Login Data [windows]
   - Atomic Test #8: Decrypt Mozilla Passwords with Firepwd.py [windows]
   - Atomic Test #9: LaZagne.py - Dump Credentials from Firefox Browser [linux]
+  - Atomic Test #10: Stage Popular Credential Files for Exfiltration [windows]
+  - Atomic Test #11: WinPwn - BrowserPwn [windows]
 - [T1552.002 Credentials in Registry](../../T1552.002/T1552.002.md)
   - Atomic Test #1: Enumeration for Credentials in Registry [windows]
   - Atomic Test #2: Enumeration for PuTTY Credentials in Registry [windows]
@@ -1448,6 +1450,7 @@
   - Atomic Test #5: View available share drives [windows]
   - Atomic Test #6: Share Discovery with PowerView [windows]
   - Atomic Test #7: PowerView ShareFinder [windows]
+  - Atomic Test #8: WinPwn - shareenumeration [windows]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #1: Packet Capture Linux [linux]
   - Atomic Test #2: Packet Capture macOS [macos]
@@ -1866,6 +1869,7 @@
   - Atomic Test #18: Curl Download File [windows]
   - Atomic Test #19: Curl Upload File [windows]
   - Atomic Test #20: Download a file with Microsoft Connection Manager Auto-Download [windows]
+  - Atomic Test #21: MAZE Propagation Script [windows]
 - [T1090.001 Internal Proxy](../../T1090.001/T1090.001.md)
   - Atomic Test #1: Connection Proxy [macos, linux]
   - Atomic Test #2: Connection Proxy for macOS UI [macos]
