@@ -553,6 +553,7 @@ atomic_tests:
       del /f/s/q %temp%\T1105 >nul 2>&1
       rmdir /s/q %temp%\T1105 >nul 2>&1
     name: command_prompt
+
 - name: MAZE Propagation Script
   auto_generated_guid: 70f4d07c-5c3e-4d53-bb0a-cdf3ada14baf
   description: |
@@ -609,3 +610,25 @@ atomic_tests:
       Remove-Item -path "$env:temp\T1105OfflineHosts.txt" -erroraction silentlycontinue
       Remove-item -path "$env:temp\T1105CompletedHosts.txt" -erroraction silentlycontinue
     name: powershell
+
+- name: Printer Migration Command-Line Tool UNC share folder into a zip file
+  description: |
+    Create a ZIP file from a folder in a remote drive
+  supported_platforms:
+    - windows
+  input_arguments:
+    Path_unc:
+      description: Path to the UNC folder
+      type: Path
+      default: \\127.0.0.1\c$\AtomicRedTeam\atomics\T1105\src\
+    Path_PrintBrm:
+      description: Path to PrintBrm.exe
+      type: Path
+      default: C:\Windows\System32\spool\tools\PrintBrm.exe
+  executor:
+    command: |
+      del %TEMP%\PrintBrm.zip >nul 2>&1 
+      #{Path_PrintBrm} -b -d #{Path_unc}  -f %TEMP%\PrintBrm.zip -O FORCE
+    cleanup_command: |
+      del %TEMP%\PrintBrm.zip >nul 2>&1
+    name: command_prompt

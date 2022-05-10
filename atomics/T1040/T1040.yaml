@@ -122,4 +122,33 @@ atomic_tests:
       del %temp%\trace.cab >nul 2>&1
     name: command_prompt
     elevation_required: true
-  
+
+- name: Windows Internal pktmon capture
+  description: |-
+    Will start a packet capture and store log file as t1040.etl.
+    https://lolbas-project.github.io/lolbas/Binaries/Pktmon/
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      pktmon.exe start --etw  -f %TEMP%\t1040.etl
+      TIMEOUT /T 5 >nul 2>&1
+      pktmon.exe stop
+    cleanup_command: |-
+      del %TEMP%\t1040.etl
+    name: command_prompt
+    elevation_required: true  
+ 
+- name: Windows Internal pktmon set filter
+  description: |-
+    Select Desired ports for packet capture 
+    https://lolbas-project.github.io/lolbas/Binaries/Pktmon/
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      pktmon.exe filter add -p 445
+    cleanup_command: |-
+      pktmon filter remove
+    name: command_prompt
+    elevation_required: true 

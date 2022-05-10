@@ -283,3 +283,25 @@ atomic_tests:
     cleanup_command: |-
       taskkill /f /im calculator.exe > nul 2>&1
     name: command_prompt 
+- name: Lolbin Gpscript logon option
+  description: |
+    Executes logon scripts configured in Group Policy.
+    https://lolbas-project.github.io/lolbas/Binaries/Gpscript/
+    https://oddvar.moe/2018/04/27/gpscript-exe-another-lolbin-to-the-list/
+  supported_platforms:
+    - windows
+  executor:
+    command: |
+      Gpscript /logon
+    name: command_prompt
+- name: Lolbin Gpscript startup option
+  description: |
+    Executes startup scripts configured in Group Policy
+    https://lolbas-project.github.io/lolbas/Binaries/Gpscript/
+    https://oddvar.moe/2018/04/27/gpscript-exe-another-lolbin-to-the-list/
+  supported_platforms:
+    - windows
+  executor:
+    command: |
+      Gpscript /startup
+    name: command_prompt
