@@ -120,7 +120,7 @@
 |  |  |  |  | [Timestomp](../../T1070.006/T1070.006.md) |  |  |  |  |  |  |  |
 |  |  |  |  | [Token Impersonation/Theft](../../T1134.001/T1134.001.md) |  |  |  |  |  |  |  |
 |  |  |  |  | Traffic Signaling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
-|  |  |  |  | Trusted Developer Utilities Proxy Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
+|  |  |  |  | [Trusted Developer Utilities Proxy Execution](../../T1127/T1127.md) |  |  |  |  |  |  |  |
 |  |  |  |  | Use Alternate Authentication Material [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
 |  |  |  |  | User Activity Based Checks [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
 |  |  |  |  | VBA Stomping [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |

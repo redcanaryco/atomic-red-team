@@ -1,0 +1,80 @@
+attack_technique: T1127
+display_name: 'Trusted Developer Utilities Proxy Execution'
+atomic_tests:
+- name: Lolbin Jsc.exe compile javascript to exe
+  auto_generated_guid: 1ec1c269-d6bd-49e7-b71b-a461f7fa7bc8
+  description: |
+    Use jsc.exe to compile javascript code stored in scriptfile.js and output scriptfile.exe.
+    https://lolbas-project.github.io/lolbas/Binaries/Jsc/
+    https://www.phpied.com/make-your-javascript-a-windows-exe/
+  supported_platforms:
+  - windows
+  input_arguments:
+    filename:
+      description: Location of the project file
+      type: Path
+      default: PathToAtomicsFolder\T1127\src\hello.js
+    jscpath:
+      description: Default location of jsc.exe
+      type: Path
+      default: C:\Windows\Microsoft.NET\Framework\v4.0.30319
+    jscname:
+      description: Default name of jsc
+      type: Path
+      default: jsc.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      JavaScript code file must exist on disk at specified location (#{filename})
+    prereq_command: |
+      if (Test-Path #{filename}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{filename}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1127/src/hello.js" -OutFile "#{filename}"
+  executor:
+    command: |
+      copy #{filename} %TEMP%\hello.js
+      #{jscpath}\#{jscname} %TEMP%\hello.js
+    cleanup_command: |
+      del %TEMP%\hello.js
+      del %TEMP%\hello.exe
+    name: command_prompt
+
+- name: Lolbin Jsc.exe compile javascript to dll
+  auto_generated_guid: 3fc9fea2-871d-414d-8ef6-02e85e322b80
+  description: |
+    Use jsc.exe to compile javascript code stored in Library.js and output Library.dll.
+    https://lolbas-project.github.io/lolbas/Binaries/Jsc/
+    https://www.phpied.com/make-your-javascript-a-windows-exe/
+  supported_platforms:
+  - windows
+  input_arguments:
+    filename:
+      description: Location of the project file
+      type: Path
+      default: PathToAtomicsFolder\T1127\src\LibHello.js
+    jscpath:
+      description: Default location of jsc.exe
+      type: Path
+      default: C:\Windows\Microsoft.NET\Framework\v4.0.30319
+    jscname:
+      description: Default name of jsc
+      type: Path
+      default: jsc.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      JavaScript code file must exist on disk at specified location (#{filename})
+    prereq_command: |
+      if (Test-Path #{filename}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{filename}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1127/src/LibHello.js" -OutFile "#{filename}"
+  executor:
+    command: |
+      copy #{filename} %TEMP%\LibHello.js
+      #{jscpath}\#{jscname} /t:library %TEMP%\LibHello.js
+    cleanup_command: |
+      del %TEMP%\LibHello.js
+      del %TEMP%\LibHello.dll
+    name: command_prompt  

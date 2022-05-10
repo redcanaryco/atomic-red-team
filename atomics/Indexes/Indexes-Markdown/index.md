@@ -122,6 +122,8 @@
   - Atomic Test #2: Packet Capture macOS [macos]
   - Atomic Test #3: Packet Capture Windows Command Prompt [windows]
   - Atomic Test #4: Windows Internal Packet Capture [windows]
+  - Atomic Test #5: Windows Internal pktmon capture [windows]
+  - Atomic Test #6: Windows Internal pktmon set filter [windows]
 - [T1003 OS Credential Dumping](../../T1003/T1003.md)
   - Atomic Test #1: Gsecdump [windows]
   - Atomic Test #2: Credential Dumping with NPPSpy [windows]
@@ -977,6 +979,8 @@
   - Atomic Test #8: Invoke-ATHRemoteFXvGPUDisablementCommand base test [windows]
   - Atomic Test #9: DiskShadow Command Execution [windows]
   - Atomic Test #10: Load Arbitrary DLL via Wuauclt (Windows Update Client) [windows]
+  - Atomic Test #11: Lolbin Gpscript logon option [windows]
+  - Atomic Test #12: Lolbin Gpscript startup option [windows]
 - [T1216 Signed Script Proxy Execution](../../T1216/T1216.md)
   - Atomic Test #1: SyncAppvPublishingServer Signed Script PowerShell Command Execution [windows]
   - Atomic Test #2: manage-bde.wsf Signed Script Command Execution [windows]
@@ -1019,7 +1023,9 @@
   - Atomic Test #1: Named pipe client impersonation [windows]
   - Atomic Test #2: `SeDebugPrivilege` token duplication [windows]
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1127 Trusted Developer Utilities Proxy Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1127 Trusted Developer Utilities Proxy Execution](../../T1127/T1127.md)
+  - Atomic Test #1: Lolbin Jsc.exe compile javascript to exe [windows]
+  - Atomic Test #2: Lolbin Jsc.exe compile javascript to dll [windows]
 - T1535 Unused/Unsupported Cloud Regions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1550 Use Alternate Authentication Material [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1497.002 User Activity Based Checks [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1456,6 +1462,8 @@
   - Atomic Test #2: Packet Capture macOS [macos]
   - Atomic Test #3: Packet Capture Windows Command Prompt [windows]
   - Atomic Test #4: Windows Internal Packet Capture [windows]
+  - Atomic Test #5: Windows Internal pktmon capture [windows]
+  - Atomic Test #6: Windows Internal pktmon set filter [windows]
 - [T1201 Password Policy Discovery](../../T1201/T1201.md)
   - Atomic Test #1: Examine password complexity policy - Ubuntu [linux]
   - Atomic Test #2: Examine password complexity policy - CentOS/RHEL 7.x [linux]
@@ -1468,6 +1476,7 @@
   - Atomic Test #9: Enumerate Active Directory Password Policy with get-addefaultdomainpasswordpolicy [windows]
 - [T1120 Peripheral Device Discovery](../../T1120/T1120.md)
   - Atomic Test #1: Win32_PnPEntity Hardware Inventory [windows]
+  - Atomic Test #2: WinPwn - printercheck [windows]
 - T1069 Permission Groups Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1057 Process Discovery](../../T1057/T1057.md)
   - Atomic Test #1: Process Discovery - ps [macos, linux]
@@ -1870,6 +1879,7 @@
   - Atomic Test #19: Curl Upload File [windows]
   - Atomic Test #20: Download a file with Microsoft Connection Manager Auto-Download [windows]
   - Atomic Test #21: MAZE Propagation Script [windows]
+  - Atomic Test #22: Printer Migration Command-Line Tool UNC share folder into a zip file [windows]
 - [T1090.001 Internal Proxy](../../T1090.001/T1090.001.md)
   - Atomic Test #1: Connection Proxy [macos, linux]
   - Atomic Test #2: Connection Proxy for macOS UI [macos]

