@@ -1386,6 +1386,7 @@
   - Atomic Test #12: Enumerate Active Directory Users with ADSISearcher [windows]
   - Atomic Test #13: Enumerate Linked Policies In ADSISearcher Discovery [windows]
   - Atomic Test #14: Enumerate Root Domain linked policies Discovery [windows]
+  - Atomic Test #15: WinPwn - generaldomaininfo [windows]
 - [T1069.002 Domain Groups](../../T1069.002/T1069.002.md)
   - Atomic Test #1: Basic Permission Groups Discovery Windows (Domain) [windows]
   - Atomic Test #2: Permission Groups Discovery PowerShell (Domain) [windows]
