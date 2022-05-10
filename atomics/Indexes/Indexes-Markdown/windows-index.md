@@ -34,6 +34,7 @@
   - Atomic Test #7: Simulating access to Windows Edge Login Data [windows]
   - Atomic Test #8: Decrypt Mozilla Passwords with Firepwd.py [windows]
   - Atomic Test #10: Stage Popular Credential Files for Exfiltration [windows]
+  - Atomic Test #11: WinPwn - BrowserPwn [windows]
 - [T1552.002 Credentials in Registry](../../T1552.002/T1552.002.md)
   - Atomic Test #1: Enumeration for Credentials in Registry [windows]
   - Atomic Test #2: Enumeration for PuTTY Credentials in Registry [windows]
@@ -1048,6 +1049,7 @@
   - Atomic Test #5: View available share drives [windows]
   - Atomic Test #6: Share Discovery with PowerView [windows]
   - Atomic Test #7: PowerView ShareFinder [windows]
+  - Atomic Test #8: WinPwn - shareenumeration [windows]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #3: Packet Capture Windows Command Prompt [windows]
   - Atomic Test #4: Windows Internal Packet Capture [windows]

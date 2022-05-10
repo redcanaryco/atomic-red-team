@@ -52,6 +52,7 @@
   - Atomic Test #8: Decrypt Mozilla Passwords with Firepwd.py [windows]
   - Atomic Test #9: LaZagne.py - Dump Credentials from Firefox Browser [linux]
   - Atomic Test #10: Stage Popular Credential Files for Exfiltration [windows]
+  - Atomic Test #11: WinPwn - BrowserPwn [windows]
 - [T1552.002 Credentials in Registry](../../T1552.002/T1552.002.md)
   - Atomic Test #1: Enumeration for Credentials in Registry [windows]
   - Atomic Test #2: Enumeration for PuTTY Credentials in Registry [windows]
@@ -1449,6 +1450,7 @@
   - Atomic Test #5: View available share drives [windows]
   - Atomic Test #6: Share Discovery with PowerView [windows]
   - Atomic Test #7: PowerView ShareFinder [windows]
+  - Atomic Test #8: WinPwn - shareenumeration [windows]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #1: Packet Capture Linux [linux]
   - Atomic Test #2: Packet Capture macOS [macos]
