@@ -1146,6 +1146,7 @@
   - Atomic Test #19: WinPwn - RBCD-Check [windows]
   - Atomic Test #20: WinPwn - PowerSharpPack - Watson searching for missing windows patches [windows]
   - Atomic Test #21: WinPwn - PowerSharpPack - Sharpup checking common Privesc vectors [windows]
+  - Atomic Test #22: WinPwn - PowerSharpPack - Seatbelt [windows]
 - [T1614.001 System Language Discovery](../../T1614.001/T1614.001.md)
   - Atomic Test #1: Discover System Language by Registry Query [windows]
   - Atomic Test #2: Discover System Language with chcp [windows]
