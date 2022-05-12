@@ -310,6 +310,10 @@
   - Atomic Test #15: UACME Bypass Method 56 [windows]
   - Atomic Test #16: UACME Bypass Method 59 [windows]
   - Atomic Test #17: UACME Bypass Method 61 [windows]
+  - Atomic Test #18: WinPwn - UAC Magic [windows]
+  - Atomic Test #19: WinPwn - UAC Bypass ccmstp technique [windows]
+  - Atomic Test #20: WinPwn - UAC Bypass DiskCleanup technique [windows]
+  - Atomic Test #21: WinPwn - UAC Bypass DccwBypassUAC technique [windows]
 - [T1574.012 COR_PROFILER](../../T1574.012/T1574.012.md)
   - Atomic Test #1: User scope COR_PROFILER [windows]
   - Atomic Test #2: System Scope COR_PROFILER [windows]
@@ -375,6 +379,8 @@
 - [T1078.003 Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #1: Create local account with admin privileges [windows]
   - Atomic Test #2: Create local account with admin privileges - MacOS [macos]
+  - Atomic Test #3: WinPwn - Loot local Credentials - powerhell kittie [windows]
+  - Atomic Test #4: WinPwn - Loot local Credentials - Safetykatz [windows]
 - T1547.015 Login Items [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1037.002 Logon Script (Mac)](../../T1037.002/T1037.002.md)
   - Atomic Test #1: Logon Scripts - Mac [macos]
@@ -529,6 +535,10 @@
   - Atomic Test #15: UACME Bypass Method 56 [windows]
   - Atomic Test #16: UACME Bypass Method 59 [windows]
   - Atomic Test #17: UACME Bypass Method 61 [windows]
+  - Atomic Test #18: WinPwn - UAC Magic [windows]
+  - Atomic Test #19: WinPwn - UAC Bypass ccmstp technique [windows]
+  - Atomic Test #20: WinPwn - UAC Bypass DiskCleanup technique [windows]
+  - Atomic Test #21: WinPwn - UAC Bypass DccwBypassUAC technique [windows]
 - [T1218.003 CMSTP](../../T1218.003/T1218.003.md)
   - Atomic Test #1: CMSTP Executing Remote Scriptlet [windows]
   - Atomic Test #2: CMSTP Executing UAC Bypass [windows]
@@ -763,6 +773,8 @@
 - [T1078.003 Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #1: Create local account with admin privileges [windows]
   - Atomic Test #2: Create local account with admin privileges - MacOS [macos]
+  - Atomic Test #3: WinPwn - Loot local Credentials - powerhell kittie [windows]
+  - Atomic Test #4: WinPwn - Loot local Credentials - Safetykatz [windows]
 - T1218.014 MMC [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1127.001 MSBuild](../../T1127.001/T1127.001.md)
   - Atomic Test #1: MSBuild Bypass Using Inline Tasks (C#) [windows]
@@ -1172,6 +1184,8 @@
 - [T1078.003 Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #1: Create local account with admin privileges [windows]
   - Atomic Test #2: Create local account with admin privileges - MacOS [macos]
+  - Atomic Test #3: WinPwn - Loot local Credentials - powerhell kittie [windows]
+  - Atomic Test #4: WinPwn - Loot local Credentials - Safetykatz [windows]
 - T1547.015 Login Items [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1037.002 Logon Script (Mac)](../../T1037.002/T1037.002.md)
   - Atomic Test #1: Logon Scripts - Mac [macos]
@@ -1712,6 +1726,9 @@
 - T1204.001 Malicious Link [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1106 Native API](../../T1106/T1106.md)
   - Atomic Test #1: Execution through API - CreateProcess [windows]
+  - Atomic Test #2: WinPwn - Get SYSTEM shell - Pop System Shell using CreateProcess technique [windows]
+  - Atomic Test #3: WinPwn - Get SYSTEM shell - Bind System Shell using CreateProcess technique [windows]
+  - Atomic Test #4: WinPwn - Get SYSTEM shell - Pop System Shell using NamedPipe Impersonation technique [windows]
 - T1059.008 Network Device CLI [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1059.001 PowerShell](../../T1059.001/T1059.001.md)
   - Atomic Test #1: Mimikatz [windows]
@@ -1981,6 +1998,8 @@
 - [T1078.003 Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #1: Create local account with admin privileges [windows]
   - Atomic Test #2: Create local account with admin privileges - MacOS [macos]
+  - Atomic Test #3: WinPwn - Loot local Credentials - powerhell kittie [windows]
+  - Atomic Test #4: WinPwn - Loot local Credentials - Safetykatz [windows]
 - T1566 Phishing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1091 Replication Through Removable Media](../../T1091/T1091.md)
   - Atomic Test #1: USB Malware Spread Simulation [windows]
