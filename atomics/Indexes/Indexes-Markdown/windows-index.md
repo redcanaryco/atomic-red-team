@@ -235,6 +235,10 @@
   - Atomic Test #15: UACME Bypass Method 56 [windows]
   - Atomic Test #16: UACME Bypass Method 59 [windows]
   - Atomic Test #17: UACME Bypass Method 61 [windows]
+  - Atomic Test #18: WinPwn - UAC Magic [windows]
+  - Atomic Test #19: WinPwn - UAC Bypass ccmstp technique [windows]
+  - Atomic Test #20: WinPwn - UAC Bypass DiskCleanup technique [windows]
+  - Atomic Test #21: WinPwn - UAC Bypass DccwBypassUAC technique [windows]
 - [T1574.012 COR_PROFILER](../../T1574.012/T1574.012.md)
   - Atomic Test #1: User scope COR_PROFILER [windows]
   - Atomic Test #2: System Scope COR_PROFILER [windows]
@@ -383,6 +387,10 @@
   - Atomic Test #15: UACME Bypass Method 56 [windows]
   - Atomic Test #16: UACME Bypass Method 59 [windows]
   - Atomic Test #17: UACME Bypass Method 61 [windows]
+  - Atomic Test #18: WinPwn - UAC Magic [windows]
+  - Atomic Test #19: WinPwn - UAC Bypass ccmstp technique [windows]
+  - Atomic Test #20: WinPwn - UAC Bypass DiskCleanup technique [windows]
+  - Atomic Test #21: WinPwn - UAC Bypass DccwBypassUAC technique [windows]
 - [T1218.003 CMSTP](../../T1218.003/T1218.003.md)
   - Atomic Test #1: CMSTP Executing Remote Scriptlet [windows]
   - Atomic Test #2: CMSTP Executing UAC Bypass [windows]
