@@ -82,6 +82,8 @@
   - Atomic Test #3: Extract all accounts in use as SPN using setspn [windows]
   - Atomic Test #4: Request A Single Ticket via PowerShell [windows]
   - Atomic Test #5: Request All Tickets via PowerShell [windows]
+  - Atomic Test #6: WinPwn - Kerberoasting [windows]
+  - Atomic Test #7: WinPwn - PowerSharpPack - Kerberoasting Using Rubeus [windows]
 - [T1555.001 Keychain](../../T1555.001/T1555.001.md)
   - Atomic Test #1: Keychain [macos]
 - [T1056.001 Keylogging](../../T1056.001/T1056.001.md)
