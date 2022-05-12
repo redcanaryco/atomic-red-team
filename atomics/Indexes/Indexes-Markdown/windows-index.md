@@ -270,6 +270,7 @@
 - T1484.002 Domain Trust Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1055.001 Dynamic-link Library Injection](../../T1055.001/T1055.001.md)
   - Atomic Test #1: Process Injection via mavinject.exe [windows]
+  - Atomic Test #2: WinPwn - Get SYSTEM shell - Bind System Shell using UsoClient DLL load technique [windows]
 - T1611 Escape to Host [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1546 Event Triggered Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574.005 Executable Installer File Permissions Weakness [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -488,6 +489,7 @@
 - T1562.010 Downgrade Attack [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1055.001 Dynamic-link Library Injection](../../T1055.001/T1055.001.md)
   - Atomic Test #1: Process Injection via mavinject.exe [windows]
+  - Atomic Test #2: WinPwn - Get SYSTEM shell - Bind System Shell using UsoClient DLL load technique [windows]
 - T1564.008 Email Hiding Rules [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1480.001 Environmental Keying [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574.005 Executable Installer File Permissions Weakness [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

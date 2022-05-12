@@ -359,6 +359,7 @@
   - Atomic Test #2: Shared Library Injection via LD_PRELOAD [linux]
 - [T1055.001 Dynamic-link Library Injection](../../T1055.001/T1055.001.md)
   - Atomic Test #1: Process Injection via mavinject.exe [windows]
+  - Atomic Test #2: WinPwn - Get SYSTEM shell - Bind System Shell using UsoClient DLL load technique [windows]
 - T1548.004 Elevated Execution with Prompt [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.014 Emond](../../T1546.014/T1546.014.md)
   - Atomic Test #1: Persistance with Event Monitor - emond [macos]
@@ -691,6 +692,7 @@
   - Atomic Test #2: Shared Library Injection via LD_PRELOAD [linux]
 - [T1055.001 Dynamic-link Library Injection](../../T1055.001/T1055.001.md)
   - Atomic Test #1: Process Injection via mavinject.exe [windows]
+  - Atomic Test #2: WinPwn - Get SYSTEM shell - Bind System Shell using UsoClient DLL load technique [windows]
 - T1548.004 Elevated Execution with Prompt [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1564.008 Email Hiding Rules [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1480.001 Environmental Keying [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
