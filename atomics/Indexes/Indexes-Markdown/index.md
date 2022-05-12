@@ -36,6 +36,7 @@
   - Atomic Test #8: WinPwn - powershellsensitive [windows]
   - Atomic Test #9: WinPwn - passhunt [windows]
   - Atomic Test #10: WinPwn - SessionGopher [windows]
+  - Atomic Test #11: WinPwn - Loot local Credentials - AWS, Microsoft Azure, and Google Compute credentials [windows]
 - [T1555 Credentials from Password Stores](../../T1555/T1555.md)
   - Atomic Test #1: Extract Windows Credential Manager via VBA [windows]
   - Atomic Test #2: Dump credentials from Windows Credential Manager With PowerShell [windows Credentials] [windows]
