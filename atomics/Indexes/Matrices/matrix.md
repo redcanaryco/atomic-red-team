@@ -120,7 +120,7 @@
 |  |  |  |  | ROMMONkit [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
 |  |  |  |  | Reduce Key Space [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
 |  |  |  |  | Redundant Access [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
-|  |  |  |  | Reflective Code Loading [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
+|  |  |  |  | [Reflective Code Loading](../../T1620/T1620.md) |  |  |  |  |  |  |  |
 |  |  |  |  | [Regsvcs/Regasm](../../T1218.009/T1218.009.md) |  |  |  |  |  |  |  |
 |  |  |  |  | [Regsvr32](../../T1218.010/T1218.010.md) |  |  |  |  |  |  |  |
 |  |  |  |  | [Rename System Utilities](../../T1036.003/T1036.003.md) |  |  |  |  |  |  |  |
