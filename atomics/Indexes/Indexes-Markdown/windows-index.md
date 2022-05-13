@@ -132,6 +132,7 @@
   - Atomic Test #4: PowerDump Hashes and Usernames from Registry [windows]
   - Atomic Test #5: dump volume shadow copy hives with certutil [windows]
   - Atomic Test #6: dump volume shadow copy hives with System.IO.File [windows]
+  - Atomic Test #7: WinPwn - Loot local Credentials - Dump SAM-File for NTLM Hashes [windows]
 - [T1558.002 Silver Ticket](../../T1558.002/T1558.002.md)
   - Atomic Test #1: Crafting Active Directory silver tickets with mimikatz [windows]
 - [T1539 Steal Web Session Cookie](../../T1539/T1539.md)
