@@ -58,6 +58,8 @@
   - Atomic Test #9: LaZagne.py - Dump Credentials from Firefox Browser [linux]
   - Atomic Test #10: Stage Popular Credential Files for Exfiltration [windows]
   - Atomic Test #11: WinPwn - BrowserPwn [windows]
+  - Atomic Test #12: WinPwn - Loot local Credentials - mimi-kittenz [windows]
+  - Atomic Test #13: WinPwn - PowerSharpPack - Sharpweb for Browser Credentials [windows]
 - [T1552.002 Credentials in Registry](../../T1552.002/T1552.002.md)
   - Atomic Test #1: Enumeration for Credentials in Registry [windows]
   - Atomic Test #2: Enumeration for PuTTY Credentials in Registry [windows]
