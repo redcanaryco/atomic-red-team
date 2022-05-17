@@ -104,4 +104,16 @@ atomic_tests:
       Remove-Item $env:TEMP\svchost-exe.dmp -ErrorAction Ignore
     name: powershell
     elevation_required: true
-
+- name: Test created with atomic gui
+  description: Just to test a PR
+  supported_platforms:
+  - windows
+  input_arguments:
+    msg:
+      description: the message to echo
+      type: string
+      default: default message
+  executor:
+    command: 'echo #{msg}'
+    name: command_prompt
+  
