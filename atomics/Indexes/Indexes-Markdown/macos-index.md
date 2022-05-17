@@ -14,6 +14,7 @@
 - T1555 Credentials from Password Stores [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1555.003 Credentials from Web Browsers](../../T1555.003/T1555.003.md)
   - Atomic Test #2: Search macOS Safari Cookies [macos]
+  - Atomic Test #14: Simulating Access to Chrome Login Data - MacOS [macos]
 - T1212 Exploitation for Credential Access [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1606 Forge Web Credentials [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1056.002 GUI Input Capture](../../T1056.002/T1056.002.md)
