@@ -60,6 +60,7 @@
   - Atomic Test #11: WinPwn - BrowserPwn [windows]
   - Atomic Test #12: WinPwn - Loot local Credentials - mimi-kittenz [windows]
   - Atomic Test #13: WinPwn - PowerSharpPack - Sharpweb for Browser Credentials [windows]
+  - Atomic Test #14: Simulating Access to Chrome Login Data - MacOS [macos]
 - [T1552.002 Credentials in Registry](../../T1552.002/T1552.002.md)
   - Atomic Test #1: Enumeration for Credentials in Registry [windows]
   - Atomic Test #2: Enumeration for PuTTY Credentials in Registry [windows]
