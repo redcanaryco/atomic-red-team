@@ -1994,6 +1994,7 @@
   - Atomic Test #3: Exfiltration Over Alternative Protocol - DNS [linux]
   - Atomic Test #4: Exfiltration Over Alternative Protocol - HTTP [windows]
   - Atomic Test #5: Exfiltration Over Alternative Protocol - SMTP [windows]
+  - Atomic Test #6: MAZE FTP Upload [windows]
 - [T1567 Exfiltration Over Web Service](../../T1567/T1567.md)
   - Atomic Test #1: Data Exfiltration with ConfigSecurityPolicy [windows]
 - T1052.001 Exfiltration over USB [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
