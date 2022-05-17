@@ -49,25 +49,28 @@ atomic_tests:
       GPORemoteAccessPolicy -consoleoutput -noninteractive
     name: powershell
 - name: MSFT Get-GPO Cmdlet
-  description: 'The Get-GPO cmdlet gets one Group Policy Object (GPO) or all the GPOs in a domain. Tested on Windows Server 2019 as a domain user with computer joined to domain. Reference: https://docs.microsoft.com/en-us/powershell/module/grouppolicy/get-gpo?view=windowsserver2022-ps '
+  description: 'The Get-GPO cmdlet gets one Group Policy Object (GPO) or all the GPOs in a domain. Tested on Windows Server 2019 as a domain user with computer joined to domain. Reference: https://docs.microsoft.com/en-us/powershell/module/grouppolicy/get-gpo?view=windowsserver2022-ps'
   supported_platforms:
   - windows
   input_arguments:
-    gpo_param:
-      description: You can specify a GPO by its display name or by its globally unique identifier (GUID) to get a single GPO, or you can get all the GPOs in the domain through the All parameter.
-      type: string
-      default: -All
-    your_domain:
-      description: This is the name of your domain such as dc1.local
-      type: string
-      default: corp.contoso.com
     gpo_output:
       description: The output of the Get-GPO cmdlet
-      type: path
+      type: String
       default: $env:temp\GPO_Output.txt
+    gpo_param:
+      description: You can specify a GPO by its display name or by its globally unique identifier (GUID) to get a single GPO, or you can get all the GPOs in the domain through the All parameter
+      type: string
+      default: -All
+  dependency_executor_name: powershell
+  dependencies:
+  - description: Two RSAT Modules needed for this to work on Win10, WinServer 2019 works by default. This will take a long time (almost 2 minutes) to install RSAT Manually.
+    prereq_command: 'Write-Host "Must add Modules MANUALLY to WIN10 ### Add-WindowsCapability -online -Name Rsat.ActiveDirectory.DS-LDS.Tools~~~~0.0.1.0; Add-WindowsCapability -Online -Name Rsat.GroupPolicy.Management.Tools~~~~0.0.1.0 #### MUST ALSO REMOVE-WindowsCapability Manually ####"'
+    get_prereq_command: |-
+      Add-WindowsCapability -online -Name Rsat.GroupPolicy.Management.Tools~~~~0.0.1.0
+      Add-WindowsCapability -online -Name Rsat.ActiveDirectory.DS-LDS.Tools~~~~0.0.1.0
   executor:
-    command: 'Get-GPO -Domain #{your_domain} #{gpo_param} >> #{gpo_output}'
+    command: 'Get-GPO -Domain $ENV:userdnsdomain #{gpo_param} >> #{gpo_output}'
     cleanup_command: del $env:temp\GPO_Output.txt -erroraction silentlycontinue
     name: powershell
     elevation_required: true
-  
+ 
