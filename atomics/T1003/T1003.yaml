@@ -105,3 +105,15 @@ atomic_tests:
     name: powershell
     elevation_required: true
 
+- name: My new test from atomicgui
+  description: sample test
+  supported_platforms:
+  - windows
+  input_arguments:
+    msg:
+      description: message to echo to screen
+      type: string
+      default: this is the default msg
+  executor:
+    command: 'echo #{msg}'
+    name: command_prompt
