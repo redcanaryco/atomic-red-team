@@ -156,6 +156,7 @@
   - Atomic Test #3: Password spray all Active Directory domain users with a single password via LDAP against domain controller (NTLM or Kerberos) [windows]
   - Atomic Test #4: Password spray all Azure AD users with a single password [azure-ad]
   - Atomic Test #5: WinPwn - DomainPasswordSpray Attacks [windows]
+  - Atomic Test #6: Password Spray Invoke-DomainPasswordSpray Light [windows]
 - [T1556.003 Pluggable Authentication Modules](../../T1556.003/T1556.003.md)
   - Atomic Test #1: Malicious PAM rule [linux]
   - Atomic Test #2: Malicious PAM module [linux]
