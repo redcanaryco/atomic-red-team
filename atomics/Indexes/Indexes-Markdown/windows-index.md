@@ -1458,7 +1458,8 @@
   - Atomic Test #2: Word spawned a command shell and used an IP address in the command line [windows]
 - T1566.002 Spearphishing Link [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1566.003 Spearphishing via Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1195 Supply Chain Compromise [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1195 Supply Chain Compromise](../../T1195/T1195.md)
+  - Atomic Test #1: Octopus Scanner Malware Open Source Supply Chain [windows]
 - T1199 Trusted Relationship [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 
