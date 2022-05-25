@@ -307,3 +307,30 @@ atomic_tests:
     command: |
       Gpscript /startup
     name: command_prompt
+
+- name: Lolbas ie4uinit.exe use as proxy
+  auto_generated_guid: 13c0804e-615e-43ad-b223-2dfbacd0b0b3
+  description: |
+    Executes commands from a specially prepared ie4uinit.inf file.
+    Poc from : https://bohops.com/2018/03/10/leveraging-inf-sct-fetch-execute-techniques-for-bypass-evasion-persistence-part-2/
+    Reference: https://lolbas-project.github.io/lolbas/Binaries/Ie4uinit/
+  supported_platforms:
+    - windows
+  input_arguments:
+    Path_inf:
+      description:  Path to the cab file
+      type: Path
+      default:  PathToAtomicsFolder\T1218\src\ieuinit.inf
+    Path_ie4uinit:
+      description: Path to ie4uinit.exe
+      type: Path
+      default: c:\windows\system32\ie4uinit.exe
+  executor:
+    command: |
+      copy #{Path_ie4uinit} %TEMP%\ie4uinit.exe
+      copy #{Path_inf} %TEMP%\ieuinit.inf
+      %TEMP%\ie4uinit.exe -BaseSettings
+    cleanup_command: |
+      del %TEMP%\ie4uinit.exe >nul 2>&1
+      del %TEMP%\ieuinit.inf >nul 2>&1
+    name: command_prompt

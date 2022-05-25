@@ -1014,6 +1014,7 @@
   - Atomic Test #10: Load Arbitrary DLL via Wuauclt (Windows Update Client) [windows]
   - Atomic Test #11: Lolbin Gpscript logon option [windows]
   - Atomic Test #12: Lolbin Gpscript startup option [windows]
+  - Atomic Test #13: Lolbas ie4uinit.exe use as proxy [windows]
 - [T1216 Signed Script Proxy Execution](../../T1216/T1216.md)
   - Atomic Test #1: SyncAppvPublishingServer Signed Script PowerShell Command Execution [windows]
   - Atomic Test #2: manage-bde.wsf Signed Script Command Execution [windows]
@@ -1923,6 +1924,8 @@
   - Atomic Test #20: Download a file with Microsoft Connection Manager Auto-Download [windows]
   - Atomic Test #21: MAZE Propagation Script [windows]
   - Atomic Test #22: Printer Migration Command-Line Tool UNC share folder into a zip file [windows]
+  - Atomic Test #23: Lolbas replace.exe use to copy file [windows]
+  - Atomic Test #24: Lolbas replace.exe use to copy UNC file [windows]
 - [T1090.001 Internal Proxy](../../T1090.001/T1090.001.md)
   - Atomic Test #1: Connection Proxy [macos, linux]
   - Atomic Test #2: Connection Proxy for macOS UI [macos]
