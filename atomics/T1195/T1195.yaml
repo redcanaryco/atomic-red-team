@@ -1,0 +1,33 @@
+attack_technique: T1195
+display_name: Supply Chain Compromise 
+atomic_tests:
+- name: Octopus Scanner Malware Open Source Supply Chain
+  auto_generated_guid: 82a9f001-94c5-495e-9ed5-f530dbded5e2
+  description: |
+    This test simulates an adversary Octupus drop the RAT dropper ExplorerSync.db
+    [octopus-scanner-malware-open-source-supply-chain](https://securitylab.github.com/research/octopus-scanner-malware-open-source-supply-chain/)
+    [the-supreme-backdoor-factory](https://www.dfir.it/blog/2019/02/26/the-supreme-backdoor-factory/)
+  supported_platforms:
+  - windows
+  input_arguments:
+    rat_payload:
+      description: RAT dropper ExplorerSync.db
+      type: Path
+      default: $env:TEMP\ExplorerSync.db
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      ExplorerSync.db must exist on disk at specified location (#{rat_payload})
+    prereq_command: |
+      if (Test-Path #{rat_payload}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Out-File -FilePath "#{rat_payload}"
+  executor:
+    command: |
+      copy %temp%\ExplorerSync.db %temp%\..\Microsoft\ExplorerSync.db
+      schtasks /create /tn ExplorerSync /tr "javaw -jar %temp%\..\Microsoft\ExplorerSync.db" /sc MINUTE /f
+    cleanup_command: |
+      schtasks /delete /tn ExplorerSync /F 2>null
+      del %temp%\..\Microsoft\ExplorerSync.db 2>null
+      del %temp%\ExplorerSync.db 2>null
+    name: command_prompt
