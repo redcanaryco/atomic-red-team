@@ -633,3 +633,51 @@ atomic_tests:
     cleanup_command: |
       del %TEMP%\PrintBrm.zip >nul 2>&1
     name: command_prompt
+
+- name: Lolbas replace.exe use to copy file
+  auto_generated_guid: 54782d65-12f0-47a5-b4c1-b70ee23de6df
+  description: |
+    Copy file.cab to destination
+    Reference: https://lolbas-project.github.io/lolbas/Binaries/Replace/
+  supported_platforms:
+    - windows
+  input_arguments:
+    replace_cab:
+      description: Path to the cab file
+      type: Path
+      default:  PathToAtomicsFolder\T1105\src\redcanary.cab
+    Path_replace:
+      description: Path to replace.exe
+      type: Path
+      default: C:\Windows\System32\replace.exe
+  executor:
+    command: |
+      del %TEMP%\redcanary.cab >nul 2>&1
+      #{Path_replace} #{replace_cab} %TEMP% /A
+    cleanup_command: |
+      del %TEMP%\redcanary.cab >nul 2>&1
+    name: command_prompt
+
+- name: Lolbas replace.exe use to copy UNC file
+  auto_generated_guid: ed0335ac-0354-400c-8148-f6151d20035a
+  description: |
+    Copy UNC file to destination
+    Reference: https://lolbas-project.github.io/lolbas/Binaries/Replace/
+  supported_platforms:
+    - windows
+  input_arguments:
+    replace_cab:
+      description: UNC Path to the cab file
+      type: Path
+      default:  \\127.0.0.1\c$\AtomicRedTeam\atomics\T1105\src\redcanary.cab
+    Path_replace:
+      description: Path to replace.exe
+      type: Path
+      default: C:\Windows\System32\replace.exe
+  executor:
+    command: |
+      del %TEMP%\redcanary.cab >nul 2>&1
+      #{Path_replace} #{replace_cab} %TEMP% /A
+    cleanup_command: |
+      del %TEMP%\redcanary.cab >nul 2>&1
+    name: command_prompt

@@ -157,6 +157,7 @@
   - Atomic Test #4: Password spray all Azure AD users with a single password [azure-ad]
   - Atomic Test #5: WinPwn - DomainPasswordSpray Attacks [windows]
   - Atomic Test #6: Password Spray Invoke-DomainPasswordSpray Light [windows]
+  - Atomic Test #7: Password Spray Microsoft Online Accounts with MSOLSpray (Azure/O365) [azure-ad]
 - [T1556.003 Pluggable Authentication Modules](../../T1556.003/T1556.003.md)
   - Atomic Test #1: Malicious PAM rule [linux]
   - Atomic Test #2: Malicious PAM module [linux]
@@ -1014,6 +1015,7 @@
   - Atomic Test #10: Load Arbitrary DLL via Wuauclt (Windows Update Client) [windows]
   - Atomic Test #11: Lolbin Gpscript logon option [windows]
   - Atomic Test #12: Lolbin Gpscript startup option [windows]
+  - Atomic Test #13: Lolbas ie4uinit.exe use as proxy [windows]
 - [T1216 Signed Script Proxy Execution](../../T1216/T1216.md)
   - Atomic Test #1: SyncAppvPublishingServer Signed Script PowerShell Command Execution [windows]
   - Atomic Test #2: manage-bde.wsf Signed Script Command Execution [windows]
@@ -1923,6 +1925,8 @@
   - Atomic Test #20: Download a file with Microsoft Connection Manager Auto-Download [windows]
   - Atomic Test #21: MAZE Propagation Script [windows]
   - Atomic Test #22: Printer Migration Command-Line Tool UNC share folder into a zip file [windows]
+  - Atomic Test #23: Lolbas replace.exe use to copy file [windows]
+  - Atomic Test #24: Lolbas replace.exe use to copy UNC file [windows]
 - [T1090.001 Internal Proxy](../../T1090.001/T1090.001.md)
   - Atomic Test #1: Connection Proxy [macos, linux]
   - Atomic Test #2: Connection Proxy for macOS UI [macos]
@@ -2034,7 +2038,8 @@
   - Atomic Test #2: Word spawned a command shell and used an IP address in the command line [windows]
 - T1566.002 Spearphishing Link [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1566.003 Spearphishing via Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1195 Supply Chain Compromise [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1195 Supply Chain Compromise](../../T1195/T1195.md)
+  - Atomic Test #1: Octopus Scanner Malware Open Source Supply Chain [windows]
 - T1199 Trusted Relationship [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 
