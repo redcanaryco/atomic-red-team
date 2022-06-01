@@ -3,6 +3,7 @@ display_name: "Escape to Host"
 
 atomic_tests:
 - name: Mount host filesystem to escape privileged Docker container
+  auto_generated_guid: 6c499943-b098-4bc6-8d38-0956fc182984
   description: |
     This technique abuses privileged Docker containers to mount the host's filesystem and then create a cron job to launch a reverse shell as the host's superuser.
     The container running the test needs be privileged.  It may take up to a minute for this to run due to how often crond triggers a job.
