@@ -62,3 +62,36 @@ atomic_tests:
     command: |
       LD_PRELOAD=#{path_to_shared_library} ls
     name: bash
+- name: Dylib Injection via DYLD_INSERT_LIBRARIES
+  description: |
+    injects a dylib that opens calculator via env variable
+  supported_platforms:
+  - macos
+  input_arguments:
+    file_to_inject:
+      description: Path of executable to be injected. Mostly works on non-apple default apps.
+      type: Path
+      default: /Applications/Firefox.app/Contents/MacOS/firefox
+    source_file:
+      description: Path of c source file
+      type: Path
+      default: PathToAtomicsFolder/T1574.006/src/MacOS/T1574.006.c
+    dylib_file:
+      description: Path of dylib file
+      type: Path
+      default: /tmp/T1574006MOS.dylib
+  dependency_executor_name: bash
+  dependencies:
+  - description: |
+      The c source must exist on disk at specified location (#{source_file})
+    prereq_command: |
+      if [ -f #{source_file} ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      gcc -dynamiclib #{source_file} -o #{dylib_file}
+  executor:
+    command: |
+      DYLD_INSERT_LIBRARIES=#{dylib_file} #{file_to_inject}
+    cleanup_command: |
+      kill `pgrep Calculator`
+    name: bash
+    elevation_required: false
