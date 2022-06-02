@@ -547,4 +547,16 @@ atomic_tests:
       reg delete "HKLM\SYSTEM\CurrentControlSet\Control\SafeBoot\Network\AtomicSafeMode" /f
     name: command_prompt
     elevation_required: true
-
+- name: Adding Windows Registry keys via Powershell to store  malware  
+  description: |
+    Adding Windows Registry keys via Powershell to store  malware execution
+	  https://thedfirreport.com/2022/05/09/seo-poisoning-a-gootloader-story/
+  supported_platforms:
+    - windows
+  executor:
+    command: |
+      New-Item -Path "HKCU:\SOFTWARE\Microsoft\Phone" -Name "username451"
+    cleanup_command: |
+      Remove-Item -Path HKCU:\SOFTWARE\Microsoft\Phone\username451 -Force -ErrorAction ignore
+    name: powershell
+	  elevation_required: true
