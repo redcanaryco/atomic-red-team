@@ -83,9 +83,9 @@ atomic_tests:
   dependency_executor_name: bash
   dependencies:
   - description: |
-      The c source must exist on disk at specified location (#{source_file})
+      Compile the dylib from (#{source_file}). Destination is #{dylib_file}
     prereq_command: |
-      if [ -f #{source_file} ]; then exit 0; else exit 1; fi;
+      gcc -dynamiclib #{source_file} -o #{dylib_file}
     get_prereq_command: |
       gcc -dynamiclib #{source_file} -o #{dylib_file}
   executor:
@@ -93,5 +93,6 @@ atomic_tests:
       DYLD_INSERT_LIBRARIES=#{dylib_file} #{file_to_inject}
     cleanup_command: |
       kill `pgrep Calculator`
+      kill `pgrep firefox`
     name: bash
     elevation_required: false
