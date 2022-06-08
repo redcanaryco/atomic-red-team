@@ -171,3 +171,28 @@ atomic_tests:
       whoami; ausearch -i --start $(date +"%d/%m/%y %H:%M:%S") 
     cleanup_command: | 
       systemctl restart auditd
+- name: MacOS Swift Keylogger
+  description: |
+    Utilizes a swift script to log keys to sout
+  supported_platforms:
+    - macos
+  input_arguments:
+    swift_src:
+        description: Location of swift script
+        type: Path
+        default: PathToAtomicsFolder/T1056.001/src/MacOSKeylogger.swift
+  dependency_executor_name: bash
+  dependencies:
+    - description: |
+        swift script must exist at #{swift_src}
+      prereq_command: |
+        if [ -f #{swift_src} ]; then chmod +x #{swift_src}; else exit 1; fi
+      get_prereq_command: |
+        echo ""
+  executor:
+    command: |
+      ./#{swift_src} -keylog
+    cleanup_command: |
+      kill `pgrep swift-frontend`
+    name: bash
+    elevation_required: false
