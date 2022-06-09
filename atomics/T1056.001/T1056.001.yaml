@@ -173,7 +173,8 @@ atomic_tests:
       systemctl restart auditd
 - name: MacOS Swift Keylogger
   description: |
-    Utilizes a swift script to log keys to sout
+    Utilizes a swift script to log keys to sout. It runs for 5 seconds then dumps the output to standard. Input Monitoring is required.
+    Input Monitoring can be enabled in System Preferences > Security & Privacy > Privacy > Input Monitoring
   supported_platforms:
     - macos
   input_arguments:
@@ -184,7 +185,7 @@ atomic_tests:
   dependency_executor_name: bash
   dependencies:
     - description: |
-        swift script must exist at #{swift_src}
+        swift script must exist at #{swift_src}, and the terminal must have input monitoring permissions.
       prereq_command: |
         if [ -f #{swift_src} ]; then chmod +x #{swift_src}; else exit 1; fi
       get_prereq_command: |
