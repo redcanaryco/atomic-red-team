@@ -157,9 +157,11 @@ atomic_tests:
     - linux
     dependencies: 
       - description: Verify if python is in the environment variable path and attempt to import requests library.
+      
         prereq_command: |
           which_python=$(which python || which python3 || which python2); $which_python -V
           $which_python -c 'import requests' 2>/dev/null; echo $?
+          
         get_prereq_command: |
           pip install requests
 
