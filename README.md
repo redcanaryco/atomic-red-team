@@ -4,7 +4,7 @@
 
 ![GitHub Action Status](https://github.com/redcanaryco/atomic-red-team/actions/workflows/validate-atomics.yml/badge.svg?branch=master)
 
-Atomic Red Team™ is library of tests mapped to the
+Atomic Red Team™ is a library of tests mapped to the
 [MITRE ATT&CK®](https://attack.mitre.org/) framework. Security teams can use
 Atomic Red Team to quickly, portably, and reproducibly test their environments.
 
