@@ -166,6 +166,7 @@ privilege-escalation,T1574.012,COR_PROFILER,3,Registry-free process scope COR_PR
 privilege-escalation,T1546.001,Change Default File Association,1,Change Default File Association,10a08978-2045-4d62-8c42-1957bbbea102,command_prompt
 privilege-escalation,T1546.015,Component Object Model Hijacking,1,COM Hijacking - InprocServer32,48117158-d7be-441b-bc6a-d9e36e47b52b,powershell
 privilege-escalation,T1546.015,Component Object Model Hijacking,2,Powershell Execute COM Object,752191b1-7c71-445c-9dbe-21bb031b18eb,powershell
+privilege-escalation,T1546.015,Component Object Model Hijacking,3,COM Hijacking with RunDLL32 (Local Server Switch),123520cc-e998-471b-a920-bd28e3feafa0,powershell
 privilege-escalation,T1134.002,Create Process with Token,1,Access Token Manipulation,dbf4f5a9-b8e0-46a3-9841-9ad71247239e,powershell
 privilege-escalation,T1134.002,Create Process with Token,2,WinPwn - Get SYSTEM shell - Pop System Shell using Token Manipulation technique,ccf4ac39-ec93-42be-9035-90e2f26bcd92,powershell
 privilege-escalation,T1574.001,DLL Search Order Hijacking,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
@@ -210,15 +211,19 @@ privilege-escalation,T1053.005,Scheduled Task,4,Powershell Cmdlet Scheduled Task
 privilege-escalation,T1053.005,Scheduled Task,5,Task Scheduler via VBA,ecd3fa21-7792-41a2-8726-2c5c673414d3,powershell
 privilege-escalation,T1053.005,Scheduled Task,6,WMI Invoke-CimMethod Scheduled Task,e16b3b75-dc9e-4cde-a23d-dfa2d0507b3b,powershell
 privilege-escalation,T1053.005,Scheduled Task,7,Scheduled Task Executing Base64 Encoded Commands From Registry,e895677d-4f06-49ab-91b6-ae3742d0a2ba,command_prompt
+privilege-escalation,T1053.005,Scheduled Task,8,Import XML Schedule Task with Hidden Attribute,cd925593-fbb4-486d-8def-16cbdf944bf4,powershell
 privilege-escalation,T1546.002,Screensaver,1,Set Arbitrary Binary as Screensaver,281201e7-de41-4dc9-b73d-f288938cbb64,command_prompt
 privilege-escalation,T1547.005,Security Support Provider,1,Modify SSP configuration in registry,afdfd7e3-8a0b-409f-85f7-886fdf249c9e,powershell
 privilege-escalation,T1574.011,Services Registry Permissions Weakness,1,Service Registry Permissions Weakness,f7536d63-7fd4-466f-89da-7e48d550752a,powershell
 privilege-escalation,T1574.011,Services Registry Permissions Weakness,2,Service ImagePath Change with reg.exe,f38e9eea-e1d7-4ba6-b716-584791963827,command_prompt
 privilege-escalation,T1547.009,Shortcut Modification,1,Shortcut Modification,ce4fc678-364f-4282-af16-2fb4c78005ce,command_prompt
 privilege-escalation,T1547.009,Shortcut Modification,2,Create shortcut to cmd in startup folders,cfdc954d-4bb0-4027-875b-a1893ce406f2,powershell
+privilege-escalation,T1547.003,Time Providers,1,Create a new time provider,df1efab7-bc6d-4b88-8be9-91f55ae017aa,powershell
+privilege-escalation,T1547.003,Time Providers,2,Edit an existing time provider,29e0afca-8d1d-471a-8d34-25512fc48315,powershell
 privilege-escalation,T1134.001,Token Impersonation/Theft,1,Named pipe client impersonation,90db9e27-8e7c-4c04-b602-a45927884966,powershell
 privilege-escalation,T1134.001,Token Impersonation/Theft,2,`SeDebugPrivilege` token duplication,34f0a430-9d04-4d98-bcb5-1989f14719f0,powershell
-privilege-escalation,T1546.003,Windows Management Instrumentation Event Subscription,1,Persistence via WMI Event Subscription,3c64f177-28e2-49eb-a799-d767b24dd1e0,powershell
+privilege-escalation,T1546.003,Windows Management Instrumentation Event Subscription,1,Persistence via WMI Event Subscription - CommandLineEventConsumer,3c64f177-28e2-49eb-a799-d767b24dd1e0,powershell
+privilege-escalation,T1546.003,Windows Management Instrumentation Event Subscription,2,Persistence via WMI Event Subscription - ActiveScriptEventConsumer,fecd0dfd-fb55-45fa-a10b-6250272d0832,powershell
 privilege-escalation,T1543.003,Windows Service,1,Modify Fax service to run PowerShell,ed366cde-7d12-49df-a833-671904770b9f,command_prompt
 privilege-escalation,T1543.003,Windows Service,2,Service Installation CMD,981e2942-e433-44e9-afc1-8c957a1496b6,command_prompt
 privilege-escalation,T1543.003,Windows Service,3,Service Installation PowerShell,491a4af6-a521-4b74-b23b-f7b3f1ee9e77,powershell
@@ -545,6 +550,7 @@ persistence,T1574.012,COR_PROFILER,3,Registry-free process scope COR_PROFILER,79
 persistence,T1546.001,Change Default File Association,1,Change Default File Association,10a08978-2045-4d62-8c42-1957bbbea102,command_prompt
 persistence,T1546.015,Component Object Model Hijacking,1,COM Hijacking - InprocServer32,48117158-d7be-441b-bc6a-d9e36e47b52b,powershell
 persistence,T1546.015,Component Object Model Hijacking,2,Powershell Execute COM Object,752191b1-7c71-445c-9dbe-21bb031b18eb,powershell
+persistence,T1546.015,Component Object Model Hijacking,3,COM Hijacking with RunDLL32 (Local Server Switch),123520cc-e998-471b-a920-bd28e3feafa0,powershell
 persistence,T1574.001,DLL Search Order Hijacking,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
 persistence,T1574.002,DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
 persistence,T1078.001,Default Accounts,1,Enable Guest account with RDP capability and admin privileges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
@@ -586,15 +592,19 @@ persistence,T1053.005,Scheduled Task,4,Powershell Cmdlet Scheduled Task,af9fd58f
 persistence,T1053.005,Scheduled Task,5,Task Scheduler via VBA,ecd3fa21-7792-41a2-8726-2c5c673414d3,powershell
 persistence,T1053.005,Scheduled Task,6,WMI Invoke-CimMethod Scheduled Task,e16b3b75-dc9e-4cde-a23d-dfa2d0507b3b,powershell
 persistence,T1053.005,Scheduled Task,7,Scheduled Task Executing Base64 Encoded Commands From Registry,e895677d-4f06-49ab-91b6-ae3742d0a2ba,command_prompt
+persistence,T1053.005,Scheduled Task,8,Import XML Schedule Task with Hidden Attribute,cd925593-fbb4-486d-8def-16cbdf944bf4,powershell
 persistence,T1546.002,Screensaver,1,Set Arbitrary Binary as Screensaver,281201e7-de41-4dc9-b73d-f288938cbb64,command_prompt
 persistence,T1547.005,Security Support Provider,1,Modify SSP configuration in registry,afdfd7e3-8a0b-409f-85f7-886fdf249c9e,powershell
 persistence,T1574.011,Services Registry Permissions Weakness,1,Service Registry Permissions Weakness,f7536d63-7fd4-466f-89da-7e48d550752a,powershell
 persistence,T1574.011,Services Registry Permissions Weakness,2,Service ImagePath Change with reg.exe,f38e9eea-e1d7-4ba6-b716-584791963827,command_prompt
 persistence,T1547.009,Shortcut Modification,1,Shortcut Modification,ce4fc678-364f-4282-af16-2fb4c78005ce,command_prompt
 persistence,T1547.009,Shortcut Modification,2,Create shortcut to cmd in startup folders,cfdc954d-4bb0-4027-875b-a1893ce406f2,powershell
+persistence,T1547.003,Time Providers,1,Create a new time provider,df1efab7-bc6d-4b88-8be9-91f55ae017aa,powershell
+persistence,T1547.003,Time Providers,2,Edit an existing time provider,29e0afca-8d1d-471a-8d34-25512fc48315,powershell
 persistence,T1505.002,Transport Agent,1,Install MS Exchange Transport Agent Persistence,43e92449-ff60-46e9-83a3-1a38089df94d,powershell
 persistence,T1505.003,Web Shell,1,Web Shell Written to Disk,0a2ce662-1efa-496f-a472-2fe7b080db16,command_prompt
-persistence,T1546.003,Windows Management Instrumentation Event Subscription,1,Persistence via WMI Event Subscription,3c64f177-28e2-49eb-a799-d767b24dd1e0,powershell
+persistence,T1546.003,Windows Management Instrumentation Event Subscription,1,Persistence via WMI Event Subscription - CommandLineEventConsumer,3c64f177-28e2-49eb-a799-d767b24dd1e0,powershell
+persistence,T1546.003,Windows Management Instrumentation Event Subscription,2,Persistence via WMI Event Subscription - ActiveScriptEventConsumer,fecd0dfd-fb55-45fa-a10b-6250272d0832,powershell
 persistence,T1543.003,Windows Service,1,Modify Fax service to run PowerShell,ed366cde-7d12-49df-a833-671904770b9f,command_prompt
 persistence,T1543.003,Windows Service,2,Service Installation CMD,981e2942-e433-44e9-afc1-8c957a1496b6,command_prompt
 persistence,T1543.003,Windows Service,3,Service Installation PowerShell,491a4af6-a521-4b74-b23b-f7b3f1ee9e77,powershell
@@ -853,6 +863,7 @@ execution,T1053.005,Scheduled Task,4,Powershell Cmdlet Scheduled Task,af9fd58f-c
 execution,T1053.005,Scheduled Task,5,Task Scheduler via VBA,ecd3fa21-7792-41a2-8726-2c5c673414d3,powershell
 execution,T1053.005,Scheduled Task,6,WMI Invoke-CimMethod Scheduled Task,e16b3b75-dc9e-4cde-a23d-dfa2d0507b3b,powershell
 execution,T1053.005,Scheduled Task,7,Scheduled Task Executing Base64 Encoded Commands From Registry,e895677d-4f06-49ab-91b6-ae3742d0a2ba,command_prompt
+execution,T1053.005,Scheduled Task,8,Import XML Schedule Task with Hidden Attribute,cd925593-fbb4-486d-8def-16cbdf944bf4,powershell
 execution,T1569.002,Service Execution,1,Execute a Command as a Service,2382dee2-a75f-49aa-9378-f52df6ed3fb1,command_prompt
 execution,T1569.002,Service Execution,2,Use PsExec to execute a command on a remote host,873106b7-cfed-454b-8680-fa9f6400431c,command_prompt
 execution,T1072,Software Deployment Tools,1,Radmin Viewer Utility,b4988cad-6ed2-434d-ace5-ea2670782129,command_prompt

@@ -88,7 +88,7 @@
 |  |  | SQL Stored Procedures [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) | [Systemd Timers](../../T1053.006/T1053.006.md) | Mavinject [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
 |  |  | [SSH Authorized Keys](../../T1098.004/T1098.004.md) | Thread Execution Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) | Modify Authentication Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
 |  |  | [Scheduled Task](../../T1053.005/T1053.005.md) | Thread Local Storage [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) | Modify Cloud Compute Infrastructure [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
-|  |  | Scheduled Task/Job [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) | Time Providers [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) | [Modify Registry](../../T1112/T1112.md) |  |  |  |  |  |  |  |
+|  |  | Scheduled Task/Job [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) | [Time Providers](../../T1547.003/T1547.003.md) | [Modify Registry](../../T1112/T1112.md) |  |  |  |  |  |  |  |
 |  |  | [Screensaver](../../T1546.002/T1546.002.md) | [Token Impersonation/Theft](../../T1134.001/T1134.001.md) | Modify System Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
 |  |  | [Security Support Provider](../../T1547.005/T1547.005.md) | [Trap](../../T1546.005/T1546.005.md) | [Mshta](../../T1218.005/T1218.005.md) |  |  |  |  |  |  |  |
 |  |  | Server Software Component [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) | [Unix Shell Configuration Modification](../../T1546.004/T1546.004.md) | [Msiexec](../../T1218.007/T1218.007.md) |  |  |  |  |  |  |  |
@@ -100,7 +100,7 @@
 |  |  | [Systemd Service](../../T1543.002/T1543.002.md) | XDG Autostart Entries [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) | [Obfuscated Files or Information](../../T1027/T1027.md) |  |  |  |  |  |  |  |
 |  |  | [Systemd Timers](../../T1053.006/T1053.006.md) |  | [Odbcconf](../../T1218.008/T1218.008.md) |  |  |  |  |  |  |  |
 |  |  | TFTP Boot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  | [Parent PID Spoofing](../../T1134.004/T1134.004.md) |  |  |  |  |  |  |  |
-|  |  | Time Providers [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  | [Pass the Hash](../../T1550.002/T1550.002.md) |  |  |  |  |  |  |  |
+|  |  | [Time Providers](../../T1547.003/T1547.003.md) |  | [Pass the Hash](../../T1550.002/T1550.002.md) |  |  |  |  |  |  |  |
 |  |  | Traffic Signaling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  | [Pass the Ticket](../../T1550.003/T1550.003.md) |  |  |  |  |  |  |  |
 |  |  | [Transport Agent](../../T1505.002/T1505.002.md) |  | [Password Filter DLL](../../T1556.002/T1556.002.md) |  |  |  |  |  |  |  |
 |  |  | [Trap](../../T1546.005/T1546.005.md) |  | Patch System Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
