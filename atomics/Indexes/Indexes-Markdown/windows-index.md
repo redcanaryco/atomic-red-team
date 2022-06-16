@@ -262,6 +262,7 @@
 - [T1546.015 Component Object Model Hijacking](../../T1546.015/T1546.015.md)
   - Atomic Test #1: COM Hijacking - InprocServer32 [windows]
   - Atomic Test #2: Powershell Execute COM Object [windows]
+  - Atomic Test #3: COM Hijacking with RunDLL32 (Local Server Switch) [windows]
 - [T1134.002 Create Process with Token](../../T1134.002/T1134.002.md)
   - Atomic Test #1: Access Token Manipulation [windows]
   - Atomic Test #2: WinPwn - Get SYSTEM shell - Pop System Shell using Token Manipulation technique [windows]
@@ -344,6 +345,7 @@
   - Atomic Test #5: Task Scheduler via VBA [windows]
   - Atomic Test #6: WMI Invoke-CimMethod Scheduled Task [windows]
   - Atomic Test #7: Scheduled Task Executing Base64 Encoded Commands From Registry [windows]
+  - Atomic Test #8: Import XML Schedule Task with Hidden Attribute [windows]
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.002 Screensaver](../../T1546.002/T1546.002.md)
   - Atomic Test #1: Set Arbitrary Binary as Screensaver [windows]
@@ -358,13 +360,16 @@
   - Atomic Test #2: Create shortcut to cmd in startup folders [windows]
 - T1055.003 Thread Execution Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1055.005 Thread Local Storage [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1547.003 Time Providers [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1547.003 Time Providers](../../T1547.003/T1547.003.md)
+  - Atomic Test #1: Create a new time provider [windows]
+  - Atomic Test #2: Edit an existing time provider [windows]
 - [T1134.001 Token Impersonation/Theft](../../T1134.001/T1134.001.md)
   - Atomic Test #1: Named pipe client impersonation [windows]
   - Atomic Test #2: `SeDebugPrivilege` token duplication [windows]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.003 Windows Management Instrumentation Event Subscription](../../T1546.003/T1546.003.md)
-  - Atomic Test #1: Persistence via WMI Event Subscription [windows]
+  - Atomic Test #1: Persistence via WMI Event Subscription - CommandLineEventConsumer [windows]
+  - Atomic Test #2: Persistence via WMI Event Subscription - ActiveScriptEventConsumer [windows]
 - [T1543.003 Windows Service](../../T1543.003/T1543.003.md)
   - Atomic Test #1: Modify Fax service to run PowerShell [windows]
   - Atomic Test #2: Service Installation CMD [windows]
@@ -843,6 +848,7 @@
 - [T1546.015 Component Object Model Hijacking](../../T1546.015/T1546.015.md)
   - Atomic Test #1: COM Hijacking - InprocServer32 [windows]
   - Atomic Test #2: Powershell Execute COM Object [windows]
+  - Atomic Test #3: COM Hijacking with RunDLL32 (Local Server Switch) [windows]
 - T1554 Compromise Client Software Binary [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1136 Create Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1543 Create or Modify System Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -928,6 +934,7 @@
   - Atomic Test #5: Task Scheduler via VBA [windows]
   - Atomic Test #6: WMI Invoke-CimMethod Scheduled Task [windows]
   - Atomic Test #7: Scheduled Task Executing Base64 Encoded Commands From Registry [windows]
+  - Atomic Test #8: Import XML Schedule Task with Hidden Attribute [windows]
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.002 Screensaver](../../T1546.002/T1546.002.md)
   - Atomic Test #1: Set Arbitrary Binary as Screensaver [windows]
@@ -942,7 +949,9 @@
   - Atomic Test #1: Shortcut Modification [windows]
   - Atomic Test #2: Create shortcut to cmd in startup folders [windows]
 - T1542.001 System Firmware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1547.003 Time Providers [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1547.003 Time Providers](../../T1547.003/T1547.003.md)
+  - Atomic Test #1: Create a new time provider [windows]
+  - Atomic Test #2: Edit an existing time provider [windows]
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1505.002 Transport Agent](../../T1505.002/T1505.002.md)
   - Atomic Test #1: Install MS Exchange Transport Agent Persistence [windows]
@@ -950,7 +959,8 @@
 - [T1505.003 Web Shell](../../T1505.003/T1505.003.md)
   - Atomic Test #1: Web Shell Written to Disk [windows]
 - [T1546.003 Windows Management Instrumentation Event Subscription](../../T1546.003/T1546.003.md)
-  - Atomic Test #1: Persistence via WMI Event Subscription [windows]
+  - Atomic Test #1: Persistence via WMI Event Subscription - CommandLineEventConsumer [windows]
+  - Atomic Test #2: Persistence via WMI Event Subscription - ActiveScriptEventConsumer [windows]
 - [T1543.003 Windows Service](../../T1543.003/T1543.003.md)
   - Atomic Test #1: Modify Fax service to run PowerShell [windows]
   - Atomic Test #2: Service Installation CMD [windows]
@@ -1335,6 +1345,7 @@
   - Atomic Test #5: Task Scheduler via VBA [windows]
   - Atomic Test #6: WMI Invoke-CimMethod Scheduled Task [windows]
   - Atomic Test #7: Scheduled Task Executing Base64 Encoded Commands From Registry [windows]
+  - Atomic Test #8: Import XML Schedule Task with Hidden Attribute [windows]
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1064 Scripting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1569.002 Service Execution](../../T1569.002/T1569.002.md)

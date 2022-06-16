@@ -341,6 +341,7 @@
 - [T1546.015 Component Object Model Hijacking](../../T1546.015/T1546.015.md)
   - Atomic Test #1: COM Hijacking - InprocServer32 [windows]
   - Atomic Test #2: Powershell Execute COM Object [windows]
+  - Atomic Test #3: COM Hijacking with RunDLL32 (Local Server Switch) [windows]
 - [T1053.007 Container Orchestration Job](../../T1053.007/T1053.007.md)
   - Atomic Test #1: ListCronjobs [containers]
   - Atomic Test #2: CreateCronjob [containers]
@@ -367,6 +368,7 @@
 - [T1574.006 Dynamic Linker Hijacking](../../T1574.006/T1574.006.md)
   - Atomic Test #1: Shared Library Injection via /etc/ld.so.preload [linux]
   - Atomic Test #2: Shared Library Injection via LD_PRELOAD [linux]
+  - Atomic Test #3: Dylib Injection via DYLD_INSERT_LIBRARIES [macos]
 - [T1055.001 Dynamic-link Library Injection](../../T1055.001/T1055.001.md)
   - Atomic Test #1: Process Injection via mavinject.exe [windows]
   - Atomic Test #2: WinPwn - Get SYSTEM shell - Bind System Shell using UsoClient DLL load technique [windows]
@@ -375,6 +377,7 @@
   - Atomic Test #1: Persistance with Event Monitor - emond [macos]
 - [T1611 Escape to Host](../../T1611/T1611.md)
   - Atomic Test #1: Deploy container using nsenter container escape [containers]
+  - Atomic Test #2: Mount host filesystem to escape privileged Docker container [containers]
 - T1546 Event Triggered Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574.005 Executable Installer File Permissions Weakness [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1068 Exploitation for Privilege Escalation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -463,6 +466,7 @@
   - Atomic Test #5: Task Scheduler via VBA [windows]
   - Atomic Test #6: WMI Invoke-CimMethod Scheduled Task [windows]
   - Atomic Test #7: Scheduled Task Executing Base64 Encoded Commands From Registry [windows]
+  - Atomic Test #8: Import XML Schedule Task with Hidden Attribute [windows]
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.002 Screensaver](../../T1546.002/T1546.002.md)
   - Atomic Test #1: Set Arbitrary Binary as Screensaver [windows]
@@ -496,7 +500,9 @@
   - Atomic Test #3: Create a system level transient systemd service and timer [linux]
 - T1055.003 Thread Execution Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1055.005 Thread Local Storage [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1547.003 Time Providers [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1547.003 Time Providers](../../T1547.003/T1547.003.md)
+  - Atomic Test #1: Create a new time provider [windows]
+  - Atomic Test #2: Edit an existing time provider [windows]
 - [T1134.001 Token Impersonation/Theft](../../T1134.001/T1134.001.md)
   - Atomic Test #1: Named pipe client impersonation [windows]
   - Atomic Test #2: `SeDebugPrivilege` token duplication [windows]
@@ -508,7 +514,8 @@
 - T1055.014 VDSO Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.003 Windows Management Instrumentation Event Subscription](../../T1546.003/T1546.003.md)
-  - Atomic Test #1: Persistence via WMI Event Subscription [windows]
+  - Atomic Test #1: Persistence via WMI Event Subscription - CommandLineEventConsumer [windows]
+  - Atomic Test #2: Persistence via WMI Event Subscription - ActiveScriptEventConsumer [windows]
 - [T1543.003 Windows Service](../../T1543.003/T1543.003.md)
   - Atomic Test #1: Modify Fax service to run PowerShell [windows]
   - Atomic Test #2: Service Installation CMD [windows]
@@ -700,6 +707,7 @@
 - [T1574.006 Dynamic Linker Hijacking](../../T1574.006/T1574.006.md)
   - Atomic Test #1: Shared Library Injection via /etc/ld.so.preload [linux]
   - Atomic Test #2: Shared Library Injection via LD_PRELOAD [linux]
+  - Atomic Test #3: Dylib Injection via DYLD_INSERT_LIBRARIES [macos]
 - [T1055.001 Dynamic-link Library Injection](../../T1055.001/T1055.001.md)
   - Atomic Test #1: Process Injection via mavinject.exe [windows]
   - Atomic Test #2: WinPwn - Get SYSTEM shell - Bind System Shell using UsoClient DLL load technique [windows]
@@ -1146,6 +1154,7 @@
 - [T1546.015 Component Object Model Hijacking](../../T1546.015/T1546.015.md)
   - Atomic Test #1: COM Hijacking - InprocServer32 [windows]
   - Atomic Test #2: Powershell Execute COM Object [windows]
+  - Atomic Test #3: COM Hijacking with RunDLL32 (Local Server Switch) [windows]
 - T1554 Compromise Client Software Binary [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1053.007 Container Orchestration Job](../../T1053.007/T1053.007.md)
   - Atomic Test #1: ListCronjobs [containers]
@@ -1173,6 +1182,7 @@
 - [T1574.006 Dynamic Linker Hijacking](../../T1574.006/T1574.006.md)
   - Atomic Test #1: Shared Library Injection via /etc/ld.so.preload [linux]
   - Atomic Test #2: Shared Library Injection via LD_PRELOAD [linux]
+  - Atomic Test #3: Dylib Injection via DYLD_INSERT_LIBRARIES [macos]
 - [T1546.014 Emond](../../T1546.014/T1546.014.md)
   - Atomic Test #1: Persistance with Event Monitor - emond [macos]
 - T1546 Event Triggered Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1277,6 +1287,7 @@
   - Atomic Test #5: Task Scheduler via VBA [windows]
   - Atomic Test #6: WMI Invoke-CimMethod Scheduled Task [windows]
   - Atomic Test #7: Scheduled Task Executing Base64 Encoded Commands From Registry [windows]
+  - Atomic Test #8: Import XML Schedule Task with Hidden Attribute [windows]
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.002 Screensaver](../../T1546.002/T1546.002.md)
   - Atomic Test #1: Set Arbitrary Binary as Screensaver [windows]
@@ -1301,7 +1312,9 @@
   - Atomic Test #2: Create a user level transient systemd service and timer [linux]
   - Atomic Test #3: Create a system level transient systemd service and timer [linux]
 - T1542.005 TFTP Boot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1547.003 Time Providers [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1547.003 Time Providers](../../T1547.003/T1547.003.md)
+  - Atomic Test #1: Create a new time provider [windows]
+  - Atomic Test #2: Edit an existing time provider [windows]
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1505.002 Transport Agent](../../T1505.002/T1505.002.md)
   - Atomic Test #1: Install MS Exchange Transport Agent Persistence [windows]
@@ -1314,7 +1327,8 @@
 - [T1505.003 Web Shell](../../T1505.003/T1505.003.md)
   - Atomic Test #1: Web Shell Written to Disk [windows]
 - [T1546.003 Windows Management Instrumentation Event Subscription](../../T1546.003/T1546.003.md)
-  - Atomic Test #1: Persistence via WMI Event Subscription [windows]
+  - Atomic Test #1: Persistence via WMI Event Subscription - CommandLineEventConsumer [windows]
+  - Atomic Test #2: Persistence via WMI Event Subscription - ActiveScriptEventConsumer [windows]
 - [T1543.003 Windows Service](../../T1543.003/T1543.003.md)
   - Atomic Test #1: Modify Fax service to run PowerShell [windows]
   - Atomic Test #2: Service Installation CMD [windows]
@@ -1791,6 +1805,7 @@
   - Atomic Test #5: Task Scheduler via VBA [windows]
   - Atomic Test #6: WMI Invoke-CimMethod Scheduled Task [windows]
   - Atomic Test #7: Scheduled Task Executing Base64 Encoded Commands From Registry [windows]
+  - Atomic Test #8: Import XML Schedule Task with Hidden Attribute [windows]
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1064 Scripting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1569.002 Service Execution](../../T1569.002/T1569.002.md)

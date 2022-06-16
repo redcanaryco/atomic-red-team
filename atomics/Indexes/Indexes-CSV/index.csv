@@ -227,6 +227,7 @@ privilege-escalation,T1546.001,Change Default File Association,1,Change Default 
 privilege-escalation,T1078.004,Cloud Accounts,1,Creating GCP Service Account and Service Account Key,9fdd83fd-bd53-46e5-a716-9dec89c8ae8e,gcloud
 privilege-escalation,T1546.015,Component Object Model Hijacking,1,COM Hijacking - InprocServer32,48117158-d7be-441b-bc6a-d9e36e47b52b,powershell
 privilege-escalation,T1546.015,Component Object Model Hijacking,2,Powershell Execute COM Object,752191b1-7c71-445c-9dbe-21bb031b18eb,powershell
+privilege-escalation,T1546.015,Component Object Model Hijacking,3,COM Hijacking with RunDLL32 (Local Server Switch),123520cc-e998-471b-a920-bd28e3feafa0,powershell
 privilege-escalation,T1053.007,Container Orchestration Job,1,ListCronjobs,ddfb0bc1-3c3f-47e9-a298-550ecfefacbd,bash
 privilege-escalation,T1053.007,Container Orchestration Job,2,CreateCronjob,f2fa019e-fb2a-4d28-9dc6-fd1a9b7f68c3,bash
 privilege-escalation,T1134.002,Create Process with Token,1,Access Token Manipulation,dbf4f5a9-b8e0-46a3-9841-9ad71247239e,powershell
@@ -241,10 +242,12 @@ privilege-escalation,T1078.001,Default Accounts,2,Activate Guest Account,aa6cb8c
 privilege-escalation,T1484.002,Domain Trust Modification,1,Add Federation to Azure AD,8906c5d0-3ee5-4f63-897a-f6cafd3fdbb7,powershell
 privilege-escalation,T1574.006,Dynamic Linker Hijacking,1,Shared Library Injection via /etc/ld.so.preload,39cb0e67-dd0d-4b74-a74b-c072db7ae991,bash
 privilege-escalation,T1574.006,Dynamic Linker Hijacking,2,Shared Library Injection via LD_PRELOAD,bc219ff7-789f-4d51-9142-ecae3397deae,bash
+privilege-escalation,T1574.006,Dynamic Linker Hijacking,3,Dylib Injection via DYLD_INSERT_LIBRARIES,4d66029d-7355-43fd-93a4-b63ba92ea1be,bash
 privilege-escalation,T1055.001,Dynamic-link Library Injection,1,Process Injection via mavinject.exe,74496461-11a1-4982-b439-4d87a550d254,powershell
 privilege-escalation,T1055.001,Dynamic-link Library Injection,2,WinPwn - Get SYSTEM shell - Bind System Shell using UsoClient DLL load technique,8b56f787-73d9-4f1d-87e8-d07e89cbc7f5,powershell
 privilege-escalation,T1546.014,Emond,1,Persistance with Event Monitor - emond,23c9c127-322b-4c75-95ca-eff464906114,sh
 privilege-escalation,T1611,Escape to Host,1,Deploy container using nsenter container escape,0b2f9520-a17a-4671-9dba-3bd034099fff,sh
+privilege-escalation,T1611,Escape to Host,2,Mount host filesystem to escape privileged Docker container,6c499943-b098-4bc6-8d38-0956fc182984,sh
 privilege-escalation,T1546.012,Image File Execution Options Injection,1,IFEO Add Debugger,fdda2626-5234-4c90-b163-60849a24c0b8,command_prompt
 privilege-escalation,T1546.012,Image File Execution Options Injection,2,IFEO Global Flags,46b1f278-c8ee-4aa5-acce-65e77b11f3c1,command_prompt
 privilege-escalation,T1547.006,Kernel Modules and Extensions,1,Linux - Load Kernel Module via insmod,687dcb93-9656-4853-9c36-9977315e9d23,bash
@@ -293,6 +296,7 @@ privilege-escalation,T1053.005,Scheduled Task,4,Powershell Cmdlet Scheduled Task
 privilege-escalation,T1053.005,Scheduled Task,5,Task Scheduler via VBA,ecd3fa21-7792-41a2-8726-2c5c673414d3,powershell
 privilege-escalation,T1053.005,Scheduled Task,6,WMI Invoke-CimMethod Scheduled Task,e16b3b75-dc9e-4cde-a23d-dfa2d0507b3b,powershell
 privilege-escalation,T1053.005,Scheduled Task,7,Scheduled Task Executing Base64 Encoded Commands From Registry,e895677d-4f06-49ab-91b6-ae3742d0a2ba,command_prompt
+privilege-escalation,T1053.005,Scheduled Task,8,Import XML Schedule Task with Hidden Attribute,cd925593-fbb4-486d-8def-16cbdf944bf4,powershell
 privilege-escalation,T1546.002,Screensaver,1,Set Arbitrary Binary as Screensaver,281201e7-de41-4dc9-b73d-f288938cbb64,command_prompt
 privilege-escalation,T1547.005,Security Support Provider,1,Modify SSP configuration in registry,afdfd7e3-8a0b-409f-85f7-886fdf249c9e,powershell
 privilege-escalation,T1574.011,Services Registry Permissions Weakness,1,Service Registry Permissions Weakness,f7536d63-7fd4-466f-89da-7e48d550752a,powershell
@@ -313,12 +317,15 @@ privilege-escalation,T1543.002,Systemd Service,2,"Create Systemd Service file,  
 privilege-escalation,T1053.006,Systemd Timers,1,Create Systemd Service and Timer,f4983098-bb13-44fb-9b2c-46149961807b,bash
 privilege-escalation,T1053.006,Systemd Timers,2,Create a user level transient systemd service and timer,3de33f5b-62e5-4e63-a2a0-6fd8808c80ec,sh
 privilege-escalation,T1053.006,Systemd Timers,3,Create a system level transient systemd service and timer,d3eda496-1fc0-49e9-aff5-3bec5da9fa22,sh
+privilege-escalation,T1547.003,Time Providers,1,Create a new time provider,df1efab7-bc6d-4b88-8be9-91f55ae017aa,powershell
+privilege-escalation,T1547.003,Time Providers,2,Edit an existing time provider,29e0afca-8d1d-471a-8d34-25512fc48315,powershell
 privilege-escalation,T1134.001,Token Impersonation/Theft,1,Named pipe client impersonation,90db9e27-8e7c-4c04-b602-a45927884966,powershell
 privilege-escalation,T1134.001,Token Impersonation/Theft,2,`SeDebugPrivilege` token duplication,34f0a430-9d04-4d98-bcb5-1989f14719f0,powershell
 privilege-escalation,T1546.005,Trap,1,Trap,a74b2e07-5952-4c03-8b56-56274b076b61,sh
 privilege-escalation,T1546.004,Unix Shell Configuration Modification,1,Add command to .bash_profile,94500ae1-7e31-47e3-886b-c328da46872f,sh
 privilege-escalation,T1546.004,Unix Shell Configuration Modification,2,Add command to .bashrc,0a898315-4cfa-4007-bafe-33a4646d115f,sh
-privilege-escalation,T1546.003,Windows Management Instrumentation Event Subscription,1,Persistence via WMI Event Subscription,3c64f177-28e2-49eb-a799-d767b24dd1e0,powershell
+privilege-escalation,T1546.003,Windows Management Instrumentation Event Subscription,1,Persistence via WMI Event Subscription - CommandLineEventConsumer,3c64f177-28e2-49eb-a799-d767b24dd1e0,powershell
+privilege-escalation,T1546.003,Windows Management Instrumentation Event Subscription,2,Persistence via WMI Event Subscription - ActiveScriptEventConsumer,fecd0dfd-fb55-45fa-a10b-6250272d0832,powershell
 privilege-escalation,T1543.003,Windows Service,1,Modify Fax service to run PowerShell,ed366cde-7d12-49df-a833-671904770b9f,command_prompt
 privilege-escalation,T1543.003,Windows Service,2,Service Installation CMD,981e2942-e433-44e9-afc1-8c957a1496b6,command_prompt
 privilege-escalation,T1543.003,Windows Service,3,Service Installation PowerShell,491a4af6-a521-4b74-b23b-f7b3f1ee9e77,powershell
@@ -459,6 +466,7 @@ defense-evasion,T1562.001,Disable or Modify Tools,30,WinPwn - Kill the event log
 defense-evasion,T1484.002,Domain Trust Modification,1,Add Federation to Azure AD,8906c5d0-3ee5-4f63-897a-f6cafd3fdbb7,powershell
 defense-evasion,T1574.006,Dynamic Linker Hijacking,1,Shared Library Injection via /etc/ld.so.preload,39cb0e67-dd0d-4b74-a74b-c072db7ae991,bash
 defense-evasion,T1574.006,Dynamic Linker Hijacking,2,Shared Library Injection via LD_PRELOAD,bc219ff7-789f-4d51-9142-ecae3397deae,bash
+defense-evasion,T1574.006,Dynamic Linker Hijacking,3,Dylib Injection via DYLD_INSERT_LIBRARIES,4d66029d-7355-43fd-93a4-b63ba92ea1be,bash
 defense-evasion,T1055.001,Dynamic-link Library Injection,1,Process Injection via mavinject.exe,74496461-11a1-4982-b439-4d87a550d254,powershell
 defense-evasion,T1055.001,Dynamic-link Library Injection,2,WinPwn - Get SYSTEM shell - Bind System Shell using UsoClient DLL load technique,8b56f787-73d9-4f1d-87e8-d07e89cbc7f5,powershell
 defense-evasion,T1070.004,File Deletion,1,Delete a single file - Linux/macOS,562d737f-2fc6-4b09-8c2a-7f8ff0828480,sh
@@ -759,6 +767,7 @@ persistence,T1136.003,Cloud Account,1,AWS - Create a new IAM user,8d1c2368-b503-
 persistence,T1078.004,Cloud Accounts,1,Creating GCP Service Account and Service Account Key,9fdd83fd-bd53-46e5-a716-9dec89c8ae8e,gcloud
 persistence,T1546.015,Component Object Model Hijacking,1,COM Hijacking - InprocServer32,48117158-d7be-441b-bc6a-d9e36e47b52b,powershell
 persistence,T1546.015,Component Object Model Hijacking,2,Powershell Execute COM Object,752191b1-7c71-445c-9dbe-21bb031b18eb,powershell
+persistence,T1546.015,Component Object Model Hijacking,3,COM Hijacking with RunDLL32 (Local Server Switch),123520cc-e998-471b-a920-bd28e3feafa0,powershell
 persistence,T1053.007,Container Orchestration Job,1,ListCronjobs,ddfb0bc1-3c3f-47e9-a298-550ecfefacbd,bash
 persistence,T1053.007,Container Orchestration Job,2,CreateCronjob,f2fa019e-fb2a-4d28-9dc6-fd1a9b7f68c3,bash
 persistence,T1053.003,Cron,1,Cron - Replace crontab with referenced file,435057fb-74b1-410e-9403-d81baf194f75,bash
@@ -773,6 +782,7 @@ persistence,T1136.002,Domain Account,2,Create a new account similar to ANONYMOUS
 persistence,T1136.002,Domain Account,3,Create a new Domain Account using PowerShell,5a3497a4-1568-4663-b12a-d4a5ed70c7d7,powershell
 persistence,T1574.006,Dynamic Linker Hijacking,1,Shared Library Injection via /etc/ld.so.preload,39cb0e67-dd0d-4b74-a74b-c072db7ae991,bash
 persistence,T1574.006,Dynamic Linker Hijacking,2,Shared Library Injection via LD_PRELOAD,bc219ff7-789f-4d51-9142-ecae3397deae,bash
+persistence,T1574.006,Dynamic Linker Hijacking,3,Dylib Injection via DYLD_INSERT_LIBRARIES,4d66029d-7355-43fd-93a4-b63ba92ea1be,bash
 persistence,T1546.014,Emond,1,Persistance with Event Monitor - emond,23c9c127-322b-4c75-95ca-eff464906114,sh
 persistence,T1133,External Remote Services,1,Running Chrome VPN Extensions via the Registry 2 vpn extension,4c8db261-a58b-42a6-a866-0a294deedde4,powershell
 persistence,T1546.012,Image File Execution Options Injection,1,IFEO Add Debugger,fdda2626-5234-4c90-b163-60849a24c0b8,command_prompt
@@ -826,6 +836,7 @@ persistence,T1053.005,Scheduled Task,4,Powershell Cmdlet Scheduled Task,af9fd58f
 persistence,T1053.005,Scheduled Task,5,Task Scheduler via VBA,ecd3fa21-7792-41a2-8726-2c5c673414d3,powershell
 persistence,T1053.005,Scheduled Task,6,WMI Invoke-CimMethod Scheduled Task,e16b3b75-dc9e-4cde-a23d-dfa2d0507b3b,powershell
 persistence,T1053.005,Scheduled Task,7,Scheduled Task Executing Base64 Encoded Commands From Registry,e895677d-4f06-49ab-91b6-ae3742d0a2ba,command_prompt
+persistence,T1053.005,Scheduled Task,8,Import XML Schedule Task with Hidden Attribute,cd925593-fbb4-486d-8def-16cbdf944bf4,powershell
 persistence,T1546.002,Screensaver,1,Set Arbitrary Binary as Screensaver,281201e7-de41-4dc9-b73d-f288938cbb64,command_prompt
 persistence,T1547.005,Security Support Provider,1,Modify SSP configuration in registry,afdfd7e3-8a0b-409f-85f7-886fdf249c9e,powershell
 persistence,T1574.011,Services Registry Permissions Weakness,1,Service Registry Permissions Weakness,f7536d63-7fd4-466f-89da-7e48d550752a,powershell
@@ -838,12 +849,15 @@ persistence,T1543.002,Systemd Service,2,"Create Systemd Service file,  Enable th
 persistence,T1053.006,Systemd Timers,1,Create Systemd Service and Timer,f4983098-bb13-44fb-9b2c-46149961807b,bash
 persistence,T1053.006,Systemd Timers,2,Create a user level transient systemd service and timer,3de33f5b-62e5-4e63-a2a0-6fd8808c80ec,sh
 persistence,T1053.006,Systemd Timers,3,Create a system level transient systemd service and timer,d3eda496-1fc0-49e9-aff5-3bec5da9fa22,sh
+persistence,T1547.003,Time Providers,1,Create a new time provider,df1efab7-bc6d-4b88-8be9-91f55ae017aa,powershell
+persistence,T1547.003,Time Providers,2,Edit an existing time provider,29e0afca-8d1d-471a-8d34-25512fc48315,powershell
 persistence,T1505.002,Transport Agent,1,Install MS Exchange Transport Agent Persistence,43e92449-ff60-46e9-83a3-1a38089df94d,powershell
 persistence,T1546.005,Trap,1,Trap,a74b2e07-5952-4c03-8b56-56274b076b61,sh
 persistence,T1546.004,Unix Shell Configuration Modification,1,Add command to .bash_profile,94500ae1-7e31-47e3-886b-c328da46872f,sh
 persistence,T1546.004,Unix Shell Configuration Modification,2,Add command to .bashrc,0a898315-4cfa-4007-bafe-33a4646d115f,sh
 persistence,T1505.003,Web Shell,1,Web Shell Written to Disk,0a2ce662-1efa-496f-a472-2fe7b080db16,command_prompt
-persistence,T1546.003,Windows Management Instrumentation Event Subscription,1,Persistence via WMI Event Subscription,3c64f177-28e2-49eb-a799-d767b24dd1e0,powershell
+persistence,T1546.003,Windows Management Instrumentation Event Subscription,1,Persistence via WMI Event Subscription - CommandLineEventConsumer,3c64f177-28e2-49eb-a799-d767b24dd1e0,powershell
+persistence,T1546.003,Windows Management Instrumentation Event Subscription,2,Persistence via WMI Event Subscription - ActiveScriptEventConsumer,fecd0dfd-fb55-45fa-a10b-6250272d0832,powershell
 persistence,T1543.003,Windows Service,1,Modify Fax service to run PowerShell,ed366cde-7d12-49df-a833-671904770b9f,command_prompt
 persistence,T1543.003,Windows Service,2,Service Installation CMD,981e2942-e433-44e9-afc1-8c957a1496b6,command_prompt
 persistence,T1543.003,Windows Service,3,Service Installation PowerShell,491a4af6-a521-4b74-b23b-f7b3f1ee9e77,powershell
@@ -1135,6 +1149,7 @@ execution,T1053.005,Scheduled Task,4,Powershell Cmdlet Scheduled Task,af9fd58f-c
 execution,T1053.005,Scheduled Task,5,Task Scheduler via VBA,ecd3fa21-7792-41a2-8726-2c5c673414d3,powershell
 execution,T1053.005,Scheduled Task,6,WMI Invoke-CimMethod Scheduled Task,e16b3b75-dc9e-4cde-a23d-dfa2d0507b3b,powershell
 execution,T1053.005,Scheduled Task,7,Scheduled Task Executing Base64 Encoded Commands From Registry,e895677d-4f06-49ab-91b6-ae3742d0a2ba,command_prompt
+execution,T1053.005,Scheduled Task,8,Import XML Schedule Task with Hidden Attribute,cd925593-fbb4-486d-8def-16cbdf944bf4,powershell
 execution,T1569.002,Service Execution,1,Execute a Command as a Service,2382dee2-a75f-49aa-9378-f52df6ed3fb1,command_prompt
 execution,T1569.002,Service Execution,2,Use PsExec to execute a command on a remote host,873106b7-cfed-454b-8680-fa9f6400431c,command_prompt
 execution,T1569.002,Service Execution,3,psexec.py (Impacket),edbcd8c9-3639-4844-afad-455c91e95a35,bash
