@@ -154,9 +154,9 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{trufflesnout_path}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1482/src/TruffleSnout.exe" -OutFile #{trufflesnout_path}
+      Invoke-WebRequest -Uri "https://github.com/dsnezhkov/TruffleSnout/releases/download/0.5/TruffleSnout.exe" -OutFile #{trufflesnout_path}
   executor:
     command: |
-      #{trufflesnout_path} forest -n {domain}
-      #{trufflesnout_path} domain -n {domain}
+      #{trufflesnout_path} forest -n #{domain}
+      #{trufflesnout_path} domain -n #{domain}
     name: command_prompt
