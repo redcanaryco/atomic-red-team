@@ -154,6 +154,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{trufflesnout_path}) {exit 0} else {exit 1}
     get_prereq_command: |
+      New-Item -ItemType Directory (Split-Path #{trufflesnout_path}) -Force | Out-Null
       Invoke-WebRequest -Uri "https://github.com/dsnezhkov/TruffleSnout/releases/download/0.5/TruffleSnout.exe" -OutFile #{trufflesnout_path}
   executor:
     command: |
