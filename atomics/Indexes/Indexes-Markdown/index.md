@@ -1828,6 +1828,7 @@
   - Atomic Test #5: Adfind - Enumerate Active Directory Trusts [windows]
   - Atomic Test #6: Get-DomainTrust with PowerView [windows]
   - Atomic Test #7: Get-ForestTrust with PowerView [windows]
+  - Atomic Test #8: TruffleSnout - Listing AD Infrastructure [windows]
 - [T1083 File and Directory Discovery](../../T1083/T1083.md)
   - Atomic Test #1: File and Directory Discovery (cmd.exe) [windows]
   - Atomic Test #2: File and Directory Discovery (PowerShell) [windows]
