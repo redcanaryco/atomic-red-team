@@ -14,6 +14,7 @@ atomic_tests:
   - windows
   executor:
     command: |
+      net stop w32time
       Copy-Item $PathToAtomicsFolder\T1547.003\bin\AtomicTest.dll C:\Users\Public\AtomicTest.dll
       reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\W32Time\TimeProviders\AtomicTest" /t REG_SZ /v "DllName" /d "C:\Users\Public\AtomicTest.dll" /f
       reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\W32Time\TimeProviders\AtomicTest" /t REG_DWORD /v "Enabled" /d "1" /f
@@ -23,6 +24,7 @@ atomic_tests:
       net stop w32time
       reg delete "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\W32Time\TimeProviders\AtomicTest" /f
       rm -force C:\Users\Public\AtomicTest.dll
+      net start w32time
     name: powershell
     elevation_required: true
 
@@ -39,6 +41,7 @@ atomic_tests:
   - windows
   executor:
     command: |
+      net stop w32time
       Copy-Item $PathToAtomicsFolder\T1547.003\bin\AtomicTest.dll C:\Users\Public\AtomicTest.dll
       reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\W32Time\TimeProviders\NtpServer" /t REG_SZ /v "DllName" /d "C:\Users\Public\AtomicTest.dll" /f
       reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\W32Time\TimeProviders\NtpServer" /t REG_DWORD /v "Enabled" /d "1" /f
@@ -50,5 +53,6 @@ atomic_tests:
       reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\W32Time\TimeProviders\NtpServer" /t REG_DWORD /v "Enabled" /d "0" /f
       reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\W32Time\TimeProviders\NtpServer" /t REG_DWORD /v "InputProvider" /d "0" /f
       rm -force C:\Users\Public\AtomicTest.dll
+      net start w32time
     name: powershell
     elevation_required: true
