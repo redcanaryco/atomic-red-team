@@ -1354,6 +1354,7 @@
   - Atomic Test #4: Bash session based keylogger [linux]
   - Atomic Test #5: SSHD PAM keylogger [linux]
   - Atomic Test #6: Auditd keylogger [linux]
+  - Atomic Test #7: MacOS Swift Keylogger [macos]
 - T1602 Data from Configuration Repository [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1213.002 Sharepoint [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1123 Audio Capture](../../T1123/T1123.md)
@@ -1480,6 +1481,7 @@
   - Atomic Test #4: Bash session based keylogger [linux]
   - Atomic Test #5: SSHD PAM keylogger [linux]
   - Atomic Test #6: Auditd keylogger [linux]
+  - Atomic Test #7: MacOS Swift Keylogger [macos]
 - [T1110.001 Password Guessing](../../T1110.001/T1110.001.md)
   - Atomic Test #1: Brute Force Credentials of single Active Directory domain users via SMB [windows]
   - Atomic Test #2: Brute Force Credentials of single Active Directory domain user via LDAP against domain controller (NTLM or Kerberos) [windows]
