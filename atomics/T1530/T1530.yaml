@@ -1,12 +1,12 @@
 attack_technique: T1530
 display_name: Data from Cloud Storage Object
 atomic_tests:
-- name: Enumerate Azure Blobs with MicroBurst
+- name: Azure - Enumerate Azure Blobs with MicroBurst
   description: |
     Upon successful execution, this test will utilize a wordlist to enumerate the public facing containers and blobs of a specified Azure storage account. 
     See https://www.netspi.com/blog/technical/cloud-penetration-testing/anonymously-enumerating-azure-file-resources/ . 
   supported_platforms:
-  - windows
+  - iaas:azure
   input_arguments:
     base:
       description: Azure blob keyword to enumerate (Example, storage account name)
