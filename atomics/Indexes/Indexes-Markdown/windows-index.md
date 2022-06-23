@@ -205,6 +205,10 @@
   - Atomic Test #32: Windows Powershell Logging Disabled [windows]
   - Atomic Test #33: Windows Add Registry Value to Load Service in Safe Mode without Network [windows]
   - Atomic Test #34: Windows Add Registry Value to Load Service in Safe Mode with Network [windows]
+  - Atomic Test #35: Disable Windows Toast Notifications [windows]
+  - Atomic Test #36: Disable Windows Security Center Notifications [windows]
+  - Atomic Test #37: Suppress Win Defender Notifications [windows]
+  - Atomic Test #38: Allow RDP Remote Assistance Feature [windows]
 - T1574.008 Path Interception by Search Order Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.001 Binary Padding [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1484.001 Group Policy Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
