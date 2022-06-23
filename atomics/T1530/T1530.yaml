@@ -1,0 +1,44 @@
+attack_technique: T1530
+display_name: Data from Cloud Storage Object
+atomic_tests:
+- name: Azure - Enumerate Azure Blobs with MicroBurst
+  auto_generated_guid: 3dab4bcc-667f-4459-aea7-4162dd2d6590
+  description: |
+    Upon successful execution, this test will utilize a wordlist to enumerate the public facing containers and blobs of a specified Azure storage account. 
+    See https://www.netspi.com/blog/technical/cloud-penetration-testing/anonymously-enumerating-azure-file-resources/ . 
+  supported_platforms:
+  - iaas:azure
+  input_arguments:
+    base:
+      description: Azure blob keyword to enumerate (Example, storage account name)
+      type: String
+      default: secure
+    output_file:
+      description: File to output results to
+      type: String
+      default: $env:temp\T1530Test1.txt
+    wordlist:
+      description: File path to keywords for search permutations 
+      type: String
+      default: $env:temp\permutations.txt      
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      The Invoke-EnumerateAzureBlobs module must exist in $env:temp.
+    prereq_command: |
+      if (test-path $env:temp\Invoke-EnumerateAzureBlobs.ps1){exit 0} else {exit 1}
+    get_prereq_command: |
+      invoke-webrequest "https://raw.githubusercontent.com/NetSPI/MicroBurst/156c4e9f4253b482b2b68eda4651116b9f0f2e17/Misc/Invoke-EnumerateAzureBlobs.ps1" -outfile "$env:temp\Invoke-EnumerateAzureBlobs.ps1"
+  - description: |
+      The wordlist file for search permutations must exist in $env:temp.
+    prereq_command: |
+      if (test-path #{wordlist}){exit 0} else {exit 1}
+    get_prereq_command: |
+      invoke-webrequest "https://raw.githubusercontent.com/NetSPI/MicroBurst/156c4e9f4253b482b2b68eda4651116b9f0f2e17/Misc/permutations.txt" -outfile "#{wordlist}"
+  executor:
+    command: |
+      import-module "$env:temp\Invoke-EnumerateAzureBlobs.ps1"
+      Invoke-EnumerateAzureBlobs -base #{base} -permutations #{wordlist} -outputfile "#{output_file}"
+    cleanup_command: |
+      remove-item #{output_file} -erroraction silentlycontinue
+    name: powershell
