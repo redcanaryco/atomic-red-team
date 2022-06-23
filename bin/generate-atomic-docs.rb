@@ -200,7 +200,7 @@ class AtomicRedTeamDocs
 
     layer = {
       "name" => layer_name,
-      "versions" => {	"attack": "10",	"navigator": "4.5.5",	"layer": "4.3"	},
+      "versions" => {	"attack": "11",	"navigator": "4.5.5",	"layer": "4.3"	},
       "description" => layer_name + " MITRE ATT&CK Navigator Layer",
       "domain" => "enterprise-attack",
       "filters"=> filters,    
