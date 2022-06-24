@@ -7,10 +7,15 @@ atomic_tests:
   description: After execution the new account will be active and added to the Administrators group
   supported_platforms:
   - windows
+  input_arguments:
+    password:
+      description: Password for art-test user
+      type: String
+      default: Password123!
   executor:
     command: |-
       net user art-test /add
-      net user art-test Password123!
+      net user art-test #{password}
       net localgroup administrators art-test /add
     cleanup_command: |-
       net localgroup administrators art-test /delete >nul 2>&1
