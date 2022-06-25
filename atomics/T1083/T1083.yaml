@@ -4,19 +4,25 @@ atomic_tests:
 - name: File and Directory Discovery (cmd.exe)
   auto_generated_guid: 0e36303b-6762-4500-b003-127743b80ba6
   description: |
-    Find or discover files on the file system.  Upon execution, the file "download" will be placed in the temporary folder and contain the output of
-    all of the data discovery commands.
+    Find or discover files on the file system.  Upon successful execution, this test will output the results of all the data discovery commands to a specified file.
   supported_platforms:
   - windows
+  input_arguments:
+    output_file:
+        description: File to output results to
+        type: String
+        default: '%temp%\T1083Test1.txt'
   executor:
     command: |
-      dir /s c:\ >> %temp%\download
-      dir /s "c:\Documents and Settings" >> %temp%\download
-      dir /s "c:\Program Files\" >> %temp%\download
-      dir "%systemdrive%\Users\*.*" >> %temp%\download
-      dir "%userprofile%\AppData\Roaming\Microsoft\Windows\Recent\*.*" >> %temp%\download
-      dir "%userprofile%\Desktop\*.*" >> %temp%\download
-      tree /F >> %temp%\download
+      dir /s c:\ >> #{output_file}
+      dir /s "c:\Documents and Settings" >> #{output_file}
+      dir /s "c:\Program Files\" >> #{output_file}
+      dir "%systemdrive%\Users\*.*" >> #{output_file}
+      dir "%userprofile%\AppData\Roaming\Microsoft\Windows\Recent\*.*" >> #{output_file}
+      dir "%userprofile%\Desktop\*.*" >> #{output_file}
+      tree /F >> #{output_file}
+    cleanup_command: |
+      del #{output_file}
     name: command_prompt
 - name: File and Directory Discovery (PowerShell)
   auto_generated_guid: 2158908e-b7ef-4c21-8a83-3ce4dd05a924

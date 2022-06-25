@@ -272,6 +272,10 @@
   - Atomic Test #32: Windows Powershell Logging Disabled [windows]
   - Atomic Test #33: Windows Add Registry Value to Load Service in Safe Mode without Network [windows]
   - Atomic Test #34: Windows Add Registry Value to Load Service in Safe Mode with Network [windows]
+  - Atomic Test #35: Disable Windows Toast Notifications [windows]
+  - Atomic Test #36: Disable Windows Security Center Notifications [windows]
+  - Atomic Test #37: Suppress Win Defender Notifications [windows]
+  - Atomic Test #38: Allow RDP Remote Assistance Feature [windows]
 - T1574.008 Path Interception by Search Order Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1535 Unused/Unsupported Cloud Regions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1027.001 Binary Padding](../../T1027.001/T1027.001.md)
@@ -758,7 +762,8 @@
 - [T1055.004 Asynchronous Procedure Call](../../T1055.004/T1055.004.md)
   - Atomic Test #1: Process Injection via C# [windows]
 - T1138 Application Shimming [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1546.009 AppCert DLLs [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1546.009 AppCert DLLs](../../T1546.009/T1546.009.md)
+  - Atomic Test #1: Create registry persistence via AppCert DLL [windows]
 - T1055.002 Portable Executable Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1547.015 Login Items [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1134.001 Token Impersonation/Theft](../../T1134.001/T1134.001.md)
@@ -1185,7 +1190,8 @@
 - T1542.002 Component Firmware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1137.001 Office Template Macros [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1138 Application Shimming [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1546.009 AppCert DLLs [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1546.009 AppCert DLLs](../../T1546.009/T1546.009.md)
+  - Atomic Test #1: Create registry persistence via AppCert DLL [windows]
 - T1098.005 Device Registration [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1547.015 Login Items [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1379,7 +1385,8 @@
   - Atomic Test #2: Execute Commands from Clipboard using PowerShell [windows]
   - Atomic Test #3: Execute commands from clipboard [macos]
   - Atomic Test #4: Collect Clipboard Data via VBA [windows]
-- T1530 Data from Cloud Storage Object [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1530 Data from Cloud Storage Object](../../T1530/T1530.md)
+  - Atomic Test #1: Azure - Enumerate Azure Blobs with MicroBurst [iaas:azure]
 - T1074.002 Remote Data Staging [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1005 Data from Local System [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1560.002 Archive via Library](../../T1560.002/T1560.002.md)

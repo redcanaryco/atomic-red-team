@@ -205,6 +205,10 @@
   - Atomic Test #32: Windows Powershell Logging Disabled [windows]
   - Atomic Test #33: Windows Add Registry Value to Load Service in Safe Mode without Network [windows]
   - Atomic Test #34: Windows Add Registry Value to Load Service in Safe Mode with Network [windows]
+  - Atomic Test #35: Disable Windows Toast Notifications [windows]
+  - Atomic Test #36: Disable Windows Security Center Notifications [windows]
+  - Atomic Test #37: Suppress Win Defender Notifications [windows]
+  - Atomic Test #38: Allow RDP Remote Assistance Feature [windows]
 - T1574.008 Path Interception by Search Order Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.001 Binary Padding [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1484.001 Group Policy Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -568,7 +572,8 @@
 - [T1055.004 Asynchronous Procedure Call](../../T1055.004/T1055.004.md)
   - Atomic Test #1: Process Injection via C# [windows]
 - T1138 Application Shimming [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1546.009 AppCert DLLs [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1546.009 AppCert DLLs](../../T1546.009/T1546.009.md)
+  - Atomic Test #1: Create registry persistence via AppCert DLL [windows]
 - T1055.002 Portable Executable Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1134.001 Token Impersonation/Theft](../../T1134.001/T1134.001.md)
   - Atomic Test #1: Named pipe client impersonation [windows]
@@ -872,7 +877,8 @@
 - T1542.002 Component Firmware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1137.001 Office Template Macros [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1138 Application Shimming [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1546.009 AppCert DLLs [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1546.009 AppCert DLLs](../../T1546.009/T1546.009.md)
+  - Atomic Test #1: Create registry persistence via AppCert DLL [windows]
 - T1098.005 Device Registration [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1205.001 Port Knocking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
