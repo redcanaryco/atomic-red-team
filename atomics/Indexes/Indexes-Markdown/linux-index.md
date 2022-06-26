@@ -834,6 +834,7 @@
   - Atomic Test #1: Execute shell script via python's command mode arguement [linux]
   - Atomic Test #2: Execute Python via scripts (Linux) [linux]
   - Atomic Test #3: Execute Python via Python executables (Linux) [linux]
+  - Atomic Test #4: Python pty module and spawn function used to spawn sh or bash [linux]
 - T1569 System Services [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1059.005 Visual Basic [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1151 Space after Filename [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
