@@ -150,3 +150,28 @@ atomic_tests:
       Stop-Process -Name "RPCService" -force -erroraction silentlycontinue
     name: powershell
     elevation_required: True
+- name: NetSupport - RAT Execution
+  description: |
+    A recent trend by threat actors, once a foothold is established, maintain long term persistence using third party remote services such as NetSupport to provide the operator with access to the network using legitimate services. 
+  supported_platforms:
+  - windows
+  input_arguments:
+    NetSupport_Path:
+      description: Path to the NetSupport executable. 
+      type: Path
+      default: $env:temp\T1219Setup.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      NetSupport must be downloaded and exist on the disk at the specified location. (#{NetSupport_Path})
+    prereq_command: |
+      if (Test-Path #{NetSupport_Path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Start-BitsTransfer -Source "https://nsproducts.azureedge.net/nsm-1270/en/Setup.exe" -Destination "$env:temp\T1219Setup.exe" -dynamic
+  executor:
+    command: |
+      Start-Process #{NetSupport_Path} -ArgumentList "/S /v/qn"
+    cleanup_command: | 
+      Stop-Process -Name "NetSupport" -force -erroraction silentlycontinue
+    name: powershell
+    elevation_required: True
