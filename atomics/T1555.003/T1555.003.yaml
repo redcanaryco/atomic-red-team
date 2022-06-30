@@ -386,3 +386,22 @@ atomic_tests:
       rm "/tmp/T1555.003_Login Data" >/dev/null 2>&1
       rm "/tmp/T1555.003_Login Data For Account" >/dev/null 2>&1
     name: sh
+    
+    - name: WebBrowserPassView - Credentials from Browser
+  description: |-
+    The following Atomic test utilizes WebBrowserPassView to extract passwords from browsers on a Window system. WebBrowserPassView is an open source application used to retrieve passwords stored on a local computer. Recently noticed as a tool used in the BlackCat Ransomware.
+    Source:https://github.com/SGhost408/PasswordStealer , https://github.com/Webster11/webpassview
+  
+    WebBrowserPassView.exe
+  
+    Launch.bat = launches invisible.vbs and passview.bat
+  
+    invisible.vbs = minimizes WebBrowserPassView.exe
+  
+    passview.bat = starts WebBrowserPassView.exe and saves all usernames and passwords to WebBrowserPassView.txt
+  supported_platforms:
+  - windows
+  executor:
+    command: "WebBrowserPassView.exe\n\nLaunch.bat\n\ninvisible.vbs\n\npassview.bat "
+    name: command_prompt
+  
