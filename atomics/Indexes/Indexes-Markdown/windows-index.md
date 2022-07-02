@@ -1440,6 +1440,7 @@
   - Atomic Test #5: ScreenConnect Application Download and Install on Windows [windows]
   - Atomic Test #6: Ammyy Admin Software Execution [windows]
   - Atomic Test #7: RemotePC Software Execution [windows]
+  - Atomic Test #8: NetSupport - RAT Execution [windows]
 - T1079 Multilayer Encryption [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1032 Standard Cryptographic Protocol [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
