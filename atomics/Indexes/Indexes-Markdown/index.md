@@ -276,6 +276,9 @@
   - Atomic Test #36: Disable Windows Security Center Notifications [windows]
   - Atomic Test #37: Suppress Win Defender Notifications [windows]
   - Atomic Test #38: Allow RDP Remote Assistance Feature [windows]
+  - Atomic Test #39: NetWire RAT Registry Key Creation [windows]
+  - Atomic Test #40: Ursnif Malware Registry Key Creation [windows]
+  - Atomic Test #41: Terminal Server Client Connection History Cleared [windows]
 - T1574.008 Path Interception by Search Order Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1535 Unused/Unsupported Cloud Regions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1027.001 Binary Padding](../../T1027.001/T1027.001.md)
