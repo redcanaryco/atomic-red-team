@@ -164,8 +164,9 @@ atomic_tests:
           pip install requests
     executor:
       command: |-
-        python -c "import pty;pty.spawn('/bin/sh')"
+        which_python=$(which python || which python3 || which python2)
+        $which_python -c "import pty;pty.spawn('/bin/sh')"
         exit
-        python -c "import pty;pty.spawn('/bin/bash')"
+        $which_python -c "import pty;pty.spawn('/bin/bash')"
         exit
       name: bash
