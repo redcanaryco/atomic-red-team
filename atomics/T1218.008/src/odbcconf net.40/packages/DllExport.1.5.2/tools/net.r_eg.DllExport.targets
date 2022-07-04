@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <DllExportRootPkg Condition="'$(DllExportRootPkg)' == ''">$(MSBuildThisFileDirectory)..\</DllExportRootPkg>
+    <DllExportLibPath Condition="'$(DllExportLibPath)' == ''">lib\net20\</DllExportLibPath>
+    <DllExportToolsPath Condition="'$(DllExportToolsPath)' == ''">tools\</DllExportToolsPath>
+    
+    <DllExportNamespace Condition="'$(DllExportNamespace)' == ''">System.Runtime.InteropServices</DllExportNamespace>
+    <DllExportLibFullPath Condition="'$(DllExportLibFullPath)' == ''">$(DllExportRootPkg)$(DllExportLibPath)</DllExportLibFullPath>
+    <DllExportMetaLibAttr Condition="'$(DllExportMetaLibAttr)' == ''">DllExportAttribute</DllExportMetaLibAttr>
+    <DllExportMetaLibName Condition="'$(DllExportMetaLibName)' == ''">DllExport.dll</DllExportMetaLibName>
+    <DllExportMetaLibFullPath Condition="'$(DllExportMetaLibFullPath)' == ''">$(DllExportLibFullPath)$(DllExportMetaLibName)</DllExportMetaLibFullPath>
+    <DllExportDDNSCecil Condition="'$(DllExportDDNSCecil)' == ''">true</DllExportDDNSCecil>
+    <DllExportOurILAsm Condition="'$(DllExportOurILAsm)' == ''">true</DllExportOurILAsm>
+    <DllExportOurILAsmPath Condition="'$(DllExportOurILAsmPath)' == ''">$(DllExportRootPkg)$(DllExportToolsPath)coreclr\</DllExportOurILAsmPath>
+  </PropertyGroup>
+
+  <Target Name="DllExportMod" AfterTargets="PostBuildEvent;Build" DependsOnTargets="GetFrameworkPaths">
+    <PropertyGroup>
+      <DllExportPlatform Condition="'$(DllExportPlatform)' == ''">$(Platform)</DllExportPlatform>
+      <DllExportPlatformTarget Condition="'$(DllExportPlatformTarget)' == ''">$(PlatformTarget)</DllExportPlatformTarget>
+      <DllExportCpuType Condition="'$(DllExportCpuType)' == ''">$(CpuType)</DllExportCpuType>
+      <DllExportEmitDebugSymbols Condition="'$(DllExportEmitDebugSymbols)' == ''">$(DebugSymbols)</DllExportEmitDebugSymbols>
+      <DllExportLeaveIntermediateFiles Condition="'$(DllExportLeaveIntermediateFiles)' == ''">false</DllExportLeaveIntermediateFiles>
+      <DllExportTimeout Condition="'$(DllExportTimeout)' == ''">$(DllExportTimeout)</DllExportTimeout>
+      <DllExportKeyContainer Condition="'$(DllExportKeyContainer)' == ''">$(KeyContainerName)$(AssemblyKeyContainerName)</DllExportKeyContainer>
+      <DllExportKeyFile Condition="'$(DllExportKeyFile)' == ''">$(KeyOriginatorFile)</DllExportKeyFile>
+      <DllExportProjectDirectory Condition="'$(DllExportProjectDirectory)' == ''">$(MSBuildProjectDirectory)</DllExportProjectDirectory>
+      <DllExportInputFileName Condition="'$(DllExportInputFileName)' == ''">$(TargetPath)</DllExportInputFileName>
+      <DllExportFrameworkPath Condition="'$(DllExportFrameworkPath)' == ''">$(TargetedFrameworkDir);$(TargetFrameworkDirectory)</DllExportFrameworkPath>
+      <DllExportLibToolPath Condition="'$(DllExportLibToolPath)' == ''">$(DevEnvDir)\..\..\VC\bin</DllExportLibToolPath>
+      <DllExportLibToolDllPath Condition="'$(DllExportLibToolDllPath)' == ''">$(DevEnvDir)</DllExportLibToolDllPath>
+      <DllExportTargetFrameworkVersion Condition="'$(DllExportTargetFrameworkVersion)' == ''">$(TargetFrameworkVersion)</DllExportTargetFrameworkVersion>
+      <DllExportSdkPath Condition="'$(DllExportSdkPath)' == ''">$(TargetFrameworkSDKToolsDirectory)</DllExportSdkPath>
+      <DllExportSkipOnAnyCpu Condition="'$(DllExportSkipOnAnyCpu)' == ''">$(NoDllExportsForAnyCpu)</DllExportSkipOnAnyCpu>
+      <DllExportOrdinalsBase Condition="'$(DllExportOrdinalsBase)' == ''">1</DllExportOrdinalsBase>
+      <DllExportGenExpLib Condition="'$(DllExportGenExpLib)' == ''">false</DllExportGenExpLib>
+      <DllExportOurILAsmPath Condition="'$(DllExportOurILAsm)' != 'true'"></DllExportOurILAsmPath>
+    </PropertyGroup>
+
+    <DllExportAppDomainIsolatedTask 
+          Platform="$(DllExportPlatform)"
+          PlatformTarget="$(DllExportPlatformTarget)"
+          CpuType="$(DllExportCpuType)"
+          DllExportAttributeFullName="$(DllExportNamespace).$(DllExportMetaLibAttr)"
+          EmitDebugSymbols="$(DllExportEmitDebugSymbols)"
+          LeaveIntermediateFiles="$(DllExportLeaveIntermediateFiles)"
+          Timeout="$(DllExportTimeout)"
+          KeyContainer="$(DllExportKeyContainer)"
+          KeyFile="$(DllExportKeyFile)"
+          ProjectDirectory="$(DllExportProjectDirectory)"
+          InputFileName="$(DllExportInputFileName)"
+          FrameworkPath="$(DllExportFrameworkPath)"
+          LibToolPath="$(DllExportLibToolPath)"
+          LibToolDllPath="$(DllExportLibToolDllPath)"
+          TargetFrameworkVersion="$(DllExportTargetFrameworkVersion)"
+          SdkPath="$(DllExportSdkPath)"
+          SkipOnAnyCpu="$(DllExportSkipOnAnyCpu)"
+          OrdinalsBase="$(DllExportOrdinalsBase)"
+          GenExpLib="$(DllExportGenExpLib)"
+          OurILAsmPath="$(DllExportOurILAsmPath)"
+          MetaLib="$(DllExportMetaLibFullPath)"
+         />
+  
+  </Target>
+  <UsingTask TaskName="RGiesecke.DllExport.MSBuild.DllExportAppDomainIsolatedTask" AssemblyFile="RGiesecke.DllExport.MSBuild.dll" />
+
+  <Target Name="DllExportLib" BeforeTargets="PrepareForBuild;BeforeBuild;BeforeRebuild" >
+      <Exec Condition="!Exists('$(DllExportMetaLibFullPath).ddNSi')"
+              WorkingDirectory="$(DllExportRootPkg)$(DllExportToolsPath)"
+              Command="NSBin.bat &quot;$(DllExportMetaLibFullPath)&quot; &quot;$(DllExportNamespace)&quot; &quot;$(DllExportDDNSCecil)&quot;" />
+  </Target>
+  
+</Project>
