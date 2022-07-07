@@ -403,7 +403,9 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{webbrowserpassview_path}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1555.003/src/WebBrowserPassView.exe -OutFile
+      Invoke-WebRequest https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1555.003/bin/WebBrowserPassView.exe #{webbrowserpassview_path} -OutFile
+  - description: |
+      WebProwserPassView.exe must exist on disk at the specified location (#{webbrowserpassview_path})
   executor:
     command: |
       Start-Process #{webbrowserpassview_path}
