@@ -42,3 +42,41 @@ atomic_tests:
     cleanup_command: |
       remove-item #{output_file} -erroraction silentlycontinue
     name: powershell
+- name: Azure - Scan for Anonymous Access to Azure Storage (Powershell)
+  description: |
+    Upon successful execution, this test will test for anonymous access to Azure storage containers by invoking a web request and outputting the results to a file. 
+    The corresponding response could then be interpreted to determine whether or not the resource/container exists, as well as other information. 
+    See https://ninocrudele.com/the-three-most-effective-and-dangerous-cyberattacks-to-azure-and-countermeasures-part-2-attack-the-azure-storage-service     
+  supported_platforms:
+  - iaas:azure
+  input_arguments:
+    base_name:
+      description: Azure storage account name to test
+      type: String
+      default: T1530Test2
+    output_file:
+      description: File to output results to
+      type: String
+      default: $env:temp\T1530Test2.txt
+    container_name:
+      description: Container name to search for (optional)
+      type: String
+      default:
+    blob_name:
+      description: Blob name to search for (optional)
+      type: String
+      default:
+  executor:
+    command: |
+      try{$response = invoke-webrequest "https://#{base_name}.blob.core.windows.net/#{container_name}/#{blob_name}" -method "GET"}
+      catch [system.net.webexception]
+      {if($_.Exception.Response -ne $null)
+      {$Response = $_.Exception.Response.GetResponseStream()
+      $ReadResponse = New-Object System.IO.StreamReader($Response)
+      $ReadResponse.BaseStream.Position = 0
+      $responseBody = $ReadResponse.ReadToEnd()}
+      else {$responseBody = "The storage account could not be anonymously accessed."}}
+      "Response received for #{base_name}.blob.core.windows.net/#{container_name}/#{blob_name}: $responsebody" | out-file -filepath #{output_file} -append
+    cleanup_command: |
+      remove-item #{output_file} -erroraction silentlycontinue
+    name: powershell
