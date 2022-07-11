@@ -604,3 +604,60 @@ atomic_tests:
       reg delete HKLM\System\CurrentControlSet\Control\Terminal Server /v fAllowToGetHelp /f >nul 2>&1
     name: command_prompt
     elevation_required: true
+- name: NetWire RAT Registry Key Creation
+  auto_generated_guid: 65704cd4-6e36-4b90-b6c1-dc29a82c8e56
+  description: |
+    NetWire continues to create its home key (HKCU\SOFTWARE\NetWire) as well as adding it into the auto-run group in the victim’s registry.
+    See how NetWire malware - https://app.any.run/tasks/41ecdbde-4997-4301-a350-0270448b4c8f/
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v NetWire /t REG_SZ  /d "C:\Users\admin\AppData\Roaming\Install\Host.exe" /f
+      reg add HKCU\SOFTWARE\NetWire /v HostId /t REG_SZ /d HostId-kai6Ci /f
+      reg add HKCU\SOFTWARE\NetWire /v "Install Date" /t REG_SZ /d "2021-08-30 07:17:27" /f
+    cleanup_command: |
+      reg delete HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v NetWire /f >nul 2>&1
+      reg delete HKCU\SOFTWARE\NetWire /va /f >nul 2>&1
+      reg delete HKCU\SOFTWARE\NetWire /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: Ursnif Malware Registry Key Creation
+  auto_generated_guid: c375558d-7c25-45e9-bd64-7b23a97c1db0
+  description: |
+      Ursnif downloads additional modules from the C&C server and saves these in the registry folder HKEY_CURRENT_USER\Software\AppDataLow\Software\Microsoft\
+      More information - https://blog.trendmicro.com/trendlabs-security-intelligence/phishing-campaign-uses-hijacked-emails-to-deliver-ursnif-by-replying-to-ongoing-threads/
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add HKCU\Software\AppDataLow\Software\Microsoft\3A861D62-51E0-15700F2219A4 /v comsxRes /t REG_BINARY  /d 72656463616e617279 /f
+    cleanup_command: |
+      reg delete HKCU\Software\AppDataLow\Software\Microsoft\3A861D62-51E0-15700F2219A4 /va /f >nul 2>&1
+      reg delete HKCU\Software\AppDataLow\Software\Microsoft\3A861D62-51E0-15700F2219A4 /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: Terminal Server Client Connection History Cleared
+  auto_generated_guid: 3448824b-3c35-4a9e-a8f5-f887f68bea21
+  description: |
+      The built-in Windows Remote Desktop Connection (RDP) client (mstsc.exe) saves the remote computer name (or IP address) and the username that is used to login after each successful connection to the remote computer
+  supported_platforms:
+  - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Must have the "MR9" Remote Desktop Connection history Key 
+    prereq_command: |
+      if ((Get-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Terminal Server Client\Default\").MR9) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -path "HKCU:\SOFTWARE\Microsoft\" -name "Terminal Server Client"  -ErrorAction Ignore
+      New-Item -path "HKCU:\SOFTWARE\Microsoft\Terminal Server Client\" -name "Default" -ErrorAction Ignore
+      New-Itemproperty -path "HKCU:\SOFTWARE\Microsoft\Terminal Server Client\Default" -name "MR9" -value "127.0.0.1"  -PropertyType "String" -ErrorAction Ignore
+      New-Item -path "HKCU:\SOFTWARE\Microsoft\Terminal Server Client\" -name "Servers" -ErrorAction Ignore
+      New-Item -path "HKCU:\SOFTWARE\Microsoft\Terminal Server Client\Servers" -name "Redcanary" -ErrorAction Ignore
+  executor:
+    command: |
+      reg delete "HKEY_CURRENT_USER\Software\Microsoft\Terminal Server Client\Default" /va /f
+      reg delete "HKEY_CURRENT_USER\Software\Microsoft\Terminal Server Client\Servers" /f
+    name: command_prompt
+    elevation_required: true

@@ -60,13 +60,14 @@ atomic_tests:
     prereq_command: |
       if [ -f #{autosuid} ]; then exit 0; else exit 1; fi;
     get_prereq_command: |
-      curl #{autosuid_url} --output #{autosuid}
+      curl --create-dirs #{autosuid_url} --output #{autosuid}
   executor:
     command: |
       chmod +x #{autosuid}
       bash #{autosuid}
+    cleanup_command: |
+      rm -rf #{autosuid}
     name: sh
-
 - name: LinEnum tool execution
   auto_generated_guid: a2b35a63-9df1-4806-9a4d-5fe0500845f2
   description: |
@@ -89,9 +90,11 @@ atomic_tests:
     prereq_command: |
       if [ -f #{linenum} ]; then exit 0; else exit 1; fi;
     get_prereq_command: |
-      curl #{linenum_url} --output #{linenum}
+      curl --create-dirs #{linenum_url} --output #{linenum}
   executor:
     command: |
       chmod +x #{linenum}
       bash #{linenum}
+    cleanup_command: |
+      rm -rf #{linenum}
     name: sh
