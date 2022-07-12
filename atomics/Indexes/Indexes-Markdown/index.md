@@ -279,6 +279,8 @@
   - Atomic Test #39: NetWire RAT Registry Key Creation [windows]
   - Atomic Test #40: Ursnif Malware Registry Key Creation [windows]
   - Atomic Test #41: Terminal Server Client Connection History Cleared [windows]
+  - Atomic Test #42: Disable Windows Error Reporting Settings [windows]
+  - Atomic Test #43: DisallowRun Execution Of Certain Application [windows]
 - T1574.008 Path Interception by Search Order Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1535 Unused/Unsupported Cloud Regions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1027.001 Binary Padding](../../T1027.001/T1027.001.md)
