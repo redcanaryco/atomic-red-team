@@ -1148,6 +1148,7 @@
   - Atomic Test #11: WinPwn - BrowserPwn [windows]
   - Atomic Test #12: WinPwn - Loot local Credentials - mimi-kittenz [windows]
   - Atomic Test #13: WinPwn - PowerSharpPack - Sharpweb for Browser Credentials [windows]
+  - Atomic Test #15: WebBrowserPassView - Credentials from Browser [windows]
 - T1557.003 DHCP Spoofing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1552.004 Private Keys](../../T1552.004/T1552.004.md)
   - Atomic Test #1: Private Keys [windows]
