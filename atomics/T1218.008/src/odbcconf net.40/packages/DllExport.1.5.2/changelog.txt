@@ -1,0 +1,80 @@
+DllExport - github.com/3F/DllExport
+- - - - - - - - - - - - - - - - - - 
+
+[v1.5.2] 2017.03.13
+    
+    * FIXED: Failing to compile in VS2017. Issue #29
+             `Error The "DllExportAppDomainIsolatedTask" task failed unexpectedly. System.ArgumentException: Requested value 'Version46' was not found.`
+             
+    * FIXED: Possible error `Could not load file or assembly Microsoft.Build.Utilities or one of its dependencies.`
+    * CHANGED: Updated script for loading of the Configurator to avoid problem with old assemblies. Issue #22
+    
+[v1.5.1] 2016.11.12
+
+    * FIXED: Error : Invalid Option: /CVRES= Issue #20
+    * NOTE: Our coreclr version was compiled with MSVC 14.0. Related Issue #21
+
+[v1.5] 2016.11.04
+
+    * FIXED: Fixed problem with white-space chars in path: `Cannot find path '<any full path with spaces>' because it does not exist ...`
+    * FIXED: Fixed typo with fullseq (ddNS) - incorrect `0x30 0x30` ~0x007A7-0x007A8  /details in #14
+    * FIXED: Possible problem with NullReferenceException when removing package.
+    * FIXED: Fixed problem with old NS data when we try to install package for project A, then for project B
+    * NEW: Implemented 'Generate .exp + .lib via MS Library Manager' #9
+           GUI Configurator + MSBuild property: `DllExportGenExpLib`
+           
+    * NEW: Added support of unmanaged-export for Executable Modules (.exe) #18
+    * NEW: Cecil variant for ddNS features /#14, #2
+    * NEW: Added our custom IL Assembler as option to fix incorrect 0x13 / 0x11 opcodes. #17
+           GUI Configurator + MSBuild property: `DllExportOurILAsm`
+           It should help for users of Fody projects, etc.
+           https://github.com/Fody/Fody/issues/271
+           
+           IlAsm 4.5.1 https://github.com/3F/coreclr
+           based on 4.5.22220.0 / coreclr 1.0.4
+           changelog of our coreclr for this release: https://github.com/3F/coreclr/blob/master/changelog.txt
+           
+    * CHANGED: Updated scripts of installing/removing package for more correct loading of our assemblies.
+
+[v1.4] 2016.10.05
+
+    * FIXED: Fixed bug - `An item with the same key has already been added`. Issue #10
+    * FIXED: Bug with Meta library: Incorrect default values. Issue #16
+             please note, the __cdecl is the default calling convention for our library 
+             as and for C and C++ programs.
+
+    * FIXED?: Probably fixed bug - `Script errors on package install` Issue #6
+    * FIXED?: Probably fixed bug - `non-English system language - syntax error` Issue #7
+    * NEW: GUI Configurator with updated ddNS features.
+    * NEW: Implemented feature 'Export for platform': [ x86 / x64 / x86 + x64 ] Issue #9
+    * NEW: Implemented feature 'Base for ordinals'. Issue #11
+           There is also alternative to configure this number - MSBuild property: DllExportOrdinalsBase
+         
+    * NEW: The one (1) now is used by default as Base for all ordinals. 
+           `Mimic ordinal counter (start from 1 instead of 0)` Issue #8
+         
+    * CHANGED: The ddNS features now as binary cmdlet `NSBin`. Use `nsbin.bat` if needed.
+    * CHANGED: `Set "Inherited = false" in AttributeUsage for DllExportAttribute`. Issue #15
+    * OTHER: other possible changes and fixes.
+
+[v1.3] 2016.08.21
+
+    * FIXED: bug 'Incorrect library' when DllExport installed for 2+ projects.
+    * CHANGED: DllExport now uses `Cdecl` calling convention by default.
+    * CHANGED: Mono.Cecil v0.9.6.4
+
+[v1.2] 2016.07.13
+
+    * CHANGED: dynamic definition of namespace for user scope. Issue #2
+
+[v1.1] 2016.06.29
+
+    * CHANGED: DllExport now is part of System.Runtime.InteropServices as and DllImport.
+    * CHANGED: Mono.Cecil v0.9.6.1
+    * NEW: 0x80070005 meaning... Issue #1
+    * NEW: +DllExport(CallingConvention convention) signature
+
+[v1.0] 2016.06.25
+
+    * Initial the open release, based on v1.2.7.38850
+
