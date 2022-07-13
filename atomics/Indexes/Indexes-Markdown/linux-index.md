@@ -557,6 +557,7 @@
   - Atomic Test #5: Linux VM Check via Kernel Modules [linux]
   - Atomic Test #7: Hostname Discovery [linux, macos]
   - Atomic Test #11: Environment variables discovery on macos and linux [macos, linux]
+  - Atomic Test #23: Azure Security Scan with SkyArk [azure-ad]
 - T1010 Application Window Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1087.003 Email Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1497.003 Time Based Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
