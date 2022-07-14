@@ -61,3 +61,4 @@ atomic_tests:
       reg delete "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\SpecialAccounts\Userlist" /v #{user_name}$ /f >nul 2>&1
       net user ${user_name}$ /delete >nul 2>&1
     name: command_prompt
+    elevation_required: true
