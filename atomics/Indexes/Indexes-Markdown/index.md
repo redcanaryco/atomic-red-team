@@ -276,6 +276,11 @@
   - Atomic Test #36: Disable Windows Security Center Notifications [windows]
   - Atomic Test #37: Suppress Win Defender Notifications [windows]
   - Atomic Test #38: Allow RDP Remote Assistance Feature [windows]
+  - Atomic Test #39: NetWire RAT Registry Key Creation [windows]
+  - Atomic Test #40: Ursnif Malware Registry Key Creation [windows]
+  - Atomic Test #41: Terminal Server Client Connection History Cleared [windows]
+  - Atomic Test #42: Disable Windows Error Reporting Settings [windows]
+  - Atomic Test #43: DisallowRun Execution Of Certain Application [windows]
 - T1574.008 Path Interception by Search Order Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1535 Unused/Unsupported Cloud Regions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1027.001 Binary Padding](../../T1027.001/T1027.001.md)
@@ -310,6 +315,7 @@
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1218.008 Odbcconf](../../T1218.008/T1218.008.md)
   - Atomic Test #1: Odbcconf.exe - Execute Arbitrary DLL [windows]
+  - Atomic Test #2: Odbcconf.exe - Load Response File [windows]
 - T1144 Gatekeeper Bypass [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1045 Software Packing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1055.013 Process Doppelgänging [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1388,6 +1394,7 @@
   - Atomic Test #4: Collect Clipboard Data via VBA [windows]
 - [T1530 Data from Cloud Storage Object](../../T1530/T1530.md)
   - Atomic Test #1: Azure - Enumerate Azure Blobs with MicroBurst [iaas:azure]
+  - Atomic Test #2: Azure - Scan for Anonymous Access to Azure Storage (Powershell) [iaas:azure]
 - T1074.002 Remote Data Staging [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1005 Data from Local System [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1560.002 Archive via Library](../../T1560.002/T1560.002.md)
@@ -1575,6 +1582,7 @@
   - Atomic Test #12: WinPwn - Loot local Credentials - mimi-kittenz [windows]
   - Atomic Test #13: WinPwn - PowerSharpPack - Sharpweb for Browser Credentials [windows]
   - Atomic Test #14: Simulating Access to Chrome Login Data - MacOS [macos]
+  - Atomic Test #15: WebBrowserPassView - Credentials from Browser [windows]
 - T1557.003 DHCP Spoofing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1552.004 Private Keys](../../T1552.004/T1552.004.md)
   - Atomic Test #1: Private Keys [windows]
@@ -1804,6 +1812,7 @@
   - Atomic Test #20: WinPwn - PowerSharpPack - Watson searching for missing windows patches [windows]
   - Atomic Test #21: WinPwn - PowerSharpPack - Sharpup checking common Privesc vectors [windows]
   - Atomic Test #22: WinPwn - PowerSharpPack - Seatbelt [windows]
+  - Atomic Test #23: Azure Security Scan with SkyArk [azure-ad]
 - [T1010 Application Window Discovery](../../T1010/T1010.md)
   - Atomic Test #1: List Process Main Windows - C# .NET [windows]
 - T1087.003 Email Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1995,6 +2004,7 @@
   - Atomic Test #5: ScreenConnect Application Download and Install on Windows [windows]
   - Atomic Test #6: Ammyy Admin Software Execution [windows]
   - Atomic Test #7: RemotePC Software Execution [windows]
+  - Atomic Test #8: NetSupport - RAT Execution [windows]
 - T1079 Multilayer Encryption [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1032 Standard Cryptographic Protocol [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

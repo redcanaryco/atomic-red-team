@@ -35,7 +35,7 @@ atomic_tests:
     computer_name:
       description: Name of remote system to query
       type: String
-      default: $env:COMPUTERNAME
+      default: "%COMPUTERNAME%"
   executor:
     command: |
       query user /SERVER:#{computer_name}

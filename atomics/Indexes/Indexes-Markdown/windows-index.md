@@ -209,6 +209,11 @@
   - Atomic Test #36: Disable Windows Security Center Notifications [windows]
   - Atomic Test #37: Suppress Win Defender Notifications [windows]
   - Atomic Test #38: Allow RDP Remote Assistance Feature [windows]
+  - Atomic Test #39: NetWire RAT Registry Key Creation [windows]
+  - Atomic Test #40: Ursnif Malware Registry Key Creation [windows]
+  - Atomic Test #41: Terminal Server Client Connection History Cleared [windows]
+  - Atomic Test #42: Disable Windows Error Reporting Settings [windows]
+  - Atomic Test #43: DisallowRun Execution Of Certain Application [windows]
 - T1574.008 Path Interception by Search Order Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.001 Binary Padding [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1484.001 Group Policy Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -231,6 +236,7 @@
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1218.008 Odbcconf](../../T1218.008/T1218.008.md)
   - Atomic Test #1: Odbcconf.exe - Execute Arbitrary DLL [windows]
+  - Atomic Test #2: Odbcconf.exe - Load Response File [windows]
 - T1045 Software Packing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1055.013 Process Doppelgänging [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574.005 Executable Installer File Permissions Weakness [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1142,6 +1148,7 @@
   - Atomic Test #11: WinPwn - BrowserPwn [windows]
   - Atomic Test #12: WinPwn - Loot local Credentials - mimi-kittenz [windows]
   - Atomic Test #13: WinPwn - PowerSharpPack - Sharpweb for Browser Credentials [windows]
+  - Atomic Test #15: WebBrowserPassView - Credentials from Browser [windows]
 - T1557.003 DHCP Spoofing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1552.004 Private Keys](../../T1552.004/T1552.004.md)
   - Atomic Test #1: Private Keys [windows]
@@ -1440,6 +1447,7 @@
   - Atomic Test #5: ScreenConnect Application Download and Install on Windows [windows]
   - Atomic Test #6: Ammyy Admin Software Execution [windows]
   - Atomic Test #7: RemotePC Software Execution [windows]
+  - Atomic Test #8: NetSupport - RAT Execution [windows]
 - T1079 Multilayer Encryption [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1032 Standard Cryptographic Protocol [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

