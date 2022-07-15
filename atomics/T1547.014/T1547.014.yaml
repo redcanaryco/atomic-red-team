@@ -1,0 +1,55 @@
+---
+attack_technique: T1547.014
+display_name: 'Boot or Logon Autostart Execution: Active Setup'
+atomic_tests:
+- name: Add Active Setup key via Powershell
+  auto_generated_guid:
+  description: |
+    Uses Powershell's **New-ItemProperty** cmdlet to add **StubPath** key to to **HKLM\SOFTWARE\Microsoft\Active Setup\Installed Components** in Windows registry.
+    Active Setup is a Windows mechanism that is used to execute programs when a user logs in.
+    This technique has been used by [PoisonIvy](https://unit42.paloaltonetworks.com/unit42-tropic-trooper-targets-taiwanese-government-and-fossil-fuel-provider-with-poison-ivy/)
+  supported_platforms:
+    - windows
+  input_arguments:
+    command:
+      description: Command to execute
+      type: String
+      default: c:\windows\system32\cmd.exe
+    guid:
+      description: CLSID to use in registry key path
+      type: String
+      default: 4edc6cdd-0760-4bd6-a6ed-a7c2ad6cfbe7
+  executor:
+    name: powershell
+    elevation_required: true 
+    command: |
+      $registryPath="HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{#{guid}}"
+      New-Item -Path $registryPath -Force -ErrorAction Ignore
+      New-ItemProperty -Path $registryPath -Name "StubPath" -Value "#{command}" -ErrorAction Ignore
+    cleanup_command: | 
+      Remove-Item -Force "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{#{guid}}" -ErrorAction Ignore
+
+- name: Add Active Setup key via reg.exe
+  auto_generated_guid:
+  description: |
+    Uses **reg.exe** command to add **StubPath** key to to **HKLM\SOFTWARE\Microsoft\Active Setup\Installed Components** in Windows registry.
+    Active Setup is a Windows mechanism that is used to execute programs when a user logs in.
+    This technique has been used by [PoisonIvy](https://unit42.paloaltonetworks.com/unit42-tropic-trooper-targets-taiwanese-government-and-fossil-fuel-provider-with-poison-ivy/)
+  supported_platforms:
+    - windows
+  input_arguments:
+    command:
+      description: Command to execute
+      type: String
+      default: c:\windows\system32\cmd.exe
+    guid:
+      description: CLSID to use in registry key path
+      type: String
+      default: 4edc6cdd-1760-4bd6-a6ed-a7c2ad6cfbe7
+  executor:
+    name: command_prompt
+    elevation_required: true 
+    command: |
+      reg add "HKLM\SOFTWARE\Microsoft\Active Setup\Installed Components\{#{guid}}" /v StubPath /t REG_SZ /d "#{command}" 2> nul
+    cleanup_command: | 
+      reg delete "HKLM\SOFTWARE\Microsoft\Active Setup\Installed Components\{#{guid}}" /f 2> nul
