@@ -440,6 +440,7 @@
   - Atomic Test #28: Disable Defender Using NirSoft AdvancedRun [windows]
   - Atomic Test #29: Kill antimalware protected processes using Backstab [windows]
   - Atomic Test #30: WinPwn - Kill the event log services for stealth [windows]
+  - Atomic Test #31: Tamper with Windows Defender ATP using Aliases - PowerShell [windows]
 - T1601 Modify System Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
