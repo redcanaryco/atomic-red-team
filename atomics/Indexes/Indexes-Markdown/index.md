@@ -32,6 +32,8 @@
   - Atomic Test #7: chown - Change file or folder mode ownership only [macos, linux]
   - Atomic Test #8: chown - Change file or folder ownership recursively [macos, linux]
   - Atomic Test #9: chattr - Remove immutable file attribute [macos, linux]
+  - Atomic Test #10: Chmod through c script [macos, linux]
+  - Atomic Test #11: Chown through c script [macos, linux]
 - [T1216.001 PubPrn](../../T1216.001/T1216.001.md)
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
 - T1574.007 Path Interception by PATH Environment Variable [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

@@ -15,6 +15,8 @@
   - Atomic Test #7: chown - Change file or folder mode ownership only [macos, linux]
   - Atomic Test #8: chown - Change file or folder ownership recursively [macos, linux]
   - Atomic Test #9: chattr - Remove immutable file attribute [macos, linux]
+  - Atomic Test #10: Chmod through c script [macos, linux]
+  - Atomic Test #11: Chown through c script [macos, linux]
 - T1564.008 Email Hiding Rules [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1014 Rootkit [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1099 Timestomp [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
