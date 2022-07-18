@@ -374,6 +374,7 @@
 - [T1564.002 Hidden Users](../../T1564.002/T1564.002.md)
   - Atomic Test #1: Create Hidden User using UniqueID < 500 [macos]
   - Atomic Test #2: Create Hidden User using IsHidden option [macos]
+  - Atomic Test #3: Create Hidden User in Registry [windows]
 - T1134.003 Make and Impersonate Token [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1196 Control Panel Items [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1562.003 Impair Command History Logging](../../T1562.003/T1562.003.md)
@@ -439,6 +440,7 @@
   - Atomic Test #28: Disable Defender Using NirSoft AdvancedRun [windows]
   - Atomic Test #29: Kill antimalware protected processes using Backstab [windows]
   - Atomic Test #30: WinPwn - Kill the event log services for stealth [windows]
+  - Atomic Test #31: Tamper with Windows Defender ATP using Aliases - PowerShell [windows]
 - T1601 Modify System Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

