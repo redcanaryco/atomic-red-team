@@ -10,7 +10,7 @@ instance of __EventFilter as $Filt
 {
     Name = "AtomicRedTeam_filter";
     EventNamespace = "root\\subscription";
-    Query ="SELECT * FROM __InstanceCreationEvent Within 3"
+    Query ="SELECT * FROM __InstanceCreationEvent Within 3 "
             "Where TargetInstance Isa \"Win32_Process\" "
             "And Targetinstance.Name = \"notepad.exe\" ";
     QueryLanguage = "WQL";
