@@ -82,3 +82,40 @@ atomic_tests:
       $EventFilterToCleanup | Remove-WmiObject
     name: powershell
     elevation_required: true
+- name: Windows MOFComp.exe Load MOF File
+  description: |
+    The following Atomic will utilize MOFComp.exe to load a local MOF file.
+    The Managed Object Format (MOF) compiler parses a file containing MOF statements and adds the classes and class instances defined in the file to the WMI repository. 
+    To query for the class:  gwmi __eventfilter -namespace root\subscription
+    A successful execution will add the class to WMI root namespace.
+    Reference: https://pentestlab.blog/2020/01/21/persistence-wmi-event-subscription/ and https://thedfirreport.com/2022/07/11/select-xmrig-from-sqlserver/.
+  supported_platforms:
+  - windows
+  input_arguments:
+    mofcomp_path:
+      description: Location of mofcomp.exe
+      type: String
+      default: c:\windows\system32\wbem\mofcomp.exe
+    mof_file:
+      description: Local location MOF file
+      type: String
+      default: PathToAtomicsFolder\T1546.003\src\T1546.003.mof
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      MofComp.exe must exist on disk at specified location (#{mofcomp_path})
+    prereq_command: |
+      if (Test-Path "#{mofcomp_path}") { exit 0} else { exit 1}
+    get_prereq_command: |
+      Validate MOFComp.exe is on disk somewhere and update input argument.
+  executor:
+    command: |
+      #{mofcomp_path} #{mof_file}
+    cleanup_command: |
+      $EventConsumerToCleanup = Get-WmiObject -Namespace root/subscription -Class CommandLineEventConsumer -Filter "Name = 'AtomicRedTeam_consumer'"
+      $EventFilterToCleanup = Get-WmiObject -Namespace root/subscription -Class __EventFilter -Filter "Name = 'AtomicRedTeam_filter'"
+      $FilterConsumerBindingToCleanup = Get-WmiObject -Namespace root/subscription -Query "REFERENCES OF {$($EventConsumerToCleanup.__RELPATH)} WHERE ResultClass = __FilterToConsumerBinding" -ErrorAction SilentlyContinue
+      $FilterConsumerBindingToCleanup | Remove-WmiObject
+      $EventConsumerToCleanup | Remove-WmiObject
+      $EventFilterToCleanup | Remove-WmiObject
+    name: powershell
