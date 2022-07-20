@@ -186,3 +186,60 @@ atomic_tests:
     command: |
       chattr -i #{file_to_modify}
     name: sh
+- name: Chmod through c script
+  auto_generated_guid: 973631cf-6680-4ffa-a053-045e1b6b67ab
+  description: |
+    chmods a file using a c script
+  supported_platforms:
+  - macos
+  - linux
+  input_arguments:
+    source_file:
+      description: Path of c source file
+      type: Path
+      default: PathToAtomicsFolder/T1222.002/src/T1222.002.c
+    compiled_file:
+      description: Path of compiled file
+      type: Path
+      default: /tmp/T1222002
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+       Compile the script from (#{source_file}). Destination is #{compiled_file}
+    prereq_command: |
+        gcc #{source_file} -o #{compiled_file}
+    get_prereq_command: |
+        gcc #{source_file} -o #{compiled_file}
+  executor:
+    command: |
+       #{compiled_file} /tmp/ T1222002
+    name: sh
+- name: Chown through c script
+  auto_generated_guid: 18592ba1-5f88-4e3c-abc8-ab1c6042e389
+  description: |
+    chowns a file to root using a c script
+  supported_platforms:
+  - macos
+  - linux
+  input_arguments:
+    source_file:
+      description: Path of c source file
+      type: Path
+      default: PathToAtomicsFolder/T1222.002/src/chown.c
+    compiled_file:
+      description: Path of compiled file
+      type: Path
+      default: /tmp/T1222002own
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+       Compile the script from (#{source_file}). Destination is #{compiled_file}
+    prereq_command: |
+        gcc #{source_file} -o #{compiled_file}
+    get_prereq_command: |
+        gcc #{source_file} -o #{compiled_file}
+  executor:
+    command: |
+       sudo #{compiled_file} #{source_file}
+    name: sh
+    elevation_required: true

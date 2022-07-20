@@ -32,6 +32,8 @@
   - Atomic Test #7: chown - Change file or folder mode ownership only [macos, linux]
   - Atomic Test #8: chown - Change file or folder ownership recursively [macos, linux]
   - Atomic Test #9: chattr - Remove immutable file attribute [macos, linux]
+  - Atomic Test #10: Chmod through c script [macos, linux]
+  - Atomic Test #11: Chown through c script [macos, linux]
 - [T1216.001 PubPrn](../../T1216.001/T1216.001.md)
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
 - T1574.007 Path Interception by PATH Environment Variable [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -374,6 +376,7 @@
 - [T1564.002 Hidden Users](../../T1564.002/T1564.002.md)
   - Atomic Test #1: Create Hidden User using UniqueID < 500 [macos]
   - Atomic Test #2: Create Hidden User using IsHidden option [macos]
+  - Atomic Test #3: Create Hidden User in Registry [windows]
 - T1134.003 Make and Impersonate Token [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1196 Control Panel Items [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1562.003 Impair Command History Logging](../../T1562.003/T1562.003.md)
@@ -439,6 +442,7 @@
   - Atomic Test #28: Disable Defender Using NirSoft AdvancedRun [windows]
   - Atomic Test #29: Kill antimalware protected processes using Backstab [windows]
   - Atomic Test #30: WinPwn - Kill the event log services for stealth [windows]
+  - Atomic Test #31: Tamper with Windows Defender ATP using Aliases - PowerShell [windows]
 - T1601 Modify System Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1812,6 +1816,7 @@
   - Atomic Test #20: WinPwn - PowerSharpPack - Watson searching for missing windows patches [windows]
   - Atomic Test #21: WinPwn - PowerSharpPack - Sharpup checking common Privesc vectors [windows]
   - Atomic Test #22: WinPwn - PowerSharpPack - Seatbelt [windows]
+  - Atomic Test #23: Azure Security Scan with SkyArk [azure-ad]
 - [T1010 Application Window Discovery](../../T1010/T1010.md)
   - Atomic Test #1: List Process Main Windows - C# .NET [windows]
 - T1087.003 Email Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
