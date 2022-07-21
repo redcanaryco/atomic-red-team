@@ -102,3 +102,29 @@ atomic_tests:
     cleanup_command: |
       stop-process -name wordpad -force -erroraction silentlycontinue
     name: powershell
+- name: Command Prompt read contents from CMD file and execute
+
+  description: |
+    Simulate Raspberry Robin using the "standard-in" command prompt feature cmd `/R <` to read and execute a file via cmd.exe
+    See https://redcanary.com/blog/raspberry-robin/. 
+  supported_platforms:
+  - windows
+  input_arguments:
+    input_file:
+      description: CMD file that is read by Command Prompt and execute, which launches calc.exe
+      type: Path
+      default: PathToAtomicsFolder\T1059.003\src\t1059.003_cmd.cmd
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      CMD file must exist on disk at specified location (#{input_file})
+    prereq_command: |
+      if (Test-Path #{input_file}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{input_file}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1059.003/src/t1059.003_cmd.cmd" -OutFile "#{input_file}"
+  executor:
+    command: |
+      cmd /r cmd<#{input_file}
+    name: command_prompt
+    elevation_required: false
