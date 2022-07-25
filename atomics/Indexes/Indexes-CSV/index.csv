@@ -22,6 +22,8 @@ defense-evasion,T1222.002,Linux and Mac File and Directory Permissions Modificat
 defense-evasion,T1222.002,Linux and Mac File and Directory Permissions Modification,7,chown - Change file or folder mode ownership only,967ba79d-f184-4e0e-8d09-6362b3162e99,bash
 defense-evasion,T1222.002,Linux and Mac File and Directory Permissions Modification,8,chown - Change file or folder ownership recursively,3b015515-b3d8-44e9-b8cd-6fa84faf30b2,bash
 defense-evasion,T1222.002,Linux and Mac File and Directory Permissions Modification,9,chattr - Remove immutable file attribute,e7469fe2-ad41-4382-8965-99b94dd3c13f,sh
+defense-evasion,T1222.002,Linux and Mac File and Directory Permissions Modification,10,Chmod through c script,973631cf-6680-4ffa-a053-045e1b6b67ab,sh
+defense-evasion,T1222.002,Linux and Mac File and Directory Permissions Modification,11,Chown through c script,18592ba1-5f88-4e3c-abc8-ab1c6042e389,sh
 defense-evasion,T1216.001,PubPrn,1,PubPrn.vbs Signed Script Bypass,9dd29a1f-1e16-4862-be83-913b10a88f6c,command_prompt
 defense-evasion,T1006,Direct Volume Access,1,Read volume boot sector via DOS device path (PowerShell),88f6327e-51ec-4bbf-b2e8-3fea534eab8b,powershell
 defense-evasion,T1014,Rootkit,1,Loadable Kernel Module based Rootkit,dfb50072-e45a-4c75-a17e-a484809c8553,sh
@@ -235,6 +237,7 @@ defense-evasion,T1550.003,Pass the Ticket,2,Rubeus Kerberos Pass The Ticket,a2fc
 defense-evasion,T1036.004,Masquerade Task or Service,1,Creating W32Time similar named service using schtasks,f9f2fe59-96f7-4a7d-ba9f-a9783200d4c9,command_prompt
 defense-evasion,T1036.004,Masquerade Task or Service,2,Creating W32Time similar named service using sc,b721c6ef-472c-4263-a0d9-37f1f4ecff66,command_prompt
 defense-evasion,T1055.004,Asynchronous Procedure Call,1,Process Injection via C#,611b39b7-e243-4c81-87a4-7145a90358b1,command_prompt
+defense-evasion,T1647,Plist File Modification,1,Plist Modification,394a538e-09bb-4a4a-95d1-b93cf12682a8,manual
 defense-evasion,T1553.005,Mark-of-the-Web Bypass,1,Mount ISO image,002cca30-4778-4891-878a-aaffcfa502fa,powershell
 defense-evasion,T1553.005,Mark-of-the-Web Bypass,2,Mount an ISO image and run executable from the ISO,42f22b00-0242-4afc-a61b-0da05041f9cc,powershell
 defense-evasion,T1553.005,Mark-of-the-Web Bypass,3,Remove the Zone.Identifier alternate data stream,64b12afc-18b8-4d3f-9eab-7f6cae7c73f9,powershell
@@ -494,6 +497,7 @@ privilege-escalation,T1134.001,Token Impersonation/Theft,1,Named pipe client imp
 privilege-escalation,T1134.001,Token Impersonation/Theft,2,`SeDebugPrivilege` token duplication,34f0a430-9d04-4d98-bcb5-1989f14719f0,powershell
 privilege-escalation,T1546.003,Windows Management Instrumentation Event Subscription,1,Persistence via WMI Event Subscription - CommandLineEventConsumer,3c64f177-28e2-49eb-a799-d767b24dd1e0,powershell
 privilege-escalation,T1546.003,Windows Management Instrumentation Event Subscription,2,Persistence via WMI Event Subscription - ActiveScriptEventConsumer,fecd0dfd-fb55-45fa-a10b-6250272d0832,powershell
+privilege-escalation,T1546.003,Windows Management Instrumentation Event Subscription,3,Windows MOFComp.exe Load MOF File,29786d7e-8916-4de6-9c55-be7b093b2706,powershell
 privilege-escalation,T1134.004,Parent PID Spoofing,1,Parent PID Spoofing using PowerShell,069258f4-2162-46e9-9a25-c9c6c56150d2,powershell
 privilege-escalation,T1134.004,Parent PID Spoofing,2,Parent PID Spoofing - Spawn from Current Process,14920ebd-1d61-491a-85e0-fe98efe37f25,powershell
 privilege-escalation,T1134.004,Parent PID Spoofing,3,Parent PID Spoofing - Spawn from Specified Process,cbbff285-9051-444a-9d17-c07cd2d230eb,powershell
@@ -631,12 +635,14 @@ execution,T1059.003,Windows Command Shell,1,Create and Execute Batch Script,9e88
 execution,T1059.003,Windows Command Shell,2,Writes text to a file and displays it.,127b4afe-2346-4192-815c-69042bec570e,command_prompt
 execution,T1059.003,Windows Command Shell,3,Suspicious Execution via Windows Command Shell,d0eb3597-a1b3-4d65-b33b-2cda8d397f20,command_prompt
 execution,T1059.003,Windows Command Shell,4,Simulate BlackByte Ransomware Print Bombing,6b2903ac-8f36-450d-9ad5-b220e8a2dcb9,powershell
+execution,T1059.003,Windows Command Shell,5,Command Prompt read contents from CMD file and execute,df81db1b-066c-4802-9bc8-b6d030c3ba8e,command_prompt
 execution,T1059.005,Visual Basic,1,Visual Basic script execution to gather local computer information,1620de42-160a-4fe5-bbaf-d3fef0181ce9,powershell
 execution,T1059.005,Visual Basic,2,Encoded VBS code execution,e8209d5f-e42d-45e6-9c2f-633ac4f1eefa,powershell
 execution,T1059.005,Visual Basic,3,Extract Memory via VBA,8faff437-a114-4547-9a60-749652a03df6,powershell
 execution,T1569.002,Service Execution,1,Execute a Command as a Service,2382dee2-a75f-49aa-9378-f52df6ed3fb1,command_prompt
 execution,T1569.002,Service Execution,2,Use PsExec to execute a command on a remote host,873106b7-cfed-454b-8680-fa9f6400431c,command_prompt
 execution,T1569.002,Service Execution,3,psexec.py (Impacket),edbcd8c9-3639-4844-afad-455c91e95a35,bash
+execution,T1569.002,Service Execution,4,BlackCat pre-encryption cmds with Lateral Movement,31eb7828-97d7-4067-9c1e-c6feb85edc4b,powershell
 execution,T1053.002,At,1,At.exe Scheduled task,4a6c0dc4-0f2a-4203-9298-a5a9bdc21ed8,command_prompt
 execution,T1053.002,At,2,At - Schedule a job,7266d898-ac82-4ec0-97c7-436075d0d08e,sh
 persistence,T1053.005,Scheduled Task,1,Scheduled Task Startup Script,fec27f65-db86-4c2d-b66c-61945aee87c2,command_prompt
@@ -713,6 +719,7 @@ persistence,T1098.001,Additional Cloud Credentials,2,Azure AD Application Hijack
 persistence,T1098.001,Additional Cloud Credentials,3,AWS - Create Access Key and Secret Key,8822c3b0-d9f9-4daf-a043-491160a31122,sh
 persistence,T1546.003,Windows Management Instrumentation Event Subscription,1,Persistence via WMI Event Subscription - CommandLineEventConsumer,3c64f177-28e2-49eb-a799-d767b24dd1e0,powershell
 persistence,T1546.003,Windows Management Instrumentation Event Subscription,2,Persistence via WMI Event Subscription - ActiveScriptEventConsumer,fecd0dfd-fb55-45fa-a10b-6250272d0832,powershell
+persistence,T1546.003,Windows Management Instrumentation Event Subscription,3,Windows MOFComp.exe Load MOF File,29786d7e-8916-4de6-9c55-be7b093b2706,powershell
 persistence,T1546.001,Change Default File Association,1,Change Default File Association,10a08978-2045-4d62-8c42-1957bbbea102,command_prompt
 persistence,T1546.014,Emond,1,Persistance with Event Monitor - emond,23c9c127-322b-4c75-95ca-eff464906114,sh
 persistence,T1547.001,Registry Run Keys / Startup Folder,1,Reg Key Run,e55be3fd-3521-4610-9d1a-e210e42dcf05,command_prompt
@@ -1237,6 +1244,7 @@ command-and-control,T1105,Ingress Tool Transfer,21,MAZE Propagation Script,70f4d
 command-and-control,T1105,Ingress Tool Transfer,22,Printer Migration Command-Line Tool UNC share folder into a zip file,49845fc1-7961-4590-a0f0-3dbcf065ae7e,command_prompt
 command-and-control,T1105,Ingress Tool Transfer,23,Lolbas replace.exe use to copy file,54782d65-12f0-47a5-b4c1-b70ee23de6df,command_prompt
 command-and-control,T1105,Ingress Tool Transfer,24,Lolbas replace.exe use to copy UNC file,ed0335ac-0354-400c-8148-f6151d20035a,command_prompt
+command-and-control,T1105,Ingress Tool Transfer,25,certreq download,6fdaae87-c05b-42f8-842e-991a74e8376b,command_prompt
 command-and-control,T1090.001,Internal Proxy,1,Connection Proxy,0ac21132-4485-4212-a681-349e8a6637cd,sh
 command-and-control,T1090.001,Internal Proxy,2,Connection Proxy for macOS UI,648d68c1-8bcd-4486-9abe-71c6655b6a2c,sh
 command-and-control,T1090.001,Internal Proxy,3,portproxy reg key,b8223ea9-4be2-44a6-b50a-9657a3d4e72a,powershell
