@@ -7,6 +7,9 @@ atomic_tests:
     Creates a service specifying an arbitrary command and executes it. When executing commands such as PowerShell, the service will report that it did not start correctly even when code executes properly.
 
     Upon successful execution, cmd.exe creates a new service using sc.exe that will start powershell.exe to create a new file `art-marker.txt`
+    
+    [BlackCat Ransomware (ALPHV)](https://www.varonis.com/blog/blackcat-ransomware)  
+    [Cybereason vs. BlackCat Ransomware](https://www.cybereason.com/blog/cybereason-vs.-blackcat-ransomware)
   supported_platforms:
   - windows
   input_arguments:
@@ -112,3 +115,27 @@ atomic_tests:
     command: |
       psexec.py '#{domain}/#{username}:#{password}@#{remote_host}' '#{command}'
     name: bash
+- name: BlackCat pre-encryption cmds with Lateral Movement
+  description: This atomic attempts to emulate the unique behavior of BlackCat ransomware prior to encryption and during Lateral Movement attempts via PsExec on Windows. Uses bundled PsExec like BlackCat
+  supported_platforms:
+  - windows
+  input_arguments:
+    targethost:
+      description: Target hostname to attempt psexec connection to for emulation of lateral movement.
+      type: string
+      default: $ENV:COMPUTERNAME
+  executor:
+    command: |
+      cmd.exe /c "wmic 	csproduct 	get UUID" 
+      cmd.exe /c "fsutil behavior 	set SymlinkEvaluation R2L:1" 
+      cmd.exe /c "fsutil behavior set 	SymlinkEvaluation R2R:1"
+      reg    add    HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters    /v MaxMpxCt /d 65535 /t REG_DWORD /f      
+      copy $pathtoatomicsfolder\T1569.002\bin\PsExec.exe $env:temp
+      cmd.exe /c "$env:temp\psexec.exe  -accepteula  \\#{targethost} cmd.exe  /c echo "--access-token""
+    cleanup_command: |
+      reg delete HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters /v MaxMpxCt /f
+      cmd.exe /c "fsutil behavior set SymlinkEvaluation R2L:0" 
+      cmd.exe /c "fsutil behavior set SymlinkEvaluation R2R:0"
+      rm $env:temp\psexec.exe
+    name: powershell
+    elevation_required: true
