@@ -45,12 +45,12 @@ If ($TLS -eq 0){
 ElseIf ($TLS -eq 1){
     # Add https server details here... remember: it is not advised to run other peoples things form the internet!
     $Url = @(
-        "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1086/payloads/test.ps1", # Basic Powershell Test script
+        "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.001/src/test.ps1", # Basic Powershell Test script
         "test.dfir.com.au", # DNS text test - Powershell Test script base64 encoded in DNS txt field
-        "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1086/payloads/test.xml", # Powershell embedded command
-        "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1086/payloads/test.sct", # Powershell embedded scriptlet
-        "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1086/payloads/mshta.sct", # Powershell embedded scriptlet
-        "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1086/payloads/test.xsl" # Powershell embedded extensible Stylesheet Language
+        "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.001/src/test.xml", # Powershell embedded command
+        "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.001/src/test.sct", # Powershell embedded scriptlet
+        "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.001/src/mshta.sct", # Powershell embedded scriptlet
+        "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.001/src/test.xsl" # Powershell embedded extensible Stylesheet Language
     )
 }
 
