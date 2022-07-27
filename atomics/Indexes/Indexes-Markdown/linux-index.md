@@ -16,6 +16,8 @@
   - Atomic Test #7: chown - Change file or folder mode ownership only [macos, linux]
   - Atomic Test #8: chown - Change file or folder ownership recursively [macos, linux]
   - Atomic Test #9: chattr - Remove immutable file attribute [macos, linux]
+  - Atomic Test #10: Chmod through c script [macos, linux]
+  - Atomic Test #11: Chown through c script [macos, linux]
 - T1564.008 Email Hiding Rules [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1014 Rootkit](../../T1014/T1014.md)
   - Atomic Test #1: Loadable Kernel Module based Rootkit [linux]
@@ -466,7 +468,8 @@
   - Atomic Test #5: SUDO brute force Redhat [linux]
 - T1003 OS Credential Dumping [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1539 Steal Web Session Cookie [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1552.005 Cloud Instance Metadata API [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1552.005 Cloud Instance Metadata API](../../T1552.005/T1552.005.md)
+  - Atomic Test #1: Azure - Search Azure AD User Attributes for Passwords [azure-ad]
 - T1555.002 Securityd Memory [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1522 Cloud Instance Metadata API [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1110.002 Password Cracking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -557,6 +560,7 @@
   - Atomic Test #5: Linux VM Check via Kernel Modules [linux]
   - Atomic Test #7: Hostname Discovery [linux, macos]
   - Atomic Test #11: Environment variables discovery on macos and linux [macos, linux]
+  - Atomic Test #23: Azure Security Scan with SkyArk [azure-ad]
 - T1010 Application Window Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1087.003 Email Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1497.003 Time Based Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
