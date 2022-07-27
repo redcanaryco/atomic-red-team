@@ -123,3 +123,19 @@ atomic_tests:
       poweroff --reboot
     name: bash
     elevation_required: true
+- name: LogOff System - Windows
+  auto_generated_guid: 1d2b3b50-44e4-449e-872a-5c50c69de961
+  description: |
+    This test log off down a Windows system. dcrat use this technique in one of backdoor function https://www.mandiant.com/resources/analyzing-dark-crystal-rat-backdoor
+  supported_platforms:
+  - windows
+  input_arguments:
+    timeout:
+      description: Timeout period before shutdown (seconds)
+      type: Integer
+      default: 1
+  executor:
+    command: |
+      shutdown /l /t #{timeout}
+    name: command_prompt
+    elevation_required: true
