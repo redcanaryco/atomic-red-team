@@ -41,6 +41,13 @@ atomic_tests:
     get_prereq_command: |
       New-Item -Type Directory (split-path #{dll_path}) -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1134.004/bin/calc.dll" -OutFile "#{dll_path}"
+  - description: |
+      PPID.ps1 must exist on disk at $PathToAtomicsFolder\T1134.004\src\PPID-Spoof.ps1
+    prereq_command: |
+      if (Test-Path $PathToAtomicsFolder\T1134.004\src\PPID-Spoof.ps1) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path $PathToAtomicsFolder\T1134.004\src\PPID-Spoof.ps1) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1134.004/src/PPID-Spoof.ps1" -OutFile $PathToAtomicsFolder\T1134.004\src\PPID-Spoof.ps1
   executor:
     command: |
       . $PathToAtomicsFolder\T1134.004\src\PPID-Spoof.ps1
