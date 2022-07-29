@@ -695,3 +695,161 @@ atomic_tests:
       reg delete HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\DisallowRun /v 1 /f >nul 2>&1
     name: command_prompt
     elevation_required: true
+- name: LockBit Black - Disable Privacy Settings Experience Using Registry -cmd
+  description: |
+     LockBit Black - Disable Privacy Settings Experience Using Registry
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKCU\Software\Policies\Microsoft\Windows\OOBE" /v DisablePrivacyExperience /t REG_DWORD /d 1 /f
+    cleanup_command: |
+       reg delete "HKCU\Software\Policies\Microsoft\Windows\OOBE" /v DisablePrivacyExperience /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: LockBit Black - Use Registry Editor to turn on automatic logon -cmd
+  description: |
+     LockBit Black - Use Registry Editor to turn on automatic logon
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKLM\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" /v AutoAdminLogon /t REG_DWORD /d 1 /f
+      reg add "HKLM\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultUserName /t REG_SZ /d Administrator /f
+      reg add "HKLM\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultDomainName /t REG_SZ /d contoso.com /f
+      reg add "HKLM\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultPassword /t REG_SZ /d password1 /f
+    cleanup_command: |
+      reg delete "HKLM\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" /v AutoAdminLogon /f >nul 2>&1
+      reg delete "HKLM\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultUserName /f >nul 2>&1
+      reg delete "HKLM\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultDomainName /f >nul 2>&1
+      reg delete "HKLM\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultPassword /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: LockBit Black - Disable the ETW Provider of Windows Defender -cmd
+  description: |
+     An adversary can disable the ETW Provider of Windows Defender,
+     so nothing would be logged to Microsoft-Windows-Windows-Defender/Operational anymore.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Windows Defender" /v Operational /t REG_DWORD /d 0 /f
+    cleanup_command: |
+      reg delete "HKLM\Software\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Windows Defender" /v Operational /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: LockBit Black - Modify Group policy settings -cmd
+  description: |
+     An adversary can modify the group policy settings.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v GroupPolicyRefreshTimeDC /t REG_DWORD /d 0 /f
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v GroupPolicyRefreshTimeOffsetDC /t REG_DWORD /d 0 /f
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v GroupPolicyRefreshTime /t REG_DWORD /d 0 /f
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v GroupPolicyRefreshTimeOffset /t REG_DWORD /d 0 /f
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v EnableSmartScreen /t REG_DWORD /d 0 /f
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v ShellSmartScreenLevel /t REG_SZ /d Block /f
+    cleanup_command: |
+      reg delete "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v GroupPolicyRefreshTimeDC /f >nul 2>&1
+      reg delete "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v GroupPolicyRefreshTimeOffsetDC /f >nul 2>&1
+      reg delete "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v GroupPolicyRefreshTime /f >nul 2>&1
+      reg delete "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v GroupPolicyRefreshTimeOffset /f >nul 2>&1
+      reg delete "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v EnableSmartScreen /f >nul 2>&1
+      reg delete "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v ShellSmartScreenLevel /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: LockBit Black - Unusual Windows firewall registry modification -cmd
+  description: |
+     An adversary tries to modify the windows firewall registry
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile" /v EnableFirewall /t REG_DWORD /d 0 /f
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\WindowsFirewall\StandardProfile" /v EnableFirewall /t REG_DWORD /d 0 /f
+    cleanup_command: |
+      reg delete "HKLM\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile" /v EnableFirewall /f >nul 2>&1
+      reg delete "HKLM\SOFTWARE\Policies\Microsoft\WindowsFirewall\StandardProfile" /v EnableFirewall /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: LockBit Black - Disable Privacy Settings Experience Using Registry -Powershell
+  description: |
+     LockBit Black - Disable Privacy Settings Experience Using Registry
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      New-ItemProperty "HKCU:\Software\Policies\Microsoft\Windows\OOBE" -Name DisablePrivacyExperience -PropertyType DWord -Value 0 -Force
+    cleanup_command: |
+      Remove-ItemProperty "HKCU:\Software\Policies\Microsoft\Windows\OOBE" -Name DisablePrivacyExperience -Force -ErrorAction Ignore
+    name: powershell
+    elevation_required: true
+- name: Lockbit Black - Use Registry Editor to turn on automatic logon -Powershell
+  description: |
+     Lockbit Black - Use Registry Editor to turn on automatic logon
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      New-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name AutoAdminLogon -PropertyType DWord -Value 1 -Force
+      New-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name DefaultUserName -Value Administrator -Force
+      New-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name DefaultDomainName -Value contoso.com -Force
+      New-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name DefaultPassword  -Value password1 -Force
+    cleanup_command: |
+      Remove-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name AutoAdminLogon -Force -ErrorAction Ignore
+      Remove-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name DefaultUserName -Force -ErrorAction Ignore
+      Remove-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name DefaultDomainName -Force -ErrorAction Ignore
+      Remove-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name DefaultPassword -Force -ErrorAction Ignore
+    name: powershell
+    elevation_required: true
+- name: LockBit Black - Disable the ETW Provider of Windows Defender -Powershell
+  description: |
+     An adversary can disable the ETW Provider of Windows Defender,
+     so nothing would be logged to Microsoft-Windows-Windows-Defender/Operational anymore.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      New-ItemProperty "HKLM:\Software\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Windows Defender" -Name Operational  -PropertyType DWord -Value 0 -Force
+    cleanup_command: |
+       Remove-ItemProperty "HKLM:\Software\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Windows Defender" -Name Operational -Force -ErrorAction Ignore
+    name: powershell
+    elevation_required: true
+- name: LockBit Black - Modify Group policy settings -Powershell
+  description: |
+     An adversary modifies group policy settings
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      New-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name GroupPolicyRefreshTimeDC -PropertyType DWord -Value 0 -Force
+      New-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name GroupPolicyRefreshTimeOffsetDC -PropertyType DWord -Value 0 -Force
+      New-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name GroupPolicyRefreshTime -PropertyType DWord -Value 0 -Force
+      New-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name GroupPolicyRefreshTimeOffset -PropertyType DWord -Value 0 -Force
+      New-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name EnableSmartScreen -PropertyType DWord -Value 0 -Force
+      New-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name ShellSmartScreenLevel -Force
+    cleanup_command: |
+       Remove-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name GroupPolicyRefreshTimeDC -Force -ErrorAction Ignore
+       Remove-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name GroupPolicyRefreshTimeOffsetDC -Force -ErrorAction Ignore 
+       Remove-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name GroupPolicyRefreshTime -Force -ErrorAction Ignore
+       Remove-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name GroupPolicyRefreshTimeOffset -Force -ErrorAction Ignore
+       Remove-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name EnableSmartScreen -Force -ErrorAction Ignore
+       Remove-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name ShellSmartScreenLevel -Force -ErrorAction Ignore
+    name: powershell
+    elevation_required: true
+- name: LockBit Black - Unusual Windows firewall registry modification -Powershell
+  description: |
+     An adversary tries to modify the windows firewall registry.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      New-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile" -Name EnableFirewall -PropertyType DWORD -Value 0 -Force
+      New-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\StandardProfile" -Name EnableFirewall -PropertyType DWORD -Value 0 -Force
+    cleanup_command: |
+       Remove-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile"  -Name EnableFirewall -Force -ErrorAction Ignore
+       Remove-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\StandardProfile" -Name EnableFirewall -Force -ErrorAction Ignore
+    name: powershell
+    elevation_required: true
