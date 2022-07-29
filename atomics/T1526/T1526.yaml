@@ -1,0 +1,52 @@
+attack_technique: T1526
+display_name: Cloud Service Discovery
+atomic_tests:
+- name: Azure - Dump Subscription Data with MicroBurst
+  auto_generated_guid: 1e40bb1d-195e-401e-a86b-c192f55e005c
+  description: |
+    Upon successful execution, this test will enumerate all resources that are contained within a valid Azure subscription. 
+    The resources enumerated will display on screen, as well as several csv files and folders will be output to a specified directory, listing what resources were discovered by the script. 
+    See https://dev.to/cheahengsoon/enumerating-subscription-information-with-microburst-35a1
+  supported_platforms:
+  - iaas:azure
+  input_arguments:
+    username:
+      description: Azure AD username
+      type: String
+      default: null
+    password:
+      description: Azure AD password
+      type: String
+      default: T1082Az
+    output_directory:
+      description: Directory to output results to
+      type: String
+      default: $env:temp\T1526Test1     
+    subscription_name:
+      description: Azure subscription name to scan
+      type: String
+      default: null
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      The Get-AzDomainInfo script must exist in $env:temp.
+    prereq_command: |
+      if (test-path $env:temp\Get-AzDomainInfo.ps1){exit 0} else {exit 1}
+    get_prereq_command: |
+      invoke-webrequest "https://raw.githubusercontent.com/NetSPI/MicroBurst/c771c665a2c71f9c5ba474869cd1c211ebee68fd/Az/Get-AzDomainInfo.ps1" -outfile "$env:temp\Get-AzDomainInfo.ps1"
+  - description: |
+      The Az module must be installed.
+    prereq_command: |
+      try {if (Get-InstalledModule -Name Az -ErrorAction SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
+    get_prereq_command: |
+      Install-Module -Name Az -Force
+  executor:
+    command: |
+      import-module "$env:temp\Get-AzDomainInfo.ps1"
+      $Password = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+      $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Password
+      Connect-AzAccount -Credential $Credential | out-null
+      Get-AzDomainInfo -folder #{output_directory} -subscription "#{subscription_name}" -verbose
+    cleanup_command: |
+      remove-item #{output_directory} -recurse -force -erroraction silentlycontinue
+    name: powershell
