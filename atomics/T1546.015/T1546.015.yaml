@@ -96,6 +96,7 @@ atomic_tests:
       Remove-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}' -Recurse -ErrorAction Ignore
     name: powershell
 - name: COM hijacking via TreatAs
+  auto_generated_guid: 33eacead-f117-4863-8eb0-5c6304fbfaa9
   description: |-
     This test first create a custom CLSID class pointing to the Windows Script Component runtime DLL. This DLL looks for the ScriptletURL key to get the location of the script to execute.
     Then, it hijacks the CLSID for the Work Folders Logon Synchronization to establish persistence on user logon by creating the 'TreatAs' with the malicious CLSID as default value. The
