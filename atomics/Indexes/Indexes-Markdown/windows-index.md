@@ -630,6 +630,7 @@
   - Atomic Test #1: COM Hijacking - InprocServer32 [windows]
   - Atomic Test #2: Powershell Execute COM Object [windows]
   - Atomic Test #3: COM Hijacking with RunDLL32 (Local Server Switch) [windows]
+  - Atomic Test #4: COM hijacking via TreatAs [windows]
 - [T1574.009 Path Interception by Unquoted Path](../../T1574.009/T1574.009.md)
   - Atomic Test #1: Execution of program.exe as service with unquoted service path [windows]
 - T1100 Web Shell [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -935,6 +936,7 @@
   - Atomic Test #1: COM Hijacking - InprocServer32 [windows]
   - Atomic Test #2: Powershell Execute COM Object [windows]
   - Atomic Test #3: COM Hijacking with RunDLL32 (Local Server Switch) [windows]
+  - Atomic Test #4: COM hijacking via TreatAs [windows]
 - [T1137.004 Outlook Home Page](../../T1137.004/T1137.004.md)
   - Atomic Test #1: Install Outlook Home Page Persistence [windows]
 - [T1574.009 Path Interception by Unquoted Path](../../T1574.009/T1574.009.md)
