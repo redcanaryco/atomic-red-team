@@ -1583,6 +1583,7 @@
 - [T1529 System Shutdown/Reboot](../../T1529/T1529.md)
   - Atomic Test #1: Shutdown System - Windows [windows]
   - Atomic Test #2: Restart System - Windows [windows]
+  - Atomic Test #10: Logoff System - Windows [windows]
 
 # initial-access
 - [T1133 External Remote Services](../../T1133/T1133.md)

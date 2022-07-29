@@ -2216,6 +2216,7 @@
   - Atomic Test #7: Reboot System via `halt` - Linux [linux]
   - Atomic Test #8: Shutdown System via `poweroff` - Linux [linux]
   - Atomic Test #9: Reboot System via `poweroff` - Linux [linux]
+  - Atomic Test #10: Logoff System - Windows [windows]
 
 # initial-access
 - [T1133 External Remote Services](../../T1133/T1133.md)
