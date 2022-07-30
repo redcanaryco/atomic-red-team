@@ -206,7 +206,9 @@ atomic_tests:
   executor:
     command: |
        aws logs create-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
+       echo "*** Log Group Created ***"
        aws logs delete-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
+       echo "*** Log Group Deleted ***"
     cleanup_command: 
     name: sh
     elevation_required: false
@@ -240,9 +242,13 @@ atomic_tests:
   executor:
     command: |
        aws logs create-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
+       echo "*** Log Group Created ***"
        aws logs create-log-stream --log-group-name #{cloudwatch_log_group_name} --log-stream-name #{cloudwatch_log_stream_name}
+       echo "*** Log Stream Created ***"
        aws logs delete-log-stream --log-group-name #{cloudwatch_log_group_name} --log-stream-name #{cloudwatch_log_stream_name}
+       echo "*** Log Stream Deleted ***"
        aws logs delete-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
+       echo "*** Log Group Deleted ***"
     cleanup_command: 
     name: sh
     elevation_required: false
