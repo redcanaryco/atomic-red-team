@@ -201,11 +201,11 @@ atomic_tests:
         Check if ~/.aws/credentials file has a default stanza is configured
       prereq_command: |
         cat ~/.aws/credentials | grep "default"
-        aws logs create-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
       get_prereq_command: |
         echo Please install the aws-cli and configure your AWS defult profile using: aws configure
   executor:
     command: |
+       aws logs create-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
        aws logs delete-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
     cleanup_command: 
     name: sh
@@ -235,12 +235,12 @@ atomic_tests:
         Check if ~/.aws/credentials file has a default stanza is configured
       prereq_command: |
         cat ~/.aws/credentials | grep "default"
-        aws logs create-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
-        aws logs create-log-stream --log-group-name #{cloudwatch_log_group_name} --log-stream-name #{cloudwatch_log_stream_name}
       get_prereq_command: |
         echo Please install the aws-cli and configure your AWS defult profile using: aws configure
   executor:
     command: |
+       aws logs create-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
+       aws logs create-log-stream --log-group-name #{cloudwatch_log_group_name} --log-stream-name #{cloudwatch_log_stream_name}
        aws logs delete-log-stream --log-group-name #{cloudwatch_log_group_name} --log-stream-name #{cloudwatch_log_stream_name}
        aws logs delete-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
     cleanup_command: 
