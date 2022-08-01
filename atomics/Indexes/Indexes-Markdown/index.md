@@ -527,6 +527,8 @@
   - Atomic Test #2: Azure - Eventhub Deletion [iaas:azure]
   - Atomic Test #3: Office 365 - Exchange Audit Log Disabled [office-365]
   - Atomic Test #4: Disable CloudTrail Logging Through Event Selectors via Stratus [linux, macos]
+  - Atomic Test #5: AWS CloudWatch Log Group Deletes [iaas:aws]
+  - Atomic Test #6: AWS CloudWatch Log Stream Deletes [iaas:aws]
 - [T1564.003 Hidden Window](../../T1564.003/T1564.003.md)
   - Atomic Test #1: Hidden Window [windows]
 - T1147 Hidden Users [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
