@@ -1060,7 +1060,7 @@
 - T1563 Remote Service Session Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1021.006 Windows Remote Management](../../T1021.006/T1021.006.md)
   - Atomic Test #1: Enable Windows Remote Management [windows]
-  - Atomic Test #2: Invoke-Command [windows]
+  - Atomic Test #2: Remote Code Execution with PS Credentials Using Invoke-Command [windows]
   - Atomic Test #3: WinRM Access with Evil-WinRM [windows]
 - [T1021.003 Distributed Component Object Model](../../T1021.003/T1021.003.md)
   - Atomic Test #1: PowerShell Lateral Movement using MMC20 [windows]
@@ -1521,6 +1521,7 @@
   - Atomic Test #23: Lolbas replace.exe use to copy file [windows]
   - Atomic Test #24: Lolbas replace.exe use to copy UNC file [windows]
   - Atomic Test #25: certreq download [windows]
+  - Atomic Test #26: Download a file using wscript [windows]
 - T1001.002 Steganography [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1008 Fallback Channels [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1090.001 Internal Proxy](../../T1090.001/T1090.001.md)

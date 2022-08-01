@@ -700,4 +700,18 @@ atomic_tests:
     command: 'certreq.exe -Post -config #{remote_file} c:\windows\win.ini #{local_path}'
     cleanup_command: 'del #{local_path} >nul 2>&1'
     name: command_prompt
-  
+
+- name: Download a file using wscript
+  auto_generated_guid: 97116a3f-efac-4b26-8336-b9cb18c45188
+  description: Use wscript to run a local VisualBasic file to download a remote file
+  supported_platforms:
+  - windows
+  input_arguments:
+    vbscript_file:
+      description: Full path to the VisualBasic downloading the file
+      type: String
+      default: PathToAtomicsFolder\T1105\src\T1105-download-file.vbs
+  executor:
+    command: 'wscript.exe #{vbscript_file}'
+    cleanup_command: del Atomic-License.txt >nul 2>&1
+    name: command_prompt
