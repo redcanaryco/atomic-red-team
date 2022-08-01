@@ -1,0 +1,22 @@
+#PRAGMA AUTORECOVER
+#PRAGMA NAMESPACE ("\\\\.\\root\\subscription")
+instance of CommandLineEventConsumer as $Cons
+{
+    Name = "AtomicRedTeam_consumer";
+    RunInteractively=false;
+    CommandLineTemplate="cmd.exe";
+};
+instance of __EventFilter as $Filt
+{
+    Name = "AtomicRedTeam_filter";
+    EventNamespace = "root\\subscription";
+    Query ="SELECT * FROM __InstanceCreationEvent Within 3 "
+            "Where TargetInstance Isa \"Win32_Process\" "
+            "And Targetinstance.Name = \"notepad.exe\" ";
+    QueryLanguage = "WQL";
+};
+instance of __FilterToConsumerBinding
+{ 
+     Filter = $Filt;
+     Consumer = $Cons;
+};
