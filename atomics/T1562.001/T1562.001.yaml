@@ -664,3 +664,63 @@ atomic_tests:
       Set-MpPreference -dbaf 0
     name: powershell
     elevation_required: true
+- name: LockBit Black - Disable Privacy Settings Experience Using Registry -cmd
+  description: |
+     LockBit Black - Disable Privacy Settings Experience Using Registry
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKCU\Software\Policies\Microsoft\Windows\OOBE" /v DisablePrivacyExperience /t REG_DWORD /d 1 /f
+    cleanup_command: |
+       reg delete "HKCU\Software\Policies\Microsoft\Windows\OOBE" /v DisablePrivacyExperience /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: LockBit Black - Use Registry Editor to turn on automatic logon -cmd
+  description: |
+     LockBit Black - Use Registry Editor to turn on automatic logon
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKLM\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" /v AutoAdminLogon /t REG_DWORD /d 1 /f
+      reg add "HKLM\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultUserName /t REG_SZ /d Administrator /f
+      reg add "HKLM\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultDomainName /t REG_SZ /d contoso.com /f
+      reg add "HKLM\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultPassword /t REG_SZ /d password1 /f
+    cleanup_command: |
+      reg delete "HKLM\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" /v AutoAdminLogon /f >nul 2>&1
+      reg delete "HKLM\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultUserName /f >nul 2>&1
+      reg delete "HKLM\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultDomainName /f >nul 2>&1
+      reg delete "HKLM\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultPassword /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: LockBit Black - Disable Privacy Settings Experience Using Registry -Powershell
+  description: |
+     LockBit Black - Disable Privacy Settings Experience Using Registry
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      New-ItemProperty "HKCU:\Software\Policies\Microsoft\Windows\OOBE" -Name DisablePrivacyExperience -PropertyType DWord -Value 0 -Force
+    cleanup_command: |
+      Remove-ItemProperty "HKCU:\Software\Policies\Microsoft\Windows\OOBE" -Name DisablePrivacyExperience -Force -ErrorAction Ignore
+    name: powershell
+    elevation_required: true
+- name: Lockbit Black - Use Registry Editor to turn on automatic logon -Powershell
+  description: |
+     Lockbit Black - Use Registry Editor to turn on automatic logon
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      New-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name AutoAdminLogon -PropertyType DWord -Value 1 -Force
+      New-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name DefaultUserName -Value Administrator -Force
+      New-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name DefaultDomainName -Value contoso.com -Force
+      New-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name DefaultPassword  -Value password1 -Force
+    cleanup_command: |
+      Remove-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name AutoAdminLogon -Force -ErrorAction Ignore
+      Remove-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name DefaultUserName -Force -ErrorAction Ignore
+      Remove-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name DefaultDomainName -Force -ErrorAction Ignore
+      Remove-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name DefaultPassword -Force -ErrorAction Ignore
+    name: powershell
+    elevation_required: true
