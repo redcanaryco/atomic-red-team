@@ -1,0 +1,15 @@
+attack_technique: T1592.001
+display_name: 'Gather Victim Host Information: Hardware'
+atomic_tests:
+- name: Enumerate PlugNPlay Camera
+  auto_generated_guid: d430bf85-b656-40e7-b238-42db01df0183
+  description: |
+    Enumerate PlugNPlay Camera using powershell commandlet. this technique was seen in dcrat malware backdoor capabilities where it enumerate the camera info mounted on the compromised host. 
+    reference: https://www.mandiant.com/resources/analyzing-dark-crystal-rat-backdoor 
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      Get-CimInstance -Query "SELECT * FROM Win32_PnPEntity WHERE (PNPClass = 'Image' OR PNPClass = 'Camera')"
+    name: powershell
+    elevation_required: true
