@@ -1465,7 +1465,7 @@
 - T1563 Remote Service Session Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1021.006 Windows Remote Management](../../T1021.006/T1021.006.md)
   - Atomic Test #1: Enable Windows Remote Management [windows]
-  - Atomic Test #2: Invoke-Command [windows]
+  - Atomic Test #2: Remote Code Execution with PS Credentials Using Invoke-Command [windows]
   - Atomic Test #3: WinRM Access with Evil-WinRM [windows]
 - [T1021.003 Distributed Component Object Model](../../T1021.003/T1021.003.md)
   - Atomic Test #1: PowerShell Lateral Movement using MMC20 [windows]
