@@ -127,8 +127,8 @@ atomic_tests:
       Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $True
     name: powershell
     elevation_required: false
-
 - name: AWS - Disable CloudTrail Logging Through Event Selectors using Stratus
+  auto_generated_guid: a27418de-bdce-4ebd-b655-38f11142bf0c
   description: |
     Update event selectors in AWS CloudTrail to disable the logging of certain management events to evade defense. This atomic test leverages a tool called stratus-red-team built by DataDog (https://github.com/DataDog/stratus-red-team). Stratus Red Team is a self-contained binary. You can use it to easily detonate offensive attack techniques against a live cloud environment. Ref: https://stratus-red-team.cloud/attack-techniques/AWS/aws.defense-evasion.cloudtrail-event-selectors/
   supported_platforms:
@@ -181,7 +181,6 @@ atomic_tests:
       rm -rf stratus*
     name: sh
     elevation_required: false
-
 - name: AWS - CloudTrail Logs Impairment Through S3 Lifecycle Rule using Stratus
   description: |
     This atomic test will use the stratus red team will first setup a cloudtrail logging into an S3 bucket and will then make an API call to update the lifecycle rule on that S3 bucket with an expiration date of 1 day. This will essentially delete all the logs after one day. Adversaries often do this actiivity to evade detection. Stratus Red Team is a self-contained binary. You can use it to easily detonate offensive attack techniques against a live cloud environment. ref: https://stratus-red-team.cloud/attack-techniques/AWS/aws.defense-evasion.cloudtrail-lifecycle-rule/
@@ -235,7 +234,6 @@ atomic_tests:
       rm -rf stratus*
     name: sh
     elevation_required: false
-
 - name: AWS - Remove VPC Flow Logs using Stratus
   description: |
     This atomic will attempt to remove VPC Flow Logs configuration. Stratus Red Team is a self-contained binary. You can use it to easily detonate offensive attack techniques against a live cloud environment. Ref: https://stratus-red-team.cloud/attack-techniques/AWS/aws.defense-evasion.vpc-remove-flow-logs/
@@ -287,5 +285,76 @@ atomic_tests:
       cd #{stratus_path}
       ./stratus cleanup --all
       rm -rf stratus*
+
+- name: AWS CloudWatch Log Group Deletes
+  auto_generated_guid: 89422c87-b57b-4a04-a8ca-802bb9d06121
+  description: |
+    Creates a new cloudWatch log group in AWS, Upon successful creation it will Delete the group. Attackers can use this technique to evade defenses by 
+    deleting the log stream. Once it is deleted, the logs created by the attackers will not be logged. https://www.elastic.co/guide/en/security/current/aws-cloudwatch-log-group-deletion.html#aws-cloudwatch-log-group-deletion
+  supported_platforms:
+  - iaas:aws
+  input_arguments:
+    cloudwatch_log_group_name:
+      description: Name of the cloudWatch log group
+      type: String
+      default: "log-test"
+    region:
+      description: Name of the region
+      type: String
+      default: "us-east-1"
+  dependencies:
+    - description: |
+        Check if ~/.aws/credentials file has a default stanza is configured
+      prereq_command: |
+        cat ~/.aws/credentials | grep "default"
+      get_prereq_command: |
+        echo Please install the aws-cli and configure your AWS defult profile using: aws configure
+  executor:
+    command: |
+       aws logs create-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
+       echo "*** Log Group Created ***"
+       aws logs delete-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
+       echo "*** Log Group Deleted ***"
+    cleanup_command: 
+    name: sh
+    elevation_required: false
+- name: AWS CloudWatch Log Stream Deletes
+  auto_generated_guid: 33ca84bc-4259-4943-bd36-4655dc420932
+  description: |
+    Creates a new cloudWatch log stream in AWS, Upon successful creation it will Delete the stream. Attackers can use this technique to evade defenses by 
+    deleting the log stream. Once it is deleted, the logs created by the attackers will not be logged. https://www.elastic.co/guide/en/security/current/aws-cloudwatch-log-stream-deletion.html
+  supported_platforms:
+  - iaas:aws
+  input_arguments:
+    cloudwatch_log_group_name:
+      description: Name of the cloudWatch log group
+      type: String
+      default: "test-logs"
+    cloudwatch_log_stream_name:
+      description: Name of the cloudWatch log stream
+      type: String
+      default: "20150601"
+    region:
+      description: Name of the region
+      type: String
+      default: "us-west-2"
+  dependencies:
+    - description: |
+        Check if ~/.aws/credentials file has a default stanza is configured
+      prereq_command: |
+        cat ~/.aws/credentials | grep "default"
+      get_prereq_command: |
+        echo Please install the aws-cli and configure your AWS defult profile using: aws configure
+  executor:
+    command: |
+       aws logs create-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
+       echo "*** Log Group Created ***"
+       aws logs create-log-stream --log-group-name #{cloudwatch_log_group_name} --log-stream-name #{cloudwatch_log_stream_name}
+       echo "*** Log Stream Created ***"
+       aws logs delete-log-stream --log-group-name #{cloudwatch_log_group_name} --log-stream-name #{cloudwatch_log_stream_name}
+       echo "*** Log Stream Deleted ***"
+       aws logs delete-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
+       echo "*** Log Group Deleted ***"
+    cleanup_command: 
     name: sh
     elevation_required: false
