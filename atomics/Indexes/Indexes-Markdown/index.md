@@ -43,6 +43,8 @@
 - [T1014 Rootkit](../../T1014/T1014.md)
   - Atomic Test #1: Loadable Kernel Module based Rootkit [linux]
   - Atomic Test #2: Loadable Kernel Module based Rootkit [linux]
+  - Atomic Test #3: dynamic-linker based rootkit (libprocesshider) [linux]
+  - Atomic Test #4: Loadable Kernel Module based Rootkit (Diamorphine) [linux]
 - T1109 Component Firmware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1036.007 Double File Extension [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1548.002 Bypass User Account Control](../../T1548.002/T1548.002.md)

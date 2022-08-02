@@ -22,6 +22,8 @@
 - [T1014 Rootkit](../../T1014/T1014.md)
   - Atomic Test #1: Loadable Kernel Module based Rootkit [linux]
   - Atomic Test #2: Loadable Kernel Module based Rootkit [linux]
+  - Atomic Test #3: dynamic-linker based rootkit (libprocesshider) [linux]
+  - Atomic Test #4: Loadable Kernel Module based Rootkit (Diamorphine) [linux]
 - T1099 Timestomp [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1548.003 Sudo and Sudo Caching](../../T1548.003/T1548.003.md)
   - Atomic Test #1: Sudo usage [macos, linux]
