@@ -1,5 +1,5 @@
 Tactic,Technique #,Technique Name,Test #,Test Name,Test GUID,Executor Name
-defense-evasion,T1218.011,Rundll32,1,Rundll32 execute JavaScript Remote Payload With GetObject,cf3bdb9a-dd11-4b6c-b0d0-9e22b68a71be,command_prompt
+defense-evasion,T1218.011,Rundll32,1,Rundll32 execute JavaScript Remote Payload With GetObject,57ba4ce9-ee7a-4f27-9928-3c70c489b59d,command_prompt
 defense-evasion,T1218.011,Rundll32,2,Rundll32 execute VBscript command,638730e7-7aed-43dc-bf8c-8117f805f5bb,command_prompt
 defense-evasion,T1218.011,Rundll32,3,Rundll32 advpack.dll Execution,d91cae26-7fc1-457b-a854-34c8aad48c89,command_prompt
 defense-evasion,T1218.011,Rundll32,4,Rundll32 ieadvpack.dll Execution,5e46a58e-cbf6-45ef-a289-ed7754603df9,command_prompt
@@ -355,9 +355,15 @@ defense-evasion,T1197,BITS Jobs,3,"Persist, Download, & Execute",62a06ec5-5754-4
 defense-evasion,T1197,BITS Jobs,4,Bits download using desktopimgdownldr.exe (cmd),afb5e09e-e385-4dee-9a94-6ee60979d114,command_prompt
 defense-evasion,T1127.001,MSBuild,1,MSBuild Bypass Using Inline Tasks (C#),58742c0f-cb01-44cd-a60b-fb26e8871c93,command_prompt
 defense-evasion,T1127.001,MSBuild,2,MSBuild Bypass Using Inline Tasks (VB),ab042179-c0c5-402f-9bc8-42741f5ce359,command_prompt
-defense-evasion,T1562.008,Disable Cloud Logs,1,AWS CloudTrail Changes,9c10dc6b-20bd-403a-8e67-50ef7d07ed4e,sh
+defense-evasion,T1562.008,Disable Cloud Logs,1,AWS - CloudTrail Changes,9c10dc6b-20bd-403a-8e67-50ef7d07ed4e,sh
 defense-evasion,T1562.008,Disable Cloud Logs,2,Azure - Eventhub Deletion,5e09bed0-7d33-453b-9bf3-caea32bff719,powershell
 defense-evasion,T1562.008,Disable Cloud Logs,3,Office 365 - Exchange Audit Log Disabled,1ee572f3-056c-4632-a7fc-7e7c42b1543c,powershell
+defense-evasion,T1562.008,Disable Cloud Logs,4,AWS - Disable CloudTrail Logging Through Event Selectors using Stratus,a27418de-bdce-4ebd-b655-38f11142bf0c,sh
+defense-evasion,T1562.008,Disable Cloud Logs,5,AWS - CloudTrail Logs Impairment Through S3 Lifecycle Rule using Stratus,22d89a2f-d475-4895-b2d4-68626d49c029,sh
+defense-evasion,T1562.008,Disable Cloud Logs,6,AWS - Remove VPC Flow Logs using Stratus,93c150f5-ad7b-4ee3-8992-df06dec2ac79,sh
+defense-evasion,T1562.008,Disable Cloud Logs,7,AWS - CloudWatch Log Group Deletes,89422c87-b57b-4a04-a8ca-802bb9d06121,sh
+defense-evasion,T1562.008,Disable Cloud Logs,8,AWS - CloudWatch Log Stream Deletes,89422c87-b57b-4a04-a12a-802bb11d06121,sh
+defense-evasion,T1562.008,Disable Cloud Logs,9,AWS CloudWatch Log Stream Deletes,33ca84bc-4259-4943-bd36-4655dc420932,sh
 defense-evasion,T1564.003,Hidden Window,1,Hidden Window,f151ee37-9e2b-47e6-80e4-550b9f999b7a,powershell
 defense-evasion,T1070.004,File Deletion,1,Delete a single file - Linux/macOS,562d737f-2fc6-4b09-8c2a-7f8ff0828480,sh
 defense-evasion,T1070.004,File Deletion,2,Delete an entire folder - Linux/macOS,a415f17e-ce8d-4ce2-a8b4-83b674e7017e,sh
@@ -529,6 +535,7 @@ privilege-escalation,T1547.002,Authentication Package,1,Authentication Package,b
 privilege-escalation,T1546.015,Component Object Model Hijacking,1,COM Hijacking - InprocServer32,48117158-d7be-441b-bc6a-d9e36e47b52b,powershell
 privilege-escalation,T1546.015,Component Object Model Hijacking,2,Powershell Execute COM Object,752191b1-7c71-445c-9dbe-21bb031b18eb,powershell
 privilege-escalation,T1546.015,Component Object Model Hijacking,3,COM Hijacking with RunDLL32 (Local Server Switch),123520cc-e998-471b-a920-bd28e3feafa0,powershell
+privilege-escalation,T1546.015,Component Object Model Hijacking,4,COM hijacking via TreatAs,33eacead-f117-4863-8eb0-5c6304fbfaa9,powershell
 privilege-escalation,T1574.009,Path Interception by Unquoted Path,1,Execution of program.exe as service with unquoted service path,2770dea7-c50f-457b-84c4-c40a47460d9f,command_prompt
 privilege-escalation,T1037.005,Startup Items,1,Add file to Local Library StartupItems,134627c3-75db-410e-bff8-7a920075f198,sh
 privilege-escalation,T1546.010,AppInit DLLs,1,Install AppInit Shim,a58d9386-3080-4242-ab5f-454c16503d18,command_prompt
@@ -754,6 +761,7 @@ persistence,T1547.002,Authentication Package,1,Authentication Package,be2590e8-4
 persistence,T1546.015,Component Object Model Hijacking,1,COM Hijacking - InprocServer32,48117158-d7be-441b-bc6a-d9e36e47b52b,powershell
 persistence,T1546.015,Component Object Model Hijacking,2,Powershell Execute COM Object,752191b1-7c71-445c-9dbe-21bb031b18eb,powershell
 persistence,T1546.015,Component Object Model Hijacking,3,COM Hijacking with RunDLL32 (Local Server Switch),123520cc-e998-471b-a920-bd28e3feafa0,powershell
+persistence,T1546.015,Component Object Model Hijacking,4,COM hijacking via TreatAs,33eacead-f117-4863-8eb0-5c6304fbfaa9,powershell
 persistence,T1137.004,Outlook Home Page,1,Install Outlook Home Page Persistence,7a91ad51-e6d2-4d43-9471-f26362f5738e,command_prompt
 persistence,T1574.009,Path Interception by Unquoted Path,1,Execution of program.exe as service with unquoted service path,2770dea7-c50f-457b-84c4-c40a47460d9f,command_prompt
 persistence,T1037.005,Startup Items,1,Add file to Local Library StartupItems,134627c3-75db-410e-bff8-7a920075f198,sh
@@ -841,7 +849,7 @@ lateral-movement,T1021.002,SMB/Windows Admin Shares,2,Map Admin Share PowerShell
 lateral-movement,T1021.002,SMB/Windows Admin Shares,3,Copy and Execute File with PsExec,0eb03d41-79e4-4393-8e57-6344856be1cf,command_prompt
 lateral-movement,T1021.002,SMB/Windows Admin Shares,4,Execute command writing output to local Admin Share,d41aaab5-bdfe-431d-a3d5-c29e9136ff46,command_prompt
 lateral-movement,T1021.006,Windows Remote Management,1,Enable Windows Remote Management,9059e8de-3d7d-4954-a322-46161880b9cf,powershell
-lateral-movement,T1021.006,Windows Remote Management,2,Invoke-Command,5295bd61-bd7e-4744-9d52-85962a4cf2d6,powershell
+lateral-movement,T1021.006,Windows Remote Management,2,Remote Code Execution with PS Credentials Using Invoke-Command,5295bd61-bd7e-4744-9d52-85962a4cf2d6,powershell
 lateral-movement,T1021.006,Windows Remote Management,3,WinRM Access with Evil-WinRM,efe86d95-44c4-4509-ae42-7bfd9d1f5b3d,powershell
 lateral-movement,T1021.003,Distributed Component Object Model,1,PowerShell Lateral Movement using MMC20,6dc74eb1-c9d6-4c53-b3b5-6f50ae339673,powershell
 lateral-movement,T1550.003,Pass the Ticket,1,Mimikatz Kerberos Ticket Attack,dbf38128-7ba7-4776-bedf-cc2eed432098,command_prompt
@@ -1158,6 +1166,7 @@ discovery,T1518.001,Security Software Discovery,3,Security Software Discovery - 
 discovery,T1518.001,Security Software Discovery,4,Security Software Discovery - ps (Linux),23b91cd2-c99c-4002-9e41-317c63e024a2,sh
 discovery,T1518.001,Security Software Discovery,5,Security Software Discovery - Sysmon Service,fe613cf3-8009-4446-9a0f-bc78a15b66c9,command_prompt
 discovery,T1518.001,Security Software Discovery,6,Security Software Discovery - AV Discovery via WMI,1553252f-14ea-4d3b-8a08-d7a4211aa945,command_prompt
+discovery,T1526,Cloud Service Discovery,1,Azure - Dump Subscription Data with MicroBurst,1e40bb1d-195e-401e-a86b-c192f55e005c,powershell
 discovery,T1018,Remote System Discovery,1,Remote System Discovery - net,85321a9c-897f-4a60-9f20-29788e50bccd,command_prompt
 discovery,T1018,Remote System Discovery,2,Remote System Discovery - net group Domain Computers,f1bf6c8f-9016-4edf-aff9-80b65f5d711f,command_prompt
 discovery,T1018,Remote System Discovery,3,Remote System Discovery - nltest,52ab5108-3f6f-42fb-8ba3-73bc054f22c8,command_prompt
@@ -1249,6 +1258,7 @@ command-and-control,T1105,Ingress Tool Transfer,22,Printer Migration Command-Lin
 command-and-control,T1105,Ingress Tool Transfer,23,Lolbas replace.exe use to copy file,54782d65-12f0-47a5-b4c1-b70ee23de6df,command_prompt
 command-and-control,T1105,Ingress Tool Transfer,24,Lolbas replace.exe use to copy UNC file,ed0335ac-0354-400c-8148-f6151d20035a,command_prompt
 command-and-control,T1105,Ingress Tool Transfer,25,certreq download,6fdaae87-c05b-42f8-842e-991a74e8376b,command_prompt
+command-and-control,T1105,Ingress Tool Transfer,26,Download a file using wscript,97116a3f-efac-4b26-8336-b9cb18c45188,command_prompt
 command-and-control,T1090.001,Internal Proxy,1,Connection Proxy,0ac21132-4485-4212-a681-349e8a6637cd,sh
 command-and-control,T1090.001,Internal Proxy,2,Connection Proxy for macOS UI,648d68c1-8bcd-4486-9abe-71c6655b6a2c,sh
 command-and-control,T1090.001,Internal Proxy,3,portproxy reg key,b8223ea9-4be2-44a6-b50a-9657a3d4e72a,powershell
@@ -1286,6 +1296,7 @@ impact,T1529,System Shutdown/Reboot,6,Shutdown System via `halt` - Linux,918f70a
 impact,T1529,System Shutdown/Reboot,7,Reboot System via `halt` - Linux,78f92e14-f1e9-4446-b3e9-f1b921f2459e,bash
 impact,T1529,System Shutdown/Reboot,8,Shutdown System via `poweroff` - Linux,73a90cd2-48a2-4ac5-8594-2af35fa909fa,bash
 impact,T1529,System Shutdown/Reboot,9,Reboot System via `poweroff` - Linux,61303105-ff60-427b-999e-efb90b314e41,bash
+impact,T1529,System Shutdown/Reboot,10,Logoff System - Windows,3d8c25b5-7ff5-4c9d-b21f-85ebd06654a4,command_prompt
 initial-access,T1133,External Remote Services,1,Running Chrome VPN Extensions via the Registry 2 vpn extension,4c8db261-a58b-42a6-a866-0a294deedde4,powershell
 initial-access,T1566.001,Spearphishing Attachment,1,Download Macro-Enabled Phishing Attachment,114ccff9-ae6d-4547-9ead-4cd69f687306,powershell
 initial-access,T1566.001,Spearphishing Attachment,2,Word spawned a command shell and used an IP address in the command line,cbb6799a-425c-4f83-9194-5447a909d67f,powershell

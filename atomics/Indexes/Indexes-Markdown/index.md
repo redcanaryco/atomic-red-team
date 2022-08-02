@@ -523,9 +523,15 @@
   - Atomic Test #2: MSBuild Bypass Using Inline Tasks (VB) [windows]
 - T1088 Bypass User Account Control [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1562.008 Disable Cloud Logs](../../T1562.008/T1562.008.md)
-  - Atomic Test #1: AWS CloudTrail Changes [iaas:aws]
+  - Atomic Test #1: AWS - CloudTrail Changes [iaas:aws]
   - Atomic Test #2: Azure - Eventhub Deletion [iaas:azure]
   - Atomic Test #3: Office 365 - Exchange Audit Log Disabled [office-365]
+  - Atomic Test #4: AWS - Disable CloudTrail Logging Through Event Selectors using Stratus [linux, macos]
+  - Atomic Test #5: AWS - CloudTrail Logs Impairment Through S3 Lifecycle Rule using Stratus [linux, macos]
+  - Atomic Test #6: AWS - Remove VPC Flow Logs using Stratus [linux, macos]
+  - Atomic Test #7: AWS - CloudWatch Log Group Deletes [iaas:aws]
+  - Atomic Test #8: AWS - CloudWatch Log Stream Deletes [iaas:aws]
+  - Atomic Test #9: AWS CloudWatch Log Stream Deletes [iaas:aws]
 - [T1564.003 Hidden Window](../../T1564.003/T1564.003.md)
   - Atomic Test #1: Hidden Window [windows]
 - T1147 Hidden Users [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -840,6 +846,7 @@
   - Atomic Test #1: COM Hijacking - InprocServer32 [windows]
   - Atomic Test #2: Powershell Execute COM Object [windows]
   - Atomic Test #3: COM Hijacking with RunDLL32 (Local Server Switch) [windows]
+  - Atomic Test #4: COM hijacking via TreatAs [windows]
 - [T1574.009 Path Interception by Unquoted Path](../../T1574.009/T1574.009.md)
   - Atomic Test #1: Execution of program.exe as service with unquoted service path [windows]
 - T1166 Setuid and Setgid [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1280,6 +1287,7 @@
   - Atomic Test #1: COM Hijacking - InprocServer32 [windows]
   - Atomic Test #2: Powershell Execute COM Object [windows]
   - Atomic Test #3: COM Hijacking with RunDLL32 (Local Server Switch) [windows]
+  - Atomic Test #4: COM hijacking via TreatAs [windows]
 - [T1137.004 Outlook Home Page](../../T1137.004/T1137.004.md)
   - Atomic Test #1: Install Outlook Home Page Persistence [windows]
 - [T1574.009 Path Interception by Unquoted Path](../../T1574.009/T1574.009.md)
@@ -1462,7 +1470,7 @@
 - T1563 Remote Service Session Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1021.006 Windows Remote Management](../../T1021.006/T1021.006.md)
   - Atomic Test #1: Enable Windows Remote Management [windows]
-  - Atomic Test #2: Invoke-Command [windows]
+  - Atomic Test #2: Remote Code Execution with PS Credentials Using Invoke-Command [windows]
   - Atomic Test #3: WinRM Access with Evil-WinRM [windows]
 - [T1021.003 Distributed Component Object Model](../../T1021.003/T1021.003.md)
   - Atomic Test #1: PowerShell Lateral Movement using MMC20 [windows]
@@ -1910,7 +1918,8 @@
   - Atomic Test #4: Security Software Discovery - ps (Linux) [linux]
   - Atomic Test #5: Security Software Discovery - Sysmon Service [windows]
   - Atomic Test #6: Security Software Discovery - AV Discovery via WMI [windows]
-- T1526 Cloud Service Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1526 Cloud Service Discovery](../../T1526/T1526.md)
+  - Atomic Test #1: Azure - Dump Subscription Data with MicroBurst [iaas:azure]
 - [T1018 Remote System Discovery](../../T1018/T1018.md)
   - Atomic Test #1: Remote System Discovery - net [windows]
   - Atomic Test #2: Remote System Discovery - net group Domain Computers [windows]
@@ -2091,6 +2100,7 @@
   - Atomic Test #23: Lolbas replace.exe use to copy file [windows]
   - Atomic Test #24: Lolbas replace.exe use to copy UNC file [windows]
   - Atomic Test #25: certreq download [windows]
+  - Atomic Test #26: Download a file using wscript [windows]
 - T1001.002 Steganography [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1008 Fallback Channels [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1090.001 Internal Proxy](../../T1090.001/T1090.001.md)
@@ -2212,6 +2222,7 @@
   - Atomic Test #7: Reboot System via `halt` - Linux [linux]
   - Atomic Test #8: Shutdown System via `poweroff` - Linux [linux]
   - Atomic Test #9: Reboot System via `poweroff` - Linux [linux]
+  - Atomic Test #10: Logoff System - Windows [windows]
 
 # initial-access
 - [T1133 External Remote Services](../../T1133/T1133.md)
