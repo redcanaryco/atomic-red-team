@@ -8,8 +8,6 @@ Atomic Red Team™ is a library of tests mapped to the
 [MITRE ATT&CK®](https://attack.mitre.org/) framework. Security teams can use
 Atomic Red Team to quickly, portably, and reproducibly test their environments.
 
-![](static/atr-demo.gif)
-
 ## Get started
 
 You can execute atomic tests directly from the command line, no installation
