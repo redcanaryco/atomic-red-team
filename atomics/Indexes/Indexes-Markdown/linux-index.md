@@ -158,12 +158,15 @@
   - Atomic Test #5: Go compile [linux, macos]
 - T1564.007 VBA Stomping [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1562.008 Disable Cloud Logs](../../T1562.008/T1562.008.md)
-  - Atomic Test #1: AWS CloudTrail Changes [iaas:aws]
+  - Atomic Test #1: AWS - CloudTrail Changes [iaas:aws]
   - Atomic Test #2: Azure - Eventhub Deletion [iaas:azure]
   - Atomic Test #3: Office 365 - Exchange Audit Log Disabled [office-365]
-  - Atomic Test #4: Disable CloudTrail Logging Through Event Selectors via Stratus [linux, macos]
-  - Atomic Test #5: AWS CloudWatch Log Group Deletes [iaas:aws]
-  - Atomic Test #6: AWS CloudWatch Log Stream Deletes [iaas:aws]
+  - Atomic Test #4: AWS - Disable CloudTrail Logging Through Event Selectors using Stratus [linux, macos]
+  - Atomic Test #5: AWS - CloudTrail Logs Impairment Through S3 Lifecycle Rule using Stratus [linux, macos]
+  - Atomic Test #6: AWS - Remove VPC Flow Logs using Stratus [linux, macos]
+  - Atomic Test #7: AWS - CloudWatch Log Group Deletes [iaas:aws]
+  - Atomic Test #8: AWS - CloudWatch Log Stream Deletes [iaas:aws]
+  - Atomic Test #9: AWS CloudWatch Log Stream Deletes [iaas:aws]
 - T1564.003 Hidden Window [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1578.002 Create Cloud Instance [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1500 Compile After Delivery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
