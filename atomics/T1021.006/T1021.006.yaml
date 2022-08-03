@@ -14,27 +14,34 @@ atomic_tests:
       Enable-PSRemoting -Force
     name: powershell
     elevation_required: true
-- name: Invoke-Command
+- name: Remote Code Execution with PS Credentials Using Invoke-Command
   auto_generated_guid: 5295bd61-bd7e-4744-9d52-85962a4cf2d6
   description: |
     Execute Invoke-command on remote host.
 
-    Upon successful execution, powershell will execute ipconfig on localhost using `invoke-command`.
+    Upon successful execution, powershell will execute whoami on specified remote host using `invoke-command`.
   supported_platforms:
   - windows
   input_arguments:
-    host_name:
-      description: Remote Windows Host Name
-      type: String
-      default: localhost
-    remote_command:
-      description: Command to execute on remote Host
-      type: String
-      default: ipconfig
+    username:
+      description: The username running the powershell command
+      type: string
+      default: $env:USERNAME
+    remotehost:
+      description: The remote hostname of the machine you are running the powershell command on.
+      type: string
+      default: $env:COMPUTERNAME
+    password:
+      description: The password to be used with the user provided in the previous input argument.
+      type: string
+      default: test12345
   executor:
-    command: |
-      invoke-command -ComputerName #{host_name} -scriptblock {#{remote_command}}
+    command: |-
+      $SecPassword = ConvertTo-SecureString "#{password}" -AsPlainText -Force
+      $Cred = New-Object System.Management.Automation.PSCredential("#{username}", $SecPassword)
+      Invoke-Command -ComputerName "#{remotehost}" -Credential $Cred -ScriptBlock {whoami}
     name: powershell
+    
 - name: WinRM Access with Evil-WinRM
   auto_generated_guid: efe86d95-44c4-4509-ae42-7bfd9d1f5b3d
   description: An adversary may attempt to use Evil-WinRM with a valid account to interact with remote systems that have WinRM enabled
