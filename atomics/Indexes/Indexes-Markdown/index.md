@@ -292,7 +292,9 @@
 - T1535 Unused/Unsupported Cloud Regions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1027.001 Binary Padding](../../T1027.001/T1027.001.md)
   - Atomic Test #1: Pad Binary to Change Hash - Linux/macOS dd [macos, linux]
-- T1484.001 Group Policy Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1484.001 Group Policy Modification](../../T1484.001/T1484.001.md)
+  - Atomic Test #1: LockBit Black - Modify Group policy settings -cmd [windows]
+  - Atomic Test #2: LockBit Black - Modify Group policy settings -Powershell [windows]
 - [T1078.001 Default Accounts](../../T1078.001/T1078.001.md)
   - Atomic Test #1: Enable Guest account with RDP capability and admin privileges [windows]
   - Atomic Test #2: Activate Guest Account [windows]
@@ -744,7 +746,9 @@
   - Atomic Test #1: Launch Daemon [macos]
 - [T1574.008 Path Interception by Search Order Hijacking](../../T1574.008/T1574.008.md)
   - Atomic Test #1: powerShell Persistence via hijacking default modules - Get-Variable.exe [windows]
-- T1484.001 Group Policy Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1484.001 Group Policy Modification](../../T1484.001/T1484.001.md)
+  - Atomic Test #1: LockBit Black - Modify Group policy settings -cmd [windows]
+  - Atomic Test #2: LockBit Black - Modify Group policy settings -Powershell [windows]
 - [T1078.001 Default Accounts](../../T1078.001/T1078.001.md)
   - Atomic Test #1: Enable Guest account with RDP capability and admin privileges [windows]
   - Atomic Test #2: Activate Guest Account [windows]
