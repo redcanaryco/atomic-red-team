@@ -165,6 +165,8 @@
   - Atomic Test #4: Opening ports for proxy - HARDRAIN [windows]
   - Atomic Test #5: Open a local port through Windows Firewall to any profile [windows]
   - Atomic Test #6: Allow Executable Through Firewall Located in Non-Standard Location [windows]
+  - Atomic Test #16: LockBit Black - Unusual Windows firewall registry modification -cmd [windows]
+  - Atomic Test #17: LockBit Black - Unusual Windows firewall registry modification -Powershell [windows]
 - T1553.003 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1207 Rogue Domain Controller](../../T1207/T1207.md)
   - Atomic Test #1: DCShadow (Active Directory) [windows]
@@ -246,6 +248,8 @@
   - Atomic Test #3: Disable Powershell ETW Provider - Windows [windows]
   - Atomic Test #4: Disable .NET Event Tracing for Windows Via Registry (cmd) [windows]
   - Atomic Test #5: Disable .NET Event Tracing for Windows Via Registry (powershell) [windows]
+  - Atomic Test #6: LockBit Black - Disable the ETW Provider of Windows Defender -cmd [windows]
+  - Atomic Test #7: LockBit Black - Disable the ETW Provider of Windows Defender -Powershell [windows]
 - T1036.002 Right-to-Left Override [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1542.002 Component Firmware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1070 Indicator Removal on Host](../../T1070/T1070.md)

@@ -28,6 +28,8 @@ defense-evasion,T1216.001,PubPrn,1,PubPrn.vbs Signed Script Bypass,9dd29a1f-1e16
 defense-evasion,T1006,Direct Volume Access,1,Read volume boot sector via DOS device path (PowerShell),88f6327e-51ec-4bbf-b2e8-3fea534eab8b,powershell
 defense-evasion,T1014,Rootkit,1,Loadable Kernel Module based Rootkit,dfb50072-e45a-4c75-a17e-a484809c8553,sh
 defense-evasion,T1014,Rootkit,2,Loadable Kernel Module based Rootkit,75483ef8-f10f-444a-bf02-62eb0e48db6f,sh
+defense-evasion,T1014,Rootkit,3,dynamic-linker based rootkit (libprocesshider),1338bf0c-fd0c-48c0-9e65-329f18e2c0d3,sh
+defense-evasion,T1014,Rootkit,4,Loadable Kernel Module based Rootkit (Diamorphine),0b996469-48c6-46e2-8155-a17f8b6c2247,sh
 defense-evasion,T1548.002,Bypass User Account Control,1,Bypass UAC using Event Viewer (cmd),5073adf8-9a50-4bd9-b298-a9bd2ead8af9,command_prompt
 defense-evasion,T1548.002,Bypass User Account Control,2,Bypass UAC using Event Viewer (PowerShell),a6ce9acf-842a-4af6-8f79-539be7608e2b,powershell
 defense-evasion,T1548.002,Bypass User Account Control,3,Bypass UAC using Fodhelper,58f641ea-12e3-499a-b684-44dee46bd182,command_prompt
@@ -164,6 +166,8 @@ defense-evasion,T1562.004,Disable or Modify System Firewall,12,Edit UFW firewall
 defense-evasion,T1562.004,Disable or Modify System Firewall,13,Edit UFW firewall sysctl.conf file,c4ae0701-88d3-4cd8-8bce-4801ed9f97e4,sh
 defense-evasion,T1562.004,Disable or Modify System Firewall,14,Edit UFW firewall main configuration file,7b697ece-8270-46b5-bbc7-6b9e27081831,sh
 defense-evasion,T1562.004,Disable or Modify System Firewall,15,Tail the UFW firewall log file,419cca0c-fa52-4572-b0d7-bc7c6f388a27,sh
+defense-evasion,T1562.004,Disable or Modify System Firewall,16,LockBit Black - Unusual Windows firewall registry modification -cmd,a4651931-ebbb-4cde-9363-ddf3d66214cb,command_prompt
+defense-evasion,T1562.004,Disable or Modify System Firewall,17,LockBit Black - Unusual Windows firewall registry modification -Powershell,80b453d1-eec5-4144-bf08-613a6c3ffe12,powershell
 defense-evasion,T1207,Rogue Domain Controller,1,DCShadow (Active Directory),0f4c5eb0-98a0-4496-9c3d-656b4f2bc8f6,powershell
 defense-evasion,T1112,Modify Registry,1,Modify Registry of Current User Profile - cmd,1324796b-d0f6-455a-b4ae-21ffee6aa6b9,command_prompt
 defense-evasion,T1112,Modify Registry,2,Modify Registry of Local Machine - cmd,282f929a-6bc5-42b8-bd93-960c3ba35afe,command_prompt
@@ -232,6 +236,8 @@ defense-evasion,T1562.006,Indicator Blocking,2,Logging Configuration Changes on 
 defense-evasion,T1562.006,Indicator Blocking,3,Disable Powershell ETW Provider - Windows,6f118276-121d-4c09-bb58-a8fb4a72ee84,powershell
 defense-evasion,T1562.006,Indicator Blocking,4,Disable .NET Event Tracing for Windows Via Registry (cmd),8a4c33be-a0d3-434a-bee6-315405edbd5b,command_prompt
 defense-evasion,T1562.006,Indicator Blocking,5,Disable .NET Event Tracing for Windows Via Registry (powershell),19c07a45-452d-4620-90ed-4c34fffbe758,powershell
+defense-evasion,T1562.006,Indicator Blocking,6,LockBit Black - Disable the ETW Provider of Windows Defender -cmd,f6df0b8e-2c83-44c7-ba5e-0fa4386bec41,command_prompt
+defense-evasion,T1562.006,Indicator Blocking,7,LockBit Black - Disable the ETW Provider of Windows Defender -Powershell,69fc085b-5444-4879-8002-b24c8e1a3e02,powershell
 defense-evasion,T1070,Indicator Removal on Host,1,Indicator Removal using FSUtil,b4115c7a-0e92-47f0-a61e-17e7218b2435,command_prompt
 defense-evasion,T1550.003,Pass the Ticket,1,Mimikatz Kerberos Ticket Attack,dbf38128-7ba7-4776-bedf-cc2eed432098,command_prompt
 defense-evasion,T1550.003,Pass the Ticket,2,Rubeus Kerberos Pass The Ticket,a2fc4ec5-12c6-4fb4-b661-961f23f359cb,powershell
@@ -355,12 +361,15 @@ defense-evasion,T1197,BITS Jobs,3,"Persist, Download, & Execute",62a06ec5-5754-4
 defense-evasion,T1197,BITS Jobs,4,Bits download using desktopimgdownldr.exe (cmd),afb5e09e-e385-4dee-9a94-6ee60979d114,command_prompt
 defense-evasion,T1127.001,MSBuild,1,MSBuild Bypass Using Inline Tasks (C#),58742c0f-cb01-44cd-a60b-fb26e8871c93,command_prompt
 defense-evasion,T1127.001,MSBuild,2,MSBuild Bypass Using Inline Tasks (VB),ab042179-c0c5-402f-9bc8-42741f5ce359,command_prompt
-defense-evasion,T1562.008,Disable Cloud Logs,1,AWS CloudTrail Changes,9c10dc6b-20bd-403a-8e67-50ef7d07ed4e,sh
+defense-evasion,T1562.008,Disable Cloud Logs,1,AWS - CloudTrail Changes,9c10dc6b-20bd-403a-8e67-50ef7d07ed4e,sh
 defense-evasion,T1562.008,Disable Cloud Logs,2,Azure - Eventhub Deletion,5e09bed0-7d33-453b-9bf3-caea32bff719,powershell
 defense-evasion,T1562.008,Disable Cloud Logs,3,Office 365 - Exchange Audit Log Disabled,1ee572f3-056c-4632-a7fc-7e7c42b1543c,powershell
-defense-evasion,T1562.008,Disable Cloud Logs,4,Disable CloudTrail Logging Through Event Selectors via Stratus,a27418de-bdce-4ebd-b655-38f11142bf0c,sh
-defense-evasion,T1562.008,Disable Cloud Logs,5,AWS CloudWatch Log Group Deletes,89422c87-b57b-4a04-a8ca-802bb9d06121,sh
-defense-evasion,T1562.008,Disable Cloud Logs,6,AWS CloudWatch Log Stream Deletes,33ca84bc-4259-4943-bd36-4655dc420932,sh
+defense-evasion,T1562.008,Disable Cloud Logs,4,AWS - Disable CloudTrail Logging Through Event Selectors using Stratus,a27418de-bdce-4ebd-b655-38f11142bf0c,sh
+defense-evasion,T1562.008,Disable Cloud Logs,5,AWS - CloudTrail Logs Impairment Through S3 Lifecycle Rule using Stratus,22d89a2f-d475-4895-b2d4-68626d49c029,sh
+defense-evasion,T1562.008,Disable Cloud Logs,6,AWS - Remove VPC Flow Logs using Stratus,93c150f5-ad7b-4ee3-8992-df06dec2ac79,sh
+defense-evasion,T1562.008,Disable Cloud Logs,7,AWS - CloudWatch Log Group Deletes,89422c87-b57b-4a04-a8ca-802bb9d06121,sh
+defense-evasion,T1562.008,Disable Cloud Logs,8,AWS - CloudWatch Log Stream Deletes,89422c87-b57b-4a04-a12a-802bb11d06121,sh
+defense-evasion,T1562.008,Disable Cloud Logs,9,AWS CloudWatch Log Stream Deletes,33ca84bc-4259-4943-bd36-4655dc420932,sh
 defense-evasion,T1564.003,Hidden Window,1,Hidden Window,f151ee37-9e2b-47e6-80e4-550b9f999b7a,powershell
 defense-evasion,T1070.004,File Deletion,1,Delete a single file - Linux/macOS,562d737f-2fc6-4b09-8c2a-7f8ff0828480,sh
 defense-evasion,T1070.004,File Deletion,2,Delete an entire folder - Linux/macOS,a415f17e-ce8d-4ce2-a8b4-83b674e7017e,sh
