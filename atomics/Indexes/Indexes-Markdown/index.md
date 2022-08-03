@@ -234,6 +234,8 @@
   - Atomic Test #13: Edit UFW firewall sysctl.conf file [linux]
   - Atomic Test #14: Edit UFW firewall main configuration file [linux]
   - Atomic Test #15: Tail the UFW firewall log file [linux]
+  - Atomic Test #16: LockBit Black - Unusual Windows firewall registry modification -cmd [windows]
+  - Atomic Test #17: LockBit Black - Unusual Windows firewall registry modification -Powershell [windows]
 - T1152 Launchctl [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1553.003 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1207 Rogue Domain Controller](../../T1207/T1207.md)
