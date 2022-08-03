@@ -43,6 +43,8 @@
 - [T1014 Rootkit](../../T1014/T1014.md)
   - Atomic Test #1: Loadable Kernel Module based Rootkit [linux]
   - Atomic Test #2: Loadable Kernel Module based Rootkit [linux]
+  - Atomic Test #3: dynamic-linker based rootkit (libprocesshider) [linux]
+  - Atomic Test #4: Loadable Kernel Module based Rootkit (Diamorphine) [linux]
 - T1109 Component Firmware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1036.007 Double File Extension [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1548.002 Bypass User Account Control](../../T1548.002/T1548.002.md)
@@ -523,12 +525,15 @@
   - Atomic Test #2: MSBuild Bypass Using Inline Tasks (VB) [windows]
 - T1088 Bypass User Account Control [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1562.008 Disable Cloud Logs](../../T1562.008/T1562.008.md)
-  - Atomic Test #1: AWS CloudTrail Changes [iaas:aws]
+  - Atomic Test #1: AWS - CloudTrail Changes [iaas:aws]
   - Atomic Test #2: Azure - Eventhub Deletion [iaas:azure]
   - Atomic Test #3: Office 365 - Exchange Audit Log Disabled [office-365]
-  - Atomic Test #4: Disable CloudTrail Logging Through Event Selectors via Stratus [linux, macos]
-  - Atomic Test #5: AWS CloudWatch Log Group Deletes [iaas:aws]
-  - Atomic Test #6: AWS CloudWatch Log Stream Deletes [iaas:aws]
+  - Atomic Test #4: AWS - Disable CloudTrail Logging Through Event Selectors using Stratus [linux, macos]
+  - Atomic Test #5: AWS - CloudTrail Logs Impairment Through S3 Lifecycle Rule using Stratus [linux, macos]
+  - Atomic Test #6: AWS - Remove VPC Flow Logs using Stratus [linux, macos]
+  - Atomic Test #7: AWS - CloudWatch Log Group Deletes [iaas:aws]
+  - Atomic Test #8: AWS - CloudWatch Log Stream Deletes [iaas:aws]
+  - Atomic Test #9: AWS CloudWatch Log Stream Deletes [iaas:aws]
 - [T1564.003 Hidden Window](../../T1564.003/T1564.003.md)
   - Atomic Test #1: Hidden Window [windows]
 - T1147 Hidden Users [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
