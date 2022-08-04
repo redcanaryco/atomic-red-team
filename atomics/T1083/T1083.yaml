@@ -117,3 +117,30 @@ atomic_tests:
     cleanup_command: |
       remove-item #{File_to_output} -ErrorAction SilentlyContinue
     name: powershell  
+- name: DirLister - create a list of accessible directories and files
+  description: |-
+    The following Atomic test installs the executable DirLister which creates files and directorie. Recently seen used as a tool along with BlackCat ransomware.
+  supported_platforms:
+  - windows
+  input_arguments:
+    dirlister_path:
+      description: 'Path to the DirLister executable '
+      type: String
+      default: PathToAtomicsFolder\T1083\bin\DirLister.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Check if DirLister.exe exists in the specified path #{dirlister_path}
+    prereq_command: |
+      if (Test-Path #{dirlister_path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1083/bin/DirLister.exe -OutFile #{dirlister_path}
+  executor:
+    command: |
+      Start-Process #{dirlister_path}
+      Start-Sleep -Second 4
+      Stop-Process -Name "DirLister"
+    cleanup_command: |
+       Remove-Item #{dirlister_path} -ErrorAction SilentlyContinue
+    name: powershell
+    elevation_required: true 
