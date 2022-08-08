@@ -151,7 +151,7 @@ atomic_tests:
   - name: 'Python pty module and spawn function used to spawn sh or bash'
     auto_generated_guid: 161d694c-b543-4434-85c3-c3a433e33792
     description: |
-      Zero-Day Exploitation of Atlassian Confluence [CVE-2022-26134] Unauthenticated RCE vulnerability - Critical severity. As per Volexity, bash shells were launched by the Confluence web application process. It had spawned a bash process which spawned a Python process that in turn spawned a bash shell. Reference: https://www.volexity.com/blog/2022/06/02/zero-day-exploitation-of-atlassian-confluence
+      Uses the Python spawn function to spawn a sh shell followed by a bash shell. Per Volexity, this technique was observed in exploitation of Atlassian Confluence [CVE-2022-26134]. Reference: https://www.volexity.com/blog/2022/06/02/zero-day-exploitation-of-atlassian-confluence
     supported_platforms:
     - linux
     dependencies: 
