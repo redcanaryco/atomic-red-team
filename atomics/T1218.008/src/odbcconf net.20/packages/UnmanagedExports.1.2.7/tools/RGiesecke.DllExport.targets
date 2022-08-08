@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <PostBuildEventDependsOn>
+      $(PostBuildEventDependsOn);
+      RGieseckeDllExport
+    </PostBuildEventDependsOn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <BuildDependsOn>
+      $(BuildDependsOn);
+      RGieseckeDllExport
+    </BuildDependsOn>
+  </PropertyGroup>
+
+  <UsingTask TaskName="RGiesecke.DllExport.MSBuild.DllExportAppDomainIsolatedTask"
+             AssemblyFile="RGiesecke.DllExport.MSBuild.dll" />
+
+  <Target Name="RGieseckeDllExport"
+          DependsOnTargets="GetFrameworkPaths">
+
+    <!--
+      These properties can still be applied to the task, but upon installation of a 
+      new version of the nuget package, the properties 
+      DllExportAttributeAssemblyName and DllExportAttributeAssemblyName will be removed from the project.
+      So, if you want to provide an alternative attribute name, the you have to name the property in your project file differently.
+      
+      e.g.:
+      DllExportAttributeAssemblyName="$(MyDllExportAttributeAssemblyName)"
+      DllExportAttributeFullName="$(MyDllExportAttributeFullName)"
+    -->
+    <PropertyGroup>
+
+			<!-- Sorry for the weird naming of those 2, but I have to prevent the upgrade from the old template to remove those from your project files -->
+			<DllExportAttributeFullNameProp Condition="'$(DllExportAttributeFullNameProp)' == ''">RGiesecke.DllExport.DllExportAttribute</DllExportAttributeFullNameProp>
+			<DllExportAttributeAssemblyNameProp Condition="'$(DllExportAttributeAssemblyNameProp)' == ''">RGiesecke.DllExport.Metadata</DllExportAttributeAssemblyNameProp>
+
+			<DllExportPlatform Condition="'$(DllExportPlatform)' == ''">$(Platform)</DllExportPlatform>
+			<DllExportPlatformTarget Condition="'$(DllExportPlatformTarget)' == ''">$(PlatformTarget)</DllExportPlatformTarget>
+			<DllExportCpuType Condition="'$(DllExportCpuType)' == ''">$(CpuType)</DllExportCpuType>
+			<DllExportEmitDebugSymbols Condition="'$(DllExportEmitDebugSymbols)' == ''">$(DebugSymbols)</DllExportEmitDebugSymbols>
+			<DllExportLeaveIntermediateFiles Condition="'$(DllExportLeaveIntermediateFiles)' == ''">false</DllExportLeaveIntermediateFiles>
+			<DllExportTimeout Condition="'$(DllExportTimeout)' == ''">$(DllExportTimeout)</DllExportTimeout>
+			<DllExportKeyContainer Condition="'$(DllExportKeyContainer)' == ''">$(KeyContainerName)$(AssemblyKeyContainerName)</DllExportKeyContainer>
+			<DllExportKeyFile Condition="'$(DllExportKeyFile)' == ''">$(KeyOriginatorFile)</DllExportKeyFile>
+			<DllExportProjectDirectory Condition="'$(DllExportProjectDirectory)' == ''">$(MSBuildProjectDirectory)</DllExportProjectDirectory>
+			<DllExportInputFileName Condition="'$(DllExportInputFileName)' == ''">$(TargetPath)</DllExportInputFileName>
+			<DllExportFrameworkPath Condition="'$(DllExportFrameworkPath)' == ''">$(TargetedFrameworkDir);$(TargetFrameworkDirectory)</DllExportFrameworkPath>
+			<DllExportLibToolPath Condition="'$(DllExportLibToolPath)' == ''">$(DevEnvDir)\..\..\VC\bin</DllExportLibToolPath>
+			<DllExportLibToolDllPath Condition="'$(DllExportLibToolDllPath)' == ''">$(DevEnvDir)</DllExportLibToolDllPath>
+			<DllExportTargetFrameworkVersion Condition="'$(DllExportTargetFrameworkVersion)' == ''">$(TargetFrameworkVersion)</DllExportTargetFrameworkVersion>
+			<DllExportSdkPath Condition="'$(DllExportSdkPath)' == ''">$(TargetFrameworkSDKToolsDirectory)</DllExportSdkPath>
+			<DllExportSkipOnAnyCpu Condition="'$(DllExportSkipOnAnyCpu)' == ''">$(NoDllExportsForAnyCpu)</DllExportSkipOnAnyCpu>
+		</PropertyGroup>
+
+		<DllExportAppDomainIsolatedTask Platform="$(DllExportPlatform)"
+                                    PlatformTarget="$(DllExportPlatformTarget)"
+                                    CpuType="$(DllExportCpuType)"
+                                    EmitDebugSymbols="$(DllExportEmitDebugSymbols)"
+                                    LeaveIntermediateFiles="$(DllExportLeaveIntermediateFiles)"
+                                    Timeout="$(DllExportTimeout)"
+                                    KeyContainer="$(DllExportKeyContainer)"
+                                    KeyFile="$(DllExportKeyFile)"
+                                    ProjectDirectory="$(DllExportProjectDirectory)"
+                                    InputFileName="$(DllExportInputFileName)"
+                                    FrameworkPath="$(DllExportFrameworkPath)"
+                                    LibToolPath="$(DllExportLibToolPath)"
+                                    LibToolDllPath="$(DllExportLibToolDllPath)"
+                                    TargetFrameworkVersion="$(DllExportTargetFrameworkVersion)"
+                                    SdkPath="$(DllExportSdkPath)"
+                                    SkipOnAnyCpu="$(DllExportSkipOnAnyCpu)"/>
+  </Target>
+</Project>

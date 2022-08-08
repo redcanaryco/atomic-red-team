@@ -31,7 +31,7 @@ atomic_tests:
       default: /tmp/keyfile_locations.txt
   executor:
     command: |
-      find #{search_path} -name id_rsa >> #{output_file}
+      find #{search_path} -name id_rsa 2>/dev/null >> #{output_file}
     cleanup_command: |
       rm #{output_file}
     name: sh
@@ -53,9 +53,9 @@ atomic_tests:
   executor:
     command: |
       mkdir #{output_folder}
-      find #{search_path} -name id_rsa -exec cp --parents {} #{output_folder} \;
+      find #{search_path} -name id_rsa 2>/dev/null -exec cp --parents {} #{output_folder} \;
     cleanup_command: |
-      rm #{output_folder}
+      rm -rf #{output_folder}
     name: sh
 - name: Copy Private SSH Keys with rsync
   auto_generated_guid: 864bb0b2-6bb5-489a-b43b-a77b3a16d68a
@@ -76,7 +76,7 @@ atomic_tests:
   executor:
     command: |
       mkdir #{output_folder}
-      find #{search_path} -name id_rsa -exec rsync -R {} #{output_folder} \;
+      find #{search_path} -name id_rsa 2>/dev/null -exec rsync -R {} #{output_folder} \;
     cleanup_command: |
       rm -rf #{output_folder}
     name: sh
@@ -99,7 +99,7 @@ atomic_tests:
   executor:
     command: |
       mkdir #{output_folder}
-      find #{search_path} -type d -name '.gnupg' -exec rsync -Rr {} #{output_folder} \;
+      find #{search_path} -type d -name '.gnupg' 2>/dev/null -exec rsync -Rr {} #{output_folder} \;
     cleanup_command: |
       rm -rf #{output_folder}
     name: sh

@@ -51,9 +51,22 @@ atomic_tests:
     Upon successful execution, cmd.exe will perform a for loop against the 192.168.1.1/24 network. Output will be via stdout.
   supported_platforms:
   - windows
-  executor:
-    command: |
-      for /l %i in (1,1,254) do ping -n 1 -w 100 192.168.1.%i
+  input_arguments:                                                                                                                                         
+    start_host:                                                                                                                                            
+      description: Last octet starting value for ping sweep.                                                                                                             
+      type: String                                                                                                                                         
+      default: "1"                                                                                                                                         
+    stop_host:                                                                                                                                             
+      description: Last octet ending value for ping sweep.                                                                                                             
+      type: String                                                                                                                                         
+      default: "254"                                                                                                                                       
+    subnet:                                                                                                                  
+      description: Subnet used for ping sweep.                                                                               
+      type: String                                                                                                           
+      default: 192.168.1                                                                                                     
+  executor:                                                                                                                  
+    command: |                                                                                                               
+      for /l %i in (#{start_host},1,#{stop_host}) do ping -n 1 -w 100 #{subnet}.%i  
     name: command_prompt
 - name: Remote System Discovery - arp
   auto_generated_guid: 2d5a61f5-0447-4be4-944a-1f8530ed6574

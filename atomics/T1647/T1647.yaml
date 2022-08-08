@@ -1,0 +1,21 @@
+attack_technique: T1647
+display_name: Plist File Modification
+atomic_tests:
+- name: Plist Modification
+  auto_generated_guid: 394a538e-09bb-4a4a-95d1-b93cf12682a8
+  description: |
+    Modify MacOS plist file in one of two directories
+  supported_platforms:
+  - macos
+  executor:
+    steps: |
+      1. Modify a .plist in
+
+          /Library/Preferences
+
+          OR
+
+          ~/Library/Preferences
+
+      2. Subsequently, follow the steps for adding and running via [Launch Agent](Persistence/Launch_Agent.md)
+    name: manual
