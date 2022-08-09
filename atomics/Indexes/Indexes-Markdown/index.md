@@ -43,6 +43,8 @@
 - [T1014 Rootkit](../../T1014/T1014.md)
   - Atomic Test #1: Loadable Kernel Module based Rootkit [linux]
   - Atomic Test #2: Loadable Kernel Module based Rootkit [linux]
+  - Atomic Test #3: dynamic-linker based rootkit (libprocesshider) [linux]
+  - Atomic Test #4: Loadable Kernel Module based Rootkit (Diamorphine) [linux]
 - T1109 Component Firmware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1036.007 Double File Extension [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1548.002 Bypass User Account Control](../../T1548.002/T1548.002.md)
@@ -232,6 +234,8 @@
   - Atomic Test #13: Edit UFW firewall sysctl.conf file [linux]
   - Atomic Test #14: Edit UFW firewall main configuration file [linux]
   - Atomic Test #15: Tail the UFW firewall log file [linux]
+  - Atomic Test #16: LockBit Black - Unusual Windows firewall registry modification -cmd [windows]
+  - Atomic Test #17: LockBit Black - Unusual Windows firewall registry modification -Powershell [windows]
 - T1152 Launchctl [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1553.003 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1207 Rogue Domain Controller](../../T1207/T1207.md)
@@ -288,7 +292,9 @@
 - T1535 Unused/Unsupported Cloud Regions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1027.001 Binary Padding](../../T1027.001/T1027.001.md)
   - Atomic Test #1: Pad Binary to Change Hash - Linux/macOS dd [macos, linux]
-- T1484.001 Group Policy Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1484.001 Group Policy Modification](../../T1484.001/T1484.001.md)
+  - Atomic Test #1: LockBit Black - Modify Group policy settings -cmd [windows]
+  - Atomic Test #2: LockBit Black - Modify Group policy settings -Powershell [windows]
 - [T1078.001 Default Accounts](../../T1078.001/T1078.001.md)
   - Atomic Test #1: Enable Guest account with RDP capability and admin privileges [windows]
   - Atomic Test #2: Activate Guest Account [windows]
@@ -331,6 +337,8 @@
   - Atomic Test #3: Disable Powershell ETW Provider - Windows [windows]
   - Atomic Test #4: Disable .NET Event Tracing for Windows Via Registry (cmd) [windows]
   - Atomic Test #5: Disable .NET Event Tracing for Windows Via Registry (powershell) [windows]
+  - Atomic Test #6: LockBit Black - Disable the ETW Provider of Windows Defender -cmd [windows]
+  - Atomic Test #7: LockBit Black - Disable the ETW Provider of Windows Defender -Powershell [windows]
 - T1562.007 Disable or Modify Cloud Firewall [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1036.002 Right-to-Left Override [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1542.002 Component Firmware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -445,6 +453,10 @@
   - Atomic Test #29: Kill antimalware protected processes using Backstab [windows]
   - Atomic Test #30: WinPwn - Kill the event log services for stealth [windows]
   - Atomic Test #31: Tamper with Windows Defender ATP using Aliases - PowerShell [windows]
+  - Atomic Test #32: LockBit Black - Disable Privacy Settings Experience Using Registry -cmd [windows]
+  - Atomic Test #33: LockBit Black - Use Registry Editor to turn on automatic logon -cmd [windows]
+  - Atomic Test #34: LockBit Black - Disable Privacy Settings Experience Using Registry -Powershell [windows]
+  - Atomic Test #35: Lockbit Black - Use Registry Editor to turn on automatic logon -Powershell [windows]
 - T1601 Modify System Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -523,12 +535,15 @@
   - Atomic Test #2: MSBuild Bypass Using Inline Tasks (VB) [windows]
 - T1088 Bypass User Account Control [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1562.008 Disable Cloud Logs](../../T1562.008/T1562.008.md)
-  - Atomic Test #1: AWS CloudTrail Changes [iaas:aws]
+  - Atomic Test #1: AWS - CloudTrail Changes [iaas:aws]
   - Atomic Test #2: Azure - Eventhub Deletion [iaas:azure]
   - Atomic Test #3: Office 365 - Exchange Audit Log Disabled [office-365]
-  - Atomic Test #4: Disable CloudTrail Logging Through Event Selectors via Stratus [linux, macos]
-  - Atomic Test #5: AWS CloudWatch Log Group Deletes [iaas:aws]
-  - Atomic Test #6: AWS CloudWatch Log Stream Deletes [iaas:aws]
+  - Atomic Test #4: AWS - Disable CloudTrail Logging Through Event Selectors using Stratus [linux, macos]
+  - Atomic Test #5: AWS - CloudTrail Logs Impairment Through S3 Lifecycle Rule using Stratus [linux, macos]
+  - Atomic Test #6: AWS - Remove VPC Flow Logs using Stratus [linux, macos]
+  - Atomic Test #7: AWS - CloudWatch Log Group Deletes [iaas:aws]
+  - Atomic Test #8: AWS - CloudWatch Log Stream Deletes [iaas:aws]
+  - Atomic Test #9: AWS CloudWatch Log Stream Deletes [iaas:aws]
 - [T1564.003 Hidden Window](../../T1564.003/T1564.003.md)
   - Atomic Test #1: Hidden Window [windows]
 - T1147 Hidden Users [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -735,7 +750,9 @@
   - Atomic Test #1: Launch Daemon [macos]
 - [T1574.008 Path Interception by Search Order Hijacking](../../T1574.008/T1574.008.md)
   - Atomic Test #1: powerShell Persistence via hijacking default modules - Get-Variable.exe [windows]
-- T1484.001 Group Policy Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1484.001 Group Policy Modification](../../T1484.001/T1484.001.md)
+  - Atomic Test #1: LockBit Black - Modify Group policy settings -cmd [windows]
+  - Atomic Test #2: LockBit Black - Modify Group policy settings -Powershell [windows]
 - [T1078.001 Default Accounts](../../T1078.001/T1078.001.md)
   - Atomic Test #1: Enable Guest account with RDP capability and admin privileges [windows]
   - Atomic Test #2: Activate Guest Account [windows]
