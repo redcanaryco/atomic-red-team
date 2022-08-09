@@ -117,9 +117,11 @@ atomic_tests:
     cleanup_command: |
       remove-item #{File_to_output} -ErrorAction SilentlyContinue
     name: powershell  
-- name: DirLister - create a list of accessible directories and files
+- name: Launch DirLister Executable
   description: |-
-    The following Atomic test installs the executable DirLister which creates files and directories. Recently seen used as a tool along with BlackCat ransomware.
+    Launches the DirLister executable for a short period of time and then exits.
+    
+    Recently seen used by [BlackCat ransomware](https://news.sophos.com/en-us/2022/07/14/blackcat-ransomware-attacks-not-merely-a-byproduct-of-bad-luck/) to create a list of accessible directories and files.
   supported_platforms:
   - windows
   input_arguments:
@@ -130,16 +132,19 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      Check if DirLister.exe exists in the specified path #{dirlister_path}
+      DirLister.exe must exist in the specified path #{dirlister_path}
     prereq_command: |
       if (Test-Path #{dirlister_path}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest https://github.com/SanderSade/DirLister/releases/download/v2.beta4/DirLister.v2.beta4.zip -OutFile #{dirlister_path}
-      Expand-Archive -Path #{dirlister_path}\TDirLister.v2.beta4.zip -DestinationPath #{dirlister_path}\TDirLister.v2.beta4
+      $parentpath = Split-Path "#{dirlister_path}"
+      Invoke-WebRequest https://github.com/SanderSade/DirLister/releases/download/v2.beta4/DirLister.v2.beta4.zip -OutFile $env:TEMP\TDirLister.v2.beta4.zip
+      New-Item -ItemType Directory -Force -Path $parentpath | Out-Null
+      Expand-Archive -Path $env:TEMP\TDirLister.v2.beta4.zip -DestinationPath $env:TEMP\TDirLister.v2.beta4 -Force
+      Copy-Item $env:TEMP\TDirLister.v2.beta4\* $parentpath -Recurse
+      Remove-Item $env:TEMP\TDirLister.v2.beta4.zip,$env:TEMP\TDirLister.v2.beta4 -Recurse -ErrorAction Ignore
   executor:
     command: |
       Start-Process #{dirlister_path}
       Start-Sleep -Second 4
       Stop-Process -Name "DirLister"
     name: powershell
-    elevation_required: true 
