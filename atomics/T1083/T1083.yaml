@@ -134,13 +134,12 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{dirlister_path}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1083/bin/DirLister.exe -OutFile #{dirlister_path}
+      Invoke-WebRequest https://github.com/SanderSade/DirLister/releases/download/v2.beta4/DirLister.v2.beta4.zip -OutFile #{dirlister_path}
+      Expand-Archive -Path #{dirlister_path}\TDirLister.v2.beta4.zip -DestinationPath #{dirlister_path}\TDirLister.v2.beta4
   executor:
     command: |
       Start-Process #{dirlister_path}
       Start-Sleep -Second 4
       Stop-Process -Name "DirLister"
-    cleanup_command: |
-       Remove-Item #{dirlister_path} -ErrorAction SilentlyContinue
     name: powershell
     elevation_required: true 
