@@ -44,3 +44,20 @@ atomic_tests:
       remove-item $env:temp\T1552.005Test1.txt -force -erroraction silentlycontinue
     name: powershell
     elevation_required: true
+- name: Azure - Dump Azure Instance Metadata from Virtual Machines
+  description: |
+    This test invokes a web request to the default Instance Metadata API of 169.254.169.254 in order to dump the data contained within it to a file. 
+    See: https://www.sans.org/blog/cloud-instance-metadata-services-imds-/
+  supported_platforms:
+  - iaas:azure
+  input_arguments:
+    output_file:
+      description: File to output metadata to
+      type: String
+      default: $env:temp\T1552.005Test2.txt
+  executor:
+    command: |
+      Invoke-RestMethod -Headers @{"Metadata"="true"} -Method GET -Uri "http://169.254.169.254/metadata/instance?api-version=2021-02-01" | ConvertTo-Json -Depth 64 > #{output_file}
+    cleanup_command: |
+      remove-item #{output_file} -force -erroraction silentlycontinue
+    name: powershell
