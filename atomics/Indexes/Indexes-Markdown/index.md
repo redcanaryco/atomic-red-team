@@ -1888,6 +1888,7 @@
   - Atomic Test #3: Nix File and Directory Discovery [macos, linux]
   - Atomic Test #4: Nix File and Directory Discovery 2 [macos, linux]
   - Atomic Test #5: Simulating MAZE Directory Enumeration [windows]
+  - Atomic Test #6: Launch DirLister Executable [windows]
 - [T1049 System Network Connections Discovery](../../T1049/T1049.md)
   - Atomic Test #1: System Network Connections Discovery [windows]
   - Atomic Test #2: System Network Connections Discovery with PowerShell [windows]

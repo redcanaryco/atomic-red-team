@@ -1382,6 +1382,7 @@
   - Atomic Test #1: File and Directory Discovery (cmd.exe) [windows]
   - Atomic Test #2: File and Directory Discovery (PowerShell) [windows]
   - Atomic Test #5: Simulating MAZE Directory Enumeration [windows]
+  - Atomic Test #6: Launch DirLister Executable [windows]
 - [T1049 System Network Connections Discovery](../../T1049/T1049.md)
   - Atomic Test #1: System Network Connections Discovery [windows]
   - Atomic Test #2: System Network Connections Discovery with PowerShell [windows]
