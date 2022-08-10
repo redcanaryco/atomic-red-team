@@ -1555,6 +1555,7 @@
   - Atomic Test #7: WinPwn - Loot local Credentials - Dump SAM-File for NTLM Hashes [windows]
 - [T1552.005 Cloud Instance Metadata API](../../T1552.005/T1552.005.md)
   - Atomic Test #1: Azure - Search Azure AD User Attributes for Passwords [azure-ad]
+  - Atomic Test #2: Azure - Dump Azure Instance Metadata from Virtual Machines [iaas:azure]
 - T1555.002 Securityd Memory [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1522 Cloud Instance Metadata API [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1110.002 Password Cracking](../../T1110.002/T1110.002.md)
