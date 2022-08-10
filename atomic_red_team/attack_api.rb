@@ -75,7 +75,7 @@ class Attack
     techniques_by_tactic = Hash.new {|h, k| h[k] = []}
     techniques.each do |technique|
       next unless !technique['x_mitre_platforms'].nil?
-      next unless technique['x_mitre_platforms'].any? { |platform| platform.downcase =~ only_platform }
+      next unless technique['x_mitre_platforms'].any? { |platform| platform.downcase.sub(" ", "-") =~ only_platform }
 
       technique.fetch('kill_chain_phases', []).select { |phase| phase['kill_chain_name'] == 'mitre-attack' }.each do |tactic|
         techniques_by_tactic[tactic.fetch('phase_name')] << technique
