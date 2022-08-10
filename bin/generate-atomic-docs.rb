@@ -42,13 +42,21 @@ class AtomicRedTeamDocs
     generate_index! 'Windows', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/windows-index.md", only_platform: /windows/
     generate_index! 'macOS', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/macos-index.md", only_platform: /macos/
     generate_index! 'Linux', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/linux-index.md", only_platform: /^(?!windows|macos).*$/
-    generate_index! 'Cloud', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/cloud-index.md", only_platform: /iaas/
+    generate_index! 'IaaS', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/iaas-index.md", only_platform: /iaas/
+    generate_index! 'Containers', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/containers-index.md", only_platform: /containers/
+    generate_index! 'Office 365', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/office-365-index.md", only_platform: /office-365/
+    generate_index! 'Google Workspace', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/google-workspace-index.md", only_platform: /google-workspace/
+    generate_index! 'Azure AD', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/azure-ad-index.md", only_platform: /azure-ad/
 
     generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/index.csv"
     generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/windows-index.csv", only_platform: /windows/
     generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/macos-index.csv", only_platform: /macos/
     generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/linux-index.csv", only_platform: /^(?!windows|macos).*$/
-    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/cloud-index.csv", only_platform: /iaas/
+    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/iaas-index.csv", only_platform: /iaas/
+    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/containers-index.csv", only_platform: /containers/
+    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/office-365-index.csv", only_platform: /office-365/
+    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/google-workspace-index.csv", only_platform: /google-workspace/
+    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/azure-ad-index.csv", only_platform: /azure-ad/
 
     generate_yaml_index! "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/index.yaml"
     generate_navigator_layer! "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer.json", \
