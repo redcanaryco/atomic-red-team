@@ -117,3 +117,34 @@ atomic_tests:
     cleanup_command: |
       remove-item #{File_to_output} -ErrorAction SilentlyContinue
     name: powershell  
+- name: Launch DirLister Executable
+  description: |-
+    Launches the DirLister executable for a short period of time and then exits.
+    
+    Recently seen used by [BlackCat ransomware](https://news.sophos.com/en-us/2022/07/14/blackcat-ransomware-attacks-not-merely-a-byproduct-of-bad-luck/) to create a list of accessible directories and files.
+  supported_platforms:
+  - windows
+  input_arguments:
+    dirlister_path:
+      description: 'Path to the DirLister executable '
+      type: String
+      default: PathToAtomicsFolder\T1083\bin\DirLister.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      DirLister.exe must exist in the specified path #{dirlister_path}
+    prereq_command: |
+      if (Test-Path #{dirlister_path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      $parentpath = Split-Path "#{dirlister_path}"
+      Invoke-WebRequest https://github.com/SanderSade/DirLister/releases/download/v2.beta4/DirLister.v2.beta4.zip -OutFile $env:TEMP\TDirLister.v2.beta4.zip
+      New-Item -ItemType Directory -Force -Path $parentpath | Out-Null
+      Expand-Archive -Path $env:TEMP\TDirLister.v2.beta4.zip -DestinationPath $env:TEMP\TDirLister.v2.beta4 -Force
+      Copy-Item $env:TEMP\TDirLister.v2.beta4\* $parentpath -Recurse
+      Remove-Item $env:TEMP\TDirLister.v2.beta4.zip,$env:TEMP\TDirLister.v2.beta4 -Recurse -ErrorAction Ignore
+  executor:
+    command: |
+      Start-Process #{dirlister_path}
+      Start-Sleep -Second 4
+      Stop-Process -Name "DirLister"
+    name: powershell
