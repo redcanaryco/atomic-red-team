@@ -81,3 +81,32 @@ atomic_tests:
     cleanup_command: |
       remove-item #{output_file} -erroraction silentlycontinue
     name: powershell
+- name: AWS - Scan for Anonymous Access to S3 
+  description: |
+    Upon successful execution, this test will test for anonymous access to AWS S3 buckets and dumps all the files to a local folder. 
+  supported_platforms:
+  - iaas:aws
+  input_arguments:
+    s3_bucket_name:
+      description: Name of the bucket
+      type: String
+      default: "redatomic-test2"
+  dependencies:
+    - description: |
+        Check if ~/.aws/credentials file has a default stanza is configured
+      prereq_command: |
+        cat ~/.aws/credentials | grep "default"
+        aws s3api create-bucket --bucket #{s3_bucket_name}
+        aws s3api put-bucket-policy --bucket #{s3_bucket_name} --policy file://$PathToAtomicsFolder/T1530/src/policy.json
+        touch /tmp/T1530.txt
+        aws s3 cp /tmp/T1530.txt s3://#{s3_bucket_name}
+      get_prereq_command: |
+        echo Please install the aws-cli and configure your AWS default profile using: aws configure
+  executor:
+    command: |
+       aws --no-sign-request s3 cp --recursive s3://#{s3_bucket_name} /tmp/#{s3_bucket_name}
+    cleanup_command: |
+       aws s3 rb s3://#{s3_bucket_name} --force 
+       rm -rf /tmp/#{s3_bucket_name}
+    name: sh
+    elevation_required: false
