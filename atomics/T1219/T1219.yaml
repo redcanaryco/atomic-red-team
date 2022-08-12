@@ -200,10 +200,8 @@ atomic_tests:
       Invoke-WebRequest -OutFile C:\Users\$env:username\Desktop\UltraViewer.exe https://www.ultraviewer.net/en/UltraViewer_setup_6.5_en.exe
       Start-Process -Wait -FilePath "C:\Users\$env:username\Desktop\UltraViewer.exe" -Argument "/silent" -PassThru
       Start-Process 'C:\Program Files (x86)\UltraViewer\UltraViewer_Desktop.exe'
-      Start-Sleep -Seconds 2
-      Stop-Process -Name "UltraViewer_Desktop" -Force
     cleanup_command: | 
-      Stop-Process -Name "UltraViewer_Desktop" -Force
+      Stop-Process -Name "UltraViewer_Desktop" -Force -ErrorAction SilentlyContinue
     name: powershell
     elevation_required: True
   
