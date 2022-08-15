@@ -235,6 +235,7 @@
 - [T1530 Data from Cloud Storage Object](../../T1530/T1530.md)
   - Atomic Test #1: Azure - Enumerate Azure Blobs with MicroBurst [iaas:azure]
   - Atomic Test #2: Azure - Scan for Anonymous Access to Azure Storage (Powershell) [iaas:azure]
+  - Atomic Test #3: AWS - Scan for Anonymous Access to S3 [iaas:aws]
 - T1074.002 Remote Data Staging [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1005 Data from Local System [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1560.002 Archive via Library](../../T1560.002/T1560.002.md)
