@@ -24,3 +24,33 @@ atomic_tests:
     cleanup_command: |
       reg DELETE HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\microphone\NonPackaged\C:#Windows#Temp#atomic.exe /f
     name: command_prompt
+- name: using Quicktime
+  description: |
+   Use AppleScript to get Quicktime Player to record an audio file from the default microphone.
+
+   Should create a non-empty m4a file with sound from the microphone.
+
+   - requires Automation permissions but no additional microphone permissions.
+  supported_platforms:
+  - macos
+  input_arguments:
+    filename:
+      description: Location of the script
+      type: Path
+      default: PathToAtomicsFolder/T1123/src/T1123.sh
+    audiofile:
+      description: Location of the recorded audio file
+      type: Path
+      default: ./T1123.m4a
+    duration:
+      description: Length of recording to make in seconds
+      type: Integer
+      default: 5
+  executor:
+    command: |
+      sh #{filename} #{duration}
+    cleanup_command: |
+      if test -w #{audiofile}; then
+        rm #{audiofile}
+      fi
+    name: sh 
