@@ -1896,7 +1896,8 @@
   - Atomic Test #3: System Network Connections Discovery Linux & MacOS [linux, macos]
   - Atomic Test #4: System Discovery using SharpView [windows]
 - T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1619 Cloud Storage Object Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1619 Cloud Storage Object Discovery](../../T1619/T1619.md)
+  - Atomic Test #1: AWS S3 Enumeration [iaas:azure]
 - T1087.004 Cloud Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1057 Process Discovery](../../T1057/T1057.md)
   - Atomic Test #1: Process Discovery - ps [macos, linux]
