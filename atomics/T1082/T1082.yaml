@@ -325,3 +325,13 @@ atomic_tests:
       remove-item $env:temp\$resultsfolder -recurse -force -erroraction silentlycontinue
     name: powershell
     elevation_required: true
+- name: Linux List Kernel Modules
+  description: |
+    Identify kernel modules installed. Upon successful execution stdout will display kernel modules installed on host.
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      sudo lsmod
+      sudo kmod list
+    name: sh
