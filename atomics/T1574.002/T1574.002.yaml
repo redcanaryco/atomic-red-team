@@ -35,7 +35,7 @@ atomic_tests:
 
 - name: DLL Side-Loading using the dotnet startup hook environment variable
   description: |
-    Utilizing the dotnet_startup_hooks environment variable, this method allows for registering a global method in an assembly that will be executed whenever a .net core application is started. This unlocks a whole range of scenarios, from injecting a profiler to tweaking a static context in a given environment.
+    Utilizing the dotnet_startup_hooks environment variable, this method allows for registering a global method in an assembly that will be executed whenever a .net core application is started. This unlocks a whole range of scenarios, from injecting a profiler to tweaking a static context in a given environment. [blog post](https://medium.com/criteo-engineering/c-have-some-fun-with-net-core-startup-hooks-498b9ad001e1)
   supported_platforms:
   - windows
   input_arguments:
@@ -50,11 +50,18 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      preloader.dll must exist
+      .Net SDK must be installed
     prereq_command: |
-      if (Test-Path C:\Program Files\dotnet\dotnet.exe) {exit 0} else {exit 1}
+      if (Test-Path "C:\Program Files\dotnet\dotnet.exe") {exit 0} else {exit 1}
     get_prereq_command: |
       winget install Microsoft.DotNet.SDK.6 --accept-source-agreements --accept-package-agreements -h > $null
+      echo.
+  - description: |
+      preloader must exist
+    prereq_command: |
+      if (Test-Path "#{preloader_dll}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1574.002/bin/preloader?raw=true" -OutFile "#{preloader_dll}"
   executor:
     command: |
       set DOTNET_STARTUP_HOOKS=#{preloader_dll}
