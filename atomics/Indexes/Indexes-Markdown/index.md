@@ -590,6 +590,7 @@
   - Atomic Test #3: Invoke-WMIExec Pass the Hash [windows]
 - [T1574.002 DLL Side-Loading](../../T1574.002/T1574.002.md)
   - Atomic Test #1: DLL Side-Loading using the Notepad++ GUP.exe binary [windows]
+  - Atomic Test #2: DLL Side-Loading using the dotnet startup hook environment variable [windows]
 - T1126 Network Share Connection Removal [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1055.008 Ptrace System Calls [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1055.015 ListPlanting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -657,6 +658,7 @@
   - Atomic Test #6: WMI Invoke-CimMethod Scheduled Task [windows]
   - Atomic Test #7: Scheduled Task Executing Base64 Encoded Commands From Registry [windows]
   - Atomic Test #8: Import XML Schedule Task with Hidden Attribute [windows]
+  - Atomic Test #9: PowerShell Modify A Scheduled Task [windows]
 - T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1150 Plist Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574.007 Path Interception by PATH Environment Variable [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -895,6 +897,7 @@
   - Atomic Test #2: Re-Opened Applications [macos]
 - [T1574.002 DLL Side-Loading](../../T1574.002/T1574.002.md)
   - Atomic Test #1: DLL Side-Loading using the Notepad++ GUP.exe binary [windows]
+  - Atomic Test #2: DLL Side-Loading using the dotnet startup hook environment variable [windows]
 - T1160 Launch Daemon [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1055.008 Ptrace System Calls [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1037.001 Logon Script (Windows)](../../T1037.001/T1037.001.md)
@@ -933,6 +936,7 @@
   - Atomic Test #6: WMI Invoke-CimMethod Scheduled Task [windows]
   - Atomic Test #7: Scheduled Task Executing Base64 Encoded Commands From Registry [windows]
   - Atomic Test #8: Import XML Schedule Task with Hidden Attribute [windows]
+  - Atomic Test #9: PowerShell Modify A Scheduled Task [windows]
 - [T1047 Windows Management Instrumentation](../../T1047/T1047.md)
   - Atomic Test #1: WMI Reconnaissance Users [windows]
   - Atomic Test #2: WMI Reconnaissance Processes [windows]
@@ -1082,6 +1086,7 @@
   - Atomic Test #6: WMI Invoke-CimMethod Scheduled Task [windows]
   - Atomic Test #7: Scheduled Task Executing Base64 Encoded Commands From Registry [windows]
   - Atomic Test #8: Import XML Schedule Task with Hidden Attribute [windows]
+  - Atomic Test #9: PowerShell Modify A Scheduled Task [windows]
 - T1156 Malicious Shell Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1067 Bootkit [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1347,6 +1352,7 @@
   - Atomic Test #2: Re-Opened Applications [macos]
 - [T1574.002 DLL Side-Loading](../../T1574.002/T1574.002.md)
   - Atomic Test #1: DLL Side-Loading using the Notepad++ GUP.exe binary [windows]
+  - Atomic Test #2: DLL Side-Loading using the dotnet startup hook environment variable [windows]
 - T1098.002 Additional Email Delegate Permissions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1084 Windows Management Instrumentation Event Subscription [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1160 Launch Daemon [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1426,6 +1432,7 @@
   - Atomic Test #2: Execute Commands from Clipboard using PowerShell [windows]
   - Atomic Test #3: Execute commands from clipboard [macos]
   - Atomic Test #4: Collect Clipboard Data via VBA [windows]
+  - Atomic Test #5: Add or copy content to clipboard with xClip [linux]
 - [T1530 Data from Cloud Storage Object](../../T1530/T1530.md)
   - Atomic Test #1: Azure - Enumerate Azure Blobs with MicroBurst [iaas:azure]
   - Atomic Test #2: Azure - Scan for Anonymous Access to Azure Storage (Powershell) [iaas:azure]
@@ -1850,6 +1857,7 @@
   - Atomic Test #21: WinPwn - PowerSharpPack - Sharpup checking common Privesc vectors [windows]
   - Atomic Test #22: WinPwn - PowerSharpPack - Seatbelt [windows]
   - Atomic Test #23: Azure Security Scan with SkyArk [azure-ad]
+  - Atomic Test #24: Linux List Kernel Modules [linux]
 - [T1010 Application Window Discovery](../../T1010/T1010.md)
   - Atomic Test #1: List Process Main Windows - C# .NET [windows]
 - T1087.003 Email Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -2119,6 +2127,7 @@
   - Atomic Test #24: Lolbas replace.exe use to copy UNC file [windows]
   - Atomic Test #25: certreq download [windows]
   - Atomic Test #26: Download a file using wscript [windows]
+  - Atomic Test #27: Linux Download File and Run [linux]
 - T1001.002 Steganography [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1008 Fallback Channels [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1090.001 Internal Proxy](../../T1090.001/T1090.001.md)
