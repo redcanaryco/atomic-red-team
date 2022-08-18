@@ -32,3 +32,42 @@ atomic_tests:
     cleanup_command: |
       taskkill /F /IM #{process_name} >nul 2>&1
     name: command_prompt
+
+- name: DLL Side-Loading using the dotnet startup hook environment variable
+  auto_generated_guid: d322cdd7-7d60-46e3-9111-648848da7c02
+  description: |
+    Utilizing the dotnet_startup_hooks environment variable, this method allows for registering a global method in an assembly that will be executed whenever a .net core application is started. This unlocks a whole range of scenarios, from injecting a profiler to tweaking a static context in a given environment. [blog post](https://medium.com/criteo-engineering/c-have-some-fun-with-net-core-startup-hooks-498b9ad001e1)
+  supported_platforms:
+  - windows
+  input_arguments:
+    process_name:
+      description: Name of the created process
+      type: String
+      default: calculator.exe
+    preloader_dll:
+      description: library for interfacing with the dotnet framework
+      type: Path
+      default: PathToAtomicsFolder\T1574.002\bin\preloader
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      .Net SDK must be installed
+    prereq_command: |
+      if (Test-Path "C:\Program Files\dotnet\dotnet.exe") {exit 0} else {exit 1}
+    get_prereq_command: |
+      winget install Microsoft.DotNet.SDK.6 --accept-source-agreements --accept-package-agreements -h > $null
+      echo.
+  - description: |
+      preloader must exist
+    prereq_command: |
+      if (Test-Path "#{preloader_dll}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1574.002/bin/preloader?raw=true" -OutFile "#{preloader_dll}"
+  executor:
+    command: |
+      set DOTNET_STARTUP_HOOKS=#{preloader_dll}
+      dotnet -h > nul
+      echo.
+    cleanup_command: |
+      taskkill /F /IM #{process_name} >nul 2>&1
+    name: command_prompt
