@@ -757,4 +757,15 @@ atomic_tests:
     cleanup_command: |
       del #{local_path} >nul 2>&1
     name: command_prompt
+	dependencies: 
+    - description: |
+        NimGrab must be installed on system.
+      prereq_command: |
+        if (Test-Path #{nimgrab_path}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        Invoke-WebRequest "https://nim-lang.org/download/nim-1.6.6_x64.zip" -Outfile $env:temp\nim.zip
+        Expand-Archive -Path $env:temp\nim.zip -DestinationPath $env:temp\nim
+        Copy-Item $env:temp\nim\nim-1.6.6\bin\nimgrab.exe <destination path of your choosing>
+        Remove-Item $env:temp\nim
+        Remove-Item $env:temp\nim.zip
  
