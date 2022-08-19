@@ -800,7 +800,8 @@
 - [T1546.009 AppCert DLLs](../../T1546.009/T1546.009.md)
   - Atomic Test #1: Create registry persistence via AppCert DLL [windows]
 - T1055.002 Portable Executable Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1547.015 Login Items [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1547.015 Login Items](../../T1547.015/T1547.015.md)
+  - Atomic Test #1: Persistence by modifying Windows Terminal profile [windows]
 - [T1134.001 Token Impersonation/Theft](../../T1134.001/T1134.001.md)
   - Atomic Test #1: Named pipe client impersonation [windows]
   - Atomic Test #2: `SeDebugPrivilege` token duplication [windows]
@@ -1238,7 +1239,8 @@
   - Atomic Test #1: Create registry persistence via AppCert DLL [windows]
 - T1098.005 Device Registration [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1547.015 Login Items [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1547.015 Login Items](../../T1547.015/T1547.015.md)
+  - Atomic Test #1: Persistence by modifying Windows Terminal profile [windows]
 - T1205.001 Port Knocking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1098.001 Additional Cloud Credentials](../../T1098.001/T1098.001.md)
   - Atomic Test #1: Azure AD Application Hijacking - Service Principal [azure-ad]
