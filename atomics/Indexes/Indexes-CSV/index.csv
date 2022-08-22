@@ -262,6 +262,7 @@ defense-evasion,T1218.005,Mshta,9,Invoke HTML Application - Simulate Lateral Mov
 defense-evasion,T1218.005,Mshta,10,Mshta used to Execute PowerShell,8707a805-2b76-4f32-b1c0-14e558205772,command_prompt
 defense-evasion,T1134.001,Token Impersonation/Theft,1,Named pipe client impersonation,90db9e27-8e7c-4c04-b602-a45927884966,powershell
 defense-evasion,T1134.001,Token Impersonation/Theft,2,`SeDebugPrivilege` token duplication,34f0a430-9d04-4d98-bcb5-1989f14719f0,powershell
+defense-evasion,T1134.001,Token Impersonation/Theft,3,Launch NSudo Executable,7be1bc0f-d8e5-4345-9333-f5f67d742cb9,powershell
 defense-evasion,T1564.002,Hidden Users,1,Create Hidden User using UniqueID < 500,4238a7f0-a980-4fff-98a2-dfc0a363d507,sh
 defense-evasion,T1564.002,Hidden Users,2,Create Hidden User using IsHidden option,de87ed7b-52c3-43fd-9554-730f695e7f31,sh
 defense-evasion,T1564.002,Hidden Users,3,Create Hidden User in Registry,173126b7-afe4-45eb-8680-fa9f6400431c,command_prompt
@@ -517,8 +518,10 @@ privilege-escalation,T1546.008,Accessibility Features,1,Attaches Command Prompt 
 privilege-escalation,T1546.008,Accessibility Features,2,Replace binary of sticky keys,934e90cf-29ca-48b3-863c-411737ad44e3,command_prompt
 privilege-escalation,T1055.004,Asynchronous Procedure Call,1,Process Injection via C#,611b39b7-e243-4c81-87a4-7145a90358b1,command_prompt
 privilege-escalation,T1546.009,AppCert DLLs,1,Create registry persistence via AppCert DLL,a5ad6104-5bab-4c43-b295-b4c44c7c6b05,powershell
+privilege-escalation,T1547.015,Login Items,1,Persistence by modifying Windows Terminal profile,ec5d76ef-82fe-48da-b931-bdb25a62bc65,powershell
 privilege-escalation,T1134.001,Token Impersonation/Theft,1,Named pipe client impersonation,90db9e27-8e7c-4c04-b602-a45927884966,powershell
 privilege-escalation,T1134.001,Token Impersonation/Theft,2,`SeDebugPrivilege` token duplication,34f0a430-9d04-4d98-bcb5-1989f14719f0,powershell
+privilege-escalation,T1134.001,Token Impersonation/Theft,3,Launch NSudo Executable,7be1bc0f-d8e5-4345-9333-f5f67d742cb9,powershell
 privilege-escalation,T1546.003,Windows Management Instrumentation Event Subscription,1,Persistence via WMI Event Subscription - CommandLineEventConsumer,3c64f177-28e2-49eb-a799-d767b24dd1e0,powershell
 privilege-escalation,T1546.003,Windows Management Instrumentation Event Subscription,2,Persistence via WMI Event Subscription - ActiveScriptEventConsumer,fecd0dfd-fb55-45fa-a10b-6250272d0832,powershell
 privilege-escalation,T1546.003,Windows Management Instrumentation Event Subscription,3,Windows MOFComp.exe Load MOF File,29786d7e-8916-4de6-9c55-be7b093b2706,powershell
@@ -743,6 +746,7 @@ persistence,T1136.002,Domain Account,1,Create a new Windows domain admin user,fc
 persistence,T1136.002,Domain Account,2,Create a new account similar to ANONYMOUS LOGON,dc7726d2-8ccb-4cc6-af22-0d5afb53a548,command_prompt
 persistence,T1136.002,Domain Account,3,Create a new Domain Account using PowerShell,5a3497a4-1568-4663-b12a-d4a5ed70c7d7,powershell
 persistence,T1546.009,AppCert DLLs,1,Create registry persistence via AppCert DLL,a5ad6104-5bab-4c43-b295-b4c44c7c6b05,powershell
+persistence,T1547.015,Login Items,1,Persistence by modifying Windows Terminal profile,ec5d76ef-82fe-48da-b931-bdb25a62bc65,powershell
 persistence,T1098.001,Additional Cloud Credentials,1,Azure AD Application Hijacking - Service Principal,b8e747c3-bdf7-4d71-bce2-f1df2a057406,powershell
 persistence,T1098.001,Additional Cloud Credentials,2,Azure AD Application Hijacking - App Registration,a12b5531-acab-4618-a470-0dafb294a87a,powershell
 persistence,T1098.001,Additional Cloud Credentials,3,AWS - Create Access Key and Secret Key,8822c3b0-d9f9-4daf-a043-491160a31122,sh
@@ -940,6 +944,7 @@ credential-access,T1555,Credentials from Password Stores,5,Enumerate credentials
 credential-access,T1555,Credentials from Password Stores,6,WinPwn - Loot local Credentials - lazagne,079ee2e9-6f16-47ca-a635-14efcd994118,powershell
 credential-access,T1555,Credentials from Password Stores,7,WinPwn - Loot local Credentials - Wifi Credentials,afe369c2-b42e-447f-98a3-fb1f4e2b8552,powershell
 credential-access,T1555,Credentials from Password Stores,8,WinPwn - Loot local Credentials - Decrypt Teamviewer Passwords,db965264-3117-4bad-b7b7-2523b7856b92,powershell
+credential-access,T1552,Unsecured Credentials,1,AWS - Retrieve EC2 Password Data using stratus,a21118de-b11e-4ebd-b655-42f11142df0c,sh
 credential-access,T1555.003,Credentials from Web Browsers,1,Run Chrome-password Collector,8c05b133-d438-47ca-a630-19cc464c4622,powershell
 credential-access,T1555.003,Credentials from Web Browsers,2,Search macOS Safari Cookies,c1402f7b-67ca-43a8-b5f3-3143abedc01b,sh
 credential-access,T1555.003,Credentials from Web Browsers,3,LaZagne - Credentials from Browser,9a2915b3-3954-4cce-8c76-00fbf4dbd014,command_prompt
@@ -1289,6 +1294,7 @@ command-and-control,T1105,Ingress Tool Transfer,27,Linux Download File and Run,b
 command-and-control,T1090.001,Internal Proxy,1,Connection Proxy,0ac21132-4485-4212-a681-349e8a6637cd,sh
 command-and-control,T1090.001,Internal Proxy,2,Connection Proxy for macOS UI,648d68c1-8bcd-4486-9abe-71c6655b6a2c,sh
 command-and-control,T1090.001,Internal Proxy,3,portproxy reg key,b8223ea9-4be2-44a6-b50a-9657a3d4e72a,powershell
+reconnaissance,T1592.002,Software,1,Enumerate COM Objects with Powershell,0d80d088-a84c-4353-af1a-fc8b439f1564,powershell
 impact,T1489,Service Stop,1,Windows - Stop service using Service Controller,21dfb440-830d-4c86-a3e5-2a491d5a8d04,command_prompt
 impact,T1489,Service Stop,2,Windows - Stop service using net.exe,41274289-ec9c-4213-bea4-e43c4aa57954,command_prompt
 impact,T1489,Service Stop,3,Windows - Stop service by killing process,f3191b84-c38b-400b-867e-3a217a27795f,command_prompt
