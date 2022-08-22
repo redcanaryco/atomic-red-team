@@ -736,3 +736,40 @@ atomic_tests:
     cleanup_command: |
       del #{payload_name}
     name: sh
+- name: Nimgrab - Transfer Files
+  auto_generated_guid: b1729c57-9384-4d1c-9b99-9b220afb384e
+  description: |
+    Use nimgrab.exe to download a file from the web. 
+  supported_platforms:
+  - windows
+  input_arguments:
+    remote_file:
+      description: URL of file to copy
+      type: Url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
+    local_path:
+      description: Local path to place file
+      type: Path
+      default: Atomic-license.txt
+    destination_path:
+      description: Destination path to file
+      type: Path
+      default: $env:TEMP\Atomic-license.txt
+  executor:
+    command: |
+      cmd /c nimgrab.exe #{remote_file} #{local_path}
+    cleanup_command: |
+      del #{local_path} >nul 2>&1
+    name: command_prompt
+  dependencies: 
+    - description: |
+        NimGrab must be installed on system.
+      prereq_command: |
+        if (Test-Path "$env:temp\nimgrab.exe") {exit 0} else {exit 1}
+      get_prereq_command: |
+        Invoke-WebRequest "https://nim-lang.org/download/nim-1.6.6_x64.zip" -Outfile $env:temp\nim.zip
+        Expand-Archive -Path $env:temp\nim.zip -DestinationPath $env:temp\nim
+        Copy-Item $env:temp\nim\nim-1.6.6\bin\nimgrab.exe #{destination_path}
+        Remove-Item $env:temp\nim
+        Remove-Item $env:temp\nim.zip
+ 
