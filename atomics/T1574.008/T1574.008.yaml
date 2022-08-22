@@ -12,7 +12,6 @@ atomic_tests:
   executor:
     command: |
       C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe /out:"$env:localappdata\Microsoft\WindowsApps\Get-Variable.exe" "PathToAtomicsFolder\T1574.008\bin\calc.cs"
-      Copy-Item "PathToAtomicsFolder\T1574.008\bin\Calc.exe" -Destination "$env:localappdata\Microsoft\WindowsApps\Get-Variable.exe"
       Powershell -noprofile
     cleanup_command: |
       Remove-Item "$env:localappdata\Microsoft\WindowsApps\Get-Variable.exe" -ErrorAction Ignore
