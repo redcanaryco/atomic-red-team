@@ -907,7 +907,8 @@
   - Atomic Test #1: Logon Scripts [windows]
 - T1055.015 ListPlanting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1484 Domain Policy Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1547.008 LSASS Driver [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1547.008 LSASS Driver](../../T1547.008/T1547.008.md)
+  - Atomic Test #1: Modify Registry to load Arbitrary DLL into LSASS - LsaDbExtPt [windows]
 - [T1078.004 Cloud Accounts](../../T1078.004/T1078.004.md)
   - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, windows, linux, macos]
 - [T1053.002 At](../../T1053.002/T1053.002.md)
@@ -1364,7 +1365,8 @@
   - Atomic Test #1: Logon Scripts [windows]
 - [T1137.002 Office Test](../../T1137.002/T1137.002.md)
   - Atomic Test #1: Office Application Startup Test Persistence [windows]
-- T1547.008 LSASS Driver [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1547.008 LSASS Driver](../../T1547.008/T1547.008.md)
+  - Atomic Test #1: Modify Registry to load Arbitrary DLL into LSASS - LsaDbExtPt [windows]
 - [T1078.004 Cloud Accounts](../../T1078.004/T1078.004.md)
   - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, windows, linux, macos]
 - [T1053.002 At](../../T1053.002/T1053.002.md)
