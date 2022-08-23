@@ -584,9 +584,9 @@ atomic_tests:
   - windows
   executor:
     command: |
-      reg add HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\UX Configuration /v Notification_Suppress /t REG_DWORD /d 1 /f
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\UX Configuration" /v Notification_Suppress /t REG_DWORD /d 1 /f
     cleanup_command: |
-      reg delete HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\UX Configuration /v Notification_Suppress /f >nul 2>&1
+      reg delete "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\UX Configuration" /v Notification_Suppress /f >nul 2>&1
     name: command_prompt
     elevation_required: true
 - name: Allow RDP Remote Assistance Feature
@@ -599,9 +599,9 @@ atomic_tests:
   - windows
   executor:
     command: |
-      reg add HKLM\System\CurrentControlSet\Control\Terminal Server /v fAllowToGetHelp /t REG_DWORD /d 1 /f
+      reg add "HKLM\System\CurrentControlSet\Control\Terminal Server" /v fAllowToGetHelp /t REG_DWORD /d 1 /f
     cleanup_command: |
-      reg delete HKLM\System\CurrentControlSet\Control\Terminal Server /v fAllowToGetHelp /f >nul 2>&1
+      reg delete "HKLM\System\CurrentControlSet\Control\Terminal Server" /v fAllowToGetHelp /f >nul 2>&1
     name: command_prompt
     elevation_required: true
 - name: NetWire RAT Registry Key Creation
