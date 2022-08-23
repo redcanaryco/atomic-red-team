@@ -1,0 +1,57 @@
+attack_technique: T1552
+display_name: 'Unsecured Credentials'
+atomic_tests:
+- name: AWS - Retrieve EC2 Password Data using stratus
+  auto_generated_guid: a21118de-b11e-4ebd-b655-42f11142df0c
+  description: |
+    This atomic runs an API call GetPasswordData from a role that does not have permission to do so. This simulates an attacker attempting to retrieve RDP passwords on a high number of Windows EC2 instances. This atomic test leverages a tool called stratus-red-team built by DataDog (https://github.com/DataDog/stratus-red-team). Stratus Red Team is a self-contained binary. You can use it to easily detonate offensive attack techniques against a live cloud environment. Ref: https://stratus-red-team.cloud/attack-techniques/AWS/aws.credential-access.ec2-get-password-data/
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
+    stratus_path:
+      description: Path of stratus binary
+      type: Path
+      default: $PathToAtomicsFolder/T1552/src
+    aws_region:
+      description: AWS region to detonate
+      type: String
+      default: us-west-2
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Stratus binary must be present at the (#{stratus_path}/stratus)
+    prereq_command: |
+      if [ -f #{stratus_path}/stratus ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      if [ "$(uname)" == "Darwin" ]
+      then DOWNLOAD_URL=$(curl -s https://api.github.com/repos/DataDog/stratus-red-team/releases/latest | grep browser_download_url | grep Darwin_x86_64 | cut -d '"' -f 4); wget -q -O #{stratus_path}/stratus-red-team-latest.tar.gz $DOWNLOAD_URL
+        tar -xzvf #{stratus_path}/stratus-red-team-latest.tar.gz --directory #{stratus_path}/
+      elif [ "$(expr substr $(uname) 1 5)" == "Linux" ]
+      then DOWNLOAD_URL=$(curl -s https://api.github.com/repos/DataDog/stratus-red-team/releases/latest | grep browser_download_url | grep linux_x86_64 | cut -d '"' -f 4) 
+        wget -q -O #{stratus_path}/stratus-red-team-latest.tar.gz $DOWNLOAD_URL
+        tar -xzvf #{stratus_path}/stratus-red-team-latest.tar.gz --directory #{stratus_path}/
+      fi
+  - description: |
+        Check if ~/.aws/credentials file has a default stanza is configured
+    prereq_command: |
+        cat ~/.aws/credentials | grep "default"
+    get_prereq_command: |
+        echo Please install the aws-cli and configure your AWS defult profile using: aws configure
+  executor:
+    command: |
+      export AWS_REGION=#{aws_region} 
+      cd #{stratus_path}
+      echo "starting warmup"
+      ./stratus warmup aws.credential-access.ec2-get-password-data
+      echo "starting detonate"
+      ./stratus detonate aws.credential-access.ec2-get-password-data --force
+    cleanup_command: |
+      export AWS_REGION=#{aws_region}
+      
+      echo "Cleanup detonation"
+      cd #{stratus_path}
+      ./stratus cleanup --all
+      rm -rf stratus*
+    name: sh
+    elevation_required: false

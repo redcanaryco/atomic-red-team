@@ -382,6 +382,7 @@
 - [T1134.001 Token Impersonation/Theft](../../T1134.001/T1134.001.md)
   - Atomic Test #1: Named pipe client impersonation [windows]
   - Atomic Test #2: `SeDebugPrivilege` token duplication [windows]
+  - Atomic Test #3: Launch NSudo Executable [windows]
 - T1205.001 Port Knocking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1564.002 Hidden Users](../../T1564.002/T1564.002.md)
   - Atomic Test #1: Create Hidden User using UniqueID < 500 [macos]
@@ -805,6 +806,7 @@
 - [T1134.001 Token Impersonation/Theft](../../T1134.001/T1134.001.md)
   - Atomic Test #1: Named pipe client impersonation [windows]
   - Atomic Test #2: `SeDebugPrivilege` token duplication [windows]
+  - Atomic Test #3: Launch NSudo Executable [windows]
 - T1134.003 Make and Impersonate Token [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1053.004 Launchd [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.003 Windows Management Instrumentation Event Subscription](../../T1546.003/T1546.003.md)
@@ -1609,7 +1611,8 @@
   - Atomic Test #6: WinPwn - Loot local Credentials - lazagne [windows]
   - Atomic Test #7: WinPwn - Loot local Credentials - Wifi Credentials [windows]
   - Atomic Test #8: WinPwn - Loot local Credentials - Decrypt Teamviewer Passwords [windows]
-- T1552 Unsecured Credentials [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1552 Unsecured Credentials](../../T1552/T1552.md)
+  - Atomic Test #1: AWS - Retrieve EC2 Password Data using stratus [linux, macos]
 - T1139 Bash History [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1503 Credentials from Web Browsers [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1145 Private Keys [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -2130,6 +2133,7 @@
   - Atomic Test #25: certreq download [windows]
   - Atomic Test #26: Download a file using wscript [windows]
   - Atomic Test #27: Linux Download File and Run [linux]
+  - Atomic Test #28: Nimgrab - Transfer Files [windows]
 - T1001.002 Steganography [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1008 Fallback Channels [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1090.001 Internal Proxy](../../T1090.001/T1090.001.md)
@@ -2173,7 +2177,8 @@
 - T1593 Search Open Websites/Domains [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1597 Search Closed Sources [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1592.003 Firmware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1592.002 Software [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1592.002 Software](../../T1592.002/T1592.002.md)
+  - Atomic Test #1: Enumerate COM Objects with Powershell [windows]
 - T1593.001 Social Media [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1589.001 Credentials [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1595.003 Wordlist Scanning [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
