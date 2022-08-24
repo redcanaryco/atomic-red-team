@@ -190,7 +190,7 @@ atomic_tests:
         Invoke-WebRequest -OutFile C:\Users\#{UltraViewer_Path} https://www.ultraviewer.net/en/UltraViewer_setup_6.5_en.exe
   executor:
       command: |
-        Start-Process -Wait -FilePath "C:\Users\#{UltraViewer_Path}" -Argument "/silent" -PassThru
+        Start-Process -Wait -FilePath "#{UltraViewer_Path}" -Argument "/silent" -PassThru
         Start-Process 'C:\Program Files (x86)\UltraViewer\UltraViewer_Desktop.exe'
       cleanup_command: | 
         Stop-Process -Name "UltraViewer_Desktop" -Force -ErrorAction SilentlyContinue
