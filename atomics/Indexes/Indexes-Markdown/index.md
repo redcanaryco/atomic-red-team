@@ -907,7 +907,8 @@
   - Atomic Test #1: Logon Scripts [windows]
 - T1055.015 ListPlanting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1484 Domain Policy Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1547.008 LSASS Driver [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1547.008 LSASS Driver](../../T1547.008/T1547.008.md)
+  - Atomic Test #1: Modify Registry to load Arbitrary DLL into LSASS - LsaDbExtPt [windows]
 - [T1078.004 Cloud Accounts](../../T1078.004/T1078.004.md)
   - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, windows, linux, macos]
 - [T1053.002 At](../../T1053.002/T1053.002.md)
@@ -1364,7 +1365,8 @@
   - Atomic Test #1: Logon Scripts [windows]
 - [T1137.002 Office Test](../../T1137.002/T1137.002.md)
   - Atomic Test #1: Office Application Startup Test Persistence [windows]
-- T1547.008 LSASS Driver [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1547.008 LSASS Driver](../../T1547.008/T1547.008.md)
+  - Atomic Test #1: Modify Registry to load Arbitrary DLL into LSASS - LsaDbExtPt [windows]
 - [T1078.004 Cloud Accounts](../../T1078.004/T1078.004.md)
   - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, windows, linux, macos]
 - [T1053.002 At](../../T1053.002/T1053.002.md)
@@ -1686,7 +1688,8 @@
   - Atomic Test #10: WinPwn - SessionGopher [windows]
   - Atomic Test #11: WinPwn - Loot local Credentials - AWS, Microsoft Azure, and Google Compute credentials [windows]
 - T1606.001 Web Cookies [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1528 Steal Application Access Token [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1528 Steal Application Access Token](../../T1528/T1528.md)
+  - Atomic Test #1: Azure - Dump All Azure Key Vaults with Microburst [iaas:azure]
 - [T1552.006 Group Policy Preferences](../../T1552.006/T1552.006.md)
   - Atomic Test #1: GPP Passwords (findstr) [windows]
   - Atomic Test #2: GPP Passwords (Get-GPPPassword) [windows]
@@ -2058,6 +2061,7 @@
   - Atomic Test #6: Ammyy Admin Software Execution [windows]
   - Atomic Test #7: RemotePC Software Execution [windows]
   - Atomic Test #8: NetSupport - RAT Execution [windows]
+  - Atomic Test #9: UltraViewer - RAT Execution [windows]
 - T1079 Multilayer Encryption [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1032 Standard Cryptographic Protocol [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

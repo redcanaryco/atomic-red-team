@@ -667,7 +667,8 @@
   - Atomic Test #1: Logon Scripts [windows]
 - T1055.015 ListPlanting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1484 Domain Policy Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1547.008 LSASS Driver [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1547.008 LSASS Driver](../../T1547.008/T1547.008.md)
+  - Atomic Test #1: Modify Registry to load Arbitrary DLL into LSASS - LsaDbExtPt [windows]
 - [T1053.002 At](../../T1053.002/T1053.002.md)
   - Atomic Test #1: At.exe Scheduled task [windows]
 - [T1055.001 Dynamic-link Library Injection](../../T1055.001/T1055.001.md)
@@ -988,7 +989,8 @@
   - Atomic Test #1: Logon Scripts [windows]
 - [T1137.002 Office Test](../../T1137.002/T1137.002.md)
   - Atomic Test #1: Office Application Startup Test Persistence [windows]
-- T1547.008 LSASS Driver [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1547.008 LSASS Driver](../../T1547.008/T1547.008.md)
+  - Atomic Test #1: Modify Registry to load Arbitrary DLL into LSASS - LsaDbExtPt [windows]
 - [T1053.002 At](../../T1053.002/T1053.002.md)
   - Atomic Test #1: At.exe Scheduled task [windows]
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1480,6 +1482,7 @@
   - Atomic Test #6: Ammyy Admin Software Execution [windows]
   - Atomic Test #7: RemotePC Software Execution [windows]
   - Atomic Test #8: NetSupport - RAT Execution [windows]
+  - Atomic Test #9: UltraViewer - RAT Execution [windows]
 - T1079 Multilayer Encryption [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1032 Standard Cryptographic Protocol [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
