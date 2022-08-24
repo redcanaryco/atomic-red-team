@@ -262,6 +262,7 @@ defense-evasion,T1218.005,Mshta,9,Invoke HTML Application - Simulate Lateral Mov
 defense-evasion,T1218.005,Mshta,10,Mshta used to Execute PowerShell,8707a805-2b76-4f32-b1c0-14e558205772,command_prompt
 defense-evasion,T1134.001,Token Impersonation/Theft,1,Named pipe client impersonation,90db9e27-8e7c-4c04-b602-a45927884966,powershell
 defense-evasion,T1134.001,Token Impersonation/Theft,2,`SeDebugPrivilege` token duplication,34f0a430-9d04-4d98-bcb5-1989f14719f0,powershell
+defense-evasion,T1134.001,Token Impersonation/Theft,3,Launch NSudo Executable,7be1bc0f-d8e5-4345-9333-f5f67d742cb9,powershell
 defense-evasion,T1564.002,Hidden Users,1,Create Hidden User using UniqueID < 500,4238a7f0-a980-4fff-98a2-dfc0a363d507,sh
 defense-evasion,T1564.002,Hidden Users,2,Create Hidden User using IsHidden option,de87ed7b-52c3-43fd-9554-730f695e7f31,sh
 defense-evasion,T1564.002,Hidden Users,3,Create Hidden User in Registry,173126b7-afe4-45eb-8680-fa9f6400431c,command_prompt
@@ -398,6 +399,7 @@ defense-evasion,T1550.002,Pass the Hash,1,Mimikatz Pass the Hash,ec23cef9-27d9-4
 defense-evasion,T1550.002,Pass the Hash,2,crackmapexec Pass the Hash,eb05b028-16c8-4ad8-adea-6f5b219da9a9,command_prompt
 defense-evasion,T1550.002,Pass the Hash,3,Invoke-WMIExec Pass the Hash,f8757545-b00a-4e4e-8cfb-8cfb961ee713,powershell
 defense-evasion,T1574.002,DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
+defense-evasion,T1574.002,DLL Side-Loading,2,DLL Side-Loading using the dotnet startup hook environment variable,d322cdd7-7d60-46e3-9111-648848da7c02,command_prompt
 defense-evasion,T1220,XSL Script Processing,1,MSXSL Bypass using local files,ca23bfb2-023f-49c5-8802-e66997de462d,command_prompt
 defense-evasion,T1220,XSL Script Processing,2,MSXSL Bypass using remote files,a7c3ab07-52fb-49c8-ab6d-e9c6d4a0a985,command_prompt
 defense-evasion,T1220,XSL Script Processing,3,WMIC bypass using local XSL file,1b237334-3e21-4a0c-8178-b8c996124988,command_prompt
@@ -436,6 +438,7 @@ privilege-escalation,T1053.005,Scheduled Task,5,Task Scheduler via VBA,ecd3fa21-
 privilege-escalation,T1053.005,Scheduled Task,6,WMI Invoke-CimMethod Scheduled Task,e16b3b75-dc9e-4cde-a23d-dfa2d0507b3b,powershell
 privilege-escalation,T1053.005,Scheduled Task,7,Scheduled Task Executing Base64 Encoded Commands From Registry,e895677d-4f06-49ab-91b6-ae3742d0a2ba,command_prompt
 privilege-escalation,T1053.005,Scheduled Task,8,Import XML Schedule Task with Hidden Attribute,cd925593-fbb4-486d-8def-16cbdf944bf4,powershell
+privilege-escalation,T1053.005,Scheduled Task,9,PowerShell Modify A Scheduled Task,dda6fc7b-c9a6-4c18-b98d-95ec6542af6d,powershell
 privilege-escalation,T1546.013,PowerShell Profile,1,Append malicious start-process cmdlet,090e5aa5-32b6-473b-a49b-21e843a56896,powershell
 privilege-escalation,T1053.007,Container Orchestration Job,1,ListCronjobs,ddfb0bc1-3c3f-47e9-a298-550ecfefacbd,bash
 privilege-escalation,T1053.007,Container Orchestration Job,2,CreateCronjob,f2fa019e-fb2a-4d28-9dc6-fd1a9b7f68c3,bash
@@ -515,8 +518,10 @@ privilege-escalation,T1546.008,Accessibility Features,1,Attaches Command Prompt 
 privilege-escalation,T1546.008,Accessibility Features,2,Replace binary of sticky keys,934e90cf-29ca-48b3-863c-411737ad44e3,command_prompt
 privilege-escalation,T1055.004,Asynchronous Procedure Call,1,Process Injection via C#,611b39b7-e243-4c81-87a4-7145a90358b1,command_prompt
 privilege-escalation,T1546.009,AppCert DLLs,1,Create registry persistence via AppCert DLL,a5ad6104-5bab-4c43-b295-b4c44c7c6b05,powershell
+privilege-escalation,T1547.015,Login Items,1,Persistence by modifying Windows Terminal profile,ec5d76ef-82fe-48da-b931-bdb25a62bc65,powershell
 privilege-escalation,T1134.001,Token Impersonation/Theft,1,Named pipe client impersonation,90db9e27-8e7c-4c04-b602-a45927884966,powershell
 privilege-escalation,T1134.001,Token Impersonation/Theft,2,`SeDebugPrivilege` token duplication,34f0a430-9d04-4d98-bcb5-1989f14719f0,powershell
+privilege-escalation,T1134.001,Token Impersonation/Theft,3,Launch NSudo Executable,7be1bc0f-d8e5-4345-9333-f5f67d742cb9,powershell
 privilege-escalation,T1546.003,Windows Management Instrumentation Event Subscription,1,Persistence via WMI Event Subscription - CommandLineEventConsumer,3c64f177-28e2-49eb-a799-d767b24dd1e0,powershell
 privilege-escalation,T1546.003,Windows Management Instrumentation Event Subscription,2,Persistence via WMI Event Subscription - ActiveScriptEventConsumer,fecd0dfd-fb55-45fa-a10b-6250272d0832,powershell
 privilege-escalation,T1546.003,Windows Management Instrumentation Event Subscription,3,Windows MOFComp.exe Load MOF File,29786d7e-8916-4de6-9c55-be7b093b2706,powershell
@@ -564,7 +569,9 @@ privilege-escalation,T1543.002,Systemd Service,2,"Create Systemd Service file,  
 privilege-escalation,T1547.007,Re-opened Applications,1,Re-Opened Applications,5fefd767-ef54-4ac6-84d3-751ab85e8aba,manual
 privilege-escalation,T1547.007,Re-opened Applications,2,Re-Opened Applications,5f5b71da-e03f-42e7-ac98-d63f9e0465cb,sh
 privilege-escalation,T1574.002,DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
+privilege-escalation,T1574.002,DLL Side-Loading,2,DLL Side-Loading using the dotnet startup hook environment variable,d322cdd7-7d60-46e3-9111-648848da7c02,command_prompt
 privilege-escalation,T1037.001,Logon Script (Windows),1,Logon Scripts,d6042746-07d4-4c92-9ad8-e644c114a231,command_prompt
+privilege-escalation,T1547.008,LSASS Driver,1,Modify Registry to load Arbitrary DLL into LSASS - LsaDbExtPt,8ecef16d-d289-46b4-917b-0dba6dc81cf1,powershell
 privilege-escalation,T1078.004,Cloud Accounts,1,Creating GCP Service Account and Service Account Key,9fdd83fd-bd53-46e5-a716-9dec89c8ae8e,gcloud
 privilege-escalation,T1053.002,At,1,At.exe Scheduled task,4a6c0dc4-0f2a-4203-9298-a5a9bdc21ed8,command_prompt
 privilege-escalation,T1053.002,At,2,At - Schedule a job,7266d898-ac82-4ec0-97c7-436075d0d08e,sh
@@ -586,6 +593,7 @@ execution,T1053.005,Scheduled Task,5,Task Scheduler via VBA,ecd3fa21-7792-41a2-8
 execution,T1053.005,Scheduled Task,6,WMI Invoke-CimMethod Scheduled Task,e16b3b75-dc9e-4cde-a23d-dfa2d0507b3b,powershell
 execution,T1053.005,Scheduled Task,7,Scheduled Task Executing Base64 Encoded Commands From Registry,e895677d-4f06-49ab-91b6-ae3742d0a2ba,command_prompt
 execution,T1053.005,Scheduled Task,8,Import XML Schedule Task with Hidden Attribute,cd925593-fbb4-486d-8def-16cbdf944bf4,powershell
+execution,T1053.005,Scheduled Task,9,PowerShell Modify A Scheduled Task,dda6fc7b-c9a6-4c18-b98d-95ec6542af6d,powershell
 execution,T1047,Windows Management Instrumentation,1,WMI Reconnaissance Users,c107778c-dcf5-47c5-af2e-1d058a3df3ea,command_prompt
 execution,T1047,Windows Management Instrumentation,2,WMI Reconnaissance Processes,5750aa16-0e59-4410-8b9a-8a47ca2788e2,command_prompt
 execution,T1047,Windows Management Instrumentation,3,WMI Reconnaissance Software,718aebaa-d0e0-471a-8241-c5afa69c7414,command_prompt
@@ -676,6 +684,7 @@ persistence,T1053.005,Scheduled Task,5,Task Scheduler via VBA,ecd3fa21-7792-41a2
 persistence,T1053.005,Scheduled Task,6,WMI Invoke-CimMethod Scheduled Task,e16b3b75-dc9e-4cde-a23d-dfa2d0507b3b,powershell
 persistence,T1053.005,Scheduled Task,7,Scheduled Task Executing Base64 Encoded Commands From Registry,e895677d-4f06-49ab-91b6-ae3742d0a2ba,command_prompt
 persistence,T1053.005,Scheduled Task,8,Import XML Schedule Task with Hidden Attribute,cd925593-fbb4-486d-8def-16cbdf944bf4,powershell
+persistence,T1053.005,Scheduled Task,9,PowerShell Modify A Scheduled Task,dda6fc7b-c9a6-4c18-b98d-95ec6542af6d,powershell
 persistence,T1556.003,Pluggable Authentication Modules,1,Malicious PAM rule,4b9dde80-ae22-44b1-a82a-644bf009eb9c,sh
 persistence,T1556.003,Pluggable Authentication Modules,2,Malicious PAM module,65208808-3125-4a2e-8389-a0a00e9ab326,sh
 persistence,T1546.013,PowerShell Profile,1,Append malicious start-process cmdlet,090e5aa5-32b6-473b-a49b-21e843a56896,powershell
@@ -738,6 +747,7 @@ persistence,T1136.002,Domain Account,1,Create a new Windows domain admin user,fc
 persistence,T1136.002,Domain Account,2,Create a new account similar to ANONYMOUS LOGON,dc7726d2-8ccb-4cc6-af22-0d5afb53a548,command_prompt
 persistence,T1136.002,Domain Account,3,Create a new Domain Account using PowerShell,5a3497a4-1568-4663-b12a-d4a5ed70c7d7,powershell
 persistence,T1546.009,AppCert DLLs,1,Create registry persistence via AppCert DLL,a5ad6104-5bab-4c43-b295-b4c44c7c6b05,powershell
+persistence,T1547.015,Login Items,1,Persistence by modifying Windows Terminal profile,ec5d76ef-82fe-48da-b931-bdb25a62bc65,powershell
 persistence,T1098.001,Additional Cloud Credentials,1,Azure AD Application Hijacking - Service Principal,b8e747c3-bdf7-4d71-bce2-f1df2a057406,powershell
 persistence,T1098.001,Additional Cloud Credentials,2,Azure AD Application Hijacking - App Registration,a12b5531-acab-4618-a470-0dafb294a87a,powershell
 persistence,T1098.001,Additional Cloud Credentials,3,AWS - Create Access Key and Secret Key,8822c3b0-d9f9-4daf-a043-491160a31122,sh
@@ -795,8 +805,10 @@ persistence,T1543.002,Systemd Service,2,"Create Systemd Service file,  Enable th
 persistence,T1547.007,Re-opened Applications,1,Re-Opened Applications,5fefd767-ef54-4ac6-84d3-751ab85e8aba,manual
 persistence,T1547.007,Re-opened Applications,2,Re-Opened Applications,5f5b71da-e03f-42e7-ac98-d63f9e0465cb,sh
 persistence,T1574.002,DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
+persistence,T1574.002,DLL Side-Loading,2,DLL Side-Loading using the dotnet startup hook environment variable,d322cdd7-7d60-46e3-9111-648848da7c02,command_prompt
 persistence,T1037.001,Logon Script (Windows),1,Logon Scripts,d6042746-07d4-4c92-9ad8-e644c114a231,command_prompt
 persistence,T1137.002,Office Test,1,Office Application Startup Test Persistence,c3e35b58-fe1c-480b-b540-7600fb612563,command_prompt
+persistence,T1547.008,LSASS Driver,1,Modify Registry to load Arbitrary DLL into LSASS - LsaDbExtPt,8ecef16d-d289-46b4-917b-0dba6dc81cf1,powershell
 persistence,T1078.004,Cloud Accounts,1,Creating GCP Service Account and Service Account Key,9fdd83fd-bd53-46e5-a716-9dec89c8ae8e,gcloud
 persistence,T1053.002,At,1,At.exe Scheduled task,4a6c0dc4-0f2a-4203-9298-a5a9bdc21ed8,command_prompt
 persistence,T1053.002,At,2,At - Schedule a job,7266d898-ac82-4ec0-97c7-436075d0d08e,sh
@@ -843,8 +855,10 @@ collection,T1115,Clipboard Data,1,Utilize Clipboard to store or execute commands
 collection,T1115,Clipboard Data,2,Execute Commands from Clipboard using PowerShell,d6dc21af-bec9-4152-be86-326b6babd416,powershell
 collection,T1115,Clipboard Data,3,Execute commands from clipboard,1ac2247f-65f8-4051-b51f-b0ccdfaaa5ff,bash
 collection,T1115,Clipboard Data,4,Collect Clipboard Data via VBA,9c8d5a72-9c98-48d3-b9bf-da2cc43bdf52,powershell
+collection,T1115,Clipboard Data,5,Add or copy content to clipboard with xClip,ee363e53-b083-4230-aff3-f8d955f2d5bb,sh
 collection,T1530,Data from Cloud Storage Object,1,Azure - Enumerate Azure Blobs with MicroBurst,3dab4bcc-667f-4459-aea7-4162dd2d6590,powershell
 collection,T1530,Data from Cloud Storage Object,2,Azure - Scan for Anonymous Access to Azure Storage (Powershell),146af1f1-b74e-4aa7-9895-505eb559b4b0,powershell
+collection,T1530,Data from Cloud Storage Object,3,AWS - Scan for Anonymous Access to S3,979356b9-b588-4e49-bba4-c35517c484f5,sh
 collection,T1560.002,Archive via Library,1,Compressing data using GZip in Python (Linux),391f5298-b12d-4636-8482-35d9c17d53a8,bash
 collection,T1560.002,Archive via Library,2,Compressing data using bz2 in Python (Linux),c75612b2-9de0-4d7c-879c-10d7b077072d,bash
 collection,T1560.002,Archive via Library,3,Compressing data using zipfile in Python (Linux),001a042b-859f-44d9-bf81-fd1c4e2200b0,bash
@@ -932,6 +946,7 @@ credential-access,T1555,Credentials from Password Stores,5,Enumerate credentials
 credential-access,T1555,Credentials from Password Stores,6,WinPwn - Loot local Credentials - lazagne,079ee2e9-6f16-47ca-a635-14efcd994118,powershell
 credential-access,T1555,Credentials from Password Stores,7,WinPwn - Loot local Credentials - Wifi Credentials,afe369c2-b42e-447f-98a3-fb1f4e2b8552,powershell
 credential-access,T1555,Credentials from Password Stores,8,WinPwn - Loot local Credentials - Decrypt Teamviewer Passwords,db965264-3117-4bad-b7b7-2523b7856b92,powershell
+credential-access,T1552,Unsecured Credentials,1,AWS - Retrieve EC2 Password Data using stratus,a21118de-b11e-4ebd-b655-42f11142df0c,sh
 credential-access,T1555.003,Credentials from Web Browsers,1,Run Chrome-password Collector,8c05b133-d438-47ca-a630-19cc464c4622,powershell
 credential-access,T1555.003,Credentials from Web Browsers,2,Search macOS Safari Cookies,c1402f7b-67ca-43a8-b5f3-3143abedc01b,sh
 credential-access,T1555.003,Credentials from Web Browsers,3,LaZagne - Credentials from Browser,9a2915b3-3954-4cce-8c76-00fbf4dbd014,command_prompt
@@ -989,6 +1004,7 @@ credential-access,T1552.001,Credentials In Files,8,WinPwn - powershellsensitive,
 credential-access,T1552.001,Credentials In Files,9,WinPwn - passhunt,00e3e3c7-6c3c-455e-bd4b-461c7f0e7797,powershell
 credential-access,T1552.001,Credentials In Files,10,WinPwn - SessionGopher,c9dc9de3-f961-4284-bd2d-f959c9f9fda5,powershell
 credential-access,T1552.001,Credentials In Files,11,"WinPwn - Loot local Credentials - AWS, Microsoft Azure, and Google Compute credentials",aaa87b0e-5232-4649-ae5c-f1724a4b2798,powershell
+credential-access,T1528,Steal Application Access Token,1,Azure - Dump All Azure Key Vaults with Microburst,1b83cddb-eaa7-45aa-98a5-85fb0a8807ea,powershell
 credential-access,T1552.006,Group Policy Preferences,1,GPP Passwords (findstr),870fe8fb-5e23-4f5f-b89d-dd7fe26f3b5f,command_prompt
 credential-access,T1552.006,Group Policy Preferences,2,GPP Passwords (Get-GPPPassword),e9584f82-322c-474a-b831-940fd8b4455c,powershell
 credential-access,T1056.002,GUI Input Capture,1,AppleScript - Prompt User for Password,76628574-0bc1-4646-8fe2-8f4427b47d15,bash
@@ -1118,6 +1134,7 @@ discovery,T1082,System Information Discovery,20,WinPwn - PowerSharpPack - Watson
 discovery,T1082,System Information Discovery,21,WinPwn - PowerSharpPack - Sharpup checking common Privesc vectors,efb79454-1101-4224-a4d0-30c9c8b29ffc,powershell
 discovery,T1082,System Information Discovery,22,WinPwn - PowerSharpPack - Seatbelt,5c16ceb4-ba3a-43d7-b848-a13c1f216d95,powershell
 discovery,T1082,System Information Discovery,23,Azure Security Scan with SkyArk,26a18d3d-f8bc-486b-9a33-d6df5d78a594,powershell
+discovery,T1082,System Information Discovery,24,Linux List Kernel Modules,034fe21c-3186-49dd-8d5d-128b35f181c7,sh
 discovery,T1010,Application Window Discovery,1,List Process Main Windows - C# .NET,fe94a1c3-3e22-4dc9-9fdf-3a8bdbc10dc4,command_prompt
 discovery,T1217,Browser Bookmark Discovery,1,List Mozilla Firefox Bookmark Database Files on Linux,3a41f169-a5ab-407f-9269-abafdb5da6c2,sh
 discovery,T1217,Browser Bookmark Discovery,2,List Mozilla Firefox Bookmark Database Files on macOS,1ca1f9c7-44bc-46bb-8c85-c50e2e94267b,sh
@@ -1153,6 +1170,7 @@ discovery,T1049,System Network Connections Discovery,1,System Network Connection
 discovery,T1049,System Network Connections Discovery,2,System Network Connections Discovery with PowerShell,f069f0f1-baad-4831-aa2b-eddac4baac4a,powershell
 discovery,T1049,System Network Connections Discovery,3,System Network Connections Discovery Linux & MacOS,9ae28d3f-190f-4fa0-b023-c7bd3e0eabf2,sh
 discovery,T1049,System Network Connections Discovery,4,System Discovery using SharpView,96f974bb-a0da-4d87-a744-ff33e73367e9,powershell
+discovery,T1619,Cloud Storage Object Discovery,1,AWS S3 Enumeration,3c7094f8-71ec-4917-aeb8-a633d7ec4ef5,sh
 discovery,T1057,Process Discovery,1,Process Discovery - ps,4ff64f0b-aaf2-4866-b39d-38d9791407cc,sh
 discovery,T1057,Process Discovery,2,Process Discovery - tasklist,c5806a4f-62b8-4900-980b-c7ec004e9908,command_prompt
 discovery,T1057,Process Discovery,3,Process Discovery - Get-Process,3b3809b6-a54b-4f5b-8aff-cb51f2e97b34,powershell
@@ -1275,9 +1293,12 @@ command-and-control,T1105,Ingress Tool Transfer,23,Lolbas replace.exe use to cop
 command-and-control,T1105,Ingress Tool Transfer,24,Lolbas replace.exe use to copy UNC file,ed0335ac-0354-400c-8148-f6151d20035a,command_prompt
 command-and-control,T1105,Ingress Tool Transfer,25,certreq download,6fdaae87-c05b-42f8-842e-991a74e8376b,command_prompt
 command-and-control,T1105,Ingress Tool Transfer,26,Download a file using wscript,97116a3f-efac-4b26-8336-b9cb18c45188,command_prompt
+command-and-control,T1105,Ingress Tool Transfer,27,Linux Download File and Run,bdc373c5-e9cf-4563-8a7b-a9ba720a90f3,sh
+command-and-control,T1105,Ingress Tool Transfer,28,Nimgrab - Transfer Files,b1729c57-9384-4d1c-9b99-9b220afb384e,command_prompt
 command-and-control,T1090.001,Internal Proxy,1,Connection Proxy,0ac21132-4485-4212-a681-349e8a6637cd,sh
 command-and-control,T1090.001,Internal Proxy,2,Connection Proxy for macOS UI,648d68c1-8bcd-4486-9abe-71c6655b6a2c,sh
 command-and-control,T1090.001,Internal Proxy,3,portproxy reg key,b8223ea9-4be2-44a6-b50a-9657a3d4e72a,powershell
+reconnaissance,T1592.002,Software,1,Enumerate COM Objects with Powershell,0d80d088-a84c-4353-af1a-fc8b439f1564,powershell
 impact,T1489,Service Stop,1,Windows - Stop service using Service Controller,21dfb440-830d-4c86-a3e5-2a491d5a8d04,command_prompt
 impact,T1489,Service Stop,2,Windows - Stop service using net.exe,41274289-ec9c-4213-bea4-e43c4aa57954,command_prompt
 impact,T1489,Service Stop,3,Windows - Stop service by killing process,f3191b84-c38b-400b-867e-3a217a27795f,command_prompt

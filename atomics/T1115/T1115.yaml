@@ -69,3 +69,15 @@ atomic_tests:
     cleanup_command: |
       Remove-Item "$env:TEMP\atomic_T1115_clipboard_data.txt" -ErrorAction Ignore
     name: powershell
+- name: Add or copy content to clipboard with xClip
+  auto_generated_guid: ee363e53-b083-4230-aff3-f8d955f2d5bb
+  description: |
+    Utilize Linux Xclip to copy history and place in clipboard then output to a history.txt file. Successful execution will capture history and output to a file on disk.
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      apt install xclip -y
+      history | tail -n 30 | xclip -sel clip
+      xclip -o > history.txt
+    name: sh

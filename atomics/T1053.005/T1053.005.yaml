@@ -179,3 +179,26 @@ atomic_tests:
       Invoke-CimMethod -ClassName PS_ScheduledTask -NameSpace "Root\Microsoft\Windows\TaskScheduler" -MethodName "RegisterByXml" -Arguments @{ Force = $true; Xml =$xml; }
     cleanup_command: |
       Unregister-ScheduledTask -TaskName "atomic red team" -confirm:$false >$null 2>&1
+- name: PowerShell Modify A Scheduled Task
+  auto_generated_guid: dda6fc7b-c9a6-4c18-b98d-95ec6542af6d
+  description: |
+    Create a scheduled task with an action and modify the action to do something else. The initial idea is to showcase Microsoft Windows TaskScheduler Operational log modification of an action on a Task already registered. 
+    It will first be created to spawn cmd.exe, but modified to run notepad.exe.
+
+    Upon successful execution, powershell.exe will create a scheduled task and modify the action. 
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $Action = New-ScheduledTaskAction -Execute "cmd.exe"
+      $Trigger = New-ScheduledTaskTrigger -AtLogon
+      $User = New-ScheduledTaskPrincipal -GroupId "BUILTIN\Administrators" -RunLevel Highest
+      $Set = New-ScheduledTaskSettingsSet
+      $object = New-ScheduledTask -Action $Action -Principal $User -Trigger $Trigger -Settings $Set
+      Register-ScheduledTask AtomicTaskModifed -InputObject $object
+      $NewAction = New-ScheduledTaskAction -Execute "Notepad.exe"
+      Set-ScheduledTask "AtomicTaskModifed" -Action $NewAction
+    cleanup_command: |
+      Unregister-ScheduledTask -TaskName "AtomicTaskModifed" -confirm:$false >$null 2>&1
