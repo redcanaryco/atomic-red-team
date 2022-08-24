@@ -177,23 +177,28 @@ atomic_tests:
     name: powershell
     elevation_required: True 
 - name: UltraViewer - RAT Execution
-    description: |
+  description: |
       A recent trend by threat actors, once a foothold is established, maintain long term persistence using third party remote services such as UltraViewer to provide the operator with access to the network using legitimate services. 
-    supported_platforms:
-    - windows
-    input_arguments:
-      UltraViewer_Path:
-        description: Path to the UltraViewer executable. 
-        type: Path
-        default: $env:temp\T1219Setup.exe
-    dependency_executor_name: powershell
-        Invoke-WebRequest -OutFile C:\Users\#{UltraViewer_Path} https://www.ultraviewer.net/en/UltraViewer_setup_6.5_en.exe
+  supported_platforms:
+  - windows
+  input_arguments:
+    UltraViewer_Path:
+      description: Path to the UltraViewer executable. 
+      type: Path
+      default: $env:temp\T1219Setup.exe
+  dependency_executor_name: powershell
+   dependencies:
+  - description: |
+      Ultraviewer installerr must be downloaded and exist on the disk at the specified location. (#{UltraViewer_Path})
+    prereq_command: |
+      if (Test-Path #{UltraViewer_Path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest -OutFile #{UltraViewer_Path} https://www.ultraviewer.net/en/UltraViewer_setup_6.5_en.exe
   executor:
-      command: |
-        Start-Process -Wait -FilePath "#{UltraViewer_Path}" -Argument "/silent" -PassThru
-        Start-Process 'C:\Program Files (x86)\UltraViewer\UltraViewer_Desktop.exe'
-      cleanup_command: | 
-        Stop-Process -Name "UltraViewer_Desktop" -Force -ErrorAction SilentlyContinue
-      name: powershell
-      elevation_required: True
-  
+    command: |
+      Start-Process -Wait -FilePath "#{UltraViewer_Path}" -Argument "/silent" -PassThru
+      Start-Process 'C:\Program Files (x86)\UltraViewer\UltraViewer_Desktop.exe'
+    cleanup_command: | 
+      Stop-Process -Name "UltraViewer_Desktop" -Force -ErrorAction SilentlyContinue
+    name: powershell
+    elevation_required: True
