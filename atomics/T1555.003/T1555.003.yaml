@@ -435,9 +435,9 @@ atomic_tests:
     prereq_command: |
       if (Test-Path "PathToAtomicsFolder\T1555.003\bin\BrowserCollector.exe") {exit 0} else {exit 1}
     get_prereq_command: |-
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T155.003/bin/BrowserCollector.exe?raw=true" -Outfile: "PathToAtomicsFolder\T1555.003\bin\BrowserCollector.exe"
+      Invoke-WebRequest "https://github.com/SaulBerrenson/BrowserStealer/releases/download/1.0.0.4/BrowserCollector_x64.exe" -Outfile: "PathToAtomicsFolder\T1555.003\bin\BrowserCollector.exe"
   - description: |
-      Login Data File that has saved data must live on the device.
+      Login Data file that is a copy of a chrome Login Data that contains credentials for the tool to "steal." Must exist at the specified path.
     prereq_command: |-
       if (Test-Path "PathToAtomicsFolder\T1555.003\src\Login Data") {exit 0} else {exit 1}
     get_prereq_command: |-
