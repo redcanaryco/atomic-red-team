@@ -431,7 +431,7 @@ atomic_tests:
       Start-Process -FilePath "chrome.exe"
       Stop-Process -Name "chrome"
   - description: |
-      BrowserCollector must exist in the temp directory
+      BrowserCollector must exist in the bin directory
     prereq_command: |
       if (Test-Path "PathToAtomicsFolder\T1555.003\bin\BrowserCollector.exe") {exit 0} else {exit 1}
     get_prereq_command: |-
