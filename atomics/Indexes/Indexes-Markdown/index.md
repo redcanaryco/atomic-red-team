@@ -382,6 +382,7 @@
 - [T1134.001 Token Impersonation/Theft](../../T1134.001/T1134.001.md)
   - Atomic Test #1: Named pipe client impersonation [windows]
   - Atomic Test #2: `SeDebugPrivilege` token duplication [windows]
+  - Atomic Test #3: Launch NSudo Executable [windows]
 - T1205.001 Port Knocking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1564.002 Hidden Users](../../T1564.002/T1564.002.md)
   - Atomic Test #1: Create Hidden User using UniqueID < 500 [macos]
@@ -805,6 +806,7 @@
 - [T1134.001 Token Impersonation/Theft](../../T1134.001/T1134.001.md)
   - Atomic Test #1: Named pipe client impersonation [windows]
   - Atomic Test #2: `SeDebugPrivilege` token duplication [windows]
+  - Atomic Test #3: Launch NSudo Executable [windows]
 - T1134.003 Make and Impersonate Token [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1053.004 Launchd [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.003 Windows Management Instrumentation Event Subscription](../../T1546.003/T1546.003.md)
@@ -905,7 +907,8 @@
   - Atomic Test #1: Logon Scripts [windows]
 - T1055.015 ListPlanting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1484 Domain Policy Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1547.008 LSASS Driver [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1547.008 LSASS Driver](../../T1547.008/T1547.008.md)
+  - Atomic Test #1: Modify Registry to load Arbitrary DLL into LSASS - LsaDbExtPt [windows]
 - [T1078.004 Cloud Accounts](../../T1078.004/T1078.004.md)
   - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, windows, linux, macos]
 - [T1053.002 At](../../T1053.002/T1053.002.md)
@@ -1362,7 +1365,8 @@
   - Atomic Test #1: Logon Scripts [windows]
 - [T1137.002 Office Test](../../T1137.002/T1137.002.md)
   - Atomic Test #1: Office Application Startup Test Persistence [windows]
-- T1547.008 LSASS Driver [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1547.008 LSASS Driver](../../T1547.008/T1547.008.md)
+  - Atomic Test #1: Modify Registry to load Arbitrary DLL into LSASS - LsaDbExtPt [windows]
 - [T1078.004 Cloud Accounts](../../T1078.004/T1078.004.md)
   - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, windows, linux, macos]
 - [T1053.002 At](../../T1053.002/T1053.002.md)
@@ -1609,7 +1613,8 @@
   - Atomic Test #6: WinPwn - Loot local Credentials - lazagne [windows]
   - Atomic Test #7: WinPwn - Loot local Credentials - Wifi Credentials [windows]
   - Atomic Test #8: WinPwn - Loot local Credentials - Decrypt Teamviewer Passwords [windows]
-- T1552 Unsecured Credentials [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1552 Unsecured Credentials](../../T1552/T1552.md)
+  - Atomic Test #1: AWS - Retrieve EC2 Password Data using stratus [linux, macos]
 - T1139 Bash History [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1503 Credentials from Web Browsers [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1145 Private Keys [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1683,7 +1688,8 @@
   - Atomic Test #10: WinPwn - SessionGopher [windows]
   - Atomic Test #11: WinPwn - Loot local Credentials - AWS, Microsoft Azure, and Google Compute credentials [windows]
 - T1606.001 Web Cookies [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1528 Steal Application Access Token [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1528 Steal Application Access Token](../../T1528/T1528.md)
+  - Atomic Test #1: Azure - Dump All Azure Key Vaults with Microburst [iaas:azure]
 - [T1552.006 Group Policy Preferences](../../T1552.006/T1552.006.md)
   - Atomic Test #1: GPP Passwords (findstr) [windows]
   - Atomic Test #2: GPP Passwords (Get-GPPPassword) [windows]
@@ -2055,6 +2061,7 @@
   - Atomic Test #6: Ammyy Admin Software Execution [windows]
   - Atomic Test #7: RemotePC Software Execution [windows]
   - Atomic Test #8: NetSupport - RAT Execution [windows]
+  - Atomic Test #9: UltraViewer - RAT Execution [windows]
 - T1079 Multilayer Encryption [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1032 Standard Cryptographic Protocol [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -2130,6 +2137,7 @@
   - Atomic Test #25: certreq download [windows]
   - Atomic Test #26: Download a file using wscript [windows]
   - Atomic Test #27: Linux Download File and Run [linux]
+  - Atomic Test #28: Nimgrab - Transfer Files [windows]
 - T1001.002 Steganography [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1008 Fallback Channels [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1090.001 Internal Proxy](../../T1090.001/T1090.001.md)
@@ -2173,7 +2181,8 @@
 - T1593 Search Open Websites/Domains [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1597 Search Closed Sources [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1592.003 Firmware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1592.002 Software [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1592.002 Software](../../T1592.002/T1592.002.md)
+  - Atomic Test #1: Enumerate COM Objects with Powershell [windows]
 - T1593.001 Social Media [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1589.001 Credentials [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1595.003 Wordlist Scanning [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

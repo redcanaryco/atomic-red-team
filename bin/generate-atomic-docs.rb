@@ -215,17 +215,71 @@ class AtomicRedTeamDocs
       "domain" => "enterprise-attack",
       "filters"=> filters,    
       "gradient" => {
-                  "colors" => ["#ce232e","#ce232e"],
+                  "colors" => ["#ffffff",
+                               "#ce232e"
+                  ],
                   "minValue" => 0,
-                  "maxValue" => 100
+                  "maxValue" => 10
                 },
       "legendItems" => [
-        "label" => "Has at least one test",
-        "color" => "#ce232e"
+        {
+          "label" => "81 to 100 tests",
+          "color" => "#ce232e"
+        },
+        {
+          "label" => "61 to 80 tests",
+          "color" => "#d2464a"
+        },
+        {
+          "label" => "41 to 60 tests",
+          "color" => "#d46164"
+        },
+        {
+          "label" => "21 to 40 tests",
+          "color" => "#d2797d"
+        },
+        {
+          "label" => "1 to 20 tests",
+          "color" => "#ce9094"
+        }
       ],
       "techniques" => techniques
     }
   end
+  
+
+  #
+  # Process the current technique and update the list
+  # 
+  def update_techniquesList(current_technique, current_techniqueParent, techniques_list, atomic_yaml, comments)
+    if not atomic_yaml['attack_technique'].include?(".") then
+      tech_parent = techniques_list.find { |h| h["techniqueID"] == atomic_yaml['attack_technique'].split('.')[0] }
+      if tech_parent then
+        tech_parent['score'] += current_technique['score']
+        if comments then
+          tech_parent.merge!("comment": current_technique['comment'])
+        end
+      else
+        if not comments then
+          current_technique.delete("comment")
+        end
+        techniques_list.push(current_technique)
+      end
+    else
+      if tech_parent = techniques_list.find { |h| h["techniqueID"] == atomic_yaml['attack_technique'].split('.')[0] }
+        puts tech_parent
+        tech_parent['score'] += current_technique['score']
+      else
+        current_techniqueParent['score'] += current_technique['score']
+        techniques_list.push(current_techniqueParent)
+      end
+      if not comments then
+        current_technique.delete("comment")
+      end
+      techniques_list.push(current_technique)
+    end
+  end
+  
   #
   # Generates a MITRE ATT&CK Navigator Layer based on contributed techniques
   #
@@ -251,107 +305,156 @@ class AtomicRedTeamDocs
       begin
         technique = {
           "techniqueID" => atomic_yaml['attack_technique'],
-          "score" => 100,
+          "score" => 0,
           "enabled" => true,
+          "comment" => "\n",
           "links" => ["label" => "View Atomic", "url" => "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/" + atomic_yaml['attack_technique'] + "/" + atomic_yaml['attack_technique'] + ".md"]
         }
 
         techniqueParent =  {
           "techniqueID" => atomic_yaml['attack_technique'].split('.')[0],
-          "score" => 100,
+          "score" => 0,
           "enabled" => true,
-          "links" => ["label" => "View Atomic", "url" => "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/" + atomic_yaml['attack_technique'] + "/" + atomic_yaml['attack_technique'] + ".md"]
+          "links" => ["label" => "View Atomic", "url" => "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/" + atomic_yaml['attack_technique'].split('.')[0] + "/" + atomic_yaml['attack_technique'].split('.')[0] + ".md"]
         }
 
-        techniques.push(technique)
-
-        for technique in techniques
-          if not technique['techniqueID'].include?(".") then 
-            techniqueParent =  {
-              "techniqueID" => atomic_yaml['attack_technique'].split('.')[0],
-              "score" => 100,
-              "enabled" => true,
-              "links" => ["label" => "View Atomics", "url" => "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/" + atomic_yaml['attack_technique'].split('.')[0] + "/" + atomic_yaml['attack_technique'].split('.')[0] + ".md"]
-            }
-          else
-            techniqueParent =  {
-              "techniqueID" => atomic_yaml['attack_technique'].split('.')[0],
-              "score" => 100,
-              "enabled" => true
-            }
-          end 
-        end
-
-        techniques.push(techniqueParent) unless techniques.include?(techniqueParent)
         has_windows_tests = false
+        win_technique = technique.clone
+        win_techniqueParent = techniqueParent.clone
         has_macos_tests = false
+        macos_technique = technique.clone
+        macos_techniqueParent = techniqueParent.clone
         has_linux_tests = false
+        linux_technique = technique.clone
+        linux_techniqueParent = techniqueParent.clone
         has_iaas_tests = false
+        iaas_technique = technique.clone
+        iaas_techniqueParent = techniqueParent.clone
         has_iaas_aws_tests = false
+        iaas_aws_technique = technique.clone
+        iaas_aws_techniqueParent = techniqueParent.clone
         has_iaas_azure_tests = false
+        iaas_azure_technique = technique.clone
+        iaas_azure_techniqueParent = techniqueParent.clone
         has_iaas_gcp_tests = false
+        iaas_gcp_technique = technique.clone
+        iaas_gcp_techniqueParent = techniqueParent.clone
         has_containers_tests = false
+        containers_technique = technique.clone
+        containers_techniqueParent = techniqueParent.clone
         has_saas_tests = false
+        saas_technique = technique.clone
+        saas_techniqueParent = techniqueParent.clone
         has_google_workspace_tests = false
+        google_workspace_technique = technique.clone
+        google_workspace_techniqueParent = techniqueParent.clone
         has_azure_ad_tests = false
+        azure_ad_technique = technique.clone
+        azure_ad_techniqueParent = techniqueParent.clone
         has_office_365_tests = false
+        office_365_technique = technique.clone
+        office_365_techniqueParent = techniqueParent.clone
 
         atomic_yaml['atomic_tests'].each do |atomic|
-          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /windows/} then has_windows_tests = true end
-          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /macos/} then has_macos_tests = true end
-          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /^(?!windows|macos).*$/} then has_linux_tests = true end
-          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /^iaas/} then has_iaas_tests = true end
-          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /^iaas:aws/} then has_iaas_aws_tests = true end
-          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /^iaas:azure/} then has_iaas_azure_tests = true end
-          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /^iaas:gcp/} then has_iaas_gcp_tests = true end
-          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /^containers/} then has_containers_tests = true end
-          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /^google-workspace/} then has_google_workspace_tests = true end
-          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /^azure-ad/} then has_azure_ad_tests = true end
-          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /^office-365/} then has_office_365_tests = true end
+          technique['score'] += 1
+          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /windows/} then
+            has_windows_tests = true
+            win_technique['score'] += 1
+            win_technique['comment'] += "- " + atomic['name'] + "\n"
+          end
+          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /macos/} then 
+            has_macos_tests = true
+            macos_technique['score'] += 1
+            macos_technique['comment'] += "- " + atomic['name'] + "\n"
+          end
+          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /^(?!windows|macos).*$/} then
+            has_linux_tests = true
+            linux_technique['score'] += 1
+            linux_technique['comment'] += "- " + atomic['name'] + "\n"
+          end
+          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /^iaas/} then
+            has_iaas_tests = true
+            iaas_technique['score'] += 1
+            iaas_technique['comment'] += "- " + atomic['name'] + "\n"
+          end
+          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /^iaas:aws/} then
+            has_iaas_aws_tests = true
+            iaas_aws_technique['score'] += 1
+            iaas_aws_technique['comment'] += "- " + atomic['name'] + "\n"
+          end
+          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /^iaas:azure/} then
+            has_iaas_azure_tests = true
+            iaas_azure_technique['score'] += 1
+            iaas_azure_technique['comment'] += "- " + atomic['name'] + "\n"
+          end
+          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /^iaas:gcp/} then
+            has_iaas_gcp_tests = true
+            iaas_gcp_technique['score'] += 1
+            iaas_gcp_technique['comment'] += "- " + atomic['name'] + "\n"
+          end
+          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /^containers/} then
+            has_containers_tests = true
+            containers_technique['score'] += 1
+            containers_technique['comment'] += "- " + atomic['name'] + "\n"
+          end
+          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /^google-workspace/} then
+            has_google_workspace_tests = true
+            google_workspace_technique['score'] += 1
+            google_workspace_technique['comment'] += "- " + atomic['name'] + "\n"
+          end
+          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /^azure-ad/} then
+            has_azure_ad_tests = true
+            azure_ad_technique['score'] += 1
+            azure_ad_technique['comment'] += "- " + atomic['name'] + "\n"
+          end
+          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /^office-365/} then
+            has_office_365_tests = true
+            office_365_technique['score'] += 1
+            office_365_technique['comment'] += "- " + atomic['name'] + "\n"
+          end
         end
+        
+        # Update full Atomic Layer
+        update_techniquesList(technique, techniqueParent, techniques, atomic_yaml, false)
+        # Update all other Atomic Layers
         if has_windows_tests then
-          techniques_win.push(technique)
-          techniques_win.push(techniqueParent) unless techniques_win.include?(techniqueParent)
+          update_techniquesList(win_technique, win_techniqueParent, techniques_win, atomic_yaml, true)
         end
         if has_macos_tests then
-          techniques_mac.push(technique)
-          techniques_mac.push(techniqueParent) unless techniques_mac.include?(techniqueParent)
+          update_techniquesList(macos_technique, macos_techniqueParent, techniques_mac, atomic_yaml, true)
         end
         if has_linux_tests then
-          techniques_lin.push(technique)
-          techniques_lin.push(techniqueParent) unless techniques_lin.include?(techniqueParent)
+          update_techniquesList(linux_technique, linux_techniqueParent, techniques_lin, atomic_yaml, true)
         end
         if has_iaas_tests then
-          techniques_iaas.push(technique)
-          techniques_iaas.push(techniqueParent) unless techniques_iaas.include?(techniqueParent)
+          update_techniquesList(iaas_technique, iaas_techniqueParent, techniques_iaas, atomic_yaml, true)
+        end
+        if has_iaas_aws_tests then
+          update_techniquesList(iaas_aws_technique, iaas_aws_techniqueParent, techniques_iaas_aws, atomic_yaml, true)
         end
         if has_iaas_azure_tests then
-          techniques_iaas_azure.push(technique)
-          techniques_iaas_azure.push(techniqueParent) unless techniques_iaas_azure.include?(techniqueParent)
+          update_techniquesList(iaas_azure_technique, iaas_azure_techniqueParent, techniques_iaas_azure, atomic_yaml, true)
         end
         if has_iaas_gcp_tests then
-          techniques_iaas_gcp.push(technique)
-          techniques_iaas_gcp.push(techniqueParent) unless techniques_iaas_gcp.include?(techniqueParent)
+          update_techniquesList(iaas_gcp_technique, iaas_gcp_techniqueParent, techniques_iaas_gcp, atomic_yaml, true)
         end
         if has_containers_tests then
-          techniques_containers.push(technique)
-          techniques_containers.push(techniqueParent) unless techniques_containers.include?(techniqueParent)
+          update_techniquesList(containers_technique, containers_techniqueParent, techniques_containers, atomic_yaml, true)
         end
         if has_google_workspace_tests then
-          techniques_google_workspace.push(technique)
-          techniques_google_workspace.push(techniqueParent) unless techniques_google_workspace.include?(techniqueParent)
+          update_techniquesList(google_workspace_technique, google_workspace_techniqueParent, techniques_google_workspace, atomic_yaml, true)
         end
         if has_azure_ad_tests then
-          techniques_azure_ad.push(technique)
-          techniques_azure_ad.push(techniqueParent) unless techniques_azure_ad.include?(techniqueParent)
+          update_techniquesList(azure_ad_technique, azure_ad_techniqueParent, techniques_azure_ad, atomic_yaml, true)
         end
         if has_office_365_tests then
-          techniques_office_365.push(technique)
-          techniques_office_365.push(techniqueParent) unless techniques_office_365.include?(techniqueParent)
+          update_techniquesList(office_365_technique, office_365_techniqueParent, techniques_office_365, atomic_yaml, true)
         end
       end
     end
-
+    
+    puts techniques_iaas_gcp
+    
     layer = get_layer techniques, "Atomic Red Team"
     layer_win = get_layer techniques_win, "Atomic Red Team (Windows)"
     layer_mac = get_layer techniques_mac, "Atomic Red Team (macOS)"
