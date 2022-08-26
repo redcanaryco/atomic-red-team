@@ -223,24 +223,12 @@ class AtomicRedTeamDocs
                 },
       "legendItems" => [
         {
-          "label" => "81 to 100 tests",
+          "label" => "10 or more tests",
           "color" => "#ce232e"
         },
         {
-          "label" => "61 to 80 tests",
-          "color" => "#d2464a"
-        },
-        {
-          "label" => "41 to 60 tests",
-          "color" => "#d46164"
-        },
-        {
-          "label" => "21 to 40 tests",
-          "color" => "#d2797d"
-        },
-        {
-          "label" => "1 to 20 tests",
-          "color" => "#ce9094"
+          "label" => "1 or more tests",
+          "color" => "#ffffff"
         }
       ],
       "techniques" => techniques
