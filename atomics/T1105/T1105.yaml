@@ -747,29 +747,30 @@ atomic_tests:
       description: URL of file to copy
       type: Url
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
-    local_path:
-      description: Local path to place file
-      type: Path
-      default: Atomic-license.txt
     destination_path:
       description: Destination path to file
       type: Path
       default: $env:TEMP\Atomic-license.txt
+    local_nimgrab:
+      description: Local path to nimgrab
+      type: Path
+      default: $env:TEMP\nimgrab.exe
   executor:
     command: |
-      cmd /c nimgrab.exe #{remote_file} #{local_path}
+      cmd /c nimgrab.exe #{remote_file} #{destination_path}
     cleanup_command: |
-      del #{local_path} >nul 2>&1
+      del #{destination_path} >nul 2>&1
     name: command_prompt
+  dependency_executor_name: powershell 
   dependencies: 
     - description: |
         NimGrab must be installed on system.
       prereq_command: |
-        if (Test-Path "$env:temp\nimgrab.exe") {exit 0} else {exit 1}
+        if (Test-Path "#{local_nimgrab}") {exit 0} else {exit 1}
       get_prereq_command: |
         Invoke-WebRequest "https://nim-lang.org/download/nim-1.6.6_x64.zip" -Outfile $env:temp\nim.zip
-        Expand-Archive -Path $env:temp\nim.zip -DestinationPath $env:temp\nim
-        Copy-Item $env:temp\nim\nim-1.6.6\bin\nimgrab.exe #{destination_path}
+        Expand-Archive -Path $env:temp\nim.zip -DestinationPath $env:temp\nim -Force
+        Copy-Item $env:temp\nim\nim-1.6.6\bin\nimgrab.exe #{local_nimgrab}
         Remove-Item $env:temp\nim
         Remove-Item $env:temp\nim.zip
- 
+
