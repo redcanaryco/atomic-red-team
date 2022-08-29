@@ -8,6 +8,7 @@ atomic_tests:
     The binary in bin is https://www.virustotal.com/gui/file/95140c1ad39fd632d1c1300b246293297aa272ce6035eecc3da56e337200221d/detection
     Source is in src folder. 
     This does require a reboot to see the filter loaded into lsass.exe. 
+    It does require Administrative privileges to import the clean registry values back into LSA, it is possible you may have to manually do this after for cleanup.
   supported_platforms:
   - windows
   input_arguments:
@@ -38,5 +39,6 @@ atomic_tests:
       Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\" "Notification Packages" $notificationPackagesValues
     cleanup_command: |
       reg.exe import PathToAtomicsFolder\T1556.002\lsa_backup.reg
+      remove-item C:\Windows\System32\#{dll_name}
     name: powershell
     elevation_required: true
