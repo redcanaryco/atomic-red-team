@@ -1123,6 +1123,7 @@
 - [T1110.001 Password Guessing](../../T1110.001/T1110.001.md)
   - Atomic Test #1: Brute Force Credentials of single Active Directory domain users via SMB [windows]
   - Atomic Test #2: Brute Force Credentials of single Active Directory domain user via LDAP against domain controller (NTLM or Kerberos) [windows]
+  - Atomic Test #6: Password Brute User using Kerbrute Tool [windows]
 - [T1003 OS Credential Dumping](../../T1003/T1003.md)
   - Atomic Test #1: Gsecdump [windows]
   - Atomic Test #2: Credential Dumping with NPPSpy [windows]
