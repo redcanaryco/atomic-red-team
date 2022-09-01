@@ -65,6 +65,7 @@ atomic_tests:
       for unamepass in $(cat /tmp/credstuffuserpass.txt);do sshpass -p `echo $unamepass | cut -d":" -f2` ssh -o 'StrictHostKeyChecking=no' `echo $unamepass | cut -d":" -f1`@#{target_host};done
 
 - name: Brute Force:Credential Stuffing using Kerbrute Tool
+  auto_generated_guid: 4852c630-87a9-409b-bb5e-5dc12c9ebcde
   description: |  
     Will read username and password combos from a file or stdin (format username:password) and perform a bruteforce attack
   supported_platforms:
