@@ -1212,6 +1212,7 @@
   - Atomic Test #3: Password spray all Active Directory domain users with a single password via LDAP against domain controller (NTLM or Kerberos) [windows]
   - Atomic Test #5: WinPwn - DomainPasswordSpray Attacks [windows]
   - Atomic Test #6: Password Spray Invoke-DomainPasswordSpray Light [windows]
+  - Atomic Test #8: Password Spray using Kerbrute Tool [windows]
 - T1056.003 Web Portal Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1003.005 Cached Domain Credentials](../../T1003.005/T1003.005.md)
   - Atomic Test #1: Cached Credential Dump via Cmdkey [windows]
