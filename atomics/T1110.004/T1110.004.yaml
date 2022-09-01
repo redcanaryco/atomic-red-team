@@ -71,13 +71,13 @@ atomic_tests:
   - windows
   input_arguments:
     domaincontroller:
-      description: Domain controller were test will be run
+      description: Domain controller where test will be run
       type: String
-      default: null
+      default: $ENV:userdnsdomain
     domain:
       description: Domain where you will be testing
       type: String
-      default: null
+      default: $ENV:userdomain
   dependency_executor_name: powershell
   dependencies:
   - description: |
