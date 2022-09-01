@@ -1711,6 +1711,7 @@
 - [T1110.004 Credential Stuffing](../../T1110.004/T1110.004.md)
   - Atomic Test #1: SSH Credential Stuffing From Linux [linux]
   - Atomic Test #2: SSH Credential Stuffing From MacOS [macos]
+  - Atomic Test #3: Brute Force:Credential Stuffing using Kerbrute Tool [windows]
 - T1208 Kerberoasting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1187 Forced Authentication](../../T1187/T1187.md)
   - Atomic Test #1: PetitPotam [windows]
