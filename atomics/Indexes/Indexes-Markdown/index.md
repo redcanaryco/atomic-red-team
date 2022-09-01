@@ -417,6 +417,7 @@
   - Atomic Test #5: Invoke CHM Simulate Double click [windows]
   - Atomic Test #6: Invoke CHM with Script Engine and Help Topic [windows]
   - Atomic Test #7: Invoke CHM Shortcut Command with ITS and Help Topic [windows]
+  - Atomic Test #8: Decompile Local CHM File [windows]
 - [T1070.005 Network Share Connection Removal](../../T1070.005/T1070.005.md)
   - Atomic Test #1: Add Network Share [windows]
   - Atomic Test #2: Remove Network Share [windows]
