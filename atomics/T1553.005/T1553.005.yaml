@@ -111,7 +111,8 @@ atomic_tests:
     command: |
       $keep = Mount-DiskImage -ImagePath "#{path_of_iso}" -StorageType ISO -Access ReadOnly
       $driveLetter = ($keep | Get-Volume).DriveLetter
-      invoke-item "$($driveLetter):\document.lnk"
+      $instance = [activator]::CreateInstance([type]::GetTypeFromCLSID("{c08afd90-f2a1-11d1-8455-00a0c91f3880}"))
+      $instance.Document.Application.ShellExecute($driveLetter+":\document.lnk","",$driveLetter+":\",$null,0)
     cleanup_command: |
       Dismount-DiskImage -ImagePath "#{path_of_iso}" | Out-Null
     name: powershell
