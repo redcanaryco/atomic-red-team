@@ -291,6 +291,7 @@
   - Atomic Test #1: Named pipe client impersonation [windows]
   - Atomic Test #2: `SeDebugPrivilege` token duplication [windows]
   - Atomic Test #3: Launch NSudo Executable [windows]
+  - Atomic Test #4: Bad Potato [windows]
 - T1205.001 Port Knocking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1564.002 Hidden Users](../../T1564.002/T1564.002.md)
   - Atomic Test #3: Create Hidden User in Registry [windows]
@@ -317,6 +318,7 @@
   - Atomic Test #5: Invoke CHM Simulate Double click [windows]
   - Atomic Test #6: Invoke CHM with Script Engine and Help Topic [windows]
   - Atomic Test #7: Invoke CHM Shortcut Command with ITS and Help Topic [windows]
+  - Atomic Test #8: Decompile Local CHM File [windows]
 - [T1070.005 Network Share Connection Removal](../../T1070.005/T1070.005.md)
   - Atomic Test #1: Add Network Share [windows]
   - Atomic Test #2: Remove Network Share [windows]
@@ -349,6 +351,7 @@
   - Atomic Test #33: LockBit Black - Use Registry Editor to turn on automatic logon -cmd [windows]
   - Atomic Test #34: LockBit Black - Disable Privacy Settings Experience Using Registry -Powershell [windows]
   - Atomic Test #35: Lockbit Black - Use Registry Editor to turn on automatic logon -Powershell [windows]
+  - Atomic Test #36: Disable Windows Defender with PwSh Disable-WindowsOptionalFeature [windows]
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -604,6 +607,7 @@
   - Atomic Test #1: Named pipe client impersonation [windows]
   - Atomic Test #2: `SeDebugPrivilege` token duplication [windows]
   - Atomic Test #3: Launch NSudo Executable [windows]
+  - Atomic Test #4: Bad Potato [windows]
 - T1134.003 Make and Impersonate Token [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.003 Windows Management Instrumentation Event Subscription](../../T1546.003/T1546.003.md)
   - Atomic Test #1: Persistence via WMI Event Subscription - CommandLineEventConsumer [windows]
@@ -1119,6 +1123,7 @@
 - [T1110.001 Password Guessing](../../T1110.001/T1110.001.md)
   - Atomic Test #1: Brute Force Credentials of single Active Directory domain users via SMB [windows]
   - Atomic Test #2: Brute Force Credentials of single Active Directory domain user via LDAP against domain controller (NTLM or Kerberos) [windows]
+  - Atomic Test #6: Password Brute User using Kerbrute Tool [windows]
 - [T1003 OS Credential Dumping](../../T1003/T1003.md)
   - Atomic Test #1: Gsecdump [windows]
   - Atomic Test #2: Credential Dumping with NPPSpy [windows]
@@ -1210,6 +1215,7 @@
   - Atomic Test #3: Password spray all Active Directory domain users with a single password via LDAP against domain controller (NTLM or Kerberos) [windows]
   - Atomic Test #5: WinPwn - DomainPasswordSpray Attacks [windows]
   - Atomic Test #6: Password Spray Invoke-DomainPasswordSpray Light [windows]
+  - Atomic Test #8: Password Spray using Kerbrute Tool [windows]
 - T1056.003 Web Portal Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1003.005 Cached Domain Credentials](../../T1003.005/T1003.005.md)
   - Atomic Test #1: Cached Credential Dump via Cmdkey [windows]
@@ -1236,7 +1242,8 @@
 - [T1056.002 GUI Input Capture](../../T1056.002/T1056.002.md)
   - Atomic Test #2: PowerShell - Prompt User for Password [windows]
 - T1110 Brute Force [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1110.004 Credential Stuffing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1110.004 Credential Stuffing](../../T1110.004/T1110.004.md)
+  - Atomic Test #3: Brute Force:Credential Stuffing using Kerbrute Tool [windows]
 - T1208 Kerberoasting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1187 Forced Authentication](../../T1187/T1187.md)
   - Atomic Test #1: PetitPotam [windows]
@@ -1307,6 +1314,7 @@
   - Atomic Test #13: Enumerate Linked Policies In ADSISearcher Discovery [windows]
   - Atomic Test #14: Enumerate Root Domain linked policies Discovery [windows]
   - Atomic Test #15: WinPwn - generaldomaininfo [windows]
+  - Atomic Test #16: Kerbrute - userenum [windows]
 - T1063 Security Software Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1087.001 Local Account](../../T1087.001/T1087.001.md)
   - Atomic Test #8: Enumerate all accounts on Windows (Local) [windows]
