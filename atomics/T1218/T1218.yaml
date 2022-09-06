@@ -108,12 +108,15 @@ atomic_tests:
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1218/src/T1218Test.docx
   dependency_executor_name: powershell 
   dependencies: 
-    - description: |
-        Microsoft Word must be installed with the correct path and protocolhandler.exe must be provided
-      prereq_command: | 
-        if (Test-Path "(Resolve-Path "C:\Program Files*\Microsoft Office\root\Office16")\protocolhandler.exe") {exit 0} else {exit 1}
-      get_prereq_command: | 
-        write-host "Install Microsoft Word or provide correct path."
+  - description: |
+      Microsoft Word must be installed
+    prereq_command: |
+      try {
+        $wdApp = New-Object -COMObject "Word.Application"
+        Stop-Process -Name "winword"
+        exit 0 } catch { exit 1 }
+    get_prereq_command: |
+      Write-Host "You will need to install Microsoft Word manually to meet this requirement"
   executor:
     name: command_prompt
     elevation_required: false
