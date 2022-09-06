@@ -1468,6 +1468,7 @@
 - [T1124 System Time Discovery](../../T1124/T1124.md)
   - Atomic Test #1: System Time Discovery [windows]
   - Atomic Test #2: System Time Discovery - PowerShell [windows]
+  - Atomic Test #4: System Time Discovery W32tm as a Delay [windows]
 
 # command-and-control
 - [T1132.001 Standard Encoding](../../T1132.001/T1132.001.md)
