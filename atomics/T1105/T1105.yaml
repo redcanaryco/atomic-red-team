@@ -301,7 +301,7 @@ atomic_tests:
 - name: Download a File with Windows Defender MpCmdRun.exe
   auto_generated_guid: 815bef8b-bf91-4b67-be4c-abe4c2a94ccc
   description: |
-    Uses the Windows Defender to download a file from the internet (must have version 4.18.2007.8-0, 4.18.2007.9, or 4.18.2009.9 installed).
+    Uses Windows Defender MpCmdRun.exe to download a file from the internet (must have version 4.18 installed).
     The input arguments "remote_file" and "local_path" can be used to specify the download URL and the name of the output file.
     By default, the test downloads the Atomic Red Team license file to the temp directory.
 
@@ -317,16 +317,12 @@ atomic_tests:
       description: Location to save downloaded file
       type: Path
       default: '%temp%\Atomic-license.txt'
-  dependency_executor_name: powershell
   dependencies:
-  - description: 'Must have one of these Windows Defender versions installed: 4.18.2007.8-0, 4.18.2007.9, or 4.18.2009.9'
+  - description: 'Must have a Windows Defender version with MpCmdRun.exe installed'
     prereq_command: |
-      $retVal = 1
-      foreach ($version in @("4.18.2007.8-0","4.18.2007.9","4.18.2009.9")){
-        if (Test-Path "$env:ProgramData\Microsoft\Windows Defender\Platform\$version") { $retVal =  0}
-      }
-      exit $retVal
-    get_prereq_command: Write-Host "Windows Defender verion 4.18.2007.8-0, 4.18.2007.9, or 4.18.2009.9 must be installed manually"
+      cd "%ProgramData%\Microsoft\Windows Defender\platform\4.18*"
+      MpCmdRun.exe /?
+    get_prereq_command: Echo "A version of Windows Defender with MpCmdRun.exe must be installed manually"
   executor:
     command: |
       cd "%ProgramData%\Microsoft\Windows Defender\platform\4.18*"
