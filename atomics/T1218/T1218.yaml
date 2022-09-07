@@ -53,6 +53,9 @@ atomic_tests:
   executor:
     command: |
       C:\Windows\SysWow64\Register-CimProvider.exe -Path #{dll_payload}
+    cleanup_command: |
+      taskkill /F /IM calculator.exe >nul 2>&1
+      C:\Windows\SysWow64\Register-CimProvider.exe -Path #{dll_payload} -verbose –ForceUpdate -GenerateUnregistration >nul 2>&1
     name: command_prompt
 - name: InfDefaultInstall.exe .inf Execution
   auto_generated_guid: 54ad7d5a-a1b5-472c-b6c4-f8090fb2daef
