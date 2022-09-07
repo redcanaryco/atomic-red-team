@@ -106,8 +106,6 @@ atomic_tests:
   executor:
     command: |
       Get-ChildItem #{file_path} | % { $_.CreationTime = "#{target_date_time}" }
-    cleanup_command: |
-      Remove-Item #{file_path} -Force -ErrorAction Ignore
     name: powershell
 - name: Windows - Modify file last modified timestamp with PowerShell
   auto_generated_guid: f8f6634d-93e1-4238-8510-f8a90a20dcf2
@@ -137,8 +135,6 @@ atomic_tests:
   executor:
     command: |
       Get-ChildItem #{file_path} | % { $_.LastWriteTime = "#{target_date_time}" }
-    cleanup_command: |
-      Remove-Item #{file_path} -Force -ErrorAction Ignore
     name: powershell
 - name: Windows - Modify file last access timestamp with PowerShell
   auto_generated_guid: da627f63-b9bd-4431-b6f8-c5b44d061a62
@@ -168,8 +164,6 @@ atomic_tests:
   executor:
     command: |
       Get-ChildItem #{file_path} | % { $_.LastAccessTime = "#{target_date_time}" }
-    cleanup_command: |
-      Remove-Item #{file_path} -Force -ErrorAction Ignore
     name: powershell
 - name: Windows - Timestomp a File
   auto_generated_guid: d7512c33-3a75-4806-9893-69abc3ccdd43
