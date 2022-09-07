@@ -176,18 +176,11 @@ atomic_tests:
   - windows
   input_arguments:
     teamviewer_log_file:
-      description: Teamviewer log file to delete. Run the prereq command to create it if it does not exist.
+      description: Teamviewer log file to create and delete.
       type: String
       default: $env:TEMP\TeamViewer_54.log
-  dependency_executor_name: powershell
-  dependencies:
-  - description: |
-      The folder to delete must exist on disk at specified location (#{teamviewer_log_file})
-    prereq_command: |
-      if (Test-Path #{teamviewer_log_file}) {exit 0} else {exit 1}
-    get_prereq_command: |
-      New-Item -Path #{teamviewer_log_file} | Out-Null
   executor:
     command: |
-      Remove-Item #{teamviewer_log_file}
+      New-Item -Path #{teamviewer_log_file} -Force | Out-Null
+      Remove-Item #{teamviewer_log_file} -Force -ErrorAction Ignore
     name: powershell
