@@ -122,18 +122,17 @@
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1218 System Binary Proxy Execution](../../T1218/T1218.md)
   - Atomic Test #1: mavinject - Inject DLL into running process [windows]
-  - Atomic Test #2: SyncAppvPublishingServer - Execute arbitrary PowerShell code [windows]
-  - Atomic Test #3: Register-CimProvider - Execute evil dll [windows]
-  - Atomic Test #4: InfDefaultInstall.exe .inf Execution [windows]
-  - Atomic Test #5: ProtocolHandler.exe Downloaded a Suspicious File [windows]
-  - Atomic Test #6: Microsoft.Workflow.Compiler.exe Payload Execution [windows]
-  - Atomic Test #7: Renamed Microsoft.Workflow.Compiler.exe Payload Executions [windows]
-  - Atomic Test #8: Invoke-ATHRemoteFXvGPUDisablementCommand base test [windows]
-  - Atomic Test #9: DiskShadow Command Execution [windows]
-  - Atomic Test #10: Load Arbitrary DLL via Wuauclt (Windows Update Client) [windows]
-  - Atomic Test #11: Lolbin Gpscript logon option [windows]
-  - Atomic Test #12: Lolbin Gpscript startup option [windows]
-  - Atomic Test #13: Lolbas ie4uinit.exe use as proxy [windows]
+  - Atomic Test #2: Register-CimProvider - Execute evil dll [windows]
+  - Atomic Test #3: InfDefaultInstall.exe .inf Execution [windows]
+  - Atomic Test #4: ProtocolHandler.exe Downloaded a Suspicious File [windows]
+  - Atomic Test #5: Microsoft.Workflow.Compiler.exe Payload Execution [windows]
+  - Atomic Test #6: Renamed Microsoft.Workflow.Compiler.exe Payload Executions [windows]
+  - Atomic Test #7: Invoke-ATHRemoteFXvGPUDisablementCommand base test [windows]
+  - Atomic Test #8: DiskShadow Command Execution [windows]
+  - Atomic Test #9: Load Arbitrary DLL via Wuauclt (Windows Update Client) [windows]
+  - Atomic Test #10: Lolbin Gpscript logon option [windows]
+  - Atomic Test #11: Lolbin Gpscript startup option [windows]
+  - Atomic Test #12: Lolbas ie4uinit.exe use as proxy [windows]
 - T1038 DLL Search Order Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1070.006 Timestomp](../../T1070.006/T1070.006.md)
   - Atomic Test #5: Windows - Modify file creation timestamp with PowerShell [windows]
@@ -269,6 +268,7 @@
   - Atomic Test #1: Mount ISO image [windows]
   - Atomic Test #2: Mount an ISO image and run executable from the ISO [windows]
   - Atomic Test #3: Remove the Zone.Identifier alternate data stream [windows]
+  - Atomic Test #4: Execute LNK file from ISO [windows]
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1064 Scripting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1055.002 Portable Executable Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1467,6 +1467,7 @@
 - [T1124 System Time Discovery](../../T1124/T1124.md)
   - Atomic Test #1: System Time Discovery [windows]
   - Atomic Test #2: System Time Discovery - PowerShell [windows]
+  - Atomic Test #4: System Time Discovery W32tm as a Delay [windows]
 
 # command-and-control
 - [T1132.001 Standard Encoding](../../T1132.001/T1132.001.md)
