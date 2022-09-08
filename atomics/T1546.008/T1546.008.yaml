@@ -63,3 +63,48 @@ atomic_tests:
       copy /Y C:\Windows\System32\sethc_backup.exe C:\Windows\System32\sethc.exe
     name: command_prompt
     elevation_required: true
+- name: GlobalFlags in Image File Execution Options
+  description: |
+    The following Atomic Test will create a GlobalFlag key under Image File Execution Options, also a SilentProcessExit Key with ReportingMode and MonitorProcess values. This test is similar to a recent CanaryToken that will generate an EventCode 3000 in the Application log when a command, whoami.exe for example, is executed.
+    Upon running Whoami.exe, a command shell will spawn and start calc.exe based on the MonitorProcess value. 
+
+    Upon successful execution, powershell will modify the registry and spawn calc.exe. An event 3000 will generate in the Application log.
+  supported_platforms:
+  - windows
+  input_arguments:
+    process:
+      description: |
+        Process to monitor
+      type: String
+      default: whoami.exe
+    cmd_to_run:
+      description: |
+        command to execute
+      type: String
+      default: cmd.exe /c calc.exe
+  executor:
+    command: |
+      $Name = "GlobalFlag"
+      $Value = "512"
+      $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{process}"
+      New-Item -Path $registryPath -Force
+      New-ItemProperty -Path $registryPath -Name $Name -Value $Value -PropertyType DWord -Force
+
+      $Name = "ReportingMode"
+      $Value = "1"
+      $SilentProcessExit = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{process}"
+      New-Item -Path $SilentProcessExit -Force
+      New-ItemProperty -Path $SilentProcessExit -Name $Name -Value $Value -PropertyType DWord -Force 
+      
+      $Name = "MonitorProcess"
+      $Value = "#{cmd_to_run}"
+      New-ItemProperty -Path $SilentProcessExit -Name $Name -Value $Value -PropertyType String -Force
+
+      Start-Process whoami.exe
+    cleanup_command: |
+      $SilentProcessExit = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{process}" 
+      Remove-Item $SilentProcessExit -force
+      $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{process}"
+      Remove-Item $registryPath -force
+    name: powershell
+    elevation_required: true
