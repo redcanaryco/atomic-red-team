@@ -4,7 +4,10 @@ atomic_tests:
 - name: Rundll32 execute JavaScript Remote Payload With GetObject
   auto_generated_guid: 57ba4ce9-ee7a-4f27-9928-3c70c489b59d
   description: |
-    Test execution of a remote script using rundll32.exe. Upon execution notepad.exe will be opened.
+    Test execution of a remote script using rundll32.exe. Upon execution notepad.exe will be opened. 
+    This has been used by Win32/Poweliks malware and works as described [here](https://www.stormshield.com/news/poweliks-command-line-confusion/)
+    
+    Note: The GetObject function is no longer supported in Internet Explorer v9 (2011) and later so this technique would only work where very old versions of IE are installed. 
   supported_platforms:
   - windows
   input_arguments:
