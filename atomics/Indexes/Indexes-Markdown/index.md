@@ -792,11 +792,10 @@
 - [T1546.012 Image File Execution Options Injection](../../T1546.012/T1546.012.md)
   - Atomic Test #1: IFEO Add Debugger [windows]
   - Atomic Test #2: IFEO Global Flags [windows]
+  - Atomic Test #3: GlobalFlags in Image File Execution Options [windows]
 - T1055.013 Process Doppelgänging [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574.005 Executable Installer File Permissions Weakness [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1546.008 Accessibility Features](../../T1546.008/T1546.008.md)
-  - Atomic Test #1: Attaches Command Prompt as a Debugger to a List of Target Processes [windows]
-  - Atomic Test #2: Replace binary of sticky keys [windows]
+- T1546.008 Accessibility Features [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1504 PowerShell Profile [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1055.004 Asynchronous Procedure Call](../../T1055.004/T1055.004.md)
   - Atomic Test #1: Process Injection via C# [windows]
@@ -1228,11 +1227,10 @@
 - [T1546.012 Image File Execution Options Injection](../../T1546.012/T1546.012.md)
   - Atomic Test #1: IFEO Add Debugger [windows]
   - Atomic Test #2: IFEO Global Flags [windows]
+  - Atomic Test #3: GlobalFlags in Image File Execution Options [windows]
 - T1177 LSASS Driver [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574.005 Executable Installer File Permissions Weakness [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1546.008 Accessibility Features](../../T1546.008/T1546.008.md)
-  - Atomic Test #1: Attaches Command Prompt as a Debugger to a List of Target Processes [windows]
-  - Atomic Test #2: Replace binary of sticky keys [windows]
+- T1546.008 Accessibility Features [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1504 PowerShell Profile [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1198 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1136.002 Domain Account](../../T1136.002/T1136.002.md)
