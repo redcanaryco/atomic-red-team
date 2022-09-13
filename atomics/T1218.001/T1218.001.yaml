@@ -211,5 +211,7 @@ atomic_tests:
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.001/src/T1218.001.chm" -OutFile "#{local_chm_file}"
   executor:
     command: |
-      hh.exe -decompile #{local_chm_file} PathToAtomicsFolder\T1218.001\src
+      hh.exe -decompile %temp% #{local_chm_file}
+    cleanup_command: |
+      del %temp%\T1218.001.html >nul 2>&1
     name: command_prompt
