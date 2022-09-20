@@ -1,0 +1,18 @@
+#r @"C:\Windows\Microsoft.NET\assembly\GAC_MSIL\System.Management.Automation\v4.0_3.0.0.0__31bf3856ad364e35\System.Management.Automation.dll"
+
+open System.Management.Automation
+open System.Management.Automation.Runspaces
+open System
+
+let runSpace = RunspaceFactory.CreateRunspace()
+runSpace.Open()
+let pipeline = runSpace.CreatePipeline()
+
+let getProcess = new Command("Get-Process")
+pipeline.Commands.Add(getProcess)
+
+
+let output = pipeline.Invoke()
+for psObject in output do
+psObject.Properties.Item("ProcessName").Value.ToString()
+|> printfn "%s"
