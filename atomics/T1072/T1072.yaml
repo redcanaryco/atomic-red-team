@@ -32,3 +32,35 @@ atomic_tests:
     elevation_required: true 
     command: | 
       "#{radmin_exe}"
+      
+- name: PDQ Deploy RAT
+  auto_generated_guid:
+  description: |
+    An adversary may use PDQ Deploy Software to deploy the Remote Adminstartion Tool, this will start the PDQ console.
+  supported_platforms:
+    - windows
+  input_arguments:
+    PDQ_Deploy_installer:
+      description: PDQ Deploy Install
+      type: Path
+      default: '%TEMP%\PDQDeploysetup.exe'
+    PDQ_Deploy_exe:
+      description: The PDQDeployConsole.exe executable from PDQDeploysetup.exe
+      type: Path
+      default: '%PROGRAMFILES(x86)%\Admin Arsenal\PDQ Deploy\PDQDeployConsole.exe'
+
+  dependencies:
+    - description: |
+        Radmin Viewer Utility must be installed at specified location (#{PDQ_Deploy_exe})
+      prereq_command: |
+        if not exist "#{PDQ_Deploy_exe}" (exit /b 1)
+      get_prereq_command: |
+        echo Downloading PDQ Deploy installer
+        bitsadmin /transfer myDownloadJob /download /priority normal "https://download.pdq.com/release/19/Deploy_19.3.350.0.exe" #{PDQ_Deploy_installer}
+        msiexec /i "#{PDQ_Deploy_installer}" /qn
+
+  executor:
+    name: command_prompt
+    elevation_required: true 
+    command: | 
+      "#{PDQ_Deploy_exe}"
