@@ -749,6 +749,7 @@
 - T1196 Control Panel Items [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1072 Software Deployment Tools](../../T1072/T1072.md)
   - Atomic Test #1: Radmin Viewer Utility [windows]
+  - Atomic Test #2: PDQ Deploy RAT [windows]
 - [T1059.001 PowerShell](../../T1059.001/T1059.001.md)
   - Atomic Test #1: Mimikatz [windows]
   - Atomic Test #2: Run BloodHound from local disk [windows]
@@ -1100,6 +1101,7 @@
 - T1051 Shared Webroot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1072 Software Deployment Tools](../../T1072/T1072.md)
   - Atomic Test #1: Radmin Viewer Utility [windows]
+  - Atomic Test #2: PDQ Deploy RAT [windows]
 - T1210 Exploitation of Remote Services [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1534 Internal Spearphishing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1097 Pass the Ticket [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
