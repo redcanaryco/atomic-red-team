@@ -5,16 +5,17 @@
 - [T1218.011 Rundll32](../../T1218.011/T1218.011.md)
   - Atomic Test #1: Rundll32 execute JavaScript Remote Payload With GetObject [windows]
   - Atomic Test #2: Rundll32 execute VBscript command [windows]
-  - Atomic Test #3: Rundll32 advpack.dll Execution [windows]
-  - Atomic Test #4: Rundll32 ieadvpack.dll Execution [windows]
-  - Atomic Test #5: Rundll32 syssetup.dll Execution [windows]
-  - Atomic Test #6: Rundll32 setupapi.dll Execution [windows]
-  - Atomic Test #7: Execution of HTA and VBS Files using Rundll32 and URL.dll [windows]
-  - Atomic Test #8: Launches an executable using Rundll32 and pcwutl.dll [windows]
-  - Atomic Test #9: Execution of non-dll using rundll32.exe [windows]
-  - Atomic Test #10: Rundll32 with Ordinal Value [windows]
-  - Atomic Test #11: Rundll32 with Control_RunDLL [windows]
-  - Atomic Test #12: Rundll32 with desk.cpl [windows]
+  - Atomic Test #3: Rundll32 execute VBscript command using Ordinal number [windows]
+  - Atomic Test #4: Rundll32 advpack.dll Execution [windows]
+  - Atomic Test #5: Rundll32 ieadvpack.dll Execution [windows]
+  - Atomic Test #6: Rundll32 syssetup.dll Execution [windows]
+  - Atomic Test #7: Rundll32 setupapi.dll Execution [windows]
+  - Atomic Test #8: Execution of HTA and VBS Files using Rundll32 and URL.dll [windows]
+  - Atomic Test #9: Launches an executable using Rundll32 and pcwutl.dll [windows]
+  - Atomic Test #10: Execution of non-dll using rundll32.exe [windows]
+  - Atomic Test #11: Rundll32 with Ordinal Value [windows]
+  - Atomic Test #12: Rundll32 with Control_RunDLL [windows]
+  - Atomic Test #13: Rundll32 with desk.cpl [windows]
 - T1143 Hidden Window [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1216.001 PubPrn](../../T1216.001/T1216.001.md)
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
@@ -748,6 +749,7 @@
 - T1196 Control Panel Items [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1072 Software Deployment Tools](../../T1072/T1072.md)
   - Atomic Test #1: Radmin Viewer Utility [windows]
+  - Atomic Test #2: PDQ Deploy RAT [windows]
 - [T1059.001 PowerShell](../../T1059.001/T1059.001.md)
   - Atomic Test #1: Mimikatz [windows]
   - Atomic Test #2: Run BloodHound from local disk [windows]
@@ -1099,6 +1101,7 @@
 - T1051 Shared Webroot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1072 Software Deployment Tools](../../T1072/T1072.md)
   - Atomic Test #1: Radmin Viewer Utility [windows]
+  - Atomic Test #2: PDQ Deploy RAT [windows]
 - T1210 Exploitation of Remote Services [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1534 Internal Spearphishing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1097 Pass the Ticket [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1431,6 +1434,7 @@
   - Atomic Test #2: Discover System Language with chcp [windows]
 - [T1012 Query Registry](../../T1012/T1012.md)
   - Atomic Test #1: Query Registry [windows]
+  - Atomic Test #2: Enumerate COM Objects in Registry with Powershell [windows]
 - T1614 System Location Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1518.001 Security Software Discovery](../../T1518.001/T1518.001.md)
   - Atomic Test #1: Security Software Discovery [windows]
