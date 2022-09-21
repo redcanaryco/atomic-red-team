@@ -261,6 +261,29 @@ atomic_tests:
     name: powershell
     elevation_required: true
 
+- name: HKLM - Policy Settings Explorer Run Key
+  description: This test will create a HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run  value launch calc.exe on boot. Requires reboot
+  supported_platforms:
+  - windows
+  input_arguments:
+    target_key_value_name:
+      description: registry value to crate on target key
+      type: string
+      default: atomictest
+    target_key:
+      description: which registry key will be modified or created
+      type: String
+      default: HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run
+    payload:
+      description: 'payload to execute'
+      type: String
+      default: C:\Windows\System32\calc.exe
+  executor:
+    command: try {if($(get-item -Path  "#{target_key}" -ErrorAction Stop).PSChildName -eq "Run"){Set-ItemProperty -Path  "#{target_key}" -Name "#{target_key_value_name}" -Value "#{payload}"}} catch {New-Item -ItemType Key -Path "#{target_key}"; Set-ItemProperty -Path "#{target_key}" -Name "#{target_key_value_name}" -Value "#{payload}"}
+    cleanup_command: Remove-ItemProperty -Path  "#{target_key}" -Name "#{target_key_value_name}"
+    name: powershell
+    elevation_required: true
+    
 - name: HKLM - Append Command to Winlogon Userinit KEY Value
   description: This test will append a command to the  HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Userinit value to launch calc.exe on boot. Requires reboot
   supported_platforms:
