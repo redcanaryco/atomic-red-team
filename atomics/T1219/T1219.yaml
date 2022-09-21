@@ -106,7 +106,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{Ammyy_Admin_Path}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Start-BitsTransfer -Source "https://web.archive.org/web/20140625232737/http://www.ammyy.com/AA_v3.exe" -Destination "$env:temp\ammyy.exe" -dynamic
+      Invoke-WebRequest "https://web.archive.org/web/20140625232737/http://www.ammyy.com/AA_v3.exe" -OutFile "$env:temp\ammyy.exe" -UseBasicParsing
   executor:
     command: |
       Start-Process #{Ammyy_Admin_Path}
@@ -133,7 +133,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{RemotePC_Path}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Start-BitsTransfer -Source "https://static.remotepc.com/downloads/rpc/140422/RemotePC.exe" -Destination "#{RemotePC_Path}" -dynamic
+      Invoke-WebRequest "https://static.remotepc.com/downloads/rpc/140422/RemotePC.exe" -OutFile "#{RemotePC_Path}" -UseBasicParsing
   executor:
     command: |
       Start-Process #{RemotePC_Path}
@@ -168,7 +168,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{NetSupport_Path}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Start-BitsTransfer -Source "https://nsproducts.azureedge.net/nsm-1270/en/Setup.exe" -Destination "$env:temp\T1219Setup.exe" -dynamic
+      Invoke-WebRequest "https://nsproducts.azureedge.net/nsm-1270/en/Setup.exe" -OutFile "$env:temp\T1219Setup.exe" -UseBasicParsing
   executor:
     command: |
       Start-Process #{NetSupport_Path} -ArgumentList "/S /v/qn"
