@@ -172,6 +172,22 @@ atomic_tests:
       description: path of powershell script to use when creating masquerading files
       type: Path
       default: PathToAtomicsFolder\T1036.003\src\T1036.003_masquerading.ps1
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        File to copy must exist on disk at specified location (#{vbs_path})
+      prereq_command: |
+        if (Test-Path #{vbs_path}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{vbs_path}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1036.003/src/T1036.003_masquerading.vbs" -OutFile "#{vbs_path}"
+    - description: |
+        File to copy must exist on disk at specified location (#{ps1_path})
+      prereq_command: |
+        if (Test-Path #{ps1_path}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{ps1_path}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1036.003/src/T1036.003_masquerading.ps1" -OutFile "#{ps1_path}"
   executor:
     command: |
       copy #{exe_path} %temp%\T1036.003_masquerading.docx.exe /Y
