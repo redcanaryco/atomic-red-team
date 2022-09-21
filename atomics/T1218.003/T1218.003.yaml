@@ -20,7 +20,7 @@ atomic_tests:
       if (Test-Path #{inf_file_path}) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path #{inf_file_path}) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.003/src/T218.003.inf" -OutFile "#{inf_file_path}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.003/src/T1218.003.inf" -OutFile "#{inf_file_path}"
   executor:
     command: |
       cmstp.exe /s #{inf_file_path}
