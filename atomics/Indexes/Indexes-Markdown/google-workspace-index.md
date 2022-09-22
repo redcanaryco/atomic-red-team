@@ -28,7 +28,7 @@
 - T1550.004 Web Session Cookie [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1550.001 Application Access Token [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1078.004 Cloud Accounts](../../T1078.004/T1078.004.md)
-  - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, windows, linux, macos]
+  - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, iaas:gcp]
 
 # discovery
 - T1069 Permission Groups Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -53,7 +53,7 @@
 - T1566 Phishing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1078.004 Cloud Accounts](../../T1078.004/T1078.004.md)
-  - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, windows, linux, macos]
+  - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, iaas:gcp]
 
 # persistence
 - T1098.003 Additional Cloud Roles [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -64,7 +64,7 @@
 - T1136 Create Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1098.002 Additional Email Delegate Permissions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1078.004 Cloud Accounts](../../T1078.004/T1078.004.md)
-  - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, windows, linux, macos]
+  - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, iaas:gcp]
 
 # lateral-movement
 - T1550 Use Alternate Authentication Material [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -76,5 +76,5 @@
 - T1078.001 Default Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1078.004 Cloud Accounts](../../T1078.004/T1078.004.md)
-  - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, windows, linux, macos]
+  - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, iaas:gcp]
 

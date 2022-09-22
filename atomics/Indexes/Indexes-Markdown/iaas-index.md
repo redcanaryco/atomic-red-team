@@ -21,7 +21,8 @@
   - Atomic Test #9: AWS CloudWatch Log Stream Deletes [iaas:aws]
 - T1578.002 Create Cloud Instance [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1578.001 Create Snapshot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1078.004 Cloud Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1078.004 Cloud Accounts](../../T1078.004/T1078.004.md)
+  - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, iaas:gcp]
 
 # credential-access
 - T1110.001 Password Guessing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -90,7 +91,8 @@
   - Atomic Test #7: Azure - adding service principal to Azure role in subscription [iaas:azure]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1136 Create Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1078.004 Cloud Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1078.004 Cloud Accounts](../../T1078.004/T1078.004.md)
+  - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, iaas:gcp]
 
 # collection
 - T1119 Automated Collection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -107,7 +109,8 @@
 - T1078.001 Default Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1199 Trusted Relationship [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1078.004 Cloud Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1078.004 Cloud Accounts](../../T1078.004/T1078.004.md)
+  - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, iaas:gcp]
 
 # lateral-movement
 - T1550 Use Alternate Authentication Material [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -116,7 +119,8 @@
 # privilege-escalation
 - T1078.001 Default Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1078.004 Cloud Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1078.004 Cloud Accounts](../../T1078.004/T1078.004.md)
+  - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, iaas:gcp]
 
 # execution
 - T1204 User Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
