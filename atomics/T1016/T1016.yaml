@@ -165,6 +165,15 @@ atomic_tests:
       description: File that houses list of commands to be executed
       type: Path
       default: PathToAtomicsFolder\T1016\src\qakbot.bat
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      File to copy must exist on disk at specified location (#{recon_commands})
+    prereq_command: |
+      if (Test-Path #{recon_commands}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{recon_commands}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1016/src/qakbot.bat" -OutFile "#{recon_commands}"
   executor:
     command: |
       #{recon_commands}
