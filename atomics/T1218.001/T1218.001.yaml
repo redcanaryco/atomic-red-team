@@ -187,3 +187,31 @@ atomic_tests:
   executor:
     command: 'Invoke-ATHCompiledHelp -ExecuteShortcutCommand -InfoTechStorageHandler #{infotech_storage_handler} -TopicExtension #{topic_extension} -HHFilePath #{hh_file_path} -CHMFilePath #{chm_file_path}'
     name: powershell
+- name: Decompile Local CHM File
+  auto_generated_guid: 20cb05e0-1fa5-406d-92c1-84da4ba01813
+  description: |
+    Uses hh.exe to decompile a local compiled HTML Help file.
+    Upon successful execution the chm file will decompile to disk.
+    Reference:https://www.ptsecurity.com/ww-en/analytics/pt-esc-threat-intelligence/higaisa-or-winnti-apt-41-backdoors-old-and-new/
+  supported_platforms:
+  - windows
+  input_arguments:
+    local_chm_file:
+      description: Local .chm payload
+      type: Path
+      default: PathToAtomicsFolder\T1218.001\src\T1218.001.chm
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      The payload must exist on disk at specified location (#{local_chm_file})
+    prereq_command: |
+      if (Test-Path #{local_chm_file}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{local_chm_file}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.001/src/T1218.001.chm" -OutFile "#{local_chm_file}"
+  executor:
+    command: |
+      hh.exe -decompile %temp% #{local_chm_file}
+    cleanup_command: |
+      del %temp%\T1218.001.html >nul 2>&1
+    name: command_prompt

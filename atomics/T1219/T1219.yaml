@@ -106,7 +106,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{Ammyy_Admin_Path}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Start-BitsTransfer -Source "https://web.archive.org/web/20140625232737/http://www.ammyy.com/AA_v3.exe" -Destination "$env:temp\ammyy.exe" -dynamic
+      Invoke-WebRequest "https://web.archive.org/web/20140625232737/http://www.ammyy.com/AA_v3.exe" -OutFile "$env:temp\ammyy.exe" -UseBasicParsing
   executor:
     command: |
       Start-Process #{Ammyy_Admin_Path}
@@ -133,7 +133,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{RemotePC_Path}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Start-BitsTransfer -Source "https://static.remotepc.com/downloads/rpc/140422/RemotePC.exe" -Destination "#{RemotePC_Path}" -dynamic
+      Invoke-WebRequest "https://static.remotepc.com/downloads/rpc/140422/RemotePC.exe" -OutFile "#{RemotePC_Path}" -UseBasicParsing
   executor:
     command: |
       Start-Process #{RemotePC_Path}
@@ -168,11 +168,38 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{NetSupport_Path}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Start-BitsTransfer -Source "https://nsproducts.azureedge.net/nsm-1270/en/Setup.exe" -Destination "$env:temp\T1219Setup.exe" -dynamic
+      Invoke-WebRequest "https://nsproducts.azureedge.net/nsm-1270/en/Setup.exe" -OutFile "$env:temp\T1219Setup.exe" -UseBasicParsing
   executor:
     command: |
       Start-Process #{NetSupport_Path} -ArgumentList "/S /v/qn"
     cleanup_command: | 
       Stop-Process -Name "client32" -force -erroraction silentlycontinue
+    name: powershell
+    elevation_required: True 
+- name: UltraViewer - RAT Execution
+  auto_generated_guid: 19acf63b-55c4-4b6a-8552-00a8865105c8
+  description: |
+      A recent trend by threat actors, once a foothold is established, maintain long term persistence using third party remote services such as UltraViewer to provide the operator with access to the network using legitimate services. 
+  supported_platforms:
+  - windows
+  input_arguments:
+    UltraViewer_Path:
+      description: Path to the UltraViewer executable. 
+      type: Path
+      default: $env:temp\T1219Setup.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Ultraviewer installerr must be downloaded and exist on the disk at the specified location. (#{UltraViewer_Path})
+    prereq_command: |
+      if (Test-Path #{UltraViewer_Path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest -OutFile #{UltraViewer_Path} https://www.ultraviewer.net/en/UltraViewer_setup_6.5_en.exe
+  executor:
+    command: |
+      Start-Process -Wait -FilePath "#{UltraViewer_Path}" -Argument "/silent" -PassThru
+      Start-Process 'C:\Program Files (x86)\UltraViewer\UltraViewer_Desktop.exe'
+    cleanup_command: | 
+      Stop-Process -Name "UltraViewer_Desktop" -Force -ErrorAction SilentlyContinue
     name: powershell
     elevation_required: True

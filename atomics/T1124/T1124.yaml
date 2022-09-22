@@ -37,3 +37,15 @@ atomic_tests:
     command: |
       date
     name: sh
+- name: System Time Discovery W32tm as a Delay
+  auto_generated_guid: d5d5a6b0-0f92-42d8-985d-47aafa2dd4db
+  description: |
+    identifies DCRat delay time tactics using w32tm.
+    https://research.splunk.com/endpoint/b2cc69e7-11ba-42dc-a269-59c069a48870/
+    https://blogs.blackberry.com/en/2022/05/dirty-deeds-done-dirt-cheap-russian-rat-offers-backdoor-bargains
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      W32tm /stripchart /computer:localhost /period:5 /dataonly /samples:2
+    name: command_prompt

