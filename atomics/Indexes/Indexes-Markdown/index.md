@@ -617,7 +617,7 @@
 - T1578.001 Create Snapshot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1550.001 Application Access Token [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1078.004 Cloud Accounts](../../T1078.004/T1078.004.md)
-  - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, windows, linux, macos]
+  - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, iaas:gcp]
 - T1480.001 Environmental Keying [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1564.004 NTFS File Attributes](../../T1564.004/T1564.004.md)
   - Atomic Test #1: Alternate Data Streams (ADS) [windows]
@@ -916,7 +916,7 @@
 - [T1547.008 LSASS Driver](../../T1547.008/T1547.008.md)
   - Atomic Test #1: Modify Registry to load Arbitrary DLL into LSASS - LsaDbExtPt [windows]
 - [T1078.004 Cloud Accounts](../../T1078.004/T1078.004.md)
-  - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, windows, linux, macos]
+  - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, iaas:gcp]
 - [T1053.002 At](../../T1053.002/T1053.002.md)
   - Atomic Test #1: At.exe Scheduled task [windows]
   - Atomic Test #2: At - Schedule a job [linux]
@@ -1376,7 +1376,7 @@
 - [T1547.008 LSASS Driver](../../T1547.008/T1547.008.md)
   - Atomic Test #1: Modify Registry to load Arbitrary DLL into LSASS - LsaDbExtPt [windows]
 - [T1078.004 Cloud Accounts](../../T1078.004/T1078.004.md)
-  - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, windows, linux, macos]
+  - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, iaas:gcp]
 - [T1053.002 At](../../T1053.002/T1053.002.md)
   - Atomic Test #1: At.exe Scheduled task [windows]
   - Atomic Test #2: At - Schedule a job [linux]
@@ -2305,7 +2305,7 @@
 - T1200 Hardware Additions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1189 Drive-by Compromise [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1078.004 Cloud Accounts](../../T1078.004/T1078.004.md)
-  - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, windows, linux, macos]
+  - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, iaas:gcp]
 - T1566.003 Spearphishing via Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1078.003 Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #1: Create local account with admin privileges [windows]
