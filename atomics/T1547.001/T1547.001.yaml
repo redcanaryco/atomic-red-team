@@ -177,14 +177,12 @@ atomic_tests:
     name: powershell
     
 - name: Change Startup Folder - HKLM Modify User Shell Folders Common Startup Value
-  description: This test will modify the HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders       -V "Common Startup" value to point to a new startup folder where a payload could be stored to launch at boot.  *successful execution requires system restart
+  description: |
+    This test will modify the HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders -V "Common Startup" 
+    value to point to a new startup folder where a payload could be stored to launch at boot.  *successful execution requires system restart
   supported_platforms:
   - windows
   input_arguments:
-    target_key_value_name:
-      description: registry value to modify on target key
-      type: string
-      default: Common Startup
     new_startup_folder:
       description: new startup folder to replace standard one
       type: String
@@ -192,18 +190,19 @@ atomic_tests:
     original_startup_path:
       description: 'original path of the standard startup location for this key. '
       type: String
-      default: '%ProgramData%\Microsoft\Windows\Start Menu\Programs\Startup'
-    target_key:
-      description: which registry key will be modified or created
-      type: path
-      default: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders
+      default: '%ProgramData%\Microsoft\Windows\Start Menu\Programs\Startup' 
     payload:
       description: 'executable to be placed in new startup location '
       type: String
       default: C:\Windows\System32\calc.exe
   executor:
-    command: New-Item -ItemType Directory -path "#{new_startup_folder}"; Copy-Item -path "#{payload}" -destination "#{new_startup_folder}"; Set-ItemProperty -Path  "#{target_key}" -Name "#{target_key_value_name}" -Value "#{new_startup_folder}"
-    cleanup_command: Set-ItemProperty -Path  "#{target_key}" -Name "#{target_key_value_name}" -Value "#{original_startup_path}"; Remove-Item "#{new_startup_folder}" -Recurse -Force
+    command: |
+      New-Item -ItemType Directory -path "#{new_startup_folder}"
+      Copy-Item -path "#{payload}" -destination "#{new_startup_folder}"
+      Set-ItemProperty -Path  "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "Common Startup" -Value "#{new_startup_folder}"
+    cleanup_command: |
+      Set-ItemProperty -Path  "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "Common Startup" -Value "#{original_startup_path}"
+      Remove-Item "#{new_startup_folder}" -Recurse -Force
     name: powershell
     elevation_required: true
 
@@ -343,4 +342,3 @@ atomic_tests:
       Remove-ItemProperty -Path  "#{target_key}" -Name 'Shell-backup'
     name: powershell
     elevation_required: true
-
