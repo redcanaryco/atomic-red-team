@@ -2175,7 +2175,8 @@
 - T1594 Search Victim-Owned Websites [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1596.001 DNS/Passive DNS [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1591.003 Identify Business Tempo [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1592.001 Hardware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1592.001 Hardware](../../T1592.001/T1592.001.md)
+  - Atomic Test #1: Enumerate PlugNPlay Camera [windows]
 - T1598.003 Spearphishing Link [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1590.004 Network Topology [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1590.003 Network Trust Dependencies [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
