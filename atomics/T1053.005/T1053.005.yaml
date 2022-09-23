@@ -151,7 +151,7 @@ atomic_tests:
     name: powershell
     elevation_required: true
     command: |
-      $xml = [System.IO.File]::ReadAllText("PathToAtomicsFolder\T1053.005\src\T1053_005_WMI.xml")
+      $xml = [System.IO.File]::ReadAllText("#{xml_path}")
       Invoke-CimMethod -ClassName PS_ScheduledTask -NameSpace "Root\Microsoft\Windows\TaskScheduler" -MethodName "RegisterByXml" -Arguments @{ Force = $true; Xml =$xml; }
     cleanup_command: |
       Unregister-ScheduledTask -TaskName "T1053_005_WMI" -confirm:$false >$null 2>&1
@@ -203,7 +203,7 @@ atomic_tests:
     name: powershell
     elevation_required: true
     command: |
-      $xml = [System.IO.File]::ReadAllText("PathToAtomicsFolder\T1053.005\src\T1053_05_SCTASK_HIDDEN_ATTRIB.xml")
+      $xml = [System.IO.File]::ReadAllText("#{xml_path}")
       Invoke-CimMethod -ClassName PS_ScheduledTask -NameSpace "Root\Microsoft\Windows\TaskScheduler" -MethodName "RegisterByXml" -Arguments @{ Force = $true; Xml =$xml; }
     cleanup_command: |
       Unregister-ScheduledTask -TaskName "atomic red team" -confirm:$false >$null 2>&1
