@@ -160,7 +160,7 @@ atomic_tests:
     NetSupport_Path:
       description: Path to the NetSupport executable. 
       type: Path
-      default: $env:temp\T1219Setup.exe
+      default: $env:temp\T1219_NetSupport.exe
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -168,7 +168,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{NetSupport_Path}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://nsproducts.azureedge.net/nsm-1270/en/Setup.exe" -OutFile "$env:temp\T1219Setup.exe" -UseBasicParsing
+      (New-Object Net.WebClient).DownloadFile("https://nsproducts.azureedge.net/nsm-1270/en/Setup.exe","#{NetSupport_Path}")
   executor:
     command: |
       Start-Process #{NetSupport_Path} -ArgumentList "/S /v/qn"
@@ -186,7 +186,7 @@ atomic_tests:
     UltraViewer_Path:
       description: Path to the UltraViewer executable. 
       type: Path
-      default: $env:temp\T1219Setup.exe
+      default: $env:temp\T1219_UltraViewer.exe
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -194,7 +194,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{UltraViewer_Path}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest -OutFile #{UltraViewer_Path} https://www.ultraviewer.net/en/UltraViewer_setup_6.5_en.exe
+      (New-Object Net.WebClient).DownloadFile("https://www.ultraviewer.net/en/UltraViewer_setup_6.5_en.exe","#{UltraViewer_Path}")
   executor:
     command: |
       Start-Process -Wait -FilePath "#{UltraViewer_Path}" -Argument "/silent" -PassThru
