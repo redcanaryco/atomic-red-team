@@ -33,8 +33,6 @@ atomic_tests:
     elevation_required: true 
     command: | 
       "%PROGRAMFILES(x86)%/#{radmin_exe}"
-    cleanup_command: |
-      MsiExec.exe /X{9F9073EA-5DCE-4B23-8A0C-C7D2C89AEADC} /qn
       
 - name: PDQ Deploy RAT
   auto_generated_guid: e447b83b-a698-4feb-bed1-a7aaf45c3443
@@ -68,5 +66,3 @@ atomic_tests:
     elevation_required: true 
     command: | 
       "%PROGRAMFILES(x86)%/#{PDQ_Deploy_exe}"
-    cleanup_command: |
-      MsiExec.exe /X{5F2FBCC6-7E0A-4D79-8CCC-26A4454BA5DB} /qn
