@@ -131,6 +131,7 @@ atomic_tests:
        Set-PSReadlineOption –HistorySaveStyle SaveNothing
     name: powershell
     cleanup_command: 'Set-PSReadLineOption -HistorySaveStyle SaveIncrementally'
+    
 - name:  Clear Powershell History by Deleting History File
   auto_generated_guid: da75ae8d-26d6-4483-b0fe-700e4df4f037
   description: |
@@ -142,3 +143,16 @@ atomic_tests:
        Remove-Item (Get-PSReadlineOption).HistorySavePath
     name: powershell
 
+- name:  Set Custom AddToHistoryHandler to Avoid History File Logging
+  description: |
+    The "AddToHistoryHandler" receives the current command as the $line variable and then returns $true if 
+    the line should be written to the history file. Here we simply return $false so nothing gets added to 
+    the history file for the current session. 
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      Set-PSReadLineOption -AddToHistoryHandler { return $false }
+    cleanup_command: |
+      Set-PSReadLineOption -AddToHistoryHandler $null
+    name: powershell
