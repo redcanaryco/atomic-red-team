@@ -155,6 +155,7 @@
   - Atomic Test #9: Disable Bash History Logging with SSH -T [linux]
   - Atomic Test #10: Prevent Powershell History Logging [windows]
   - Atomic Test #11: Clear Powershell History by Deleting History File [windows]
+  - Atomic Test #12: Set Custom AddToHistoryHandler to Avoid History File Logging [windows]
 - [T1202 Indirect Command Execution](../../T1202/T1202.md)
   - Atomic Test #1: Indirect Command Execution - pcalua.exe [windows]
   - Atomic Test #2: Indirect Command Execution - forfiles.exe [windows]
