@@ -21,7 +21,7 @@ osascript -e '
             close
         end tell
     end run
-' "$1" $2
+' "${OUTPATH}" ${DURSEC}
 RECSIZE=`cat $1 | wc -c`
 if [ $RECSIZE -gt 100000 ]; then
     echo "Recording complete"
