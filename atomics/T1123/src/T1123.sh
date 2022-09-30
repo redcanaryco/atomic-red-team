@@ -24,9 +24,11 @@ osascript -e '
 ' "${OUTPATH}" ${DURSEC}
 
 # check file is created and a decent size (empty recording is still ~62KB)
-RECSIZE=`cat ${OUTPATH} | wc -c`
-if [ $RECSIZE -gt 100000 ]; then
-    echo "Audio data present" && exit 0
+if [ -f "${OUTPATH}" ] ; then
+   RECSIZE=`stat -f '%z' ${OUTPATH}`
+   if [ $RECSIZE -gt 100000 ]; then
+       echo "Audio data present" && exit 0
+   fi
 fi
 echo "Failed"
 exit 1
