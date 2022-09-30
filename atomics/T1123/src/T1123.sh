@@ -1,4 +1,6 @@
-echo "Starting recording, make some noise for $2 seconds!"
+OUTPATH=$1
+DURSEC=$2
+echo "Starting recording, make some noise for ${DURSEC} seconds!"
 osascript -e '
     on run argv
         set theFilePath to POSIX path of item 1 of argv
