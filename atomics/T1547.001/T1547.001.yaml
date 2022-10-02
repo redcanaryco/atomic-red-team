@@ -242,38 +242,20 @@ atomic_tests:
       description: registry value to crate on target key
       type: string
       default: atomictest
-    payload:
+    payload_value:
       description: 'payload to execute'
       type: String
       default: C:\Windows\System32\calc.exe
   executor:
-    command: try {if($(get-item -Path  "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run").PSChildName -eq "Run"){Set-ItemProperty -Path  "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run" -Name "#{target_key_value_name}" -Value "#{payload}"}} catch {New-Item -ItemType Key -Path  "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run"; Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run" -Name "#{target_key_value_name}" -Value "#{payload}"}
+    command: |
+      if (!(Test-Path -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run")){
+        New-Item -ItemType Key -Path  "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run"
+      }
+      Set-ItemProperty -Path  "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run" -Name "#{target_key_value_name}" -Value "#{payload_value}"
     cleanup_command: Remove-ItemProperty -Path  "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run" -Name "#{target_key_value_name}"
     name: powershell
     elevation_required: true
-
-- name: HKLM - Policy Settings Explorer Run Key
-  auto_generated_guid: b5c9a9bc-dda3-4ea0-b16a-add8e81ab75f
-  description: | 
-    This test will create a HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run key value to launch calc.exe on boot. 
-    *Requires reboot
-  supported_platforms:
-  - windows
-  input_arguments:
-    target_key_value_name:
-      description: registry value to crate on target key
-      type: string
-      default: atomictest
-    payload:
-      description: 'payload to execute'
-      type: String
-      default: C:\Windows\System32\calc.exe
-  executor:
-    command: try {if($(get-item -Path  "HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run" -ErrorAction Stop).PSChildName -eq "Run"){Set-ItemProperty -Path  "HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run" -Name "#{target_key_value_name}" -Value "#{payload}"}} catch {New-Item -ItemType Key -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run"; Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run" -Name "#{target_key_value_name}" -Value "#{payload}"}
-    cleanup_command: Remove-ItemProperty -Path  "HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run" -Name "#{target_key_value_name}"
-    name: powershell
-    elevation_required: true
-    
+   
 - name: HKLM - Append Command to Winlogon Userinit KEY Value
   auto_generated_guid: f7fab6cc-8ece-4ca7-a0f1-30a22fccd374
   description: | 
