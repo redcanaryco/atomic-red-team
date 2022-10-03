@@ -20,6 +20,15 @@ atomic_tests:
       description: Output Binary
       type: Path
       default: PathToAtomicsFolder\T1055.004\bin\T1055.exe
+  dependency_executor_name: powershell 
+  dependencies:   
+  - description: |
+      #{exe_binary} must be installed on system.
+    prereq_command: |
+      if (Test-Path #{exe_binary}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{exe_binary}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1055.004/bin/T1055.exe" -OutFile "#{exe_binary}"
   executor:
     command: |
       #{exe_binary}
