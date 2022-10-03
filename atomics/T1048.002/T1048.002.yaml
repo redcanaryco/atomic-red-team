@@ -28,6 +28,13 @@ atomic_tests:
       Copy-Item $env:temp\curl\curl-7.79.1-win64-mingw\bin\curl.exe C:\Windows\System32\Curl.exe
       Remove-Item $env:temp\curl
       Remove-Item $env:temp\curl.zip
+  - description: |
+      #{input_file} must be exist on system.
+    prereq_command: |
+      if (Test-Path #{input_file}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{input_file}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1048.002/src/artifact" -OutFile "#{input_file}"
   executor:
     name: command_prompt
     elevation_required: false
