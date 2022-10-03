@@ -29,7 +29,7 @@ atomic_tests:
       Remove-Item $env:temp\curl
       Remove-Item $env:temp\curl.zip
   - description: |
-      #{input_file} must be installed on system.
+      #{input_file} must be exist on system.
     prereq_command: |
       if (Test-Path #{input_file}) {exit 0} else {exit 1}
     get_prereq_command: |
