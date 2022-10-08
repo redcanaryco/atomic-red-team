@@ -247,7 +247,11 @@ atomic_tests:
       type: String
       default: C:\Windows\System32\calc.exe
   executor:
-    command: try {if($(get-item -Path  "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run").PSChildName -eq "Run"){Set-ItemProperty -Path  "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run" -Name "#{target_key_value_name}" -Value "#{payload}"}} catch {New-Item -ItemType Key -Path  "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run"; Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run" -Name "#{target_key_value_name}" -Value "#{payload}"}
+    command: |
+      if (!(Test-Path -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run")){
+        New-Item -ItemType Key -Path  "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run"
+      }
+      Set-ItemProperty -Path  "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run" -Name "#{target_key_value_name}" -Value "#{payload}"
     cleanup_command: Remove-ItemProperty -Path  "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run" -Name "#{target_key_value_name}"
     name: powershell
     elevation_required: true
@@ -269,11 +273,15 @@ atomic_tests:
       type: String
       default: C:\Windows\System32\calc.exe
   executor:
-    command: try {if($(get-item -Path  "HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run" -ErrorAction Stop).PSChildName -eq "Run"){Set-ItemProperty -Path  "HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run" -Name "#{target_key_value_name}" -Value "#{payload}"}} catch {New-Item -ItemType Key -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run"; Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run" -Name "#{target_key_value_name}" -Value "#{payload}"}
+    command: |
+      if (!(Test-Path -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run")){
+        New-Item -ItemType Key -Path  "HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run"
+      }
+      Set-ItemProperty -Path  "HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run" -Name "#{target_key_value_name}" -Value "#{payload}"
     cleanup_command: Remove-ItemProperty -Path  "HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run" -Name "#{target_key_value_name}"
     name: powershell
     elevation_required: true
-    
+
 - name: HKLM - Append Command to Winlogon Userinit KEY Value
   auto_generated_guid: f7fab6cc-8ece-4ca7-a0f1-30a22fccd374
   description: | 
