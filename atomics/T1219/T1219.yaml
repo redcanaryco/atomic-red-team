@@ -106,7 +106,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{Ammyy_Admin_Path}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Start-BitsTransfer -Source "https://web.archive.org/web/20140625232737/http://www.ammyy.com/AA_v3.exe" -Destination "$env:temp\ammyy.exe" -dynamic
+      Invoke-WebRequest "https://web.archive.org/web/20140625232737/http://www.ammyy.com/AA_v3.exe" -OutFile "$env:temp\ammyy.exe" -UseBasicParsing
   executor:
     command: |
       Start-Process #{Ammyy_Admin_Path}
@@ -133,7 +133,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{RemotePC_Path}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Start-BitsTransfer -Source "https://static.remotepc.com/downloads/rpc/140422/RemotePC.exe" -Destination "#{RemotePC_Path}" -dynamic
+      Invoke-WebRequest "https://static.remotepc.com/downloads/rpc/140422/RemotePC.exe" -OutFile "#{RemotePC_Path}" -UseBasicParsing
   executor:
     command: |
       Start-Process #{RemotePC_Path}
@@ -160,7 +160,7 @@ atomic_tests:
     NetSupport_Path:
       description: Path to the NetSupport executable. 
       type: Path
-      default: $env:temp\T1219Setup.exe
+      default: $env:temp\T1219_NetSupport.exe
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -168,7 +168,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{NetSupport_Path}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Start-BitsTransfer -Source "https://nsproducts.azureedge.net/nsm-1270/en/Setup.exe" -Destination "$env:temp\T1219Setup.exe" -dynamic
+      (New-Object Net.WebClient).DownloadFile("https://nsproducts.azureedge.net/nsm-1270/en/Setup.exe","#{NetSupport_Path}")
   executor:
     command: |
       Start-Process #{NetSupport_Path} -ArgumentList "/S /v/qn"
@@ -186,20 +186,48 @@ atomic_tests:
     UltraViewer_Path:
       description: Path to the UltraViewer executable. 
       type: Path
-      default: $env:temp\T1219Setup.exe
+      default: $env:temp\T1219_UltraViewer.exe
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      Ultraviewer installerr must be downloaded and exist on the disk at the specified location. (#{UltraViewer_Path})
+      Ultraviewer installer must be downloaded and exist on the disk at the specified location. (#{UltraViewer_Path})
     prereq_command: |
       if (Test-Path #{UltraViewer_Path}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest -OutFile #{UltraViewer_Path} https://www.ultraviewer.net/en/UltraViewer_setup_6.5_en.exe
+      (New-Object Net.WebClient).DownloadFile("https://www.ultraviewer.net/en/UltraViewer_setup_6.5_en.exe","#{UltraViewer_Path}")
   executor:
     command: |
       Start-Process -Wait -FilePath "#{UltraViewer_Path}" -Argument "/silent" -PassThru
       Start-Process 'C:\Program Files (x86)\UltraViewer\UltraViewer_Desktop.exe'
     cleanup_command: | 
       Stop-Process -Name "UltraViewer_Desktop" -Force -ErrorAction SilentlyContinue
+    name: powershell
+    elevation_required: True 
+- name: UltraVNC Execution
+  auto_generated_guid: 42e51815-a6cc-4c75-b970-3f0ff54b610e
+  description: |
+    An adversary may attempt to trick the user into downloading UltraVNC for use as a C2 channel.
+    Upon successful execution, UltraVNC will be executed.
+  supported_platforms:
+  - windows
+  input_arguments:
+    UltraVNC_Viewer_Path:
+      description: Path of UltraVNC Viewer executable
+      type: Path
+      default: $env:ProgramFiles\'uvnc bvba\UltraVnc\vncviewer.exe'
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      UltraVNC must exist at (#{UltraVNC_Viewer_Path})
+    prereq_command: |
+      if (Test-Path #{UltraVNC_Viewer_Path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+       Start-BitsTransfer -Source "https://www.uvnc.eu/download/1381/UltraVNC_1_3_81_X64_Setup.exe" -Destination $env:temp\vncsetup.exe -dynamic
+       start-process $env:temp\vncsetup.exe /silent
+  executor:
+    command: |
+      Start-Process #{UltraVNC_Viewer_Path}
+    cleanup_command: |
+      Stop-Process -Name "vncviewer" -force -erroraction silentlycontinue
     name: powershell
     elevation_required: True

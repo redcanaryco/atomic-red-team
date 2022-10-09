@@ -121,6 +121,15 @@ atomic_tests:
       description: Path to sample script
       type: String
       default: PathToAtomicsFolder\T1082\src\griffon_recon.vbs
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+       Sample script file must exist on disk at specified location (#{vbscript})
+      prereq_command: |
+        if (Test-Path #{vbscript}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{vbscript}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1082/src/griffon_recon.vbs" -OutFile "#{vbscript}"
   executor:
     command: 'cscript #{vbscript}'
     name: powershell
