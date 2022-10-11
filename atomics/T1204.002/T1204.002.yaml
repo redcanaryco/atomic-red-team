@@ -408,3 +408,13 @@ atomic_tests:
       Remove-Item $file1 -ErrorAction Ignore
       Remove-Item $file2 -ErrorAction Ignore
     name: powershell
+- name: Mirror Blast Emulation
+  description: Create atomic to emulate the JS -> MSI chain of the Mirror Blast T505 campaign. Attached is an xlsm file designed to emulate the attack. It requires the 32 bit version of Office to run.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      Cd "C:\ProgramData\Microsoft\Windows\Start Menu\Programs"
+      & '.\Excel 2016.lnk' C:\AtomicRedTeam\atomics\T1204.002\bin\mirrorblast_emulation.xlsm
+    name: powershell
+   
