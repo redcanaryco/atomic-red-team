@@ -409,14 +409,16 @@ atomic_tests:
       Remove-Item $file2 -ErrorAction Ignore
     name: powershell
 - name: Mirror Blast Emulation
-  description: Create atomic to emulate the JS -> MSI chain of the Mirror Blast T505 campaign. Attached is an xlsm file designed to emulate the attack. It requires the 32 bit version of Office to run.
+  description: |
+    Emulates the JS -> MSI chain of the Mirror Blast T505 campaign by executing an xlsm file designed. 
+    Requires the 32 bit version of Office to run.
   supported_platforms:
   - windows
   executor:
     command: |-
       Cd "C:\ProgramData\Microsoft\Windows\Start Menu\Programs"
       New-ItemProperty -Path Registry::HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office\16.0\Excel\Security -Name "VBAWarnings" -Value "1" -PropertyType DWORD -Force | Out-Null
-      & '.\Excel 2016.lnk' C:\AtomicRedTeam\atomics\T1204.002\bin\mirrorblast_emulation.xlsm
+      & '.\Excel 2016.lnk' PathToAtomicsFolder\T1204.002\bin\mirrorblast_emulation.xlsm
     cleanup_command: reg delete "HKCU\SOFTWARE\Microsoft\Office\16.0\Excel\Security" /v "VBAWarnings" /f
     name: powershell
   
