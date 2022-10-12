@@ -738,6 +738,7 @@
   - Atomic Test #8: Potentially Unwanted Applications (PUA) [windows]
   - Atomic Test #9: Office Generic Payload Download [windows]
   - Atomic Test #10: LNK Payload Download [windows]
+  - Atomic Test #11: Mirror Blast Emulation [windows]
 - T1559.001 Component Object Model [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1106 Native API](../../T1106/T1106.md)

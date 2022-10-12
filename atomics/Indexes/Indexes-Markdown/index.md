@@ -986,6 +986,7 @@
   - Atomic Test #8: Potentially Unwanted Applications (PUA) [windows]
   - Atomic Test #9: Office Generic Payload Download [windows]
   - Atomic Test #10: LNK Payload Download [windows]
+  - Atomic Test #11: Mirror Blast Emulation [windows]
 - [T1053.003 Scheduled Task/Job: Cron](../../T1053.003/T1053.003.md)
   - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
   - Atomic Test #2: Cron - Add script to all cron subfolders [macos, linux]
