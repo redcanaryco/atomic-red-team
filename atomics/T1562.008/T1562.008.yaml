@@ -20,23 +20,29 @@ atomic_tests:
       description: Name of the region
       type: String
       default: "us-east-1"
+    terraform:
+      aws_s3_bucket:
+        name: some_bucket
+      aws_cloudtrail:
+        name: some_cloudtrail
+        args:
+          s3_bucket_name: aws_s3_bucket.some_bucket.id
+          name: some_cloudtrail
   dependencies:
     - description: |
         Check if ~/.aws/credentials file has a default stanza is configured
       prereq_command: |
         cat ~/.aws/credentials | grep "default"
-        aws s3api create-bucket --bucket #{s3_bucket_name} --region #{region}
-        aws s3api put-bucket-policy --bucket #{s3_bucket_name} --policy file://$PathToAtomicsFolder/T1562.008/src/policy.json
+        terraform apply -auto-approve
       get_prereq_command: |
         echo Please install the aws-cli and configure your AWS defult profile using: aws configure
   executor:
     command: |
-       aws cloudtrail create-trail --name #{cloudtrail_name} --s3-bucket-name #{s3_bucket_name} --region #{region}
        aws cloudtrail update-trail --name #{cloudtrail_name} --s3-bucket-name #{s3_bucket_name}  --is-multi-region-trail --region #{region}
        aws cloudtrail stop-logging --name #{cloudtrail_name} --region #{region}
        aws cloudtrail delete-trail --name #{cloudtrail_name} --region #{region}
     cleanup_command: |
-       aws s3 rb s3://#{s3_bucket_name} --force 
+      terraform destroy
     name: sh
     elevation_required: false
 - name: Azure - Eventhub Deletion
@@ -69,12 +75,34 @@ atomic_tests:
       description: Name of the NameSpace
       type: String
       default: null
+    terraform:
+      azurerm_resource_group:
+        name: some_resource_group
+        args:
+          name: atomicredteam-rg
+          location: West Europe
+      azurerm_eventhub_namespace:
+        name: some_namespace
+        args:
+          name: atomicredteam-ns
+          location: azurerm_resource_group.some_resource_group.location
+          resource_group_name: azurerm_resource_group.some_resource_group.name
+          sku: standard
+      azurerm_eventhub:
+        name: some_eventhub
+        args:
+          name: atomicredteam-eventhub
+          namespace_name: azurerm_eventhub_namespace.some_namespace.name
+          resource_group_name: azurerm_resource_group.some_resource_group.name
+          message_retention: 1
+          partition_count: 2
   dependency_executor_name: powershell
   dependencies:
   - description: |
       Install-Module -Name Az
     prereq_command: |
       try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
+      terraform apply -auto-approve
     get_prereq_command: |
       Install-Module -Name AzureAD -Force
   executor:
@@ -86,6 +114,8 @@ atomic_tests:
       Remove-AzEventHub -ResourceGroupName #{resource_group} -Namespace #{name_space_name} -Name #{event_hub_name}
     name: powershell
     elevation_required: false
+    cleanup_command: |
+      terraform destroy
 - name: Office 365 - Exchange Audit Log Disabled
   auto_generated_guid: 1ee572f3-056c-4632-a7fc-7e7c42b1543c
   description: |
@@ -288,7 +318,7 @@ atomic_tests:
       ./stratus cleanup --all
       rm -rf stratus*
     name: sh
-    elevation_required: false   
+    elevation_required: false
 - name: AWS - CloudWatch Log Group Deletes
   auto_generated_guid: 89422c87-b57b-4a04-a8ca-802bb9d06121
   description: |
@@ -318,7 +348,7 @@ atomic_tests:
        echo "*** Log Group Created ***"
        aws logs delete-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
        echo "*** Log Group Deleted ***"
-    cleanup_command: 
+    cleanup_command:
     name: sh
     elevation_required: false
 - name: AWS - CloudWatch Log Stream Deletes
@@ -350,7 +380,7 @@ atomic_tests:
        echo "*** Log Group Created ***"
        aws logs delete-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
        echo "*** Log Group Deleted ***"
-    cleanup_command: 
+    cleanup_command:
     name: sh
     elevation_required: false
 - name: AWS CloudWatch Log Stream Deletes
@@ -390,6 +420,6 @@ atomic_tests:
        echo "*** Log Stream Deleted ***"
        aws logs delete-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
        echo "*** Log Group Deleted ***"
-    cleanup_command: 
+    cleanup_command:
     name: sh
     elevation_required: false
