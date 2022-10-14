@@ -28,6 +28,12 @@ atomic_tests:
         if (Test-Path $env:UserProfile\Downloads\psiphon3.exe) {exit 0} else {exit 1}
       get_prereq_command: |
         Invoke-WebRequest -OutFile "$env:UserProfile\Downloads\psiphon3.exe" "https://s3.amazonaws.com/0ubz-2q11-gi9y/psiphon3.exe"
+     - description: |
+        Path to batch file containing commands to run 
+      prereq_command: | 
+        if (Test-Path PathToAtomicsFolder\T1090.003\src\Psiphon.bat) {exit 0} else {exit 1}
+      get_prereq_command: |
+        Invoke-WebRequest -OutFile "PathToAtomicsFolder\T1090.003\src\Psiphon.bat" "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1090.003/src/Psiphon.bat"
   executor:
     name: powershell
     command: |
