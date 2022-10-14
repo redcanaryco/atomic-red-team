@@ -6,60 +6,65 @@ import Glob from 'glob';
 import _ from "lodash"
 
 
-function addProviders(supportedPlatforms, t) {
-    for (const i of supportedPlatforms) {
-        switch (i) {
-            case 'iaas:aws':
-                t.provider('aws');
-                break;
-            case 'iaas:azure':
-                t.provider('azurerm', {'features': {}});
-                break;
-            case 'iaas:gcp':
-                t.provider('google');
-                break;
-            default:
-                break;
-        }
+class Generator {
+    constructor(atomicTest) {
+        this.tfg = new TerraformGenerator({
+            required_version: '>= 0.12'
+        });
+        this.atomicTest = atomicTest
     }
-}
 
-
-function getResourceId(idStr, t) {
-    const blocks = t.getBlocks();
-    const [resourceType, resourceName, id] = idStr.split(".")
-    for (const i of blocks) {
-        if (i.type === resourceType && i.name === resourceName) {
-            return i.attr(id)
-        }
-    }
-}
-
-function addResources(resource, resourceName, resourceArgs, t) {
-    if (!_.isEmpty(resourceArgs)) {
-        for (const arg in resourceArgs) {
-            const value = resourceArgs[arg];
-            if (_.isString(value)) {
-                if (value.startsWith("aws_") || value.startsWith("azurerm_") || value.startsWith("google_")) {
-                    resourceArgs[arg] = getResourceId(value, t)
-                }
+    addProviders() {
+        for (const i of this.atomicTest.supported_platforms) {
+            switch (i) {
+                case 'iaas:aws':
+                    this.tfg.provider('aws');
+                    break;
+                case 'iaas:azure':
+                    this.tfg.provider('azurerm', {'features': {}});
+                    break;
+                case 'iaas:gcp':
+                    this.tfg.provider('google');
+                    break;
+                default:
+                    break;
             }
         }
     }
-    t.resource(resource, resourceName, resourceArgs)
-}
 
-function generateTerraformFiles(atomicTest) {
-    const tfg = new TerraformGenerator({
-        required_version: '>= 0.12'
-    });
-    addProviders(atomicTest.supported_platforms, tfg)
-    const tf = atomicTest.input_arguments.terraform
-    for (const key in tf) {
-        addResources(key, tf[key].name, tf[key].args, tfg)
+    getResourceId(idStr) {
+        const blocks = this.tfg.getBlocks();
+        const [resourceType, resourceName, id] = idStr.split(".")
+        for (const i of blocks) {
+            if (i.type === resourceType && i.name === resourceName) {
+                return i.attr(id)
+            }
+        }
     }
-    const result = tfg.generate();
-    return result.tf
+
+    addResources(resource, resourceName, resourceArgs) {
+        if (!_.isEmpty(resourceArgs)) {
+            for (const arg in resourceArgs) {
+                const value = resourceArgs[arg];
+                if (_.isString(value)) {
+                    if (value.startsWith("aws_") || value.startsWith("azurerm_") || value.startsWith("google_")) {
+                        resourceArgs[arg] = this.getResourceId(value)
+                    }
+                }
+            }
+        }
+        this.tfg.resource(resource, resourceName, resourceArgs)
+    }
+
+    getTerraformResult() {
+        this.addProviders()
+        const tf = this.atomicTest.input_arguments.terraform
+        for (const key in tf) {
+            this.addResources(key, tf[key].name, tf[key].args)
+        }
+        const result = this.tfg.generate();
+        return result.tf
+    }
 }
 
 
@@ -71,9 +76,9 @@ Glob("../atomics/T*/T*.yaml", function (er, files) {
         doc.atomic_tests.forEach((test, index) => {
             try {
                 if (!_.isEmpty(test.input_arguments) && !_.isEmpty(test.input_arguments.terraform)) {
-                    const tf = generateTerraformFiles(test)
+                    const tf = new Generator(test);
                     const file = `${dirPath}/${atomicID}-${index + 1}.tf`
-                    fs.writeFile(file, tf, (error, writtenBytes) => {
+                    fs.writeFile(file, tf.getTerraformResult(), (error, writtenBytes) => {
                         if (error) {
                             throw error
                         } else {
