@@ -70,6 +70,7 @@
   - Atomic Test #19: WinPwn - UAC Bypass ccmstp technique [windows]
   - Atomic Test #20: WinPwn - UAC Bypass DiskCleanup technique [windows]
   - Atomic Test #21: WinPwn - UAC Bypass DccwBypassUAC technique [windows]
+  - Atomic Test #22: Disable UAC admin consent prompt via ConsentPromptBehaviorAdmin registry key [windows]
 - T1099 Timestomp [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1548.003 Abuse Elevation Control Mechanism: Sudo and Sudo Caching](../../T1548.003/T1548.003.md)
   - Atomic Test #1: Sudo usage [macos, linux]
@@ -699,6 +700,7 @@
   - Atomic Test #19: WinPwn - UAC Bypass ccmstp technique [windows]
   - Atomic Test #20: WinPwn - UAC Bypass DiskCleanup technique [windows]
   - Atomic Test #21: WinPwn - UAC Bypass DccwBypassUAC technique [windows]
+  - Atomic Test #22: Disable UAC admin consent prompt via ConsentPromptBehaviorAdmin registry key [windows]
 - [T1548.003 Abuse Elevation Control Mechanism: Sudo and Sudo Caching](../../T1548.003/T1548.003.md)
   - Atomic Test #1: Sudo usage [macos, linux]
   - Atomic Test #2: Unlimited sudo cache timeout [macos, linux]
@@ -986,6 +988,7 @@
   - Atomic Test #8: Potentially Unwanted Applications (PUA) [windows]
   - Atomic Test #9: Office Generic Payload Download [windows]
   - Atomic Test #10: LNK Payload Download [windows]
+  - Atomic Test #11: Mirror Blast Emulation [windows]
 - [T1053.003 Scheduled Task/Job: Cron](../../T1053.003/T1053.003.md)
   - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
   - Atomic Test #2: Cron - Add script to all cron subfolders [macos, linux]
