@@ -549,7 +549,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{Path_to_file}) {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #Path_to_file}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path #{Path_to_file}) -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1105/src/T1105.bat" -OutFile "#{Path_to_file}"
   executor:
     command: |
