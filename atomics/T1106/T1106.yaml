@@ -15,6 +15,15 @@ atomic_tests:
       description: Location of the payload
       type: Path
       default: '%tmp%\T1106.exe'
+  dependency_executor_name: powershell 
+  dependencies:   
+  - description: |
+      #{source_file} must exist on system.
+    prereq_command: |
+      if (Test-Path #{source_file}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{source_file}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1106/src/CreateProcess.cs" -OutFile "#{source_file}"
   executor:
     command: |
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /out:"#{output_file}" /target:exe #{source_file}
