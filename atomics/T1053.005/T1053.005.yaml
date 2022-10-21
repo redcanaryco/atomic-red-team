@@ -133,11 +133,25 @@ atomic_tests:
     Create an scheduled task that executes notepad.exe after user login from XML by leveraging WMI class PS_ScheduledTask. Does the same thing as Register-ScheduledTask cmdlet behind the scenes.
   supported_platforms:
     - windows
+  input_arguments:
+    xml_path:
+      description: path of vbs to use when creating masquerading files
+      type: Path
+      default: PathToAtomicsFolder\T1053.005\src\T1053_005_WMI.xml
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        File to copy must exist on disk at specified location (#{xml_path})
+      prereq_command: |
+        if (Test-Path #{xml_path}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{xml_path}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1053.005/src/T1053_005_WMI.xml" -OutFile "#{xml_path}"
   executor:
     name: powershell
     elevation_required: true
     command: |
-      $xml = [System.IO.File]::ReadAllText("PathToAtomicsFolder\T1053.005\src\T1053_005_WMI.xml")
+      $xml = [System.IO.File]::ReadAllText("#{xml_path}")
       Invoke-CimMethod -ClassName PS_ScheduledTask -NameSpace "Root\Microsoft\Windows\TaskScheduler" -MethodName "RegisterByXml" -Arguments @{ Force = $true; Xml =$xml; }
     cleanup_command: |
       Unregister-ScheduledTask -TaskName "T1053_005_WMI" -confirm:$false >$null 2>&1
@@ -145,7 +159,7 @@ atomic_tests:
   auto_generated_guid: e895677d-4f06-49ab-91b6-ae3742d0a2ba
   description: |
     A Base64 Encoded command will be stored in the registry (ping 127.0.0.1) and then a scheduled task will be created.
-    The scheduled task will launch powershell to decode and run the command in the rgistry daily.
+    The scheduled task will launch powershell to decode and run the command in the registry daily.
     This is a persistence mechanism recently seen in use by Qakbot.  
     
     [Additiona Information](https://thedfirreport.com/2022/02/07/qbot-likes-to-move-it-move-it/)
@@ -171,11 +185,25 @@ atomic_tests:
     This technique was seen several times in tricbot malware and also with the targetted attack campaigne the industroyer2.
   supported_platforms:
     - windows
+  input_arguments:
+    xml_path:
+      description: path of vbs to use when creating masquerading files
+      type: Path
+      default: PathToAtomicsFolder\T1053.005\src\T1053_05_SCTASK_HIDDEN_ATTRIB.xml
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        File to copy must exist on disk at specified location (#{xml_path})
+      prereq_command: |
+        if (Test-Path #{xml_path}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{xml_path}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1053.005/src/T1053_05_SCTASK_HIDDEN_ATTRIB.xml" -OutFile "#{xml_path}"
   executor:
     name: powershell
     elevation_required: true
     command: |
-      $xml = [System.IO.File]::ReadAllText("PathToAtomicsFolder\T1053.005\src\T1053_05_SCTASK_HIDDEN_ATTRIB.xml")
+      $xml = [System.IO.File]::ReadAllText("#{xml_path}")
       Invoke-CimMethod -ClassName PS_ScheduledTask -NameSpace "Root\Microsoft\Windows\TaskScheduler" -MethodName "RegisterByXml" -Arguments @{ Force = $true; Xml =$xml; }
     cleanup_command: |
       Unregister-ScheduledTask -TaskName "atomic red team" -confirm:$false >$null 2>&1

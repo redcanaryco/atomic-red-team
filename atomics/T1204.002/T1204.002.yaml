@@ -57,7 +57,7 @@ atomic_tests:
     file_url:
       description: URL to retrieve file from
       type: Url
-      default: https://128.30.52.100/TR/PNG/iso_8859-1.txt
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
   executor:
     command: |
       echo var url = "#{file_url}", fso = WScript.CreateObject('Scripting.FileSystemObject'), request, stream; request = WScript.CreateObject('MSXML2.ServerXMLHTTP'); request.open('GET', url, false); request.send(); if (request.status === 200) {stream = WScript.CreateObject('ADODB.Stream'); stream.Open(); stream.Type = 1; stream.Write(request.responseBody); stream.Position = 0; stream.SaveToFile(filename, 1); stream.Close();} else {WScript.Quit(1);}WScript.Quit(0); > #{script_file}
@@ -408,3 +408,18 @@ atomic_tests:
       Remove-Item $file1 -ErrorAction Ignore
       Remove-Item $file2 -ErrorAction Ignore
     name: powershell
+- name: Mirror Blast Emulation
+  auto_generated_guid: 24fd9719-7419-42dd-bce6-ab3463110b3c
+  description: |
+    Emulates the JS -> MSI chain of the MirrorBlast T505 campaign by executing an xlsm file designed. 
+    Requires the 32 bit version of Office to run. [MirrorBlast Campaign Analysis](https://blog.morphisec.com/explosive-new-mirrorblast-campaign-targets-financial-companies)
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      Cd "C:\ProgramData\Microsoft\Windows\Start Menu\Programs"
+      New-ItemProperty -Path Registry::HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office\16.0\Excel\Security -Name "VBAWarnings" -Value "1" -PropertyType DWORD -Force | Out-Null
+      & '.\Excel 2016.lnk' PathToAtomicsFolder\T1204.002\bin\mirrorblast_emulation.xlsm
+    cleanup_command: reg delete "HKCU\SOFTWARE\Microsoft\Office\16.0\Excel\Security" /v "VBAWarnings" /f
+    name: powershell
+  

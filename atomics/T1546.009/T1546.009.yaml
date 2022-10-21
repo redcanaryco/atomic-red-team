@@ -12,11 +12,29 @@ atomic_tests:
 
   supported_platforms:
   - windows
+  input_arguments:
+    dll_path:
+      description: path of dll to use
+      type: Path
+      default: PathToAtomicsFolder\T1546.009\bin\AtomicTest.dll
+    reboot:
+      description: Set value to $true if you want to automatically reboot the machine
+      type: string
+      default: $false
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        File to copy must exist on disk at specified location (#{dll_path})
+      prereq_command: |
+        if (Test-Path #{dll_path}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{dll_path}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.009/bin/AtomicTest.dll" -OutFile "#{dll_path}"
   executor:
     command: |
-      Copy-Item $PathToAtomicsFolder\T1546.009\bin\AtomicTest.dll C:\Users\Public\AtomicTest.dll -Force
+      Copy-Item #{dll_path} C:\Users\Public\AtomicTest.dll -Force
       reg add "HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\AppCertDlls" /v "AtomicTest" /t REG_EXPAND_SZ /d "C:\Users\Public\AtomicTest.dll" /f
-      Restart-Computer
+      if(#{reboot}){Restart-Computer} 
     cleanup_command: |
       reg delete "HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\AppCertDlls" /v "AtomicTest" /f
       Remove-Item C:\Users\Public\AtomicTest.dll -Force

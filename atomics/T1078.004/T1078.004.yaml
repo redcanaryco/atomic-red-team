@@ -10,9 +10,7 @@ atomic_tests:
 
   supported_platforms:
     - google-workspace
-    - windows
-    - linux
-    - macos
+    - iaas:gcp
 
   input_arguments:
     project-id:
@@ -36,7 +34,7 @@ atomic_tests:
       default: gcp-art-service-account-1.json
 
   executor:
-    name: gcloud
+    name: sh
     elevation_required: false
     command: |
       gcloud auth login --no-launch-browser
@@ -46,7 +44,7 @@ atomic_tests:
     cleanup_command: |
       gcloud iam service-accounts delete #{service-account-email} --quiet
 
-  dependency_executor_name: gcloud
+  dependency_executor_name: sh
   dependencies:
       - description: |
           Requires gcloud

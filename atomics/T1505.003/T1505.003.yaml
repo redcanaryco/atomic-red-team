@@ -17,7 +17,7 @@ atomic_tests:
     web_shells:
       description: Path of Web Shell
       type: Path
-      default: PathToAtomicsFolder\T1505.003\src\
+      default: PathToAtomicsFolder\T1505.003\src
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -25,7 +25,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{web_shells}) {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{web_shells}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory #{web_shells} -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1505.003/src/b.jsp" -OutFile "#{web_shells}/b.jsp"
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1505.003/src/tests.jsp" -OutFile "#{web_shells}/tests.jsp"
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1505.003/src/cmd.aspx" -OutFile "#{web_shells}/cmd.aspx"
