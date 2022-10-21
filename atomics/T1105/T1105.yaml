@@ -542,6 +542,15 @@ atomic_tests:
       description: Path to the Batch script
       type: Path
       default: PathToAtomicsFolder\T1105\src\T1105.bat
+  dependency_executor_name: powershell 
+  dependencies:   
+  - description: |
+      #{Path_to_file} must exist on system.
+    prereq_command: |
+      if (Test-Path #{Path_to_file}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{Path_to_file}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1105/src/T1105.bat" -OutFile "#{Path_to_file}"
   executor:
     command: |
       #{Path_to_file} 1>NUL 
@@ -646,6 +655,15 @@ atomic_tests:
       description: Path to replace.exe
       type: Path
       default: C:\Windows\System32\replace.exe
+  dependency_executor_name: powershell 
+  dependencies:   
+  - description: |
+      #{replace_cab} must exist on system.
+    prereq_command: |
+      if (Test-Path #{replace_cab}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{replace_cab}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1105/src/redcanary.cab" -OutFile "#{replace_cab}"
   executor:
     command: |
       del %TEMP%\redcanary.cab >nul 2>&1
@@ -707,6 +725,15 @@ atomic_tests:
       description: Full path to the VisualBasic downloading the file
       type: String
       default: PathToAtomicsFolder\T1105\src\T1105-download-file.vbs
+  dependency_executor_name: powershell 
+  dependencies:   
+  - description: |
+      #{vbscript_file} must be exist on system.
+    prereq_command: |
+      if (Test-Path #{vbscript_file}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{vbscript_file}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1105/src/T1105-download-file.vbs" -OutFile "#{vbscript_file}"
   executor:
     command: 'wscript.exe #{vbscript_file}'
     cleanup_command: del Atomic-License.txt >nul 2>&1
