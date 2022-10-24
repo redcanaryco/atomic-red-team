@@ -81,12 +81,7 @@ atomic_tests:
     controller of the targeted or compromised host. reference https://securelist.com/qakbot-technical-analysis/103931/
   supported_platforms:
   - windows
-  input_arguments:
-    domain_name:
-      description: Domain Name
-      type: String
-      default:   $var = cmd /c set user |Select-String -pattern "USERDNSDOMAIN";$var.ToString().Substring(14) 
   executor:
     command: |
-       nslookup -querytype=ALL -timeout=12 _ldap._tcp.dc."#{domain_name}"
-    name: powershell
+       nslookup -querytype=ALL -timeout=12 _ldap._tcp.dc._msdcs.$env:USERDNSDOMAIN
+    name: command_prompt
