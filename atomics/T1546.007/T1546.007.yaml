@@ -4,15 +4,30 @@ atomic_tests:
 - name: Netsh Helper DLL Registration
   auto_generated_guid: 3244697d-5a3a-4dfc-941c-550f69f91a4d
   description: |
-    Netsh interacts with other operating system components using dynamic-link library (DLL) files
+    You can register a "helper dll" with Netsh as a persistance mechanism. The code in the dll is executed every time netsh.exe is called.
+    The NetshHelper.dll provided with the atomic will simply launch notepad when netsh.exe is run.
+    
+    [Blog](https://htmlpreview.github.io/?https://github.com/MatthewDemaske/blogbackup/blob/master/netshell.html)
+    [Sample DLL code](https://github.com/outflanknl/NetshHelperBeacon)
   supported_platforms:
   - windows
   input_arguments:
     helper_file:
       description: Path to DLL
       type: Path
-      default: C:\Path\file.dll
+      default: PathToAtomicsFolder\T1546.007\bin\NetshHelper.dll
+  dependencies:
+  - description: |
+      Helper DLL must exist on disk at specified location (#{helper_file})
+    prereq_command: |
+      if (Test-Path "#{helper_file}") { exit 0} else { exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{helper_file}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.007/bin/NetshHelper.dll" -OutFile "#{helper_file}"
   executor:
     command: |
       netsh.exe add helper #{helper_file}
+    cleanup_command: |
+      netsh.exe delete helper #{helper_file}
     name: command_prompt
+    elevation_required: true

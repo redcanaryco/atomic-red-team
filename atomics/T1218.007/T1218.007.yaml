@@ -11,7 +11,7 @@ atomic_tests:
     msi_payload:
       description: MSI file to execute
       type: Path
-      default: PathToAtomicsFolder\T1218.007\src\T1218.007_JScript.msi
+      default: PathToAtomicsFolder\T1218.007\bin\T1218.007_JScript.msi
     msi_exe:
       description: MSIExec File Path
       type: Path
@@ -28,7 +28,8 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{msi_payload}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Write-Host "You must provide your own MSI"
+      New-Item -Type Directory (split-path #{msi_payload}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/T1218.007_JScript.msi" -OutFile "#{msi_payload}"
   executor:
     command: |
       #{msi_exe} /q /#{action} "#{msi_payload}"
@@ -43,7 +44,7 @@ atomic_tests:
     msi_payload:
       description: MSI file to execute
       type: Path
-      default: PathToAtomicsFolder\T1218.007\src\T1218.007_VBScript.msi
+      default: PathToAtomicsFolder\T1218.007\bin\T1218.007_VBScript.msi
     msi_exe:
       description: MSIExec File Path
       type: Path
@@ -60,7 +61,8 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{msi_payload}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Write-Host "You must provide your own MSI"
+      New-Item -Type Directory (split-path #{msi_payload}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/T1218.007_VBScript.msi" -OutFile "#{msi_payload}"
   executor:
     command: |
       #{msi_exe} /q /#{action} "#{msi_payload}"
@@ -75,7 +77,7 @@ atomic_tests:
     msi_payload:
       description: MSI file to execute
       type: Path
-      default: PathToAtomicsFolder\T1218.007\src\T1218.007_DLL.msi
+      default: PathToAtomicsFolder\T1218.007\bin\T1218.007_DLL.msi
     msi_exe:
       description: MSIExec File Path
       type: Path
@@ -92,7 +94,8 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{msi_payload}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Write-Host "You must provide your own MSI"
+      New-Item -Type Directory (split-path #{msi_payload}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/T1218.007_DLL.msi" -OutFile "#{msi_payload}"
   executor:
     command: |
       #{msi_exe} /q /#{action} "#{msi_payload}"
@@ -107,7 +110,7 @@ atomic_tests:
     msi_payload:
       description: MSI file to execute
       type: Path
-      default: PathToAtomicsFolder\T1218.007\src\T1218.007_EXE.msi
+      default: PathToAtomicsFolder\T1218.007\bin\T1218.007_EXE.msi
     msi_exe:
       description: MSIExec File Path
       type: Path
@@ -124,7 +127,8 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{msi_payload}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Write-Host "You must provide your own MSI"
+      New-Item -Type Directory (split-path #{msi_payload}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/T1218.007_EXE.msi" -OutFile "#{msi_payload}"
   executor:
     command: |
       #{msi_exe} /q /#{action} "#{msi_payload}"
@@ -139,7 +143,7 @@ atomic_tests:
     msi_payload:
       description: MSI file to execute
       type: Path
-      default: PathToAtomicsFolder\T1218.007\src\T1218.007_JScript.msi
+      default: PathToAtomicsFolder\T1218.007\bin\T1218.007_JScript.msi
     action:
       description: |
         Specifies the MSI action to perform: Install, Admin, Advertise. The included MSI is designed to support all three action types.
@@ -152,7 +156,8 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{msi_payload}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Write-Host "You must provide your own MSI"
+      New-Item -Type Directory (split-path #{msi_payload}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/T1218.007_JScript.msi" -OutFile "#{msi_payload}"
   executor:
     command: |
       Invoke-CimMethod -ClassName Win32_Product -MethodName #{action} -Arguments @{ PackageLocation = '#{msi_payload}' }
@@ -167,7 +172,7 @@ atomic_tests:
     msi_payload:
       description: MSI file to execute
       type: Path
-      default: PathToAtomicsFolder\T1218.007\src\T1218.007_VBScript.msi
+      default: PathToAtomicsFolder\T1218.007\bin\T1218.007_VBScript.msi
     action:
       description: |
         Specifies the MSI action to perform: Install, Admin, Advertise. The included MSI is designed to support all three action types.
@@ -180,7 +185,8 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{msi_payload}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Write-Host "You must provide your own MSI"
+      New-Item -Type Directory (split-path #{msi_payload}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/T1218.007_VBScript.msi" -OutFile "#{msi_payload}"
   executor:
     command: |
       Invoke-CimMethod -ClassName Win32_Product -MethodName #{action} -Arguments @{ PackageLocation = '#{msi_payload}' }
@@ -195,7 +201,7 @@ atomic_tests:
     msi_payload:
       description: MSI file to execute
       type: Path
-      default: PathToAtomicsFolder\T1218.007\src\T1218.007_DLL.msi
+      default: PathToAtomicsFolder\T1218.007\bin\T1218.007_DLL.msi
     action:
       description: |
         Specifies the MSI action to perform: Install, Admin, Advertise. The included MSI is designed to support all three action types.
@@ -208,7 +214,8 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{msi_payload}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Write-Host "You must provide your own MSI"
+      New-Item -Type Directory (split-path #{msi_payload}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/T1218.007_DLL.msi" -OutFile "#{msi_payload}"
   executor:
     command: |
       Invoke-CimMethod -ClassName Win32_Product -MethodName #{action} -Arguments @{ PackageLocation = '#{msi_payload}' }
@@ -223,7 +230,7 @@ atomic_tests:
     msi_payload:
       description: MSI file to execute
       type: Path
-      default: PathToAtomicsFolder\T1218.007\src\T1218.007_EXE.msi
+      default: PathToAtomicsFolder\T1218.007\bin\T1218.007_EXE.msi
     action:
       description: |
         Specifies the MSI action to perform: Install, Admin, Advertise. The included MSI is designed to support all three action types.
@@ -236,7 +243,8 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{msi_payload}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Write-Host "You must provide your own MSI"
+      New-Item -Type Directory (split-path #{msi_payload}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/T1218.007_EXE.msi" -OutFile "#{msi_payload}"
   executor:
     command: |
       Invoke-CimMethod -ClassName Win32_Product -MethodName #{action} -Arguments @{ PackageLocation = '#{msi_payload}' }
@@ -244,14 +252,14 @@ atomic_tests:
 - name: Msiexec.exe - Execute the DllRegisterServer function of a DLL
   auto_generated_guid: 0106ffa5-fab6-4c7d-82e3-e6b8867d5e5d
   description: |
-    Loads a DLL into msiexec.exe and calls its DllRegisterServer function. Note: the DLL included in the "src" folder is only built for 64-bit, so this won't work on a 32-bit OS.
+    Loads a DLL into msiexec.exe and calls its DllRegisterServer function. Note: the DLL included in the "bin" folder is only built for 64-bit, so this won't work on a 32-bit OS.
   supported_platforms:
   - windows
   input_arguments:
     dll_payload:
       description: DLL to execute that has an implemented DllRegisterServer function
       type: Path
-      default: PathToAtomicsFolder\T1218.007\src\MSIRunner.dll
+      default: PathToAtomicsFolder\T1218.007\bin\MSIRunner.dll
     msi_exe:
       description: MSIExec File Path
       type: Path
@@ -263,7 +271,8 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Write-Host "You must provide your own MSI"
+      New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/MSIRunner.dll -OutFile "#{dll_payload}"
   executor:
     command: |
       #{msi_exe} /y "#{dll_payload}"
@@ -271,14 +280,14 @@ atomic_tests:
 - name: Msiexec.exe - Execute the DllUnregisterServer function of a DLL
   auto_generated_guid: ab09ec85-4955-4f9c-b8e0-6851baf4d47f
   description: |
-    Loads a DLL into msiexec.exe and calls its DllUnregisterServer function. Note: the DLL included in the "src" folder is only built for 64-bit, so this won't work on a 32-bit OS.
+    Loads a DLL into msiexec.exe and calls its DllUnregisterServer function. Note: the DLL included in the "bin" folder is only built for 64-bit, so this won't work on a 32-bit OS.
   supported_platforms:
   - windows
   input_arguments:
     dll_payload:
       description: DLL to execute that has an implemented DllUnregisterServer function
       type: Path
-      default: PathToAtomicsFolder\T1218.007\src\MSIRunner.dll
+      default: PathToAtomicsFolder\T1218.007\bin\MSIRunner.dll
     msi_exe:
       description: MSIExec File Path
       type: Path
@@ -290,7 +299,8 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Write-Host "You must provide your own MSI"
+      New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/MSIRunner.dll -OutFile "#{dll_payload}"
   executor:
     command: |
       #{msi_exe} /z "#{dll_payload}"
@@ -305,7 +315,7 @@ atomic_tests:
     msi_payload:
       description: MSI file to execute
       type: String
-      default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/src/T1218.007_JScript.msi
+      default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/T1218.007_JScript.msi
     msi_exe:
       description: MSIExec File Path
       type: Path

@@ -12,6 +12,10 @@ atomic_tests:
       description: Executable binary to use in place of screensaver for persistence
       type: Path
       default: C:\Windows\System32\cmd.exe
+    reboot:
+      description: Set to non-zero value if you want the test to reboot the system so that changes take effect
+      type: Integer
+      default: 0
   executor:
     command: |
       reg export "HKEY_CURRENT_USER\Control Panel\Desktop" %userprofile%\backup.reg
@@ -20,7 +24,7 @@ atomic_tests:
       reg.exe add "HKEY_CURRENT_USER\Control Panel\Desktop" /v ScreenSaveTimeout /t REG_SZ /d 60 /f
       reg.exe add "HKEY_CURRENT_USER\Control Panel\Desktop" /v ScreenSaverIsSecure /t REG_SZ /d 0 /f
       reg.exe add "HKEY_CURRENT_USER\Control Panel\Desktop" /v SCRNSAVE.EXE /t REG_SZ /d "%SystemRoot%\System32\evilscreensaver.scr" /f
-      shutdown /r /t 0
+      if #{reboot} NEQ 0 shutdown /r /t 0
     cleanup_command: |
       reg import %userprofile%\backup.reg
       del %userprofile%\backup.reg

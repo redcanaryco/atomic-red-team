@@ -1,0 +1,22 @@
+---
+attack_technique: T1619
+display_name: Cloud Storage Object Discovery
+atomic_tests:
+- name: AWS S3 Enumeration
+  auto_generated_guid: 3c7094f8-71ec-4917-aeb8-a633d7ec4ef5
+  description: |
+    This test will enumerate all the S3 buckets in the user account and lists all the files in each bucket. 
+  supported_platforms:
+  - iaas:azure
+  dependencies:
+    - description: |
+        Check if ~/.aws/credentials file has a default stanza is configured
+      prereq_command: |
+        cat ~/.aws/credentials | grep "default"
+      get_prereq_command: |
+        echo Please install the aws-cli and configure your AWS default profile using: aws configure
+  executor:
+    command: |
+      for bucket in "$(aws s3 ls | cut -d " " -f3)"; do aws s3api list-objects-v2 --bucket $bucket --output text; done
+    name: sh
+    elevation_required: false
