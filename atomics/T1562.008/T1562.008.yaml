@@ -21,15 +21,21 @@ atomic_tests:
       type: String
       default: "us-east-1"
     terraform:
-      description: Terraform variables
-      type: Hash
       aws_s3_bucket:
         name: some_bucket
+        args:
+          bucket: var.s3_bucket_name
+          force_destroy: true
+      aws_s3_bucket_policy:
+        name: some_policy
+        args:
+          bucket: aws_s3_bucket.some_bucket.id
+          policy: file("src/policy.json")
       aws_cloudtrail:
         name: some_cloudtrail
         args:
           s3_bucket_name: aws_s3_bucket.some_bucket.id
-          name: some_cloudtrail
+          name: var.cloudtrail_name
   dependencies:
     - description: |
         Check if ~/.aws/credentials file has a default stanza is configured
@@ -78,8 +84,6 @@ atomic_tests:
       type: String
       default: null
     terraform:
-      description: Terraform variables
-      type: Hash
       azurerm_resource_group:
         name: some_resource_group
         args:
@@ -91,7 +95,7 @@ atomic_tests:
           name: atomicredteam-ns
           location: azurerm_resource_group.some_resource_group.location
           resource_group_name: azurerm_resource_group.some_resource_group.name
-          sku: standard
+          sku: Standard
       azurerm_eventhub:
         name: some_eventhub
         args:
@@ -103,18 +107,16 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      Install-Module -Name Az
+      Create dependency resources using terraform
     prereq_command: |
-      try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
       terraform apply -auto-approve
     get_prereq_command: |
-      Install-Module -Name AzureAD -Force
+      echo "Install terraform manually and configure it."
   executor:
     command: |
       $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
       $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
       Connect-AzureAD -Credential $creds
-      New-AzEventHub -ResourceGroupName #{resource_group} -NamespaceName #{name_space_name} -Name #{event_hub_name}
       Remove-AzEventHub -ResourceGroupName #{resource_group} -Namespace #{name_space_name} -Name #{event_hub_name}
     name: powershell
     elevation_required: false

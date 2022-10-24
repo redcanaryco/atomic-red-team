@@ -7,6 +7,21 @@ provider "azurerm" {
   }
 }
 
+variable "username" {
+}
+
+variable "password" {
+}
+
+variable "event_hub_name" {
+}
+
+variable "resource_group" {
+}
+
+variable "name_space_name" {
+}
+
 resource "azurerm_resource_group" "some_resource_group" {
   name     = "atomicredteam-rg"
   location = "West Europe"
@@ -16,7 +31,7 @@ resource "azurerm_eventhub_namespace" "some_namespace" {
   name                = "atomicredteam-ns"
   location            = azurerm_resource_group.some_resource_group.location
   resource_group_name = azurerm_resource_group.some_resource_group.name
-  sku                 = "standard"
+  sku                 = "Standard"
 }
 
 resource "azurerm_eventhub" "some_eventhub" {
