@@ -593,6 +593,8 @@
   - Atomic Test #1: Winlogon Shell Key Persistence - PowerShell [windows]
   - Atomic Test #2: Winlogon Userinit Key Persistence - PowerShell [windows]
   - Atomic Test #3: Winlogon Notify Key Logon Persistence - PowerShell [windows]
+  - Atomic Test #4: Winlogon HKLM Shell Key Persistence - PowerShell [windows]
+  - Atomic Test #5: Winlogon HKLM Userinit Key Persistence - PowerShell [windows]
 - [T1546.012 Event Triggered Execution: Image File Execution Options Injection](../../T1546.012/T1546.012.md)
   - Atomic Test #1: IFEO Add Debugger [windows]
   - Atomic Test #2: IFEO Global Flags [windows]
@@ -909,6 +911,8 @@
   - Atomic Test #1: Winlogon Shell Key Persistence - PowerShell [windows]
   - Atomic Test #2: Winlogon Userinit Key Persistence - PowerShell [windows]
   - Atomic Test #3: Winlogon Notify Key Logon Persistence - PowerShell [windows]
+  - Atomic Test #4: Winlogon HKLM Shell Key Persistence - PowerShell [windows]
+  - Atomic Test #5: Winlogon HKLM Userinit Key Persistence - PowerShell [windows]
 - T1019 System Firmware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1042 Change Default File Association [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1409,6 +1413,7 @@
   - Atomic Test #5: List Open Egress Ports [windows]
   - Atomic Test #6: Adfind - Enumerate Active Directory Subnet Objects [windows]
   - Atomic Test #7: Qakbot Recon [windows]
+  - Atomic Test #9: DNS Server Discovery Using nslookup [windows]
 - T1087 Account Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1482 Domain Trust Discovery](../../T1482/T1482.md)
   - Atomic Test #1: Windows - Discover domain trusts with dsquery [windows]
