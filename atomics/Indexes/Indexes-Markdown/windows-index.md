@@ -65,6 +65,7 @@
   - Atomic Test #1: Extract binary files via VBA [windows]
   - Atomic Test #2: Create a Hidden User Called "$" [windows]
   - Atomic Test #3: Create an "Administrator " user (with a space on the end) [windows]
+  - Atomic Test #4: Create and Hide a Service with sc.exe [windows]
 - T1484.002 Domain Trust Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1562.009 Safe Mode Boot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1497.001 Virtualization/Sandbox Evasion: System Checks](../../T1497.001/T1497.001.md)
@@ -1408,6 +1409,7 @@
   - Atomic Test #5: List Open Egress Ports [windows]
   - Atomic Test #6: Adfind - Enumerate Active Directory Subnet Objects [windows]
   - Atomic Test #7: Qakbot Recon [windows]
+  - Atomic Test #9: DNS Server Discovery Using nslookup [windows]
 - T1087 Account Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1482 Domain Trust Discovery](../../T1482/T1482.md)
   - Atomic Test #1: Windows - Discover domain trusts with dsquery [windows]
