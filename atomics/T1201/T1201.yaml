@@ -21,7 +21,7 @@ atomic_tests:
   - description: |
       System must be CentOS or RHEL v7
     prereq_command: |
-      if [ $(rpm -q --queryformat '%{VERSION}') -eq "7" ]; then exit /b 0; else exit /b 1; fi;
+      if [ $(uname -a | grep -ioP 'el[0-9]' | grep -oP '[0-9]') -eq "7" ]; then exit 0; else exit 1; fi;
     get_prereq_command: |
       echo Please run from CentOS or RHEL v7
   executor:
