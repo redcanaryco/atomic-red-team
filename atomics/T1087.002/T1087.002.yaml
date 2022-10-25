@@ -11,6 +11,8 @@ atomic_tests:
   executor:
     command: |
       net user /domain
+      net group "Domain Admins" /domain
+      net group "Enterprise Admins" /domain
       net group /domain
     name: command_prompt
 - name: Enumerate all accounts via PowerShell (Domain)
