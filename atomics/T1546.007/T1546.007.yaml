@@ -27,6 +27,7 @@ atomic_tests:
   executor:
     command: |
       netsh.exe add helper #{helper_file}
+      taskkill /im notepad.exe /t /f > NUL 2>&1
     cleanup_command: |
       netsh.exe delete helper #{helper_file}
     name: command_prompt
