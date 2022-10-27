@@ -112,6 +112,12 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
+      Install-Module -Name Az
+    prereq_command: |
+      try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
+    get_prereq_command: |
+      Install-Module -Name AzureAD -Force
+  - description: |
       Create dependency resources using terraform
     prereq_command: |
       terraform version
