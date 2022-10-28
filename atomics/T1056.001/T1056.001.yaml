@@ -16,6 +16,17 @@ atomic_tests:
       description: Name of the local file, include path.
       type: Path
       default: $env:TEMP\key.log
+    input_file:
+      description: input powershell script path
+      type: Path
+      default: PathToAtomicsFolder\T1056.001\src\Get-Keystrokes.ps1
+  dependencies:
+  - description: |
+      script of powershell must exist on disk at specified location (#{input_file})
+    prereq_command: |
+      if (Test-Path #{input_file}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1056.001/src/Get-Keystrokes.ps1 -OutFile #{input_file}      
   executor:
     command: |
       Set-Location $PathToAtomicsFolder
