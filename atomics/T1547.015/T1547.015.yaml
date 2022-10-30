@@ -40,3 +40,26 @@ atomic_tests:
       mv -Force #{settings_json_tmp} #{settings_json_def}
       taskkill /F /IM "#{calculator}" > $null
     name: powershell
+- name: Add macOS LoginItem using Applescript
+  description: |
+    Runs osascript on a file to create new LoginItem for current user.
+    NOTE: Will popup dialog prompting user to Allow or Deny Terminal.app to control "System Events"
+    Therefore, it can't be automated until the TCC is granted.
+    The login item will launch Safari.app when user logs in.
+  supported_platforms:
+  - macos
+  input_arguments:
+    scriptfile:
+      description: path to Applescript source to add Safari LoginItem.
+      type: String
+      default: PathToAtomicsFolder/T1547.015/src/add_login_item.osa
+    cleanup_script:
+      description: path to Applescript source to delete Safari LoginItem.
+      type: String
+      default: PathToAtomicsFolder/T1547.015/src/remove_login_item.osa
+  executor:
+    command: |
+      osascript #{scriptfile}
+    cleanup_command: |
+      osascript #{cleanup_script}
+    name: bash
