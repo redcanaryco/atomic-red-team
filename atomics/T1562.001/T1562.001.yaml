@@ -746,3 +746,17 @@ atomic_tests:
       Disable-WindowsOptionalFeature -Online -FeatureName "Windows-Defender-ApplicationGuard" -NoRestart -ErrorAction Ignore
     name: powershell 
     elevation_required: true
+
+- name: WMIC Tamper with Windows Defender Evade Scanning Folder
+  description: | 
+    The following Atomic will attempt to exclude a folder within Defender leveraging WMI
+    Reference: https://www.bleepingcomputer.com/news/security/gootkit-malware-bypasses-windows-defender-by-setting-path-exclusions/
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      wmic.exe /Namespace:\\root\Microsoft\Windows\Defender class MSFT_MpPreference call Add ExclusionPath=\"ATOMICREDTEAM\"
+    cleanup_command: |
+      wmic.exe /Namespace:\\root\Microsoft\Windows\Defender class MSFT_MpPreference call Remove ExclusionPath=\"ATOMICREDTEAM\"
+    name: command_prompt
+    elevation_required: true
