@@ -57,8 +57,13 @@ atomic_tests:
   dependencies:
   - description: |
       The kernel module must exist on disk at specified location
+    prereq_command: |
+      if [ -d #{module_path} ] ; then exit 0; else exit 1 ; fi
+    get_prereq_command: |
+      exit 1
   executor:
     command: |
+      set -x
       sudo kextload #{module_path}
       kextstat 2>/dev/null | grep SoftRAID
       sudo kextunload #{module_path}
