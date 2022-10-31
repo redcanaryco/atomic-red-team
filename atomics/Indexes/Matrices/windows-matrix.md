@@ -136,7 +136,7 @@
 |  |  |  |  | Compile After Delivery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
 |  |  |  |  | Compiled HTML File [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
 |  |  |  |  | Domain Controller Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
-|  |  |  |  | HTML Smuggling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
+|  |  |  |  | [HTML Smuggling](../../T1027.006/T1027.006.md) |  |  |  |  |  |  |  |
 |  |  |  |  | Reversible Encryption [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
 |  |  |  |  | Install Root Certificate [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
 |  |  |  |  | [Indicator Removal on Host: File Deletion](../../T1070.004/T1070.004.md) |  |  |  |  |  |  |  |
