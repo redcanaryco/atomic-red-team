@@ -63,6 +63,7 @@ defense-evasion,T1036.005,Masquerading: Match Legitimate Name or Location,2,Masq
 defense-evasion,T1564,Hide Artifacts,1,Extract binary files via VBA,6afe288a-8a8b-4d33-a629-8d03ba9dad3a,powershell
 defense-evasion,T1564,Hide Artifacts,2,"Create a Hidden User Called ""$""",2ec63cc2-4975-41a6-bf09-dffdfb610778,command_prompt
 defense-evasion,T1564,Hide Artifacts,3,"Create an ""Administrator "" user (with a space on the end)",5bb20389-39a5-4e99-9264-aeb92a55a85c,powershell
+defense-evasion,T1564,Hide Artifacts,4,Create and Hide a Service with sc.exe,333c7de0-6fbe-42aa-ac2b-c7e40b18246a,command_prompt
 defense-evasion,T1484.002,Domain Trust Modification,1,Add Federation to Azure AD,8906c5d0-3ee5-4f63-897a-f6cafd3fdbb7,powershell
 defense-evasion,T1497.001,Virtualization/Sandbox Evasion: System Checks,1,Detect Virtualization Environment (Linux),dfbd1a21-540d-4574-9731-e852bd6fe840,sh
 defense-evasion,T1497.001,Virtualization/Sandbox Evasion: System Checks,2,Detect Virtualization Environment (Windows),502a7dc4-9d6f-4d28-abf2-f0e84692562d,powershell
@@ -326,6 +327,7 @@ defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,33,LockBit Bl
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,34,LockBit Black - Disable Privacy Settings Experience Using Registry -Powershell,d8c57eaa-497a-4a08-961e-bd5efd7c9374,powershell
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,35,Lockbit Black - Use Registry Editor to turn on automatic logon -Powershell,5e27f36d-5132-4537-b43b-413b0d5eec9a,powershell
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,36,Disable Windows Defender with PwSh Disable-WindowsOptionalFeature,f542ffd3-37b4-4528-837f-682874faa012,powershell
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,37,WMIC Tamper with Windows Defender Evade Scanning Folder,59d386fc-3a4b-41b8-850d-9e3eee24dfe4,command_prompt
 defense-evasion,T1055.012,Process Injection: Process Hollowing,1,Process Hollowing using PowerShell,562427b4-39ef-4e8c-af88-463a78e70b9c,powershell
 defense-evasion,T1055.012,Process Injection: Process Hollowing,2,RunPE via VBA,3ad4a037-1598-4136-837c-4027e4fa319b,powershell
 defense-evasion,T1027,Obfuscated Files or Information,1,Decode base64 Data into Script,f45df6be-2e1e-4136-a384-8f18ab3826fb,sh
@@ -384,6 +386,7 @@ defense-evasion,T1562.008,Impair Defenses: Disable Cloud Logs,7,AWS - CloudWatch
 defense-evasion,T1562.008,Impair Defenses: Disable Cloud Logs,8,AWS - CloudWatch Log Stream Deletes,89422c87-b57b-4a04-a12a-802bb11d06121,sh
 defense-evasion,T1562.008,Impair Defenses: Disable Cloud Logs,9,AWS CloudWatch Log Stream Deletes,33ca84bc-4259-4943-bd36-4655dc420932,sh
 defense-evasion,T1564.003,Hide Artifacts: Hidden Window,1,Hidden Window,f151ee37-9e2b-47e6-80e4-550b9f999b7a,powershell
+defense-evasion,T1027.006,HTML Smuggling,1,HTML Smuggling Remote Payload,30cbeda4-08d9-42f1-8685-197fad677734,powershell
 defense-evasion,T1070.004,Indicator Removal on Host: File Deletion,1,Delete a single file - Linux/macOS,562d737f-2fc6-4b09-8c2a-7f8ff0828480,sh
 defense-evasion,T1070.004,Indicator Removal on Host: File Deletion,2,Delete an entire folder - Linux/macOS,a415f17e-ce8d-4ce2-a8b4-83b674e7017e,sh
 defense-evasion,T1070.004,Indicator Removal on Host: File Deletion,3,Overwrite and delete a file with shred,039b4b10-2900-404b-b67f-4b6d49aa6499,sh
@@ -519,6 +522,8 @@ privilege-escalation,T1548.001,Abuse Elevation Control Mechanism: Setuid and Set
 privilege-escalation,T1547.004,Boot or Logon Autostart Execution: Winlogon Helper DLL,1,Winlogon Shell Key Persistence - PowerShell,bf9f9d65-ee4d-4c3e-a843-777d04f19c38,powershell
 privilege-escalation,T1547.004,Boot or Logon Autostart Execution: Winlogon Helper DLL,2,Winlogon Userinit Key Persistence - PowerShell,fb32c935-ee2e-454b-8fa3-1c46b42e8dfb,powershell
 privilege-escalation,T1547.004,Boot or Logon Autostart Execution: Winlogon Helper DLL,3,Winlogon Notify Key Logon Persistence - PowerShell,d40da266-e073-4e5a-bb8b-2b385023e5f9,powershell
+privilege-escalation,T1547.004,Boot or Logon Autostart Execution: Winlogon Helper DLL,4,Winlogon HKLM Shell Key Persistence - PowerShell,95a3c42f-8c88-4952-ad60-13b81d929a9d,powershell
+privilege-escalation,T1547.004,Boot or Logon Autostart Execution: Winlogon Helper DLL,5,Winlogon HKLM Userinit Key Persistence - PowerShell,f9b8daff-8fa7-4e6a-a1a7-7c14675a545b,powershell
 privilege-escalation,T1546.012,Event Triggered Execution: Image File Execution Options Injection,1,IFEO Add Debugger,fdda2626-5234-4c90-b163-60849a24c0b8,command_prompt
 privilege-escalation,T1546.012,Event Triggered Execution: Image File Execution Options Injection,2,IFEO Global Flags,46b1f278-c8ee-4aa5-acce-65e77b11f3c1,command_prompt
 privilege-escalation,T1546.012,Event Triggered Execution: Image File Execution Options Injection,3,GlobalFlags in Image File Execution Options,13117939-c9b2-4a43-999e-0a543df92f0d,powershell
@@ -556,12 +561,15 @@ privilege-escalation,T1547.001,Boot or Logon Autostart Execution: Registry Run K
 privilege-escalation,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,13,HKLM - Policy Settings Explorer Run Key,b5c9a9bc-dda3-4ea0-b16a-add8e81ab75f,powershell
 privilege-escalation,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,14,HKLM - Append Command to Winlogon Userinit KEY Value,f7fab6cc-8ece-4ca7-a0f1-30a22fccd374,powershell
 privilege-escalation,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,15,HKLM - Modify default System Shell - Winlogon Shell KEY Value ,1d958c61-09c6-4d9e-b26b-4130314e520e,powershell
+privilege-escalation,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,16,HKLM - Persistence using CommandProcessor AutoRun key (With Elevation),a574dafe-a903-4cce-9701-14040f4f3532,powershell
+privilege-escalation,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,17,HKCU - Persistence using CommandProcessor AutoRun key (With Elevation),36b8dbf9-59b1-4e9b-a3bb-36e80563ef01,powershell
 privilege-escalation,T1547.006,Boot or Logon Autostart Execution: Kernel Modules and Extensions,1,Linux - Load Kernel Module via insmod,687dcb93-9656-4853-9c36-9977315e9d23,bash
 privilege-escalation,T1053.006,Scheduled Task/Job: Systemd Timers,1,Create Systemd Service and Timer,f4983098-bb13-44fb-9b2c-46149961807b,bash
 privilege-escalation,T1053.006,Scheduled Task/Job: Systemd Timers,2,Create a user level transient systemd service and timer,3de33f5b-62e5-4e63-a2a0-6fd8808c80ec,sh
 privilege-escalation,T1053.006,Scheduled Task/Job: Systemd Timers,3,Create a system level transient systemd service and timer,d3eda496-1fc0-49e9-aff5-3bec5da9fa22,sh
 privilege-escalation,T1055.012,Process Injection: Process Hollowing,1,Process Hollowing using PowerShell,562427b4-39ef-4e8c-af88-463a78e70b9c,powershell
 privilege-escalation,T1055.012,Process Injection: Process Hollowing,2,RunPE via VBA,3ad4a037-1598-4136-837c-4027e4fa319b,powershell
+privilege-escalation,T1546,Event Triggered Execution,1,Persistence with Custom AutodialDLL,aca9ae16-7425-4b6d-8c30-cad306fdbd5b,powershell
 privilege-escalation,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,1,Add command to .bash_profile,94500ae1-7e31-47e3-886b-c328da46872f,sh
 privilege-escalation,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,2,Add command to .bashrc,0a898315-4cfa-4007-bafe-33a4646d115f,sh
 privilege-escalation,T1134.005,Access Token Manipulation: SID-History Injection,1,Injection SID-History with mimikatz,6bef32e5-9456-4072-8f14-35566fb85401,command_prompt
@@ -755,6 +763,8 @@ persistence,T1136.001,Create Account: Local Account,6,Create a new Windows admin
 persistence,T1547.004,Boot or Logon Autostart Execution: Winlogon Helper DLL,1,Winlogon Shell Key Persistence - PowerShell,bf9f9d65-ee4d-4c3e-a843-777d04f19c38,powershell
 persistence,T1547.004,Boot or Logon Autostart Execution: Winlogon Helper DLL,2,Winlogon Userinit Key Persistence - PowerShell,fb32c935-ee2e-454b-8fa3-1c46b42e8dfb,powershell
 persistence,T1547.004,Boot or Logon Autostart Execution: Winlogon Helper DLL,3,Winlogon Notify Key Logon Persistence - PowerShell,d40da266-e073-4e5a-bb8b-2b385023e5f9,powershell
+persistence,T1547.004,Boot or Logon Autostart Execution: Winlogon Helper DLL,4,Winlogon HKLM Shell Key Persistence - PowerShell,95a3c42f-8c88-4952-ad60-13b81d929a9d,powershell
+persistence,T1547.004,Boot or Logon Autostart Execution: Winlogon Helper DLL,5,Winlogon HKLM Userinit Key Persistence - PowerShell,f9b8daff-8fa7-4e6a-a1a7-7c14675a545b,powershell
 persistence,T1098.004,SSH Authorized Keys,1,Modify SSH Authorized Keys,342cc723-127c-4d3a-8292-9c0c6b4ecadc,bash
 persistence,T1546.012,Event Triggered Execution: Image File Execution Options Injection,1,IFEO Add Debugger,fdda2626-5234-4c90-b163-60849a24c0b8,command_prompt
 persistence,T1546.012,Event Triggered Execution: Image File Execution Options Injection,2,IFEO Global Flags,46b1f278-c8ee-4aa5-acce-65e77b11f3c1,command_prompt
@@ -789,6 +799,8 @@ persistence,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Sta
 persistence,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,13,HKLM - Policy Settings Explorer Run Key,b5c9a9bc-dda3-4ea0-b16a-add8e81ab75f,powershell
 persistence,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,14,HKLM - Append Command to Winlogon Userinit KEY Value,f7fab6cc-8ece-4ca7-a0f1-30a22fccd374,powershell
 persistence,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,15,HKLM - Modify default System Shell - Winlogon Shell KEY Value ,1d958c61-09c6-4d9e-b26b-4130314e520e,powershell
+persistence,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,16,HKLM - Persistence using CommandProcessor AutoRun key (With Elevation),a574dafe-a903-4cce-9701-14040f4f3532,powershell
+persistence,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,17,HKCU - Persistence using CommandProcessor AutoRun key (With Elevation),36b8dbf9-59b1-4e9b-a3bb-36e80563ef01,powershell
 persistence,T1136.003,Create Account: Cloud Account,1,AWS - Create a new IAM user,8d1c2368-b503-40c9-9057-8e42f21c58ad,sh
 persistence,T1098,Account Manipulation,1,Admin Account Manipulate,5598f7cb-cf43-455e-883a-f6008c5d46af,powershell
 persistence,T1098,Account Manipulation,2,Domain Account and Group Manipulate,a55a22e9-a3d3-42ce-bd48-2653adb8f7a9,powershell
@@ -803,6 +815,7 @@ persistence,T1547.006,Boot or Logon Autostart Execution: Kernel Modules and Exte
 persistence,T1053.006,Scheduled Task/Job: Systemd Timers,1,Create Systemd Service and Timer,f4983098-bb13-44fb-9b2c-46149961807b,bash
 persistence,T1053.006,Scheduled Task/Job: Systemd Timers,2,Create a user level transient systemd service and timer,3de33f5b-62e5-4e63-a2a0-6fd8808c80ec,sh
 persistence,T1053.006,Scheduled Task/Job: Systemd Timers,3,Create a system level transient systemd service and timer,d3eda496-1fc0-49e9-aff5-3bec5da9fa22,sh
+persistence,T1546,Event Triggered Execution,1,Persistence with Custom AutodialDLL,aca9ae16-7425-4b6d-8c30-cad306fdbd5b,powershell
 persistence,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,1,Add command to .bash_profile,94500ae1-7e31-47e3-886b-c328da46872f,sh
 persistence,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,2,Add command to .bashrc,0a898315-4cfa-4007-bafe-33a4646d115f,sh
 persistence,T1547.002,Authentication Package,1,Authentication Package,be2590e8-4ac3-47ac-b4b5-945820f2fbe9,powershell
@@ -1018,6 +1031,7 @@ credential-access,T1110.003,Brute Force: Password Spraying,5,WinPwn - DomainPass
 credential-access,T1110.003,Brute Force: Password Spraying,6,Password Spray Invoke-DomainPasswordSpray Light,b15bc9a5-a4f3-4879-9304-ea0011ace63a,powershell
 credential-access,T1110.003,Brute Force: Password Spraying,7,Password Spray Microsoft Online Accounts with MSOLSpray (Azure/O365),f3a10056-0160-4785-8744-d9bd7c12dc39,powershell
 credential-access,T1110.003,Brute Force: Password Spraying,8,Password Spray using Kerbrute Tool,c6f25ec3-6475-47a9-b75d-09ac593c5ecb,powershell
+credential-access,T1110.003,Brute Force: Password Spraying,9,AWS - Password Spray an AWS using GoAWSConsoleSpray,9c10d16b-20b1-403a-8e67-50ef7117ed4e,sh
 credential-access,T1003.005,OS Credential Dumping: Cached Domain Credentials,1,Cached Credential Dump via Cmdkey,56506854-89d6-46a3-9804-b7fde90791f9,command_prompt
 credential-access,T1558.001,Steal or Forge Kerberos Tickets: Golden Ticket,1,Crafting Active Directory golden tickets with mimikatz,9726592a-dabc-4d4d-81cd-44070008b3af,powershell
 credential-access,T1558.001,Steal or Forge Kerberos Tickets: Golden Ticket,2,Crafting Active Directory golden tickets with Rubeus,e42d33cd-205c-4acf-ab59-a9f38f6bad9c,powershell
@@ -1183,6 +1197,7 @@ discovery,T1016,System Network Configuration Discovery,5,List Open Egress Ports,
 discovery,T1016,System Network Configuration Discovery,6,Adfind - Enumerate Active Directory Subnet Objects,9bb45dd7-c466-4f93-83a1-be30e56033ee,command_prompt
 discovery,T1016,System Network Configuration Discovery,7,Qakbot Recon,121de5c6-5818-4868-b8a7-8fd07c455c1b,command_prompt
 discovery,T1016,System Network Configuration Discovery,8,List macOS Firewall Rules,ff1d8c25-2aa4-4f18-a425-fede4a41ee88,bash
+discovery,T1016,System Network Configuration Discovery,9,DNS Server Discovery Using nslookup,34557863-344a-468f-808b-a1bfb89b4fa9,command_prompt
 discovery,T1482,Domain Trust Discovery,1,Windows - Discover domain trusts with dsquery,4700a710-c821-4e17-a3ec-9e4c81d6845f,command_prompt
 discovery,T1482,Domain Trust Discovery,2,Windows - Discover domain trusts with nltest,2e22641d-0498-48d2-b9ff-c71e496ccdbe,command_prompt
 discovery,T1482,Domain Trust Discovery,3,Powershell enumerate domains and forests,c58fbc62-8a62-489e-8f2d-3565d7d96f30,powershell
@@ -1398,3 +1413,4 @@ exfiltration,T1048.003,Exfiltration Over Alternative Protocol: Exfiltration Over
 exfiltration,T1048.003,Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,4,Exfiltration Over Alternative Protocol - HTTP,6aa58451-1121-4490-a8e9-1dada3f1c68c,powershell
 exfiltration,T1048.003,Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,5,Exfiltration Over Alternative Protocol - SMTP,ec3a835e-adca-4c7c-88d2-853b69c11bb9,powershell
 exfiltration,T1048.003,Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,6,MAZE FTP Upload,57799bc2-ad1e-4130-a793-fb0c385130ba,powershell
+exfiltration,T1048.003,Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,7,Exfiltration Over Alternative Protocol - FTP - Rclone,b854eb97-bf9b-45ab-a1b5-b94e4880c56b,powershell
