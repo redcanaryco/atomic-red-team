@@ -1,25 +1,24 @@
 attack_technique: T1547.007
 display_name: 'Boot or Logon Autostart Execution: Re-opened Applications'
 atomic_tests:
-- name: Re-Opened Applications
+- name: Copy in loginwindow.plist for Re-Opened Applications
   auto_generated_guid: 5fefd767-ef54-4ac6-84d3-751ab85e8aba
   description: |
-    Plist Method
-
-    [Reference](https://developer.apple.com/library/content/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CustomLogin.html)
+    Copy in new loginwindow.plist to launch Calculator.
   supported_platforms:
   - macos
+  input_arguments:
+    calc_plist_path:
+      description: path to binary plist with entry to open calculator
+      type: Path
+      default: PathToAtomicsFolder/T1547.007/src/reopen_loginwindow_calc.plist
   executor:
-    steps: |
-      1. create a custom plist:
-
-          ~/Library/Preferences/com.apple.loginwindow.plist
-
-      or
-
-          ~/Library/Preferences/ByHost/com.apple.loginwindow.*.plist
-    name: manual
-- name: Re-Opened Applications
+    command: |
+      cp #{calc_plist_path} ~/Library/Preferences/ByHost/com.apple.loginwindow.plist
+    cleanup_command: |
+      rm -f ~/Library/Preferences/ByHost/com.apple.loginwindow.plist
+    name: sh
+- name: Re-Opened Applications using LoginHook
   auto_generated_guid: 5f5b71da-e03f-42e7-ac98-d63f9e0465cb
   description: |
     Mac Defaults
@@ -38,4 +37,52 @@ atomic_tests:
     cleanup_command: |
       sudo defaults delete com.apple.loginwindow LoginHook
     elevation_required: true
+    name: sh
+- name: Append to existing loginwindow for Re-Opened Applications
+  auto_generated_guid: 5fefd767-ef54-4ac6-84d3-751ab85e8aba
+  description: |
+    Appends an entry to launch Calculator hidden loginwindow.*.plist for next login.
+  supported_platforms:
+  - macos
+  input_arguments:
+    objc_source_path:
+      description: path to objective C program
+      type: Path
+      default: PathToAtomicsFolder/T1547.007/src/append_reopen_loginwindow.m
+    exe_path:
+      description: path to compiled program
+      type: Path
+      default: /tmp/t1547007_append_exe
+  dependency_executor_name: bash
+  dependencies:
+    - description: |
+         compile C program
+      prereq_command: |
+         exit 1
+      get_prereq_command: |
+         cc #{objc_source_path} -o #{exe_path} -framework Cocoa
+  executor:
+    command: |
+      set -x
+      FILE=`find ~/Library/Preferences/ByHost/com.apple.loginwindow.*.plist -type f | head -1`
+      if [ -z "${FILE}" ] ; then
+         echo "No loginwindow plist file found"
+         exit 1
+      fi
+      # save backup copy
+      cp ${FILE} /tmp/t1547007_loginwindow-backup.plist
+      # before
+      plutil -p ${FILE}
+      # overwrite
+      #{exe_path} ${FILE}
+      # after
+      plutil -p ${FILE}
+    cleanup_command: |
+      rm -f #{exe_path}
+      # revert to backup copy
+      FILE=`find ~/Library/Preferences/ByHost/com.apple.loginwindow.*.plist -type f | head -1`
+      if [ -z "${FILE}" ] ; then
+         exit 0
+      fi
+      mv /tmp/t1547007_loginwindow-backup.plist ${FILE}
     name: sh
