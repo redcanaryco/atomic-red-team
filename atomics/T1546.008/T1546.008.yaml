@@ -54,7 +54,7 @@ atomic_tests:
   - windows
   executor:
     command: |
-      copy C:\Windows\System32\sethc.exe C:\Windows\System32\sethc_backup.exe
+      IF NOT EXIST C:\Windows\System32\sethc_backup.exe (copy C:\Windows\System32\sethc.exe C:\Windows\System32\sethc_backup.exe) ELSE ( pushd )
       takeown /F C:\Windows\System32\sethc.exe /A
       icacls C:\Windows\System32\sethc.exe /grant Administrators:F /t
       copy /Y C:\Windows\System32\cmd.exe C:\Windows\System32\sethc.exe
