@@ -650,6 +650,8 @@
   - Atomic Test #13: HKLM - Policy Settings Explorer Run Key [windows]
   - Atomic Test #14: HKLM - Append Command to Winlogon Userinit KEY Value [windows]
   - Atomic Test #15: HKLM - Modify default System Shell - Winlogon Shell KEY Value  [windows]
+  - Atomic Test #16: HKLM - Persistence using CommandProcessor AutoRun key (With Elevation) [windows]
+  - Atomic Test #17: HKCU - Persistence using CommandProcessor AutoRun key (With Elevation) [windows]
 - T1574.013 KernelCallbackTable [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -971,6 +973,8 @@
   - Atomic Test #13: HKLM - Policy Settings Explorer Run Key [windows]
   - Atomic Test #14: HKLM - Append Command to Winlogon Userinit KEY Value [windows]
   - Atomic Test #15: HKLM - Modify default System Shell - Winlogon Shell KEY Value  [windows]
+  - Atomic Test #16: HKLM - Persistence using CommandProcessor AutoRun key (With Elevation) [windows]
+  - Atomic Test #17: HKCU - Persistence using CommandProcessor AutoRun key (With Elevation) [windows]
 - [T1098 Account Manipulation](../../T1098/T1098.md)
   - Atomic Test #1: Admin Account Manipulate [windows]
   - Atomic Test #2: Domain Account and Group Manipulate [windows]
