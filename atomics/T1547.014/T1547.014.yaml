@@ -2,6 +2,7 @@ attack_technique: T1547.014
 display_name: 'Active Setup'
 atomic_tests:
 - name: 'HKLM - Add atomic_test key to launch executable as part of user setup'
+  auto_generated_guid: deff4586-0517-49c2-981d-bbea24d48d71
   description: |
     This test will create an "atomic_test" key under 'HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components' to launch calc by configuring an active setup executable and 
     forcing to run active setup using the "runonce.exe /AlternateShellStartup" command. 
@@ -30,6 +31,7 @@ atomic_tests:
     name: powershell
     elevation_required: true
 - name: 'HKLM - Add malicious StubPath value to existing Active Setup Entry'
+  auto_generated_guid: 39e417dd-4fed-4d9c-ae3a-ba433b4d0e9a
   description: |
     This test will add a StubPath entry to the Active Setup native registry key associated with 'Internet Explorer Core Fonts' (UUID {C9E9A340-D1F1-11D0-821E-444553540600}) 
     Said key doesn't have a StubPath value by default, by adding one it will launch calc by forcing to run active setup using runonce.exe /AlternateShellStartup. 
@@ -51,6 +53,7 @@ atomic_tests:
     name: powershell
     elevation_required: true
 - name: HKLM - re-execute 'Internet Explorer Core Fonts' StubPath payload by decreasing version number
+  auto_generated_guid: 04d55cef-f283-40ba-ae2a-316bc3b5e78c
   description: |
     This test will decrease the version number of the 'Internet Explorer Core Fonts' (UUID {C9E9A340-D1F1-11D0-821E-444553540600}) registry key for the current user, 
     which will force the StubPath payload (if set) to execute.
