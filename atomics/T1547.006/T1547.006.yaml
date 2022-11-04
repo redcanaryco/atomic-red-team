@@ -92,7 +92,7 @@ atomic_tests:
   - description: |
       The kernel module must exist on disk at specified location
     prereq_command: |
-      exit 1
+      if [ -f "#{exe_path}" ]; then exit 0 ; else exit 1; fi
     get_prereq_command: |
       cc -o #{exe_path} #{src_path} -framework IOKit -framework Foundation
   executor:
