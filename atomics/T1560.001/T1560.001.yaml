@@ -106,6 +106,7 @@ atomic_tests:
       prereq_command: |
         cmd /c 'if not exist "#{winzip_exe}" (echo 1) else (echo 0)'
       get_prereq_command: |
+        IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1" -UseBasicParsing)
         if(Invoke-WebRequestVerifyHash "#{winzip_url}" "$env:Temp\winzip.exe" #{winzip_hash}){
           Write-Host Follow the installation prompts to continue
           cmd /c "$env:Temp\winzip.exe"
