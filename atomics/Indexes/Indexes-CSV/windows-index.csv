@@ -247,6 +247,7 @@ defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,33,LockBit Bl
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,34,LockBit Black - Disable Privacy Settings Experience Using Registry -Powershell,d8c57eaa-497a-4a08-961e-bd5efd7c9374,powershell
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,35,Lockbit Black - Use Registry Editor to turn on automatic logon -Powershell,5e27f36d-5132-4537-b43b-413b0d5eec9a,powershell
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,36,Disable Windows Defender with PwSh Disable-WindowsOptionalFeature,f542ffd3-37b4-4528-837f-682874faa012,powershell
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,37,WMIC Tamper with Windows Defender Evade Scanning Folder,59d386fc-3a4b-41b8-850d-9e3eee24dfe4,command_prompt
 defense-evasion,T1055.012,Process Injection: Process Hollowing,1,Process Hollowing using PowerShell,562427b4-39ef-4e8c-af88-463a78e70b9c,powershell
 defense-evasion,T1055.012,Process Injection: Process Hollowing,2,RunPE via VBA,3ad4a037-1598-4136-837c-4027e4fa319b,powershell
 defense-evasion,T1027,Obfuscated Files or Information,2,Execute base64-encoded PowerShell,a50d5a97-2531-499e-a1de-5544c74432c6,powershell
@@ -288,6 +289,7 @@ defense-evasion,T1197,BITS Jobs,4,Bits download using desktopimgdownldr.exe (cmd
 defense-evasion,T1127.001,Trusted Developer Utilities Proxy Execution: MSBuild,1,MSBuild Bypass Using Inline Tasks (C#),58742c0f-cb01-44cd-a60b-fb26e8871c93,command_prompt
 defense-evasion,T1127.001,Trusted Developer Utilities Proxy Execution: MSBuild,2,MSBuild Bypass Using Inline Tasks (VB),ab042179-c0c5-402f-9bc8-42741f5ce359,command_prompt
 defense-evasion,T1564.003,Hide Artifacts: Hidden Window,1,Hidden Window,f151ee37-9e2b-47e6-80e4-550b9f999b7a,powershell
+defense-evasion,T1027.006,HTML Smuggling,1,HTML Smuggling Remote Payload,30cbeda4-08d9-42f1-8685-197fad677734,powershell
 defense-evasion,T1070.004,Indicator Removal on Host: File Deletion,4,Delete a single file - Windows cmd,861ea0b4-708a-4d17-848d-186c9c7f17e3,command_prompt
 defense-evasion,T1070.004,Indicator Removal on Host: File Deletion,5,Delete an entire folder - Windows cmd,ded937c4-2add-42f7-9c2c-c742b7a98698,command_prompt
 defense-evasion,T1070.004,Indicator Removal on Host: File Deletion,6,Delete a single file - Windows PowerShell,9dee89bd-9a98-4c4f-9e2d-4256690b0e72,powershell
@@ -358,6 +360,9 @@ privilege-escalation,T1548.002,Abuse Elevation Control Mechanism: Bypass User Ac
 privilege-escalation,T1574.011,Hijack Execution Flow: Services Registry Permissions Weakness,1,Service Registry Permissions Weakness,f7536d63-7fd4-466f-89da-7e48d550752a,powershell
 privilege-escalation,T1574.011,Hijack Execution Flow: Services Registry Permissions Weakness,2,Service ImagePath Change with reg.exe,f38e9eea-e1d7-4ba6-b716-584791963827,command_prompt
 privilege-escalation,T1547,Boot or Logon Autostart Execution,1,Add a driver,cb01b3da-b0e7-4e24-bf6d-de5223526785,command_prompt
+privilege-escalation,T1547.014,Active Setup,1,HKLM - Add atomic_test key to launch executable as part of user setup,deff4586-0517-49c2-981d-bbea24d48d71,powershell
+privilege-escalation,T1547.014,Active Setup,2,HKLM - Add malicious StubPath value to existing Active Setup Entry,39e417dd-4fed-4d9c-ae3a-ba433b4d0e9a,powershell
+privilege-escalation,T1547.014,Active Setup,3,HKLM - re-execute 'Internet Explorer Core Fonts' StubPath payload by decreasing version number,04d55cef-f283-40ba-ae2a-316bc3b5e78c,powershell
 privilege-escalation,T1543.003,Create or Modify System Process: Windows Service,1,Modify Fax service to run PowerShell,ed366cde-7d12-49df-a833-671904770b9f,command_prompt
 privilege-escalation,T1543.003,Create or Modify System Process: Windows Service,2,Service Installation CMD,981e2942-e433-44e9-afc1-8c957a1496b6,command_prompt
 privilege-escalation,T1543.003,Create or Modify System Process: Windows Service,3,Service Installation PowerShell,491a4af6-a521-4b74-b23b-f7b3f1ee9e77,powershell
@@ -391,6 +396,7 @@ privilege-escalation,T1546.012,Event Triggered Execution: Image File Execution O
 privilege-escalation,T1546.012,Event Triggered Execution: Image File Execution Options Injection,3,GlobalFlags in Image File Execution Options,13117939-c9b2-4a43-999e-0a543df92f0d,powershell
 privilege-escalation,T1546.008,Event Triggered Execution: Accessibility Features,1,Attaches Command Prompt as a Debugger to a List of Target Processes,3309f53e-b22b-4eb6-8fd2-a6cf58b355a9,powershell
 privilege-escalation,T1546.008,Event Triggered Execution: Accessibility Features,2,Replace binary of sticky keys,934e90cf-29ca-48b3-863c-411737ad44e3,command_prompt
+privilege-escalation,T1546.008,Event Triggered Execution: Accessibility Features,3,Create Symbolic Link From osk.exe to cmd.exe,51ef369c-5e87-4f33-88cd-6d61be63edf2,command_prompt
 privilege-escalation,T1055.004,Process Injection: Asynchronous Procedure Call,1,Process Injection via C#,611b39b7-e243-4c81-87a4-7145a90358b1,command_prompt
 privilege-escalation,T1546.009,Event Triggered Execution: AppCert DLLs,1,Create registry persistence via AppCert DLL,a5ad6104-5bab-4c43-b295-b4c44c7c6b05,powershell
 privilege-escalation,T1134.001,Access Token Manipulation: Token Impersonation/Theft,1,Named pipe client impersonation,90db9e27-8e7c-4c04-b602-a45927884966,powershell
@@ -421,6 +427,8 @@ privilege-escalation,T1547.001,Boot or Logon Autostart Execution: Registry Run K
 privilege-escalation,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,13,HKLM - Policy Settings Explorer Run Key,b5c9a9bc-dda3-4ea0-b16a-add8e81ab75f,powershell
 privilege-escalation,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,14,HKLM - Append Command to Winlogon Userinit KEY Value,f7fab6cc-8ece-4ca7-a0f1-30a22fccd374,powershell
 privilege-escalation,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,15,HKLM - Modify default System Shell - Winlogon Shell KEY Value ,1d958c61-09c6-4d9e-b26b-4130314e520e,powershell
+privilege-escalation,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,16,HKLM - Persistence using CommandProcessor AutoRun key (With Elevation),a574dafe-a903-4cce-9701-14040f4f3532,powershell
+privilege-escalation,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,17,HKCU - Persistence using CommandProcessor AutoRun key (With Elevation),36b8dbf9-59b1-4e9b-a3bb-36e80563ef01,powershell
 privilege-escalation,T1055.012,Process Injection: Process Hollowing,1,Process Hollowing using PowerShell,562427b4-39ef-4e8c-af88-463a78e70b9c,powershell
 privilege-escalation,T1055.012,Process Injection: Process Hollowing,2,RunPE via VBA,3ad4a037-1598-4136-837c-4027e4fa319b,powershell
 privilege-escalation,T1546,Event Triggered Execution,1,Persistence with Custom AutodialDLL,aca9ae16-7425-4b6d-8c30-cad306fdbd5b,powershell
@@ -533,6 +541,9 @@ persistence,T1133,External Remote Services,1,Running Chrome VPN Extensions via t
 persistence,T1574.011,Hijack Execution Flow: Services Registry Permissions Weakness,1,Service Registry Permissions Weakness,f7536d63-7fd4-466f-89da-7e48d550752a,powershell
 persistence,T1574.011,Hijack Execution Flow: Services Registry Permissions Weakness,2,Service ImagePath Change with reg.exe,f38e9eea-e1d7-4ba6-b716-584791963827,command_prompt
 persistence,T1547,Boot or Logon Autostart Execution,1,Add a driver,cb01b3da-b0e7-4e24-bf6d-de5223526785,command_prompt
+persistence,T1547.014,Active Setup,1,HKLM - Add atomic_test key to launch executable as part of user setup,deff4586-0517-49c2-981d-bbea24d48d71,powershell
+persistence,T1547.014,Active Setup,2,HKLM - Add malicious StubPath value to existing Active Setup Entry,39e417dd-4fed-4d9c-ae3a-ba433b4d0e9a,powershell
+persistence,T1547.014,Active Setup,3,HKLM - re-execute 'Internet Explorer Core Fonts' StubPath payload by decreasing version number,04d55cef-f283-40ba-ae2a-316bc3b5e78c,powershell
 persistence,T1543.003,Create or Modify System Process: Windows Service,1,Modify Fax service to run PowerShell,ed366cde-7d12-49df-a833-671904770b9f,command_prompt
 persistence,T1543.003,Create or Modify System Process: Windows Service,2,Service Installation CMD,981e2942-e433-44e9-afc1-8c957a1496b6,command_prompt
 persistence,T1543.003,Create or Modify System Process: Windows Service,3,Service Installation PowerShell,491a4af6-a521-4b74-b23b-f7b3f1ee9e77,powershell
@@ -572,6 +583,7 @@ persistence,T1546.012,Event Triggered Execution: Image File Execution Options In
 persistence,T1546.012,Event Triggered Execution: Image File Execution Options Injection,3,GlobalFlags in Image File Execution Options,13117939-c9b2-4a43-999e-0a543df92f0d,powershell
 persistence,T1546.008,Event Triggered Execution: Accessibility Features,1,Attaches Command Prompt as a Debugger to a List of Target Processes,3309f53e-b22b-4eb6-8fd2-a6cf58b355a9,powershell
 persistence,T1546.008,Event Triggered Execution: Accessibility Features,2,Replace binary of sticky keys,934e90cf-29ca-48b3-863c-411737ad44e3,command_prompt
+persistence,T1546.008,Event Triggered Execution: Accessibility Features,3,Create Symbolic Link From osk.exe to cmd.exe,51ef369c-5e87-4f33-88cd-6d61be63edf2,command_prompt
 persistence,T1136.002,Create Account: Domain Account,1,Create a new Windows domain admin user,fcec2963-9951-4173-9bfa-98d8b7834e62,command_prompt
 persistence,T1136.002,Create Account: Domain Account,2,Create a new account similar to ANONYMOUS LOGON,dc7726d2-8ccb-4cc6-af22-0d5afb53a548,command_prompt
 persistence,T1136.002,Create Account: Domain Account,3,Create a new Domain Account using PowerShell,5a3497a4-1568-4663-b12a-d4a5ed70c7d7,powershell
@@ -595,6 +607,8 @@ persistence,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Sta
 persistence,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,13,HKLM - Policy Settings Explorer Run Key,b5c9a9bc-dda3-4ea0-b16a-add8e81ab75f,powershell
 persistence,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,14,HKLM - Append Command to Winlogon Userinit KEY Value,f7fab6cc-8ece-4ca7-a0f1-30a22fccd374,powershell
 persistence,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,15,HKLM - Modify default System Shell - Winlogon Shell KEY Value ,1d958c61-09c6-4d9e-b26b-4130314e520e,powershell
+persistence,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,16,HKLM - Persistence using CommandProcessor AutoRun key (With Elevation),a574dafe-a903-4cce-9701-14040f4f3532,powershell
+persistence,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,17,HKCU - Persistence using CommandProcessor AutoRun key (With Elevation),36b8dbf9-59b1-4e9b-a3bb-36e80563ef01,powershell
 persistence,T1098,Account Manipulation,1,Admin Account Manipulate,5598f7cb-cf43-455e-883a-f6008c5d46af,powershell
 persistence,T1098,Account Manipulation,2,Domain Account and Group Manipulate,a55a22e9-a3d3-42ce-bd48-2653adb8f7a9,powershell
 persistence,T1098,Account Manipulation,9,Password Change on Directory Service Restore Mode (DSRM) Account,d5b886d9-d1c7-4b6e-a7b0-460041bf2823,command_prompt
@@ -1020,3 +1034,4 @@ exfiltration,T1048.003,Exfiltration Over Alternative Protocol: Exfiltration Over
 exfiltration,T1048.003,Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,4,Exfiltration Over Alternative Protocol - HTTP,6aa58451-1121-4490-a8e9-1dada3f1c68c,powershell
 exfiltration,T1048.003,Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,5,Exfiltration Over Alternative Protocol - SMTP,ec3a835e-adca-4c7c-88d2-853b69c11bb9,powershell
 exfiltration,T1048.003,Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,6,MAZE FTP Upload,57799bc2-ad1e-4130-a793-fb0c385130ba,powershell
+exfiltration,T1048.003,Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,7,Exfiltration Over Alternative Protocol - FTP - Rclone,b854eb97-bf9b-45ab-a1b5-b94e4880c56b,powershell
