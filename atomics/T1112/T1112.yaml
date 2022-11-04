@@ -14,13 +14,12 @@ atomic_tests:
     cleanup_command: |
       reg delete HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced /v HideFileExt /f >nul 2>&1
     name: command_prompt
-    elevation_required: true
 - name: Modify Registry of Local Machine - cmd
   auto_generated_guid: 282f929a-6bc5-42b8-bd93-960c3ba35afe
   description: |
     Modify the Local Machine registry RUN key to change Windows Defender executable that should be ran on startup.  This should only be possible when
     CMD is ran as Administrative rights. Upon execution, the message "The operation completed successfully."
-    will be displayed. Additionally, open Registry Editor to view the modified entry in HKCU\Software\Microsoft\Windows\CurrentVersion\Run.
+    will be displayed. Additionally, open Registry Editor to view the modified entry in HKLM\Software\Microsoft\Windows\CurrentVersion\Run.
   supported_platforms:
   - windows
   input_arguments:
@@ -495,7 +494,6 @@ atomic_tests:
       reg delete HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced /v ShowInfoTip /f >nul 2>&1
       reg delete HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced /v ShowCompColor /f >nul 2>&1
     name: command_prompt
-    elevation_required: true
 - name: Windows Powershell Logging Disabled
   auto_generated_guid: 95b25212-91a7-42ff-9613-124aca6845a8
   description: |
@@ -621,7 +619,6 @@ atomic_tests:
       reg delete HKCU\SOFTWARE\NetWire /va /f >nul 2>&1
       reg delete HKCU\SOFTWARE\NetWire /f >nul 2>&1
     name: command_prompt
-    elevation_required: true
 - name: Ursnif Malware Registry Key Creation
   auto_generated_guid: c375558d-7c25-45e9-bd64-7b23a97c1db0
   description: |
@@ -636,7 +633,6 @@ atomic_tests:
       reg delete HKCU\Software\AppDataLow\Software\Microsoft\3A861D62-51E0-15700F2219A4 /va /f >nul 2>&1
       reg delete HKCU\Software\AppDataLow\Software\Microsoft\3A861D62-51E0-15700F2219A4 /f >nul 2>&1
     name: command_prompt
-    elevation_required: true
 - name: Terminal Server Client Connection History Cleared
   auto_generated_guid: 3448824b-3c35-4a9e-a8f5-f887f68bea21
   description: |
