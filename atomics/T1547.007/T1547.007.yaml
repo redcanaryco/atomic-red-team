@@ -41,6 +41,8 @@ atomic_tests:
 - name: Append to existing loginwindow for Re-Opened Applications
   description: |
     Appends an entry to launch Calculator hidden loginwindow.*.plist for next login.
+    Note that the change may not result in the added Calculator program launching on next user login.
+    It may depend on which version of macOS you are running on.
   supported_platforms:
   - macos
   input_arguments:
@@ -57,25 +59,19 @@ atomic_tests:
     - description: |
          compile C program
       prereq_command: |
-         exit 1
+         if [ -f "#{exe_path}" ]; then exit 0 ; else exit 1; fi
       get_prereq_command: |
          cc #{objc_source_path} -o #{exe_path} -framework Cocoa
   executor:
     command: |
-      set -x
       FILE=`find ~/Library/Preferences/ByHost/com.apple.loginwindow.*.plist -type f | head -1`
-      if [ -z "${FILE}" ] ; then
-         echo "No loginwindow plist file found"
-         exit 1
-      fi
-      # save backup copy
+      if [ -z "${FILE}" ] ; then echo "No loginwindow plist file found" && exit 1 ; fi
+      echo save backup copy to /tmp/
       cp ${FILE} /tmp/t1547007_loginwindow-backup.plist
-      # before
+      echo before
       plutil -p ${FILE}
-      # overwrite
-      #{exe_path} ${FILE}
-      # after
-      plutil -p ${FILE}
+      echo overwriting...
+      #{exe_path} ${FILE} && echo after && plutil -p ${FILE}
     cleanup_command: |
       rm -f #{exe_path}
       # revert to backup copy
