@@ -173,7 +173,7 @@ atomic_tests:
     - description: |
         compile C program
       prereq_command: |
-        exit 1
+        if [ -f "#{program_path}" ]; then exit 0; else exit 1; fi
       get_prereq_command: |
         cc #{csource_path} -o #{program_path}
   executor:
@@ -202,7 +202,7 @@ atomic_tests:
     - description: |
         compile C program
       prereq_command: |
-        exit 1
+        if [ -f "#{program_path}" ]; then exit 0; else exit 1; fi
       get_prereq_command: |
         cc #{csource_path} -o #{program_path}
   executor:
@@ -232,7 +232,7 @@ atomic_tests:
     - description: |
         compile C program
       prereq_command: |
-        exit 1
+        if [ -f "#{program_path}" ]; then exit 0; else exit 1; fi
       get_prereq_command: |
         cc #{csource_path} -o #{program_path}
   executor:
@@ -262,7 +262,7 @@ atomic_tests:
     - description: |
         compile C program
       prereq_command: |
-        exit 1
+        if [ -f "#{program_path}" ]; then exit 0; else exit 1; fi
       get_prereq_command: |
         cc #{csource_path} -o #{program_path}
   executor:
