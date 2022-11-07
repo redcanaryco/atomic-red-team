@@ -228,7 +228,6 @@ atomic_tests:
         Set-ItemProperty -Path  "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "Startup" -Value "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup"
         Remove-Item "#{new_startup_folder}" -Recurse -Force
     name: powershell
-    elevation_required: true
 
 - name: HKCU - Policy Settings Explorer Run Key
   auto_generated_guid: a70faea1-e206-4f6f-8d9a-67379be8f6f1
@@ -330,48 +329,6 @@ atomic_tests:
       $oldvalue = $(Get-ItemPropertyValue -Path  "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name 'Shell-backup');
       Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name "Shell" -Value "$oldvalue";
       Remove-ItemProperty -Path  "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name 'Shell-backup'
-    name: powershell
-    elevation_required: true
-- name: HKLM - Persistence using CommandProcessor AutoRun key (With Elevation)
-  auto_generated_guid: a574dafe-a903-4cce-9701-14040f4f3532
-  description:  |-
-    An adversary may abuse the CommandProcessor AutoRun registry key to persist. Every time cmd.exe is executed, the command defined in the AutoRun key also gets executed.
-    [reference](https://devblogs.microsoft.com/oldnewthing/20071121-00/?p=24433)
-  supported_platforms:
-  - windows
-  input_arguments:
-    command:
-      description: Command to Execute
-      type: string
-      default: notepad.exe
-  executor:
-    command: |- 
-      New-ItemProperty -Path "HKLM:\Software\Microsoft\Command Processor" -Name "AutoRun" -Value "#{command}" -PropertyType "String"
-    cleanup_command: |-
-      Remove-ItemProperty -Path "HKLM:\Software\Microsoft\Command Processor" -Name "AutoRun" -ErrorAction Ignore
-    name: powershell
-    elevation_required: true
-- name: HKCU - Persistence using CommandProcessor AutoRun key (With Elevation)
-  auto_generated_guid: 36b8dbf9-59b1-4e9b-a3bb-36e80563ef01
-  description:  |-
-    An adversary may abuse the CommandProcessor AutoRun registry key to persist. Every time cmd.exe is executed, the command defined in the AutoRun key also gets executed.
-    [reference](https://devblogs.microsoft.com/oldnewthing/20071121-00/?p=24433)
-  supported_platforms:
-  - windows
-  input_arguments:
-    command:
-      description: Command to Execute
-      type: string
-      default: notepad.exe
-  executor:
-    command: |- 
-      $path = "HKCU:\Software\Microsoft\Command Processor"
-      if (!(Test-Path -path $path)){
-        New-Item -ItemType Key -Path $path
-      }
-      New-ItemProperty -Path $path -Name "AutoRun" -Value "#{command}" -PropertyType "String"
-    cleanup_command: |-
-      Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Command Processor" -Name "AutoRun" -ErrorAction Ignore
     name: powershell
     elevation_required: true
   
