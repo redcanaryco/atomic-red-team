@@ -86,6 +86,7 @@ persistence,T1546.005,Event Triggered Execution: Trap,1,Trap,a74b2e07-5952-4c03-
 persistence,T1574.006,Hijack Execution Flow: LD_PRELOAD,3,Dylib Injection via DYLD_INSERT_LIBRARIES,4d66029d-7355-43fd-93a4-b63ba92ea1be,bash
 persistence,T1136.001,Create Account: Local Account,2,Create a user account on a MacOS system,01993ba5-1da3-4e15-a719-b690d4f0f0b2,bash
 persistence,T1098.004,SSH Authorized Keys,1,Modify SSH Authorized Keys,342cc723-127c-4d3a-8292-9c0c6b4ecadc,bash
+persistence,T1547.015,Boot or Logon Autostart Execution: Login Items,2,Add macOS LoginItem using Applescript,716e756a-607b-41f3-8204-b214baf37c1d,bash
 persistence,T1546.014,Event Triggered Execution: Emond,1,Persistance with Event Monitor - emond,23c9c127-322b-4c75-95ca-eff464906114,sh
 persistence,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,1,Add command to .bash_profile,94500ae1-7e31-47e3-886b-c328da46872f,sh
 persistence,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,2,Add command to .bashrc,0a898315-4cfa-4007-bafe-33a4646d115f,sh
@@ -108,6 +109,7 @@ privilege-escalation,T1574.006,Hijack Execution Flow: LD_PRELOAD,3,Dylib Injecti
 privilege-escalation,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,1,Make and modify binary from C source,896dfe97-ae43-4101-8e96-9a7996555d80,sh
 privilege-escalation,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,2,Set a SetUID flag on file,759055b3-3885-4582-a8ec-c00c9d64dd79,sh
 privilege-escalation,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,3,Set a SetGID flag on file,db55f666-7cba-46c6-9fe6-205a05c3242c,sh
+privilege-escalation,T1547.015,Boot or Logon Autostart Execution: Login Items,2,Add macOS LoginItem using Applescript,716e756a-607b-41f3-8204-b214baf37c1d,bash
 privilege-escalation,T1546.014,Event Triggered Execution: Emond,1,Persistance with Event Monitor - emond,23c9c127-322b-4c75-95ca-eff464906114,sh
 privilege-escalation,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,1,Add command to .bash_profile,94500ae1-7e31-47e3-886b-c328da46872f,sh
 privilege-escalation,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,2,Add command to .bashrc,0a898315-4cfa-4007-bafe-33a4646d115f,sh
@@ -120,7 +122,9 @@ privilege-escalation,T1547.007,Boot or Logon Autostart Execution: Re-opened Appl
 privilege-escalation,T1078.003,Valid Accounts: Local Accounts,2,Create local account with admin privileges - MacOS,f1275566-1c26-4b66-83e3-7f9f7f964daa,bash
 credential-access,T1056.001,Input Capture: Keylogging,7,MacOS Swift Keylogger,aee3a097-4c5c-4fff-bbd3-0a705867ae29,bash
 credential-access,T1555.001,Credentials from Password Stores: Keychain,1,Keychain,1864fdec-ff86-4452-8c30-f12507582a93,sh
-credential-access,T1040,Network Sniffing,2,Packet Capture macOS,9d04efee-eff5-4240-b8d2-07792b873608,bash
+credential-access,T1040,Network Sniffing,2,Packet Capture macOS using tcpdump or tshark,9d04efee-eff5-4240-b8d2-07792b873608,bash
+credential-access,T1040,Network Sniffing,7,Packet Capture macOS using /dev/bpfN with sudo,e6fe5095-545d-4c8b-a0ae-e863914be3aa,bash
+credential-access,T1040,Network Sniffing,8,Filtered Packet Capture macOS using /dev/bpfN with sudo,e2480aee-23f3-4f34-80ce-de221e27cd19,bash
 credential-access,T1552,Unsecured Credentials,1,AWS - Retrieve EC2 Password Data using stratus,a21118de-b11e-4ebd-b655-42f11142df0c,sh
 credential-access,T1555.003,Credentials from Password Stores: Credentials from Web Browsers,2,Search macOS Safari Cookies,c1402f7b-67ca-43a8-b5f3-3143abedc01b,sh
 credential-access,T1555.003,Credentials from Password Stores: Credentials from Web Browsers,14,Simulating Access to Chrome Login Data - MacOS,124e13e5-d8a1-4378-a6ee-a53cd0c7e369,sh
@@ -140,7 +144,9 @@ discovery,T1087.001,Account Discovery: Local Account,4,List opened files by user
 discovery,T1087.001,Account Discovery: Local Account,6,Enumerate users and groups,e6f36545-dc1e-47f0-9f48-7f730f54a02e,sh
 discovery,T1087.001,Account Discovery: Local Account,7,Enumerate users and groups,319e9f6c-7a9e-432e-8c62-9385c803b6f2,sh
 discovery,T1497.001,Virtualization/Sandbox Evasion: System Checks,3,Detect Virtualization Environment (MacOS),a960185f-aef6-4547-8350-d1ce16680d09,sh
-discovery,T1040,Network Sniffing,2,Packet Capture macOS,9d04efee-eff5-4240-b8d2-07792b873608,bash
+discovery,T1040,Network Sniffing,2,Packet Capture macOS using tcpdump or tshark,9d04efee-eff5-4240-b8d2-07792b873608,bash
+discovery,T1040,Network Sniffing,7,Packet Capture macOS using /dev/bpfN with sudo,e6fe5095-545d-4c8b-a0ae-e863914be3aa,bash
+discovery,T1040,Network Sniffing,8,Filtered Packet Capture macOS using /dev/bpfN with sudo,e2480aee-23f3-4f34-80ce-de221e27cd19,bash
 discovery,T1135,Network Share Discovery,1,Network Share Discovery,f94b5ad9-911c-4eff-9718-fd21899db4f7,sh
 discovery,T1082,System Information Discovery,2,System Information Discovery,edff98ec-0f73-4f63-9890-6b117092aff6,sh
 discovery,T1082,System Information Discovery,3,List OS Information,cccb070c-df86-4216-a5bc-9fb60c74e27c,sh

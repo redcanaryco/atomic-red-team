@@ -1,0 +1,27 @@
+attack_technique: T1027.006
+display_name: HTML Smuggling
+atomic_tests:
+
+- name: HTML Smuggling Remote Payload
+  auto_generated_guid: 30cbeda4-08d9-42f1-8685-197fad677734
+  description: |
+    The HTML file will download an ISO file from [T1553.005](https://github.com/redcanaryco/atomic-red-team/blob/d0dad62dbcae9c60c519368e82c196a3db577055/atomics/T1553.005/bin/FeelTheBurn.iso) without userinteraction. 
+    The HTML file is based off of the work from [Stan Hegt](https://outflank.nl/blog/2018/08/14/html-smuggling-explained/)
+  supported_platforms:
+  - windows
+  dependencies:
+  - description: |
+      T1027_006_remote.html must exist on disk at specified at PathToAtomicsFolder\T1027.006\bin\T1027_006_Remote.html
+    prereq_command: |
+      if (Test-Path PathToAtomicsFolder\T1027.006\bin\T1027_006_Remote.html) { exit 0} else { exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\T1027.006\bin\" -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027.006/bin/T1027_006_Remote.html" -OutFile "PathToAtomicsFolder\T1027.006\bin\T1027_006_Remote.html"
+  executor:
+    command: |
+      PathToAtomicsFolder\T1027.006\bin\T1027_006_remote.html
+    cleanup_command:
+      $user = [System.Environment]::UserName;
+      Remove-Item -Path C:\Users\$user\Downloads\FeelTheBurn.iso
+    name: powershell
+    elevation_required: false
