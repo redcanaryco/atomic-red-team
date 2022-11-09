@@ -865,6 +865,8 @@
   - Atomic Test #15: HKLM - Modify default System Shell - Winlogon Shell KEY Value  [windows]
 - [T1547.006 Boot or Logon Autostart Execution: Kernel Modules and Extensions](../../T1547.006/T1547.006.md)
   - Atomic Test #1: Linux - Load Kernel Module via insmod [linux]
+  - Atomic Test #2: MacOS - Load Kernel Module via kextload and kmutil [macos]
+  - Atomic Test #3: MacOS - Load Kernel Module via KextManagerLoadKextWithURL() [macos]
 - T1574.013 KernelCallbackTable [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1053.006 Scheduled Task/Job: Systemd Timers](../../T1053.006/T1053.006.md)
   - Atomic Test #1: Create Systemd Service and Timer [linux]
@@ -1332,6 +1334,8 @@
   - Atomic Test #9: Password Change on Directory Service Restore Mode (DSRM) Account [windows]
 - [T1547.006 Boot or Logon Autostart Execution: Kernel Modules and Extensions](../../T1547.006/T1547.006.md)
   - Atomic Test #1: Linux - Load Kernel Module via insmod [linux]
+  - Atomic Test #2: MacOS - Load Kernel Module via kextload and kmutil [macos]
+  - Atomic Test #3: MacOS - Load Kernel Module via KextManagerLoadKextWithURL() [macos]
 - T1574.013 KernelCallbackTable [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1053.006 Scheduled Task/Job: Systemd Timers](../../T1053.006/T1053.006.md)
   - Atomic Test #1: Create Systemd Service and Timer [linux]

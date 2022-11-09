@@ -264,7 +264,9 @@
 - [T1546.014 Event Triggered Execution: Emond](../../T1546.014/T1546.014.md)
   - Atomic Test #1: Persistance with Event Monitor - emond [macos]
 - T1098 Account Manipulation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1547.006 Boot or Logon Autostart Execution: Kernel Modules and Extensions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1547.006 Boot or Logon Autostart Execution: Kernel Modules and Extensions](../../T1547.006/T1547.006.md)
+  - Atomic Test #2: MacOS - Load Kernel Module via kextload and kmutil [macos]
+  - Atomic Test #3: MacOS - Load Kernel Module via KextManagerLoadKextWithURL() [macos]
 - T1157 Dylib Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -339,7 +341,9 @@
 - [T1546.014 Event Triggered Execution: Emond](../../T1546.014/T1546.014.md)
   - Atomic Test #1: Persistance with Event Monitor - emond [macos]
 - T1169 Sudo [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1547.006 Boot or Logon Autostart Execution: Kernel Modules and Extensions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1547.006 Boot or Logon Autostart Execution: Kernel Modules and Extensions](../../T1547.006/T1547.006.md)
+  - Atomic Test #2: MacOS - Load Kernel Module via kextload and kmutil [macos]
+  - Atomic Test #3: MacOS - Load Kernel Module via KextManagerLoadKextWithURL() [macos]
 - T1157 Dylib Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
