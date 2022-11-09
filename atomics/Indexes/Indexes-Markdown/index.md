@@ -863,8 +863,6 @@
   - Atomic Test #13: HKLM - Policy Settings Explorer Run Key [windows]
   - Atomic Test #14: HKLM - Append Command to Winlogon Userinit KEY Value [windows]
   - Atomic Test #15: HKLM - Modify default System Shell - Winlogon Shell KEY Value  [windows]
-  - Atomic Test #16: HKLM - Persistence using CommandProcessor AutoRun key (With Elevation) [windows]
-  - Atomic Test #17: HKCU - Persistence using CommandProcessor AutoRun key (With Elevation) [windows]
 - [T1547.006 Boot or Logon Autostart Execution: Kernel Modules and Extensions](../../T1547.006/T1547.006.md)
   - Atomic Test #1: Linux - Load Kernel Module via insmod [linux]
 - T1574.013 KernelCallbackTable [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -881,6 +879,8 @@
 - T1068 Exploitation for Privilege Escalation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546 Event Triggered Execution](../../T1546/T1546.md)
   - Atomic Test #1: Persistence with Custom AutodialDLL [windows]
+  - Atomic Test #2: HKLM - Persistence using CommandProcessor AutoRun key (With Elevation) [windows]
+  - Atomic Test #3: HKCU - Persistence using CommandProcessor AutoRun key (With Elevation) [windows]
 - [T1546.004 Event Triggered Execution: .bash_profile and .bashrc](../../T1546.004/T1546.004.md)
   - Atomic Test #1: Add command to .bash_profile [macos, linux]
   - Atomic Test #2: Add command to .bashrc [macos, linux]
@@ -1318,8 +1318,6 @@
   - Atomic Test #13: HKLM - Policy Settings Explorer Run Key [windows]
   - Atomic Test #14: HKLM - Append Command to Winlogon Userinit KEY Value [windows]
   - Atomic Test #15: HKLM - Modify default System Shell - Winlogon Shell KEY Value  [windows]
-  - Atomic Test #16: HKLM - Persistence using CommandProcessor AutoRun key (With Elevation) [windows]
-  - Atomic Test #17: HKCU - Persistence using CommandProcessor AutoRun key (With Elevation) [windows]
 - [T1136.003 Create Account: Cloud Account](../../T1136.003/T1136.003.md)
   - Atomic Test #1: AWS - Create a new IAM user [iaas:aws]
 - [T1098 Account Manipulation](../../T1098/T1098.md)
@@ -1348,6 +1346,8 @@
 - T1154 Trap [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546 Event Triggered Execution](../../T1546/T1546.md)
   - Atomic Test #1: Persistence with Custom AutodialDLL [windows]
+  - Atomic Test #2: HKLM - Persistence using CommandProcessor AutoRun key (With Elevation) [windows]
+  - Atomic Test #3: HKCU - Persistence using CommandProcessor AutoRun key (With Elevation) [windows]
 - [T1546.004 Event Triggered Execution: .bash_profile and .bashrc](../../T1546.004/T1546.004.md)
   - Atomic Test #1: Add command to .bash_profile [macos, linux]
   - Atomic Test #2: Add command to .bashrc [macos, linux]
@@ -1605,6 +1605,8 @@
   - Atomic Test #1: Gsecdump [windows]
   - Atomic Test #2: Credential Dumping with NPPSpy [windows]
   - Atomic Test #3: Dump svchost.exe to gather RDP credentials [windows]
+  - Atomic Test #4: Retrieve Microsoft IIS Service Account Credentials Using AppCmd (using list) [windows]
+  - Atomic Test #5: Retrieve Microsoft IIS Service Account Credentials Using AppCmd (using config) [windows]
 - T1171 LLMNR/NBT-NS Poisoning and Relay [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1539 Steal Web Session Cookie](../../T1539/T1539.md)
   - Atomic Test #1: Steal Firefox Cookies (Windows) [windows]
