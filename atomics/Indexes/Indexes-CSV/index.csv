@@ -327,6 +327,7 @@ defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,33,LockBit Bl
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,34,LockBit Black - Disable Privacy Settings Experience Using Registry -Powershell,d8c57eaa-497a-4a08-961e-bd5efd7c9374,powershell
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,35,Lockbit Black - Use Registry Editor to turn on automatic logon -Powershell,5e27f36d-5132-4537-b43b-413b0d5eec9a,powershell
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,36,Disable Windows Defender with PwSh Disable-WindowsOptionalFeature,f542ffd3-37b4-4528-837f-682874faa012,powershell
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,37,WMIC Tamper with Windows Defender Evade Scanning Folder,59d386fc-3a4b-41b8-850d-9e3eee24dfe4,command_prompt
 defense-evasion,T1055.012,Process Injection: Process Hollowing,1,Process Hollowing using PowerShell,562427b4-39ef-4e8c-af88-463a78e70b9c,powershell
 defense-evasion,T1055.012,Process Injection: Process Hollowing,2,RunPE via VBA,3ad4a037-1598-4136-837c-4027e4fa319b,powershell
 defense-evasion,T1027,Obfuscated Files or Information,1,Decode base64 Data into Script,f45df6be-2e1e-4136-a384-8f18ab3826fb,sh
@@ -385,6 +386,7 @@ defense-evasion,T1562.008,Impair Defenses: Disable Cloud Logs,7,AWS - CloudWatch
 defense-evasion,T1562.008,Impair Defenses: Disable Cloud Logs,8,AWS - CloudWatch Log Stream Deletes,89422c87-b57b-4a04-a12a-802bb11d06121,sh
 defense-evasion,T1562.008,Impair Defenses: Disable Cloud Logs,9,AWS CloudWatch Log Stream Deletes,33ca84bc-4259-4943-bd36-4655dc420932,sh
 defense-evasion,T1564.003,Hide Artifacts: Hidden Window,1,Hidden Window,f151ee37-9e2b-47e6-80e4-550b9f999b7a,powershell
+defense-evasion,T1027.006,HTML Smuggling,1,HTML Smuggling Remote Payload,30cbeda4-08d9-42f1-8685-197fad677734,powershell
 defense-evasion,T1070.004,Indicator Removal on Host: File Deletion,1,Delete a single file - Linux/macOS,562d737f-2fc6-4b09-8c2a-7f8ff0828480,sh
 defense-evasion,T1070.004,Indicator Removal on Host: File Deletion,2,Delete an entire folder - Linux/macOS,a415f17e-ce8d-4ce2-a8b4-83b674e7017e,sh
 defense-evasion,T1070.004,Indicator Removal on Host: File Deletion,3,Overwrite and delete a file with shred,039b4b10-2900-404b-b67f-4b6d49aa6499,sh
@@ -477,6 +479,9 @@ privilege-escalation,T1548.003,Abuse Elevation Control Mechanism: Sudo and Sudo 
 privilege-escalation,T1574.011,Hijack Execution Flow: Services Registry Permissions Weakness,1,Service Registry Permissions Weakness,f7536d63-7fd4-466f-89da-7e48d550752a,powershell
 privilege-escalation,T1574.011,Hijack Execution Flow: Services Registry Permissions Weakness,2,Service ImagePath Change with reg.exe,f38e9eea-e1d7-4ba6-b716-584791963827,command_prompt
 privilege-escalation,T1547,Boot or Logon Autostart Execution,1,Add a driver,cb01b3da-b0e7-4e24-bf6d-de5223526785,command_prompt
+privilege-escalation,T1547.014,Active Setup,1,HKLM - Add atomic_test key to launch executable as part of user setup,deff4586-0517-49c2-981d-bbea24d48d71,powershell
+privilege-escalation,T1547.014,Active Setup,2,HKLM - Add malicious StubPath value to existing Active Setup Entry,39e417dd-4fed-4d9c-ae3a-ba433b4d0e9a,powershell
+privilege-escalation,T1547.014,Active Setup,3,HKLM - re-execute 'Internet Explorer Core Fonts' StubPath payload by decreasing version number,04d55cef-f283-40ba-ae2a-316bc3b5e78c,powershell
 privilege-escalation,T1484.002,Domain Trust Modification,1,Add Federation to Azure AD,8906c5d0-3ee5-4f63-897a-f6cafd3fdbb7,powershell
 privilege-escalation,T1543.003,Create or Modify System Process: Windows Service,1,Modify Fax service to run PowerShell,ed366cde-7d12-49df-a833-671904770b9f,command_prompt
 privilege-escalation,T1543.003,Create or Modify System Process: Windows Service,2,Service Installation CMD,981e2942-e433-44e9-afc1-8c957a1496b6,command_prompt
@@ -527,9 +532,11 @@ privilege-escalation,T1546.012,Event Triggered Execution: Image File Execution O
 privilege-escalation,T1546.012,Event Triggered Execution: Image File Execution Options Injection,3,GlobalFlags in Image File Execution Options,13117939-c9b2-4a43-999e-0a543df92f0d,powershell
 privilege-escalation,T1546.008,Event Triggered Execution: Accessibility Features,1,Attaches Command Prompt as a Debugger to a List of Target Processes,3309f53e-b22b-4eb6-8fd2-a6cf58b355a9,powershell
 privilege-escalation,T1546.008,Event Triggered Execution: Accessibility Features,2,Replace binary of sticky keys,934e90cf-29ca-48b3-863c-411737ad44e3,command_prompt
+privilege-escalation,T1546.008,Event Triggered Execution: Accessibility Features,3,Create Symbolic Link From osk.exe to cmd.exe,51ef369c-5e87-4f33-88cd-6d61be63edf2,command_prompt
 privilege-escalation,T1055.004,Process Injection: Asynchronous Procedure Call,1,Process Injection via C#,611b39b7-e243-4c81-87a4-7145a90358b1,command_prompt
 privilege-escalation,T1546.009,Event Triggered Execution: AppCert DLLs,1,Create registry persistence via AppCert DLL,a5ad6104-5bab-4c43-b295-b4c44c7c6b05,powershell
 privilege-escalation,T1547.015,Boot or Logon Autostart Execution: Login Items,1,Persistence by modifying Windows Terminal profile,ec5d76ef-82fe-48da-b931-bdb25a62bc65,powershell
+privilege-escalation,T1547.015,Boot or Logon Autostart Execution: Login Items,2,Add macOS LoginItem using Applescript,716e756a-607b-41f3-8204-b214baf37c1d,bash
 privilege-escalation,T1134.001,Access Token Manipulation: Token Impersonation/Theft,1,Named pipe client impersonation,90db9e27-8e7c-4c04-b602-a45927884966,powershell
 privilege-escalation,T1134.001,Access Token Manipulation: Token Impersonation/Theft,2,`SeDebugPrivilege` token duplication,34f0a430-9d04-4d98-bcb5-1989f14719f0,powershell
 privilege-escalation,T1134.001,Access Token Manipulation: Token Impersonation/Theft,3,Launch NSudo Executable,7be1bc0f-d8e5-4345-9333-f5f67d742cb9,powershell
@@ -560,11 +567,16 @@ privilege-escalation,T1547.001,Boot or Logon Autostart Execution: Registry Run K
 privilege-escalation,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,14,HKLM - Append Command to Winlogon Userinit KEY Value,f7fab6cc-8ece-4ca7-a0f1-30a22fccd374,powershell
 privilege-escalation,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,15,HKLM - Modify default System Shell - Winlogon Shell KEY Value ,1d958c61-09c6-4d9e-b26b-4130314e520e,powershell
 privilege-escalation,T1547.006,Boot or Logon Autostart Execution: Kernel Modules and Extensions,1,Linux - Load Kernel Module via insmod,687dcb93-9656-4853-9c36-9977315e9d23,bash
+privilege-escalation,T1547.006,Boot or Logon Autostart Execution: Kernel Modules and Extensions,2,MacOS - Load Kernel Module via kextload and kmutil,f4391089-d3a5-4dd1-ab22-0419527f2672,bash
+privilege-escalation,T1547.006,Boot or Logon Autostart Execution: Kernel Modules and Extensions,3,MacOS - Load Kernel Module via KextManagerLoadKextWithURL(),f0007753-beb3-41ea-9948-760785e4c1e5,bash
 privilege-escalation,T1053.006,Scheduled Task/Job: Systemd Timers,1,Create Systemd Service and Timer,f4983098-bb13-44fb-9b2c-46149961807b,bash
 privilege-escalation,T1053.006,Scheduled Task/Job: Systemd Timers,2,Create a user level transient systemd service and timer,3de33f5b-62e5-4e63-a2a0-6fd8808c80ec,sh
 privilege-escalation,T1053.006,Scheduled Task/Job: Systemd Timers,3,Create a system level transient systemd service and timer,d3eda496-1fc0-49e9-aff5-3bec5da9fa22,sh
 privilege-escalation,T1055.012,Process Injection: Process Hollowing,1,Process Hollowing using PowerShell,562427b4-39ef-4e8c-af88-463a78e70b9c,powershell
 privilege-escalation,T1055.012,Process Injection: Process Hollowing,2,RunPE via VBA,3ad4a037-1598-4136-837c-4027e4fa319b,powershell
+privilege-escalation,T1546,Event Triggered Execution,1,Persistence with Custom AutodialDLL,aca9ae16-7425-4b6d-8c30-cad306fdbd5b,powershell
+privilege-escalation,T1546,Event Triggered Execution,2,HKLM - Persistence using CommandProcessor AutoRun key (With Elevation),a574dafe-a903-4cce-9701-14040f4f3532,powershell
+privilege-escalation,T1546,Event Triggered Execution,3,HKCU - Persistence using CommandProcessor AutoRun key (With Elevation),36b8dbf9-59b1-4e9b-a3bb-36e80563ef01,powershell
 privilege-escalation,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,1,Add command to .bash_profile,94500ae1-7e31-47e3-886b-c328da46872f,sh
 privilege-escalation,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,2,Add command to .bashrc,0a898315-4cfa-4007-bafe-33a4646d115f,sh
 privilege-escalation,T1134.005,Access Token Manipulation: SID-History Injection,1,Injection SID-History with mimikatz,6bef32e5-9456-4072-8f14-35566fb85401,command_prompt
@@ -584,8 +596,9 @@ privilege-escalation,T1037.004,Boot or Logon Initialization Scripts: Rc.common,2
 privilege-escalation,T1037.004,Boot or Logon Initialization Scripts: Rc.common,3,rc.local,126f71af-e1c9-405c-94ef-26a47b16c102,bash
 privilege-escalation,T1543.002,Create or Modify System Process: Systemd Service,1,Create Systemd Service,d9e4f24f-aa67-4c6e-bcbf-85622b697a7c,bash
 privilege-escalation,T1543.002,Create or Modify System Process: Systemd Service,2,"Create Systemd Service file,  Enable the service , Modify and Reload the service.",c35ac4a8-19de-43af-b9f8-755da7e89c89,bash
-privilege-escalation,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,1,Re-Opened Applications,5fefd767-ef54-4ac6-84d3-751ab85e8aba,manual
-privilege-escalation,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,2,Re-Opened Applications,5f5b71da-e03f-42e7-ac98-d63f9e0465cb,sh
+privilege-escalation,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,1,Copy in loginwindow.plist for Re-Opened Applications,5fefd767-ef54-4ac6-84d3-751ab85e8aba,sh
+privilege-escalation,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,2,Re-Opened Applications using LoginHook,5f5b71da-e03f-42e7-ac98-d63f9e0465cb,sh
+privilege-escalation,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,3,Append to existing loginwindow for Re-Opened Applications,766b6c3c-9353-4033-8b7e-38b309fa3a93,sh
 privilege-escalation,T1574.002,Hijack Execution Flow: DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
 privilege-escalation,T1574.002,Hijack Execution Flow: DLL Side-Loading,2,DLL Side-Loading using the dotnet startup hook environment variable,d322cdd7-7d60-46e3-9111-648848da7c02,command_prompt
 privilege-escalation,T1037.001,Boot or Logon Initialization Scripts: Logon Script (Windows),1,Logon Scripts,d6042746-07d4-4c92-9ad8-e644c114a231,command_prompt
@@ -714,6 +727,9 @@ persistence,T1053.007,Kubernetes Cronjob,2,CreateCronjob,f2fa019e-fb2a-4d28-9dc6
 persistence,T1574.011,Hijack Execution Flow: Services Registry Permissions Weakness,1,Service Registry Permissions Weakness,f7536d63-7fd4-466f-89da-7e48d550752a,powershell
 persistence,T1574.011,Hijack Execution Flow: Services Registry Permissions Weakness,2,Service ImagePath Change with reg.exe,f38e9eea-e1d7-4ba6-b716-584791963827,command_prompt
 persistence,T1547,Boot or Logon Autostart Execution,1,Add a driver,cb01b3da-b0e7-4e24-bf6d-de5223526785,command_prompt
+persistence,T1547.014,Active Setup,1,HKLM - Add atomic_test key to launch executable as part of user setup,deff4586-0517-49c2-981d-bbea24d48d71,powershell
+persistence,T1547.014,Active Setup,2,HKLM - Add malicious StubPath value to existing Active Setup Entry,39e417dd-4fed-4d9c-ae3a-ba433b4d0e9a,powershell
+persistence,T1547.014,Active Setup,3,HKLM - re-execute 'Internet Explorer Core Fonts' StubPath payload by decreasing version number,04d55cef-f283-40ba-ae2a-316bc3b5e78c,powershell
 persistence,T1543.003,Create or Modify System Process: Windows Service,1,Modify Fax service to run PowerShell,ed366cde-7d12-49df-a833-671904770b9f,command_prompt
 persistence,T1543.003,Create or Modify System Process: Windows Service,2,Service Installation CMD,981e2942-e433-44e9-afc1-8c957a1496b6,command_prompt
 persistence,T1543.003,Create or Modify System Process: Windows Service,3,Service Installation PowerShell,491a4af6-a521-4b74-b23b-f7b3f1ee9e77,powershell
@@ -766,11 +782,13 @@ persistence,T1546.012,Event Triggered Execution: Image File Execution Options In
 persistence,T1546.012,Event Triggered Execution: Image File Execution Options Injection,3,GlobalFlags in Image File Execution Options,13117939-c9b2-4a43-999e-0a543df92f0d,powershell
 persistence,T1546.008,Event Triggered Execution: Accessibility Features,1,Attaches Command Prompt as a Debugger to a List of Target Processes,3309f53e-b22b-4eb6-8fd2-a6cf58b355a9,powershell
 persistence,T1546.008,Event Triggered Execution: Accessibility Features,2,Replace binary of sticky keys,934e90cf-29ca-48b3-863c-411737ad44e3,command_prompt
+persistence,T1546.008,Event Triggered Execution: Accessibility Features,3,Create Symbolic Link From osk.exe to cmd.exe,51ef369c-5e87-4f33-88cd-6d61be63edf2,command_prompt
 persistence,T1136.002,Create Account: Domain Account,1,Create a new Windows domain admin user,fcec2963-9951-4173-9bfa-98d8b7834e62,command_prompt
 persistence,T1136.002,Create Account: Domain Account,2,Create a new account similar to ANONYMOUS LOGON,dc7726d2-8ccb-4cc6-af22-0d5afb53a548,command_prompt
 persistence,T1136.002,Create Account: Domain Account,3,Create a new Domain Account using PowerShell,5a3497a4-1568-4663-b12a-d4a5ed70c7d7,powershell
 persistence,T1546.009,Event Triggered Execution: AppCert DLLs,1,Create registry persistence via AppCert DLL,a5ad6104-5bab-4c43-b295-b4c44c7c6b05,powershell
 persistence,T1547.015,Boot or Logon Autostart Execution: Login Items,1,Persistence by modifying Windows Terminal profile,ec5d76ef-82fe-48da-b931-bdb25a62bc65,powershell
+persistence,T1547.015,Boot or Logon Autostart Execution: Login Items,2,Add macOS LoginItem using Applescript,716e756a-607b-41f3-8204-b214baf37c1d,bash
 persistence,T1098.001,Account Manipulation: Additional Cloud Credentials,1,Azure AD Application Hijacking - Service Principal,b8e747c3-bdf7-4d71-bce2-f1df2a057406,powershell
 persistence,T1098.001,Account Manipulation: Additional Cloud Credentials,2,Azure AD Application Hijacking - App Registration,a12b5531-acab-4618-a470-0dafb294a87a,powershell
 persistence,T1098.001,Account Manipulation: Additional Cloud Credentials,3,AWS - Create Access Key and Secret Key,8822c3b0-d9f9-4daf-a043-491160a31122,sh
@@ -805,9 +823,14 @@ persistence,T1098,Account Manipulation,7,Azure - adding service principal to Azu
 persistence,T1098,Account Manipulation,8,AzureAD - adding permission to application,94ea9cc3-81f9-4111-8dde-3fb54f36af4b,powershell
 persistence,T1098,Account Manipulation,9,Password Change on Directory Service Restore Mode (DSRM) Account,d5b886d9-d1c7-4b6e-a7b0-460041bf2823,command_prompt
 persistence,T1547.006,Boot or Logon Autostart Execution: Kernel Modules and Extensions,1,Linux - Load Kernel Module via insmod,687dcb93-9656-4853-9c36-9977315e9d23,bash
+persistence,T1547.006,Boot or Logon Autostart Execution: Kernel Modules and Extensions,2,MacOS - Load Kernel Module via kextload and kmutil,f4391089-d3a5-4dd1-ab22-0419527f2672,bash
+persistence,T1547.006,Boot or Logon Autostart Execution: Kernel Modules and Extensions,3,MacOS - Load Kernel Module via KextManagerLoadKextWithURL(),f0007753-beb3-41ea-9948-760785e4c1e5,bash
 persistence,T1053.006,Scheduled Task/Job: Systemd Timers,1,Create Systemd Service and Timer,f4983098-bb13-44fb-9b2c-46149961807b,bash
 persistence,T1053.006,Scheduled Task/Job: Systemd Timers,2,Create a user level transient systemd service and timer,3de33f5b-62e5-4e63-a2a0-6fd8808c80ec,sh
 persistence,T1053.006,Scheduled Task/Job: Systemd Timers,3,Create a system level transient systemd service and timer,d3eda496-1fc0-49e9-aff5-3bec5da9fa22,sh
+persistence,T1546,Event Triggered Execution,1,Persistence with Custom AutodialDLL,aca9ae16-7425-4b6d-8c30-cad306fdbd5b,powershell
+persistence,T1546,Event Triggered Execution,2,HKLM - Persistence using CommandProcessor AutoRun key (With Elevation),a574dafe-a903-4cce-9701-14040f4f3532,powershell
+persistence,T1546,Event Triggered Execution,3,HKCU - Persistence using CommandProcessor AutoRun key (With Elevation),36b8dbf9-59b1-4e9b-a3bb-36e80563ef01,powershell
 persistence,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,1,Add command to .bash_profile,94500ae1-7e31-47e3-886b-c328da46872f,sh
 persistence,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,2,Add command to .bashrc,0a898315-4cfa-4007-bafe-33a4646d115f,sh
 persistence,T1547.002,Authentication Package,1,Authentication Package,be2590e8-4ac3-47ac-b4b5-945820f2fbe9,powershell
@@ -831,8 +854,9 @@ persistence,T1037.004,Boot or Logon Initialization Scripts: Rc.common,2,rc.commo
 persistence,T1037.004,Boot or Logon Initialization Scripts: Rc.common,3,rc.local,126f71af-e1c9-405c-94ef-26a47b16c102,bash
 persistence,T1543.002,Create or Modify System Process: Systemd Service,1,Create Systemd Service,d9e4f24f-aa67-4c6e-bcbf-85622b697a7c,bash
 persistence,T1543.002,Create or Modify System Process: Systemd Service,2,"Create Systemd Service file,  Enable the service , Modify and Reload the service.",c35ac4a8-19de-43af-b9f8-755da7e89c89,bash
-persistence,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,1,Re-Opened Applications,5fefd767-ef54-4ac6-84d3-751ab85e8aba,manual
-persistence,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,2,Re-Opened Applications,5f5b71da-e03f-42e7-ac98-d63f9e0465cb,sh
+persistence,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,1,Copy in loginwindow.plist for Re-Opened Applications,5fefd767-ef54-4ac6-84d3-751ab85e8aba,sh
+persistence,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,2,Re-Opened Applications using LoginHook,5f5b71da-e03f-42e7-ac98-d63f9e0465cb,sh
+persistence,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,3,Append to existing loginwindow for Re-Opened Applications,766b6c3c-9353-4033-8b7e-38b309fa3a93,sh
 persistence,T1574.002,Hijack Execution Flow: DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
 persistence,T1574.002,Hijack Execution Flow: DLL Side-Loading,2,DLL Side-Loading using the dotnet startup hook environment variable,d322cdd7-7d60-46e3-9111-648848da7c02,command_prompt
 persistence,T1037.001,Boot or Logon Initialization Scripts: Logon Script (Windows),1,Logon Scripts,d6042746-07d4-4c92-9ad8-e644c114a231,command_prompt
@@ -940,6 +964,8 @@ credential-access,T1110.001,Brute Force: Password Guessing,6,Password Brute User
 credential-access,T1003,OS Credential Dumping,1,Gsecdump,96345bfc-8ae7-4b6a-80b7-223200f24ef9,command_prompt
 credential-access,T1003,OS Credential Dumping,2,Credential Dumping with NPPSpy,9e2173c0-ba26-4cdf-b0ed-8c54b27e3ad6,powershell
 credential-access,T1003,OS Credential Dumping,3,Dump svchost.exe to gather RDP credentials,d400090a-d8ca-4be0-982e-c70598a23de9,powershell
+credential-access,T1003,OS Credential Dumping,4,Retrieve Microsoft IIS Service Account Credentials Using AppCmd (using list),6c7a4fd3-5b0b-4b30-a93e-39411b25d889,powershell
+credential-access,T1003,OS Credential Dumping,5,Retrieve Microsoft IIS Service Account Credentials Using AppCmd (using config),42510244-5019-48fa-a0e5-66c3b76e6049,powershell
 credential-access,T1539,Steal Web Session Cookie,1,Steal Firefox Cookies (Windows),4b437357-f4e9-4c84-9fa6-9bcee6f826aa,powershell
 credential-access,T1539,Steal Web Session Cookie,2,Steal Chrome Cookies (Windows),26a6b840-4943-4965-8df5-ef1f9a282440,powershell
 credential-access,T1003.002,OS Credential Dumping: Security Account Manager,1,"Registry dump of SAM, creds, and secrets",5c2571d0-1572-416d-9676-812e64ca9f44,command_prompt
@@ -959,11 +985,13 @@ credential-access,T1003.007,OS Credential Dumping: Proc Filesystem,1,Dump indivi
 credential-access,T1003.007,OS Credential Dumping: Proc Filesystem,2,Dump individual process memory with Python (Local),437b2003-a20d-4ed8-834c-4964f24eec63,sh
 credential-access,T1003.007,OS Credential Dumping: Proc Filesystem,3,Capture Passwords with MimiPenguin,a27418de-bdce-4ebd-b655-38f04842bf0c,bash
 credential-access,T1040,Network Sniffing,1,Packet Capture Linux,7fe741f7-b265-4951-a7c7-320889083b3e,bash
-credential-access,T1040,Network Sniffing,2,Packet Capture macOS,9d04efee-eff5-4240-b8d2-07792b873608,bash
+credential-access,T1040,Network Sniffing,2,Packet Capture macOS using tcpdump or tshark,9d04efee-eff5-4240-b8d2-07792b873608,bash
 credential-access,T1040,Network Sniffing,3,Packet Capture Windows Command Prompt,a5b2f6a0-24b4-493e-9590-c699f75723ca,command_prompt
 credential-access,T1040,Network Sniffing,4,Windows Internal Packet Capture,b5656f67-d67f-4de8-8e62-b5581630f528,command_prompt
 credential-access,T1040,Network Sniffing,5,Windows Internal pktmon capture,c67ba807-f48b-446e-b955-e4928cd1bf91,command_prompt
 credential-access,T1040,Network Sniffing,6,Windows Internal pktmon set filter,855fb8b4-b8ab-4785-ae77-09f5df7bff55,command_prompt
+credential-access,T1040,Network Sniffing,7,Packet Capture macOS using /dev/bpfN with sudo,e6fe5095-545d-4c8b-a0ae-e863914be3aa,bash
+credential-access,T1040,Network Sniffing,8,Filtered Packet Capture macOS using /dev/bpfN with sudo,e2480aee-23f3-4f34-80ce-de221e27cd19,bash
 credential-access,T1552.002,Unsecured Credentials: Credentials in Registry,1,Enumeration for Credentials in Registry,b6ec082c-7384-46b3-a111-9a9b8b14e5e7,command_prompt
 credential-access,T1552.002,Unsecured Credentials: Credentials in Registry,2,Enumeration for PuTTY Credentials in Registry,af197fd7-e868-448e-9bd5-05d1bcd9d9e5,command_prompt
 credential-access,T1556.002,Modify Authentication Process: Password Filter DLL,1,Install and Register Password Filter DLL,a7961770-beb5-4134-9674-83d7e1fa865c,powershell
@@ -1023,6 +1051,7 @@ credential-access,T1110.003,Brute Force: Password Spraying,5,WinPwn - DomainPass
 credential-access,T1110.003,Brute Force: Password Spraying,6,Password Spray Invoke-DomainPasswordSpray Light,b15bc9a5-a4f3-4879-9304-ea0011ace63a,powershell
 credential-access,T1110.003,Brute Force: Password Spraying,7,Password Spray Microsoft Online Accounts with MSOLSpray (Azure/O365),f3a10056-0160-4785-8744-d9bd7c12dc39,powershell
 credential-access,T1110.003,Brute Force: Password Spraying,8,Password Spray using Kerbrute Tool,c6f25ec3-6475-47a9-b75d-09ac593c5ecb,powershell
+credential-access,T1110.003,Brute Force: Password Spraying,9,AWS - Password Spray an AWS using GoAWSConsoleSpray,9c10d16b-20b1-403a-8e67-50ef7117ed4e,sh
 credential-access,T1003.005,OS Credential Dumping: Cached Domain Credentials,1,Cached Credential Dump via Cmdkey,56506854-89d6-46a3-9804-b7fde90791f9,command_prompt
 credential-access,T1558.001,Steal or Forge Kerberos Tickets: Golden Ticket,1,Crafting Active Directory golden tickets with mimikatz,9726592a-dabc-4d4d-81cd-44070008b3af,powershell
 credential-access,T1558.001,Steal or Forge Kerberos Tickets: Golden Ticket,2,Crafting Active Directory golden tickets with Rubeus,e42d33cd-205c-4acf-ab59-a9f38f6bad9c,powershell
@@ -1132,11 +1161,13 @@ discovery,T1007,System Service Discovery,1,System Service Discovery,89676ba1-b1f
 discovery,T1007,System Service Discovery,2,System Service Discovery - net.exe,5f864a3f-8ce9-45c0-812c-bdf7d8aeacc3,command_prompt
 discovery,T1007,System Service Discovery,3,System Service Discovery - systemctl,f4b26bce-4c2c-46c0-bcc5-fce062d38bef,bash
 discovery,T1040,Network Sniffing,1,Packet Capture Linux,7fe741f7-b265-4951-a7c7-320889083b3e,bash
-discovery,T1040,Network Sniffing,2,Packet Capture macOS,9d04efee-eff5-4240-b8d2-07792b873608,bash
+discovery,T1040,Network Sniffing,2,Packet Capture macOS using tcpdump or tshark,9d04efee-eff5-4240-b8d2-07792b873608,bash
 discovery,T1040,Network Sniffing,3,Packet Capture Windows Command Prompt,a5b2f6a0-24b4-493e-9590-c699f75723ca,command_prompt
 discovery,T1040,Network Sniffing,4,Windows Internal Packet Capture,b5656f67-d67f-4de8-8e62-b5581630f528,command_prompt
 discovery,T1040,Network Sniffing,5,Windows Internal pktmon capture,c67ba807-f48b-446e-b955-e4928cd1bf91,command_prompt
 discovery,T1040,Network Sniffing,6,Windows Internal pktmon set filter,855fb8b4-b8ab-4785-ae77-09f5df7bff55,command_prompt
+discovery,T1040,Network Sniffing,7,Packet Capture macOS using /dev/bpfN with sudo,e6fe5095-545d-4c8b-a0ae-e863914be3aa,bash
+discovery,T1040,Network Sniffing,8,Filtered Packet Capture macOS using /dev/bpfN with sudo,e2480aee-23f3-4f34-80ce-de221e27cd19,bash
 discovery,T1135,Network Share Discovery,1,Network Share Discovery,f94b5ad9-911c-4eff-9718-fd21899db4f7,sh
 discovery,T1135,Network Share Discovery,2,Network Share Discovery - linux,875805bc-9e86-4e87-be86-3a5527315cae,bash
 discovery,T1135,Network Share Discovery,3,Network Share Discovery command prompt,20f1097d-81c1-405c-8380-32174d493bbb,command_prompt
@@ -1404,3 +1435,4 @@ exfiltration,T1048.003,Exfiltration Over Alternative Protocol: Exfiltration Over
 exfiltration,T1048.003,Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,4,Exfiltration Over Alternative Protocol - HTTP,6aa58451-1121-4490-a8e9-1dada3f1c68c,powershell
 exfiltration,T1048.003,Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,5,Exfiltration Over Alternative Protocol - SMTP,ec3a835e-adca-4c7c-88d2-853b69c11bb9,powershell
 exfiltration,T1048.003,Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,6,MAZE FTP Upload,57799bc2-ad1e-4130-a793-fb0c385130ba,powershell
+exfiltration,T1048.003,Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,7,Exfiltration Over Alternative Protocol - FTP - Rclone,b854eb97-bf9b-45ab-a1b5-b94e4880c56b,powershell
