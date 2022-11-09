@@ -292,8 +292,9 @@
 - T1159 Launch Agent [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1136 Create Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1547.007 Boot or Logon Autostart Execution: Re-opened Applications](../../T1547.007/T1547.007.md)
-  - Atomic Test #1: Re-Opened Applications [macos]
-  - Atomic Test #2: Re-Opened Applications [macos]
+  - Atomic Test #1: Copy in loginwindow.plist for Re-Opened Applications [macos]
+  - Atomic Test #2: Re-Opened Applications using LoginHook [macos]
+  - Atomic Test #3: Append to existing loginwindow for Re-Opened Applications [macos]
 - T1160 Launch Daemon [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1053.002 Scheduled Task/Job: At [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -365,8 +366,9 @@
 - [T1037.004 Boot or Logon Initialization Scripts: Rc.common](../../T1037.004/T1037.004.md)
   - Atomic Test #1: rc.common [macos]
 - [T1547.007 Boot or Logon Autostart Execution: Re-opened Applications](../../T1547.007/T1547.007.md)
-  - Atomic Test #1: Re-Opened Applications [macos]
-  - Atomic Test #2: Re-Opened Applications [macos]
+  - Atomic Test #1: Copy in loginwindow.plist for Re-Opened Applications [macos]
+  - Atomic Test #2: Re-Opened Applications using LoginHook [macos]
+  - Atomic Test #3: Append to existing loginwindow for Re-Opened Applications [macos]
 - T1160 Launch Daemon [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1053.002 Scheduled Task/Job: At [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574.004 Dylib Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
