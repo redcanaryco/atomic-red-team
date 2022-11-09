@@ -43,3 +43,64 @@ atomic_tests:
       [ -f #{temp_folder}/safe_to_delete ] && rm -rf #{temp_folder}
     name: bash
     elevation_required: true
+- name: MacOS - Load Kernel Module via kextload and kmutil
+  description: |
+    This test uses the kextload and kmutil commands to load and unload a MacOS kernel module.
+  supported_platforms:
+  - macos
+  input_arguments:
+    module_path:
+      description: Folder used to store the module.
+      type: Path
+      default: /Library/Extensions/SoftRAID.kext
+  dependency_executor_name: bash
+  dependencies:
+  - description: |
+      The kernel module must exist on disk at specified location
+    prereq_command: |
+      if [ -d #{module_path} ] ; then exit 0; else exit 1 ; fi
+    get_prereq_command: |
+      exit 1
+  executor:
+    command: |
+      set -x
+      sudo kextload #{module_path}
+      kextstat 2>/dev/null | grep SoftRAID
+      sudo kextunload #{module_path}
+      sudo kmutil load -p #{module_path}
+      kextstat 2>/dev/null | grep SoftRAID
+      sudo kmutil unload -p #{module_path}
+    name: bash
+    elevation_required: true
+- name: MacOS - Load Kernel Module via KextManagerLoadKextWithURL()
+  description: |
+    This test uses the IOKit API to load a kernel module for macOS.
+    Harcoded to use SoftRAID kext
+  supported_platforms:
+  - macos
+  input_arguments:
+    src_path:
+      description: Folder used to store the module.
+      type: Path
+      default: PathToAtomicsFolder/T1547.006/src/macos_kextload.c
+    exe_path:
+      description: Folder used to store the module.
+      type: Path
+      default: /tmp/T1547006_iokit_loader
+  dependency_executor_name: bash
+  dependencies:
+  - description: |
+      The kernel module must exist on disk at specified location
+    prereq_command: |
+      if [ -f "#{exe_path}" ]; then exit 0 ; else exit 1; fi
+    get_prereq_command: |
+      cc -o #{exe_path} #{src_path} -framework IOKit -framework Foundation
+  executor:
+    command: |
+      sudo #{exe_path}
+      kextstat 2>/dev/null | grep SoftRAID
+      sudo kextunload /Library/Extensions/SoftRAID.kext
+    name: bash
+    elevation_required: true
+    cleanup_command: |
+      rm -f #{exe_path}
