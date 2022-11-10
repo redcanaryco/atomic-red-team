@@ -48,13 +48,14 @@ atomic_tests:
      cd #{rclone_path}
      .\rclone.exe config create #{remote_share} mega
      set-Content #{rclone_config_path}\rclone\rclone.conf "[#{remote_share}] `n type = mega `n user = #{mega_user_account} `n pass = #{mega_user_password}"
-     .\rclone.exe copy --max-size 1700k #{dir_to_copy} #{remote_share}: --no-check-certificate  
+     .\rclone.exe copy --max-size 1700k #{dir_to_copy} #{remote_share}:test -v
     cleanup_command: |
      cd #{rclone_path}
-     .\rclone.exe purge #{remote_share}:
+     .\rclone.exe purge #{remote_share}:test
      .\rclone.exe config delete #{remote_share}:
-     Remove-Item $env:temp\rclone.zip
-     Remove-Item "#{dir_to_copy}" -recurse -force -erroraction silentlycontinue
      Remove-Item #{rclone_config_path}\rclone -recurse -force -erroraction silentlycontinue
+     cd c:\
+     Remove-Item $env:temp\rclone.zip
+     Remove-Item $env:temp\T1567.002 -recurse -force
     name: powershell
     elevation_required: false
