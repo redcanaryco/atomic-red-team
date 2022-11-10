@@ -865,6 +865,8 @@
   - Atomic Test #15: HKLM - Modify default System Shell - Winlogon Shell KEY Value  [windows]
 - [T1547.006 Boot or Logon Autostart Execution: Kernel Modules and Extensions](../../T1547.006/T1547.006.md)
   - Atomic Test #1: Linux - Load Kernel Module via insmod [linux]
+  - Atomic Test #2: MacOS - Load Kernel Module via kextload and kmutil [macos]
+  - Atomic Test #3: MacOS - Load Kernel Module via KextManagerLoadKextWithURL() [macos]
 - T1574.013 KernelCallbackTable [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1053.006 Scheduled Task/Job: Systemd Timers](../../T1053.006/T1053.006.md)
   - Atomic Test #1: Create Systemd Service and Timer [linux]
@@ -924,8 +926,9 @@
 - T1547.013 XDG Autostart Entries [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1055.005 Thread Local Storage [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1547.007 Boot or Logon Autostart Execution: Re-opened Applications](../../T1547.007/T1547.007.md)
-  - Atomic Test #1: Re-Opened Applications [macos]
-  - Atomic Test #2: Re-Opened Applications [macos]
+  - Atomic Test #1: Copy in loginwindow.plist for Re-Opened Applications [macos]
+  - Atomic Test #2: Re-Opened Applications using LoginHook [macos]
+  - Atomic Test #3: Append to existing loginwindow for Re-Opened Applications [macos]
 - [T1574.002 Hijack Execution Flow: DLL Side-Loading](../../T1574.002/T1574.002.md)
   - Atomic Test #1: DLL Side-Loading using the Notepad++ GUP.exe binary [windows]
   - Atomic Test #2: DLL Side-Loading using the dotnet startup hook environment variable [windows]
@@ -1332,6 +1335,8 @@
   - Atomic Test #9: Password Change on Directory Service Restore Mode (DSRM) Account [windows]
 - [T1547.006 Boot or Logon Autostart Execution: Kernel Modules and Extensions](../../T1547.006/T1547.006.md)
   - Atomic Test #1: Linux - Load Kernel Module via insmod [linux]
+  - Atomic Test #2: MacOS - Load Kernel Module via kextload and kmutil [macos]
+  - Atomic Test #3: MacOS - Load Kernel Module via KextManagerLoadKextWithURL() [macos]
 - T1574.013 KernelCallbackTable [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1053.006 Scheduled Task/Job: Systemd Timers](../../T1053.006/T1053.006.md)
   - Atomic Test #1: Create Systemd Service and Timer [linux]
@@ -1400,8 +1405,9 @@
 - T1136 Create Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1547.013 XDG Autostart Entries [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1547.007 Boot or Logon Autostart Execution: Re-opened Applications](../../T1547.007/T1547.007.md)
-  - Atomic Test #1: Re-Opened Applications [macos]
-  - Atomic Test #2: Re-Opened Applications [macos]
+  - Atomic Test #1: Copy in loginwindow.plist for Re-Opened Applications [macos]
+  - Atomic Test #2: Re-Opened Applications using LoginHook [macos]
+  - Atomic Test #3: Append to existing loginwindow for Re-Opened Applications [macos]
 - [T1574.002 Hijack Execution Flow: DLL Side-Loading](../../T1574.002/T1574.002.md)
   - Atomic Test #1: DLL Side-Loading using the Notepad++ GUP.exe binary [windows]
   - Atomic Test #2: DLL Side-Loading using the dotnet startup hook environment variable [windows]
@@ -1641,11 +1647,13 @@
 - T1555.005 Password Managers [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #1: Packet Capture Linux [linux]
-  - Atomic Test #2: Packet Capture macOS [macos]
+  - Atomic Test #2: Packet Capture macOS using tcpdump or tshark [macos]
   - Atomic Test #3: Packet Capture Windows Command Prompt [windows]
   - Atomic Test #4: Windows Internal Packet Capture [windows]
   - Atomic Test #5: Windows Internal pktmon capture [windows]
   - Atomic Test #6: Windows Internal pktmon set filter [windows]
+  - Atomic Test #7: Packet Capture macOS using /dev/bpfN with sudo [macos]
+  - Atomic Test #8: Filtered Packet Capture macOS using /dev/bpfN with sudo [macos]
 - [T1552.002 Unsecured Credentials: Credentials in Registry](../../T1552.002/T1552.002.md)
   - Atomic Test #1: Enumeration for Credentials in Registry [windows]
   - Atomic Test #2: Enumeration for PuTTY Credentials in Registry [windows]
@@ -1881,11 +1889,13 @@
   - Atomic Test #3: System Service Discovery - systemctl [linux]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #1: Packet Capture Linux [linux]
-  - Atomic Test #2: Packet Capture macOS [macos]
+  - Atomic Test #2: Packet Capture macOS using tcpdump or tshark [macos]
   - Atomic Test #3: Packet Capture Windows Command Prompt [windows]
   - Atomic Test #4: Windows Internal Packet Capture [windows]
   - Atomic Test #5: Windows Internal pktmon capture [windows]
   - Atomic Test #6: Windows Internal pktmon set filter [windows]
+  - Atomic Test #7: Packet Capture macOS using /dev/bpfN with sudo [macos]
+  - Atomic Test #8: Filtered Packet Capture macOS using /dev/bpfN with sudo [macos]
 - [T1135 Network Share Discovery](../../T1135/T1135.md)
   - Atomic Test #1: Network Share Discovery [macos]
   - Atomic Test #2: Network Share Discovery - linux [linux]
