@@ -882,7 +882,7 @@
 - [T1546 Event Triggered Execution](../../T1546/T1546.md)
   - Atomic Test #1: Persistence with Custom AutodialDLL [windows]
   - Atomic Test #2: HKLM - Persistence using CommandProcessor AutoRun key (With Elevation) [windows]
-  - Atomic Test #3: HKCU - Persistence using CommandProcessor AutoRun key (With Elevation) [windows]
+  - Atomic Test #3: HKCU - Persistence using CommandProcessor AutoRun key (Without Elevation) [windows]
 - [T1546.004 Event Triggered Execution: .bash_profile and .bashrc](../../T1546.004/T1546.004.md)
   - Atomic Test #1: Add command to .bash_profile [macos, linux]
   - Atomic Test #2: Add command to .bashrc [macos, linux]
@@ -1352,7 +1352,7 @@
 - [T1546 Event Triggered Execution](../../T1546/T1546.md)
   - Atomic Test #1: Persistence with Custom AutodialDLL [windows]
   - Atomic Test #2: HKLM - Persistence using CommandProcessor AutoRun key (With Elevation) [windows]
-  - Atomic Test #3: HKCU - Persistence using CommandProcessor AutoRun key (With Elevation) [windows]
+  - Atomic Test #3: HKCU - Persistence using CommandProcessor AutoRun key (Without Elevation) [windows]
 - [T1546.004 Event Triggered Execution: .bash_profile and .bashrc](../../T1546.004/T1546.004.md)
   - Atomic Test #1: Add command to .bash_profile [macos, linux]
   - Atomic Test #2: Add command to .bashrc [macos, linux]
