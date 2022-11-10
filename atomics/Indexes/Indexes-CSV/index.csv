@@ -567,6 +567,8 @@ privilege-escalation,T1547.001,Boot or Logon Autostart Execution: Registry Run K
 privilege-escalation,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,14,HKLM - Append Command to Winlogon Userinit KEY Value,f7fab6cc-8ece-4ca7-a0f1-30a22fccd374,powershell
 privilege-escalation,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,15,HKLM - Modify default System Shell - Winlogon Shell KEY Value ,1d958c61-09c6-4d9e-b26b-4130314e520e,powershell
 privilege-escalation,T1547.006,Boot or Logon Autostart Execution: Kernel Modules and Extensions,1,Linux - Load Kernel Module via insmod,687dcb93-9656-4853-9c36-9977315e9d23,bash
+privilege-escalation,T1547.006,Boot or Logon Autostart Execution: Kernel Modules and Extensions,2,MacOS - Load Kernel Module via kextload and kmutil,f4391089-d3a5-4dd1-ab22-0419527f2672,bash
+privilege-escalation,T1547.006,Boot or Logon Autostart Execution: Kernel Modules and Extensions,3,MacOS - Load Kernel Module via KextManagerLoadKextWithURL(),f0007753-beb3-41ea-9948-760785e4c1e5,bash
 privilege-escalation,T1053.006,Scheduled Task/Job: Systemd Timers,1,Create Systemd Service and Timer,f4983098-bb13-44fb-9b2c-46149961807b,bash
 privilege-escalation,T1053.006,Scheduled Task/Job: Systemd Timers,2,Create a user level transient systemd service and timer,3de33f5b-62e5-4e63-a2a0-6fd8808c80ec,sh
 privilege-escalation,T1053.006,Scheduled Task/Job: Systemd Timers,3,Create a system level transient systemd service and timer,d3eda496-1fc0-49e9-aff5-3bec5da9fa22,sh
@@ -594,8 +596,9 @@ privilege-escalation,T1037.004,Boot or Logon Initialization Scripts: Rc.common,2
 privilege-escalation,T1037.004,Boot or Logon Initialization Scripts: Rc.common,3,rc.local,126f71af-e1c9-405c-94ef-26a47b16c102,bash
 privilege-escalation,T1543.002,Create or Modify System Process: Systemd Service,1,Create Systemd Service,d9e4f24f-aa67-4c6e-bcbf-85622b697a7c,bash
 privilege-escalation,T1543.002,Create or Modify System Process: Systemd Service,2,"Create Systemd Service file,  Enable the service , Modify and Reload the service.",c35ac4a8-19de-43af-b9f8-755da7e89c89,bash
-privilege-escalation,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,1,Re-Opened Applications,5fefd767-ef54-4ac6-84d3-751ab85e8aba,manual
-privilege-escalation,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,2,Re-Opened Applications,5f5b71da-e03f-42e7-ac98-d63f9e0465cb,sh
+privilege-escalation,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,1,Copy in loginwindow.plist for Re-Opened Applications,5fefd767-ef54-4ac6-84d3-751ab85e8aba,sh
+privilege-escalation,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,2,Re-Opened Applications using LoginHook,5f5b71da-e03f-42e7-ac98-d63f9e0465cb,sh
+privilege-escalation,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,3,Append to existing loginwindow for Re-Opened Applications,766b6c3c-9353-4033-8b7e-38b309fa3a93,sh
 privilege-escalation,T1574.002,Hijack Execution Flow: DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
 privilege-escalation,T1574.002,Hijack Execution Flow: DLL Side-Loading,2,DLL Side-Loading using the dotnet startup hook environment variable,d322cdd7-7d60-46e3-9111-648848da7c02,command_prompt
 privilege-escalation,T1037.001,Boot or Logon Initialization Scripts: Logon Script (Windows),1,Logon Scripts,d6042746-07d4-4c92-9ad8-e644c114a231,command_prompt
@@ -820,6 +823,8 @@ persistence,T1098,Account Manipulation,7,Azure - adding service principal to Azu
 persistence,T1098,Account Manipulation,8,AzureAD - adding permission to application,94ea9cc3-81f9-4111-8dde-3fb54f36af4b,powershell
 persistence,T1098,Account Manipulation,9,Password Change on Directory Service Restore Mode (DSRM) Account,d5b886d9-d1c7-4b6e-a7b0-460041bf2823,command_prompt
 persistence,T1547.006,Boot or Logon Autostart Execution: Kernel Modules and Extensions,1,Linux - Load Kernel Module via insmod,687dcb93-9656-4853-9c36-9977315e9d23,bash
+persistence,T1547.006,Boot or Logon Autostart Execution: Kernel Modules and Extensions,2,MacOS - Load Kernel Module via kextload and kmutil,f4391089-d3a5-4dd1-ab22-0419527f2672,bash
+persistence,T1547.006,Boot or Logon Autostart Execution: Kernel Modules and Extensions,3,MacOS - Load Kernel Module via KextManagerLoadKextWithURL(),f0007753-beb3-41ea-9948-760785e4c1e5,bash
 persistence,T1053.006,Scheduled Task/Job: Systemd Timers,1,Create Systemd Service and Timer,f4983098-bb13-44fb-9b2c-46149961807b,bash
 persistence,T1053.006,Scheduled Task/Job: Systemd Timers,2,Create a user level transient systemd service and timer,3de33f5b-62e5-4e63-a2a0-6fd8808c80ec,sh
 persistence,T1053.006,Scheduled Task/Job: Systemd Timers,3,Create a system level transient systemd service and timer,d3eda496-1fc0-49e9-aff5-3bec5da9fa22,sh
@@ -849,8 +854,9 @@ persistence,T1037.004,Boot or Logon Initialization Scripts: Rc.common,2,rc.commo
 persistence,T1037.004,Boot or Logon Initialization Scripts: Rc.common,3,rc.local,126f71af-e1c9-405c-94ef-26a47b16c102,bash
 persistence,T1543.002,Create or Modify System Process: Systemd Service,1,Create Systemd Service,d9e4f24f-aa67-4c6e-bcbf-85622b697a7c,bash
 persistence,T1543.002,Create or Modify System Process: Systemd Service,2,"Create Systemd Service file,  Enable the service , Modify and Reload the service.",c35ac4a8-19de-43af-b9f8-755da7e89c89,bash
-persistence,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,1,Re-Opened Applications,5fefd767-ef54-4ac6-84d3-751ab85e8aba,manual
-persistence,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,2,Re-Opened Applications,5f5b71da-e03f-42e7-ac98-d63f9e0465cb,sh
+persistence,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,1,Copy in loginwindow.plist for Re-Opened Applications,5fefd767-ef54-4ac6-84d3-751ab85e8aba,sh
+persistence,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,2,Re-Opened Applications using LoginHook,5f5b71da-e03f-42e7-ac98-d63f9e0465cb,sh
+persistence,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,3,Append to existing loginwindow for Re-Opened Applications,766b6c3c-9353-4033-8b7e-38b309fa3a93,sh
 persistence,T1574.002,Hijack Execution Flow: DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
 persistence,T1574.002,Hijack Execution Flow: DLL Side-Loading,2,DLL Side-Loading using the dotnet startup hook environment variable,d322cdd7-7d60-46e3-9111-648848da7c02,command_prompt
 persistence,T1037.001,Boot or Logon Initialization Scripts: Logon Script (Windows),1,Logon Scripts,d6042746-07d4-4c92-9ad8-e644c114a231,command_prompt
@@ -979,11 +985,13 @@ credential-access,T1003.007,OS Credential Dumping: Proc Filesystem,1,Dump indivi
 credential-access,T1003.007,OS Credential Dumping: Proc Filesystem,2,Dump individual process memory with Python (Local),437b2003-a20d-4ed8-834c-4964f24eec63,sh
 credential-access,T1003.007,OS Credential Dumping: Proc Filesystem,3,Capture Passwords with MimiPenguin,a27418de-bdce-4ebd-b655-38f04842bf0c,bash
 credential-access,T1040,Network Sniffing,1,Packet Capture Linux,7fe741f7-b265-4951-a7c7-320889083b3e,bash
-credential-access,T1040,Network Sniffing,2,Packet Capture macOS,9d04efee-eff5-4240-b8d2-07792b873608,bash
+credential-access,T1040,Network Sniffing,2,Packet Capture macOS using tcpdump or tshark,9d04efee-eff5-4240-b8d2-07792b873608,bash
 credential-access,T1040,Network Sniffing,3,Packet Capture Windows Command Prompt,a5b2f6a0-24b4-493e-9590-c699f75723ca,command_prompt
 credential-access,T1040,Network Sniffing,4,Windows Internal Packet Capture,b5656f67-d67f-4de8-8e62-b5581630f528,command_prompt
 credential-access,T1040,Network Sniffing,5,Windows Internal pktmon capture,c67ba807-f48b-446e-b955-e4928cd1bf91,command_prompt
 credential-access,T1040,Network Sniffing,6,Windows Internal pktmon set filter,855fb8b4-b8ab-4785-ae77-09f5df7bff55,command_prompt
+credential-access,T1040,Network Sniffing,7,Packet Capture macOS using /dev/bpfN with sudo,e6fe5095-545d-4c8b-a0ae-e863914be3aa,bash
+credential-access,T1040,Network Sniffing,8,Filtered Packet Capture macOS using /dev/bpfN with sudo,e2480aee-23f3-4f34-80ce-de221e27cd19,bash
 credential-access,T1552.002,Unsecured Credentials: Credentials in Registry,1,Enumeration for Credentials in Registry,b6ec082c-7384-46b3-a111-9a9b8b14e5e7,command_prompt
 credential-access,T1552.002,Unsecured Credentials: Credentials in Registry,2,Enumeration for PuTTY Credentials in Registry,af197fd7-e868-448e-9bd5-05d1bcd9d9e5,command_prompt
 credential-access,T1556.002,Modify Authentication Process: Password Filter DLL,1,Install and Register Password Filter DLL,a7961770-beb5-4134-9674-83d7e1fa865c,powershell
@@ -1153,11 +1161,13 @@ discovery,T1007,System Service Discovery,1,System Service Discovery,89676ba1-b1f
 discovery,T1007,System Service Discovery,2,System Service Discovery - net.exe,5f864a3f-8ce9-45c0-812c-bdf7d8aeacc3,command_prompt
 discovery,T1007,System Service Discovery,3,System Service Discovery - systemctl,f4b26bce-4c2c-46c0-bcc5-fce062d38bef,bash
 discovery,T1040,Network Sniffing,1,Packet Capture Linux,7fe741f7-b265-4951-a7c7-320889083b3e,bash
-discovery,T1040,Network Sniffing,2,Packet Capture macOS,9d04efee-eff5-4240-b8d2-07792b873608,bash
+discovery,T1040,Network Sniffing,2,Packet Capture macOS using tcpdump or tshark,9d04efee-eff5-4240-b8d2-07792b873608,bash
 discovery,T1040,Network Sniffing,3,Packet Capture Windows Command Prompt,a5b2f6a0-24b4-493e-9590-c699f75723ca,command_prompt
 discovery,T1040,Network Sniffing,4,Windows Internal Packet Capture,b5656f67-d67f-4de8-8e62-b5581630f528,command_prompt
 discovery,T1040,Network Sniffing,5,Windows Internal pktmon capture,c67ba807-f48b-446e-b955-e4928cd1bf91,command_prompt
 discovery,T1040,Network Sniffing,6,Windows Internal pktmon set filter,855fb8b4-b8ab-4785-ae77-09f5df7bff55,command_prompt
+discovery,T1040,Network Sniffing,7,Packet Capture macOS using /dev/bpfN with sudo,e6fe5095-545d-4c8b-a0ae-e863914be3aa,bash
+discovery,T1040,Network Sniffing,8,Filtered Packet Capture macOS using /dev/bpfN with sudo,e2480aee-23f3-4f34-80ce-de221e27cd19,bash
 discovery,T1135,Network Share Discovery,1,Network Share Discovery,f94b5ad9-911c-4eff-9718-fd21899db4f7,sh
 discovery,T1135,Network Share Discovery,2,Network Share Discovery - linux,875805bc-9e86-4e87-be86-3a5527315cae,bash
 discovery,T1135,Network Share Discovery,3,Network Share Discovery command prompt,20f1097d-81c1-405c-8380-32174d493bbb,command_prompt

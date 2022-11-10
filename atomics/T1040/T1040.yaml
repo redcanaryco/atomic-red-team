@@ -28,7 +28,7 @@ atomic_tests:
       tshark -c 5 -i #{interface}
     name: bash
     elevation_required: true
-- name: Packet Capture macOS
+- name: Packet Capture macOS using tcpdump or tshark
   auto_generated_guid: 9d04efee-eff5-4240-b8d2-07792b873608
   description: |
     Perform a PCAP on macOS. This will require Wireshark/tshark to be installed. TCPdump may already be installed.
@@ -153,4 +153,72 @@ atomic_tests:
     cleanup_command: |-
       pktmon filter remove
     name: command_prompt
-    elevation_required: true 
+    elevation_required: true
+- name: Packet Capture macOS using /dev/bpfN with sudo
+  auto_generated_guid: e6fe5095-545d-4c8b-a0ae-e863914be3aa
+  description: |
+    Opens a /dev/bpf file (O_RDONLY) and captures packets for a few seconds.
+  supported_platforms:
+  - macos
+  input_arguments:
+    ifname:
+      description: Specify interface to perform PCAP on.
+      type: String
+      default: en0
+    csource_path:
+      description: Path to C program source
+      type: String
+      default: PathToAtomicsFolder/T1040/src/macos_pcapdemo.c
+    program_path:
+      description: Path to compiled C program
+      type: String
+      default: /tmp/t1040_macos_pcapdemo
+  dependency_executor_name: bash
+  dependencies:
+    - description: |
+        compile C program
+      prereq_command: |
+        exit 1
+      get_prereq_command: |
+        cc #{csource_path} -o #{program_path}
+  executor:
+    command: |
+      sudo #{program_path} -i #{ifname} -t 3
+    cleanup_command: |
+      rm -f #{program_path}
+    name: bash
+    elevation_required: true
+- name: Filtered Packet Capture macOS using /dev/bpfN with sudo
+  auto_generated_guid: e2480aee-23f3-4f34-80ce-de221e27cd19
+  description: |
+    Opens a /dev/bpf file (O_RDONLY), sets BPF filter for 'udp' and captures packets for a few seconds.
+  supported_platforms:
+  - macos
+  input_arguments:
+    ifname:
+      description: Specify interface to perform PCAP on.
+      type: String
+      default: en0
+    csource_path:
+      description: Path to C program source
+      type: String
+      default: PathToAtomicsFolder/T1040/src/macos_pcapdemo.c
+    program_path:
+      description: Path to compiled C program
+      type: String
+      default: /tmp/t1040_macos_pcapdemo
+  dependency_executor_name: bash
+  dependencies:
+    - description: |
+        compile C program
+      prereq_command: |
+        exit 1
+      get_prereq_command: |
+        cc #{csource_path} -o #{program_path}
+  executor:
+    command: |
+      sudo #{program_path} -f -i #{ifname} -t 3
+    cleanup_command: |
+      rm -f #{program_path}
+    name: bash
+    elevation_required: true
