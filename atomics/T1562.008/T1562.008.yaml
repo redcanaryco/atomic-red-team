@@ -20,22 +20,6 @@ atomic_tests:
       description: Name of the region
       type: String
       default: "us-east-1"
-    terraform:
-      aws_s3_bucket:
-        name: some_bucket
-        args:
-          bucket: var.s3_bucket_name
-          force_destroy: true
-      aws_s3_bucket_policy:
-        name: some_policy
-        args:
-          bucket: aws_s3_bucket.some_bucket.id
-          policy: file("src/policy.json")
-      aws_cloudtrail:
-        name: some_cloudtrail
-        args:
-          s3_bucket_name: aws_s3_bucket.some_bucket.id
-          name: var.cloudtrail_name
   dependencies:
     - description: |
         Check if ~/.aws/credentials file has a default stanza is configured
@@ -88,27 +72,6 @@ atomic_tests:
       description: Name of the NameSpace
       type: String
       default: null
-    terraform:
-      azurerm_resource_group:
-        name: some_resource_group
-        args:
-          name: atomicredteam-rg
-          location: West Europe
-      azurerm_eventhub_namespace:
-        name: some_namespace
-        args:
-          name: atomicredteam-ns
-          location: azurerm_resource_group.some_resource_group.location
-          resource_group_name: azurerm_resource_group.some_resource_group.name
-          sku: Standard
-      azurerm_eventhub:
-        name: some_eventhub
-        args:
-          name: atomicredteam-eventhub
-          namespace_name: azurerm_eventhub_namespace.some_namespace.name
-          resource_group_name: azurerm_resource_group.some_resource_group.name
-          message_retention: 1
-          partition_count: 2
   dependency_executor_name: powershell
   dependencies:
   - description: |

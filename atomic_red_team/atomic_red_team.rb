@@ -122,7 +122,7 @@ class AtomicRedTeam
           raise("`atomic_tests[#{i}].dependencies` '#{dependency}' must be have a get_prereq_command}") unless dependency.has_key?('get_prereq_command')
         end
       end
-      (atomic['input_arguments'] || {}).reject{|i| i == "terraform"}.each_with_index do |arg_kvp, iai|
+      (atomic['input_arguments'] || {}).each_with_index do |arg_kvp, iai|
         arg_name, arg = arg_kvp
         raise("`atomic_tests[#{i}].input_arguments[#{iai}].description` element is required") unless arg.has_key?('description')
         raise("`atomic_tests[#{i}].input_arguments[#{iai}].description` element must be a string") unless arg['description'].is_a?(String)

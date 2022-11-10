@@ -21,7 +21,7 @@ resource "aws_s3_bucket" "some_bucket" {
 
 resource "aws_s3_bucket_policy" "some_policy" {
   bucket = aws_s3_bucket.some_bucket.id
-  policy = templatefile("src/policy.json", {
+  policy = templatefile("policy.json", {
     cloudtrail_name = "${var.cloudtrail_name}"
     s3_bucket_name  = "${var.s3_bucket_name}"
     region          = "${var.region}"
