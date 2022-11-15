@@ -337,12 +337,12 @@ atomic_tests:
 - name: Linux List Kernel Modules
   auto_generated_guid: 034fe21c-3186-49dd-8d5d-128b35f181c7
   description: |
-    Enumerate kernel modules installed 3 different ways. Upon successful execution stdout will display kernel modules installed on host 3 times.
+    Enumerate kernel modules installed 3 different ways. Upon successful execution stdout will display kernel modules installed on host 2 times, followed by list of modules matching 'vmw' if present.
   supported_platforms:
   - linux
   executor:
     command: |
       lsmod
       kmod list
-      cat /proc/modules
+      grep vmw /proc/modules
     name: sh
