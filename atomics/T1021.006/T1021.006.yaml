@@ -17,29 +17,16 @@ atomic_tests:
 - name: Remote Code Execution with PS Credentials Using Invoke-Command
   auto_generated_guid: 5295bd61-bd7e-4744-9d52-85962a4cf2d6
   description: |
-    Execute Invoke-command on remote host.
-
-    Upon successful execution, powershell will execute whoami on specified remote host using `invoke-command`.
+    Simulate lateral movement with PowerShell Remoting on the local host. 
+    Upon successful execution, PowerShell will execute `whoami` using `Invoke-Command`, targeting the 
+    local machine as remote target.
   supported_platforms:
   - windows
-  input_arguments:
-    username:
-      description: The username running the powershell command
-      type: string
-      default: $env:USERNAME
-    remotehost:
-      description: The remote hostname of the machine you are running the powershell command on.
-      type: string
-      default: $env:COMPUTERNAME
-    password:
-      description: The password to be used with the user provided in the previous input argument.
-      type: string
-      default: test12345
   executor:
     command: |-
-      $SecPassword = ConvertTo-SecureString "#{password}" -AsPlainText -Force
-      $Cred = New-Object System.Management.Automation.PSCredential("#{username}", $SecPassword)
-      Invoke-Command -ComputerName "#{remotehost}" -Credential $Cred -ScriptBlock {whoami}
+      Enable-PSRemoting -Force
+      Invoke-Command -ComputerName $env:COMPUTERNAME -ScriptBlock {whoami}
+    cleanup_command: Disable-PSRemoting -Force
     name: powershell
     
 - name: WinRM Access with Evil-WinRM
