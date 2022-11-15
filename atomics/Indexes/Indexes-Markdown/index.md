@@ -71,6 +71,7 @@
   - Atomic Test #20: WinPwn - UAC Bypass DiskCleanup technique [windows]
   - Atomic Test #21: WinPwn - UAC Bypass DccwBypassUAC technique [windows]
   - Atomic Test #22: Disable UAC admin consent prompt via ConsentPromptBehaviorAdmin registry key [windows]
+  - Atomic Test #23: UAC Bypass with WSReset Registry Modification [windows]
 - T1099 Timestomp [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1548.003 Abuse Elevation Control Mechanism: Sudo and Sudo Caching](../../T1548.003/T1548.003.md)
   - Atomic Test #1: Sudo usage [macos, linux]
@@ -704,6 +705,7 @@
   - Atomic Test #20: WinPwn - UAC Bypass DiskCleanup technique [windows]
   - Atomic Test #21: WinPwn - UAC Bypass DccwBypassUAC technique [windows]
   - Atomic Test #22: Disable UAC admin consent prompt via ConsentPromptBehaviorAdmin registry key [windows]
+  - Atomic Test #23: UAC Bypass with WSReset Registry Modification [windows]
 - [T1548.003 Abuse Elevation Control Mechanism: Sudo and Sudo Caching](../../T1548.003/T1548.003.md)
   - Atomic Test #1: Sudo usage [macos, linux]
   - Atomic Test #2: Unlimited sudo cache timeout [macos, linux]

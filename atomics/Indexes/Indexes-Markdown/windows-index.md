@@ -49,6 +49,7 @@
   - Atomic Test #20: WinPwn - UAC Bypass DiskCleanup technique [windows]
   - Atomic Test #21: WinPwn - UAC Bypass DccwBypassUAC technique [windows]
   - Atomic Test #22: Disable UAC admin consent prompt via ConsentPromptBehaviorAdmin registry key [windows]
+  - Atomic Test #23: UAC Bypass with WSReset Registry Modification [windows]
 - T1099 Timestomp [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1542.001 System Firmware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1574.011 Hijack Execution Flow: Services Registry Permissions Weakness](../../T1574.011/T1574.011.md)
@@ -534,6 +535,7 @@
   - Atomic Test #20: WinPwn - UAC Bypass DiskCleanup technique [windows]
   - Atomic Test #21: WinPwn - UAC Bypass DccwBypassUAC technique [windows]
   - Atomic Test #22: Disable UAC admin consent prompt via ConsentPromptBehaviorAdmin registry key [windows]
+  - Atomic Test #23: UAC Bypass with WSReset Registry Modification [windows]
 - [T1574.011 Hijack Execution Flow: Services Registry Permissions Weakness](../../T1574.011/T1574.011.md)
   - Atomic Test #1: Service Registry Permissions Weakness [windows]
   - Atomic Test #2: Service ImagePath Change with reg.exe [windows]
