@@ -337,11 +337,12 @@ atomic_tests:
 - name: Linux List Kernel Modules
   auto_generated_guid: 034fe21c-3186-49dd-8d5d-128b35f181c7
   description: |
-    Identify kernel modules installed. Upon successful execution stdout will display kernel modules installed on host.
+    Enumerate kernel modules installed 3 different ways. Upon successful execution stdout will display kernel modules installed on host 3 times.
   supported_platforms:
   - linux
   executor:
     command: |
-      sudo lsmod
-      sudo kmod list
+      lsmod
+      kmod list
+      cat /proc/modules
     name: sh
