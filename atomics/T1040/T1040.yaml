@@ -1,7 +1,7 @@
 attack_technique: T1040
 display_name: Network Sniffing
 atomic_tests:
-- name: Packet Capture Linux
+- name: Packet Capture Linux using tshark or tcpdump
   auto_generated_guid: 7fe741f7-b265-4951-a7c7-320889083b3e
   description: |
     Perform a PCAP. Wireshark will be required for tshark. TCPdump may already be installed.
@@ -218,6 +218,124 @@ atomic_tests:
   executor:
     command: |
       sudo #{program_path} -f -i #{ifname} -t 3
+    cleanup_command: |
+      rm -f #{program_path}
+    name: bash
+    elevation_required: true
+- name: Packet Capture Linux socket AF_PACKET,SOCK_RAW with sudo
+  description: |
+    Captures packets with domain=AF_PACKET, type=SOCK_RAW for a few seconds.
+  supported_platforms:
+  - linux
+  input_arguments:
+    csource_path:
+      description: Path to C program source
+      type: String
+      default: PathToAtomicsFolder/T1040/src/linux_pcapdemo.c
+    program_path:
+      description: Path to compiled C program
+      type: String
+      default: /tmp/t1040_linux_pcapdemo
+  dependency_executor_name: bash
+  dependencies:
+    - description: |
+        compile C program
+      prereq_command: |
+        if [ -f "#{program_path}" ]; then exit 0; else exit 1; fi
+      get_prereq_command: |
+        cc #{csource_path} -o #{program_path}
+  executor:
+    command: |
+      sudo #{program_path} -a -t 3
+    cleanup_command: |
+      rm -f #{program_path}
+    name: bash
+    elevation_required: true
+- name: Packet Capture Linux socket AF_INET,SOCK_RAW,TCP with sudo
+  description: |
+    Captures packets with domain=AF_INET,type=SOCK_RAW,protocol=TCP for a few seconds.
+  supported_platforms:
+  - linux
+  input_arguments:
+    csource_path:
+      description: Path to C program source
+      type: String
+      default: PathToAtomicsFolder/T1040/src/linux_pcapdemo.c
+    program_path:
+      description: Path to compiled C program
+      type: String
+      default: /tmp/t1040_linux_pcapdemo
+  dependency_executor_name: bash
+  dependencies:
+    - description: |
+        compile C program
+      prereq_command: |
+        if [ -f "#{program_path}" ]; then exit 0; else exit 1; fi
+      get_prereq_command: |
+        cc #{csource_path} -o #{program_path}
+  executor:
+    command: |
+      sudo #{program_path} -4 -p 6 -t 3
+    cleanup_command: |
+      rm -f #{program_path}
+    name: bash
+    elevation_required: true
+- name: Packet Capture Linux socket AF_INET,SOCK_PACKET,UDP with sudo
+  description: |
+    Captures packets with domain=AF_INET,type=SOCK_PACKET,protocol=UDP for a few seconds.
+    SOCK_PACKET is "obsolete" according to the man page, but still works on Ubuntu 20.04
+  supported_platforms:
+  - linux
+  input_arguments:
+    csource_path:
+      description: Path to C program source
+      type: String
+      default: PathToAtomicsFolder/T1040/src/linux_pcapdemo.c
+    program_path:
+      description: Path to compiled C program
+      type: String
+      default: /tmp/t1040_linux_pcapdemo
+  dependency_executor_name: bash
+  dependencies:
+    - description: |
+        compile C program
+      prereq_command: |
+        if [ -f "#{program_path}" ]; then exit 0; else exit 1; fi
+      get_prereq_command: |
+        cc #{csource_path} -o #{program_path}
+  executor:
+    command: |
+      sudo #{program_path} -4 -P -p 17 -t 3
+    cleanup_command: |
+      rm -f #{program_path}
+    name: bash
+    elevation_required: true
+- name: Packet Capture Linux socket AF_PACKET,SOCK_RAW with BPF filter for UDP with sudo
+  description: |
+    Captures packets with domain=AF_PACKET,type=SOCK_RAW for a few seconds.
+    Sets a BPF filter on the socket to filter for UDP traffic.
+  supported_platforms:
+  - linux
+  input_arguments:
+    csource_path:
+      description: Path to C program source
+      type: String
+      default: PathToAtomicsFolder/T1040/src/linux_pcapdemo.c
+    program_path:
+      description: Path to compiled C program
+      type: String
+      default: /tmp/t1040_linux_pcapdemo
+  dependency_executor_name: bash
+  dependencies:
+    - description: |
+        compile C program
+      prereq_command: |
+        if [ -f "#{program_path}" ]; then exit 0; else exit 1; fi
+      get_prereq_command: |
+        cc #{csource_path} -o #{program_path}
+  executor:
+    command: |
+      sudo #{program_path} -a -f -t 3
     cleanup_command: |
       rm -f #{program_path}
     name: bash
