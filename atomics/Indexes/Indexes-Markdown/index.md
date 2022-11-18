@@ -1648,7 +1648,7 @@
   - Atomic Test #3: Capture Passwords with MimiPenguin [linux]
 - T1555.005 Password Managers [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1040 Network Sniffing](../../T1040/T1040.md)
-  - Atomic Test #1: Packet Capture Linux [linux]
+  - Atomic Test #1: Packet Capture Linux using tshark or tcpdump [linux]
   - Atomic Test #2: Packet Capture macOS using tcpdump or tshark [macos]
   - Atomic Test #3: Packet Capture Windows Command Prompt [windows]
   - Atomic Test #4: Windows Internal Packet Capture [windows]
@@ -1656,6 +1656,10 @@
   - Atomic Test #6: Windows Internal pktmon set filter [windows]
   - Atomic Test #7: Packet Capture macOS using /dev/bpfN with sudo [macos]
   - Atomic Test #8: Filtered Packet Capture macOS using /dev/bpfN with sudo [macos]
+  - Atomic Test #9: Packet Capture Linux socket AF_PACKET,SOCK_RAW with sudo [linux]
+  - Atomic Test #10: Packet Capture Linux socket AF_INET,SOCK_RAW,TCP with sudo [linux]
+  - Atomic Test #11: Packet Capture Linux socket AF_INET,SOCK_PACKET,UDP with sudo [linux]
+  - Atomic Test #12: Packet Capture Linux socket AF_PACKET,SOCK_RAW with BPF filter for UDP with sudo [linux]
 - [T1552.002 Unsecured Credentials: Credentials in Registry](../../T1552.002/T1552.002.md)
   - Atomic Test #1: Enumeration for Credentials in Registry [windows]
   - Atomic Test #2: Enumeration for PuTTY Credentials in Registry [windows]
@@ -1890,7 +1894,7 @@
   - Atomic Test #2: System Service Discovery - net.exe [windows]
   - Atomic Test #3: System Service Discovery - systemctl [linux]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
-  - Atomic Test #1: Packet Capture Linux [linux]
+  - Atomic Test #1: Packet Capture Linux using tshark or tcpdump [linux]
   - Atomic Test #2: Packet Capture macOS using tcpdump or tshark [macos]
   - Atomic Test #3: Packet Capture Windows Command Prompt [windows]
   - Atomic Test #4: Windows Internal Packet Capture [windows]
@@ -1898,6 +1902,10 @@
   - Atomic Test #6: Windows Internal pktmon set filter [windows]
   - Atomic Test #7: Packet Capture macOS using /dev/bpfN with sudo [macos]
   - Atomic Test #8: Filtered Packet Capture macOS using /dev/bpfN with sudo [macos]
+  - Atomic Test #9: Packet Capture Linux socket AF_PACKET,SOCK_RAW with sudo [linux]
+  - Atomic Test #10: Packet Capture Linux socket AF_INET,SOCK_RAW,TCP with sudo [linux]
+  - Atomic Test #11: Packet Capture Linux socket AF_INET,SOCK_PACKET,UDP with sudo [linux]
+  - Atomic Test #12: Packet Capture Linux socket AF_PACKET,SOCK_RAW with BPF filter for UDP with sudo [linux]
 - [T1135 Network Share Discovery](../../T1135/T1135.md)
   - Atomic Test #1: Network Share Discovery [macos]
   - Atomic Test #2: Network Share Discovery - linux [linux]
