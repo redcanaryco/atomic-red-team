@@ -30,6 +30,7 @@ atomic_tests:
   executor:
     command: |
       nltest /domain_trusts
+      nltest /trusted_domains
     name: command_prompt
 - name: Powershell enumerate domains and forests
   auto_generated_guid: c58fbc62-8a62-489e-8f2d-3565d7d96f30
@@ -59,6 +60,7 @@ atomic_tests:
       Get-NetForestTrust
       Get-ADDomain
       Get-ADGroupMember Administrators -Recursive
+      ([System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain()).GetAllTrustRelationships()
     name: powershell
 - name: Adfind - Enumerate Active Directory OUs
   auto_generated_guid: d1c73b96-ab87-4031-bad8-0e1b3b8bf3ec
