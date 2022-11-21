@@ -160,7 +160,11 @@ credential-access,T1110.001,Brute Force: Password Guessing,5,SUDO brute force Re
 credential-access,T1003.007,OS Credential Dumping: Proc Filesystem,1,Dump individual process memory with sh (Local),7e91138a-8e74-456d-a007-973d67a0bb80,sh
 credential-access,T1003.007,OS Credential Dumping: Proc Filesystem,2,Dump individual process memory with Python (Local),437b2003-a20d-4ed8-834c-4964f24eec63,sh
 credential-access,T1003.007,OS Credential Dumping: Proc Filesystem,3,Capture Passwords with MimiPenguin,a27418de-bdce-4ebd-b655-38f04842bf0c,bash
-credential-access,T1040,Network Sniffing,1,Packet Capture Linux,7fe741f7-b265-4951-a7c7-320889083b3e,bash
+credential-access,T1040,Network Sniffing,1,Packet Capture Linux using tshark or tcpdump,7fe741f7-b265-4951-a7c7-320889083b3e,bash
+credential-access,T1040,Network Sniffing,9,"Packet Capture Linux socket AF_PACKET,SOCK_RAW with sudo",10c710c9-9104-4d5f-8829-5b65391e2a29,bash
+credential-access,T1040,Network Sniffing,10,"Packet Capture Linux socket AF_INET,SOCK_RAW,TCP with sudo",7a0895f0-84c1-4adf-8491-a21510b1d4c1,bash
+credential-access,T1040,Network Sniffing,11,"Packet Capture Linux socket AF_INET,SOCK_PACKET,UDP with sudo",515575ab-d213-42b1-aa64-ef6a2dd4641b,bash
+credential-access,T1040,Network Sniffing,12,"Packet Capture Linux socket AF_PACKET,SOCK_RAW with BPF filter for UDP with sudo",b1cbdf8b-6078-48f5-a890-11ea19d7f8e9,bash
 credential-access,T1552,Unsecured Credentials,1,AWS - Retrieve EC2 Password Data using stratus,a21118de-b11e-4ebd-b655-42f11142df0c,sh
 credential-access,T1555.003,Credentials from Password Stores: Credentials from Web Browsers,9,LaZagne.py - Dump Credentials from Firefox Browser,87e88698-621b-4c45-8a89-4eaebdeaabb1,sh
 credential-access,T1552.004,Unsecured Credentials: Private Keys,2,Discover Private SSH Keys,46959285-906d-40fa-9437-5a439accd878,sh
@@ -184,7 +188,11 @@ discovery,T1087.001,Account Discovery: Local Account,5,Show if a user account ha
 discovery,T1087.001,Account Discovery: Local Account,6,Enumerate users and groups,e6f36545-dc1e-47f0-9f48-7f730f54a02e,sh
 discovery,T1497.001,Virtualization/Sandbox Evasion: System Checks,1,Detect Virtualization Environment (Linux),dfbd1a21-540d-4574-9731-e852bd6fe840,sh
 discovery,T1007,System Service Discovery,3,System Service Discovery - systemctl,f4b26bce-4c2c-46c0-bcc5-fce062d38bef,bash
-discovery,T1040,Network Sniffing,1,Packet Capture Linux,7fe741f7-b265-4951-a7c7-320889083b3e,bash
+discovery,T1040,Network Sniffing,1,Packet Capture Linux using tshark or tcpdump,7fe741f7-b265-4951-a7c7-320889083b3e,bash
+discovery,T1040,Network Sniffing,9,"Packet Capture Linux socket AF_PACKET,SOCK_RAW with sudo",10c710c9-9104-4d5f-8829-5b65391e2a29,bash
+discovery,T1040,Network Sniffing,10,"Packet Capture Linux socket AF_INET,SOCK_RAW,TCP with sudo",7a0895f0-84c1-4adf-8491-a21510b1d4c1,bash
+discovery,T1040,Network Sniffing,11,"Packet Capture Linux socket AF_INET,SOCK_PACKET,UDP with sudo",515575ab-d213-42b1-aa64-ef6a2dd4641b,bash
+discovery,T1040,Network Sniffing,12,"Packet Capture Linux socket AF_PACKET,SOCK_RAW with BPF filter for UDP with sudo",b1cbdf8b-6078-48f5-a890-11ea19d7f8e9,bash
 discovery,T1135,Network Share Discovery,2,Network Share Discovery - linux,875805bc-9e86-4e87-be86-3a5527315cae,bash
 discovery,T1082,System Information Discovery,3,List OS Information,cccb070c-df86-4216-a5bc-9fb60c74e27c,sh
 discovery,T1082,System Information Discovery,4,Linux VM Check via Hardware,31dad7ad-2286-4c02-ae92-274418c85fec,bash
