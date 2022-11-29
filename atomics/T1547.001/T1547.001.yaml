@@ -331,4 +331,26 @@ atomic_tests:
       Remove-ItemProperty -Path  "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name 'Shell-backup'
     name: powershell
     elevation_required: true
-  
+- name: secedit used to create a Run key in the HKLM Hive
+  auto_generated_guid: 14fdc3f1-6fc3-4556-8d36-aa89d9d42d02
+  description: | 
+    secedit allows to manipulate the HKLM hive of the Windows registry. This test creates a Run key with the keyname calc having calc.exe as the value in the HKLM hive.
+    [Reference](https://blueteamops.medium.com/secedit-and-i-know-it-595056dee53d)
+  supported_platforms:
+  - windows
+  input_arguments:
+    ini_file:
+      description: INI config template
+      type: String
+      default: $PathToAtomicsFolder\T1547.001\src\regtemplate.ini
+    secedit_db:
+      description: Custom secedit db
+      type: string
+      default: mytemplate.db
+  executor:
+    command: |
+      secedit /import /db #{secedit_db} /cfg #{ini_file}
+      secedit /configure /db #{secedit_db}
+    cleanup_command: REG DELETE "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /V "calc" /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
