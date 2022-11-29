@@ -867,6 +867,7 @@
   - Atomic Test #13: HKLM - Policy Settings Explorer Run Key [windows]
   - Atomic Test #14: HKLM - Append Command to Winlogon Userinit KEY Value [windows]
   - Atomic Test #15: HKLM - Modify default System Shell - Winlogon Shell KEY Value  [windows]
+  - Atomic Test #16: secedit used to create a Run key in the HKLM Hive [windows]
 - [T1547.006 Boot or Logon Autostart Execution: Kernel Modules and Extensions](../../T1547.006/T1547.006.md)
   - Atomic Test #1: Linux - Load Kernel Module via insmod [linux]
   - Atomic Test #2: MacOS - Load Kernel Module via kextload and kmutil [macos]
@@ -1325,6 +1326,7 @@
   - Atomic Test #13: HKLM - Policy Settings Explorer Run Key [windows]
   - Atomic Test #14: HKLM - Append Command to Winlogon Userinit KEY Value [windows]
   - Atomic Test #15: HKLM - Modify default System Shell - Winlogon Shell KEY Value  [windows]
+  - Atomic Test #16: secedit used to create a Run key in the HKLM Hive [windows]
 - [T1136.003 Create Account: Cloud Account](../../T1136.003/T1136.003.md)
   - Atomic Test #1: AWS - Create a new IAM user [iaas:aws]
 - [T1098 Account Manipulation](../../T1098/T1098.md)
@@ -2019,6 +2021,7 @@
   - Atomic Test #7: Examine password policy - macOS [macos]
   - Atomic Test #8: Get-DomainPolicy with PowerView [windows]
   - Atomic Test #9: Enumerate Active Directory Password Policy with get-addefaultdomainpasswordpolicy [windows]
+  - Atomic Test #10: Use of SecEdit.exe to export the local security policy (including the password policy) [windows]
 - [T1614.001 System Location Discovery: System Language Discovery](../../T1614.001/T1614.001.md)
   - Atomic Test #1: Discover System Language by Registry Query [windows]
   - Atomic Test #2: Discover System Language with chcp [windows]
