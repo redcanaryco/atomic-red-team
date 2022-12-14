@@ -1159,9 +1159,8 @@
   - Atomic Test #3: Invoke-WMIExec Pass the Hash [windows]
 - [T1021.001 Remote Services: Remote Desktop Protocol](../../T1021.001/T1021.001.md)
   - Atomic Test #1: RDP to DomainController [windows]
-  - Atomic Test #2: RDP to Server [windows]
-  - Atomic Test #3: Changing RDP Port to Non Standard Port via Powershell [windows]
-  - Atomic Test #4: Changing RDP Port to Non Standard Port via Command_Prompt [windows]
+  - Atomic Test #2: Changing RDP Port to Non Standard Port via Powershell [windows]
+  - Atomic Test #3: Changing RDP Port to Non Standard Port via Command_Prompt [windows]
 - T1077 Windows Admin Shares [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 
 # credential-access
