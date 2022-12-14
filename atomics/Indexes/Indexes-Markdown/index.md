@@ -48,7 +48,7 @@
   - Atomic Test #4: Loadable Kernel Module based Rootkit (Diamorphine) [linux]
 - T1109 Component Firmware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1036.007 Double File Extension [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1548.002 Abuse Elevation Control Mechanism: Bypass User Access Control](../../T1548.002/T1548.002.md)
+- [T1548.002 Abuse Elevation Control Mechanism: Bypass User Account Control](../../T1548.002/T1548.002.md)
   - Atomic Test #1: Bypass UAC using Event Viewer (cmd) [windows]
   - Atomic Test #2: Bypass UAC using Event Viewer (PowerShell) [windows]
   - Atomic Test #3: Bypass UAC using Fodhelper [windows]
@@ -683,7 +683,7 @@
 - [T1053.007 Kubernetes Cronjob](../../T1053.007/T1053.007.md)
   - Atomic Test #1: ListCronjobs [containers]
   - Atomic Test #2: CreateCronjob [containers]
-- [T1548.002 Abuse Elevation Control Mechanism: Bypass User Access Control](../../T1548.002/T1548.002.md)
+- [T1548.002 Abuse Elevation Control Mechanism: Bypass User Account Control](../../T1548.002/T1548.002.md)
   - Atomic Test #1: Bypass UAC using Event Viewer (cmd) [windows]
   - Atomic Test #2: Bypass UAC using Event Viewer (PowerShell) [windows]
   - Atomic Test #3: Bypass UAC using Fodhelper [windows]
