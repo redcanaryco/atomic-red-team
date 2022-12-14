@@ -121,6 +121,7 @@ defense-evasion,T1140,Deobfuscate/Decode Files or Information,3,Base64 decoding 
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,4,Base64 decoding with Perl,6604d964-b9f6-4d4b-8ce8-499829a14d0a,sh
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,5,Base64 decoding with shell utilities,b4f6a567-a27a-41e5-b8ef-ac4b4008bb7e,sh
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,6,Hex decoding with shell utilities,005943f9-8dd5-4349-8b46-0313c0a9f973,sh
+defense-evasion,T1055.003,Thread Execution Hijacking,1,Thread Execution Hijacking,578025d5-faa9-4f6d-8390-aae527d503e1,powershell
 defense-evasion,T1036,Masquerading,1,System File Copied to Unusual Location,51005ac7-52e2-45e0-bdab-d17c6d4916cd,powershell
 defense-evasion,T1036,Masquerading,2,Malware Masquerading and Execution from Zip File,4449c89b-ec82-43a4-89c1-91e2f1abeecc,powershell
 defense-evasion,T1055,Process Injection,1,Shellcode execution via VBA,1c91e740-1729-4329-b779-feba6e71d048,powershell
@@ -493,6 +494,7 @@ privilege-escalation,T1053.003,Scheduled Task/Job: Cron,1,Cron - Replace crontab
 privilege-escalation,T1053.003,Scheduled Task/Job: Cron,2,Cron - Add script to all cron subfolders,b7d42afa-9086-4c8a-b7b0-8ea3faa6ebb0,bash
 privilege-escalation,T1053.003,Scheduled Task/Job: Cron,3,Cron - Add script to /var/spool/cron/crontabs/ folder,2d943c18-e74a-44bf-936f-25ade6cccab4,bash
 privilege-escalation,T1574.001,Hijack Execution Flow: DLL Search Order Hijacking,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
+privilege-escalation,T1055.003,Thread Execution Hijacking,1,Thread Execution Hijacking,578025d5-faa9-4f6d-8390-aae527d503e1,powershell
 privilege-escalation,T1546.011,Event Triggered Execution: Application Shimming,1,Application Shim Installation,9ab27e22-ee62-4211-962b-d36d9a0e6a18,command_prompt
 privilege-escalation,T1546.011,Event Triggered Execution: Application Shimming,2,New shim database files created in the default shim database directory,aefd6866-d753-431f-a7a4-215ca7e3f13d,powershell
 privilege-escalation,T1546.011,Event Triggered Execution: Application Shimming,3,Registry key creation and/or modification events for SDB,9b6a06f9-ab5e-4e8d-8289-1df4289db02f,powershell
@@ -568,6 +570,7 @@ privilege-escalation,T1547.001,Boot or Logon Autostart Execution: Registry Run K
 privilege-escalation,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,13,HKLM - Policy Settings Explorer Run Key,b5c9a9bc-dda3-4ea0-b16a-add8e81ab75f,powershell
 privilege-escalation,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,14,HKLM - Append Command to Winlogon Userinit KEY Value,f7fab6cc-8ece-4ca7-a0f1-30a22fccd374,powershell
 privilege-escalation,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,15,HKLM - Modify default System Shell - Winlogon Shell KEY Value ,1d958c61-09c6-4d9e-b26b-4130314e520e,powershell
+privilege-escalation,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,16,secedit used to create a Run key in the HKLM Hive,14fdc3f1-6fc3-4556-8d36-aa89d9d42d02,command_prompt
 privilege-escalation,T1547.006,Boot or Logon Autostart Execution: Kernel Modules and Extensions,1,Linux - Load Kernel Module via insmod,687dcb93-9656-4853-9c36-9977315e9d23,bash
 privilege-escalation,T1547.006,Boot or Logon Autostart Execution: Kernel Modules and Extensions,2,MacOS - Load Kernel Module via kextload and kmutil,f4391089-d3a5-4dd1-ab22-0419527f2672,bash
 privilege-escalation,T1547.006,Boot or Logon Autostart Execution: Kernel Modules and Extensions,3,MacOS - Load Kernel Module via KextManagerLoadKextWithURL(),f0007753-beb3-41ea-9948-760785e4c1e5,bash
@@ -814,6 +817,7 @@ persistence,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Sta
 persistence,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,13,HKLM - Policy Settings Explorer Run Key,b5c9a9bc-dda3-4ea0-b16a-add8e81ab75f,powershell
 persistence,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,14,HKLM - Append Command to Winlogon Userinit KEY Value,f7fab6cc-8ece-4ca7-a0f1-30a22fccd374,powershell
 persistence,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,15,HKLM - Modify default System Shell - Winlogon Shell KEY Value ,1d958c61-09c6-4d9e-b26b-4130314e520e,powershell
+persistence,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,16,secedit used to create a Run key in the HKLM Hive,14fdc3f1-6fc3-4556-8d36-aa89d9d42d02,command_prompt
 persistence,T1136.003,Create Account: Cloud Account,1,AWS - Create a new IAM user,8d1c2368-b503-40c9-9057-8e42f21c58ad,sh
 persistence,T1098,Account Manipulation,1,Admin Account Manipulate,5598f7cb-cf43-455e-883a-f6008c5d46af,powershell
 persistence,T1098,Account Manipulation,2,Domain Account and Group Manipulate,a55a22e9-a3d3-42ce-bd48-2653adb8f7a9,powershell
@@ -968,6 +972,7 @@ credential-access,T1003,OS Credential Dumping,2,Credential Dumping with NPPSpy,9
 credential-access,T1003,OS Credential Dumping,3,Dump svchost.exe to gather RDP credentials,d400090a-d8ca-4be0-982e-c70598a23de9,powershell
 credential-access,T1003,OS Credential Dumping,4,Retrieve Microsoft IIS Service Account Credentials Using AppCmd (using list),6c7a4fd3-5b0b-4b30-a93e-39411b25d889,powershell
 credential-access,T1003,OS Credential Dumping,5,Retrieve Microsoft IIS Service Account Credentials Using AppCmd (using config),42510244-5019-48fa-a0e5-66c3b76e6049,powershell
+credential-access,T1003,OS Credential Dumping,6,Dump Credential Manager using keymgr.dll and rundll32.exe,84113186-ed3c-4d0d-8a3c-8980c86c1f4a,powershell
 credential-access,T1539,Steal Web Session Cookie,1,Steal Firefox Cookies (Windows),4b437357-f4e9-4c84-9fa6-9bcee6f826aa,powershell
 credential-access,T1539,Steal Web Session Cookie,2,Steal Chrome Cookies (Windows),26a6b840-4943-4965-8df5-ef1f9a282440,powershell
 credential-access,T1003.002,OS Credential Dumping: Security Account Manager,1,"Registry dump of SAM, creds, and secrets",5c2571d0-1572-416d-9676-812e64ca9f44,command_prompt
@@ -1269,6 +1274,7 @@ discovery,T1201,Password Policy Discovery,6,Examine domain password policy - Win
 discovery,T1201,Password Policy Discovery,7,Examine password policy - macOS,4b7fa042-9482-45e1-b348-4b756b2a0742,bash
 discovery,T1201,Password Policy Discovery,8,Get-DomainPolicy with PowerView,3177f4da-3d4b-4592-8bdc-aa23d0b2e843,powershell
 discovery,T1201,Password Policy Discovery,9,Enumerate Active Directory Password Policy with get-addefaultdomainpasswordpolicy,b2698b33-984c-4a1c-93bb-e4ba72a0babb,powershell
+discovery,T1201,Password Policy Discovery,10,Use of SecEdit.exe to export the local security policy (including the password policy),510cc97f-56ac-4cd3-a198-d3218c23d889,command_prompt
 discovery,T1614.001,System Location Discovery: System Language Discovery,1,Discover System Language by Registry Query,631d4cf1-42c9-4209-8fe9-6bd4de9421be,command_prompt
 discovery,T1614.001,System Location Discovery: System Language Discovery,2,Discover System Language with chcp,d91473ca-944e-477a-b484-0e80217cd789,command_prompt
 discovery,T1012,Query Registry,1,Query Registry,8f7578c4-9863-4d83-875c-a565573bbdf0,command_prompt
