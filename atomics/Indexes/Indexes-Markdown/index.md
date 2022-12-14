@@ -2058,6 +2058,7 @@
   - Atomic Test #17: Enumerate Active Directory Computers with ADSISearcher [windows]
   - Atomic Test #18: Get-DomainController with PowerView [windows]
   - Atomic Test #19: Get-wmiobject to Enumerate Domain Controllers [windows]
+  - Atomic Test #20: Remote System Discovery - net group Domain Controller [windows]
 - [T1046 Network Service Scanning](../../T1046/T1046.md)
   - Atomic Test #1: Port Scan [linux, macos]
   - Atomic Test #2: Port Scan Nmap [linux, macos]
