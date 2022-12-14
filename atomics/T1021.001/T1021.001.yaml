@@ -43,41 +43,10 @@ atomic_tests:
       $p=Tasklist /svc /fi "IMAGENAME eq mstsc.exe" /fo csv | convertfrom-csv
       if(-not ([string]::IsNullOrEmpty($p.PID))) { Stop-Process -Id $p.PID }
     name: powershell
-- name: RDP to Server
-  auto_generated_guid: 7382a43e-f19c-46be-8f09-5c63af7d3e2b
-  description: |
-    Attempt an RDP session via Remote Desktop Application over Powershell
-  supported_platforms:
-  - windows
-  input_arguments:
-    logonserver:
-      description: ComputerName
-      type: String
-      default: WIN-DC
-    username:
-      description: Username
-      type: String
-      default: Administrator
-    password:
-      description: Password
-      type: String
-      default: 1password2!
-  executor:
-    command: |
-      $Server="#{logonserver}"
-      $User="#{username}"
-      $Password="#{password}"
-      cmdkey /generic:TERMSRV/$Server /user:$User /pass:$Password
-      mstsc /v:$Server
-      echo "RDP connection established"
-    cleanup_command: |
-      $p=Tasklist /svc /fi "IMAGENAME eq mstsc.exe" /fo csv | convertfrom-csv
-      if(-not ([string]::IsNullOrEmpty($p.PID))) { Stop-Process -Id $p.PID }
-    name: powershell
 - name: Changing RDP Port to Non Standard Port via Powershell
   auto_generated_guid: 2f840dd4-8a2e-4f44-beb3-6b2399ea3771
   description: |
-    Changing RDP Port to Non Standard Port via Remote Desktop Application over Powershell
+    Changing RDP Port to Non Standard Port via Powershell
   supported_platforms:
     - windows
   input_arguments:
@@ -97,6 +66,7 @@ atomic_tests:
       Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "PortNumber" -Value #{OLD_Remote_Port}
       Remove-NetFirewallRule -DisplayName "RDPPORTLatest-TCP-In" -ErrorAction ignore 
     name: powershell
+    elevation_required: true 
 - name: Changing RDP Port to Non Standard Port via Command_Prompt
   auto_generated_guid: 74ace21e-a31c-4f7d-b540-53e4eb6d1f73
   description: |

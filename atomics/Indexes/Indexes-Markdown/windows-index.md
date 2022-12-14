@@ -26,7 +26,7 @@
 - T1014 Rootkit [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1109 Component Firmware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1036.007 Double File Extension [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1548.002 Abuse Elevation Control Mechanism: Bypass User Access Control](../../T1548.002/T1548.002.md)
+- [T1548.002 Abuse Elevation Control Mechanism: Bypass User Account Control](../../T1548.002/T1548.002.md)
   - Atomic Test #1: Bypass UAC using Event Viewer (cmd) [windows]
   - Atomic Test #2: Bypass UAC using Event Viewer (PowerShell) [windows]
   - Atomic Test #3: Bypass UAC using Fodhelper [windows]
@@ -513,7 +513,7 @@
 - [T1546.013 Event Triggered Execution: PowerShell Profile](../../T1546.013/T1546.013.md)
   - Atomic Test #1: Append malicious start-process cmdlet [windows]
 - T1543 Create or Modify System Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1548.002 Abuse Elevation Control Mechanism: Bypass User Access Control](../../T1548.002/T1548.002.md)
+- [T1548.002 Abuse Elevation Control Mechanism: Bypass User Account Control](../../T1548.002/T1548.002.md)
   - Atomic Test #1: Bypass UAC using Event Viewer (cmd) [windows]
   - Atomic Test #2: Bypass UAC using Event Viewer (PowerShell) [windows]
   - Atomic Test #3: Bypass UAC using Fodhelper [windows]
@@ -1159,9 +1159,8 @@
   - Atomic Test #3: Invoke-WMIExec Pass the Hash [windows]
 - [T1021.001 Remote Services: Remote Desktop Protocol](../../T1021.001/T1021.001.md)
   - Atomic Test #1: RDP to DomainController [windows]
-  - Atomic Test #2: RDP to Server [windows]
-  - Atomic Test #3: Changing RDP Port to Non Standard Port via Powershell [windows]
-  - Atomic Test #4: Changing RDP Port to Non Standard Port via Command_Prompt [windows]
+  - Atomic Test #2: Changing RDP Port to Non Standard Port via Powershell [windows]
+  - Atomic Test #3: Changing RDP Port to Non Standard Port via Command_Prompt [windows]
 - T1077 Windows Admin Shares [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 
 # credential-access
