@@ -10,18 +10,14 @@ atomic_tests:
   - description: Check if docker is installed
     prereq_command: which docker
     get_prereq_command: echo "install docker manually"
-  - description: Run test Container
-    prereq_command: docker ps
-    get_prereq_command: |-
-      docker build -t t1613 /root/src
-      docker run -d -t t1613
   executor:
     command: |-
+      docker build -t t1613 /src
+      docker run -d -t t1613
       docker ps
-      docker logs --tail 10 $(docker ps -l -q --filter ancestor=t1613)
       docker stats --no-stream
-      docker inspect $(docker inspect --format="{{.Id}}" t1613)
+      docker inspect $(docker ps -l -q --filter ancestor=t1613)
     cleanup_command: |-
-      docker stop | docker ps -q --filter ancestor=t1613
+      docker stop $(docker ps -q --filter ancestor=t1613)
       docker rmi -f t1613
     name: sh
