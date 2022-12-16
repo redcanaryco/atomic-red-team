@@ -1,34 +1,26 @@
+---
 attack_technique: T1613
-display_name: "Container Resource Discovery"
+display_name: "Container and Resource Discovery"
 atomic_tests:
-- name: ContainerResourceDiscovery
-  auto_generated_guid:
+- name: ContainerandResourceDiscovery
   description: Adversaries may attempt to discover containers and other resources that are available within a containers environment. Other resources may include images. In Docker, logs may leak information about the environment, such as the environment’s configuration, which services are available, and what cloud provider the victim may be utilizing. The discovery of these resources may inform an adversary’s next steps in the environment, such as how to perform lateral movement and which methods to utilize for execution.
   supported_platforms:
-  - containers
-  dependency_executor_name: sh
-  dependencies: 
-  -- description: Docker must be installed
+  - linux
+  dependency_executor_name: bash
+  dependencies:
+  - description: Check if docker is installed
     prereq_command: which docker
-    get_prereq_command: sudo apt-get -y install docker
-  - description: Verify docker service is running.
-    prereq_command: |
-      sudo systemctl status docker
-    get_prereq_command: |
-      sudo systemctl start docker
-  -  description: Run test Container
+    get_prereq_command: echo "install docker manually"
+  - description: Run test Container
     prereq_command: docker ps
     get_prereq_command: |-
       docker build -t t1613 /src
       docker run -d -t t1613
-    executor:
-    command: |
+  executor:
+    command: |-
       docker ps
       docker logs --tail 10 $(docker ps -l -q --filter ancestor=t1613)
       docker stats --no-stream
       docker inspect $(docker ps -a -q --filter ancestor=t1613)
+    cleanup_command: docker rm $(docker stop $(docker ps -a -q --filter ancestor=t1613))
     name: bash
-    cleanup_command: |
-      docker rm $(docker stop $(docker ps -a -q --filter ancestor=t1613))
-    name: bash
-    elevation_required: false
