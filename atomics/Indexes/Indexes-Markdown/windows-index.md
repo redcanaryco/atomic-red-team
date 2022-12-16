@@ -799,6 +799,7 @@
   - Atomic Test #19: PowerShell Command Execution [windows]
   - Atomic Test #20: PowerShell Invoke Known Malicious Cmdlets [windows]
   - Atomic Test #21: PowerUp Invoke-AllChecks [windows]
+  - Atomic Test #22: Abuse Nslookup with DNS Records [windows]
 - T1170 Mshta [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1061 Graphical User Interface [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1559 Inter-Process Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
