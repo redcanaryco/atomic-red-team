@@ -79,7 +79,7 @@ atomic_tests:
   executor:
     command: |
       echo cmd /c echo "Shell code execution."> #{file_name}:#{ads_filename}
-      for /f "usebackq delims=?" %%i in (#{file_name}:#{ads_filename}) do %%i
+      for /f "usebackq delims=?" %i in (#{file_name}:#{ads_filename}) do %i
     cleanup_command: |
       del #{file_name} >nul 2>&1
     name: command_prompt
