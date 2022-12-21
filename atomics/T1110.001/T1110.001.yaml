@@ -142,6 +142,7 @@ atomic_tests:
     elevation_required: false
     command: |
       for i in 1 2 3 ; do SUDO_ASKPASS=/tmp/asker sudo -k -A whoami && wc -l /tmp/workingfile; done
+      echo done
     cleanup_command: |
       rm -f /tmp/asker /tmp/workingfile
     name: sh
