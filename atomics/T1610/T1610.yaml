@@ -6,7 +6,7 @@ atomic_tests:
 - name: deploycontainer
   auto_generated_guid: 
   description: |
-    Adversaries may deploy containers based on retrieved or built malicious images or from benign images that download and execute malicious payloads at runtime. They can do this using docker create and docker start commands 
+    Adversaries may deploy containers based on retrieved or built malicious images or from benign images that download and execute malicious payloads at runtime. They can do this using docker create and docker start commands. Kinsing & Doki was exploited using this technique. 
 
   supported_platforms:
   - containers
@@ -28,7 +28,7 @@ atomic_tests:
 
   executor:
     command: |
-      docker build -t t1610 /home/kali/test/atomic-red-team/atomics/T1610/src/
+      docker build -t t1610 $PathtoAtomicsFolder/T1610/src/
       docker run --name t1610_container --rm -itd t1610 bash /tmp/script.sh
     name: bash
     cleanup_command: |
