@@ -1186,7 +1186,7 @@
   - Atomic Test #1: DLL Search Order Hijacking - amsi.dll [windows]
 - T1103 AppInit DLLs [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1137.006 Office Application Startup: Add-ins](../../T1137.006/T1137.006.md)
-  - Atomic Test #1: Code Executed Via Excel Add-in File (Xll) [windows]
+  - Atomic Test #1: Code Executed Via Excel Add-in File (XLL) [windows]
 - [T1505.002 Server Software Component: Transport Agent](../../T1505.002/T1505.002.md)
   - Atomic Test #1: Install MS Exchange Transport Agent Persistence [windows]
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
