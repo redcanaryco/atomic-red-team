@@ -9,11 +9,11 @@ atomic_tests:
   - office-365
   input_arguments:
     username:
-      description: office 365 username
+      description: office-365 username
       type: String
       default: null
     password:
-      description: office 365 password
+      description: office-365 password
       type: String
       default: null
     rule_name:
@@ -36,11 +36,11 @@ atomic_tests:
       $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
       $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
       Connect-ExchangeOnline -Credential $creds
-      New-InboxRule -Name "#{rule_name}-" -ForwardTo 'Atomic_Operator@example.com'
+      New-InboxRule -Name "#{rule_name}" -ForwardTo 'Atomic_Operator@example.com'
     cleanup_command: |
       $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
       $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
       Connect-ExchangeOnline -Credential $creds
-      Get-InboxRule | Where-Object { $_.Name -eq 'Atomic Red Team Email Rule' } | ForEach-Object { Remove-InboxRule -Identity $_.Identity -Force -Confirm:$False }
+      Get-InboxRule | Where-Object { $_.Name -eq "#{rule_name}" | ForEach-Object { Remove-InboxRule -Identity $_.Identity -Force -Confirm:$False }
     name: powershell
     elevation_required: false
