@@ -692,3 +692,16 @@ atomic_tests:
       reg delete HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\DisallowRun /v art2 /f >nul 2>&1
     name: command_prompt
     elevation_required: true
+- name: Enabling Restricted Admin Mode via Command_Prompt
+  auto_generated_guid: fe7974e5-5813-477b-a7bd-311d4f535e83
+  description: |
+    Enabling Restricted Admin Mode via Command_Prompt,enables an attacker to perform a pass-the-hash attack using RDP
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "hklm\system\currentcontrolset\control\lsa" /f /v DisableRestrictedAdmin /t REG_DWORD /d 0
+    cleanup_command: |
+      reg delete "hklm\system\currentcontrolset\control\lsa" /f /v DisableRestrictedAdmin >nul 2>&1
+    name: command_prompt
+    elevation_required: true
