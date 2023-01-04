@@ -2,6 +2,7 @@ attack_technique: T1505.004
 display_name: IIS Components
 atomic_tests:
 - name: Install IIS Module using AppCmd.exe
+  auto_generated_guid: 53adbdfa-8200-490c-871c-d3b1ab3324b2
   description: |
     The following Atomic will utilize AppCmd.exe to install a new IIS Module. IIS must be installed.
     This atomic utilizes a DLL on disk, but to test further suspiciousness, compile and load [IIS-Raid](https://www.mdsec.co.uk/2020/02/iis-raid-backdooring-iis-using-native-modules/).
@@ -35,6 +36,7 @@ atomic_tests:
       %windir%\system32\inetsrv\appcmd.exe uninstall module #{module_name}
     name: command_prompt
 - name: Install IIS Module using PowerShell Cmdlet New-WebGlobalModule
+  auto_generated_guid: cc3381fb-4bd0-405c-a8e4-6cacfac3b06c
   description: |
     The following Atomic will utilize PowerShell Cmdlet New-WebGlobalModule to install a new IIS Module. IIS must be installed.
     This atomic utilizes a DLL on disk, but to test further suspiciousness, compile and load [IIS-Raid](https://www.mdsec.co.uk/2020/02/iis-raid-backdooring-iis-using-native-modules/).
