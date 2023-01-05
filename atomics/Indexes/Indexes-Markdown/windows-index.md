@@ -154,11 +154,12 @@
   - Atomic Test #2: CMSTP Executing UAC Bypass [windows]
 - [T1562.002 Impair Defenses: Disable Windows Event Logging](../../T1562.002/T1562.002.md)
   - Atomic Test #1: Disable Windows IIS HTTP Logging [windows]
-  - Atomic Test #2: Kill Event Log Service Threads [windows]
-  - Atomic Test #3: Impair Windows Audit Log Policy [windows]
-  - Atomic Test #4: Clear Windows Audit Policy Config [windows]
-  - Atomic Test #5: Disable Event Logging with wevtutil [windows]
-  - Atomic Test #6: Makes Eventlog blind with Phant0m [windows]
+  - Atomic Test #2: Disable Windows IIS HTTP Logging via PowerShell [windows]
+  - Atomic Test #3: Kill Event Log Service Threads [windows]
+  - Atomic Test #4: Impair Windows Audit Log Policy [windows]
+  - Atomic Test #5: Clear Windows Audit Policy Config [windows]
+  - Atomic Test #6: Disable Event Logging with wevtutil [windows]
+  - Atomic Test #7: Makes Eventlog blind with Phant0m [windows]
 - [T1218.002 Signed Binary Proxy Execution: Control Panel](../../T1218.002/T1218.002.md)
   - Atomic Test #1: Control Panel Items [windows]
 - T1009 Binary Padding [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -998,7 +999,9 @@
 - T1137.003 Outlook Forms [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1505.004 IIS Components [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1505.004 IIS Components](../../T1505.004/T1505.004.md)
+  - Atomic Test #1: Install IIS Module using AppCmd.exe [windows]
+  - Atomic Test #2: Install IIS Module using PowerShell Cmdlet New-WebGlobalModule [windows]
 - [T1546 Event Triggered Execution](../../T1546/T1546.md)
   - Atomic Test #1: Persistence with Custom AutodialDLL [windows]
   - Atomic Test #2: HKLM - Persistence using CommandProcessor AutoRun key (With Elevation) [windows]
@@ -1105,7 +1108,7 @@
 - T1056.003 Web Portal Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1125 Video Capture](../../T1125/T1125.md)
   - Atomic Test #1: Registry artefact when application use webcam [windows]
-- T1114.003 Email Forwarding Rule [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1114.003 Email Collection: Email Forwarding Rule [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1074 Data Staged [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1056.002 Input Capture: GUI Input Capture](../../T1056.002/T1056.002.md)
   - Atomic Test #2: PowerShell - Prompt User for Password [windows]

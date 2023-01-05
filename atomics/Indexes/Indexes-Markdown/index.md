@@ -213,11 +213,12 @@
   - Atomic Test #2: CMSTP Executing UAC Bypass [windows]
 - [T1562.002 Impair Defenses: Disable Windows Event Logging](../../T1562.002/T1562.002.md)
   - Atomic Test #1: Disable Windows IIS HTTP Logging [windows]
-  - Atomic Test #2: Kill Event Log Service Threads [windows]
-  - Atomic Test #3: Impair Windows Audit Log Policy [windows]
-  - Atomic Test #4: Clear Windows Audit Policy Config [windows]
-  - Atomic Test #5: Disable Event Logging with wevtutil [windows]
-  - Atomic Test #6: Makes Eventlog blind with Phant0m [windows]
+  - Atomic Test #2: Disable Windows IIS HTTP Logging via PowerShell [windows]
+  - Atomic Test #3: Kill Event Log Service Threads [windows]
+  - Atomic Test #4: Impair Windows Audit Log Policy [windows]
+  - Atomic Test #5: Clear Windows Audit Policy Config [windows]
+  - Atomic Test #6: Disable Event Logging with wevtutil [windows]
+  - Atomic Test #7: Makes Eventlog blind with Phant0m [windows]
 - [T1218.002 Signed Binary Proxy Execution: Control Panel](../../T1218.002/T1218.002.md)
   - Atomic Test #1: Control Panel Items [windows]
 - T1599.001 Network Address Translation Traversal [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1356,7 +1357,9 @@
 - T1157 Dylib Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1505.004 IIS Components [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1505.004 IIS Components](../../T1505.004/T1505.004.md)
+  - Atomic Test #1: Install IIS Module using AppCmd.exe [windows]
+  - Atomic Test #2: Install IIS Module using PowerShell Cmdlet New-WebGlobalModule [windows]
 - T1154 Trap [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546 Event Triggered Execution](../../T1546/T1546.md)
   - Atomic Test #1: Persistence with Custom AutodialDLL [windows]
@@ -1524,7 +1527,8 @@
 - [T1125 Video Capture](../../T1125/T1125.md)
   - Atomic Test #1: Registry artefact when application use webcam [windows]
 - T1213.001 Confluence [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1114.003 Email Forwarding Rule [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1114.003 Email Collection: Email Forwarding Rule](../../T1114.003/T1114.003.md)
+  - Atomic Test #1: Office365 - Email Forwarding [office-365]
 - T1074 Data Staged [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1056.002 Input Capture: GUI Input Capture](../../T1056.002/T1056.002.md)
   - Atomic Test #1: AppleScript - Prompt User for Password [macos]
