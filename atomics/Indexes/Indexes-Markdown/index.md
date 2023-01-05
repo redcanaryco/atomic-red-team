@@ -784,7 +784,8 @@
   - Atomic Test #2: Edit an existing time provider [windows]
 - T1183 Image File Execution Options Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.005 Event Triggered Execution: Trap](../../T1546.005/T1546.005.md)
-  - Atomic Test #1: Trap [macos, linux]
+  - Atomic Test #1: Trap EXIT [macos, linux]
+  - Atomic Test #2: Trap SIGINT [macos, linux]
 - [T1574.006 Hijack Execution Flow: LD_PRELOAD](../../T1574.006/T1574.006.md)
   - Atomic Test #1: Shared Library Injection via /etc/ld.so.preload [linux]
   - Atomic Test #2: Shared Library Injection via LD_PRELOAD [linux]
@@ -1239,7 +1240,8 @@
 - T1183 Image File Execution Options Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1031 Modify Existing Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.005 Event Triggered Execution: Trap](../../T1546.005/T1546.005.md)
-  - Atomic Test #1: Trap [macos, linux]
+  - Atomic Test #1: Trap EXIT [macos, linux]
+  - Atomic Test #2: Trap SIGINT [macos, linux]
 - [T1574.006 Hijack Execution Flow: LD_PRELOAD](../../T1574.006/T1574.006.md)
   - Atomic Test #1: Shared Library Injection via /etc/ld.so.preload [linux]
   - Atomic Test #2: Shared Library Injection via LD_PRELOAD [linux]
