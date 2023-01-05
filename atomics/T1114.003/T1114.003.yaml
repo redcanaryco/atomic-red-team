@@ -20,6 +20,10 @@ atomic_tests:
       description: email rule name
       type: String
       default: "Atomic Red Team Email Rule"
+    forwarding_email:
+      description: email rule name
+      type: String
+      default: "Atomic_Operator@at0mic.com"
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -36,7 +40,7 @@ atomic_tests:
       $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
       $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
       Connect-ExchangeOnline -Credential $creds
-      New-InboxRule -Name "#{rule_name}" -ForwardTo 'Atomic_Operator@example.com'
+      New-InboxRule -Name "#{rule_name}" -ForwardTo "{#forwarding_email}"
     cleanup_command: |
       $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
       $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
