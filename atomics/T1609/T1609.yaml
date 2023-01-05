@@ -31,3 +31,32 @@ atomic_tests:
       kubectl delete pod busybox -n #{namespace}
     name: bash
     elevation_required: false
+- name: Docker Exec Into Container
+  description: |
+    Attackers who have permissions, can run malicious commands in containers in the cluster using exec command (“docker exec”). In this method, attackers can use legitimate images, such as an OS image (e.g., Ubuntu) as a backdoor container, and run their malicious code remotely by using “docker exec”. Kinsing (Golang-based malware) was executed with an Ubuntu container entry point that runs shell scripts.
+
+  supported_platforms:
+   - containers
+  input_arguments:
+    command:
+      description: Command to run
+      type: String
+      default: cat
+  dependencies:
+  - description: |
+      docker must be installed
+    get_prereq_command: |
+      if [ "" == "`which docker`" ]; then echo "Docker Not Found"; if [ -n "`which apt-get`" ]; then sudo apt-get -y install docker ; elif [ -n "`which yum`" ]; then sudo yum -y install docker ; fi ; else echo "Docker installed"; fi
+    prereq_command: |
+      which docker
+  executor:
+    command: |
+      docker build -t t1609  $PathtoAtomicsFolder/T1609/src/ 
+      docker run --name t1609_container --rm -itd t1609 bash /tmp/script.sh
+      docker exec -i t1609_container bash -c "cat /tmp/output.txt"
+    cleanup_command: |
+      docker stop t1609_container
+      docker rmi -f t1609:latest 
+    name: bash
+    elevation_required: false
+
