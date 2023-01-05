@@ -56,6 +56,8 @@ atomic_tests:
       $ver = (New-Object -COMObject "Excel.Application").version
       Remove-Item "HKCU:\Software\Microsoft\Office\$Ver\Excel\Options" -ErrorAction Ignore
       Stop-Process -Name "notepad","Excel" -ErrorAction Ignore
+      Start-Sleep 3
+      Remove-Item "$env:APPDATA\Microsoft\AddIns\notepad.xll" -ErrorAction Ignore
       
 - name: Persistent Code Execution Via Word Add-in File (WLL)
   description: |
@@ -79,8 +81,9 @@ atomic_tests:
       Stop-Process -Name "WinWord" 
       Start-Process "WinWord"
     cleanup_command: |
-      Remove-Item "$env:APPDATA\Microsoft\Word\Startup\notepad.wll" -ErrorAction Ignore
       Stop-Process -Name "notepad","WinWord" -ErrorAction Ignore
+      Start-Sleep 3
+      Remove-Item "$env:APPDATA\Microsoft\Word\Startup\notepad.wll" -ErrorAction Ignore
       
 - name: Persistent Code Execution Via Excel VBA Add-in File (XLAM)
   description: |
@@ -95,6 +98,7 @@ atomic_tests:
       Start-Process "Excel"
     cleanup_command: |
       Stop-Process -Name "notepad","Excel" -ErrorAction Ignore
+      Start-Sleep 3
       Remove-Item "$env:APPDATA\Microsoft\Excel\XLSTART\notepad.xlam" -ErrorAction Ignore
 
 - name: Persistent Code Execution Via PowerPoint VBA Add-in File (PPAM)
@@ -115,7 +119,8 @@ atomic_tests:
       Stop-Process -Name "PowerPnt" -ErrorAction Ignore
       Start-Process "PowerPnt"
     cleanup_command: |
-      Remove-Item "$env:APPDATA\Microsoft\AddIns\notepad.ppam" -ErrorAction Ignore
       $ver = (New-Object -COMObject "PowerPoint.Application").version
       Remove-Item "HKCU:\Software\Microsoft\Office\$Ver\PowerPoint\AddIns\notepad" -ErrorAction Ignore
       Stop-Process -Name "notepad","PowerPnt" -ErrorAction Ignore
+      Start-Sleep 3
+      Remove-Item "$env:APPDATA\Microsoft\AddIns\notepad.ppam"  -ErrorAction Ignore
