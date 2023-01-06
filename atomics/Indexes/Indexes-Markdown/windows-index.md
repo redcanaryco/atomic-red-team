@@ -880,6 +880,10 @@
 - T1103 AppInit DLLs [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1137.006 Office Application Startup: Add-ins](../../T1137.006/T1137.006.md)
   - Atomic Test #1: Code Executed Via Excel Add-in File (XLL) [windows]
+  - Atomic Test #2: Persistent Code Execution Via Excel Add-in File (XLL) [windows]
+  - Atomic Test #3: Persistent Code Execution Via Word Add-in File (WLL) [windows]
+  - Atomic Test #4: Persistent Code Execution Via Excel VBA Add-in File (XLAM) [windows]
+  - Atomic Test #5: Persistent Code Execution Via PowerPoint VBA Add-in File (PPAM) [windows]
 - [T1505.002 Server Software Component: Transport Agent](../../T1505.002/T1505.002.md)
   - Atomic Test #1: Install MS Exchange Transport Agent Persistence [windows]
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
