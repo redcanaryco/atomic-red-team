@@ -43,7 +43,7 @@ systeminfo
 qwinsta
 quser
 
-:: discovery command found in winpeas post-exploitation tool that was used by Prestige-Ransomware
+:: discovery commands found in winpeas post-exploitation tool that was used by Prestige-Ransomware stated by Microsoft blog
 :: https://www.microsoft.com/en-us/security/blog/2022/10/14/new-prestige-ransomware-impacts-organizations-in-ukraine-and-poland/
 
 reg query HKCU\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated
