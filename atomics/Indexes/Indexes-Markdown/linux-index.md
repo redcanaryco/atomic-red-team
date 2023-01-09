@@ -200,7 +200,7 @@
 - T1557.003 DHCP Spoofing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1056.003 Web Portal Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1125 Video Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1114.003 Email Forwarding Rule [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1114.003 Email Collection: Email Forwarding Rule [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1074 Data Staged [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1056.002 Input Capture: GUI Input Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1039 Data from Network Shared Drive [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -249,7 +249,8 @@
 - T1505.003 Server Software Component: Web Shell [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078.001 Valid Accounts: Default Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.005 Event Triggered Execution: Trap](../../T1546.005/T1546.005.md)
-  - Atomic Test #1: Trap [macos, linux]
+  - Atomic Test #1: Trap EXIT [macos, linux]
+  - Atomic Test #2: Trap SIGINT [macos, linux]
 - [T1574.006 Hijack Execution Flow: LD_PRELOAD](../../T1574.006/T1574.006.md)
   - Atomic Test #1: Shared Library Injection via /etc/ld.so.preload [linux]
   - Atomic Test #2: Shared Library Injection via LD_PRELOAD [linux]
@@ -319,7 +320,8 @@
 - T1611 Escape to Host [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078.001 Valid Accounts: Default Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.005 Event Triggered Execution: Trap](../../T1546.005/T1546.005.md)
-  - Atomic Test #1: Trap [macos, linux]
+  - Atomic Test #1: Trap EXIT [macos, linux]
+  - Atomic Test #2: Trap SIGINT [macos, linux]
 - [T1574.006 Hijack Execution Flow: LD_PRELOAD](../../T1574.006/T1574.006.md)
   - Atomic Test #1: Shared Library Injection via /etc/ld.so.preload [linux]
   - Atomic Test #2: Shared Library Injection via LD_PRELOAD [linux]

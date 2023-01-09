@@ -171,7 +171,8 @@
   - Atomic Test #4: Base64 decoding with Perl [linux, macos]
   - Atomic Test #5: Base64 decoding with shell utilities [linux, macos]
   - Atomic Test #6: Hex decoding with shell utilities [linux, macos]
-- T1562 Impair Defenses [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1562 Impair Defenses](../../T1562/T1562.md)
+  - Atomic Test #1: Windows Disable LSA Protection [windows]
 - [T1055.003 Thread Execution Hijacking](../../T1055.003/T1055.003.md)
   - Atomic Test #1: Thread Execution Hijacking [windows]
 - [T1036 Masquerading](../../T1036/T1036.md)
@@ -212,11 +213,12 @@
   - Atomic Test #2: CMSTP Executing UAC Bypass [windows]
 - [T1562.002 Impair Defenses: Disable Windows Event Logging](../../T1562.002/T1562.002.md)
   - Atomic Test #1: Disable Windows IIS HTTP Logging [windows]
-  - Atomic Test #2: Kill Event Log Service Threads [windows]
-  - Atomic Test #3: Impair Windows Audit Log Policy [windows]
-  - Atomic Test #4: Clear Windows Audit Policy Config [windows]
-  - Atomic Test #5: Disable Event Logging with wevtutil [windows]
-  - Atomic Test #6: Makes Eventlog blind with Phant0m [windows]
+  - Atomic Test #2: Disable Windows IIS HTTP Logging via PowerShell [windows]
+  - Atomic Test #3: Kill Event Log Service Threads [windows]
+  - Atomic Test #4: Impair Windows Audit Log Policy [windows]
+  - Atomic Test #5: Clear Windows Audit Policy Config [windows]
+  - Atomic Test #6: Disable Event Logging with wevtutil [windows]
+  - Atomic Test #7: Makes Eventlog blind with Phant0m [windows]
 - [T1218.002 Signed Binary Proxy Execution: Control Panel](../../T1218.002/T1218.002.md)
   - Atomic Test #1: Control Panel Items [windows]
 - T1599.001 Network Address Translation Traversal [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -291,7 +293,8 @@
   - Atomic Test #40: Ursnif Malware Registry Key Creation [windows]
   - Atomic Test #41: Terminal Server Client Connection History Cleared [windows]
   - Atomic Test #42: Disable Windows Error Reporting Settings [windows]
-  - Atomic Test #43: DisallowRun Execution Of Certain Application [windows]
+  - Atomic Test #43: DisallowRun Execution Of Certain Applications [windows]
+  - Atomic Test #44: Enabling Restricted Admin Mode via Command_Prompt [windows]
 - [T1574.008 Hijack Execution Flow: Path Interception by Search Order Hijacking](../../T1574.008/T1574.008.md)
   - Atomic Test #1: powerShell Persistence via hijacking default modules - Get-Variable.exe [windows]
 - T1535 Unused/Unsupported Cloud Regions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -781,7 +784,8 @@
   - Atomic Test #2: Edit an existing time provider [windows]
 - T1183 Image File Execution Options Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.005 Event Triggered Execution: Trap](../../T1546.005/T1546.005.md)
-  - Atomic Test #1: Trap [macos, linux]
+  - Atomic Test #1: Trap EXIT [macos, linux]
+  - Atomic Test #2: Trap SIGINT [macos, linux]
 - [T1574.006 Hijack Execution Flow: LD_PRELOAD](../../T1574.006/T1574.006.md)
   - Atomic Test #1: Shared Library Injection via /etc/ld.so.preload [linux]
   - Atomic Test #2: Shared Library Injection via LD_PRELOAD [linux]
@@ -1035,6 +1039,7 @@
 - T1175 Component Object Model and Distributed COM [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1609 Kubernetes Exec Into Container](../../T1609/T1609.md)
   - Atomic Test #1: ExecIntoContainer [containers]
+  - Atomic Test #2: Docker Exec Into Container [containers]
 - T1191 CMSTP [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1064 Scripting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1569.001 System Services: Launchctl](../../T1569.001/T1569.001.md)
@@ -1069,6 +1074,7 @@
   - Atomic Test #19: PowerShell Command Execution [windows]
   - Atomic Test #20: PowerShell Invoke Known Malicious Cmdlets [windows]
   - Atomic Test #21: PowerUp Invoke-AllChecks [windows]
+  - Atomic Test #22: Abuse Nslookup with DNS Records [windows]
 - T1170 Mshta [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1053.006 Scheduled Task/Job: Systemd Timers](../../T1053.006/T1053.006.md)
   - Atomic Test #1: Create Systemd Service and Timer [linux]
@@ -1183,7 +1189,11 @@
   - Atomic Test #1: DLL Search Order Hijacking - amsi.dll [windows]
 - T1103 AppInit DLLs [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1137.006 Office Application Startup: Add-ins](../../T1137.006/T1137.006.md)
-  - Atomic Test #1: Code Executed Via Excel Add-in File (Xll) [windows]
+  - Atomic Test #1: Code Executed Via Excel Add-in File (XLL) [windows]
+  - Atomic Test #2: Persistent Code Execution Via Excel Add-in File (XLL) [windows]
+  - Atomic Test #3: Persistent Code Execution Via Word Add-in File (WLL) [windows]
+  - Atomic Test #4: Persistent Code Execution Via Excel VBA Add-in File (XLAM) [windows]
+  - Atomic Test #5: Persistent Code Execution Via PowerPoint VBA Add-in File (PPAM) [windows]
 - [T1505.002 Server Software Component: Transport Agent](../../T1505.002/T1505.002.md)
   - Atomic Test #1: Install MS Exchange Transport Agent Persistence [windows]
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1235,7 +1245,8 @@
 - T1183 Image File Execution Options Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1031 Modify Existing Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.005 Event Triggered Execution: Trap](../../T1546.005/T1546.005.md)
-  - Atomic Test #1: Trap [macos, linux]
+  - Atomic Test #1: Trap EXIT [macos, linux]
+  - Atomic Test #2: Trap SIGINT [macos, linux]
 - [T1574.006 Hijack Execution Flow: LD_PRELOAD](../../T1574.006/T1574.006.md)
   - Atomic Test #1: Shared Library Injection via /etc/ld.so.preload [linux]
   - Atomic Test #2: Shared Library Injection via LD_PRELOAD [linux]
@@ -1353,7 +1364,9 @@
 - T1157 Dylib Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1505.004 IIS Components [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1505.004 IIS Components](../../T1505.004/T1505.004.md)
+  - Atomic Test #1: Install IIS Module using AppCmd.exe [windows]
+  - Atomic Test #2: Install IIS Module using PowerShell Cmdlet New-WebGlobalModule [windows]
 - T1154 Trap [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546 Event Triggered Execution](../../T1546/T1546.md)
   - Atomic Test #1: Persistence with Custom AutodialDLL [windows]
@@ -1521,7 +1534,8 @@
 - [T1125 Video Capture](../../T1125/T1125.md)
   - Atomic Test #1: Registry artefact when application use webcam [windows]
 - T1213.001 Confluence [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1114.003 Email Forwarding Rule [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1114.003 Email Collection: Email Forwarding Rule](../../T1114.003/T1114.003.md)
+  - Atomic Test #1: Office365 - Email Forwarding [office-365]
 - T1074 Data Staged [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1056.002 Input Capture: GUI Input Capture](../../T1056.002/T1056.002.md)
   - Atomic Test #1: AppleScript - Prompt User for Password [macos]

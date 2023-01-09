@@ -1,0 +1,22 @@
+attack_technique: T1562
+display_name: 'Impair Defenses'
+atomic_tests:
+- name: Windows Disable LSA Protection
+  auto_generated_guid: 40075d5f-3a70-4c66-9125-f72bee87247d
+  description: |
+    The following Atomic adds a registry entry to disable LSA Protection.
+
+    The LSA controls and manages user rights information, password hashes and other important bits of information in memory. Attacker tools, such as mimikatz, rely on accessing this content to scrape password hashes or clear-text passwords. Enabling LSA Protection configures Windows to control the information stored in memory in a more secure fashion - specifically, to prevent non-protected processes from accessing that data.
+    Upon successful execution, the registry will be modified and RunAsPPL will be set to 0, disabling Lsass protection.
+    https://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/configuring-additional-lsa-protection#how-to-disable-lsa-protection
+    https://blog.netwrix.com/2022/01/11/understanding-lsa-protection/
+    https://thedfirreport.com/2022/03/21/phosphorus-automates-initial-access-using-proxyshell/  
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add HKLM\SYSTEM\CurrentControlSet\Control\LSA /v RunAsPPL /t REG_DWORD /d 0 /f
+    cleanup_command: |
+      reg delete HKLM\SYSTEM\CurrentControlSet\Control\LSA /v RunAsPPL /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
