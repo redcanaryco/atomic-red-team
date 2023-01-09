@@ -74,19 +74,4 @@ atomic_tests:
     cleanup_command: |
       Remove-Item -Path .\CurrentUserObject.txt -Force
     name: powershell
-- name: System Owner/User Discovery Using nslookup
-  auto_generated_guid: 34557863-344a-468f-808b-a1bfb89b4fa9
-  description: |
-    Identify System owner or users on an endpoint using nslookup ldap query. This tool is being abuse by qakbot malware to gather information on the domain
-    controller of the targeted or compromised host. reference https://securelist.com/qakbot-technical-analysis/103931/
-  supported_platforms:
-  - windows
-  input_arguments:
-    domain_name:
-      description: Domain Name
-      type: String
-      default:   $var = cmd /c set user |Select-String -pattern "USERDNSDOMAIN";$var.ToString().Substring(14) 
-  executor:
-    command: |
-       nslookup -querytype=ALL -timeout=12 _ldap._tcp.dc."#{domain_name}"
-    name: powershell
+
