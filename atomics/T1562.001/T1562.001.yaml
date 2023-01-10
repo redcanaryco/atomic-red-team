@@ -761,3 +761,52 @@ atomic_tests:
       wmic.exe /Namespace:\\root\Microsoft\Windows\Defender class MSFT_MpPreference call Remove ExclusionPath=\"ATOMICREDTEAM\"
     name: command_prompt
     elevation_required: true
+    
+- name: Delete Defender Scheduled Task 
+  description: |
+    The following atomics will attempt to dlete the Defender schedule task.
+    Reference : https://thedfirreport.com/2022/05/09/seo-poisoning-a-gootloader-story/
+  supported_platforms:
+  - windows
+  input_arguments:
+    Windows_Defender_Scheduled_Scan_file:
+      description: Path to Windows_Defender_Scheduled_Scan.xml backup
+      type: Path
+      default: '%temp%\BACKUP_ATOMICS\Windows_Defender_Scheduled_Scan.xml'
+    Windows_Defender_Cleanup_file:
+      description: Path to Windows_Defender_Cleanup.xml backup
+      type: Path
+      default: '%temp%\BACKUP_ATOMICS\Windows_Defender_Cleanup.xml'
+    Windows_Defender_Verification_file:
+      description: Path to Windows_Defender_Verification.xml backup
+      type: Path
+      default: '%temp%\BACKUP_ATOMICS\Windows_Defender_Verification.xml'
+    Windows_Defender_Cache_Maintenance_file:
+      description: Path to Windows_Defender_Cache_Maintenance.xml backup
+      type: Path
+      default: '%temp%\BACKUP_ATOMICS\Windows_Defender_Cache_Maintenance.xml'
+  dependency_executor_name: command_prompt
+  dependencies:
+    - description: |
+        The file to delete must exist on disk at specified location (#{Windows_Defender_Scheduled_Scan_file})
+      prereq_command: |
+        IF EXIST "#{Windows_Defender_Scheduled_Scan_file}" ( EXIT 0 ) ELSE ( EXIT 1 )
+      get_prereq_command: |
+        mkdir %temp%\BACKUP_ATOMICS
+        schtasks /query /xml /tn "\Microsoft\Windows\Windows Defender\Windows Defender Scheduled Scan" > #{Windows_Defender_Scheduled_Scan_file}
+        schtasks /query /xml /tn "\Microsoft\Windows\Windows Defender\Windows Defender Cleanup" > #{Windows_Defender_Cleanup_file}
+        schtasks /query /xml /tn "\Microsoft\Windows\Windows Defender\Windows Defender Verification" > #{Windows_Defender_Verification_file}
+        schtasks /query /xml /tn "\Microsoft\Windows\Windows Defender\Windows Defender Cache Maintenance" > #{Windows_Defender_Cache_Maintenance_file}
+  executor:
+    command: |
+      schtasks /delete /tn "\Microsoft\Windows\Windows Defender\Windows Defender Scheduled Scan" /f
+      schtasks /delete /tn "\Microsoft\Windows\Windows Defender\Windows Defender Cache Maintenance" /f
+      schtasks /delete /tn "\Microsoft\Windows\Windows Defender\Windows Defender Cleanup" /f
+      schtasks /delete /tn "\Microsoft\Windows\Windows Defender\Windows Defender Verification" /f
+    cleanup_command: |
+      schtasks /create /xml "#{Windows_Defender_Scheduled_Scan_file}" /tn "\Microsoft\Windows\Windows Defender\Windows Defender Scheduled Scan" /f
+      schtasks /create /xml "#{Windows_Defender_Cleanup_file}" /tn "\Microsoft\Windows\Windows Defender\Windows Defender Cache Maintenance" /f
+      schtasks /create /xml "#{Windows_Defender_Verification_file}" /tn "\Microsoft\Windows\Windows Defender\Windows Defender Cleanup" /f
+      schtasks /create /xml "#{Windows_Defender_Cache_Maintenance_file}" /tn "\Microsoft\Windows\Windows Defender\Windows Defender Verification" /f
+    name: command_prompt
+    elevation_required: true
