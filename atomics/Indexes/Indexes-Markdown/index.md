@@ -1438,7 +1438,7 @@
 - [T1037.001 Boot or Logon Initialization Scripts: Logon Script (Windows)](../../T1037.001/T1037.001.md)
   - Atomic Test #1: Logon Scripts [windows]
 - [T1137.002 Office Application Startup: Office Test](../../T1137.002/T1137.002.md)
-  - Atomic Test #1: Office Application Startup Test Persistence [windows]
+  - Atomic Test #1: Office Application Startup Test Persistence (HKCU) [windows]
 - [T1547.008 Boot or Logon Autostart Execution: LSASS Driver](../../T1547.008/T1547.008.md)
   - Atomic Test #1: Modify Registry to load Arbitrary DLL into LSASS - LsaDbExtPt [windows]
 - [T1078.004 Valid Accounts: Cloud Accounts](../../T1078.004/T1078.004.md)
