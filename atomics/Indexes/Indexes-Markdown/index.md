@@ -248,7 +248,8 @@
 - [T1207 Rogue Domain Controller](../../T1207/T1207.md)
   - Atomic Test #1: DCShadow (Active Directory) [windows]
 - T1553.006 Code Signing Policy Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1610 Deploy Container [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1610 Deploy a container](../../T1610/T1610.md)
+  - Atomic Test #1: Deploy Docker container [containers]
 - T1107 File Deletion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1112 Modify Registry](../../T1112/T1112.md)
   - Atomic Test #1: Modify Registry of Current User Profile - cmd [windows]
@@ -1029,7 +1030,8 @@
   - Atomic Test #4: WinPwn - Get SYSTEM shell - Pop System Shell using NamedPipe Impersonation technique [windows]
 - T1153 Source [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1152 Launchctl [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1610 Deploy Container [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1610 Deploy a container](../../T1610/T1610.md)
+  - Atomic Test #1: Deploy Docker container [containers]
 - T1155 AppleScript [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1085 Rundll32 [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1053.001 At (Linux) [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

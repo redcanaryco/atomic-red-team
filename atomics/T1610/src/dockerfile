@@ -1,0 +1,5 @@
+FROM ubuntu
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN  echo "1" > /tmp/output.txt && \
+     echo ' bin/sh -c "while true; do sleep 30;done;"' > /tmp/script.sh && chmod +x /tmp/script.sh
