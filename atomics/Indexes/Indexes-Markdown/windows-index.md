@@ -126,6 +126,7 @@
 - [T1055 Process Injection](../../T1055/T1055.md)
   - Atomic Test #1: Shellcode execution via VBA [windows]
   - Atomic Test #2: Remote Process Injection in LSASS via mimikatz [windows]
+  - Atomic Test #3: Section View Injection [windows]
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1218 Signed Binary Proxy Execution](../../T1218/T1218.md)
   - Atomic Test #1: mavinject - Inject DLL into running process [windows]
@@ -574,6 +575,7 @@
 - [T1055 Process Injection](../../T1055/T1055.md)
   - Atomic Test #1: Shellcode execution via VBA [windows]
   - Atomic Test #2: Remote Process Injection in LSASS via mimikatz [windows]
+  - Atomic Test #3: Section View Injection [windows]
 - T1038 DLL Search Order Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1050 New Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1611 Escape to Host [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
