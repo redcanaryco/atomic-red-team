@@ -127,6 +127,7 @@ defense-evasion,T1036,Masquerading,1,System File Copied to Unusual Location,5100
 defense-evasion,T1036,Masquerading,2,Malware Masquerading and Execution from Zip File,4449c89b-ec82-43a4-89c1-91e2f1abeecc,powershell
 defense-evasion,T1055,Process Injection,1,Shellcode execution via VBA,1c91e740-1729-4329-b779-feba6e71d048,powershell
 defense-evasion,T1055,Process Injection,2,Remote Process Injection in LSASS via mimikatz,3203ad24-168e-4bec-be36-f79b13ef8a83,command_prompt
+defense-evasion,T1055,Process Injection,3,Section View Injection,c6952f41-6cf0-450a-b352-2ca8dae7c178,powershell
 defense-evasion,T1218,Signed Binary Proxy Execution,1,mavinject - Inject DLL into running process,c426dacf-575d-4937-8611-a148a86a5e61,command_prompt
 defense-evasion,T1218,Signed Binary Proxy Execution,2,Register-CimProvider - Execute evil dll,ad2c17ed-f626-4061-b21e-b9804a6f3655,command_prompt
 defense-evasion,T1218,Signed Binary Proxy Execution,3,InfDefaultInstall.exe .inf Execution,54ad7d5a-a1b5-472c-b6c4-f8090fb2daef,command_prompt
@@ -176,6 +177,7 @@ defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,15,
 defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,16,LockBit Black - Unusual Windows firewall registry modification -cmd,a4651931-ebbb-4cde-9363-ddf3d66214cb,command_prompt
 defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,17,LockBit Black - Unusual Windows firewall registry modification -Powershell,80b453d1-eec5-4144-bf08-613a6c3ffe12,powershell
 defense-evasion,T1207,Rogue Domain Controller,1,DCShadow (Active Directory),0f4c5eb0-98a0-4496-9c3d-656b4f2bc8f6,powershell
+defense-evasion,T1610,Deploy a container,1,Deploy Docker container,59aa6f26-7620-417e-9318-589e0fb7a372,bash
 defense-evasion,T1112,Modify Registry,1,Modify Registry of Current User Profile - cmd,1324796b-d0f6-455a-b4ae-21ffee6aa6b9,command_prompt
 defense-evasion,T1112,Modify Registry,2,Modify Registry of Local Machine - cmd,282f929a-6bc5-42b8-bd93-960c3ba35afe,command_prompt
 defense-evasion,T1112,Modify Registry,3,Modify registry to store logon credentials,c0413fb5-33e2-40b7-9b6f-60b29f4a7a18,command_prompt
@@ -333,6 +335,7 @@ defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,34,LockBit Bl
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,35,Lockbit Black - Use Registry Editor to turn on automatic logon -Powershell,5e27f36d-5132-4537-b43b-413b0d5eec9a,powershell
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,36,Disable Windows Defender with PwSh Disable-WindowsOptionalFeature,f542ffd3-37b4-4528-837f-682874faa012,powershell
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,37,WMIC Tamper with Windows Defender Evade Scanning Folder,59d386fc-3a4b-41b8-850d-9e3eee24dfe4,command_prompt
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,38,Delete Windows Defender Scheduled Tasks,4b841aa1-0d05-4b32-bbe7-7564346e7c76,command_prompt
 defense-evasion,T1055.012,Process Injection: Process Hollowing,1,Process Hollowing using PowerShell,562427b4-39ef-4e8c-af88-463a78e70b9c,powershell
 defense-evasion,T1055.012,Process Injection: Process Hollowing,2,RunPE via VBA,3ad4a037-1598-4136-837c-4027e4fa319b,powershell
 defense-evasion,T1027,Obfuscated Files or Information,1,Decode base64 Data into Script,f45df6be-2e1e-4136-a384-8f18ab3826fb,sh
@@ -505,6 +508,7 @@ privilege-escalation,T1547.010,Boot or Logon Autostart Execution: Port Monitors,
 privilege-escalation,T1037.002,Boot or Logon Initialization Scripts: Logon Script (Mac),1,Logon Scripts - Mac,f047c7de-a2d9-406e-a62b-12a09d9516f4,manual
 privilege-escalation,T1055,Process Injection,1,Shellcode execution via VBA,1c91e740-1729-4329-b779-feba6e71d048,powershell
 privilege-escalation,T1055,Process Injection,2,Remote Process Injection in LSASS via mimikatz,3203ad24-168e-4bec-be36-f79b13ef8a83,command_prompt
+privilege-escalation,T1055,Process Injection,3,Section View Injection,c6952f41-6cf0-450a-b352-2ca8dae7c178,powershell
 privilege-escalation,T1611,Escape to Host,1,Deploy container using nsenter container escape,0b2f9520-a17a-4671-9dba-3bd034099fff,sh
 privilege-escalation,T1611,Escape to Host,2,Mount host filesystem to escape privileged Docker container,6c499943-b098-4bc6-8d38-0956fc182984,sh
 privilege-escalation,T1547.009,Boot or Logon Autostart Execution: Shortcut Modification,1,Shortcut Modification,ce4fc678-364f-4282-af16-2fb4c78005ce,command_prompt
@@ -668,6 +672,7 @@ execution,T1106,Native API,1,Execution through API - CreateProcess,99be2089-c52d
 execution,T1106,Native API,2,WinPwn - Get SYSTEM shell - Pop System Shell using CreateProcess technique,ce4e76e6-de70-4392-9efe-b281fc2b4087,powershell
 execution,T1106,Native API,3,WinPwn - Get SYSTEM shell - Bind System Shell using CreateProcess technique,7ec5b74e-8289-4ff2-a162-b6f286a33abd,powershell
 execution,T1106,Native API,4,WinPwn - Get SYSTEM shell - Pop System Shell using NamedPipe Impersonation technique,e1f93a06-1649-4f07-89a8-f57279a7d60e,powershell
+execution,T1610,Deploy a container,1,Deploy Docker container,59aa6f26-7620-417e-9318-589e0fb7a372,bash
 execution,T1609,Kubernetes Exec Into Container,1,ExecIntoContainer,d03bfcd3-ed87-49c8-8880-44bb772dea4b,bash
 execution,T1609,Kubernetes Exec Into Container,2,Docker Exec Into Container,900e2c49-221b-42ec-ae3c-4717e41e6219,bash
 execution,T1569.001,System Services: Launchctl,1,Launchctl,6fb61988-724e-4755-a595-07743749d4e2,bash
@@ -879,7 +884,7 @@ persistence,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,
 persistence,T1574.002,Hijack Execution Flow: DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
 persistence,T1574.002,Hijack Execution Flow: DLL Side-Loading,2,DLL Side-Loading using the dotnet startup hook environment variable,d322cdd7-7d60-46e3-9111-648848da7c02,command_prompt
 persistence,T1037.001,Boot or Logon Initialization Scripts: Logon Script (Windows),1,Logon Scripts,d6042746-07d4-4c92-9ad8-e644c114a231,command_prompt
-persistence,T1137.002,Office Application Startup: Office Test,1,Office Application Startup Test Persistence,c3e35b58-fe1c-480b-b540-7600fb612563,command_prompt
+persistence,T1137.002,Office Application Startup: Office Test,1,Office Application Startup Test Persistence (HKCU),c3e35b58-fe1c-480b-b540-7600fb612563,powershell
 persistence,T1547.008,Boot or Logon Autostart Execution: LSASS Driver,1,Modify Registry to load Arbitrary DLL into LSASS - LsaDbExtPt,8ecef16d-d289-46b4-917b-0dba6dc81cf1,powershell
 persistence,T1078.004,Valid Accounts: Cloud Accounts,1,Creating GCP Service Account and Service Account Key,9fdd83fd-bd53-46e5-a716-9dec89c8ae8e,sh
 persistence,T1053.002,Scheduled Task/Job: At,1,At.exe Scheduled task,4a6c0dc4-0f2a-4203-9298-a5a9bdc21ed8,command_prompt

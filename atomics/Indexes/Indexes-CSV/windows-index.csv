@@ -86,6 +86,7 @@ defense-evasion,T1036,Masquerading,1,System File Copied to Unusual Location,5100
 defense-evasion,T1036,Masquerading,2,Malware Masquerading and Execution from Zip File,4449c89b-ec82-43a4-89c1-91e2f1abeecc,powershell
 defense-evasion,T1055,Process Injection,1,Shellcode execution via VBA,1c91e740-1729-4329-b779-feba6e71d048,powershell
 defense-evasion,T1055,Process Injection,2,Remote Process Injection in LSASS via mimikatz,3203ad24-168e-4bec-be36-f79b13ef8a83,command_prompt
+defense-evasion,T1055,Process Injection,3,Section View Injection,c6952f41-6cf0-450a-b352-2ca8dae7c178,powershell
 defense-evasion,T1218,Signed Binary Proxy Execution,1,mavinject - Inject DLL into running process,c426dacf-575d-4937-8611-a148a86a5e61,command_prompt
 defense-evasion,T1218,Signed Binary Proxy Execution,2,Register-CimProvider - Execute evil dll,ad2c17ed-f626-4061-b21e-b9804a6f3655,command_prompt
 defense-evasion,T1218,Signed Binary Proxy Execution,3,InfDefaultInstall.exe .inf Execution,54ad7d5a-a1b5-472c-b6c4-f8090fb2daef,command_prompt
@@ -253,6 +254,7 @@ defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,34,LockBit Bl
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,35,Lockbit Black - Use Registry Editor to turn on automatic logon -Powershell,5e27f36d-5132-4537-b43b-413b0d5eec9a,powershell
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,36,Disable Windows Defender with PwSh Disable-WindowsOptionalFeature,f542ffd3-37b4-4528-837f-682874faa012,powershell
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,37,WMIC Tamper with Windows Defender Evade Scanning Folder,59d386fc-3a4b-41b8-850d-9e3eee24dfe4,command_prompt
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,38,Delete Windows Defender Scheduled Tasks,4b841aa1-0d05-4b32-bbe7-7564346e7c76,command_prompt
 defense-evasion,T1055.012,Process Injection: Process Hollowing,1,Process Hollowing using PowerShell,562427b4-39ef-4e8c-af88-463a78e70b9c,powershell
 defense-evasion,T1055.012,Process Injection: Process Hollowing,2,RunPE via VBA,3ad4a037-1598-4136-837c-4027e4fa319b,powershell
 defense-evasion,T1027,Obfuscated Files or Information,2,Execute base64-encoded PowerShell,a50d5a97-2531-499e-a1de-5544c74432c6,powershell
@@ -381,6 +383,7 @@ privilege-escalation,T1546.011,Event Triggered Execution: Application Shimming,3
 privilege-escalation,T1547.010,Boot or Logon Autostart Execution: Port Monitors,1,Add Port Monitor persistence in Registry,d34ef297-f178-4462-871e-9ce618d44e50,command_prompt
 privilege-escalation,T1055,Process Injection,1,Shellcode execution via VBA,1c91e740-1729-4329-b779-feba6e71d048,powershell
 privilege-escalation,T1055,Process Injection,2,Remote Process Injection in LSASS via mimikatz,3203ad24-168e-4bec-be36-f79b13ef8a83,command_prompt
+privilege-escalation,T1055,Process Injection,3,Section View Injection,c6952f41-6cf0-450a-b352-2ca8dae7c178,powershell
 privilege-escalation,T1547.009,Boot or Logon Autostart Execution: Shortcut Modification,1,Shortcut Modification,ce4fc678-364f-4282-af16-2fb4c78005ce,command_prompt
 privilege-escalation,T1547.009,Boot or Logon Autostart Execution: Shortcut Modification,2,Create shortcut to cmd in startup folders,cfdc954d-4bb0-4027-875b-a1893ce406f2,powershell
 privilege-escalation,T1547.005,Boot or Logon Autostart Execution: Security Support Provider,1,Modify SSP configuration in registry,afdfd7e3-8a0b-409f-85f7-886fdf249c9e,powershell
@@ -645,7 +648,7 @@ persistence,T1546.002,Event Triggered Execution: Screensaver,1,Set Arbitrary Bin
 persistence,T1574.002,Hijack Execution Flow: DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
 persistence,T1574.002,Hijack Execution Flow: DLL Side-Loading,2,DLL Side-Loading using the dotnet startup hook environment variable,d322cdd7-7d60-46e3-9111-648848da7c02,command_prompt
 persistence,T1037.001,Boot or Logon Initialization Scripts: Logon Script (Windows),1,Logon Scripts,d6042746-07d4-4c92-9ad8-e644c114a231,command_prompt
-persistence,T1137.002,Office Application Startup: Office Test,1,Office Application Startup Test Persistence,c3e35b58-fe1c-480b-b540-7600fb612563,command_prompt
+persistence,T1137.002,Office Application Startup: Office Test,1,Office Application Startup Test Persistence (HKCU),c3e35b58-fe1c-480b-b540-7600fb612563,powershell
 persistence,T1547.008,Boot or Logon Autostart Execution: LSASS Driver,1,Modify Registry to load Arbitrary DLL into LSASS - LsaDbExtPt,8ecef16d-d289-46b4-917b-0dba6dc81cf1,powershell
 persistence,T1053.002,Scheduled Task/Job: At,1,At.exe Scheduled task,4a6c0dc4-0f2a-4203-9298-a5a9bdc21ed8,command_prompt
 persistence,T1546.007,Event Triggered Execution: Netsh Helper DLL,1,Netsh Helper DLL Registration,3244697d-5a3a-4dfc-941c-550f69f91a4d,command_prompt
