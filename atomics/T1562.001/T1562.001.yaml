@@ -761,3 +761,34 @@ atomic_tests:
       wmic.exe /Namespace:\\root\Microsoft\Windows\Defender class MSFT_MpPreference call Remove ExclusionPath=\"ATOMICREDTEAM\"
     name: command_prompt
     elevation_required: true
+    
+- name: Delete Windows Defender Scheduled Tasks 
+  description: |
+    The following atomic test will delete the Windows Defender scheduled tasks.
+
+    [Reference](https://thedfirreport.com/2022/05/09/seo-poisoning-a-gootloader-story/)
+  supported_platforms:
+  - windows
+  dependencies:
+    - description: |
+        The Windows Defender scheduled tasks must be backed up first
+      prereq_command: |
+        IF EXIST "%temp%\Windows_Defender_Scheduled_Scan.xml" ( EXIT 0 ) ELSE ( EXIT 1 )
+      get_prereq_command: |
+        schtasks /query /xml /tn "\Microsoft\Windows\Windows Defender\Windows Defender Scheduled Scan" > "%temp%\Windows_Defender_Scheduled_Scan.xml"
+        schtasks /query /xml /tn "\Microsoft\Windows\Windows Defender\Windows Defender Cleanup" > "%temp%\Windows_Defender_Cleanup.xml"
+        schtasks /query /xml /tn "\Microsoft\Windows\Windows Defender\Windows Defender Verification" > "%temp%\Windows_Defender_Verification.xml"
+        schtasks /query /xml /tn "\Microsoft\Windows\Windows Defender\Windows Defender Cache Maintenance" > "%temp%\Windows_Defender_Cache_Maintenance.xml"
+  executor:
+    command: |
+      IF EXIST "%temp%\Windows_Defender_Scheduled_Scan.xml" ( schtasks /delete /tn "\Microsoft\Windows\Windows Defender\Windows Defender Scheduled Scan" /f )
+      IF EXIST "%temp%\Windows_Defender_Cleanup.xml" ( schtasks /delete /tn "\Microsoft\Windows\Windows Defender\Windows Defender Cleanup" /f )
+      IF EXIST "%temp%\Windows_Defender_Verification.xml" ( schtasks /delete /tn "\Microsoft\Windows\Windows Defender\Windows Defender Verification" /f )
+      IF EXIST "%temp%\Windows_Defender_Cache_Maintenance.xml" ( schtasks /delete /tn "\Microsoft\Windows\Windows Defender\Windows Defender Cache Maintenance" /f )
+    cleanup_command: |
+      schtasks /create /xml "%temp%\Windows_Defender_Scheduled_Scan.xml" /tn "\Microsoft\Windows\Windows Defender\Windows Defender Scheduled Scan" /f
+      schtasks /create /xml "%temp%\Windows_Defender_Cleanup.xml" /tn "\Microsoft\Windows\Windows Defender\Windows Defender Cleanup" /f
+      schtasks /create /xml "%temp%\Windows_Defender_Verification.xml" /tn "\Microsoft\Windows\Windows Defender\Windows Defender Verification" /f
+      schtasks /create /xml "%temp%\Windows_Defender_Cache_Maintenance.xml" /tn "\Microsoft\Windows\Windows Defender\Windows Defender Cache Maintenance" /f
+    name: command_prompt
+    elevation_required: true
