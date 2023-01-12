@@ -1269,7 +1269,7 @@
   - Atomic Test #8: Dump LSASS.exe Memory using Out-Minidump.ps1 [windows]
   - Atomic Test #9: Create Mini Dump of LSASS.exe using ProcDump [windows]
   - Atomic Test #10: Powershell Mimikatz [windows]
-  - Atomic Test #11: Dump LSASS with .Net 5 createdump.exe [windows]
+  - Atomic Test #11: Dump LSASS with createdump.exe from .Net v5 [windows]
   - Atomic Test #12: Dump LSASS.exe using imported Microsoft DLLs [windows]
 - T1179 Hooking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1110.003 Brute Force: Password Spraying](../../T1110.003/T1110.003.md)
