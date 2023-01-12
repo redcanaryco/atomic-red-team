@@ -1,4 +1,18 @@
-<p><img src="https://redcanary.com/wp-content/uploads/Atomic-Red-Team-Logo.png" width="150px" /></p>
+<p><img src="https://redcanary.com/wp-content/uploads/Atomic-Red-Team-Logo.png" width="150px" />
+<a
+    href="https://opensourcesecurityindex.io/"
+    target="_blank"
+    rel="noopener"
+>
+    <img
+        style="width: 282px; height: 56px"
+        src="https://opensourcesecurityindex.io/badge.svg"
+        alt="Open Source Security Index - Fastest Growing Open Source Security Projects"
+        width="282"
+        height="56"
+    />
+</a>
+</p>
 
 # Atomic Red Team
 
