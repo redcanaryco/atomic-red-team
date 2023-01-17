@@ -98,3 +98,13 @@ atomic_tests:
     cleanup_command: |
       rm -rf #{linenum}
     name: sh
+- name: Obfuscated command line scripts
+  description: |
+    An attacker may pre-compute the base64 representations of the terminal commands that they wish to execute in an attempt to avoid or frustrate detection. The following commands base64 encodes the text string id, then base64 decodes the string, then passes it as a command to bash, which results in the id command being executed.
+  supported_platforms:
+  - linux
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      echo -n "id" |base64 -w 0 |base64 -d |/usr/bin/bash
