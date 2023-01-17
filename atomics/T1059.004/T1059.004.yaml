@@ -98,3 +98,13 @@ atomic_tests:
     cleanup_command: |
       rm -rf #{linenum}
     name: sh
+- name: Command line scripts
+  description: |
+    An attacker may type in elaborate multi-line shell commands into a terminal session because they can't or don't wish to create script files on the host. The following command is a simple loop, echoing out Atomic Red Team was here!
+  supported_platforms:
+  - linux
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      for i in $(seq 1 5); do echo "$i, Atomic Red Team was here!"; sleep 1; done
