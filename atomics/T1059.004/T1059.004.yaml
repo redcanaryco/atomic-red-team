@@ -98,3 +98,17 @@ atomic_tests:
     cleanup_command: |
       rm -rf #{linenum}
     name: sh
+- name: What shells are available
+  description: |
+    An attacker may want to discover which shell's are available so that they might switch to that shell to tailor their attacks to suit that shell. The following commands will discover what shells are available on the host.
+  supported_platforms:
+  - linux
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      which bash 
+      which sh 
+      which csh 
+      which tcsh 
+      which ksh
