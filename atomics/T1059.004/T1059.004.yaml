@@ -98,3 +98,15 @@ atomic_tests:
     cleanup_command: |
       rm -rf #{linenum}
     name: sh
+- name: What shell is running
+  description: |
+    An attacker will want to discover what shell is running so that they can tailor their attacks accordingly. The following commands will discover what shell is running.
+  supported_platforms:
+  - linux
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      echo $0
+      env |grep SHELL
+      printenv SHELL
