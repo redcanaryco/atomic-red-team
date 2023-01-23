@@ -98,3 +98,18 @@ atomic_tests:
     cleanup_command: |
       rm -rf #{linenum}
     name: sh
+- name: New script file in the tmp directory
+  description: |
+    An attacker may create script files in the /tmp directory using the mktemp utility and execute them. The following commands creates a temp file and places a pointer to it in the variable $TMPFILE, echos the string id into it, and then executes the file using bash, which results in the id command being executed.
+  supported_platforms:
+  - linux
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      TMPFILE=$(mktemp)
+      echo "id" > $TMPFILE
+      bash $TMPFILE
+    cleanup_command: |
+      rm $TMPFILE
+      unset TMPFILE
