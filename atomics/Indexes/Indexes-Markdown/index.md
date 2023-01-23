@@ -997,7 +997,9 @@
   - Atomic Test #9: WMI Execute rundll32 [windows]
   - Atomic Test #10: Application uninstall using WMIC [windows]
 - T1129 Shared Modules [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1059.007 JavaScript [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1059.007 Command and Scripting Interpreter: JavaScript](../../T1059.007/T1059.007.md)
+  - Atomic Test #1: JScript execution to gather local computer information via cscript [windows]
+  - Atomic Test #2: JScript execution to gather local computer information via wscript [windows]
 - [T1053.007 Kubernetes Cronjob](../../T1053.007/T1053.007.md)
   - Atomic Test #1: ListCronjobs [containers]
   - Atomic Test #2: CreateCronjob [containers]
@@ -2041,6 +2043,7 @@
   - Atomic Test #8: Get-DomainPolicy with PowerView [windows]
   - Atomic Test #9: Enumerate Active Directory Password Policy with get-addefaultdomainpasswordpolicy [windows]
   - Atomic Test #10: Use of SecEdit.exe to export the local security policy (including the password policy) [windows]
+  - Atomic Test #11: Examine AWS Password Policy [iaas:aws]
 - [T1614.001 System Location Discovery: System Language Discovery](../../T1614.001/T1614.001.md)
   - Atomic Test #1: Discover System Language by Registry Query [windows]
   - Atomic Test #2: Discover System Language with chcp [windows]
