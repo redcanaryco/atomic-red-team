@@ -2043,6 +2043,7 @@
   - Atomic Test #8: Get-DomainPolicy with PowerView [windows]
   - Atomic Test #9: Enumerate Active Directory Password Policy with get-addefaultdomainpasswordpolicy [windows]
   - Atomic Test #10: Use of SecEdit.exe to export the local security policy (including the password policy) [windows]
+  - Atomic Test #11: Examine AWS Password Policy [iaas:aws]
 - [T1614.001 System Location Discovery: System Language Discovery](../../T1614.001/T1614.001.md)
   - Atomic Test #1: Discover System Language by Registry Query [windows]
   - Atomic Test #2: Discover System Language with chcp [windows]
