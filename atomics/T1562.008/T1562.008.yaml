@@ -35,6 +35,8 @@ atomic_tests:
         echo Please install the aws-cli and configure your AWS defult profile using: aws configure
     - description: |
         Check if the dependency resources are already present.
+      prereq_command: |
+        if [ -f $PathToAtomicsFolder/T1562.008/src/T1562.008-1/terraform.tfstate ]; then exit 0; else exit 1; fi;
       get_prereq_command: |
         cd $PathToAtomicsFolder/T1562.008/src/T1562.008-1/
         terraform init
@@ -95,6 +97,8 @@ atomic_tests:
         echo Please install the terraform and configure your Azure defult profile 
   - description: |
       Create dependency resources using terraform
+    prereq_command: |
+        if [ -f $PathToAtomicsFolder/T1562.008/src/T1562.008-2/terraform.tfstate ]; then exit 0; else exit 1; fi;
     get_prereq_command: |
       cd $PathToAtomicsFolder/T1562.008/src/T1562.008-2/
       terraform init
