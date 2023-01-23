@@ -24,7 +24,7 @@ variable "name_space_name" {
 
 resource "azurerm_resource_group" "some_resource_group" {
   name     = "atomicredteam-rg"
-  location = "West Europe"
+  location = "East US"
 }
 
 resource "azurerm_eventhub_namespace" "some_namespace" {
