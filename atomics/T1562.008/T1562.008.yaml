@@ -94,7 +94,13 @@ atomic_tests:
     prereq_command: |
       terraform version
     get_prereq_command: |
-        echo Please install the terraform and configure your Azure login for terraform. 
+        echo Please install the terraform.
+  - description: |
+      Check if the user is logged into Azure.
+    prereq_command: |
+      az account show
+    get_prereq_command: |
+        echo Configure your Azure account using: az login. 
   - description: |
       Create dependency resources using terraform
     prereq_command: |
