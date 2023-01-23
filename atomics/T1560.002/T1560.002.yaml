@@ -28,7 +28,7 @@ atomic_tests:
     name: bash
     elevation_required: false
     command: |
-      $which_python -c "import gzip;input_file=open('#{path_to_input_file}', 'rb');content=input_file.read();input_file.close();output_file=gzip.GzipFile('#{path_to_output_file}','wb','compresslevel=6');output_file.write(content);output_file.close();"
+      $which_python -c "import gzip;input_file=open('#{path_to_input_file}', 'rb');content=input_file.read();input_file.close();output_file=gzip.GzipFile('#{path_to_output_file}','wb',compresslevel=6);output_file.write(content);output_file.close();"
     cleanup_command: |
       rm #{path_to_output_file}
 - name: Compressing data using bz2 in Python (Linux)

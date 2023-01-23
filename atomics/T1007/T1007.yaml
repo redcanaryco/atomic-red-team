@@ -21,14 +21,14 @@ atomic_tests:
   description: |
     Enumerates started system services using net.exe and writes them to a file. This technique has been used by multiple threat actors.
 
-    Upon successful execution, net.exe will run from cmd.exe that queries services. Expected output is to a txt file in c:\Windows\Temp\service-list.txt.s
+    Upon successful execution, net.exe will run from cmd.exe that queries services. Expected output is to a txt file in in the temp directory called service-list.txt.
   supported_platforms:
   - windows
   input_arguments:
     output_file:
       description: Path of file to hold net.exe output
       type: Path
-      default: C:\Windows\Temp\service-list.txt
+      default: '%temp%\service-list.txt'
   executor:
     command: |
       net.exe start >> #{output_file}

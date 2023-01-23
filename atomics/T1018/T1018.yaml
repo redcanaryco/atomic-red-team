@@ -373,3 +373,14 @@ atomic_tests:
     elevation_required: false
     command: |
       get-wmiobject -class ds_computer -namespace root\directory\ldap
+- name: Remote System Discovery - net group Domain Controller 
+  auto_generated_guid: 5843529a-5056-4bc1-9c13-a311e2af4ca0
+  description: |
+    Identify remote systems with net.exe querying the Active Directory Domain Controller.
+    Upon successful execution, cmd.exe will execute cmd.exe against Active Directory to list the "Domain Controller" in the domain. Output will be via stdout.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      net group /domain "Domain controllers"
+    name: command_prompt

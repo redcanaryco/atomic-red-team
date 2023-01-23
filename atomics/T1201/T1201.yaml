@@ -109,3 +109,15 @@ atomic_tests:
     elevation_required: false
     command: |
       get-addefaultdomainpasswordpolicy
+- name: 'Use of SecEdit.exe to export the local security policy (including the password policy)'
+  auto_generated_guid: 510cc97f-56ac-4cd3-a198-d3218c23d889
+  description: |
+    SecEdit.exe can be used to export the current local security policy applied to a host.
+    [Reference](https://blueteamops.medium.com/secedit-and-i-know-it-595056dee53d)
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      secedit.exe /export /areas SECURITYPOLICY /cfg output_mysecpol.txt
+    name: command_prompt
+    elevation_required: true

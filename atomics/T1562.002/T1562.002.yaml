@@ -23,6 +23,28 @@ atomic_tests:
         C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}" /section:httplogging /dontLog:false *>$null
       }
     name: powershell
+- name: Disable Windows IIS HTTP Logging via PowerShell
+  auto_generated_guid: a957fb0f-1e85-49b2-a211-413366784b1e
+  description: |
+    Disables HTTP logging on a Windows IIS web server as seen by Threat Group 3390 (Bronze Union).
+    This action requires HTTP logging configurations in IIS to be unlocked.
+
+    Use the cleanup commands to restore some default auditpol settings (your original settings will be lost)
+  supported_platforms:
+  - windows
+  input_arguments:
+    website_name:
+      description: The name of the website on a server
+      type: String
+      default: Default Web Site
+  executor:
+    command: |
+      set-WebConfigurationProperty -PSPath "IIS:\Sites\#{website_name}\" -filter "system.webServer/httpLogging" -name dontLog -value $true
+    cleanup_command: |
+      if(Test-Path "C:\Windows\System32\inetsrv\appcmd.exe"){
+        C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}" /section:httplogging /dontLog:false *>$null
+      }
+    name: powershell
 - name: Kill Event Log Service Threads
   auto_generated_guid: 41ac52ba-5d5e-40c0-b267-573ed90489bd
   description: 'Kill Windows Event Log Service Threads using Invoke-Phant0m. WARNING you will need to restart PC to return to normal state with Log Service. https://artofpwn.com/phant0m-killing-windows-event-log.html'

