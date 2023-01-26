@@ -346,3 +346,26 @@ atomic_tests:
       kmod list
       grep vmw /proc/modules
     name: sh
+- name: System Information Discovery with WMIC
+  description: |
+    Identify system information with the WMI command-line (WMIC) utility. Upon execution, various system information will be displayed, including: OS, CPU, GPU, and disk drive names; memory capacity; display resolution; and baseboard, BIOS, and GPU driver products/versions.
+    https://nwgat.ninja/getting-system-information-with-wmic-on-windows/
+    Elements of this test were observed in the wild used by Aurora Stealer in late 2022 and early 2023, as highlighted in public reporting:
+    https://blog.sekoia.io/aurora-a-rising-stealer-flying-under-the-radar
+    https://blog.cyble.com/2023/01/18/aurora-a-stealer-using-shapeshifting-tactics/
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      wmic cpu get name
+      wmic MEMPHYSICAL get MaxCapacity
+      wmic baseboard get product
+      wmic baseboard get version
+      wmic bios get SMBIOSBIOSVersion
+      wmic path win32_VideoController get name
+      wmic path win32_VideoController get DriverVersion
+      wmic path win32_VideoController get VideoModeDescription
+      wmic OS get Caption,OSArchitecture,Version
+      wmic DISKDRIVE get Caption
+    name: command_prompt
+    
