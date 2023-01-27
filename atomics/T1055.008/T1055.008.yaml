@@ -1,0 +1,21 @@
+attack_technique: T1055.008
+display_name: 'Process Injection: Ptrace System Calls'
+atomic_tests:
+- name: Inject shellcode into a process via ptrace(2)
+  auto_generated_guid: 59ce4fde-31fe-40d6-b371-b272da799960
+  description: |
+    Spawns a new child process and injects shellcode into said process via ptrace(2).
+  supported_platforms:
+  - linux
+  input_arguments:
+    bin_path:
+      description: Test Program
+      type: Path
+      default: PathToAtomicsFolder/T1055.008/bin/ptrace-inject
+  executor:
+    command: |
+      cp #{bin_path} /tmp/ptrace-inject && /tmp/ptrace-inject
+    cleanup_command: |
+      rm /tmp/ptrace-inject
+    name: sh
+
