@@ -1,0 +1,24 @@
+name: Validat JSON Schema
+
+on: 
+  push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.7"]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        pip install jsonschema
+        pip install pyyaml
+    - name: Validate atomics
+      run: |
+        python ./bin/validate/validate.py
