@@ -57,7 +57,7 @@ atomic_tests:
     name: bash
     elevation_required: false
     command: |
-      $which_python -c "import bz2;input_file=open('#{path_to_input_file}','rb');content=input_file.read();input_file.close();bz2content=bz2.compress(content,compresslevel=9);output_file=open('#{path_to_output_file}','w+');output_file.write(bz2content);output_file.close();"
+      $which_python -c "import bz2;input_file=open('#{path_to_input_file}','rb');content=input_file.read();input_file.close();bz2content=bz2.compress(content,compresslevel=9);output_file=open('#{path_to_output_file}','w+');output_file.write(str(bz2content));output_file.close();"
     cleanup_command: |
       rm #{path_to_output_file}
 - name: Compressing data using zipfile in Python (Linux)
