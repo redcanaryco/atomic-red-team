@@ -114,3 +114,47 @@ atomic_tests:
     cleanup_command: |
       rm $TMPFILE
       unset TMPFILE
+- name: What shell is running
+  description: |
+    An adversary will want to discover what shell is running so that they can tailor their attacks accordingly. The following commands will discover what shell is running.
+  supported_platforms:
+  - linux
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      echo $0
+      env |grep SHELL
+      printenv SHELL
+- name: What shells are available
+  description: |
+    An adversary may want to discover which shell's are available so that they might switch to that shell to tailor their attacks to suit that shell. The following commands will discover what shells are available on the host.
+  supported_platforms:
+  - linux
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      cat /etc/shells 
+- name: Command line scripts
+  description: |
+    An adversary may type in elaborate multi-line shell commands into a terminal session because they can't or don't wish to create script files on the host. The following command is a simple loop, echoing out Atomic Red Team was here!
+  supported_platforms:
+  - linux
+  executor:
+    name: sh
+    command: |
+      for i in $(seq 1 5); do echo "$i, Atomic Red Team was here!"; sleep 1; done
+- name: Obfuscated command line scripts
+  description: |
+    An adversary may pre-compute the base64 representations of the terminal commands that they wish to execute in an attempt to avoid or frustrate detection. The following commands base64 encodes the text string id, then base64 decodes the string, then pipes it as a command to bash, which results in the id command being executed.
+  supported_platforms:
+  - linux
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      ART=$(echo -n "id" |base64 -w 0)
+      echo "\$ART=$ART"
+      echo -n "$ART" |base64 -d |/bin/bash
+      unset ART 
