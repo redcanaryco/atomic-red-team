@@ -15,7 +15,7 @@ atomic_tests:
     prereq_command: |
       which kubectl
     get_prereq_command: |
-      kubectl not installed, please install kubectl (https://kubernetes.io/docs/tasks/tools/)
+      echo "kubectl not installed, please install kubectl (https://kubernetes.io/docs/tasks/tools/)"
   executor:
     command: |
       kubectl get secrets --all-namespaces
