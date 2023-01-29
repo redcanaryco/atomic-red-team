@@ -12,8 +12,10 @@ atomic_tests:
   dependencies:
   - description: |
       kubectl must be installed
-    get_prereq_command:
+    prereq_command:
       which kubectl
+    get_prereq_command:
+      kubectl not installed, please install kubectl (https://kubernetes.io/docs/tasks/tools/)
   executor:
     command: |
       kubectl get secrets --all-namespaces
