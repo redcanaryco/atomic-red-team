@@ -326,4 +326,16 @@ atomic_tests:
        Remove-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile"  -Name EnableFirewall -Force -ErrorAction Ignore
        Remove-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\StandardProfile" -Name EnableFirewall -Force -ErrorAction Ignore
     name: powershell
-    elevation_required: true 
+    elevation_required: true
+- name: Blackbit - Disable Windows Firewall using netsh firewall
+  description: |
+     An adversary tries to modify the windows firewall configuration using the deprecated netsh firewall command (command still works).     
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      netsh firewall set opmode mode=disable
+    cleanup_command: |
+      netsh firewall set opmode mode=enable
+    name: command_prompt
+    elevation_required: true    
