@@ -336,6 +336,6 @@ atomic_tests:
     command: |
       netsh firewall set opmode mode=disable
     cleanup_command: |
-      netsh firewall set opmode mode=enable
+      netsh firewall set opmode mode=enable >nul 2>&1
     name: command_prompt
-    elevation_required: true    
+    elevation_required: true  
