@@ -1,4 +1,4 @@
-name: Validat JSON Schema
+name: Validate JSON Schema
 
 on: 
   push
@@ -6,19 +6,14 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.7"]
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
+    - uses: actions/checkout@v3
+    - uses: ruby/setup-ruby@v1
       with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
+        ruby-version: '3.2' # Not needed with a .ruby-version file
+    - name: Install gems
       run: |
-        pip install jsonschema
-        pip install pyyaml
+        gem install json-schema
     - name: Validate atomics
       run: |
-        python ./bin/validate/validate.py
+        ruby ./bin/validate/validate.rb
