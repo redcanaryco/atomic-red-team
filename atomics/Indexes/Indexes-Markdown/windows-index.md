@@ -175,6 +175,7 @@
   - Atomic Test #6: Allow Executable Through Firewall Located in Non-Standard Location [windows]
   - Atomic Test #16: LockBit Black - Unusual Windows firewall registry modification -cmd [windows]
   - Atomic Test #17: LockBit Black - Unusual Windows firewall registry modification -Powershell [windows]
+  - Atomic Test #18: Blackbit - Disable Windows Firewall using netsh firewall [windows]
 - T1553.003 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1207 Rogue Domain Controller](../../T1207/T1207.md)
   - Atomic Test #1: DCShadow (Active Directory) [windows]
