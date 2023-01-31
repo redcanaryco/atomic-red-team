@@ -707,3 +707,29 @@ atomic_tests:
       reg delete "hklm\system\currentcontrolset\control\lsa" /f /v DisableRestrictedAdmin >nul 2>&1
     name: command_prompt
     elevation_required: true
+- name: Mimic Ransomware - Enable Multiple User Sessions
+  description: |
+    This test emulates Mimic ransomware's ability to enable multiple user sessions by modifying the AllowMultipleTSSessions value within the Winlogon registry key. 
+    See [Mimic Ransomware Overview] (https://www.trendmicro.com/en_us/research/23/a/new-mimic-ransomware-abuses-everything-apis-for-its-encryption-p.html)
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Winlogon /t REG_DWORD /v AllowMultipleTSSessions /d 1 /f
+    cleanup_command: |
+      reg delete HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Winlogon /v AllowMultipleTSSessions /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: Mimic Ransomware - Allow Multiple RDP Sessions per User
+  description: |
+    This test emulates Mimic ransomware's ability to enable multiple RDP sessions per user by modifying the fSingleSessionPerUser value within the Terminal Server registry key. 
+    See [Mimic Ransomware Overview] (https://www.trendmicro.com/en_us/research/23/a/new-mimic-ransomware-abuses-everything-apis-for-its-encryption-p.html)
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKLM\System\CurrentControlSet\Control\Terminal Server" /v fSingleSessionPerUser /t REG_DWORD /d 0 /f
+    cleanup_command: |
+      reg delete "HKLM\System\CurrentControlSet\Control\Terminal Server" /v fSingleSessionPerUser /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true    
