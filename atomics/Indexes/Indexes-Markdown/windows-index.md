@@ -226,6 +226,8 @@
   - Atomic Test #42: Disable Windows Error Reporting Settings [windows]
   - Atomic Test #43: DisallowRun Execution Of Certain Applications [windows]
   - Atomic Test #44: Enabling Restricted Admin Mode via Command_Prompt [windows]
+  - Atomic Test #45: Mimic Ransomware - Enable Multiple User Sessions [windows]
+  - Atomic Test #46: Mimic Ransomware - Allow Multiple RDP Sessions per User [windows]
 - [T1574.008 Hijack Execution Flow: Path Interception by Search Order Hijacking](../../T1574.008/T1574.008.md)
   - Atomic Test #1: powerShell Persistence via hijacking default modules - Get-Variable.exe [windows]
 - T1027.001 Obfuscated Files or Information: Binary Padding [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
