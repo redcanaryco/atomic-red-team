@@ -23,8 +23,10 @@ Dir.glob("./atomics/T*/T*.yaml").each do |atomic_test|
     rescue JSON::Schema::ValidationError => e
         puts "Error of type '#{e.class}' occurred."
         puts "\n#{e.message}"
+        raise
     rescue JSON::Schema::JsonParseError => e
         puts e
+        raise
     end
     JSON::Validator::fully_validate(schema, a_test, :errors_as_objects => true)
     puts "Successfully validated Atomic Test #{atomic_test}."
