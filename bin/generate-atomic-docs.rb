@@ -59,6 +59,9 @@ class AtomicRedTeamDocs
     generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/azure-ad-index.csv", only_platform: /azure-ad/
 
     generate_yaml_index! "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/index.yaml"
+    ["windows", "macos", "linux", "office-365", "azure-ad", "google-workspace", "saas", "iaas", "containers", "iaas:gcp", "iaas:azure", "iaas:aws"].each do | platform|
+      generate_yaml_index_by_platform! "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/#{platform}-index.yaml", platform: "#{platform}"
+    end
     generate_navigator_layer! "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer.json", \
       "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-windows.json", \
       "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-macos.json", \
