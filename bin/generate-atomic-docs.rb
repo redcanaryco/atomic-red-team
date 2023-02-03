@@ -182,6 +182,29 @@ class AtomicRedTeamDocs
   #
   # Generates a master YAML index of ATT&CK Tactic -> Technique -> Atomic Tests
   #
+  def generate_yaml_index_by_platform!(output_doc_path, platform)
+    result = {}
+
+    ATTACK_API.techniques_by_tactic.each do |tactic, techniques|
+      result[tactic] = techniques.collect do |technique|
+        [
+            technique['external_references'][0]['external_id'],
+            {
+                'technique' => technique,
+                'atomic_tests' => ATOMIC_RED_TEAM.atomic_tests_for_technique_by_platform(technique, platform)
+            }
+        ]
+      end.to_h
+    end
+
+    File.write output_doc_path, JSON.parse(result.to_json).to_yaml # shenanigans to eliminate YAML aliases
+
+    puts "Generated Atomic Red Team YAML index at #{output_doc_path}"
+  end
+
+  #
+  # Generates a master YAML index of ATT&CK Tactic -> Technique -> Atomic Tests
+  #
   def generate_yaml_index!(output_doc_path)
     result = {}
 
