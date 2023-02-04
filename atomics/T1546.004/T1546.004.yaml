@@ -39,3 +39,54 @@ atomic_tests:
       head -n '-2' ~/.bashrc > /tmp/T1546.004
       mv /tmp/T1546.004 ~/.bashrc
     name: sh
+- name: Append to the system shell profile
+  description: |
+    An adversary may wish to establish persistence by executing malicious commands from the systems /etc/profile every time "any" user logs in.
+  supported_platforms:
+  - linux
+  input_arguments:
+    text_to_append:
+      description: Text to append to the /etc/profile file
+      type: String
+      default: "# Hello from Atomic Red Team T1546.004"
+  executor:
+    elevation_required: true
+    name: sh
+    command: |
+      echo '#{text_to_append}' >> /etc/profile
+    cleanup_command: |
+      sed -i "s/# Atomic Red Team was here! T1546.004//" /etc/profile
+- name: Append commands user shell profile
+  description: |
+    An adversary may wish to establish persistence by executing malicious commands from the users ~/.profile every time the "user" logs in.
+  supported_platforms:
+  - linux
+  input_arguments:
+    text_to_append:
+      description: Text to append to the ~/.profile file
+      type: String
+      default: "# Hello from Atomic Red Team T1546.004"
+  executor:
+    elevation_required: false
+    name: sh
+    command: |
+      echo '#{text_to_append}' >> ~/.profile
+    cleanup_command: |
+      sed -i "s/# Atomic Red Team was here! T1546.004//" ~/.profile
+- name: System shell profile scripts 
+  description: |
+    An adversary may wish to establish persistence by adding commands into any of the script files in the /etc/profile.d/ directory, which are executed every time "any" user logs in.
+  supported_platforms:
+  - linux
+  input_arguments:
+    text_to_append:
+      description: Text to append to the /etc/profile.d/bash_completion.sh file
+      type: String
+      default: "# Hello from Atomic Red Team T1546.004"
+  executor:
+    elevation_required: true
+    name: sh
+    command: |
+      echo '#{text_to_append}' >> /etc/profile.d/bash_completion.sh
+    cleanup_command: |
+      sed -i "s/# Atomic Red Team was here! T1546.004//" /etc/profile.d/bash_completion.sh
