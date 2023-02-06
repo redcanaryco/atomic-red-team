@@ -198,6 +198,7 @@ atomic_tests:
       Remove-Item -Path ".\ADFS_signing.pfx" -ErrorAction Ignore
     name: powershell
 - name: CertUtil ExportPFX
+  auto_generated_guid: 336b25bf-4514-4684-8924-474974f28137
   description: |
     The following Atomic test simulates adding a generic non-malicious certificate to the Root certificate store. This behavior generates a registry modification that adds the cloned root CA certificate in the keys outlined in the blog. In addition, this Atomic utilizes CertUtil to export the PFX (ExportPFX), similar to what was seen in the Golden SAML attack.
     Keys will look like - \SystemCertificates\CA\Certificates or \SystemCertificates\Root\Certificates
@@ -223,6 +224,7 @@ atomic_tests:
     name: powershell
     elevation_required: true
 - name: Export Root Certificate with Export-PFXCertificate
+  auto_generated_guid: 7617f689-bbd8-44bc-adcd-6f8968897848
   description: |
     Creates a Root certificate and exports it with Export-PFXCertificate PowerShell Cmdlet.
     Upon a successful attempt, this will write a pfx to disk and utilize the Cmdlet Export-PFXCertificate.
@@ -248,6 +250,7 @@ atomic_tests:
     name: powershell
     elevation_required: true
 - name: Export Root Certificate with Export-Certificate
+  auto_generated_guid: 78b274f8-acb0-428b-b1f7-7b0d0e73330a
   description: |
     Creates a Root certificate and exports it with Export-Certificate PowerShell Cmdlet.
     Upon a successful attempt, this will write a pfx to disk and utilize the Cmdlet Export-Certificate.
