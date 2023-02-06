@@ -11666,11 +11666,11 @@ defense-evasion:
         username:
           description: Azure username
           type: String
-          default:
+          default: 
         password:
           description: Azure password
           type: String
-          default:
+          default: 
         event_hub_name:
           description: Name of the eventhub
           type: String
@@ -11678,11 +11678,11 @@ defense-evasion:
         resource_group:
           description: Name of the resource group
           type: String
-          default:
+          default: 
         name_space_name:
           description: Name of the NameSpace
           type: String
-          default:
+          default: 
       dependency_executor_name: powershell
       dependencies:
       - description: 'Install-Module -Name Az
@@ -41484,11 +41484,11 @@ collection:
         container_name:
           description: Container name to search for (optional)
           type: String
-          default:
+          default: 
         blob_name:
           description: Blob name to search for (optional)
           type: String
-          default:
+          default: 
       executor:
         command: |
           try{$response = invoke-webrequest "https://#{base_name}.blob.core.windows.net/#{container_name}/#{blob_name}" -method "GET"}
@@ -48317,7 +48317,7 @@ credential-access:
         username:
           description: Azure AD username
           type: String
-          default:
+          default: 
         password:
           description: Azure AD password
           type: String
@@ -48329,7 +48329,7 @@ credential-access:
         subscription_id:
           description: Azure subscription id to search
           type: String
-          default:
+          default: 
       dependency_executor_name: powershell
       dependencies:
       - description: 'The Get-AzurePasswords script must exist in $env:temp.
@@ -52775,7 +52775,7 @@ discovery:
         username:
           description: Azure AD username
           type: String
-          default:
+          default: 
         password:
           description: Azure AD password
           type: String
@@ -52787,7 +52787,7 @@ discovery:
         subscription_name:
           description: Azure subscription name to scan
           type: String
-          default:
+          default: 
       dependency_executor_name: powershell
       dependencies:
       - description: 'The Get-AzDomainInfo script must exist in $env:temp.
