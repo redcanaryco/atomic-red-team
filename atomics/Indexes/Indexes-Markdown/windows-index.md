@@ -1261,6 +1261,9 @@
   - Atomic Test #1: Private Keys [windows]
   - Atomic Test #6: ADFS token signing and encryption certificates theft - Local [windows]
   - Atomic Test #7: ADFS token signing and encryption certificates theft - Remote [windows]
+  - Atomic Test #8: CertUtil ExportPFX [windows]
+  - Atomic Test #9: Export Root Certificate with Export-PFXCertificate [windows]
+  - Atomic Test #10: Export Root Certificate with Export-Certificate [windows]
 - [T1557.001 Adversary-in-the-Middle: LLMNR/NBT-NS Poisoning and SMB Relay](../../T1557.001/T1557.001.md)
   - Atomic Test #1: LLMNR Poisoning with Inveigh (PowerShell) [windows]
 - [T1003.001 OS Credential Dumping: LSASS Memory](../../T1003.001/T1003.001.md)
