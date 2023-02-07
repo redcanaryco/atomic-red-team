@@ -124,8 +124,8 @@ atomic_tests:
     elevation_required: false
     command: |
       echo $0
-      env |grep SHELL
-      printenv SHELL
+      if $(env |grep "SHELL" >/dev/null); then env |grep "SHELL"; fi
+      if $(printenv SHELL >/dev/null); then printenv SHELL; fi
 - name: What shells are available
   description: |
     An adversary may want to discover which shell's are available so that they might switch to that shell to tailor their attacks to suit that shell. The following commands will discover what shells are available on the host.
