@@ -92,6 +92,7 @@ atomic_tests:
       [ -x "$(command -v printenv)" ] && exit 0 || exit 1
     get_prereq_command: |
       echo "printenv command does not exist"
+      exit 1
   executor:
     command: |
       env
