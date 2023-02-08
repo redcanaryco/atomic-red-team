@@ -32,6 +32,29 @@ class AtomicRedTeam
   #
   # Returns the individual Atomic Tests for a given identifer, passed as either a string (T1234) or an ATT&CK technique object
   #
+  def atomic_tests_for_technique_by_platform(technique_or_technique_identifier, platform)
+    technique_identifier = if technique_or_technique_identifier.is_a? Hash
+      ATTACK_API.technique_identifier_for_technique technique_or_technique_identifier
+    else
+      technique_or_technique_identifier
+    end
+
+    test_list = Array.new
+    atomic_tests.find do |atomic_yaml| 
+      if atomic_yaml.fetch('attack_technique').upcase == technique_identifier.upcase
+        atomic_yaml['atomic_tests'].each do |a_test|
+          if a_test["supported_platforms"].include?(platform[:platform])
+              test_list.append(a_test)
+          end
+        end
+      end
+    end
+    test_list
+  end
+
+  #
+  # Returns the individual Atomic Tests for a given identifer, passed as either a string (T1234) or an ATT&CK technique object
+  #
   def atomic_tests_for_technique(technique_or_technique_identifier)
     technique_identifier = if technique_or_technique_identifier.is_a? Hash
       ATTACK_API.technique_identifier_for_technique technique_or_technique_identifier
