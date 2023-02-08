@@ -42,6 +42,45 @@ atomic_tests:
       sudo dscl . -delete /Users/AtomicUser
     name: bash
     elevation_required: true
+    
+- name: Create local account with admin privileges using sysadminctl utility - MacOS
+  description: After execution the new account will be active and added to the Administrators group
+  supported_platforms:
+  - macos
+  executor:
+    command: |-
+      sysadminctl interactive -addUser art-tester -fullName ARTUser -password !pass123! -admin
+    cleanup_command: |-
+      sysadminctl interactive -deleteUser art-tester
+    name: bash
+    elevation_required: true
+    
+- name: Enable root account using dsenableroot utility - MacOS
+  description: After execution the current or new user will have root access
+  supported_platforms:
+  - macos
+  executor:
+    command: |-
+      dsenableroot #current user
+      dsenableroot -u art-tester -p art-tester -r art-root #new user
+    cleanup_command: |-
+      dsenableroot -d #current user
+      dsenableroot -d -u art-tester -p art-tester #new user
+    name: bash
+    elevation_required: true
+    
+- name: Add a new/existing user to the admin group - macOS
+  description: After execution the current or new user will be added to the Admin group
+  supported_platforms:
+  - macos
+  executor:
+    command: |-
+      dseditgroup -o edit -a art-user -t user admin
+    cleanup_command: |-
+      dseditgroup -o edit -d art-user -t user admin
+    name: bash
+    elevation_required: true
+
 - name: WinPwn - Loot local Credentials - powerhell kittie 
   auto_generated_guid: 9e9fd066-453d-442f-88c1-ad7911d32912
   description: Loot local Credentials - powerhell kittie technique via function of WinPwn
