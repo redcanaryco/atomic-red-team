@@ -1,7 +1,7 @@
 # <%= technique['identifier'] %> - <%= technique['name'] -%>
 
 ## [Description from ATT&CK](https://attack.mitre.org/techniques/<%= technique['identifier'].gsub(/\./, '/') %>)
-<blockquote><%= technique['description'] %></blockquote>
+<blockquote><%= technique['description'].gsub("%\\<", "%<") %></blockquote>
 
 ## Atomic Tests
 <% atomic_yaml['atomic_tests'].each_with_index do |test, test_number| -%>
