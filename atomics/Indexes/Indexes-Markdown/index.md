@@ -1852,8 +1852,9 @@
 - [T1056.004 Input Capture: Credential API Hooking](../../T1056.004/T1056.004.md)
   - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
 - [T1552.007 Kubernetes List Secrets](../../T1552.007/T1552.007.md)
-  - Atomic Test #1: ListSecrets [containers]
-  - Atomic Test #2: Cat the contents of a Kubernetes service account token file [linux]
+  - Atomic Test #1: List All Secrets [containers]
+  - Atomic Test #2: ListSecrets [containers]
+  - Atomic Test #3: Cat the contents of a Kubernetes service account token file [linux]
 - T1556.004 Network Device Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 
 # discovery
