@@ -14,7 +14,7 @@ atomic_tests:
       default: dir
     script_path:
       description: Script path.
-      type: Path
+      type: path
       default: $env:TEMP\T1059.003_script.bat
   dependency_executor_name: powershell
   dependencies:
@@ -40,7 +40,7 @@ atomic_tests:
   input_arguments:
     file_contents_path:
       description: Path to the file that the command prompt will drop.
-      type: Path
+      type: path
       default: '%TEMP%\test.bin'
     message:
       description: Message that will be written to disk and then displayed.
@@ -113,7 +113,7 @@ atomic_tests:
   input_arguments:
     input_file:
       description: CMD file that is read by Command Prompt and execute, which launches calc.exe
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1059.003\src\t1059.003_cmd.cmd
   dependency_executor_name: powershell
   dependencies:

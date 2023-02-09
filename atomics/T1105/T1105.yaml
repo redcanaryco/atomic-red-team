@@ -11,7 +11,7 @@ atomic_tests:
   input_arguments:
     remote_path:
       description: Remote path to receive rsync
-      type: Path
+      type: path
       default: /tmp/victim-files
     remote_host:
       description: Remote host to copy toward
@@ -19,7 +19,7 @@ atomic_tests:
       default: victim-host
     local_path:
       description: Path of folder to copy
-      type: Path
+      type: path
       default: /tmp/adversary-rsync/
     username:
       description: User account to authenticate on remote host
@@ -39,7 +39,7 @@ atomic_tests:
   input_arguments:
     remote_path:
       description: Path of folder to copy
-      type: Path
+      type: path
       default: /tmp/adversary-rsync/
     remote_host:
       description: Remote host to copy from
@@ -47,7 +47,7 @@ atomic_tests:
       default: adversary-host
     local_path:
       description: Local path to receive rsync
-      type: Path
+      type: path
       default: /tmp/victim-files
     username:
       description: User account to authenticate on remote host
@@ -67,11 +67,11 @@ atomic_tests:
   input_arguments:
     remote_path:
       description: Remote path to receive scp
-      type: Path
+      type: path
       default: /tmp/victim-files/
     local_file:
       description: Path of file to copy
-      type: Path
+      type: path
       default: /tmp/adversary-scp
     remote_host:
       description: Remote host to copy toward
@@ -99,11 +99,11 @@ atomic_tests:
       default: adversary-host
     local_path:
       description: Local path to receive scp
-      type: Path
+      type: path
       default: /tmp/victim-files/
     remote_file:
       description: Path of file to copy
-      type: Path
+      type: path
       default: /tmp/adversary-scp
     username:
       description: User account to authenticate on remote host
@@ -123,11 +123,11 @@ atomic_tests:
   input_arguments:
     remote_path:
       description: Remote path to receive sftp
-      type: Path
+      type: path
       default: /tmp/victim-files/
     local_file:
       description: Path of file to copy
-      type: Path
+      type: path
       default: /tmp/adversary-sftp
     remote_host:
       description: Remote host to copy toward
@@ -155,11 +155,11 @@ atomic_tests:
       default: adversary-host
     local_path:
       description: Local path to receive sftp
-      type: Path
+      type: path
       default: /tmp/victim-files/
     remote_file:
       description: Path of file to copy
-      type: Path
+      type: path
       default: /tmp/adversary-sftp
     username:
       description: User account to authenticate on remote host
@@ -182,7 +182,7 @@ atomic_tests:
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
     local_path:
       description: Local path to place file
-      type: Path
+      type: path
       default: Atomic-license.txt
   executor:
     command: |
@@ -203,7 +203,7 @@ atomic_tests:
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
     local_path:
       description: Local path to place file
-      type: Path
+      type: path
       default: Atomic-license.txt
   executor:
     command: |
@@ -229,7 +229,7 @@ atomic_tests:
       default: qcxjb7
     local_path:
       description: Local path to place file
-      type: Path
+      type: path
       default: '%temp%\Atomic-license.txt'
     remote_file:
       description: URL of file to copy
@@ -253,7 +253,7 @@ atomic_tests:
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
     destination_path:
       description: Destination path to file
-      type: Path
+      type: path
       default: $env:TEMP\Atomic-license.txt
   executor:
     command: |
@@ -315,7 +315,7 @@ atomic_tests:
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
     local_path:
       description: Location to save downloaded file
-      type: Path
+      type: path
       default: '%temp%\Atomic-license.txt'
   dependencies:
   - description: 'Must have a Windows Defender version with MpCmdRun.exe installed'
@@ -349,7 +349,7 @@ atomic_tests:
       default: 8443
     output_file:
       description: Path of file to save output to
-      type: Path
+      type: path
       default: /tmp/T1105.whois.out
     query:
       description: Query to send to remote server
@@ -451,7 +451,7 @@ atomic_tests:
       default: https://github.com/redcanaryco/atomic-red-team/raw/058b5c2423c4a6e9e226f4e5ffa1a6fd9bb1a90e/atomics/T1218.010/bin/AllTheThingsx64.dll
     curl_path:
       description: path to curl.exe
-      type: Path
+      type: path
       default: C:\Windows\System32\Curl.exe
   dependency_executor_name: powershell 
   dependencies: 
@@ -488,7 +488,7 @@ atomic_tests:
   input_arguments:
     curl_path:
       description: path to curl.exe
-      type: Path
+      type: path
       default: C:\Windows\System32\Curl.exe
     remote_destination:
       description: Remote destination
@@ -540,7 +540,7 @@ atomic_tests:
   input_arguments:
     Path_to_file:
       description: Path to the Batch script
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1105\src\T1105.bat
   dependency_executor_name: powershell 
   dependencies:   
@@ -625,11 +625,11 @@ atomic_tests:
   input_arguments:
     Path_unc:
       description: Path to the UNC folder
-      type: Path
+      type: path
       default: \\127.0.0.1\c$\AtomicRedTeam\atomics\T1105\src\
     Path_PrintBrm:
       description: Path to PrintBrm.exe
-      type: Path
+      type: path
       default: C:\Windows\System32\spool\tools\PrintBrm.exe
   executor:
     command: |
@@ -649,11 +649,11 @@ atomic_tests:
   input_arguments:
     replace_cab:
       description: Path to the cab file
-      type: Path
+      type: path
       default:  PathToAtomicsFolder\T1105\src\redcanary.cab
     Path_replace:
       description: Path to replace.exe
-      type: Path
+      type: path
       default: C:\Windows\System32\replace.exe
   dependency_executor_name: powershell 
   dependencies:   
@@ -682,11 +682,11 @@ atomic_tests:
   input_arguments:
     replace_cab:
       description: UNC Path to the cab file
-      type: Path
+      type: path
       default:  \\127.0.0.1\c$\AtomicRedTeam\atomics\T1105\src\redcanary.cab
     Path_replace:
       description: Path to replace.exe
-      type: Path
+      type: path
       default: C:\Windows\System32\replace.exe
   executor:
     command: |
@@ -772,11 +772,11 @@ atomic_tests:
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
     destination_path:
       description: Destination path to file
-      type: Path
+      type: path
       default: $env:TEMP\Atomic-license.txt
     local_nimgrab:
       description: Local path to nimgrab
-      type: Path
+      type: path
       default: $env:TEMP\nimgrab.exe
   executor:
     command: |
@@ -809,7 +809,7 @@ atomic_tests:
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
     local_path:
       description: Local path to place file
-      type: Path
+      type: path
       default: '%temp%\Atomic-license.txt'
   executor:
     command: |
