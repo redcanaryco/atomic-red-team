@@ -244,6 +244,7 @@
   - Atomic Test #15: Tail the UFW firewall log file [linux]
   - Atomic Test #16: LockBit Black - Unusual Windows firewall registry modification -cmd [windows]
   - Atomic Test #17: LockBit Black - Unusual Windows firewall registry modification -Powershell [windows]
+  - Atomic Test #18: Blackbit - Disable Windows Firewall using netsh firewall [windows]
 - T1152 Launchctl [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1553.003 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1207 Rogue Domain Controller](../../T1207/T1207.md)
@@ -297,6 +298,8 @@
   - Atomic Test #42: Disable Windows Error Reporting Settings [windows]
   - Atomic Test #43: DisallowRun Execution Of Certain Applications [windows]
   - Atomic Test #44: Enabling Restricted Admin Mode via Command_Prompt [windows]
+  - Atomic Test #45: Mimic Ransomware - Enable Multiple User Sessions [windows]
+  - Atomic Test #46: Mimic Ransomware - Allow Multiple RDP Sessions per User [windows]
 - [T1574.008 Hijack Execution Flow: Path Interception by Search Order Hijacking](../../T1574.008/T1574.008.md)
   - Atomic Test #1: powerShell Persistence via hijacking default modules - Get-Variable.exe [windows]
 - T1535 Unused/Unsupported Cloud Regions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1094,6 +1097,10 @@
   - Atomic Test #3: Harvest SUID executable files [linux]
   - Atomic Test #4: LinEnum tool execution [linux]
   - Atomic Test #5: New script file in the tmp directory [linux]
+  - Atomic Test #6: What shell is running [linux]
+  - Atomic Test #7: What shells are available [linux]
+  - Atomic Test #8: Command line scripts [linux]
+  - Atomic Test #9: Obfuscated command line scripts [linux]
 - T1559 Inter-Process Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1204.003 Malicious Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1154 Trap [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1736,6 +1743,9 @@
   - Atomic Test #5: Copy the users GnuPG directory with rsync [macos, linux]
   - Atomic Test #6: ADFS token signing and encryption certificates theft - Local [windows]
   - Atomic Test #7: ADFS token signing and encryption certificates theft - Remote [windows]
+  - Atomic Test #8: CertUtil ExportPFX [windows]
+  - Atomic Test #9: Export Root Certificate with Export-PFXCertificate [windows]
+  - Atomic Test #10: Export Root Certificate with Export-Certificate [windows]
 - [T1557.001 Adversary-in-the-Middle: LLMNR/NBT-NS Poisoning and SMB Relay](../../T1557.001/T1557.001.md)
   - Atomic Test #1: LLMNR Poisoning with Inveigh (PowerShell) [windows]
 - [T1003.001 OS Credential Dumping: LSASS Memory](../../T1003.001/T1003.001.md)
@@ -1846,8 +1856,9 @@
 - [T1056.004 Input Capture: Credential API Hooking](../../T1056.004/T1056.004.md)
   - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
 - [T1552.007 Kubernetes List Secrets](../../T1552.007/T1552.007.md)
-  - Atomic Test #1: ListSecrets [containers]
-  - Atomic Test #2: Cat the contents of a Kubernetes service account token file [linux]
+  - Atomic Test #1: List All Secrets [containers]
+  - Atomic Test #2: ListSecrets [containers]
+  - Atomic Test #3: Cat the contents of a Kubernetes service account token file [linux]
 - T1556.004 Network Device Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 
 # discovery

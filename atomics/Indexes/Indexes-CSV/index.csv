@@ -176,6 +176,7 @@ defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,14,
 defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,15,Tail the UFW firewall log file,419cca0c-fa52-4572-b0d7-bc7c6f388a27,sh
 defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,16,LockBit Black - Unusual Windows firewall registry modification -cmd,a4651931-ebbb-4cde-9363-ddf3d66214cb,command_prompt
 defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,17,LockBit Black - Unusual Windows firewall registry modification -Powershell,80b453d1-eec5-4144-bf08-613a6c3ffe12,powershell
+defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,18,Blackbit - Disable Windows Firewall using netsh firewall,91f348e6-3760-4997-a93b-2ceee7f254ee,command_prompt
 defense-evasion,T1207,Rogue Domain Controller,1,DCShadow (Active Directory),0f4c5eb0-98a0-4496-9c3d-656b4f2bc8f6,powershell
 defense-evasion,T1610,Deploy a container,1,Deploy Docker container,59aa6f26-7620-417e-9318-589e0fb7a372,bash
 defense-evasion,T1112,Modify Registry,1,Modify Registry of Current User Profile - cmd,1324796b-d0f6-455a-b4ae-21ffee6aa6b9,command_prompt
@@ -222,6 +223,8 @@ defense-evasion,T1112,Modify Registry,41,Terminal Server Client Connection Histo
 defense-evasion,T1112,Modify Registry,42,Disable Windows Error Reporting Settings,d2c9e41e-cd86-473d-980d-b6403562e3e1,command_prompt
 defense-evasion,T1112,Modify Registry,43,DisallowRun Execution Of Certain Applications,71db768a-5a9c-4047-b5e7-59e01f188e84,command_prompt
 defense-evasion,T1112,Modify Registry,44,Enabling Restricted Admin Mode via Command_Prompt,fe7974e5-5813-477b-a7bd-311d4f535e83,command_prompt
+defense-evasion,T1112,Modify Registry,45,Mimic Ransomware - Enable Multiple User Sessions,39f1f378-ba8a-42b3-96dc-2a6540cfc1e3,command_prompt
+defense-evasion,T1112,Modify Registry,46,Mimic Ransomware - Allow Multiple RDP Sessions per User,35727d9e-7a7f-4d0c-a259-dc3906d6e8b9,command_prompt
 defense-evasion,T1574.008,Hijack Execution Flow: Path Interception by Search Order Hijacking,1,powerShell Persistence via hijacking default modules - Get-Variable.exe,1561de08-0b4b-498e-8261-e922f3494aae,powershell
 defense-evasion,T1027.001,Obfuscated Files or Information: Binary Padding,1,Pad Binary to Change Hash - Linux/macOS dd,ffe2346c-abd5-4b45-a713-bf5f1ebd573a,sh
 defense-evasion,T1484.001,Domain Policy Modification: Group Policy Modification,1,LockBit Black - Modify Group policy settings -cmd,9ab80952-74ee-43da-a98c-1e740a985f28,command_prompt
@@ -710,6 +713,10 @@ execution,T1059.004,Command and Scripting Interpreter: Bash,2,Command-Line Inter
 execution,T1059.004,Command and Scripting Interpreter: Bash,3,Harvest SUID executable files,46274fc6-08a7-4956-861b-24cbbaa0503c,sh
 execution,T1059.004,Command and Scripting Interpreter: Bash,4,LinEnum tool execution,a2b35a63-9df1-4806-9a4d-5fe0500845f2,sh
 execution,T1059.004,Command and Scripting Interpreter: Bash,5,New script file in the tmp directory,8cd1947b-4a54-41fb-b5ea-07d0ace04f81,sh
+execution,T1059.004,Command and Scripting Interpreter: Bash,6,What shell is running,7b38e5cc-47be-44f0-a425-390305c76c17,sh
+execution,T1059.004,Command and Scripting Interpreter: Bash,7,What shells are available,bf23c7dc-1004-4949-8262-4c1d1ef87702,sh
+execution,T1059.004,Command and Scripting Interpreter: Bash,8,Command line scripts,b04ed73c-7d43-4dc8-b563-a2fc595cba1a,sh
+execution,T1059.004,Command and Scripting Interpreter: Bash,9,Obfuscated command line scripts,5bec4cc8-f41e-437b-b417-33ff60acf9af,sh
 execution,T1059.006,Command and Scripting Interpreter: Python,1,Execute shell script via python's command mode arguement,3a95cdb2-c6ea-4761-b24e-02b71889b8bb,sh
 execution,T1059.006,Command and Scripting Interpreter: Python,2,Execute Python via scripts (Linux),6c4d1dcb-33c7-4c36-a8df-c6cfd0408be8,sh
 execution,T1059.006,Command and Scripting Interpreter: Python,3,Execute Python via Python executables (Linux),0b44d79b-570a-4b27-a31f-3bf2156e5eaa,sh
@@ -1062,6 +1069,9 @@ credential-access,T1552.004,Unsecured Credentials: Private Keys,4,Copy Private S
 credential-access,T1552.004,Unsecured Credentials: Private Keys,5,Copy the users GnuPG directory with rsync,2a5a0601-f5fb-4e2e-aa09-73282ae6afca,sh
 credential-access,T1552.004,Unsecured Credentials: Private Keys,6,ADFS token signing and encryption certificates theft - Local,78e95057-d429-4e66-8f82-0f060c1ac96f,powershell
 credential-access,T1552.004,Unsecured Credentials: Private Keys,7,ADFS token signing and encryption certificates theft - Remote,cab413d8-9e4a-4b8d-9b84-c985bd73a442,powershell
+credential-access,T1552.004,Unsecured Credentials: Private Keys,8,CertUtil ExportPFX,336b25bf-4514-4684-8924-474974f28137,powershell
+credential-access,T1552.004,Unsecured Credentials: Private Keys,9,Export Root Certificate with Export-PFXCertificate,7617f689-bbd8-44bc-adcd-6f8968897848,powershell
+credential-access,T1552.004,Unsecured Credentials: Private Keys,10,Export Root Certificate with Export-Certificate,78b274f8-acb0-428b-b1f7-7b0d0e73330a,powershell
 credential-access,T1557.001,Adversary-in-the-Middle: LLMNR/NBT-NS Poisoning and SMB Relay,1,LLMNR Poisoning with Inveigh (PowerShell),deecd55f-afe0-4a62-9fba-4d1ba2deb321,powershell
 credential-access,T1003.001,OS Credential Dumping: LSASS Memory,1,Dump LSASS.exe Memory using ProcDump,0be2230c-9ab3-4ac2-8826-3199b9a0ebf8,command_prompt
 credential-access,T1003.001,OS Credential Dumping: LSASS Memory,2,Dump LSASS.exe Memory using comsvcs.dll,2536dee2-12fb-459a-8c37-971844fa73be,powershell
@@ -1134,8 +1144,9 @@ credential-access,T1558.003,Steal or Forge Kerberos Tickets: Kerberoasting,7,Win
 credential-access,T1003.006,OS Credential Dumping: DCSync,1,DCSync (Active Directory),129efd28-8497-4c87-a1b0-73b9a870ca3e,command_prompt
 credential-access,T1003.006,OS Credential Dumping: DCSync,2,Run DSInternals Get-ADReplAccount,a0bced08-3fc5-4d8b-93b7-e8344739376e,powershell
 credential-access,T1056.004,Input Capture: Credential API Hooking,1,Hook PowerShell TLS Encrypt/Decrypt Messages,de1934ea-1fbf-425b-8795-65fb27dd7e33,powershell
-credential-access,T1552.007,Kubernetes List Secrets,1,ListSecrets,43c3a49d-d15c-45e6-b303-f6e177e44a9a,bash
-credential-access,T1552.007,Kubernetes List Secrets,2,Cat the contents of a Kubernetes service account token file,788e0019-a483-45da-bcfe-96353d46820f,sh
+credential-access,T1552.007,Kubernetes List Secrets,1,List All Secrets,31e794c4-48fd-4a76-aca4-6587c155bc11,bash
+credential-access,T1552.007,Kubernetes List Secrets,2,ListSecrets,43c3a49d-d15c-45e6-b303-f6e177e44a9a,bash
+credential-access,T1552.007,Kubernetes List Secrets,3,Cat the contents of a Kubernetes service account token file,788e0019-a483-45da-bcfe-96353d46820f,sh
 discovery,T1033,System Owner/User Discovery,1,System Owner/User Discovery,4c4959bf-addf-4b4a-be86-8d09cc1857aa,command_prompt
 discovery,T1033,System Owner/User Discovery,2,System Owner/User Discovery,2a9b677d-a230-44f4-ad86-782df1ef108c,sh
 discovery,T1033,System Owner/User Discovery,3,Find computers where user has session - Stealth mode (PowerView),29857f27-a36f-4f7e-8084-4557cd6207ca,powershell
