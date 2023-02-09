@@ -2459,4 +2459,5 @@
   - Atomic Test #5: Exfiltration Over Alternative Protocol - SMTP [windows]
   - Atomic Test #6: MAZE FTP Upload [windows]
   - Atomic Test #7: Exfiltration Over Alternative Protocol - FTP - Rclone [windows]
+  - Atomic Test #8: Python3 http.server [linux]
 

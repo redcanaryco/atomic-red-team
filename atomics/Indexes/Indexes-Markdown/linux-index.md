@@ -708,4 +708,5 @@
 - [T1048.003 Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol](../../T1048.003/T1048.003.md)
   - Atomic Test #1: Exfiltration Over Alternative Protocol - HTTP [macos, linux]
   - Atomic Test #3: Exfiltration Over Alternative Protocol - DNS [linux]
+  - Atomic Test #8: Python3 http.server [linux]
 
