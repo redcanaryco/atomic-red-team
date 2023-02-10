@@ -48,7 +48,7 @@ atomic_tests:
   input_arguments:
     text_to_append:
       description: Text to append to the /etc/profile file
-      type: String
+      type: string
       default: "# Hello from Atomic Red Team T1546.004"
   executor:
     elevation_required: true
@@ -66,7 +66,7 @@ atomic_tests:
   input_arguments:
     text_to_append:
       description: Text to append to the ~/.profile file
-      type: String
+      type: string
       default: "# Hello from Atomic Red Team T1546.004"
   executor:
     elevation_required: false
@@ -75,7 +75,7 @@ atomic_tests:
       echo '#{text_to_append}' >> ~/.profile
     cleanup_command: |
       sed -i "s/# Atomic Red Team was here! T1546.004//" ~/.profile
-- name: System shell profile scripts 
+- name: System shell profile scripts
   auto_generated_guid: 8fe2ccfd-f079-4c03-b1a9-bd9b362b67d4
   description: |
     An adversary may wish to establish persistence by adding commands into any of the script files in the /etc/profile.d/ directory, which are executed every time "any" user logs in.
@@ -84,7 +84,7 @@ atomic_tests:
   input_arguments:
     text_to_append:
       description: Text to append to the /etc/profile.d/bash_completion.sh file
-      type: String
+      type: string
       default: "# Hello from Atomic Red Team T1546.004"
   executor:
     elevation_required: true
