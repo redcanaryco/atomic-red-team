@@ -9,14 +9,14 @@ atomic_tests:
   input_arguments:
     source_file:
       description: Location of the CSharp source file to compile and execute
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1106\src\CreateProcess.cs
     output_file:
       description: Location of the payload
-      type: Path
+      type: path
       default: '%tmp%\T1106.exe'
-  dependency_executor_name: powershell 
-  dependencies:   
+  dependency_executor_name: powershell
+  dependencies:
   - description: |
       #{source_file} must exist on system.
     prereq_command: |

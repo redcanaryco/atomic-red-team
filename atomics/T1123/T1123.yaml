@@ -29,26 +29,26 @@ atomic_tests:
 - name: using Quicktime Player
   auto_generated_guid: c7a0bb71-70ce-4a53-b115-881f241b795b
   description: |
-   Use AppleScript to get Quicktime Player to record an audio file from the default microphone.
+    Use AppleScript to get Quicktime Player to record an audio file from the default microphone.
 
-   Should create a non-empty m4a file with sound from the microphone.
+    Should create a non-empty m4a file with sound from the microphone.
 
-   - requires Automation permissions but no additional microphone permissions
-   - saves file in /tmp by default. Other locations likely to require more permissions.
+    - requires Automation permissions but no additional microphone permissions
+    - saves file in /tmp by default. Other locations likely to require more permissions.
   supported_platforms:
   - macos
   input_arguments:
     filename:
       description: Location of the script
-      type: Path
+      type: path
       default: PathToAtomicsFolder/T1123/src/T1123.sh
     audiofile:
       description: Location of the recorded audio file
-      type: Path
+      type: path
       default: /tmp/T1123.m4a
     duration:
       description: Length of recording to make in seconds
-      type: Integer
+      type: integer
       default: 5
   executor:
     command: |
@@ -57,4 +57,4 @@ atomic_tests:
       if test -w #{audiofile}; then
         rm #{audiofile}
       fi
-    name: sh 
+    name: sh

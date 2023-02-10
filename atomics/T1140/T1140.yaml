@@ -11,7 +11,7 @@ atomic_tests:
   input_arguments:
     executable:
       description: name of executable
-      type: Path
+      type: path
       default: C:\Windows\System32\calc.exe
   executor:
     command: |
@@ -30,7 +30,7 @@ atomic_tests:
   input_arguments:
     executable:
       description: name of executable/file to decode
-      type: Path
+      type: path
       default: C:\Windows\System32\calc.exe
   executor:
     command: |
@@ -52,19 +52,19 @@ atomic_tests:
   input_arguments:
     message:
       description: Message to print to the screen
-      type: String
+      type: string
       default: Hello from Atomic Red Team test T1140!
     encoded_file:
       description: File to temporarily save encoded text
-      type: Path
+      type: path
       default: /tmp/T1140.encoded
   dependencies:
-    - description: |
-        Python must be present
-      prereq_command: |
-        which python3
-      get_prereq_command: |
-        echo "Please install Python 3"
+  - description: |
+      Python must be present
+    prereq_command: |
+      which python3
+    get_prereq_command: |
+      echo "Please install Python 3"
   executor:
     name: sh
     elevation_required: false
@@ -86,19 +86,19 @@ atomic_tests:
   input_arguments:
     message:
       description: Message to print to the screen
-      type: String
+      type: string
       default: Hello from Atomic Red Team test T1140!
     encoded_file:
       description: File to temporarily save encoded text
-      type: Path
+      type: path
       default: /tmp/T1140.encoded
   dependencies:
-    - description: |
-        Perl must be present
-      prereq_command: |
-        which perl
-      get_prereq_command: |
-        echo "Please install Perl"
+  - description: |
+      Perl must be present
+    prereq_command: |
+      which perl
+    get_prereq_command: |
+      echo "Please install Perl"
   executor:
     name: sh
     elevation_required: false
@@ -117,11 +117,11 @@ atomic_tests:
   input_arguments:
     message:
       description: Message to print to the screen
-      type: String
+      type: string
       default: Hello from Atomic Red Team test T1140!
     encoded_file:
       description: File to temporarily save encoded text
-      type: Path
+      type: path
       default: /tmp/T1140.encoded
   executor:
     name: sh
@@ -146,19 +146,19 @@ atomic_tests:
   input_arguments:
     message:
       description: Message to print to the screen
-      type: String
+      type: string
       default: Hello from Atomic Red Team test T1140!
     encoded_file:
       description: File to temporarily save encoded text
-      type: Path
+      type: path
       default: /tmp/T1140.encoded
   dependencies:
-    - description: |
-        xxd must be present
-      prereq_command: |
-        which xxd
-      get_prereq_command: |
-        echo "Please install xxd"
+  - description: |
+      xxd must be present
+    prereq_command: |
+      which xxd
+    get_prereq_command: |
+      echo "Please install xxd"
   executor:
     name: sh
     elevation_required: false

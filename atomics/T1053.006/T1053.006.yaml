@@ -7,23 +7,23 @@ atomic_tests:
   description: |
     This test creates Systemd service and timer then starts and enables the Systemd timer 
   supported_platforms:
-    - linux
+  - linux
   input_arguments:
     path_to_systemd_service:
       description: Path to systemd service unit file
-      type: Path
+      type: path
       default: /etc/systemd/system/art-timer.service
     path_to_systemd_timer:
       description: Path to service timer file
-      type: Path
+      type: path
       default: /etc/systemd/system/art-timer.timer
     systemd_service_name:
       description: Name of systemd service
-      type: String
+      type: string
       default: art-timer.service
     systemd_timer_name:
       description: Name of systemd service timer
-      type: String
+      type: string
       default: art-timer.timer
   executor:
     command: |
@@ -58,7 +58,7 @@ atomic_tests:
   description: |
     Schedule a user level transient task (will not survive a reboot) without having to create the .timer or .service files by using the systemd-run command. 
   supported_platforms:
-    - linux
+  - linux
   dependency_executor_name: sh
   dependencies:
   - description: |
@@ -68,7 +68,7 @@ atomic_tests:
     get_prereq_command: |
       echo "Install systemd on the machine."; exit 1;
   executor:
-    elevation_required: false 
+    elevation_required: false
     command: |
       systemd-run --user --unit=Atomic-Red-Team --on-calendar '*:0/1' /bin/sh -c 'echo "$(date) $(whoami)" >>/tmp/log'
     cleanup_command: |
@@ -82,7 +82,7 @@ atomic_tests:
   description: |
     Schedule a system level transient task (will not survive a reboot) without having to create the .timer or .service files by using the systemd-run command. 
   supported_platforms:
-    - linux
+  - linux
   dependency_executor_name: sh
   dependencies:
   - description: |
@@ -92,7 +92,7 @@ atomic_tests:
     get_prereq_command: |
       echo "Install systemd on the machine."; exit 1;
   executor:
-    elevation_required: true 
+    elevation_required: true
     command: |
       systemd-run --unit=Atomic-Red-Team --on-calendar '*:0/1' /bin/sh -c 'echo "$(date) $(whoami)" >>/tmp/log'
     cleanup_command: |

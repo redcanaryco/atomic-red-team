@@ -14,7 +14,7 @@ atomic_tests:
   input_arguments:
     path:
       description: Path of ADS file
-      type: Path
+      type: path
       default: c:\ADS\
   executor:
     command: |
@@ -40,15 +40,15 @@ atomic_tests:
   input_arguments:
     payload_path:
       description: Path of file to hide in ADS
-      type: Path
+      type: path
       default: c:\windows\system32\cmd.exe
     ads_file_path:
       description: Path of file to create an ADS under
-      type: Path
+      type: path
       default: C:\Users\Public\Libraries\yanki\desktop.ini
     ads_name:
       description: Name of ADS
-      type: String
+      type: string
       default: desktop.ini
   executor:
     command: |
@@ -70,11 +70,11 @@ atomic_tests:
   input_arguments:
     file_name:
       description: File name of file to create ADS on.
-      type: String
+      type: string
       default: '%temp%\T1564.004_has_ads_cmd.txt'
     ads_filename:
       description: Name of ADS.
-      type: String
+      type: string
       default: adstest.txt
   executor:
     command: |
@@ -93,11 +93,11 @@ atomic_tests:
   input_arguments:
     file_name:
       description: File name of file to create ADS on.
-      type: String
+      type: string
       default: $env:TEMP\T1564.004_has_ads_powershell.txt
     ads_filename:
       description: Name of ADS file.
-      type: String
+      type: string
       default: adstest.txt
   dependency_executor_name: powershell
   dependencies:

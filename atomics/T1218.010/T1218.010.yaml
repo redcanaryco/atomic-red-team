@@ -10,15 +10,15 @@ atomic_tests:
   input_arguments:
     filename:
       description: Name of the local file, include path.
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1218.010\src\RegSvr32.sct
     regsvr32path:
       description: Default location of Regsvr32.exe
-      type: Path
+      type: path
       default: C:\Windows\system32
     regsvr32name:
       description: Default name of Regsvr32.exe
-      type: String
+      type: string
       default: regsvr32.exe
   dependency_executor_name: powershell
   dependencies:
@@ -44,15 +44,15 @@ atomic_tests:
   input_arguments:
     url:
       description: URL to hosted sct file
-      type: Url
+      type: url
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1218.010/src/RegSvr32.sct
     regsvr32path:
       description: Default location of Regsvr32.exe
-      type: Path
+      type: path
       default: C:\Windows\system32
     regsvr32name:
       description: Default name of Regsvr32.exe
-      type: String
+      type: string
       default: regsvr32.exe
   executor:
     command: |
@@ -68,15 +68,15 @@ atomic_tests:
   input_arguments:
     dll_name:
       description: Name of DLL to Execute, DLL Should export DllRegisterServer
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1218.010\bin\AllTheThingsx86.dll
     regsvr32path:
       description: Default location of Regsvr32.exe
-      type: Path
+      type: path
       default: C:\Windows\system32
     regsvr32name:
       description: Default name of Regsvr32.exe
-      type: String
+      type: string
       default: regsvr32.exe
   dependency_executor_name: powershell
   dependencies:
@@ -98,32 +98,32 @@ atomic_tests:
     Replicating observed Gozi maldoc behavior registering a dll with an altered extension
 
   supported_platforms:
-    - windows
+  - windows
 
   input_arguments:
     dll_file:
       description: Path to renamed dll file to be registered
-      type: Path
+      type: path
       default: '%temp%\shell32.jpg'
     regsvr32path:
       description: Default location of Regsvr32.exe
-      type: Path
+      type: path
       default: C:\Windows\system32
     regsvr32name:
       description: Default name of Regsvr32.exe
-      type: String
+      type: string
       default: regsvr32.exe
-  dependency_executor_name: command_prompt 
+  dependency_executor_name: command_prompt
   dependencies: # (optional)
-    - description: |
-        Test requires a renamed dll file
-      prereq_command: | 
-        if exist #{dll_file} ( exit 0 ) else ( exit 1 )
-      get_prereq_command: | # commands to meet this prerequisite or a message describing how to meet this prereq
-        copy "C:\Windows\System32\shell32.dll" "#{dll_file}"
+  - description: |
+      Test requires a renamed dll file
+    prereq_command: |
+      if exist #{dll_file} ( exit 0 ) else ( exit 1 )
+    get_prereq_command: | # commands to meet this prerequisite or a message describing how to meet this prereq
+      copy "C:\Windows\System32\shell32.dll" "#{dll_file}"
   executor:
     name: command_prompt
-    elevation_required: false 
+    elevation_required: false
     command: |
       #{regsvr32path}\#{regsvr32name} /s #{dll_file}
     cleanup_command: |
@@ -137,15 +137,15 @@ atomic_tests:
   input_arguments:
     dll_name:
       description: Name of DLL to Install
-      type: String
+      type: string
       default: PathToAtomicsFolder\T1218.010\bin\AllTheThingsx86.dll
     regsvr32path:
       description: Default location of Regsvr32.exe
-      type: String
+      type: string
       default: C:\Windows\system32
     regsvr32name:
       description: Default name of Regsvr32.exe
-      type: String
+      type: string
       default: regsvr32.exe
   dependency_executor_name: powershell
   dependencies:

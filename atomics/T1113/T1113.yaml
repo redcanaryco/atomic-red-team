@@ -10,7 +10,7 @@ atomic_tests:
   input_arguments:
     output_file:
       description: Output file path
-      type: Path
+      type: path
       default: /tmp/T1113_desktop.png
   executor:
     command: |
@@ -27,7 +27,7 @@ atomic_tests:
   input_arguments:
     output_file:
       description: Output file path
-      type: Path
+      type: path
       default: /tmp/T1113_desktop.png
   executor:
     command: |
@@ -44,15 +44,15 @@ atomic_tests:
   input_arguments:
     output_file:
       description: Output file path
-      type: Path
+      type: path
       default: /tmp/T1113_desktop.xwd
     package_checker:
       description: Package checking command for linux. Debian system command- dpkg -s x11-apps
-      type: String
+      type: string
       default: rpm -q xorg-x11-apps
     package_installer:
       description: Package installer command for linux. Debian system command- apt-get install x11-apps
-      type: String
+      type: string
       default: yum install -y xorg-x11-apps
   dependency_executor_name: bash
   dependencies:
@@ -78,7 +78,7 @@ atomic_tests:
   input_arguments:
     output_file:
       description: Output file path
-      type: Path
+      type: path
       default: /tmp/T1113_desktop.png
   dependencies:
   - description: |
@@ -98,15 +98,15 @@ atomic_tests:
   description: |
     Use Psr.exe binary to collect screenshots of user display. Test will do left mouse click to simulate user behaviour
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     output_file:
       description: Output file path
-      type: Path
+      type: path
       default: c:\temp\T1113_desktop.zip
     recording_time:
       description: Time to take screenshots
-      type: String
+      type: string
       default: 5
   executor:
     name: powershell
@@ -129,7 +129,7 @@ atomic_tests:
   input_arguments:
     output_file:
       description: Path where captured results will be placed
-      type: Path
+      type: path
       default: $env:TEMP\T1113.png
   executor:
     command: |
