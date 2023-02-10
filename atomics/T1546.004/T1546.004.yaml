@@ -40,6 +40,7 @@ atomic_tests:
       mv /tmp/T1546.004 ~/.bashrc
     name: sh
 - name: Append to the system shell profile
+  auto_generated_guid: 694b3cc8-6a78-4d35-9e74-0123d009e94b
   description: |
     An adversary may wish to establish persistence by executing malicious commands from the systems /etc/profile every time "any" user logs in.
   supported_platforms:
@@ -57,6 +58,7 @@ atomic_tests:
     cleanup_command: |
       sed -i "s/# Atomic Red Team was here! T1546.004//" /etc/profile
 - name: Append commands user shell profile
+  auto_generated_guid: bbdb06bc-bab6-4f5b-8232-ba3fbed51d77
   description: |
     An adversary may wish to establish persistence by executing malicious commands from the users ~/.profile every time the "user" logs in.
   supported_platforms:
@@ -74,6 +76,7 @@ atomic_tests:
     cleanup_command: |
       sed -i "s/# Atomic Red Team was here! T1546.004//" ~/.profile
 - name: System shell profile scripts 
+  auto_generated_guid: 8fe2ccfd-f079-4c03-b1a9-bd9b362b67d4
   description: |
     An adversary may wish to establish persistence by adding commands into any of the script files in the /etc/profile.d/ directory, which are executed every time "any" user logs in.
   supported_platforms:
