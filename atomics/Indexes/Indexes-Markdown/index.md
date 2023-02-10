@@ -1097,6 +1097,10 @@
   - Atomic Test #3: Harvest SUID executable files [linux]
   - Atomic Test #4: LinEnum tool execution [linux]
   - Atomic Test #5: New script file in the tmp directory [linux]
+  - Atomic Test #6: What shell is running [linux]
+  - Atomic Test #7: What shells are available [linux]
+  - Atomic Test #8: Command line scripts [linux]
+  - Atomic Test #9: Obfuscated command line scripts [linux]
 - T1559 Inter-Process Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1204.003 Malicious Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1154 Trap [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1852,8 +1856,9 @@
 - [T1056.004 Input Capture: Credential API Hooking](../../T1056.004/T1056.004.md)
   - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
 - [T1552.007 Kubernetes List Secrets](../../T1552.007/T1552.007.md)
-  - Atomic Test #1: ListSecrets [containers]
-  - Atomic Test #2: Cat the contents of a Kubernetes service account token file [linux]
+  - Atomic Test #1: List All Secrets [containers]
+  - Atomic Test #2: ListSecrets [containers]
+  - Atomic Test #3: Cat the contents of a Kubernetes service account token file [linux]
 - T1556.004 Network Device Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 
 # discovery
@@ -2454,4 +2459,5 @@
   - Atomic Test #5: Exfiltration Over Alternative Protocol - SMTP [windows]
   - Atomic Test #6: MAZE FTP Upload [windows]
   - Atomic Test #7: Exfiltration Over Alternative Protocol - FTP - Rclone [windows]
+  - Atomic Test #8: Python3 http.server [linux]
 
