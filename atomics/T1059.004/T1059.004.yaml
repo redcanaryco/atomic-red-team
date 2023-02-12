@@ -162,3 +162,38 @@ atomic_tests:
       echo "\$ART=$ART"
       echo -n "$ART" |base64 -d |/bin/bash
       unset ART 
+- name: Change login shell
+  description: |
+    An adversary may want to use a different login shell. The chsh command changes the user login shell. The following test, creates an art user with a /bin/bash shell, changes the users shell to sh, then deletes the art user. 
+  supported_platforms:
+    - linux
+  dependencies:
+    - description: |
+      chsh - change login shell, must be installed
+    prereq_command: |
+      if [ -f /usr/bin/chsh ]; then echo "exit 0"; else echo "exit 1"; exit 1; fi
+    get_prereq_command: |
+      echo "Automated installer not implemented yet, please install chsh manually"
+  executor:
+    name: bash
+    elevation_required: true 
+    command: |      
+      useradd -s /bin/bash art
+      cat /etc/passwd |grep ^art
+      chsh -s /bin/sh art
+      cat /etc/passwd |grep ^art
+    cleanup_command: | 
+      userdel art
+- name: Environment variable scripts
+  description: |
+    An adversary may place scripts in an environment variable because they can't or don't wish to create script files on the host. The following test, in a bash shell, exports the ART variable containing an echo command, then pipes the variable to /bin/bash
+  supported_platforms:
+    - linux
+  executor:
+    name: bash
+    elevation_required: false 
+    command: |
+      export ART='echo "Atomic Red Team was here... T1059.004"'
+      echo $ART |/bin/bash
+    cleanup_command: | 
+      unset ART
