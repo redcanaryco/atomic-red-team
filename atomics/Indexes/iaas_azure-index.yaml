@@ -11665,23 +11665,23 @@ defense-evasion:
       input_arguments:
         username:
           description: Azure username
-          type: String
+          type: string
           default: 
         password:
           description: Azure password
-          type: String
+          type: string
           default: 
         event_hub_name:
           description: Name of the eventhub
-          type: String
+          type: string
           default: test_eventhub
         resource_group:
           description: Name of the resource group
-          type: String
+          type: string
           default: 
         name_space_name:
           description: Name of the NameSpace
-          type: String
+          type: string
           default: 
       dependency_executor_name: powershell
       dependencies:
@@ -36309,23 +36309,23 @@ persistence:
       input_arguments:
         username:
           description: Azure AD username
-          type: String
+          type: string
           default: jonh@contoso.com
         password:
           description: Azure AD password
-          type: String
+          type: string
           default: p4sswd
         user_principal_name:
           description: Name of the targeted user (user principal)
-          type: String
+          type: string
           default: SuperUser
         role_name:
           description: Name of the targed Azure role
-          type: String
+          type: string
           default: Reader
         subscription:
           description: Name of the targed subscription
-          type: String
+          type: string
           default: Azure subscription 1
       dependencies:
       - description: 'Az.Resources module must be installed.
@@ -36389,23 +36389,23 @@ persistence:
       input_arguments:
         username:
           description: Azure AD username
-          type: String
+          type: string
           default: jonh@contoso.com
         password:
           description: Azure AD password
-          type: String
+          type: string
           default: p4sswd
         service_principal_name:
           description: Name of the service principal
-          type: String
+          type: string
           default: SuperSP
         role_name:
           description: Name of the targed Azure role
-          type: String
+          type: string
           default: Reader
         subscription:
           description: Name of the targed subscription
-          type: String
+          type: string
           default: Azure subscription 1
       dependencies:
       - description: 'Az.Resources module must be installed.
@@ -41421,15 +41421,15 @@ collection:
       input_arguments:
         base:
           description: Azure blob keyword to enumerate (Example, storage account name)
-          type: String
+          type: string
           default: secure
         output_file:
           description: File to output results to
-          type: String
+          type: string
           default: "$env:temp\\T1530Test1.txt"
         wordlist:
           description: File path to keywords for search permutations
-          type: String
+          type: string
           default: "$env:temp\\permutations.txt"
       dependency_executor_name: powershell
       dependencies:
@@ -41475,19 +41475,19 @@ collection:
       input_arguments:
         base_name:
           description: Azure storage account name to test
-          type: String
+          type: string
           default: T1530Test2
         output_file:
           description: File to output results to
-          type: String
+          type: string
           default: "$env:temp\\T1530Test2.txt"
         container_name:
           description: Container name to search for (optional)
-          type: String
+          type: string
           default: 
         blob_name:
           description: Blob name to search for (optional)
-          type: String
+          type: string
           default: 
       executor:
         command: |
@@ -45818,7 +45818,7 @@ credential-access:
       input_arguments:
         output_file:
           description: File to output metadata to
-          type: String
+          type: string
           default: "$env:temp\\T1552.005Test2.txt"
       executor:
         command: 'Invoke-RestMethod -Headers @{"Metadata"="true"} -Method GET -Uri
@@ -48316,19 +48316,19 @@ credential-access:
       input_arguments:
         username:
           description: Azure AD username
-          type: String
+          type: string
           default: 
         password:
           description: Azure AD password
-          type: String
+          type: string
           default: T1082Az
         output_file:
           description: File to dump results to
-          type: String
+          type: string
           default: "$env:temp\\T1528Test1.txt"
         subscription_id:
           description: Azure subscription id to search
-          type: String
+          type: string
           default: 
       dependency_executor_name: powershell
       dependencies:
@@ -52774,19 +52774,19 @@ discovery:
       input_arguments:
         username:
           description: Azure AD username
-          type: String
+          type: string
           default: 
         password:
           description: Azure AD password
-          type: String
+          type: string
           default: T1082Az
         output_directory:
           description: Directory to output results to
-          type: String
+          type: string
           default: "$env:temp\\T1526Test1"
         subscription_name:
           description: Azure subscription name to scan
-          type: String
+          type: string
           default: 
       dependency_executor_name: powershell
       dependencies:
