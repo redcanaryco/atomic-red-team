@@ -77,7 +77,7 @@ atomic_tests:
 
    Upon successful execution, the 5 character locale result can be looked up to
    correlate the language and territory. Environment query commands are likely
-   to run with a pattern match command e.g. `printenv | grep LANG`
+   to run with a pattern match command e.g. `env | grep LANG`
 
    Note: `env` and `printenv` will usually provide the same results. `set` is
    also used as a builtin command that does not generate syscall telemetry but
@@ -95,7 +95,7 @@ atomic_tests:
       exit 1
   executor:
     command: |
-      env
-      printenv
-      set
+      env | grep LANG
+      printenv LANG
+      set | grep LANG
     name: sh
