@@ -5,7 +5,7 @@ atomic_tests:
   auto_generated_guid: 8ecef16d-d289-46b4-917b-0dba6dc81cf1
   description: |
     The following Atomic will modify an undocumented registry key that may be abused to load a arbitrary DLL into LSASS. 
-    
+
     Upon execution, the registry key will be modified and a value will contain the path to the DLL. 
     Reference: https://blog.xpnsec.com/exploring-mimikatz-part-1/ and source https://github.com/oxfemale/LogonCredentialsSteal
     Note that if any LSA based protection is enabled, this will most likely not be successful with LSASS.exe loading the DLL.
@@ -14,7 +14,7 @@ atomic_tests:
   input_arguments:
     dll_path:
       description: Module to be loaded into LSASS
-      type: Path
+      type: path
       default: '$env:TEMP\lsass_lib.dll'
   dependency_executor_name: powershell
   dependencies:

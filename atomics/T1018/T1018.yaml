@@ -37,7 +37,7 @@ atomic_tests:
   input_arguments:
     target_domain:
       description: Domain to query for domain controllers
-      type: String
+      type: string
       default: '%userdnsdomain%'
   executor:
     command: |
@@ -51,21 +51,21 @@ atomic_tests:
     Upon successful execution, cmd.exe will perform a for loop against the 192.168.1.1/24 network. Output will be via stdout.
   supported_platforms:
   - windows
-  input_arguments:                                                                                                                                         
-    start_host:                                                                                                                                            
-      description: Last octet starting value for ping sweep.                                                                                                             
-      type: String                                                                                                                                         
-      default: "1"                                                                                                                                         
-    stop_host:                                                                                                                                             
-      description: Last octet ending value for ping sweep.                                                                                                             
-      type: String                                                                                                                                         
-      default: "254"                                                                                                                                       
-    subnet:                                                                                                                  
-      description: Subnet used for ping sweep.                                                                               
-      type: String                                                                                                           
-      default: 192.168.1                                                                                                     
-  executor:                                                                                                                  
-    command: |                                                                                                               
+  input_arguments:
+    start_host:
+      description: Last octet starting value for ping sweep.
+      type: string
+      default: "1"
+    stop_host:
+      description: Last octet ending value for ping sweep.
+      type: string
+      default: "254"
+    subnet:
+      description: Subnet used for ping sweep.
+      type: string
+      default: 192.168.1
+  executor:
+    command: |
       for /l %i in (#{start_host},1,#{stop_host}) do ping -n 1 -w 100 #{subnet}.%i  
     name: command_prompt
 - name: Remote System Discovery - arp
@@ -113,15 +113,15 @@ atomic_tests:
   input_arguments:
     start_host:
       description: Subnet used for ping sweep.
-      type: String
+      type: string
       default: "1"
     stop_host:
       description: Subnet used for ping sweep.
-      type: String
+      type: string
       default: "254"
     subnet:
       description: Subnet used for ping sweep.
-      type: String
+      type: string
       default: 192.168.1
   executor:
     command: |
@@ -156,15 +156,15 @@ atomic_tests:
   input_arguments:
     user_name:
       description: username including domain.
-      type: String
+      type: string
       default: 'domain\user'
     acct_pass:
       description: Account password.
-      type: String
+      type: string
       default: "password"
     host_name:
       description: hostname or ip address to connect to.
-      type: String
+      type: string
       default: "192.168.1.1"
   dependency_executor_name: powershell
   dependencies:
@@ -193,7 +193,7 @@ atomic_tests:
     elevation_required: true
 - name: Adfind - Enumerate Active Directory Computer Objects
   auto_generated_guid: a889f5be-2d54-4050-bd05-884578748bb4
-  description: | 
+  description: |
     Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Computer Objects
     reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
   supported_platforms:
@@ -201,7 +201,7 @@ atomic_tests:
   input_arguments:
     adfind_path:
       description: Path to the AdFind executable
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1087.002\src\AdFind.exe
   dependency_executor_name: powershell
   dependencies:
@@ -217,7 +217,7 @@ atomic_tests:
     name: command_prompt
 - name: Adfind - Enumerate Active Directory Domain Controller Objects
   auto_generated_guid: 5838c31e-a0e2-4b9f-b60a-d79d2cb7995e
-  description: | 
+  description: |
     Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Domain Controller Objects
     reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
   supported_platforms:
@@ -225,7 +225,7 @@ atomic_tests:
   input_arguments:
     adfind_path:
       description: Path to the AdFind executable
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1087.002\src\AdFind.exe
   dependency_executor_name: powershell
   dependencies:
@@ -307,9 +307,9 @@ atomic_tests:
   - windows
   dependency_executor_name: powershell
   dependencies:
-  - description: This PC must be joined to a domain. 
+  - description: This PC must be joined to a domain.
     prereq_command: |-
-     if ((Get-WmiObject -Class Win32_ComputerSystem).partofdomain -eq $true) {exit 0} else {exit 1}		
+      if ((Get-WmiObject -Class Win32_ComputerSystem).partofdomain -eq $true) {exit 0} else {exit 1}
     get_prereq_command: |-
       write-host "This PC must be manually added to a domain." 
   executor:
@@ -373,7 +373,7 @@ atomic_tests:
     elevation_required: false
     command: |
       get-wmiobject -class ds_computer -namespace root\directory\ldap
-- name: Remote System Discovery - net group Domain Controller 
+- name: Remote System Discovery - net group Domain Controller
   auto_generated_guid: 5843529a-5056-4bc1-9c13-a311e2af4ca0
   description: |
     Identify remote systems with net.exe querying the Active Directory Domain Controller.

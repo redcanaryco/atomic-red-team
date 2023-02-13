@@ -11,7 +11,7 @@ atomic_tests:
   input_arguments:
     script_path:
       description: Script path
-      type: Path
+      type: path
       default: /tmp/art.sh
   executor:
     command: |
@@ -43,15 +43,15 @@ atomic_tests:
   description: |
     AutoSUID application is the Open-Source project, the main idea of which is to automate harvesting the SUID executable files and to find a way for further escalating the privileges. 
   supported_platforms:
-  - linux 
+  - linux
   input_arguments:
     autosuid:
       description: Path to the autosuid shell script
-      type: Path
+      type: path
       default: PathToAtomicsFolder/T1059.004/src/AutoSUID.sh
     autosuid_url:
       description: Path to download autosuid shell script
-      type: Url
+      type: url
       default: https://raw.githubusercontent.com/IvanGlinkin/AutoSUID/main/AutoSUID.sh
   dependency_executor_name: bash
   dependencies:
@@ -73,15 +73,15 @@ atomic_tests:
   description: |
     LinEnum is a bash script that performs discovery commands for accounts,processes, kernel version, applications, services, and uses the information from these commands to present operator with ways of escalating privileges or further exploitation of targeted host.
   supported_platforms:
-  - linux 
+  - linux
   input_arguments:
     linenum:
       description: Path to the LinEnum shell script
-      type: Path
+      type: path
       default: PathToAtomicsFolder/T1059.004/src/LinEnum.sh
     linenum_url:
       description: Path to download LinEnum shell script
-      type: Url
+      type: url
       default: https://raw.githubusercontent.com/rebootuser/LinEnum/c47f9b226d3ce2848629f25fe142c1b2986bc427/LinEnum.sh
   dependency_executor_name: bash
   dependencies:

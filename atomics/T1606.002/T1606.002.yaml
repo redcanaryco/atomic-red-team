@@ -12,15 +12,15 @@ atomic_tests:
   input_arguments:
     certificate_path:
       description: Token signing certificate path. See T1552.004 to export it
-      type: Path
+      type: path
       default: '.\ADFS_signing.pfx'
     immutable_id:
       description: ImmutableId of the targeted user. It can be obtained with AzureAD powershell module; $(Get-AzureADUser -SearchString "username").ImmutableId
-      type: String
+      type: string
       default: "aehgdqBTZV50DKQZmNJ8mg=="
     issuer_uri:
       description: Issuer URI of the ADFS service
-      type: String
+      type: string
       default: "http://contoso.com/adfs/services/trust/"
   dependency_executor_name: powershell
   dependencies:
@@ -38,4 +38,3 @@ atomic_tests:
       if ($conn) { Write-Host "`nSuccessfully connected as $($conn.User)" } else { Write-Host "`nThe connection failed" }
       Write-Host "End of Golden SAML"
     name: powershell
-

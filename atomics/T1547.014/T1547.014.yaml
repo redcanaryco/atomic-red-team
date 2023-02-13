@@ -7,17 +7,17 @@ atomic_tests:
     This test will create an "atomic_test" key under 'HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components' to launch calc by configuring an active setup executable and 
     forcing to run active setup using the "runonce.exe /AlternateShellStartup" command. 
     Without the "runonce.exe /AlternateShellStartup" command it would run during the next logon for each user.
-    
+
     Note: If you logout before running the cleanup command, you will be required to go through the OOBE (out-of-box experience) setup sequence to log back in. 
     The payload will only run once unless the cleanup command is run in between tests.
-  
+
     [Active Setup Explained](https://helgeklein.com/blog/active-setup-explained/)
   supported_platforms:
   - windows
   input_arguments:
     payload:
       description: Payload to run once during login
-      type: String
+      type: string
       default: C:\Windows\System32\calc.exe
   executor:
     command: |-
@@ -41,7 +41,7 @@ atomic_tests:
   input_arguments:
     payload:
       description: Payload to run once during login
-      type: String
+      type: string
       default: C:\Windows\System32\calc.exe
   executor:
     command: |-

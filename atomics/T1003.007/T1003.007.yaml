@@ -1,4 +1,3 @@
----
 attack_technique: T1003.007
 display_name: 'OS Credential Dumping: Proc Filesystem'
 atomic_tests:
@@ -9,31 +8,31 @@ atomic_tests:
     copy process memory to an external file so it can be searched or exfiltrated later.
 
   supported_platforms:
-    - linux
+  - linux
 
   input_arguments:
     output_file:
       description: Path where captured results will be placed
-      type: Path
+      type: path
       default: /tmp/T1003.007.bin
     script_path:
       description: Path to script generating the target process
-      type: Path
+      type: path
       default: /tmp/T1003.007.sh
     pid_term:
       description: Unique string to use to identify target process
-      type: String
+      type: string
       default: T1003.007
 
   dependencies:
-    - description: |
-        Script to launch target process must exist
-      prereq_command: |
-        test -f #{script_path}
-        grep "#{pid_term}" #{script_path}
-      get_prereq_command: |
-        echo '#!/bin/sh' > #{script_path}
-        echo "sh -c 'echo \"The password is #{pid_term}\" && sleep 30' &" >> #{script_path}
+  - description: |
+      Script to launch target process must exist
+    prereq_command: |
+      test -f #{script_path}
+      grep "#{pid_term}" #{script_path}
+    get_prereq_command: |
+      echo '#!/bin/sh' > #{script_path}
+      echo "sh -c 'echo \"The password is #{pid_term}\" && sleep 30' &" >> #{script_path}
 
   executor:
     name: sh
@@ -57,41 +56,41 @@ atomic_tests:
     copy a process's heap memory to an external file so it can be searched or exfiltrated later.
 
   supported_platforms:
-    - linux
+  - linux
 
   input_arguments:
     output_file:
       description: Path where captured results will be placed
-      type: Path
+      type: path
       default: /tmp/T1003.007.bin
     script_path:
       description: Path to script generating the target process
-      type: Path
+      type: path
       default: /tmp/T1003.007.sh
     python_script:
       description: Path to script generating the target process
-      type: Path
+      type: path
       default: PathToAtomicsFolder/T1003.007/src/dump_heap.py
     pid_term:
       description: Unique string to use to identify target process
-      type: String
+      type: string
       default: T1003.007
 
   dependencies:
-    - description: |
-        Script to launch target process must exist
-      prereq_command: |
-        test -f #{script_path}
-        grep "#{pid_term}" #{script_path}
-      get_prereq_command: |
-        echo '#!/bin/sh' > #{script_path}
-        echo "sh -c 'echo \"The password is #{pid_term}\" && sleep 30' &" >> #{script_path}
-    - description: |
-        Requires Python
-      prereq_command: |
-        (which python || which python3 || which python2)
-      get_prereq_command: |
-        echo "Python 2.7+ or 3.4+ must be installed"
+  - description: |
+      Script to launch target process must exist
+    prereq_command: |
+      test -f #{script_path}
+      grep "#{pid_term}" #{script_path}
+    get_prereq_command: |
+      echo '#!/bin/sh' > #{script_path}
+      echo "sh -c 'echo \"The password is #{pid_term}\" && sleep 30' &" >> #{script_path}
+  - description: |
+      Requires Python
+    prereq_command: |
+      (which python || which python3 || which python2)
+    get_prereq_command: |
+      echo "Python 2.7+ or 3.4+ must be installed"
 
   executor:
     name: sh
@@ -116,11 +115,11 @@ atomic_tests:
   input_arguments:
     output_file:
       description: Path where captured results will be placed
-      type: Path
+      type: path
       default: /tmp/T1003.007Test3.txt
     MimiPenguin_Location:
       description: Path of MimiPenguin script
-      type: Path
+      type: path
       default: /tmp/mimipenguin/mimipenguin_2.0-release/mimipenguin.sh
   dependency_executor_name: sh
   dependencies:

