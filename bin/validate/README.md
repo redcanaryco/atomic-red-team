@@ -2,15 +2,16 @@
 
 We provide validation of each defined Atomic Red Team test in the form of a [JSON Schema](https://json-schema.org/). This schema defines the structure and format of an Atomic test.
 
-* [Validation Requirements](#validation-requirements)
-    * [atomic_tests](#atomic_tests)
-        * [input_arguments](#input_arguments)
-        * [dependencies](#dependencies)
-        * [dependency_executor_name](#dependency_executor_name)
-        * [executor](#executor)
-* [Tooling & Usage](#tooling--usage)
-* [Error Messages (Ruby)](#error-messages-ruby-version)
-* [Error Messages (Python)](#error-messages-python-version)
+- [Validaton](#validaton)
+  - [Validation Requirements](#validation-requirements)
+    - [atomic\_tests](#atomic_tests)
+    - [input\_arguments](#input_arguments)
+    - [dependencies](#dependencies)
+    - [dependency\_executor\_name](#dependency_executor_name)
+    - [executor](#executor)
+  - [Tooling \& Usage](#tooling--usage)
+  - [Error Messages (Ruby Version)](#error-messages-ruby-version)
+  - [Error Messages (Python version)](#error-messages-python-version)
 
 We use this schema to validate the format of Atomics using a [GitHub Action](.../.github/workflows/validate-schema.yml) which runs on every push to the repository. If an Atomic fails validation, it is not allowed to be merged into the main branch.
 
@@ -94,7 +95,7 @@ The executor for the prereq commands, defaults to the same executor used by the 
 
 ### executor
 
-The `executor` propery contains a list of unique executors for each envirnoment that the test belongs to or has defined definitions for.
+The `executor` propery contains a list of unique executors for each environment that the test belongs to or has defined definitions for.
 
 Each defined `executor` can define the following properties.
 
