@@ -57,12 +57,12 @@ atomic_tests:
       default: /tmp/t1547007_append_exe
   dependency_executor_name: bash
   dependencies:
-    - description: |
-         compile C program
-      prereq_command: |
-         if [ -f "#{exe_path}" ]; then exit 0 ; else exit 1; fi
-      get_prereq_command: |
-         cc #{objc_source_path} -o #{exe_path} -framework Cocoa
+  - description: |
+      compile C program
+    prereq_command: |
+      if [ -f "#{exe_path}" ]; then exit 0 ; else exit 1; fi
+    get_prereq_command: |
+      cc #{objc_source_path} -o #{exe_path} -framework Cocoa
   executor:
     command: |
       FILE=`find ~/Library/Preferences/ByHost/com.apple.loginwindow.*.plist -type f | head -1`

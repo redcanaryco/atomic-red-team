@@ -12,19 +12,19 @@ atomic_tests:
   input_arguments:
     query_type:
       description: DNS query type
-      type: String
+      type: string
       default: TXT
     subdomain:
       description: Subdomain prepended to the domain name
-      type: String
+      type: string
       default: atomicredteam
     query_volume:
       description: Number of DNS queries to send
-      type: Integer
+      type: integer
       default: 1000
     domain:
       description: Default domain to simulate against
-      type: String
+      type: string
       default: 127.0.0.1.xip.io
   executor:
     command: |
@@ -41,27 +41,27 @@ atomic_tests:
   input_arguments:
     runtime:
       description: Time in minutes to run the simulation
-      type: Integer
+      type: integer
       default: 30
     domain:
       description: Default domain to simulate against
-      type: String
+      type: string
       default: 127.0.0.1.xip.io
     subdomain:
       description: Subdomain prepended to the domain name
-      type: String
+      type: string
       default: atomicredteam
     query_type:
       description: DNS query type
-      type: String
+      type: string
       default: TXT
     c2_interval:
       description: Seconds between C2 requests to the command and control server
-      type: Integer
+      type: integer
       default: 30
     c2_jitter:
       description: Percentage of jitter to add to the C2 interval to create variance in the times between C2 requests
-      type: Integer
+      type: integer
       default: 20
   executor:
     command: |
@@ -79,15 +79,15 @@ atomic_tests:
   input_arguments:
     query_type:
       description: DNS query type
-      type: String
+      type: string
       default: TXT
     subdomain:
       description: Subdomain prepended to the domain name (should be 63 characters to test maximum length)
-      type: String
+      type: string
       default: atomicredteamatomicredteamatomicredteamatomicredteamatomicredte
     domain:
       description: Default domain to simulate against
-      type: String
+      type: string
       default: 127.0.0.1.xip.io
   executor:
     command: |
@@ -108,11 +108,11 @@ atomic_tests:
   input_arguments:
     domain:
       description: Domain Name configured to use DNS Server where your C2 listener is running
-      type: String
+      type: string
       default: example.com
     server_ip:
       description: IP address of DNS server where your C2 listener is running
-      type: String
+      type: string
       default: 127.0.0.1
   executor:
     command: |

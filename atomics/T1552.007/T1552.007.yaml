@@ -1,6 +1,28 @@
 attack_technique: T1552.007
 display_name: Kubernetes List Secrets
 atomic_tests:
+- name: List All Secrets
+  auto_generated_guid: 31e794c4-48fd-4a76-aca4-6587c155bc11
+  description: |
+    A Kubernetes secret is an object that lets users store and manage sensitive information, such as passwords and connection strings in the cluster. Secrets can be consumed by reference in the pod configuration. Attackers who have permissions to retrieve the secrets from the API server (by using the pod service account, for example) can access sensitive information that might include credentials to various services or provide further access to the cluster.
+    [More information about secrets](https://kubernetes.io/docs/concepts/configuration/secret/).
+
+    This test will make a request to the Kubernetes api at the `/api/v1/secrets` endpoint requesting every secret stored within the cluster.
+  supported_platforms:
+  - containers
+  dependencies:
+  - description: |
+      kubectl must be installed
+    prereq_command: |
+      which kubectl
+    get_prereq_command: |
+      echo "kubectl not installed, please install kubectl (https://kubernetes.io/docs/tasks/tools/)"
+  executor:
+    command: |
+      kubectl get secrets --all-namespaces
+    name: bash
+    elevation_required: false
+
 - name: ListSecrets
   auto_generated_guid: 43c3a49d-d15c-45e6-b303-f6e177e44a9a
   description: |
@@ -10,7 +32,7 @@ atomic_tests:
   input_arguments:
     namespace:
       description: K8s namespace to list
-      type: String
+      type: string
       default: default
   dependencies:
   - description: |
@@ -29,24 +51,24 @@ atomic_tests:
   auto_generated_guid: 788e0019-a483-45da-bcfe-96353d46820f
   description: |
     Access the Kubernetes service account access token stored within a container in a cluster.
-  
+
   supported_platforms:
   - linux
-  
+
   dependency_executor_name: sh
-  dependencies: 
+  dependencies:
   - description: Verify docker is installed.
     prereq_command: |
       which docker
     get_prereq_command: |
       if [ "" == "`which docker`" ]; then echo "Docker Not Found"; if [ -n "`which apt-get`" ]; then sudo apt-get -y install docker ; elif [ -n "`which yum`" ]; then sudo yum -y install docker ; fi ; else echo "Docker installed"; fi
-  
+
   - description: Verify docker service is running.
     prereq_command: |
       sudo systemctl status docker
     get_prereq_command: |
       sudo systemctl start docker
-  
+
   - description: Verify kind is in the path.
     prereq_command: |
       which kind
@@ -54,13 +76,13 @@ atomic_tests:
       curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.10.0/kind-linux-amd64
       chmod +x ./kind
       mv kind /usr/bin/kind
-  
+
   - description: Verify kind-atomic-cluster is created
     prereq_command: |
       sudo kind get clusters
     get_prereq_command: |
       sudo kind create cluster --name atomic-cluster
-  
+
   - description: Verify kubectl is in path
     prereq_command: |
       which kubectl
@@ -74,7 +96,7 @@ atomic_tests:
       kubectl --context kind-atomic-cluster get pods |grep atomic-pod
     get_prereq_command: |
       kubectl --context kind-atomic-cluster run atomic-pod --image=alpine --command -- sleep infinity
-  
+
   executor:
     command: |
       kubectl --context kind-atomic-cluster exec atomic-pod -- cat /run/secrets/kubernetes.io/serviceaccount/token

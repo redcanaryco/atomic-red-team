@@ -122,7 +122,7 @@ atomic_tests:
       Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\batstartup.bat" -ErrorAction Ignore
     name: powershell
     elevation_required: true
-    
+
 - name: Add Executable Shortcut Link to User Startup Folder
   auto_generated_guid: 24e55612-85f6-4bd6-ae74-a73d02e3441d
   description: 'Adds a non-malicious executable shortcut link to the current users startup directory. Test can be verified by going to the users startup directory and checking if the shortcut link exists. '
@@ -138,7 +138,7 @@ atomic_tests:
       $Create.Save()      
     cleanup_command: Remove-Item "$home\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\calc_exe.lnk" -ErrorAction Ignore
     name: powershell
-    elevation_required: true 
+    elevation_required: true
 
 - name: Add persistance via Recycle bin
   auto_generated_guid: bda6a3d6-7aa7-4e89-908b-306772e9662f
@@ -148,15 +148,15 @@ atomic_tests:
   supported_platforms:
   - windows
   executor:
-    command: reg ADD "HKCR\CLSID\{645FF040-5081-101B-9F08-00AA002F954E}\shell\open\command" /ve /d "calc.exe" /f  
+    command: reg ADD "HKCR\CLSID\{645FF040-5081-101B-9F08-00AA002F954E}\shell\open\command" /ve /d "calc.exe" /f
     cleanup_command: reg DELETE "HKCR\CLSID\{645FF040-5081-101B-9F08-00AA002F954E}\shell\open" /f
     name: command_prompt
 
 - name: SystemBC Malware-as-a-Service Registry
   auto_generated_guid: 9dc7767b-30c1-4cc4-b999-50cab5e27891
   description: |
-      This Atomic will create a registry key called socks5_powershell for persistance access
-      https://medium.com/walmartglobaltech/systembc-powershell-version-68c9aad0f85c
+    This Atomic will create a registry key called socks5_powershell for persistance access
+    https://medium.com/walmartglobaltech/systembc-powershell-version-68c9aad0f85c
   supported_platforms:
   - windows
   input_arguments:
@@ -175,7 +175,7 @@ atomic_tests:
     cleanup_command: |
       Remove-ItemProperty -Path #{reg_key_path} -Name "socks5_powershell" -Force -ErrorAction Ignore
     name: powershell
-    
+
 - name: Change Startup Folder - HKLM Modify User Shell Folders Common Startup Value
   auto_generated_guid: acfef903-7662-447e-a391-9c91c2f00f7b
   description: |
@@ -186,11 +186,11 @@ atomic_tests:
   input_arguments:
     new_startup_folder:
       description: new startup folder to replace standard one
-      type: String
+      type: string
       default: $env:TMP\atomictest\
     payload:
       description: 'executable to be placed in new startup location '
-      type: String
+      type: string
       default: C:\Windows\System32\calc.exe
   executor:
     command: |
@@ -205,7 +205,7 @@ atomic_tests:
 
 - name: Change Startup Folder - HKCU Modify User Shell Folders Startup Value
   auto_generated_guid: 8834b65a-f808-4ece-ad7e-2acdf647aafa
-  description: | 
+  description: |
     This test will modify the HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders  -V "Startup" value 
     to point to a new startup folder where a payload could be stored to launch at boot.  *successful execution requires system restart
   supported_platforms:
@@ -213,25 +213,25 @@ atomic_tests:
   input_arguments:
     new_startup_folder:
       description: new startup folder to replace standard one
-      type: String
+      type: string
       default: $env:TMP\atomictest\
     payload:
       description: 'executable to be placed in new startup location '
-      type: String
+      type: string
       default: C:\Windows\System32\calc.exe
   executor:
-    command: | 
-        New-Item -ItemType Directory -path "#{new_startup_folder}"
-        Copy-Item -path "#{payload}" -destination "#{new_startup_folder}"
-        Set-ItemProperty -Path  "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "Startup" -Value "#{new_startup_folder}"
+    command: |
+      New-Item -ItemType Directory -path "#{new_startup_folder}"
+      Copy-Item -path "#{payload}" -destination "#{new_startup_folder}"
+      Set-ItemProperty -Path  "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "Startup" -Value "#{new_startup_folder}"
     cleanup_command: |
-        Set-ItemProperty -Path  "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "Startup" -Value "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup"
-        Remove-Item "#{new_startup_folder}" -Recurse -Force
+      Set-ItemProperty -Path  "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "Startup" -Value "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup"
+      Remove-Item "#{new_startup_folder}" -Recurse -Force
     name: powershell
 
 - name: HKCU - Policy Settings Explorer Run Key
   auto_generated_guid: a70faea1-e206-4f6f-8d9a-67379be8f6f1
-  description: | 
+  description: |
     This test will create a new value under HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run to launch calc.exe on boot. 
     *Requires reboot
   supported_platforms:
@@ -243,7 +243,7 @@ atomic_tests:
       default: atomictest
     payload:
       description: 'payload to execute'
-      type: String
+      type: string
       default: C:\Windows\System32\calc.exe
   executor:
     command: |
@@ -257,7 +257,7 @@ atomic_tests:
 
 - name: HKLM - Policy Settings Explorer Run Key
   auto_generated_guid: b5c9a9bc-dda3-4ea0-b16a-add8e81ab75f
-  description: | 
+  description: |
     This test will create a HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run key value to launch calc.exe on boot. 
     *Requires reboot
   supported_platforms:
@@ -269,7 +269,7 @@ atomic_tests:
       default: atomictest
     payload:
       description: 'payload to execute'
-      type: String
+      type: string
       default: C:\Windows\System32\calc.exe
   executor:
     command: |
@@ -283,7 +283,7 @@ atomic_tests:
 
 - name: HKLM - Append Command to Winlogon Userinit KEY Value
   auto_generated_guid: f7fab6cc-8ece-4ca7-a0f1-30a22fccd374
-  description: | 
+  description: |
     This test will append a command to the  HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Userinit value to launch calc.exe on boot.
     * Requires reboot
   supported_platforms:
@@ -291,7 +291,7 @@ atomic_tests:
   input_arguments:
     payload:
       description: what to run
-      type: String
+      type: string
       default: C:\Windows\System32\calc.exe
   executor:
     command: |
@@ -308,7 +308,7 @@ atomic_tests:
 
 - name: 'HKLM - Modify default System Shell - Winlogon Shell KEY Value '
   auto_generated_guid: 1d958c61-09c6-4d9e-b26b-4130314e520e
-  description: | 
+  description: |
     This test change the default value of HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Shell from "explorer.exe" to the full path of "C:\Windows\explorer.exe" 
     to log a change to the key's default value without breaking boot sequence. 
     An atacker will alternatively replace this with a custom shell. 
@@ -317,7 +317,7 @@ atomic_tests:
   input_arguments:
     payload:
       description: what to run
-      type: String
+      type: string
       default: C:\Windows\explorer.exe
   executor:
     command: |
@@ -333,7 +333,7 @@ atomic_tests:
     elevation_required: true
 - name: secedit used to create a Run key in the HKLM Hive
   auto_generated_guid: 14fdc3f1-6fc3-4556-8d36-aa89d9d42d02
-  description: | 
+  description: |
     secedit allows to manipulate the HKLM hive of the Windows registry. This test creates a Run key with the keyname calc having calc.exe as the value in the HKLM hive.
     [Reference](https://blueteamops.medium.com/secedit-and-i-know-it-595056dee53d)
   supported_platforms:
@@ -341,7 +341,7 @@ atomic_tests:
   input_arguments:
     ini_file:
       description: INI config template
-      type: String
+      type: string
       default: $PathToAtomicsFolder\T1547.001\src\regtemplate.ini
     secedit_db:
       description: Custom secedit db

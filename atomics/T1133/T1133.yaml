@@ -1,6 +1,5 @@
----
-attack_technique: T1133  
-display_name: External Remote Services  
+attack_technique: T1133
+display_name: External Remote Services
 
 atomic_tests:
 - name: Running Chrome VPN Extensions via the Registry 2 vpn extension
@@ -8,29 +7,29 @@ atomic_tests:
   description: |
     Running Chrome VPN Extensions via the Registry install 2 vpn extension, please see "T1133\src\list of vpn extension.txt" to view complete list
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     chrome_url:
       description: chrome installer download URL
-      type: Url
+      type: url
       default: https://dl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530F96%7D%26iid%3D%7BFD62DDBC-14C6-20BD-706F-C7744738E422%7D%26lang%3Den%26browser%3D3%26usagestats%3D0%26appname%3DGoogle%2520Chrome%26needsadmin%3Dprefers%26ap%3Dx64-stable-statsdef_1%26installdataindex%3Dempty/chrome/install/ChromeStandaloneSetup64.exe
     extension_id:
       description: chrome extension id
-      type: String
-      default: | 
+      type: string
+      default: |
         "fcfhplploccackoneaefokcmbjfbkenj", "fdcgdnkidjaadafnichfpabhfomcebme"
   dependency_executor_name: powershell
-  dependencies: 
-    - description: |
-        Chrome must be installed
-      prereq_command: 'if ((Test-Path "C:\Program Files\Google\Chrome\Application\chrome.exe") -Or (Test-Path "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe")) {exit 0} else {exit 1}'
-      get_prereq_command: | 
-        Invoke-WebRequest -OutFile $env:temp\ChromeStandaloneSetup64.exe #{chrome_url}
-        Start-Process $env:temp\ChromeStandaloneSetup64.exe /S     
+  dependencies:
+  - description: |
+      Chrome must be installed
+    prereq_command: 'if ((Test-Path "C:\Program Files\Google\Chrome\Application\chrome.exe") -Or (Test-Path "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe")) {exit 0} else {exit 1}'
+    get_prereq_command: |
+      Invoke-WebRequest -OutFile $env:temp\ChromeStandaloneSetup64.exe #{chrome_url}
+      Start-Process $env:temp\ChromeStandaloneSetup64.exe /S
   executor:
     name: powershell
     elevation_required: true
-    command: | 
+    command: |
       $extList = #{extension_id}
       foreach ($extension in $extList) {
         New-Item -Path HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension -Force
@@ -38,7 +37,7 @@ atomic_tests:
       Start chrome
       Start-Sleep -Seconds 30
       Stop-Process -Name "chrome"
-    cleanup_command: | 
+    cleanup_command: |
       $extList = #{extension_id}
       foreach ($extension in $extList) {
       Remove-Item -Path "HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension" -ErrorAction Ignore}

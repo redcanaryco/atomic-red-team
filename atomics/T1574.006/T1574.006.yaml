@@ -12,11 +12,11 @@ atomic_tests:
   input_arguments:
     path_to_shared_library_source:
       description: Path to a shared library source code
-      type: Path
+      type: path
       default: PathToAtomicsFolder/T1574.006/src/Linux/T1574.006.c
     path_to_shared_library:
       description: Path to a shared library object
-      type: Path
+      type: path
       default: /tmp/T1574006.so
   dependency_executor_name: bash
   dependencies:
@@ -24,7 +24,7 @@ atomic_tests:
       The shared library must exist on disk at specified location (#{path_to_shared_library})
     prereq_command: |
       if [ -f #{path_to_shared_library} ]; then exit 0; else exit 1; fi;
-    get_prereq_command: |      
+    get_prereq_command: |
       gcc -shared -fPIC -o #{path_to_shared_library} #{path_to_shared_library_source}
   executor:
     command: |
@@ -44,11 +44,11 @@ atomic_tests:
   input_arguments:
     path_to_shared_library_source:
       description: Path to a shared library source code
-      type: Path
+      type: path
       default: PathToAtomicsFolder/T1574.006/src/Linux/T1574.006.c
     path_to_shared_library:
       description: Path to a shared library object
-      type: Path
+      type: path
       default: /tmp/T1574006.so
   dependency_executor_name: bash
   dependencies:
@@ -71,15 +71,15 @@ atomic_tests:
   input_arguments:
     file_to_inject:
       description: Path of executable to be injected. Mostly works on non-apple default apps.
-      type: Path
+      type: path
       default: /Applications/Firefox.app/Contents/MacOS/firefox
     source_file:
       description: Path of c source file
-      type: Path
+      type: path
       default: PathToAtomicsFolder/T1574.006/src/MacOS/T1574.006.c
     dylib_file:
       description: Path of dylib file
-      type: Path
+      type: path
       default: /tmp/T1574006MOS.dylib
   dependency_executor_name: bash
   dependencies:

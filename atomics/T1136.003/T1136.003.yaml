@@ -10,15 +10,15 @@ atomic_tests:
   input_arguments:
     username:
       description: Username of the IAM user to create in AWS
-      type: String
+      type: string
       default: "atomicredteam"
   dependencies:
-    - description: |
-        Check if ~/.aws/credentials file has a default stanza is configured
-      prereq_command: |
-        cat ~/.aws/credentials | grep "default"
-      get_prereq_command: |
-        echo Please install the aws-cli and configure your AWS defult profile using: aws configure
+  - description: |
+      Check if ~/.aws/credentials file has a default stanza is configured
+    prereq_command: |
+      cat ~/.aws/credentials | grep "default"
+    get_prereq_command: |
+      echo Please install the aws-cli and configure your AWS defult profile using: aws configure
   executor:
     command: |
       aws iam create-user --user-name #{username}

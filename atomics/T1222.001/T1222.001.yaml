@@ -42,7 +42,7 @@ atomic_tests:
       default: '%temp%\T1222.001_cacls'
     user_or_group:
       description: User or group to allow full control
-      type: String
+      type: string
       default: Everyone
   dependency_executor_name: command_prompt
   dependencies:
@@ -139,4 +139,4 @@ atomic_tests:
     cleanup_command: |
       icacls '#{path}' /restore #{file_path} /q >nul 2>&1
     name: command_prompt
-    elevation_required: true 
+    elevation_required: true

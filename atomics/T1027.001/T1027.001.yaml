@@ -13,7 +13,7 @@ atomic_tests:
   input_arguments:
     file_to_pad:
       description: Path of binary to be padded
-      type: Path
+      type: path
       default: /tmp/evil-binary
   dependency_executor_name: bash
   dependencies:
@@ -29,4 +29,3 @@ atomic_tests:
     cleanup_command: |
       rm #{file_to_pad}
     name: sh
-

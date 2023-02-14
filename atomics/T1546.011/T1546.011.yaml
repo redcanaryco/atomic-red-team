@@ -14,7 +14,7 @@ atomic_tests:
   input_arguments:
     file_path:
       description: Path to the shim database file
-      type: String
+      type: string
       default: PathToAtomicsFolder\T1546.011\bin\AtomicShimx86.sdb
   dependency_executor_name: powershell
   dependencies:
@@ -75,4 +75,3 @@ atomic_tests:
       Remove-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\InstalledSDB" -Name "AtomicRedTeamT1546.011" -ErrorAction Ignore
     name: powershell
     elevation_required: true
-

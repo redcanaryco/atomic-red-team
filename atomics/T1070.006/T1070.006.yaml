@@ -11,7 +11,7 @@ atomic_tests:
   input_arguments:
     target_filename:
       description: Path of file that we are going to stomp on last access time
-      type: Path
+      type: path
       default: /opt/filename
   executor:
     command: |
@@ -27,7 +27,7 @@ atomic_tests:
   input_arguments:
     target_filename:
       description: Path of file that we are going to stomp on last access time
-      type: Path
+      type: path
       default: /opt/filename
   executor:
     command: |
@@ -46,7 +46,7 @@ atomic_tests:
   input_arguments:
     target_filename:
       description: Path of file that we are going to stomp on last access time
-      type: Path
+      type: path
       default: /opt/filename
   executor:
     command: |
@@ -68,11 +68,11 @@ atomic_tests:
   input_arguments:
     target_file_path:
       description: Path of file to modify timestamps of
-      type: Path
+      type: path
       default: /opt/filename
     reference_file_path:
       description: Path of reference file to read timestamps from
-      type: Path
+      type: path
       default: /bin/sh
   executor:
     command: |
@@ -88,11 +88,11 @@ atomic_tests:
   input_arguments:
     target_date_time:
       description: Date/time to replace original timestamps with
-      type: String
+      type: string
       default: 01/01/1970 00:00:00
     file_path:
       description: Path of file to change creation timestamp
-      type: Path
+      type: path
       default: $env:TEMP\T1551.006_timestomp.txt
   dependency_executor_name: powershell
   dependencies:
@@ -117,11 +117,11 @@ atomic_tests:
   input_arguments:
     target_date_time:
       description: Date/time to replace original timestamps with
-      type: String
+      type: string
       default: 01/01/1970 00:00:00
     file_path:
       description: Path of file to change modified timestamp
-      type: Path
+      type: path
       default: $env:TEMP\T1551.006_timestomp.txt
   dependency_executor_name: powershell
   dependencies:
@@ -146,11 +146,11 @@ atomic_tests:
   input_arguments:
     target_date_time:
       description: Date/time to replace original timestamps with
-      type: String
+      type: string
       default: 01/01/1970 00:00:00
     file_path:
       description: Path of file to change last access timestamp
-      type: Path
+      type: path
       default: $env:TEMP\T1551.006_timestomp.txt
   dependency_executor_name: powershell
   dependencies:
@@ -178,7 +178,7 @@ atomic_tests:
   input_arguments:
     file_path:
       description: File path for timestomp payload
-      type: String
+      type: string
       default: $env:appdata\Microsoft
   dependency_executor_name: powershell
   dependencies:

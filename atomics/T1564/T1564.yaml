@@ -5,7 +5,7 @@ atomic_tests:
   auto_generated_guid: 6afe288a-8a8b-4d33-a629-8d03ba9dad3a
   description: |
     This module extracts a binary (calc.exe) from inside of another binary. 
-    
+
     In the wild maldoc authors will use this technique to hide binaries inside of files stored 
     within the office document itself. An example of this technique can be seen in sample
 
@@ -41,22 +41,22 @@ atomic_tests:
     name: powershell
 - name: Create a Hidden User Called "$"
   auto_generated_guid: 2ec63cc2-4975-41a6-bf09-dffdfb610778
-  description: Creating a user with a username containing "$" 
+  description: Creating a user with a username containing "$"
   supported_platforms:
   - windows
   executor:
     name: command_prompt
-    elevation_required: true 
+    elevation_required: true
     command: net user $ ATOMIC123! /add /active:yes
     cleanup_command: net user $ /DELETE 2>&1
-- name: Create an "Administrator " user (with a space on the end) 
+- name: Create an "Administrator " user (with a space on the end)
   auto_generated_guid: 5bb20389-39a5-4e99-9264-aeb92a55a85c
   description: Creating a user with a username containing with a space on the end
   supported_platforms:
   - windows
   executor:
     name: powershell
-    elevation_required: true 
+    elevation_required: true
     command: New-LocalUser -Name "Administrator " -NoPassword
     cleanup_command: Remove-LocalUser -Name "Administrator " 2>&1 | out-null
 - name: Create and Hide a Service with sc.exe
@@ -65,7 +65,7 @@ atomic_tests:
     The following technique utilizes sc.exe and sdset to change the security descriptor of a service and "hide" it from Get-Service or sc query.
 
     Upon successful execution, sc.exe creates a new service changes the security descriptor.
-    
+
     https://twitter.com/Alh4zr3d/status/1580925761996828672
     https://learn.microsoft.com/en-us/windows/win32/secauthz/security-descriptor-string-format
   supported_platforms:
@@ -73,11 +73,11 @@ atomic_tests:
   input_arguments:
     service_name:
       description: Name of service to create
-      type: String
+      type: string
       default: AtomicService
     executable_command:
       description: Command to execute as a service
-      type: String
+      type: string
       default: 'C:\Windows\System32\calc.exe'
   executor:
     command: |
