@@ -10,11 +10,11 @@ atomic_tests:
   input_arguments:
     command_to_execute:
       description: Command to execute within script.
-      type: String
+      type: string
       default: dir
     script_path:
       description: Script path.
-      type: Path
+      type: path
       default: $env:TEMP\T1059.003_script.bat
   dependency_executor_name: powershell
   dependencies:
@@ -40,11 +40,11 @@ atomic_tests:
   input_arguments:
     file_contents_path:
       description: Path to the file that the command prompt will drop.
-      type: Path
+      type: path
       default: '%TEMP%\test.bin'
     message:
       description: Message that will be written to disk and then displayed.
-      type: String
+      type: string
       default: 'Hello from the Windows Command Prompt!'
   executor:
     command: |
@@ -61,11 +61,11 @@ atomic_tests:
   input_arguments:
     output_file:
       description: File to output to
-      type: String
+      type: string
       default: hello.txt
     input_message:
       description: Message to write to file
-      type: String
+      type: string
       default: Hello, from CMD!
   executor:
     command: |
@@ -82,11 +82,11 @@ atomic_tests:
   input_arguments:
     file_to_print:
       description: File to be opened/printed by Wordpad.
-      type: String
+      type: string
       default: $env:temp\T1059_003note.txt
     max_to_print:
       description: The maximum number of Wordpad windows the test will open/print.
-      type: String
+      type: string
       default: 75
   dependency_executor_name: powershell
   dependencies:
@@ -113,7 +113,7 @@ atomic_tests:
   input_arguments:
     input_file:
       description: CMD file that is read by Command Prompt and execute, which launches calc.exe
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1059.003\src\t1059.003_cmd.cmd
   dependency_executor_name: powershell
   dependencies:

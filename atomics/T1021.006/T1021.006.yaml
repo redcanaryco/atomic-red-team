@@ -28,7 +28,7 @@ atomic_tests:
       Invoke-Command -ComputerName $env:COMPUTERNAME -ScriptBlock {whoami}
     cleanup_command: Disable-PSRemoting -Force
     name: powershell
-    
+
 - name: WinRM Access with Evil-WinRM
   auto_generated_guid: efe86d95-44c4-4509-ae42-7bfd9d1f5b3d
   description: An adversary may attempt to use Evil-WinRM with a valid account to interact with remote systems that have WinRM enabled
@@ -37,15 +37,15 @@ atomic_tests:
   input_arguments:
     user_name:
       description: Username
-      type: String
+      type: string
       default: Domain\Administrator
     destination_address:
       description: Remote Host IP or Hostname
-      type: String
+      type: string
       default: Target
     password:
       description: Password
-      type: String
+      type: string
       default: P@ssw0rd1
   dependency_executor_name: powershell
   dependencies:

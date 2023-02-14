@@ -15975,7 +15975,7 @@ privilege-escalation:
       input_arguments:
         namespace:
           description: K8s namespace to list
-          type: String
+          type: string
           default: default
       dependencies:
       - description: 'kubectl must be installed
@@ -16008,7 +16008,7 @@ privilege-escalation:
       input_arguments:
         namespace:
           description: K8s namespace to list
-          type: String
+          type: string
           default: default
       dependencies:
       - description: 'kubectl must be installed
@@ -18107,27 +18107,27 @@ privilege-escalation:
       input_arguments:
         mount_device:
           description: Path to the device of the host's disk to mount
-          type: Path
+          type: path
           default: "/dev/dm-0"
         mount_point:
           description: Path where the host filesystem will be mounted
-          type: Path
+          type: path
           default: "/mnt/T1611.002"
         cron_path:
           description: Path on the host filesystem where cron jobs are stored
-          type: Path
+          type: path
           default: "/etc/cron.d"
         cron_filename:
           description: Filename of the cron job in cron_path
-          type: String
+          type: string
           default: T1611_002
         listen_address:
           description: IP address to listen for callback from the host system.
-          type: String
+          type: string
           default: "`ifconfig eth0 | grep inet | awk '{print $2}'`"
         listen_port:
           description: TCP Port to listen on for callback from the host system.
-          type: String
+          type: string
           default: 4444
       dependency_executor_name: sh
       dependencies:
@@ -25389,7 +25389,7 @@ execution:
       input_arguments:
         namespace:
           description: K8s namespace to list
-          type: String
+          type: string
           default: default
       dependencies:
       - description: 'kubectl must be installed
@@ -25422,7 +25422,7 @@ execution:
       input_arguments:
         namespace:
           description: K8s namespace to list
-          type: String
+          type: string
           default: default
       dependencies:
       - description: 'kubectl must be installed
@@ -26808,11 +26808,11 @@ execution:
       input_arguments:
         namespace:
           description: K8s namespace to use
-          type: String
+          type: string
           default: default
         command:
           description: Command to run
-          type: String
+          type: string
           default: uname
       dependencies:
       - description: 'kubectl must be installed
@@ -26848,7 +26848,7 @@ execution:
       input_arguments:
         command:
           description: Command to run
-          type: String
+          type: string
           default: cat
       dependencies:
       - description: 'docker must be installed
@@ -30085,7 +30085,7 @@ persistence:
       input_arguments:
         namespace:
           description: K8s namespace to list
-          type: String
+          type: string
           default: default
       dependencies:
       - description: 'kubectl must be installed
@@ -30118,7 +30118,7 @@ persistence:
       input_arguments:
         namespace:
           description: K8s namespace to list
-          type: String
+          type: string
           default: default
       dependencies:
       - description: 'kubectl must be installed
@@ -50427,7 +50427,7 @@ credential-access:
       input_arguments:
         namespace:
           description: K8s namespace to list
-          type: String
+          type: string
           default: default
       dependencies:
       - description: 'kubectl must be installed
@@ -63471,7 +63471,6 @@ exfiltration:
       - 'Network Traffic: Network Traffic Flow'
       - 'Network Traffic: Network Traffic Content'
       - 'File: File Access'
-      identifier: T1567
     atomic_tests: []
   T1029:
     technique:

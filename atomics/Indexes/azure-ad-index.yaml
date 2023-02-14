@@ -2035,15 +2035,15 @@ defense-evasion:
         azure_username:
           description: Username of a privileged Azure AD account such as External
             Identity Provider Administrator or Global Administrator roles
-          type: String
+          type: string
           default: bruce.wayne@contosocloud.com
         azure_password:
           description: Password of azure_username
-          type: String
+          type: string
           default: iamthebatman
         domain_name:
           description: Malicious federated domain name
-          type: String
+          type: string
           default: contoso.com
       dependency_executor_name: powershell
       dependencies:
@@ -16736,15 +16736,15 @@ privilege-escalation:
         azure_username:
           description: Username of a privileged Azure AD account such as External
             Identity Provider Administrator or Global Administrator roles
-          type: String
+          type: string
           default: bruce.wayne@contosocloud.com
         azure_password:
           description: Password of azure_username
-          type: String
+          type: string
           default: iamthebatman
         domain_name:
           description: Malicious federated domain name
-          type: String
+          type: string
           default: contoso.com
       dependency_executor_name: powershell
       dependencies:
@@ -35501,23 +35501,23 @@ persistence:
       input_arguments:
         username:
           description: Azure AD username
-          type: String
+          type: string
           default: jonh@contoso.com
         password:
           description: Azure AD password
-          type: String
+          type: string
           default: p4sswd
         service_principal_name:
           description: Name of the targeted service principal
-          type: String
+          type: string
           default: SuperSP
         certificate_password:
           description: Password of the new certificate
-          type: String
+          type: string
           default: Passw0rd
         path_to_cert:
           description: Path of the new certificate, locally stored
-          type: String
+          type: string
           default: "$env:TEMP"
       dependency_executor_name: powershell
       dependencies:
@@ -35584,23 +35584,23 @@ persistence:
       input_arguments:
         username:
           description: Azure AD username
-          type: String
+          type: string
           default: jonh@contoso.com
         password:
           description: Azure AD password
-          type: String
+          type: string
           default: p4sswd
         application_name:
           description: Name of the targeted application
-          type: String
+          type: string
           default: SuperApp
         certificate_password:
           description: Password of the new certificate
-          type: String
+          type: string
           default: Passw0rd
         path_to_cert:
           description: Path of the new certificate, locally stored
-          type: String
+          type: string
           default: "$env:TEMP"
       dependency_executor_name: powershell
       dependencies:
@@ -36615,19 +36615,19 @@ persistence:
       input_arguments:
         username:
           description: Azure AD username
-          type: String
+          type: string
           default: jonh@contoso.com
         password:
           description: Azure AD password
-          type: String
+          type: string
           default: p4sswd
         user_principal_name:
           description: Name of the targeted user (user principal)
-          type: String
+          type: string
           default: SuperUser
         role_name:
           description: Name of the targed Azure AD role
-          type: String
+          type: string
           default: Global Reader
       dependencies:
       - description: 'AzureAD module must be installed.
@@ -36684,19 +36684,19 @@ persistence:
       input_arguments:
         username:
           description: Azure AD username
-          type: String
+          type: string
           default: jonh@contoso.com
         password:
           description: Azure AD password
-          type: String
+          type: string
           default: p4sswd
         service_principal_name:
           description: Name of the service principal
-          type: String
+          type: string
           default: SuperSP
         role_name:
           description: Name of the targed Azure AD role
-          type: String
+          type: string
           default: Global Reader
       dependencies:
       - description: 'AzureAD module must be installed.
@@ -36757,20 +36757,20 @@ persistence:
       input_arguments:
         username:
           description: Azure AD username
-          type: String
+          type: string
           default: jonh@contoso.com
         password:
           description: Azure AD password
-          type: String
+          type: string
           default: p4sswd
         application_name:
           description: Name of the targed application
-          type: String
+          type: string
           default: test_app
         application_permission:
           description: Permission from Microsoft Graph Resource API that will be add
             to application
-          type: String
+          type: string
           default: DirectoryRecommendations.Read.All
       dependencies:
       - description: 'AzureAD module must be installed.
@@ -45718,11 +45718,11 @@ credential-access:
         username:
           description: Account to bruteforce. We encourage users running this atomic
             to add a valid microsoft account domain; for eg "bruce.wayne@<valid_ms_account.com>"
-          type: String
+          type: string
           default: bruce.wayne@contoso.com
         passwords:
           description: List of passwords we will attempt to brute force with
-          type: String
+          type: string
           default: Password1`n1q2w3e4r`nPassword!
       dependency_executor_name: powershell
       dependencies:
@@ -46148,11 +46148,11 @@ credential-access:
       input_arguments:
         username:
           description: Azure AD username
-          type: String
+          type: string
           default: 
         password:
           description: Azure AD password
-          type: String
+          type: string
           default: T1082Az
       dependency_executor_name: powershell
       dependencies:
@@ -46575,16 +46575,16 @@ credential-access:
       input_arguments:
         certificate_path:
           description: Token signing certificate path. See T1552.004 to export it
-          type: Path
+          type: path
           default: ".\\ADFS_signing.pfx"
         immutable_id:
           description: ImmutableId of the targeted user. It can be obtained with AzureAD
             powershell module; $(Get-AzureADUser -SearchString "username").ImmutableId
-          type: String
+          type: string
           default: aehgdqBTZV50DKQZmNJ8mg==
         issuer_uri:
           description: Issuer URI of the ADFS service
-          type: String
+          type: string
           default: http://contoso.com/adfs/services/trust/
       dependency_executor_name: powershell
       dependencies:
@@ -48210,16 +48210,16 @@ credential-access:
         password:
           description: Single password we will attempt to auth with (if you need several
             passwords, then it is a bruteforce so see T1110.001)
-          type: String
+          type: string
           default: P@ssw0rd!
         valid_username:
           description: Valid username to retrieve Azure AD users. We encourage users
             running this atomic to add a valid microsoft account domain; for eg <valid_test_user>@<valid_ms_account.com>
-          type: String
+          type: string
           default: bruce.wayne@contoso.com
         valid_password:
           description: Valid password to authenticate as valid_username in the <valid_ms_account>
-          type: String
+          type: string
           default: iamthebatman
       dependency_executor_name: powershell
       dependencies:
@@ -48271,11 +48271,11 @@ credential-access:
       input_arguments:
         password:
           description: Single password to try against the list of user accounts
-          type: String
+          type: string
           default: P@ssword1
         user_list:
           description: File path to list of users (one per line, formatted as user@subdomain.onmicrosoft.com)
-          type: String
+          type: string
           default: "$env:temp\\T1110.003UserList.txt"
       dependency_executor_name: powershell
       dependencies:
@@ -51701,11 +51701,11 @@ discovery:
       input_arguments:
         username:
           description: Azure AD username
-          type: String
+          type: string
           default: 
         password:
           description: Azure AD password
-          type: String
+          type: string
           default: T1082Az
       dependency_executor_name: powershell
       dependencies:
@@ -63774,7 +63774,6 @@ exfiltration:
       - 'Network Traffic: Network Traffic Flow'
       - 'Network Traffic: Network Traffic Content'
       - 'File: File Access'
-      identifier: T1567
     atomic_tests: []
   T1029:
     technique:

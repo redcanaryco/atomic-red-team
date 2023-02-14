@@ -14,15 +14,15 @@ atomic_tests:
   input_arguments:
     azure_username:
       description: Username of a privileged Azure AD account such as External Identity Provider Administrator or Global Administrator roles
-      type: String
+      type: string
       default: bruce.wayne@contosocloud.com
     azure_password:
       description: Password of azure_username
-      type: String
+      type: string
       default: iamthebatman
     domain_name:
       description: Malicious federated domain name
-      type: String
+      type: string
       default: contoso.com
   dependency_executor_name: powershell
   dependencies:
@@ -60,7 +60,7 @@ atomic_tests:
         Write-Host "Error: domain ""#{domain_name}"" not verified"
         exit 1
       }
-      
+
       if ($domain.AuthenticationType -eq "Federated") {
         Write-Host "Error: domain ""#{domain_name}"" already federated. Try with a different domain or re-create it before."
         exit 1
@@ -93,5 +93,3 @@ atomic_tests:
         Remove-AzureADDomain -Name "#{domain_name}" -ErrorAction Ignore
       } catch {}
     name: powershell
-    
-    

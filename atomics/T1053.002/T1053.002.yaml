@@ -1,4 +1,3 @@
----
 attack_technique: T1053.002
 display_name: 'Scheduled Task/Job: At'
 
@@ -11,7 +10,7 @@ atomic_tests:
 
     Upon successful execution, cmd.exe will spawn at.exe and create a scheduled task that will spawn cmd at a specific time.
   supported_platforms:
-    - windows
+  - windows
   executor:
     name: command_prompt
     elevation_required: false
@@ -23,35 +22,35 @@ atomic_tests:
     This test submits a command to be run in the future by the `at` daemon.
 
   supported_platforms:
-    - linux
+  - linux
 
   input_arguments:
     time_spec:
       description: Time specification of when the command should run
-      type: String
+      type: string
       default: now + 1 minute
     at_command:
       description: The command to be run
-      type: String
+      type: string
       default: echo Hello from Atomic Red Team
 
   dependency_executor_name: sh
   dependencies:
-    - description: |
-        The `at` and `atd` executables must exist in the PATH
-      prereq_command: |
-        which at && which atd
-      get_prereq_command: |
-        echo 'Please install `at` and `atd`; they were not found in the PATH (Package name: `at`)'
-    - description: |
-        The `atd` daemon must be running
-      prereq_command: |
-        systemctl status atd || service atd status
-      get_prereq_command: |
-        echo 'Please start the `atd` daemon (sysv: `service atd start` ; systemd: `systemctl start atd`)'
+  - description: |
+      The `at` and `atd` executables must exist in the PATH
+    prereq_command: |
+      which at && which atd
+    get_prereq_command: |
+      echo 'Please install `at` and `atd`; they were not found in the PATH (Package name: `at`)'
+  - description: |
+      The `atd` daemon must be running
+    prereq_command: |
+      systemctl status atd || service atd status
+    get_prereq_command: |
+      echo 'Please start the `atd` daemon (sysv: `service atd start` ; systemd: `systemctl start atd`)'
 
   executor:
     name: sh
     elevation_required: false
-    command: |
+    command: |-
       echo "#{at_command}" | at #{time_spec}

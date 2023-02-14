@@ -25,7 +25,7 @@ atomic_tests:
   input_arguments:
     new_executable:
       description: New executable to run on startup instead of Windows Defender
-      type: String
+      type: string
       default: calc.exe
   executor:
     command: |
@@ -62,7 +62,7 @@ atomic_tests:
   input_arguments:
     bad_domain:
       description: Domain to add to trusted site zone
-      type: String
+      type: string
       default: bad-domain.com
   executor:
     command: |
@@ -99,7 +99,7 @@ atomic_tests:
   input_arguments:
     default_execution_policy:
       description: Specify the default poweshell execution policy
-      type: String
+      type: string
       default: Default
   executor:
     command: |
@@ -225,7 +225,7 @@ atomic_tests:
       reg delete "HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v shutdownwithoutlogon /f >nul 2>&1
     name: command_prompt
     elevation_required: true
-- name: Disable Windows LogOff Button 
+- name: Disable Windows LogOff Button
   auto_generated_guid: e246578a-c24d-46a7-9237-0213ff86fb0c
   description: |
     Modify the registry of the currently logged in user using reg.exe via cmd console to disable the windows logoff button.
@@ -343,7 +343,7 @@ atomic_tests:
     cleanup_command: |
       reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoFileMenu /f >nul 2>&1
     name: command_prompt
-    elevation_required: true  
+    elevation_required: true
 - name: Activate Windows NoClose Group Policy Feature
   auto_generated_guid: 12f50e15-dbc6-478b-a801-a746e8ba1723
   description: |
@@ -358,7 +358,7 @@ atomic_tests:
     cleanup_command: |
       reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoClose /f >nul 2>&1
     name: command_prompt
-    elevation_required: true 
+    elevation_required: true
 - name: Activate Windows NoSetTaskbar Group Policy Feature
   auto_generated_guid: d29b7faf-7355-4036-9ed3-719bd17951ed
   description: |
@@ -622,8 +622,8 @@ atomic_tests:
 - name: Ursnif Malware Registry Key Creation
   auto_generated_guid: c375558d-7c25-45e9-bd64-7b23a97c1db0
   description: |
-      Ursnif downloads additional modules from the C&C server and saves these in the registry folder HKEY_CURRENT_USER\Software\AppDataLow\Software\Microsoft\
-      More information - https://blog.trendmicro.com/trendlabs-security-intelligence/phishing-campaign-uses-hijacked-emails-to-deliver-ursnif-by-replying-to-ongoing-threads/
+    Ursnif downloads additional modules from the C&C server and saves these in the registry folder HKEY_CURRENT_USER\Software\AppDataLow\Software\Microsoft\
+    More information - https://blog.trendmicro.com/trendlabs-security-intelligence/phishing-campaign-uses-hijacked-emails-to-deliver-ursnif-by-replying-to-ongoing-threads/
   supported_platforms:
   - windows
   executor:
@@ -636,7 +636,7 @@ atomic_tests:
 - name: Terminal Server Client Connection History Cleared
   auto_generated_guid: 3448824b-3c35-4a9e-a8f5-f887f68bea21
   description: |
-      The built-in Windows Remote Desktop Connection (RDP) client (mstsc.exe) saves the remote computer name (or IP address) and the username that is used to login after each successful connection to the remote computer
+    The built-in Windows Remote Desktop Connection (RDP) client (mstsc.exe) saves the remote computer name (or IP address) and the username that is used to login after each successful connection to the remote computer
   supported_platforms:
   - windows
   dependency_executor_name: powershell
@@ -696,7 +696,7 @@ atomic_tests:
   auto_generated_guid: fe7974e5-5813-477b-a7bd-311d4f535e83
   description: |
     Enabling Restricted Admin Mode via Command_Prompt,enables an attacker to perform a pass-the-hash attack using RDP.
-    
+
     See [Passing the Hash with Remote Desktop](https://www.kali.org/blog/passing-hash-remote-desktop/)
   supported_platforms:
   - windows
@@ -734,4 +734,4 @@ atomic_tests:
     cleanup_command: |
       reg delete "HKLM\System\CurrentControlSet\Control\Terminal Server" /v fSingleSessionPerUser /f >nul 2>&1
     name: command_prompt
-    elevation_required: true    
+    elevation_required: true

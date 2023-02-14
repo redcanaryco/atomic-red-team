@@ -902,6 +902,9 @@
 - [T1546.004 Event Triggered Execution: .bash_profile and .bashrc](../../T1546.004/T1546.004.md)
   - Atomic Test #1: Add command to .bash_profile [macos, linux]
   - Atomic Test #2: Add command to .bashrc [macos, linux]
+  - Atomic Test #3: Append to the system shell profile [linux]
+  - Atomic Test #4: Append commands user shell profile [linux]
+  - Atomic Test #5: System shell profile scripts [linux]
 - [T1134.005 Access Token Manipulation: SID-History Injection](../../T1134.005/T1134.005.md)
   - Atomic Test #1: Injection SID-History with mimikatz [windows]
 - T1548.004 Elevated Execution with Prompt [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1097,6 +1100,10 @@
   - Atomic Test #3: Harvest SUID executable files [linux]
   - Atomic Test #4: LinEnum tool execution [linux]
   - Atomic Test #5: New script file in the tmp directory [linux]
+  - Atomic Test #6: What shell is running [linux]
+  - Atomic Test #7: What shells are available [linux]
+  - Atomic Test #8: Command line scripts [linux]
+  - Atomic Test #9: Obfuscated command line scripts [linux]
 - T1559 Inter-Process Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1204.003 Malicious Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1154 Trap [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1386,6 +1393,9 @@
 - [T1546.004 Event Triggered Execution: .bash_profile and .bashrc](../../T1546.004/T1546.004.md)
   - Atomic Test #1: Add command to .bash_profile [macos, linux]
   - Atomic Test #2: Add command to .bashrc [macos, linux]
+  - Atomic Test #3: Append to the system shell profile [linux]
+  - Atomic Test #4: Append commands user shell profile [linux]
+  - Atomic Test #5: System shell profile scripts [linux]
 - [T1547.002 Authentication Package](../../T1547.002/T1547.002.md)
   - Atomic Test #1: Authentication Package [windows]
 - T1128 Netsh Helper DLL [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1742,6 +1752,7 @@
   - Atomic Test #8: CertUtil ExportPFX [windows]
   - Atomic Test #9: Export Root Certificate with Export-PFXCertificate [windows]
   - Atomic Test #10: Export Root Certificate with Export-Certificate [windows]
+  - Atomic Test #11: Export Certificates with Mimikatz [windows]
 - [T1557.001 Adversary-in-the-Middle: LLMNR/NBT-NS Poisoning and SMB Relay](../../T1557.001/T1557.001.md)
   - Atomic Test #1: LLMNR Poisoning with Inveigh (PowerShell) [windows]
 - [T1003.001 OS Credential Dumping: LSASS Memory](../../T1003.001/T1003.001.md)
@@ -2419,8 +2430,7 @@
   - Atomic Test #4: WinPwn - Loot local Credentials - Safetykatz [windows]
 
 # exfiltration
-- [T1567 Exfiltration Over Web Service](../../T1567/T1567.md)
-  - Atomic Test #1: Data Exfiltration with ConfigSecurityPolicy [windows]
+- T1567 Exfiltration Over Web Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1029 Scheduled Transfer [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1011 Exfiltration Over Other Network Medium [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1011.001 Exfiltration Over Bluetooth [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -2455,4 +2465,5 @@
   - Atomic Test #5: Exfiltration Over Alternative Protocol - SMTP [windows]
   - Atomic Test #6: MAZE FTP Upload [windows]
   - Atomic Test #7: Exfiltration Over Alternative Protocol - FTP - Rclone [windows]
+  - Atomic Test #8: Python3 http.server [linux]
 

@@ -11,23 +11,23 @@ atomic_tests:
   input_arguments:
     guest_user:
       description: Specify the guest account
-      type: String
+      type: string
       default: guest
     guest_password:
       description: Specify the guest password
-      type: String
+      type: string
       default: Password123!
     local_admin_group:
       description: Specify the admin localgroup name
-      type: String
+      type: string
       default: Administrators
     remote_desktop_users_group_name:
       description: Specify the remote desktop users group name
-      type: String
+      type: string
       default: Remote Desktop Users
     remove_rdp_access_during_cleanup:
       description: Set to 1 if you want the cleanup to remove RDP access to machine
-      type: Integer
+      type: integer
       default: 0
   executor:
     command: |-
@@ -56,13 +56,13 @@ atomic_tests:
   input_arguments:
     guest_user:
       description: Specify the guest account
-      type: String
+      type: string
       default: guest
   executor:
     command: |
-     net user #{guest_user} /active:yes
+      net user #{guest_user} /active:yes
     cleanup_command: |
-     net user #{guest_user} /active:no
+      net user #{guest_user} /active:no
     name: command_prompt
     elevation_required: true
 

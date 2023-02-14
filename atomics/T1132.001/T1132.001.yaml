@@ -11,11 +11,11 @@ atomic_tests:
   input_arguments:
     destination_url:
       description: Destination URL to post encoded data.
-      type: Url
+      type: url
       default: redcanary.com
     base64_data:
       description: Encoded data to post using fake Social Security number 111-11-1111.
-      type: String
+      type: string
       default: MTExLTExLTExMTE=
   executor:
     command: |
@@ -32,15 +32,15 @@ atomic_tests:
   input_arguments:
     destination_url:
       description: Destination URL to post encoded data.
-      type: Url
+      type: url
       default: example.com
     plaintext:
       description: Plain text mimicking victim data sent to C2 server.
-      type: String
+      type: string
       default: Path\n----\nC:\Users\victim
     key:
       description: XOR key used for encoding the plaintext.
-      type: String
+      type: string
       default: abcdefghijklmnopqrstuvwxyz123456
   executor:
     command: |
