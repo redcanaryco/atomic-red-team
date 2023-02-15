@@ -595,6 +595,9 @@ privilege-escalation,T1546,Event Triggered Execution,2,HKLM - Persistence using 
 privilege-escalation,T1546,Event Triggered Execution,3,HKCU - Persistence using CommandProcessor AutoRun key (Without Elevation),36b8dbf9-59b1-4e9b-a3bb-36e80563ef01,powershell
 privilege-escalation,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,1,Add command to .bash_profile,94500ae1-7e31-47e3-886b-c328da46872f,sh
 privilege-escalation,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,2,Add command to .bashrc,0a898315-4cfa-4007-bafe-33a4646d115f,sh
+privilege-escalation,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,3,Append to the system shell profile,694b3cc8-6a78-4d35-9e74-0123d009e94b,sh
+privilege-escalation,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,4,Append commands user shell profile,bbdb06bc-bab6-4f5b-8232-ba3fbed51d77,sh
+privilege-escalation,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,5,System shell profile scripts,8fe2ccfd-f079-4c03-b1a9-bd9b362b67d4,sh
 privilege-escalation,T1134.005,Access Token Manipulation: SID-History Injection,1,Injection SID-History with mimikatz,6bef32e5-9456-4072-8f14-35566fb85401,command_prompt
 privilege-escalation,T1547.002,Authentication Package,1,Authentication Package,be2590e8-4ac3-47ac-b4b5-945820f2fbe9,powershell
 privilege-escalation,T1546.015,Event Triggered Execution: Component Object Model Hijacking,1,COM Hijacking - InprocServer32,48117158-d7be-441b-bc6a-d9e36e47b52b,powershell
@@ -713,6 +716,10 @@ execution,T1059.004,Command and Scripting Interpreter: Bash,2,Command-Line Inter
 execution,T1059.004,Command and Scripting Interpreter: Bash,3,Harvest SUID executable files,46274fc6-08a7-4956-861b-24cbbaa0503c,sh
 execution,T1059.004,Command and Scripting Interpreter: Bash,4,LinEnum tool execution,a2b35a63-9df1-4806-9a4d-5fe0500845f2,sh
 execution,T1059.004,Command and Scripting Interpreter: Bash,5,New script file in the tmp directory,8cd1947b-4a54-41fb-b5ea-07d0ace04f81,sh
+execution,T1059.004,Command and Scripting Interpreter: Bash,6,What shell is running,7b38e5cc-47be-44f0-a425-390305c76c17,sh
+execution,T1059.004,Command and Scripting Interpreter: Bash,7,What shells are available,bf23c7dc-1004-4949-8262-4c1d1ef87702,sh
+execution,T1059.004,Command and Scripting Interpreter: Bash,8,Command line scripts,b04ed73c-7d43-4dc8-b563-a2fc595cba1a,sh
+execution,T1059.004,Command and Scripting Interpreter: Bash,9,Obfuscated command line scripts,5bec4cc8-f41e-437b-b417-33ff60acf9af,sh
 execution,T1059.006,Command and Scripting Interpreter: Python,1,Execute shell script via python's command mode arguement,3a95cdb2-c6ea-4761-b24e-02b71889b8bb,sh
 execution,T1059.006,Command and Scripting Interpreter: Python,2,Execute Python via scripts (Linux),6c4d1dcb-33c7-4c36-a8df-c6cfd0408be8,sh
 execution,T1059.006,Command and Scripting Interpreter: Python,3,Execute Python via Python executables (Linux),0b44d79b-570a-4b27-a31f-3bf2156e5eaa,sh
@@ -863,6 +870,9 @@ persistence,T1546,Event Triggered Execution,2,HKLM - Persistence using CommandPr
 persistence,T1546,Event Triggered Execution,3,HKCU - Persistence using CommandProcessor AutoRun key (Without Elevation),36b8dbf9-59b1-4e9b-a3bb-36e80563ef01,powershell
 persistence,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,1,Add command to .bash_profile,94500ae1-7e31-47e3-886b-c328da46872f,sh
 persistence,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,2,Add command to .bashrc,0a898315-4cfa-4007-bafe-33a4646d115f,sh
+persistence,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,3,Append to the system shell profile,694b3cc8-6a78-4d35-9e74-0123d009e94b,sh
+persistence,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,4,Append commands user shell profile,bbdb06bc-bab6-4f5b-8232-ba3fbed51d77,sh
+persistence,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,5,System shell profile scripts,8fe2ccfd-f079-4c03-b1a9-bd9b362b67d4,sh
 persistence,T1547.002,Authentication Package,1,Authentication Package,be2590e8-4ac3-47ac-b4b5-945820f2fbe9,powershell
 persistence,T1546.015,Event Triggered Execution: Component Object Model Hijacking,1,COM Hijacking - InprocServer32,48117158-d7be-441b-bc6a-d9e36e47b52b,powershell
 persistence,T1546.015,Event Triggered Execution: Component Object Model Hijacking,2,Powershell Execute COM Object,752191b1-7c71-445c-9dbe-21bb031b18eb,powershell
@@ -1065,6 +1075,10 @@ credential-access,T1552.004,Unsecured Credentials: Private Keys,4,Copy Private S
 credential-access,T1552.004,Unsecured Credentials: Private Keys,5,Copy the users GnuPG directory with rsync,2a5a0601-f5fb-4e2e-aa09-73282ae6afca,sh
 credential-access,T1552.004,Unsecured Credentials: Private Keys,6,ADFS token signing and encryption certificates theft - Local,78e95057-d429-4e66-8f82-0f060c1ac96f,powershell
 credential-access,T1552.004,Unsecured Credentials: Private Keys,7,ADFS token signing and encryption certificates theft - Remote,cab413d8-9e4a-4b8d-9b84-c985bd73a442,powershell
+credential-access,T1552.004,Unsecured Credentials: Private Keys,8,CertUtil ExportPFX,336b25bf-4514-4684-8924-474974f28137,powershell
+credential-access,T1552.004,Unsecured Credentials: Private Keys,9,Export Root Certificate with Export-PFXCertificate,7617f689-bbd8-44bc-adcd-6f8968897848,powershell
+credential-access,T1552.004,Unsecured Credentials: Private Keys,10,Export Root Certificate with Export-Certificate,78b274f8-acb0-428b-b1f7-7b0d0e73330a,powershell
+credential-access,T1552.004,Unsecured Credentials: Private Keys,11,Export Certificates with Mimikatz,290df60e-4b5d-4a5e-b0c7-dc5348ea0c86,command_prompt
 credential-access,T1557.001,Adversary-in-the-Middle: LLMNR/NBT-NS Poisoning and SMB Relay,1,LLMNR Poisoning with Inveigh (PowerShell),deecd55f-afe0-4a62-9fba-4d1ba2deb321,powershell
 credential-access,T1003.001,OS Credential Dumping: LSASS Memory,1,Dump LSASS.exe Memory using ProcDump,0be2230c-9ab3-4ac2-8826-3199b9a0ebf8,command_prompt
 credential-access,T1003.001,OS Credential Dumping: LSASS Memory,2,Dump LSASS.exe Memory using comsvcs.dll,2536dee2-12fb-459a-8c37-971844fa73be,powershell
@@ -1137,8 +1151,9 @@ credential-access,T1558.003,Steal or Forge Kerberos Tickets: Kerberoasting,7,Win
 credential-access,T1003.006,OS Credential Dumping: DCSync,1,DCSync (Active Directory),129efd28-8497-4c87-a1b0-73b9a870ca3e,command_prompt
 credential-access,T1003.006,OS Credential Dumping: DCSync,2,Run DSInternals Get-ADReplAccount,a0bced08-3fc5-4d8b-93b7-e8344739376e,powershell
 credential-access,T1056.004,Input Capture: Credential API Hooking,1,Hook PowerShell TLS Encrypt/Decrypt Messages,de1934ea-1fbf-425b-8795-65fb27dd7e33,powershell
-credential-access,T1552.007,Kubernetes List Secrets,1,ListSecrets,43c3a49d-d15c-45e6-b303-f6e177e44a9a,bash
-credential-access,T1552.007,Kubernetes List Secrets,2,Cat the contents of a Kubernetes service account token file,788e0019-a483-45da-bcfe-96353d46820f,sh
+credential-access,T1552.007,Kubernetes List Secrets,1,List All Secrets,31e794c4-48fd-4a76-aca4-6587c155bc11,bash
+credential-access,T1552.007,Kubernetes List Secrets,2,ListSecrets,43c3a49d-d15c-45e6-b303-f6e177e44a9a,bash
+credential-access,T1552.007,Kubernetes List Secrets,3,Cat the contents of a Kubernetes service account token file,788e0019-a483-45da-bcfe-96353d46820f,sh
 discovery,T1033,System Owner/User Discovery,1,System Owner/User Discovery,4c4959bf-addf-4b4a-be86-8d09cc1857aa,command_prompt
 discovery,T1033,System Owner/User Discovery,2,System Owner/User Discovery,2a9b677d-a230-44f4-ad86-782df1ef108c,sh
 discovery,T1033,System Owner/User Discovery,3,Find computers where user has session - Stealth mode (PowerView),29857f27-a36f-4f7e-8084-4557cd6207ca,powershell
@@ -1463,7 +1478,6 @@ initial-access,T1078.003,Valid Accounts: Local Accounts,1,Create local account w
 initial-access,T1078.003,Valid Accounts: Local Accounts,2,Create local account with admin privileges - MacOS,f1275566-1c26-4b66-83e3-7f9f7f964daa,bash
 initial-access,T1078.003,Valid Accounts: Local Accounts,3,WinPwn - Loot local Credentials - powerhell kittie,9e9fd066-453d-442f-88c1-ad7911d32912,powershell
 initial-access,T1078.003,Valid Accounts: Local Accounts,4,WinPwn - Loot local Credentials - Safetykatz,e9fdb899-a980-4ba4-934b-486ad22e22f4,powershell
-exfiltration,T1567,Exfiltration Over Web Service,1,Data Exfiltration with ConfigSecurityPolicy,5568a8f4-a8b1-4c40-9399-4969b642f122,powershell
 exfiltration,T1020,Automated Exfiltration,1,IcedID Botnet HTTP PUT,9c780d3d-3a14-4278-8ee5-faaeb2ccfbe0,powershell
 exfiltration,T1048.002,Exfiltration Over Alternative Protocol - Exfiltration Over Asymmetric Encrypted Non-C2 Protocol,1,Exfiltrate data HTTPS using curl windows,1cdf2fb0-51b6-4fd8-96af-77020d5f1bf0,command_prompt
 exfiltration,T1048.002,Exfiltration Over Alternative Protocol - Exfiltration Over Asymmetric Encrypted Non-C2 Protocol,2,Exfiltrate data HTTPS using curl linux,4a4f31e2-46ea-4c26-ad89-f09ad1d5fe01,bash
@@ -1480,3 +1494,4 @@ exfiltration,T1048.003,Exfiltration Over Alternative Protocol: Exfiltration Over
 exfiltration,T1048.003,Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,5,Exfiltration Over Alternative Protocol - SMTP,ec3a835e-adca-4c7c-88d2-853b69c11bb9,powershell
 exfiltration,T1048.003,Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,6,MAZE FTP Upload,57799bc2-ad1e-4130-a793-fb0c385130ba,powershell
 exfiltration,T1048.003,Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,7,Exfiltration Over Alternative Protocol - FTP - Rclone,b854eb97-bf9b-45ab-a1b5-b94e4880c56b,powershell
+exfiltration,T1048.003,Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,8,Python3 http.server,3ea1f938-f80a-4305-9aa8-431bc4867313,sh

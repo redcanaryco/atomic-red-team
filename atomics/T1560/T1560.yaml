@@ -1,4 +1,3 @@
----
 attack_technique: T1560
 display_name: Archive Collected Data
 
@@ -9,20 +8,20 @@ atomic_tests:
     An adversary may compress data (e.g., sensitive documents) that is collected prior to exfiltration.
     When the test completes you should find the files from the $env:USERPROFILE directory compressed in a file called T1560-data-ps.zip in the $env:USERPROFILE directory 
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     input_file:
       description: Path that should be compressed into our output file
-      type: Path
+      type: path
       default: $env:USERPROFILE
     output_file:
       description: Path where resulting compressed data should be placed
-      type: Path
+      type: path
       default: $env:USERPROFILE\T1560-data-ps.zip
   executor:
     name: powershell
     elevation_required: false
     command: |
       dir #{input_file} -Recurse | Compress-Archive -DestinationPath #{output_file}
-    cleanup_command: |
+    cleanup_command: |-
       Remove-Item -path #{output_file} -ErrorAction Ignore

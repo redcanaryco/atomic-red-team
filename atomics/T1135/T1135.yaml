@@ -10,7 +10,7 @@ atomic_tests:
   input_arguments:
     computer_name:
       description: Computer name to find a mount on.
-      type: String
+      type: string
       default: computer1
   executor:
     command: |
@@ -27,11 +27,11 @@ atomic_tests:
   input_arguments:
     package_checker:
       description: Package checking command. Debian - dpkg -s samba
-      type: String
+      type: string
       default: (rpm -q samba &>/dev/null) || (dpkg -s samba | grep -q installed)
     package_installer:
       description: Package installer command. Debian - apt install samba
-      type: String
+      type: string
       default: (which yum && yum -y install epel-release samba)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y samba)
   dependency_executor_name: bash
   dependencies:
@@ -56,7 +56,7 @@ atomic_tests:
   input_arguments:
     computer_name:
       description: Computer name to find a mount on.
-      type: String
+      type: string
       default: localhost
   executor:
     command: |
@@ -109,7 +109,7 @@ atomic_tests:
   input_arguments:
     parameters:
       description: ShareFinder parameter
-      type: String
+      type: string
       default: -CheckShareAccess
   dependencies:
   - description: Invoke-ShareFinder module must exist in %TEMP% directory

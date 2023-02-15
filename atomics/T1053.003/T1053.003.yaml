@@ -1,4 +1,3 @@
----
 attack_technique: T1053.003
 display_name: 'Scheduled Task/Job: Cron'
 atomic_tests:
@@ -7,16 +6,16 @@ atomic_tests:
   description: |
     This test replaces the current user's crontab file with the contents of the referenced file. This technique was used by numerous IoT automated exploitation attacks.
   supported_platforms:
-    - macos
-    - linux
+  - macos
+  - linux
   input_arguments:
     command:
       description: Command to execute
-      type: String
+      type: string
       default: /tmp/evil.sh
     tmp_cron:
       description: Temporary reference file to hold evil cron schedule
-      type: Path
+      type: path
       default: /tmp/persistevil
   executor:
     name: bash
@@ -30,16 +29,16 @@ atomic_tests:
   description: |
     This test adds a script to /etc/cron.hourly, /etc/cron.daily, /etc/cron.monthly and /etc/cron.weekly folders configured to execute on a schedule. This technique was used by the threat actor Rocke during the exploitation of Linux web servers.
   supported_platforms:
-    - macos
-    - linux
+  - macos
+  - linux
   input_arguments:
     command:
       description: Command to execute
-      type: String
+      type: string
       default: echo 'Hello from Atomic Red Team' > /tmp/atomic.log
     cron_script_name:
       description: Name of file to store in cron folder
-      type: String
+      type: string
       default: persistevil
   executor:
     elevation_required: true
@@ -59,15 +58,15 @@ atomic_tests:
   description: |
     This test adds a script to a /var/spool/cron/crontabs folder configured to execute on a schedule. This technique was used by the threat actor Rocke during the exploitation of Linux web servers.
   supported_platforms:
-    - linux
+  - linux
   input_arguments:
     command:
       description: Command to execute
-      type: String
+      type: string
       default: echo 'Hello from Atomic Red Team' > /tmp/atomic.log
     cron_script_name:
       description: Name of file to store in /var/spool/cron/crontabs folder
-      type: String
+      type: string
       default: persistevil
   executor:
     elevation_required: true
