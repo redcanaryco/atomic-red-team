@@ -793,3 +793,68 @@ atomic_tests:
       schtasks /create /xml "%temp%\Windows_Defender_Cache_Maintenance.xml" /tn "\Microsoft\Windows\Windows Defender\Windows Defender Cache Maintenance" /f
     name: command_prompt
     elevation_required: true
+- name: Clear History
+  auto_generated_guid: 23b88394-091b-4968-a42d-fb8076992443
+  description: |
+    Clear Shell History 
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      history -c
+    name: sh
+    elevation_required: true
+- name: Suspend History
+  auto_generated_guid: 94f6a1c9-aae7-46a4-9083-2bb1f5768ec4
+  description: |
+    suspend Shell History seen in Awfulshred wiper- https://unix.stackexchange.com/questions/10922/temporarily-suspend-bash-history-on-a-given-shell
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      set +o history
+    cleanup_command: |
+      set -o history
+    name: sh
+    elevation_required: true
+- name: Reboot Linux Host via Kernel System Request
+  auto_generated_guid: 6d6d3154-1a52-4d1a-9d51-92ab8148b32e
+  description: |
+    reboot system via system request seen in Awfulshred wiper.
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      echo 1> /proc/sys/kernel/sysrq 
+      echo b> /proc/sysrq-trigger 
+    name: sh
+    elevation_required: true
+- name: Clear Pagging Cache
+  auto_generated_guid: f790927b-ea85-4a16-b7b2-7eb44176a510
+  description: |
+    clear pagging cache via system request. seen in Awfulshred wiper.
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      echo 3> /proc/sys/vm/drop_caches 
+    name: sh
+    elevation_required: true
+- name: Disable Swapping of Paging Device
+  auto_generated_guid: e74e4c63-6fde-4ad2-9ee8-21c3a1733114
+  description: |
+    disable swaaping of device paging. seen in Awfulshred wiper.
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      swapon -a 
+      sleep 2
+      swapoff -a
+      sync
+    cleanup_command: |
+      swapon -a
+      sleep 2
+      sync
+    name: sh
+    elevation_required: true
