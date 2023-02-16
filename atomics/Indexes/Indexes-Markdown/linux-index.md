@@ -497,7 +497,11 @@
   - Atomic Test #2: Examine password complexity policy - CentOS/RHEL 7.x [linux]
   - Atomic Test #3: Examine password complexity policy - CentOS/RHEL 6.x [linux]
   - Atomic Test #4: Examine password expiration policy - All Linux [linux]
-- T1614.001 System Location Discovery: System Language Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1614.001 System Location Discovery: System Language Discovery](../../T1614.001/T1614.001.md)
+  - Atomic Test #3: Discover System Language with locale [linux]
+  - Atomic Test #4: Discover System Language with localectl [linux]
+  - Atomic Test #5: Discover System Language by locale file [linux]
+  - Atomic Test #6: Discover System Language by Environment Variable Query [linux]
 - T1614 System Location Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1518.001 Software Discovery: Security Software Discovery](../../T1518.001/T1518.001.md)
   - Atomic Test #4: Security Software Discovery - ps (Linux) [linux]
