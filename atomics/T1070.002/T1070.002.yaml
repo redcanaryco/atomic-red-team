@@ -58,16 +58,6 @@ atomic_tests:
       sudo find /var/log/ -name "system.log.*" -exec unlink {} \; #using "unlink" execution
     name: sh
     elevation_required: true
-- name: Delete system logs using syslog utility
-  description: |
-   Clears the contents of the system log, effectively erasing it's content
-  supported_platforms:
-  - macos
-  executor:
-    command: |
-      sudo syslog -c
-    name: sh
-    elevation_required: true
 - name: Overwrite macOS system log using echo utility
   description: |
    This test overwrites the contents of system log file with an empty string using echo utility
@@ -118,12 +108,13 @@ atomic_tests:
   - linux
   executor:
     command: |
-     shred -u -z -n 3 /var/log/system.log
+     sudo shred -u -z -n 3 /var/log/system.log
     name: sh
     elevation_required: true
 - name: Delete system log files using srm utility
   description: |
    This test securely deletes the system log files individually and recursively
+   Refer: https://github.com/khell/homebrew-srm/issues/1 for installation
   supported_platforms:
   - macos
   executor:
@@ -149,7 +140,7 @@ atomic_tests:
   - macos
   executor:
     command: |
-     osascript -e 'tell application "Finder" to delete file "/var/log/system.log"'
+     osascript -e 'tell application "Finder" to delete POSIX file "/var/log/system.log"'
     name: sh
     elevation_required: true
 - name: Overwrite Linux Mail Spool
