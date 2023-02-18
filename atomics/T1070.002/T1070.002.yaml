@@ -48,12 +48,14 @@ atomic_tests:
     elevation_required: true
 - name: System log file deletion using find utility
   description: |
-    Finds and deletes the system log files within /var/log/ directory
+    Finds and deletes the system log files within /var/log/ directory using various executions(rm, shred, unlink)
   supported_platforms:
   - macos
   executor:
     command: |
-      sudo find /var/log -name 'system.log.*' -exec rm {} \;
+      sudo find /var/log -name 'system.log.*' -exec rm {} \; #using "rm" execution
+      sudo find /var/log/ -name "system.log.*" -exec shred -u -z -n 3 {} \; #using "shred" execution
+      sudo find /var/log/ -name "system.log.*" -exec unlink {} \; #using "unlink" execution
     name: sh
     elevation_required: true
 - name: Delete system logs using syslog utility
@@ -97,6 +99,127 @@ atomic_tests:
      sudo journalctl --vacuum-time=0 #real-time deletion of journal files
     name: sh
     elevation_required: true
+- name: Delete system log files using unlink utility
+  description: |
+   This test deletes the system log file
+  supported_platforms:
+  - macos
+  - linux
+  executor:
+    command: |
+     sudo unlink /var/log/system.log
+    name: sh
+    elevation_required: true
+- name: Delete system log files using shred utility
+  description: |
+   This test overwrites the contents of the log file with zero bytes(-z) using three passes(-n 3) of data, and then delete the file(-u) securely
+  supported_platforms:
+  - macos
+  - linux
+  executor:
+    command: |
+     shred -u -z -n 3 /var/log/system.log
+    name: sh
+    elevation_required: true
+- name: Delete system log files using srm utility
+  description: |
+   This test securely deletes the system log files individually and recursively
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+     sudo srm /var/log/system.log #system log file deletion
+     sudo srm -r /var/log/ #recursive deletion of log files
+    name: sh
+    elevation_required: true
+- name: Delete system log files using OSAScript
+  description: |
+   This test deletes the system log file using osascript via "do shell script", requires admin privileges
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+     osascript -e 'do shell script "rm /var/log/system.log" with administrator privileges'
+    name: sh
+    elevation_required: true
+- name: Delete system log files using Applescript
+  description: |
+   This test deletes the system log file using applescript using osascript via Finder application
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+     osascript -e 'tell application "Finder" to delete file "/var/log/system.log"'
+    name: sh
+    elevation_required: true
+- name: Delete system log files using JXA
+  description: |
+    Deletes the system log file using JXA
+  supported_platforms:
+  - macos
+  input_arguments:
+    input_file:
+      description: source file
+      type: path
+      default: PathToAtomicsFolder/T1070.002/src/T1070-002-test.js
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      the source file must exist on disk at specified location (#{input_file})
+    prereq_command: |
+      if [ -e  #{input_file} ]; then exit 0; else exit 1; fi
+    get_prereq_command: |
+      wget https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1070.002/src/T1070-002-test.js -O #{input_file}
+  executor:
+    command: |
+      chmod +x #{input_file}
+      ./#{input_file}
+    name: bash
+- name: System log file deletion using Cocoa API - 1
+  description: |
+    Deletes the system log file using Cocoa API calls via OSAScript
+  supported_platforms:
+  - macos
+  input_arguments:
+    input_file:
+      description: source file
+      type: path
+      default: PathToAtomicsFolder/T1070.002/src/T1070-002-test.scpt
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      the source file must exist on disk at specified location (#{input_file})
+    prereq_command: |
+      if [ -e  #{input_file} ]; then exit 0; else exit 1; fi
+    get_prereq_command: |
+      wget https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1070.002/src/T1070-002-test.scpt -O #{input_file}
+  executor:
+    command: |
+      osascript #{input_file}
+    name: bash
+- name: System log file deletion using Cocoa API - 2
+  description: |
+    Deletes the system log file using Cocoa API calls via Swift
+  supported_platforms:
+  - macos
+  input_arguments:
+    input_file:
+      description: source file
+      type: path
+      default: PathToAtomicsFolder/T1070.002/src/T1070-002-test.swift
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      the source file must exist on disk at specified location (#{input_file})
+    prereq_command: |
+      if [ -e  #{input_file} ]; then exit 0; else exit 1; fi
+    get_prereq_command: |
+      wget https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1070.002/src/T1070-002-test.swift -O #{input_file}
+  executor:
+    command: |
+      swiftc #{input_file}
+      ./#{input_file}
+    name: bash
 - name: Overwrite Linux Mail Spool
   auto_generated_guid: 1602ff76-ed7f-4c94-b550-2f727b4782d4
   description: |
