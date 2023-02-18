@@ -14,6 +14,89 @@ atomic_tests:
       sudo rm -rf /private/var/audit/*
     name: sh
     elevation_required: true
+- name: Delete log files using built-in log utility 
+  description: |
+    Deletes main log datastore, inflight log data, time-to-live data(TTL), fault and error content
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+      sudo log erase --all
+      sudo log erase --ttl #Deletes only time-to-live log content
+      sudo log erase --predicate 'subsystem == "com.apple.appstore"' #Deletes all logs related to the App Store, useful for clearing specific entries of the system log
+    name: sh
+    elevation_required: true
+- name: Truncate system log files 
+  description: |
+    Truncates the system log files, thus emptying the file content
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+      sudo truncate -s 0 /var/log/system.log
+    name: sh
+    elevation_required: true
+- name: Delete log files by appending null bytes
+  description: |
+    Appends null bytes using /dev/null to the system log file
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+      sudo cat /dev/null > /var/log/system.log
+    name: sh
+    elevation_required: true
+- name: System log file deletion using find utility
+  description: |
+    Finds and deletes the system log files within /var/log/ directory
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+      sudo find /var/log -name 'system.log.*' -exec rm {} \;
+    name: sh
+    elevation_required: true
+- name: Delete system logs using syslog utility
+  description: |
+   Clears the contents of the system log, effectively erasing it's content
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+      sudo syslog -c
+    name: sh
+    elevation_required: true
+- name: Overwrite macOS system log using echo utility
+  description: |
+   This test overwrites the contents of system log file with an empty string using echo utility
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+      sudo sh -c "echo '' > /var/log/system.log"
+    name: sh
+    elevation_required: true
+- name: Real-time system log clearance/deletion
+  description: |
+   This test reads real-time system log file and writes empty string to it, thus clearing the log file without tampering with the logging process
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+     sudo log -f /var/log/system.log | : > /var/log/system.log
+    name: sh
+    elevation_required: true
+- name: Delete system journal logs
+  description: |
+   This test reads real-time system log file and writes empty string to it, thus clearing the log file without tampering with the logging process
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+     sudo rm /var/log/journal/* #delete journal files using rm utility
+     sudo journalctl --vacuum-time=0 #real-time deletion of journal files
+    name: sh
+    elevation_required: true
 - name: Overwrite Linux Mail Spool
   auto_generated_guid: 1602ff76-ed7f-4c94-b550-2f727b4782d4
   description: |
