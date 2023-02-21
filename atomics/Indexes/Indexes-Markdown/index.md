@@ -1875,7 +1875,8 @@
   - Atomic Test #3: Find computers where user has session - Stealth mode (PowerView) [windows]
   - Atomic Test #4: User Discovery With Env Vars PowerShell Script [windows]
   - Atomic Test #5: GetCurrent User with PowerShell Script [windows]
-- T1613 Container and Resource Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1613 Container and Resource Discovery](../../T1613/T1613.md)
+  - Atomic Test #1: Container and ResourceDiscovery [containers]
 - T1016.001 Internet Connection Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1069 Permission Groups Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1069.003 Cloud Groups [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -2067,6 +2068,10 @@
 - [T1614.001 System Location Discovery: System Language Discovery](../../T1614.001/T1614.001.md)
   - Atomic Test #1: Discover System Language by Registry Query [windows]
   - Atomic Test #2: Discover System Language with chcp [windows]
+  - Atomic Test #3: Discover System Language with locale [linux]
+  - Atomic Test #4: Discover System Language with localectl [linux]
+  - Atomic Test #5: Discover System Language by locale file [linux]
+  - Atomic Test #6: Discover System Language by Environment Variable Query [linux]
 - [T1012 Query Registry](../../T1012/T1012.md)
   - Atomic Test #1: Query Registry [windows]
   - Atomic Test #2: Enumerate COM Objects in Registry with Powershell [windows]
