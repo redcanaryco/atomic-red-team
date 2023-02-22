@@ -100,11 +100,11 @@ atomic_tests:
     prereq_command: |
       az account show
     get_prereq_command: |
-        echo Configure your Azure account using: az login. 
+      echo Configure your Azure account using: az login. 
   - description: |
       Create dependency resources using terraform
     prereq_command: |
-        if [ -f $PathToAtomicsFolder/T1562.008/src/T1562.008-2/terraform.tfstate ]; then exit 0; else exit 1; fi;
+      try {if (Test-Path $PathToAtomicsFolder/T1562.008/src/T1562.008-2/terraform.tfstate ){ exit 0 } else {exit 1}} catch {exit 1}
     get_prereq_command: |
       cd $PathToAtomicsFolder/T1562.008/src/T1562.008-2/
       terraform init
@@ -252,7 +252,6 @@ atomic_tests:
       cat ~/.aws/credentials | grep "default"
     get_prereq_command: |
       echo Please install the aws-cli and configure your AWS defult profile using: aws configure
-
   executor:
     command: |
       export AWS_REGION=#{aws_region} 
