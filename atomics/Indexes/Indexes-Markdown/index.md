@@ -2068,6 +2068,10 @@
 - [T1614.001 System Location Discovery: System Language Discovery](../../T1614.001/T1614.001.md)
   - Atomic Test #1: Discover System Language by Registry Query [windows]
   - Atomic Test #2: Discover System Language with chcp [windows]
+  - Atomic Test #3: Discover System Language with locale [linux]
+  - Atomic Test #4: Discover System Language with localectl [linux]
+  - Atomic Test #5: Discover System Language by locale file [linux]
+  - Atomic Test #6: Discover System Language by Environment Variable Query [linux]
 - [T1012 Query Registry](../../T1012/T1012.md)
   - Atomic Test #1: Query Registry [windows]
   - Atomic Test #2: Enumerate COM Objects in Registry with Powershell [windows]
