@@ -64,11 +64,11 @@ atomic_tests:
     username:
       description: Azure username
       type: string
-      default:
+      default: null
     password:
       description: Azure password
       type: string
-      default:
+      default: null
     event_hub_name:
       description: Name of the eventhub
       type: string
@@ -76,11 +76,11 @@ atomic_tests:
     resource_group:
       description: Name of the resource group
       type: string
-      default:
+      default: null
     name_space_name:
       description: Name of the NameSpace
       type: string
-      default:
+      default: null
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -111,7 +111,7 @@ atomic_tests:
       terraform apply -auto-approve
   executor:
     command: |
-      $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
+      $secure_pwd = "#{password}" | ConvertTo-Securestring -AsPlainText -Force
       $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
       Connect-AzureAD -Credential $creds
       Remove-AzEventHub -ResourceGroupName #{resource_group} -Namespace #{name_space_name} -Name #{event_hub_name}
@@ -132,11 +132,11 @@ atomic_tests:
     username:
       description: office-365 username
       type: string
-      default:
+      default: null
     password:
       description: office-365 password
       type: string
-      default:
+      default: null
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -150,12 +150,12 @@ atomic_tests:
       Import-Module ExchangeOnlineManagement
   executor:
     command: |
-      $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
+      $secure_pwd = "#{password}" | ConvertTo-Securestring -AsPlainText -Force
       $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
       Connect-ExchangeOnline -Credential $creds
       Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $False
     cleanup_command: |
-      $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
+      $secure_pwd = "#{password}" | ConvertTo-Securestring -AsPlainText -Force
       $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
       Connect-ExchangeOnline -Credential $creds
       Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $True
@@ -193,16 +193,11 @@ atomic_tests:
         tar -xzvf #{stratus_path}/stratus-red-team-latest.tar.gz --directory #{stratus_path}/
       fi
   - description: |
-      Check if ~/.aws/credentials file has a default stanza is configured
+        Check if ~/.aws/credentials file has a default stanza is configured
     prereq_command: |
-      cat ~/.aws/credentials | grep "default"
+        cat ~/.aws/credentials | grep "default"
     get_prereq_command: |
-<<<<<<< HEAD
         echo Please install the aws-cli and configure your AWS default profile using: aws configure
-=======
-      echo Please install the aws-cli and configure your AWS defult profile using: aws configure
->>>>>>> master
-
   executor:
     command: |
       export AWS_REGION=#{aws_region} 
@@ -251,15 +246,11 @@ atomic_tests:
         tar -xzvf #{stratus_path}/stratus-red-team-latest.tar.gz --directory #{stratus_path}/
       fi
   - description: |
-      Check if ~/.aws/credentials file has a default stanza is configured
+        Check if ~/.aws/credentials file has a default stanza is configured
     prereq_command: |
-      cat ~/.aws/credentials | grep "default"
+        cat ~/.aws/credentials | grep "default"
     get_prereq_command: |
-<<<<<<< HEAD
         echo Please install the aws-cli and configure your AWS default profile using: aws configure
-=======
-      echo Please install the aws-cli and configure your AWS defult profile using: aws configure
->>>>>>> master
 
   executor:
     command: |
@@ -309,15 +300,11 @@ atomic_tests:
         tar -xzvf #{stratus_path}/stratus-red-team-latest.tar.gz --directory #{stratus_path}/
       fi
   - description: |
-      Check if ~/.aws/credentials file has a default stanza is configured
+        Check if ~/.aws/credentials file has a default stanza is configured
     prereq_command: |
-      cat ~/.aws/credentials | grep "default"
+        cat ~/.aws/credentials | grep "default"
     get_prereq_command: |
-<<<<<<< HEAD
         echo Please install the aws-cli and configure your AWS default profile using: aws configure
-=======
-      echo Please install the aws-cli and configure your AWS defult profile using: aws configure
->>>>>>> master
 
   executor:
     command: |
@@ -352,7 +339,6 @@ atomic_tests:
       type: string
       default: "us-east-1"
   dependencies:
-<<<<<<< HEAD
     - description: |
         Check if ~/.aws/credentials file has a default stanza is configured
       prereq_command: |
@@ -365,20 +351,6 @@ atomic_tests:
        echo "*** Log Group Created ***"
        aws logs delete-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
        echo "*** Log Group Deleted ***"
-=======
-  - description: |
-      Check if ~/.aws/credentials file has a default stanza is configured
-    prereq_command: |
-      cat ~/.aws/credentials | grep "default"
-    get_prereq_command: |
-      echo Please install the aws-cli and configure your AWS defult profile using: aws configure
-  executor:
-    command: |
-      aws logs create-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
-      echo "*** Log Group Created ***"
-      aws logs delete-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
-      echo "*** Log Group Deleted ***"
->>>>>>> master
     cleanup_command:
     name: sh
     elevation_required: false
@@ -399,7 +371,6 @@ atomic_tests:
       type: string
       default: "us-east-1"
   dependencies:
-<<<<<<< HEAD
     - description: |
         Check if ~/.aws/credentials file has a default stanza is configured
       prereq_command: |
@@ -412,20 +383,6 @@ atomic_tests:
        echo "*** Log Group Created ***"
        aws logs delete-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
        echo "*** Log Group Deleted ***"
-=======
-  - description: |
-      Check if ~/.aws/credentials file has a default stanza is configured
-    prereq_command: |
-      cat ~/.aws/credentials | grep "default"
-    get_prereq_command: |
-      echo Please install the aws-cli and configure your AWS defult profile using: aws configure
-  executor:
-    command: |
-      aws logs create-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
-      echo "*** Log Group Created ***"
-      aws logs delete-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
-      echo "*** Log Group Deleted ***"
->>>>>>> master
     cleanup_command:
     name: sh
     elevation_required: false
@@ -450,7 +407,6 @@ atomic_tests:
       type: string
       default: "us-west-2"
   dependencies:
-<<<<<<< HEAD
     - description: |
         Check if ~/.aws/credentials file has a default stanza is configured
       prereq_command: |
@@ -467,24 +423,6 @@ atomic_tests:
        echo "*** Log Stream Deleted ***"
        aws logs delete-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
        echo "*** Log Group Deleted ***"
-=======
-  - description: |
-      Check if ~/.aws/credentials file has a default stanza is configured
-    prereq_command: |
-      cat ~/.aws/credentials | grep "default"
-    get_prereq_command: |
-      echo Please install the aws-cli and configure your AWS defult profile using: aws configure
-  executor:
-    command: |
-      aws logs create-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
-      echo "*** Log Group Created ***"
-      aws logs create-log-stream --log-group-name #{cloudwatch_log_group_name} --log-stream-name #{cloudwatch_log_stream_name}
-      echo "*** Log Stream Created ***"
-      aws logs delete-log-stream --log-group-name #{cloudwatch_log_group_name} --log-stream-name #{cloudwatch_log_stream_name}
-      echo "*** Log Stream Deleted ***"
-      aws logs delete-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
-      echo "*** Log Group Deleted ***"
->>>>>>> master
     cleanup_command:
     name: sh
     elevation_required: false
