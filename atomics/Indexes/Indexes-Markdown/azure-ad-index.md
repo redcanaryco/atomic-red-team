@@ -61,9 +61,9 @@
   - Atomic Test #2: Azure AD Application Hijacking - App Registration [azure-ad]
 - T1136.003 Create Account: Cloud Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1098 Account Manipulation](../../T1098/T1098.md)
-  - Atomic Test #4: Azure - adding user to Azure AD role [azure-ad]
-  - Atomic Test #5: Azure - adding service principal to Azure AD role [azure-ad]
-  - Atomic Test #8: AzureAD - adding permission to application [azure-ad]
+  - Atomic Test #4: Azure AD - adding user to Azure AD role [azure-ad]
+  - Atomic Test #5: Azure AD - adding service principal to Azure AD role [azure-ad]
+  - Atomic Test #8: Azure AD - adding permission to application [azure-ad]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1136 Create Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078.004 Valid Accounts: Cloud Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
