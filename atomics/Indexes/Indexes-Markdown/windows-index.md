@@ -1545,6 +1545,7 @@
   - Atomic Test #1: System Time Discovery [windows]
   - Atomic Test #2: System Time Discovery - PowerShell [windows]
   - Atomic Test #4: System Time Discovery W32tm as a Delay [windows]
+  - Atomic Test #5: System Time with Windows time Command [windows]
 
 # command-and-control
 - [T1132.001 Data Encoding: Standard Encoding](../../T1132.001/T1132.001.md)
