@@ -36294,7 +36294,7 @@ persistence:
     atomic_tests:
     - name: Azure - adding user to Azure role in subscription
       auto_generated_guid: 1a94b3fc-b080-450a-b3d8-6d9b57b472ea
-      description: "The adversarie want to add user to some Azure role, also called
+      description: "The adversaries want to add user to some Azure role, also called
         Azure resource role. Threat actor \nmay be interested primarily in highly
         privileged roles, e.g. Owner, Contributor.\nBy default, the role Reader is
         assigned to user in this test.\n\nNew-AzRoleAssignment cmdlet could be also
@@ -36320,11 +36320,11 @@ persistence:
           type: string
           default: SuperUser
         role_name:
-          description: Name of the targed Azure role
+          description: Name of the targeted Azure role
           type: string
           default: Reader
         subscription:
-          description: Name of the targed subscription
+          description: Name of the targeted subscription
           type: string
           default: Azure subscription 1
       dependencies:
@@ -36368,12 +36368,12 @@ persistence:
           if ($role -eq $null) { Write-Warning "Role not found"; exit }
 
           Remove-AzRoleAssignment -ObjectId $user.id -RoleDefinitionId $role.id -Scope /subscriptions/$subscription
-          Write-Host "Service Principal $($sp.DisplayName) was removed from $($role.Name) role in subscriptions $($subscriptions.Name)"
+          Write-Host "User Principal $($sp.DisplayName) was removed from $($role.Name) role in subscriptions $($subscriptions.Name)"
         name: powershell
         elevation_required: false
     - name: Azure - adding service principal to Azure role in subscription
       auto_generated_guid: c8f4bc29-a151-48da-b3be-4680af56f404
-      description: "The adversarie want to add service principal to some Azure role,
+      description: "The adversaries want to add service principal to some Azure role,
         also called Azure resource role. Threat actor \nmay be interested primarily
         in highly privileged roles, e.g. Owner, Contributor.\nBy default, the role
         Reader is assigned to service principal in this test.\n\nNew-AzRoleAssignment
@@ -36400,11 +36400,11 @@ persistence:
           type: string
           default: SuperSP
         role_name:
-          description: Name of the targed Azure role
+          description: Name of the targeted Azure role
           type: string
           default: Reader
         subscription:
-          description: Name of the targed subscription
+          description: Name of the targeted subscription
           type: string
           default: Azure subscription 1
       dependencies:
