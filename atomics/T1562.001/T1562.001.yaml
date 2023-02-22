@@ -832,18 +832,21 @@ atomic_tests:
 - name: Clear Pagging Cache
   auto_generated_guid: f790927b-ea85-4a16-b7b2-7eb44176a510
   description: |
-    clear pagging cache via system request. seen in Awfulshred wiper.
+    clear pagging cache via system request. This is a temporary change in the system to clear paging cache. This technique seen in Awfulshred wiper as part
+    of its malicious payload on the compromised host. added reference link for this technique: https://www.tecmint.com/clear-ram-memory-cache-buffer-and-swap-space-on-linux/
   supported_platforms:
   - linux
   executor:
     command: |
+      free && echo 3 > /proc/sys/vm/drop_caches && free
       echo 3> /proc/sys/vm/drop_caches 
     name: sh
     elevation_required: true
-- name: Disable Swapping of Paging Device
+- name: Disable Memory Swap
   auto_generated_guid: e74e4c63-6fde-4ad2-9ee8-21c3a1733114
   description: |
-    disable swaaping of device paging. seen in Awfulshred wiper.
+    disable swapping of device paging that impaire the compromised host to swap data if the RAM. Awfulshred wiper used this technique as an additional 
+    payload to the compromised host and to make sure that there will be no recoverable data due to swap feature of linux.
   supported_platforms:
   - linux
   executor:
