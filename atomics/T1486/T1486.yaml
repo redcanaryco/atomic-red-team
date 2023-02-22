@@ -7,32 +7,32 @@ atomic_tests:
   description: |
     Uses gpg to encrypt a file
   supported_platforms:
-    - linux
+  - linux
   input_arguments:
     pwd_for_encrypted_file:
       description: the password that you want for the encrypted file
-      type: String
+      type: string
       default: passwd
     encrypted_file_path:
       description: path to the encrypted file
-      type: Path
+      type: path
       default: /tmp/passwd.gpg
     input_file_path:
       description: path to the file that you want to encrypt
-      type: Path
+      type: path
       default: /etc/passwd
     encryption_alg:
       description: encryption algorithm of the file
-      type: String
+      type: string
       default: AES-256
   dependency_executor_name: bash
   dependencies:
-    - description: |
-        Finds where gpg is located
-      prereq_command: |
-        which_gpg=`which gpg`
-      get_prereq_command: |
-        (which yum && yum -y install epel-release gpg)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y gpg)
+  - description: |
+      Finds where gpg is located
+    prereq_command: |
+      which_gpg=`which gpg`
+    get_prereq_command: |
+      (which yum && yum -y install epel-release gpg)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y gpg)
   executor:
     name: bash
     elevation_required: false
@@ -47,27 +47,27 @@ atomic_tests:
   description: |
     Uses 7z to encrypt a file
   supported_platforms:
-    - linux
+  - linux
   input_arguments:
     pwd_for_encrypted_file:
       description: the password that you want for the encrypted file
-      type: String
+      type: string
       default: passwd
     encrypted_file_path:
       description: path to the encrypted file
-      type: Path
+      type: path
       default: /tmp/passwd.zip
     input_file_path:
       description: path to the file that you want to encrypt
-      type: Path
+      type: path
       default: /etc/passwd
   dependency_executor_name: bash
   dependencies:
-    - description: |
-        Finds where 7z is located
-      prereq_command: |
-        which_7z=`which 7z`
-      get_prereq_command: |
+  - description: |
+      Finds where 7z is located
+    prereq_command: |
+      which_7z=`which 7z`
+    get_prereq_command: |
   executor:
     name: bash
     elevation_required: false
@@ -81,36 +81,37 @@ atomic_tests:
 - name: Encrypt files using ccrypt (Linux)
   auto_generated_guid: 08cbf59f-85da-4369-a5f4-049cffd7709f
   description: |
-      Attempts to encrypt data on target systems as root to simulate an inturruption authentication to target system. If root permissions are not available then attempts to encrypt data within user's home directory.
+    Attempts to encrypt data on target systems as root to simulate an inturruption authentication to target system. If root permissions are not available then attempts to encrypt data within user's home directory.
   supported_platforms:
-    - linux
+  - linux
   input_arguments:
     cped_file_path:
       description: path where you want your copied file to be
-      type: Path
+      type: path
       default: /tmp/passwd
     root_input_file_path:
-      description: path to the file that you want to be encrypted if you are root user
-      type: Path
+      description: path to the file that you want to be encrypted if you are root
+        user
+      type: path
       default: /etc/passwd
     user_input_file_path:
       description: path to file that you want to be encrypted if you are normal user
-      type: Path
+      type: path
       default: ~/.bash_history
     impact_command:
       description: command to show impact of encryption
-      type: String
+      type: string
       default: sudo su
   dependency_executor_name: bash
   dependencies:
-    - description: |
-        Finds where ccencrypt and ccdecrypt is located and copies input file
-      prereq_command: |
-        which_ccencrypt=`which ccencrypt`
-        which_ccdecrypt=`which ccdecrypt`
-        if [[ $USER == "root" ]]; then cp #{root_input_file_path} #{cped_file_path}; else cp #{user_input_file_path} #{cped_file_path}; fi
-      get_prereq_command: |
-        (which yum && yum -y install epel-release ccrypt)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y ccrypt)
+  - description: |
+      Finds where ccencrypt and ccdecrypt is located and copies input file
+    prereq_command: |
+      which_ccencrypt=`which ccencrypt`
+      which_ccdecrypt=`which ccdecrypt`
+      if [[ $USER == "root" ]]; then cp #{root_input_file_path} #{cped_file_path}; else cp #{user_input_file_path} #{cped_file_path}; fi
+    get_prereq_command: |
+      (which yum && yum -y install epel-release ccrypt)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y ccrypt)
   executor:
     name: bash
     elevation_required: false
@@ -125,35 +126,35 @@ atomic_tests:
   description: |
     Uses openssl to encrypt a file
   supported_platforms:
-    - linux
+  - linux
   input_arguments:
     private_key_path:
       description: path to the private key
-      type: Path
+      type: path
       default: /tmp/key.pem
     public_key_path:
       description: path to the public key
-      type: Path
+      type: path
       default: /tmp/pub.pem
     encryption_bit_size:
       description: size of the bit of encryption
-      type: Integer
+      type: integer
       default: 2048
     encrypted_file_path:
       description: path to the encrypted file
-      type: Path
+      type: path
       default: /tmp/passwd.zip
     input_file_path:
       description: path to the file that you want to encrypt
-      type: Path
-      default: /etc/passwd 
+      type: path
+      default: /etc/passwd
   dependency_executor_name: bash
   dependencies:
-    - description: |
-        Finds where openssl is located
-      prereq_command: |
-        which_openssl=`which openssl`
-      get_prereq_command: |
+  - description: |
+      Finds where openssl is located
+    prereq_command: |
+      which_openssl=`which openssl`
+    get_prereq_command: |
   executor:
     name: bash
     elevation_required: false
@@ -172,12 +173,12 @@ atomic_tests:
     https://www.bleepingcomputer.com/news/security/purelocker-ransomware-can-lock-files-on-windows-linux-and-macos/
 
   supported_platforms:
-    - windows
+  - windows
 
   executor:
     name: command_prompt
-    elevation_required: true 
-    command: | 
+    elevation_required: true
+    command: |
       echo T1486 - Purelocker Ransom Note > %USERPROFILE%\Desktop\YOUR_FILES.txt
-    cleanup_command: | 
+    cleanup_command: |
       del %USERPROFILE%\Desktop\YOUR_FILES.txt >nul 2>&1

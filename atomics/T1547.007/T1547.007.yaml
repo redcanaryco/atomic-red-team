@@ -10,7 +10,7 @@ atomic_tests:
   input_arguments:
     calc_plist_path:
       description: path to binary plist with entry to open calculator
-      type: Path
+      type: path
       default: PathToAtomicsFolder/T1547.007/src/reopen_loginwindow_calc.plist
   executor:
     command: |
@@ -29,7 +29,7 @@ atomic_tests:
   input_arguments:
     script:
       description: path to script
-      type: Path
+      type: path
       default: /path/to/script
   executor:
     command: |
@@ -49,20 +49,20 @@ atomic_tests:
   input_arguments:
     objc_source_path:
       description: path to objective C program
-      type: Path
+      type: path
       default: PathToAtomicsFolder/T1547.007/src/append_reopen_loginwindow.m
     exe_path:
       description: path to compiled program
-      type: Path
+      type: path
       default: /tmp/t1547007_append_exe
   dependency_executor_name: bash
   dependencies:
-    - description: |
-         compile C program
-      prereq_command: |
-         if [ -f "#{exe_path}" ]; then exit 0 ; else exit 1; fi
-      get_prereq_command: |
-         cc #{objc_source_path} -o #{exe_path} -framework Cocoa
+  - description: |
+      compile C program
+    prereq_command: |
+      if [ -f "#{exe_path}" ]; then exit 0 ; else exit 1; fi
+    get_prereq_command: |
+      cc #{objc_source_path} -o #{exe_path} -framework Cocoa
   executor:
     command: |
       FILE=`find ~/Library/Preferences/ByHost/com.apple.loginwindow.*.plist -type f | head -1`

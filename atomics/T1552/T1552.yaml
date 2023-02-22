@@ -11,11 +11,11 @@ atomic_tests:
   input_arguments:
     stratus_path:
       description: Path of stratus binary
-      type: Path
+      type: path
       default: $PathToAtomicsFolder/T1552/src
     aws_region:
       description: AWS region to detonate
-      type: String
+      type: string
       default: us-west-2
   dependency_executor_name: sh
   dependencies:
@@ -33,11 +33,11 @@ atomic_tests:
         tar -xzvf #{stratus_path}/stratus-red-team-latest.tar.gz --directory #{stratus_path}/
       fi
   - description: |
-        Check if ~/.aws/credentials file has a default stanza is configured
+      Check if ~/.aws/credentials file has a default stanza is configured
     prereq_command: |
-        cat ~/.aws/credentials | grep "default"
+      cat ~/.aws/credentials | grep "default"
     get_prereq_command: |
-        echo Please install the aws-cli and configure your AWS defult profile using: aws configure
+      echo Please install the aws-cli and configure your AWS defult profile using: aws configure
   executor:
     command: |
       export AWS_REGION=#{aws_region} 
@@ -48,7 +48,7 @@ atomic_tests:
       ./stratus detonate aws.credential-access.ec2-get-password-data --force
     cleanup_command: |
       export AWS_REGION=#{aws_region}
-      
+
       echo "Cleanup detonation"
       cd #{stratus_path}
       ./stratus cleanup --all

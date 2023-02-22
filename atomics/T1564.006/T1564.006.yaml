@@ -11,11 +11,11 @@ atomic_tests:
   input_arguments:
     msi_file_path:
       description: Path to the MSI file
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1564.006\bin\Virtualbox_52.msi
     cab_file_path:
       description: Path to the CAB file
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1564.006\bin\common.cab
   dependency_executor_name: powershell
   dependencies:
@@ -61,27 +61,27 @@ atomic_tests:
     https://news.sophos.com/en-us/2020/05/21/ragnar-locker-ransomware-deploys-virtual-machine-to-dodge-security/
     https://attack.mitre.org/techniques/T1564/006/
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     vm_name:
       description: Name of the new virtual machine
-      type: String
+      type: string
       default: Atomic VM
     virtualbox_exe:
       description: Path to the VirtualBox executable
-      type: Path
+      type: path
       default: C:\Program Files\Oracle\VirtualBox\VirtualBox.exe
     vboxmanage_exe:
       description: Path to the executable for VBoxManage, the command-line interface to VirtualBox
-      type: Path
+      type: path
       default: C:\Program Files\Oracle\VirtualBox\VBoxManage.exe
     virtualbox_download:
       description: URL for the current installer for the Windows version of VirtualBox, as of March 2022
-      type: Url
+      type: url
       default: https://download.virtualbox.org/virtualbox/6.1.32/VirtualBox-6.1.32-149290-Win.exe
     virtualbox_installer:
       description: Executable for the Virtualbox installer
-      type: String
+      type: string
       default: VirtualBox-6.1.32-149290-Win.exe
   dependency_executor_name: powershell
   dependencies:
@@ -120,20 +120,20 @@ atomic_tests:
     https://embracethered.com/blog/posts/2020/shadowbunny-virtual-machine-red-teaming-technique/
     https://attack.mitre.org/techniques/T1564/006/
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     vm_name:
       description: Name of the new virtual machine
-      type: String
+      type: string
       default: Atomic VM
   dependencies:
-    - description: |
-        Hyper-V must be enabled on the system
-        Checks whether Hyper-V is enabled. If not, enables Hyper-V and forces a required restart
-      prereq_command: |
-        if ((Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V).State = "Enabled") {exit 0} else {exit 1}
-      get_prereq_command: |
-        Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -Force
+  - description: |
+      Hyper-V must be enabled on the system
+      Checks whether Hyper-V is enabled. If not, enables Hyper-V and forces a required restart
+    prereq_command: |
+      if ((Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V).State = "Enabled") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -Force
   executor:
     name: powershell
     elevation_required: true

@@ -11664,15 +11664,15 @@ defense-evasion:
       input_arguments:
         cloudtrail_name:
           description: Name of the cloudTrail
-          type: String
+          type: string
           default: redatomictesttrail
         s3_bucket_name:
           description: Name of the bucket
-          type: String
+          type: string
           default: redatomic-test
         region:
           description: Name of the region
-          type: String
+          type: string
           default: us-east-1
       dependencies:
       - description: 'Check if ~/.aws/credentials file has a default stanza is configured
@@ -11706,11 +11706,11 @@ defense-evasion:
       input_arguments:
         cloudwatch_log_group_name:
           description: Name of the cloudWatch log group
-          type: String
+          type: string
           default: log-test
         region:
           description: Name of the region
-          type: String
+          type: string
           default: us-east-1
       dependencies:
       - description: 'Check if ~/.aws/credentials file has a default stanza is configured
@@ -11743,11 +11743,11 @@ defense-evasion:
       input_arguments:
         cloudwatch_log_group_name:
           description: Name of the cloudWatch log group
-          type: String
+          type: string
           default: log-test
         region:
           description: Name of the region
-          type: String
+          type: string
           default: us-east-1
       dependencies:
       - description: 'Check if ~/.aws/credentials file has a default stanza is configured
@@ -11780,15 +11780,15 @@ defense-evasion:
       input_arguments:
         cloudwatch_log_group_name:
           description: Name of the cloudWatch log group
-          type: String
+          type: string
           default: test-logs
         cloudwatch_log_stream_name:
           description: Name of the cloudWatch log stream
-          type: String
+          type: string
           default: '20150601'
         region:
           description: Name of the region
-          type: String
+          type: string
           default: us-west-2
       dependencies:
       - description: 'Check if ~/.aws/credentials file has a default stanza is configured
@@ -35470,7 +35470,7 @@ persistence:
       input_arguments:
         username:
           description: Create new AWS access and secret keys for the user
-          type: String
+          type: string
           default: atomicredteam
       dependencies:
       - description: 'Check if the user exists.
@@ -36369,7 +36369,7 @@ persistence:
       input_arguments:
         username:
           description: Username of the IAM user to create in AWS
-          type: String
+          type: string
           default: atomicredteam
       dependencies:
       - description: 'Check if ~/.aws/credentials file has a default stanza is configured
@@ -36482,7 +36482,7 @@ persistence:
       input_arguments:
         username:
           description: Name of the AWS group to create
-          type: String
+          type: string
           default: atomicredteam
       dependencies:
       - description: 'Check if the user exists, we can only add a user to a group
@@ -41475,7 +41475,7 @@ collection:
       input_arguments:
         s3_bucket_name:
           description: Name of the bucket
-          type: String
+          type: string
           default: redatomic-test2
       dependencies:
       - description: 'Check if ~/.aws/credentials file has a default stanza is configured
@@ -47790,7 +47790,7 @@ credential-access:
       input_arguments:
         aws_account_id:
           description: ID of the AWS account
-          type: String
+          type: string
           default: XXXXXXXX
       dependencies:
       - description: 'Check if go is installed
@@ -50370,6 +50370,7 @@ discovery:
       - 'Container: Container Enumeration'
       x_mitre_permissions_required:
       - User
+      identifier: T1613
     atomic_tests: []
   T1016.001:
     technique:
@@ -63252,7 +63253,6 @@ exfiltration:
       - 'Network Traffic: Network Traffic Flow'
       - 'Network Traffic: Network Traffic Content'
       - 'File: File Access'
-      identifier: T1567
     atomic_tests: []
   T1029:
     technique:

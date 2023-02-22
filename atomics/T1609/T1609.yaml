@@ -10,11 +10,11 @@ atomic_tests:
   input_arguments:
     namespace:
       description: K8s namespace to use
-      type: String
+      type: string
       default: default
     command:
       description: Command to run
-      type: String
+      type: string
       default: uname
   dependencies:
   - description: |
@@ -37,11 +37,11 @@ atomic_tests:
     Attackers who have permissions, can run malicious commands in containers in the cluster using exec command (“docker exec”). In this method, attackers can use legitimate images, such as an OS image (e.g., Ubuntu) as a backdoor container, and run their malicious code remotely by using “docker exec”. Kinsing (Golang-based malware) was executed with an Ubuntu container entry point that runs shell scripts.
 
   supported_platforms:
-   - containers
+  - containers
   input_arguments:
     command:
       description: Command to run
-      type: String
+      type: string
       default: cat
   dependencies:
   - description: |
@@ -60,4 +60,3 @@ atomic_tests:
       docker rmi -f t1609:latest 
     name: bash
     elevation_required: false
-

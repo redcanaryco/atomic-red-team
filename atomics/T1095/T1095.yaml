@@ -11,7 +11,7 @@ atomic_tests:
   input_arguments:
     server_ip:
       description: The IP address of the listening server
-      type: String
+      type: string
       default: 127.0.0.1
   executor:
     command: |
@@ -19,7 +19,7 @@ atomic_tests:
       Invoke-PowerShellIcmp -IPAddress #{server_ip}
     name: powershell
 - name: Netcat C2
-  auto_generated_guid: bcf0d1c1-3f6a-4847-b1c9-7ed4ea321f37 
+  auto_generated_guid: bcf0d1c1-3f6a-4847-b1c9-7ed4ea321f37
   description: |
     Start C2 Session Using Ncat
     To start the listener on a Linux device, type the following: 
@@ -29,19 +29,19 @@ atomic_tests:
   input_arguments:
     server_port:
       description: The port for the C2 connection
-      type: Integer
+      type: integer
       default: 80
     ncat_exe:
       description: The location of ncat.exe
-      type: Path
+      type: path
       default: $env:TEMP\T1095\nmap-7.80\ncat.exe
     ncat_path:
       description: The folder path of ncat.exe
-      type: Path
+      type: path
       default: $env:TEMP\T1095
     server_ip:
       description: The IP address or domain name of the listening server
-      type: String
+      type: string
       default: 127.0.0.1
   dependency_executor_name: powershell
   dependencies:
@@ -74,11 +74,11 @@ atomic_tests:
   input_arguments:
     server_ip:
       description: The IP address or domain name of the listening server
-      type: String
+      type: string
       default: 127.0.0.1
     server_port:
       description: The port for the C2 connection
-      type: Integer
+      type: integer
       default: 80
   executor:
     command: |

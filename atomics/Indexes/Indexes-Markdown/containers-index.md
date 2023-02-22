@@ -1,6 +1,7 @@
 # Containers Atomic Tests by ATT&CK Tactic & Technique
 # discovery
-- T1613 Container and Resource Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1613 Container and Resource Discovery](../../T1613/T1613.md)
+  - Atomic Test #1: Container and ResourceDiscovery [containers]
 - T1069 Permission Groups Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1046 Network Service Scanning [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 

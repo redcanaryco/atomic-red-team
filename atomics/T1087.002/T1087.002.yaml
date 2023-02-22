@@ -34,7 +34,7 @@ atomic_tests:
   input_arguments:
     computer_name:
       description: Name of remote system to query
-      type: String
+      type: string
       default: "%COMPUTERNAME%"
   executor:
     command: |
@@ -50,7 +50,7 @@ atomic_tests:
   input_arguments:
     adrecon_path:
       description: Path of ADRecon.ps1 file
-      type: Path
+      type: path
       default: $env:TEMP\ADRecon.ps1
   dependency_executor_name: powershell
   dependencies:
@@ -77,7 +77,7 @@ atomic_tests:
   input_arguments:
     adfind_path:
       description: Path to the AdFind executable
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1087.002\src\AdFind.exe
   dependency_executor_name: powershell
   dependencies:
@@ -101,7 +101,7 @@ atomic_tests:
   input_arguments:
     adfind_path:
       description: Path to the AdFind executable
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1087.002\src\AdFind.exe
   dependency_executor_name: powershell
   dependencies:
@@ -125,7 +125,7 @@ atomic_tests:
   input_arguments:
     adfind_path:
       description: Path to the AdFind executable
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1087.002\src\AdFind.exe
   dependency_executor_name: powershell
   dependencies:
@@ -149,7 +149,7 @@ atomic_tests:
   input_arguments:
     adfind_path:
       description: Path to the AdFind executable
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1087.002\src\AdFind.exe
   dependency_executor_name: powershell
   dependencies:
@@ -186,11 +186,11 @@ atomic_tests:
   input_arguments:
     domain:
       description: Domain FQDN
-      type: String
+      type: string
       default: $env:UserDnsDomain
     uac_prop:
       description: UAC Property to search
-      type: String
+      type: string
       default: 524288
   dependencies:
   - description: |
@@ -282,13 +282,13 @@ atomic_tests:
   supported_platforms:
   - windows
   input_arguments:
-    Domain: 
+    Domain:
       description: Domain that is being tested against
-      type: String
+      type: string
       default: $env:USERDOMAIN
     DomainController:
       description: Domain Controller that is being tested against
-      type: String
+      type: string
       default: $env:UserDnsDomain
   dependency_executor_name: powershell
   dependencies:
