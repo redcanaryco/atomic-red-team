@@ -64,11 +64,9 @@ atomic_tests:
     username:
       description: Azure username
       type: string
-      default: null
     password:
       description: Azure password
       type: string
-      default: null
     event_hub_name:
       description: Name of the eventhub
       type: string
@@ -76,11 +74,9 @@ atomic_tests:
     resource_group:
       description: Name of the resource group
       type: string
-      default: null
     name_space_name:
       description: Name of the NameSpace
       type: string
-      default: null
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -111,7 +107,7 @@ atomic_tests:
       terraform apply -auto-approve
   executor:
     command: |
-      $secure_pwd = "#{password}" | ConvertTo-Securestring -AsPlainText -Force
+      $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
       $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
       Connect-AzureAD -Credential $creds
       Remove-AzEventHub -ResourceGroupName #{resource_group} -Namespace #{name_space_name} -Name #{event_hub_name}
@@ -132,11 +128,9 @@ atomic_tests:
     username:
       description: office-365 username
       type: string
-      default: null
     password:
       description: office-365 password
       type: string
-      default: null
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -150,12 +144,12 @@ atomic_tests:
       Import-Module ExchangeOnlineManagement
   executor:
     command: |
-      $secure_pwd = "#{password}" | ConvertTo-Securestring -AsPlainText -Force
+      $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
       $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
       Connect-ExchangeOnline -Credential $creds
       Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $False
     cleanup_command: |
-      $secure_pwd = "#{password}" | ConvertTo-Securestring -AsPlainText -Force
+      $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
       $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
       Connect-ExchangeOnline -Credential $creds
       Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $True
