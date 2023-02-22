@@ -2129,6 +2129,7 @@
   - Atomic Test #2: System Time Discovery - PowerShell [windows]
   - Atomic Test #3: System Time Discovery in macOS [macos]
   - Atomic Test #4: System Time Discovery W32tm as a Delay [windows]
+  - Atomic Test #5: System Time with Windows time Command [windows]
 
 # resource-development
 - T1583 Acquire Infrastructure [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
