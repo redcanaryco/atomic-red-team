@@ -175,6 +175,7 @@
   - Atomic Test #6: Allow Executable Through Firewall Located in Non-Standard Location [windows]
   - Atomic Test #16: LockBit Black - Unusual Windows firewall registry modification -cmd [windows]
   - Atomic Test #17: LockBit Black - Unusual Windows firewall registry modification -Powershell [windows]
+  - Atomic Test #18: Blackbit - Disable Windows Firewall using netsh firewall [windows]
 - T1553.003 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1207 Rogue Domain Controller](../../T1207/T1207.md)
   - Atomic Test #1: DCShadow (Active Directory) [windows]
@@ -225,6 +226,8 @@
   - Atomic Test #42: Disable Windows Error Reporting Settings [windows]
   - Atomic Test #43: DisallowRun Execution Of Certain Applications [windows]
   - Atomic Test #44: Enabling Restricted Admin Mode via Command_Prompt [windows]
+  - Atomic Test #45: Mimic Ransomware - Enable Multiple User Sessions [windows]
+  - Atomic Test #46: Mimic Ransomware - Allow Multiple RDP Sessions per User [windows]
 - [T1574.008 Hijack Execution Flow: Path Interception by Search Order Hijacking](../../T1574.008/T1574.008.md)
   - Atomic Test #1: powerShell Persistence via hijacking default modules - Get-Variable.exe [windows]
 - T1027.001 Obfuscated Files or Information: Binary Padding [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1258,6 +1261,10 @@
   - Atomic Test #1: Private Keys [windows]
   - Atomic Test #6: ADFS token signing and encryption certificates theft - Local [windows]
   - Atomic Test #7: ADFS token signing and encryption certificates theft - Remote [windows]
+  - Atomic Test #8: CertUtil ExportPFX [windows]
+  - Atomic Test #9: Export Root Certificate with Export-PFXCertificate [windows]
+  - Atomic Test #10: Export Root Certificate with Export-Certificate [windows]
+  - Atomic Test #11: Export Certificates with Mimikatz [windows]
 - [T1557.001 Adversary-in-the-Middle: LLMNR/NBT-NS Poisoning and SMB Relay](../../T1557.001/T1557.001.md)
   - Atomic Test #1: LLMNR Poisoning with Inveigh (PowerShell) [windows]
 - [T1003.001 OS Credential Dumping: LSASS Memory](../../T1003.001/T1003.001.md)
@@ -1436,6 +1443,7 @@
   - Atomic Test #20: WinPwn - PowerSharpPack - Watson searching for missing windows patches [windows]
   - Atomic Test #21: WinPwn - PowerSharpPack - Sharpup checking common Privesc vectors [windows]
   - Atomic Test #22: WinPwn - PowerSharpPack - Seatbelt [windows]
+  - Atomic Test #25: System Information Discovery with WMIC [windows]
 - [T1010 Application Window Discovery](../../T1010/T1010.md)
   - Atomic Test #1: List Process Main Windows - C# .NET [windows]
 - T1087.003 Email Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1537,6 +1545,7 @@
   - Atomic Test #1: System Time Discovery [windows]
   - Atomic Test #2: System Time Discovery - PowerShell [windows]
   - Atomic Test #4: System Time Discovery W32tm as a Delay [windows]
+  - Atomic Test #5: System Time with Windows time Command [windows]
 
 # command-and-control
 - [T1132.001 Data Encoding: Standard Encoding](../../T1132.001/T1132.001.md)
@@ -1727,8 +1736,7 @@
   - Atomic Test #4: WinPwn - Loot local Credentials - Safetykatz [windows]
 
 # exfiltration
-- [T1567 Exfiltration Over Web Service](../../T1567/T1567.md)
-  - Atomic Test #1: Data Exfiltration with ConfigSecurityPolicy [windows]
+- T1567 Exfiltration Over Web Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1029 Scheduled Transfer [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1011 Exfiltration Over Other Network Medium [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1011.001 Exfiltration Over Bluetooth [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

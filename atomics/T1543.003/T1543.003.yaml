@@ -9,7 +9,7 @@ atomic_tests:
     and will then revert the binPath change, restoring Fax to its original state.
     Upon successful execution, cmd will modify the binpath for `Fax` to spawn powershell. Powershell will then spawn.
   supported_platforms:
-    - windows
+  - windows
 
   executor:
     name: command_prompt
@@ -26,26 +26,26 @@ atomic_tests:
     Download an executable from github and start it as a service.
     Upon successful execution, powershell will download `AtomicService.exe` from github. cmd.exe will spawn sc.exe which will create and start the service. Results will output via stdout.
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     binary_path:
       description: Name of the service binary, include path.
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1543.003\bin\AtomicService.exe
     service_name:
       description: Name of the Service
-      type: String
+      type: string
       default: AtomicTestService_CMD
 
   dependency_executor_name: powershell
   dependencies:
-    - description: |
-        Service binary must exist on disk at specified location (#{binary_path})
-      prereq_command: |
-        if (Test-Path #{binary_path}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        New-Item -Type Directory (split-path #{binary_path}) -ErrorAction ignore | Out-Null
-        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1543.003/bin/AtomicService.exe" -OutFile "#{binary_path}"
+  - description: |
+      Service binary must exist on disk at specified location (#{binary_path})
+    prereq_command: |
+      if (Test-Path #{binary_path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{binary_path}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1543.003/bin/AtomicService.exe" -OutFile "#{binary_path}"
   executor:
     name: command_prompt
     elevation_required: true
@@ -58,29 +58,29 @@ atomic_tests:
 - name: Service Installation PowerShell
   auto_generated_guid: 491a4af6-a521-4b74-b23b-f7b3f1ee9e77
   description: |
-      Installs A Local Service via PowerShell.
-      Upon successful execution, powershell will download `AtomicService.exe` from github. Powershell will then use `New-Service` and `Start-Service` to start service. Results will be displayed.
+    Installs A Local Service via PowerShell.
+    Upon successful execution, powershell will download `AtomicService.exe` from github. Powershell will then use `New-Service` and `Start-Service` to start service. Results will be displayed.
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     binary_path:
       description: Name of the service binary, include path.
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1543.003\bin\AtomicService.exe
     service_name:
       description: Name of the Service
-      type: String
+      type: string
       default: AtomicTestService_PowerShell
 
   dependency_executor_name: powershell
   dependencies:
-    - description: |
-        Service binary must exist on disk at specified location (#{binary_path})
-      prereq_command: |
-        if (Test-Path #{binary_path}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        New-Item -Type Directory (split-path #{binary_path}) -ErrorAction ignore | Out-Null
-        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1543.003/bin/AtomicService.exe" -OutFile "#{binary_path}"
+  - description: |
+      Service binary must exist on disk at specified location (#{binary_path})
+    prereq_command: |
+      if (Test-Path #{binary_path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{binary_path}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1543.003/bin/AtomicService.exe" -OutFile "#{binary_path}"
   executor:
     name: powershell
     elevation_required: true
@@ -95,7 +95,7 @@ atomic_tests:
   auto_generated_guid: ef0581fd-528e-4662-87bc-4c2affb86940
   description: |
     It's running Dll as service to emulate the TinyTurla backdoor
-    
+
     [Related Talos Blog](https://blog.talosintelligence.com/2021/09/tinyturla.html)
   supported_platforms:
   - windows

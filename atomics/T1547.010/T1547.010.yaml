@@ -3,13 +3,13 @@ display_name: 'Boot or Logon Autostart Execution: Port Monitors'
 atomic_tests:
 - name: Add Port Monitor persistence in Registry
   auto_generated_guid: d34ef297-f178-4462-871e-9ce618d44e50
-  description: Add key-value pair to a Windows Port Monitor registry. On the subsequent reboot dll will be execute under spoolsv with NT AUTHORITY/SYSTEM privilege. 
+  description: Add key-value pair to a Windows Port Monitor registry. On the subsequent reboot dll will be execute under spoolsv with NT AUTHORITY/SYSTEM privilege.
   supported_platforms:
   - windows
   input_arguments:
     monitor_dll:
       description: Addition to port monitor registry key. Normally refers to a DLL name in C:\Windows\System32. arbitrary DLL can be loaded if permissions allow writing a fully-qualified pathname for that DLL.
-      type: Path
+      type: path
       default: C:\Path\AtomicRedTeam.dll
   executor:
     command: |

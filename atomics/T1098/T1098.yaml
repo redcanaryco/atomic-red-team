@@ -41,7 +41,7 @@ atomic_tests:
   auto_generated_guid: a55a22e9-a3d3-42ce-bd48-2653adb8f7a9
   description: |
     Create a random atr-nnnnnnnn account and add it to a domain group (by default, Domain Admins). 
-    
+
     The quickest way to run it is against a domain controller, using `-Session` of `Invoke-AtomicTest`. Alternatively,
     you need to install PS Module ActiveDirectory (in prereqs) and run the script with appropriare AD privileges to 
     create the user and alter the group. Automatic installation of the dependency requires an elevated session, 
@@ -59,15 +59,15 @@ atomic_tests:
       description: |
         Prefix string of the random username (by default, atr-). Because the cleanup deletes such account based on
         a match `(&(samaccountname=#{account_prefix}-*)(givenName=Test))`, if you are to change it, be careful.
-      type: String
+      type: string
       default: atr-
     group:
       description: Name of the group to alter
-      type: String
+      type: string
       default: "Domain Admins"
     create_args:
-      description: Additional string appended to New-ADUser call 
-      type: String
+      description: Additional string appended to New-ADUser call
+      type: string
       default: ""
   dependencies:
   - description: |
@@ -110,15 +110,15 @@ atomic_tests:
   input_arguments:
     username:
       description: Name of the AWS group to create
-      type: String
+      type: string
       default: "atomicredteam"
   dependencies:
-    - description: |
-        Check if the user exists, we can only add a user to a group if the user exists.
-      prereq_command: |
-        aws iam list-users | grep #{username}
-      get_prereq_command: |
-        echo Please run atomic test T1136.003, before running this atomic test
+  - description: |
+      Check if the user exists, we can only add a user to a group if the user exists.
+    prereq_command: |
+      aws iam list-users | grep #{username}
+    get_prereq_command: |
+      echo Please run atomic test T1136.003, before running this atomic test
   executor:
     command: |
       aws iam create-group --group-name #{username}
@@ -128,14 +128,14 @@ atomic_tests:
       aws iam delete-group --group-name #{username}
     name: sh
 
-- name: Azure - adding user to Azure AD role
+- name: Azure AD - adding user to Azure AD role
   auto_generated_guid: 0e65ae27-5385-46b4-98ac-607a8ee82261
   description: |
-    The adversarie want to add user to some Azure AD role. Threat actor 
+    The adversaries want to add user to some Azure AD role. Threat actor 
     may be interested primarily in highly privileged roles, e.g. Global Administrator, Application Administrator, 
-    Privileged authentication administrator (this role can reset Global Administrator password!).
-    By default, the role Global Reader is assigned to service principal in this test.
-  
+    Privileged Authentication Administrator (this role can reset Global Administrator password!).
+    By default, the role Global Reader is assigned to the user principal in this test.
+
     The account you use to run the PowerShell command should have Privileged Role Administrator or Global Administrator role in your Azure AD.
 
     Detection hint - check Activity "Add member to role" in Azure AD Audit Logs. In targer you will also see User as a type.
@@ -144,20 +144,20 @@ atomic_tests:
   input_arguments:
     username:
       description: Azure AD username
-      type: String
+      type: string
       default: jonh@contoso.com
     password:
       description: Azure AD password
-      type: String
+      type: string
       default: p4sswd
     user_principal_name:
       description: Name of the targeted user (user principal)
-      type: String
+      type: string
       default: SuperUser
     role_name:
-      description: Name of the targed Azure AD role
-      type: String
-      default: Global Reader 
+      description: Name of the targeted Azure AD role
+      type: string
+      default: Global Reader
   dependencies:
   - description: |
       AzureAD module must be installed.
@@ -188,20 +188,20 @@ atomic_tests:
       if ($user -eq $null) { Write-Warning "User not found"; exit }
       $role = Get-AzureADDirectoryRole | where-object {$_.DisplayName -eq "#{role_name}"}
       if ($role -eq $null) { Write-Warning "Role not found"; exit }
-      
+
       Remove-AzureADDirectoryRoleMember -ObjectId $role.ObjectId -MemberId $user.ObjectId
       Write-Host "User $($user.DisplayName) was removed from $($role.DisplayName) role"
     name: powershell
     elevation_required: false
 
-- name: Azure - adding service principal to Azure AD role
+- name: Azure AD - adding service principal to Azure AD role
   auto_generated_guid: 92c40b3f-c406-4d1f-8d2b-c039bf5009e4
   description: |
-    The adversarie want to add service principal to some Azure AD role. Threat actor 
+    The adversaries want to add service principal to some Azure AD role. Threat actor 
     may be interested primarily in highly privileged roles, e.g. Global Administrator, Application Administrator, 
-    Privileged authentication administrator (this role can reset Global Administrator password!).
+    Privileged Authentication Administrator (this role can reset Global Administrator password!).
     By default, the role Global Reader is assigned to service principal in this test.
-  
+
     The account you use to run the PowerShell command should have Privileged Role Administrator or Global Administrator role in your Azure AD.
 
     Detection hint - check Activity "Add member to role" in Azure AD Audit Logs. In targer you will also see Service Principal as a type.
@@ -210,20 +210,20 @@ atomic_tests:
   input_arguments:
     username:
       description: Azure AD username
-      type: String
+      type: string
       default: jonh@contoso.com
     password:
       description: Azure AD password
-      type: String
+      type: string
       default: p4sswd
     service_principal_name:
       description: Name of the service principal
-      type: String
+      type: string
       default: SuperSP
     role_name:
-      description: Name of the targed Azure AD role
-      type: String
-      default: Global Reader 
+      description: Name of the targeted Azure AD role
+      type: string
+      default: Global Reader
   dependencies:
   - description: |
       AzureAD module must be installed.
@@ -263,12 +263,12 @@ atomic_tests:
 - name: Azure - adding user to Azure role in subscription
   auto_generated_guid: 1a94b3fc-b080-450a-b3d8-6d9b57b472ea
   description: |
-    The adversarie want to add user to some Azure role, also called Azure resource role. Threat actor 
+    The adversaries want to add user to some Azure role, also called Azure resource role. Threat actor 
     may be interested primarily in highly privileged roles, e.g. Owner, Contributor.
     By default, the role Reader is assigned to user in this test.
 
     New-AzRoleAssignment cmdlet could be also use to assign user/service principal to resource, resource group and management group.
-  
+
     The account you use to run the PowerShell command must have Microsoft.Authorization/roleAssignments/write 
     (e.g. such as User Access Administrator or Owner) and the Azure Active Directory Graph Directory.Read.All 
     and Microsoft Graph Directory.Read.All permissions.
@@ -279,23 +279,23 @@ atomic_tests:
   input_arguments:
     username:
       description: Azure AD username
-      type: String
+      type: string
       default: jonh@contoso.com
     password:
       description: Azure AD password
-      type: String
+      type: string
       default: p4sswd
     user_principal_name:
       description: Name of the targeted user (user principal)
-      type: String
+      type: string
       default: SuperUser
     role_name:
-      description: Name of the targed Azure role
-      type: String
+      description: Name of the targeted Azure role
+      type: string
       default: Reader
     subscription:
-      description: Name of the targed subscription
-      type: String
+      description: Name of the targeted subscription
+      type: string
       default: Azure subscription 1
   dependencies:
   - description: |
@@ -334,19 +334,19 @@ atomic_tests:
       if ($role -eq $null) { Write-Warning "Role not found"; exit }
 
       Remove-AzRoleAssignment -ObjectId $user.id -RoleDefinitionId $role.id -Scope /subscriptions/$subscription
-      Write-Host "Service Principal $($sp.DisplayName) was removed from $($role.Name) role in subscriptions $($subscriptions.Name)"
+      Write-Host "User Principal $($sp.DisplayName) was removed from $($role.Name) role in subscriptions $($subscriptions.Name)"
     name: powershell
     elevation_required: false
 
 - name: Azure - adding service principal to Azure role in subscription
   auto_generated_guid: c8f4bc29-a151-48da-b3be-4680af56f404
   description: |
-    The adversarie want to add service principal to some Azure role, also called Azure resource role. Threat actor 
+    The adversaries want to add service principal to some Azure role, also called Azure resource role. Threat actor 
     may be interested primarily in highly privileged roles, e.g. Owner, Contributor.
     By default, the role Reader is assigned to service principal in this test.
 
     New-AzRoleAssignment cmdlet could be also use to assign user/service principal to resource, resource group and management group.
-  
+
     The account you use to run the PowerShell command must have Microsoft.Authorization/roleAssignments/write 
     (e.g. such as User Access Administrator or Owner) and the Azure Active Directory Graph Directory.Read.All 
     and Microsoft Graph Directory.Read.All permissions.
@@ -357,24 +357,24 @@ atomic_tests:
   input_arguments:
     username:
       description: Azure AD username
-      type: String
+      type: string
       default: jonh@contoso.com
     password:
       description: Azure AD password
-      type: String
+      type: string
       default: p4sswd
     service_principal_name:
       description: Name of the service principal
-      type: String
+      type: string
       default: SuperSP
     role_name:
-      description: Name of the targed Azure role
-      type: String
-      default: Reader 
+      description: Name of the targeted Azure role
+      type: string
+      default: Reader
     subscription:
-      description: Name of the targed subscription
-      type: String
-      default: Azure subscription 1  
+      description: Name of the targeted subscription
+      type: string
+      default: Azure subscription 1
   dependencies:
   - description: |
       Az.Resources module must be installed.
@@ -410,17 +410,17 @@ atomic_tests:
       if ($subscription -eq $null) { Write-Warning "Subscription not found"; exit }
       $role = Get-AzRoleDefinition | where-object {$_.Name -eq "#{role_name}"}
       if ($role -eq $null) { Write-Warning "Role not found"; exit }
-      
+
       Remove-AzRoleAssignment -ObjectId $sp.id -RoleDefinitionId $role.id -Scope /subscriptions/$subscription
       Write-Host "Service Principal $($sp.DisplayName) was removed from $($role.Name) role in subscriptions $($subscriptions.Name)"
     name: powershell
     elevation_required: false
 
-- name: AzureAD - adding permission to application
+- name: Azure AD - adding permission to application
   auto_generated_guid: 94ea9cc3-81f9-4111-8dde-3fb54f36af4b
   description: |
-    The adversarie want to add permission to new created application. Application could be then use for persistence or for further operation in the attacked infrastructure. Permissions like AppRoleAssignment.ReadWrite.All or RoleManagement.ReadWrite.Directory in particular can be a valuable target for a threat actor.
-    You can use Get-AzureADApplication instead New-AzureADServicePrincipal to use an existing application.
+    The adversaries want to add permission to new created application. Application could be then use for persistence or for further operation in the attacked infrastructure. Permissions like AppRoleAssignment.ReadWrite.All or RoleManagement.ReadWrite.Directory in particular can be a valuable target for a threat actor.
+    You can use Get-AzureADApplication instead of New-AzureADServicePrincipal to use an existing application.
     The DirectoryRecommendations.Read.All permissions have been selected as the default
 
     The account you use to run the PowerShell command should have Global Administrator/Application Administrator/Cloud Application Administrator role in your Azure AD.
@@ -436,19 +436,19 @@ atomic_tests:
   input_arguments:
     username:
       description: Azure AD username
-      type: String
+      type: string
       default: jonh@contoso.com
     password:
       description: Azure AD password
-      type: String
+      type: string
       default: p4sswd
     application_name:
-      description: Name of the targed application
-      type: String
+      description: Name of the targeted application
+      type: string
       default: test_app
     application_permission:
       description: Permission from Microsoft Graph Resource API that will be add to application
-      type: String
+      type: string
       default: DirectoryRecommendations.Read.All
   dependencies:
   - description: |
@@ -512,7 +512,7 @@ atomic_tests:
 
       $aadApplication = Get-AzureADApplication | Where-Object {$_.DisplayName -eq "#{application_name}"}
       Remove-AzureADApplication -ObjectId $aadApplication.ObjectId
-      
+
     name: powershell
     elevation_required: false
 - name: Password Change on Directory Service Restore Mode (DSRM) Account
@@ -521,11 +521,11 @@ atomic_tests:
   description: |
     Change the password on the Directory Service Restore Mode (DSRM) account using ntdsutil by syncing to existing account
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     sync_account:
       description: Account to sync password from
-      type: String
+      type: string
       default: '%username%'
   executor:
     name: command_prompt

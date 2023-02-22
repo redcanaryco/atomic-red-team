@@ -10,15 +10,15 @@ atomic_tests:
   input_arguments:
     cloudtrail_name:
       description: Name of the cloudTrail
-      type: String
+      type: string
       default: "redatomictesttrail"
     s3_bucket_name:
       description: Name of the bucket
-      type: String
+      type: string
       default: "redatomic-test"
     region:
       description: Name of the region
-      type: String
+      type: string
       default: "us-east-1"
   dependencies:
     - description: |
@@ -63,24 +63,24 @@ atomic_tests:
   input_arguments:
     username:
       description: Azure username
-      type: String
-      default: null
+      type: string
+      default:
     password:
       description: Azure password
-      type: String
-      default: null
+      type: string
+      default:
     event_hub_name:
       description: Name of the eventhub
-      type: String
+      type: string
       default: "test_eventhub"
     resource_group:
       description: Name of the resource group
-      type: String
-      default: null
+      type: string
+      default:
     name_space_name:
       description: Name of the NameSpace
-      type: String
-      default: null
+      type: string
+      default:
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -131,12 +131,12 @@ atomic_tests:
   input_arguments:
     username:
       description: office-365 username
-      type: String
-      default: null
+      type: string
+      default:
     password:
       description: office-365 password
-      type: String
-      default: null
+      type: string
+      default:
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -171,11 +171,11 @@ atomic_tests:
   input_arguments:
     stratus_path:
       description: Path of stratus binary
-      type: Path
+      type: path
       default: $PathToAtomicsFolder/T1562.008/src
     aws_region:
       description: AWS region to detonate
-      type: String
+      type: string
       default: us-west-2
   dependency_executor_name: sh
   dependencies:
@@ -193,11 +193,15 @@ atomic_tests:
         tar -xzvf #{stratus_path}/stratus-red-team-latest.tar.gz --directory #{stratus_path}/
       fi
   - description: |
-        Check if ~/.aws/credentials file has a default stanza is configured
+      Check if ~/.aws/credentials file has a default stanza is configured
     prereq_command: |
-        cat ~/.aws/credentials | grep "default"
+      cat ~/.aws/credentials | grep "default"
     get_prereq_command: |
+<<<<<<< HEAD
         echo Please install the aws-cli and configure your AWS default profile using: aws configure
+=======
+      echo Please install the aws-cli and configure your AWS defult profile using: aws configure
+>>>>>>> master
 
   executor:
     command: |
@@ -225,11 +229,11 @@ atomic_tests:
   input_arguments:
     stratus_path:
       description: Path of stratus binary
-      type: Path
+      type: path
       default: $PathToAtomicsFolder/T1562.008/src
     aws_region:
       description: AWS region to detonate
-      type: String
+      type: string
       default: us-west-2
   dependency_executor_name: sh
   dependencies:
@@ -247,11 +251,15 @@ atomic_tests:
         tar -xzvf #{stratus_path}/stratus-red-team-latest.tar.gz --directory #{stratus_path}/
       fi
   - description: |
-        Check if ~/.aws/credentials file has a default stanza is configured
+      Check if ~/.aws/credentials file has a default stanza is configured
     prereq_command: |
-        cat ~/.aws/credentials | grep "default"
+      cat ~/.aws/credentials | grep "default"
     get_prereq_command: |
+<<<<<<< HEAD
         echo Please install the aws-cli and configure your AWS default profile using: aws configure
+=======
+      echo Please install the aws-cli and configure your AWS defult profile using: aws configure
+>>>>>>> master
 
   executor:
     command: |
@@ -279,11 +287,11 @@ atomic_tests:
   input_arguments:
     stratus_path:
       description: Path of stratus binary
-      type: Path
+      type: path
       default: $PathToAtomicsFolder/T1562.008/src
     aws_region:
       description: AWS region to detonate
-      type: String
+      type: string
       default: us-west-2
   dependency_executor_name: sh
   dependencies:
@@ -301,11 +309,15 @@ atomic_tests:
         tar -xzvf #{stratus_path}/stratus-red-team-latest.tar.gz --directory #{stratus_path}/
       fi
   - description: |
-        Check if ~/.aws/credentials file has a default stanza is configured
+      Check if ~/.aws/credentials file has a default stanza is configured
     prereq_command: |
-        cat ~/.aws/credentials | grep "default"
+      cat ~/.aws/credentials | grep "default"
     get_prereq_command: |
+<<<<<<< HEAD
         echo Please install the aws-cli and configure your AWS default profile using: aws configure
+=======
+      echo Please install the aws-cli and configure your AWS defult profile using: aws configure
+>>>>>>> master
 
   executor:
     command: |
@@ -333,13 +345,14 @@ atomic_tests:
   input_arguments:
     cloudwatch_log_group_name:
       description: Name of the cloudWatch log group
-      type: String
+      type: string
       default: "log-test"
     region:
       description: Name of the region
-      type: String
+      type: string
       default: "us-east-1"
   dependencies:
+<<<<<<< HEAD
     - description: |
         Check if ~/.aws/credentials file has a default stanza is configured
       prereq_command: |
@@ -352,6 +365,20 @@ atomic_tests:
        echo "*** Log Group Created ***"
        aws logs delete-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
        echo "*** Log Group Deleted ***"
+=======
+  - description: |
+      Check if ~/.aws/credentials file has a default stanza is configured
+    prereq_command: |
+      cat ~/.aws/credentials | grep "default"
+    get_prereq_command: |
+      echo Please install the aws-cli and configure your AWS defult profile using: aws configure
+  executor:
+    command: |
+      aws logs create-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
+      echo "*** Log Group Created ***"
+      aws logs delete-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
+      echo "*** Log Group Deleted ***"
+>>>>>>> master
     cleanup_command:
     name: sh
     elevation_required: false
@@ -365,13 +392,14 @@ atomic_tests:
   input_arguments:
     cloudwatch_log_group_name:
       description: Name of the cloudWatch log group
-      type: String
+      type: string
       default: "log-test"
     region:
       description: Name of the region
-      type: String
+      type: string
       default: "us-east-1"
   dependencies:
+<<<<<<< HEAD
     - description: |
         Check if ~/.aws/credentials file has a default stanza is configured
       prereq_command: |
@@ -384,6 +412,20 @@ atomic_tests:
        echo "*** Log Group Created ***"
        aws logs delete-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
        echo "*** Log Group Deleted ***"
+=======
+  - description: |
+      Check if ~/.aws/credentials file has a default stanza is configured
+    prereq_command: |
+      cat ~/.aws/credentials | grep "default"
+    get_prereq_command: |
+      echo Please install the aws-cli and configure your AWS defult profile using: aws configure
+  executor:
+    command: |
+      aws logs create-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
+      echo "*** Log Group Created ***"
+      aws logs delete-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
+      echo "*** Log Group Deleted ***"
+>>>>>>> master
     cleanup_command:
     name: sh
     elevation_required: false
@@ -397,17 +439,18 @@ atomic_tests:
   input_arguments:
     cloudwatch_log_group_name:
       description: Name of the cloudWatch log group
-      type: String
+      type: string
       default: "test-logs"
     cloudwatch_log_stream_name:
       description: Name of the cloudWatch log stream
-      type: String
+      type: string
       default: "20150601"
     region:
       description: Name of the region
-      type: String
+      type: string
       default: "us-west-2"
   dependencies:
+<<<<<<< HEAD
     - description: |
         Check if ~/.aws/credentials file has a default stanza is configured
       prereq_command: |
@@ -424,6 +467,24 @@ atomic_tests:
        echo "*** Log Stream Deleted ***"
        aws logs delete-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
        echo "*** Log Group Deleted ***"
+=======
+  - description: |
+      Check if ~/.aws/credentials file has a default stanza is configured
+    prereq_command: |
+      cat ~/.aws/credentials | grep "default"
+    get_prereq_command: |
+      echo Please install the aws-cli and configure your AWS defult profile using: aws configure
+  executor:
+    command: |
+      aws logs create-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
+      echo "*** Log Group Created ***"
+      aws logs create-log-stream --log-group-name #{cloudwatch_log_group_name} --log-stream-name #{cloudwatch_log_stream_name}
+      echo "*** Log Stream Created ***"
+      aws logs delete-log-stream --log-group-name #{cloudwatch_log_group_name} --log-stream-name #{cloudwatch_log_stream_name}
+      echo "*** Log Stream Deleted ***"
+      aws logs delete-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
+      echo "*** Log Group Deleted ***"
+>>>>>>> master
     cleanup_command:
     name: sh
     elevation_required: false

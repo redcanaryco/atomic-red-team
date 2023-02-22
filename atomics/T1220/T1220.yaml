@@ -13,15 +13,15 @@ atomic_tests:
   input_arguments:
     xmlfile:
       description: Location of the test XML file on the local filesystem.
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1220\src\msxslxmlfile.xml
     xslfile:
       description: Location of the test XSL script file on the local filesystem.
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1220\src\msxslscript.xsl
     msxsl_exe:
       description: Location of the MSXSL executable.
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1220\bin\msxsl.exe
   dependency_executor_name: powershell
   dependencies:
@@ -48,7 +48,7 @@ atomic_tests:
   executor:
     command: |
       #{msxsl_exe} #{xmlfile} #{xslfile}
-    cleanup_command: | 
+    cleanup_command: |
       del #{msxsl_exe} >nul 2>&1
     name: command_prompt
 - name: MSXSL Bypass using remote files
@@ -63,15 +63,15 @@ atomic_tests:
   input_arguments:
     xmlfile:
       description: Remote location (URL) of the test XML file.
-      type: Url
+      type: url
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1220/src/msxslxmlfile.xml
     xslfile:
       description: Remote location (URL) of the test XSL script file.
-      type: Url
+      type: url
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1220/src/msxslscript.xsl
     msxsl_exe:
       description: Location of the MSXSL executable.
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1220\bin\msxsl.exe
   dependency_executor_name: powershell
   dependencies:
@@ -84,7 +84,7 @@ atomic_tests:
   executor:
     command: |
       #{msxsl_exe} #{xmlfile} #{xslfile}
-    cleanup_command: | 
+    cleanup_command: |
       del -Path #{msxsl_exe} >nul 2>&1
     name: command_prompt
 - name: WMIC bypass using local XSL file
@@ -96,11 +96,11 @@ atomic_tests:
   input_arguments:
     wmic_command:
       description: WMI command to execute using wmic.exe
-      type: String
+      type: string
       default: process list
     local_xsl_file:
       description: Location of the test XSL script file on the local filesystem.
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1220\src\wmicscript.xsl
   dependency_executor_name: powershell
   dependencies:
@@ -124,11 +124,11 @@ atomic_tests:
   input_arguments:
     remote_xsl_file:
       description: Remote location of an XSL payload.
-      type: Url
+      type: url
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1220/src/wmicscript.xsl
     wmic_command:
       description: WMI command to execute using wmic.exe
-      type: String
+      type: string
       default: process list
   executor:
     command: |

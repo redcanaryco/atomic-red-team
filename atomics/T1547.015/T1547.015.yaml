@@ -9,19 +9,19 @@ atomic_tests:
   input_arguments:
     calculator:
       description: Test program used to imitate a maliciously called program.
-      type: String
+      type: string
       default: calculator.exe
     settings_json_def:
       description: Default file for Windows Terminal to replace the default profile with a backdoor to call another program.
-      type: Path
+      type: path
       default: ~\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
     settings_json_tmp:
       description: Temp file for Windows Terminal.
-      type: Path
+      type: path
       default: ~\AppData\Local\Temp\settings.json
     wt_exe:
       description: Windows Terminal executable.
-      type: Path
+      type: path
       default: ~\AppData\Local\Microsoft\WindowsApps\Microsoft.WindowsTerminal_8wekyb3d8bbwe\wt.exe
   dependency_executor_name: powershell
   dependencies:
@@ -54,11 +54,11 @@ atomic_tests:
   input_arguments:
     scriptfile:
       description: path to Applescript source to add Safari LoginItem.
-      type: String
+      type: string
       default: PathToAtomicsFolder/T1547.015/src/add_login_item.osa
     cleanup_script:
       description: path to Applescript source to delete Safari LoginItem.
-      type: String
+      type: string
       default: PathToAtomicsFolder/T1547.015/src/remove_login_item.osa
   executor:
     command: |

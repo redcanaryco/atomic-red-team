@@ -41,7 +41,7 @@ atomic_tests:
     cleanup_command: |
       netsh advfirewall reset >nul 2>&1
     name: command_prompt
-- name: Opening ports for proxy - HARDRAIN 
+- name: Opening ports for proxy - HARDRAIN
   auto_generated_guid: 15e57006-79dd-46df-9bf9-31bc24fb5a80
   description: |
     This test creates a listening interface on a victim device. This tactic was used by HARDRAIN for proxying.
@@ -63,7 +63,7 @@ atomic_tests:
   input_arguments:
     local_port:
       description: This is the local port you wish to test opening
-      type: Integer
+      type: integer
       default: 3389
   executor:
     command: netsh advfirewall firewall add rule name="Open Port to Any" dir=in protocol=tcp localport=#{local_port} action=allow profile=any
@@ -78,7 +78,7 @@ atomic_tests:
   input_arguments:
     exe_file_path:
       description: path to exe file
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1562.004\bin\AtomicTest.exe
   executor:
     command: |
@@ -89,21 +89,21 @@ atomic_tests:
       Remove-Item C:\Users\$env:UserName\AtomicTest.exe -ErrorAction Ignore
     name: powershell
     elevation_required: true
-- name: Stop/Start UFW firewall 
+- name: Stop/Start UFW firewall
   auto_generated_guid: fe135572-edcd-49a2-afe6-1d39521c5a9a
   description: |
     Stop the Uncomplicated Firewall (UFW) if installed.
   supported_platforms:
   - linux
   dependency_executor_name: sh
-  dependencies: 
-    - description: |
-        Check if ufw is installed on the machine.
-      prereq_command: | 
-        if [ ! -x "$(command -v ufw)" ]; then echo -e "\n***** ufw NOT installed *****\n"; exit 1; fi
-        if echo "$(ufw status)" |grep -q "inactive"; then echo -e "\n***** ufw inactive *****\n"; exit 1; fi 
-      get_prereq_command: | 
-        echo ""
+  dependencies:
+  - description: |
+      Check if ufw is installed on the machine.
+    prereq_command: |
+      if [ ! -x "$(command -v ufw)" ]; then echo -e "\n***** ufw NOT installed *****\n"; exit 1; fi
+      if echo "$(ufw status)" |grep -q "inactive"; then echo -e "\n***** ufw inactive *****\n"; exit 1; fi 
+    get_prereq_command: |
+      echo ""
   executor:
     name: sh
     elevation_required: true
@@ -112,22 +112,22 @@ atomic_tests:
     cleanup_command: |
       ufw enable
       ufw status verbose
-- name: Stop/Start UFW firewall systemctl 
+- name: Stop/Start UFW firewall systemctl
   auto_generated_guid: 9fd99609-1854-4f3c-b47b-97d9a5972bd1
   description: |
     Stop the Uncomplicated Firewall (UFW) if installed, using systemctl. 
   supported_platforms:
   - linux
   dependency_executor_name: sh
-  dependencies: 
-    - description: |
-        Check if systemctl and ufw is installed on the machine.
-      prereq_command: | 
-        if [ ! -x "$(command -v systemctl)" ]; then echo -e "\n***** systemctl NOT installed *****\n"; exit 1; fi
-        if [ ! -x "$(command -v ufw)" ]; then echo -e "\n***** ufw NOT installed *****\n"; exit 1; fi
-        if echo "$(ufw status)" |grep -q "inactive"; then echo -e "\n***** ufw inactive *****\n"; exit 1; fi 
-      get_prereq_command: | 
-        echo ""
+  dependencies:
+  - description: |
+      Check if systemctl and ufw is installed on the machine.
+    prereq_command: |
+      if [ ! -x "$(command -v systemctl)" ]; then echo -e "\n***** systemctl NOT installed *****\n"; exit 1; fi
+      if [ ! -x "$(command -v ufw)" ]; then echo -e "\n***** ufw NOT installed *****\n"; exit 1; fi
+      if echo "$(ufw status)" |grep -q "inactive"; then echo -e "\n***** ufw inactive *****\n"; exit 1; fi 
+    get_prereq_command: |
+      echo ""
   executor:
     name: sh
     elevation_required: true
@@ -136,21 +136,21 @@ atomic_tests:
     cleanup_command: |
       systemctl start ufw
       systemctl status ufw
-- name: Turn off UFW logging  
+- name: Turn off UFW logging
   auto_generated_guid: 8a95b832-2c2a-494d-9cb0-dc9dd97c8bad
   description: |
     Turn off the Uncomplicated Firewall (UFW) logging. 
   supported_platforms:
   - linux
   dependency_executor_name: sh
-  dependencies: 
-    - description: |
-        Check if ufw is installed on the machine and enabled.
-      prereq_command: | 
-        if [ ! -x "$(command -v ufw)" ]; then echo -e "\n***** ufw NOT installed *****\n"; exit 1; fi
-        if echo "$(ufw status)" |grep -q "inactive"; then echo -e "\n***** ufw inactive *****\n"; exit 1; fi 
-      get_prereq_command: | 
-        echo ""
+  dependencies:
+  - description: |
+      Check if ufw is installed on the machine and enabled.
+    prereq_command: |
+      if [ ! -x "$(command -v ufw)" ]; then echo -e "\n***** ufw NOT installed *****\n"; exit 1; fi
+      if echo "$(ufw status)" |grep -q "inactive"; then echo -e "\n***** ufw inactive *****\n"; exit 1; fi 
+    get_prereq_command: |
+      echo ""
   executor:
     name: sh
     elevation_required: true
@@ -159,21 +159,21 @@ atomic_tests:
     cleanup_command: |
       ufw logging low
       ufw status verbose
-- name: Add and delete UFW firewall rules 
+- name: Add and delete UFW firewall rules
   auto_generated_guid: b2563a4e-c4b8-429c-8d47-d5bcb227ba7a
   description: |
     Add and delete a rule on the Uncomplicated Firewall (UFW) if installed and enabled. 
   supported_platforms:
   - linux
   dependency_executor_name: sh
-  dependencies: 
-    - description: |
-        Check if ufw is installed on the machine and enabled.
-      prereq_command: | 
-        if [ ! -x "$(command -v ufw)" ]; then echo -e "\n***** ufw NOT installed *****\n"; exit 1; fi
-        if echo "$(ufw status)" |grep -q "inactive"; then echo -e "\n***** ufw inactive *****\n"; exit 1; fi 
-      get_prereq_command: | 
-        echo ""
+  dependencies:
+  - description: |
+      Check if ufw is installed on the machine and enabled.
+    prereq_command: |
+      if [ ! -x "$(command -v ufw)" ]; then echo -e "\n***** ufw NOT installed *****\n"; exit 1; fi
+      if echo "$(ufw status)" |grep -q "inactive"; then echo -e "\n***** ufw inactive *****\n"; exit 1; fi 
+    get_prereq_command: |
+      echo ""
   executor:
     name: sh
     elevation_required: true
@@ -183,20 +183,20 @@ atomic_tests:
     cleanup_command: |
       { echo y; echo response; } | ufw delete 1
       ufw status numbered
-- name: Edit UFW firewall user.rules file 
+- name: Edit UFW firewall user.rules file
   auto_generated_guid: beaf815a-c883-4194-97e9-fdbbb2bbdd7c
   description: |
     Edit the Uncomplicated Firewall (UFW) rules file /etc/ufw/user.rules.
   supported_platforms:
   - linux
   dependency_executor_name: sh
-  dependencies: 
-    - description: |
-        Check if /etc/ufw/user.rules exists.
-      prereq_command: | 
-        if [ ! -f "/etc/ufw/user.rules" ]; then echo -e "\n***** ufw NOT installed *****\n"; exit 1; fi
-      get_prereq_command: | 
-        echo ""
+  dependencies:
+  - description: |
+      Check if /etc/ufw/user.rules exists.
+    prereq_command: |
+      if [ ! -f "/etc/ufw/user.rules" ]; then echo -e "\n***** ufw NOT installed *****\n"; exit 1; fi
+    get_prereq_command: |
+      echo ""
   executor:
     name: sh
     elevation_required: true
@@ -205,7 +205,7 @@ atomic_tests:
       grep "# THIS IS A COMMENT" /etc/ufw/user.rules
     cleanup_command: |
       sed -i 's/# THIS IS A COMMENT//g' /etc/ufw/user.rules
-- name: Edit UFW firewall ufw.conf file 
+- name: Edit UFW firewall ufw.conf file
   auto_generated_guid: c1d8c4eb-88da-4927-ae97-c7c25893803b
   description: |
     Edit the Uncomplicated Firewall (UFW) configuration file /etc/ufw/ufw.conf 
@@ -213,13 +213,13 @@ atomic_tests:
   supported_platforms:
   - linux
   dependency_executor_name: sh
-  dependencies: 
-    - description: |
-        Check if /etc/ufw/ufw.conf exists.
-      prereq_command: | 
-        if [ ! -f "/etc/ufw/ufw.conf" ]; then echo -e "\n***** ufw NOT installed *****\n"; exit 1; fi
-      get_prereq_command: | 
-        echo ""
+  dependencies:
+  - description: |
+      Check if /etc/ufw/ufw.conf exists.
+    prereq_command: |
+      if [ ! -f "/etc/ufw/ufw.conf" ]; then echo -e "\n***** ufw NOT installed *****\n"; exit 1; fi
+    get_prereq_command: |
+      echo ""
   executor:
     name: sh
     elevation_required: true
@@ -229,7 +229,7 @@ atomic_tests:
     cleanup_command: |
       sed -i 's/# THIS IS A COMMENT//g' /etc/ufw/ufw.conf
       cat /etc/ufw/ufw.conf
-- name: Edit UFW firewall sysctl.conf file 
+- name: Edit UFW firewall sysctl.conf file
   auto_generated_guid: c4ae0701-88d3-4cd8-8bce-4801ed9f97e4
   description: |
     Edit the Uncomplicated Firewall (UFW) configuration file for setting network 
@@ -237,13 +237,13 @@ atomic_tests:
   supported_platforms:
   - linux
   dependency_executor_name: sh
-  dependencies: 
-    - description: |
-        Check if /etc/ufw/sysctl.conf exists.
-      prereq_command: | 
-        if [ ! -f "/etc/ufw/sysctl.conf" ]; then echo -e "\n***** ufw NOT installed *****\n"; exit 1; fi
-      get_prereq_command: | 
-        echo ""
+  dependencies:
+  - description: |
+      Check if /etc/ufw/sysctl.conf exists.
+    prereq_command: |
+      if [ ! -f "/etc/ufw/sysctl.conf" ]; then echo -e "\n***** ufw NOT installed *****\n"; exit 1; fi
+    get_prereq_command: |
+      echo ""
   executor:
     name: sh
     elevation_required: true
@@ -253,7 +253,7 @@ atomic_tests:
     cleanup_command: |
       sed -i 's/# THIS IS A COMMENT//g' /etc/ufw/sysctl.conf
       cat /etc/ufw/sysctl.conf
-- name: Edit UFW firewall main configuration file 
+- name: Edit UFW firewall main configuration file
   auto_generated_guid: 7b697ece-8270-46b5-bbc7-6b9e27081831
   description: |
     Edit the Uncomplicated Firewall (UFW) main configuration file for setting 
@@ -261,13 +261,13 @@ atomic_tests:
   supported_platforms:
   - linux
   dependency_executor_name: sh
-  dependencies: 
-    - description: |
-        Check if /etc/default/ufw exists.
-      prereq_command: | 
-        if [ ! -f "/etc/default/ufw" ]; then echo -e "\n***** ufw NOT installed *****\n"; exit 1; fi
-      get_prereq_command: | 
-        echo ""
+  dependencies:
+  - description: |
+      Check if /etc/default/ufw exists.
+    prereq_command: |
+      if [ ! -f "/etc/default/ufw" ]; then echo -e "\n***** ufw NOT installed *****\n"; exit 1; fi
+    get_prereq_command: |
+      echo ""
   executor:
     name: sh
     elevation_required: true
@@ -276,7 +276,7 @@ atomic_tests:
       grep "# THIS IS A COMMENT" /etc/default/ufw
     cleanup_command: |
       sed -i 's/# THIS IS A COMMENT//g' /etc/default/ufw
-- name: Tail the UFW firewall log file 
+- name: Tail the UFW firewall log file
   auto_generated_guid: 419cca0c-fa52-4572-b0d7-bc7c6f388a27
   description: |
     Print  the last 10 lines of the Uncomplicated Firewall (UFW) log file 
@@ -284,13 +284,13 @@ atomic_tests:
   supported_platforms:
   - linux
   dependency_executor_name: sh
-  dependencies: 
-    - description: |
-        Check if /var/log/ufw.log exists.
-      prereq_command: | 
-        if [ ! -f "/var/log/ufw.log" ]; then echo -e "\n***** ufw NOT logging *****\n"; exit 1; fi
-      get_prereq_command: | 
-        echo ""
+  dependencies:
+  - description: |
+      Check if /var/log/ufw.log exists.
+    prereq_command: |
+      if [ ! -f "/var/log/ufw.log" ]; then echo -e "\n***** ufw NOT logging *****\n"; exit 1; fi
+    get_prereq_command: |
+      echo ""
   executor:
     name: sh
     elevation_required: true
@@ -300,7 +300,7 @@ atomic_tests:
 - name: LockBit Black - Unusual Windows firewall registry modification -cmd
   auto_generated_guid: a4651931-ebbb-4cde-9363-ddf3d66214cb
   description: |
-     An adversary tries to modify the windows firewall registry
+    An adversary tries to modify the windows firewall registry
   supported_platforms:
   - windows
   executor:
@@ -315,7 +315,7 @@ atomic_tests:
 - name: LockBit Black - Unusual Windows firewall registry modification -Powershell
   auto_generated_guid: 80b453d1-eec5-4144-bf08-613a6c3ffe12
   description: |
-     An adversary tries to modify the windows firewall registry.
+    An adversary tries to modify the windows firewall registry.
   supported_platforms:
   - windows
   executor:
@@ -323,7 +323,20 @@ atomic_tests:
       New-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile" -Name EnableFirewall -PropertyType DWORD -Value 0 -Force
       New-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\StandardProfile" -Name EnableFirewall -PropertyType DWORD -Value 0 -Force
     cleanup_command: |
-       Remove-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile"  -Name EnableFirewall -Force -ErrorAction Ignore
-       Remove-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\StandardProfile" -Name EnableFirewall -Force -ErrorAction Ignore
+      Remove-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile"  -Name EnableFirewall -Force -ErrorAction Ignore
+      Remove-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\StandardProfile" -Name EnableFirewall -Force -ErrorAction Ignore
     name: powershell
-    elevation_required: true 
+    elevation_required: true
+- name: Blackbit - Disable Windows Firewall using netsh firewall
+  auto_generated_guid: 91f348e6-3760-4997-a93b-2ceee7f254ee
+  description: |
+    An adversary tries to modify the windows firewall configuration using the deprecated netsh firewall command (command still works).     
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      netsh firewall set opmode mode=disable
+    cleanup_command: |
+      netsh firewall set opmode mode=enable >nul 2>&1
+    name: command_prompt
+    elevation_required: true

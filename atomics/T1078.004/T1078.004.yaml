@@ -1,4 +1,3 @@
----
 attack_technique: T1078.004
 display_name: 'Valid Accounts: Cloud Accounts'
 
@@ -9,28 +8,28 @@ atomic_tests:
     GCP Service Accounts can be used to gain intial access as well as maintain persistence inside Google Cloud.
 
   supported_platforms:
-    - google-workspace
-    - iaas:gcp
+  - google-workspace
+  - iaas:gcp
 
   input_arguments:
     project-id:
       description: ID of the project, you want to create service account as well as service account key for
-      type: String
+      type: string
       default: art-project-1
 
     service-account-name:
       description: Name of the service account
-      type: String
+      type: string
       default: gcp-art-service-account-1
 
     service-account-email:
       description: Email of the service account
-      type: String
+      type: string
       default: gcp-art-service-account-1@art-project-1.iam.gserviceaccount.com
 
     output-key-file:
       description: Email of the service account
-      type: String
+      type: string
       default: gcp-art-service-account-1.json
 
   executor:
@@ -46,11 +45,9 @@ atomic_tests:
 
   dependency_executor_name: sh
   dependencies:
-      - description: |
-          Requires gcloud
-        prereq_command: |
-          if [ -x "$(command -v gcloud)" ]; then exit 0; else exit 1; fi;
-        get_prereq_command: |
-          echo "Please Install Google Cloud SDK before running this atomic test : https://cloud.google.com/sdk/docs/install"
-
-
+  - description: |
+      Requires gcloud
+    prereq_command: |
+      if [ -x "$(command -v gcloud)" ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      echo "Please Install Google Cloud SDK before running this atomic test : https://cloud.google.com/sdk/docs/install"

