@@ -11,7 +11,7 @@ atomic_tests:
   input_arguments:
     file_folder_to_own:
       description: Path of the file or folder for takeown to take ownership.
-      type: Path
+      type: path
       default: '%temp%\T1222.001_takeown_folder'
   dependency_executor_name: command_prompt
   dependencies:
@@ -38,11 +38,11 @@ atomic_tests:
   input_arguments:
     file_or_folder:
       description: Path of the file or folder to change permissions.
-      type: Path
+      type: path
       default: '%temp%\T1222.001_cacls'
     user_or_group:
       description: User or group to allow full control
-      type: String
+      type: string
       default: Everyone
   dependency_executor_name: command_prompt
   dependencies:
@@ -68,7 +68,7 @@ atomic_tests:
   input_arguments:
     file_or_folder:
       description: Path of the file or folder remove attribute.
-      type: Path
+      type: path
       default: '%temp%\T1222.001_attrib'
   dependency_executor_name: command_prompt
   dependencies:
@@ -96,7 +96,7 @@ atomic_tests:
   input_arguments:
     file_or_folder:
       description: Path of the files to hide.
-      type: Path
+      type: path
       default: '%temp%\T1222.001_attrib_2'
   executor:
     command: |
@@ -120,11 +120,11 @@ atomic_tests:
   input_arguments:
     path:
       description: Path of folder to recursively set permissions on
-      type: Path
+      type: path
       default: 'C:\Users\Public\*'
     file_path:
       description: Path of folder permission back
-      type: Path
+      type: path
       default: '%temp%\T1222.001-folder-perms-backup.txt'
   dependency_executor_name: command_prompt
   dependencies:
@@ -139,4 +139,4 @@ atomic_tests:
     cleanup_command: |
       icacls '#{path}' /restore #{file_path} /q >nul 2>&1
     name: command_prompt
-    elevation_required: true 
+    elevation_required: true

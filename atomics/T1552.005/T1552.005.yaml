@@ -13,11 +13,11 @@ atomic_tests:
   input_arguments:
     username:
       description: Azure AD username
-      type: String
-      default: null
+      type: string
+      default:
     password:
       description: Azure AD password
-      type: String
+      type: string
       default: T1082Az
   dependency_executor_name: powershell
   dependencies:
@@ -54,7 +54,7 @@ atomic_tests:
   input_arguments:
     output_file:
       description: File to output metadata to
-      type: String
+      type: string
       default: $env:temp\T1552.005Test2.txt
   executor:
     command: |

@@ -9,9 +9,9 @@ atomic_tests:
   - windows
   input_arguments:
     output_file:
-        description: File to output results to
-        type: String
-        default: '%temp%\T1083Test1.txt'
+      description: File to output results to
+      type: string
+      default: '%temp%\T1083Test1.txt'
   executor:
     command: |
       dir /s c:\ >> #{output_file}
@@ -52,7 +52,7 @@ atomic_tests:
   input_arguments:
     output_file:
       description: Output file used to store the results.
-      type: Path
+      type: path
       default: /tmp/T1083.txt
   executor:
     command: |
@@ -77,7 +77,7 @@ atomic_tests:
   input_arguments:
     output_file:
       description: Output file used to store the results.
-      type: Path
+      type: path
       default: /tmp/T1083.txt
   executor:
     command: |
@@ -99,7 +99,7 @@ atomic_tests:
   input_arguments:
     File_to_output:
       description: File to output results to
-      type: String
+      type: string
       default: $env:temp\T1083Test5.txt
   executor:
     command: |
@@ -116,19 +116,19 @@ atomic_tests:
       cat #{File_to_output}
     cleanup_command: |
       remove-item #{File_to_output} -ErrorAction SilentlyContinue
-    name: powershell  
+    name: powershell
 - name: Launch DirLister Executable
   auto_generated_guid: c5bec457-43c9-4a18-9a24-fe151d8971b7
   description: |-
     Launches the DirLister executable for a short period of time and then exits.
-    
+
     Recently seen used by [BlackCat ransomware](https://news.sophos.com/en-us/2022/07/14/blackcat-ransomware-attacks-not-merely-a-byproduct-of-bad-luck/) to create a list of accessible directories and files.
   supported_platforms:
   - windows
   input_arguments:
     dirlister_path:
       description: 'Path to the DirLister executable '
-      type: String
+      type: string
       default: PathToAtomicsFolder\T1083\bin\DirLister.exe
   dependency_executor_name: powershell
   dependencies:

@@ -11,11 +11,11 @@ atomic_tests:
   input_arguments:
     file_name:
       description: File name
-      type: Path
+      type: path
       default: T1030_urandom
     folder_path:
       description: Path where the test creates artifacts
-      type: Path
+      type: path
       default: /tmp/T1030
   dependency_executor_name: sh
   dependencies:
@@ -31,4 +31,3 @@ atomic_tests:
     cleanup_command: |
       if [ -f #{folder_path}/safe_to_delete ]; then rm -rf #{folder_path}; fi;
     name: sh
-

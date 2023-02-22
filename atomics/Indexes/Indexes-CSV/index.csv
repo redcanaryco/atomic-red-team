@@ -244,6 +244,8 @@ defense-evasion,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,2
 defense-evasion,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,3,Set a SetGID flag on file,db55f666-7cba-46c6-9fe6-205a05c3242c,sh
 defense-evasion,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,4,Make and modify capabilities of a binary,db53959c-207d-4000-9e7a-cd8eb417e072,sh
 defense-evasion,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,5,Provide the SetUID capability to a file,1ac3272f-9bcf-443a-9888-4b1d3de785c1,sh
+defense-evasion,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,6,Do reconnaissance for files that have the setuid bit set,8e36da01-cd29-45fd-be72-8a0fcaad4481,sh
+defense-evasion,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,7,Do reconnaissance for files that have the setgid bit set,3fb46e17-f337-4c14-9f9a-a471946533e2,sh
 defense-evasion,T1218.008,Signed Binary Proxy Execution: Odbcconf,1,Odbcconf.exe - Execute Arbitrary DLL,2430498b-06c0-4b92-a448-8ad263c388e2,command_prompt
 defense-evasion,T1218.008,Signed Binary Proxy Execution: Odbcconf,2,Odbcconf.exe - Load Response File,331ce274-f9c9-440b-9f8c-a1006e1fce0b,command_prompt
 defense-evasion,T1562.006,Impair Defenses: Indicator Blocking,1,Auditing Configuration Changes on Linux Host,212cfbcf-4770-4980-bc21-303e37abd0e3,bash
@@ -537,6 +539,8 @@ privilege-escalation,T1548.001,Abuse Elevation Control Mechanism: Setuid and Set
 privilege-escalation,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,3,Set a SetGID flag on file,db55f666-7cba-46c6-9fe6-205a05c3242c,sh
 privilege-escalation,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,4,Make and modify capabilities of a binary,db53959c-207d-4000-9e7a-cd8eb417e072,sh
 privilege-escalation,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,5,Provide the SetUID capability to a file,1ac3272f-9bcf-443a-9888-4b1d3de785c1,sh
+privilege-escalation,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,6,Do reconnaissance for files that have the setuid bit set,8e36da01-cd29-45fd-be72-8a0fcaad4481,sh
+privilege-escalation,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,7,Do reconnaissance for files that have the setgid bit set,3fb46e17-f337-4c14-9f9a-a471946533e2,sh
 privilege-escalation,T1547.004,Boot or Logon Autostart Execution: Winlogon Helper DLL,1,Winlogon Shell Key Persistence - PowerShell,bf9f9d65-ee4d-4c3e-a843-777d04f19c38,powershell
 privilege-escalation,T1547.004,Boot or Logon Autostart Execution: Winlogon Helper DLL,2,Winlogon Userinit Key Persistence - PowerShell,fb32c935-ee2e-454b-8fa3-1c46b42e8dfb,powershell
 privilege-escalation,T1547.004,Boot or Logon Autostart Execution: Winlogon Helper DLL,3,Winlogon Notify Key Logon Persistence - PowerShell,d40da266-e073-4e5a-bb8b-2b385023e5f9,powershell
@@ -851,11 +855,11 @@ persistence,T1136.003,Create Account: Cloud Account,1,AWS - Create a new IAM use
 persistence,T1098,Account Manipulation,1,Admin Account Manipulate,5598f7cb-cf43-455e-883a-f6008c5d46af,powershell
 persistence,T1098,Account Manipulation,2,Domain Account and Group Manipulate,a55a22e9-a3d3-42ce-bd48-2653adb8f7a9,powershell
 persistence,T1098,Account Manipulation,3,AWS - Create a group and add a user to that group,8822c3b0-d9f9-4daf-a043-49f110a31122,sh
-persistence,T1098,Account Manipulation,4,Azure - adding user to Azure AD role,0e65ae27-5385-46b4-98ac-607a8ee82261,powershell
-persistence,T1098,Account Manipulation,5,Azure - adding service principal to Azure AD role,92c40b3f-c406-4d1f-8d2b-c039bf5009e4,powershell
+persistence,T1098,Account Manipulation,4,Azure AD - adding user to Azure AD role,0e65ae27-5385-46b4-98ac-607a8ee82261,powershell
+persistence,T1098,Account Manipulation,5,Azure AD - adding service principal to Azure AD role,92c40b3f-c406-4d1f-8d2b-c039bf5009e4,powershell
 persistence,T1098,Account Manipulation,6,Azure - adding user to Azure role in subscription,1a94b3fc-b080-450a-b3d8-6d9b57b472ea,powershell
 persistence,T1098,Account Manipulation,7,Azure - adding service principal to Azure role in subscription,c8f4bc29-a151-48da-b3be-4680af56f404,powershell
-persistence,T1098,Account Manipulation,8,AzureAD - adding permission to application,94ea9cc3-81f9-4111-8dde-3fb54f36af4b,powershell
+persistence,T1098,Account Manipulation,8,Azure AD - adding permission to application,94ea9cc3-81f9-4111-8dde-3fb54f36af4b,powershell
 persistence,T1098,Account Manipulation,9,Password Change on Directory Service Restore Mode (DSRM) Account,d5b886d9-d1c7-4b6e-a7b0-460041bf2823,command_prompt
 persistence,T1547.006,Boot or Logon Autostart Execution: Kernel Modules and Extensions,1,Linux - Load Kernel Module via insmod,687dcb93-9656-4853-9c36-9977315e9d23,bash
 persistence,T1547.006,Boot or Logon Autostart Execution: Kernel Modules and Extensions,2,MacOS - Load Kernel Module via kextload and kmutil,f4391089-d3a5-4dd1-ab22-0419527f2672,bash
@@ -1078,6 +1082,7 @@ credential-access,T1552.004,Unsecured Credentials: Private Keys,7,ADFS token sig
 credential-access,T1552.004,Unsecured Credentials: Private Keys,8,CertUtil ExportPFX,336b25bf-4514-4684-8924-474974f28137,powershell
 credential-access,T1552.004,Unsecured Credentials: Private Keys,9,Export Root Certificate with Export-PFXCertificate,7617f689-bbd8-44bc-adcd-6f8968897848,powershell
 credential-access,T1552.004,Unsecured Credentials: Private Keys,10,Export Root Certificate with Export-Certificate,78b274f8-acb0-428b-b1f7-7b0d0e73330a,powershell
+credential-access,T1552.004,Unsecured Credentials: Private Keys,11,Export Certificates with Mimikatz,290df60e-4b5d-4a5e-b0c7-dc5348ea0c86,command_prompt
 credential-access,T1557.001,Adversary-in-the-Middle: LLMNR/NBT-NS Poisoning and SMB Relay,1,LLMNR Poisoning with Inveigh (PowerShell),deecd55f-afe0-4a62-9fba-4d1ba2deb321,powershell
 credential-access,T1003.001,OS Credential Dumping: LSASS Memory,1,Dump LSASS.exe Memory using ProcDump,0be2230c-9ab3-4ac2-8826-3199b9a0ebf8,command_prompt
 credential-access,T1003.001,OS Credential Dumping: LSASS Memory,2,Dump LSASS.exe Memory using comsvcs.dll,2536dee2-12fb-459a-8c37-971844fa73be,powershell
@@ -1158,6 +1163,7 @@ discovery,T1033,System Owner/User Discovery,2,System Owner/User Discovery,2a9b67
 discovery,T1033,System Owner/User Discovery,3,Find computers where user has session - Stealth mode (PowerView),29857f27-a36f-4f7e-8084-4557cd6207ca,powershell
 discovery,T1033,System Owner/User Discovery,4,User Discovery With Env Vars PowerShell Script,dcb6cdee-1fb0-4087-8bf8-88cfd136ba51,powershell
 discovery,T1033,System Owner/User Discovery,5,GetCurrent User with PowerShell Script,1392bd0f-5d5a-429e-81d9-eb9d4d4d5b3b,powershell
+discovery,T1613,Container and Resource Discovery,1,Container and ResourceDiscovery,8a895923-f99f-4668-acf2-6cc59a44f05e,sh
 discovery,T1615,Group Policy Discovery,1,Display group policy information via gpresult,0976990f-53b1-4d3f-a185-6df5be429d3b,command_prompt
 discovery,T1615,Group Policy Discovery,2,Get-DomainGPO to display group policy information via PowerView,4e524c4e-0e02-49aa-8df5-93f3f7959b9f,powershell
 discovery,T1615,Group Policy Discovery,3,WinPwn - GPOAudit,bc25c04b-841e-4965-855f-d1f645d7ab73,powershell
@@ -1317,6 +1323,10 @@ discovery,T1201,Password Policy Discovery,10,Use of SecEdit.exe to export the lo
 discovery,T1201,Password Policy Discovery,11,Examine AWS Password Policy,15330820-d405-450b-bd08-16b5be5be9f4,sh
 discovery,T1614.001,System Location Discovery: System Language Discovery,1,Discover System Language by Registry Query,631d4cf1-42c9-4209-8fe9-6bd4de9421be,command_prompt
 discovery,T1614.001,System Location Discovery: System Language Discovery,2,Discover System Language with chcp,d91473ca-944e-477a-b484-0e80217cd789,command_prompt
+discovery,T1614.001,System Location Discovery: System Language Discovery,3,Discover System Language with locale,837d609b-845e-4519-90ce-edc3b4b0e138,sh
+discovery,T1614.001,System Location Discovery: System Language Discovery,4,Discover System Language with localectl,07ce871a-b3c3-44a3-97fa-a20118fdc7c9,sh
+discovery,T1614.001,System Location Discovery: System Language Discovery,5,Discover System Language by locale file,5d7057c9-2c8a-4026-91dd-13b5584daa69,sh
+discovery,T1614.001,System Location Discovery: System Language Discovery,6,Discover System Language by Environment Variable Query,cb8f7cdc-36c4-4ed0-befc-7ad7d24dfd7a,sh
 discovery,T1012,Query Registry,1,Query Registry,8f7578c4-9863-4d83-875c-a565573bbdf0,command_prompt
 discovery,T1012,Query Registry,2,Enumerate COM Objects in Registry with Powershell,0d80d088-a84c-4353-af1a-fc8b439f1564,powershell
 discovery,T1518.001,Software Discovery: Security Software Discovery,1,Security Software Discovery,f92a380f-ced9-491f-b338-95a991418ce2,command_prompt
@@ -1364,6 +1374,7 @@ discovery,T1124,System Time Discovery,1,System Time Discovery,20aba24b-e61f-4b26
 discovery,T1124,System Time Discovery,2,System Time Discovery - PowerShell,1d5711d6-655c-4a47-ae9c-6503c74fa877,powershell
 discovery,T1124,System Time Discovery,3,System Time Discovery in macOS,f449c933-0891-407f-821e-7916a21a1a6f,sh
 discovery,T1124,System Time Discovery,4,System Time Discovery W32tm as a Delay,d5d5a6b0-0f92-42d8-985d-47aafa2dd4db,command_prompt
+discovery,T1124,System Time Discovery,5,System Time with Windows time Command,53ead5db-7098-4111-bb3f-563be390e72e,command_prompt
 command-and-control,T1132.001,Data Encoding: Standard Encoding,1,Base64 Encoded data.,1164f70f-9a88-4dff-b9ff-dc70e7bf0c25,sh
 command-and-control,T1132.001,Data Encoding: Standard Encoding,2,XOR Encoded data.,c3ed6d2a-e3ad-400d-ad78-bbfdbfeacc08,powershell
 command-and-control,T1071.004,Application Layer Protocol: DNS,1,DNS Large Query Volume,1700f5d6-5a44-487b-84de-bc66f507b0a6,powershell
@@ -1477,7 +1488,6 @@ initial-access,T1078.003,Valid Accounts: Local Accounts,1,Create local account w
 initial-access,T1078.003,Valid Accounts: Local Accounts,2,Create local account with admin privileges - MacOS,f1275566-1c26-4b66-83e3-7f9f7f964daa,bash
 initial-access,T1078.003,Valid Accounts: Local Accounts,3,WinPwn - Loot local Credentials - powerhell kittie,9e9fd066-453d-442f-88c1-ad7911d32912,powershell
 initial-access,T1078.003,Valid Accounts: Local Accounts,4,WinPwn - Loot local Credentials - Safetykatz,e9fdb899-a980-4ba4-934b-486ad22e22f4,powershell
-exfiltration,T1567,Exfiltration Over Web Service,1,Data Exfiltration with ConfigSecurityPolicy,5568a8f4-a8b1-4c40-9399-4969b642f122,powershell
 exfiltration,T1020,Automated Exfiltration,1,IcedID Botnet HTTP PUT,9c780d3d-3a14-4278-8ee5-faaeb2ccfbe0,powershell
 exfiltration,T1048.002,Exfiltration Over Alternative Protocol - Exfiltration Over Asymmetric Encrypted Non-C2 Protocol,1,Exfiltrate data HTTPS using curl windows,1cdf2fb0-51b6-4fd8-96af-77020d5f1bf0,command_prompt
 exfiltration,T1048.002,Exfiltration Over Alternative Protocol - Exfiltration Over Asymmetric Encrypted Non-C2 Protocol,2,Exfiltrate data HTTPS using curl linux,4a4f31e2-46ea-4c26-ad89-f09ad1d5fe01,bash

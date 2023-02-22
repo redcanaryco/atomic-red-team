@@ -10,15 +10,15 @@ atomic_tests:
   input_arguments:
     audisp_config_file_name:
       description: The name of the audispd configuration file to be changed
-      type: String
+      type: string
       default: audispd.conf
     auditd_config_file_name:
       description: The name of the auditd configuration file to be changed
-      type: String
+      type: string
       default: auditd.conf
     libaudit_config_file_name:
       description: The name of the libaudit configuration file to be changed
-      type: String
+      type: string
       default: libaudit.conf
   executor:
     command: |
@@ -46,15 +46,15 @@ atomic_tests:
   input_arguments:
     syslog_config_file_name:
       description: The name of the syslog configuration file to be changed
-      type: String
+      type: string
       default: syslog.conf
     rsyslog_config_file_name:
       description: The name of the rsyslog configuration file to be changed
-      type: String
+      type: string
       default: rsyslog.conf
     syslog_ng_config_file_name:
       description: The name of the syslog-ng configuration file to be changed
-      type: String
+      type: string
       default: syslog-ng.conf
   executor:
     command: |
@@ -81,7 +81,7 @@ atomic_tests:
     elevation_required: true
 - name: Disable Powershell ETW Provider - Windows
   auto_generated_guid: 6f118276-121d-4c09-bb58-a8fb4a72ee84
-  description: This test was created to disable the Microsoft Powershell ETW provider by using the built-in Windows tool, logman.exe. This provider is used as a common source of telemetry in AV/EDR solutions. 
+  description: This test was created to disable the Microsoft Powershell ETW provider by using the built-in Windows tool, logman.exe. This provider is used as a common source of telemetry in AV/EDR solutions.
   supported_platforms:
   - windows
   input_arguments:
@@ -132,8 +132,8 @@ atomic_tests:
 - name: LockBit Black - Disable the ETW Provider of Windows Defender -cmd
   auto_generated_guid: f6df0b8e-2c83-44c7-ba5e-0fa4386bec41
   description: |
-     An adversary can disable the ETW Provider of Windows Defender,
-     so nothing would be logged to Microsoft-Windows-Windows-Defender/Operational anymore.
+    An adversary can disable the ETW Provider of Windows Defender,
+    so nothing would be logged to Microsoft-Windows-Windows-Defender/Operational anymore.
   supported_platforms:
   - windows
   executor:
@@ -146,14 +146,14 @@ atomic_tests:
 - name: LockBit Black - Disable the ETW Provider of Windows Defender -Powershell
   auto_generated_guid: 69fc085b-5444-4879-8002-b24c8e1a3e02
   description: |
-     An adversary can disable the ETW Provider of Windows Defender,
-     so nothing would be logged to Microsoft-Windows-Windows-Defender/Operational anymore.
+    An adversary can disable the ETW Provider of Windows Defender,
+    so nothing would be logged to Microsoft-Windows-Windows-Defender/Operational anymore.
   supported_platforms:
   - windows
   executor:
     command: |
       New-ItemProperty "HKLM:\Software\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Windows Defender" -Name Operational  -PropertyType DWord -Value 0 -Force
     cleanup_command: |
-       Remove-ItemProperty "HKLM:\Software\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Windows Defender" -Name Operational -Force -ErrorAction Ignore
+      Remove-ItemProperty "HKLM:\Software\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Windows Defender" -Name Operational -Force -ErrorAction Ignore
     name: powershell
     elevation_required: true

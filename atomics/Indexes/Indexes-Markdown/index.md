@@ -332,6 +332,8 @@
   - Atomic Test #3: Set a SetGID flag on file [macos, linux]
   - Atomic Test #4: Make and modify capabilities of a binary [linux]
   - Atomic Test #5: Provide the SetUID capability to a file [linux]
+  - Atomic Test #6: Do reconnaissance for files that have the setuid bit set [linux]
+  - Atomic Test #7: Do reconnaissance for files that have the setgid bit set [linux]
 - T1117 Regsvr32 [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1054 Indicator Blocking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -810,6 +812,8 @@
   - Atomic Test #3: Set a SetGID flag on file [macos, linux]
   - Atomic Test #4: Make and modify capabilities of a binary [linux]
   - Atomic Test #5: Provide the SetUID capability to a file [linux]
+  - Atomic Test #6: Do reconnaissance for files that have the setuid bit set [linux]
+  - Atomic Test #7: Do reconnaissance for files that have the setgid bit set [linux]
 - [T1547.004 Boot or Logon Autostart Execution: Winlogon Helper DLL](../../T1547.004/T1547.004.md)
   - Atomic Test #1: Winlogon Shell Key Persistence - PowerShell [windows]
   - Atomic Test #2: Winlogon Userinit Key Persistence - PowerShell [windows]
@@ -1362,11 +1366,11 @@
   - Atomic Test #1: Admin Account Manipulate [windows]
   - Atomic Test #2: Domain Account and Group Manipulate [windows]
   - Atomic Test #3: AWS - Create a group and add a user to that group [iaas:aws]
-  - Atomic Test #4: Azure - adding user to Azure AD role [azure-ad]
-  - Atomic Test #5: Azure - adding service principal to Azure AD role [azure-ad]
+  - Atomic Test #4: Azure AD - adding user to Azure AD role [azure-ad]
+  - Atomic Test #5: Azure AD - adding service principal to Azure AD role [azure-ad]
   - Atomic Test #6: Azure - adding user to Azure role in subscription [iaas:azure]
   - Atomic Test #7: Azure - adding service principal to Azure role in subscription [iaas:azure]
-  - Atomic Test #8: AzureAD - adding permission to application [azure-ad]
+  - Atomic Test #8: Azure AD - adding permission to application [azure-ad]
   - Atomic Test #9: Password Change on Directory Service Restore Mode (DSRM) Account [windows]
 - [T1547.006 Boot or Logon Autostart Execution: Kernel Modules and Extensions](../../T1547.006/T1547.006.md)
   - Atomic Test #1: Linux - Load Kernel Module via insmod [linux]
@@ -1752,6 +1756,7 @@
   - Atomic Test #8: CertUtil ExportPFX [windows]
   - Atomic Test #9: Export Root Certificate with Export-PFXCertificate [windows]
   - Atomic Test #10: Export Root Certificate with Export-Certificate [windows]
+  - Atomic Test #11: Export Certificates with Mimikatz [windows]
 - [T1557.001 Adversary-in-the-Middle: LLMNR/NBT-NS Poisoning and SMB Relay](../../T1557.001/T1557.001.md)
   - Atomic Test #1: LLMNR Poisoning with Inveigh (PowerShell) [windows]
 - [T1003.001 OS Credential Dumping: LSASS Memory](../../T1003.001/T1003.001.md)
@@ -1874,7 +1879,8 @@
   - Atomic Test #3: Find computers where user has session - Stealth mode (PowerView) [windows]
   - Atomic Test #4: User Discovery With Env Vars PowerShell Script [windows]
   - Atomic Test #5: GetCurrent User with PowerShell Script [windows]
-- T1613 Container and Resource Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1613 Container and Resource Discovery](../../T1613/T1613.md)
+  - Atomic Test #1: Container and ResourceDiscovery [containers]
 - T1016.001 Internet Connection Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1069 Permission Groups Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1069.003 Cloud Groups [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -2066,6 +2072,10 @@
 - [T1614.001 System Location Discovery: System Language Discovery](../../T1614.001/T1614.001.md)
   - Atomic Test #1: Discover System Language by Registry Query [windows]
   - Atomic Test #2: Discover System Language with chcp [windows]
+  - Atomic Test #3: Discover System Language with locale [linux]
+  - Atomic Test #4: Discover System Language with localectl [linux]
+  - Atomic Test #5: Discover System Language by locale file [linux]
+  - Atomic Test #6: Discover System Language by Environment Variable Query [linux]
 - [T1012 Query Registry](../../T1012/T1012.md)
   - Atomic Test #1: Query Registry [windows]
   - Atomic Test #2: Enumerate COM Objects in Registry with Powershell [windows]
@@ -2123,6 +2133,7 @@
   - Atomic Test #2: System Time Discovery - PowerShell [windows]
   - Atomic Test #3: System Time Discovery in macOS [macos]
   - Atomic Test #4: System Time Discovery W32tm as a Delay [windows]
+  - Atomic Test #5: System Time with Windows time Command [windows]
 
 # resource-development
 - T1583 Acquire Infrastructure [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -2429,8 +2440,7 @@
   - Atomic Test #4: WinPwn - Loot local Credentials - Safetykatz [windows]
 
 # exfiltration
-- [T1567 Exfiltration Over Web Service](../../T1567/T1567.md)
-  - Atomic Test #1: Data Exfiltration with ConfigSecurityPolicy [windows]
+- T1567 Exfiltration Over Web Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1029 Scheduled Transfer [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1011 Exfiltration Over Other Network Medium [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1011.001 Exfiltration Over Bluetooth [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

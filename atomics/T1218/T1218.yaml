@@ -10,11 +10,11 @@ atomic_tests:
   input_arguments:
     process_id:
       description: PID of process receiving injection
-      type: String
+      type: string
       default: "1000"
     dll_payload:
       description: DLL to inject
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1218\src\x64\T1218.dll
   dependency_executor_name: powershell
   dependencies:
@@ -39,7 +39,7 @@ atomic_tests:
   input_arguments:
     dll_payload:
       description: DLL to execute
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
   dependency_executor_name: powershell
   dependencies:
@@ -65,7 +65,7 @@ atomic_tests:
   input_arguments:
     inf_to_execute:
       description: Local location of inf file
-      type: String
+      type: string
       default: PathToAtomicsFolder\T1218\src\Infdefaultinstall.inf
   dependency_executor_name: powershell
   dependencies:
@@ -85,14 +85,14 @@ atomic_tests:
   description: |
     Emulates attack via documents through protocol handler in Microsoft Office.  On successful execution you should see Microsoft Word launch a blank file.
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     remote_url:
       description: url to document
-      type: Url
+      type: url
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1218/src/T1218Test.docx
-  dependency_executor_name: powershell 
-  dependencies: 
+  dependency_executor_name: powershell
+  dependencies:
   - description: |
       Microsoft Word must be installed
     prereq_command: |
@@ -113,28 +113,28 @@ atomic_tests:
   description: |
     Emulates attack with Microsoft.Workflow.Compiler.exe running a .Net assembly that launches calc.exe
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     xml_payload:
       description: XML to execution
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1218\src\T1218.xml
     mwcpath:
       description: Default location of Microsoft.Workflow.Compiler.exe
-      type: Path
+      type: path
       default: C:\Windows\Microsoft.NET\Framework64\v4.0.30319
     mwcname:
       description: Default name of microsoft.workflow.compiler.exe
-      type: Path
+      type: path
       default: microsoft.workflow.compiler.exe
-  dependency_executor_name: powershell 
-  dependencies: 
-    - description: |
-        .Net must be installed for this test to work correctly.
-      prereq_command: | 
-        if (Test-Path #{mwcpath}\#{mwcname} ) {exit 0} else {exit 1}
-      get_prereq_command: | 
-        write-host ".Net must be installed for this test to work correctly."
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      .Net must be installed for this test to work correctly.
+    prereq_command: |
+      if (Test-Path #{mwcpath}\#{mwcname} ) {exit 0} else {exit 1}
+    get_prereq_command: |
+      write-host ".Net must be installed for this test to work correctly."
   executor:
     command: |
       #{mwcpath}\#{mwcname} "#{xml_payload}" output.txt
@@ -145,33 +145,33 @@ atomic_tests:
   description: |
     Emulates attack with a renamed Microsoft.Workflow.Compiler.exe running a .Net assembly that launches calc.exe
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     xml_payload:
       description: XML to execution
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1218\src\T1218.xml
     renamed_binary:
       description: renamed Microsoft.Workflow.Compiler
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1218\src\svchost.exe
     mwcpath:
       description: Default location of Microsoft.Workflow.Compiler.exe
-      type: Path
+      type: path
       default: C:\Windows\Microsoft.NET\Framework64\v4.0.30319
     mwcname:
       description: Default name of microsoft.workflow.compiler.exe
-      type: Path
+      type: path
       default: microsoft.workflow.compiler.exe
-  dependency_executor_name: powershell 
-  dependencies: 
-    - description: |
-        .Net must be installed for this test to work correctly.
-      prereq_command: | 
-        Copy-Item #{mwcpath}\#{mwcname} "#{renamed_binary}" -Force
-        if (Test-Path "#{renamed_binary}") {exit 0} else {exit 1}
-      get_prereq_command: | 
-        write-host "you need to rename workflow complier before you run this test"
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      .Net must be installed for this test to work correctly.
+    prereq_command: |
+      Copy-Item #{mwcpath}\#{mwcname} "#{renamed_binary}" -Force
+      if (Test-Path "#{renamed_binary}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      write-host "you need to rename workflow complier before you run this test"
   executor:
     command: |
       #{renamed_binary} #{xml_payload} output.txt
@@ -185,20 +185,20 @@ atomic_tests:
     One of the PowerShell functions called by RemoteFXvGPUDisablement.exe is Get-VMRemoteFXPhysicalVideoAdapter, a part of the Hyper-V module. This atomic test influences RemoteFXvGPUDisablement.exe to execute custom PowerShell code by using a technique referred to as "PowerShell module load-order hijacking" where a module containing, in this case, an implementation of the Get-VMRemoteFXPhysicalVideoAdapter is loaded first by way of introducing a temporary module into the first directory listed in the %PSModulePath% environment variable or within a user-specified module directory outside of %PSModulePath%. Upon execution the temporary module is deleted.
 
     Invoke-ATHRemoteFXvGPUDisablementCommand is used in this test to demonstrate how a PowerShell host executable can be directed to user-supplied PowerShell code without needing to supply anything at the command-line. PowerShell code execution is triggered when supplying the "Disable" argument to RemoteFXvGPUDisablement.exe.
-    
+
     The Invoke-ATHRemoteFXvGPUDisablementCommand function outputs all relevant execution-related artifacts.
-    
+
     Reference: https://github.com/redcanaryco/AtomicTestHarnesses/blob/master/TestHarnesses/T1218_SignedBinaryProxyExecution/InvokeRemoteFXvGPUDisablementCommand.ps1
   supported_platforms:
   - windows
   input_arguments:
     module_name:
       description: Specifies a temporary module name to use. If -ModuleName is not supplied, a 16-character random temporary module name is used. A PowerShell module can have any name. Because Get-VMRemoteFXPhysicalVideoAdapter abuses module load order, a module name must be specified.
-      type: String
+      type: string
       default: foo
     module_path:
       description: Specifies an alternate, non-default PowerShell module path for RemoteFXvGPUDisablement.exe. If -ModulePath is not specified, the first entry in %PSModulePath% will be used. Typically, this is %USERPROFILE%\Documents\WindowsPowerShell\Modules.
-      type: String
+      type: string
       default: $PWD
   dependencies:
   - description: The AtomicTestHarnesses module must be installed and Invoke-ATHRemoteFXvGPUDisablementCommand must be exported in the module.
@@ -216,29 +216,29 @@ atomic_tests:
   description: |
     Emulates attack with a DiskShadow.exe (LOLBIN installed by default on Windows) being used to execute arbitrary commands Reference: https://bohops.com/2018/03/26/diskshadow-the-return-of-vss-evasion-persistence-and-active-directory-database-extraction/
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     txt_payload:
       description: txt to execute
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1218\src\T1218.txt
     dspath:
       description: Default location of DiskShadow.exe
-      type: Path
+      type: path
       default: C:\Windows\System32\diskshadow.exe
-  dependency_executor_name: powershell 
-  dependencies: 
-    - description: txt file must exist on disk at specified location (#{txt_payload})
-      prereq_command: |
-        if (Test-Path #{txt_payload}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        New-Item -Type Directory (split-path #{txt_payload}) -ErrorAction ignore | Out-Null
-        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/T1218.txt" -OutFile "#{txt_payload}"
-    - description: DiskShadow.exe must exist on disk at specified location (#{dspath})
-      prereq_command: |
-        if (Test-Path #{dspath}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        echo "DiskShadow.exe not found on disk at expected location"
+  dependency_executor_name: powershell
+  dependencies:
+  - description: txt file must exist on disk at specified location (#{txt_payload})
+    prereq_command: |
+      if (Test-Path #{txt_payload}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{txt_payload}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/T1218.txt" -OutFile "#{txt_payload}"
+  - description: DiskShadow.exe must exist on disk at specified location (#{dspath})
+    prereq_command: |
+      if (Test-Path #{dspath}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      echo "DiskShadow.exe not found on disk at expected location"
   executor:
     command: |
       #{dspath} -S #{txt_payload} 
@@ -254,7 +254,7 @@ atomic_tests:
   input_arguments:
     arbitrary_dll:
       description: Path of DLL to be loaded
-      type: String
+      type: string
       default: PathToAtomicsFolder\T1218\bin\calc.dll
   dependency_executor_name: powershell
   dependencies:
@@ -270,7 +270,7 @@ atomic_tests:
       wuauclt.exe /UpdateDeploymentProvider #{arbitrary_dll} /RunHandlerComServer
     cleanup_command: |-
       taskkill /f /im calculator.exe > nul 2>&1
-    name: command_prompt 
+    name: command_prompt
 - name: Lolbin Gpscript logon option
   auto_generated_guid: 5bcda9cd-8e85-48fa-861d-b5a85d91d48c
   description: |
@@ -278,7 +278,7 @@ atomic_tests:
     https://lolbas-project.github.io/lolbas/Binaries/Gpscript/
     https://oddvar.moe/2018/04/27/gpscript-exe-another-lolbin-to-the-list/
   supported_platforms:
-    - windows
+  - windows
   executor:
     command: |
       Gpscript /logon
@@ -290,7 +290,7 @@ atomic_tests:
     https://lolbas-project.github.io/lolbas/Binaries/Gpscript/
     https://oddvar.moe/2018/04/27/gpscript-exe-another-lolbin-to-the-list/
   supported_platforms:
-    - windows
+  - windows
   executor:
     command: |
       Gpscript /startup
@@ -303,15 +303,15 @@ atomic_tests:
     Poc from : https://bohops.com/2018/03/10/leveraging-inf-sct-fetch-execute-techniques-for-bypass-evasion-persistence-part-2/
     Reference: https://lolbas-project.github.io/lolbas/Binaries/Ie4uinit/
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     Path_inf:
-      description:  Path to the cab file
-      type: Path
-      default:  PathToAtomicsFolder\T1218\src\ieuinit.inf
+      description: Path to the cab file
+      type: path
+      default: PathToAtomicsFolder\T1218\src\ieuinit.inf
     Path_ie4uinit:
       description: Path to ie4uinit.exe
-      type: Path
+      type: path
       default: c:\windows\system32\ie4uinit.exe
   executor:
     command: |

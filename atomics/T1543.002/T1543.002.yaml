@@ -10,35 +10,35 @@ atomic_tests:
   input_arguments:
     systemd_service_path:
       description: Path to systemd service unit file
-      type: Path
+      type: path
       default: /etc/systemd/system
     systemd_service_file:
       description: File name of systemd service unit file
-      type: String
+      type: string
       default: art-systemd-service.service
     execstoppost_action:
       description: ExecStopPost action for Systemd service
-      type: String
+      type: string
       default: /bin/touch /tmp/art-systemd-execstoppost-marker
     execreload_action:
       description: ExecReload action for Systemd service
-      type: String
+      type: string
       default: /bin/touch /tmp/art-systemd-execreload-marker
     execstart_action:
       description: ExecStart action for Systemd service
-      type: String
+      type: string
       default: /bin/touch /tmp/art-systemd-execstart-marker
     execstop_action:
       description: ExecStop action for Systemd service
-      type: String
+      type: string
       default: /bin/touch /tmp/art-systemd-execstop-marker
     execstartpre_action:
       description: ExecStartPre action for Systemd service
-      type: String
+      type: string
       default: /bin/touch /tmp/art-systemd-execstartpre-marker
     execstartpost_action:
       description: ExecStartPost action for Systemd service
-      type: String
+      type: string
       default: /bin/touch /tmp/art-systemd-execstartpost-marker
   executor:
     command: |
@@ -73,14 +73,14 @@ atomic_tests:
     This test creates a systemd service unit file and enables it to autostart on boot. Once service is created and enabled, it also modifies this same service file showcasing both Creation and Modification of system process. 
 
   supported_platforms:
-    - linux
+  - linux
   dependencies:
-    - description: |
-        System must be Ubuntu ,Kali OR CentOS.
-      prereq_command: |
-        if [ $(cat /etc/os-release | grep -i ID=ubuntu) ] || [ $(cat /etc/os-release | grep -i ID=kali) ] || [ $(cat /etc/os-release | grep -i 'ID="centos"') ]; then exit /b 0; else exit /b 1; fi;
-      get_prereq_command: |
-        echo Please run from Ubuntu ,Kali OR CentOS.
+  - description: |
+      System must be Ubuntu ,Kali OR CentOS.
+    prereq_command: |
+      if [ $(cat /etc/os-release | grep -i ID=ubuntu) ] || [ $(cat /etc/os-release | grep -i ID=kali) ] || [ $(cat /etc/os-release | grep -i 'ID="centos"') ]; then exit /b 0; else exit /b 1; fi;
+    get_prereq_command: |
+      echo Please run from Ubuntu ,Kali OR CentOS.
   executor:
     name: bash
     elevation_required: true
@@ -111,4 +111,3 @@ atomic_tests:
       systemctl disable T1543.002
       rm -rf /etc/init.d/T1543.002
       systemctl daemon-reload
-

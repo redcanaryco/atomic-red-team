@@ -9,19 +9,19 @@ atomic_tests:
     input_arguments: 
       script_url: 
         description: Shell script public URL
-        type: String
+        type: string
         default: https://github.com/carlospolop/PEASS-ng/releases/download/20220214/linpeas.sh
       payload_file_name: 
         description: Name of shell script downloaded from the script_url
-        type: String
+        type: string
         default: T1059.006-payload
       executor: 
         description: Linux shell
-        type: String
+        type: string
         default: sh
       script_args: 
         description: Arguments to check for system stats, available software, process details, environment paths, open sockets, and interesting files.  
-        type: String
+        type: string
         default: -q -o SysI, Devs, AvaSof, ProCronSrvcsTmrsSocks, Net, UsrI, SofI, IntFiles
     dependency_executor_name: sh
     dependencies: 
@@ -46,23 +46,23 @@ atomic_tests:
     input_arguments: 
       python_script_name: 
         description: Python script name
-        type: Path
+        type: path
         default: T1059.006.py
       script_url: 
         description: Shell script public URL
-        type: String
+        type: string
         default: https://github.com/carlospolop/PEASS-ng/releases/download/20220214/linpeas.sh
       payload_file_name: 
         description: Shell script file name downloaded from the script_url
-        type: String
+        type: string
         default: T1059.006-payload
       executor: 
         description: Payload or script interpreter / executor
-        type: String
+        type: string
         default: sh
       script_args: 
         description: Arguments to check for system stats, available software, process details, environment paths, open sockets, and interesting files
-        type: String
+        type: string
         default: -q -o SysI, Devs, AvaSof, ProCronSrvcsTmrsSocks, Net, UsrI, SofI, IntFiles
     dependency_executor_name: sh
     dependencies: 
@@ -99,27 +99,27 @@ atomic_tests:
     input_arguments: 
       python_script_name: 
         description: Name of Python script name
-        type: Path
+        type: path
         default: T1059.006.py
       script_url: 
         description: URL hosting external malicious payload
-        type: String
+        type: string
         default: https://github.com/carlospolop/PEASS-ng/releases/download/20220214/linpeas.sh
       payload_file_name: 
         description: Shell script file name downloaded from the script_url
-        type: String
+        type: string
         default: T1059.006-payload
       executor: 
         description: Payload or script interpreter / executor
-        type: String
+        type: string
         default: sh
       script_args: 
         description: Arguments to check for system stats, available software, process details, environment paths, open sockets, and interesting files
-        type: String
+        type: string
         default: -q -o SysI, Devs, AvaSof, ProCronSrvcsTmrsSocks, Net, UsrI, SofI, IntFiles
       python_binary_name: 
         description: Name of Python file to be compiled
-        type: Path
+        type: path
         default: T1059.006.pyc
     dependency_executor_name: sh
     dependencies: 
