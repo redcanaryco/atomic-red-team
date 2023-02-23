@@ -36740,9 +36740,9 @@ persistence:
     - name: Azure AD - adding permission to application
       auto_generated_guid: 94ea9cc3-81f9-4111-8dde-3fb54f36af4b
       description: |
-        The adversaries want to add permission to new created application. Application could be then use for persistence or for further operation in the attacked infrastructure. Permissions like AppRoleAssignment.ReadWrite.All or RoleManagement.ReadWrite.Directory in particular can be a valuable target for a threat actor.
-        You can use Get-AzureADApplication instead of New-AzureADServicePrincipal to use an existing application.
-        The DirectoryRecommendations.Read.All permissions have been selected as the default
+        The adversaries want to add permission to newly created application. Application could be then used for persistence or for further operation in the attacked infrastructure. Permissions like AppRoleAssignment.ReadWrite.All or RoleManagement.ReadWrite.Directory in particular can be a valuable target for a threat actor.
+        This technique will create a new app, with the provided name, and give it the provided permission. But if you prefer to add credentials to an existing app, replace in the code: "Get-AzureADApplication" instead of "New-AzureADServicePrincipal".
+        The DirectoryRecommendations.Read.All permissions has been selected as the default.
 
         The account you use to run the PowerShell command should have Global Administrator/Application Administrator/Cloud Application Administrator role in your Azure AD.
 
@@ -36764,11 +36764,11 @@ persistence:
           type: string
           default: p4sswd
         application_name:
-          description: Name of the targeted application
+          description: Name of the targeted application that will be created
           type: string
           default: test_app
         application_permission:
-          description: Permission from Microsoft Graph Resource API that will be add
+          description: Permission from Microsoft Graph Resource API that will be added
             to application
           type: string
           default: DirectoryRecommendations.Read.All
@@ -36805,7 +36805,7 @@ persistence:
           System.Collections.Generic.List[Microsoft.Open.AzureAD.Model.RequiredResourceAccess]\n$requiredResourcesAccess.Add($requiredGraphAccess)\n\n#Set
           permissions in existing Azure AD App\nSet-AzureADApplication -ObjectId $aadApplication.ObjectId
           -RequiredResourceAccess $requiredResourcesAccess\n\n$servicePrincipal =
-          Get-AzureADServicePrincipal -Filter \"AppId eq '$aadApplication.AppId'\"\n\nNew-AzureADServiceAppRoleAssignment
+          Get-AzureADServicePrincipal -Filter \"AppId eq '$($aadApplication.AppId)'\"\n\nNew-AzureADServiceAppRoleAssignment
           -ObjectId $servicePrincipal.ObjectId -PrincipalId $servicePrincipal.ObjectId
           -ResourceId $graphSP.ObjectId -Id $reqPermission.Id\n"
         cleanup_command: |
@@ -36814,8 +36814,22 @@ persistence:
           $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
           Connect-AzureAD -Credential $Credential
 
-          $aadApplication = Get-AzureADApplication -Filter "DisplayName eq '#{application_name}'"
-          Remove-AzureADApplication -ObjectId $aadApplication.ObjectId
+          $aadApplication = @(Get-AzureADApplication -Filter "DisplayName eq '#{application_name}'")
+          If ($aadApplication.Count -eq 0)
+          {
+            Write-Host "App not found: cannot delete it"
+            exit
+          }
+          ElseIf ($aadApplication.Count -gt 1)
+          {
+            Write-Host "Found several app with name '#{application_name}': one is likely the one this technique created, but as a precaution, none will be deleted. Manual cleanup is required."
+            exit
+          }
+          Else
+          {
+            Remove-AzureADApplication -ObjectId $aadApplication[0].ObjectId
+            Write-Host "Successfully deleted app"
+          }
         name: powershell
         elevation_required: false
   T1547.006:
