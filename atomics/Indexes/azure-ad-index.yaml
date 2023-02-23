@@ -36647,9 +36647,9 @@ persistence:
           $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
           Connect-AzureAD -Credential $Credential
 
-          $user = Get-AzureADUser | where-object {$_.DisplayName -eq "#{user_principal_name}"}
+          $user = Get-AzureADUser -Filter "DisplayName eq '#{user_principal_name}'"
           if ($user -eq $null) { Write-Warning "User not found"; exit }
-          $role = Get-AzureADDirectoryRole | where-object {$_.DisplayName -eq "#{role_name}"}
+          $role = Get-AzureADDirectoryRole -Filter "DisplayName eq '#{role_name}'"
           if ($role -eq $null) { Write-Warning "Role not found"; exit }
           Add-AzureADDirectoryRoleMember -ObjectId $role.ObjectId -RefObjectId $user.ObjectId
           Write-Host "User $($user.DisplayName) was added to $($role.DisplayName) role"
@@ -36659,9 +36659,9 @@ persistence:
           $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
           Connect-AzureAD -Credential $Credential -ErrorAction Ignore
 
-          $user = Get-AzureADUser | where-object {$_.DisplayName -eq "#{user_principal_name}"}
+          $user = Get-AzureADUser -Filter "DisplayName eq '#{user_principal_name}'"
           if ($user -eq $null) { Write-Warning "User not found"; exit }
-          $role = Get-AzureADDirectoryRole | where-object {$_.DisplayName -eq "#{role_name}"}
+          $role = Get-AzureADDirectoryRole -Filter "DisplayName eq '#{role_name}'"
           if ($role -eq $null) { Write-Warning "Role not found"; exit }
 
           Remove-AzureADDirectoryRoleMember -ObjectId $role.ObjectId -MemberId $user.ObjectId
@@ -36716,9 +36716,9 @@ persistence:
           $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
           Connect-AzureAD -Credential $Credential
 
-          $sp = Get-AzureADServicePrincipal | where-object {$_.DisplayName -eq "#{service_principal_name}"}
+          $sp = Get-AzureADServicePrincipal -Filter "DisplayName eq '#{service_principal_name}'"
           if ($sp -eq $null) { Write-Warning "Service Principal not found"; exit }
-          $role = Get-AzureADDirectoryRole | where-object {$_.DisplayName -eq "#{role_name}"}
+          $role = Get-AzureADDirectoryRole -Filter "DisplayName eq '#{role_name}'"
           if ($role -eq $null) { Write-Warning "Role not found"; exit }
           Add-AzureADDirectoryRoleMember -ObjectId $role.ObjectId -RefObjectId $sp.ObjectId
           Write-Host "Service Principal $($sp.DisplayName) was added to $($role.DisplayName)"
@@ -36728,9 +36728,9 @@ persistence:
           $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
           Connect-AzureAD -Credential $Credential -ErrorAction Ignore
 
-          $sp = Get-AzureADServicePrincipal | where-object {$_.DisplayName -eq "#{service_principal_name}"}
+          $sp = Get-AzureADServicePrincipal -Filter "DisplayName eq '#{service_principal_name}'"
           if ($sp -eq $null) { Write-Warning "Service Principal not found"; exit }
-          $role = Get-AzureADDirectoryRole | where-object {$_.DisplayName -eq "#{role_name}"}
+          $role = Get-AzureADDirectoryRole -Filter "DisplayName eq '#{role_name}'"
           if ($role -eq $null) { Write-Warning "Role not found"; exit }
 
           Remove-AzureADDirectoryRoleMember -ObjectId $role.ObjectId -MemberId $sp.ObjectId
@@ -36790,11 +36790,10 @@ persistence:
           $Pword\nConnect-AzureAD -Credential $Credential\n\n$aadApplication = New-AzureADApplication
           -DisplayName \"#{application_name}\"\n$servicePrincipal = New-AzureADServicePrincipal
           -AppId $aadApplication.AppId\n#$aadApplication = Get-AzureADApplication
-          | Where-Object {$_.DisplayName -eq \"#{application_name}\"}\n\n#Get Service
-          Principal of Microsoft Graph Resource API \n$graphSP =  Get-AzureADServicePrincipal
-          -All $true | Where-Object {$_.DisplayName -eq \"Microsoft Graph\"}\n\n#Initialize
-          RequiredResourceAccess for Microsoft Graph Resource API \n$requiredGraphAccess
-          = New-Object Microsoft.Open.AzureAD.Model.RequiredResourceAccess\n$requiredGraphAccess.ResourceAppId
+          -Filter \"DisplayName eq '#{application_name}'\"\n\n#Get Service Principal
+          of Microsoft Graph Resource API \n$graphSP = Get-AzureADServicePrincipal
+          -Filter \"DisplayName eq 'Microsoft Graph'\"\n\n#Initialize RequiredResourceAccess
+          for Microsoft Graph Resource API \n$requiredGraphAccess = New-Object Microsoft.Open.AzureAD.Model.RequiredResourceAccess\n$requiredGraphAccess.ResourceAppId
           = $graphSP.AppId\n$requiredGraphAccess.ResourceAccess = New-Object System.Collections.Generic.List[Microsoft.Open.AzureAD.Model.ResourceAccess]\n\n#Set
           Application Permissions\n$ApplicationPermissions = @('#{application_permission}')\n\n$reqPermission
           = $graphSP.AppRoles | Where-Object {$_.Value -eq $ApplicationPermissions}\nif($reqPermission)\n{\n$resourceAccess
@@ -36806,7 +36805,7 @@ persistence:
           System.Collections.Generic.List[Microsoft.Open.AzureAD.Model.RequiredResourceAccess]\n$requiredResourcesAccess.Add($requiredGraphAccess)\n\n#Set
           permissions in existing Azure AD App\nSet-AzureADApplication -ObjectId $aadApplication.ObjectId
           -RequiredResourceAccess $requiredResourcesAccess\n\n$servicePrincipal =
-          Get-AzureADServicePrincipal -All $true | Where-Object {$_.AppId -eq $aadApplication.AppId}\n\nNew-AzureADServiceAppRoleAssignment
+          Get-AzureADServicePrincipal -Filter \"AppId eq '$aadApplication.AppId'\"\n\nNew-AzureADServiceAppRoleAssignment
           -ObjectId $servicePrincipal.ObjectId -PrincipalId $servicePrincipal.ObjectId
           -ResourceId $graphSP.ObjectId -Id $reqPermission.Id\n"
         cleanup_command: |
@@ -36815,7 +36814,7 @@ persistence:
           $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
           Connect-AzureAD -Credential $Credential
 
-          $aadApplication = Get-AzureADApplication | Where-Object {$_.DisplayName -eq "#{application_name}"}
+          $aadApplication = Get-AzureADApplication -Filter "DisplayName eq '#{application_name}'"
           Remove-AzureADApplication -ObjectId $aadApplication.ObjectId
         name: powershell
         elevation_required: false
