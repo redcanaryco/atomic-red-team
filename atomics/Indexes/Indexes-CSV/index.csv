@@ -244,6 +244,8 @@ defense-evasion,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,2
 defense-evasion,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,3,Set a SetGID flag on file,db55f666-7cba-46c6-9fe6-205a05c3242c,sh
 defense-evasion,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,4,Make and modify capabilities of a binary,db53959c-207d-4000-9e7a-cd8eb417e072,sh
 defense-evasion,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,5,Provide the SetUID capability to a file,1ac3272f-9bcf-443a-9888-4b1d3de785c1,sh
+defense-evasion,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,6,Do reconnaissance for files that have the setuid bit set,8e36da01-cd29-45fd-be72-8a0fcaad4481,sh
+defense-evasion,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,7,Do reconnaissance for files that have the setgid bit set,3fb46e17-f337-4c14-9f9a-a471946533e2,sh
 defense-evasion,T1218.008,Signed Binary Proxy Execution: Odbcconf,1,Odbcconf.exe - Execute Arbitrary DLL,2430498b-06c0-4b92-a448-8ad263c388e2,command_prompt
 defense-evasion,T1218.008,Signed Binary Proxy Execution: Odbcconf,2,Odbcconf.exe - Load Response File,331ce274-f9c9-440b-9f8c-a1006e1fce0b,command_prompt
 defense-evasion,T1562.006,Impair Defenses: Indicator Blocking,1,Auditing Configuration Changes on Linux Host,212cfbcf-4770-4980-bc21-303e37abd0e3,bash
@@ -537,6 +539,8 @@ privilege-escalation,T1548.001,Abuse Elevation Control Mechanism: Setuid and Set
 privilege-escalation,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,3,Set a SetGID flag on file,db55f666-7cba-46c6-9fe6-205a05c3242c,sh
 privilege-escalation,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,4,Make and modify capabilities of a binary,db53959c-207d-4000-9e7a-cd8eb417e072,sh
 privilege-escalation,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,5,Provide the SetUID capability to a file,1ac3272f-9bcf-443a-9888-4b1d3de785c1,sh
+privilege-escalation,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,6,Do reconnaissance for files that have the setuid bit set,8e36da01-cd29-45fd-be72-8a0fcaad4481,sh
+privilege-escalation,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,7,Do reconnaissance for files that have the setgid bit set,3fb46e17-f337-4c14-9f9a-a471946533e2,sh
 privilege-escalation,T1547.004,Boot or Logon Autostart Execution: Winlogon Helper DLL,1,Winlogon Shell Key Persistence - PowerShell,bf9f9d65-ee4d-4c3e-a843-777d04f19c38,powershell
 privilege-escalation,T1547.004,Boot or Logon Autostart Execution: Winlogon Helper DLL,2,Winlogon Userinit Key Persistence - PowerShell,fb32c935-ee2e-454b-8fa3-1c46b42e8dfb,powershell
 privilege-escalation,T1547.004,Boot or Logon Autostart Execution: Winlogon Helper DLL,3,Winlogon Notify Key Logon Persistence - PowerShell,d40da266-e073-4e5a-bb8b-2b385023e5f9,powershell
@@ -720,6 +724,8 @@ execution,T1059.004,Command and Scripting Interpreter: Bash,6,What shell is runn
 execution,T1059.004,Command and Scripting Interpreter: Bash,7,What shells are available,bf23c7dc-1004-4949-8262-4c1d1ef87702,sh
 execution,T1059.004,Command and Scripting Interpreter: Bash,8,Command line scripts,b04ed73c-7d43-4dc8-b563-a2fc595cba1a,sh
 execution,T1059.004,Command and Scripting Interpreter: Bash,9,Obfuscated command line scripts,5bec4cc8-f41e-437b-b417-33ff60acf9af,sh
+execution,T1059.004,Command and Scripting Interpreter: Bash,10,Change login shell,c7ac59cb-13cc-4622-81dc-6d2fee9bfac7,bash
+execution,T1059.004,Command and Scripting Interpreter: Bash,11,Environment variable scripts,bdaebd56-368b-4970-a523-f905ff4a8a51,bash
 execution,T1059.006,Command and Scripting Interpreter: Python,1,Execute shell script via python's command mode arguement,3a95cdb2-c6ea-4761-b24e-02b71889b8bb,sh
 execution,T1059.006,Command and Scripting Interpreter: Python,2,Execute Python via scripts (Linux),6c4d1dcb-33c7-4c36-a8df-c6cfd0408be8,sh
 execution,T1059.006,Command and Scripting Interpreter: Python,3,Execute Python via Python executables (Linux),0b44d79b-570a-4b27-a31f-3bf2156e5eaa,sh
@@ -851,11 +857,11 @@ persistence,T1136.003,Create Account: Cloud Account,1,AWS - Create a new IAM use
 persistence,T1098,Account Manipulation,1,Admin Account Manipulate,5598f7cb-cf43-455e-883a-f6008c5d46af,powershell
 persistence,T1098,Account Manipulation,2,Domain Account and Group Manipulate,a55a22e9-a3d3-42ce-bd48-2653adb8f7a9,powershell
 persistence,T1098,Account Manipulation,3,AWS - Create a group and add a user to that group,8822c3b0-d9f9-4daf-a043-49f110a31122,sh
-persistence,T1098,Account Manipulation,4,Azure - adding user to Azure AD role,0e65ae27-5385-46b4-98ac-607a8ee82261,powershell
-persistence,T1098,Account Manipulation,5,Azure - adding service principal to Azure AD role,92c40b3f-c406-4d1f-8d2b-c039bf5009e4,powershell
+persistence,T1098,Account Manipulation,4,Azure AD - adding user to Azure AD role,0e65ae27-5385-46b4-98ac-607a8ee82261,powershell
+persistence,T1098,Account Manipulation,5,Azure AD - adding service principal to Azure AD role,92c40b3f-c406-4d1f-8d2b-c039bf5009e4,powershell
 persistence,T1098,Account Manipulation,6,Azure - adding user to Azure role in subscription,1a94b3fc-b080-450a-b3d8-6d9b57b472ea,powershell
 persistence,T1098,Account Manipulation,7,Azure - adding service principal to Azure role in subscription,c8f4bc29-a151-48da-b3be-4680af56f404,powershell
-persistence,T1098,Account Manipulation,8,AzureAD - adding permission to application,94ea9cc3-81f9-4111-8dde-3fb54f36af4b,powershell
+persistence,T1098,Account Manipulation,8,Azure AD - adding permission to application,94ea9cc3-81f9-4111-8dde-3fb54f36af4b,powershell
 persistence,T1098,Account Manipulation,9,Password Change on Directory Service Restore Mode (DSRM) Account,d5b886d9-d1c7-4b6e-a7b0-460041bf2823,command_prompt
 persistence,T1547.006,Boot or Logon Autostart Execution: Kernel Modules and Extensions,1,Linux - Load Kernel Module via insmod,687dcb93-9656-4853-9c36-9977315e9d23,bash
 persistence,T1547.006,Boot or Logon Autostart Execution: Kernel Modules and Extensions,2,MacOS - Load Kernel Module via kextload and kmutil,f4391089-d3a5-4dd1-ab22-0419527f2672,bash
@@ -1370,6 +1376,7 @@ discovery,T1124,System Time Discovery,1,System Time Discovery,20aba24b-e61f-4b26
 discovery,T1124,System Time Discovery,2,System Time Discovery - PowerShell,1d5711d6-655c-4a47-ae9c-6503c74fa877,powershell
 discovery,T1124,System Time Discovery,3,System Time Discovery in macOS,f449c933-0891-407f-821e-7916a21a1a6f,sh
 discovery,T1124,System Time Discovery,4,System Time Discovery W32tm as a Delay,d5d5a6b0-0f92-42d8-985d-47aafa2dd4db,command_prompt
+discovery,T1124,System Time Discovery,5,System Time with Windows time Command,53ead5db-7098-4111-bb3f-563be390e72e,command_prompt
 command-and-control,T1132.001,Data Encoding: Standard Encoding,1,Base64 Encoded data.,1164f70f-9a88-4dff-b9ff-dc70e7bf0c25,sh
 command-and-control,T1132.001,Data Encoding: Standard Encoding,2,XOR Encoded data.,c3ed6d2a-e3ad-400d-ad78-bbfdbfeacc08,powershell
 command-and-control,T1071.004,Application Layer Protocol: DNS,1,DNS Large Query Volume,1700f5d6-5a44-487b-84de-bc66f507b0a6,powershell
