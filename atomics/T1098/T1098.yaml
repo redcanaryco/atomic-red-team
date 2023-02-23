@@ -172,9 +172,9 @@ atomic_tests:
       $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
       Connect-AzureAD -Credential $Credential
 
-      $user = Get-AzureADUser | where-object {$_.DisplayName -eq "#{user_principal_name}"}
+      $user = Get-AzureADUser -Filter "DisplayName eq '#{user_principal_name}'"
       if ($user -eq $null) { Write-Warning "User not found"; exit }
-      $role = Get-AzureADDirectoryRole | where-object {$_.DisplayName -eq "#{role_name}"}
+      $role = Get-AzureADDirectoryRole -Filter "DisplayName eq '#{role_name}'"
       if ($role -eq $null) { Write-Warning "Role not found"; exit }
       Add-AzureADDirectoryRoleMember -ObjectId $role.ObjectId -RefObjectId $user.ObjectId
       Write-Host "User $($user.DisplayName) was added to $($role.DisplayName) role"
@@ -184,9 +184,9 @@ atomic_tests:
       $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
       Connect-AzureAD -Credential $Credential -ErrorAction Ignore
 
-      $user = Get-AzureADUser | where-object {$_.DisplayName -eq "#{user_principal_name}"}
+      $user = Get-AzureADUser -Filter "DisplayName eq '#{user_principal_name}'"
       if ($user -eq $null) { Write-Warning "User not found"; exit }
-      $role = Get-AzureADDirectoryRole | where-object {$_.DisplayName -eq "#{role_name}"}
+      $role = Get-AzureADDirectoryRole -Filter "DisplayName eq '#{role_name}'"
       if ($role -eq $null) { Write-Warning "Role not found"; exit }
 
       Remove-AzureADDirectoryRoleMember -ObjectId $role.ObjectId -MemberId $user.ObjectId
@@ -238,9 +238,9 @@ atomic_tests:
       $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
       Connect-AzureAD -Credential $Credential
 
-      $sp = Get-AzureADServicePrincipal | where-object {$_.DisplayName -eq "#{service_principal_name}"}
+      $sp = Get-AzureADServicePrincipal -Filter "DisplayName eq '#{service_principal_name}'"
       if ($sp -eq $null) { Write-Warning "Service Principal not found"; exit }
-      $role = Get-AzureADDirectoryRole | where-object {$_.DisplayName -eq "#{role_name}"}
+      $role = Get-AzureADDirectoryRole -Filter "DisplayName eq '#{role_name}'"
       if ($role -eq $null) { Write-Warning "Role not found"; exit }
       Add-AzureADDirectoryRoleMember -ObjectId $role.ObjectId -RefObjectId $sp.ObjectId
       Write-Host "Service Principal $($sp.DisplayName) was added to $($role.DisplayName)"
@@ -250,9 +250,9 @@ atomic_tests:
       $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
       Connect-AzureAD -Credential $Credential -ErrorAction Ignore
 
-      $sp = Get-AzureADServicePrincipal | where-object {$_.DisplayName -eq "#{service_principal_name}"}
+      $sp = Get-AzureADServicePrincipal -Filter "DisplayName eq '#{service_principal_name}'"
       if ($sp -eq $null) { Write-Warning "Service Principal not found"; exit }
-      $role = Get-AzureADDirectoryRole | where-object {$_.DisplayName -eq "#{role_name}"}
+      $role = Get-AzureADDirectoryRole -Filter "DisplayName eq '#{role_name}'"
       if ($role -eq $null) { Write-Warning "Role not found"; exit }
 
       Remove-AzureADDirectoryRoleMember -ObjectId $role.ObjectId -MemberId $sp.ObjectId
@@ -419,9 +419,9 @@ atomic_tests:
 - name: Azure AD - adding permission to application
   auto_generated_guid: 94ea9cc3-81f9-4111-8dde-3fb54f36af4b
   description: |
-    The adversaries want to add permission to new created application. Application could be then use for persistence or for further operation in the attacked infrastructure. Permissions like AppRoleAssignment.ReadWrite.All or RoleManagement.ReadWrite.Directory in particular can be a valuable target for a threat actor.
-    You can use Get-AzureADApplication instead of New-AzureADServicePrincipal to use an existing application.
-    The DirectoryRecommendations.Read.All permissions have been selected as the default
+    The adversaries want to add permission to newly created application. Application could be then used for persistence or for further operation in the attacked infrastructure. Permissions like AppRoleAssignment.ReadWrite.All or RoleManagement.ReadWrite.Directory in particular can be a valuable target for a threat actor.
+    This technique will create a new app, with the provided name, and give it the provided permission. But if you prefer to add credentials to an existing app, replace in the code: "Get-AzureADApplication" instead of "New-AzureADServicePrincipal".
+    The DirectoryRecommendations.Read.All permissions has been selected as the default.
 
     The account you use to run the PowerShell command should have Global Administrator/Application Administrator/Cloud Application Administrator role in your Azure AD.
 
@@ -443,11 +443,11 @@ atomic_tests:
       type: string
       default: p4sswd
     application_name:
-      description: Name of the targeted application
+      description: Name of the targeted application that will be created
       type: string
       default: test_app
     application_permission:
-      description: Permission from Microsoft Graph Resource API that will be add to application
+      description: Permission from Microsoft Graph Resource API that will be added to application
       type: string
       default: DirectoryRecommendations.Read.All
   dependencies:
@@ -466,10 +466,10 @@ atomic_tests:
 
       $aadApplication = New-AzureADApplication -DisplayName "#{application_name}"
       $servicePrincipal = New-AzureADServicePrincipal -AppId $aadApplication.AppId
-      #$aadApplication = Get-AzureADApplication | Where-Object {$_.DisplayName -eq "#{application_name}"}
+      #$aadApplication = Get-AzureADApplication -Filter "DisplayName eq '#{application_name}'"
 
       #Get Service Principal of Microsoft Graph Resource API 
-      $graphSP =  Get-AzureADServicePrincipal -All $true | Where-Object {$_.DisplayName -eq "Microsoft Graph"}
+      $graphSP = Get-AzureADServicePrincipal -Filter "DisplayName eq 'Microsoft Graph'"
 
       #Initialize RequiredResourceAccess for Microsoft Graph Resource API 
       $requiredGraphAccess = New-Object Microsoft.Open.AzureAD.Model.RequiredResourceAccess
@@ -500,7 +500,7 @@ atomic_tests:
       #Set permissions in existing Azure AD App
       Set-AzureADApplication -ObjectId $aadApplication.ObjectId -RequiredResourceAccess $requiredResourcesAccess
 
-      $servicePrincipal = Get-AzureADServicePrincipal -All $true | Where-Object {$_.AppId -eq $aadApplication.AppId}
+      $servicePrincipal = Get-AzureADServicePrincipal -Filter "AppId eq '$($aadApplication.AppId)'"
 
       New-AzureADServiceAppRoleAssignment -ObjectId $servicePrincipal.ObjectId -PrincipalId $servicePrincipal.ObjectId -ResourceId $graphSP.ObjectId -Id $reqPermission.Id
 
@@ -509,9 +509,23 @@ atomic_tests:
       $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
       $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
       Connect-AzureAD -Credential $Credential
-
-      $aadApplication = Get-AzureADApplication | Where-Object {$_.DisplayName -eq "#{application_name}"}
-      Remove-AzureADApplication -ObjectId $aadApplication.ObjectId
+      
+      $aadApplication = @(Get-AzureADApplication -Filter "DisplayName eq '#{application_name}'")
+      If ($aadApplication.Count -eq 0)
+      {
+        Write-Host "App not found: cannot delete it"
+        exit
+      }
+      ElseIf ($aadApplication.Count -gt 1)
+      {
+        Write-Host "Found several app with name '#{application_name}': one is likely the one this technique created, but as a precaution, none will be deleted. Manual cleanup is required."
+        exit
+      }
+      Else
+      {
+        Remove-AzureADApplication -ObjectId $aadApplication[0].ObjectId
+        Write-Host "Successfully deleted app"
+      }
 
     name: powershell
     elevation_required: false
