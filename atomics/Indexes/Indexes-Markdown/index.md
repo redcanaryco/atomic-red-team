@@ -1108,6 +1108,8 @@
   - Atomic Test #7: What shells are available [linux]
   - Atomic Test #8: Command line scripts [linux]
   - Atomic Test #9: Obfuscated command line scripts [linux]
+  - Atomic Test #10: Change login shell [linux]
+  - Atomic Test #11: Environment variable scripts [linux]
 - T1559 Inter-Process Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1204.003 Malicious Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1154 Trap [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
