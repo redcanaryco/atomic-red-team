@@ -569,8 +569,7 @@
   - Atomic Test #5: AWS - CloudTrail Logs Impairment Through S3 Lifecycle Rule using Stratus [linux, macos]
   - Atomic Test #6: AWS - Remove VPC Flow Logs using Stratus [linux, macos]
   - Atomic Test #7: AWS - CloudWatch Log Group Deletes [iaas:aws]
-  - Atomic Test #8: AWS - CloudWatch Log Stream Deletes [iaas:aws]
-  - Atomic Test #9: AWS CloudWatch Log Stream Deletes [iaas:aws]
+  - Atomic Test #8: AWS CloudWatch Log Stream Deletes [iaas:aws]
 - [T1564.003 Hide Artifacts: Hidden Window](../../T1564.003/T1564.003.md)
   - Atomic Test #1: Hidden Window [windows]
 - T1147 Hidden Users [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
