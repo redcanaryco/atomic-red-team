@@ -735,3 +735,31 @@ atomic_tests:
       reg delete "HKLM\System\CurrentControlSet\Control\Terminal Server" /v fSingleSessionPerUser /f >nul 2>&1
     name: command_prompt
     elevation_required: true
+- name: Event Viewer Registry Modification - Redirection URL
+  description: Modify event viewer registry values to alter the behavior of the online help redirection. Upon opening an event in event viewer and attempting to view the help page for the event, it will open the URL or execute the program defined in the redirection URL registry entry.
+  supported_platforms:
+  - windows
+  input_arguments:
+    redirection_url:
+      description: URL to open or file URI to execute upon opening the event help
+      type: url
+      default: file://C:\windows\system32\notepad.exe
+  executor:
+    command: reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Event Viewer" /v MicrosoftRedirectionURL /t REG_SZ /d "#{redirection_url}" /f
+    cleanup_command: reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Event Viewer" /v MicrosoftRedirectionURL /t REG_SZ /d "http://go.microsoft.com/fwlink/events.asp" /f
+    name: command_prompt
+    elevation_required: true
+- name: Event Viewer Registry Modification - Redirection Program
+  description: Modify event viewer registry values to alter the behavior of the online help redirection. Upon opening an event in event viewer and attempting to view the help page for the event, it will execute the program defined in thed redirection program registry entry.
+  supported_platforms:
+  - windows
+  input_arguments:
+    redirection_program:
+      description: Path of the program to execute upon opening the event help
+      type: path
+      default: C:\windows\system32\notepad.exe
+  executor:
+    command: reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Event Viewer" /v MicrosoftRedirectionProgram /t REG_EXPAND_SZ /d "#{redirection_program}" /f
+    cleanup_command: reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Event Viewer" /v MicrosoftRedirectionProgram /t REG_EXPAND_SZ /f
+    name: command_prompt
+    elevation_required: true
