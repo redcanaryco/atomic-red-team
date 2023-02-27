@@ -300,6 +300,8 @@
   - Atomic Test #44: Enabling Restricted Admin Mode via Command_Prompt [windows]
   - Atomic Test #45: Mimic Ransomware - Enable Multiple User Sessions [windows]
   - Atomic Test #46: Mimic Ransomware - Allow Multiple RDP Sessions per User [windows]
+  - Atomic Test #47: Event Viewer Registry Modification - Redirection URL [windows]
+  - Atomic Test #48: Event Viewer Registry Modification - Redirection Program [windows]
 - [T1574.008 Hijack Execution Flow: Path Interception by Search Order Hijacking](../../T1574.008/T1574.008.md)
   - Atomic Test #1: powerShell Persistence via hijacking default modules - Get-Variable.exe [windows]
 - T1535 Unused/Unsupported Cloud Regions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -479,6 +481,11 @@
   - Atomic Test #36: Disable Windows Defender with PwSh Disable-WindowsOptionalFeature [windows]
   - Atomic Test #37: WMIC Tamper with Windows Defender Evade Scanning Folder [windows]
   - Atomic Test #38: Delete Windows Defender Scheduled Tasks [windows]
+  - Atomic Test #39: Clear History [linux]
+  - Atomic Test #40: Suspend History [linux]
+  - Atomic Test #41: Reboot Linux Host via Kernel System Request [linux]
+  - Atomic Test #42: Clear Pagging Cache [linux]
+  - Atomic Test #43: Disable Memory Swap [linux]
 - T1601 Modify System Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -564,8 +571,7 @@
   - Atomic Test #5: AWS - CloudTrail Logs Impairment Through S3 Lifecycle Rule using Stratus [linux, macos]
   - Atomic Test #6: AWS - Remove VPC Flow Logs using Stratus [linux, macos]
   - Atomic Test #7: AWS - CloudWatch Log Group Deletes [iaas:aws]
-  - Atomic Test #8: AWS - CloudWatch Log Stream Deletes [iaas:aws]
-  - Atomic Test #9: AWS CloudWatch Log Stream Deletes [iaas:aws]
+  - Atomic Test #8: AWS CloudWatch Log Stream Deletes [iaas:aws]
 - [T1564.003 Hide Artifacts: Hidden Window](../../T1564.003/T1564.003.md)
   - Atomic Test #1: Hidden Window [windows]
 - T1147 Hidden Users [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
