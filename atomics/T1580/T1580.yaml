@@ -2,7 +2,6 @@ attack_technique: T1580
 display_name: 'Cloud Infrastructure Discovery'
 atomic_tests:
 - name: AWS - EC2 Enumeration from Cloud Instance
-  auto_generated_guid:
   description: |
     This atomic runs several API calls (sts:GetCallerIdentity, s3:ListBuckets, iam:GetAccountSummary, iam:ListRoles, iam:ListUsers, iam:GetAccountAuthorizationDetails, ec2:DescribeSnapshots, cloudtrail:DescribeTrails, guardduty:ListDetectors) from the context of an EC2 instance role. This simulates an attacker compromising an EC2 instance and running initial discovery commands on it. This atomic test leverages a tool called stratus-red-team built by DataDog (https://github.com/DataDog/stratus-red-team). Stratus Red Team is a self-contained binary. You can use it to easily detonate offensive attack techniques against a live cloud environment. Ref: https://stratus-red-team.cloud/attack-techniques/AWS/aws.discovery.ec2-enumerate-from-instance/
   supported_platforms:
@@ -12,7 +11,7 @@ atomic_tests:
     stratus_path:
       description: Path of stratus binary
       type: path
-      default: /home/clouddev/AtomicRedTeam/atomics/T1580/bin
+      default: $PathToAtomicsFolder/T1580/src
     aws_region:
       description: AWS region to detonate
       type: string
