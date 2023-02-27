@@ -2375,6 +2375,7 @@
   - Atomic Test #3: Encrypt files using ccrypt (Linux) [linux]
   - Atomic Test #4: Encrypt files using openssl (Linux) [linux]
   - Atomic Test #5: PureLocker Ransom Note [windows]
+  - Atomic Test #6: Data Encrypted with GPG4Win [windows]
 - T1488 Disk Content Wipe [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1499 Endpoint Denial of Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1494 Runtime Data Manipulation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
