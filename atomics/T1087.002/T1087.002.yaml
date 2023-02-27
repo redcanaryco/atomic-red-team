@@ -310,7 +310,8 @@ atomic_tests:
       .\kerbrute.exe userenum -d #{Domain} --dc #{DomainController} $env:TEMP\username.txt
     name: powershell
 - name: Wevtutil - Discover NTLM Users Remote 
-  description: This test discovers users who have authenticated against a Domain Controller via NTLM. This is done remotely via wmic and captures the event code 4776 from the domain controller and stores the ouput in C:\temp.
+  description: This test discovers users who have authenticated against a Domain Controller via NTLM. 
+  This is done remotely via wmic and captures the event code 4776 from the domain controller and stores the ouput in C:\temp. [Reference](https://www.reliaquest.com/blog/socgholish-fakeupdates/)
   supported_platforms:
   - windows
   input_arguments:
