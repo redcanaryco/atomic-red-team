@@ -1,6 +1,7 @@
 # Containers Atomic Tests by ATT&CK Tactic & Technique
 # discovery
-- T1613 Container and Resource Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1613 Container and Resource Discovery](../../T1613/T1613.md)
+  - Atomic Test #1: Container and ResourceDiscovery [containers]
 - T1069 Permission Groups Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1046 Network Service Scanning [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 
@@ -13,7 +14,8 @@
 - T1110 Brute Force [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1110.004 Brute Force: Credential Stuffing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1552.007 Kubernetes List Secrets](../../T1552.007/T1552.007.md)
-  - Atomic Test #1: ListSecrets [containers]
+  - Atomic Test #1: List All Secrets [containers]
+  - Atomic Test #2: ListSecrets [containers]
 
 # persistence
 - T1133 External Remote Services [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

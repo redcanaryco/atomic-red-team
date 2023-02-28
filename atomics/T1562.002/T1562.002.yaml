@@ -13,7 +13,7 @@ atomic_tests:
   input_arguments:
     website_name:
       description: The name of the website on a server
-      type: String
+      type: string
       default: Default Web Site
   executor:
     command: |
@@ -35,7 +35,7 @@ atomic_tests:
   input_arguments:
     website_name:
       description: The name of the website on a server
-      type: String
+      type: string
       default: Default Web Site
   executor:
     command: |
@@ -70,10 +70,10 @@ atomic_tests:
   description: >-
     Disables the windows audit policy to prevent key host based telemetry being
     written into the event logs.
-    
+
     [Solarigate example](https://www.microsoft.com/security/blog/2021/01/20/deep-dive-into-the-solorigate-second-stage-activation-from-sunburst-to-teardrop-and-raindrop/)
   supported_platforms:
-    - windows
+  - windows
   executor:
     command: |
       auditpol /set /category:"Account Logon" /success:disable /failure:disable
@@ -90,7 +90,7 @@ atomic_tests:
   description: >-
     Clear the Windows audit policy using auditpol utility. This action would stop certain audit events from being recorded in the security log.
   supported_platforms:
-    - windows
+  - windows
   executor:
     command: |
       auditpol /clear /y
@@ -111,7 +111,7 @@ atomic_tests:
   input_arguments:
     log_name:
       description: Name of the log to be disabled
-      type: String
+      type: string
       default: Microsoft-Windows-IKE/Operational
   executor:
     command: |
@@ -128,7 +128,7 @@ atomic_tests:
   input_arguments:
     file_name:
       description: exe version of Phant0m
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1562.002\bin\Phant0m.exe
   dependency_executor_name: powershell
   dependencies:

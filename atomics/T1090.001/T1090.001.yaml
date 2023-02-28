@@ -13,11 +13,11 @@ atomic_tests:
   input_arguments:
     proxy_server:
       description: Proxy server URL (host:port)
-      type: Url
+      type: url
       default: 127.0.0.1:8080
     proxy_scheme:
       description: Protocol to proxy (http or https)
-      type: String
+      type: string
       default: http
   executor:
     command: |
@@ -31,22 +31,22 @@ atomic_tests:
   description: |
     Enable traffic redirection on macOS UI (not terminal).
     The test will modify and enable the "Web Proxy" and "Secure Web Proxy" settings  in System Preferences => Network => Advanced => Proxies for the specified network interface.
-    
+
     Note that this test may conflict with pre-existing system configuration.
   supported_platforms:
-    - macos
+  - macos
   input_arguments:
     proxy_server:
       description: Proxy server URL (host)
-      type: Url
+      type: url
       default: 127.0.0.1
     proxy_port:
       description: Proxy server port
-      type: Integer
+      type: integer
       default: 8080
     interface:
       description: Protocol to proxy (http or https)
-      type: String
+      type: string
       default: Wi-Fi
   executor:
     name: sh
@@ -67,15 +67,15 @@ atomic_tests:
   input_arguments:
     connectaddress:
       description: Specifies the IPv4 address to which to connect. Acceptable values are IP address, computer NetBIOS name, or computer DNS name. If an address is not specified, the default is the local computer.
-      type: String
+      type: string
       default: 127.0.0.1
     connectport:
       description: Specifies the IPv4 port, by port number or service name, to which to connect. If connectport is not specified, the default is the value of listenport on the local computer.
-      type: String
+      type: string
       default: "1337"
     listenport:
       description: Specifies the IPv4 port, by port number or service name, on which to listen.
-      type: String
+      type: string
       default: "1337"
   executor:
     command: netsh interface portproxy add v4tov4 listenport=#{listenport} connectport=#{connectport} connectaddress=#{connectaddress}

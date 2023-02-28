@@ -11,15 +11,15 @@ atomic_tests:
   input_arguments:
     output_file:
       description: Path where captured results will be placed
-      type: Path
+      type: path
       default: ~/loot.txt
     bash_history_grep_args:
       description: grep arguments that filter out specific commands we want to capture
-      type: Path
+      type: path
       default: -e '-p ' -e 'pass' -e 'ssh'
     bash_history_filename:
       description: Path of the bash history file to capture
-      type: Path
+      type: path
       default: ~/.bash_history
   executor:
     command: |

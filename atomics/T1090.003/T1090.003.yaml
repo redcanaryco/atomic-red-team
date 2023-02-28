@@ -11,29 +11,29 @@ atomic_tests:
     http://s3.amazonaws.com/0ubz-2q11-gi9y/en.html
     https://psiphon.ca/faq.html
   supported_platforms:
-    - windows
-  dependency_executor_name: powershell 
+  - windows
+  dependency_executor_name: powershell
   dependencies:
-    - description: |
-        The proxy settings backup file must exist on disk at $env:Temp\proxy-backup.txt
-      prereq_command: | 
-        if (Test-Path $env:Temp\proxy-backup.txt) {exit 0} else {exit 1}
-      get_prereq_command: |
-        if(-not (test-path $env:Temp\proxy-backup.txt)){
-        $Proxy = (Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Name "ProxyServer" -ErrorAction Ignore).ProxyServer
-        Set-Content $env:Temp\proxy-backup.txt $Proxy}
-    - description: |
-        The Psiphon executable must exist in the Downloads folder
-      prereq_command: | 
-        if (Test-Path $env:UserProfile\Downloads\psiphon3.exe) {exit 0} else {exit 1}
-      get_prereq_command: |
-        Invoke-WebRequest -OutFile "$env:UserProfile\Downloads\psiphon3.exe" "https://s3.amazonaws.com/0ubz-2q11-gi9y/psiphon3.exe"
-    - description: |
-        Batch file containing commands to run must be in src directory 
-      prereq_command: | 
-        if (Test-Path PathToAtomicsFolder\T1090.003\src\Psiphon.bat) {exit 0} else {exit 1}
-      get_prereq_command: |
-        Invoke-WebRequest -OutFile "PathToAtomicsFolder\T1090.003\src\Psiphon.bat" "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1090.003/src/Psiphon.bat"
+  - description: |
+      The proxy settings backup file must exist on disk at $env:Temp\proxy-backup.txt
+    prereq_command: |
+      if (Test-Path $env:Temp\proxy-backup.txt) {exit 0} else {exit 1}
+    get_prereq_command: |
+      if(-not (test-path $env:Temp\proxy-backup.txt)){
+      $Proxy = (Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Name "ProxyServer" -ErrorAction Ignore).ProxyServer
+      Set-Content $env:Temp\proxy-backup.txt $Proxy}
+  - description: |
+      The Psiphon executable must exist in the Downloads folder
+    prereq_command: |
+      if (Test-Path $env:UserProfile\Downloads\psiphon3.exe) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest -OutFile "$env:UserProfile\Downloads\psiphon3.exe" "https://s3.amazonaws.com/0ubz-2q11-gi9y/psiphon3.exe"
+  - description: |
+      Batch file containing commands to run must be in src directory 
+    prereq_command: |
+      if (Test-Path PathToAtomicsFolder\T1090.003\src\Psiphon.bat) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest -OutFile "PathToAtomicsFolder\T1090.003\src\Psiphon.bat" "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1090.003/src/Psiphon.bat"
   executor:
     name: powershell
     command: |
@@ -52,8 +52,8 @@ atomic_tests:
   - windows
   input_arguments:
     TorExe:
-      description: Location of tor.exe file.  
-      type: String
+      description: Location of tor.exe file.
+      type: string
       default: $env:temp\tor\Tor\tor.exe
   dependency_executor_name: powershell
   dependencies:
@@ -66,9 +66,9 @@ atomic_tests:
       expand-archive -LiteralPath "$env:temp\tor.zip" -DestinationPath "$env:temp\tor"
   executor:
     command: |
-     invoke-expression 'cmd /c start powershell -Command {cmd /c #{TorExe}}'
-     sleep -s 60
-     stop-process -name "tor" | out-null
+      invoke-expression 'cmd /c start powershell -Command {cmd /c #{TorExe}}'
+      sleep -s 60
+      stop-process -name "tor" | out-null
     name: powershell
     elevation_required: false
 - name: Tor Proxy Usage - Debian/Ubuntu
@@ -81,16 +81,16 @@ atomic_tests:
   dependency_executor_name: sh
   dependencies:
   - description: |
-     Tor must be installed on the machine 
+      Tor must be installed on the machine 
     prereq_command: |
-     if [ -x "$(command -v tor --version)" ]; then exit 0; else exit 1; fi
+      if [ -x "$(command -v tor --version)" ]; then exit 0; else exit 1; fi
     get_prereq_command: |
-     sudo apt-get -y install tor
+      sudo apt-get -y install tor
   executor:
     command: |
-     sudo systemctl start tor 
+      sudo systemctl start tor 
     cleanup_command: |
-     sudo systemctl stop tor
+      sudo systemctl stop tor
     name: sh
 - name: Tor Proxy Usage - MacOS
   auto_generated_guid: 12631354-fdbc-4164-92be-402527e748da
@@ -102,15 +102,15 @@ atomic_tests:
   dependency_executor_name: sh
   dependencies:
   - description: |
-     Tor must be installed on the machine 
+      Tor must be installed on the machine 
     prereq_command: |
-     if [ -x "$(command -v tor --version)" ]; then exit 0; else exit 1; fi
+      if [ -x "$(command -v tor --version)" ]; then exit 0; else exit 1; fi
     get_prereq_command: |
       if [ ! -x "$(command -v brew --version)" ]; then /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh keystroke return)"; fi
       brew install tor
   executor:
     command: |
-     osascript -e 'tell application "Terminal" to do script "tor"'
+      osascript -e 'tell application "Terminal" to do script "tor"'
     cleanup_command: |
-     killall tor > /dev/null 2>&1
-    name: sh        
+      killall tor > /dev/null 2>&1
+    name: sh

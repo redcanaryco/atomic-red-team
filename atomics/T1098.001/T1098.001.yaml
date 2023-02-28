@@ -12,23 +12,23 @@ atomic_tests:
   input_arguments:
     username:
       description: Azure AD username
-      type: String
+      type: string
       default: jonh@contoso.com
     password:
       description: Azure AD password
-      type: String
+      type: string
       default: p4sswd
     service_principal_name:
       description: Name of the targeted service principal
-      type: String
+      type: string
       default: SuperSP
     certificate_password:
       description: Password of the new certificate
-      type: String
+      type: string
       default: Passw0rd
     path_to_cert:
-      description: Path of the new certificate, locally stored 
-      type: String
+      description: Path of the new certificate, locally stored
+      type: string
       default: $env:TEMP
   dependency_executor_name: powershell
   dependencies:
@@ -83,7 +83,7 @@ atomic_tests:
       }
       Get-ChildItem -Path Cert:\CurrentUser\My | where { $_.FriendlyName -eq "AtomicCert" } | Remove-Item
       rm "#{path_to_cert}\#{service_principal_name}.pfx" -ErrorAction Ignore
-      
+
     name: powershell
     elevation_required: false
 - name: Azure AD Application Hijacking - App Registration
@@ -97,23 +97,23 @@ atomic_tests:
   input_arguments:
     username:
       description: Azure AD username
-      type: String
+      type: string
       default: jonh@contoso.com
     password:
       description: Azure AD password
-      type: String
+      type: string
       default: p4sswd
     application_name:
-      description: Name of the targeted application 
-      type: String
+      description: Name of the targeted application
+      type: string
       default: SuperApp
     certificate_password:
       description: Password of the new certificate
-      type: String
+      type: string
       default: Passw0rd
     path_to_cert:
-      description: Path of the new certificate, locally stored 
-      type: String
+      description: Path of the new certificate, locally stored
+      type: string
       default: $env:TEMP
   dependency_executor_name: powershell
   dependencies:
@@ -178,15 +178,15 @@ atomic_tests:
   input_arguments:
     username:
       description: Create new AWS access and secret keys for the user
-      type: String
+      type: string
       default: "atomicredteam"
   dependencies:
-    - description: |
-        Check if the user exists.
-      prereq_command: |
-        aws iam list-users | grep #{username}
-      get_prereq_command: |
-        echo Please run atomic test T1136.003, before running this atomic
+  - description: |
+      Check if the user exists.
+    prereq_command: |
+      aws iam list-users | grep #{username}
+    get_prereq_command: |
+      echo Please run atomic test T1136.003, before running this atomic
   executor:
     command: |
       aws iam create-access-key --user-name #{username} > $PathToAtomicsFolder/T1098.001/bin/aws_secret.creds
