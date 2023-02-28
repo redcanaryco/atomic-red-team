@@ -300,6 +300,8 @@
   - Atomic Test #44: Enabling Restricted Admin Mode via Command_Prompt [windows]
   - Atomic Test #45: Mimic Ransomware - Enable Multiple User Sessions [windows]
   - Atomic Test #46: Mimic Ransomware - Allow Multiple RDP Sessions per User [windows]
+  - Atomic Test #47: Event Viewer Registry Modification - Redirection URL [windows]
+  - Atomic Test #48: Event Viewer Registry Modification - Redirection Program [windows]
 - [T1574.008 Hijack Execution Flow: Path Interception by Search Order Hijacking](../../T1574.008/T1574.008.md)
   - Atomic Test #1: powerShell Persistence via hijacking default modules - Get-Variable.exe [windows]
 - T1535 Unused/Unsupported Cloud Regions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -479,6 +481,11 @@
   - Atomic Test #36: Disable Windows Defender with PwSh Disable-WindowsOptionalFeature [windows]
   - Atomic Test #37: WMIC Tamper with Windows Defender Evade Scanning Folder [windows]
   - Atomic Test #38: Delete Windows Defender Scheduled Tasks [windows]
+  - Atomic Test #39: Clear History [linux]
+  - Atomic Test #40: Suspend History [linux]
+  - Atomic Test #41: Reboot Linux Host via Kernel System Request [linux]
+  - Atomic Test #42: Clear Pagging Cache [linux]
+  - Atomic Test #43: Disable Memory Swap [linux]
 - T1601 Modify System Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -564,8 +571,7 @@
   - Atomic Test #5: AWS - CloudTrail Logs Impairment Through S3 Lifecycle Rule using Stratus [linux, macos]
   - Atomic Test #6: AWS - Remove VPC Flow Logs using Stratus [linux, macos]
   - Atomic Test #7: AWS - CloudWatch Log Group Deletes [iaas:aws]
-  - Atomic Test #8: AWS - CloudWatch Log Stream Deletes [iaas:aws]
-  - Atomic Test #9: AWS CloudWatch Log Stream Deletes [iaas:aws]
+  - Atomic Test #8: AWS CloudWatch Log Stream Deletes [iaas:aws]
 - [T1564.003 Hide Artifacts: Hidden Window](../../T1564.003/T1564.003.md)
   - Atomic Test #1: Hidden Window [windows]
 - T1147 Hidden Users [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1108,6 +1114,8 @@
   - Atomic Test #7: What shells are available [linux]
   - Atomic Test #8: Command line scripts [linux]
   - Atomic Test #9: Obfuscated command line scripts [linux]
+  - Atomic Test #10: Change login shell [linux]
+  - Atomic Test #11: Environment variable scripts [linux]
 - T1559 Inter-Process Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1204.003 Malicious Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1154 Trap [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1907,6 +1915,7 @@
   - Atomic Test #14: Enumerate Root Domain linked policies Discovery [windows]
   - Atomic Test #15: WinPwn - generaldomaininfo [windows]
   - Atomic Test #16: Kerbrute - userenum [windows]
+  - Atomic Test #17: Wevtutil - Discover NTLM Users Remote [windows]
 - T1063 Security Software Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1087.001 Account Discovery: Local Account](../../T1087.001/T1087.001.md)
   - Atomic Test #1: Enumerate all accounts (Local) [linux]
@@ -2367,6 +2376,7 @@
   - Atomic Test #3: Encrypt files using ccrypt (Linux) [linux]
   - Atomic Test #4: Encrypt files using openssl (Linux) [linux]
   - Atomic Test #5: PureLocker Ransom Note [windows]
+  - Atomic Test #6: Data Encrypted with GPG4Win [windows]
 - T1488 Disk Content Wipe [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1499 Endpoint Denial of Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1494 Runtime Data Manipulation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

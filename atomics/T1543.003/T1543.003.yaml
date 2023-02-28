@@ -19,7 +19,6 @@ atomic_tests:
       sc start Fax
     cleanup_command:
       sc config Fax binPath= "C:\WINDOWS\system32\fxssvc.exe" >nul 2>&1
-
 - name: Service Installation CMD
   auto_generated_guid: 981e2942-e433-44e9-afc1-8c957a1496b6
   description: |
@@ -32,6 +31,14 @@ atomic_tests:
       description: Name of the service binary, include path.
       type: path
       default: PathToAtomicsFolder\T1543.003\bin\AtomicService.exe
+    service_type:
+      description: Type of service. May be own|share|interact|kernel|filesys|rec|userown|usershare
+      type: String
+      default: Own
+    startup_type:
+      description: Service start method. May be boot|system|auto|demand|disabled|delayed-auto
+      type: String
+      default: auto
     service_name:
       description: Name of the Service
       type: string
@@ -50,7 +57,7 @@ atomic_tests:
     name: command_prompt
     elevation_required: true
     command: |
-      sc.exe create #{service_name} binPath= #{binary_path}
+      sc.exe create #{service_name} binPath= #{binary_path} start=#{startup_type}  type=#{service_type}
       sc.exe start #{service_name}
     cleanup_command: |
       sc.exe stop #{service_name} >nul 2>&1

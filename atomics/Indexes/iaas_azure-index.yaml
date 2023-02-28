@@ -11695,15 +11695,44 @@ defense-evasion:
         get_prereq_command: 'Install-Module -Name AzureAD -Force
 
           '
+      - description: 'Check if terraform is installed.
+
+          '
+        prereq_command: 'terraform version
+
+          '
+        get_prereq_command: 'echo Please install the terraform.
+
+          '
+      - description: 'Check if the user is logged into Azure.
+
+          '
+        prereq_command: 'az account show
+
+          '
+        get_prereq_command: "echo Configure your Azure account using: az login. \n"
+      - description: 'Create dependency resources using terraform
+
+          '
+        prereq_command: 'try {if (Test-Path $PathToAtomicsFolder/T1562.008/src/T1562.008-2/terraform.tfstate
+          ){ exit 0 } else {exit 1}} catch {exit 1}
+
+          '
+        get_prereq_command: |
+          cd $PathToAtomicsFolder/T1562.008/src/T1562.008-2/
+          terraform init
+          terraform apply -auto-approve
       executor:
         command: |
           $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
           $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
           Connect-AzureAD -Credential $creds
-          New-AzEventHub -ResourceGroupName #{resource_group} -NamespaceName #{name_space_name} -Name #{event_hub_name}
           Remove-AzEventHub -ResourceGroupName #{resource_group} -Namespace #{name_space_name} -Name #{event_hub_name}
         name: powershell
         elevation_required: false
+        cleanup_command: |
+          cd $PathToAtomicsFolder/T1562.008/src/T1562.008-2/
+          terraform destroy -auto-approve
   T1564.003:
     technique:
       x_mitre_platforms:

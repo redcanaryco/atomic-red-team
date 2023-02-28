@@ -228,6 +228,8 @@
   - Atomic Test #44: Enabling Restricted Admin Mode via Command_Prompt [windows]
   - Atomic Test #45: Mimic Ransomware - Enable Multiple User Sessions [windows]
   - Atomic Test #46: Mimic Ransomware - Allow Multiple RDP Sessions per User [windows]
+  - Atomic Test #47: Event Viewer Registry Modification - Redirection URL [windows]
+  - Atomic Test #48: Event Viewer Registry Modification - Redirection Program [windows]
 - [T1574.008 Hijack Execution Flow: Path Interception by Search Order Hijacking](../../T1574.008/T1574.008.md)
   - Atomic Test #1: powerShell Persistence via hijacking default modules - Get-Variable.exe [windows]
 - T1027.001 Obfuscated Files or Information: Binary Padding [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1387,6 +1389,7 @@
   - Atomic Test #14: Enumerate Root Domain linked policies Discovery [windows]
   - Atomic Test #15: WinPwn - generaldomaininfo [windows]
   - Atomic Test #16: Kerbrute - userenum [windows]
+  - Atomic Test #17: Wevtutil - Discover NTLM Users Remote [windows]
 - T1063 Security Software Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1087.001 Account Discovery: Local Account](../../T1087.001/T1087.001.md)
   - Atomic Test #8: Enumerate all accounts on Windows (Local) [windows]
@@ -1675,6 +1678,7 @@
   - Atomic Test #3: Remove Account From Domain Admin Group [windows]
 - [T1486 Data Encrypted for Impact](../../T1486/T1486.md)
   - Atomic Test #5: PureLocker Ransom Note [windows]
+  - Atomic Test #6: Data Encrypted with GPG4Win [windows]
 - T1488 Disk Content Wipe [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1499 Endpoint Denial of Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1494 Runtime Data Manipulation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
