@@ -26,3 +26,38 @@ atomic_tests:
       aws iam delete-user --user-name #{username}
     name: sh
     elevation_required: false
+- name: Azure - Create a new user
+  auto_generated_guid: # This key and/or it's value will be added by the CI build after submitting a Pull Request
+  description: |
+    Creates a new user in Azure. Upon successful creation, a new user will be created. Adversaries create new users so that their malicious activity does not interupt the normal functions of the compromised users and can remain undetected for a long time
+  supported_platforms:
+  - iaas:azure
+  - azure-ad
+  input_arguments:
+    username:
+      description: Username displayed for the user to create in Azure
+      type: string
+      default: "atomicredteam"
+    password:
+      description: Password for the new Azure user being created
+      type: string
+      default: "atomicredteam12345ART-"
+    id:
+      description: User principal name (UPN) for the new Azure user being created format email address
+      type: string
+      default: "atomicredteam@yourdomain.com"
+  dependencies:
+  - description: |
+      Check if az PowerShell module is installed and it is connected to the target Azure tenant using Connect-AzAccount
+    prereq_command: |
+      Get-InstalledModule -Name az
+      Connect-AzAccount
+    get_prereq_command: |
+      echo Please install the az PowerShell module using the following command: Install-Module -Name Az -Scope CurrentUser -Repository PSGallery -Force. Then connect to your Azure tenant using: Connect-AzAccount
+  executor:
+    command: |
+      az ad user create --display-name #{username} --password #{password} --user-principal-name #{id}
+    cleanup_command: |
+      az ad user delete --id #{id}
+    name: powershell
+    elevation_required: false   
