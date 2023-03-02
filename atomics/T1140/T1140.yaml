@@ -171,3 +171,47 @@ atomic_tests:
       echo $ENCODED > #{encoded_file} && xxd -r -p < #{encoded_file}
       echo $ENCODED > #{encoded_file} && cat #{encoded_file} | xxd -r -p
       echo $ENCODED > #{encoded_file} && cat < #{encoded_file} | xxd -r -p
+- name: Linux Base64 Encoded Shebang in CLI
+  auto_generated_guid: 3a15c372-67c1-4430-ac8e-ec06d641ce4d
+  description: |
+    Using Linux Base64 Encoded shell scripts that have Shebang in them. This is commonly how attackers obfuscate passing and executing a shell script. 
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
+    bash_encoded:
+      description: Encoded #!/bin/bash script
+      type: string
+      default: IyEvYmluL2Jhc2gKZWNobyAiaHR0cHM6Ly93d3cueW91dHViZS5jb20vQGF0b21pY3NvbmFmcmlkYXkgRlRXIgo=
+    dash_encoded:
+      description: Encoded #!/bin/dash script
+      type: string
+      default: IyEvYmluL2Rhc2gKZWNobyAiaHR0cHM6Ly93d3cueW91dHViZS5jb20vQGF0b21pY3NvbmFmcmlkYXkgRlRXIgo=
+    zsh_encoded:
+      description: Encoded #!/bin/zsh script
+      type: string
+      default: IyEvYmluL3pzaAplY2hvICJodHRwczovL3d3dy55b3V0dWJlLmNvbS9AYXRvbWljc29uYWZyaWRheSBGVFciCg==
+    fish_encoded:
+      description: Encoded #!/bin/fish script
+      type: string
+      default: IyEvYmluL2Rhc2gKZWNobyAiaHR0cHM6Ly93d3cueW91dHViZS5jb20vQGF0b21pY3NvbmFmcmlkYXkgRlRXIgo=
+    sh_encoded:
+      description: Encoded #!/bin/sh script
+      type: string
+      default: IyEvYmluL3NoCmVjaG8gImh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL0BhdG9taWNzb25hZnJpZGF5IEZUVyIK
+  dependencies:
+  - description: |
+      base64 must be present
+    prereq_command: |
+      which base64
+    get_prereq_command: |
+      echo "please install base64"
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      echo #{bash_encoded} | base64 -d | bash
+      echo #{dash_encoded} | base64 -d | bash
+      echo #{fish_encoded} | base64 -d | bash
+      echo #{sh_encoded} | base64 -d | bash
+      

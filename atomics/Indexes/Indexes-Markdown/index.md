@@ -171,6 +171,7 @@
   - Atomic Test #4: Base64 decoding with Perl [linux, macos]
   - Atomic Test #5: Base64 decoding with shell utilities [linux, macos]
   - Atomic Test #6: Hex decoding with shell utilities [linux, macos]
+  - Atomic Test #7: Linux Base64 Encoded Shebang in CLI [linux, macos]
 - [T1562 Impair Defenses](../../T1562/T1562.md)
   - Atomic Test #1: Windows Disable LSA Protection [windows]
 - [T1055.003 Thread Execution Hijacking](../../T1055.003/T1055.003.md)
@@ -2006,7 +2007,8 @@
   - Atomic Test #1: List Process Main Windows - C# .NET [windows]
 - T1087.003 Email Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1497.003 Time Based Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1580 Cloud Infrastructure Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1580 Cloud Infrastructure Discovery](../../T1580/T1580.md)
+  - Atomic Test #1: AWS - EC2 Enumeration from Cloud Instance [linux, macos]
 - [T1217 Browser Bookmark Discovery](../../T1217/T1217.md)
   - Atomic Test #1: List Mozilla Firefox Bookmark Database Files on Linux [linux]
   - Atomic Test #2: List Mozilla Firefox Bookmark Database Files on macOS [macos]
