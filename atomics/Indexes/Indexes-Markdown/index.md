@@ -1371,6 +1371,7 @@
   - Atomic Test #16: secedit used to create a Run key in the HKLM Hive [windows]
 - [T1136.003 Create Account: Cloud Account](../../T1136.003/T1136.003.md)
   - Atomic Test #1: AWS - Create a new IAM user [iaas:aws]
+  - Atomic Test #2: Azure AD - Create a new use [azure-ad]
 - [T1098 Account Manipulation](../../T1098/T1098.md)
   - Atomic Test #1: Admin Account Manipulate [windows]
   - Atomic Test #2: Domain Account and Group Manipulate [windows]
