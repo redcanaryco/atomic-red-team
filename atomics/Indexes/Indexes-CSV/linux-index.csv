@@ -37,6 +37,7 @@ defense-evasion,T1140,Deobfuscate/Decode Files or Information,3,Base64 decoding 
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,4,Base64 decoding with Perl,6604d964-b9f6-4d4b-8ce8-499829a14d0a,sh
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,5,Base64 decoding with shell utilities,b4f6a567-a27a-41e5-b8ef-ac4b4008bb7e,sh
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,6,Hex decoding with shell utilities,005943f9-8dd5-4349-8b46-0313c0a9f973,sh
+defense-evasion,T1140,Deobfuscate/Decode Files or Information,7,Linux Base64 Encoded Shebang in CLI,3a15c372-67c1-4430-ac8e-ec06d641ce4d,sh
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,1,Set a file's access timestamp,5f9113d5-ed75-47ed-ba23-ea3573d05810,sh
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,2,Set a file's modification timestamp,20ef1523-8758-4898-b5a2-d026cc3d2c52,sh
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,3,Set a file's creation timestamp,8164a4a6-f99c-4661-ac4f-80f5e4e78d2b,sh
@@ -58,6 +59,8 @@ defense-evasion,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,2
 defense-evasion,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,3,Set a SetGID flag on file,db55f666-7cba-46c6-9fe6-205a05c3242c,sh
 defense-evasion,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,4,Make and modify capabilities of a binary,db53959c-207d-4000-9e7a-cd8eb417e072,sh
 defense-evasion,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,5,Provide the SetUID capability to a file,1ac3272f-9bcf-443a-9888-4b1d3de785c1,sh
+defense-evasion,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,6,Do reconnaissance for files that have the setuid bit set,8e36da01-cd29-45fd-be72-8a0fcaad4481,sh
+defense-evasion,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,7,Do reconnaissance for files that have the setgid bit set,3fb46e17-f337-4c14-9f9a-a471946533e2,sh
 defense-evasion,T1562.006,Impair Defenses: Indicator Blocking,1,Auditing Configuration Changes on Linux Host,212cfbcf-4770-4980-bc21-303e37abd0e3,bash
 defense-evasion,T1562.006,Impair Defenses: Indicator Blocking,2,Logging Configuration Changes on Linux Host,7d40bc58-94c7-4fbb-88d9-ebce9fcdb60c,bash
 defense-evasion,T1562.003,Impair Defenses: HISTCONTROL,1,Disable history collection,4eafdb45-0f79-4d66-aa86-a3e2c08791f5,sh
@@ -66,6 +69,11 @@ defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,1,Disable sys
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,2,Disable Cb Response,ae8943f7-0f8d-44de-962d-fbc2e2f03eb8,sh
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,3,Disable SELinux,fc225f36-9279-4c39-b3f9-5141ab74f8d8,sh
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,4,Stop Crowdstrike Falcon on Linux,828a1278-81cc-4802-96ab-188bf29ca77d,sh
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,39,Clear History,23b88394-091b-4968-a42d-fb8076992443,sh
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,40,Suspend History,94f6a1c9-aae7-46a4-9083-2bb1f5768ec4,sh
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,41,Reboot Linux Host via Kernel System Request,6d6d3154-1a52-4d1a-9d51-92ab8148b32e,sh
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,42,Clear Pagging Cache,f790927b-ea85-4a16-b7b2-7eb44176a510,sh
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,43,Disable Memory Swap,e74e4c63-6fde-4ad2-9ee8-21c3a1733114,sh
 defense-evasion,T1027,Obfuscated Files or Information,1,Decode base64 Data into Script,f45df6be-2e1e-4136-a384-8f18ab3826fb,sh
 defense-evasion,T1036.003,Masquerading: Rename System Utilities,2,Masquerading as Linux crond process.,a315bfff-7a98-403b-b442-2ea1b255e556,sh
 defense-evasion,T1553.004,Subvert Trust Controls: Install Root Certificate,1,Install root CA on CentOS/RHEL,9c096ec4-fd42-419d-a762-d64cc950627e,sh
@@ -142,6 +150,8 @@ privilege-escalation,T1548.001,Abuse Elevation Control Mechanism: Setuid and Set
 privilege-escalation,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,3,Set a SetGID flag on file,db55f666-7cba-46c6-9fe6-205a05c3242c,sh
 privilege-escalation,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,4,Make and modify capabilities of a binary,db53959c-207d-4000-9e7a-cd8eb417e072,sh
 privilege-escalation,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,5,Provide the SetUID capability to a file,1ac3272f-9bcf-443a-9888-4b1d3de785c1,sh
+privilege-escalation,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,6,Do reconnaissance for files that have the setuid bit set,8e36da01-cd29-45fd-be72-8a0fcaad4481,sh
+privilege-escalation,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,7,Do reconnaissance for files that have the setgid bit set,3fb46e17-f337-4c14-9f9a-a471946533e2,sh
 privilege-escalation,T1547.006,Boot or Logon Autostart Execution: Kernel Modules and Extensions,1,Linux - Load Kernel Module via insmod,687dcb93-9656-4853-9c36-9977315e9d23,bash
 privilege-escalation,T1053.006,Scheduled Task/Job: Systemd Timers,1,Create Systemd Service and Timer,f4983098-bb13-44fb-9b2c-46149961807b,bash
 privilege-escalation,T1053.006,Scheduled Task/Job: Systemd Timers,2,Create a user level transient systemd service and timer,3de33f5b-62e5-4e63-a2a0-6fd8808c80ec,sh
@@ -219,6 +229,10 @@ discovery,T1201,Password Policy Discovery,1,Examine password complexity policy -
 discovery,T1201,Password Policy Discovery,2,Examine password complexity policy - CentOS/RHEL 7.x,78a12e65-efff-4617-bc01-88f17d71315d,bash
 discovery,T1201,Password Policy Discovery,3,Examine password complexity policy - CentOS/RHEL 6.x,6ce12552-0adb-4f56-89ff-95ce268f6358,bash
 discovery,T1201,Password Policy Discovery,4,Examine password expiration policy - All Linux,7c86c55c-70fa-4a05-83c9-3aa19b145d1a,bash
+discovery,T1614.001,System Location Discovery: System Language Discovery,3,Discover System Language with locale,837d609b-845e-4519-90ce-edc3b4b0e138,sh
+discovery,T1614.001,System Location Discovery: System Language Discovery,4,Discover System Language with localectl,07ce871a-b3c3-44a3-97fa-a20118fdc7c9,sh
+discovery,T1614.001,System Location Discovery: System Language Discovery,5,Discover System Language by locale file,5d7057c9-2c8a-4026-91dd-13b5584daa69,sh
+discovery,T1614.001,System Location Discovery: System Language Discovery,6,Discover System Language by Environment Variable Query,cb8f7cdc-36c4-4ed0-befc-7ad7d24dfd7a,sh
 discovery,T1518.001,Software Discovery: Security Software Discovery,4,Security Software Discovery - ps (Linux),23b91cd2-c99c-4002-9e41-317c63e024a2,sh
 discovery,T1018,Remote System Discovery,6,Remote System Discovery - arp nix,acb6b1ff-e2ad-4d64-806c-6c35fe73b951,sh
 discovery,T1018,Remote System Discovery,7,Remote System Discovery - sweep,96db2632-8417-4dbb-b8bb-a8b92ba391de,sh
@@ -268,6 +282,8 @@ execution,T1059.004,Command and Scripting Interpreter: Bash,6,What shell is runn
 execution,T1059.004,Command and Scripting Interpreter: Bash,7,What shells are available,bf23c7dc-1004-4949-8262-4c1d1ef87702,sh
 execution,T1059.004,Command and Scripting Interpreter: Bash,8,Command line scripts,b04ed73c-7d43-4dc8-b563-a2fc595cba1a,sh
 execution,T1059.004,Command and Scripting Interpreter: Bash,9,Obfuscated command line scripts,5bec4cc8-f41e-437b-b417-33ff60acf9af,sh
+execution,T1059.004,Command and Scripting Interpreter: Bash,10,Change login shell,c7ac59cb-13cc-4622-81dc-6d2fee9bfac7,bash
+execution,T1059.004,Command and Scripting Interpreter: Bash,11,Environment variable scripts,bdaebd56-368b-4970-a523-f905ff4a8a51,bash
 execution,T1059.006,Command and Scripting Interpreter: Python,1,Execute shell script via python's command mode arguement,3a95cdb2-c6ea-4761-b24e-02b71889b8bb,sh
 execution,T1059.006,Command and Scripting Interpreter: Python,2,Execute Python via scripts (Linux),6c4d1dcb-33c7-4c36-a8df-c6cfd0408be8,sh
 execution,T1059.006,Command and Scripting Interpreter: Python,3,Execute Python via Python executables (Linux),0b44d79b-570a-4b27-a31f-3bf2156e5eaa,sh

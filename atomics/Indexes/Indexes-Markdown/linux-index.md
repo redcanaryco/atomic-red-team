@@ -54,6 +54,7 @@
   - Atomic Test #4: Base64 decoding with Perl [linux, macos]
   - Atomic Test #5: Base64 decoding with shell utilities [linux, macos]
   - Atomic Test #6: Hex decoding with shell utilities [linux, macos]
+  - Atomic Test #7: Linux Base64 Encoded Shebang in CLI [linux, macos]
 - T1562 Impair Defenses [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1036 Masquerading [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1055 Process Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -92,6 +93,8 @@
   - Atomic Test #3: Set a SetGID flag on file [macos, linux]
   - Atomic Test #4: Make and modify capabilities of a binary [linux]
   - Atomic Test #5: Provide the SetUID capability to a file [linux]
+  - Atomic Test #6: Do reconnaissance for files that have the setuid bit set [linux]
+  - Atomic Test #7: Do reconnaissance for files that have the setgid bit set [linux]
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1562.006 Impair Defenses: Indicator Blocking](../../T1562.006/T1562.006.md)
   - Atomic Test #1: Auditing Configuration Changes on Linux Host [linux]
@@ -117,6 +120,11 @@
   - Atomic Test #2: Disable Cb Response [linux]
   - Atomic Test #3: Disable SELinux [linux]
   - Atomic Test #4: Stop Crowdstrike Falcon on Linux [linux]
+  - Atomic Test #39: Clear History [linux]
+  - Atomic Test #40: Suspend History [linux]
+  - Atomic Test #41: Reboot Linux Host via Kernel System Request [linux]
+  - Atomic Test #42: Clear Pagging Cache [linux]
+  - Atomic Test #43: Disable Memory Swap [linux]
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -336,6 +344,8 @@
   - Atomic Test #3: Set a SetGID flag on file [macos, linux]
   - Atomic Test #4: Make and modify capabilities of a binary [linux]
   - Atomic Test #5: Provide the SetUID capability to a file [linux]
+  - Atomic Test #6: Do reconnaissance for files that have the setuid bit set [linux]
+  - Atomic Test #7: Do reconnaissance for files that have the setgid bit set [linux]
 - T1055.014 VDSO Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1169 Sudo [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1547.006 Boot or Logon Autostart Execution: Kernel Modules and Extensions](../../T1547.006/T1547.006.md)
@@ -497,7 +507,11 @@
   - Atomic Test #2: Examine password complexity policy - CentOS/RHEL 7.x [linux]
   - Atomic Test #3: Examine password complexity policy - CentOS/RHEL 6.x [linux]
   - Atomic Test #4: Examine password expiration policy - All Linux [linux]
-- T1614.001 System Location Discovery: System Language Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1614.001 System Location Discovery: System Language Discovery](../../T1614.001/T1614.001.md)
+  - Atomic Test #3: Discover System Language with locale [linux]
+  - Atomic Test #4: Discover System Language with localectl [linux]
+  - Atomic Test #5: Discover System Language by locale file [linux]
+  - Atomic Test #6: Discover System Language by Environment Variable Query [linux]
 - T1614 System Location Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1518.001 Software Discovery: Security Software Discovery](../../T1518.001/T1518.001.md)
   - Atomic Test #4: Security Software Discovery - ps (Linux) [linux]
@@ -652,6 +666,8 @@
   - Atomic Test #7: What shells are available [linux]
   - Atomic Test #8: Command line scripts [linux]
   - Atomic Test #9: Obfuscated command line scripts [linux]
+  - Atomic Test #10: Change login shell [linux]
+  - Atomic Test #11: Environment variable scripts [linux]
 - T1559 Inter-Process Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1154 Trap [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1203 Exploitation for Client Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
