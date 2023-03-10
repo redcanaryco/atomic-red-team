@@ -76,7 +76,7 @@ atomic_tests:
     userprincipalname:
       description: User principal name (UPN) for the new Azure user being created format email address
       type: String
-      default: "atomicredteam@bwc-demo.com"
+      default: "atomicredteam@domain.com"
     password:
       description: Password for the new Azure AD user being created
       type: string
@@ -99,6 +99,6 @@ atomic_tests:
       $username = "#{username}"      
       $password = "#{password}"
       az ad user create --display-name $username --password $password --user-principal-name $userprincipalname
-      az ad user list --upn $userprincipalname      
-    cleanup_command: az ad user delete --upn #{userprincipalname}
+      az ad user list --filter "displayname eq 'atomicredteam'"     
+    cleanup_command: az ad user delete --id #{userprincipalname}
     name: powershell    
