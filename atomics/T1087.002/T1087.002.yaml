@@ -86,6 +86,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
     get_prereq_command: |
+      New-Item -Type Directory (split-path #{adfind_path}) -ErrorAction ignore | Out-Null
       Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe" -OutFile #{adfind_path}
   executor:
     command: |
@@ -110,6 +111,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
     get_prereq_command: |
+      New-Item -Type Directory (split-path #{adfind_path}) -ErrorAction ignore | Out-Null
       Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe" -OutFile #{adfind_path}
   executor:
     command: |
@@ -134,6 +136,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
     get_prereq_command: |
+      New-Item -Type Directory (split-path #{adfind_path}) -ErrorAction ignore | Out-Null
       Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe" -OutFile #{adfind_path}
   executor:
     command: |
@@ -158,6 +161,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
     get_prereq_command: |
+      New-Item -Type Directory (split-path #{adfind_path}) -ErrorAction ignore | Out-Null
       Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe" -OutFile #{adfind_path}
   executor:
     command: |
