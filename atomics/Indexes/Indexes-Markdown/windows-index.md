@@ -815,7 +815,12 @@
   - Atomic Test #22: Abuse Nslookup with DNS Records [windows]
 - T1170 Mshta [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1061 Graphical User Interface [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1559 Inter-Process Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1559 Inter-Process Communication](../../T1559/T1559.md)
+  - Atomic Test #1: Cobalt Strike Artifact Kit pipe [windows]
+  - Atomic Test #2: Cobalt Strike Lateral Movement (psexec_psh) pipe [windows]
+  - Atomic Test #3: Cobalt Strike SSH (postex_ssh) pipe [windows]
+  - Atomic Test #4: Cobalt Strike post-exploitation pipe (4.2 and later) [windows]
+  - Atomic Test #5: Cobalt Strike post-exploitation pipe (before 4.2) [windows]
 - T1203 Exploitation for Client Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1028 Windows Remote Management [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1059.006 Command and Scripting Interpreter: Python [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
