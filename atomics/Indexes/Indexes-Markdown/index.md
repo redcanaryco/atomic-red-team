@@ -2393,6 +2393,8 @@
   - Atomic Test #1: Change User Password - Windows [windows]
   - Atomic Test #2: Delete User - Windows [windows]
   - Atomic Test #3: Remove Account From Domain Admin Group [windows]
+  - Atomic Test #4: Azure AD - Delete user via Azure AD PowerShell [azure-ad]
+  - Atomic Test #5: Azure AD - Delete user via Azure CLI [azure-ad]
 - [T1486 Data Encrypted for Impact](../../T1486/T1486.md)
   - Atomic Test #1: Encrypt files using gpg (Linux) [linux]
   - Atomic Test #2: Encrypt files using 7z (Linux) [linux]
