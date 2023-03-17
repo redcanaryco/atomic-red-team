@@ -86,6 +86,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
     get_prereq_command: |
+      New-Item -Type Directory (split-path #{adfind_path}) -ErrorAction ignore | Out-Null
       Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe" -OutFile #{adfind_path}
   executor:
     command: |
@@ -110,6 +111,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
     get_prereq_command: |
+      New-Item -Type Directory (split-path #{adfind_path}) -ErrorAction ignore | Out-Null
       Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe" -OutFile #{adfind_path}
   executor:
     command: |
@@ -134,6 +136,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
     get_prereq_command: |
+      New-Item -Type Directory (split-path #{adfind_path}) -ErrorAction ignore | Out-Null
       Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe" -OutFile #{adfind_path}
   executor:
     command: |
@@ -158,6 +161,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
     get_prereq_command: |
+      New-Item -Type Directory (split-path #{adfind_path}) -ErrorAction ignore | Out-Null
       Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe" -OutFile #{adfind_path}
   executor:
     command: |
@@ -316,15 +320,6 @@ atomic_tests:
     This is done remotely via wmic and captures the event code 4776 from the domain controller and stores the ouput in C:\temp. [Reference](https://www.reliaquest.com/blog/socgholish-fakeupdates/)
   supported_platforms:
   - windows
-  input_arguments:
-    Domain:
-      description: Domain that is being tested against
-      type: string
-      default: $env:USERDOMAIN
-    DomainController:
-      description: Domain Controller that is being tested against
-      type: string
-      default: $env:UserDnsDomain
   executor:
     command: |-
       wmic /node:$env:UserDnsDomain process call create 'wevtutil epl Security C:\Temp\ntlmusers.evtx /q:Event[System[(EventID=4776)]]'

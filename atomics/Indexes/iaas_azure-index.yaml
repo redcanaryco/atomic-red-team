@@ -14090,7 +14090,56 @@ defense-evasion:
       x_mitre_attack_spec_version: 2.1.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
       identifier: T1078.004
-    atomic_tests: []
+    atomic_tests:
+    - name: Azure Persistence Automation Runbook Created or Modified
+      auto_generated_guid: 348f4d14-4bd3-4f6b-bd8a-61237f78b3ac
+      description: |
+        Identifies when an Azure Automation runbook is created or modified. An adversary may create or modify an Azure
+        Automation runbook to execute malicious code and maintain persistence in their target's environment.
+      supported_platforms:
+      - iaas:azure
+      input_arguments:
+        username:
+          description: Azure username
+          type: String
+          default: 
+        password:
+          description: Azure password
+          type: String
+          default: 
+        resource_group:
+          description: Name of the resource group
+          type: String
+          default: 
+        runbook_name:
+          description: Name of the runbook name
+          type: String
+          default: 
+        automation_account_name:
+          description: Name of the automation account name
+          type: String
+          default: 
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Install-Module -Name Az
+
+          '
+        prereq_command: 'try {if (Get-InstalledModule -Name Az -ErrorAction SilentlyContinue)
+          {exit 0} else {exit 1}} catch {exit 1}
+
+          '
+        get_prereq_command: 'Install-Module -Name Az -Scope CurrentUser -Force
+
+          '
+      executor:
+        command: |
+          $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
+          $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
+          Connect-AzAccount -Credential $creds
+          New-AzAutomationRunbook -Name #{runbook_name} -Type PowerShell -ResourceGroupName #{resource_group} -Description 'my-test-runbook' -AutomationAccountName #{automation_account_name}
+          Remove-AzAutomationRunbook -AutomationAccountName #{automation_account_name} -Name #{runbook_name} -ResourceGroupName #{resource_group} -Force
+        name: powershell
+        elevation_required: false
   T1480.001:
     technique:
       x_mitre_platforms:
@@ -24323,7 +24372,56 @@ privilege-escalation:
       x_mitre_attack_spec_version: 2.1.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
       identifier: T1078.004
-    atomic_tests: []
+    atomic_tests:
+    - name: Azure Persistence Automation Runbook Created or Modified
+      auto_generated_guid: 348f4d14-4bd3-4f6b-bd8a-61237f78b3ac
+      description: |
+        Identifies when an Azure Automation runbook is created or modified. An adversary may create or modify an Azure
+        Automation runbook to execute malicious code and maintain persistence in their target's environment.
+      supported_platforms:
+      - iaas:azure
+      input_arguments:
+        username:
+          description: Azure username
+          type: String
+          default: 
+        password:
+          description: Azure password
+          type: String
+          default: 
+        resource_group:
+          description: Name of the resource group
+          type: String
+          default: 
+        runbook_name:
+          description: Name of the runbook name
+          type: String
+          default: 
+        automation_account_name:
+          description: Name of the automation account name
+          type: String
+          default: 
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Install-Module -Name Az
+
+          '
+        prereq_command: 'try {if (Get-InstalledModule -Name Az -ErrorAction SilentlyContinue)
+          {exit 0} else {exit 1}} catch {exit 1}
+
+          '
+        get_prereq_command: 'Install-Module -Name Az -Scope CurrentUser -Force
+
+          '
+      executor:
+        command: |
+          $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
+          $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
+          Connect-AzAccount -Credential $creds
+          New-AzAutomationRunbook -Name #{runbook_name} -Type PowerShell -ResourceGroupName #{resource_group} -Description 'my-test-runbook' -AutomationAccountName #{automation_account_name}
+          Remove-AzAutomationRunbook -AutomationAccountName #{automation_account_name} -Name #{runbook_name} -ResourceGroupName #{resource_group} -Force
+        name: powershell
+        elevation_required: false
   T1053.002:
     technique:
       x_mitre_platforms:
@@ -27498,6 +27596,7 @@ execution:
       - User
       - SYSTEM
       x_mitre_remote_support: true
+      identifier: T1559
     atomic_tests: []
   T1204.003:
     technique:
@@ -36345,7 +36444,8 @@ persistence:
           type: string
           default: p4sswd
         user_principal_name:
-          description: Name of the targeted user (user principal)
+          description: Display Name, or User Principal Name, of the targeted user
+            principal
           type: string
           default: SuperUser
         role_name:
@@ -36374,7 +36474,7 @@ persistence:
           $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
           Connect-AzAccount -Credential $Credential
 
-          $user = Get-AzADUser | where-object {$_.DisplayName -eq "#{user_principal_name}"}
+          $user = Get-AzADUser | where-object {$_.DisplayName -eq "#{user_principal_name}" -or $_.UserPrincipalName -eq "#{user_principal_name}" }
           if ($user -eq $null) { Write-Warning "User not found"; exit }
           $subscription = Get-AzSubscription | where-object {$_.Name -eq "#{subscription}"}
           if ($subscription -eq $null) { Write-Warning "Subscription not found"; exit }
@@ -36389,7 +36489,7 @@ persistence:
           $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
           Connect-AzAccount -Credential $Credential -ErrorAction Ignore
 
-          $user = Get-AzADUser | where-object {$_.DisplayName -eq "#{user_principal_name}"}
+          $user = Get-AzADUser | where-object {$_.DisplayName -eq "#{user_principal_name}" -or $_.UserPrincipalName -eq "#{user_principal_name}" }
           if ($user -eq $null) { Write-Warning "User not found"; exit }
           $subscription = Get-AzSubscription | where-object {$_.Name -eq "#{subscription}"}
           if ($subscription -eq $null) { Write-Warning "Subscription not found"; exit }
@@ -39931,7 +40031,56 @@ persistence:
       x_mitre_attack_spec_version: 2.1.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
       identifier: T1078.004
-    atomic_tests: []
+    atomic_tests:
+    - name: Azure Persistence Automation Runbook Created or Modified
+      auto_generated_guid: 348f4d14-4bd3-4f6b-bd8a-61237f78b3ac
+      description: |
+        Identifies when an Azure Automation runbook is created or modified. An adversary may create or modify an Azure
+        Automation runbook to execute malicious code and maintain persistence in their target's environment.
+      supported_platforms:
+      - iaas:azure
+      input_arguments:
+        username:
+          description: Azure username
+          type: String
+          default: 
+        password:
+          description: Azure password
+          type: String
+          default: 
+        resource_group:
+          description: Name of the resource group
+          type: String
+          default: 
+        runbook_name:
+          description: Name of the runbook name
+          type: String
+          default: 
+        automation_account_name:
+          description: Name of the automation account name
+          type: String
+          default: 
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Install-Module -Name Az
+
+          '
+        prereq_command: 'try {if (Get-InstalledModule -Name Az -ErrorAction SilentlyContinue)
+          {exit 0} else {exit 1}} catch {exit 1}
+
+          '
+        get_prereq_command: 'Install-Module -Name Az -Scope CurrentUser -Force
+
+          '
+      executor:
+        command: |
+          $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
+          $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
+          Connect-AzAccount -Credential $creds
+          New-AzAutomationRunbook -Name #{runbook_name} -Type PowerShell -ResourceGroupName #{resource_group} -Description 'my-test-runbook' -AutomationAccountName #{automation_account_name}
+          Remove-AzAutomationRunbook -AutomationAccountName #{automation_account_name} -Name #{runbook_name} -ResourceGroupName #{resource_group} -Force
+        name: powershell
+        elevation_required: false
   T1053.002:
     technique:
       x_mitre_platforms:
@@ -51578,6 +51727,7 @@ discovery:
       - 'Cloud Storage: Cloud Storage Metadata'
       x_mitre_attack_spec_version: 2.1.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      identifier: T1580
     atomic_tests: []
   T1217:
     technique:
@@ -63243,7 +63393,56 @@ initial-access:
       x_mitre_attack_spec_version: 2.1.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
       identifier: T1078.004
-    atomic_tests: []
+    atomic_tests:
+    - name: Azure Persistence Automation Runbook Created or Modified
+      auto_generated_guid: 348f4d14-4bd3-4f6b-bd8a-61237f78b3ac
+      description: |
+        Identifies when an Azure Automation runbook is created or modified. An adversary may create or modify an Azure
+        Automation runbook to execute malicious code and maintain persistence in their target's environment.
+      supported_platforms:
+      - iaas:azure
+      input_arguments:
+        username:
+          description: Azure username
+          type: String
+          default: 
+        password:
+          description: Azure password
+          type: String
+          default: 
+        resource_group:
+          description: Name of the resource group
+          type: String
+          default: 
+        runbook_name:
+          description: Name of the runbook name
+          type: String
+          default: 
+        automation_account_name:
+          description: Name of the automation account name
+          type: String
+          default: 
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Install-Module -Name Az
+
+          '
+        prereq_command: 'try {if (Get-InstalledModule -Name Az -ErrorAction SilentlyContinue)
+          {exit 0} else {exit 1}} catch {exit 1}
+
+          '
+        get_prereq_command: 'Install-Module -Name Az -Scope CurrentUser -Force
+
+          '
+      executor:
+        command: |
+          $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
+          $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
+          Connect-AzAccount -Credential $creds
+          New-AzAutomationRunbook -Name #{runbook_name} -Type PowerShell -ResourceGroupName #{resource_group} -Description 'my-test-runbook' -AutomationAccountName #{automation_account_name}
+          Remove-AzAutomationRunbook -AutomationAccountName #{automation_account_name} -Name #{runbook_name} -ResourceGroupName #{resource_group} -Force
+        name: powershell
+        elevation_required: false
   T1566.003:
     technique:
       x_mitre_platforms:
