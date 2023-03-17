@@ -1119,7 +1119,12 @@
   - Atomic Test #9: Obfuscated command line scripts [linux]
   - Atomic Test #10: Change login shell [linux]
   - Atomic Test #11: Environment variable scripts [linux]
-- T1559 Inter-Process Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1559 Inter-Process Communication](../../T1559/T1559.md)
+  - Atomic Test #1: Cobalt Strike Artifact Kit pipe [windows]
+  - Atomic Test #2: Cobalt Strike Lateral Movement (psexec_psh) pipe [windows]
+  - Atomic Test #3: Cobalt Strike SSH (postex_ssh) pipe [windows]
+  - Atomic Test #4: Cobalt Strike post-exploitation pipe (4.2 and later) [windows]
+  - Atomic Test #5: Cobalt Strike post-exploitation pipe (before 4.2) [windows]
 - T1204.003 Malicious Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1154 Trap [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1203 Exploitation for Client Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1893,6 +1898,7 @@
   - Atomic Test #3: Find computers where user has session - Stealth mode (PowerView) [windows]
   - Atomic Test #4: User Discovery With Env Vars PowerShell Script [windows]
   - Atomic Test #5: GetCurrent User with PowerShell Script [windows]
+  - Atomic Test #6: System Discovery - SocGholish whoami [windows]
 - [T1613 Container and Resource Discovery](../../T1613/T1613.md)
   - Atomic Test #1: Container and ResourceDiscovery [containers]
 - T1016.001 Internet Connection Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
