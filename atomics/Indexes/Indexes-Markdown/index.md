@@ -665,8 +665,11 @@
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #1: Create local account with admin privileges [windows]
   - Atomic Test #2: Create local account with admin privileges - MacOS [macos]
-  - Atomic Test #3: WinPwn - Loot local Credentials - powerhell kittie [windows]
-  - Atomic Test #4: WinPwn - Loot local Credentials - Safetykatz [windows]
+  - Atomic Test #3: Create local account with admin privileges using sysadminctl utility - MacOS [macos]
+  - Atomic Test #4: Enable root account using dsenableroot utility - MacOS [macos]
+  - Atomic Test #5: Add a new/existing user to the admin group using dseditgroup utility - macOS [macos]
+  - Atomic Test #6: WinPwn - Loot local Credentials - powerhell kittie [windows]
+  - Atomic Test #7: WinPwn - Loot local Credentials - Safetykatz [windows]
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1127 Trusted Developer Utilities Proxy Execution](../../T1127/T1127.md)
   - Atomic Test #1: Lolbin Jsc.exe compile javascript to exe [windows]
@@ -986,8 +989,11 @@
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #1: Create local account with admin privileges [windows]
   - Atomic Test #2: Create local account with admin privileges - MacOS [macos]
-  - Atomic Test #3: WinPwn - Loot local Credentials - powerhell kittie [windows]
-  - Atomic Test #4: WinPwn - Loot local Credentials - Safetykatz [windows]
+  - Atomic Test #3: Create local account with admin privileges using sysadminctl utility - MacOS [macos]
+  - Atomic Test #4: Enable root account using dsenableroot utility - MacOS [macos]
+  - Atomic Test #5: Add a new/existing user to the admin group using dseditgroup utility - macOS [macos]
+  - Atomic Test #6: WinPwn - Loot local Credentials - powerhell kittie [windows]
+  - Atomic Test #7: WinPwn - Loot local Credentials - Safetykatz [windows]
 - [T1574.012 Hijack Execution Flow: COR_PROFILER](../../T1574.012/T1574.012.md)
   - Atomic Test #1: User scope COR_PROFILER [windows]
   - Atomic Test #2: System Scope COR_PROFILER [windows]
@@ -1119,7 +1125,12 @@
   - Atomic Test #9: Obfuscated command line scripts [linux]
   - Atomic Test #10: Change login shell [linux]
   - Atomic Test #11: Environment variable scripts [linux]
-- T1559 Inter-Process Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1559 Inter-Process Communication](../../T1559/T1559.md)
+  - Atomic Test #1: Cobalt Strike Artifact Kit pipe [windows]
+  - Atomic Test #2: Cobalt Strike Lateral Movement (psexec_psh) pipe [windows]
+  - Atomic Test #3: Cobalt Strike SSH (postex_ssh) pipe [windows]
+  - Atomic Test #4: Cobalt Strike post-exploitation pipe (4.2 and later) [windows]
+  - Atomic Test #5: Cobalt Strike post-exploitation pipe (before 4.2) [windows]
 - T1204.003 Malicious Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1154 Trap [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1203 Exploitation for Client Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1492,8 +1503,11 @@
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #1: Create local account with admin privileges [windows]
   - Atomic Test #2: Create local account with admin privileges - MacOS [macos]
-  - Atomic Test #3: WinPwn - Loot local Credentials - powerhell kittie [windows]
-  - Atomic Test #4: WinPwn - Loot local Credentials - Safetykatz [windows]
+  - Atomic Test #3: Create local account with admin privileges using sysadminctl utility - MacOS [macos]
+  - Atomic Test #4: Enable root account using dsenableroot utility - MacOS [macos]
+  - Atomic Test #5: Add a new/existing user to the admin group using dseditgroup utility - macOS [macos]
+  - Atomic Test #6: WinPwn - Loot local Credentials - powerhell kittie [windows]
+  - Atomic Test #7: WinPwn - Loot local Credentials - Safetykatz [windows]
 - [T1574.012 Hijack Execution Flow: COR_PROFILER](../../T1574.012/T1574.012.md)
   - Atomic Test #1: User scope COR_PROFILER [windows]
   - Atomic Test #2: System Scope COR_PROFILER [windows]
@@ -1893,6 +1907,7 @@
   - Atomic Test #3: Find computers where user has session - Stealth mode (PowerView) [windows]
   - Atomic Test #4: User Discovery With Env Vars PowerShell Script [windows]
   - Atomic Test #5: GetCurrent User with PowerShell Script [windows]
+  - Atomic Test #6: System Discovery - SocGholish whoami [windows]
 - [T1613 Container and Resource Discovery](../../T1613/T1613.md)
   - Atomic Test #1: Container and ResourceDiscovery [containers]
 - T1016.001 Internet Connection Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -2454,8 +2469,11 @@
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #1: Create local account with admin privileges [windows]
   - Atomic Test #2: Create local account with admin privileges - MacOS [macos]
-  - Atomic Test #3: WinPwn - Loot local Credentials - powerhell kittie [windows]
-  - Atomic Test #4: WinPwn - Loot local Credentials - Safetykatz [windows]
+  - Atomic Test #3: Create local account with admin privileges using sysadminctl utility - MacOS [macos]
+  - Atomic Test #4: Enable root account using dsenableroot utility - MacOS [macos]
+  - Atomic Test #5: Add a new/existing user to the admin group using dseditgroup utility - macOS [macos]
+  - Atomic Test #6: WinPwn - Loot local Credentials - powerhell kittie [windows]
+  - Atomic Test #7: WinPwn - Loot local Credentials - Safetykatz [windows]
 
 # exfiltration
 - T1567 Exfiltration Over Web Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
