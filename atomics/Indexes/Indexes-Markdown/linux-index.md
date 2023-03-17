@@ -392,8 +392,8 @@
   - Atomic Test #5: SSHD PAM keylogger [linux]
   - Atomic Test #6: Auditd keylogger [linux]
 - [T1110.001 Brute Force: Password Guessing](../../T1110.001/T1110.001.md)
-  - Atomic Test #4: SUDO brute force Debian [linux]
-  - Atomic Test #5: SUDO brute force Redhat [linux]
+  - Atomic Test #5: SUDO Brute Force - Debian [linux]
+  - Atomic Test #6: SUDO Brute Force - Redhat [linux]
 - T1003 OS Credential Dumping [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1539 Steal Web Session Cookie [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1555.002 Securityd Memory [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
