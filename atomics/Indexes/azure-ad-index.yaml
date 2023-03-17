@@ -27610,6 +27610,7 @@ execution:
       - User
       - SYSTEM
       x_mitre_remote_support: true
+      identifier: T1559
     atomic_tests: []
   T1204.003:
     technique:
@@ -36711,7 +36712,8 @@ persistence:
           type: string
           default: p4sswd
         user_principal_name:
-          description: Name of the targeted user (user principal)
+          description: Display Name, or User Principal Name, of the targeted user
+            principal
           type: string
           default: SuperUser
         role_name:
@@ -36736,7 +36738,7 @@ persistence:
           $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
           Connect-AzureAD -Credential $Credential
 
-          $user = Get-AzureADUser -Filter "DisplayName eq '#{user_principal_name}'"
+          $user = Get-AzureADUser -Filter "DisplayName eq '#{user_principal_name}' or UserPrincipalName eq '#{user_principal_name}'"
           if ($user -eq $null) { Write-Warning "User not found"; exit }
           $role = Get-AzureADDirectoryRole -Filter "DisplayName eq '#{role_name}'"
           if ($role -eq $null) { Write-Warning "Role not found"; exit }
@@ -36748,7 +36750,7 @@ persistence:
           $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
           Connect-AzureAD -Credential $Credential -ErrorAction Ignore
 
-          $user = Get-AzureADUser -Filter "DisplayName eq '#{user_principal_name}'"
+          $user = Get-AzureADUser -Filter "DisplayName eq '#{user_principal_name}' or UserPrincipalName eq '#{user_principal_name}'"
           if ($user -eq $null) { Write-Warning "User not found"; exit }
           $role = Get-AzureADDirectoryRole -Filter "DisplayName eq '#{role_name}'"
           if ($role -eq $null) { Write-Warning "Role not found"; exit }
