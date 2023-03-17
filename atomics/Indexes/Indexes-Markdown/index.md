@@ -1676,9 +1676,9 @@
   - Atomic Test #1: Brute Force Credentials of single Active Directory domain users via SMB [windows]
   - Atomic Test #2: Brute Force Credentials of single Active Directory domain user via LDAP against domain controller (NTLM or Kerberos) [windows]
   - Atomic Test #3: Brute Force Credentials of single Azure AD user [azure-ad]
-  - Atomic Test #4: SUDO brute force Debian [linux]
-  - Atomic Test #5: SUDO brute force Redhat [linux]
-  - Atomic Test #6: Password Brute User using Kerbrute Tool [windows]
+  - Atomic Test #4: Password Brute User using Kerbrute Tool [windows]
+  - Atomic Test #5: SUDO Brute Force - Debian [linux]
+  - Atomic Test #6: SUDO Brute Force - Redhat [linux]
 - [T1003 OS Credential Dumping](../../T1003/T1003.md)
   - Atomic Test #1: Gsecdump [windows]
   - Atomic Test #2: Credential Dumping with NPPSpy [windows]
