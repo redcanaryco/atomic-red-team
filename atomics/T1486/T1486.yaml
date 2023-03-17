@@ -182,3 +182,35 @@ atomic_tests:
       echo T1486 - Purelocker Ransom Note > %USERPROFILE%\Desktop\YOUR_FILES.txt
     cleanup_command: |
       del %USERPROFILE%\Desktop\YOUR_FILES.txt >nul 2>&1
+- name: Data Encrypted with GPG4Win
+  auto_generated_guid: 4541e2c2-33c8-44b1-be79-9161440f1718
+  description:
+      Gpg4win is a Windows tool (also called Kleopatra which is the preferred certificate manager) that uses email and file encryption packages for symmetric encryption. 
+      It is used by attackers to encrypt disks. User will need to add pass phrase to encrypt file as automation is not allowed under newer versions.  
+  supported_platforms:
+    - windows
+  input_arguments:
+    GPG_Exe_Location:
+      description: Path of the GPG program
+      type: Path
+      default: 'C:\Program Files (x86)\GnuPG\bin\gpg.exe'
+    File_to_Encrypt_Location:
+      description: Path of File
+      type: Path
+      default: '$env:temp\test.txt'
+  dependencies:
+    - description: |
+        GPG must exist at (#{GPG_Exe_Location})
+      prereq_command: |
+        if (test-path '#{GPG_Exe_Location}'){exit 0} else {exit 1}
+      get_prereq_command: |
+        invoke-webrequest "https://files.gpg4win.org/gpg4win-4.1.0.exe" -outfile "$env:temp\gpginstall.exe"
+        cmd /c "$env:temp\gpginstall.exe" /S
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      cmd /c '#{GPG_Exe_Location}' -c '#{File_to_Encrypt_Location}'
+    cleanup_command: |
+      remove-item '#{File_to_Encrypt_Location}.gpg' -force -erroraction silentlycontinue | out-null
+
