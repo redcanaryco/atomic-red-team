@@ -12,22 +12,22 @@ atomic_tests:
   input_arguments:
     target_extension_handler:
       description: txtfile maps to notepad.exe
-      type: Path
+      type: path
       default: txtfile
     extension_to_change:
       description: File Extension To Hijack
-      type: String
+      type: string
       default: .hta
     #Adding additional input arguement below for new cleanup command
     original_extension_handler:
-     description: File Extension To Revert
-     type: String
-     default: htafile
+      description: File Extension To Revert
+      type: string
+      default: htafile
   executor:
     command: |
       assoc #{extension_to_change}=#{target_extension_handler}
     cleanup_command: |
       assoc  #{extension_to_change}=#{original_extension_handler}
-    
+
     name: command_prompt
     elevation_required: true

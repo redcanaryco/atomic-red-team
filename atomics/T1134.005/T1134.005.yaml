@@ -6,19 +6,19 @@ atomic_tests:
   description: |
     Adversaries may use SID-History Injection to escalate privileges and bypass access controls. Must be run on domain controller
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     sid_to_inject:
       description: SID to inject into sidhistory
-      type: String
+      type: string
       default: S-1-5-21-1004336348-1177238915-682003330-1134
     sam_account_name:
       description: Target account to modify
-      type: String
+      type: string
       default: '$env:username'
     mimikatz_path:
       description: Mimikatz windows executable
-      type: Path
+      type: path
       default: '$env:TEMP\mimikatz\x64\mimikatz.exe'
   dependency_executor_name: powershell
   dependencies:

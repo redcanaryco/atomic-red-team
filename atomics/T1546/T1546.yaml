@@ -6,7 +6,7 @@ atomic_tests:
   auto_generated_guid: aca9ae16-7425-4b6d-8c30-cad306fdbd5b
   description: |
     The DLL pointed to by the AutodialDLL registry key is loaded every time a process connects to the internet. Attackers can gain persistent code execution by setting this key to a DLL of their choice. 
-    
+
     The sample dll provided, AltWinSock2DLL, will launch the notepad process. Starting and stopping a web browser such as MS Edge or Chrome should result in the dll executing.
     [Blog](https://www.mdsec.co.uk/2022/10/autodialdlling-your-way/)
   supported_platforms:
@@ -28,7 +28,7 @@ atomic_tests:
     elevation_required: true
 - name: HKLM - Persistence using CommandProcessor AutoRun key (With Elevation)
   auto_generated_guid: a574dafe-a903-4cce-9701-14040f4f3532
-  description:  |-
+  description: |-
     An adversary may abuse the CommandProcessor AutoRun registry key to persist. Every time cmd.exe is executed, the command defined in the AutoRun key also gets executed.
     [reference](https://devblogs.microsoft.com/oldnewthing/20071121-00/?p=24433)
   supported_platforms:
@@ -39,7 +39,7 @@ atomic_tests:
       type: string
       default: notepad.exe
   executor:
-    command: |- 
+    command: |-
       New-ItemProperty -Path "HKLM:\Software\Microsoft\Command Processor" -Name "AutoRun" -Value "#{command}" -PropertyType "String"
     cleanup_command: |-
       Remove-ItemProperty -Path "HKLM:\Software\Microsoft\Command Processor" -Name "AutoRun" -ErrorAction Ignore
@@ -47,7 +47,7 @@ atomic_tests:
     elevation_required: true
 - name: HKCU - Persistence using CommandProcessor AutoRun key (Without Elevation)
   auto_generated_guid: 36b8dbf9-59b1-4e9b-a3bb-36e80563ef01
-  description:  |-
+  description: |-
     An adversary may abuse the CommandProcessor AutoRun registry key to persist. Every time cmd.exe is executed, the command defined in the AutoRun key also gets executed.
     [reference](https://devblogs.microsoft.com/oldnewthing/20071121-00/?p=24433)
   supported_platforms:
@@ -58,7 +58,7 @@ atomic_tests:
       type: string
       default: notepad.exe
   executor:
-    command: |- 
+    command: |-
       $path = "HKCU:\Software\Microsoft\Command Processor"
       if (!(Test-Path -path $path)){
         New-Item -ItemType Key -Path $path

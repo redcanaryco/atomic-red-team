@@ -122,6 +122,7 @@ defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,5,O
 defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,6,Allow Executable Through Firewall Located in Non-Standard Location,6f5822d2-d38d-4f48-9bfc-916607ff6b8c,powershell
 defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,16,LockBit Black - Unusual Windows firewall registry modification -cmd,a4651931-ebbb-4cde-9363-ddf3d66214cb,command_prompt
 defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,17,LockBit Black - Unusual Windows firewall registry modification -Powershell,80b453d1-eec5-4144-bf08-613a6c3ffe12,powershell
+defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,18,Blackbit - Disable Windows Firewall using netsh firewall,91f348e6-3760-4997-a93b-2ceee7f254ee,command_prompt
 defense-evasion,T1207,Rogue Domain Controller,1,DCShadow (Active Directory),0f4c5eb0-98a0-4496-9c3d-656b4f2bc8f6,powershell
 defense-evasion,T1112,Modify Registry,1,Modify Registry of Current User Profile - cmd,1324796b-d0f6-455a-b4ae-21ffee6aa6b9,command_prompt
 defense-evasion,T1112,Modify Registry,2,Modify Registry of Local Machine - cmd,282f929a-6bc5-42b8-bd93-960c3ba35afe,command_prompt
@@ -167,6 +168,10 @@ defense-evasion,T1112,Modify Registry,41,Terminal Server Client Connection Histo
 defense-evasion,T1112,Modify Registry,42,Disable Windows Error Reporting Settings,d2c9e41e-cd86-473d-980d-b6403562e3e1,command_prompt
 defense-evasion,T1112,Modify Registry,43,DisallowRun Execution Of Certain Applications,71db768a-5a9c-4047-b5e7-59e01f188e84,command_prompt
 defense-evasion,T1112,Modify Registry,44,Enabling Restricted Admin Mode via Command_Prompt,fe7974e5-5813-477b-a7bd-311d4f535e83,command_prompt
+defense-evasion,T1112,Modify Registry,45,Mimic Ransomware - Enable Multiple User Sessions,39f1f378-ba8a-42b3-96dc-2a6540cfc1e3,command_prompt
+defense-evasion,T1112,Modify Registry,46,Mimic Ransomware - Allow Multiple RDP Sessions per User,35727d9e-7a7f-4d0c-a259-dc3906d6e8b9,command_prompt
+defense-evasion,T1112,Modify Registry,47,Event Viewer Registry Modification - Redirection URL,6174be7f-5153-4afd-92c5-e0c3b7cdb5ae,command_prompt
+defense-evasion,T1112,Modify Registry,48,Event Viewer Registry Modification - Redirection Program,81483501-b8a5-4225-8b32-52128e2f69db,command_prompt
 defense-evasion,T1574.008,Hijack Execution Flow: Path Interception by Search Order Hijacking,1,powerShell Persistence via hijacking default modules - Get-Variable.exe,1561de08-0b4b-498e-8261-e922f3494aae,powershell
 defense-evasion,T1484.001,Domain Policy Modification: Group Policy Modification,1,LockBit Black - Modify Group policy settings -cmd,9ab80952-74ee-43da-a98c-1e740a985f28,command_prompt
 defense-evasion,T1484.001,Domain Policy Modification: Group Policy Modification,2,LockBit Black - Modify Group policy settings -Powershell,b51eae65-5441-4789-b8e8-64783c26c1d1,powershell
@@ -529,6 +534,11 @@ execution,T1059.001,Command and Scripting Interpreter: PowerShell,19,PowerShell 
 execution,T1059.001,Command and Scripting Interpreter: PowerShell,20,PowerShell Invoke Known Malicious Cmdlets,49eb9404-5e0f-4031-a179-b40f7be385e3,powershell
 execution,T1059.001,Command and Scripting Interpreter: PowerShell,21,PowerUp Invoke-AllChecks,1289f78d-22d2-4590-ac76-166737e1811b,powershell
 execution,T1059.001,Command and Scripting Interpreter: PowerShell,22,Abuse Nslookup with DNS Records,999bff6d-dc15-44c9-9f5c-e1051bfc86e1,powershell
+execution,T1559,Inter-Process Communication,1,Cobalt Strike Artifact Kit pipe,bd13b9fc-b758-496a-b81a-397462f82c72,command_prompt
+execution,T1559,Inter-Process Communication,2,Cobalt Strike Lateral Movement (psexec_psh) pipe,830c8b6c-7a70-4f40-b975-8bbe74558acd,command_prompt
+execution,T1559,Inter-Process Communication,3,Cobalt Strike SSH (postex_ssh) pipe,d1f72fa0-5bc2-4b4b-bd1e-43b6e8cfb2e6,command_prompt
+execution,T1559,Inter-Process Communication,4,Cobalt Strike post-exploitation pipe (4.2 and later),7a48f482-246f-4aeb-9837-21c271ebf244,command_prompt
+execution,T1559,Inter-Process Communication,5,Cobalt Strike post-exploitation pipe (before 4.2),8dbfc15c-527b-4ab0-a272-019f469d367f,command_prompt
 execution,T1059.003,Command and Scripting Interpreter: Windows Command Shell,1,Create and Execute Batch Script,9e8894c0-50bd-4525-a96c-d4ac78ece388,powershell
 execution,T1059.003,Command and Scripting Interpreter: Windows Command Shell,2,Writes text to a file and displays it.,127b4afe-2346-4192-815c-69042bec570e,command_prompt
 execution,T1059.003,Command and Scripting Interpreter: Windows Command Shell,3,Suspicious Execution via Windows Command Shell,d0eb3597-a1b3-4d65-b33b-2cda8d397f20,command_prompt
@@ -761,6 +771,10 @@ credential-access,T1555.003,Credentials from Password Stores: Credentials from W
 credential-access,T1552.004,Unsecured Credentials: Private Keys,1,Private Keys,520ce462-7ca7-441e-b5a5-f8347f632696,command_prompt
 credential-access,T1552.004,Unsecured Credentials: Private Keys,6,ADFS token signing and encryption certificates theft - Local,78e95057-d429-4e66-8f82-0f060c1ac96f,powershell
 credential-access,T1552.004,Unsecured Credentials: Private Keys,7,ADFS token signing and encryption certificates theft - Remote,cab413d8-9e4a-4b8d-9b84-c985bd73a442,powershell
+credential-access,T1552.004,Unsecured Credentials: Private Keys,8,CertUtil ExportPFX,336b25bf-4514-4684-8924-474974f28137,powershell
+credential-access,T1552.004,Unsecured Credentials: Private Keys,9,Export Root Certificate with Export-PFXCertificate,7617f689-bbd8-44bc-adcd-6f8968897848,powershell
+credential-access,T1552.004,Unsecured Credentials: Private Keys,10,Export Root Certificate with Export-Certificate,78b274f8-acb0-428b-b1f7-7b0d0e73330a,powershell
+credential-access,T1552.004,Unsecured Credentials: Private Keys,11,Export Certificates with Mimikatz,290df60e-4b5d-4a5e-b0c7-dc5348ea0c86,command_prompt
 credential-access,T1557.001,Adversary-in-the-Middle: LLMNR/NBT-NS Poisoning and SMB Relay,1,LLMNR Poisoning with Inveigh (PowerShell),deecd55f-afe0-4a62-9fba-4d1ba2deb321,powershell
 credential-access,T1003.001,OS Credential Dumping: LSASS Memory,1,Dump LSASS.exe Memory using ProcDump,0be2230c-9ab3-4ac2-8826-3199b9a0ebf8,command_prompt
 credential-access,T1003.001,OS Credential Dumping: LSASS Memory,2,Dump LSASS.exe Memory using comsvcs.dll,2536dee2-12fb-459a-8c37-971844fa73be,powershell
@@ -822,6 +836,7 @@ discovery,T1033,System Owner/User Discovery,1,System Owner/User Discovery,4c4959
 discovery,T1033,System Owner/User Discovery,3,Find computers where user has session - Stealth mode (PowerView),29857f27-a36f-4f7e-8084-4557cd6207ca,powershell
 discovery,T1033,System Owner/User Discovery,4,User Discovery With Env Vars PowerShell Script,dcb6cdee-1fb0-4087-8bf8-88cfd136ba51,powershell
 discovery,T1033,System Owner/User Discovery,5,GetCurrent User with PowerShell Script,1392bd0f-5d5a-429e-81d9-eb9d4d4d5b3b,powershell
+discovery,T1033,System Owner/User Discovery,6,System Discovery - SocGholish whoami,3d257a03-eb80-41c5-b744-bb37ac7f65c7,powershell
 discovery,T1615,Group Policy Discovery,1,Display group policy information via gpresult,0976990f-53b1-4d3f-a185-6df5be429d3b,command_prompt
 discovery,T1615,Group Policy Discovery,2,Get-DomainGPO to display group policy information via PowerView,4e524c4e-0e02-49aa-8df5-93f3f7959b9f,powershell
 discovery,T1615,Group Policy Discovery,3,WinPwn - GPOAudit,bc25c04b-841e-4965-855f-d1f645d7ab73,powershell
@@ -843,6 +858,7 @@ discovery,T1087.002,Account Discovery: Domain Account,13,Enumerate Linked Polici
 discovery,T1087.002,Account Discovery: Domain Account,14,Enumerate Root Domain linked policies Discovery,00c652e2-0750-4ca6-82ff-0204684a6fe4,powershell
 discovery,T1087.002,Account Discovery: Domain Account,15,WinPwn - generaldomaininfo,ce483c35-c74b-45a7-a670-631d1e69db3d,powershell
 discovery,T1087.002,Account Discovery: Domain Account,16,Kerbrute - userenum,f450461c-18d1-4452-9f0d-2c42c3f08624,powershell
+discovery,T1087.002,Account Discovery: Domain Account,17,Wevtutil - Discover NTLM Users Remote,b8a563d4-a836-4993-a74e-0a19b8481bfe,powershell
 discovery,T1087.001,Account Discovery: Local Account,8,Enumerate all accounts on Windows (Local),80887bec-5a9b-4efc-a81d-f83eb2eb32ab,command_prompt
 discovery,T1087.001,Account Discovery: Local Account,9,Enumerate all accounts via PowerShell (Local),ae4b6361-b5f8-46cb-a3f9-9cf108ccfe7b,powershell
 discovery,T1087.001,Account Discovery: Local Account,10,Enumerate logged on users via CMD (Local),a138085e-bfe5-46ba-a242-74a6fb884af3,command_prompt
@@ -969,6 +985,7 @@ discovery,T1518,Software Discovery,6,WinPwn - powerSQL,0bb64470-582a-4155-bde2-d
 discovery,T1124,System Time Discovery,1,System Time Discovery,20aba24b-e61f-4b26-b4ce-4784f763ca20,command_prompt
 discovery,T1124,System Time Discovery,2,System Time Discovery - PowerShell,1d5711d6-655c-4a47-ae9c-6503c74fa877,powershell
 discovery,T1124,System Time Discovery,4,System Time Discovery W32tm as a Delay,d5d5a6b0-0f92-42d8-985d-47aafa2dd4db,command_prompt
+discovery,T1124,System Time Discovery,5,System Time with Windows time Command,53ead5db-7098-4111-bb3f-563be390e72e,command_prompt
 command-and-control,T1132.001,Data Encoding: Standard Encoding,2,XOR Encoded data.,c3ed6d2a-e3ad-400d-ad78-bbfdbfeacc08,powershell
 command-and-control,T1071.004,Application Layer Protocol: DNS,1,DNS Large Query Volume,1700f5d6-5a44-487b-84de-bc66f507b0a6,powershell
 command-and-control,T1071.004,Application Layer Protocol: DNS,2,DNS Regular Beaconing,3efc144e-1af8-46bb-8ca2-1376bb6db8b6,powershell
@@ -1027,6 +1044,7 @@ impact,T1531,Account Access Removal,1,Change User Password - Windows,1b99ef28-f8
 impact,T1531,Account Access Removal,2,Delete User - Windows,f21a1d7d-a62f-442a-8c3a-2440d43b19e5,command_prompt
 impact,T1531,Account Access Removal,3,Remove Account From Domain Admin Group,43f71395-6c37-498e-ab17-897d814a0947,powershell
 impact,T1486,Data Encrypted for Impact,5,PureLocker Ransom Note,649349c7-9abf-493b-a7a2-b1aa4d141528,command_prompt
+impact,T1486,Data Encrypted for Impact,6,Data Encrypted with GPG4Win,4541e2c2-33c8-44b1-be79-9161440f1718,powershell
 impact,T1485,Data Destruction,1,Windows - Overwrite file with Sysinternals SDelete,476419b5-aebf-4366-a131-ae3e8dae5fc2,powershell
 impact,T1485,Data Destruction,3,Overwrite deleted data on C drive,321fd25e-0007-417f-adec-33232252be19,command_prompt
 impact,T1490,Inhibit System Recovery,1,Windows - Delete Volume Shadow Copies,43819286-91a9-4369-90ed-d31fb4da2c01,command_prompt
@@ -1051,7 +1069,6 @@ initial-access,T1078.001,Valid Accounts: Default Accounts,2,Activate Guest Accou
 initial-access,T1078.003,Valid Accounts: Local Accounts,1,Create local account with admin privileges,a524ce99-86de-4db6-b4f9-e08f35a47a15,command_prompt
 initial-access,T1078.003,Valid Accounts: Local Accounts,3,WinPwn - Loot local Credentials - powerhell kittie,9e9fd066-453d-442f-88c1-ad7911d32912,powershell
 initial-access,T1078.003,Valid Accounts: Local Accounts,4,WinPwn - Loot local Credentials - Safetykatz,e9fdb899-a980-4ba4-934b-486ad22e22f4,powershell
-exfiltration,T1567,Exfiltration Over Web Service,1,Data Exfiltration with ConfigSecurityPolicy,5568a8f4-a8b1-4c40-9399-4969b642f122,powershell
 exfiltration,T1020,Automated Exfiltration,1,IcedID Botnet HTTP PUT,9c780d3d-3a14-4278-8ee5-faaeb2ccfbe0,powershell
 exfiltration,T1048.002,Exfiltration Over Alternative Protocol - Exfiltration Over Asymmetric Encrypted Non-C2 Protocol,1,Exfiltrate data HTTPS using curl windows,1cdf2fb0-51b6-4fd8-96af-77020d5f1bf0,command_prompt
 exfiltration,T1041,Exfiltration Over C2 Channel,1,C2 Data Exfiltration,d1253f6e-c29b-49dc-b466-2147a6191932,powershell

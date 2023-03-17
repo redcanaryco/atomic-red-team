@@ -10,11 +10,11 @@ atomic_tests:
   input_arguments:
     output_file:
       description: Location of the payload
-      type: Path
+      type: path
       default: '%tmp%\T1218.009.dll'
     source_file:
       description: Location of the CSharp source_file
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1218.009\src\T1218.009.cs
   dependency_executor_name: powershell
   dependencies:
@@ -42,11 +42,11 @@ atomic_tests:
   input_arguments:
     output_file:
       description: Location of the payload
-      type: Path
+      type: path
       default: $Env:TEMP\T1218.009.dll
     source_file:
       description: Location of the CSharp source_file
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1218.009\src\T1218.009.cs
   dependency_executor_name: powershell
   dependencies:
@@ -71,4 +71,3 @@ atomic_tests:
       Remove-Item $parentpath\T1218.009.tlb -ErrorAction Ignore | Out-Null
     name: powershell
     elevation_required: true
-

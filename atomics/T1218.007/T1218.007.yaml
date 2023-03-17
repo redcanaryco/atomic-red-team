@@ -10,16 +10,16 @@ atomic_tests:
   input_arguments:
     msi_payload:
       description: MSI file to execute
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1218.007\bin\T1218.007_JScript.msi
     msi_exe:
       description: MSIExec File Path
-      type: Path
+      type: path
       default: c:\windows\system32\msiexec.exe
     action:
       description: |
         Specifies the MSI action to perform: i (install), a (admin), j (advertise). The included MSI is designed to support all three action types.
-      type: String
+      type: string
       default: i
   dependency_executor_name: powershell
   dependencies:
@@ -43,16 +43,16 @@ atomic_tests:
   input_arguments:
     msi_payload:
       description: MSI file to execute
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1218.007\bin\T1218.007_VBScript.msi
     msi_exe:
       description: MSIExec File Path
-      type: Path
+      type: path
       default: c:\windows\system32\msiexec.exe
     action:
       description: |
         Specifies the MSI action to perform: i (install), a (admin), j (advertise). The included MSI is designed to support all three action types.
-      type: String
+      type: string
       default: i
   dependency_executor_name: powershell
   dependencies:
@@ -76,16 +76,16 @@ atomic_tests:
   input_arguments:
     msi_payload:
       description: MSI file to execute
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1218.007\bin\T1218.007_DLL.msi
     msi_exe:
       description: MSIExec File Path
-      type: Path
+      type: path
       default: c:\windows\system32\msiexec.exe
     action:
       description: |
         Specifies the MSI action to perform: i (install), a (admin), j (advertise). The included MSI is designed to support all three action types.
-      type: String
+      type: string
       default: i
   dependency_executor_name: powershell
   dependencies:
@@ -109,16 +109,16 @@ atomic_tests:
   input_arguments:
     msi_payload:
       description: MSI file to execute
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1218.007\bin\T1218.007_EXE.msi
     msi_exe:
       description: MSIExec File Path
-      type: Path
+      type: path
       default: c:\windows\system32\msiexec.exe
     action:
       description: |
         Specifies the MSI action to perform: i (install), a (admin), j (advertise). The included MSI is designed to support all three action types.
-      type: String
+      type: string
       default: i
   dependency_executor_name: powershell
   dependencies:
@@ -142,12 +142,12 @@ atomic_tests:
   input_arguments:
     msi_payload:
       description: MSI file to execute
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1218.007\bin\T1218.007_JScript.msi
     action:
       description: |
         Specifies the MSI action to perform: Install, Admin, Advertise. The included MSI is designed to support all three action types.
-      type: String
+      type: string
       default: Install
   dependency_executor_name: powershell
   dependencies:
@@ -171,12 +171,12 @@ atomic_tests:
   input_arguments:
     msi_payload:
       description: MSI file to execute
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1218.007\bin\T1218.007_VBScript.msi
     action:
       description: |
         Specifies the MSI action to perform: Install, Admin, Advertise. The included MSI is designed to support all three action types.
-      type: String
+      type: string
       default: Install
   dependency_executor_name: powershell
   dependencies:
@@ -200,12 +200,12 @@ atomic_tests:
   input_arguments:
     msi_payload:
       description: MSI file to execute
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1218.007\bin\T1218.007_DLL.msi
     action:
       description: |
         Specifies the MSI action to perform: Install, Admin, Advertise. The included MSI is designed to support all three action types.
-      type: String
+      type: string
       default: Install
   dependency_executor_name: powershell
   dependencies:
@@ -229,12 +229,12 @@ atomic_tests:
   input_arguments:
     msi_payload:
       description: MSI file to execute
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1218.007\bin\T1218.007_EXE.msi
     action:
       description: |
         Specifies the MSI action to perform: Install, Admin, Advertise. The included MSI is designed to support all three action types.
-      type: String
+      type: string
       default: Install
   dependency_executor_name: powershell
   dependencies:
@@ -258,11 +258,11 @@ atomic_tests:
   input_arguments:
     dll_payload:
       description: DLL to execute that has an implemented DllRegisterServer function
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1218.007\bin\MSIRunner.dll
     msi_exe:
       description: MSIExec File Path
-      type: Path
+      type: path
       default: c:\windows\system32\msiexec.exe
   dependency_executor_name: powershell
   dependencies:
@@ -286,11 +286,11 @@ atomic_tests:
   input_arguments:
     dll_payload:
       description: DLL to execute that has an implemented DllUnregisterServer function
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1218.007\bin\MSIRunner.dll
     msi_exe:
       description: MSIExec File Path
-      type: Path
+      type: path
       default: c:\windows\system32\msiexec.exe
   dependency_executor_name: powershell
   dependencies:
@@ -314,11 +314,11 @@ atomic_tests:
   input_arguments:
     msi_payload:
       description: MSI file to execute
-      type: String
+      type: string
       default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/T1218.007_JScript.msi
     msi_exe:
       description: MSIExec File Path
-      type: Path
+      type: path
       default: c:\windows\system32\msiexec.exe
   executor:
     command: |
