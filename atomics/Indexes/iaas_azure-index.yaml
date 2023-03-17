@@ -36444,7 +36444,8 @@ persistence:
           type: string
           default: p4sswd
         user_principal_name:
-          description: Name of the targeted user (user principal)
+          description: Display Name, or User Principal Name, of the targeted user
+            principal
           type: string
           default: SuperUser
         role_name:
@@ -36473,7 +36474,7 @@ persistence:
           $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
           Connect-AzAccount -Credential $Credential
 
-          $user = Get-AzADUser | where-object {$_.DisplayName -eq "#{user_principal_name}"}
+          $user = Get-AzADUser | where-object {$_.DisplayName -eq "#{user_principal_name}" -or $_.UserPrincipalName -eq "#{user_principal_name}" }
           if ($user -eq $null) { Write-Warning "User not found"; exit }
           $subscription = Get-AzSubscription | where-object {$_.Name -eq "#{subscription}"}
           if ($subscription -eq $null) { Write-Warning "Subscription not found"; exit }
@@ -36488,7 +36489,7 @@ persistence:
           $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
           Connect-AzAccount -Credential $Credential -ErrorAction Ignore
 
-          $user = Get-AzADUser | where-object {$_.DisplayName -eq "#{user_principal_name}"}
+          $user = Get-AzADUser | where-object {$_.DisplayName -eq "#{user_principal_name}" -or $_.UserPrincipalName -eq "#{user_principal_name}" }
           if ($user -eq $null) { Write-Warning "User not found"; exit }
           $subscription = Get-AzSubscription | where-object {$_.Name -eq "#{subscription}"}
           if ($subscription -eq $null) { Write-Warning "Subscription not found"; exit }
