@@ -59,7 +59,9 @@
 - [T1098.001 Account Manipulation: Additional Cloud Credentials](../../T1098.001/T1098.001.md)
   - Atomic Test #1: Azure AD Application Hijacking - Service Principal [azure-ad]
   - Atomic Test #2: Azure AD Application Hijacking - App Registration [azure-ad]
-- T1136.003 Create Account: Cloud Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1136.003 Create Account: Cloud Account](../../T1136.003/T1136.003.md)
+  - Atomic Test #2: Azure AD - Create a new user [azure-ad]
+  - Atomic Test #3: Azure AD - Create a new user via Azure CLI [azure-ad]
 - [T1098 Account Manipulation](../../T1098/T1098.md)
   - Atomic Test #4: Azure AD - adding user to Azure AD role [azure-ad]
   - Atomic Test #5: Azure AD - adding service principal to Azure AD role [azure-ad]

