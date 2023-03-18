@@ -1,4 +1,3 @@
----
 attack_technique: T1110.004
 display_name: 'Brute Force: Credential Stuffing'
 
@@ -9,22 +8,22 @@ atomic_tests:
     Using username,password combination from a password dump to login over SSH.
 
   supported_platforms:
-    - linux
+  - linux
 
   input_arguments:
     target_host:
       description: IP Address / Hostname you want to target.
-      type: String
+      type: string
       default: localhost
 
   dependency_executor_name: bash
   dependencies:
-    - description: |
-        Requires SSHPASS
-      prereq_command: |
-        if [ -x "$(command -v sshpass)" ]; then exit 0; else exit 1; fi;
-      get_prereq_command: |
-        if [ $(cat /etc/os-release | grep -i ID=ubuntu) ] || [ $(cat /etc/os-release | grep -i ID=kali) ]; then sudo apt update && sudo apt install sshpass -y; else echo "This test requires sshpass" ; fi ;
+  - description: |
+      Requires SSHPASS
+    prereq_command: |
+      if [ -x "$(command -v sshpass)" ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      if [ $(cat /etc/os-release | grep -i ID=ubuntu) ] || [ $(cat /etc/os-release | grep -i ID=kali) ]; then sudo apt update && sudo apt install sshpass -y; else echo "This test requires sshpass" ; fi ;
 
   executor:
     name: bash
@@ -39,23 +38,23 @@ atomic_tests:
     Using username,password combination from a password dump to login over SSH.
 
   supported_platforms:
-    - macos
+  - macos
 
   input_arguments:
     target_host:
       description: IP Address / Hostname you want to target.
-      type: String
+      type: string
       default: localhost
 
   dependency_executor_name: bash
   dependencies:
-    - description: |
-        Requires SSHPASS
-      prereq_command: |
-        if [ -x "$(command -v sshpass)" ]; then exit 0; else exit 1; fi;
-      get_prereq_command: |
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/e8114640740938c20cc41ffdbf07816b428afc49/install.sh)"
-        brew install hudochenkov/sshpass/sshpass
+  - description: |
+      Requires SSHPASS
+    prereq_command: |
+      if [ -x "$(command -v sshpass)" ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/e8114640740938c20cc41ffdbf07816b428afc49/install.sh)"
+      brew install hudochenkov/sshpass/sshpass
 
   executor:
     name: bash
@@ -66,18 +65,18 @@ atomic_tests:
 
 - name: Brute Force:Credential Stuffing using Kerbrute Tool
   auto_generated_guid: 4852c630-87a9-409b-bb5e-5dc12c9ebcde
-  description: |  
+  description: |
     Will read username and password combos from a file or stdin (format username:password) and perform a bruteforce attack
   supported_platforms:
   - windows
   input_arguments:
     domaincontroller:
       description: Domain controller where test will be run
-      type: String
+      type: string
       default: $ENV:userdnsdomain
     domain:
       description: Domain where you will be testing
-      type: String
+      type: string
       default: $ENV:userdomain
   dependency_executor_name: powershell
   dependencies:
@@ -93,7 +92,7 @@ atomic_tests:
       if (test-path $env:temp\bruteforce.txt){exit 0} else {exit 1}
     get_prereq_command: |
       invoke-webrequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1110.004/src/bruteforce.txt?raw=true" -outfile "$env:temp\bruteforce.txt"
-  executor: 
+  executor:
     name: powershell
     elevation_required: false
     command: |

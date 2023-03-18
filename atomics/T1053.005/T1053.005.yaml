@@ -1,4 +1,3 @@
----
 attack_technique: T1053.005
 display_name: 'Scheduled Task/Job: Scheduled Task'
 atomic_tests:
@@ -23,15 +22,15 @@ atomic_tests:
   description: |
     Upon successful execution, cmd.exe will create a scheduled task to spawn cmd.exe at 20:10.
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     task_command:
       description: What you want to execute
-      type: String
+      type: string
       default: C:\windows\system32\cmd.exe
     time:
       description: What time 24 Hour
-      type: String
+      type: string
       default: "20:10"
   executor:
     name: command_prompt
@@ -43,31 +42,30 @@ atomic_tests:
 - name: Scheduled task Remote
   auto_generated_guid: 2e5eac3e-327b-4a88-a0c0-c4057039a8dd
   description: |
-      Create a task on a remote system.
-
-      Upon successful execution, cmd.exe will create a scheduled task to spawn cmd.exe at 20:10 on a remote endpoint.
+    Create a task on a remote system.
+    Upon successful execution, cmd.exe will create a scheduled task to spawn cmd.exe at 20:10 on a remote endpoint.
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     task_command:
       description: What you want to execute
-      type: String
+      type: string
       default: C:\windows\system32\cmd.exe
     time:
       description: What time 24 Hour
-      type: String
+      type: string
       default: "20:10"
     target:
       description: Target
-      type: String
+      type: string
       default: localhost
     user_name:
       description: 'Username to authenticate with, format: DOMAIN\User'
-      type: String
+      type: string
       default: DOMAIN\user
     password:
       description: Password to authenticate with
-      type: String
+      type: string
       default: At0micStrong
   executor:
     name: command_prompt
@@ -83,7 +81,7 @@ atomic_tests:
 
     Upon successful execution, powershell.exe will create a scheduled task to spawn cmd.exe at 20:10.
   supported_platforms:
-    - windows
+  - windows
   executor:
     name: powershell
     elevation_required: false
@@ -106,7 +104,7 @@ atomic_tests:
   input_arguments:
     ms_product:
       description: Maldoc application Word
-      type: String
+      type: string
       default: Word
   dependency_executor_name: powershell
   dependencies:
@@ -127,26 +125,28 @@ atomic_tests:
       IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing) 
       Invoke-MalDoc -macroFile "PathToAtomicsFolder\T1053.005\src\T1053.005-macrocode.txt" -officeProduct "#{ms_product}" -sub "Scheduler"
     name: powershell
+    cleanup_command: |
+      Unregister-ScheduledTask -TaskName "Run Notepad" -Confirm:$false
 - name: WMI Invoke-CimMethod Scheduled Task
   auto_generated_guid: e16b3b75-dc9e-4cde-a23d-dfa2d0507b3b
   description: |
     Create an scheduled task that executes notepad.exe after user login from XML by leveraging WMI class PS_ScheduledTask. Does the same thing as Register-ScheduledTask cmdlet behind the scenes.
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     xml_path:
       description: path of vbs to use when creating masquerading files
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1053.005\src\T1053_005_WMI.xml
   dependency_executor_name: powershell
   dependencies:
-    - description: |
-        File to copy must exist on disk at specified location (#{xml_path})
-      prereq_command: |
-        if (Test-Path #{xml_path}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        New-Item -Type Directory (split-path #{xml_path}) -ErrorAction ignore | Out-Null
-        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1053.005/src/T1053_005_WMI.xml" -OutFile "#{xml_path}"
+  - description: |
+      File to copy must exist on disk at specified location (#{xml_path})
+    prereq_command: |
+      if (Test-Path #{xml_path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{xml_path}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1053.005/src/T1053_005_WMI.xml" -OutFile "#{xml_path}"
   executor:
     name: powershell
     elevation_required: true
@@ -161,7 +161,7 @@ atomic_tests:
     A Base64 Encoded command will be stored in the registry (ping 127.0.0.1) and then a scheduled task will be created.
     The scheduled task will launch powershell to decode and run the command in the registry daily.
     This is a persistence mechanism recently seen in use by Qakbot.  
-    
+
     [Additiona Information](https://thedfirreport.com/2022/02/07/qbot-likes-to-move-it-move-it/)
   supported_platforms:
   - windows
@@ -178,27 +178,27 @@ atomic_tests:
       schtasks /delete /tn "ATOMIC-T1053.005" /F >nul 2>&1
       reg delete HKCU\SOFTWARE\ATOMIC-T1053.005 /F >nul 2>&1
     name: command_prompt
-- name: Import XML Schedule Task with Hidden Attribute 
+- name: Import XML Schedule Task with Hidden Attribute
   auto_generated_guid: cd925593-fbb4-486d-8def-16cbdf944bf4
   description: |
     Create an scheduled task that executes calc.exe after user login from XML that contains hidden setting attribute. 
     This technique was seen several times in tricbot malware and also with the targetted attack campaigne the industroyer2.
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     xml_path:
       description: path of vbs to use when creating masquerading files
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1053.005\src\T1053_05_SCTASK_HIDDEN_ATTRIB.xml
   dependency_executor_name: powershell
   dependencies:
-    - description: |
-        File to copy must exist on disk at specified location (#{xml_path})
-      prereq_command: |
-        if (Test-Path #{xml_path}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        New-Item -Type Directory (split-path #{xml_path}) -ErrorAction ignore | Out-Null
-        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1053.005/src/T1053_05_SCTASK_HIDDEN_ATTRIB.xml" -OutFile "#{xml_path}"
+  - description: |
+      File to copy must exist on disk at specified location (#{xml_path})
+    prereq_command: |
+      if (Test-Path #{xml_path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{xml_path}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1053.005/src/T1053_05_SCTASK_HIDDEN_ATTRIB.xml" -OutFile "#{xml_path}"
   executor:
     name: powershell
     elevation_required: true
@@ -215,7 +215,7 @@ atomic_tests:
 
     Upon successful execution, powershell.exe will create a scheduled task and modify the action. 
   supported_platforms:
-    - windows
+  - windows
   executor:
     name: powershell
     elevation_required: false

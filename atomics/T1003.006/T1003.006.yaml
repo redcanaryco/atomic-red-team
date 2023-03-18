@@ -9,19 +9,19 @@ atomic_tests:
     Privileges required: domain admin or domain controller account (by default), or any other account with required rights.
     [Reference](https://adsecurity.org/?p=1729)
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     domain:
       description: Targeted Active Directory domain
-      type: String
+      type: string
       default: '%userdnsdomain%'
     user:
       description: Targeted user
-      type: String
+      type: string
       default: krbtgt
     mimikatz_path:
       description: Mimikatz windows executable
-      type: Path
+      type: path
       default: '%tmp%\mimikatz\x64\mimikatz.exe'
   dependency_executor_name: powershell
   dependencies:
@@ -56,7 +56,7 @@ atomic_tests:
   input_arguments:
     logonserver:
       description: ComputerName argument default %logonserver%
-      type: String
+      type: string
       default: $ENV:logonserver.TrimStart("\")
   dependency_executor_name: powershell
   dependencies:
@@ -72,4 +72,4 @@ atomic_tests:
     command: |
       Get-ADReplAccount -All -Server #{logonserver}
     name: powershell
-    elevation_required: False
+    elevation_required: false

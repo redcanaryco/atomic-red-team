@@ -7,23 +7,23 @@ atomic_tests:
   description: |
     Uses GZip from Python to compress files
   supported_platforms:
-    - linux
+  - linux
   input_arguments:
     path_to_input_file:
       description: Path to the file that you want to compress
-      type: Path
+      type: path
       default: /etc/passwd
     path_to_output_file:
       description: Path of the file that you want your .gz file to be
-      type: Path
+      type: path
       default: /tmp/passwd.gz
   dependency_executor_name: bash
   dependencies:
-    - description: |
-        Requires Python
-      prereq_command: |
-        which_python=`which python`; $which_python -V
-      get_prereq_command: |
+  - description: |
+      Requires Python
+    prereq_command: |
+      which_python=`which python`; $which_python -V
+    get_prereq_command: |
   executor:
     name: bash
     elevation_required: false
@@ -36,28 +36,28 @@ atomic_tests:
   description: |
     Uses bz2 from Python to compress files
   supported_platforms:
-    - linux
+  - linux
   input_arguments:
     path_to_input_file:
       description: Path to the file that you want to compress
-      type: Path
+      type: path
       default: /etc/passwd
     path_to_output_file:
       description: Path of the file that you want your .bz2 file to be
-      type: Path
+      type: path
       default: /tmp/passwd.bz2
   dependency_executor_name: bash
   dependencies:
-    - description: |
-        Requires Python
-      prereq_command: |
-        which_python=`which python`; $which_python -V
-      get_prereq_command: | 
+  - description: |
+      Requires Python
+    prereq_command: |
+      which_python=`which python`; $which_python -V
+    get_prereq_command: |
   executor:
     name: bash
     elevation_required: false
     command: |
-      $which_python -c "import bz2;input_file=open('#{path_to_input_file}','rb');content=input_file.read();input_file.close();bz2content=bz2.compress(content,compresslevel=9);output_file=open('#{path_to_output_file}','w+');output_file.write(bz2content);output_file.close();"
+      $which_python -c "import bz2;input_file=open('#{path_to_input_file}','rb');content=input_file.read();input_file.close();bz2content=bz2.compress(content,compresslevel=9);output_file=open('#{path_to_output_file}','w+');output_file.write(str(bz2content));output_file.close();"
     cleanup_command: |
       rm #{path_to_output_file}
 - name: Compressing data using zipfile in Python (Linux)
@@ -65,23 +65,23 @@ atomic_tests:
   description: |
     Uses zipfile from Python to compress files
   supported_platforms:
-    - linux
+  - linux
   input_arguments:
     path_to_input_file:
       description: Path to the file that you want to compress
-      type: Path
+      type: path
       default: /etc/passwd
     path_to_output_file:
       description: Path of the file that you want your .zip file to be
-      type: Path
+      type: path
       default: /tmp/passwd.zip
   dependency_executor_name: bash
   dependencies:
-    - description: |
-        Requires Python
-      prereq_command: |
-        which_python=`which python`; $which_python -V
-      get_prereq_command: |
+  - description: |
+      Requires Python
+    prereq_command: |
+      which_python=`which python`; $which_python -V
+    get_prereq_command: |
   executor:
     name: bash
     elevation_required: false
@@ -94,23 +94,23 @@ atomic_tests:
   description: |
     Uses tarfile from Python to compress files
   supported_platforms:
-    - linux
+  - linux
   input_arguments:
     path_to_input_file:
       description: Path to the file that you want to compress
-      type: Path
+      type: path
       default: /etc/passwd
     path_to_output_file:
       description: Path of the file that you want your .tar.gz file to be
-      type: Path
+      type: path
       default: /tmp/passwd.tar.gz
   dependency_executor_name: bash
   dependencies:
-    - description: |
-        Requires Python
-      prereq_command: |
-        which_python=`which python`; $which_python -V
-      get_prereq_command: |
+  - description: |
+      Requires Python
+    prereq_command: |
+      which_python=`which python`; $which_python -V
+    get_prereq_command: |
   executor:
     name: bash
     elevation_required: false

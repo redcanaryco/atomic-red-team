@@ -11,11 +11,11 @@ atomic_tests:
   input_arguments:
     numeric_mode:
       description: Specified numeric mode value
-      type: Integer
+      type: integer
       default: 755
     file_or_folder:
       description: Path of the file or folder
-      type: Path
+      type: path
       default: /tmp/AtomicRedTeam/atomics/T1222.002
   executor:
     command: |
@@ -31,11 +31,11 @@ atomic_tests:
   input_arguments:
     symbolic_mode:
       description: Specified symbolic mode value
-      type: String
+      type: string
       default: a+w
     file_or_folder:
       description: Path of the file or folder
-      type: Path
+      type: path
       default: /tmp/AtomicRedTeam/atomics/T1222.002
   executor:
     command: |
@@ -51,11 +51,11 @@ atomic_tests:
   input_arguments:
     numeric_mode:
       description: Specified numeric mode value
-      type: Integer
+      type: integer
       default: 755
     file_or_folder:
       description: Path of the file or folder
-      type: Path
+      type: path
       default: /tmp/AtomicRedTeam/atomics/T1222.002
   executor:
     command: |
@@ -71,11 +71,11 @@ atomic_tests:
   input_arguments:
     symbolic_mode:
       description: Specified symbolic mode value
-      type: String
+      type: string
       default: a+w
     file_or_folder:
       description: Path of the file or folder
-      type: Path
+      type: path
       default: /tmp/AtomicRedTeam/atomics/T1222.002
   executor:
     command: |
@@ -91,15 +91,15 @@ atomic_tests:
   input_arguments:
     owner:
       description: Username of desired owner
-      type: String
+      type: string
       default: root
     file_or_folder:
       description: Path of the file or folder
-      type: Path
+      type: path
       default: /tmp/AtomicRedTeam/atomics/T1222.002/T1222.002.yaml
     group:
       description: Group name of desired group
-      type: String
+      type: string
       default: root
   executor:
     command: |
@@ -115,15 +115,15 @@ atomic_tests:
   input_arguments:
     owner:
       description: Username of desired owner
-      type: String
+      type: string
       default: root
     file_or_folder:
       description: Path of the file or folder
-      type: Path
+      type: path
       default: /tmp/AtomicRedTeam/atomics/T1222.002
     group:
       description: Group name of desired group
-      type: String
+      type: string
       default: root
   executor:
     command: |
@@ -139,11 +139,11 @@ atomic_tests:
   input_arguments:
     owner:
       description: Username of desired owner
-      type: String
+      type: string
       default: root
     file_or_folder:
       description: Path of the file or folder
-      type: Path
+      type: path
       default: /tmp/AtomicRedTeam/atomics/T1222.002/T1222.002.yaml
   executor:
     command: |
@@ -159,11 +159,11 @@ atomic_tests:
   input_arguments:
     owner:
       description: Username of desired owner
-      type: String
+      type: string
       default: root
     file_or_folder:
       description: Path of the file or folder
-      type: Path
+      type: path
       default: /tmp/AtomicRedTeam/atomics/T1222.002
   executor:
     command: |
@@ -180,7 +180,7 @@ atomic_tests:
   input_arguments:
     file_to_modify:
       description: Path of the file
-      type: Path
+      type: path
       default: /var/spool/cron/root
   executor:
     command: |
@@ -196,23 +196,23 @@ atomic_tests:
   input_arguments:
     source_file:
       description: Path of c source file
-      type: Path
+      type: path
       default: PathToAtomicsFolder/T1222.002/src/T1222.002.c
     compiled_file:
       description: Path of compiled file
-      type: Path
+      type: path
       default: /tmp/T1222002
   dependency_executor_name: sh
   dependencies:
   - description: |
-       Compile the script from (#{source_file}). Destination is #{compiled_file}
+      Compile the script from (#{source_file}). Destination is #{compiled_file}
     prereq_command: |
-        gcc #{source_file} -o #{compiled_file}
+      gcc #{source_file} -o #{compiled_file}
     get_prereq_command: |
-        gcc #{source_file} -o #{compiled_file}
+      gcc #{source_file} -o #{compiled_file}
   executor:
     command: |
-       #{compiled_file} /tmp/ T1222002
+      #{compiled_file} /tmp/ T1222002
     name: sh
 - name: Chown through c script
   auto_generated_guid: 18592ba1-5f88-4e3c-abc8-ab1c6042e389
@@ -224,22 +224,22 @@ atomic_tests:
   input_arguments:
     source_file:
       description: Path of c source file
-      type: Path
+      type: path
       default: PathToAtomicsFolder/T1222.002/src/chown.c
     compiled_file:
       description: Path of compiled file
-      type: Path
+      type: path
       default: /tmp/T1222002own
   dependency_executor_name: sh
   dependencies:
   - description: |
-       Compile the script from (#{source_file}). Destination is #{compiled_file}
+      Compile the script from (#{source_file}). Destination is #{compiled_file}
     prereq_command: |
-        gcc #{source_file} -o #{compiled_file}
+      gcc #{source_file} -o #{compiled_file}
     get_prereq_command: |
-        gcc #{source_file} -o #{compiled_file}
+      gcc #{source_file} -o #{compiled_file}
   executor:
     command: |
-       sudo #{compiled_file} #{source_file}
+      sudo #{compiled_file} #{source_file}
     name: sh
     elevation_required: true

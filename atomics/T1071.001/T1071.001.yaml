@@ -13,7 +13,7 @@ atomic_tests:
   input_arguments:
     domain:
       description: Default domain to simulate against
-      type: String
+      type: string
       default: www.google.com
   executor:
     command: |
@@ -34,24 +34,24 @@ atomic_tests:
   input_arguments:
     domain:
       description: Default domain to simulate against
-      type: String
+      type: string
       default: www.google.com
     curl_path:
       description: path to curl.exe
-      type: Path
+      type: path
       default: C:\Windows\System32\Curl.exe
-  dependency_executor_name: powershell 
-  dependencies: 
-    - description: |
-        Curl must be installed on system 
-      prereq_command: |
-        if (Test-Path #{curl_path}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        Invoke-WebRequest "https://curl.haxx.se/windows/dl-7.71.1/curl-7.71.1-win32-mingw.zip" -Outfile $env:temp\curl.zip
-        Expand-Archive -Path $env:temp\curl.zip -DestinationPath $env:temp\curl
-        Copy-Item $env:temp\curl\curl-7.71.1-win32-mingw\bin\curl.exe #{curl_path}
-        Remove-Item $env:temp\curl
-        Remove-Item $env:temp\curl.zip
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Curl must be installed on system 
+    prereq_command: |
+      if (Test-Path #{curl_path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://curl.haxx.se/windows/dl-7.71.1/curl-7.71.1-win32-mingw.zip" -Outfile $env:temp\curl.zip
+      Expand-Archive -Path $env:temp\curl.zip -DestinationPath $env:temp\curl
+      Copy-Item $env:temp\curl\curl-7.71.1-win32-mingw\bin\curl.exe #{curl_path}
+      Remove-Item $env:temp\curl
+      Remove-Item $env:temp\curl.zip
   executor:
     command: |
       #{curl_path} -s -A "HttpBrowser/1.0" -m3 #{domain} >nul 2>&1
@@ -70,7 +70,7 @@ atomic_tests:
   input_arguments:
     domain:
       description: Default domain to simulate against
-      type: String
+      type: string
       default: www.google.com
   executor:
     command: |

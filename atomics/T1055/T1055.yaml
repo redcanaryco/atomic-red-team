@@ -14,7 +14,7 @@ atomic_tests:
   input_arguments:
     txt_path:
       description: Path to file containing VBA macro to run
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1055\src\x64\T1055-macrocode.txt
   dependency_executor_name: powershell
   dependencies:
@@ -55,15 +55,15 @@ atomic_tests:
   input_arguments:
     machine:
       description: machine to target (via psexec)
-      type: String
+      type: string
       default: DC1
     mimikatz_path:
       description: Mimikatz windows executable
-      type: Path
+      type: path
       default: '%tmp%\mimikatz\x64\mimikatz.exe'
     psexec_path:
       description: Path to PsExec
-      type: String
+      type: string
       default: C:\PSTools\PsExec.exe
   dependency_executor_name: powershell
   dependencies:
@@ -95,3 +95,17 @@ atomic_tests:
       #{psexec_path} /accepteula \\#{machine} -c #{mimikatz_path} "lsadump::lsa /inject /id:500" "exit"
     name: command_prompt
     elevation_required: false # locally not, but remotely on target machine then yes
+- name: Section View Injection
+  auto_generated_guid: c6952f41-6cf0-450a-b352-2ca8dae7c178
+  description: |
+    This test creates a section object in the local process followed by a local section view.
+    The shellcode is copied into the local section view and a remote section view is created in the target process, pointing to the local section view. 
+    A thread is then created in the target process, using the remote section view as start address.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      $notepad = Start-Process notepad -passthru
+      Start-Process $PathToAtomicsFolder\T1055\bin\x64\InjectView.exe
+    cleanup_command: Stop-Process $notepad.pid
+    name: powershell

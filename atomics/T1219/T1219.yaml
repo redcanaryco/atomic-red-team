@@ -82,7 +82,7 @@ atomic_tests:
       $installer = "C:\Users\$env:username\Downloads\ScreenConnect.msi"
       Invoke-WebRequest -OutFile $installer "https://d1kuyuqowve5id.cloudfront.net/ScreenConnect_21.11.4237.7885_Release.msi"
       msiexec /i $installer /qn
-    cleanup_command: | 
+    cleanup_command: |
       $installer = "C:\Users\$env:username\Downloads\ScreenConnect.msi"
       msiexec /x $installer /qn
     name: powershell
@@ -97,7 +97,7 @@ atomic_tests:
   input_arguments:
     Ammyy_Admin_Path:
       description: Path of Ammyy Admin executable
-      type: Path
+      type: path
       default: $env:temp\ammyy.exe
   dependency_executor_name: powershell
   dependencies:
@@ -110,10 +110,10 @@ atomic_tests:
   executor:
     command: |
       Start-Process #{Ammyy_Admin_Path}
-    cleanup_command: | 
+    cleanup_command: |
       Stop-Process -Name "Ammyy" -force -erroraction silentlycontinue
     name: powershell
-    elevation_required: True
+    elevation_required: true
 - name: RemotePC Software Execution
   auto_generated_guid: fbff3f1f-b0bf-448e-840f-7e1687affdce
   description: |
@@ -124,7 +124,7 @@ atomic_tests:
   input_arguments:
     RemotePC_Path:
       description: Path of RemotePC executable
-      type: Path
+      type: path
       default: $env:temp\RemotePC.exe
   dependency_executor_name: powershell
   dependencies:
@@ -137,7 +137,7 @@ atomic_tests:
   executor:
     command: |
       Start-Process #{RemotePC_Path}
-    cleanup_command: | 
+    cleanup_command: |
       Unregister-ScheduledTask -TaskName "RemotePC" -Confirm:$False -ErrorAction SilentlyContinue
       Unregister-ScheduledTask -TaskName "RPCServiceHealthCheck" -Confirm:$False -ErrorAction SilentlyContinue
       Unregister-ScheduledTask -TaskName "ServiceMonitor" -Confirm:$False -ErrorAction SilentlyContinue
@@ -149,7 +149,7 @@ atomic_tests:
       Stop-Process -Name "RemotePCService" -force -erroraction silentlycontinue
       Stop-Process -Name "RPCService" -force -erroraction silentlycontinue
     name: powershell
-    elevation_required: True
+    elevation_required: true
 - name: NetSupport - RAT Execution
   auto_generated_guid: ecca999b-e0c8-40e8-8416-ad320b146a75
   description: |
@@ -158,8 +158,8 @@ atomic_tests:
   - windows
   input_arguments:
     NetSupport_Path:
-      description: Path to the NetSupport executable. 
-      type: Path
+      description: Path to the NetSupport executable.
+      type: path
       default: $env:temp\T1219_NetSupport.exe
   dependency_executor_name: powershell
   dependencies:
@@ -172,20 +172,20 @@ atomic_tests:
   executor:
     command: |
       Start-Process #{NetSupport_Path} -ArgumentList "/S /v/qn"
-    cleanup_command: | 
+    cleanup_command: |
       Stop-Process -Name "client32" -force -erroraction silentlycontinue
     name: powershell
-    elevation_required: True 
+    elevation_required: true
 - name: UltraViewer - RAT Execution
   auto_generated_guid: 19acf63b-55c4-4b6a-8552-00a8865105c8
   description: |
-      A recent trend by threat actors, once a foothold is established, maintain long term persistence using third party remote services such as UltraViewer to provide the operator with access to the network using legitimate services. 
+    A recent trend by threat actors, once a foothold is established, maintain long term persistence using third party remote services such as UltraViewer to provide the operator with access to the network using legitimate services. 
   supported_platforms:
   - windows
   input_arguments:
     UltraViewer_Path:
-      description: Path to the UltraViewer executable. 
-      type: Path
+      description: Path to the UltraViewer executable.
+      type: path
       default: $env:temp\T1219_UltraViewer.exe
   dependency_executor_name: powershell
   dependencies:
@@ -199,10 +199,10 @@ atomic_tests:
     command: |
       Start-Process -Wait -FilePath "#{UltraViewer_Path}" -Argument "/silent" -PassThru
       Start-Process 'C:\Program Files (x86)\UltraViewer\UltraViewer_Desktop.exe'
-    cleanup_command: | 
+    cleanup_command: |
       Stop-Process -Name "UltraViewer_Desktop" -Force -ErrorAction SilentlyContinue
     name: powershell
-    elevation_required: True 
+    elevation_required: true
 - name: UltraVNC Execution
   auto_generated_guid: 42e51815-a6cc-4c75-b970-3f0ff54b610e
   description: |
@@ -213,7 +213,7 @@ atomic_tests:
   input_arguments:
     UltraVNC_Viewer_Path:
       description: Path of UltraVNC Viewer executable
-      type: Path
+      type: path
       default: $env:ProgramFiles\'uvnc bvba\UltraVnc\vncviewer.exe'
   dependency_executor_name: powershell
   dependencies:
@@ -222,12 +222,12 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{UltraVNC_Viewer_Path}) {exit 0} else {exit 1}
     get_prereq_command: |
-       Start-BitsTransfer -Source "https://www.uvnc.eu/download/1381/UltraVNC_1_3_81_X64_Setup.exe" -Destination $env:temp\vncsetup.exe -dynamic
-       start-process $env:temp\vncsetup.exe /silent
+      Start-BitsTransfer -Source "https://www.uvnc.eu/download/1381/UltraVNC_1_3_81_X64_Setup.exe" -Destination $env:temp\vncsetup.exe -dynamic
+      start-process $env:temp\vncsetup.exe /silent
   executor:
     command: |
       Start-Process #{UltraVNC_Viewer_Path}
     cleanup_command: |
       Stop-Process -Name "vncviewer" -force -erroraction silentlycontinue
     name: powershell
-    elevation_required: True
+    elevation_required: true

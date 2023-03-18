@@ -64,7 +64,7 @@ atomic_tests:
     name: powershell
 - name: Adfind - Enumerate Active Directory OUs
   auto_generated_guid: d1c73b96-ab87-4031-bad8-0e1b3b8bf3ec
-  description: | 
+  description: |
     Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory OUs
     reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
   supported_platforms:
@@ -72,7 +72,7 @@ atomic_tests:
   input_arguments:
     adfind_path:
       description: Path to the AdFind executable
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1087.002\src\AdFind.exe
   dependency_executor_name: powershell
   dependencies:
@@ -81,6 +81,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
     get_prereq_command: |
+      New-Item -Type Directory (split-path #{adfind_path}) -ErrorAction ignore | Out-Null
       Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe" -OutFile #{adfind_path}
   executor:
     command: |
@@ -88,7 +89,7 @@ atomic_tests:
     name: command_prompt
 - name: Adfind - Enumerate Active Directory Trusts
   auto_generated_guid: 15fe436d-e771-4ff3-b655-2dca9ba52834
-  description: | 
+  description: |
     Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Trusts
     reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
   supported_platforms:
@@ -96,7 +97,7 @@ atomic_tests:
   input_arguments:
     adfind_path:
       description: Path to the AdFind executable
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1087.002\src\AdFind.exe
   dependency_executor_name: powershell
   dependencies:
@@ -105,6 +106,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
     get_prereq_command: |
+      New-Item -Type Directory (split-path #{adfind_path}) -ErrorAction ignore | Out-Null
       Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe" -OutFile #{adfind_path}
   executor:
     command: |
@@ -144,11 +146,11 @@ atomic_tests:
   input_arguments:
     trufflesnout_path:
       description: Path to the TruffleSnout executable
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1482\src\TruffleSnout.exe
     domain:
       description: Domain name to search on
-      type: String
+      type: string
       default: '%userdomain%'
   dependency_executor_name: powershell
   dependencies:

@@ -10,19 +10,19 @@ atomic_tests:
   input_arguments:
     package_checker:
       description: Package checking command for linux.
-      type: String
+      type: string
       default: (rpm -q rsyslog 2>&1 >/dev/null) || (dpkg -s rsyslog | grep -q installed)
     package_installer:
       description: Package installer command for linux. Default yum
-      type: String
+      type: string
       default: (which yum && yum -y install epel-release rsyslog)||(which apt-get && apt-get install -y rsyslog)
     flavor_command:
       description: Command to disable syslog collection. Default newer rsyslog commands. i.e older command = service rsyslog stop ; chkconfig off rsyslog
-      type: String
+      type: string
       default: systemctl stop rsyslog ; systemctl disable rsyslog
     cleanup_command:
       description: Command to enable syslog collection. Default newer rsyslog commands. i.e older command = service rsyslog start ; chkconfig rsyslog on
-      type: String
+      type: string
       default: systemctl start rsyslog ; systemctl enable rsyslog
   dependency_executor_name: sh
   dependencies:
@@ -147,11 +147,11 @@ atomic_tests:
   input_arguments:
     falcond_plist:
       description: The path of the Crowdstrike Falcon plist file
-      type: Path
+      type: path
       default: /Library/LaunchDaemons/com.crowdstrike.falcond.plist
     userdaemon_plist:
       description: The path of the Crowdstrike Userdaemon plist file
-      type: Path
+      type: path
       default: /Library/LaunchDaemons/com.crowdstrike.userdaemon.plist
   executor:
     command: |
@@ -172,7 +172,7 @@ atomic_tests:
   input_arguments:
     sysmon_driver:
       description: The name of the Sysmon filter driver (this can change from the default)
-      type: String
+      type: string
       default: SysmonDrv
   dependency_executor_name: powershell
   dependencies:
@@ -217,7 +217,7 @@ atomic_tests:
   input_arguments:
     sysmon_exe:
       description: The location of the Sysmon executable from Sysinternals (ignored if sysmon.exe is found in your PATH)
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1562.001\bin\sysmon.exe
   dependency_executor_name: powershell
   dependencies:
@@ -285,7 +285,7 @@ atomic_tests:
   input_arguments:
     service_name:
       description: The name of the service to stop
-      type: String
+      type: string
       default: McAfeeDLPAgentService
   executor:
     command: |
@@ -395,7 +395,7 @@ atomic_tests:
   input_arguments:
     service_name:
       description: The name of the service to remove
-      type: String
+      type: string
       default: McAfeeDLPAgentService
   executor:
     command: |
@@ -412,7 +412,7 @@ atomic_tests:
   input_arguments:
     falcond_path:
       description: The Crowdstrike Windows Sensor path. The Guid always changes.
-      type: Path
+      type: path
       default: C:\ProgramData\Package Cache\{7489ba93-b668-447f-8401-7e57a6fe538d}\WindowsSensor.exe
   executor:
     command: if (Test-Path "#{falcond_path}") {. "#{falcond_path}" /repair /uninstall /quiet } else { Get-ChildItem -Path "C:\ProgramData\Package Cache" -Include "WindowsSensor.exe" -Recurse | % { $sig=$(Get-AuthenticodeSignature -FilePath $_.FullName); if ($sig.Status -eq "Valid" -and $sig.SignerCertificate.DnsNameList -eq "CrowdStrike, Inc.") { . "$_" /repair /uninstall /quiet; break;}}}
@@ -420,7 +420,7 @@ atomic_tests:
     elevation_required: true
 - name: Tamper with Windows Defender Evade Scanning -Folder
   auto_generated_guid: 0b19f4ee-de90-4059-88cb-63c800c683ed
-  description: | 
+  description: |
     Malware can exclude a specific path from being scanned and evading detection. 
     Upon successul execution, the file provided should be on the list of excluded path. 
     To check the exclusion list using poweshell (Get-MpPreference).ExclusionPath 
@@ -429,20 +429,20 @@ atomic_tests:
   input_arguments:
     excluded_folder:
       description: This folder will be excluded from scanning
-      type: Path
+      type: path
       default: C:\Temp
   executor:
     command: |-
       $excludedpath= "#{excluded_folder}"
       Add-MpPreference -ExclusionPath $excludedpath
-    cleanup_command: | 
+    cleanup_command: |
       $excludedpath= "#{excluded_folder}"
       Remove-MpPreference -ExclusionPath $excludedpath
     name: powershell
     elevation_required: true
 - name: Tamper with Windows Defender Evade Scanning -Extension
   auto_generated_guid: 315f4be6-2240-4552-b3e1-d1047f5eecea
-  description: | 
+  description: |
     Malware can exclude specific extensions from being scanned and evading detection. 
     Upon successful execution, the extension(s) should be on the list of excluded extensions.
     To check the exclusion list using poweshell  (Get-MpPreference).ExclusionExtension.
@@ -451,13 +451,13 @@ atomic_tests:
   input_arguments:
     excluded_exts:
       description: A list of extension to exclude from scanning
-      type: String
+      type: string
       default: .exe
   executor:
     command: |-
       $excludedExts= "#{excluded_exts}"
       Add-MpPreference -ExclusionExtension  $excludedExts
-    cleanup_command: | 
+    cleanup_command: |
       $excludedExts= "#{excluded_exts}"
       Remove-MpPreference -ExclusionExtension  $excludedExts -ErrorAction Ignore
     name: powershell
@@ -473,7 +473,7 @@ atomic_tests:
   input_arguments:
     excluded_process:
       description: A list of processes to exclude from scanning
-      type: String
+      type: string
       default: outlook.exe
   executor:
     command: |-
@@ -493,12 +493,12 @@ atomic_tests:
   input_arguments:
     username:
       description: office-365 username
-      type: String
-      default: null
+      type: string
+      default:
     password:
       description: office-365 password
-      type: String
-      default: null
+      type: string
+      default:
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -531,7 +531,7 @@ atomic_tests:
     elevation_required: false
 - name: Disable Windows Defender with DISM
   auto_generated_guid: 871438ac-7d6e-432a-b27d-3e7db69faf58
-  description: | 
+  description: |
     The following Atomic will attempt to disable Windows-Defender using the built in DISM.exe, Deployment Image Servicing and Management tool. 
     DISM is used to enumerate, install, uninstall, configure, and update features and packages in Windows images.
     A successful execution will not standard-out any details. Remove the quiet switch if verbosity is needed.
@@ -551,12 +551,12 @@ atomic_tests:
   - windows
   input_arguments:
     DefenderID:
-      description: Defender ID that is used as a sort of passcode to disable it within Defender Control from the command line. The machine-specific Defender ID can be obtained within Defender Control by going to menu, command line info, and then retrieving the 4 character passcode to continue (listed after defendercontrol /d /id in the command line info window). 
-      type: String
+      description: Defender ID that is used as a sort of passcode to disable it within Defender Control from the command line. The machine-specific Defender ID can be obtained within Defender Control by going to menu, command line info, and then retrieving the 4 character passcode to continue (listed after defendercontrol /d /id in the command line info window).
+      type: string
       default: FFFF
     DefenderControlExe:
-      description: Path to Defender Control software version 1.6. 
-      type: String
+      description: Path to Defender Control software version 1.6.
+      type: string
       default: $env:temp\DefenderControl\DefenderControl\DefenderControl.exe
   dependency_executor_name: powershell
   dependencies:
@@ -586,11 +586,11 @@ atomic_tests:
   input_arguments:
     AdvancedRun_Location:
       description: Path of Advanced Run executable
-      type: Path
+      type: path
       default: '$env:temp\AdvancedRun.exe'
     delete_defender_folder:
       description: Set to 1 to also delete the Windows Defender folder
-      type: Integer
+      type: integer
       default: 0
   dependency_executor_name: powershell
   dependencies:
@@ -667,20 +667,20 @@ atomic_tests:
 - name: LockBit Black - Disable Privacy Settings Experience Using Registry -cmd
   auto_generated_guid: d6d22332-d07d-498f-aea0-6139ecb7850e
   description: |
-     LockBit Black - Disable Privacy Settings Experience Using Registry
+    LockBit Black - Disable Privacy Settings Experience Using Registry
   supported_platforms:
   - windows
   executor:
     command: |
       reg add "HKCU\Software\Policies\Microsoft\Windows\OOBE" /v DisablePrivacyExperience /t REG_DWORD /d 1 /f
     cleanup_command: |
-       reg delete "HKCU\Software\Policies\Microsoft\Windows\OOBE" /v DisablePrivacyExperience /f >nul 2>&1
+      reg delete "HKCU\Software\Policies\Microsoft\Windows\OOBE" /v DisablePrivacyExperience /f >nul 2>&1
     name: command_prompt
     elevation_required: true
 - name: LockBit Black - Use Registry Editor to turn on automatic logon -cmd
   auto_generated_guid: 9719d0e1-4fe0-4b2e-9a72-7ad3ee8ddc70
   description: |
-     LockBit Black - Use Registry Editor to turn on automatic logon
+    LockBit Black - Use Registry Editor to turn on automatic logon
   supported_platforms:
   - windows
   executor:
@@ -699,7 +699,7 @@ atomic_tests:
 - name: LockBit Black - Disable Privacy Settings Experience Using Registry -Powershell
   auto_generated_guid: d8c57eaa-497a-4a08-961e-bd5efd7c9374
   description: |
-     LockBit Black - Disable Privacy Settings Experience Using Registry
+    LockBit Black - Disable Privacy Settings Experience Using Registry
   supported_platforms:
   - windows
   executor:
@@ -712,7 +712,7 @@ atomic_tests:
 - name: Lockbit Black - Use Registry Editor to turn on automatic logon -Powershell
   auto_generated_guid: 5e27f36d-5132-4537-b43b-413b0d5eec9a
   description: |
-     Lockbit Black - Use Registry Editor to turn on automatic logon
+    Lockbit Black - Use Registry Editor to turn on automatic logon
   supported_platforms:
   - windows
   executor:
@@ -730,7 +730,7 @@ atomic_tests:
     elevation_required: true
 - name: Disable Windows Defender with PwSh Disable-WindowsOptionalFeature
   auto_generated_guid: f542ffd3-37b4-4528-837f-682874faa012
-  description: | 
+  description: |
     The following Atomic will attempt to disable Windows-Defender using the built in PowerShell cmdlet Disable-WindowsOptionalFeature, Deployment Image Servicing and Management tool. 
     Similar to DISM.exe, this cmdlet is used to enumerate, install, uninstall, configure, and update features and packages in Windows images.
     A successful execution will not standard-out any details. Remove the quiet switch if verbosity is needed.
@@ -744,12 +744,12 @@ atomic_tests:
       Disable-WindowsOptionalFeature -Online -FeatureName "Windows-Defender-Features" -NoRestart -ErrorAction Ignore
       Disable-WindowsOptionalFeature -Online -FeatureName "Windows-Defender" -NoRestart -ErrorAction Ignore
       Disable-WindowsOptionalFeature -Online -FeatureName "Windows-Defender-ApplicationGuard" -NoRestart -ErrorAction Ignore
-    name: powershell 
+    name: powershell
     elevation_required: true
 
 - name: WMIC Tamper with Windows Defender Evade Scanning Folder
   auto_generated_guid: 59d386fc-3a4b-41b8-850d-9e3eee24dfe4
-  description: | 
+  description: |
     The following Atomic will attempt to exclude a folder within Defender leveraging WMI
     Reference: https://www.bleepingcomputer.com/news/security/gootkit-malware-bypasses-windows-defender-by-setting-path-exclusions/
   supported_platforms:
@@ -760,4 +760,104 @@ atomic_tests:
     cleanup_command: |
       wmic.exe /Namespace:\\root\Microsoft\Windows\Defender class MSFT_MpPreference call Remove ExclusionPath=\"ATOMICREDTEAM\"
     name: command_prompt
+    elevation_required: true
+
+- name: Delete Windows Defender Scheduled Tasks
+  auto_generated_guid: 4b841aa1-0d05-4b32-bbe7-7564346e7c76
+  description: |
+    The following atomic test will delete the Windows Defender scheduled tasks.
+
+    [Reference](https://thedfirreport.com/2022/05/09/seo-poisoning-a-gootloader-story/)
+  supported_platforms:
+  - windows
+  dependencies:
+  - description: |
+      The Windows Defender scheduled tasks must be backed up first
+    prereq_command: |
+      IF EXIST "%temp%\Windows_Defender_Scheduled_Scan.xml" ( EXIT 0 ) ELSE ( EXIT 1 )
+    get_prereq_command: |
+      schtasks /query /xml /tn "\Microsoft\Windows\Windows Defender\Windows Defender Scheduled Scan" > "%temp%\Windows_Defender_Scheduled_Scan.xml"
+      schtasks /query /xml /tn "\Microsoft\Windows\Windows Defender\Windows Defender Cleanup" > "%temp%\Windows_Defender_Cleanup.xml"
+      schtasks /query /xml /tn "\Microsoft\Windows\Windows Defender\Windows Defender Verification" > "%temp%\Windows_Defender_Verification.xml"
+      schtasks /query /xml /tn "\Microsoft\Windows\Windows Defender\Windows Defender Cache Maintenance" > "%temp%\Windows_Defender_Cache_Maintenance.xml"
+  executor:
+    command: |
+      IF EXIST "%temp%\Windows_Defender_Scheduled_Scan.xml" ( schtasks /delete /tn "\Microsoft\Windows\Windows Defender\Windows Defender Scheduled Scan" /f )
+      IF EXIST "%temp%\Windows_Defender_Cleanup.xml" ( schtasks /delete /tn "\Microsoft\Windows\Windows Defender\Windows Defender Cleanup" /f )
+      IF EXIST "%temp%\Windows_Defender_Verification.xml" ( schtasks /delete /tn "\Microsoft\Windows\Windows Defender\Windows Defender Verification" /f )
+      IF EXIST "%temp%\Windows_Defender_Cache_Maintenance.xml" ( schtasks /delete /tn "\Microsoft\Windows\Windows Defender\Windows Defender Cache Maintenance" /f )
+    cleanup_command: |
+      schtasks /create /xml "%temp%\Windows_Defender_Scheduled_Scan.xml" /tn "\Microsoft\Windows\Windows Defender\Windows Defender Scheduled Scan" /f
+      schtasks /create /xml "%temp%\Windows_Defender_Cleanup.xml" /tn "\Microsoft\Windows\Windows Defender\Windows Defender Cleanup" /f
+      schtasks /create /xml "%temp%\Windows_Defender_Verification.xml" /tn "\Microsoft\Windows\Windows Defender\Windows Defender Verification" /f
+      schtasks /create /xml "%temp%\Windows_Defender_Cache_Maintenance.xml" /tn "\Microsoft\Windows\Windows Defender\Windows Defender Cache Maintenance" /f
+    name: command_prompt
+    elevation_required: true
+- name: Clear History
+  auto_generated_guid: 23b88394-091b-4968-a42d-fb8076992443
+  description: |
+    Clear Shell History. This technique only affect the bash shell application. 
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      history -c
+    name: sh
+    elevation_required: true
+- name: Suspend History
+  auto_generated_guid: 94f6a1c9-aae7-46a4-9083-2bb1f5768ec4
+  description: |
+    suspend Shell History seen in Awfulshred wiper- https://unix.stackexchange.com/questions/10922/temporarily-suspend-bash-history-on-a-given-shell
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      set +o history
+    cleanup_command: |
+      set -o history
+    name: sh
+    elevation_required: true
+- name: Reboot Linux Host via Kernel System Request
+  auto_generated_guid: 6d6d3154-1a52-4d1a-9d51-92ab8148b32e
+  description: |
+    reboot system via system request seen in Awfulshred wiper.
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      echo 1> /proc/sys/kernel/sysrq 
+      echo b> /proc/sysrq-trigger 
+    name: sh
+    elevation_required: true
+- name: Clear Pagging Cache
+  auto_generated_guid: f790927b-ea85-4a16-b7b2-7eb44176a510
+  description: |
+    clear pagging cache via system request. This is a temporary change in the system to clear paging cache. This technique seen in Awfulshred wiper as part
+    of its malicious payload on the compromised host. added reference link for this technique: https://www.tecmint.com/clear-ram-memory-cache-buffer-and-swap-space-on-linux/
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      free && echo 3 > /proc/sys/vm/drop_caches && free
+      echo 3> /proc/sys/vm/drop_caches 
+    name: sh
+    elevation_required: true
+- name: Disable Memory Swap
+  auto_generated_guid: e74e4c63-6fde-4ad2-9ee8-21c3a1733114
+  description: |
+    disable swapping of device paging that impaire the compromised host to swap data if the RAM is full. Awfulshred wiper used this technique as an additional 
+    payload to the compromised host and to make sure that there will be no recoverable data due to swap feature of linux.
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      swapon -a 
+      sleep 2
+      swapoff -a
+      sync
+    cleanup_command: |
+      swapon -a
+      sleep 2
+      sync
+    name: sh
     elevation_required: true

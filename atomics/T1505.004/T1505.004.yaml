@@ -1,0 +1,71 @@
+attack_technique: T1505.004
+display_name: IIS Components
+atomic_tests:
+- name: Install IIS Module using AppCmd.exe
+  auto_generated_guid: 53adbdfa-8200-490c-871c-d3b1ab3324b2
+  description: |
+    The following Atomic will utilize AppCmd.exe to install a new IIS Module. IIS must be installed.
+    This atomic utilizes a DLL on disk, but to test further suspiciousness, compile and load [IIS-Raid](https://www.mdsec.co.uk/2020/02/iis-raid-backdooring-iis-using-native-modules/).
+    A successful execution will install a module into IIS using AppCmd.exe.
+    [Managing and installing Modules Reference](https://learn.microsoft.com/en-us/iis/get-started/introduction-to-iis/iis-modules-overview#to-install-a-module-using-appcmdexe)
+    [IIS Modules](https://www.microsoft.com/en-us/security/blog/2022/12/12/iis-modules-the-evolution-of-web-shells-and-how-to-detect-them/)
+  supported_platforms:
+  - windows
+  input_arguments:
+    module_name:
+      description: The name of the IIS module
+      type: string
+      default: DefaultDocumentModule_Atomic
+    dll_path:
+      description: The path to the DLL to be loaded
+      type: path
+      default: '%windir%\system32\inetsrv\defdoc.dll'
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      IIS must be installed in order to add a module to IIS.
+    prereq_command: |
+      $service = get-service w3svc -ErrorAction SilentlyContinue
+      if($service){ Write-Host "IIS installed on $env:computername" } else { Write-Host "IIS is not installed on $env:computername" } 
+    get_prereq_command: |
+      Install IIS to continue.
+  executor:
+    command: |
+      %windir%\system32\inetsrv\appcmd.exe install module /name:#{module_name} /image:#{dll_path}
+    cleanup_command: |
+      %windir%\system32\inetsrv\appcmd.exe uninstall module #{module_name}
+    name: command_prompt
+- name: Install IIS Module using PowerShell Cmdlet New-WebGlobalModule
+  auto_generated_guid: cc3381fb-4bd0-405c-a8e4-6cacfac3b06c
+  description: |
+    The following Atomic will utilize PowerShell Cmdlet New-WebGlobalModule to install a new IIS Module. IIS must be installed.
+    This atomic utilizes a DLL on disk, but to test further suspiciousness, compile and load [IIS-Raid](https://www.mdsec.co.uk/2020/02/iis-raid-backdooring-iis-using-native-modules/).
+    A successful execution will install a module into IIS using New-WebGlobalModule.
+    [Managing IIS Modules with PowerShell](https://learn.microsoft.com/en-us/powershell/module/webadministration/set-webglobalmodule?view=windowsserver2022-ps)
+    [IIS Modules](https://www.microsoft.com/en-us/security/blog/2022/12/12/iis-modules-the-evolution-of-web-shells-and-how-to-detect-them/)
+  supported_platforms:
+  - windows
+  input_arguments:
+    module_name:
+      description: The name of the IIS module
+      type: string
+      default: DefaultDocumentModule_Atomic
+    dll_path:
+      description: The path to the DLL to be loaded
+      type: path
+      default: '%windir%\system32\inetsrv\defdoc.dll'
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      IIS must be installed in order to add a module to IIS.
+    prereq_command: |
+      $service = get-service w3svc -ErrorAction SilentlyContinue
+      if($service){ Write-Host "IIS installed on $env:computername" } else { Write-Host "IIS is not installed on $env:computername" } 
+    get_prereq_command: |
+      Install IIS to continue.
+  executor:
+    command: |
+      New-WebGlobalModule -Name #{module_name} -Image #{dll_path}
+    cleanup_command: |
+      Remove-WebGlobalModule -Name #{module_name}
+    name: powershell

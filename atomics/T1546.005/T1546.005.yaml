@@ -1,17 +1,31 @@
 attack_technique: T1546.005
 display_name: 'Event Triggered Execution: Trap'
 atomic_tests:
-- name: Trap
+- name: Trap EXIT
   auto_generated_guid: a74b2e07-5952-4c03-8b56-56274b076b61
   description: |
-    After exiting the shell, the script will download and execute.
-    After sending a keyboard interrupt (CTRL+C) the script will download and execute.
+    Launch bash shell with command arg to create TRAP on EXIT.
+    The trap executes script that writes to /tmp/art-fish.txt
   supported_platforms:
   - macos
   - linux
   executor:
     command: |
-      trap "nohup sh $PathToAtomicsFolder/T1546.005/src/echo-art-fish.sh | bash" EXIT
-      exit
-      trap "nohup sh $PathToAtomicsFolder/T1546.005/src/echo-art-fish.sh | bash" SIGINt
+      bash -c 'trap "nohup sh $PathToAtomicsFolder/T1546.005/src/echo-art-fish.sh" EXIT'
+    cleanup_command: |
+      rm -f /tmp/art-fish.txt
+    name: sh
+- name: Trap SIGINT
+  auto_generated_guid: a547d1ba-1d7a-4cc5-a9cb-8d65e8809636
+  description: |
+    Launch bash shell with command arg to create TRAP on SIGINT (CTRL+C), then send SIGINT signal.
+    The trap executes script that writes to /tmp/art-fish.txt
+  supported_platforms:
+  - macos
+  - linux
+  executor:
+    command: |
+      bash -c 'trap "nohup sh $PathToAtomicsFolder/T1546.005/src/echo-art-fish.sh" SIGINT && kill -SIGINT $$'
+    cleanup_command: |
+      rm -f /tmp/art-fish.txt
     name: sh

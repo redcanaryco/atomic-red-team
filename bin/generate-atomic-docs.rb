@@ -59,6 +59,9 @@ class AtomicRedTeamDocs
     generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/azure-ad-index.csv", only_platform: /azure-ad/
 
     generate_yaml_index! "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/index.yaml"
+    ["windows", "macos", "linux", "office-365", "azure-ad", "google-workspace", "saas", "iaas", "containers", "iaas:gcp", "iaas:azure", "iaas:aws"].each do | platform|
+      generate_yaml_index_by_platform! "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/#{platform.gsub(':','_')}-index.yaml", platform: "#{platform}"
+    end
     generate_navigator_layer! "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer.json", \
       "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-windows.json", \
       "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-macos.json", \
@@ -179,6 +182,29 @@ class AtomicRedTeamDocs
   #
   # Generates a master YAML index of ATT&CK Tactic -> Technique -> Atomic Tests
   #
+  def generate_yaml_index_by_platform!(output_doc_path, platform)
+    result = {}
+
+    ATTACK_API.techniques_by_tactic.each do |tactic, techniques|
+      result[tactic] = techniques.collect do |technique|
+        [
+            technique['external_references'][0]['external_id'],
+            {
+                'technique' => technique,
+                'atomic_tests' => ATOMIC_RED_TEAM.atomic_tests_for_technique_by_platform(technique, platform)
+            }
+        ]
+      end.to_h
+    end
+
+    File.write output_doc_path, JSON.parse(result.to_json).to_yaml # shenanigans to eliminate YAML aliases
+
+    puts "Generated Atomic Red Team YAML index at #{output_doc_path}"
+  end
+
+  #
+  # Generates a master YAML index of ATT&CK Tactic -> Technique -> Atomic Tests
+  #
   def generate_yaml_index!(output_doc_path)
     result = {}
 
@@ -211,7 +237,7 @@ class AtomicRedTeamDocs
 
     layer = {
       "name" => layer_name,
-      "versions" => {	"attack": "12",	"navigator": "4.7.1",	"layer": "4.3"	},
+      "versions" => {	"attack": "12",	"navigator": "4.7.1",	"layer": "4.4"	},
       "description" => layer_name + " MITRE ATT&CK Navigator Layer",
       "domain" => "enterprise-attack",
       "filters"=> filters,    

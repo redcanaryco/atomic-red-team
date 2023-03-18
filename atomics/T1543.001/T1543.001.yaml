@@ -9,12 +9,12 @@ atomic_tests:
   - macos
   input_arguments:
     plist_filename:
-      description: filename 
-      type: String
+      description: filename
+      type: string
       default: com.atomicredteam.plist
     path_malicious_plist:
       description: Name of file to store in cron folder
-      type: String
+      type: string
       default: $PathToAtomicsFolder/T1543.001/src/atomicredteam_T1543_001.plist
   dependency_executor_name: bash
   dependencies:
@@ -40,19 +40,19 @@ atomic_tests:
     This test adds persistence via a plist to execute via the macOS Event Monitor Daemon. 
 
   supported_platforms:
-    - macos
+  - macos
   input_arguments:
     script_location:
       description: evil plist location
-      type: Path
-      default: $PathToAtomicsFolder/T1053.004/src/atomicredteam_T1053_004.plist
+      type: path
+      default: $PathToAtomicsFolder/T1543.001/src/atomicredteam_T1543_001.plist
     script_destination:
       description: Path where to move the evil plist
-      type: Path
-      default: /etc/emond.d/rules/atomicredteam_T1053_004.plist
+      type: path
+      default: /etc/emond.d/rules/atomicredteam_T1543_001.plist
     empty_file:
       description: Random name of the empty file used to trigger emond service
-      type: String
+      type: string
       default: randomflag
   executor:
     name: bash
@@ -60,6 +60,6 @@ atomic_tests:
     command: |
       sudo cp #{script_location} #{script_destination}
       sudo touch /private/var/db/emondClients/#{empty_file}
-    cleanup_command: |
+    cleanup_command: |-
       sudo rm #{script_destination}
       sudo rm /private/var/db/emondClients/#{empty_file}
