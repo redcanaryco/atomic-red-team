@@ -4,7 +4,7 @@ atomic_tests:
 - name: Pad Binary to Change Hash - Linux/macOS dd
   auto_generated_guid: ffe2346c-abd5-4b45-a713-bf5f1ebd573a
   description: |
-    Uses dd to add a zero to the binary to change the hash.
+    Uses dd to add a zero byte, high-quality random data, and low-quality random data to the binary to change the hash.
 
     Upon successful execution, dd will modify `/tmp/evil-binary`, therefore the expected hash will change.
   supported_platforms:
@@ -34,7 +34,7 @@ atomic_tests:
     
 - name: Pad Binary to Change Hash using truncate command - Linux/macOS
   description: |
-    Uses truncate to add number of bytes to the binary to change the hash.
+    Uses truncate to add a byte to the binary to change the hash.
 
     Upon successful execution, truncate will modify `/tmp/evil-binary`, therefore the expected hash will change.
   supported_platforms:
