@@ -16,7 +16,7 @@ atomic_tests:
     elevation_required: true
 - name: Delete log files using built-in log utility 
   description: |
-    Deletes main log datastore, inflight log data, time-to-live data(TTL), fault and error content
+    This test deletes main log datastore, inflight log data, time-to-live data(TTL), fault and error content
   supported_platforms:
   - macos
   executor:
@@ -26,29 +26,31 @@ atomic_tests:
       sudo log erase --predicate 'subsystem == "com.apple.appstore"' #Deletes all logs related to the App Store, useful for clearing specific entries of the system log
     name: sh
     elevation_required: true
-- name: Truncate system log files 
+- name: Truncate system log files via truncate utility
   description: |
-    Truncates the system log files, thus emptying the file content
+    This test truncates the system log files using the truncate utility with (-s 0 or --size=0) parameter which sets file size to zero, thus emptying the file content
   supported_platforms:
   - macos
   executor:
     command: |
-      sudo truncate -s 0 /var/log/system.log
+      sudo truncate -s 0 /var/log/system.log #size parameter shorthand
+      sudo truncate --size=0 /var/log/system.log #size parameter 
     name: sh
     elevation_required: true
-- name: Delete log files by appending null bytes
+- name: Delete log files via cat utility by appending /dev/null or /dev/zero
   description: |
-    Appends null bytes using /dev/null to the system log file
+    The first sub-test truncates the log file to zero bytes via /dev/null and the second sub-test fills the log file with null bytes(zeroes) via /dev/zero, using cat utility
   supported_platforms:
   - macos
   executor:
     command: |
-      sudo cat /dev/null > /var/log/system.log
+      sudo cat /dev/null > /var/log/system.log #truncating the file to zero bytes
+      sudo cat /dev/zero > /var/lol/system.log #log file filled with null bytes(zeros)
     name: sh
     elevation_required: true
-- name: System log file deletion using find utility
+- name: System log file deletion via find utility
   description: |
-    Finds and deletes the system log files within /var/log/ directory using various executions(rm, shred, unlink)
+    This test finds and deletes the system log files within /var/log/ directory using various executions(rm, shred, unlink)
   supported_platforms:
   - macos
   executor:
@@ -58,91 +60,92 @@ atomic_tests:
       sudo find /var/log/ -name "system.log.*" -exec unlink {} \; #using "unlink" execution
     name: sh
     elevation_required: true
-- name: Overwrite macOS system log using echo utility
+- name: Overwrite macOS system log via echo utility
   description: |
-   This test overwrites the contents of system log file with an empty string using echo utility
+    This test overwrites the contents of system log file with an empty string using echo utility
   supported_platforms:
   - macos
   executor:
     command: |
-      sudo sh -c "echo '' > /var/log/system.log"
+      sudo echo '' > /var/log/system.log
     name: sh
     elevation_required: true
 - name: Real-time system log clearance/deletion
   description: |
-   This test reads real-time system log file and writes empty string to it, thus clearing the log file without tampering with the logging process
+    This test reads real-time system log file and writes empty string to it, thus clearing the log file without tampering with the logging process
   supported_platforms:
   - macos
   executor:
     command: |
-     sudo log -f /var/log/system.log | : > /var/log/system.log
+      sudo log -f /var/log/system.log | : > /var/log/system.log
     name: sh
     elevation_required: true
-- name: Delete system journal logs
+- name: Delete system log files via unlink utility
   description: |
-   This test reads real-time system log file and writes empty string to it, thus clearing the log file without tampering with the logging process
-  supported_platforms:
-  - linux
-  executor:
-    command: |
-     sudo rm /var/log/journal/* #delete journal files using rm utility
-     sudo journalctl --vacuum-time=0 #real-time deletion of journal files
-    name: sh
-    elevation_required: true
-- name: Delete system log files using unlink utility
-  description: |
-   This test deletes the system log file
+    This test deletes the system log file using unlink utility
   supported_platforms:
   - macos
-  - linux
   executor:
     command: |
-     sudo unlink /var/log/system.log
+      sudo unlink /var/log/system.log
     name: sh
     elevation_required: true
 - name: Delete system log files using shred utility
   description: |
-   This test overwrites the contents of the log file with zero bytes(-z) using three passes(-n 3) of data, and then delete the file(-u) securely
+    This test overwrites the contents of the log file with zero bytes(-z) using three passes(-n 3) of data, and then delete the file(-u) securely
   supported_platforms:
   - macos
-  - linux
   executor:
     command: |
-     sudo shred -u -z -n 3 /var/log/system.log
+      sudo shred -u -z -n 3 /var/log/system.log
     name: sh
     elevation_required: true
 - name: Delete system log files using srm utility
   description: |
-   This test securely deletes the system log files individually and recursively
-   Refer: https://github.com/khell/homebrew-srm/issues/1 for installation
+    This test securely deletes the system log files individually and recursively using the srm utility.
+    Install srm using Homebrew with the command: brew install khell/homebrew-srm/srm
+    Refer: https://github.com/khell/homebrew-srm/issues/1 for installation
   supported_platforms:
   - macos
   executor:
     command: |
-     sudo srm /var/log/system.log #system log file deletion
-     sudo srm -r /var/log/ #recursive deletion of log files
+      sudo srm /var/log/system.log #system log file deletion
+      sudo srm -r /var/log/ #recursive deletion of log files
     name: sh
     elevation_required: true
 - name: Delete system log files using OSAScript
   description: |
-   This test deletes the system log file using osascript via "do shell script", requires admin privileges
+    This test deletes the system log file using osascript via "do shell script"(sh/bash by default) which in-turn spawns rm utility, requires admin privileges
   supported_platforms:
   - macos
   executor:
     command: |
-     osascript -e 'do shell script "rm /var/log/system.log" with administrator privileges'
+      osascript -e 'do shell script "rm /var/log/system.log" with administrator privileges'
     name: sh
     elevation_required: true
 - name: Delete system log files using Applescript
   description: |
-   This test deletes the system log file using applescript using osascript via Finder application
+    This test deletes the system log file using applescript using osascript via Finder application
+    Note: The user may be prompted to grant access to the Finder application before the command can be executed successfully as part of TCC(Transparency, Consent, and Control) Framework.
+    Refer: https://www.rainforestqa.com/blog/macos-tcc-db-deep-dive
   supported_platforms:
   - macos
   executor:
     command: |
-     osascript -e 'tell application "Finder" to delete POSIX file "/var/log/system.log"'
+      osascript -e 'tell application "Finder" to delete POSIX file "/var/log/system.log"'
     name: sh
     elevation_required: true
+- name: Delete system journal logs via rm and journalctl utilities
+  description: |
+    The first sub-test deletes the journal files using rm utility in the "/var/log/journal/" directory and the second sub-test clears the journal by modifiying time period of logs that should be retained to zero.
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      sudo rm /var/log/journal/* #physically deletes the journal files, and not just their content
+      sudo journalctl --vacuum-time=0 #clears the journal while still keeping the journal files in place
+    name: sh
+    elevation_required: true 
 - name: Overwrite Linux Mail Spool
   auto_generated_guid: 1602ff76-ed7f-4c94-b550-2f727b4782d4
   description: |
