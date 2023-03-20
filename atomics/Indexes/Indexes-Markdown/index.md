@@ -1161,6 +1161,7 @@
   - Atomic Test #2: Use PsExec to execute a command on a remote host [windows]
   - Atomic Test #3: psexec.py (Impacket) [linux]
   - Atomic Test #4: BlackCat pre-encryption cmds with Lateral Movement [windows]
+  - Atomic Test #5: Use RemCom to execute a command on a remote host [windows]
 - [T1053.002 Scheduled Task/Job: At](../../T1053.002/T1053.002.md)
   - Atomic Test #1: At.exe Scheduled task [windows]
   - Atomic Test #2: At - Schedule a job [linux]
