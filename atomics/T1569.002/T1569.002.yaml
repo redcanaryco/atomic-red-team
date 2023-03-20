@@ -175,5 +175,5 @@ atomic_tests:
       Invoke-WebRequest "https://github.com/kavika13/RemCom/raw/master/bin/Release/RemCom.exe" -OutFile "#{remcom_exe}"
   executor:
     command: |
-      "#{remcom_exe}" \\#{remote_host} -u #{user_name} -p #{password} "C:\Windows\System32\calc.exe"
+      "#{remcom_exe}" \\#{remote_host} /user:#{user_name} /pwd:#{password} cmd.exe
     name: command_prompt
