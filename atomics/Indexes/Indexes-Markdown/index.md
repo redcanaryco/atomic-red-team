@@ -186,6 +186,8 @@
   - Atomic Test #7: Linux Base64 Encoded Shebang in CLI [linux, macos]
 - [T1562 Impair Defenses](../../T1562/T1562.md)
   - Atomic Test #1: Windows Disable LSA Protection [windows]
+  - Atomic Test #2: Disable journal logging via systemctl utility [linux]
+  - Atomic Test #3: Disable journal logging via sed utility [linux]
 - [T1055.003 Thread Execution Hijacking](../../T1055.003/T1055.003.md)
   - Atomic Test #1: Thread Execution Hijacking [windows]
 - [T1036 Masquerading](../../T1036/T1036.md)
