@@ -6,7 +6,6 @@ atomic_tests:
   auto_generated_guid: 9fdd83fd-bd53-46e5-a716-9dec89c8ae8e
   description: |
     GCP Service Accounts can be used to gain intial access as well as maintain persistence inside Google Cloud.
-
   supported_platforms:
   - google-workspace
   - iaas:gcp
@@ -42,7 +41,6 @@ atomic_tests:
       gcloud iam service-accounts keys create #{output-key-file} --iam-account=#{service-account-email}
     cleanup_command: |
       gcloud iam service-accounts delete #{service-account-email} --quiet
-
   dependency_executor_name: sh
   dependencies:
   - description: |
@@ -51,3 +49,48 @@ atomic_tests:
       if [ -x "$(command -v gcloud)" ]; then exit 0; else exit 1; fi;
     get_prereq_command: |
       echo "Please Install Google Cloud SDK before running this atomic test : https://cloud.google.com/sdk/docs/install"
+- name: Azure Persistence Automation Runbook Created or Modified
+  auto_generated_guid: 348f4d14-4bd3-4f6b-bd8a-61237f78b3ac
+  description: |
+    Identifies when an Azure Automation runbook is created or modified. An adversary may create or modify an Azure
+    Automation runbook to execute malicious code and maintain persistence in their target's environment.
+  supported_platforms:
+  - iaas:azure
+  input_arguments:
+    username:
+      description: Azure username
+      type: String
+      default: null
+    password:
+      description: Azure password
+      type: String
+      default: null
+    resource_group:
+      description: Name of the resource group
+      type: String
+      default: null
+    runbook_name:
+      description: Name of the runbook name
+      type: String
+      default: null
+    automation_account_name:
+      description: Name of the automation account name
+      type: String
+      default: null
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Install-Module -Name Az
+    prereq_command: |
+      try {if (Get-InstalledModule -Name Az -ErrorAction SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
+    get_prereq_command: |
+      Install-Module -Name Az -Scope CurrentUser -Force
+  executor:
+    command: |
+      $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
+      $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
+      Connect-AzAccount -Credential $creds
+      New-AzAutomationRunbook -Name #{runbook_name} -Type PowerShell -ResourceGroupName #{resource_group} -Description 'my-test-runbook' -AutomationAccountName #{automation_account_name}
+      Remove-AzAutomationRunbook -AutomationAccountName #{automation_account_name} -Name #{runbook_name} -ResourceGroupName #{resource_group} -Force
+    name: powershell
+    elevation_required: false
