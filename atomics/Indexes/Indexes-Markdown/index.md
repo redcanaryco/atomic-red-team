@@ -665,8 +665,11 @@
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #1: Create local account with admin privileges [windows]
   - Atomic Test #2: Create local account with admin privileges - MacOS [macos]
-  - Atomic Test #3: WinPwn - Loot local Credentials - powerhell kittie [windows]
-  - Atomic Test #4: WinPwn - Loot local Credentials - Safetykatz [windows]
+  - Atomic Test #3: Create local account with admin privileges using sysadminctl utility - MacOS [macos]
+  - Atomic Test #4: Enable root account using dsenableroot utility - MacOS [macos]
+  - Atomic Test #5: Add a new/existing user to the admin group using dseditgroup utility - macOS [macos]
+  - Atomic Test #6: WinPwn - Loot local Credentials - powerhell kittie [windows]
+  - Atomic Test #7: WinPwn - Loot local Credentials - Safetykatz [windows]
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1127 Trusted Developer Utilities Proxy Execution](../../T1127/T1127.md)
   - Atomic Test #1: Lolbin Jsc.exe compile javascript to exe [windows]
@@ -986,8 +989,11 @@
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #1: Create local account with admin privileges [windows]
   - Atomic Test #2: Create local account with admin privileges - MacOS [macos]
-  - Atomic Test #3: WinPwn - Loot local Credentials - powerhell kittie [windows]
-  - Atomic Test #4: WinPwn - Loot local Credentials - Safetykatz [windows]
+  - Atomic Test #3: Create local account with admin privileges using sysadminctl utility - MacOS [macos]
+  - Atomic Test #4: Enable root account using dsenableroot utility - MacOS [macos]
+  - Atomic Test #5: Add a new/existing user to the admin group using dseditgroup utility - macOS [macos]
+  - Atomic Test #6: WinPwn - Loot local Credentials - powerhell kittie [windows]
+  - Atomic Test #7: WinPwn - Loot local Credentials - Safetykatz [windows]
 - [T1574.012 Hijack Execution Flow: COR_PROFILER](../../T1574.012/T1574.012.md)
   - Atomic Test #1: User scope COR_PROFILER [windows]
   - Atomic Test #2: System Scope COR_PROFILER [windows]
@@ -1155,6 +1161,7 @@
   - Atomic Test #2: Use PsExec to execute a command on a remote host [windows]
   - Atomic Test #3: psexec.py (Impacket) [linux]
   - Atomic Test #4: BlackCat pre-encryption cmds with Lateral Movement [windows]
+  - Atomic Test #5: Use RemCom to execute a command on a remote host [windows]
 - [T1053.002 Scheduled Task/Job: At](../../T1053.002/T1053.002.md)
   - Atomic Test #1: At.exe Scheduled task [windows]
   - Atomic Test #2: At - Schedule a job [linux]
@@ -1497,8 +1504,11 @@
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #1: Create local account with admin privileges [windows]
   - Atomic Test #2: Create local account with admin privileges - MacOS [macos]
-  - Atomic Test #3: WinPwn - Loot local Credentials - powerhell kittie [windows]
-  - Atomic Test #4: WinPwn - Loot local Credentials - Safetykatz [windows]
+  - Atomic Test #3: Create local account with admin privileges using sysadminctl utility - MacOS [macos]
+  - Atomic Test #4: Enable root account using dsenableroot utility - MacOS [macos]
+  - Atomic Test #5: Add a new/existing user to the admin group using dseditgroup utility - macOS [macos]
+  - Atomic Test #6: WinPwn - Loot local Credentials - powerhell kittie [windows]
+  - Atomic Test #7: WinPwn - Loot local Credentials - Safetykatz [windows]
 - [T1574.012 Hijack Execution Flow: COR_PROFILER](../../T1574.012/T1574.012.md)
   - Atomic Test #1: User scope COR_PROFILER [windows]
   - Atomic Test #2: System Scope COR_PROFILER [windows]
@@ -1667,9 +1677,9 @@
   - Atomic Test #1: Brute Force Credentials of single Active Directory domain users via SMB [windows]
   - Atomic Test #2: Brute Force Credentials of single Active Directory domain user via LDAP against domain controller (NTLM or Kerberos) [windows]
   - Atomic Test #3: Brute Force Credentials of single Azure AD user [azure-ad]
-  - Atomic Test #4: SUDO brute force Debian [linux]
-  - Atomic Test #5: SUDO brute force Redhat [linux]
-  - Atomic Test #6: Password Brute User using Kerbrute Tool [windows]
+  - Atomic Test #4: Password Brute User using Kerbrute Tool [windows]
+  - Atomic Test #5: SUDO Brute Force - Debian [linux]
+  - Atomic Test #6: SUDO Brute Force - Redhat [linux]
 - [T1003 OS Credential Dumping](../../T1003/T1003.md)
   - Atomic Test #1: Gsecdump [windows]
   - Atomic Test #2: Credential Dumping with NPPSpy [windows]
@@ -2071,6 +2081,7 @@
   - Atomic Test #3: Process Discovery - Get-Process [windows]
   - Atomic Test #4: Process Discovery - get-wmiObject [windows]
   - Atomic Test #5: Process Discovery - wmic process [windows]
+  - Atomic Test #6: Discover Specific Process - tasklist [windows]
 - T1497.002 User Activity Based Checks [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1069.001 Permission Groups Discovery: Local Groups](../../T1069.001/T1069.001.md)
   - Atomic Test #1: Permission Groups Discovery (Local) [macos, linux]
@@ -2100,7 +2111,8 @@
   - Atomic Test #6: Discover System Language by Environment Variable Query [linux]
 - [T1012 Query Registry](../../T1012/T1012.md)
   - Atomic Test #1: Query Registry [windows]
-  - Atomic Test #2: Enumerate COM Objects in Registry with Powershell [windows]
+  - Atomic Test #2: Query Registry with Powershell cmdlets [windows]
+  - Atomic Test #3: Enumerate COM Objects in Registry with Powershell [windows]
 - T1614 System Location Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1518.001 Software Discovery: Security Software Discovery](../../T1518.001/T1518.001.md)
   - Atomic Test #1: Security Software Discovery [windows]
@@ -2383,6 +2395,8 @@
   - Atomic Test #1: Change User Password - Windows [windows]
   - Atomic Test #2: Delete User - Windows [windows]
   - Atomic Test #3: Remove Account From Domain Admin Group [windows]
+  - Atomic Test #4: Azure AD - Delete user via Azure AD PowerShell [azure-ad]
+  - Atomic Test #5: Azure AD - Delete user via Azure CLI [azure-ad]
 - [T1486 Data Encrypted for Impact](../../T1486/T1486.md)
   - Atomic Test #1: Encrypt files using gpg (Linux) [linux]
   - Atomic Test #2: Encrypt files using 7z (Linux) [linux]
@@ -2460,8 +2474,11 @@
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #1: Create local account with admin privileges [windows]
   - Atomic Test #2: Create local account with admin privileges - MacOS [macos]
-  - Atomic Test #3: WinPwn - Loot local Credentials - powerhell kittie [windows]
-  - Atomic Test #4: WinPwn - Loot local Credentials - Safetykatz [windows]
+  - Atomic Test #3: Create local account with admin privileges using sysadminctl utility - MacOS [macos]
+  - Atomic Test #4: Enable root account using dsenableroot utility - MacOS [macos]
+  - Atomic Test #5: Add a new/existing user to the admin group using dseditgroup utility - macOS [macos]
+  - Atomic Test #6: WinPwn - Loot local Credentials - powerhell kittie [windows]
+  - Atomic Test #7: WinPwn - Loot local Credentials - Safetykatz [windows]
 
 # exfiltration
 - T1567 Exfiltration Over Web Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
