@@ -308,6 +308,7 @@
 - T1535 Unused/Unsupported Cloud Regions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1027.001 Obfuscated Files or Information: Binary Padding](../../T1027.001/T1027.001.md)
   - Atomic Test #1: Pad Binary to Change Hash - Linux/macOS dd [macos, linux]
+  - Atomic Test #2: Pad Binary to Change Hash using truncate command - Linux/macOS [macos, linux]
 - [T1484.001 Domain Policy Modification: Group Policy Modification](../../T1484.001/T1484.001.md)
   - Atomic Test #1: LockBit Black - Modify Group policy settings -cmd [windows]
   - Atomic Test #2: LockBit Black - Modify Group policy settings -Powershell [windows]
