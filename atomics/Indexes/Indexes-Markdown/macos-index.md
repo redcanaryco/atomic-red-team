@@ -32,6 +32,17 @@
   - Atomic Test #3: Detect Virtualization Environment (MacOS) [macos]
 - [T1070.002 Indicator Removal on Host: Clear Linux or Mac System Logs](../../T1070.002/T1070.002.md)
   - Atomic Test #1: rm -rf [macos, linux]
+  - Atomic Test #2: Delete log files using built-in log utility [macos]
+  - Atomic Test #3: Truncate system log files via truncate utility [macos]
+  - Atomic Test #4: Delete log files via cat utility by appending /dev/null or /dev/zero [macos]
+  - Atomic Test #5: System log file deletion via find utility [macos]
+  - Atomic Test #6: Overwrite macOS system log via echo utility [macos]
+  - Atomic Test #7: Real-time system log clearance/deletion [macos]
+  - Atomic Test #8: Delete system log files via unlink utility [macos]
+  - Atomic Test #9: Delete system log files using shred utility [macos]
+  - Atomic Test #10: Delete system log files using srm utility [macos]
+  - Atomic Test #11: Delete system log files using OSAScript [macos]
+  - Atomic Test #12: Delete system log files using Applescript [macos]
 - T1089 Disabling Security Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1553.001 Subvert Trust Controls: Gatekeeper Bypass](../../T1553.001/T1553.001.md)
   - Atomic Test #1: Gatekeeper Bypass [macos]

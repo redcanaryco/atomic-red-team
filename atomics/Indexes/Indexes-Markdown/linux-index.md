@@ -36,8 +36,9 @@
   - Atomic Test #1: Detect Virtualization Environment (Linux) [linux]
 - [T1070.002 Indicator Removal on Host: Clear Linux or Mac System Logs](../../T1070.002/T1070.002.md)
   - Atomic Test #1: rm -rf [macos, linux]
-  - Atomic Test #2: Overwrite Linux Mail Spool [linux]
-  - Atomic Test #3: Overwrite Linux Log [linux]
+  - Atomic Test #13: Delete system journal logs via rm and journalctl utilities [linux]
+  - Atomic Test #14: Overwrite Linux Mail Spool [linux]
+  - Atomic Test #15: Overwrite Linux Log [linux]
 - T1089 Disabling Security Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1070.003 Indicator Removal on Host: Clear Command History](../../T1070.003/T1070.003.md)
   - Atomic Test #1: Clear Bash history (rm) [linux, macos]
