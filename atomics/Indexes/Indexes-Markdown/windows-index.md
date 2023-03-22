@@ -842,6 +842,7 @@
   - Atomic Test #1: Execute a Command as a Service [windows]
   - Atomic Test #2: Use PsExec to execute a command on a remote host [windows]
   - Atomic Test #4: BlackCat pre-encryption cmds with Lateral Movement [windows]
+  - Atomic Test #5: Use RemCom to execute a command on a remote host [windows]
 - [T1053.002 Scheduled Task/Job: At](../../T1053.002/T1053.002.md)
   - Atomic Test #1: At.exe Scheduled task [windows]
 - T1035 Service Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1195,7 +1196,7 @@
 - [T1110.001 Brute Force: Password Guessing](../../T1110.001/T1110.001.md)
   - Atomic Test #1: Brute Force Credentials of single Active Directory domain users via SMB [windows]
   - Atomic Test #2: Brute Force Credentials of single Active Directory domain user via LDAP against domain controller (NTLM or Kerberos) [windows]
-  - Atomic Test #6: Password Brute User using Kerbrute Tool [windows]
+  - Atomic Test #4: Password Brute User using Kerbrute Tool [windows]
 - [T1003 OS Credential Dumping](../../T1003/T1003.md)
   - Atomic Test #1: Gsecdump [windows]
   - Atomic Test #2: Credential Dumping with NPPSpy [windows]
@@ -1495,6 +1496,7 @@
   - Atomic Test #3: Process Discovery - Get-Process [windows]
   - Atomic Test #4: Process Discovery - get-wmiObject [windows]
   - Atomic Test #5: Process Discovery - wmic process [windows]
+  - Atomic Test #6: Discover Specific Process - tasklist [windows]
 - T1497.002 User Activity Based Checks [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1069.001 Permission Groups Discovery: Local Groups](../../T1069.001/T1069.001.md)
   - Atomic Test #2: Basic Permission Groups Discovery Windows (Local) [windows]
@@ -1513,7 +1515,8 @@
   - Atomic Test #2: Discover System Language with chcp [windows]
 - [T1012 Query Registry](../../T1012/T1012.md)
   - Atomic Test #1: Query Registry [windows]
-  - Atomic Test #2: Enumerate COM Objects in Registry with Powershell [windows]
+  - Atomic Test #2: Query Registry with Powershell cmdlets [windows]
+  - Atomic Test #3: Enumerate COM Objects in Registry with Powershell [windows]
 - T1614 System Location Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1518.001 Software Discovery: Security Software Discovery](../../T1518.001/T1518.001.md)
   - Atomic Test #1: Security Software Discovery [windows]

