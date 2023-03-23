@@ -322,7 +322,10 @@ atomic_tests:
   - windows
   executor:
     command: |-
-      wmic /node:$env:UserDnsDomain process call create 'wevtutil epl Security C:\Temp\ntlmusers.evtx /q:Event[System[(EventID=4776)]]'
+      $target = $env:LOGONSERVER
+      $target = $target.Trim("\\")
+      $IpAddress = [System.Net.Dns]::GetHostAddresses($target) | select IPAddressToString -ExpandProperty IPAddressToString
+      wmic.exe /node:$IpAddress process call create 'wevtutil epl Security C:\\ntlmusers.evtx /q:\"Event[System[(EventID=4776)]]"'
     cleanup_command: |
-      Remove-Item C:\Temp\ntlmusers.evtx
+      Remove-Item -Path \\$IpAddress\c$\ntlmusers.evtx
     name: powershell
