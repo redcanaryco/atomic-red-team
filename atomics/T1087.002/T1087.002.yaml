@@ -327,5 +327,5 @@ atomic_tests:
       $IpAddress = [System.Net.Dns]::GetHostAddresses($target) | select IPAddressToString -ExpandProperty IPAddressToString
       wmic.exe /node:$IpAddress process call create 'wevtutil epl Security C:\\ntlmusers.evtx /q:\"Event[System[(EventID=4776)]]"'
     cleanup_command: |
-      Get-Item -Path \\$IpAddress\c$\ntlmusers.evtx
+      Remove-Item -Path \\$IpAddress\c$\ntlmusers.evtx
     name: powershell
