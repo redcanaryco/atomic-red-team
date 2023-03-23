@@ -36,8 +36,9 @@
   - Atomic Test #1: Detect Virtualization Environment (Linux) [linux]
 - [T1070.002 Indicator Removal on Host: Clear Linux or Mac System Logs](../../T1070.002/T1070.002.md)
   - Atomic Test #1: rm -rf [macos, linux]
-  - Atomic Test #2: Overwrite Linux Mail Spool [linux]
-  - Atomic Test #3: Overwrite Linux Log [linux]
+  - Atomic Test #13: Delete system journal logs via rm and journalctl utilities [linux]
+  - Atomic Test #14: Overwrite Linux Mail Spool [linux]
+  - Atomic Test #15: Overwrite Linux Log [linux]
 - T1089 Disabling Security Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1070.003 Indicator Removal on Host: Clear Command History](../../T1070.003/T1070.003.md)
   - Atomic Test #1: Clear Bash history (rm) [linux, macos]
@@ -55,7 +56,9 @@
   - Atomic Test #5: Base64 decoding with shell utilities [linux, macos]
   - Atomic Test #6: Hex decoding with shell utilities [linux, macos]
   - Atomic Test #7: Linux Base64 Encoded Shebang in CLI [linux, macos]
-- T1562 Impair Defenses [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1562 Impair Defenses](../../T1562/T1562.md)
+  - Atomic Test #2: Disable journal logging via systemctl utility [linux]
+  - Atomic Test #3: Disable journal logging via sed utility [linux]
 - T1036 Masquerading [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1055 Process Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -81,6 +84,7 @@
 - T1107 File Deletion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1027.001 Obfuscated Files or Information: Binary Padding](../../T1027.001/T1027.001.md)
   - Atomic Test #1: Pad Binary to Change Hash - Linux/macOS dd [macos, linux]
+  - Atomic Test #2: Pad Binary to Change Hash using truncate command - Linux/macOS [macos, linux]
 - T1078.001 Valid Accounts: Default Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1574.006 Hijack Execution Flow: LD_PRELOAD](../../T1574.006/T1574.006.md)
   - Atomic Test #1: Shared Library Injection via /etc/ld.so.preload [linux]
