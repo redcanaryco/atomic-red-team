@@ -70,3 +70,19 @@ atomic_tests:
     command: |
       wmic process get /format:list
     name: command_prompt
+- name: Discover Specific Process - tasklist
+  auto_generated_guid: 11ba69ee-902e-4a0f-b3b6-418aed7d7ddb
+  description: |
+    Adversaries may use command line tools to discover specific processes in preparation of further attacks. 
+    Examples of this could be discovering the PID of lsass.exe to dump its memory or discovering whether specific security processes (e.g. AV or EDR) are running.
+  supported_platforms:
+  - windows
+  input_arguments:
+    process_to_enumerate:
+      description: Process name string to search for.
+      type: string
+      default: 'lsass'
+  executor:
+    command: |
+      tasklist | findstr #{process_to_enumerate}
+    name: command_prompt
