@@ -1,0 +1,34 @@
+name: generate-svg-counter
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  generate-counter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.12' 
+          cache: 'poetry'
+      - name: Generate shields.io URL
+        run: python generate_shield.py atomics/
+        id: shield
+      - name: Generate shields.io URL
+        run: python generate_counter.py -d atomics/
+        id: counter
+      - name: Update README
+        run: |
+          sed -i "s|https://img.shields.io/badge/Atomics-.*-flat.svg|${{ steps.counter.outputs.result }}|" README.md
+        shell: bash
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4.4.1
+        with:
+          commit_message: 'Generate SVG counter'
+          commit_user_name: My GitHub Actions Bot # defaults to "github-actions[bot]"
+          commit_user_email: opensource@redcanary.com
+          commit_author: Atomic Red Team counter generator # defaults to author of the commit that triggered the run
+      
