@@ -88,3 +88,64 @@ atomic_tests:
       }
     name: powershell
     elevation_required: false
+- name: Change User Password via passwd
+  description: |
+    This test changes the user password to hinder access to the account using passwd utility.
+  supported_platforms:
+  - macos
+  - linux
+  input_arguments:
+    user_account:
+      description: User account whose password will be changed.
+      type: String
+      default: ARTUser
+  executor:
+    command: |
+      passwd #{user_account} #enter admin password > enter new password > confirm new password
+    name: command_prompt
+    elevation_required: true
+- name: Delete User via dscl utility
+  description: |
+    This test deletes the user account using the dscl utility.
+  supported_platforms:
+  - macos
+  input_arguments:
+    user_account:
+      description: User account which will be deleted.
+      type: String  
+    user_password:
+      description: User password.
+      type: String      
+  executor:
+    command: |
+      dscl . -delete /Users/#{user_account} #enter admin password
+    cleanup_command: |
+      dscl . -create /Users/#{user_account} #enter admin password
+      dscl . -create /Users/#{user_account} UserShell /bin/bash
+      dscl . -create /Users/#{user_account} UniqueID 503
+      dscl . -create /Users/#{user_account} NFSHomeDirectory /Users/#{user_account}
+      dscl . -passwd /Users/#{user_account} #{user_password} #enter password for new user
+    name: command_prompt
+    elevation_required: true
+- name: Delete User via sysadminctl utility
+  description: |
+    This test deletes the user account using the sysadminctl utility.
+  supported_platforms:
+  - macos
+  input_arguments:
+    user_account:
+      description: User account which will be deleted.
+      type: String  
+    user_name:
+      description: New user name.
+      type: String
+    user_password:
+      description: New user password.
+      type: String
+  executor:
+    command: |
+      sysadminctl -deleteUser #{user_account} #enter admin password
+    cleanup_command: |
+      sysadminctl -addUser #{user_account} -fullName "#{user_name}" -password #{user_password}
+    name: command_prompt
+    elevation_required: true     
