@@ -230,6 +230,7 @@
   - Atomic Test #46: Mimic Ransomware - Allow Multiple RDP Sessions per User [windows]
   - Atomic Test #47: Event Viewer Registry Modification - Redirection URL [windows]
   - Atomic Test #48: Event Viewer Registry Modification - Redirection Program [windows]
+  - Atomic Test #49: Enabling Remote Desktop Protocol via Remote Registry [windows]
 - [T1574.008 Hijack Execution Flow: Path Interception by Search Order Hijacking](../../T1574.008/T1574.008.md)
   - Atomic Test #1: powerShell Persistence via hijacking default modules - Get-Variable.exe [windows]
 - T1027.001 Obfuscated Files or Information: Binary Padding [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
