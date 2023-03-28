@@ -71,8 +71,20 @@ defense-evasion,T1497.001,Virtualization/Sandbox Evasion: System Checks,2,Detect
 defense-evasion,T1497.001,Virtualization/Sandbox Evasion: System Checks,3,Detect Virtualization Environment (MacOS),a960185f-aef6-4547-8350-d1ce16680d09,sh
 defense-evasion,T1497.001,Virtualization/Sandbox Evasion: System Checks,4,Detect Virtualization Environment via WMI Manufacturer/Model Listing (Windows),4a41089a-48e0-47aa-82cb-5b81a463bc78,powershell
 defense-evasion,T1070.002,Indicator Removal on Host: Clear Linux or Mac System Logs,1,rm -rf,989cc1b1-3642-4260-a809-54f9dd559683,sh
-defense-evasion,T1070.002,Indicator Removal on Host: Clear Linux or Mac System Logs,2,Overwrite Linux Mail Spool,1602ff76-ed7f-4c94-b550-2f727b4782d4,bash
-defense-evasion,T1070.002,Indicator Removal on Host: Clear Linux or Mac System Logs,3,Overwrite Linux Log,d304b2dc-90b4-4465-a650-16ddd503f7b5,bash
+defense-evasion,T1070.002,Indicator Removal on Host: Clear Linux or Mac System Logs,2,Delete log files using built-in log utility,653d39cd-bae7-499a-898c-9fb96b8b5cd1,sh
+defense-evasion,T1070.002,Indicator Removal on Host: Clear Linux or Mac System Logs,3,Truncate system log files via truncate utility,6290f8a8-8ee9-4661-b9cf-390031bf6973,sh
+defense-evasion,T1070.002,Indicator Removal on Host: Clear Linux or Mac System Logs,4,Delete log files via cat utility by appending /dev/null or /dev/zero,c23bdb88-928d-493e-b46d-df2906a50941,sh
+defense-evasion,T1070.002,Indicator Removal on Host: Clear Linux or Mac System Logs,5,System log file deletion via find utility,bc8eeb4a-cc3e-45ec-aa6e-41e973da2558,sh
+defense-evasion,T1070.002,Indicator Removal on Host: Clear Linux or Mac System Logs,6,Overwrite macOS system log via echo utility,0208ea60-98f1-4e8c-8052-930dce8f742c,sh
+defense-evasion,T1070.002,Indicator Removal on Host: Clear Linux or Mac System Logs,7,Real-time system log clearance/deletion,848e43b3-4c0a-4e4c-b4c9-d1e8cea9651c,sh
+defense-evasion,T1070.002,Indicator Removal on Host: Clear Linux or Mac System Logs,8,Delete system log files via unlink utility,03013b4b-01db-437d-909b-1fdaa5010ee8,sh
+defense-evasion,T1070.002,Indicator Removal on Host: Clear Linux or Mac System Logs,9,Delete system log files using shred utility,86f0e4d5-3ca7-45fb-829d-4eda32b232bb,sh
+defense-evasion,T1070.002,Indicator Removal on Host: Clear Linux or Mac System Logs,10,Delete system log files using srm utility,b0768a5e-0f32-4e75-ae5b-d036edcf96b6,sh
+defense-evasion,T1070.002,Indicator Removal on Host: Clear Linux or Mac System Logs,11,Delete system log files using OSAScript,810a465f-cd4f-47bc-b43e-d2de3b033ecc,sh
+defense-evasion,T1070.002,Indicator Removal on Host: Clear Linux or Mac System Logs,12,Delete system log files using Applescript,e62f8694-cbc7-468f-862c-b10cd07e1757,sh
+defense-evasion,T1070.002,Indicator Removal on Host: Clear Linux or Mac System Logs,13,Delete system journal logs via rm and journalctl utilities,ca50dd85-81ff-48ca-92e1-61f119cb1dcf,sh
+defense-evasion,T1070.002,Indicator Removal on Host: Clear Linux or Mac System Logs,14,Overwrite Linux Mail Spool,1602ff76-ed7f-4c94-b550-2f727b4782d4,bash
+defense-evasion,T1070.002,Indicator Removal on Host: Clear Linux or Mac System Logs,15,Overwrite Linux Log,d304b2dc-90b4-4465-a650-16ddd503f7b5,bash
 defense-evasion,T1218.004,Signed Binary Proxy Execution: InstallUtil,1,CheckIfInstallable method call,ffd9c807-d402-47d2-879d-f915cf2a3a94,powershell
 defense-evasion,T1218.004,Signed Binary Proxy Execution: InstallUtil,2,InstallHelper method call,d43a5bde-ae28-4c55-a850-3f4c80573503,powershell
 defense-evasion,T1218.004,Signed Binary Proxy Execution: InstallUtil,3,InstallUtil class constructor method call,9b7a7cfc-dd2e-43f5-a885-c0a3c270dd93,powershell
@@ -123,6 +135,8 @@ defense-evasion,T1140,Deobfuscate/Decode Files or Information,5,Base64 decoding 
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,6,Hex decoding with shell utilities,005943f9-8dd5-4349-8b46-0313c0a9f973,sh
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,7,Linux Base64 Encoded Shebang in CLI,3a15c372-67c1-4430-ac8e-ec06d641ce4d,sh
 defense-evasion,T1562,Impair Defenses,1,Windows Disable LSA Protection,40075d5f-3a70-4c66-9125-f72bee87247d,command_prompt
+defense-evasion,T1562,Impair Defenses,2,Disable journal logging via systemctl utility,c3a377f9-1203-4454-aa35-9d391d34768f,sh
+defense-evasion,T1562,Impair Defenses,3,Disable journal logging via sed utility,12e5551c-8d5c-408e-b3e4-63f53b03379f,sh
 defense-evasion,T1055.003,Thread Execution Hijacking,1,Thread Execution Hijacking,578025d5-faa9-4f6d-8390-aae527d503e1,powershell
 defense-evasion,T1036,Masquerading,1,System File Copied to Unusual Location,51005ac7-52e2-45e0-bdab-d17c6d4916cd,powershell
 defense-evasion,T1036,Masquerading,2,Malware Masquerading and Execution from Zip File,4449c89b-ec82-43a4-89c1-91e2f1abeecc,powershell
@@ -230,6 +244,7 @@ defense-evasion,T1112,Modify Registry,47,Event Viewer Registry Modification - Re
 defense-evasion,T1112,Modify Registry,48,Event Viewer Registry Modification - Redirection Program,81483501-b8a5-4225-8b32-52128e2f69db,command_prompt
 defense-evasion,T1574.008,Hijack Execution Flow: Path Interception by Search Order Hijacking,1,powerShell Persistence via hijacking default modules - Get-Variable.exe,1561de08-0b4b-498e-8261-e922f3494aae,powershell
 defense-evasion,T1027.001,Obfuscated Files or Information: Binary Padding,1,Pad Binary to Change Hash - Linux/macOS dd,ffe2346c-abd5-4b45-a713-bf5f1ebd573a,sh
+defense-evasion,T1027.001,Obfuscated Files or Information: Binary Padding,2,Pad Binary to Change Hash using truncate command - Linux/macOS,e22a9e89-69c7-410f-a473-e6c212cd2292,sh
 defense-evasion,T1484.001,Domain Policy Modification: Group Policy Modification,1,LockBit Black - Modify Group policy settings -cmd,9ab80952-74ee-43da-a98c-1e740a985f28,command_prompt
 defense-evasion,T1484.001,Domain Policy Modification: Group Policy Modification,2,LockBit Black - Modify Group policy settings -Powershell,b51eae65-5441-4789-b8e8-64783c26c1d1,powershell
 defense-evasion,T1078.001,Valid Accounts: Default Accounts,1,Enable Guest account with RDP capability and admin privileges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
@@ -512,6 +527,7 @@ privilege-escalation,T1543.003,Create or Modify System Process: Windows Service,
 privilege-escalation,T1543.003,Create or Modify System Process: Windows Service,2,Service Installation CMD,981e2942-e433-44e9-afc1-8c957a1496b6,command_prompt
 privilege-escalation,T1543.003,Create or Modify System Process: Windows Service,3,Service Installation PowerShell,491a4af6-a521-4b74-b23b-f7b3f1ee9e77,powershell
 privilege-escalation,T1543.003,Create or Modify System Process: Windows Service,4,TinyTurla backdoor service w64time,ef0581fd-528e-4662-87bc-4c2affb86940,command_prompt
+privilege-escalation,T1543.003,Create or Modify System Process: Windows Service,5,Remote Service Installation CMD,fb4151a2-db33-4f8c-b7f8-78ea8790f961,command_prompt
 privilege-escalation,T1053.003,Scheduled Task/Job: Cron,1,Cron - Replace crontab with referenced file,435057fb-74b1-410e-9403-d81baf194f75,bash
 privilege-escalation,T1053.003,Scheduled Task/Job: Cron,2,Cron - Add script to all cron subfolders,b7d42afa-9086-4c8a-b7b0-8ea3faa6ebb0,bash
 privilege-escalation,T1053.003,Scheduled Task/Job: Cron,3,Cron - Add script to /var/spool/cron/crontabs/ folder,2d943c18-e74a-44bf-936f-25ade6cccab4,bash
@@ -608,6 +624,7 @@ privilege-escalation,T1055.012,Process Injection: Process Hollowing,2,RunPE via 
 privilege-escalation,T1546,Event Triggered Execution,1,Persistence with Custom AutodialDLL,aca9ae16-7425-4b6d-8c30-cad306fdbd5b,powershell
 privilege-escalation,T1546,Event Triggered Execution,2,HKLM - Persistence using CommandProcessor AutoRun key (With Elevation),a574dafe-a903-4cce-9701-14040f4f3532,powershell
 privilege-escalation,T1546,Event Triggered Execution,3,HKCU - Persistence using CommandProcessor AutoRun key (Without Elevation),36b8dbf9-59b1-4e9b-a3bb-36e80563ef01,powershell
+privilege-escalation,T1546,Event Triggered Execution,4,WMI Invoke-CimMethod Start Process,adae83d3-0df6-45e7-b2c3-575f91584577,powershell
 privilege-escalation,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,1,Add command to .bash_profile,94500ae1-7e31-47e3-886b-c328da46872f,sh
 privilege-escalation,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,2,Add command to .bashrc,0a898315-4cfa-4007-bafe-33a4646d115f,sh
 privilege-escalation,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,3,Append to the system shell profile,694b3cc8-6a78-4d35-9e74-0123d009e94b,sh
@@ -790,6 +807,7 @@ persistence,T1543.003,Create or Modify System Process: Windows Service,1,Modify 
 persistence,T1543.003,Create or Modify System Process: Windows Service,2,Service Installation CMD,981e2942-e433-44e9-afc1-8c957a1496b6,command_prompt
 persistence,T1543.003,Create or Modify System Process: Windows Service,3,Service Installation PowerShell,491a4af6-a521-4b74-b23b-f7b3f1ee9e77,powershell
 persistence,T1543.003,Create or Modify System Process: Windows Service,4,TinyTurla backdoor service w64time,ef0581fd-528e-4662-87bc-4c2affb86940,command_prompt
+persistence,T1543.003,Create or Modify System Process: Windows Service,5,Remote Service Installation CMD,fb4151a2-db33-4f8c-b7f8-78ea8790f961,command_prompt
 persistence,T1053.003,Scheduled Task/Job: Cron,1,Cron - Replace crontab with referenced file,435057fb-74b1-410e-9403-d81baf194f75,bash
 persistence,T1053.003,Scheduled Task/Job: Cron,2,Cron - Add script to all cron subfolders,b7d42afa-9086-4c8a-b7b0-8ea3faa6ebb0,bash
 persistence,T1053.003,Scheduled Task/Job: Cron,3,Cron - Add script to /var/spool/cron/crontabs/ folder,2d943c18-e74a-44bf-936f-25ade6cccab4,bash
@@ -897,6 +915,7 @@ persistence,T1505.004,IIS Components,2,Install IIS Module using PowerShell Cmdle
 persistence,T1546,Event Triggered Execution,1,Persistence with Custom AutodialDLL,aca9ae16-7425-4b6d-8c30-cad306fdbd5b,powershell
 persistence,T1546,Event Triggered Execution,2,HKLM - Persistence using CommandProcessor AutoRun key (With Elevation),a574dafe-a903-4cce-9701-14040f4f3532,powershell
 persistence,T1546,Event Triggered Execution,3,HKCU - Persistence using CommandProcessor AutoRun key (Without Elevation),36b8dbf9-59b1-4e9b-a3bb-36e80563ef01,powershell
+persistence,T1546,Event Triggered Execution,4,WMI Invoke-CimMethod Start Process,adae83d3-0df6-45e7-b2c3-575f91584577,powershell
 persistence,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,1,Add command to .bash_profile,94500ae1-7e31-47e3-886b-c328da46872f,sh
 persistence,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,2,Add command to .bashrc,0a898315-4cfa-4007-bafe-33a4646d115f,sh
 persistence,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,3,Append to the system shell profile,694b3cc8-6a78-4d35-9e74-0123d009e94b,sh
