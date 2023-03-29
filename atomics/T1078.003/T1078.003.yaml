@@ -102,3 +102,64 @@ atomic_tests:
       safedump -consoleoutput -noninteractive
     name: powershell
     elevation_required: true
+- name: Create local account (Linux)
+  description: |
+    An adversary may wish to create an account with admin privileges to work with. In this test we create a "art" user with the password art, switch to art, execute whoami, exit and delete the art user.
+  supported_platforms:
+  - linux
+  executor:
+    name: bash
+    elevation_required: true
+    command: |
+      useradd --shell /bin/bash --create-home --password $(openssl passwd -1 art) art
+      su art
+      whoami
+      exit
+    cleanup_command: |
+      userdel -r art 
+- name: Reactivate a locked/expired account (Linux)
+  description: |
+    A system administrator may have locked and expired a user account rather than deleting it. "the user is coming back, at some stage" An adversary may reactivate a inactive account in an attempt to appear legitimate. 
+
+    In this test we create a "art" user with the password art, lock and expire the account, try to su to art and fail, unlock and renew the account, su successfully, then delete the account.
+  supported_platforms:
+  - linux
+  executor:
+    name: bash
+    elevation_required: true
+    command: |
+      useradd --shell /bin/bash --create-home --password $(openssl passwd -1 art) art
+      usermod --lock art
+      usermod --expiredate "1" art
+
+      su art
+      # -> Your account has expired; please contact your system administrator.
+      # -> su: Authentication failure
+
+      usermod --unlock art
+      usermod --expiredate "99999" art
+      su art
+      whoami
+      exit
+    cleanup_command: |
+      userdel -r art 
+- name: Login as nobody (Linux)
+  description: |
+    An adversary may try to re-purpose a system account to appear legitimate. In this test change the login shell of the nobody account, change its password to nobody, su to nobody, exit, then reset nobody's shell to /usr/sbin/nologin.
+  supported_platforms:
+  - linux
+  executor:
+    name: bash
+    elevation_required: true
+    command: |
+      cat /etc/passwd |grep nobody 
+      # -> nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+      chsh --shell /bin/bash nobody
+      usermod --password $(openssl passwd -1 nobody) nobody
+      su nobody
+      whoami
+      exit
+    cleanup_command: |
+      chsh --shell /usr/sbin/nologin nobody
+      cat /etc/passwd |grep nobody 
+      # -> nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
