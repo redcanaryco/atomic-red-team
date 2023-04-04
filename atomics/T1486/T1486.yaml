@@ -181,3 +181,73 @@ atomic_tests:
       echo T1486 - Purelocker Ransom Note > %USERPROFILE%\Desktop\YOUR_FILES.txt
     cleanup_command: | 
       del %USERPROFILE%\Desktop\YOUR_FILES.txt >nul 2>&1
+
+- name: Encrypt files using 7z utility - macOS
+  description: |
+    This test encrypts the file(s) using the 7z utility
+  supported_platforms:
+  - macos
+  input_arguments:
+    file_password:
+      description: Password to be provided for archiving the file
+      type: String
+      default: ARTPass
+    encrypted_file_name:
+      description: Name of the archive to be created
+      type: String
+      default: ARTArchive.7z
+    input_file_path:
+      description: Path to the file that you want to encrypt
+      type: Path
+      default: /etc/passwd 
+  executor:
+    command: |
+      7z a -p#{file_password} -mhe=on #{encrypted_file_name} #{input_file_path}
+    cleanup_command: |
+      rm #{encrypted_file_name}
+    name: command_prompt
+    elevation_required: false
+    
+- name: Encrypt files using ccrypt utility - macOS
+  description: |
+    This test encrypts the file(s) using the ccrypt utility
+  supported_platforms:
+  - macos
+  input_arguments:
+    input_file_path:
+      description: Path to the file that you want to encrypt
+      type: Path
+      default: /etc/passwd 
+  executor:
+    command: |
+      ccrypt #{input_file_path} #alternate parameters that can be used "-e", "--encrypt", "ccencrypt", "-S .suf"
+    cleanup_command: |
+      rm #{input_file_path}.cpt #in case of custom suffix, change from ".cpt" to ".suf"
+    name: command_prompt
+    elevation_required: false 
+    
+- name: Encrypt files using openssl utility - macOS
+  description: |
+    This test encrypts the file(s) using the openssl utility
+  supported_platforms:
+  - macos
+  input_arguments:
+    encryption_option:
+      description: Specifiy the required encryption option
+      type: String
+      default: -pbkdf2  
+    input_file_path:
+      description: Path to the file that you want to encrypt
+      type: Path
+      default: /etc/passwd 
+    output_file_name:
+      description: Path to the file that you want to encrypt
+      type: String
+      default: ARTFile      
+  executor:
+    command: |
+      openssl enc #{encryption_option} -in #{input_file_path} -out #{output_file_name}
+    cleanup_command: |
+      rm #{output_file_name}
+    name: command_prompt
+    elevation_required: false     
