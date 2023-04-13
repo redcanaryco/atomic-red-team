@@ -11,7 +11,7 @@ atomic_tests:
   input_arguments:
     payload:
       description: hello.c payload
-      type: Path
+      type: path
       default: PathToAtomicsFolder/T1548.001/src/hello.c
   executor:
     command: |
@@ -36,13 +36,13 @@ atomic_tests:
   input_arguments:
     file_to_setuid:
       description: Path of file to set SetUID flag
-      type: Path
+      type: path
       default: /tmp/evilBinary
   executor:
     command: |
       sudo touch #{file_to_setuid}
       sudo chown root #{file_to_setuid}
-      sudo chmod u+s #{file_to_setuid}
+      sudo chmod u+xs #{file_to_setuid}
     cleanup_command: |
       sudo rm #{file_to_setuid}
     name: sh
@@ -57,13 +57,13 @@ atomic_tests:
   input_arguments:
     file_to_setuid:
       description: Path of file to set SetGID flag
-      type: Path
+      type: path
       default: /tmp/evilBinary
   executor:
     command: |
       sudo touch #{file_to_setuid}
       sudo chown root #{file_to_setuid}
-      sudo chmod g+s #{file_to_setuid}
+      sudo chmod g+xs #{file_to_setuid}
     cleanup_command: |
       sudo rm #{file_to_setuid}
     name: sh
@@ -79,7 +79,7 @@ atomic_tests:
   input_arguments:
     payload:
       description: cap.c payload
-      type: Path
+      type: path
       default: PathToAtomicsFolder/T1548.001/src/cap.c
   executor:
     command: |
@@ -100,8 +100,8 @@ atomic_tests:
   - linux
   input_arguments:
     file_to_setcap:
-      description: Path of file to provide the SetUID capability 
-      type: Path
+      description: Path of file to provide the SetUID capability
+      type: path
       default: /tmp/evilBinary
   executor:
     command: |
@@ -111,3 +111,23 @@ atomic_tests:
       rm #{file_to_setcap}
     name: sh
     elevation_required: true
+- name: Do reconnaissance for files that have the setuid bit set
+  auto_generated_guid: 8e36da01-cd29-45fd-be72-8a0fcaad4481
+  description: |
+    This test simulates a command that can be run to enumerate files that have the setuid bit set
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      find /usr/bin -perm -4000
+    name: sh
+- name: Do reconnaissance for files that have the setgid bit set
+  auto_generated_guid: 3fb46e17-f337-4c14-9f9a-a471946533e2
+  description: |
+    This test simulates a command that can be run to enumerate files that have the setgid bit set
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      find /usr/bin -perm -2000
+    name: sh

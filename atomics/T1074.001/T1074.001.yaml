@@ -11,7 +11,7 @@ atomic_tests:
   input_arguments:
     output_file:
       description: Location to save downloaded discovery.bat file
-      type: Path
+      type: path
       default: $env:TEMP\discovery.bat
   executor:
     command: |
@@ -29,7 +29,7 @@ atomic_tests:
   input_arguments:
     output_file:
       description: Location to save downloaded discovery.bat file
-      type: Path
+      type: path
       default: /tmp/T1074.001_discovery.log
   executor:
     command: |
@@ -45,11 +45,11 @@ atomic_tests:
   input_arguments:
     output_file:
       description: Location to save zipped file or folder
-      type: Path
+      type: path
       default: $env:TEMP\Folder_to_zip.zip
     input_file:
       description: Location of file or folder to zip
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1074.001\bin\Folder_to_zip
   executor:
     command: |
@@ -57,4 +57,3 @@ atomic_tests:
     cleanup_command: |
       Remove-Item -Path #{output_file} -ErrorAction Ignore
     name: powershell
-

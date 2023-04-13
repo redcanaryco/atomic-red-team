@@ -6,12 +6,12 @@ atomic_tests:
   description: |
     Create and execute a process from a directory masquerading as the current parent directory (`...` instead of normal `..`)
   supported_platforms:
-    - macos
-    - linux
+  - macos
+  - linux
   input_arguments:
     test_message:
       description: Test message to echo out to the screen
-      type: String
+      type: string
       default: Hello from the Atomic Red Team test T1036.005#1
   executor:
     name: sh
@@ -32,7 +32,7 @@ atomic_tests:
   input_arguments:
     executable_filepath:
       description: File path where the generated executable will be dropped and executed from. The filename should be the name of a built-in system utility.
-      type: String
+      type: string
       default: $Env:windir\Temp\svchost.exe
   executor:
     command: |
@@ -43,7 +43,7 @@ atomic_tests:
           }
       }
       '@ -OutputAssembly "#{executable_filepath}"
-      
+
       Start-Process -FilePath "#{executable_filepath}"
     cleanup_command: |
       Remove-Item -Path "#{executable_filepath}" -ErrorAction Ignore

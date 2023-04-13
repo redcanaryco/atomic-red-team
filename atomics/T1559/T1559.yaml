@@ -1,0 +1,123 @@
+attack_technique: T1559
+display_name: Inter-Process Communication
+atomic_tests:
+
+- name: Cobalt Strike Artifact Kit pipe
+  auto_generated_guid: bd13b9fc-b758-496a-b81a-397462f82c72
+  description: |
+    Uses the [Named Pipes Micro Emulation](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/tree/master/micro_emulation_plans/src/named_pipes) executable from the Center for Threat Informed Defense to create a named pipe for inter-process communication.
+    
+    The named pipe executable will pause for 30 seconds to allow the client and server to exchange a message through the pipe.
+  supported_platforms:
+  - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Named pipe executors must exist on disk
+    prereq_command: |
+      if ((Test-Path PathToAtomicsFolder\T1559\bin\build\namedpipes_executor.exe) -and (Test-Path PathToAtomicsFolder\T1559\bin\build\namedpipes_client.exe) -and (Test-Path PathToAtomicsFolder\T1559\bin\build\namedpipes_server.exe)) {exit 0} else {exit 1}
+    get_prereq_command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-FetchFromZip.ps1" -UseBasicParsing)
+      $zipUrl  = "https://github.com/center-for-threat-informed-defense/adversary_emulation_library/raw/master/micro_emulation_plans/src/named_pipes/named_pipes.zip"
+      Invoke-FetchFromZip $zipUrl "*.exe" "PathToAtomicsFolder\T1559\bin"
+  executor:
+    command: |
+      "PathToAtomicsFolder\T1559\bin\build\namedpipes_executor.exe" --pipe 1
+    name: command_prompt
+    
+- name: Cobalt Strike Lateral Movement (psexec_psh) pipe
+  auto_generated_guid: 830c8b6c-7a70-4f40-b975-8bbe74558acd
+  description: |
+    Uses the [Named Pipes Micro Emulation](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/tree/master/micro_emulation_plans/src/named_pipes) executable from the Center for Threat Informed Defense to create a named pipe for inter-process communication.
+    
+    The named pipe executable will pause for 30 seconds to allow the client and server to exchange a message through the pipe.
+  supported_platforms:
+  - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Named pipe executors must exist on disk
+    prereq_command: |
+      if ((Test-Path PathToAtomicsFolder\T1559\bin\build\namedpipes_executor.exe) -and (Test-Path PathToAtomicsFolder\T1559\bin\build\namedpipes_client.exe) -and (Test-Path PathToAtomicsFolder\T1559\bin\build\namedpipes_server.exe)) {exit 0} else {exit 1}
+    get_prereq_command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-FetchFromZip.ps1" -UseBasicParsing)
+      $zipUrl  = "https://github.com/center-for-threat-informed-defense/adversary_emulation_library/raw/master/micro_emulation_plans/src/named_pipes/named_pipes.zip"
+      Invoke-FetchFromZip $zipUrl "*.exe" "PathToAtomicsFolder\T1559\bin"
+  executor:
+    command: |
+      "PathToAtomicsFolder\T1559\bin\build\namedpipes_executor.exe" --pipe 2
+    name: command_prompt
+    
+- name: Cobalt Strike SSH (postex_ssh) pipe
+  auto_generated_guid: d1f72fa0-5bc2-4b4b-bd1e-43b6e8cfb2e6
+  description: |
+    Uses the [Named Pipes Micro Emulation](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/tree/master/micro_emulation_plans/src/named_pipes) executable from the Center for Threat Informed Defense to create a named pipe for inter-process communication.
+    
+    The named pipe executable will pause for 30 seconds to allow the client and server to exchange a message through the pipe.
+  supported_platforms:
+  - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Named pipe executors must exist on disk
+    prereq_command: |
+      if ((Test-Path PathToAtomicsFolder\T1559\bin\build\namedpipes_executor.exe) -and (Test-Path PathToAtomicsFolder\T1559\bin\build\namedpipes_client.exe) -and (Test-Path PathToAtomicsFolder\T1559\bin\build\namedpipes_server.exe)) {exit 0} else {exit 1}
+    get_prereq_command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-FetchFromZip.ps1" -UseBasicParsing)
+      $zipUrl  = "https://github.com/center-for-threat-informed-defense/adversary_emulation_library/raw/master/micro_emulation_plans/src/named_pipes/named_pipes.zip"
+      Invoke-FetchFromZip $zipUrl "*.exe" "PathToAtomicsFolder\T1559\bin"
+  executor:
+    command: |
+      "PathToAtomicsFolder\T1559\bin\build\namedpipes_executor.exe" --pipe 3
+    name: command_prompt
+
+- name: Cobalt Strike post-exploitation pipe (4.2 and later)
+  auto_generated_guid: 7a48f482-246f-4aeb-9837-21c271ebf244
+  description: |
+    Uses the [Named Pipes Micro Emulation](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/tree/master/micro_emulation_plans/src/named_pipes) executable from the Center for Threat Informed Defense to create a named pipe for inter-process communication.
+    
+    The named pipe executable will pause for 30 seconds to allow the client and server to exchange a message through the pipe.
+  supported_platforms:
+  - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Named pipe executors must exist on disk
+    prereq_command: |
+      if ((Test-Path PathToAtomicsFolder\T1559\bin\build\namedpipes_executor.exe) -and (Test-Path PathToAtomicsFolder\T1559\bin\build\namedpipes_client.exe) -and (Test-Path PathToAtomicsFolder\T1559\bin\build\namedpipes_server.exe)) {exit 0} else {exit 1}
+    get_prereq_command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-FetchFromZip.ps1" -UseBasicParsing)
+      $zipUrl  = "https://github.com/center-for-threat-informed-defense/adversary_emulation_library/raw/master/micro_emulation_plans/src/named_pipes/named_pipes.zip"
+      Invoke-FetchFromZip $zipUrl "*.exe" "PathToAtomicsFolder\T1559\bin"
+  executor:
+    command: |
+      "PathToAtomicsFolder\T1559\bin\build\namedpipes_executor.exe" --pipe 4
+    name: command_prompt
+    
+- name: Cobalt Strike post-exploitation pipe (before 4.2)
+  auto_generated_guid: 8dbfc15c-527b-4ab0-a272-019f469d367f
+  description: |
+    Uses the [Named Pipes Micro Emulation](https://github.com/center-for-threat-informed-defense/adversary_emulation_library/tree/master/micro_emulation_plans/src/named_pipes) executable from the Center for Threat Informed Defense to create a named pipe for inter-process communication.
+    
+    The named pipe executable will pause for 30 seconds to allow the client and server to exchange a message through the pipe.
+  supported_platforms:
+  - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Named pipe executors must exist on disk
+    prereq_command: |
+      if ((Test-Path PathToAtomicsFolder\T1559\bin\build\namedpipes_executor.exe) -and (Test-Path PathToAtomicsFolder\T1559\bin\build\namedpipes_client.exe) -and (Test-Path PathToAtomicsFolder\T1559\bin\build\namedpipes_server.exe)) {exit 0} else {exit 1}
+    get_prereq_command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-FetchFromZip.ps1" -UseBasicParsing)
+      $zipUrl  = "https://github.com/center-for-threat-informed-defense/adversary_emulation_library/raw/master/micro_emulation_plans/src/named_pipes/named_pipes.zip"
+      Invoke-FetchFromZip $zipUrl "*.exe" "PathToAtomicsFolder\T1559\bin"
+  executor:
+    command: |
+      "PathToAtomicsFolder\T1559\bin\build\namedpipes_executor.exe" --pipe 5
+    name: command_prompt
