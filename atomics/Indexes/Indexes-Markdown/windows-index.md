@@ -230,6 +230,7 @@
   - Atomic Test #46: Mimic Ransomware - Allow Multiple RDP Sessions per User [windows]
   - Atomic Test #47: Event Viewer Registry Modification - Redirection URL [windows]
   - Atomic Test #48: Event Viewer Registry Modification - Redirection Program [windows]
+  - Atomic Test #49: Enabling Remote Desktop Protocol via Remote Registry [windows]
 - [T1574.008 Hijack Execution Flow: Path Interception by Search Order Hijacking](../../T1574.008/T1574.008.md)
   - Atomic Test #1: powerShell Persistence via hijacking default modules - Get-Variable.exe [windows]
 - T1027.001 Obfuscated Files or Information: Binary Padding [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -369,6 +370,7 @@
   - Atomic Test #36: Disable Windows Defender with PwSh Disable-WindowsOptionalFeature [windows]
   - Atomic Test #37: WMIC Tamper with Windows Defender Evade Scanning Folder [windows]
   - Atomic Test #38: Delete Windows Defender Scheduled Tasks [windows]
+  - Atomic Test #44: Disable Hypervisor-Enforced Code Integrity (HVCI) [windows]
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -564,6 +566,7 @@
   - Atomic Test #2: Service Installation CMD [windows]
   - Atomic Test #3: Service Installation PowerShell [windows]
   - Atomic Test #4: TinyTurla backdoor service w64time [windows]
+  - Atomic Test #5: Remote Service Installation CMD [windows]
 - T1547.012 Print Processors [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1574.001 Hijack Execution Flow: DLL Search Order Hijacking](../../T1574.001/T1574.001.md)
   - Atomic Test #1: DLL Search Order Hijacking - amsi.dll [windows]
@@ -681,6 +684,7 @@
   - Atomic Test #1: Persistence with Custom AutodialDLL [windows]
   - Atomic Test #2: HKLM - Persistence using CommandProcessor AutoRun key (With Elevation) [windows]
   - Atomic Test #3: HKCU - Persistence using CommandProcessor AutoRun key (Without Elevation) [windows]
+  - Atomic Test #4: WMI Invoke-CimMethod Start Process [windows]
 - [T1134.005 Access Token Manipulation: SID-History Injection](../../T1134.005/T1134.005.md)
   - Atomic Test #1: Injection SID-History with mimikatz [windows]
 - [T1547.002 Authentication Package](../../T1547.002/T1547.002.md)
@@ -888,6 +892,7 @@
   - Atomic Test #2: Service Installation CMD [windows]
   - Atomic Test #3: Service Installation PowerShell [windows]
   - Atomic Test #4: TinyTurla backdoor service w64time [windows]
+  - Atomic Test #5: Remote Service Installation CMD [windows]
 - [T1137 Office Application Startup](../../T1137/T1137.md)
   - Atomic Test #1: Office Application Startup - Outlook as a C2 [windows]
 - T1547.012 Print Processors [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1026,6 +1031,7 @@
   - Atomic Test #1: Persistence with Custom AutodialDLL [windows]
   - Atomic Test #2: HKLM - Persistence using CommandProcessor AutoRun key (With Elevation) [windows]
   - Atomic Test #3: HKCU - Persistence using CommandProcessor AutoRun key (Without Elevation) [windows]
+  - Atomic Test #4: WMI Invoke-CimMethod Start Process [windows]
 - [T1547.002 Authentication Package](../../T1547.002/T1547.002.md)
   - Atomic Test #1: Authentication Package [windows]
 - T1128 Netsh Helper DLL [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

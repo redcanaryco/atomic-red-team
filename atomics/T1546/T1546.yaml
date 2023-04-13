@@ -67,3 +67,58 @@ atomic_tests:
     cleanup_command: |-
       Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Command Processor" -Name "AutoRun" -ErrorAction Ignore
     name: powershell
+
+- name: WMI Invoke-CimMethod Start Process
+  auto_generated_guid: adae83d3-0df6-45e7-b2c3-575f91584577
+  description: |
+    The following Atomic will create a New-CimSession on a remote endpoint and start a process usnig Invoke-CimMethod.
+    This is a novel way to perform lateral movement or to start a remote process.
+    This does require WinRM to be enabled. The account performing the run will also need to be elevated.
+    A successful execution will stdout that the process started. On the remote endpoint, wmiprvse.exe will spawn the given process.
+  supported_platforms:
+  - windows
+  input_arguments:
+    dest:
+      description: destination computer name
+      type: string
+      default: localhost
+    password:
+      description: password for account
+      type: string
+      default: P@ssword1
+    username:
+      description: account to use
+      type: string
+      default: Administrator
+    process:
+      description: process to spawn
+      type: string
+      default: calc.exe
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+       # Set the remote computer name and credentials
+        $RemoteComputer = "#{dest}"
+        $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+        $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+
+        # Create a CIM session
+        $CimSession = New-CimSession -ComputerName $RemoteComputer -Credential $Credential
+
+        # Define the process you want to start
+        $ProcessToStart = "#{process}"
+
+        # Invoke the Create method on the Win32_Process class to start the process
+        $Result = Invoke-CimMethod -CimSession $CimSession -ClassName Win32_Process -MethodName Create -Arguments @{CommandLine = $ProcessToStart}
+
+        # Check the result
+        if ($Result.ReturnValue -eq 0) {
+            Write-Host "Process started successfully with Process ID: $($Result.ProcessId)"
+        } else {
+            Write-Host "Failed to start the process. Error code: $($Result.ReturnValue)"
+        }
+
+        # Clean up the CIM session
+        Remove-CimSession -CimSession $CimSession 
+

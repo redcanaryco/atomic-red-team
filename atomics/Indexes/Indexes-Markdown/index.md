@@ -108,8 +108,20 @@
   - Atomic Test #4: Detect Virtualization Environment via WMI Manufacturer/Model Listing (Windows) [windows]
 - [T1070.002 Indicator Removal on Host: Clear Linux or Mac System Logs](../../T1070.002/T1070.002.md)
   - Atomic Test #1: rm -rf [macos, linux]
-  - Atomic Test #2: Overwrite Linux Mail Spool [linux]
-  - Atomic Test #3: Overwrite Linux Log [linux]
+  - Atomic Test #2: Delete log files using built-in log utility [macos]
+  - Atomic Test #3: Truncate system log files via truncate utility [macos]
+  - Atomic Test #4: Delete log files via cat utility by appending /dev/null or /dev/zero [macos]
+  - Atomic Test #5: System log file deletion via find utility [macos]
+  - Atomic Test #6: Overwrite macOS system log via echo utility [macos]
+  - Atomic Test #7: Real-time system log clearance/deletion [macos]
+  - Atomic Test #8: Delete system log files via unlink utility [macos]
+  - Atomic Test #9: Delete system log files using shred utility [macos]
+  - Atomic Test #10: Delete system log files using srm utility [macos]
+  - Atomic Test #11: Delete system log files using OSAScript [macos]
+  - Atomic Test #12: Delete system log files using Applescript [macos]
+  - Atomic Test #13: Delete system journal logs via rm and journalctl utilities [linux]
+  - Atomic Test #14: Overwrite Linux Mail Spool [linux]
+  - Atomic Test #15: Overwrite Linux Log [linux]
 - [T1218.004 Signed Binary Proxy Execution: InstallUtil](../../T1218.004/T1218.004.md)
   - Atomic Test #1: CheckIfInstallable method call [windows]
   - Atomic Test #2: InstallHelper method call [windows]
@@ -174,6 +186,8 @@
   - Atomic Test #7: Linux Base64 Encoded Shebang in CLI [linux, macos]
 - [T1562 Impair Defenses](../../T1562/T1562.md)
   - Atomic Test #1: Windows Disable LSA Protection [windows]
+  - Atomic Test #2: Disable journal logging via systemctl utility [linux]
+  - Atomic Test #3: Disable journal logging via sed utility [linux]
 - [T1055.003 Thread Execution Hijacking](../../T1055.003/T1055.003.md)
   - Atomic Test #1: Thread Execution Hijacking [windows]
 - [T1036 Masquerading](../../T1036/T1036.md)
@@ -303,11 +317,13 @@
   - Atomic Test #46: Mimic Ransomware - Allow Multiple RDP Sessions per User [windows]
   - Atomic Test #47: Event Viewer Registry Modification - Redirection URL [windows]
   - Atomic Test #48: Event Viewer Registry Modification - Redirection Program [windows]
+  - Atomic Test #49: Enabling Remote Desktop Protocol via Remote Registry [windows]
 - [T1574.008 Hijack Execution Flow: Path Interception by Search Order Hijacking](../../T1574.008/T1574.008.md)
   - Atomic Test #1: powerShell Persistence via hijacking default modules - Get-Variable.exe [windows]
 - T1535 Unused/Unsupported Cloud Regions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1027.001 Obfuscated Files or Information: Binary Padding](../../T1027.001/T1027.001.md)
   - Atomic Test #1: Pad Binary to Change Hash - Linux/macOS dd [macos, linux]
+  - Atomic Test #2: Pad Binary to Change Hash using truncate command - Linux/macOS [macos, linux]
 - [T1484.001 Domain Policy Modification: Group Policy Modification](../../T1484.001/T1484.001.md)
   - Atomic Test #1: LockBit Black - Modify Group policy settings -cmd [windows]
   - Atomic Test #2: LockBit Black - Modify Group policy settings -Powershell [windows]
@@ -381,7 +397,8 @@
 - T1600.002 Disable Crypto Hardware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1064 Scripting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1612 Build Image on Host [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1612 Build Image on Host](../../T1612/T1612.md)
+  - Atomic Test #1: Build Image On Host [containers]
 - T1055.002 Portable Executable Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1218.012 Verclsid [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1562.010 Downgrade Attack [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -413,6 +430,11 @@
 - [T1562.003 Impair Defenses: HISTCONTROL](../../T1562.003/T1562.003.md)
   - Atomic Test #1: Disable history collection [linux, macos]
   - Atomic Test #2: Mac HISTCONTROL [macos, linux]
+  - Atomic Test #3: Clear bash history [linux]
+  - Atomic Test #4: Setting the HISTCONTROL environment variable [linux]
+  - Atomic Test #5: Setting the HISTFILESIZE environment variable [linux]
+  - Atomic Test #6: Setting the HISTFILE environment variable [linux]
+  - Atomic Test #7: Setting the HISTIGNORE environment variable [linux]
 - T1497.002 User Activity Based Checks [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1134.004 Access Token Manipulation: Parent PID Spoofing](../../T1134.004/T1134.004.md)
   - Atomic Test #1: Parent PID Spoofing using PowerShell [windows]
@@ -487,6 +509,7 @@
   - Atomic Test #41: Reboot Linux Host via Kernel System Request [linux]
   - Atomic Test #42: Clear Pagging Cache [linux]
   - Atomic Test #43: Disable Memory Swap [linux]
+  - Atomic Test #44: Disable Hypervisor-Enforced Code Integrity (HVCI) [windows]
 - T1601 Modify System Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -752,6 +775,7 @@
   - Atomic Test #2: Service Installation CMD [windows]
   - Atomic Test #3: Service Installation PowerShell [windows]
   - Atomic Test #4: TinyTurla backdoor service w64time [windows]
+  - Atomic Test #5: Remote Service Installation CMD [windows]
 - [T1053.003 Scheduled Task/Job: Cron](../../T1053.003/T1053.003.md)
   - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
   - Atomic Test #2: Cron - Add script to all cron subfolders [macos, linux]
@@ -914,6 +938,7 @@
   - Atomic Test #1: Persistence with Custom AutodialDLL [windows]
   - Atomic Test #2: HKLM - Persistence using CommandProcessor AutoRun key (With Elevation) [windows]
   - Atomic Test #3: HKCU - Persistence using CommandProcessor AutoRun key (Without Elevation) [windows]
+  - Atomic Test #4: WMI Invoke-CimMethod Start Process [windows]
 - [T1546.004 Event Triggered Execution: .bash_profile and .bashrc](../../T1546.004/T1546.004.md)
   - Atomic Test #1: Add command to .bash_profile [macos, linux]
   - Atomic Test #2: Add command to .bashrc [macos, linux]
@@ -1221,6 +1246,7 @@
   - Atomic Test #2: Service Installation CMD [windows]
   - Atomic Test #3: Service Installation PowerShell [windows]
   - Atomic Test #4: TinyTurla backdoor service w64time [windows]
+  - Atomic Test #5: Remote Service Installation CMD [windows]
 - [T1053.003 Scheduled Task/Job: Cron](../../T1053.003/T1053.003.md)
   - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
   - Atomic Test #2: Cron - Add script to all cron subfolders [macos, linux]
@@ -1419,6 +1445,7 @@
   - Atomic Test #1: Persistence with Custom AutodialDLL [windows]
   - Atomic Test #2: HKLM - Persistence using CommandProcessor AutoRun key (With Elevation) [windows]
   - Atomic Test #3: HKCU - Persistence using CommandProcessor AutoRun key (Without Elevation) [windows]
+  - Atomic Test #4: WMI Invoke-CimMethod Start Process [windows]
 - [T1546.004 Event Triggered Execution: .bash_profile and .bashrc](../../T1546.004/T1546.004.md)
   - Atomic Test #1: Add command to .bash_profile [macos, linux]
   - Atomic Test #2: Add command to .bashrc [macos, linux]
