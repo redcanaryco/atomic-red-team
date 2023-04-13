@@ -1545,7 +1545,7 @@
   - Atomic Test #18: Get-DomainController with PowerView [windows]
   - Atomic Test #19: Get-wmiobject to Enumerate Domain Controllers [windows]
   - Atomic Test #20: Remote System Discovery - net group Domain Controller [windows]
-- [T1046 Network Service Scanning](../../T1046/T1046.md)
+- [T1046 Network Service Discovery](../../T1046/T1046.md)
   - Atomic Test #3: Port Scan NMap for Windows [windows]
   - Atomic Test #4: Port Scan using python [windows]
   - Atomic Test #5: WinPwn - spoolvulnscan [windows]

@@ -2171,7 +2171,7 @@
   - Atomic Test #18: Get-DomainController with PowerView [windows]
   - Atomic Test #19: Get-wmiobject to Enumerate Domain Controllers [windows]
   - Atomic Test #20: Remote System Discovery - net group Domain Controller [windows]
-- [T1046 Network Service Scanning](../../T1046/T1046.md)
+- [T1046 Network Service Discovery](../../T1046/T1046.md)
   - Atomic Test #1: Port Scan [linux, macos]
   - Atomic Test #2: Port Scan Nmap [linux, macos]
   - Atomic Test #3: Port Scan NMap for Windows [windows]
@@ -2180,6 +2180,7 @@
   - Atomic Test #6: WinPwn - MS17-10 [windows]
   - Atomic Test #7: WinPwn - bluekeep [windows]
   - Atomic Test #8: WinPwn - fruit [windows]
+  - Atomic Test #9: Network Service Discovery for Containers [containers]
 - [T1518 Software Discovery](../../T1518/T1518.md)
   - Atomic Test #1: Find and Display Internet Explorer Browser Version [windows]
   - Atomic Test #2: Applications Installed [windows]

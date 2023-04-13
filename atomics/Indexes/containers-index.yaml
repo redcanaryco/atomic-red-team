@@ -53130,7 +53130,7 @@ discovery:
         macOS APT Activity Bradley)"
       modified: '2022-04-20T16:05:30.960Z'
       created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
-      name: Network Service Scanning
+      name: Network Service Discovery
       x_mitre_detection: |-
         System and network discovery techniques normally occur throughout an operation as an adversary learns the environment. Data and events should not be viewed in isolation, but as part of a chain of behavior that could lead to other activities, such as Lateral Movement, based on the information obtained.
 
@@ -53146,7 +53146,44 @@ discovery:
       x_mitre_attack_spec_version: 2.1.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
       identifier: T1046
-    atomic_tests: []
+    atomic_tests:
+    - name: Network Service Discovery for Containers
+      auto_generated_guid: 06eaafdb-8982-426e-8a31-d572da633caa
+      description: Attackers may try to obtain a list of services that are operating
+        on remote hosts and local network infrastructure devices, in order to identify
+        potential vulnerabilities that can be exploited through remote software attacks.
+        They typically use tools to conduct port and vulnerability scans in order
+        to obtain this information.
+      supported_platforms:
+      - containers
+      dependency_executor_name: sh
+      dependencies:
+      - description: Verify docker is installed.
+        prereq_command: 'which docker
+
+          '
+        get_prereq_command: 'if [ "" == "`which docker`" ]; then echo "Docker Not
+          Found"; if [ -n "`which apt-get`" ]; then sudo apt-get -y install docker
+          ; elif [ -n "`which yum`" ]; then sudo yum -y install docker ; fi ; else
+          echo "Docker installed"; fi
+
+          '
+      - description: Verify docker service is running.
+        prereq_command: 'sudo systemctl status docker  --no-pager
+
+          '
+        get_prereq_command: 'sudo systemctl start docker
+
+          '
+      executor:
+        command: |-
+          docker build -t t1046 /root/AtomicRedTeam/atomics/T1046/src/
+          docker run --name t1046_container  -d -t t1046
+          docker exec t1046_container ./test.sh
+        cleanup_command: |-
+          docker stop t1046_container
+          docker rmi -f t1046
+        name: sh
   T1518:
     technique:
       x_mitre_platforms:

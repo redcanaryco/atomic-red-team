@@ -530,7 +530,7 @@
   - Atomic Test #12: Remote System Discovery - ip neighbour [linux]
   - Atomic Test #13: Remote System Discovery - ip route [linux]
   - Atomic Test #14: Remote System Discovery - ip tcp_metrics [linux]
-- [T1046 Network Service Scanning](../../T1046/T1046.md)
+- [T1046 Network Service Discovery](../../T1046/T1046.md)
   - Atomic Test #1: Port Scan [linux, macos]
   - Atomic Test #2: Port Scan Nmap [linux, macos]
 - T1518 Software Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
