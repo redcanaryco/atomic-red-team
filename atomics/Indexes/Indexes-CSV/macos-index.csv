@@ -16,6 +16,17 @@ defense-evasion,T1548.003,Abuse Elevation Control Mechanism: Sudo and Sudo Cachi
 defense-evasion,T1036.005,Masquerading: Match Legitimate Name or Location,1,Execute a process from a directory masquerading as the current parent directory.,812c3ab8-94b0-4698-a9bf-9420af23ce24,sh
 defense-evasion,T1497.001,Virtualization/Sandbox Evasion: System Checks,3,Detect Virtualization Environment (MacOS),a960185f-aef6-4547-8350-d1ce16680d09,sh
 defense-evasion,T1070.002,Indicator Removal on Host: Clear Linux or Mac System Logs,1,rm -rf,989cc1b1-3642-4260-a809-54f9dd559683,sh
+defense-evasion,T1070.002,Indicator Removal on Host: Clear Linux or Mac System Logs,2,Delete log files using built-in log utility,653d39cd-bae7-499a-898c-9fb96b8b5cd1,sh
+defense-evasion,T1070.002,Indicator Removal on Host: Clear Linux or Mac System Logs,3,Truncate system log files via truncate utility,6290f8a8-8ee9-4661-b9cf-390031bf6973,sh
+defense-evasion,T1070.002,Indicator Removal on Host: Clear Linux or Mac System Logs,4,Delete log files via cat utility by appending /dev/null or /dev/zero,c23bdb88-928d-493e-b46d-df2906a50941,sh
+defense-evasion,T1070.002,Indicator Removal on Host: Clear Linux or Mac System Logs,5,System log file deletion via find utility,bc8eeb4a-cc3e-45ec-aa6e-41e973da2558,sh
+defense-evasion,T1070.002,Indicator Removal on Host: Clear Linux or Mac System Logs,6,Overwrite macOS system log via echo utility,0208ea60-98f1-4e8c-8052-930dce8f742c,sh
+defense-evasion,T1070.002,Indicator Removal on Host: Clear Linux or Mac System Logs,7,Real-time system log clearance/deletion,848e43b3-4c0a-4e4c-b4c9-d1e8cea9651c,sh
+defense-evasion,T1070.002,Indicator Removal on Host: Clear Linux or Mac System Logs,8,Delete system log files via unlink utility,03013b4b-01db-437d-909b-1fdaa5010ee8,sh
+defense-evasion,T1070.002,Indicator Removal on Host: Clear Linux or Mac System Logs,9,Delete system log files using shred utility,86f0e4d5-3ca7-45fb-829d-4eda32b232bb,sh
+defense-evasion,T1070.002,Indicator Removal on Host: Clear Linux or Mac System Logs,10,Delete system log files using srm utility,b0768a5e-0f32-4e75-ae5b-d036edcf96b6,sh
+defense-evasion,T1070.002,Indicator Removal on Host: Clear Linux or Mac System Logs,11,Delete system log files using OSAScript,810a465f-cd4f-47bc-b43e-d2de3b033ecc,sh
+defense-evasion,T1070.002,Indicator Removal on Host: Clear Linux or Mac System Logs,12,Delete system log files using Applescript,e62f8694-cbc7-468f-862c-b10cd07e1757,sh
 defense-evasion,T1553.001,Subvert Trust Controls: Gatekeeper Bypass,1,Gatekeeper Bypass,fb3d46c6-9480-4803-8d7d-ce676e1f1a9b,sh
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,1,Clear Bash history (rm),a934276e-2be5-4a36-93fd-98adbb5bd4fc,sh
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,3,Clear Bash history (cat dev/null),b1251c35-dcd3-4ea1-86da-36d27b54f31f,sh
@@ -27,11 +38,13 @@ defense-evasion,T1140,Deobfuscate/Decode Files or Information,3,Base64 decoding 
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,4,Base64 decoding with Perl,6604d964-b9f6-4d4b-8ce8-499829a14d0a,sh
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,5,Base64 decoding with shell utilities,b4f6a567-a27a-41e5-b8ef-ac4b4008bb7e,sh
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,6,Hex decoding with shell utilities,005943f9-8dd5-4349-8b46-0313c0a9f973,sh
+defense-evasion,T1140,Deobfuscate/Decode Files or Information,7,Linux Base64 Encoded Shebang in CLI,3a15c372-67c1-4430-ac8e-ec06d641ce4d,sh
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,1,Set a file's access timestamp,5f9113d5-ed75-47ed-ba23-ea3573d05810,sh
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,2,Set a file's modification timestamp,20ef1523-8758-4898-b5a2-d026cc3d2c52,sh
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,3,Set a file's creation timestamp,8164a4a6-f99c-4661-ac4f-80f5e4e78d2b,sh
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,4,Modify file timestamps using reference file,631ea661-d661-44b0-abdb-7a7f3fc08e50,sh
 defense-evasion,T1027.001,Obfuscated Files or Information: Binary Padding,1,Pad Binary to Change Hash - Linux/macOS dd,ffe2346c-abd5-4b45-a713-bf5f1ebd573a,sh
+defense-evasion,T1027.001,Obfuscated Files or Information: Binary Padding,2,Pad Binary to Change Hash using truncate command - Linux/macOS,e22a9e89-69c7-410f-a473-e6c212cd2292,sh
 defense-evasion,T1574.006,Hijack Execution Flow: LD_PRELOAD,3,Dylib Injection via DYLD_INSERT_LIBRARIES,4d66029d-7355-43fd-93a4-b63ba92ea1be,bash
 defense-evasion,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,1,Make and modify binary from C source,896dfe97-ae43-4101-8e96-9a7996555d80,sh
 defense-evasion,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,2,Set a SetUID flag on file,759055b3-3885-4582-a8ec-c00c9d64dd79,sh
@@ -63,6 +76,9 @@ defense-evasion,T1564.001,Hide Artifacts: Hidden Files and Directories,5,Hidden 
 defense-evasion,T1564.001,Hide Artifacts: Hidden Files and Directories,6,Hide a Directory,b115ecaf-3b24-4ed2-aefe-2fcb9db913d3,sh
 defense-evasion,T1564.001,Hide Artifacts: Hidden Files and Directories,7,Show all hidden files,9a1ec7da-b892-449f-ad68-67066d04380c,sh
 defense-evasion,T1078.003,Valid Accounts: Local Accounts,2,Create local account with admin privileges - MacOS,f1275566-1c26-4b66-83e3-7f9f7f964daa,bash
+defense-evasion,T1078.003,Valid Accounts: Local Accounts,3,Create local account with admin privileges using sysadminctl utility - MacOS,191db57d-091a-47d5-99f3-97fde53de505,bash
+defense-evasion,T1078.003,Valid Accounts: Local Accounts,4,Enable root account using dsenableroot utility - MacOS,20b40ea9-0e17-4155-b8e6-244911a678ac,bash
+defense-evasion,T1078.003,Valid Accounts: Local Accounts,5,Add a new/existing user to the admin group using dseditgroup utility - macOS,433842ba-e796-4fd5-a14f-95d3a1970875,bash
 collection,T1560.001,Archive Collected Data: Archive via Utility,5,Data Compressed - nix - zip,c51cec55-28dd-4ad2-9461-1eacbc82c3a0,sh
 collection,T1560.001,Archive Collected Data: Archive via Utility,6,Data Compressed - nix - gzip Single File,cde3c2af-3485-49eb-9c1f-0ed60e9cc0af,sh
 collection,T1560.001,Archive Collected Data: Archive via Utility,7,Data Compressed - nix - tar Folder or File,7af2b51e-ad1c-498c-aca8-d3290c19535a,sh
@@ -101,6 +117,9 @@ persistence,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,
 persistence,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,2,Re-Opened Applications using LoginHook,5f5b71da-e03f-42e7-ac98-d63f9e0465cb,sh
 persistence,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,3,Append to existing loginwindow for Re-Opened Applications,766b6c3c-9353-4033-8b7e-38b309fa3a93,sh
 persistence,T1078.003,Valid Accounts: Local Accounts,2,Create local account with admin privileges - MacOS,f1275566-1c26-4b66-83e3-7f9f7f964daa,bash
+persistence,T1078.003,Valid Accounts: Local Accounts,3,Create local account with admin privileges using sysadminctl utility - MacOS,191db57d-091a-47d5-99f3-97fde53de505,bash
+persistence,T1078.003,Valid Accounts: Local Accounts,4,Enable root account using dsenableroot utility - MacOS,20b40ea9-0e17-4155-b8e6-244911a678ac,bash
+persistence,T1078.003,Valid Accounts: Local Accounts,5,Add a new/existing user to the admin group using dseditgroup utility - macOS,433842ba-e796-4fd5-a14f-95d3a1970875,bash
 privilege-escalation,T1548.003,Abuse Elevation Control Mechanism: Sudo and Sudo Caching,1,Sudo usage,150c3a08-ee6e-48a6-aeaf-3659d24ceb4e,sh
 privilege-escalation,T1548.003,Abuse Elevation Control Mechanism: Sudo and Sudo Caching,2,Unlimited sudo cache timeout,a7b17659-dd5e-46f7-b7d1-e6792c91d0bc,sh
 privilege-escalation,T1548.003,Abuse Elevation Control Mechanism: Sudo and Sudo Caching,3,Disable tty_tickets for sudo caching,91a60b03-fb75-4d24-a42e-2eb8956e8de1,sh
@@ -128,6 +147,9 @@ privilege-escalation,T1547.007,Boot or Logon Autostart Execution: Re-opened Appl
 privilege-escalation,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,2,Re-Opened Applications using LoginHook,5f5b71da-e03f-42e7-ac98-d63f9e0465cb,sh
 privilege-escalation,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,3,Append to existing loginwindow for Re-Opened Applications,766b6c3c-9353-4033-8b7e-38b309fa3a93,sh
 privilege-escalation,T1078.003,Valid Accounts: Local Accounts,2,Create local account with admin privileges - MacOS,f1275566-1c26-4b66-83e3-7f9f7f964daa,bash
+privilege-escalation,T1078.003,Valid Accounts: Local Accounts,3,Create local account with admin privileges using sysadminctl utility - MacOS,191db57d-091a-47d5-99f3-97fde53de505,bash
+privilege-escalation,T1078.003,Valid Accounts: Local Accounts,4,Enable root account using dsenableroot utility - MacOS,20b40ea9-0e17-4155-b8e6-244911a678ac,bash
+privilege-escalation,T1078.003,Valid Accounts: Local Accounts,5,Add a new/existing user to the admin group using dseditgroup utility - macOS,433842ba-e796-4fd5-a14f-95d3a1970875,bash
 credential-access,T1056.001,Input Capture: Keylogging,7,MacOS Swift Keylogger,aee3a097-4c5c-4fff-bbd3-0a705867ae29,bash
 credential-access,T1555.001,Credentials from Password Stores: Keychain,1,Keychain,1864fdec-ff86-4452-8c30-f12507582a93,sh
 credential-access,T1040,Network Sniffing,2,Packet Capture macOS using tcpdump or tshark,9d04efee-eff5-4240-b8d2-07792b873608,bash
@@ -203,6 +225,9 @@ execution,T1569.001,System Services: Launchctl,1,Launchctl,6fb61988-724e-4755-a5
 execution,T1059.004,Command and Scripting Interpreter: Bash,1,Create and Execute Bash Shell Script,7e7ac3ed-f795-4fa5-b711-09d6fbe9b873,sh
 execution,T1059.004,Command and Scripting Interpreter: Bash,2,Command-Line Interface,d0c88567-803d-4dca-99b4-7ce65e7b257c,sh
 initial-access,T1078.003,Valid Accounts: Local Accounts,2,Create local account with admin privileges - MacOS,f1275566-1c26-4b66-83e3-7f9f7f964daa,bash
+initial-access,T1078.003,Valid Accounts: Local Accounts,3,Create local account with admin privileges using sysadminctl utility - MacOS,191db57d-091a-47d5-99f3-97fde53de505,bash
+initial-access,T1078.003,Valid Accounts: Local Accounts,4,Enable root account using dsenableroot utility - MacOS,20b40ea9-0e17-4155-b8e6-244911a678ac,bash
+initial-access,T1078.003,Valid Accounts: Local Accounts,5,Add a new/existing user to the admin group using dseditgroup utility - macOS,433842ba-e796-4fd5-a14f-95d3a1970875,bash
 exfiltration,T1048.002,Exfiltration Over Alternative Protocol - Exfiltration Over Asymmetric Encrypted Non-C2 Protocol,2,Exfiltrate data HTTPS using curl linux,4a4f31e2-46ea-4c26-ad89-f09ad1d5fe01,bash
 exfiltration,T1048,Exfiltration Over Alternative Protocol,1,Exfiltration Over Alternative Protocol - SSH,f6786cc8-beda-4915-a4d6-ac2f193bb988,sh
 exfiltration,T1048,Exfiltration Over Alternative Protocol,2,Exfiltration Over Alternative Protocol - SSH,7c3cb337-35ae-4d06-bf03-3032ed2ec268,sh

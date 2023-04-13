@@ -3,7 +3,6 @@ display_name: 'Valid Accounts: Local Accounts'
 atomic_tests:
 - name: Create local account with admin privileges
   auto_generated_guid: a524ce99-86de-4db6-b4f9-e08f35a47a15
-
   description: After execution the new account will be active and added to the Administrators group
   supported_platforms:
   - windows
@@ -22,7 +21,6 @@ atomic_tests:
       net user art-test /delete >nul 2>&1
     name: command_prompt
     elevation_required: true
-
 - name: Create local account with admin privileges - MacOS
   auto_generated_guid: f1275566-1c26-4b66-83e3-7f9f7f964daa
   description: After execution the new account will be active and added to the Administrators group
@@ -42,7 +40,45 @@ atomic_tests:
       sudo dscl . -delete /Users/AtomicUser
     name: bash
     elevation_required: true
-- name: WinPwn - Loot local Credentials - powerhell kittie
+- name: Create local account with admin privileges using sysadminctl utility - MacOS
+  auto_generated_guid: 191db57d-091a-47d5-99f3-97fde53de505
+  description: After execution the new account will be active and added to the Administrators group
+  supported_platforms:
+  - macos
+  executor:
+    command: |-
+      sysadminctl interactive -addUser art-tester -fullName ARTUser -password !pass123! -admin
+    cleanup_command: |-
+      sysadminctl interactive -deleteUser art-tester
+    name: bash
+    elevation_required: true
+- name: Enable root account using dsenableroot utility - MacOS
+  auto_generated_guid: 20b40ea9-0e17-4155-b8e6-244911a678ac
+  description: After execution the current/new user will have root access
+  supported_platforms:
+  - macos
+  executor:
+    command: |-
+      dsenableroot #current user
+      dsenableroot -u art-tester -p art-tester -r art-root #new user
+    cleanup_command: |-
+      dsenableroot -d #current user
+      dsenableroot -d -u art-tester -p art-tester #new user
+    name: bash
+    elevation_required: true
+- name: Add a new/existing user to the admin group using dseditgroup utility - macOS
+  auto_generated_guid: 433842ba-e796-4fd5-a14f-95d3a1970875
+  description: After execution the current/new user will be added to the Admin group
+  supported_platforms:
+  - macos
+  executor:
+    command: |-
+      dseditgroup -o edit -a art-user -t user admin
+    cleanup_command: |-
+      dseditgroup -o edit -d art-user -t user admin
+    name: bash
+    elevation_required: true
+- name: WinPwn - Loot local Credentials - powerhell kittie 
   auto_generated_guid: 9e9fd066-453d-442f-88c1-ad7911d32912
   description: Loot local Credentials - powerhell kittie technique via function of WinPwn
   supported_platforms:

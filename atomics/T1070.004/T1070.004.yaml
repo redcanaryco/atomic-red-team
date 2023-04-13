@@ -9,13 +9,27 @@ atomic_tests:
   - linux
   - macos
   input_arguments:
+    parent_folder:
+      description: Path of parent folder
+      type: path
+      default: /tmp/victim-files/
     file_to_delete:
       description: Path of file to delete
       type: path
-      default: /tmp/victim-files/a
+      default: /tmp/victim-files/T1070.004-test.txt  
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      The file must exist in order to be deleted
+    prereq_command: |
+      test -e #{file_to_delete} && exit 0 || exit 1
+    get_prereq_command: |
+      mkdir -p #{parent_folder} && touch #{file_to_delete}
   executor:
     command: |
       rm -f #{file_to_delete}
+    cleanup_command: |
+      rm -rf #{parent_folder}
     name: sh
 - name: Delete an entire folder - Linux/macOS
   auto_generated_guid: a415f17e-ce8d-4ce2-a8b4-83b674e7017e
@@ -28,7 +42,15 @@ atomic_tests:
     folder_to_delete:
       description: Path of folder to delete
       type: path
-      default: /tmp/victim-files
+      default: /tmp/victim-folder
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      The folder must exist in order to be deleted
+    prereq_command: |
+      test -e #{folder_to_delete} && exit 0 || exit 1
+    get_prereq_command: |
+      mkdir -p #{folder_to_delete}
   executor:
     command: |
       rm -rf #{folder_to_delete}

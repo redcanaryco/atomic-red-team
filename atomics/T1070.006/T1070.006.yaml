@@ -12,10 +12,19 @@ atomic_tests:
     target_filename:
       description: Path of file that we are going to stomp on last access time
       type: path
-      default: /opt/filename
+      default: /tmp/T1070.006-access.txt
+  dependencies:
+  - description: |
+      The file must exist in order to be timestomped
+    prereq_command: |
+      test -e #{target_filename} && exit 0 || exit 1
+    get_prereq_command: |
+      echo 'T1070.006 file access timestomp test' > #{target_filename}
   executor:
     command: |
       touch -a -t 197001010000.00 #{target_filename}
+    cleanup_command: |
+      rm -f #{target_filename}
     name: sh
 - name: Set a file's modification timestamp
   auto_generated_guid: 20ef1523-8758-4898-b5a2-d026cc3d2c52
@@ -28,10 +37,19 @@ atomic_tests:
     target_filename:
       description: Path of file that we are going to stomp on last access time
       type: path
-      default: /opt/filename
+      default: /tmp/T1070.006-modification.txt
+  dependencies:
+  - description: |
+      The file must exist in order to be timestomped
+    prereq_command: |
+      test -e #{target_filename} && exit 0 || exit 1
+    get_prereq_command: |
+      echo 'T1070.006 file modification timestomp test' > #{target_filename}
   executor:
     command: |
       touch -m -t 197001010000.00 #{target_filename}
+    cleanup_command: |
+      rm -f #{target_filename}
     name: sh
 - name: Set a file's creation timestamp
   auto_generated_guid: 8164a4a6-f99c-4661-ac4f-80f5e4e78d2b
@@ -47,14 +65,17 @@ atomic_tests:
     target_filename:
       description: Path of file that we are going to stomp on last access time
       type: path
-      default: /opt/filename
+      default: /tmp/T1070.006-creation.txt
   executor:
+    elevation_required: true
     command: |
-      NOW=$(date)
-      date -s "1970-01-01 00:00:00"
+      NOW=$(date +%m%d%H%M%Y)
+      date 010100001971
       touch #{target_filename}
-      date -s "$NOW"
+      date "$NOW"
       stat #{target_filename}
+    cleanup_command: |
+      rm -f #{target_filename}
     name: sh
 - name: Modify file timestamps using reference file
   auto_generated_guid: 631ea661-d661-44b0-abdb-7a7f3fc08e50
@@ -69,14 +90,23 @@ atomic_tests:
     target_file_path:
       description: Path of file to modify timestamps of
       type: path
-      default: /opt/filename
+      default: /tmp/T1070.006-reference.txt
     reference_file_path:
       description: Path of reference file to read timestamps from
       type: path
       default: /bin/sh
+  dependencies:
+  - description: |
+      The file must exist in order to be timestomped
+    prereq_command: |
+      test -e #{target_file_path} && exit 0 || exit 1
+    get_prereq_command: |
+      echo 'T1070.006 reference file timestomp test' > #{target_file_path}
   executor:
     command: |
       touch -acmr #{reference_file_path} #{target_file_path}
+    cleanup_command: |
+      rm -f #{target_file_path}
     name: sh
 - name: Windows - Modify file creation timestamp with PowerShell
   auto_generated_guid: b3b2c408-2ff0-4a33-b89b-1cb46a9e6a9c

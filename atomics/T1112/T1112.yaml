@@ -735,3 +735,46 @@ atomic_tests:
       reg delete "HKLM\System\CurrentControlSet\Control\Terminal Server" /v fSingleSessionPerUser /f >nul 2>&1
     name: command_prompt
     elevation_required: true
+- name: Event Viewer Registry Modification - Redirection URL
+  auto_generated_guid: 6174be7f-5153-4afd-92c5-e0c3b7cdb5ae
+  description: Modify event viewer registry values to alter the behavior of the online help redirection. Upon opening an event in event viewer and attempting to view the help page for the event, it will open the URL or execute the program defined in the redirection URL registry entry.
+  supported_platforms:
+  - windows
+  input_arguments:
+    redirection_url:
+      description: URL to open or file URI to execute upon opening the event help
+      type: url
+      default: file://C:\windows\system32\notepad.exe
+  executor:
+    command: reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Event Viewer" /v MicrosoftRedirectionURL /t REG_SZ /d "#{redirection_url}" /f
+    cleanup_command: reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Event Viewer" /v MicrosoftRedirectionURL /t REG_SZ /d "http://go.microsoft.com/fwlink/events.asp" /f
+    name: command_prompt
+    elevation_required: true
+- name: Event Viewer Registry Modification - Redirection Program
+  auto_generated_guid: 81483501-b8a5-4225-8b32-52128e2f69db
+  description: Modify event viewer registry values to alter the behavior of the online help redirection. Upon opening an event in event viewer and attempting to view the help page for the event, it will execute the program defined in the redirection program registry entry.
+  supported_platforms:
+  - windows
+  input_arguments:
+    redirection_program:
+      description: Path of the program to execute upon opening the event help
+      type: path
+      default: C:\windows\system32\notepad.exe
+  executor:
+    command: reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Event Viewer" /v MicrosoftRedirectionProgram /t REG_EXPAND_SZ /d "#{redirection_program}" /f
+    cleanup_command: reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Event Viewer" /v MicrosoftRedirectionProgram /t REG_EXPAND_SZ /f
+    name: command_prompt
+    elevation_required: true
+- name: Enabling Remote Desktop Protocol via Remote Registry
+  auto_generated_guid: e3ad8e83-3089-49ff-817f-e52f8c948090
+  description: |
+    Enabling RDP through remote registry.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "hklm\SYSTEM\CurrentControlSet\Control\Terminal Server\Winstations\RDP-Tcp" /v SecurityLayer /t REG_DWORD /d 0 /f
+    cleanup_command: |
+      reg add "hklm\SYSTEM\CurrentControlSet\Control\Terminal Server\Winstations\RDP-Tcp" /v SecurityLayer /t REG_DWORD /d 2 /f
+    name: command_prompt
+    elevation_required: true

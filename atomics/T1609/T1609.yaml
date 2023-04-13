@@ -16,6 +16,10 @@ atomic_tests:
       description: Command to run
       type: string
       default: uname
+    path:
+      description: Path to busybox.yaml file
+      type: string
+      default: $PathtoAtomicsFolder/T1609/src/busybox.yaml  
   dependencies:
   - description: |
       kubectl must be installed
@@ -25,7 +29,9 @@ atomic_tests:
       which kubectl
   executor:
     command: |
-      kubectl create -f src/busybox.yaml -n #{namespace}
+      kubectl create -f #{path} -n #{namespace}
+      # wait 3 seconds for the instance to come up
+      sleep 3
       kubectl exec -n #{namespace} busybox -- #{command}
     cleanup_command: |
       kubectl delete pod busybox -n #{namespace}
@@ -38,11 +44,6 @@ atomic_tests:
 
   supported_platforms:
   - containers
-  input_arguments:
-    command:
-      description: Command to run
-      type: string
-      default: cat
   dependencies:
   - description: |
       docker must be installed

@@ -20,3 +20,14 @@ jobs:
       - name: validate the format of atomics tests against the spec
         run: |
           bin/validate-atomics.rb
+
+  validate-terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform fmt
+        id: fmt
+        run: terraform fmt -recursive -check
+        continue-on-error: false

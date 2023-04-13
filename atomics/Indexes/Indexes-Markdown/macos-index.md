@@ -32,6 +32,17 @@
   - Atomic Test #3: Detect Virtualization Environment (MacOS) [macos]
 - [T1070.002 Indicator Removal on Host: Clear Linux or Mac System Logs](../../T1070.002/T1070.002.md)
   - Atomic Test #1: rm -rf [macos, linux]
+  - Atomic Test #2: Delete log files using built-in log utility [macos]
+  - Atomic Test #3: Truncate system log files via truncate utility [macos]
+  - Atomic Test #4: Delete log files via cat utility by appending /dev/null or /dev/zero [macos]
+  - Atomic Test #5: System log file deletion via find utility [macos]
+  - Atomic Test #6: Overwrite macOS system log via echo utility [macos]
+  - Atomic Test #7: Real-time system log clearance/deletion [macos]
+  - Atomic Test #8: Delete system log files via unlink utility [macos]
+  - Atomic Test #9: Delete system log files using shred utility [macos]
+  - Atomic Test #10: Delete system log files using srm utility [macos]
+  - Atomic Test #11: Delete system log files using OSAScript [macos]
+  - Atomic Test #12: Delete system log files using Applescript [macos]
 - T1089 Disabling Security Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1553.001 Subvert Trust Controls: Gatekeeper Bypass](../../T1553.001/T1553.001.md)
   - Atomic Test #1: Gatekeeper Bypass [macos]
@@ -48,6 +59,7 @@
   - Atomic Test #4: Base64 decoding with Perl [linux, macos]
   - Atomic Test #5: Base64 decoding with shell utilities [linux, macos]
   - Atomic Test #6: Hex decoding with shell utilities [linux, macos]
+  - Atomic Test #7: Linux Base64 Encoded Shebang in CLI [linux, macos]
 - T1562 Impair Defenses [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1036 Masquerading [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1055 Process Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -67,6 +79,7 @@
 - T1107 File Deletion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1027.001 Obfuscated Files or Information: Binary Padding](../../T1027.001/T1027.001.md)
   - Atomic Test #1: Pad Binary to Change Hash - Linux/macOS dd [macos, linux]
+  - Atomic Test #2: Pad Binary to Change Hash using truncate command - Linux/macOS [macos, linux]
 - T1078.001 Valid Accounts: Default Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1574.006 Hijack Execution Flow: LD_PRELOAD](../../T1574.006/T1574.006.md)
   - Atomic Test #3: Dylib Injection via DYLD_INSERT_LIBRARIES [macos]
@@ -156,6 +169,9 @@
 - T1574.004 Dylib Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #2: Create local account with admin privileges - MacOS [macos]
+  - Atomic Test #3: Create local account with admin privileges using sysadminctl utility - MacOS [macos]
+  - Atomic Test #4: Enable root account using dsenableroot utility - MacOS [macos]
+  - Atomic Test #5: Add a new/existing user to the admin group using dseditgroup utility - macOS [macos]
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 
 # collection
@@ -302,6 +318,9 @@
 - T1574.004 Dylib Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #2: Create local account with admin privileges - MacOS [macos]
+  - Atomic Test #3: Create local account with admin privileges using sysadminctl utility - MacOS [macos]
+  - Atomic Test #4: Enable root account using dsenableroot utility - MacOS [macos]
+  - Atomic Test #5: Add a new/existing user to the admin group using dseditgroup utility - macOS [macos]
 
 # privilege-escalation
 - T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -376,6 +395,9 @@
 - T1574.004 Dylib Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #2: Create local account with admin privileges - MacOS [macos]
+  - Atomic Test #3: Create local account with admin privileges using sysadminctl utility - MacOS [macos]
+  - Atomic Test #4: Enable root account using dsenableroot utility - MacOS [macos]
+  - Atomic Test #5: Add a new/existing user to the admin group using dseditgroup utility - macOS [macos]
 
 # credential-access
 - T1557 Adversary-in-the-Middle [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -661,6 +683,9 @@
 - T1566.003 Spearphishing via Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #2: Create local account with admin privileges - MacOS [macos]
+  - Atomic Test #3: Create local account with admin privileges using sysadminctl utility - MacOS [macos]
+  - Atomic Test #4: Enable root account using dsenableroot utility - MacOS [macos]
+  - Atomic Test #5: Add a new/existing user to the admin group using dseditgroup utility - macOS [macos]
 
 # exfiltration
 - T1567 Exfiltration Over Web Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
