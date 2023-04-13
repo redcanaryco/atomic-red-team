@@ -88,3 +88,56 @@ atomic_tests:
       }
     name: powershell
     elevation_required: false
+- name: Azure AD - Delete user via Azure AD PowerShell
+  auto_generated_guid: 4f577511-dc1c-4045-bcb8-75d2457f01f4
+  description: Deletes a user in Azure AD. Adversaries may interrupt availability of system and network resources by inhibiting access to accounts utilized by legitimate users. Accounts may be deleted, locked, or manipulated (excluding changed credentials) to remove access to accounts.
+  supported_platforms:
+  - azure-ad
+  input_arguments:
+    userprincipalname:
+      description: User principal name (UPN) for the Azure user being deleted
+      type: String
+      default: "atomicredteam@yourdomain.com"
+  dependency_executor_name: powershell
+  dependencies:
+  - description: Check if AzureAD PowerShell module is installed
+    prereq_command: Get-InstalledModule -Name AzureAD
+    get_prereq_command: echo "use the following to install AzureAD PowerShell module - Install-Module -Name AzureAD -Scope CurrentUser -Repository PSGallery -Force"
+  - description: Check if AzureAD PowerShell module is installed
+    prereq_command: Update the input arguments so the userprincipalname value is accurate for your environment
+    get_prereq_command: echo "Update the input arguments in the .yaml file so that the userprincipalname value is accurate for your environment"
+  executor:
+    command: |-
+      Connect-AzureAD
+      $userprincipalname = "#{userprincipalname}"
+      Remove-AzureADUser -ObjectId $userprincipalname      
+    cleanup_command: N/A
+    name: powershell
+- name: Azure AD - Delete user via Azure CLI
+  auto_generated_guid: c955c1c7-3145-4a22-af2d-63eea0d967f0
+  description: Deletes a user in Azure AD. Adversaries may interrupt availability of system and network resources by inhibiting access to accounts utilized by legitimate users. Accounts may be deleted, locked, or manipulated (excluding changed credentials) to remove access to accounts.
+  supported_platforms:
+  - azure-ad
+  input_arguments:
+    userprincipalname:
+      description: User principal name (UPN) for the Azure user being deleted
+      type: String
+      default: "atomicredteam@yourdomain.com"
+  dependency_executor_name: powershell
+  dependencies:
+  - description: Check if Azure CLI is installed and install manually
+    prereq_command: az account list
+    get_prereq_command: echo "use the following to install the Azure CLI manually https://aka.ms/installazurecliwindows"
+  - description: Check if Azure CLI is installed and install via PowerShell
+    prereq_command: az account list
+    get_prereq_command: echo "use the following to install the Azure CLI $ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile .\AzureCLI.msi; Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet'; Remove-Item .\AzureCLI.msi"
+  - description: Update the userprincipalname to meet your requirements  
+    prereq_command: Update the input arguments so the userprincipalname value is accurate for your environment
+    get_prereq_command: echo "Update the input arguments in the .yaml file so that the userprincipalname value is accurate for your environment"
+  executor:
+    command: |-
+      az login
+      $userprincipalname = "#{userprincipalname}"
+      az ad user delete --id $userprincipalname
+    cleanup_command: N/A
+    name: powershell

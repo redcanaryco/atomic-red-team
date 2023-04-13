@@ -20,3 +20,31 @@ atomic_tests:
       reg delete HKLM\SYSTEM\CurrentControlSet\Control\LSA /v RunAsPPL /f >nul 2>&1
     name: command_prompt
     elevation_required: true
+- name: Disable journal logging via systemctl utility
+  auto_generated_guid: c3a377f9-1203-4454-aa35-9d391d34768f
+  description: |
+    The atomic test disables the journal logging using built-in systemctl utility
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      sudo systemctl stop systemd-journald #disables journal logging
+    cleanup_command: |
+      sudo systemctl start systemd-journald #starts journal service
+      sudo systemctl enable systemd-journald #starts journal service automatically at boot time
+    name: sh
+    elevation_required: true
+- name: Disable journal logging via sed utility
+  auto_generated_guid: 12e5551c-8d5c-408e-b3e4-63f53b03379f
+  description: |
+    The atomic test disables the journal logging by searching and replacing the "Storage" parameter to "none" within the journald.conf file, thus any new journal entries will only be temporarily available in memory and not written to disk
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      sudo sed -i 's/Storage=auto/Storage=none/' /etc/systemd/journald.conf
+    cleanup_command: |
+      sudo sed -i 's/Storage=none/Storage=auto/' /etc/systemd/journald.conf #re-enables storage of journal data
+      sudo systemctl restart systemd-journald #restart the journal service
+    name: sh
+    elevation_required: true

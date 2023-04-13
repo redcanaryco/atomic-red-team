@@ -128,3 +128,49 @@ atomic_tests:
       reg delete "HKLM\SYSTEM\CurrentControlSet\Services\W64Time\Parameters" /v ServiceDll /f
     name: command_prompt
     elevation_required: true
+- name: Remote Service Installation CMD
+  auto_generated_guid: fb4151a2-db33-4f8c-b7f8-78ea8790f961
+  description: |
+    Download an executable from github and start it as a service on a remote endpoint
+    Upon successful execution, powershell will download `AtomicService.exe` from github. cmd.exe will spawn sc.exe which will create and start the service. Results will output via stdout.
+  supported_platforms:
+  - windows
+  input_arguments:
+    binary_path:
+      description: Name of the service binary, include path.
+      type: path
+      default: PathToAtomicsFolder\T1543.003\bin\AtomicService.exe
+    service_type:
+      description: Type of service. May be own,share,interact,kernel,filesys,rec,userown,usershare
+      type: String
+      default: Own
+    startup_type:
+      description: Service start method. May be boot,system,auto,demand,disabled,delayed-auto
+      type: String
+      default: auto
+    service_name:
+      description: Name of the Service
+      type: string
+      default: AtomicTestService_CMD
+    remote_host:
+      description: Name of the remote endpoint
+      type: string
+      default: localhost
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Service binary must exist on disk at specified location (#{binary_path})
+    prereq_command: |
+      if (Test-Path #{binary_path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{binary_path}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1543.003/bin/AtomicService.exe" -OutFile "#{binary_path}"
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      sc.exe \\#{remote_host} create #{service_name} binPath= #{binary_path} start=#{startup_type} type=#{service_type}
+      sc.exe \\#{remote_host} start #{service_name}
+    cleanup_command: |
+      sc.exe \\#{remote_host} stop #{service_name} >nul 2>&1
+      sc.exe \\#{remote_host} delete #{service_name} >nul 2>&1
