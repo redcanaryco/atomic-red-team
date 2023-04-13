@@ -305,6 +305,11 @@ defense-evasion,T1564.002,Hide Artifacts: Hidden Users,2,Create Hidden User usin
 defense-evasion,T1564.002,Hide Artifacts: Hidden Users,3,Create Hidden User in Registry,173126b7-afe4-45eb-8680-fa9f6400431c,command_prompt
 defense-evasion,T1562.003,Impair Defenses: HISTCONTROL,1,Disable history collection,4eafdb45-0f79-4d66-aa86-a3e2c08791f5,sh
 defense-evasion,T1562.003,Impair Defenses: HISTCONTROL,2,Mac HISTCONTROL,468566d5-83e5-40c1-b338-511e1659628d,manual
+defense-evasion,T1562.003,Impair Defenses: HISTCONTROL,3,Clear bash history,878794f7-c511-4199-a950-8c28b3ed8e5b,bash
+defense-evasion,T1562.003,Impair Defenses: HISTCONTROL,4,Setting the HISTCONTROL environment variable,10ab786a-028e-4465-96f6-9e83ca6c5f24,bash
+defense-evasion,T1562.003,Impair Defenses: HISTCONTROL,5,Setting the HISTFILESIZE environment variable,5cafd6c1-2f43-46eb-ac47-a5301ba0a618,bash
+defense-evasion,T1562.003,Impair Defenses: HISTCONTROL,6,Setting the HISTFILE environment variable,b3dacb6c-a9e3-44ec-bf87-38db60c5cad1,bash
+defense-evasion,T1562.003,Impair Defenses: HISTCONTROL,7,Setting the HISTIGNORE environment variable,f12acddb-7502-4ce6-a146-5b62c59592f1,bash
 defense-evasion,T1134.004,Access Token Manipulation: Parent PID Spoofing,1,Parent PID Spoofing using PowerShell,069258f4-2162-46e9-9a25-c9c6c56150d2,powershell
 defense-evasion,T1134.004,Access Token Manipulation: Parent PID Spoofing,2,Parent PID Spoofing - Spawn from Current Process,14920ebd-1d61-491a-85e0-fe98efe37f25,powershell
 defense-evasion,T1134.004,Access Token Manipulation: Parent PID Spoofing,3,Parent PID Spoofing - Spawn from Specified Process,cbbff285-9051-444a-9d17-c07cd2d230eb,powershell
@@ -366,6 +371,7 @@ defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,40,Suspend Hi
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,41,Reboot Linux Host via Kernel System Request,6d6d3154-1a52-4d1a-9d51-92ab8148b32e,sh
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,42,Clear Pagging Cache,f790927b-ea85-4a16-b7b2-7eb44176a510,sh
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,43,Disable Memory Swap,e74e4c63-6fde-4ad2-9ee8-21c3a1733114,sh
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,44,Disable Hypervisor-Enforced Code Integrity (HVCI),70bd71e6-eba4-4e00-92f7-617911dbe020,powershell
 defense-evasion,T1055.012,Process Injection: Process Hollowing,1,Process Hollowing using PowerShell,562427b4-39ef-4e8c-af88-463a78e70b9c,powershell
 defense-evasion,T1055.012,Process Injection: Process Hollowing,2,RunPE via VBA,3ad4a037-1598-4136-837c-4027e4fa319b,powershell
 defense-evasion,T1027,Obfuscated Files or Information,1,Decode base64 Data into Script,f45df6be-2e1e-4136-a384-8f18ab3826fb,sh
@@ -1411,14 +1417,15 @@ discovery,T1018,Remote System Discovery,17,Enumerate Active Directory Computers 
 discovery,T1018,Remote System Discovery,18,Get-DomainController with PowerView,b9d2e8ca-5520-4737-8076-4f08913da2c4,powershell
 discovery,T1018,Remote System Discovery,19,Get-wmiobject to Enumerate Domain Controllers,e3cf5123-f6c9-4375-bdf2-1bb3ba43a1ad,powershell
 discovery,T1018,Remote System Discovery,20,Remote System Discovery - net group Domain Controller,5843529a-5056-4bc1-9c13-a311e2af4ca0,command_prompt
-discovery,T1046,Network Service Scanning,1,Port Scan,68e907da-2539-48f6-9fc9-257a78c05540,bash
-discovery,T1046,Network Service Scanning,2,Port Scan Nmap,515942b0-a09f-4163-a7bb-22fefb6f185f,sh
-discovery,T1046,Network Service Scanning,3,Port Scan NMap for Windows,d696a3cb-d7a8-4976-8eb5-5af4abf2e3df,powershell
-discovery,T1046,Network Service Scanning,4,Port Scan using python,6ca45b04-9f15-4424-b9d3-84a217285a5c,powershell
-discovery,T1046,Network Service Scanning,5,WinPwn - spoolvulnscan,54574908-f1de-4356-9021-8053dd57439a,powershell
-discovery,T1046,Network Service Scanning,6,WinPwn - MS17-10,97585b04-5be2-40e9-8c31-82157b8af2d6,powershell
-discovery,T1046,Network Service Scanning,7,WinPwn - bluekeep,1cca5640-32a9-46e6-b8e0-fabbe2384a73,powershell
-discovery,T1046,Network Service Scanning,8,WinPwn - fruit,bb037826-cbe8-4a41-93ea-b94059d6bb98,powershell
+discovery,T1046,Network Service Discovery,1,Port Scan,68e907da-2539-48f6-9fc9-257a78c05540,bash
+discovery,T1046,Network Service Discovery,2,Port Scan Nmap,515942b0-a09f-4163-a7bb-22fefb6f185f,sh
+discovery,T1046,Network Service Discovery,3,Port Scan NMap for Windows,d696a3cb-d7a8-4976-8eb5-5af4abf2e3df,powershell
+discovery,T1046,Network Service Discovery,4,Port Scan using python,6ca45b04-9f15-4424-b9d3-84a217285a5c,powershell
+discovery,T1046,Network Service Discovery,5,WinPwn - spoolvulnscan,54574908-f1de-4356-9021-8053dd57439a,powershell
+discovery,T1046,Network Service Discovery,6,WinPwn - MS17-10,97585b04-5be2-40e9-8c31-82157b8af2d6,powershell
+discovery,T1046,Network Service Discovery,7,WinPwn - bluekeep,1cca5640-32a9-46e6-b8e0-fabbe2384a73,powershell
+discovery,T1046,Network Service Discovery,8,WinPwn - fruit,bb037826-cbe8-4a41-93ea-b94059d6bb98,powershell
+discovery,T1046,Network Service Discovery,9,Network Service Discovery for Containers,06eaafdb-8982-426e-8a31-d572da633caa,sh
 discovery,T1518,Software Discovery,1,Find and Display Internet Explorer Browser Version,68981660-6670-47ee-a5fa-7e74806420a4,command_prompt
 discovery,T1518,Software Discovery,2,Applications Installed,c49978f6-bd6e-4221-ad2c-9e3e30cc1e3b,powershell
 discovery,T1518,Software Discovery,3,Find and Display Safari Browser Version,103d6533-fd2a-4d08-976a-4a598565280f,sh
