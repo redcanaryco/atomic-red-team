@@ -1309,14 +1309,14 @@
   - Atomic Test #1: Crafting Active Directory golden tickets with mimikatz [windows]
   - Atomic Test #2: Crafting Active Directory golden tickets with Rubeus [windows]
 - [T1552.001 Unsecured Credentials: Credentials In Files](../../T1552.001/T1552.001.md)
-  - Atomic Test #3: Extracting passwords with findstr [windows]
-  - Atomic Test #4: Access unattend.xml [windows]
-  - Atomic Test #6: WinPwn - sensitivefiles [windows]
-  - Atomic Test #7: WinPwn - Snaffler [windows]
-  - Atomic Test #8: WinPwn - powershellsensitive [windows]
-  - Atomic Test #9: WinPwn - passhunt [windows]
-  - Atomic Test #10: WinPwn - SessionGopher [windows]
-  - Atomic Test #11: WinPwn - Loot local Credentials - AWS, Microsoft Azure, and Google Compute credentials [windows]
+  - Atomic Test #4: Extracting passwords with findstr [windows]
+  - Atomic Test #5: Access unattend.xml [windows]
+  - Atomic Test #7: WinPwn - sensitivefiles [windows]
+  - Atomic Test #8: WinPwn - Snaffler [windows]
+  - Atomic Test #9: WinPwn - powershellsensitive [windows]
+  - Atomic Test #10: WinPwn - passhunt [windows]
+  - Atomic Test #11: WinPwn - SessionGopher [windows]
+  - Atomic Test #12: WinPwn - Loot local Credentials - AWS, Microsoft Azure, and Google Compute credentials [windows]
 - T1606.001 Web Cookies [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1552.006 Unsecured Credentials: Group Policy Preferences](../../T1552.006/T1552.006.md)
   - Atomic Test #1: GPP Passwords (findstr) [windows]
