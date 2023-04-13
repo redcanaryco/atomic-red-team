@@ -370,6 +370,7 @@
   - Atomic Test #36: Disable Windows Defender with PwSh Disable-WindowsOptionalFeature [windows]
   - Atomic Test #37: WMIC Tamper with Windows Defender Evade Scanning Folder [windows]
   - Atomic Test #38: Delete Windows Defender Scheduled Tasks [windows]
+  - Atomic Test #44: Disable Hypervisor-Enforced Code Integrity (HVCI) [windows]
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

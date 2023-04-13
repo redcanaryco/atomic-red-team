@@ -509,6 +509,7 @@
   - Atomic Test #41: Reboot Linux Host via Kernel System Request [linux]
   - Atomic Test #42: Clear Pagging Cache [linux]
   - Atomic Test #43: Disable Memory Swap [linux]
+  - Atomic Test #44: Disable Hypervisor-Enforced Code Integrity (HVCI) [windows]
 - T1601 Modify System Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
