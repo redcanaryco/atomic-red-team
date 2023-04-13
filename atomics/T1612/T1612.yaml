@@ -1,0 +1,30 @@
+attack_technique: T1612
+display_name: "Build Image on Host"
+atomic_tests:
+- name: Build Image On Host
+  auto_generated_guid: 2db30061-589d-409b-b125-7b473944f9b3
+  description: Adversaries may build a container image directly on a host to bypass defenses that monitor for the retrieval of malicious images from a public registry. An adversary may take advantage of that build API to build a custom image on the host that includes malware downloaded from their C2 server, and then they then may utilize Deploy Container using that custom image.
+  supported_platforms:
+  - containers
+  dependency_executor_name: sh
+  dependencies:
+  - description: Verify docker is installed.
+    prereq_command: |
+      which docker
+    get_prereq_command: |
+      if [ "" == "`which docker`" ]; then echo "Docker Not Found"; if [ -n "`which apt-get`" ]; then sudo apt-get -y install docker ; elif [ -n "`which yum`" ]; then sudo yum -y install docker ; fi ; else echo "Docker installed"; fi
+
+  - description: Verify docker service is running.
+    prereq_command: |
+      sudo systemctl status docker  --no-pager
+    get_prereq_command: |
+      sudo systemctl start docker
+  executor:
+    command: |-
+      docker build -t t1612  $PathtoAtomicsFolder/T1612/src/
+      docker run --name t1612_container  -d -t t1612
+      docker exec t1612_container ./test.sh
+    cleanup_command: |-
+      docker stop t1612_container
+      docker rmi -f t1612
+    name: sh
