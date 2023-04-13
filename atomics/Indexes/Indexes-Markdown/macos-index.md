@@ -80,7 +80,8 @@
 - [T1027.001 Obfuscated Files or Information: Binary Padding](../../T1027.001/T1027.001.md)
   - Atomic Test #1: Pad Binary to Change Hash - Linux/macOS dd [macos, linux]
   - Atomic Test #2: Pad Binary to Change Hash using truncate command - Linux/macOS [macos, linux]
-- T1078.001 Valid Accounts: Default Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1078.001 Valid Accounts: Default Accounts](../../T1078.001/T1078.001.md)
+  - Atomic Test #3: Enable Guest Account on macOS [macos]
 - [T1574.006 Hijack Execution Flow: LD_PRELOAD](../../T1574.006/T1574.006.md)
   - Atomic Test #3: Dylib Injection via DYLD_INSERT_LIBRARIES [macos]
 - T1222 File and Directory Permissions Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -256,7 +257,8 @@
 - [T1543.004 Create or Modify System Process: Launch Daemon](../../T1543.004/T1543.004.md)
   - Atomic Test #1: Launch Daemon [macos]
 - T1505.003 Server Software Component: Web Shell [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1078.001 Valid Accounts: Default Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1078.001 Valid Accounts: Default Accounts](../../T1078.001/T1078.001.md)
+  - Atomic Test #3: Enable Guest Account on macOS [macos]
 - [T1546.005 Event Triggered Execution: Trap](../../T1546.005/T1546.005.md)
   - Atomic Test #1: Trap EXIT [macos, linux]
   - Atomic Test #2: Trap SIGINT [macos, linux]
@@ -345,7 +347,8 @@
 - T1055 Process Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1543.004 Create or Modify System Process: Launch Daemon](../../T1543.004/T1543.004.md)
   - Atomic Test #1: Launch Daemon [macos]
-- T1078.001 Valid Accounts: Default Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1078.001 Valid Accounts: Default Accounts](../../T1078.001/T1078.001.md)
+  - Atomic Test #3: Enable Guest Account on macOS [macos]
 - [T1546.005 Event Triggered Execution: Trap](../../T1546.005/T1546.005.md)
   - Atomic Test #1: Trap EXIT [macos, linux]
   - Atomic Test #2: Trap SIGINT [macos, linux]
@@ -670,7 +673,8 @@
 - T1195.003 Compromise Hardware Supply Chain [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1195 Supply Chain Compromise [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1190 Exploit Public-Facing Application [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1078.001 Valid Accounts: Default Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1078.001 Valid Accounts: Default Accounts](../../T1078.001/T1078.001.md)
+  - Atomic Test #3: Enable Guest Account on macOS [macos]
 - T1193 Spearphishing Attachment [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1199 Trusted Relationship [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1566 Phishing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

@@ -330,6 +330,7 @@
 - [T1078.001 Valid Accounts: Default Accounts](../../T1078.001/T1078.001.md)
   - Atomic Test #1: Enable Guest account with RDP capability and admin privileges [windows]
   - Atomic Test #2: Activate Guest Account [windows]
+  - Atomic Test #3: Enable Guest Account on macOS [macos]
 - T1183 Image File Execution Options Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1085 Rundll32 [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1574.006 Hijack Execution Flow: LD_PRELOAD](../../T1574.006/T1574.006.md)
@@ -823,6 +824,7 @@
 - [T1078.001 Valid Accounts: Default Accounts](../../T1078.001/T1078.001.md)
   - Atomic Test #1: Enable Guest account with RDP capability and admin privileges [windows]
   - Atomic Test #2: Activate Guest Account [windows]
+  - Atomic Test #3: Enable Guest Account on macOS [macos]
 - [T1547.003 Time Providers](../../T1547.003/T1547.003.md)
   - Atomic Test #1: Create a new time provider [windows]
   - Atomic Test #2: Edit an existing time provider [windows]
@@ -1310,6 +1312,7 @@
 - [T1078.001 Valid Accounts: Default Accounts](../../T1078.001/T1078.001.md)
   - Atomic Test #1: Enable Guest account with RDP capability and admin privileges [windows]
   - Atomic Test #2: Activate Guest Account [windows]
+  - Atomic Test #3: Enable Guest Account on macOS [macos]
 - [T1547.003 Time Providers](../../T1547.003/T1547.003.md)
   - Atomic Test #1: Create a new time provider [windows]
   - Atomic Test #2: Edit an existing time provider [windows]
@@ -2487,6 +2490,7 @@
 - [T1078.001 Valid Accounts: Default Accounts](../../T1078.001/T1078.001.md)
   - Atomic Test #1: Enable Guest account with RDP capability and admin privileges [windows]
   - Atomic Test #2: Activate Guest Account [windows]
+  - Atomic Test #3: Enable Guest Account on macOS [macos]
 - T1193 Spearphishing Attachment [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1199 Trusted Relationship [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1566 Phishing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
