@@ -108,8 +108,20 @@
   - Atomic Test #4: Detect Virtualization Environment via WMI Manufacturer/Model Listing (Windows) [windows]
 - [T1070.002 Indicator Removal on Host: Clear Linux or Mac System Logs](../../T1070.002/T1070.002.md)
   - Atomic Test #1: rm -rf [macos, linux]
-  - Atomic Test #2: Overwrite Linux Mail Spool [linux]
-  - Atomic Test #3: Overwrite Linux Log [linux]
+  - Atomic Test #2: Delete log files using built-in log utility [macos]
+  - Atomic Test #3: Truncate system log files via truncate utility [macos]
+  - Atomic Test #4: Delete log files via cat utility by appending /dev/null or /dev/zero [macos]
+  - Atomic Test #5: System log file deletion via find utility [macos]
+  - Atomic Test #6: Overwrite macOS system log via echo utility [macos]
+  - Atomic Test #7: Real-time system log clearance/deletion [macos]
+  - Atomic Test #8: Delete system log files via unlink utility [macos]
+  - Atomic Test #9: Delete system log files using shred utility [macos]
+  - Atomic Test #10: Delete system log files using srm utility [macos]
+  - Atomic Test #11: Delete system log files using OSAScript [macos]
+  - Atomic Test #12: Delete system log files using Applescript [macos]
+  - Atomic Test #13: Delete system journal logs via rm and journalctl utilities [linux]
+  - Atomic Test #14: Overwrite Linux Mail Spool [linux]
+  - Atomic Test #15: Overwrite Linux Log [linux]
 - [T1218.004 Signed Binary Proxy Execution: InstallUtil](../../T1218.004/T1218.004.md)
   - Atomic Test #1: CheckIfInstallable method call [windows]
   - Atomic Test #2: InstallHelper method call [windows]
@@ -174,6 +186,8 @@
   - Atomic Test #7: Linux Base64 Encoded Shebang in CLI [linux, macos]
 - [T1562 Impair Defenses](../../T1562/T1562.md)
   - Atomic Test #1: Windows Disable LSA Protection [windows]
+  - Atomic Test #2: Disable journal logging via systemctl utility [linux]
+  - Atomic Test #3: Disable journal logging via sed utility [linux]
 - [T1055.003 Thread Execution Hijacking](../../T1055.003/T1055.003.md)
   - Atomic Test #1: Thread Execution Hijacking [windows]
 - [T1036 Masquerading](../../T1036/T1036.md)
@@ -303,11 +317,13 @@
   - Atomic Test #46: Mimic Ransomware - Allow Multiple RDP Sessions per User [windows]
   - Atomic Test #47: Event Viewer Registry Modification - Redirection URL [windows]
   - Atomic Test #48: Event Viewer Registry Modification - Redirection Program [windows]
+  - Atomic Test #49: Enabling Remote Desktop Protocol via Remote Registry [windows]
 - [T1574.008 Hijack Execution Flow: Path Interception by Search Order Hijacking](../../T1574.008/T1574.008.md)
   - Atomic Test #1: powerShell Persistence via hijacking default modules - Get-Variable.exe [windows]
 - T1535 Unused/Unsupported Cloud Regions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1027.001 Obfuscated Files or Information: Binary Padding](../../T1027.001/T1027.001.md)
   - Atomic Test #1: Pad Binary to Change Hash - Linux/macOS dd [macos, linux]
+  - Atomic Test #2: Pad Binary to Change Hash using truncate command - Linux/macOS [macos, linux]
 - [T1484.001 Domain Policy Modification: Group Policy Modification](../../T1484.001/T1484.001.md)
   - Atomic Test #1: LockBit Black - Modify Group policy settings -cmd [windows]
   - Atomic Test #2: LockBit Black - Modify Group policy settings -Powershell [windows]
@@ -381,7 +397,8 @@
 - T1600.002 Disable Crypto Hardware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1064 Scripting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1612 Build Image on Host [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1612 Build Image on Host](../../T1612/T1612.md)
+  - Atomic Test #1: Build Image On Host [containers]
 - T1055.002 Portable Executable Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1218.012 Verclsid [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1562.010 Downgrade Attack [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -413,6 +430,11 @@
 - [T1562.003 Impair Defenses: HISTCONTROL](../../T1562.003/T1562.003.md)
   - Atomic Test #1: Disable history collection [linux, macos]
   - Atomic Test #2: Mac HISTCONTROL [macos, linux]
+  - Atomic Test #3: Clear bash history [linux]
+  - Atomic Test #4: Setting the HISTCONTROL environment variable [linux]
+  - Atomic Test #5: Setting the HISTFILESIZE environment variable [linux]
+  - Atomic Test #6: Setting the HISTFILE environment variable [linux]
+  - Atomic Test #7: Setting the HISTIGNORE environment variable [linux]
 - T1497.002 User Activity Based Checks [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1134.004 Access Token Manipulation: Parent PID Spoofing](../../T1134.004/T1134.004.md)
   - Atomic Test #1: Parent PID Spoofing using PowerShell [windows]
@@ -665,8 +687,11 @@
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #1: Create local account with admin privileges [windows]
   - Atomic Test #2: Create local account with admin privileges - MacOS [macos]
-  - Atomic Test #3: WinPwn - Loot local Credentials - powerhell kittie [windows]
-  - Atomic Test #4: WinPwn - Loot local Credentials - Safetykatz [windows]
+  - Atomic Test #3: Create local account with admin privileges using sysadminctl utility - MacOS [macos]
+  - Atomic Test #4: Enable root account using dsenableroot utility - MacOS [macos]
+  - Atomic Test #5: Add a new/existing user to the admin group using dseditgroup utility - macOS [macos]
+  - Atomic Test #6: WinPwn - Loot local Credentials - powerhell kittie [windows]
+  - Atomic Test #7: WinPwn - Loot local Credentials - Safetykatz [windows]
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1127 Trusted Developer Utilities Proxy Execution](../../T1127/T1127.md)
   - Atomic Test #1: Lolbin Jsc.exe compile javascript to exe [windows]
@@ -749,6 +774,7 @@
   - Atomic Test #2: Service Installation CMD [windows]
   - Atomic Test #3: Service Installation PowerShell [windows]
   - Atomic Test #4: TinyTurla backdoor service w64time [windows]
+  - Atomic Test #5: Remote Service Installation CMD [windows]
 - [T1053.003 Scheduled Task/Job: Cron](../../T1053.003/T1053.003.md)
   - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
   - Atomic Test #2: Cron - Add script to all cron subfolders [macos, linux]
@@ -911,6 +937,7 @@
   - Atomic Test #1: Persistence with Custom AutodialDLL [windows]
   - Atomic Test #2: HKLM - Persistence using CommandProcessor AutoRun key (With Elevation) [windows]
   - Atomic Test #3: HKCU - Persistence using CommandProcessor AutoRun key (Without Elevation) [windows]
+  - Atomic Test #4: WMI Invoke-CimMethod Start Process [windows]
 - [T1546.004 Event Triggered Execution: .bash_profile and .bashrc](../../T1546.004/T1546.004.md)
   - Atomic Test #1: Add command to .bash_profile [macos, linux]
   - Atomic Test #2: Add command to .bashrc [macos, linux]
@@ -986,8 +1013,11 @@
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #1: Create local account with admin privileges [windows]
   - Atomic Test #2: Create local account with admin privileges - MacOS [macos]
-  - Atomic Test #3: WinPwn - Loot local Credentials - powerhell kittie [windows]
-  - Atomic Test #4: WinPwn - Loot local Credentials - Safetykatz [windows]
+  - Atomic Test #3: Create local account with admin privileges using sysadminctl utility - MacOS [macos]
+  - Atomic Test #4: Enable root account using dsenableroot utility - MacOS [macos]
+  - Atomic Test #5: Add a new/existing user to the admin group using dseditgroup utility - macOS [macos]
+  - Atomic Test #6: WinPwn - Loot local Credentials - powerhell kittie [windows]
+  - Atomic Test #7: WinPwn - Loot local Credentials - Safetykatz [windows]
 - [T1574.012 Hijack Execution Flow: COR_PROFILER](../../T1574.012/T1574.012.md)
   - Atomic Test #1: User scope COR_PROFILER [windows]
   - Atomic Test #2: System Scope COR_PROFILER [windows]
@@ -1119,7 +1149,12 @@
   - Atomic Test #9: Obfuscated command line scripts [linux]
   - Atomic Test #10: Change login shell [linux]
   - Atomic Test #11: Environment variable scripts [linux]
-- T1559 Inter-Process Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1559 Inter-Process Communication](../../T1559/T1559.md)
+  - Atomic Test #1: Cobalt Strike Artifact Kit pipe [windows]
+  - Atomic Test #2: Cobalt Strike Lateral Movement (psexec_psh) pipe [windows]
+  - Atomic Test #3: Cobalt Strike SSH (postex_ssh) pipe [windows]
+  - Atomic Test #4: Cobalt Strike post-exploitation pipe (4.2 and later) [windows]
+  - Atomic Test #5: Cobalt Strike post-exploitation pipe (before 4.2) [windows]
 - T1204.003 Malicious Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1154 Trap [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1203 Exploitation for Client Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1150,6 +1185,7 @@
   - Atomic Test #2: Use PsExec to execute a command on a remote host [windows]
   - Atomic Test #3: psexec.py (Impacket) [linux]
   - Atomic Test #4: BlackCat pre-encryption cmds with Lateral Movement [windows]
+  - Atomic Test #5: Use RemCom to execute a command on a remote host [windows]
 - [T1053.002 Scheduled Task/Job: At](../../T1053.002/T1053.002.md)
   - Atomic Test #1: At.exe Scheduled task [windows]
   - Atomic Test #2: At - Schedule a job [linux]
@@ -1209,6 +1245,7 @@
   - Atomic Test #2: Service Installation CMD [windows]
   - Atomic Test #3: Service Installation PowerShell [windows]
   - Atomic Test #4: TinyTurla backdoor service w64time [windows]
+  - Atomic Test #5: Remote Service Installation CMD [windows]
 - [T1053.003 Scheduled Task/Job: Cron](../../T1053.003/T1053.003.md)
   - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
   - Atomic Test #2: Cron - Add script to all cron subfolders [macos, linux]
@@ -1407,6 +1444,7 @@
   - Atomic Test #1: Persistence with Custom AutodialDLL [windows]
   - Atomic Test #2: HKLM - Persistence using CommandProcessor AutoRun key (With Elevation) [windows]
   - Atomic Test #3: HKCU - Persistence using CommandProcessor AutoRun key (Without Elevation) [windows]
+  - Atomic Test #4: WMI Invoke-CimMethod Start Process [windows]
 - [T1546.004 Event Triggered Execution: .bash_profile and .bashrc](../../T1546.004/T1546.004.md)
   - Atomic Test #1: Add command to .bash_profile [macos, linux]
   - Atomic Test #2: Add command to .bashrc [macos, linux]
@@ -1492,8 +1530,11 @@
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #1: Create local account with admin privileges [windows]
   - Atomic Test #2: Create local account with admin privileges - MacOS [macos]
-  - Atomic Test #3: WinPwn - Loot local Credentials - powerhell kittie [windows]
-  - Atomic Test #4: WinPwn - Loot local Credentials - Safetykatz [windows]
+  - Atomic Test #3: Create local account with admin privileges using sysadminctl utility - MacOS [macos]
+  - Atomic Test #4: Enable root account using dsenableroot utility - MacOS [macos]
+  - Atomic Test #5: Add a new/existing user to the admin group using dseditgroup utility - macOS [macos]
+  - Atomic Test #6: WinPwn - Loot local Credentials - powerhell kittie [windows]
+  - Atomic Test #7: WinPwn - Loot local Credentials - Safetykatz [windows]
 - [T1574.012 Hijack Execution Flow: COR_PROFILER](../../T1574.012/T1574.012.md)
   - Atomic Test #1: User scope COR_PROFILER [windows]
   - Atomic Test #2: System Scope COR_PROFILER [windows]
@@ -1662,9 +1703,9 @@
   - Atomic Test #1: Brute Force Credentials of single Active Directory domain users via SMB [windows]
   - Atomic Test #2: Brute Force Credentials of single Active Directory domain user via LDAP against domain controller (NTLM or Kerberos) [windows]
   - Atomic Test #3: Brute Force Credentials of single Azure AD user [azure-ad]
-  - Atomic Test #4: SUDO brute force Debian [linux]
-  - Atomic Test #5: SUDO brute force Redhat [linux]
-  - Atomic Test #6: Password Brute User using Kerbrute Tool [windows]
+  - Atomic Test #4: Password Brute User using Kerbrute Tool [windows]
+  - Atomic Test #5: SUDO Brute Force - Debian [linux]
+  - Atomic Test #6: SUDO Brute Force - Redhat [linux]
 - [T1003 OS Credential Dumping](../../T1003/T1003.md)
   - Atomic Test #1: Gsecdump [windows]
   - Atomic Test #2: Credential Dumping with NPPSpy [windows]
@@ -1893,6 +1934,7 @@
   - Atomic Test #3: Find computers where user has session - Stealth mode (PowerView) [windows]
   - Atomic Test #4: User Discovery With Env Vars PowerShell Script [windows]
   - Atomic Test #5: GetCurrent User with PowerShell Script [windows]
+  - Atomic Test #6: System Discovery - SocGholish whoami [windows]
 - [T1613 Container and Resource Discovery](../../T1613/T1613.md)
   - Atomic Test #1: Container and ResourceDiscovery [containers]
 - T1016.001 Internet Connection Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -2065,6 +2107,7 @@
   - Atomic Test #3: Process Discovery - Get-Process [windows]
   - Atomic Test #4: Process Discovery - get-wmiObject [windows]
   - Atomic Test #5: Process Discovery - wmic process [windows]
+  - Atomic Test #6: Discover Specific Process - tasklist [windows]
 - T1497.002 User Activity Based Checks [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1069.001 Permission Groups Discovery: Local Groups](../../T1069.001/T1069.001.md)
   - Atomic Test #1: Permission Groups Discovery (Local) [macos, linux]
@@ -2094,7 +2137,8 @@
   - Atomic Test #6: Discover System Language by Environment Variable Query [linux]
 - [T1012 Query Registry](../../T1012/T1012.md)
   - Atomic Test #1: Query Registry [windows]
-  - Atomic Test #2: Enumerate COM Objects in Registry with Powershell [windows]
+  - Atomic Test #2: Query Registry with Powershell cmdlets [windows]
+  - Atomic Test #3: Enumerate COM Objects in Registry with Powershell [windows]
 - T1614 System Location Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1518.001 Software Discovery: Security Software Discovery](../../T1518.001/T1518.001.md)
   - Atomic Test #1: Security Software Discovery [windows]
@@ -2377,6 +2421,8 @@
   - Atomic Test #1: Change User Password - Windows [windows]
   - Atomic Test #2: Delete User - Windows [windows]
   - Atomic Test #3: Remove Account From Domain Admin Group [windows]
+  - Atomic Test #4: Azure AD - Delete user via Azure AD PowerShell [azure-ad]
+  - Atomic Test #5: Azure AD - Delete user via Azure CLI [azure-ad]
 - [T1486 Data Encrypted for Impact](../../T1486/T1486.md)
   - Atomic Test #1: Encrypt files using gpg (Linux) [linux]
   - Atomic Test #2: Encrypt files using 7z (Linux) [linux]
@@ -2454,8 +2500,11 @@
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #1: Create local account with admin privileges [windows]
   - Atomic Test #2: Create local account with admin privileges - MacOS [macos]
-  - Atomic Test #3: WinPwn - Loot local Credentials - powerhell kittie [windows]
-  - Atomic Test #4: WinPwn - Loot local Credentials - Safetykatz [windows]
+  - Atomic Test #3: Create local account with admin privileges using sysadminctl utility - MacOS [macos]
+  - Atomic Test #4: Enable root account using dsenableroot utility - MacOS [macos]
+  - Atomic Test #5: Add a new/existing user to the admin group using dseditgroup utility - macOS [macos]
+  - Atomic Test #6: WinPwn - Loot local Credentials - powerhell kittie [windows]
+  - Atomic Test #7: WinPwn - Loot local Credentials - Safetykatz [windows]
 
 # exfiltration
 - T1567 Exfiltration Over Web Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

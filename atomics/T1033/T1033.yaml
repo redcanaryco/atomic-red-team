@@ -74,3 +74,34 @@ atomic_tests:
     cleanup_command: |
       Remove-Item -Path .\CurrentUserObject.txt -Force
     name: powershell
+- name: System Discovery - SocGholish whoami
+  auto_generated_guid: 3d257a03-eb80-41c5-b744-bb37ac7f65c7
+  description: |
+    SocGholish performs whoami discovery commands and outputs the results to a tmp file. 
+    The test will generate a filename similar to the random one generated during execution and write the file to AppData\Temp.
+
+    Reference: https://redcanary.com/threat-detection-report/threats/socgholish/
+  supported_platforms:
+  - windows
+  input_arguments:
+    output_path:
+      description: Location of output file
+      type: string
+      default: $env:temp
+  executor:
+    command: |
+      $TokenSet = @{
+        U = [Char[]]'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        N = [Char[]]'0123456789'
+      }
+      $Upper = Get-Random -Count 5 -InputObject $TokenSet.U
+      $Number = Get-Random -Count 5 -InputObject $TokenSet.N
+      $StringSet = $Upper + $Number
+      $rad = (Get-Random -Count 5 -InputObject $StringSet) -join ''
+      $file = "rad" + $rad + ".tmp"
+
+      whoami.exe /all >> #{output_path}\$file
+    
+    cleanup_command: |
+      Remove-Item -Path #{output_path}\rad*.tmp -Force
+    name: powershell
