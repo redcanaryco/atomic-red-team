@@ -2117,6 +2117,7 @@
   - Atomic Test #4: SharpHound3 - LocalAdmin [windows]
   - Atomic Test #5: Wmic Group Discovery [windows]
   - Atomic Test #6: WMIObject Group Discovery [windows]
+  - Atomic Test #7: Permission Groups Discovery for Containers- Local Groups [containers]
 - [T1201 Password Policy Discovery](../../T1201/T1201.md)
   - Atomic Test #1: Examine password complexity policy - Ubuntu [linux]
   - Atomic Test #2: Examine password complexity policy - CentOS/RHEL 7.x [linux]
