@@ -65,6 +65,15 @@ atomic_tests:
       net user #{guest_user} /active:no
     name: command_prompt
     elevation_required: true
-
-
-
+    
+- name: Enable Guest Account on macOS
+  description: This test enables the guest account on macOS using sysadminctl utility.
+  supported_platforms:
+  - macos
+  executor:
+    command: |-
+      sudo sysadminctl -guestAccount on
+    cleanup_command: |-
+      sudo sysadminctl -guestAccount off
+    name: command_prompt
+    elevation_required: true
