@@ -117,6 +117,11 @@
 - [T1562.003 Impair Defenses: HISTCONTROL](../../T1562.003/T1562.003.md)
   - Atomic Test #1: Disable history collection [linux, macos]
   - Atomic Test #2: Mac HISTCONTROL [macos, linux]
+  - Atomic Test #3: Clear bash history [linux]
+  - Atomic Test #4: Setting the HISTCONTROL environment variable [linux]
+  - Atomic Test #5: Setting the HISTFILESIZE environment variable [linux]
+  - Atomic Test #6: Setting the HISTFILE environment variable [linux]
+  - Atomic Test #7: Setting the HISTIGNORE environment variable [linux]
 - T1497.002 User Activity Based Checks [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1055.014 VDSO Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1562.001 Impair Defenses: Disable or Modify Tools](../../T1562.001/T1562.001.md)
