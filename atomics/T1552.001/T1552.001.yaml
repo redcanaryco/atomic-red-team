@@ -1,6 +1,22 @@
 attack_technique: T1552.001
 display_name: 'Unsecured Credentials: Credentials In Files'
 atomic_tests:
+- name: Find AWS credentials
+  auto_generated_guid: 2b93758e-a8d7-4e3b-bc7b-d3aa8d7ecb17
+  description: |
+    Find local AWS credentials from file, defaults to using / as the look path.
+  supported_platforms:
+  - macos
+  - linux
+  input_arguments:
+    file_path:
+      description: Path to search
+      type: string
+      default: /
+  executor:
+    command: |
+      find #{file_path} -name "credentials" -type f -path "*/.aws/*" 2>/dev/null
+    name: sh
 - name: Extract Browser and System credentials with LaZagne
   auto_generated_guid: 9e507bb8-1d30-4e3b-a49b-cb5727d7ea79
   description: |

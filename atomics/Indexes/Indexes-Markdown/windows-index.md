@@ -370,6 +370,7 @@
   - Atomic Test #36: Disable Windows Defender with PwSh Disable-WindowsOptionalFeature [windows]
   - Atomic Test #37: WMIC Tamper with Windows Defender Evade Scanning Folder [windows]
   - Atomic Test #38: Delete Windows Defender Scheduled Tasks [windows]
+  - Atomic Test #44: Disable Hypervisor-Enforced Code Integrity (HVCI) [windows]
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1308,14 +1309,14 @@
   - Atomic Test #1: Crafting Active Directory golden tickets with mimikatz [windows]
   - Atomic Test #2: Crafting Active Directory golden tickets with Rubeus [windows]
 - [T1552.001 Unsecured Credentials: Credentials In Files](../../T1552.001/T1552.001.md)
-  - Atomic Test #3: Extracting passwords with findstr [windows]
-  - Atomic Test #4: Access unattend.xml [windows]
-  - Atomic Test #6: WinPwn - sensitivefiles [windows]
-  - Atomic Test #7: WinPwn - Snaffler [windows]
-  - Atomic Test #8: WinPwn - powershellsensitive [windows]
-  - Atomic Test #9: WinPwn - passhunt [windows]
-  - Atomic Test #10: WinPwn - SessionGopher [windows]
-  - Atomic Test #11: WinPwn - Loot local Credentials - AWS, Microsoft Azure, and Google Compute credentials [windows]
+  - Atomic Test #4: Extracting passwords with findstr [windows]
+  - Atomic Test #5: Access unattend.xml [windows]
+  - Atomic Test #7: WinPwn - sensitivefiles [windows]
+  - Atomic Test #8: WinPwn - Snaffler [windows]
+  - Atomic Test #9: WinPwn - powershellsensitive [windows]
+  - Atomic Test #10: WinPwn - passhunt [windows]
+  - Atomic Test #11: WinPwn - SessionGopher [windows]
+  - Atomic Test #12: WinPwn - Loot local Credentials - AWS, Microsoft Azure, and Google Compute credentials [windows]
 - T1606.001 Web Cookies [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1552.006 Unsecured Credentials: Group Policy Preferences](../../T1552.006/T1552.006.md)
   - Atomic Test #1: GPP Passwords (findstr) [windows]
@@ -1544,7 +1545,7 @@
   - Atomic Test #18: Get-DomainController with PowerView [windows]
   - Atomic Test #19: Get-wmiobject to Enumerate Domain Controllers [windows]
   - Atomic Test #20: Remote System Discovery - net group Domain Controller [windows]
-- [T1046 Network Service Scanning](../../T1046/T1046.md)
+- [T1046 Network Service Discovery](../../T1046/T1046.md)
   - Atomic Test #3: Port Scan NMap for Windows [windows]
   - Atomic Test #4: Port Scan using python [windows]
   - Atomic Test #5: WinPwn - spoolvulnscan [windows]
