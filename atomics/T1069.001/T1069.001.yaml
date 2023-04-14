@@ -99,3 +99,29 @@ atomic_tests:
     command: |
       Get-WMIObject Win32_Group
     name: powershell
+- name: Permission Groups Discovery for Containers- Local Groups
+  auto_generated_guid: 007d7aa4-8c4d-4f55-ba6a-7c965d51219c
+  description: Attackers may try to obtain a list of services that are operating on remote hosts and local network infrastructure devices, in order to identify potential vulnerabilities that can be exploited through remote software attacks. They typically use tools to conduct port and vulnerability scans in order to obtain this information.
+  supported_platforms:
+  - containers
+  dependency_executor_name: sh
+  dependencies:
+  - description: Verify docker is installed.
+    prereq_command: |
+      which docker
+    get_prereq_command: |
+      if [ "" == "`which docker`" ]; then echo "Docker Not Found"; if [ -n "`which apt-get`" ]; then sudo apt-get -y install docker ; elif [ -n "`which yum`" ]; then sudo yum -y install docker ; fi ; else echo "Docker installed"; fi
+  - description: Verify docker service is running.
+    prereq_command: |
+      sudo systemctl status docker  --no-pager
+    get_prereq_command: |
+      sudo systemctl start docker
+  executor:
+    command: |-
+      docker build -t t1069 $PathtoAtomicsFolder/T1069.001/src/
+      docker run --name t1069_container  -d -t t1069
+      docker exec t1069_container ./test.sh
+    cleanup_command: |-
+      docker stop t1069_container
+      docker rmi -f t1069
+    name: sh

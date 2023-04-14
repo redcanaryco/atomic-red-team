@@ -117,6 +117,11 @@
 - [T1562.003 Impair Defenses: HISTCONTROL](../../T1562.003/T1562.003.md)
   - Atomic Test #1: Disable history collection [linux, macos]
   - Atomic Test #2: Mac HISTCONTROL [macos, linux]
+  - Atomic Test #3: Clear bash history [linux]
+  - Atomic Test #4: Setting the HISTCONTROL environment variable [linux]
+  - Atomic Test #5: Setting the HISTFILESIZE environment variable [linux]
+  - Atomic Test #6: Setting the HISTFILE environment variable [linux]
+  - Atomic Test #7: Setting the HISTIGNORE environment variable [linux]
 - T1497.002 User Activity Based Checks [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1055.014 VDSO Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1562.001 Impair Defenses: Disable or Modify Tools](../../T1562.001/T1562.001.md)
@@ -433,8 +438,9 @@
 - [T1552.003 Unsecured Credentials: Bash History](../../T1552.003/T1552.003.md)
   - Atomic Test #1: Search Through Bash History [linux, macos]
 - [T1552.001 Unsecured Credentials: Credentials In Files](../../T1552.001/T1552.001.md)
-  - Atomic Test #2: Extract passwords with grep [macos, linux]
-  - Atomic Test #5: Find and Access Github Credentials [macos, linux]
+  - Atomic Test #1: Find AWS credentials [macos, linux]
+  - Atomic Test #3: Extract passwords with grep [macos, linux]
+  - Atomic Test #6: Find and Access Github Credentials [macos, linux]
 - T1606.001 Web Cookies [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1606 Forge Web Credentials [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1621 Multi-Factor Authentication Request Generation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -525,7 +531,7 @@
   - Atomic Test #12: Remote System Discovery - ip neighbour [linux]
   - Atomic Test #13: Remote System Discovery - ip route [linux]
   - Atomic Test #14: Remote System Discovery - ip tcp_metrics [linux]
-- [T1046 Network Service Scanning](../../T1046/T1046.md)
+- [T1046 Network Service Discovery](../../T1046/T1046.md)
   - Atomic Test #1: Port Scan [linux, macos]
   - Atomic Test #2: Port Scan Nmap [linux, macos]
 - T1518 Software Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
