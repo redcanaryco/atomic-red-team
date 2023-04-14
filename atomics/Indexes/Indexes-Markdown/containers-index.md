@@ -3,7 +3,8 @@
 - [T1613 Container and Resource Discovery](../../T1613/T1613.md)
   - Atomic Test #1: Container and ResourceDiscovery [containers]
 - T1069 Permission Groups Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1046 Network Service Scanning [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1046 Network Service Discovery](../../T1046/T1046.md)
+  - Atomic Test #9: Network Service Discovery for Containers [containers]
 
 # credential-access
 - T1110.001 Brute Force: Password Guessing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -70,7 +71,8 @@
   - Atomic Test #1: Deploy Docker container [containers]
 - T1078.001 Valid Accounts: Default Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1070 Indicator Removal on Host [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1612 Build Image on Host [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1612 Build Image on Host](../../T1612/T1612.md)
+  - Atomic Test #1: Build Image On Host [containers]
 - T1562.001 Impair Defenses: Disable or Modify Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1550.001 Application Access Token [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

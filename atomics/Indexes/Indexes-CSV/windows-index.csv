@@ -261,6 +261,7 @@ defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,35,Lockbit Bl
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,36,Disable Windows Defender with PwSh Disable-WindowsOptionalFeature,f542ffd3-37b4-4528-837f-682874faa012,powershell
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,37,WMIC Tamper with Windows Defender Evade Scanning Folder,59d386fc-3a4b-41b8-850d-9e3eee24dfe4,command_prompt
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,38,Delete Windows Defender Scheduled Tasks,4b841aa1-0d05-4b32-bbe7-7564346e7c76,command_prompt
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,44,Disable Hypervisor-Enforced Code Integrity (HVCI),70bd71e6-eba4-4e00-92f7-617911dbe020,powershell
 defense-evasion,T1055.012,Process Injection: Process Hollowing,1,Process Hollowing using PowerShell,562427b4-39ef-4e8c-af88-463a78e70b9c,powershell
 defense-evasion,T1055.012,Process Injection: Process Hollowing,2,RunPE via VBA,3ad4a037-1598-4136-837c-4027e4fa319b,powershell
 defense-evasion,T1027,Obfuscated Files or Information,2,Execute base64-encoded PowerShell,a50d5a97-2531-499e-a1de-5544c74432c6,powershell
@@ -803,14 +804,14 @@ credential-access,T1110.003,Brute Force: Password Spraying,8,Password Spray usin
 credential-access,T1003.005,OS Credential Dumping: Cached Domain Credentials,1,Cached Credential Dump via Cmdkey,56506854-89d6-46a3-9804-b7fde90791f9,command_prompt
 credential-access,T1558.001,Steal or Forge Kerberos Tickets: Golden Ticket,1,Crafting Active Directory golden tickets with mimikatz,9726592a-dabc-4d4d-81cd-44070008b3af,powershell
 credential-access,T1558.001,Steal or Forge Kerberos Tickets: Golden Ticket,2,Crafting Active Directory golden tickets with Rubeus,e42d33cd-205c-4acf-ab59-a9f38f6bad9c,powershell
-credential-access,T1552.001,Unsecured Credentials: Credentials In Files,3,Extracting passwords with findstr,0e56bf29-ff49-4ea5-9af4-3b81283fd513,powershell
-credential-access,T1552.001,Unsecured Credentials: Credentials In Files,4,Access unattend.xml,367d4004-5fc0-446d-823f-960c74ae52c3,command_prompt
-credential-access,T1552.001,Unsecured Credentials: Credentials In Files,6,WinPwn - sensitivefiles,114dd4e3-8d1c-4ea7-bb8d-8d8f6aca21f0,powershell
-credential-access,T1552.001,Unsecured Credentials: Credentials In Files,7,WinPwn - Snaffler,fdd0c913-714b-4c13-b40f-1824d6c015f2,powershell
-credential-access,T1552.001,Unsecured Credentials: Credentials In Files,8,WinPwn - powershellsensitive,75f66e03-37d3-4704-9520-3210efbe33ce,powershell
-credential-access,T1552.001,Unsecured Credentials: Credentials In Files,9,WinPwn - passhunt,00e3e3c7-6c3c-455e-bd4b-461c7f0e7797,powershell
-credential-access,T1552.001,Unsecured Credentials: Credentials In Files,10,WinPwn - SessionGopher,c9dc9de3-f961-4284-bd2d-f959c9f9fda5,powershell
-credential-access,T1552.001,Unsecured Credentials: Credentials In Files,11,"WinPwn - Loot local Credentials - AWS, Microsoft Azure, and Google Compute credentials",aaa87b0e-5232-4649-ae5c-f1724a4b2798,powershell
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,4,Extracting passwords with findstr,0e56bf29-ff49-4ea5-9af4-3b81283fd513,powershell
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,5,Access unattend.xml,367d4004-5fc0-446d-823f-960c74ae52c3,command_prompt
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,7,WinPwn - sensitivefiles,114dd4e3-8d1c-4ea7-bb8d-8d8f6aca21f0,powershell
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,8,WinPwn - Snaffler,fdd0c913-714b-4c13-b40f-1824d6c015f2,powershell
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,9,WinPwn - powershellsensitive,75f66e03-37d3-4704-9520-3210efbe33ce,powershell
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,10,WinPwn - passhunt,00e3e3c7-6c3c-455e-bd4b-461c7f0e7797,powershell
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,11,WinPwn - SessionGopher,c9dc9de3-f961-4284-bd2d-f959c9f9fda5,powershell
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,12,"WinPwn - Loot local Credentials - AWS, Microsoft Azure, and Google Compute credentials",aaa87b0e-5232-4649-ae5c-f1724a4b2798,powershell
 credential-access,T1552.006,Unsecured Credentials: Group Policy Preferences,1,GPP Passwords (findstr),870fe8fb-5e23-4f5f-b89d-dd7fe26f3b5f,command_prompt
 credential-access,T1552.006,Unsecured Credentials: Group Policy Preferences,2,GPP Passwords (Get-GPPPassword),e9584f82-322c-474a-b831-940fd8b4455c,powershell
 credential-access,T1056.002,Input Capture: GUI Input Capture,2,PowerShell - Prompt User for Password,2b162bfd-0928-4d4c-9ec3-4d9f88374b52,powershell
@@ -979,12 +980,12 @@ discovery,T1018,Remote System Discovery,17,Enumerate Active Directory Computers 
 discovery,T1018,Remote System Discovery,18,Get-DomainController with PowerView,b9d2e8ca-5520-4737-8076-4f08913da2c4,powershell
 discovery,T1018,Remote System Discovery,19,Get-wmiobject to Enumerate Domain Controllers,e3cf5123-f6c9-4375-bdf2-1bb3ba43a1ad,powershell
 discovery,T1018,Remote System Discovery,20,Remote System Discovery - net group Domain Controller,5843529a-5056-4bc1-9c13-a311e2af4ca0,command_prompt
-discovery,T1046,Network Service Scanning,3,Port Scan NMap for Windows,d696a3cb-d7a8-4976-8eb5-5af4abf2e3df,powershell
-discovery,T1046,Network Service Scanning,4,Port Scan using python,6ca45b04-9f15-4424-b9d3-84a217285a5c,powershell
-discovery,T1046,Network Service Scanning,5,WinPwn - spoolvulnscan,54574908-f1de-4356-9021-8053dd57439a,powershell
-discovery,T1046,Network Service Scanning,6,WinPwn - MS17-10,97585b04-5be2-40e9-8c31-82157b8af2d6,powershell
-discovery,T1046,Network Service Scanning,7,WinPwn - bluekeep,1cca5640-32a9-46e6-b8e0-fabbe2384a73,powershell
-discovery,T1046,Network Service Scanning,8,WinPwn - fruit,bb037826-cbe8-4a41-93ea-b94059d6bb98,powershell
+discovery,T1046,Network Service Discovery,3,Port Scan NMap for Windows,d696a3cb-d7a8-4976-8eb5-5af4abf2e3df,powershell
+discovery,T1046,Network Service Discovery,4,Port Scan using python,6ca45b04-9f15-4424-b9d3-84a217285a5c,powershell
+discovery,T1046,Network Service Discovery,5,WinPwn - spoolvulnscan,54574908-f1de-4356-9021-8053dd57439a,powershell
+discovery,T1046,Network Service Discovery,6,WinPwn - MS17-10,97585b04-5be2-40e9-8c31-82157b8af2d6,powershell
+discovery,T1046,Network Service Discovery,7,WinPwn - bluekeep,1cca5640-32a9-46e6-b8e0-fabbe2384a73,powershell
+discovery,T1046,Network Service Discovery,8,WinPwn - fruit,bb037826-cbe8-4a41-93ea-b94059d6bb98,powershell
 discovery,T1518,Software Discovery,1,Find and Display Internet Explorer Browser Version,68981660-6670-47ee-a5fa-7e74806420a4,command_prompt
 discovery,T1518,Software Discovery,2,Applications Installed,c49978f6-bd6e-4221-ad2c-9e3e30cc1e3b,powershell
 discovery,T1518,Software Discovery,4,WinPwn - Dotnetsearch,7e79a1b6-519e-433c-ad55-3ff293667101,powershell
