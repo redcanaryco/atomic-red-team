@@ -131,11 +131,6 @@ atomic_tests:
       useradd --shell /bin/bash --create-home --password $(openssl passwd -1 art) art
       usermod --lock art
       usermod --expiredate "1" art
-
-      su art
-      # -> Your account has expired; please contact your system administrator.
-      # -> su: Authentication failure
-
       usermod --unlock art
       usermod --expiredate "99999" art
       su art
