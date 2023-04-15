@@ -678,6 +678,7 @@
   - Atomic Test #9: Obfuscated command line scripts [linux]
   - Atomic Test #10: Change login shell [linux]
   - Atomic Test #11: Environment variable scripts [linux]
+  - Atomic Test #12: Detecting pipe-to-shell [linux]
 - T1559 Inter-Process Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1154 Trap [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1203 Exploitation for Client Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
