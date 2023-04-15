@@ -947,6 +947,7 @@
   - Atomic Test #3: Append to the system shell profile [linux]
   - Atomic Test #4: Append commands user shell profile [linux]
   - Atomic Test #5: System shell profile scripts [linux]
+  - Atomic Test #6: Create/Append to .bash_logout [linux]
 - [T1134.005 Access Token Manipulation: SID-History Injection](../../T1134.005/T1134.005.md)
   - Atomic Test #1: Injection SID-History with mimikatz [windows]
 - T1548.004 Elevated Execution with Prompt [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1456,6 +1457,7 @@
   - Atomic Test #3: Append to the system shell profile [linux]
   - Atomic Test #4: Append commands user shell profile [linux]
   - Atomic Test #5: System shell profile scripts [linux]
+  - Atomic Test #6: Create/Append to .bash_logout [linux]
 - [T1547.002 Authentication Package](../../T1547.002/T1547.002.md)
   - Atomic Test #1: Authentication Package [windows]
 - T1128 Netsh Helper DLL [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

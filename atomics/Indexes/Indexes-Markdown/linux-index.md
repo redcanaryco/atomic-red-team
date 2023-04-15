@@ -301,6 +301,7 @@
   - Atomic Test #3: Append to the system shell profile [linux]
   - Atomic Test #4: Append commands user shell profile [linux]
   - Atomic Test #5: System shell profile scripts [linux]
+  - Atomic Test #6: Create/Append to .bash_logout [linux]
 - T1168 Local Job Scheduling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1166 Setuid and Setgid [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1100 Web Shell [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -373,6 +374,7 @@
   - Atomic Test #3: Append to the system shell profile [linux]
   - Atomic Test #4: Append commands user shell profile [linux]
   - Atomic Test #5: System shell profile scripts [linux]
+  - Atomic Test #6: Create/Append to .bash_logout [linux]
 - T1166 Setuid and Setgid [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1100 Web Shell [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
