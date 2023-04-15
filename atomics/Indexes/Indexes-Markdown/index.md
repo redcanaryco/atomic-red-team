@@ -694,6 +694,9 @@
   - Atomic Test #5: Add a new/existing user to the admin group using dseditgroup utility - macOS [macos]
   - Atomic Test #6: WinPwn - Loot local Credentials - powerhell kittie [windows]
   - Atomic Test #7: WinPwn - Loot local Credentials - Safetykatz [windows]
+  - Atomic Test #8: Create local account (Linux) [linux]
+  - Atomic Test #9: Reactivate a locked/expired account (Linux) [linux]
+  - Atomic Test #10: Login as nobody (Linux) [linux]
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1127 Trusted Developer Utilities Proxy Execution](../../T1127/T1127.md)
   - Atomic Test #1: Lolbin Jsc.exe compile javascript to exe [windows]
@@ -1022,6 +1025,9 @@
   - Atomic Test #5: Add a new/existing user to the admin group using dseditgroup utility - macOS [macos]
   - Atomic Test #6: WinPwn - Loot local Credentials - powerhell kittie [windows]
   - Atomic Test #7: WinPwn - Loot local Credentials - Safetykatz [windows]
+  - Atomic Test #8: Create local account (Linux) [linux]
+  - Atomic Test #9: Reactivate a locked/expired account (Linux) [linux]
+  - Atomic Test #10: Login as nobody (Linux) [linux]
 - [T1574.012 Hijack Execution Flow: COR_PROFILER](../../T1574.012/T1574.012.md)
   - Atomic Test #1: User scope COR_PROFILER [windows]
   - Atomic Test #2: System Scope COR_PROFILER [windows]
@@ -1542,6 +1548,9 @@
   - Atomic Test #5: Add a new/existing user to the admin group using dseditgroup utility - macOS [macos]
   - Atomic Test #6: WinPwn - Loot local Credentials - powerhell kittie [windows]
   - Atomic Test #7: WinPwn - Loot local Credentials - Safetykatz [windows]
+  - Atomic Test #8: Create local account (Linux) [linux]
+  - Atomic Test #9: Reactivate a locked/expired account (Linux) [linux]
+  - Atomic Test #10: Login as nobody (Linux) [linux]
 - [T1574.012 Hijack Execution Flow: COR_PROFILER](../../T1574.012/T1574.012.md)
   - Atomic Test #1: User scope COR_PROFILER [windows]
   - Atomic Test #2: System Scope COR_PROFILER [windows]
@@ -2516,6 +2525,9 @@
   - Atomic Test #5: Add a new/existing user to the admin group using dseditgroup utility - macOS [macos]
   - Atomic Test #6: WinPwn - Loot local Credentials - powerhell kittie [windows]
   - Atomic Test #7: WinPwn - Loot local Credentials - Safetykatz [windows]
+  - Atomic Test #8: Create local account (Linux) [linux]
+  - Atomic Test #9: Reactivate a locked/expired account (Linux) [linux]
+  - Atomic Test #10: Login as nobody (Linux) [linux]
 
 # exfiltration
 - T1567 Exfiltration Over Web Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

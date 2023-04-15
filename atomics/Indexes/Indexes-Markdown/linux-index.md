@@ -178,7 +178,10 @@
   - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
 - T1480.001 Environmental Keying [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1078.003 Valid Accounts: Local Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
+  - Atomic Test #8: Create local account (Linux) [linux]
+  - Atomic Test #9: Reactivate a locked/expired account (Linux) [linux]
+  - Atomic Test #10: Login as nobody (Linux) [linux]
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 
 # collection
@@ -320,7 +323,10 @@
   - Atomic Test #2: At - Schedule a job [linux]
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1505.001 SQL Stored Procedures [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1078.003 Valid Accounts: Local Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
+  - Atomic Test #8: Create local account (Linux) [linux]
+  - Atomic Test #9: Reactivate a locked/expired account (Linux) [linux]
+  - Atomic Test #10: Login as nobody (Linux) [linux]
 
 # privilege-escalation
 - T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -389,7 +395,10 @@
 - T1055.008 Ptrace System Calls [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1053.002 Scheduled Task/Job: At](../../T1053.002/T1053.002.md)
   - Atomic Test #2: At - Schedule a job [linux]
-- T1078.003 Valid Accounts: Local Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
+  - Atomic Test #8: Create local account (Linux) [linux]
+  - Atomic Test #9: Reactivate a locked/expired account (Linux) [linux]
+  - Atomic Test #10: Login as nobody (Linux) [linux]
 
 # credential-access
 - T1557 Adversary-in-the-Middle [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -717,7 +726,10 @@
 - T1200 Hardware Additions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1189 Drive-by Compromise [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1566.003 Spearphishing via Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1078.003 Valid Accounts: Local Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
+  - Atomic Test #8: Create local account (Linux) [linux]
+  - Atomic Test #9: Reactivate a locked/expired account (Linux) [linux]
+  - Atomic Test #10: Login as nobody (Linux) [linux]
 
 # exfiltration
 - T1567 Exfiltration Over Web Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
