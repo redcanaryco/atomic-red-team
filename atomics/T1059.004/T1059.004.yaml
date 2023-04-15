@@ -200,6 +200,7 @@ atomic_tests:
     cleanup_command: | 
       unset ART
 - name: Detecting pipe-to-shell
+  auto_generated_guid: fca246a8-a585-4f28-a2df-6495973976a1
   description: |
     An adversary may develop a useful utility or subvert the CI/CD pipe line of a legitimate utility developer, who requires or suggests installing their utility by piping a curl download directly into bash. Of-course this is a very bad idea. The adversary may also take advantage of this BLIND install method and selectively running extra commands in the install script for those who DO pipe to bash and not for those who DO NOT. This test uses curl to download the pipe-to-shell.sh script, the first time without piping it to bash and the second piping it into bash which executes the echo command.
   supported_platforms:
