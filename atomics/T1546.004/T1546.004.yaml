@@ -94,6 +94,7 @@ atomic_tests:
     cleanup_command: |
       sed -i "s/# Atomic Red Team was here... T1546.004//" /etc/profile.d/bash_completion.sh
 - name: Create/Append to .bash_logout
+  auto_generated_guid: 37ad2f24-7c53-4a50-92da-427a4ad13f58
   description: |
     The Bash shell runs ~/.bash_logout "if it exists" to run commands on user logout. An adversary may create or append to a .bash_logout to clear history, start processes etc. Note the ~/.bash_logout is only run if you explicitly exit or log out of an "interactive login shell session" i.e. via the console, SSH, /bin/bash -l or su -l <username>. 
 
