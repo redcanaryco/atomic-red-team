@@ -3,28 +3,19 @@ display_name: 'Steal or Forge Authentication Certificates'
 atomic_tests:
 - name: Staging Local Certificates via Export-Certificate
   description: |
-    The following Atomic test simulates an adversary exporting and staging digital certificates. Digital certificates are often used to sign and encrypt messages and/or files. Certificates are also used as authentication material. For example, Azure AD device certificates and Active Directory Certificate Services (AD CS) certificates bind to an identity and can be used as credentials for domain accounts.
+    Export all user certificates and add to a compressed archive.
   supported_platforms:
   - windows
-  input_arguments:
-    output:
-      description: archive file
-      type: path
-      default: c:\temp\certs\atomic_certs.zip
-    output_path:
-      description: file path to export to
-      type: path
-      default: c:\temp\certs
   executor:
     command: |
-      $archive=#{output}
-      $exfilpath=#{output_path}
-      $ErrorActionPreference = 'SilentlyContinue';
+      $archive="$env:PUBLIC\T1649\atomic_certs.zip"
+      $exfilpath="$env:PUBLIC\T1649\certs"
       Add-Type -assembly "system.io.compression.filesystem"
-      If(Test-path $archive) {Remove-item $archive}
+      Remove-Item $(split-path $exfilpath) -Recurse -Force -ErrorAction Ignore
+      mkdir $exfilpath | Out-Null
       foreach ($cert in (gci Cert:\CurrentUser\My)) { Export-Certificate -Cert $cert -FilePath $exfilpath\$($cert.FriendlyName).cer}
       [io.compression.zipfile]::CreateFromDirectory($exfilpath, $archive)
     cleanup_command: |
-      Remove-Item #{output}
+      $exfilpath="$env:PUBLIC\T1649\certs"
+      Remove-Item $(split-path $exfilpath) -Recurse -Force -ErrorAction Ignore
     name: powershell
-    elevation_required: false
