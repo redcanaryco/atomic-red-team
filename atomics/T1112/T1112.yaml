@@ -843,3 +843,16 @@ atomic_tests:
       reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "AUOptions" /t REG_DWORD /d 3
     name: command_prompt
     elevation_required: true
+- name: Do Not Connect To Win Update
+  auto_generated_guid: d1de3767-99c2-4c6c-8c5a-4ba4586474c8
+  description: |
+    Do Not Connect To Win Update. Redline is using this as part of its defense evasion.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "DoNotConnectToWindowsUpdateInternetLocations" /t REG_DWORD /d 1
+    cleanup_command: |
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "DoNotConnectToWindowsUpdateInternetLocations" /t REG_DWORD /d 0
+    name: command_prompt
+    elevation_required: true
