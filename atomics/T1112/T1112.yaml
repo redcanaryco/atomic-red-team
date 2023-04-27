@@ -778,19 +778,6 @@ atomic_tests:
       reg add "hklm\SYSTEM\CurrentControlSet\Control\Terminal Server\Winstations\RDP-Tcp" /v SecurityLayer /t REG_DWORD /d 2 /f
     name: command_prompt
     elevation_required: true
-- name: Tamper Win Defender Protection
-  auto_generated_guid: 3b625eaa-c10d-4635-af96-3eae7d2a2f3c
-  description: |
-    Tamper Win Defender Protection. Redline is using this to disable this win defender feature.
-  supported_platforms:
-  - windows
-  executor:
-    command: |
-      reg add "HKLM\SOFTWARE\Microsoft\Windows Defender\Features" /v "TamperProtection" /t REG_DWORD /d 0
-    cleanup_command: |
-      reg add "HKLM\SOFTWARE\Microsoft\Windows Defender\Features" /v "TamperProtection" /t REG_DWORD /d 5
-    name: command_prompt
-    elevation_required: true
 - name: Disable Win Defender Notification
   auto_generated_guid: 12e03af7-79f9-4f95-af48-d3f12f28a260
   description: |
