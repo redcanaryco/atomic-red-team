@@ -704,7 +704,7 @@ atomic_tests:
   - windows
   executor:
     command: |
-      New-ItemProperty "HKCU:\Software\Policies\Microsoft\Windows\OOBE" -Name DisablePrivacyExperience -PropertyType DWord -Value 0 -Force
+      New-ItemProperty "HKCU:\Software\Policies\Microsoft\Windows\OOBE" -Name DisablePrivacyExperience -PropertyType DWord -Value 1 -Force
     cleanup_command: |
       Remove-ItemProperty "HKCU:\Software\Policies\Microsoft\Windows\OOBE" -Name DisablePrivacyExperience -Force -ErrorAction Ignore
     name: powershell
