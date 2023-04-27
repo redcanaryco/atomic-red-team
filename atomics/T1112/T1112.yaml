@@ -843,3 +843,16 @@ atomic_tests:
       reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "DoNotConnectToWindowsUpdateInternetLocations" /t REG_DWORD /d 0
     name: command_prompt
     elevation_required: true
+- name: Tamper Win Defender Protection
+  auto_generated_guid: 3b625eaa-c10d-4635-af96-3eae7d2a2f3c
+  description: |
+    Tamper Win Defender Protection. RedLine Stealer is executing another component file to disable this win defender feature.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKLM\SOFTWARE\Microsoft\Windows Defender\Features" /v "TamperProtection" /t REG_DWORD /d 0
+    cleanup_command: |
+      reg add "HKLM\SOFTWARE\Microsoft\Windows Defender\Features" /v "TamperProtection" /t REG_DWORD /d 5
+    name: command_prompt
+    elevation_required: true
