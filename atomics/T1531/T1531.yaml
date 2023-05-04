@@ -102,7 +102,7 @@ atomic_tests:
   executor:
     command: |
       passwd #{user_account} #enter admin password > enter new password > confirm new password
-    name: command_prompt
+    name: sh
     elevation_required: true
 - name: Delete User via dscl utility
   description: |
@@ -112,10 +112,12 @@ atomic_tests:
   input_arguments:
     user_account:
       description: User account which will be deleted.
-      type: String  
+      type: String 
+      default: ARTUser
     user_password:
       description: User password.
-      type: String      
+      type: String 
+      default: ARTPassword    
   executor:
     command: |
       dscl . -delete /Users/#{user_account} #enter admin password
@@ -125,7 +127,7 @@ atomic_tests:
       dscl . -create /Users/#{user_account} UniqueID 503
       dscl . -create /Users/#{user_account} NFSHomeDirectory /Users/#{user_account}
       dscl . -passwd /Users/#{user_account} #{user_password} #enter password for new user
-    name: command_prompt
+    name: sh
     elevation_required: true
 - name: Delete User via sysadminctl utility
   description: |
@@ -136,18 +138,21 @@ atomic_tests:
     user_account:
       description: User account which will be deleted.
       type: String  
+      default: ARTUserAccount
     user_name:
       description: New user name.
       type: String
+      default: ARTUser
     user_password:
       description: New user password.
       type: String
+      default: ARTPassword
   executor:
     command: |
       sysadminctl -deleteUser #{user_account} #enter admin password
     cleanup_command: |
       sysadminctl -addUser #{user_account} -fullName "#{user_name}" -password #{user_password}
-    name: command_prompt
+    name: sh
     elevation_required: true     
 - name: Azure AD - Delete user via Azure AD PowerShell
   auto_generated_guid: 4f577511-dc1c-4045-bcb8-75d2457f01f4
