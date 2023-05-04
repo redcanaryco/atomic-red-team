@@ -88,6 +88,72 @@ atomic_tests:
       }
     name: powershell
     elevation_required: false
+- name: Change User Password via passwd
+  description: |
+    This test changes the user password to hinder access to the account using passwd utility.
+  supported_platforms:
+  - macos
+  - linux
+  input_arguments:
+    user_account:
+      description: User account whose password will be changed.
+      type: String
+      default: ARTUser
+  executor:
+    command: |
+      passwd #{user_account} #enter admin password > enter new password > confirm new password
+    name: sh
+    elevation_required: true
+- name: Delete User via dscl utility
+  description: |
+    This test deletes the user account using the dscl utility.
+  supported_platforms:
+  - macos
+  input_arguments:
+    user_account:
+      description: User account which will be deleted.
+      type: String 
+      default: ARTUser
+    user_password:
+      description: User password.
+      type: String 
+      default: ARTPassword    
+  executor:
+    command: |
+      dscl . -delete /Users/#{user_account} #enter admin password
+    cleanup_command: |
+      dscl . -create /Users/#{user_account} #enter admin password
+      dscl . -create /Users/#{user_account} UserShell /bin/bash
+      dscl . -create /Users/#{user_account} UniqueID 503
+      dscl . -create /Users/#{user_account} NFSHomeDirectory /Users/#{user_account}
+      dscl . -passwd /Users/#{user_account} #{user_password} #enter password for new user
+    name: sh
+    elevation_required: true
+- name: Delete User via sysadminctl utility
+  description: |
+    This test deletes the user account using the sysadminctl utility.
+  supported_platforms:
+  - macos
+  input_arguments:
+    user_account:
+      description: User account which will be deleted.
+      type: String  
+      default: ARTUserAccount
+    user_name:
+      description: New user name.
+      type: String
+      default: ARTUser
+    user_password:
+      description: New user password.
+      type: String
+      default: ARTPassword
+  executor:
+    command: |
+      sysadminctl -deleteUser #{user_account} #enter admin password
+    cleanup_command: |
+      sysadminctl -addUser #{user_account} -fullName "#{user_name}" -password #{user_password}
+    name: sh
+    elevation_required: true     
 - name: Azure AD - Delete user via Azure AD PowerShell
   auto_generated_guid: 4f577511-dc1c-4045-bcb8-75d2457f01f4
   description: Deletes a user in Azure AD. Adversaries may interrupt availability of system and network resources by inhibiting access to accounts utilized by legitimate users. Accounts may be deleted, locked, or manipulated (excluding changed credentials) to remove access to accounts.
