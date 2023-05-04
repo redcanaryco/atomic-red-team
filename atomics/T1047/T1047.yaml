@@ -47,11 +47,11 @@ atomic_tests:
   input_arguments:
     node:
       description: Ip Address
-      type: String
+      type: string
       default: 127.0.0.1
     service_search_string:
       description: Name Of Service
-      type: String
+      type: string
       default: Spooler
   executor:
     command: |
@@ -67,7 +67,7 @@ atomic_tests:
   input_arguments:
     process_to_execute:
       description: Name or path of process to execute.
-      type: String
+      type: string
       default: notepad.exe
   executor:
     command: |
@@ -86,19 +86,19 @@ atomic_tests:
   input_arguments:
     node:
       description: Ip Address
-      type: String
+      type: string
       default: 127.0.0.1
     user_name:
       description: Username
-      type: String
+      type: string
       default: DOMAIN\Administrator
     password:
       description: Password
-      type: String
+      type: string
       default: P@ssw0rd1
     process_to_execute:
       description: Name or path of process to execute.
-      type: String
+      type: string
       default: notepad.exe
   executor:
     command: |
@@ -132,11 +132,11 @@ atomic_tests:
   input_arguments:
     new_class:
       description: Derived class name
-      type: String
+      type: string
       default: Win32_Atomic
     process_to_execute:
       description: Name or path of process to execute.
-      type: String
+      type: string
       default: notepad.exe
   executor:
     name: powershell
@@ -158,15 +158,15 @@ atomic_tests:
   input_arguments:
     node:
       description: Ip Address
-      type: String
+      type: string
       default: 127.0.0.1
     dll_to_execute:
       description: Path to DLL.
-      type: String
+      type: string
       default: $env:TEMP\calc.dll
     function_to_execute:
       description: Name of DLL function to call
-      type: String
+      type: string
       default: StartW
   dependency_executor_name: powershell
   dependencies:
@@ -192,7 +192,7 @@ atomic_tests:
       default: 127.0.0.1
     product:
       description: Enter the product name being uninstalled.  This will default to TightVNC.
-      type: String
+      type: string
       default: Tightvnc
   dependency_executor_name: powershell
   dependencies:

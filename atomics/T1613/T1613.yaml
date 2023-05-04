@@ -1,0 +1,33 @@
+---
+attack_technique: T1613
+display_name: "Container and Resource Discovery"
+atomic_tests:
+- name: Container and ResourceDiscovery
+  auto_generated_guid: 8a895923-f99f-4668-acf2-6cc59a44f05e
+  description: Adversaries may attempt to discover containers and other resources that are available within a containers environment. 
+  supported_platforms:
+  - containers
+  dependency_executor_name: sh
+  dependencies: 
+  - description: Verify docker is installed.
+    prereq_command: |
+      which docker
+    get_prereq_command: |
+      if [ "" == "`which docker`" ]; then echo "Docker Not Found"; if [ -n "`which apt-get`" ]; then sudo apt-get -y install docker ; elif [ -n "`which yum`" ]; then sudo yum -y install docker ; fi ; else echo "Docker installed"; fi
+  
+  - description: Verify docker service is running.
+    prereq_command: |
+      sudo systemctl status docker  --no-pager
+    get_prereq_command: |
+      sudo systemctl start docker
+  executor:
+    command: |-
+      docker build -t t1613  $PathtoAtomicsFolder/T1613/src/
+      docker run --name t1613_container  -d -t t1613
+      docker ps
+      docker stats --no-stream
+      docker inspect $(docker ps -l -q --filter ancestor=t1613)
+    cleanup_command: |-
+      docker stop t1613_container
+      docker rmi -f t1613_container
+    name: sh

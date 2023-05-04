@@ -11,7 +11,7 @@ atomic_tests:
   input_arguments:
     weak_service_name:
       description: weak service check
-      type: String
+      type: string
       default: weakservicename
   executor:
     command: |
@@ -27,15 +27,15 @@ atomic_tests:
   input_arguments:
     weak_service_name:
       description: weak service name
-      type: String
+      type: string
       default: calcservice
     weak_service_path:
       description: weak service path
-      type: String
+      type: string
       default: '%windir%\system32\win32calc.exe'
     malicious_service_path:
       description: malicious service path
-      type: String
+      type: string
       default: '%windir%\system32\cmd.exe'
   dependency_executor_name: powershell
   dependencies:

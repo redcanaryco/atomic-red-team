@@ -14,7 +14,7 @@ atomic_tests:
   input_arguments:
     shell_command:
       description: command to encode
-      type: String
+      type: string
       default: "echo Hello from the Atomic Red Team && uname -v"
   dependency_executor_name: sh
   dependencies:
@@ -44,7 +44,7 @@ atomic_tests:
   input_arguments:
     powershell_command:
       description: PowerShell command to encode
-      type: String
+      type: string
       default: Write-Host "Hey, Atomic!"
   executor:
     command: |
@@ -65,15 +65,15 @@ atomic_tests:
   input_arguments:
     registry_key_storage:
       description: Windows Registry Key to store code
-      type: String
+      type: string
       default: HKCU:Software\Microsoft\Windows\CurrentVersion
     powershell_command:
       description: PowerShell command to encode
-      type: String
+      type: string
       default: Write-Host "Hey, Atomic!"
     registry_entry_storage:
       description: Windows Registry entry to store code under key
-      type: String
+      type: string
       default: Debug
   executor:
     command: |
@@ -96,7 +96,7 @@ atomic_tests:
   input_arguments:
     url_path:
       description: url to download Exe
-      type: Url
+      type: url
       default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027/bin/T1027.zip
   dependency_executor_name: powershell
   dependencies:
@@ -126,19 +126,19 @@ atomic_tests:
   input_arguments:
     input_file:
       description: Path of the XLSM file
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1027\src\T1027-cc-macro.xlsm
     sender:
       description: sender email
-      type: String
+      type: string
       default: test@corp.com
     receiver:
       description: receiver email
-      type: String
+      type: string
       default: test@corp.com
     smtp_server:
       description: SMTP Server IP Address
-      type: String
+      type: string
       default: 127.0.0.1
   executor:
     command: |
@@ -154,11 +154,11 @@ atomic_tests:
   input_arguments:
     input_file:
       description: Path of the XLSM file
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1027\src\T1027-cc-macro.xlsm
     ip_address:
       description: Destination IP address
-      type: String
+      type: string
       default: 127.0.0.1
   executor:
     command: |
@@ -185,11 +185,11 @@ atomic_tests:
   input_arguments:
     remote_file:
       description: URL of file to download
-      type: Url
+      type: url
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
     local_path:
       description: Local path/filename to save the dowloaded file to
-      type: Path
+      type: path
       default: Atomic-license.txt
   executor:
     steps: |

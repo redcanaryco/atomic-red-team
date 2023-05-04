@@ -10,5 +10,6 @@ atomic_tests:
     command: |-
       $notepad = Start-Process notepad -passthru
       Start-Process $PathToAtomicsFolder\T1055.003\bin\InjectContext.exe
-    cleanup_command: Stop-Process $notepad.pid
+      Start-Sleep -Seconds 5
+      Stop-Process $notepad.id
     name: powershell

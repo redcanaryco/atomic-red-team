@@ -10,19 +10,19 @@ atomic_tests:
   input_arguments:
     username:
       description: office-365 username
-      type: String
-      default: null
+      type: string
+      default:
     password:
       description: office-365 password
-      type: String
-      default: null
+      type: string
+      default:
     rule_name:
       description: email rule name
-      type: String
+      type: string
       default: "Atomic Red Team Email Rule"
     forwarding_email:
       description: destination email addresses
-      type: String
+      type: string
       default: "Atomic_Operator@fakeemail.aq"
   dependency_executor_name: powershell
   dependencies:
@@ -40,7 +40,7 @@ atomic_tests:
       $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
       $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
       Connect-ExchangeOnline -Credential $creds
-      New-InboxRule -Name "#{rule_name}" -ForwardTo "{#forwarding_email}"
+      New-InboxRule -Name "#{rule_name}" -ForwardTo "#{forwarding_email}"
     cleanup_command: |
       $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
       $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd

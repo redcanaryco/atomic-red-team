@@ -15,7 +15,7 @@ atomic_tests:
   input_arguments:
     domain:
       description: target SSH domain
-      type: Url
+      type: url
       default: target.example.com
   executor:
     command: |
@@ -35,15 +35,15 @@ atomic_tests:
   input_arguments:
     user_name:
       description: username for domain
-      type: String
+      type: string
       default: atomic
     password:
       description: password for user
-      type: String
+      type: string
       default: atomic
     domain:
       description: target SSH domain
-      type: Url
+      type: url
       default: target.example.com
   executor:
     command: |
@@ -60,28 +60,28 @@ atomic_tests:
   input_arguments:
     password:
       description: Password used to encrypt the data to be exfiltrated
-      type: String
+      type: string
       default: atomic
     domain:
       description: The domain name to use for DNS requests
-      type: String
+      type: string
       default: target.example.com
     ps_module:
       description: DNSExfiltrator powershell ps_module
-      type: Path
+      type: path
       default: '$env:Temp\dnsexfil.ps1'
     doh:
       description: Google or CloudFlare DoH (DNS over HTTP) server
-      type: String
+      type: string
       default: google
     time:
       description: The time in milliseconds to wait between each DNS request
-      type: String
-      default: 500
+      type: string
+      default: "500"
     encoding:
       description: Set to '-b32' to use base32 encoding of data. Might be required by some DNS resolvers.
-      type: String
-      default: null
+      type: string
+      default:
   dependency_executor_name: powershell
   dependencies:
   - description: |

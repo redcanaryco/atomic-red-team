@@ -10,19 +10,19 @@ atomic_tests:
   input_arguments:
     module_name:
       description: Name of the kernel module name.
-      type: String
+      type: string
       default: T1547006
     module_path:
       description: Folder used to store the module.
-      type: Path
+      type: path
       default: /tmp/T1547.006/T1547006.ko
     temp_folder:
       description: Temp folder used to compile the code.
-      type: Path
+      type: path
       default: /tmp/T1547.006
     module_source_path:
       description: Path to download Gsecdump binary file
-      type: Url
+      type: url
       default: PathToAtomicsFolder/T1547.006/src
   dependency_executor_name: bash
   dependencies:
@@ -52,7 +52,7 @@ atomic_tests:
   input_arguments:
     module_path:
       description: Folder used to store the module.
-      type: Path
+      type: path
       default: /Library/Extensions/SoftRAID.kext
   dependency_executor_name: bash
   dependencies:
@@ -83,11 +83,11 @@ atomic_tests:
   input_arguments:
     src_path:
       description: Folder used to store the module.
-      type: Path
+      type: path
       default: PathToAtomicsFolder/T1547.006/src/macos_kextload.c
     exe_path:
       description: Folder used to store the module.
-      type: Path
+      type: path
       default: /tmp/T1547006_iokit_loader
   dependency_executor_name: bash
   dependencies:
