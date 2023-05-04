@@ -5,22 +5,22 @@ atomic_tests:
   auto_generated_guid: 4b9dde80-ae22-44b1-a82a-644bf009eb9c
   description: |
     Inserts a rule into a PAM config and then tests it.
-    
+
     Upon successful execution, this test will insert a rule that allows every user to su to root without a password.
   supported_platforms:
   - linux
   input_arguments:
     path_to_pam_conf:
       description: PAM config file to modify.
-      type: String
+      type: string
       default: /etc/pam.d/su-l
     pam_rule:
       description: Rule to add to the PAM config.
-      type: String
+      type: string
       default: auth sufficient pam_succeed_if.so uid >= 0
     index:
       description: Index where the rule is inserted.
-      type: Integer
+      type: integer
       default: 1
   executor:
     name: sh
@@ -40,23 +40,23 @@ atomic_tests:
   input_arguments:
     path_to_pam_conf:
       description: PAM config file to modify.
-      type: String
+      type: string
       default: /etc/pam.d/su-l
     pam_rule:
       description: Rule to add to the PAM config.
-      type: String
+      type: string
       default: auth sufficient /tmp/pam_evil.so
     index:
       description: Index where the rule is inserted.
-      type: Integer
+      type: integer
       default: 1
     path_to_pam_module_source:
       description: Path to PAM module source code.
-      type: Path
+      type: path
       default: PathToAtomicsFolder/T1556.003/src/pam_evil.c
     path_to_pam_module:
       description: Path to PAM module object
-      type: Path
+      type: path
       default: /tmp/pam_evil.so
   dependencies:
   - description: |

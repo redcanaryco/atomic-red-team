@@ -2035,15 +2035,15 @@ defense-evasion:
         azure_username:
           description: Username of a privileged Azure AD account such as External
             Identity Provider Administrator or Global Administrator roles
-          type: String
+          type: string
           default: bruce.wayne@contosocloud.com
         azure_password:
           description: Password of azure_username
-          type: String
+          type: string
           default: iamthebatman
         domain_name:
           description: Malicious federated domain name
-          type: String
+          type: string
           default: contoso.com
       dependency_executor_name: powershell
       dependencies:
@@ -7862,6 +7862,7 @@ defense-evasion:
       x_mitre_permissions_required:
       - User
       - root
+      identifier: T1612
     atomic_tests: []
   T1055.002:
     technique:
@@ -16736,15 +16737,15 @@ privilege-escalation:
         azure_username:
           description: Username of a privileged Azure AD account such as External
             Identity Provider Administrator or Global Administrator roles
-          type: String
+          type: string
           default: bruce.wayne@contosocloud.com
         azure_password:
           description: Password of azure_username
-          type: String
+          type: string
           default: iamthebatman
         domain_name:
           description: Malicious federated domain name
-          type: String
+          type: string
           default: contoso.com
       dependency_executor_name: powershell
       dependencies:
@@ -27610,6 +27611,7 @@ execution:
       - User
       - SYSTEM
       x_mitre_remote_support: true
+      identifier: T1559
     atomic_tests: []
   T1204.003:
     technique:
@@ -35501,23 +35503,23 @@ persistence:
       input_arguments:
         username:
           description: Azure AD username
-          type: String
+          type: string
           default: jonh@contoso.com
         password:
           description: Azure AD password
-          type: String
+          type: string
           default: p4sswd
         service_principal_name:
           description: Name of the targeted service principal
-          type: String
+          type: string
           default: SuperSP
         certificate_password:
           description: Password of the new certificate
-          type: String
+          type: string
           default: Passw0rd
         path_to_cert:
           description: Path of the new certificate, locally stored
-          type: String
+          type: string
           default: "$env:TEMP"
       dependency_executor_name: powershell
       dependencies:
@@ -35584,23 +35586,23 @@ persistence:
       input_arguments:
         username:
           description: Azure AD username
-          type: String
+          type: string
           default: jonh@contoso.com
         password:
           description: Azure AD password
-          type: String
+          type: string
           default: p4sswd
         application_name:
           description: Name of the targeted application
-          type: String
+          type: string
           default: SuperApp
         certificate_password:
           description: Password of the new certificate
-          type: String
+          type: string
           default: Passw0rd
         path_to_cert:
           description: Path of the new certificate, locally stored
-          type: String
+          type: string
           default: "$env:TEMP"
       dependency_executor_name: powershell
       dependencies:
@@ -36518,7 +36520,96 @@ persistence:
       x_mitre_attack_spec_version: 2.1.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
       identifier: T1136.003
-    atomic_tests: []
+    atomic_tests:
+    - name: Azure AD - Create a new user
+      auto_generated_guid: e62d23ef-3153-4837-8625-fa4a3829134d
+      description: Creates a new user in Azure AD. Upon successful creation, a new
+        user will be created. Adversaries create new users so that their malicious
+        activity does not interrupt the normal functions of the compromised users
+        and can remain undetected for a long time.
+      supported_platforms:
+      - azure-ad
+      input_arguments:
+        username:
+          description: Display name of the new user to be created in Azure AD
+          type: string
+          default: atomicredteam
+        userprincipalname:
+          description: User principal name (UPN) for the new Azure user being created
+            format email address
+          type: String
+          default: atomicredteam@yourdomain.com
+        password:
+          description: Password for the new Azure AD user being created
+          type: string
+          default: reallylongcredential12345ART-ydsfghsdgfhsdgfhgsdhfg
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Check if AzureAD PowerShell module is installed
+        prereq_command: Get-InstalledModule -Name AzureAD
+        get_prereq_command: echo "use the following to install AzureAD PowerShell
+          module - Install-Module -Name AzureAD -Scope CurrentUser -Repository PSGallery
+          -Force"
+      - description: Check if AzureAD PowerShell module is installed
+        prereq_command: Update the input arguments so the userprincipalname value
+          is accurate for your environment
+        get_prereq_command: echo "Update the input arguments in the .yaml file so
+          that the userprincipalname value is accurate for your environment"
+      executor:
+        command: "Connect-AzureAD\n$userprincipalname = \"#{userprincipalname}\"\n$username
+          = \"#{username}\"      \n$password = \"#{password}\"\n$PasswordProfile =
+          New-Object -TypeName Microsoft.Open.AzureAD.Model.PasswordProfile\n$PasswordProfile.Password
+          = $password\nNew-AzureADUser -DisplayName $username -PasswordProfile $PasswordProfile
+          -UserPrincipalName $userprincipalname -AccountEnabled $true -MailNickName
+          $username      "
+        cleanup_command: Remove-AzureADUser -ObjectId "#{userprincipalname}"
+        name: powershell
+    - name: Azure AD - Create a new user via Azure CLI
+      auto_generated_guid: 228c7498-be31-48e9-83b7-9cb906504ec8
+      description: Creates a new user in Azure AD via the Azure CLI. Upon successful
+        creation, a new user will be created. Adversaries create new users so that
+        their malicious activity does not interrupt the normal functions of the compromised
+        users and can remain undetected for a long time.
+      supported_platforms:
+      - azure-ad
+      input_arguments:
+        username:
+          description: Display name of the new user to be created in Azure AD
+          type: string
+          default: atomicredteam
+        userprincipalname:
+          description: User principal name (UPN) for the new Azure user being created
+            format email address
+          type: String
+          default: atomicredteam@yourdomain.com
+        password:
+          description: Password for the new Azure AD user being created
+          type: string
+          default: reallylongcredential12345ART-ydsfghsdgfhsdgfhgsdhfg
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Check if Azure CLI is installed and install manually
+        prereq_command: az account list
+        get_prereq_command: echo "use the following to install the Azure CLI manually
+          https://aka.ms/installazurecliwindows"
+      - description: Check if Azure CLI is installed and install via PowerShell
+        prereq_command: az account list
+        get_prereq_command: echo "use the following to install the Azure CLI $ProgressPreference
+          = 'SilentlyContinue'; Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows
+          -OutFile .\AzureCLI.msi; Start-Process msiexec.exe -Wait -ArgumentList '/I
+          AzureCLI.msi /quiet'; Remove-Item .\AzureCLI.msi"
+      - description: Update the userprincipalname to meet your requirements
+        prereq_command: Update the input arguments so the userprincipalname value
+          is accurate for your environment
+        get_prereq_command: echo "Update the input arguments in the .yaml file so
+          that the userprincipalname value is accurate for your environment"
+      executor:
+        command: "az login\n$userprincipalname = \"#{userprincipalname}\"\n$username
+          = \"#{username}\"      \n$password = \"#{password}\"\naz ad user create
+          --display-name $username --password $password --user-principal-name $userprincipalname\naz
+          ad user list --filter \"displayname eq 'atomicredteam'\"     "
+        cleanup_command: az ad user delete --id
+        name: powershell
   T1098:
     technique:
       x_mitre_platforms:
@@ -36599,13 +36690,13 @@ persistence:
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
       identifier: T1098
     atomic_tests:
-    - name: Azure - adding user to Azure AD role
+    - name: Azure AD - adding user to Azure AD role
       auto_generated_guid: 0e65ae27-5385-46b4-98ac-607a8ee82261
-      description: "The adversarie want to add user to some Azure AD role. Threat
+      description: "The adversaries want to add user to some Azure AD role. Threat
         actor \nmay be interested primarily in highly privileged roles, e.g. Global
-        Administrator, Application Administrator, \nPrivileged authentication administrator
+        Administrator, Application Administrator, \nPrivileged Authentication Administrator
         (this role can reset Global Administrator password!).\nBy default, the role
-        Global Reader is assigned to service principal in this test.\n\nThe account
+        Global Reader is assigned to the user principal in this test.\n\nThe account
         you use to run the PowerShell command should have Privileged Role Administrator
         or Global Administrator role in your Azure AD.\n\nDetection hint - check Activity
         \"Add member to role\" in Azure AD Audit Logs. In targer you will also see
@@ -36615,19 +36706,20 @@ persistence:
       input_arguments:
         username:
           description: Azure AD username
-          type: String
+          type: string
           default: jonh@contoso.com
         password:
           description: Azure AD password
-          type: String
+          type: string
           default: p4sswd
         user_principal_name:
-          description: Name of the targeted user (user principal)
-          type: String
+          description: Display Name, or User Principal Name, of the targeted user
+            principal
+          type: string
           default: SuperUser
         role_name:
-          description: Name of the targed Azure AD role
-          type: String
+          description: Name of the targeted Azure AD role
+          type: string
           default: Global Reader
       dependencies:
       - description: 'AzureAD module must be installed.
@@ -36647,9 +36739,9 @@ persistence:
           $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
           Connect-AzureAD -Credential $Credential
 
-          $user = Get-AzureADUser | where-object {$_.DisplayName -eq "#{user_principal_name}"}
+          $user = Get-AzureADUser -Filter "DisplayName eq '#{user_principal_name}' or UserPrincipalName eq '#{user_principal_name}'"
           if ($user -eq $null) { Write-Warning "User not found"; exit }
-          $role = Get-AzureADDirectoryRole | where-object {$_.DisplayName -eq "#{role_name}"}
+          $role = Get-AzureADDirectoryRole -Filter "DisplayName eq '#{role_name}'"
           if ($role -eq $null) { Write-Warning "Role not found"; exit }
           Add-AzureADDirectoryRoleMember -ObjectId $role.ObjectId -RefObjectId $user.ObjectId
           Write-Host "User $($user.DisplayName) was added to $($role.DisplayName) role"
@@ -36659,21 +36751,21 @@ persistence:
           $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
           Connect-AzureAD -Credential $Credential -ErrorAction Ignore
 
-          $user = Get-AzureADUser | where-object {$_.DisplayName -eq "#{user_principal_name}"}
+          $user = Get-AzureADUser -Filter "DisplayName eq '#{user_principal_name}' or UserPrincipalName eq '#{user_principal_name}'"
           if ($user -eq $null) { Write-Warning "User not found"; exit }
-          $role = Get-AzureADDirectoryRole | where-object {$_.DisplayName -eq "#{role_name}"}
+          $role = Get-AzureADDirectoryRole -Filter "DisplayName eq '#{role_name}'"
           if ($role -eq $null) { Write-Warning "Role not found"; exit }
 
           Remove-AzureADDirectoryRoleMember -ObjectId $role.ObjectId -MemberId $user.ObjectId
           Write-Host "User $($user.DisplayName) was removed from $($role.DisplayName) role"
         name: powershell
         elevation_required: false
-    - name: Azure - adding service principal to Azure AD role
+    - name: Azure AD - adding service principal to Azure AD role
       auto_generated_guid: 92c40b3f-c406-4d1f-8d2b-c039bf5009e4
-      description: "The adversarie want to add service principal to some Azure AD
+      description: "The adversaries want to add service principal to some Azure AD
         role. Threat actor \nmay be interested primarily in highly privileged roles,
-        e.g. Global Administrator, Application Administrator, \nPrivileged authentication
-        administrator (this role can reset Global Administrator password!).\nBy default,
+        e.g. Global Administrator, Application Administrator, \nPrivileged Authentication
+        Administrator (this role can reset Global Administrator password!).\nBy default,
         the role Global Reader is assigned to service principal in this test.\n\nThe
         account you use to run the PowerShell command should have Privileged Role
         Administrator or Global Administrator role in your Azure AD.\n\nDetection
@@ -36684,19 +36776,19 @@ persistence:
       input_arguments:
         username:
           description: Azure AD username
-          type: String
+          type: string
           default: jonh@contoso.com
         password:
           description: Azure AD password
-          type: String
+          type: string
           default: p4sswd
         service_principal_name:
           description: Name of the service principal
-          type: String
+          type: string
           default: SuperSP
         role_name:
-          description: Name of the targed Azure AD role
-          type: String
+          description: Name of the targeted Azure AD role
+          type: string
           default: Global Reader
       dependencies:
       - description: 'AzureAD module must be installed.
@@ -36716,9 +36808,9 @@ persistence:
           $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
           Connect-AzureAD -Credential $Credential
 
-          $sp = Get-AzureADServicePrincipal | where-object {$_.DisplayName -eq "#{service_principal_name}"}
+          $sp = Get-AzureADServicePrincipal -Filter "DisplayName eq '#{service_principal_name}'"
           if ($sp -eq $null) { Write-Warning "Service Principal not found"; exit }
-          $role = Get-AzureADDirectoryRole | where-object {$_.DisplayName -eq "#{role_name}"}
+          $role = Get-AzureADDirectoryRole -Filter "DisplayName eq '#{role_name}'"
           if ($role -eq $null) { Write-Warning "Role not found"; exit }
           Add-AzureADDirectoryRoleMember -ObjectId $role.ObjectId -RefObjectId $sp.ObjectId
           Write-Host "Service Principal $($sp.DisplayName) was added to $($role.DisplayName)"
@@ -36728,21 +36820,21 @@ persistence:
           $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
           Connect-AzureAD -Credential $Credential -ErrorAction Ignore
 
-          $sp = Get-AzureADServicePrincipal | where-object {$_.DisplayName -eq "#{service_principal_name}"}
+          $sp = Get-AzureADServicePrincipal -Filter "DisplayName eq '#{service_principal_name}'"
           if ($sp -eq $null) { Write-Warning "Service Principal not found"; exit }
-          $role = Get-AzureADDirectoryRole | where-object {$_.DisplayName -eq "#{role_name}"}
+          $role = Get-AzureADDirectoryRole -Filter "DisplayName eq '#{role_name}'"
           if ($role -eq $null) { Write-Warning "Role not found"; exit }
 
           Remove-AzureADDirectoryRoleMember -ObjectId $role.ObjectId -MemberId $sp.ObjectId
           Write-Host "Service Principal $($sp.DisplayName) was removed from $($role.DisplayName) role"
         name: powershell
         elevation_required: false
-    - name: AzureAD - adding permission to application
+    - name: Azure AD - adding permission to application
       auto_generated_guid: 94ea9cc3-81f9-4111-8dde-3fb54f36af4b
       description: |
-        The adversarie want to add permission to new created application. Application could be then use for persistence or for further operation in the attacked infrastructure. Permissions like AppRoleAssignment.ReadWrite.All or RoleManagement.ReadWrite.Directory in particular can be a valuable target for a threat actor.
-        You can use Get-AzureADApplication instead New-AzureADServicePrincipal to use an existing application.
-        The DirectoryRecommendations.Read.All permissions have been selected as the default
+        The adversaries want to add permission to newly created application. Application could be then used for persistence or for further operation in the attacked infrastructure. Permissions like AppRoleAssignment.ReadWrite.All or RoleManagement.ReadWrite.Directory in particular can be a valuable target for a threat actor.
+        This technique will create a new app, with the provided name, and give it the provided permission. But if you prefer to add credentials to an existing app, replace in the code: "Get-AzureADApplication" instead of "New-AzureADServicePrincipal".
+        The DirectoryRecommendations.Read.All permissions has been selected as the default.
 
         The account you use to run the PowerShell command should have Global Administrator/Application Administrator/Cloud Application Administrator role in your Azure AD.
 
@@ -36757,20 +36849,20 @@ persistence:
       input_arguments:
         username:
           description: Azure AD username
-          type: String
+          type: string
           default: jonh@contoso.com
         password:
           description: Azure AD password
-          type: String
+          type: string
           default: p4sswd
         application_name:
-          description: Name of the targed application
-          type: String
+          description: Name of the targeted application that will be created
+          type: string
           default: test_app
         application_permission:
-          description: Permission from Microsoft Graph Resource API that will be add
+          description: Permission from Microsoft Graph Resource API that will be added
             to application
-          type: String
+          type: string
           default: DirectoryRecommendations.Read.All
       dependencies:
       - description: 'AzureAD module must be installed.
@@ -36790,11 +36882,10 @@ persistence:
           $Pword\nConnect-AzureAD -Credential $Credential\n\n$aadApplication = New-AzureADApplication
           -DisplayName \"#{application_name}\"\n$servicePrincipal = New-AzureADServicePrincipal
           -AppId $aadApplication.AppId\n#$aadApplication = Get-AzureADApplication
-          | Where-Object {$_.DisplayName -eq \"#{application_name}\"}\n\n#Get Service
-          Principal of Microsoft Graph Resource API \n$graphSP =  Get-AzureADServicePrincipal
-          -All $true | Where-Object {$_.DisplayName -eq \"Microsoft Graph\"}\n\n#Initialize
-          RequiredResourceAccess for Microsoft Graph Resource API \n$requiredGraphAccess
-          = New-Object Microsoft.Open.AzureAD.Model.RequiredResourceAccess\n$requiredGraphAccess.ResourceAppId
+          -Filter \"DisplayName eq '#{application_name}'\"\n\n#Get Service Principal
+          of Microsoft Graph Resource API \n$graphSP = Get-AzureADServicePrincipal
+          -Filter \"DisplayName eq 'Microsoft Graph'\"\n\n#Initialize RequiredResourceAccess
+          for Microsoft Graph Resource API \n$requiredGraphAccess = New-Object Microsoft.Open.AzureAD.Model.RequiredResourceAccess\n$requiredGraphAccess.ResourceAppId
           = $graphSP.AppId\n$requiredGraphAccess.ResourceAccess = New-Object System.Collections.Generic.List[Microsoft.Open.AzureAD.Model.ResourceAccess]\n\n#Set
           Application Permissions\n$ApplicationPermissions = @('#{application_permission}')\n\n$reqPermission
           = $graphSP.AppRoles | Where-Object {$_.Value -eq $ApplicationPermissions}\nif($reqPermission)\n{\n$resourceAccess
@@ -36806,7 +36897,7 @@ persistence:
           System.Collections.Generic.List[Microsoft.Open.AzureAD.Model.RequiredResourceAccess]\n$requiredResourcesAccess.Add($requiredGraphAccess)\n\n#Set
           permissions in existing Azure AD App\nSet-AzureADApplication -ObjectId $aadApplication.ObjectId
           -RequiredResourceAccess $requiredResourcesAccess\n\n$servicePrincipal =
-          Get-AzureADServicePrincipal -All $true | Where-Object {$_.AppId -eq $aadApplication.AppId}\n\nNew-AzureADServiceAppRoleAssignment
+          Get-AzureADServicePrincipal -Filter \"AppId eq '$($aadApplication.AppId)'\"\n\nNew-AzureADServiceAppRoleAssignment
           -ObjectId $servicePrincipal.ObjectId -PrincipalId $servicePrincipal.ObjectId
           -ResourceId $graphSP.ObjectId -Id $reqPermission.Id\n"
         cleanup_command: |
@@ -36815,8 +36906,22 @@ persistence:
           $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
           Connect-AzureAD -Credential $Credential
 
-          $aadApplication = Get-AzureADApplication | Where-Object {$_.DisplayName -eq "#{application_name}"}
-          Remove-AzureADApplication -ObjectId $aadApplication.ObjectId
+          $aadApplication = @(Get-AzureADApplication -Filter "DisplayName eq '#{application_name}'")
+          If ($aadApplication.Count -eq 0)
+          {
+            Write-Host "App not found: cannot delete it"
+            exit
+          }
+          ElseIf ($aadApplication.Count -gt 1)
+          {
+            Write-Host "Found several app with name '#{application_name}': one is likely the one this technique created, but as a precaution, none will be deleted. Manual cleanup is required."
+            exit
+          }
+          Else
+          {
+            Remove-AzureADApplication -ObjectId $aadApplication[0].ObjectId
+            Write-Host "Successfully deleted app"
+          }
         name: powershell
         elevation_required: false
   T1547.006:
@@ -45718,11 +45823,11 @@ credential-access:
         username:
           description: Account to bruteforce. We encourage users running this atomic
             to add a valid microsoft account domain; for eg "bruce.wayne@<valid_ms_account.com>"
-          type: String
+          type: string
           default: bruce.wayne@contoso.com
         passwords:
           description: List of passwords we will attempt to brute force with
-          type: String
+          type: string
           default: Password1`n1q2w3e4r`nPassword!
       dependency_executor_name: powershell
       dependencies:
@@ -46148,11 +46253,11 @@ credential-access:
       input_arguments:
         username:
           description: Azure AD username
-          type: String
+          type: string
           default: 
         password:
           description: Azure AD password
-          type: String
+          type: string
           default: T1082Az
       dependency_executor_name: powershell
       dependencies:
@@ -46575,16 +46680,16 @@ credential-access:
       input_arguments:
         certificate_path:
           description: Token signing certificate path. See T1552.004 to export it
-          type: Path
+          type: path
           default: ".\\ADFS_signing.pfx"
         immutable_id:
           description: ImmutableId of the targeted user. It can be obtained with AzureAD
             powershell module; $(Get-AzureADUser -SearchString "username").ImmutableId
-          type: String
+          type: string
           default: aehgdqBTZV50DKQZmNJ8mg==
         issuer_uri:
           description: Issuer URI of the ADFS service
-          type: String
+          type: string
           default: http://contoso.com/adfs/services/trust/
       dependency_executor_name: powershell
       dependencies:
@@ -48210,16 +48315,16 @@ credential-access:
         password:
           description: Single password we will attempt to auth with (if you need several
             passwords, then it is a bruteforce so see T1110.001)
-          type: String
+          type: string
           default: P@ssw0rd!
         valid_username:
           description: Valid username to retrieve Azure AD users. We encourage users
             running this atomic to add a valid microsoft account domain; for eg <valid_test_user>@<valid_ms_account.com>
-          type: String
+          type: string
           default: bruce.wayne@contoso.com
         valid_password:
           description: Valid password to authenticate as valid_username in the <valid_ms_account>
-          type: String
+          type: string
           default: iamthebatman
       dependency_executor_name: powershell
       dependencies:
@@ -48271,11 +48376,11 @@ credential-access:
       input_arguments:
         password:
           description: Single password to try against the list of user accounts
-          type: String
+          type: string
           default: P@ssword1
         user_list:
           description: File path to list of users (one per line, formatted as user@subdomain.onmicrosoft.com)
-          type: String
+          type: string
           default: "$env:temp\\T1110.003UserList.txt"
       dependency_executor_name: powershell
       dependencies:
@@ -50853,6 +50958,7 @@ discovery:
       - 'Container: Container Enumeration'
       x_mitre_permissions_required:
       - User
+      identifier: T1613
     atomic_tests: []
   T1016.001:
     technique:
@@ -51701,11 +51807,11 @@ discovery:
       input_arguments:
         username:
           description: Azure AD username
-          type: String
+          type: string
           default: 
         password:
           description: Azure AD password
-          type: String
+          type: string
           default: T1082Az
       dependency_executor_name: powershell
       dependencies:
@@ -52032,6 +52138,7 @@ discovery:
       - 'Cloud Storage: Cloud Storage Metadata'
       x_mitre_attack_spec_version: 2.1.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      identifier: T1580
     atomic_tests: []
   T1217:
     technique:
@@ -53355,7 +53462,7 @@ discovery:
         macOS APT Activity Bradley)"
       modified: '2022-04-20T16:05:30.960Z'
       created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
-      name: Network Service Scanning
+      name: Network Service Discovery
       x_mitre_detection: |-
         System and network discovery techniques normally occur throughout an operation as an adversary learns the environment. Data and events should not be viewed in isolation, but as part of a chain of behavior that could lead to other activities, such as Lateral Movement, based on the information obtained.
 
@@ -61263,7 +61370,74 @@ impact:
       x_mitre_attack_spec_version: 2.1.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
       identifier: T1531
-    atomic_tests: []
+    atomic_tests:
+    - name: Azure AD - Delete user via Azure AD PowerShell
+      auto_generated_guid: 4f577511-dc1c-4045-bcb8-75d2457f01f4
+      description: Deletes a user in Azure AD. Adversaries may interrupt availability
+        of system and network resources by inhibiting access to accounts utilized
+        by legitimate users. Accounts may be deleted, locked, or manipulated (excluding
+        changed credentials) to remove access to accounts.
+      supported_platforms:
+      - azure-ad
+      input_arguments:
+        userprincipalname:
+          description: User principal name (UPN) for the Azure user being deleted
+          type: String
+          default: atomicredteam@yourdomain.com
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Check if AzureAD PowerShell module is installed
+        prereq_command: Get-InstalledModule -Name AzureAD
+        get_prereq_command: echo "use the following to install AzureAD PowerShell
+          module - Install-Module -Name AzureAD -Scope CurrentUser -Repository PSGallery
+          -Force"
+      - description: Check if AzureAD PowerShell module is installed
+        prereq_command: Update the input arguments so the userprincipalname value
+          is accurate for your environment
+        get_prereq_command: echo "Update the input arguments in the .yaml file so
+          that the userprincipalname value is accurate for your environment"
+      executor:
+        command: "Connect-AzureAD\n$userprincipalname = \"#{userprincipalname}\"\nRemove-AzureADUser
+          -ObjectId $userprincipalname      "
+        cleanup_command: N/A
+        name: powershell
+    - name: Azure AD - Delete user via Azure CLI
+      auto_generated_guid: c955c1c7-3145-4a22-af2d-63eea0d967f0
+      description: Deletes a user in Azure AD. Adversaries may interrupt availability
+        of system and network resources by inhibiting access to accounts utilized
+        by legitimate users. Accounts may be deleted, locked, or manipulated (excluding
+        changed credentials) to remove access to accounts.
+      supported_platforms:
+      - azure-ad
+      input_arguments:
+        userprincipalname:
+          description: User principal name (UPN) for the Azure user being deleted
+          type: String
+          default: atomicredteam@yourdomain.com
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Check if Azure CLI is installed and install manually
+        prereq_command: az account list
+        get_prereq_command: echo "use the following to install the Azure CLI manually
+          https://aka.ms/installazurecliwindows"
+      - description: Check if Azure CLI is installed and install via PowerShell
+        prereq_command: az account list
+        get_prereq_command: echo "use the following to install the Azure CLI $ProgressPreference
+          = 'SilentlyContinue'; Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows
+          -OutFile .\AzureCLI.msi; Start-Process msiexec.exe -Wait -ArgumentList '/I
+          AzureCLI.msi /quiet'; Remove-Item .\AzureCLI.msi"
+      - description: Update the userprincipalname to meet your requirements
+        prereq_command: Update the input arguments so the userprincipalname value
+          is accurate for your environment
+        get_prereq_command: echo "Update the input arguments in the .yaml file so
+          that the userprincipalname value is accurate for your environment"
+      executor:
+        command: |-
+          az login
+          $userprincipalname = "#{userprincipalname}"
+          az ad user delete --id $userprincipalname
+        cleanup_command: N/A
+        name: powershell
   T1486:
     technique:
       x_mitre_platforms:
@@ -63774,7 +63948,6 @@ exfiltration:
       - 'Network Traffic: Network Traffic Flow'
       - 'Network Traffic: Network Traffic Content'
       - 'File: File Access'
-      identifier: T1567
     atomic_tests: []
   T1029:
     technique:

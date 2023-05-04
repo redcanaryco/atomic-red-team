@@ -6,7 +6,7 @@ atomic_tests:
   description: |
     You can register a "helper dll" with Netsh as a persistance mechanism. The code in the dll is executed every time netsh.exe is called.
     The NetshHelper.dll provided with the atomic will simply launch notepad when netsh.exe is run.
-    
+
     [Blog](https://htmlpreview.github.io/?https://github.com/MatthewDemaske/blogbackup/blob/master/netshell.html)
     [Sample DLL code](https://github.com/outflanknl/NetshHelperBeacon)
   supported_platforms:
@@ -14,7 +14,7 @@ atomic_tests:
   input_arguments:
     helper_file:
       description: Path to DLL
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1546.007\bin\NetshHelper.dll
   dependency_executor_name: powershell
   dependencies:

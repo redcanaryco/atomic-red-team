@@ -7766,6 +7766,7 @@ defense-evasion:
       x_mitre_permissions_required:
       - User
       - root
+      identifier: T1612
     atomic_tests: []
   T1055.002:
     technique:
@@ -11664,35 +11665,54 @@ defense-evasion:
       input_arguments:
         cloudtrail_name:
           description: Name of the cloudTrail
-          type: String
+          type: string
           default: redatomictesttrail
         s3_bucket_name:
           description: Name of the bucket
-          type: String
+          type: string
           default: redatomic-test
         region:
           description: Name of the region
-          type: String
+          type: string
           default: us-east-1
       dependencies:
       - description: 'Check if ~/.aws/credentials file has a default stanza is configured
 
           '
-        prereq_command: |
-          cat ~/.aws/credentials | grep "default"
-          aws s3api create-bucket --bucket #{s3_bucket_name} --region #{region}
-          aws s3api put-bucket-policy --bucket #{s3_bucket_name} --policy file://$PathToAtomicsFolder/T1562.008/src/policy.json
-        get_prereq_command: 'echo Please install the aws-cli and configure your AWS
-          defult profile using: aws configure
+        prereq_command: 'cat ~/.aws/credentials | grep "default"
 
           '
+        get_prereq_command: 'echo Please install the aws-cli and configure your AWS
+          default profile using: aws configure
+
+          '
+      - description: 'Check if terraform is installed.
+
+          '
+        prereq_command: 'terraform version
+
+          '
+        get_prereq_command: "echo Please install the terraform and configure your
+          aws default profile \n"
+      - description: 'Check if the dependency resources are already present.
+
+          '
+        prereq_command: 'if [ -f $PathToAtomicsFolder/T1562.008/src/T1562.008-1/terraform.tfstate
+          ]; then exit 0; else exit 1; fi;
+
+          '
+        get_prereq_command: |
+          cd $PathToAtomicsFolder/T1562.008/src/T1562.008-1/
+          terraform init
+          terraform apply -auto-approve
       executor:
         command: |
-          aws cloudtrail create-trail --name #{cloudtrail_name} --s3-bucket-name #{s3_bucket_name} --region #{region}
           aws cloudtrail update-trail --name #{cloudtrail_name} --s3-bucket-name #{s3_bucket_name}  --is-multi-region-trail --region #{region}
           aws cloudtrail stop-logging --name #{cloudtrail_name} --region #{region}
           aws cloudtrail delete-trail --name #{cloudtrail_name} --region #{region}
-        cleanup_command: "aws s3 rb s3://#{s3_bucket_name} --force \n"
+        cleanup_command: |
+          cd $PathToAtomicsFolder/T1562.008/src/T1562.008-1/
+          terraform destroy -auto-approve
         name: sh
         elevation_required: false
     - name: AWS - CloudWatch Log Group Deletes
@@ -11706,48 +11726,11 @@ defense-evasion:
       input_arguments:
         cloudwatch_log_group_name:
           description: Name of the cloudWatch log group
-          type: String
+          type: string
           default: log-test
         region:
           description: Name of the region
-          type: String
-          default: us-east-1
-      dependencies:
-      - description: 'Check if ~/.aws/credentials file has a default stanza is configured
-
-          '
-        prereq_command: 'cat ~/.aws/credentials | grep "default"
-
-          '
-        get_prereq_command: 'echo Please install the aws-cli and configure your AWS
-          defult profile using: aws configure
-
-          '
-      executor:
-        command: |
-          aws logs create-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
-          echo "*** Log Group Created ***"
-          aws logs delete-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
-          echo "*** Log Group Deleted ***"
-        cleanup_command: 
-        name: sh
-        elevation_required: false
-    - name: AWS - CloudWatch Log Stream Deletes
-      auto_generated_guid: 89422c87-b57b-4a04-a12a-802bb11d06121
-      description: "Creates a new CloudWatch log group in AWS, Upon successful creation
-        it will Delete the group. Attackers can use this technique to evade defenses
-        by \ndeleting the log stream. Once it is deleted, the logs created by the
-        attackers will not be logged. https://www.elastic.co/guide/en/security/current/aws-cloudwatch-log-group-deletion.html#aws-cloudwatch-log-group-deletion\n"
-      supported_platforms:
-      - iaas:aws
-      input_arguments:
-        cloudwatch_log_group_name:
-          description: Name of the cloudWatch log group
-          type: String
-          default: log-test
-        region:
-          description: Name of the region
-          type: String
+          type: string
           default: us-east-1
       dependencies:
       - description: 'Check if ~/.aws/credentials file has a default stanza is configured
@@ -11780,15 +11763,15 @@ defense-evasion:
       input_arguments:
         cloudwatch_log_group_name:
           description: Name of the cloudWatch log group
-          type: String
+          type: string
           default: test-logs
         cloudwatch_log_stream_name:
           description: Name of the cloudWatch log stream
-          type: String
+          type: string
           default: '20150601'
         region:
           description: Name of the region
-          type: String
+          type: string
           default: us-west-2
       dependencies:
       - description: 'Check if ~/.aws/credentials file has a default stanza is configured
@@ -27579,6 +27562,7 @@ execution:
       - User
       - SYSTEM
       x_mitre_remote_support: true
+      identifier: T1559
     atomic_tests: []
   T1204.003:
     technique:
@@ -35470,7 +35454,7 @@ persistence:
       input_arguments:
         username:
           description: Create new AWS access and secret keys for the user
-          type: String
+          type: string
           default: atomicredteam
       dependencies:
       - description: 'Check if the user exists.
@@ -36369,7 +36353,7 @@ persistence:
       input_arguments:
         username:
           description: Username of the IAM user to create in AWS
-          type: String
+          type: string
           default: atomicredteam
       dependencies:
       - description: 'Check if ~/.aws/credentials file has a default stanza is configured
@@ -36482,7 +36466,7 @@ persistence:
       input_arguments:
         username:
           description: Name of the AWS group to create
-          type: String
+          type: string
           default: atomicredteam
       dependencies:
       - description: 'Check if the user exists, we can only add a user to a group
@@ -41475,7 +41459,7 @@ collection:
       input_arguments:
         s3_bucket_name:
           description: Name of the bucket
-          type: String
+          type: string
           default: redatomic-test2
       dependencies:
       - description: 'Check if ~/.aws/credentials file has a default stanza is configured
@@ -47790,7 +47774,7 @@ credential-access:
       input_arguments:
         aws_account_id:
           description: ID of the AWS account
-          type: String
+          type: string
           default: XXXXXXXX
       dependencies:
       - description: 'Check if go is installed
@@ -50370,6 +50354,7 @@ discovery:
       - 'Container: Container Enumeration'
       x_mitre_permissions_required:
       - User
+      identifier: T1613
     atomic_tests: []
   T1016.001:
     technique:
@@ -51485,6 +51470,7 @@ discovery:
       - 'Cloud Storage: Cloud Storage Metadata'
       x_mitre_attack_spec_version: 2.1.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      identifier: T1580
     atomic_tests: []
   T1217:
     technique:
@@ -52833,7 +52819,7 @@ discovery:
         macOS APT Activity Bradley)"
       modified: '2022-04-20T16:05:30.960Z'
       created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
-      name: Network Service Scanning
+      name: Network Service Discovery
       x_mitre_detection: |-
         System and network discovery techniques normally occur throughout an operation as an adversary learns the environment. Data and events should not be viewed in isolation, but as part of a chain of behavior that could lead to other activities, such as Lateral Movement, based on the information obtained.
 
@@ -63252,7 +63238,6 @@ exfiltration:
       - 'Network Traffic: Network Traffic Flow'
       - 'Network Traffic: Network Traffic Content'
       - 'File: File Access'
-      identifier: T1567
     atomic_tests: []
   T1029:
     technique:

