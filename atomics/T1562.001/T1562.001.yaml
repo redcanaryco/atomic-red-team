@@ -704,7 +704,7 @@ atomic_tests:
   - windows
   executor:
     command: |
-      New-ItemProperty "HKCU:\Software\Policies\Microsoft\Windows\OOBE" -Name DisablePrivacyExperience -PropertyType DWord -Value 0 -Force
+      New-ItemProperty "HKCU:\Software\Policies\Microsoft\Windows\OOBE" -Name DisablePrivacyExperience -PropertyType DWord -Value 1 -Force
     cleanup_command: |
       Remove-ItemProperty "HKCU:\Software\Policies\Microsoft\Windows\OOBE" -Name DisablePrivacyExperience -Force -ErrorAction Ignore
     name: powershell
@@ -862,6 +862,7 @@ atomic_tests:
     name: sh
     elevation_required: true
 - name: Disable Hypervisor-Enforced Code Integrity (HVCI)
+  auto_generated_guid: 70bd71e6-eba4-4e00-92f7-617911dbe020
   description: |
     This test disables Hypervisor-Enforced Code Integrity (HVCI) by setting the registry key HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity "Enabled" value to "0".
     The pre-req needs to be ran in order to setup HVCI and have it enabled. 

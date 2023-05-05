@@ -98,6 +98,9 @@ defense-evasion,T1027.002,Obfuscated Files or Information: Software Packing,1,Bi
 defense-evasion,T1027.002,Obfuscated Files or Information: Software Packing,2,"Binary packed by UPX, with modified headers (linux)",f06197f8-ff46-48c2-a0c6-afc1b50665e1,sh
 defense-evasion,T1036.006,Masquerading: Space after Filename,2,Space After Filename,b95ce2eb-a093-4cd8-938d-5258cef656ea,bash
 defense-evasion,T1564.001,Hide Artifacts: Hidden Files and Directories,1,Create a hidden file in a hidden directory,61a782e5-9a19-40b5-8ba4-69a4b9f3d7be,sh
+defense-evasion,T1078.003,Valid Accounts: Local Accounts,8,Create local account (Linux),02a91c34-8a5b-4bed-87af-501103eb5357,bash
+defense-evasion,T1078.003,Valid Accounts: Local Accounts,9,Reactivate a locked/expired account (Linux),d2b95631-62d7-45a3-aaef-0972cea97931,bash
+defense-evasion,T1078.003,Valid Accounts: Local Accounts,10,Login as nobody (Linux),3d2cd093-ee05-41bd-a802-59ee5c301b85,bash
 collection,T1560.001,Archive Collected Data: Archive via Utility,5,Data Compressed - nix - zip,c51cec55-28dd-4ad2-9461-1eacbc82c3a0,sh
 collection,T1560.001,Archive Collected Data: Archive via Utility,6,Data Compressed - nix - gzip Single File,cde3c2af-3485-49eb-9c1f-0ed60e9cc0af,sh
 collection,T1560.001,Archive Collected Data: Archive via Utility,7,Data Compressed - nix - tar Folder or File,7af2b51e-ad1c-498c-aca8-d3290c19535a,sh
@@ -139,11 +142,15 @@ persistence,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,2,Add
 persistence,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,3,Append to the system shell profile,694b3cc8-6a78-4d35-9e74-0123d009e94b,sh
 persistence,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,4,Append commands user shell profile,bbdb06bc-bab6-4f5b-8232-ba3fbed51d77,sh
 persistence,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,5,System shell profile scripts,8fe2ccfd-f079-4c03-b1a9-bd9b362b67d4,sh
+persistence,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,6,Create/Append to .bash_logout,37ad2f24-7c53-4a50-92da-427a4ad13f58,bash
 persistence,T1037.004,Boot or Logon Initialization Scripts: Rc.common,2,rc.common,c33f3d80-5f04-419b-a13a-854d1cbdbf3a,bash
 persistence,T1037.004,Boot or Logon Initialization Scripts: Rc.common,3,rc.local,126f71af-e1c9-405c-94ef-26a47b16c102,bash
 persistence,T1543.002,Create or Modify System Process: Systemd Service,1,Create Systemd Service,d9e4f24f-aa67-4c6e-bcbf-85622b697a7c,bash
 persistence,T1543.002,Create or Modify System Process: Systemd Service,2,"Create Systemd Service file,  Enable the service , Modify and Reload the service.",c35ac4a8-19de-43af-b9f8-755da7e89c89,bash
 persistence,T1053.002,Scheduled Task/Job: At,2,At - Schedule a job,7266d898-ac82-4ec0-97c7-436075d0d08e,sh
+persistence,T1078.003,Valid Accounts: Local Accounts,8,Create local account (Linux),02a91c34-8a5b-4bed-87af-501103eb5357,bash
+persistence,T1078.003,Valid Accounts: Local Accounts,9,Reactivate a locked/expired account (Linux),d2b95631-62d7-45a3-aaef-0972cea97931,bash
+persistence,T1078.003,Valid Accounts: Local Accounts,10,Login as nobody (Linux),3d2cd093-ee05-41bd-a802-59ee5c301b85,bash
 privilege-escalation,T1548.003,Abuse Elevation Control Mechanism: Sudo and Sudo Caching,1,Sudo usage,150c3a08-ee6e-48a6-aeaf-3659d24ceb4e,sh
 privilege-escalation,T1548.003,Abuse Elevation Control Mechanism: Sudo and Sudo Caching,2,Unlimited sudo cache timeout,a7b17659-dd5e-46f7-b7d1-e6792c91d0bc,sh
 privilege-escalation,T1548.003,Abuse Elevation Control Mechanism: Sudo and Sudo Caching,3,Disable tty_tickets for sudo caching,91a60b03-fb75-4d24-a42e-2eb8956e8de1,sh
@@ -170,11 +177,15 @@ privilege-escalation,T1546.004,Event Triggered Execution: .bash_profile and .bas
 privilege-escalation,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,3,Append to the system shell profile,694b3cc8-6a78-4d35-9e74-0123d009e94b,sh
 privilege-escalation,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,4,Append commands user shell profile,bbdb06bc-bab6-4f5b-8232-ba3fbed51d77,sh
 privilege-escalation,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,5,System shell profile scripts,8fe2ccfd-f079-4c03-b1a9-bd9b362b67d4,sh
+privilege-escalation,T1546.004,Event Triggered Execution: .bash_profile and .bashrc,6,Create/Append to .bash_logout,37ad2f24-7c53-4a50-92da-427a4ad13f58,bash
 privilege-escalation,T1037.004,Boot or Logon Initialization Scripts: Rc.common,2,rc.common,c33f3d80-5f04-419b-a13a-854d1cbdbf3a,bash
 privilege-escalation,T1037.004,Boot or Logon Initialization Scripts: Rc.common,3,rc.local,126f71af-e1c9-405c-94ef-26a47b16c102,bash
 privilege-escalation,T1543.002,Create or Modify System Process: Systemd Service,1,Create Systemd Service,d9e4f24f-aa67-4c6e-bcbf-85622b697a7c,bash
 privilege-escalation,T1543.002,Create or Modify System Process: Systemd Service,2,"Create Systemd Service file,  Enable the service , Modify and Reload the service.",c35ac4a8-19de-43af-b9f8-755da7e89c89,bash
 privilege-escalation,T1053.002,Scheduled Task/Job: At,2,At - Schedule a job,7266d898-ac82-4ec0-97c7-436075d0d08e,sh
+privilege-escalation,T1078.003,Valid Accounts: Local Accounts,8,Create local account (Linux),02a91c34-8a5b-4bed-87af-501103eb5357,bash
+privilege-escalation,T1078.003,Valid Accounts: Local Accounts,9,Reactivate a locked/expired account (Linux),d2b95631-62d7-45a3-aaef-0972cea97931,bash
+privilege-escalation,T1078.003,Valid Accounts: Local Accounts,10,Login as nobody (Linux),3d2cd093-ee05-41bd-a802-59ee5c301b85,bash
 credential-access,T1556.003,Modify Authentication Process: Pluggable Authentication Modules,1,Malicious PAM rule,4b9dde80-ae22-44b1-a82a-644bf009eb9c,sh
 credential-access,T1556.003,Modify Authentication Process: Pluggable Authentication Modules,2,Malicious PAM module,65208808-3125-4a2e-8389-a0a00e9ab326,sh
 credential-access,T1056.001,Input Capture: Keylogging,2,Living off the land Terminal Input Capture on Linux with pam.d,9c6bdb34-a89f-4b90-acb1-5970614c711b,sh
@@ -199,8 +210,9 @@ credential-access,T1552.004,Unsecured Credentials: Private Keys,3,Copy Private S
 credential-access,T1552.004,Unsecured Credentials: Private Keys,4,Copy Private SSH Keys with rsync,864bb0b2-6bb5-489a-b43b-a77b3a16d68a,sh
 credential-access,T1552.004,Unsecured Credentials: Private Keys,5,Copy the users GnuPG directory with rsync,2a5a0601-f5fb-4e2e-aa09-73282ae6afca,sh
 credential-access,T1552.003,Unsecured Credentials: Bash History,1,Search Through Bash History,3cfde62b-7c33-4b26-a61e-755d6131c8ce,sh
-credential-access,T1552.001,Unsecured Credentials: Credentials In Files,2,Extract passwords with grep,bd4cf0d1-7646-474e-8610-78ccf5a097c4,sh
-credential-access,T1552.001,Unsecured Credentials: Credentials In Files,5,Find and Access Github Credentials,da4f751a-020b-40d7-b9ff-d433b7799803,bash
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,1,Find AWS credentials,2b93758e-a8d7-4e3b-bc7b-d3aa8d7ecb17,sh
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,3,Extract passwords with grep,bd4cf0d1-7646-474e-8610-78ccf5a097c4,sh
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,6,Find and Access Github Credentials,da4f751a-020b-40d7-b9ff-d433b7799803,bash
 credential-access,T1110.004,Brute Force: Credential Stuffing,1,SSH Credential Stuffing From Linux,4f08197a-2a8a-472d-9589-cd2895ef22ad,bash
 credential-access,T1003.008,OS Credential Dumping: /etc/passwd and /etc/shadow,1,Access /etc/shadow (Local),3723ab77-c546-403c-8fb4-bb577033b235,bash
 credential-access,T1003.008,OS Credential Dumping: /etc/passwd and /etc/shadow,2,Access /etc/passwd (Local),60e860b6-8ae6-49db-ad07-5e73edd88f5d,sh
@@ -248,8 +260,8 @@ discovery,T1018,Remote System Discovery,7,Remote System Discovery - sweep,96db26
 discovery,T1018,Remote System Discovery,12,Remote System Discovery - ip neighbour,158bd4dd-6359-40ab-b13c-285b9ef6fa25,sh
 discovery,T1018,Remote System Discovery,13,Remote System Discovery - ip route,1a4ebe70-31d0-417b-ade2-ef4cb3e7d0e1,sh
 discovery,T1018,Remote System Discovery,14,Remote System Discovery - ip tcp_metrics,6c2da894-0b57-43cb-87af-46ea3b501388,sh
-discovery,T1046,Network Service Scanning,1,Port Scan,68e907da-2539-48f6-9fc9-257a78c05540,bash
-discovery,T1046,Network Service Scanning,2,Port Scan Nmap,515942b0-a09f-4163-a7bb-22fefb6f185f,sh
+discovery,T1046,Network Service Discovery,1,Port Scan,68e907da-2539-48f6-9fc9-257a78c05540,bash
+discovery,T1046,Network Service Discovery,2,Port Scan Nmap,515942b0-a09f-4163-a7bb-22fefb6f185f,sh
 command-and-control,T1132.001,Data Encoding: Standard Encoding,1,Base64 Encoded data.,1164f70f-9a88-4dff-b9ff-dc70e7bf0c25,sh
 command-and-control,T1090.003,Proxy: Multi-hop Proxy,3,Tor Proxy Usage - Debian/Ubuntu,5ff9d047-6e9c-4357-b39b-5cf89d9b59c7,sh
 command-and-control,T1571,Non-Standard Port,2,Testing usage of uncommonly used port,5db21e1d-dd9c-4a50-b885-b1e748912767,sh
@@ -293,11 +305,15 @@ execution,T1059.004,Command and Scripting Interpreter: Bash,8,Command line scrip
 execution,T1059.004,Command and Scripting Interpreter: Bash,9,Obfuscated command line scripts,5bec4cc8-f41e-437b-b417-33ff60acf9af,sh
 execution,T1059.004,Command and Scripting Interpreter: Bash,10,Change login shell,c7ac59cb-13cc-4622-81dc-6d2fee9bfac7,bash
 execution,T1059.004,Command and Scripting Interpreter: Bash,11,Environment variable scripts,bdaebd56-368b-4970-a523-f905ff4a8a51,bash
+execution,T1059.004,Command and Scripting Interpreter: Bash,12,Detecting pipe-to-shell,fca246a8-a585-4f28-a2df-6495973976a1,bash
 execution,T1059.006,Command and Scripting Interpreter: Python,1,Execute shell script via python's command mode arguement,3a95cdb2-c6ea-4761-b24e-02b71889b8bb,sh
 execution,T1059.006,Command and Scripting Interpreter: Python,2,Execute Python via scripts (Linux),6c4d1dcb-33c7-4c36-a8df-c6cfd0408be8,sh
 execution,T1059.006,Command and Scripting Interpreter: Python,3,Execute Python via Python executables (Linux),0b44d79b-570a-4b27-a31f-3bf2156e5eaa,sh
 execution,T1059.006,Command and Scripting Interpreter: Python,4,Python pty module and spawn function used to spawn sh or bash,161d694c-b543-4434-85c3-c3a433e33792,bash
 execution,T1053.002,Scheduled Task/Job: At,2,At - Schedule a job,7266d898-ac82-4ec0-97c7-436075d0d08e,sh
+initial-access,T1078.003,Valid Accounts: Local Accounts,8,Create local account (Linux),02a91c34-8a5b-4bed-87af-501103eb5357,bash
+initial-access,T1078.003,Valid Accounts: Local Accounts,9,Reactivate a locked/expired account (Linux),d2b95631-62d7-45a3-aaef-0972cea97931,bash
+initial-access,T1078.003,Valid Accounts: Local Accounts,10,Login as nobody (Linux),3d2cd093-ee05-41bd-a802-59ee5c301b85,bash
 exfiltration,T1048.002,Exfiltration Over Alternative Protocol - Exfiltration Over Asymmetric Encrypted Non-C2 Protocol,2,Exfiltrate data HTTPS using curl linux,4a4f31e2-46ea-4c26-ad89-f09ad1d5fe01,bash
 exfiltration,T1048,Exfiltration Over Alternative Protocol,1,Exfiltration Over Alternative Protocol - SSH,f6786cc8-beda-4915-a4d6-ac2f193bb988,sh
 exfiltration,T1048,Exfiltration Over Alternative Protocol,2,Exfiltration Over Alternative Protocol - SSH,7c3cb337-35ae-4d06-bf03-3032ed2ec268,sh

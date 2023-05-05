@@ -3,7 +3,8 @@
 - [T1613 Container and Resource Discovery](../../T1613/T1613.md)
   - Atomic Test #1: Container and ResourceDiscovery [containers]
 - T1069 Permission Groups Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1046 Network Service Scanning [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1046 Network Service Discovery](../../T1046/T1046.md)
+  - Atomic Test #9: Network Service Discovery for Containers [containers]
 
 # credential-access
 - T1110.001 Brute Force: Password Guessing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
