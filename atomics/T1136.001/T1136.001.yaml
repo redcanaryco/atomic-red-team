@@ -19,6 +19,24 @@ atomic_tests:
       userdel #{username}
     name: bash
     elevation_required: true
+- name: Create a user account on a FreeBSD system
+  auto_generated_guid: 
+  description: |
+    Create a user via pw
+  supported_platforms:
+  - freebsd
+  input_arguments:
+    username:
+      description: Username of the user to create
+      type: string
+      default: evil_user
+  executor:
+    command: |
+      pw useradd #{username} -s /usr/sbin/nologin -d /nonexistent -c evil_account
+    cleanup_command: |
+      rmuser -y #{username}
+    name: sh
+    elevation_required: true
 - name: Create a user account on a MacOS system
   auto_generated_guid: 01993ba5-1da3-4e15-a719-b690d4f0f0b2
   description: |
@@ -110,6 +128,29 @@ atomic_tests:
     cleanup_command: |
       userdel #{username}
     name: bash
+    elevation_required: true
+- name: Create a new user in FreeBSD with `root` GID.
+  auto_generated_guid: 
+  description: |
+    Creates a new user in FreeBSD and adds the user to the `root` group. This technique was used by adversaries during the Butter attack campaign.
+  supported_platforms:
+  - freebsd
+  input_arguments:
+    username:
+      description: Username of the user to create
+      type: string
+      default: butter
+    password:
+      description: Password of the user to create
+      type: string
+      default: BetterWithButter
+  executor:
+    command: |
+      pw useradd #{username} -g 0 -d /root -s /bin/sh
+      echo "#{password}" | pw usermod #{username} -h 0
+    cleanup_command: |
+      pw userdel #{username}
+    name: sh
     elevation_required: true
 - name: Create a new Windows admin user
   auto_generated_guid: fda74566-a604-4581-a4cc-fbbe21d66559

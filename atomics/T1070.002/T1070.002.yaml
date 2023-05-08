@@ -1,5 +1,5 @@
 attack_technique: T1070.002
-display_name: 'Indicator Removal on Host: Clear Linux or Mac System Logs'
+display_name: 'Indicator Removal on Host: Clear FreeBSD, Linux or Mac System Logs'
 atomic_tests:
 - name: rm -rf
   auto_generated_guid: 989cc1b1-3642-4260-a809-54f9dd559683
@@ -12,6 +12,18 @@ atomic_tests:
     command: |
       sudo rm -rf /private/var/log/system.log*
       sudo rm -rf /private/var/audit/*
+    name: sh
+    elevation_required: true
+- name: rm -rf
+  auto_generated_guid: 
+  description: |
+    Delete messages and security logs
+  supported_platforms:
+  - freebsd
+  executor:
+    command: |
+      rm -rf /var/log/messages
+      rm -rf /var/log/security
     name: sh
     elevation_required: true
 - name: Delete log files using built-in log utility 
@@ -39,6 +51,19 @@ atomic_tests:
       sudo truncate --size=0 /var/log/system.log #size parameter 
     name: sh
     elevation_required: true
+- name: Truncate system log files via truncate utility (freebsd)
+  auto_generated_guid: 
+  description: |
+    This test truncates the system log files using the truncate utility with (-s 0 or --size=0) parameter which sets file size to zero, thus emptying the file content
+  supported_platforms:
+  - freebsd
+  executor:
+    command: |
+      truncate -s 0 /var/log/messages #size parameter shorthand
+      truncate --size=0 /var/log/security #size parameter 
+    name: sh
+    elevation_required: true
+
 - name: Delete log files via cat utility by appending /dev/null or /dev/zero
   auto_generated_guid: c23bdb88-928d-493e-b46d-df2906a50941
   description: |
@@ -51,6 +76,19 @@ atomic_tests:
       sudo cat /dev/zero > /var/lol/system.log #log file filled with null bytes(zeros)
     name: sh
     elevation_required: true
+- name: Delete log files via cat utility by appending /dev/null or /dev/zero (freebsd)
+  auto_generated_guid: 
+  description: |
+    The first sub-test truncates the log file to zero bytes via /dev/null and the second sub-test fills the log file with null bytes(zeroes) via /dev/zero, using cat utility
+  supported_platforms:
+  - freebsd
+  executor:
+    command: |
+      cat /dev/null > /var/log/messages #truncating the file to zero bytes
+      cat /dev/zero > /var/lol/messages #log file filled with null bytes(zeros)
+    name: sh
+    elevation_required: true
+
 - name: System log file deletion via find utility
   auto_generated_guid: bc8eeb4a-cc3e-45ec-aa6e-41e973da2558
   description: |
@@ -75,6 +113,18 @@ atomic_tests:
       sudo echo '' > /var/log/system.log
     name: sh
     elevation_required: true
+- name: Overwrite FreeBSD system log via echo utility
+  auto_generated_guid: 
+  description: |
+    This test overwrites the contents of system log file with an empty string using echo utility
+  supported_platforms:
+  - freebsd
+  executor:
+    command: |
+      echo '' > /var/log/messages
+    name: sh
+    elevation_required: true
+
 - name: Real-time system log clearance/deletion
   auto_generated_guid: 848e43b3-4c0a-4e4c-b4c9-d1e8cea9651c
   description: |
@@ -95,6 +145,17 @@ atomic_tests:
   executor:
     command: |
       sudo unlink /var/log/system.log
+    name: sh
+    elevation_required: true
+- name: Delete system log files via unlink utility (freebsd)
+  auto_generated_guid: 
+  description: |
+    This test deletes the messages log file using unlink utility
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+      unlink /var/log/messages
     name: sh
     elevation_required: true
 - name: Delete system log files using shred utility

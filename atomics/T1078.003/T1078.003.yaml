@@ -118,6 +118,23 @@ atomic_tests:
       exit
     cleanup_command: |
       userdel -r art 
+- name: Create local account (FreeBSD)
+  auto_generated_guid: 
+  description: |
+    An adversary may wish to create an account with admin privileges to work with. In this test we create a "art" user with the password art, switch to art, execute whoami, exit and delete the art user.
+  supported_platforms:
+  - freebsd
+  executor:
+    name: sh
+    elevation_required: true
+    command: |
+      pw useradd art -g wheel -s /bin/sh
+      echo $(openssl passwd -1 art) | pw mod user testuser1 -h 0      
+      su art
+      whoami
+      exit
+    cleanup_command: |
+      rmuser -y art
 - name: Reactivate a locked/expired account (Linux)
   auto_generated_guid: d2b95631-62d7-45a3-aaef-0972cea97931
   description: |
@@ -140,6 +157,29 @@ atomic_tests:
       exit
     cleanup_command: |
       userdel -r art 
+- name: Reactivate a locked/expired account (FreeBSD)
+  auto_generated_guid: 
+  description: |
+    A system administrator may have locked and expired a user account rather than deleting it. "the user is coming back, at some stage" An adversary may reactivate a inactive account in an attempt to appear legitimate. 
+
+    In this test we create a "art" user with the password art, lock and expire the account, try to su to art and fail, unlock and renew the account, su successfully, then delete the account.
+  supported_platforms:
+  - freebsd
+  executor:
+    name: sh
+    elevation_required: true
+    command: |
+      pw useradd art -g wheel -s /bin/sh
+      echo $(openssl passwd -1 art) | pw mod user testuser1 -h 0
+      pw lock art
+      pw usermod art -e +1d
+      pw unlock art
+      pw user mod art -e +99d
+      su art
+      whoami
+      exit
+    cleanup_command: |
+      rmuser -y art 
 - name: Login as nobody (Linux)
   auto_generated_guid: 3d2cd093-ee05-41bd-a802-59ee5c301b85
   description: |
@@ -161,3 +201,25 @@ atomic_tests:
       chsh --shell /usr/sbin/nologin nobody
       cat /etc/passwd |grep nobody 
       # -> nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+- name: Login as nobody (freebsd)
+  auto_generated_guid: 
+  description: |
+    An adversary may try to re-purpose a system account to appear legitimate. In this test change the login shell of the nobody account, change its password to nobody, su to nobody, exit, then reset nobody's shell to /usr/sbin/nologin.
+  supported_platforms:
+  - freebsd
+  executor:
+    name: sh
+    elevation_required: true
+    command: |
+      cat /etc/passwd |grep nobody 
+      # -> nobody:x:65534:65534:Unprivileged user:/nonexistent:/usr/sbin/nologin
+      pw usermod nobody -s /bin/sh
+      echo $(openssl passwd -1 art) | pw mod user nobody -h 0
+      su nobody
+      whoami
+      exit
+    cleanup_command: |
+      pw usermod nobody -s /usr/sbin/nologin
+      cat /etc/passwd |grep nobody
+      # -> nobody:*:65534:65534:Unprivileged user:/nonexistent:/usr/sbin/nologin
+

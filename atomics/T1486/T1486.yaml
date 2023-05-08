@@ -2,11 +2,12 @@ attack_technique: T1486
 display_name: Data Encrypted for Impact
 
 atomic_tests:
-- name: Encrypt files using gpg (Linux)
+- name: Encrypt files using gpg (FreeBSD/Linux)
   auto_generated_guid: 7b8ce084-3922-4618-8d22-95f996173765
   description: |
     Uses gpg to encrypt a file
   supported_platforms:
+  - freebsd
   - linux
   input_arguments:
     pwd_for_encrypted_file:
@@ -32,9 +33,9 @@ atomic_tests:
     prereq_command: |
       which_gpg=`which gpg`
     get_prereq_command: |
-      (which yum && yum -y install epel-release gpg)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y gpg)
+      (which pkg && pkg install -y gnupg)||(which yum && yum -y install epel-release gpg)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y gpg)
   executor:
-    name: bash
+    name: sh
     elevation_required: false
     command: |
       echo "#{pwd_for_encrypted_file}" | $which_gpg --batch --yes --passphrase-fd 0 --cipher-algo #{encryption_alg} -o #{encrypted_file_path} -c #{input_file_path}
@@ -42,11 +43,12 @@ atomic_tests:
       rm #{encrypted_file_path}
 
 
-- name: Encrypt files using 7z (Linux)
+- name: Encrypt files using 7z (FreeBSD/Linux)
   auto_generated_guid: 53e6735a-4727-44cc-b35b-237682a151ad
   description: |
     Uses 7z to encrypt a file
   supported_platforms:
+  - freebsd
   - linux
   input_arguments:
     pwd_for_encrypted_file:
@@ -68,8 +70,9 @@ atomic_tests:
     prereq_command: |
       which_7z=`which 7z`
     get_prereq_command: |
+      (which pkg && pkg install -y 7-zip)
   executor:
-    name: bash
+    name: sh
     elevation_required: false
     command: |
       $which_7z a -p#{pwd_for_encrypted_file} #{encrypted_file_path} #{input_file_path}
@@ -78,11 +81,12 @@ atomic_tests:
       rm #{encrypted_file_path}
 
 
-- name: Encrypt files using ccrypt (Linux)
+- name: Encrypt files using ccrypt (FreeBSD/Linux)
   auto_generated_guid: 08cbf59f-85da-4369-a5f4-049cffd7709f
   description: |
     Attempts to encrypt data on target systems as root to simulate an inturruption authentication to target system. If root permissions are not available then attempts to encrypt data within user's home directory.
   supported_platforms:
+  - freebsd
   - linux
   input_arguments:
     cped_file_path:
@@ -102,30 +106,31 @@ atomic_tests:
       description: command to show impact of encryption
       type: string
       default: sudo su
-  dependency_executor_name: bash
+  dependency_executor_name: sh
   dependencies:
   - description: |
       Finds where ccencrypt and ccdecrypt is located and copies input file
     prereq_command: |
       which_ccencrypt=`which ccencrypt`
       which_ccdecrypt=`which ccdecrypt`
-      if [[ $USER == "root" ]]; then cp #{root_input_file_path} #{cped_file_path}; else cp #{user_input_file_path} #{cped_file_path}; fi
+      if [ $USER == "root" ]; then cp #{root_input_file_path} #{cped_file_path}; else cp #{user_input_file_path} #{cped_file_path}; fi
     get_prereq_command: |
-      (which yum && yum -y install epel-release ccrypt)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y ccrypt)
+      (which pkg && pkg install -y ccript)||(which yum && yum -y install epel-release ccrypt)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y ccrypt)
   executor:
-    name: bash
+    name: sh
     elevation_required: false
     command: |
-      if [[ $USER == "root" ]]; then $which_ccencrypt #{root_input_file_path}; file #{root_input_file_path}.cpt; #{impact_command}; else $which_ccencrypt #{user_input_file_path}; file #{user_input_file_path}.cpt; #{impact_command}; fi
+      if [ $USER == "root" ]; then $which_ccencrypt #{root_input_file_path}; file #{root_input_file_path}.cpt; #{impact_command}; else $which_ccencrypt #{user_input_file_path}; file #{user_input_file_path}.cpt; #{impact_command}; fi
     cleanup_command: |
-      if [[ $USER == "root" ]]; then mv #{cped_file_path} #{root_input_file_path}; else cp #{cped_file_path} #{user_input_file_path}; fi 
+      if [ $USER == "root" ]; then mv #{cped_file_path} #{root_input_file_path}; else cp #{cped_file_path} #{user_input_file_path}; fi 
 
 
-- name: Encrypt files using openssl (Linux)
+- name: Encrypt files using openssl (FreeBSD/Linux)
   auto_generated_guid: 142752dc-ca71-443b-9359-cf6f497315f1
   description: |
     Uses openssl to encrypt a file
   supported_platforms:
+  - freebsd
   - linux
   input_arguments:
     private_key_path:
@@ -156,7 +161,7 @@ atomic_tests:
       which_openssl=`which openssl`
     get_prereq_command: |
   executor:
-    name: bash
+    name: sh
     elevation_required: false
     command: |
       $which_openssl genrsa -out #{private_key_path} #{encryption_bit_size}

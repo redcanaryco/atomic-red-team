@@ -63,6 +63,17 @@ atomic_tests:
     command: |
       ps aux | egrep 'falcond|nessusd|cbagentd|td-agent|packetbeat|filebeat|auditbeat|osqueryd'
     name: sh
+- name: Security Software Discovery - pgrep (FreeBSD)
+  auto_generated_guid: 
+  description: |
+    Methods to identify Security Software on an endpoint
+    when sucessfully executed, command shell is going to display AV/Security software it is running.
+  supported_platforms:
+  - freebsd
+  executor:
+    command: |
+      pgrep -l 'bareos-fd|icinga2|cbagentd|wazuh-agent|packetbeat|filebeat|osqueryd'
+    name: sh
 - name: Security Software Discovery - Sysmon Service
   auto_generated_guid: fe613cf3-8009-4446-9a0f-bc78a15b66c9
   description: |
