@@ -369,8 +369,8 @@ atomic_tests:
       default: autocheck autoche *
   executor:
     command: |
-      reg.exe export "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager" SessionManagerBackup.reg /y
+      reg.exe export "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager" $PathToAtomicsFolder\T1547.001\src\SessionManagerBackup.reg /y
       reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager" /v BootExecute /t REG_MULTI_SZ /d "#{registry_value}" /f
-    cleanup_command: reg.exe import SessionManagerBackup.reg
+    cleanup_command: reg.exe import $PathToAtomicsFolder\T1547.001\src\SessionManagerBackup.reg
     name: command_prompt
     elevation_required: true
