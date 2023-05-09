@@ -45,6 +45,7 @@ atomic_tests:
   executor:
     command: |
       grep -ri password #{file_path}
+      exit 0
     name: sh
 - name: Extracting passwords with findstr
   auto_generated_guid: 0e56bf29-ff49-4ea5-9af4-3b81283fd513
@@ -80,12 +81,16 @@ atomic_tests:
   - freebsd
   - macos
   - linux
-
+ input_arguments:
+    file_path:
+      description: Path to search
+      type: String
+      default: /home
   executor:
     name: sh
     elevation_required: false
     command: |
-      for file in $(find / -name .netrc 2> /dev/null);do echo $file ; cat $file ; done 
+      for file in $(find #{file_path} -type f -name .netrc 2> /dev/null);do echo $file ; cat $file ; done 
 - name: WinPwn - sensitivefiles
   auto_generated_guid: 114dd4e3-8d1c-4ea7-bb8d-8d8f6aca21f0
   description: Search for sensitive files on this local system using the SensitiveFiles function of WinPwn
