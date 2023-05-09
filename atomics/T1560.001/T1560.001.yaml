@@ -230,7 +230,7 @@ atomic_tests:
     prereq_command: |
       test -e #{input_file_folder}
     get_prereq_command: |
-      echo Please set input_file_folder argument to a folder that exists
+      mkdir -p #{input_file_folder} && touch #{input_file_folder}/file1
   executor:
     name: sh
     elevation_required: false
