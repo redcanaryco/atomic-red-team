@@ -32,6 +32,7 @@ atomic_tests:
   executor:
     command: |
       find #{search_path} -name id_rsa 2>/dev/null >> #{output_file}
+      exit 0
     cleanup_command: |
       rm #{output_file}
     name: sh
@@ -54,6 +55,7 @@ atomic_tests:
     command: |
       mkdir #{output_folder}
       find #{search_path} -name id_rsa 2>/dev/null -exec cp --parents {} #{output_folder} \;
+      exit 0
     cleanup_command: |
       rm -rf #{output_folder}
     name: sh
@@ -77,6 +79,7 @@ atomic_tests:
     command: |
       mkdir #{output_folder}
       find #{search_path} -name id_rsa 2>/dev/null -exec rsync -R {} #{output_folder} \;
+      exit 0
     cleanup_command: |
       rm -rf #{output_folder}
     name: sh
@@ -100,6 +103,7 @@ atomic_tests:
     command: |
       mkdir #{output_folder}
       find #{search_path} -type d -name '.gnupg' 2>/dev/null -exec rsync -Rr {} #{output_folder} \;
+      exit 0
     cleanup_command: |
       rm -rf #{output_folder}
     name: sh
