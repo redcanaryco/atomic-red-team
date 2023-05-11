@@ -858,3 +858,17 @@ atomic_tests:
       reg add "HKLM\SOFTWARE\Microsoft\Windows Defender\Features" /v "TamperProtection" /t REG_DWORD /d 5
     name: command_prompt
     elevation_required: true
+- name: Snake Malware Registry Blob
+  auto_generated_guid: 8318ad20-0488-4a64-98f4-72525a012f6b
+  description: |
+    The following Atomic Test creates a registry blob in HKLM:\SOFTWARE\Classes\.wav\OpenWithProgIds, which is related to Snake Malware. Per the report, upon execution, Snake's WerFault.exe will attempt to decrypt an encrypted blob within the Windows
+    registry that is typically found at HKLM:\SOFTWARE\Classes\.wav\OpenWithProgIds. The encrypted data includes the AES key, IV, and path that is used to find and decrypt the file containing Snake's kernel driver and kernel driver loader.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      $typicalPath = "HKLM:\SOFTWARE\Classes\.wav\OpenWithProgIds"; $randomBytes = New-Object Byte[] 0x1000; (New-Object Random).NextBytes($randomBytes); New-ItemProperty -Path $typicalPath -Name "AtomicSnake" -Value $randomBytes -PropertyType Binary -Force | Out-Null
+    cleanup_command: |
+      $typicalPath = "HKLM:\SOFTWARE\Classes\.wav\OpenWithProgIds"; Remove-ItemProperty -Path $typicalPath -Name "AtomicSnake" -ErrorAction SilentlyContinue | Out-Null
+    name: powershell
+    elevation_required: true
