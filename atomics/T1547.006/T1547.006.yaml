@@ -106,3 +106,18 @@ atomic_tests:
     elevation_required: true
     cleanup_command: |
       rm -f #{exe_path}
+- name: Snake Malware Kernel Driver Comadmin
+  description: |
+    The following Atomic Test will write an file, comadmin.dat, to disk. From the report, Snake's installer drops the kernel driver and a custom DLL which is used to load the driver into a
+    single AES encrypted file on disk. Typically, this file is named “comadmin.dat” and is stored in the %windows%\system32\Com directory. 
+    This Atomic Test will write a hardcoded named file to disk in the com directory named comadmin.dat.
+    [Snake Malware - CISA](https://media.defense.gov/2023/May/09/2003218554/-1/-1/0/JOINT_CSA_HUNTING_RU_INTEL_SNAKE_MALWARE_20230509.PDF)  
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      $examplePath = Join-Path $env:windir "system32\Com"; if (-not (Test-Path $examplePath)) { New-Item -ItemType Directory -Path $examplePath | Out-Null }; $exampleName = "comadmin.dat"; $exampleFullPath = Join-Path $examplePath $exampleName; $randomBytes = New-Object Byte[] 0x1000; (New-Object Random).NextBytes($randomBytes); [System.IO.File]::WriteAllBytes($exampleFullPath, $randomBytes)
+    cleanup_command: |
+      $examplePath = Join-Path $env:windir "system32\Com"; $exampleName = "comadmin.dat"; $exampleFullPath = Join-Path $examplePath $exampleName; if (Test-Path $exampleFullPath) { Remove-Item $exampleFullPath -Force }
+    name: powershell
+    elevation_required: true
