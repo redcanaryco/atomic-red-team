@@ -8,16 +8,38 @@ jobs:
   validate-atomics:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: ruby/setup-ruby@v1
+      - name: checkout repo
+        uses: actions/checkout@v3
+
+
+      - name: setup python3.10
+        uses: actions/setup-python@v4
+        id: setup-python
         with:
-          ruby-version: "3.2" # Not needed with a .ruby-version file
-      - name: Install gems
+          python-version: '3.11'
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
+
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+
+      - name: Install dependencies
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install --no-interaction --no-root
+
+      - name: validate the format of atomics tests against the spec
         run: |
-          gem install json-schema
-      - name: Validate atomics
-        run: |
-          ruby ./bin/validate/validate.rb
+          source .venv/bin/activate
+          python bin/validate/validate.py
 
   validate-terraform:
     runs-on: ubuntu-latest
