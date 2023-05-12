@@ -21,22 +21,34 @@ atomic_tests:
       type: string
       default: "us-east-1"
   dependencies:
-  - description: |
-      Check if ~/.aws/credentials file has a default stanza is configured
-    prereq_command: |
-      cat ~/.aws/credentials | grep "default"
-      aws s3api create-bucket --bucket #{s3_bucket_name} --region #{region}
-      aws s3api put-bucket-policy --bucket #{s3_bucket_name} --policy file://$PathToAtomicsFolder/T1562.008/src/policy.json
-    get_prereq_command: |
-      echo Please install the aws-cli and configure your AWS defult profile using: aws configure
+    - description: |
+        Check if ~/.aws/credentials file has a default stanza is configured
+      prereq_command: |
+        cat ~/.aws/credentials | grep "default"
+      get_prereq_command: |
+        echo Please install the aws-cli and configure your AWS default profile using: aws configure
+    - description: |
+        Check if terraform is installed.
+      prereq_command: |
+        terraform version
+      get_prereq_command: |
+        echo Please install the terraform and configure your aws default profile 
+    - description: |
+        Check if the dependency resources are already present.
+      prereq_command: |
+        if [ -f $PathToAtomicsFolder/T1562.008/src/T1562.008-1/terraform.tfstate ]; then exit 0; else exit 1; fi;
+      get_prereq_command: |
+        cd $PathToAtomicsFolder/T1562.008/src/T1562.008-1/
+        terraform init
+        terraform apply -auto-approve
   executor:
     command: |
-      aws cloudtrail create-trail --name #{cloudtrail_name} --s3-bucket-name #{s3_bucket_name} --region #{region}
-      aws cloudtrail update-trail --name #{cloudtrail_name} --s3-bucket-name #{s3_bucket_name}  --is-multi-region-trail --region #{region}
-      aws cloudtrail stop-logging --name #{cloudtrail_name} --region #{region}
-      aws cloudtrail delete-trail --name #{cloudtrail_name} --region #{region}
+       aws cloudtrail update-trail --name #{cloudtrail_name} --s3-bucket-name #{s3_bucket_name}  --is-multi-region-trail --region #{region}
+       aws cloudtrail stop-logging --name #{cloudtrail_name} --region #{region}
+       aws cloudtrail delete-trail --name #{cloudtrail_name} --region #{region}
     cleanup_command: |
-      aws s3 rb s3://#{s3_bucket_name} --force 
+      cd $PathToAtomicsFolder/T1562.008/src/T1562.008-1/
+      terraform destroy -auto-approve
     name: sh
     elevation_required: false
 - name: Azure - Eventhub Deletion
@@ -77,15 +89,37 @@ atomic_tests:
       try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
     get_prereq_command: |
       Install-Module -Name AzureAD -Force
+  - description: |
+      Check if terraform is installed.
+    prereq_command: |
+      terraform version
+    get_prereq_command: |
+        echo Please install the terraform.
+  - description: |
+      Check if the user is logged into Azure.
+    prereq_command: |
+      az account show
+    get_prereq_command: |
+      echo Configure your Azure account using: az login. 
+  - description: |
+      Create dependency resources using terraform
+    prereq_command: |
+      try {if (Test-Path $PathToAtomicsFolder/T1562.008/src/T1562.008-2/terraform.tfstate ){ exit 0 } else {exit 1}} catch {exit 1}
+    get_prereq_command: |
+      cd $PathToAtomicsFolder/T1562.008/src/T1562.008-2/
+      terraform init
+      terraform apply -auto-approve
   executor:
     command: |
       $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
       $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
       Connect-AzureAD -Credential $creds
-      New-AzEventHub -ResourceGroupName #{resource_group} -NamespaceName #{name_space_name} -Name #{event_hub_name}
       Remove-AzEventHub -ResourceGroupName #{resource_group} -Namespace #{name_space_name} -Name #{event_hub_name}
     name: powershell
     elevation_required: false
+    cleanup_command: |
+      cd $PathToAtomicsFolder/T1562.008/src/T1562.008-2/
+      terraform destroy -auto-approve
 - name: Office 365 - Exchange Audit Log Disabled
   auto_generated_guid: 1ee572f3-056c-4632-a7fc-7e7c42b1543c
   description: |
@@ -218,7 +252,6 @@ atomic_tests:
       cat ~/.aws/credentials | grep "default"
     get_prereq_command: |
       echo Please install the aws-cli and configure your AWS defult profile using: aws configure
-
   executor:
     command: |
       export AWS_REGION=#{aws_region} 
@@ -293,38 +326,6 @@ atomic_tests:
   auto_generated_guid: 89422c87-b57b-4a04-a8ca-802bb9d06121
   description: |
     Creates a new cloudWatch log group in AWS, Upon successful creation it will Delete the group. Attackers can use this technique to evade defenses by 
-    deleting the log stream. Once it is deleted, the logs created by the attackers will not be logged. https://www.elastic.co/guide/en/security/current/aws-cloudwatch-log-group-deletion.html#aws-cloudwatch-log-group-deletion
-  supported_platforms:
-  - iaas:aws
-  input_arguments:
-    cloudwatch_log_group_name:
-      description: Name of the cloudWatch log group
-      type: string
-      default: "log-test"
-    region:
-      description: Name of the region
-      type: string
-      default: "us-east-1"
-  dependencies:
-  - description: |
-      Check if ~/.aws/credentials file has a default stanza is configured
-    prereq_command: |
-      cat ~/.aws/credentials | grep "default"
-    get_prereq_command: |
-      echo Please install the aws-cli and configure your AWS defult profile using: aws configure
-  executor:
-    command: |
-      aws logs create-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
-      echo "*** Log Group Created ***"
-      aws logs delete-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
-      echo "*** Log Group Deleted ***"
-    cleanup_command:
-    name: sh
-    elevation_required: false
-- name: AWS - CloudWatch Log Stream Deletes
-  auto_generated_guid: 89422c87-b57b-4a04-a12a-802bb11d06121
-  description: |
-    Creates a new CloudWatch log group in AWS, Upon successful creation it will Delete the group. Attackers can use this technique to evade defenses by 
     deleting the log stream. Once it is deleted, the logs created by the attackers will not be logged. https://www.elastic.co/guide/en/security/current/aws-cloudwatch-log-group-deletion.html#aws-cloudwatch-log-group-deletion
   supported_platforms:
   - iaas:aws

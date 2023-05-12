@@ -62,6 +62,13 @@ atomic_tests:
     Disables SELinux enforcement
   supported_platforms:
   - linux
+  dependencies:
+    - description: |
+        SELinux must be installed
+      prereq_command: |
+        which setenforce
+      get_prereq_command: |
+        echo "SELinux is not installed"; exit 1
   executor:
     command: |
       setenforce 0
@@ -704,7 +711,7 @@ atomic_tests:
   - windows
   executor:
     command: |
-      New-ItemProperty "HKCU:\Software\Policies\Microsoft\Windows\OOBE" -Name DisablePrivacyExperience -PropertyType DWord -Value 0 -Force
+      New-ItemProperty "HKCU:\Software\Policies\Microsoft\Windows\OOBE" -Name DisablePrivacyExperience -PropertyType DWord -Value 1 -Force
     cleanup_command: |
       Remove-ItemProperty "HKCU:\Software\Policies\Microsoft\Windows\OOBE" -Name DisablePrivacyExperience -Force -ErrorAction Ignore
     name: powershell
@@ -792,4 +799,105 @@ atomic_tests:
       schtasks /create /xml "%temp%\Windows_Defender_Verification.xml" /tn "\Microsoft\Windows\Windows Defender\Windows Defender Verification" /f
       schtasks /create /xml "%temp%\Windows_Defender_Cache_Maintenance.xml" /tn "\Microsoft\Windows\Windows Defender\Windows Defender Cache Maintenance" /f
     name: command_prompt
+    elevation_required: true
+- name: Clear History
+  auto_generated_guid: 23b88394-091b-4968-a42d-fb8076992443
+  description: |
+    Clear Shell History. This technique only affect the bash shell application. 
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      history -c
+    name: sh
+    elevation_required: true
+- name: Suspend History
+  auto_generated_guid: 94f6a1c9-aae7-46a4-9083-2bb1f5768ec4
+  description: |
+    suspend Shell History seen in Awfulshred wiper- https://unix.stackexchange.com/questions/10922/temporarily-suspend-bash-history-on-a-given-shell
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      set +o history
+    cleanup_command: |
+      set -o history
+    name: sh
+    elevation_required: true
+- name: Reboot Linux Host via Kernel System Request
+  auto_generated_guid: 6d6d3154-1a52-4d1a-9d51-92ab8148b32e
+  description: |
+    reboot system via system request seen in Awfulshred wiper.
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      echo 1> /proc/sys/kernel/sysrq 
+      echo b> /proc/sysrq-trigger 
+    name: sh
+    elevation_required: true
+- name: Clear Pagging Cache
+  auto_generated_guid: f790927b-ea85-4a16-b7b2-7eb44176a510
+  description: |
+    clear pagging cache via system request. This is a temporary change in the system to clear paging cache. This technique seen in Awfulshred wiper as part
+    of its malicious payload on the compromised host. added reference link for this technique: https://www.tecmint.com/clear-ram-memory-cache-buffer-and-swap-space-on-linux/
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      free && echo 3 > /proc/sys/vm/drop_caches && free
+      echo 3> /proc/sys/vm/drop_caches 
+    name: sh
+    elevation_required: true
+- name: Disable Memory Swap
+  auto_generated_guid: e74e4c63-6fde-4ad2-9ee8-21c3a1733114
+  description: |
+    disable swapping of device paging that impaire the compromised host to swap data if the RAM is full. Awfulshred wiper used this technique as an additional 
+    payload to the compromised host and to make sure that there will be no recoverable data due to swap feature of linux.
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      swapon -a 
+      sleep 2
+      swapoff -a
+      sync
+    cleanup_command: |
+      swapon -a
+      sleep 2
+      sync
+    name: sh
+    elevation_required: true
+- name: Disable Hypervisor-Enforced Code Integrity (HVCI)
+  auto_generated_guid: 70bd71e6-eba4-4e00-92f7-617911dbe020
+  description: |
+    This test disables Hypervisor-Enforced Code Integrity (HVCI) by setting the registry key HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity "Enabled" value to "0".
+    The pre-req needs to be ran in order to setup HVCI and have it enabled. 
+    We do not recommend running this in production.
+    [Black Lotus Campaign](https://www.microsoft.com/en-us/security/blog/2023/04/11/guidance-for-investigating-attacks-using-cve-2022-21894-the-blacklotus-campaign/)
+    [Microsoft](https://learn.microsoft.com/en-us/windows/security/threat-protection/device-guard/enable-virtualization-based-protection-of-code-integrity)
+  supported_platforms:
+  - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      HVCI must be enabled
+    prereq_command: |
+      if (((cmd.exe /c "reg query "HKLM\SYSTEM\CurrentControlSet\Control\DeviceGuard" /v "EnableVirtualizationBasedSecurity" 2> nul | findstr EnableVirtualizationBasedSecurity 2> nul") -and (cmd.exe /c "reg query "HKLM\SYSTEM\CurrentControlSet\Control\DeviceGuard" /v "RequirePlatformSecurityFeatures" 2> nul | findstr RequirePlatformSecurityFeatures 2> nul") -and (cmd.exe /c "reg query "HKLM\SYSTEM\CurrentControlSet\Control\DeviceGuard" /v "Locked" 2> nul | findstr Locked 2> nul") -and (cmd.exe /c "reg query "HKLM\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" /v "Enabled" 2> nul | findstr Enabled 2> nul") -and (cmd.exe /c "reg query "HKLM\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" /v "Locked" 2> nul | findstr Locked 2> nul"))) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      reg add "HKLM\SYSTEM\CurrentControlSet\Control\DeviceGuard" /v "EnableVirtualizationBasedSecurity" /t REG_DWORD /d 1 /f
+      reg add "HKLM\SYSTEM\CurrentControlSet\Control\DeviceGuard" /v "RequirePlatformSecurityFeatures" /t REG_DWORD /d 1 /f
+      reg add "HKLM\SYSTEM\CurrentControlSet\Control\DeviceGuard" /v "Locked" /t REG_DWORD /d 0 /f
+      reg add "HKLM\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" /v "Enabled" /t REG_DWORD /d 1 /f
+      reg add "HKLM\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" /v "Locked" /t REG_DWORD /d 0 /f
+  executor:
+    command: |
+      reg add "HKLM\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" /v "Enabled" /t REG_DWORD /d 0 /f
+    cleanup_command: |
+      reg delete "HKLM\SYSTEM\CurrentControlSet\Control\DeviceGuard" /v "EnableVirtualizationBasedSecurity" /f
+      reg delete "HKLM\SYSTEM\CurrentControlSet\Control\DeviceGuard" /v "RequirePlatformSecurityFeatures" /f
+      reg delete "HKLM\SYSTEM\CurrentControlSet\Control\DeviceGuard" /v "Locked" /f
+      reg delete "HKLM\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" /v "Enabled" /f
+      reg delete "HKLM\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" /v "Locked" /f
+    name: powershell
     elevation_required: true

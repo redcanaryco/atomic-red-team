@@ -26,3 +26,79 @@ atomic_tests:
       aws iam delete-user --user-name #{username}
     name: sh
     elevation_required: false
+- name: Azure AD - Create a new user
+  auto_generated_guid: e62d23ef-3153-4837-8625-fa4a3829134d
+  description: Creates a new user in Azure AD. Upon successful creation, a new user will be created. Adversaries create new users so that their malicious activity does not interrupt the normal functions of the compromised users and can remain undetected for a long time.
+  supported_platforms:
+  - azure-ad
+  input_arguments:
+    username:
+      description: Display name of the new user to be created in Azure AD
+      type: string
+      default: "atomicredteam"
+    userprincipalname:
+      description: User principal name (UPN) for the new Azure user being created format email address
+      type: String
+      default: "atomicredteam@yourdomain.com"
+    password:
+      description: Password for the new Azure AD user being created
+      type: string
+      default: "reallylongcredential12345ART-ydsfghsdgfhsdgfhgsdhfg"
+  dependency_executor_name: powershell
+  dependencies:
+  - description: Check if AzureAD PowerShell module is installed
+    prereq_command: Get-InstalledModule -Name AzureAD
+    get_prereq_command: echo "use the following to install AzureAD PowerShell module - Install-Module -Name AzureAD -Scope CurrentUser -Repository PSGallery -Force"
+  - description: Check if AzureAD PowerShell module is installed
+    prereq_command: Update the input arguments so the userprincipalname value is accurate for your environment
+    get_prereq_command: echo "Update the input arguments in the .yaml file so that the userprincipalname value is accurate for your environment"
+  executor:
+    command: |-
+      Connect-AzureAD
+      $userprincipalname = "#{userprincipalname}"
+      $username = "#{username}"      
+      $password = "#{password}"
+      $PasswordProfile = New-Object -TypeName Microsoft.Open.AzureAD.Model.PasswordProfile
+      $PasswordProfile.Password = $password
+      New-AzureADUser -DisplayName $username -PasswordProfile $PasswordProfile -UserPrincipalName $userprincipalname -AccountEnabled $true -MailNickName $username      
+    cleanup_command: Remove-AzureADUser -ObjectId "#{userprincipalname}"
+    name: powershell
+- name: Azure AD - Create a new user via Azure CLI
+  auto_generated_guid: 228c7498-be31-48e9-83b7-9cb906504ec8
+  description: Creates a new user in Azure AD via the Azure CLI. Upon successful creation, a new user will be created. Adversaries create new users so that their malicious activity does not interrupt the normal functions of the compromised users and can remain undetected for a long time.
+  supported_platforms:
+  - azure-ad
+  input_arguments:
+    username:
+      description: Display name of the new user to be created in Azure AD
+      type: string
+      default: "atomicredteam"
+    userprincipalname:
+      description: User principal name (UPN) for the new Azure user being created format email address
+      type: String
+      default: "atomicredteam@yourdomain.com"
+    password:
+      description: Password for the new Azure AD user being created
+      type: string
+      default: "reallylongcredential12345ART-ydsfghsdgfhsdgfhgsdhfg"
+  dependency_executor_name: powershell
+  dependencies:
+  - description: Check if Azure CLI is installed and install manually
+    prereq_command: az account list
+    get_prereq_command: echo "use the following to install the Azure CLI manually https://aka.ms/installazurecliwindows"
+  - description: Check if Azure CLI is installed and install via PowerShell
+    prereq_command: az account list
+    get_prereq_command: echo "use the following to install the Azure CLI $ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile .\AzureCLI.msi; Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet'; Remove-Item .\AzureCLI.msi"
+  - description: Update the userprincipalname to meet your requirements  
+    prereq_command: Update the input arguments so the userprincipalname value is accurate for your environment
+    get_prereq_command: echo "Update the input arguments in the .yaml file so that the userprincipalname value is accurate for your environment"
+  executor:
+    command: |-
+      az login
+      $userprincipalname = "#{userprincipalname}"
+      $username = "#{username}"      
+      $password = "#{password}"
+      az ad user create --display-name $username --password $password --user-principal-name $userprincipalname
+      az ad user list --filter "displayname eq 'atomicredteam'"     
+    cleanup_command: az ad user delete --id #{userprincipalname}
+    name: powershell

