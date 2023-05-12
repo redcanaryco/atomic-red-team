@@ -56,39 +56,45 @@ $defs:
             - iaas:azure
             - iaas:aws
       input_arguments:
-        additionalProperties:
-          type: object
-          required:
-            - description
-          properties:
-            description:
-              type: string
-          anyOf:
-            - required:
-                - type
-              properties:
-                type:
-                  type: string
-                  enum:
-                    - integer
-                    - float
-                default:
+        type: object
+        additionalProperties: false
+        properties:
+          "/": {}
+        patternProperties:
+          "^[\\w-]+$":
+            type: integer
+            type: object
+            required:
+              - description
+            properties:
+              description:
+                type: string
+            anyOf:
+              - required:
+                  - type
+                properties:
                   type:
-                    - number
-                    - "null"
-            - required:
-                - type
-              properties:
-                type:
-                  type: string
-                  enum:
-                    - path
-                    - url
-                    - string
-                default:
+                    type: string
+                    enum:
+                      - integer
+                      - float
+                  default:
+                    type:
+                      - number
+                      - "null"
+              - required:
+                  - type
+                properties:
                   type:
-                    - string
-                    - "null"
+                    type: string
+                    enum:
+                      - path
+                      - url
+                      - string
+                  default:
+                    type:
+                      - string
+                      - "null"
       dependency_executor_name:
         type: string
         enum:

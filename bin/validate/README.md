@@ -56,7 +56,7 @@ If your argument requires a String or null value you can use the following prope
 
 |Property Name|Description|Data Type|Accepted Values|
 |-------------|-----------|---------|---------------|
-|{unique_name}|A unique name for the input argument that will be referenced in commands|String|`^[a-zA-Z0-9]*$`|
+|{unique_name}|A unique name for the input argument that will be referenced in commands|String|`^[a-zA-Z0-9_-]+$`|
 |description  |A description about the the input argument property|String|Any|
 |type         |The data type of the value for this property|String|Path, Url, String (please note the capitalization)|
 |default      |The default value for the argument|String or Null|Any|
@@ -65,7 +65,7 @@ If your argument requires a integer or float you can use the following propertie
 
 |Property Name|Description|Data Type|Accepted Values|
 |-------------|-----------|---------|---------------|
-|{unique_name}|A unique name for the input argument that will be referenced in commands|String|`^[a-zA-Z0-9]*$`|
+|{unique_name}|A unique name for the input argument that will be referenced in commands|String|`^[a-zA-Z0-9_-]+$`|
 |description  |A description about the the input argument property|String|Any|
 |type         |The data type of the value for this property|String|Integer, Float (please note the capitalization)|
 |default      |The default value for the argument|Number or Null|Any|

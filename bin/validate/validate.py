@@ -34,4 +34,7 @@ with open(f"{os.path.dirname(os.path.abspath(__file__))}/atomic-red-team.schema.
             is_exception = True
 
 if is_exception:
+    print("Validation Failed")
     sys.exit(1)
+else:
+    print("Validation Successful")
