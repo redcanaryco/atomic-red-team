@@ -42,7 +42,7 @@ class Validator:
 
     def validate(self, obj: DirEntry):
         if obj.is_file():
-            if fnmatch.fnmatch(obj.name, "*.yaml"):
+            if fnmatch.fnmatch(obj.name, "*.y*ml"):
                 self.validate_file(obj)
         if obj.is_dir():
             self.validate_directory(obj)
@@ -74,6 +74,7 @@ class Validator:
 
     def validate_yaml_extension(self, file: DirEntry):
         """Validates the yaml extension"""
+        print(file.path)
         if fnmatch.fnmatch(file.path, "*.yml"):
             self.errors[file.path].append(InvalidFileName(file.path))
 
