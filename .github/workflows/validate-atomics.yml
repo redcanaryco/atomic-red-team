@@ -1,9 +1,9 @@
 name: validate-atomics
+
 on:
-  push:
-    branches: [master]
   pull_request:
-    branches: [master]
+    branches: [ master ]
+
 jobs:
   validate-atomics:
     runs-on: ubuntu-latest
@@ -25,6 +25,29 @@ jobs:
       - name: validate the format of atomics tests against the spec
         run: |
           poetry run python bin/validate/validate.py
+
+      - uses: actions/github-script@v6
+        id: get_pr_number
+        with:
+          script: |
+            if (context.issue.number) {
+              // Return issue number if present
+              return context.issue.number;
+            } else {
+              // Otherwise return issue number from commit
+              return (
+                await github.rest.repos.listPullRequestsAssociatedWithCommit({
+                  commit_sha: context.sha,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                })
+              ).data[0].number;
+            }
+          result-encoding: string
+
+      - name: assign labels and reviewers
+        run: |
+          poetry run python bin/runner/runner.py -t ${{ secrets.GITHUB_TOKEN }} -pr '${{steps.get_pr_number.outputs.result}}'
 
   validate-terraform:
     runs-on: ubuntu-latest
