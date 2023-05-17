@@ -54,6 +54,7 @@ jobs:
       - uses: actions/github-script@v6
         id: assign_labels_test
         with:
+          github-token: ${{ secrets.AUTO_ASSIGN_TOKEN }}
           script: |            
             github.rest.issues.addLabels({
               issue_number: context.issue.number,
