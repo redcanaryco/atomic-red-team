@@ -75,6 +75,7 @@ class GithubAPI:
         """Get new and modified files in the `atomics` directory changed in a PR."""
         response = requests.get(f"https://api.github.com/repos/redcanaryco/atomic-red-team/pulls/{pr}/files",
                                 headers=self.headers, timeout=15)
+        print(response.status_code, response.reason)
         assert response.status_code == 200
         files = response.json()
         return filter(
