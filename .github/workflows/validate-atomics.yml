@@ -43,10 +43,6 @@ jobs:
               ).data[0].number;
             }
           result-encoding: string
-      - name: check whether token is present
-        run: |
-          echo ${{ secrets.AUTO_ASSIGN_TOKEN }}
-
       - name: assign labels and reviewers
         env:
           AUTO_ASSIGN_TOKEN: ${{ secrets.AUTO_ASSIGN_TOKEN }}
