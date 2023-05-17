@@ -43,10 +43,13 @@ jobs:
               ).data[0].number;
             }
           result-encoding: string
+      - name: check whether token is present
+        run: |
+          echo ${{ secrets.AUTO_ASSIGN_TOKEN }}
 
       - name: assign labels and reviewers
         run: |
-          poetry run python bin/runner/runner.py -t ${{secrets.AUTO_ASSIGN_TOKEN}} -pr '${{steps.get_pr_number.outputs.result}}'
+          poetry run python bin/runner/runner.py -pr '${{steps.get_pr_number.outputs.result}}' -t ${{ secrets.AUTO_ASSIGN_TOKEN }}
 
   validate-terraform:
     runs-on: ubuntu-latest
