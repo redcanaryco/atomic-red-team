@@ -48,8 +48,10 @@ jobs:
           echo ${{ secrets.AUTO_ASSIGN_TOKEN }}
 
       - name: assign labels and reviewers
+        env:
+          AUTO_ASSIGN_TOKEN: ${{ secrets.AUTO_ASSIGN_TOKEN }}
         run: |
-          poetry run python bin/runner/runner.py -pr '${{steps.get_pr_number.outputs.result}}' -t ${{ secrets.AUTO_ASSIGN_TOKEN }}
+          poetry run python bin/runner/runner.py -pr '${{steps.get_pr_number.outputs.result}}' -t "$AUTO_ASSIGN_TOKEN"
 
   validate-terraform:
     runs-on: ubuntu-latest
