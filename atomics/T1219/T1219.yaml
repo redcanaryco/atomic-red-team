@@ -231,3 +231,31 @@ atomic_tests:
       Stop-Process -Name "vncviewer" -force -erroraction silentlycontinue
     name: powershell
     elevation_required: true
+- name: MSP360 Connect Execution
+  auto_generated_guid: b1b8128b-c5d4-4de9-bf70-e60419274562
+  description: |
+    An adversary may attempt to trick the user into downloading MSP360 Connect for use as a C2 channel.
+    Upon successful execution, MSP360 Connect will be executed.
+  supported_platforms:
+  - windows
+  input_arguments:
+    MSP360_Connect_Path:
+      description: Path of MSP360 executable
+      type: path
+      default: $env:ProgramFiles\Connect\Connect.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      MSP360 must exist at (#{MSP360_Connect_Path})
+    prereq_command: |
+      if (Test-Path #{MSP360_Connect_Path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+       Invoke-WebRequest -OutFile $env:temp\msp360connect.exe "https://s3.amazonaws.com/cb_setups/_current/cbra/setup.exe?X-Amz-Expires=604800&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA2WIZE3YN7NOSY65U/20230515/us-east-1/s3/aws4_request&X-Amz-Date=20230515T024742Z&X-Amz-SignedHeaders=host&response-content-disposition=attachment;filename=ConnectStandaloneSetup_v3.3.0.15_netv4.5.1_cFA9100C6.exe&X-Amz-Signature=1fe3ddf93f8431b182fac90341f80a4ebf8665ddcc0e36dd385ee20d0ce865c9"
+       start-process $env:temp\msp360connect.exe /S    
+  executor:
+    command: |
+      Start-Process #{MSP360_Connect_Path}
+    cleanup_command: |
+      Stop-Process -Name "Connect" -force -erroraction silentlycontinue
+    name: powershell
+    elevation_required: true

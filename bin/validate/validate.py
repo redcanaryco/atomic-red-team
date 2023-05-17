@@ -74,7 +74,6 @@ class Validator:
 
     def validate_yaml_extension(self, file: DirEntry):
         """Validates the yaml extension"""
-        print(file.path)
         if fnmatch.fnmatch(file.path, "*.yml"):
             self.errors[file.path].append(InvalidFileName(file.path))
 
@@ -109,10 +108,12 @@ class Validator:
                     print(f"\n\t{error}\n")
                 elif isinstance(error, ValidationError):
                     if (context := error.context) and len(context) > 0:
-                        print(f"\n\t{context[0].message}\n")
+                        print("\n\tIt failed because of one of the following reasons:")
+                        messages = '\n\t\t'.join([c.message for c in context])
+                        print(f"\n\t\t{messages}")
                     else:
                         print(f"\n\t{error}\n")
-                    print(f"The JSON Path is {error.json_path}")
+                    print(f"\nThe JSON Path is {error.json_path}")
                 else:
                     print(f"\n\t{error}\n")
 
