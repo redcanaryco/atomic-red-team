@@ -46,7 +46,7 @@ jobs:
 
       - name: assign labels and reviewers
         run: |
-          poetry run python bin/runner/runner.py -t ${{ secrets.GITHUB_TOKEN }} -pr '${{steps.get_pr_number.outputs.result}}'
+          poetry run python bin/runner/runner.py -t ${{ secrets.AUTO_ASSIGN_TOKEN }} -pr '${{steps.get_pr_number.outputs.result}}'
 
   validate-terraform:
     runs-on: ubuntu-latest
