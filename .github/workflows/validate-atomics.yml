@@ -45,7 +45,7 @@ jobs:
           result-encoding: string
       - name: assign labels and reviewers
         env:
-          AUTO_ASSIGN_TOKEN: ${{ secrets.AUTO_ASSIGN_TOKEN }}
+          AUTO_ASSIGN_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           poetry run python bin/runner/runner.py -pr '${{steps.get_pr_number.outputs.result}}' -t "$AUTO_ASSIGN_TOKEN"
 
