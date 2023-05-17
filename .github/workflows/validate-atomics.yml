@@ -51,6 +51,17 @@ jobs:
         if: env.AUTO_ASSIGN_TOKEN
         run: |
           poetry run python bin/runner/runner.py -pr '${{steps.get_pr_number.outputs.result}}' -t "$AUTO_ASSIGN_TOKEN"
+      - uses: actions/github-script@v6
+        id: assign_labels_test
+        with:
+          script: |            
+            github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ['windows']
+            })
+          result-encoding: string
 
   validate-terraform:
     runs-on: ubuntu-latest
