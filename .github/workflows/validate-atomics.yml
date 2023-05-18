@@ -1,7 +1,9 @@
 name: validate-atomics
 
 on:
-  - pull_request_target
+  pull_request:
+    branches:
+      - master
 
 permissions: write-all
 
@@ -25,31 +27,6 @@ jobs:
       - name: validate the format of atomics tests against the spec
         run: |
           poetry run python bin/validate/validate.py
-
-      - uses: actions/github-script@v6
-        id: get_pr_number
-        with:
-          script: |
-            if (context.issue.number) {
-              // Return issue number if present
-              return context.issue.number;
-            } else {
-              // Otherwise return issue number from commit
-              return (
-                await github.rest.repos.listPullRequestsAssociatedWithCommit({
-                  commit_sha: context.sha,
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                })
-              ).data[0].number;
-            }
-          result-encoding: string
-      - name: assign labels and reviewers
-        env:
-          AUTO_ASSIGN_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        if: env.AUTO_ASSIGN_TOKEN
-        run: |
-          poetry run python bin/runner/runner.py -pr '${{steps.get_pr_number.outputs.result}}' -t "$AUTO_ASSIGN_TOKEN"
 
   validate-terraform:
     runs-on: ubuntu-latest
