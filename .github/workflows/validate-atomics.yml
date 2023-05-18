@@ -1,8 +1,11 @@
 name: validate-atomics
 
 on:
-  pull_request:
-    branches: [ master ]
+  pull_request_target:
+    types:
+      - opened
+    branches:
+      - "master"
 
 permissions: write-all
 
@@ -45,24 +48,12 @@ jobs:
               ).data[0].number;
             }
           result-encoding: string
-#      - name: assign labels and reviewers
-#        env:
-#          AUTO_ASSIGN_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        if: env.AUTO_ASSIGN_TOKEN
-#        run: |
-#          poetry run python bin/runner/runner.py -pr '${{steps.get_pr_number.outputs.result}}' -t "$AUTO_ASSIGN_TOKEN"
-      - uses: actions/github-script@v6
-        id: assign_labels_test
-        with:
-          github-token: ${{ secrets.AUTO_ASSIGN_TOKEN }}
-          script: |            
-            github.rest.issues.addLabels({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              labels: ['windows']
-            })
-          result-encoding: string
+      - name: assign labels and reviewers
+        env:
+          AUTO_ASSIGN_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: env.AUTO_ASSIGN_TOKEN
+        run: |
+          poetry run python bin/runner/runner.py -pr '${{steps.get_pr_number.outputs.result}}' -t "$AUTO_ASSIGN_TOKEN"
 
   validate-terraform:
     runs-on: ubuntu-latest
