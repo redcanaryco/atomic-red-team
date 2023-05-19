@@ -1318,7 +1318,8 @@
 - T1162 Login Item [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1556.002 Modify Authentication Process: Password Filter DLL](../../T1556.002/T1556.002.md)
   - Atomic Test #1: Install and Register Password Filter DLL [windows]
-- T1505.005 Terminal Services DLL [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1505.005 Server Software Component: Terminal Services DLL](../../T1505.005/T1505.005.md)
+  - Atomic Test #1: Simulate Patching termsrv.dll [windows]
 - [T1176 Browser Extensions](../../T1176/T1176.md)
   - Atomic Test #1: Chrome (Developer Mode) [linux, windows, macos]
   - Atomic Test #2: Chrome (Chrome Web Store) [linux, windows, macos]
