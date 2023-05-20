@@ -305,7 +305,7 @@ atomic_tests:
     get_prereq_command: 'if [ ! -d #{input_folder} ]; then mkdir -p #{input_folder}; cd #{input_folder}; touch {a..z}.data; fi;'
   executor:
     command: |-
-      zip -r #{input_file}.zip #{input_folder}
+      zip -r  #{input_folder}/#{input_file}.zip #{input_folder}
       openssl enc -aes-256-cbc -pass pass:#{enc_pass} -p -in #{input_folder}/#{input_file}.zip -out #{input_folder}/#{input_file}.enc 
       cat #{input_folder}/#{input_file}.enc | base64
     cleanup_command: 'rm -rf #{input_folder}'
