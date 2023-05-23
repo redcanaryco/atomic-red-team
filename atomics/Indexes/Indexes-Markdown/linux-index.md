@@ -355,6 +355,7 @@
   - Atomic Test #6: Data Compressed - nix - gzip Single File [linux, macos]
   - Atomic Test #7: Data Compressed - nix - tar Folder or File [linux, macos]
   - Atomic Test #8: Data Encrypted with zip and gpg symmetric [macos, linux]
+  - Atomic Test #9: Encrypts collected data with AES-256 and Base64 [linux, macos]
 - [T1113 Screen Capture](../../T1113/T1113.md)
   - Atomic Test #3: X Windows Capture [linux]
   - Atomic Test #4: Capture Linux Desktop using Import Tool [linux]
