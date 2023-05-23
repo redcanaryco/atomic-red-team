@@ -19,7 +19,7 @@ atomic_tests:
 
       foreach($member in $fmm) {
           if($member -like "*Administrator*") {
-              $account = $member.Name -replace ".+\\\","" # strip computername\
+              $account = $member.Name.Split("\")[-1] # strip computername\
               $originalDescription = (Get-LocalUser -Name $account).Description
               Set-LocalUser -Name $account -Description "atr:$account;$originalDescription".Substring(0,48) # Keep original name in description
               Rename-LocalUser -Name $account -NewName "HaHa_$x$y$z" # Required due to length limitation
