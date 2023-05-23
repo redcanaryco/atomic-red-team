@@ -276,3 +276,39 @@ atomic_tests:
       ls -l #{test_folder}
     cleanup_command: |
       rm -Rf #{test_folder}
+- name: 'Encrypts collected data with AES-256 and Base64'
+  auto_generated_guid: a743e3a6-e8b2-4a30-abe7-ca85d201b5d3
+  description: |-
+    An adversary may compress all the collected data, encrypt and send them to a C2 server using base64 encoding. 
+    This atomic test tries to emulate the behaviour of the FLEXIROOT backdoor to archive the collected data. FLEXIROOT typically utilizes AES encryption and base64 encoding to transfer the encrypted data to the C2 server. 
+    In this test, standard zip compression and the OpenSSL library are used to encrypt the compressed data.
+    https://attack.mitre.org/versions/v7/software/S0267/
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
+    input_folder:
+      description: Path to the folder used to store the test files
+      type: path
+      default: /tmp/t1560
+    input_file:
+      description: 'Name of the compressed and encrypted files'
+      type: string
+      default: t1560_data
+    enc_pass:
+      description: Password used to encrypt the data
+      type: string
+      default: atomic_enc_pass
+  dependency_executor_name: bash
+  dependencies:
+  - description: The folder and test files must exist
+    prereq_command: 'if [ ! -d #{input_folder} ]; then exit 1; else exit 0; fi;'
+    get_prereq_command: 'if [ ! -d #{input_folder} ]; then mkdir -p #{input_folder}; cd #{input_folder}; touch {a..z}.data; fi;'
+  executor:
+    command: |-
+      zip -r  #{input_folder}/#{input_file}.zip #{input_folder}
+      openssl enc -aes-256-cbc -pass pass:#{enc_pass} -p -in #{input_folder}/#{input_file}.zip -out #{input_folder}/#{input_file}.enc 
+      cat #{input_folder}/#{input_file}.enc | base64
+    cleanup_command: 'rm -rf #{input_folder}'
+    name: bash
+    elevation_required: false

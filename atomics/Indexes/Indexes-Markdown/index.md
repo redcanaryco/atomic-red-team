@@ -1726,6 +1726,7 @@
   - Atomic Test #6: Data Compressed - nix - gzip Single File [linux, macos]
   - Atomic Test #7: Data Compressed - nix - tar Folder or File [linux, macos]
   - Atomic Test #8: Data Encrypted with zip and gpg symmetric [macos, linux]
+  - Atomic Test #9: Encrypts collected data with AES-256 and Base64 [linux, macos]
 - [T1113 Screen Capture](../../T1113/T1113.md)
   - Atomic Test #1: Screencapture [macos]
   - Atomic Test #2: Screencapture (silent) [macos]
@@ -2206,6 +2207,7 @@
   - Atomic Test #6: Share Discovery with PowerView [windows]
   - Atomic Test #7: PowerView ShareFinder [windows]
   - Atomic Test #8: WinPwn - shareenumeration [windows]
+  - Atomic Test #9: Network Share Discovery via dir command [windows]
 - [T1120 Peripheral Device Discovery](../../T1120/T1120.md)
   - Atomic Test #1: Win32_PnPEntity Hardware Inventory [windows]
   - Atomic Test #2: WinPwn - printercheck [windows]
