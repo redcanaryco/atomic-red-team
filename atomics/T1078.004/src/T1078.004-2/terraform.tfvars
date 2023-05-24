@@ -1,3 +1,3 @@
-automation_account_name=""
-resource_group=""
-runbook_name=""
+automation_account_name = ""
+resource_group          = ""
+runbook_name            = ""
