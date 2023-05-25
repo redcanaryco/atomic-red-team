@@ -547,7 +547,7 @@ atomic_tests:
     command: |
       ntdsutil "set dsrm password" "sync from domain account #{sync_account}" "q" "q"
       
-- name: 'Domain Password Policy Check: Short Passwword'
+- name: 'Domain Password Policy Check: Short Password'
   description: |
     Attempt to change the password of the current domain user in order to check password policy. Ideally, you would only run this atomic test to verify that your password policy is blocking the use of the new password.
     If the password is succesfully changed to the new password, the credential file will be updated to reflect the new password.  You can then run the atomic manually and specify a new password of your choosing, however the
