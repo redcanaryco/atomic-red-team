@@ -1475,6 +1475,13 @@
   - Atomic Test #7: Azure - adding service principal to Azure role in subscription [iaas:azure]
   - Atomic Test #8: Azure AD - adding permission to application [azure-ad]
   - Atomic Test #9: Password Change on Directory Service Restore Mode (DSRM) Account [windows]
+  - Atomic Test #10: Domain Password Policy Check: Short Password [windows]
+  - Atomic Test #11: Domain Password Policy Check: No Number in Password [windows]
+  - Atomic Test #12: Domain Password Policy Check: No Special Character in Password [windows]
+  - Atomic Test #13: Domain Password Policy Check: No Uppercase Character in Password [windows]
+  - Atomic Test #14: Domain Password Policy Check: No Lowercase Character in Password [windows]
+  - Atomic Test #15: Domain Password Policy Check: Only Two Character Classes [windows]
+  - Atomic Test #16: Domain Password Policy Check: Common Password Use [windows]
 - [T1547.006 Boot or Logon Autostart Execution: Kernel Modules and Extensions](../../T1547.006/T1547.006.md)
   - Atomic Test #1: Linux - Load Kernel Module via insmod [linux]
   - Atomic Test #2: MacOS - Load Kernel Module via kextload and kmutil [macos]
@@ -2181,6 +2188,7 @@
   - Atomic Test #11: Get-ADUser Enumeration using UserAccountControl flags (AS-REP Roasting) [windows]
   - Atomic Test #12: Get-DomainGroupMember with PowerView [windows]
   - Atomic Test #13: Get-DomainGroup with PowerView [windows]
+  - Atomic Test #14: Active Directory Enumeration with LDIFDE [windows]
 - [T1007 System Service Discovery](../../T1007/T1007.md)
   - Atomic Test #1: System Service Discovery [windows]
   - Atomic Test #2: System Service Discovery - net.exe [windows]
