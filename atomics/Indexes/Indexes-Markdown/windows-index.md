@@ -1052,6 +1052,13 @@
   - Atomic Test #1: Admin Account Manipulate [windows]
   - Atomic Test #2: Domain Account and Group Manipulate [windows]
   - Atomic Test #9: Password Change on Directory Service Restore Mode (DSRM) Account [windows]
+  - Atomic Test #10: Domain Password Policy Check: Short Password [windows]
+  - Atomic Test #11: Domain Password Policy Check: No Number in Password [windows]
+  - Atomic Test #12: Domain Password Policy Check: No Special Character in Password [windows]
+  - Atomic Test #13: Domain Password Policy Check: No Uppercase Character in Password [windows]
+  - Atomic Test #14: Domain Password Policy Check: No Lowercase Character in Password [windows]
+  - Atomic Test #15: Domain Password Policy Check: Only Two Character Classes [windows]
+  - Atomic Test #16: Domain Password Policy Check: Common Password Use [windows]
 - T1574.013 KernelCallbackTable [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1137.003 Outlook Forms [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
