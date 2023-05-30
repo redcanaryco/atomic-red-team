@@ -1551,6 +1551,11 @@
   - Atomic Test #15: WinPwn - generaldomaininfo [windows]
   - Atomic Test #16: Kerbrute - userenum [windows]
   - Atomic Test #17: Wevtutil - Discover NTLM Users Remote [windows]
+  - Atomic Test #18: Suspicious LAPS Attributes Query with Get-ADComputer all properties [windows]
+  - Atomic Test #19: Suspicious LAPS Attributes Query with Get-ADComputer ms-Mcs-AdmPwd property [windows]
+  - Atomic Test #20: Suspicious LAPS Attributes Query with Get-ADComputer all properties and SearchScope [windows]
+  - Atomic Test #21: Suspicious LAPS Attributes Query with adfind all properties [windows]
+  - Atomic Test #22: Suspicious LAPS Attributes Query with adfind ms-Mcs-AdmPwd [windows]
 - T1063 Security Software Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1087.001 Account Discovery: Local Account](../../T1087.001/T1087.001.md)
   - Atomic Test #8: Enumerate all accounts on Windows (Local) [windows]
