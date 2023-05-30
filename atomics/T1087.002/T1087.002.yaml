@@ -337,7 +337,7 @@ atomic_tests:
   input_arguments:
     hostname:
       description: Name of the host
-      type: String
+      type: string
       default: $env:computername
   executor:
     command: 'Get-ADComputer #{hostname} -Properties *'
@@ -352,7 +352,7 @@ atomic_tests:
   input_arguments:
     hostname:
       description: Name of the host
-      type: String
+      type: string
       default: $env:computername
   executor:
     command: 'Get-ADComputer #{hostname} -Properties ms-Mcs-AdmPwd, ms-Mcs-AdmPwdExpirationTime'
@@ -377,11 +377,11 @@ atomic_tests:
   input_arguments:
     adfind_path:
       description: Path to adfind
-      type: String
+      type: string
       default: C:\AtomicRedTeam\atomics\T1087.002\src\AdFind.exe
     domain:
       description: Domain of the host
-      type: String
+      type: string
       default: $env:USERDOMAIN
   executor:
     command: '#{adfind_path} -h #{domain} -s subtree -f "objectclass=computer" *'
@@ -396,11 +396,11 @@ atomic_tests:
   input_arguments:
     adfind_path:
       description: Path to adfind
-      type: String
+      type: string
       default: C:\AtomicRedTeam\atomics\T1087.002\src\AdFind.exe
     domain:
       description: Domain of the host
-      type: String
+      type: string
       default: $env:USERDOMAIN
   executor:
     command: '#{adfind_path} -h #{domain} -s subtree -f "objectclass=computer" ms-Mcs-AdmPwd, ms-Mcs-AdmPwdExpirationTime'
