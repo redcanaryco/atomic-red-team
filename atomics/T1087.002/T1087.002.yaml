@@ -329,3 +329,81 @@ atomic_tests:
     cleanup_command: |
       Remove-Item -Path \\$IpAddress\c$\ntlmusers.evtx
     name: powershell
+
+- name: Suspicious LAPS Attributes Query with Get-ADComputer all properties
+  description: This test executes LDAP query using powershell command Get-ADComputer and lists all the properties including Microsoft LAPS attributes ms-mcs-AdmPwd and ms-mcs-AdmPwdExpirationTime  
+  supported_platforms:
+  - windows
+  input_arguments:
+    hostname:
+      description: Name of the host
+      type: string
+      default: $env:computername
+  executor:
+    command: 'Get-ADComputer #{hostname} -Properties *'
+    cleanup_command: 
+    name: powershell
+    elevation_required: false
+
+- name: Suspicious LAPS Attributes Query with Get-ADComputer ms-Mcs-AdmPwd property
+  description: This test executes LDAP query using powershell command Get-ADComputer and lists Microsoft LAPS attributes ms-mcs-AdmPwd and ms-mcs-AdmPwdExpirationTime
+  supported_platforms:
+  - windows
+  input_arguments:
+    hostname:
+      description: Name of the host
+      type: string
+      default: $env:computername
+  executor:
+    command: 'Get-ADComputer #{hostname} -Properties ms-Mcs-AdmPwd, ms-Mcs-AdmPwdExpirationTime'
+    cleanup_command: 
+    name: powershell
+    elevation_required: false
+  
+- name: Suspicious LAPS Attributes Query with Get-ADComputer all properties and SearchScope 
+  description: This test executes LDAP query using powershell command Get-ADComputer with SearchScope as subtree and lists all the properties including Microsoft LAPS attributes ms-mcs-AdmPwd and ms-mcs-AdmPwdExpirationTime
+  supported_platforms:
+  - windows
+  executor:
+    command: Get-adcomputer -SearchScope subtree -filter "name -like '*'" -Properties *
+    cleanup_command: 
+    name: powershell
+    elevation_required: false
+  
+- name: Suspicious LAPS Attributes Query with adfind all properties
+  description: This test executes LDAP query using adfind command and lists all the attributes including Microsoft LAPS attributes ms-mcs-AdmPwd and ms-mcs-AdmPwdExpirationTime
+  supported_platforms:
+  - windows
+  input_arguments:
+    adfind_path:
+      description: Path to adfind
+      type: string
+      default: C:\AtomicRedTeam\atomics\T1087.002\src\AdFind.exe
+    domain:
+      description: Domain of the host
+      type: string
+      default: $env:USERDOMAIN
+  executor:
+    command: '#{adfind_path} -h #{domain} -s subtree -f "objectclass=computer" *'
+    cleanup_command: 
+    name: powershell
+    elevation_required: false
+
+- name: Suspicious LAPS Attributes Query with adfind ms-Mcs-AdmPwd
+  description: This test executes LDAP query using adfind command and lists Microsoft LAPS attributes ms-mcs-AdmPwd and ms-mcs-AdmPwdExpirationTime
+  supported_platforms:
+  - windows
+  input_arguments:
+    adfind_path:
+      description: Path to adfind
+      type: string
+      default: C:\AtomicRedTeam\atomics\T1087.002\src\AdFind.exe
+    domain:
+      description: Domain of the host
+      type: string
+      default: $env:USERDOMAIN
+  executor:
+    command: '#{adfind_path} -h #{domain} -s subtree -f "objectclass=computer" ms-Mcs-AdmPwd, ms-Mcs-AdmPwdExpirationTime'
+    cleanup_command: 
+    name: powershell
+    elevation_required: false
