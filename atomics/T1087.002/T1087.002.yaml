@@ -329,3 +329,86 @@ atomic_tests:
     cleanup_command: |
       Remove-Item -Path \\$IpAddress\c$\ntlmusers.evtx
     name: powershell
+
+- name: Suspicious LAPS Attributes Query with Get-ADComputer all properties
+  auto_generated_guid: 
+  description: To detect the suspicious use of LDAP query to view Microsoft LAPS attributes like ms-mcs-AdmPwd and ms-mcs-AdmPwdExpirationTime using powershell command Get-ADComputer and listing all the properties
+  supported_platforms:
+  - windows
+  input_arguments:
+    hostname:
+      description: Name of the host
+      type: String
+      default: $env:computername
+  executor:
+    command: 'Get-ADComputer #{hostname} -Properties *'
+    cleanup_command: 
+    name: powershell
+    elevation_required: false
+
+- name: Suspicious LAPS Attributes Query with Get-ADComputer ms-Mcs-AdmPwd property
+  auto_generated_guid: 
+  description: To detect the suspicious use of LDAP query to view Microsoft LAPS attributes like ms-mcs-AdmPwd and ms-mcs-AdmPwdExpirationTime using powershell command Get-ADComputer and listing the respective properties.
+  supported_platforms:
+  - windows
+  input_arguments:
+    hostname:
+      description: Name of the host
+      type: String
+      default: $env:computername
+  executor:
+    command: 'Get-ADComputer #{hostname} -Properties ms-Mcs-AdmPwd, ms-Mcs-AdmPwdExpirationTime'
+    cleanup_command: 
+    name: powershell
+    elevation_required: false
+  
+- name: Suspicious LAPS Attributes Query with Get-ADComputer all properties and SearchScope
+  auto_generated_guid: 
+  description: To detect the suspicious use of LDAP query to view Microsoft LAPS attributes like ms-mcs-AdmPwd and ms-mcs-AdmPwdExpirationTime using powershell command Get-ADComputer and listing all the properties with SearchScope as subtree
+  supported_platforms:
+  - windows
+  executor:
+    command: Get-adcomputer -SearchScope subtree -filter "name -like '*'" -Properties *
+    cleanup_command: 
+    name: powershell
+    elevation_required: false
+  
+- name: Suspicious LAPS Attributes Query with adfind all properties
+  auto_generated_guid: 
+  description: To detect the suspicious use of LDAP query to view Microsoft LAPS attributes like ms-mcs-AdmPwd and ms-mcs-AdmPwdExpirationTime using adfind command and listing all the attributes.
+  supported_platforms:
+  - windows
+  input_arguments:
+    adfind_path:
+      description: Path to adfind
+      type: String
+      default: C:\AtomicRedTeam\atomics\T1087.002\src\AdFind.exe
+    domain:
+      description: Domain of the host
+      type: String
+      default: $env:USERDOMAIN
+  executor:
+    command: '#{adfind_path} -h #{domain} -s subtree -f "objectclass=computer" *'
+    cleanup_command: 
+    name: powershell
+    elevation_required: false
+
+- name: Suspicious LAPS Attributes Query with adfind ms-Mcs-AdmPwd
+  auto_generated_guid: 
+  description: To detect the suspicious use of LDAP query to view Microsoft LAPS attributes like ms-mcs-AdmPwd and ms-mcs-AdmPwdExpirationTime using adfind command and listing the respective attributes.
+  supported_platforms:
+  - windows
+  input_arguments:
+    adfind_path:
+      description: Path to adfind
+      type: String
+      default: C:\AtomicRedTeam\atomics\T1087.002\src\AdFind.exe
+    domain:
+      description: Domain of the host
+      type: String
+      default: $env:USERDOMAIN
+  executor:
+    command: '#{adfind_path} -h #{domain} -s subtree -f "objectclass=computer" ms-Mcs-AdmPwd, ms-Mcs-AdmPwdExpirationTime'
+    cleanup_command: 
+    name: powershell
+    elevation_required: false
