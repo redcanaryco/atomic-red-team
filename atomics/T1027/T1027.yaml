@@ -216,3 +216,32 @@ atomic_tests:
       $fileNameToDelete = '04e53197-72be-4dd8-88b1-533fe6eed577.04e53197-72be-4dd8-88b1-533fe6eed577.crmlog'; $filePathToDelete = "$env:windir\registration\"; $fullPathToDelete = Join-Path $filePathToDelete $fileNameToDelete; if (Test-Path $fullPathToDelete) { Remove-Item -Path $fullPathToDelete -Force; Write-Host "File deleted: $fullPathToDelete" } else { Write-Host "File not found: $fullPathToDelete" }
     name: powershell
     elevation_required: true
+- name: Execution from Compressed JScript File
+  auto_generated_guid:
+  description: |
+    Mimic execution of compressed JavaScript file. When successfully executed, calculator.exe will open. This test is meant to help emulate Gootloader as per https://redcanary.com/blog/gootloader/
+  supported_platforms:
+  - windows
+  input_arguments:
+    url_path:
+      description: url to download JScript file
+      type: url
+      default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027/bin/T1027js.zip
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      T1027.js must exist on disk at $env:temp\temp_T1027js.zip\T1027js.js
+    prereq_command: |
+      if (Test-Path $env:temp\temp_T1027js.zip\T1027js.js) {exit 0} else {exit 1}
+    get_prereq_command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      Invoke-WebRequest "#{url_path}" -OutFile "$env:temp\T1027js.zip"
+      Expand-Archive -path "$env:temp\T1027js.zip" -DestinationPath "$env:temp\temp_T1027js.zip\" -Force
+  executor:
+    command: |
+      "%temp%\temp_T1027js.zip\T1027js.js"
+    cleanup_command: |
+      taskkill /f /im calculator.exe >nul 2>nul
+      rmdir /S /Q %temp%\temp_T1027.zip >nul 2>nul
+      del /Q "%temp%\T1027.zip" >nul 2>nul
+    name: command_prompt
