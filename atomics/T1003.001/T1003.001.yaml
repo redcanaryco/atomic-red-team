@@ -301,7 +301,7 @@ atomic_tests:
       .Net v5 must be installed
     prereq_command: |
       $exePath =  resolve-path "$env:ProgramFiles\dotnet\shared\Microsoft.NETCore.App\5*\createdump.exe"
-      if (Test-Path $exePath) {exit 0} else {exit 1}
+      if ($exePath -and (Test-Path $exePath)) {exit 0} else {exit 1}
     get_prereq_command: |
       winget install Microsoft.DotNet.DesktopRuntime.5 --accept-source-agreements --accept-package-agreements --silent
   executor:
