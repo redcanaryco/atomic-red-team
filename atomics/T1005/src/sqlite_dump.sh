@@ -11,7 +11,7 @@ fi
 # Set the name of the SQLite database file
 DB_NAME=$1
 
-if [ "$(head -c 15 gta.db |strings)" == "SQLite format 3" ]
+if [ "$(head -c 15 $DB_NAME |strings)" == "SQLite format 3" ]
 then
     # List all tables
     echo "List of tables:"
