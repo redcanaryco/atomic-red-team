@@ -397,6 +397,7 @@ defense-evasion,T1027,Obfuscated Files or Information,6,DLP Evasion via Sensitiv
 defense-evasion,T1027,Obfuscated Files or Information,7,Obfuscated Command in PowerShell,8b3f4ed6-077b-4bdd-891c-2d237f19410f,powershell
 defense-evasion,T1027,Obfuscated Files or Information,8,Obfuscated Command Line using special Unicode characters,e68b945c-52d0-4dd9-a5e8-d173d70c448f,manual
 defense-evasion,T1027,Obfuscated Files or Information,9,Snake Malware Encrypted crmlog file,7e47ee60-9dd1-4269-9c4f-97953b183268,powershell
+defense-evasion,T1027,Obfuscated Files or Information,10,Execution from Compressed JScript File,fad04df1-5229-4185-b016-fb6010cd87ac,command_prompt
 defense-evasion,T1564.006,Run Virtual Instance,1,Register Portable Virtualbox,c59f246a-34f8-4e4d-9276-c295ef9ba0dd,command_prompt
 defense-evasion,T1564.006,Run Virtual Instance,2,Create and start VirtualBox virtual machine,88b81702-a1c0-49a9-95b2-2dd53d755767,command_prompt
 defense-evasion,T1564.006,Run Virtual Instance,3,Create and start Hyper-V virtual machine,fb8d4d7e-f5a4-481c-8867-febf13f8b6d3,powershell
@@ -1132,8 +1133,8 @@ collection,T1125,Video Capture,1,Registry artefact when application use webcam,6
 collection,T1114.003,Email Collection: Email Forwarding Rule,1,Office365 - Email Forwarding,3234117e-151d-4254-9150-3d0bac41e38c,powershell
 collection,T1056.002,Input Capture: GUI Input Capture,1,AppleScript - Prompt User for Password,76628574-0bc1-4646-8fe2-8f4427b47d15,bash
 collection,T1056.002,Input Capture: GUI Input Capture,2,PowerShell - Prompt User for Password,2b162bfd-0928-4d4c-9ec3-4d9f88374b52,powershell
-collection,T1039,Data from Network Shared Drive,1,Copy a sensitive File over Administive share with copy,6ed67921-1774-44ba-bac6-adb51ed60660,command_prompt
-collection,T1039,Data from Network Shared Drive,2,Copy a sensitive File over Administive share with Powershell,7762e120-5879-44ff-97f8-008b401b9a98,powershell
+collection,T1039,Data from Network Shared Drive,1,Copy a sensitive File over Administrative share with copy,6ed67921-1774-44ba-bac6-adb51ed60660,command_prompt
+collection,T1039,Data from Network Shared Drive,2,Copy a sensitive File over Administrative share with Powershell,7762e120-5879-44ff-97f8-008b401b9a98,powershell
 collection,T1056.004,Input Capture: Credential API Hooking,1,Hook PowerShell TLS Encrypt/Decrypt Messages,de1934ea-1fbf-425b-8795-65fb27dd7e33,powershell
 lateral-movement,T1091,Replication Through Removable Media,1,USB Malware Spread Simulation,d44b7297-622c-4be8-ad88-ec40d7563c75,powershell
 lateral-movement,T1021.002,Remote Services: SMB/Windows Admin Shares,1,Map admin share,3386975b-367a-4fbb-9d77-4dcf3639ffd3,command_prompt
@@ -1354,6 +1355,11 @@ discovery,T1087.002,Account Discovery: Domain Account,14,Enumerate Root Domain l
 discovery,T1087.002,Account Discovery: Domain Account,15,WinPwn - generaldomaininfo,ce483c35-c74b-45a7-a670-631d1e69db3d,powershell
 discovery,T1087.002,Account Discovery: Domain Account,16,Kerbrute - userenum,f450461c-18d1-4452-9f0d-2c42c3f08624,powershell
 discovery,T1087.002,Account Discovery: Domain Account,17,Wevtutil - Discover NTLM Users Remote,b8a563d4-a836-4993-a74e-0a19b8481bfe,powershell
+discovery,T1087.002,Account Discovery: Domain Account,18,Suspicious LAPS Attributes Query with Get-ADComputer all properties,394012d9-2164-4d4f-b9e5-acf30ba933fe,powershell
+discovery,T1087.002,Account Discovery: Domain Account,19,Suspicious LAPS Attributes Query with Get-ADComputer ms-Mcs-AdmPwd property,6e85bdf9-7bc4-4259-ac0f-f0cb39964443,powershell
+discovery,T1087.002,Account Discovery: Domain Account,20,Suspicious LAPS Attributes Query with Get-ADComputer all properties and SearchScope,ffbcfd62-15d6-4989-a21a-80bfc8e58bb5,powershell
+discovery,T1087.002,Account Discovery: Domain Account,21,Suspicious LAPS Attributes Query with adfind all properties,abf00f6c-9983-4d9a-afbc-6b1c6c6448e1,powershell
+discovery,T1087.002,Account Discovery: Domain Account,22,Suspicious LAPS Attributes Query with adfind ms-Mcs-AdmPwd,51a98f96-0269-4e09-a10f-e307779a8b05,powershell
 discovery,T1087.001,Account Discovery: Local Account,1,Enumerate all accounts (Local),f8aab3dd-5990-4bf8-b8ab-2226c951696f,sh
 discovery,T1087.001,Account Discovery: Local Account,2,View sudoers access,fed9be70-0186-4bde-9f8a-20945f9370c2,sh
 discovery,T1087.001,Account Discovery: Local Account,3,View accounts with UID 0,c955a599-3653-4fe5-b631-f11c00eb0397,sh
@@ -1529,7 +1535,7 @@ discovery,T1018,Remote System Discovery,15,Enumerate domain computers within Act
 discovery,T1018,Remote System Discovery,16,Enumerate Active Directory Computers with Get-AdComputer,97e89d9e-e3f5-41b5-a90f-1e0825df0fdf,powershell
 discovery,T1018,Remote System Discovery,17,Enumerate Active Directory Computers with ADSISearcher,64ede6ac-b57a-41c2-a7d1-32c6cd35397d,powershell
 discovery,T1018,Remote System Discovery,18,Get-DomainController with PowerView,b9d2e8ca-5520-4737-8076-4f08913da2c4,powershell
-discovery,T1018,Remote System Discovery,19,Get-wmiobject to Enumerate Domain Controllers,e3cf5123-f6c9-4375-bdf2-1bb3ba43a1ad,powershell
+discovery,T1018,Remote System Discovery,19,Get-WmiObject to Enumerate Domain Controllers,e3cf5123-f6c9-4375-bdf2-1bb3ba43a1ad,powershell
 discovery,T1018,Remote System Discovery,20,Remote System Discovery - net group Domain Controller,5843529a-5056-4bc1-9c13-a311e2af4ca0,command_prompt
 discovery,T1046,Network Service Discovery,1,Port Scan,68e907da-2539-48f6-9fc9-257a78c05540,bash
 discovery,T1046,Network Service Discovery,2,Port Scan Nmap,515942b0-a09f-4163-a7bb-22fefb6f185f,sh
