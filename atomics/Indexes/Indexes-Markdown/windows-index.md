@@ -1281,8 +1281,8 @@
 - [T1056.002 Input Capture: GUI Input Capture](../../T1056.002/T1056.002.md)
   - Atomic Test #2: PowerShell - Prompt User for Password [windows]
 - [T1039 Data from Network Shared Drive](../../T1039/T1039.md)
-  - Atomic Test #1: Copy a sensitive File over Administive share with copy [windows]
-  - Atomic Test #2: Copy a sensitive File over Administive share with Powershell [windows]
+  - Atomic Test #1: Copy a sensitive File over Administrative share with copy [windows]
+  - Atomic Test #2: Copy a sensitive File over Administrative share with Powershell [windows]
 - T1114.002 Remote Email Collection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1056 Input Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1557.002 ARP Cache Poisoning [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1698,7 +1698,7 @@
   - Atomic Test #16: Enumerate Active Directory Computers with Get-AdComputer [windows]
   - Atomic Test #17: Enumerate Active Directory Computers with ADSISearcher [windows]
   - Atomic Test #18: Get-DomainController with PowerView [windows]
-  - Atomic Test #19: Get-wmiobject to Enumerate Domain Controllers [windows]
+  - Atomic Test #19: Get-WmiObject to Enumerate Domain Controllers [windows]
   - Atomic Test #20: Remote System Discovery - net group Domain Controller [windows]
 - [T1046 Network Service Discovery](../../T1046/T1046.md)
   - Atomic Test #3: Port Scan NMap for Windows [windows]
