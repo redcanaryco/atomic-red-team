@@ -1,0 +1,111 @@
+attack_technique: T1070.008
+display_name: 'Email Collection: Mailbox Manipulation'
+atomic_tests:
+- name: Copy and Delete Mailbox Data on Windows
+  auto_generated_guid: d29f01ea-ac72-4efc-8a15-bea64b77fabf
+  description: |
+    Copies and deletes mail data on Windows
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      New-Item -Path "C:\Users\$env:USERNAME\AppData\Local\Comms\Unistore\data\copy" -ItemType Directory -ErrorAction Ignore
+      Get-ChildItem -Path "C:\Users\$env:USERNAME\AppData\Local\Comms\Unistore\data" -Exclude copy | ForEach-Object { Copy-Item -Path $_.FullName -Destination "C:\Users\$env:USERNAME\AppData\Local\Comms\Unistore\data\copy" -Recurse -Force -ErrorAction Ignore }
+      Remove-Item -Path "C:\Users\$env:USERNAME\AppData\Local\Comms\Unistore\data\copy" -Recurse -Force -ErrorAction Ignore
+    cleanup_command: |
+      Remove-Item -Path "C:\Users\$env:USERNAME\AppData\Local\Comms\Unistore\data\copy" -Recurse -Force -ErrorAction Ignore
+    name: powershell
+    elevation_required: true
+
+- name: Copy and Delete Mailbox Data on Linux
+  auto_generated_guid: 25e2be0e-96f7-4417-bd16-a4a2500e3802
+  description: |
+    Copies and deletes mail data on Linux
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      mkdir -p /var/spool/mail/copy
+      for file in /var/spool/mail/*; do
+        if [ "$(basename "$file")" != "copy" ]
+        then
+          cp -R "$file" /var/spool/mail/copy/
+        fi
+      done
+      rm -rf /var/spool/mail/copy/*
+    cleanup_command: |
+      rm -rf /var/spool/mail/copy
+    name: bash
+    elevation_required: true
+
+- name: Copy and Delete Mailbox Data on macOS
+  auto_generated_guid: 3824130e-a6e4-4528-8091-3a52eeb540f6
+  description: |
+    Copies and deletes mail data on macOS
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+      mkdir ~/Library/Mail/copy
+      cp -R ~/Library/Mail/* ~/Library/Mail/copy
+      rm -rf ~/Library/Mail/copy/*
+    cleanup_command: |
+      rm -rf ~/Library/Mail/copy
+    name: bash
+    elevation_required: true
+
+- name: Copy and Modify Mailbox Data on Windows
+  auto_generated_guid: edddff85-fee0-499d-9501-7d4d2892e79b
+  description: |
+    Copies and modifies mail data on Windows
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      New-Item -Path "C:\Users\$env:USERNAME\AppData\Local\Comms\Unistore\data\copy" -ItemType Directory -ErrorAction Ignore
+      Get-ChildItem -Path "C:\Users\$env:USERNAME\AppData\Local\Comms\Unistore\data" -Exclude copy | ForEach-Object { Copy-Item -Path $_.FullName -Destination "C:\Users\$env:USERNAME\AppData\Local\Comms\Unistore\data\copy" -Recurse -Force -ErrorAction Ignore }
+      Get-ChildItem -Path "C:\Users\$env:USERNAME\AppData\Local\Comms\Unistore\data\copy" -File | ForEach-Object { Add-Content -Path $_.FullName -Value "Modification for Atomic Red Test" -ErrorAction Ignore }
+    cleanup_command: |
+      Remove-Item -Path "C:\Users\$env:USERNAME\AppData\Local\Comms\Unistore\data\copy" -Recurse -Force -ErrorAction Ignore
+    name: powershell
+    elevation_required: true
+
+- name: Copy and Modify Mailbox Data on Linux
+  auto_generated_guid: 6d99f93c-da56-49e3-b195-163090ace4f6
+  description: |
+    Copies and modifies mail data on Linux
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      mkdir -p /var/spool/mail/copy
+      for file in /var/spool/mail/*; do
+        if [ "$(basename "$file")" != "copy" ]
+        then
+          cp -R "$file" /var/spool/mail/copy/
+          if [ -f "/var/spool/mail/copy/$(basename "$file")" ]; then
+            echo "Modification for Atomic Red Test" >> "/var/spool/mail/copy/$(basename "$file")"
+          fi
+        fi
+      done
+    cleanup_command: |
+      rm -rf /var/spool/mail/copy
+    name: bash
+    elevation_required: true
+
+- name: Copy and Modify Mailbox Data on macOS
+  auto_generated_guid: 8a0b1579-5a36-483a-9cde-0236983e1665
+  description: |
+    Copies and modifies mail data on macOS
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+      mkdir ~/Library/Mail/copy
+      cp -R ~/Library/Mail/* ~/Library/Mail/copy
+      echo "Manipulated data" > ~/Library/Mail/copy/manipulated.txt
+    cleanup_command: |
+      rm -rf ~/Library/Mail/copy
+    name: bash
+    elevation_required: true
+

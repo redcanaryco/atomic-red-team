@@ -134,13 +134,13 @@ atomic_tests:
   supported_platforms:
   - windows
   input_arguments:
-    command.to.execute:
+    command_to_execute:
       description: Command to execute
       type: string
       default: cmd.exe /c notepad.exe
   executor:
     command: |
-      New-Item -Force -Path "HKCU:\Software\Classes\Folder\shell\open\command" -Value '#{command.to.execute}'
+      New-Item -Force -Path "HKCU:\Software\Classes\Folder\shell\open\command" -Value '#{command_to_execute}'
       New-ItemProperty -Force -Path "HKCU:\Software\Classes\Folder\shell\open\command" -Name "DelegateExecute"
       Start-Process -FilePath $env:windir\system32\sdclt.exe
       Start-Sleep -s 3
