@@ -204,5 +204,5 @@ atomic_tests:
   - windows
   executor:
     command: |
-      nslookup -querytype=ALL -timeout=12 _ldap._tcp.dc._msdcs.$env:USERDNSDOMAIN
+      nslookup -querytype=ALL -timeout=12 _ldap._tcp.dc._msdcs.%USERDNSDOMAIN%
     name: command_prompt
