@@ -210,4 +210,28 @@ atomic_tests:
       echo #{dash_encoded} | base64 -d | bash
       echo #{fish_encoded} | base64 -d | bash
       echo #{sh_encoded} | base64 -d | bash
+- name: 'XOR decoding and command execution using Python'
+  description: An adversary can obfuscate malicious commands or payloads using XOR and execute them on the victim's machine. This test uses Python to decode and execute commands on the machine.
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
+    xor_key:
+      description: 'Key used to decrypt the command '
+      type: string
+      default: waEHleblxiQjoxFJQaIMLdHKz
+    encrypted_command:
+      description: Encrypted command that will be executed
+      type: string
+      default: AAkqKQEM
+  dependency_executor_name: bash
+  dependencies:
+  - description: Python3 must be installed
+    prereq_command: which python3
+    get_prereq_command: echo "Install Python3"
+  executor:
+    command: "python3 -c 'import base64; import subprocess; xor_decrypt = lambda text, key: \"\".join([chr(c ^ ord(k)) for c, k in zip(base64.b64decode(text.encode()), key)]); command = \"#{encrypted_command}\"; key = \"#{xor_key}\"; exec = xor_decrypt(command, key); subprocess.call(exec, shell=True)'"
+    cleanup_command: 
+    name: bash
+    elevation_required: false
       
