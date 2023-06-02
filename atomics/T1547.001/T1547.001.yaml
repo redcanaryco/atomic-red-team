@@ -355,3 +355,25 @@ atomic_tests:
     cleanup_command: REG DELETE "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /V "calc" /f >nul 2>&1
     name: command_prompt
     elevation_required: true
+- name: Modify BootExecute Value
+  auto_generated_guid: befc2b40-d487-4a5a-8813-c11085fb5672
+  description: |
+    This test modifies the BootExecute registry value to "autocheck autoche *", which can be used to simulate an adversary's attempt to tamper with the system's boot process. 
+    Reference - https://www.welivesecurity.com/wp-content/uploads/2018/09/ESET-LoJax.pdf
+    NOTE that by not saving the correct value, you may inhibit your system from booting properly. Only run on a test system. There is a reg export before running the Atomic.
+  supported_platforms:
+  - windows
+  input_arguments:
+    registry_value:
+      description: Registry value to set
+      type: string
+      default: autocheck autoche *
+  executor:
+    command: |
+      if (!(Test-Path "$PathToAtomicsFolder\T1547.001\src\SessionManagerBackup.reg")) { reg.exe export "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager" "$PathToAtomicsFolder\T1547.001\src\SessionManagerBackup.reg" /y }
+      Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager" -Name "BootExecute" -Value "#{registry_value}" -Type MultiString
+    cleanup_command: |
+      reg.exe import "$PathToAtomicsFolder\T1547.001\src\SessionManagerBackup.reg"
+      Remove-Item -Path "$PathToAtomicsFolder\T1547.001\src\SessionManagerBackup.reg" -Force
+    name: powershell
+    elevation_required: true

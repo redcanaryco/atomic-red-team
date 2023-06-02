@@ -778,3 +778,97 @@ atomic_tests:
       reg add "hklm\SYSTEM\CurrentControlSet\Control\Terminal Server\Winstations\RDP-Tcp" /v SecurityLayer /t REG_DWORD /d 2 /f
     name: command_prompt
     elevation_required: true
+- name: Disable Win Defender Notification
+  auto_generated_guid: 12e03af7-79f9-4f95-af48-d3f12f28a260
+  description: |
+    Disable Win Defender Notification. Redline is using this to disable this win defender feature.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Notifications" /v "DisableNotifications" /t REG_DWORD /d 1
+    cleanup_command: |
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Notifications" /v "DisableNotifications" /t REG_DWORD /d 0
+    name: command_prompt
+    elevation_required: true
+- name: Disable Windows OS Auto Update
+  auto_generated_guid: 01b20ca8-c7a3-4d86-af59-059f15ed5474
+  description: |
+    Disable Auto Update Windows OS feature. Redline is using this as part of its defense evasion.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAutoUpdate" /t REG_DWORD /d 1
+    cleanup_command: |
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAutoUpdate" /t REG_DWORD /d 0
+    name: command_prompt
+    elevation_required: true
+- name: Disable Windows Auto Reboot for current logon user
+  auto_generated_guid: 396f997b-c5f8-4a96-bb2c-3c8795cf459d
+  description: |
+    Disable Windows Auto Reboot for current logon user. Redline is using this as part of its defense evasion.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAutoRebootWithLoggedOnUsers" /t REG_DWORD /d 1
+    cleanup_command: |
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAutoRebootWithLoggedOnUsers" /t REG_DWORD /d 0
+    name: command_prompt
+    elevation_required: true
+- name: Windows Auto Update Option to Notify before download
+  auto_generated_guid: 335a6b15-b8d2-4a3f-a973-ad69aa2620d7
+  description: |
+    Windows Auto Update Option to Notify before download. Redline is using this as part of its defense evasion.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "AUOptions" /t REG_DWORD /d 2
+    cleanup_command: |
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "AUOptions" /t REG_DWORD /d 3
+    name: command_prompt
+    elevation_required: true
+- name: Do Not Connect To Win Update
+  auto_generated_guid: d1de3767-99c2-4c6c-8c5a-4ba4586474c8
+  description: |
+    Do Not Connect To Win Update. Redline is using this as part of its defense evasion.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "DoNotConnectToWindowsUpdateInternetLocations" /t REG_DWORD /d 1
+    cleanup_command: |
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "DoNotConnectToWindowsUpdateInternetLocations" /t REG_DWORD /d 0
+    name: command_prompt
+    elevation_required: true
+- name: Tamper Win Defender Protection
+  auto_generated_guid: 3b625eaa-c10d-4635-af96-3eae7d2a2f3c
+  description: |
+    Tamper Win Defender Protection. RedLine Stealer is executing another component file to modify this win defender feature in registry. 
+    Take note that this modification might not be enough to disable this feature but can be a good indicator of malicious process that 
+    tries to tamper this Win Defender feature settings.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKLM\SOFTWARE\Microsoft\Windows Defender\Features" /v "TamperProtection" /t REG_DWORD /d 0
+    cleanup_command: |
+      reg add "HKLM\SOFTWARE\Microsoft\Windows Defender\Features" /v "TamperProtection" /t REG_DWORD /d 5
+    name: command_prompt
+    elevation_required: true
+- name: Snake Malware Registry Blob
+  auto_generated_guid: 8318ad20-0488-4a64-98f4-72525a012f6b
+  description: |
+    The following Atomic Test creates a registry blob in HKLM:\SOFTWARE\Classes\.wav\OpenWithProgIds, which is related to Snake Malware. Per the report, upon execution, Snake's WerFault.exe will attempt to decrypt an encrypted blob within the Windows
+    registry that is typically found at HKLM:\SOFTWARE\Classes\.wav\OpenWithProgIds. The encrypted data includes the AES key, IV, and path that is used to find and decrypt the file containing Snake's kernel driver and kernel driver loader.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      $typicalPath = "HKLM:\SOFTWARE\Classes\.wav\OpenWithProgIds"; $randomBytes = New-Object Byte[] 0x1000; (New-Object Random).NextBytes($randomBytes); New-ItemProperty -Path $typicalPath -Name "AtomicSnake" -Value $randomBytes -PropertyType Binary -Force | Out-Null
+    cleanup_command: |
+      $typicalPath = "HKLM:\SOFTWARE\Classes\.wav\OpenWithProgIds"; Remove-ItemProperty -Path $typicalPath -Name "AtomicSnake" -ErrorAction SilentlyContinue | Out-Null
+    name: powershell
+    elevation_required: true

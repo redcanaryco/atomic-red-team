@@ -37,7 +37,16 @@ atomic_tests:
       description: Specify target hostname
       type: string
       default: google.com
+  dependency_executor_name: sh
+  dependencies:
+    - description: |
+        Requires telnet
+      prereq_command: |
+        which telnet
+      get_prereq_command: |
+        echo "please install telnet to run this test"; exit 1
   executor:
     command: |
-      telnet #{domain} #{port}
+      echo quit | telnet #{domain} #{port}
+      exit 0
     name: sh
