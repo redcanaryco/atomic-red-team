@@ -64,7 +64,8 @@ atomic_tests:
       New-NetFirewallRule -DisplayName 'RDPPORTLatest-TCP-In' -Profile 'Public' -Direction Inbound -Action Allow -Protocol TCP -LocalPort #{NEW_Remote_Port}
     cleanup_command: |
       Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "PortNumber" -Value #{OLD_Remote_Port}
-      Remove-NetFirewallRule -DisplayName "RDPPORTLatest-TCP-In" -ErrorAction ignore 
+      Remove-NetFirewallRule -DisplayName "RDPPORTLatest-TCP-In" -ErrorAction Ignore 
+      Get-Service TermService | Restart-Service -Force -ErrorAction Ignore 
     name: powershell
     elevation_required: true
 - name: Changing RDP Port to Non Standard Port via Command_Prompt
@@ -89,5 +90,7 @@ atomic_tests:
     cleanup_command: |
       reg add "HKLM\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v PortNumber /t REG_DWORD /d #{OLD_Remote_Port} -f >nul 2>&1
       netsh advfirewall firewall delete rule name="RDPPORTLatest-TCP-In" >nul 2>&1
+      net stop TermService >nul 2>&1
+      net start TermService >nul 2>&1
     name: command_prompt
     elevation_required: true

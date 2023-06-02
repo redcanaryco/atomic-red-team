@@ -84,10 +84,10 @@ atomic_tests:
   input_arguments:
     file_path:
       description: Path to search
-      type: String
+      type: string
       default: /home
   executor:
-    name: sh
+    name: bash
     elevation_required: false
     command: |
       for file in $(find #{file_path} -type f -name .netrc 2> /dev/null);do echo $file ; cat $file ; done
