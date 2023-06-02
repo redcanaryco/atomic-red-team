@@ -61,6 +61,7 @@
   - Atomic Test #5: Base64 decoding with shell utilities [linux, macos]
   - Atomic Test #6: Hex decoding with shell utilities [linux, macos]
   - Atomic Test #7: Linux Base64 Encoded Shebang in CLI [linux, macos]
+  - Atomic Test #8: XOR decoding and command execution using Python [linux, macos]
 - [T1562 Impair Defenses](../../T1562/T1562.md)
   - Atomic Test #2: Disable journal logging via systemctl utility [linux]
   - Atomic Test #3: Disable journal logging via sed utility [linux]
