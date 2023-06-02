@@ -321,8 +321,7 @@ atomic_tests:
       iptables -F
     cleanup_command: | 
       iptables-restore < /tmp/iptables.rules
-- name: Modify/delete iptables firewall rules 
-  auto_generated_guid: 
+- name: Modify/delete iptables firewall rules
   description: |
     Instead of completely "disabling" iptables, adversaries may choose to delete a certain rule, which, for example, blocks data exfiltration via ftp.
     By doing so, they may cause less noise to avoid detection. 
