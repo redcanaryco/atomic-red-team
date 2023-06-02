@@ -298,7 +298,6 @@ atomic_tests:
       tail /var/log/ufw.log
     cleanup_command: |
 - name: Disable iptables 
-  auto_generated_guid: 
   description: |
     Some Linux systems may not activate ufw, but use iptables for firewall rules instead. (ufw works on top of iptables.) 
     Attackers cannot directly disable iptables, as it is not implemented as a service like ufw. But they can flush all iptables 
