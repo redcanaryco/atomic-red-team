@@ -165,6 +165,44 @@ atomic_tests:
       echo $ENCODED > #{encoded_file} && b64decode -r < #{encoded_file}
       echo $ENCODED > #{encoded_file} && cat #{encoded_file} | b64decode -r
       echo $ENCODED > #{encoded_file} && cat < #{encoded_file} | b64decode -r
+- name: FreeBSD b64encode Shebang in CLI
+  auto_generated_guid: 
+  description: |
+    Using b64decode shell scripts that have Shebang in them. This is commonly how attackers obfuscate passing and executing a shell script. Seen [here](https://www.trendmicro.com/pl_pl/research/20/i/the-evolution-of-malicious-shell-scripts.html) by TrendMicro, as well as [LinPEAS](https://github.com/carlospolop/PEASS-ng/tree/master/linPEAS). Also a there is a great Sigma rule [here](https://github.com/SigmaHQ/sigma/blob/master/rules/linux/process_creation/proc_creation_lnx_base64_shebang_cli.yml) for it. 
+  supported_platforms:
+  - freebsd
+  input_arguments:
+    bash_encoded:
+      description: Encoded #!/bin/bash script
+      type: string
+      default: IyEvYmluL2Jhc2gKZWNobyAiaHR0cHM6Ly93d3cueW91dHViZS5jb20vQGF0b21pY3NvbmFmcmlkYXkgRlRXIgo=
+    dash_encoded:
+      description: Encoded #!/bin/dash script
+      type: string
+      default: IyEvYmluL2Rhc2gKZWNobyAiaHR0cHM6Ly93d3cueW91dHViZS5jb20vQGF0b21pY3NvbmFmcmlkYXkgRlRXIgo=
+    fish_encoded:
+      description: Encoded #!/bin/fish script
+      type: string
+      default: IyEvYmluL2Rhc2gKZWNobyAiaHR0cHM6Ly93d3cueW91dHViZS5jb20vQGF0b21pY3NvbmFmcmlkYXkgRlRXIgo=
+    sh_encoded:
+      description: Encoded #!/bin/sh script
+      type: string
+      default: IyEvYmluL3NoCmVjaG8gImh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL0BhdG9taWNzb25hZnJpZGF5IEZUVyIK
+  dependencies:
+  - description: |
+      b64decode must be present
+    prereq_command: |
+      which b64decode
+    get_prereq_command: |
+      echo "please install b64decode"
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      echo #{bash_encoded} | b64decode -r | sh
+      echo #{dash_encoded} | b64decode -r | sh
+      echo #{fish_encoded} | b64decode -r | sh
+      echo #{sh_encoded} | b64decode -r | sh
 - name: Hex decoding with shell utilities
   auto_generated_guid: 005943f9-8dd5-4349-8b46-0313c0a9f973
   description: |
