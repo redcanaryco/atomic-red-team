@@ -298,6 +298,7 @@ atomic_tests:
       tail /var/log/ufw.log
     cleanup_command: |
 - name: Disable iptables 
+  auto_generated_guid: 7784c64e-ed0b-4b65-bf63-c86db229fd56
   description: |
     Some Linux systems may not activate ufw, but use iptables for firewall rules instead. (ufw works on top of iptables.) 
     Attackers cannot directly disable iptables, as it is not implemented as a service like ufw. But they can flush all iptables 
@@ -321,6 +322,7 @@ atomic_tests:
     cleanup_command: | 
       iptables-restore < /tmp/iptables.rules
 - name: Modify/delete iptables firewall rules
+  auto_generated_guid: 899a7fb5-d197-4951-8614-f19ac4a73ad4
   description: |
     Instead of completely "disabling" iptables, adversaries may choose to delete a certain rule, which, for example, blocks data exfiltration via ftp.
     By doing so, they may cause less noise to avoid detection. 
