@@ -61,6 +61,7 @@
   - Atomic Test #5: Base64 decoding with shell utilities [linux, macos]
   - Atomic Test #6: Hex decoding with shell utilities [linux, macos]
   - Atomic Test #7: Linux Base64 Encoded Shebang in CLI [linux, macos]
+  - Atomic Test #8: XOR decoding and command execution using Python [linux, macos]
 - [T1562 Impair Defenses](../../T1562/T1562.md)
   - Atomic Test #2: Disable journal logging via systemctl utility [linux]
   - Atomic Test #3: Disable journal logging via sed utility [linux]
@@ -89,6 +90,8 @@
   - Atomic Test #13: Edit UFW firewall sysctl.conf file [linux]
   - Atomic Test #14: Edit UFW firewall main configuration file [linux]
   - Atomic Test #15: Tail the UFW firewall log file [linux]
+  - Atomic Test #16: Disable iptables [linux]
+  - Atomic Test #17: Modify/delete iptables firewall rules [linux]
 - T1107 File Deletion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1027.001 Obfuscated Files or Information: Binary Padding](../../T1027.001/T1027.001.md)
   - Atomic Test #1: Pad Binary to Change Hash - Linux/macOS dd [macos, linux]
@@ -355,6 +358,7 @@
   - Atomic Test #6: Data Compressed - nix - gzip Single File [linux, macos]
   - Atomic Test #7: Data Compressed - nix - tar Folder or File [linux, macos]
   - Atomic Test #8: Data Encrypted with zip and gpg symmetric [macos, linux]
+  - Atomic Test #9: Encrypts collected data with AES-256 and Base64 [linux, macos]
 - [T1113 Screen Capture](../../T1113/T1113.md)
   - Atomic Test #3: X Windows Capture [linux]
   - Atomic Test #4: Capture Linux Desktop using Import Tool [linux]

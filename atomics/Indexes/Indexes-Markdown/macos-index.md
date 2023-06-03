@@ -65,6 +65,7 @@
   - Atomic Test #5: Base64 decoding with shell utilities [linux, macos]
   - Atomic Test #6: Hex decoding with shell utilities [linux, macos]
   - Atomic Test #7: Linux Base64 Encoded Shebang in CLI [linux, macos]
+  - Atomic Test #8: XOR decoding and command execution using Python [linux, macos]
 - T1562 Impair Defenses [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1036 Masquerading [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1070.008 Email Collection: Mailbox Manipulation](../../T1070.008/T1070.008.md)
@@ -357,6 +358,7 @@
   - Atomic Test #6: Data Compressed - nix - gzip Single File [linux, macos]
   - Atomic Test #7: Data Compressed - nix - tar Folder or File [linux, macos]
   - Atomic Test #8: Data Encrypted with zip and gpg symmetric [macos, linux]
+  - Atomic Test #9: Encrypts collected data with AES-256 and Base64 [linux, macos]
 - [T1113 Screen Capture](../../T1113/T1113.md)
   - Atomic Test #1: Screencapture [macos]
   - Atomic Test #2: Screencapture (silent) [macos]

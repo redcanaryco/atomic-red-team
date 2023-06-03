@@ -41,7 +41,9 @@ class GithubAPI:
         "containers": "containers",
         "iaas:gcp": "cloud",
         "iaas:aws": "cloud",
-        "iaas:azure": "cloud"
+        "iaas:azure": "cloud",
+        "office-365": "cloud",
+        "google-workspace":"cloud"
     }
 
     maintainers = {
@@ -52,7 +54,9 @@ class GithubAPI:
         "iaas:gcp": ["patel-bhavin"],
         "iaas:aws": ["patel-bhavin"],
         "iaas:azure": ["patel-bhavin"],
-        "azure-ad": ["patel-bhavin"]
+        "azure-ad": ["patel-bhavin"],
+        "google-workspace": ["patel-bhavin"],
+        "office-365": ["patel-bhavin"]
     }
 
     def __init__(self, token):
