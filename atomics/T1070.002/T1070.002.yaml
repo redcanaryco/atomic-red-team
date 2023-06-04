@@ -325,7 +325,16 @@ atomic_tests:
       description: Username of mail spool
       type: string
       default: root
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      target files must exist
+    prereq_command: |
+      stat /var/spool/mail/#{username}
+    get_prereq_command: |
+      touch /var/spool/mail/#{username}
   executor:
+    elevation_required: true
     command: |
       echo 0> /var/spool/mail/#{username}
     name: bash
@@ -344,3 +353,6 @@ atomic_tests:
     command: |
       echo 0> #{log_path}
     name: bash
+    elevation_required: true
+    cleanup_command: |
+      if [ "/var/log/secure" != "#{log_path}" ] ; then rm -f #{log_path} ; fi
