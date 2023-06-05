@@ -190,6 +190,7 @@
   - Atomic Test #5: Base64 decoding with shell utilities [linux, macos]
   - Atomic Test #6: Hex decoding with shell utilities [linux, macos]
   - Atomic Test #7: Linux Base64 Encoded Shebang in CLI [linux, macos]
+  - Atomic Test #8: XOR decoding and command execution using Python [linux, macos]
 - [T1562 Impair Defenses](../../T1562/T1562.md)
   - Atomic Test #1: Windows Disable LSA Protection [windows]
   - Atomic Test #2: Disable journal logging via systemctl utility [linux]
@@ -270,9 +271,11 @@
   - Atomic Test #13: Edit UFW firewall sysctl.conf file [linux]
   - Atomic Test #14: Edit UFW firewall main configuration file [linux]
   - Atomic Test #15: Tail the UFW firewall log file [linux]
-  - Atomic Test #16: LockBit Black - Unusual Windows firewall registry modification -cmd [windows]
-  - Atomic Test #17: LockBit Black - Unusual Windows firewall registry modification -Powershell [windows]
-  - Atomic Test #18: Blackbit - Disable Windows Firewall using netsh firewall [windows]
+  - Atomic Test #16: Disable iptables [linux]
+  - Atomic Test #17: Modify/delete iptables firewall rules [linux]
+  - Atomic Test #18: LockBit Black - Unusual Windows firewall registry modification -cmd [windows]
+  - Atomic Test #19: LockBit Black - Unusual Windows firewall registry modification -Powershell [windows]
+  - Atomic Test #20: Blackbit - Disable Windows Firewall using netsh firewall [windows]
 - T1152 Launchctl [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1553.003 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1556.007 Hybrid Identity [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -552,6 +555,7 @@
   - Atomic Test #7: Obfuscated Command in PowerShell [windows]
   - Atomic Test #8: Obfuscated Command Line using special Unicode characters [windows]
   - Atomic Test #9: Snake Malware Encrypted crmlog file [windows]
+  - Atomic Test #10: Execution from Compressed JScript File [windows]
 - T1556.006 Multi-Factor Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1036.001 Invalid Code Signature [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1564.006 Run Virtual Instance](../../T1564.006/T1564.006.md)
@@ -622,6 +626,7 @@
   - Atomic Test #6: AWS - Remove VPC Flow Logs using Stratus [linux, macos]
   - Atomic Test #7: AWS - CloudWatch Log Group Deletes [iaas:aws]
   - Atomic Test #8: AWS CloudWatch Log Stream Deletes [iaas:aws]
+  - Atomic Test #9: Office 365 - Set Audit Bypass For a Mailbox [office-365]
 - [T1564.003 Hide Artifacts: Hidden Window](../../T1564.003/T1564.003.md)
   - Atomic Test #1: Hidden Window [windows]
 - T1147 Hidden Users [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1805,8 +1810,8 @@
   - Atomic Test #1: AppleScript - Prompt User for Password [macos]
   - Atomic Test #2: PowerShell - Prompt User for Password [windows]
 - [T1039 Data from Network Shared Drive](../../T1039/T1039.md)
-  - Atomic Test #1: Copy a sensitive File over Administive share with copy [windows]
-  - Atomic Test #2: Copy a sensitive File over Administive share with Powershell [windows]
+  - Atomic Test #1: Copy a sensitive File over Administrative share with copy [windows]
+  - Atomic Test #2: Copy a sensitive File over Administrative share with Powershell [windows]
 - T1114.002 Remote Email Collection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1056 Input Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1557.002 ARP Cache Poisoning [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -2157,6 +2162,11 @@
   - Atomic Test #15: WinPwn - generaldomaininfo [windows]
   - Atomic Test #16: Kerbrute - userenum [windows]
   - Atomic Test #17: Wevtutil - Discover NTLM Users Remote [windows]
+  - Atomic Test #18: Suspicious LAPS Attributes Query with Get-ADComputer all properties [windows]
+  - Atomic Test #19: Suspicious LAPS Attributes Query with Get-ADComputer ms-Mcs-AdmPwd property [windows]
+  - Atomic Test #20: Suspicious LAPS Attributes Query with Get-ADComputer all properties and SearchScope [windows]
+  - Atomic Test #21: Suspicious LAPS Attributes Query with adfind all properties [windows]
+  - Atomic Test #22: Suspicious LAPS Attributes Query with adfind ms-Mcs-AdmPwd [windows]
 - T1063 Security Software Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1087.001 Account Discovery: Local Account](../../T1087.001/T1087.001.md)
   - Atomic Test #1: Enumerate all accounts (Local) [linux]
@@ -2364,7 +2374,7 @@
   - Atomic Test #16: Enumerate Active Directory Computers with Get-AdComputer [windows]
   - Atomic Test #17: Enumerate Active Directory Computers with ADSISearcher [windows]
   - Atomic Test #18: Get-DomainController with PowerView [windows]
-  - Atomic Test #19: Get-wmiobject to Enumerate Domain Controllers [windows]
+  - Atomic Test #19: Get-WmiObject to Enumerate Domain Controllers [windows]
   - Atomic Test #20: Remote System Discovery - net group Domain Controller [windows]
 - [T1046 Network Service Discovery](../../T1046/T1046.md)
   - Atomic Test #1: Port Scan [linux, macos]
