@@ -51,6 +51,7 @@
 - T1506 Web Session Cookie [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1562.008 Impair Defenses: Disable Cloud Logs](../../T1562.008/T1562.008.md)
   - Atomic Test #3: Office 365 - Exchange Audit Log Disabled [office-365]
+  - Atomic Test #9: Office 365 - Set Audit Bypass For a Mailbox [office-365]
 - T1550.001 Application Access Token [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078.004 Valid Accounts: Cloud Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
