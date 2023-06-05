@@ -271,9 +271,11 @@
   - Atomic Test #13: Edit UFW firewall sysctl.conf file [linux]
   - Atomic Test #14: Edit UFW firewall main configuration file [linux]
   - Atomic Test #15: Tail the UFW firewall log file [linux]
-  - Atomic Test #16: LockBit Black - Unusual Windows firewall registry modification -cmd [windows]
-  - Atomic Test #17: LockBit Black - Unusual Windows firewall registry modification -Powershell [windows]
-  - Atomic Test #18: Blackbit - Disable Windows Firewall using netsh firewall [windows]
+  - Atomic Test #16: Disable iptables [linux]
+  - Atomic Test #17: Modify/delete iptables firewall rules [linux]
+  - Atomic Test #18: LockBit Black - Unusual Windows firewall registry modification -cmd [windows]
+  - Atomic Test #19: LockBit Black - Unusual Windows firewall registry modification -Powershell [windows]
+  - Atomic Test #20: Blackbit - Disable Windows Firewall using netsh firewall [windows]
 - T1152 Launchctl [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1553.003 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1556.007 Hybrid Identity [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

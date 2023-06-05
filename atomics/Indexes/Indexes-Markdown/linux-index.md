@@ -90,6 +90,8 @@
   - Atomic Test #13: Edit UFW firewall sysctl.conf file [linux]
   - Atomic Test #14: Edit UFW firewall main configuration file [linux]
   - Atomic Test #15: Tail the UFW firewall log file [linux]
+  - Atomic Test #16: Disable iptables [linux]
+  - Atomic Test #17: Modify/delete iptables firewall rules [linux]
 - T1107 File Deletion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1027.001 Obfuscated Files or Information: Binary Padding](../../T1027.001/T1027.001.md)
   - Atomic Test #1: Pad Binary to Change Hash - Linux/macOS dd [macos, linux]

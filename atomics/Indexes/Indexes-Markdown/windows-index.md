@@ -182,9 +182,9 @@
   - Atomic Test #4: Opening ports for proxy - HARDRAIN [windows]
   - Atomic Test #5: Open a local port through Windows Firewall to any profile [windows]
   - Atomic Test #6: Allow Executable Through Firewall Located in Non-Standard Location [windows]
-  - Atomic Test #16: LockBit Black - Unusual Windows firewall registry modification -cmd [windows]
-  - Atomic Test #17: LockBit Black - Unusual Windows firewall registry modification -Powershell [windows]
-  - Atomic Test #18: Blackbit - Disable Windows Firewall using netsh firewall [windows]
+  - Atomic Test #18: LockBit Black - Unusual Windows firewall registry modification -cmd [windows]
+  - Atomic Test #19: LockBit Black - Unusual Windows firewall registry modification -Powershell [windows]
+  - Atomic Test #20: Blackbit - Disable Windows Firewall using netsh firewall [windows]
 - T1553.003 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1556.007 Hybrid Identity [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1207 Rogue Domain Controller](../../T1207/T1207.md)
