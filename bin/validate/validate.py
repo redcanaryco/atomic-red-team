@@ -64,9 +64,11 @@ class Validator:
                         executor = t.get("executor", {})
                         deps = t.get("dependencies", [])
 
-                        commands = [executor.get("command"), executor.get("cleanup_command"), executor.get("steps")]
-                        commands += [d.get("get_prereq_command") for d in deps]
-                        commands += [d.get("prereq_command") for d in deps]
+                        if executor:
+                            commands = [executor.get("command"), executor.get("cleanup_command"), executor.get("steps")]
+                        if deps:
+                            commands += [d.get("get_prereq_command") for d in deps]
+                            commands += [d.get("prereq_command") for d in deps]
                         commands = filter(lambda x: x is not None, commands)
 
                         if not any([variable in c for c in commands]):
@@ -107,13 +109,16 @@ class Validator:
                 if isinstance(error, BaseError):
                     print(f"\n\t{error}\n")
                 elif isinstance(error, ValidationError):
-                    if (context := error.context) and len(context) > 0:
-                        print("\n\tIt failed because of one of the following reasons:")
-                        messages = '\n\t\t'.join([c.message for c in context])
-                        print(f"\n\t\t{messages}")
+                    if "auto_generated_guid" in error.json_path:
+                        print(f"\n\tGUIDs are auto generated. You can remove {error.json_path}\n")
                     else:
-                        print(f"\n\t{error}\n")
-                    print(f"\nThe JSON Path is {error.json_path}")
+                        if (context := error.context) and len(context) > 0:
+                            print("\n\tIt failed because of one of the following reasons:")
+                            messages = '\n\t\t'.join([c.message for c in context])
+                            print(f"\n\t\t{messages}")
+                        else:
+                            print(f"\n\t{error}\n")
+                        print(f"\nThe JSON Path is {error.json_path}\n")
                 else:
                     print(f"\n\t{error}\n")
 

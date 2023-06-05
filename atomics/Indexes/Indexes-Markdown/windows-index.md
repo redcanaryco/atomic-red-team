@@ -182,9 +182,9 @@
   - Atomic Test #4: Opening ports for proxy - HARDRAIN [windows]
   - Atomic Test #5: Open a local port through Windows Firewall to any profile [windows]
   - Atomic Test #6: Allow Executable Through Firewall Located in Non-Standard Location [windows]
-  - Atomic Test #16: LockBit Black - Unusual Windows firewall registry modification -cmd [windows]
-  - Atomic Test #17: LockBit Black - Unusual Windows firewall registry modification -Powershell [windows]
-  - Atomic Test #18: Blackbit - Disable Windows Firewall using netsh firewall [windows]
+  - Atomic Test #18: LockBit Black - Unusual Windows firewall registry modification -cmd [windows]
+  - Atomic Test #19: LockBit Black - Unusual Windows firewall registry modification -Powershell [windows]
+  - Atomic Test #20: Blackbit - Disable Windows Firewall using netsh firewall [windows]
 - T1553.003 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1556.007 Hybrid Identity [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1207 Rogue Domain Controller](../../T1207/T1207.md)
@@ -405,6 +405,7 @@
   - Atomic Test #7: Obfuscated Command in PowerShell [windows]
   - Atomic Test #8: Obfuscated Command Line using special Unicode characters [windows]
   - Atomic Test #9: Snake Malware Encrypted crmlog file [windows]
+  - Atomic Test #10: Execution from Compressed JScript File [windows]
 - T1556.006 Multi-Factor Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1036.001 Invalid Code Signature [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1564.006 Run Virtual Instance](../../T1564.006/T1564.006.md)
@@ -1052,6 +1053,13 @@
   - Atomic Test #1: Admin Account Manipulate [windows]
   - Atomic Test #2: Domain Account and Group Manipulate [windows]
   - Atomic Test #9: Password Change on Directory Service Restore Mode (DSRM) Account [windows]
+  - Atomic Test #10: Domain Password Policy Check: Short Password [windows]
+  - Atomic Test #11: Domain Password Policy Check: No Number in Password [windows]
+  - Atomic Test #12: Domain Password Policy Check: No Special Character in Password [windows]
+  - Atomic Test #13: Domain Password Policy Check: No Uppercase Character in Password [windows]
+  - Atomic Test #14: Domain Password Policy Check: No Lowercase Character in Password [windows]
+  - Atomic Test #15: Domain Password Policy Check: Only Two Character Classes [windows]
+  - Atomic Test #16: Domain Password Policy Check: Common Password Use [windows]
 - T1574.013 KernelCallbackTable [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1137.003 Outlook Forms [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1274,8 +1282,8 @@
 - [T1056.002 Input Capture: GUI Input Capture](../../T1056.002/T1056.002.md)
   - Atomic Test #2: PowerShell - Prompt User for Password [windows]
 - [T1039 Data from Network Shared Drive](../../T1039/T1039.md)
-  - Atomic Test #1: Copy a sensitive File over Administive share with copy [windows]
-  - Atomic Test #2: Copy a sensitive File over Administive share with Powershell [windows]
+  - Atomic Test #1: Copy a sensitive File over Administrative share with copy [windows]
+  - Atomic Test #2: Copy a sensitive File over Administrative share with Powershell [windows]
 - T1114.002 Remote Email Collection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1056 Input Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1557.002 ARP Cache Poisoning [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1544,6 +1552,11 @@
   - Atomic Test #15: WinPwn - generaldomaininfo [windows]
   - Atomic Test #16: Kerbrute - userenum [windows]
   - Atomic Test #17: Wevtutil - Discover NTLM Users Remote [windows]
+  - Atomic Test #18: Suspicious LAPS Attributes Query with Get-ADComputer all properties [windows]
+  - Atomic Test #19: Suspicious LAPS Attributes Query with Get-ADComputer ms-Mcs-AdmPwd property [windows]
+  - Atomic Test #20: Suspicious LAPS Attributes Query with Get-ADComputer all properties and SearchScope [windows]
+  - Atomic Test #21: Suspicious LAPS Attributes Query with adfind all properties [windows]
+  - Atomic Test #22: Suspicious LAPS Attributes Query with adfind ms-Mcs-AdmPwd [windows]
 - T1063 Security Software Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1087.001 Account Discovery: Local Account](../../T1087.001/T1087.001.md)
   - Atomic Test #8: Enumerate all accounts on Windows (Local) [windows]
@@ -1566,6 +1579,7 @@
   - Atomic Test #11: Get-ADUser Enumeration using UserAccountControl flags (AS-REP Roasting) [windows]
   - Atomic Test #12: Get-DomainGroupMember with PowerView [windows]
   - Atomic Test #13: Get-DomainGroup with PowerView [windows]
+  - Atomic Test #14: Active Directory Enumeration with LDIFDE [windows]
 - [T1007 System Service Discovery](../../T1007/T1007.md)
   - Atomic Test #1: System Service Discovery [windows]
   - Atomic Test #2: System Service Discovery - net.exe [windows]
@@ -1581,6 +1595,7 @@
   - Atomic Test #6: Share Discovery with PowerView [windows]
   - Atomic Test #7: PowerView ShareFinder [windows]
   - Atomic Test #8: WinPwn - shareenumeration [windows]
+  - Atomic Test #9: Network Share Discovery via dir command [windows]
 - [T1120 Peripheral Device Discovery](../../T1120/T1120.md)
   - Atomic Test #1: Win32_PnPEntity Hardware Inventory [windows]
   - Atomic Test #2: WinPwn - printercheck [windows]
@@ -1684,7 +1699,7 @@
   - Atomic Test #16: Enumerate Active Directory Computers with Get-AdComputer [windows]
   - Atomic Test #17: Enumerate Active Directory Computers with ADSISearcher [windows]
   - Atomic Test #18: Get-DomainController with PowerView [windows]
-  - Atomic Test #19: Get-wmiobject to Enumerate Domain Controllers [windows]
+  - Atomic Test #19: Get-WmiObject to Enumerate Domain Controllers [windows]
   - Atomic Test #20: Remote System Discovery - net group Domain Controller [windows]
 - [T1046 Network Service Discovery](../../T1046/T1046.md)
   - Atomic Test #3: Port Scan NMap for Windows [windows]

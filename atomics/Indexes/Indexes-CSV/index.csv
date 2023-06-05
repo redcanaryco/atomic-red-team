@@ -134,6 +134,7 @@ defense-evasion,T1140,Deobfuscate/Decode Files or Information,4,Base64 decoding 
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,5,Base64 decoding with shell utilities,b4f6a567-a27a-41e5-b8ef-ac4b4008bb7e,sh
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,6,Hex decoding with shell utilities,005943f9-8dd5-4349-8b46-0313c0a9f973,sh
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,7,Linux Base64 Encoded Shebang in CLI,3a15c372-67c1-4430-ac8e-ec06d641ce4d,sh
+defense-evasion,T1140,Deobfuscate/Decode Files or Information,8,XOR decoding and command execution using Python,c3b65cd5-ee51-4e98-b6a3-6cbdec138efc,bash
 defense-evasion,T1562,Impair Defenses,1,Windows Disable LSA Protection,40075d5f-3a70-4c66-9125-f72bee87247d,command_prompt
 defense-evasion,T1562,Impair Defenses,2,Disable journal logging via systemctl utility,c3a377f9-1203-4454-aa35-9d391d34768f,sh
 defense-evasion,T1562,Impair Defenses,3,Disable journal logging via sed utility,12e5551c-8d5c-408e-b3e4-63f53b03379f,sh
@@ -195,9 +196,11 @@ defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,12,
 defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,13,Edit UFW firewall sysctl.conf file,c4ae0701-88d3-4cd8-8bce-4801ed9f97e4,sh
 defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,14,Edit UFW firewall main configuration file,7b697ece-8270-46b5-bbc7-6b9e27081831,sh
 defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,15,Tail the UFW firewall log file,419cca0c-fa52-4572-b0d7-bc7c6f388a27,sh
-defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,16,LockBit Black - Unusual Windows firewall registry modification -cmd,a4651931-ebbb-4cde-9363-ddf3d66214cb,command_prompt
-defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,17,LockBit Black - Unusual Windows firewall registry modification -Powershell,80b453d1-eec5-4144-bf08-613a6c3ffe12,powershell
-defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,18,Blackbit - Disable Windows Firewall using netsh firewall,91f348e6-3760-4997-a93b-2ceee7f254ee,command_prompt
+defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,16,Disable iptables,7784c64e-ed0b-4b65-bf63-c86db229fd56,sh
+defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,17,Modify/delete iptables firewall rules,899a7fb5-d197-4951-8614-f19ac4a73ad4,sh
+defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,18,LockBit Black - Unusual Windows firewall registry modification -cmd,a4651931-ebbb-4cde-9363-ddf3d66214cb,command_prompt
+defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,19,LockBit Black - Unusual Windows firewall registry modification -Powershell,80b453d1-eec5-4144-bf08-613a6c3ffe12,powershell
+defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,20,Blackbit - Disable Windows Firewall using netsh firewall,91f348e6-3760-4997-a93b-2ceee7f254ee,command_prompt
 defense-evasion,T1207,Rogue Domain Controller,1,DCShadow (Active Directory),0f4c5eb0-98a0-4496-9c3d-656b4f2bc8f6,powershell
 defense-evasion,T1610,Deploy a container,1,Deploy Docker container,59aa6f26-7620-417e-9318-589e0fb7a372,bash
 defense-evasion,T1112,Modify Registry,1,Modify Registry of Current User Profile - cmd,1324796b-d0f6-455a-b4ae-21ffee6aa6b9,command_prompt
@@ -397,6 +400,7 @@ defense-evasion,T1027,Obfuscated Files or Information,6,DLP Evasion via Sensitiv
 defense-evasion,T1027,Obfuscated Files or Information,7,Obfuscated Command in PowerShell,8b3f4ed6-077b-4bdd-891c-2d237f19410f,powershell
 defense-evasion,T1027,Obfuscated Files or Information,8,Obfuscated Command Line using special Unicode characters,e68b945c-52d0-4dd9-a5e8-d173d70c448f,manual
 defense-evasion,T1027,Obfuscated Files or Information,9,Snake Malware Encrypted crmlog file,7e47ee60-9dd1-4269-9c4f-97953b183268,powershell
+defense-evasion,T1027,Obfuscated Files or Information,10,Execution from Compressed JScript File,fad04df1-5229-4185-b016-fb6010cd87ac,command_prompt
 defense-evasion,T1564.006,Run Virtual Instance,1,Register Portable Virtualbox,c59f246a-34f8-4e4d-9276-c295ef9ba0dd,command_prompt
 defense-evasion,T1564.006,Run Virtual Instance,2,Create and start VirtualBox virtual machine,88b81702-a1c0-49a9-95b2-2dd53d755767,command_prompt
 defense-evasion,T1564.006,Run Virtual Instance,3,Create and start Hyper-V virtual machine,fb8d4d7e-f5a4-481c-8867-febf13f8b6d3,powershell
@@ -443,6 +447,7 @@ defense-evasion,T1562.008,Impair Defenses: Disable Cloud Logs,5,AWS - CloudTrail
 defense-evasion,T1562.008,Impair Defenses: Disable Cloud Logs,6,AWS - Remove VPC Flow Logs using Stratus,93c150f5-ad7b-4ee3-8992-df06dec2ac79,sh
 defense-evasion,T1562.008,Impair Defenses: Disable Cloud Logs,7,AWS - CloudWatch Log Group Deletes,89422c87-b57b-4a04-a8ca-802bb9d06121,sh
 defense-evasion,T1562.008,Impair Defenses: Disable Cloud Logs,8,AWS CloudWatch Log Stream Deletes,33ca84bc-4259-4943-bd36-4655dc420932,sh
+defense-evasion,T1562.008,Impair Defenses: Disable Cloud Logs,9,Office 365 - Set Audit Bypass For a Mailbox,c9a2f6fe-7197-488c-af6d-10c782121ca6,powershell
 defense-evasion,T1564.003,Hide Artifacts: Hidden Window,1,Hidden Window,f151ee37-9e2b-47e6-80e4-550b9f999b7a,powershell
 defense-evasion,T1027.006,HTML Smuggling,1,HTML Smuggling Remote Payload,30cbeda4-08d9-42f1-8685-197fad677734,powershell
 defense-evasion,T1070.004,Indicator Removal on Host: File Deletion,1,Delete a single file - Linux/macOS,562d737f-2fc6-4b09-8c2a-7f8ff0828480,sh
@@ -943,6 +948,13 @@ persistence,T1098,Account Manipulation,6,Azure - adding user to Azure role in su
 persistence,T1098,Account Manipulation,7,Azure - adding service principal to Azure role in subscription,c8f4bc29-a151-48da-b3be-4680af56f404,powershell
 persistence,T1098,Account Manipulation,8,Azure AD - adding permission to application,94ea9cc3-81f9-4111-8dde-3fb54f36af4b,powershell
 persistence,T1098,Account Manipulation,9,Password Change on Directory Service Restore Mode (DSRM) Account,d5b886d9-d1c7-4b6e-a7b0-460041bf2823,command_prompt
+persistence,T1098,Account Manipulation,10,Domain Password Policy Check: Short Password,fc5f9414-bd67-4f5f-a08e-e5381e29cbd1,powershell
+persistence,T1098,Account Manipulation,11,Domain Password Policy Check: No Number in Password,68190529-069b-4ffc-a942-919704158065,powershell
+persistence,T1098,Account Manipulation,12,Domain Password Policy Check: No Special Character in Password,7d984ef2-2db2-4cec-b090-e637e1698f61,powershell
+persistence,T1098,Account Manipulation,13,Domain Password Policy Check: No Uppercase Character in Password,b299c120-44a7-4d68-b8e2-8ba5a28511ec,powershell
+persistence,T1098,Account Manipulation,14,Domain Password Policy Check: No Lowercase Character in Password,945da11e-977e-4dab-85d2-f394d03c5887,powershell
+persistence,T1098,Account Manipulation,15,Domain Password Policy Check: Only Two Character Classes,784d1349-5a26-4d20-af5e-d6af53bae460,powershell
+persistence,T1098,Account Manipulation,16,Domain Password Policy Check: Common Password Use,81959d03-c51f-49a1-bb24-23f1ec885578,powershell
 persistence,T1547.006,Boot or Logon Autostart Execution: Kernel Modules and Extensions,1,Linux - Load Kernel Module via insmod,687dcb93-9656-4853-9c36-9977315e9d23,bash
 persistence,T1547.006,Boot or Logon Autostart Execution: Kernel Modules and Extensions,2,MacOS - Load Kernel Module via kextload and kmutil,f4391089-d3a5-4dd1-ab22-0419527f2672,bash
 persistence,T1547.006,Boot or Logon Autostart Execution: Kernel Modules and Extensions,3,MacOS - Load Kernel Module via KextManagerLoadKextWithURL(),f0007753-beb3-41ea-9948-760785e4c1e5,bash
@@ -1125,8 +1137,8 @@ collection,T1125,Video Capture,1,Registry artefact when application use webcam,6
 collection,T1114.003,Email Collection: Email Forwarding Rule,1,Office365 - Email Forwarding,3234117e-151d-4254-9150-3d0bac41e38c,powershell
 collection,T1056.002,Input Capture: GUI Input Capture,1,AppleScript - Prompt User for Password,76628574-0bc1-4646-8fe2-8f4427b47d15,bash
 collection,T1056.002,Input Capture: GUI Input Capture,2,PowerShell - Prompt User for Password,2b162bfd-0928-4d4c-9ec3-4d9f88374b52,powershell
-collection,T1039,Data from Network Shared Drive,1,Copy a sensitive File over Administive share with copy,6ed67921-1774-44ba-bac6-adb51ed60660,command_prompt
-collection,T1039,Data from Network Shared Drive,2,Copy a sensitive File over Administive share with Powershell,7762e120-5879-44ff-97f8-008b401b9a98,powershell
+collection,T1039,Data from Network Shared Drive,1,Copy a sensitive File over Administrative share with copy,6ed67921-1774-44ba-bac6-adb51ed60660,command_prompt
+collection,T1039,Data from Network Shared Drive,2,Copy a sensitive File over Administrative share with Powershell,7762e120-5879-44ff-97f8-008b401b9a98,powershell
 collection,T1056.004,Input Capture: Credential API Hooking,1,Hook PowerShell TLS Encrypt/Decrypt Messages,de1934ea-1fbf-425b-8795-65fb27dd7e33,powershell
 lateral-movement,T1091,Replication Through Removable Media,1,USB Malware Spread Simulation,d44b7297-622c-4be8-ad88-ec40d7563c75,powershell
 lateral-movement,T1021.002,Remote Services: SMB/Windows Admin Shares,1,Map admin share,3386975b-367a-4fbb-9d77-4dcf3639ffd3,command_prompt
@@ -1347,6 +1359,11 @@ discovery,T1087.002,Account Discovery: Domain Account,14,Enumerate Root Domain l
 discovery,T1087.002,Account Discovery: Domain Account,15,WinPwn - generaldomaininfo,ce483c35-c74b-45a7-a670-631d1e69db3d,powershell
 discovery,T1087.002,Account Discovery: Domain Account,16,Kerbrute - userenum,f450461c-18d1-4452-9f0d-2c42c3f08624,powershell
 discovery,T1087.002,Account Discovery: Domain Account,17,Wevtutil - Discover NTLM Users Remote,b8a563d4-a836-4993-a74e-0a19b8481bfe,powershell
+discovery,T1087.002,Account Discovery: Domain Account,18,Suspicious LAPS Attributes Query with Get-ADComputer all properties,394012d9-2164-4d4f-b9e5-acf30ba933fe,powershell
+discovery,T1087.002,Account Discovery: Domain Account,19,Suspicious LAPS Attributes Query with Get-ADComputer ms-Mcs-AdmPwd property,6e85bdf9-7bc4-4259-ac0f-f0cb39964443,powershell
+discovery,T1087.002,Account Discovery: Domain Account,20,Suspicious LAPS Attributes Query with Get-ADComputer all properties and SearchScope,ffbcfd62-15d6-4989-a21a-80bfc8e58bb5,powershell
+discovery,T1087.002,Account Discovery: Domain Account,21,Suspicious LAPS Attributes Query with adfind all properties,abf00f6c-9983-4d9a-afbc-6b1c6c6448e1,powershell
+discovery,T1087.002,Account Discovery: Domain Account,22,Suspicious LAPS Attributes Query with adfind ms-Mcs-AdmPwd,51a98f96-0269-4e09-a10f-e307779a8b05,powershell
 discovery,T1087.001,Account Discovery: Local Account,1,Enumerate all accounts (Local),f8aab3dd-5990-4bf8-b8ab-2226c951696f,sh
 discovery,T1087.001,Account Discovery: Local Account,2,View sudoers access,fed9be70-0186-4bde-9f8a-20945f9370c2,sh
 discovery,T1087.001,Account Discovery: Local Account,3,View accounts with UID 0,c955a599-3653-4fe5-b631-f11c00eb0397,sh
@@ -1374,6 +1391,7 @@ discovery,T1069.002,Permission Groups Discovery: Domain Groups,10,Enumerate Acti
 discovery,T1069.002,Permission Groups Discovery: Domain Groups,11,Get-ADUser Enumeration using UserAccountControl flags (AS-REP Roasting),43fa81fb-34bb-4b5f-867b-03c7dbe0e3d8,powershell
 discovery,T1069.002,Permission Groups Discovery: Domain Groups,12,Get-DomainGroupMember with PowerView,46352f40-f283-4fe5-b56d-d9a71750e145,powershell
 discovery,T1069.002,Permission Groups Discovery: Domain Groups,13,Get-DomainGroup with PowerView,5a8a181c-2c8e-478d-a943-549305a01230,powershell
+discovery,T1069.002,Permission Groups Discovery: Domain Groups,14,Active Directory Enumeration with LDIFDE,22cf8cb9-adb1-4e8c-80ca-7c723dfc8784,command_prompt
 discovery,T1007,System Service Discovery,1,System Service Discovery,89676ba1-b1f8-47ee-b940-2e1a113ebc71,command_prompt
 discovery,T1007,System Service Discovery,2,System Service Discovery - net.exe,5f864a3f-8ce9-45c0-812c-bdf7d8aeacc3,command_prompt
 discovery,T1007,System Service Discovery,3,System Service Discovery - systemctl,f4b26bce-4c2c-46c0-bcc5-fce062d38bef,bash
@@ -1397,6 +1415,7 @@ discovery,T1135,Network Share Discovery,5,View available share drives,ab39a04f-0
 discovery,T1135,Network Share Discovery,6,Share Discovery with PowerView,b1636f0a-ba82-435c-b699-0d78794d8bfd,powershell
 discovery,T1135,Network Share Discovery,7,PowerView ShareFinder,d07e4cc1-98ae-447e-9d31-36cb430d28c4,powershell
 discovery,T1135,Network Share Discovery,8,WinPwn - shareenumeration,987901d1-5b87-4558-a6d9-cffcabc638b8,powershell
+discovery,T1135,Network Share Discovery,9,Network Share Discovery via dir command,13daa2cf-195a-43df-a8bd-7dd5ffb607b5,command_prompt
 discovery,T1120,Peripheral Device Discovery,1,Win32_PnPEntity Hardware Inventory,2cb4dbf2-2dca-4597-8678-4d39d207a3a5,powershell
 discovery,T1120,Peripheral Device Discovery,2,WinPwn - printercheck,cb6e76ca-861e-4a7f-be08-564caa3e6f75,powershell
 discovery,T1082,System Information Discovery,1,System Information Discovery,66703791-c902-4560-8770-42b8a91f7667,command_prompt
@@ -1520,7 +1539,7 @@ discovery,T1018,Remote System Discovery,15,Enumerate domain computers within Act
 discovery,T1018,Remote System Discovery,16,Enumerate Active Directory Computers with Get-AdComputer,97e89d9e-e3f5-41b5-a90f-1e0825df0fdf,powershell
 discovery,T1018,Remote System Discovery,17,Enumerate Active Directory Computers with ADSISearcher,64ede6ac-b57a-41c2-a7d1-32c6cd35397d,powershell
 discovery,T1018,Remote System Discovery,18,Get-DomainController with PowerView,b9d2e8ca-5520-4737-8076-4f08913da2c4,powershell
-discovery,T1018,Remote System Discovery,19,Get-wmiobject to Enumerate Domain Controllers,e3cf5123-f6c9-4375-bdf2-1bb3ba43a1ad,powershell
+discovery,T1018,Remote System Discovery,19,Get-WmiObject to Enumerate Domain Controllers,e3cf5123-f6c9-4375-bdf2-1bb3ba43a1ad,powershell
 discovery,T1018,Remote System Discovery,20,Remote System Discovery - net group Domain Controller,5843529a-5056-4bc1-9c13-a311e2af4ca0,command_prompt
 discovery,T1046,Network Service Discovery,1,Port Scan,68e907da-2539-48f6-9fc9-257a78c05540,bash
 discovery,T1046,Network Service Discovery,2,Port Scan Nmap,515942b0-a09f-4163-a7bb-22fefb6f185f,sh
