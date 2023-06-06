@@ -62,6 +62,13 @@ atomic_tests:
     Disables SELinux enforcement
   supported_platforms:
   - linux
+  dependencies:
+    - description: |
+        SELinux must be installed
+      prereq_command: |
+        which setenforce
+      get_prereq_command: |
+        echo "SELinux is not installed"; exit 1
   executor:
     command: |
       setenforce 0
@@ -704,7 +711,7 @@ atomic_tests:
   - windows
   executor:
     command: |
-      New-ItemProperty "HKCU:\Software\Policies\Microsoft\Windows\OOBE" -Name DisablePrivacyExperience -PropertyType DWord -Value 0 -Force
+      New-ItemProperty "HKCU:\Software\Policies\Microsoft\Windows\OOBE" -Name DisablePrivacyExperience -PropertyType DWord -Value 1 -Force
     cleanup_command: |
       Remove-ItemProperty "HKCU:\Software\Policies\Microsoft\Windows\OOBE" -Name DisablePrivacyExperience -Force -ErrorAction Ignore
     name: powershell

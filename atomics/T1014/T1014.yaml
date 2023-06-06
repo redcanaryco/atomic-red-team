@@ -9,7 +9,7 @@ atomic_tests:
   - linux
   input_arguments:
     rootkit_source_path:
-      description: Path to the rootkit source. Used when prerequistes are fetched.
+      description: Path to the rootkit source. Used when prerequisites are fetched.
       type: path
       default: PathToAtomicsFolder/T1014/src/Linux
     rootkit_path:
@@ -51,13 +51,9 @@ atomic_tests:
   - linux
   input_arguments:
     rootkit_source_path:
-      description: Path to the rootkit source. Used when prerequistes are fetched.
+      description: Path to the rootkit source. Used when prerequisites are fetched.
       type: path
       default: PathToAtomicsFolder/T1014/src/Linux
-    rootkit_path:
-      description: Path To rootkit
-      type: string
-      default: PathToAtomicsFolder/T1014/bin
     rootkit_name:
       description: Module name
       type: string
@@ -65,7 +61,7 @@ atomic_tests:
   dependency_executor_name: bash
   dependencies:
   - description: |
-      The kernel module must exist on disk at specified location (#{rootkit_path}/#{rootkit_name}.ko)
+      The kernel module must exist on disk at specified location (#{rootkit_source_path}/#{rootkit_name}.ko)
     prereq_command: |
       if [ -f /lib/modules/$(uname -r)/#{rootkit_name}.ko ]; then exit 0; else exit 1; fi;
     get_prereq_command: |
@@ -141,10 +137,6 @@ atomic_tests:
       description: Revision of the github repo zip
       type: string
       default: 898810523aa2033f582a4a5903ffe453334044f9
-    rootkit_path:
-      description: Path To rootkit
-      type: string
-      default: /tmp/atomic/Diamorphine
     rootkit_name:
       description: Module name
       type: string
@@ -152,7 +144,7 @@ atomic_tests:
   dependency_executor_name: bash
   dependencies:
   - description: |
-      The kernel module must exist on disk at specified location (#{rootkit_path}/#{rootkit_name}.ko)
+      The kernel module must exist on disk at specified location (#{rootkit_name}.ko)
     prereq_command: |
       if [ -f /lib/modules/$(uname -r)/#{rootkit_name}.ko ]; then exit 0; else exit 1; fi;
     get_prereq_command: |

@@ -22,12 +22,14 @@ atomic_tests:
   - description: |
       Requires Python
     prereq_command: |
-      which_python=`which python`; $which_python -V
+      which python || which python3
     get_prereq_command: |
+      echo "please install python to run this test"; exit 1
   executor:
     name: bash
     elevation_required: false
     command: |
+      which_python=`which python || which python3`
       $which_python -c "import gzip;input_file=open('#{path_to_input_file}', 'rb');content=input_file.read();input_file.close();output_file=gzip.GzipFile('#{path_to_output_file}','wb',compresslevel=6);output_file.write(content);output_file.close();"
     cleanup_command: |
       rm #{path_to_output_file}
@@ -51,12 +53,14 @@ atomic_tests:
   - description: |
       Requires Python
     prereq_command: |
-      which_python=`which python`; $which_python -V
+      which python || which python3
     get_prereq_command: |
+      echo "please install python to run this test"; exit 1
   executor:
     name: bash
     elevation_required: false
     command: |
+      which_python=`which python || which python3`
       $which_python -c "import bz2;input_file=open('#{path_to_input_file}','rb');content=input_file.read();input_file.close();bz2content=bz2.compress(content,compresslevel=9);output_file=open('#{path_to_output_file}','w+');output_file.write(str(bz2content));output_file.close();"
     cleanup_command: |
       rm #{path_to_output_file}
@@ -80,12 +84,14 @@ atomic_tests:
   - description: |
       Requires Python
     prereq_command: |
-      which_python=`which python`; $which_python -V
+      which python || which python3
     get_prereq_command: |
+      echo "please install python to run this test"; exit 1
   executor:
     name: bash
     elevation_required: false
     command: |
+      which_python=`which python || which python3`
       $which_python -c "from zipfile import ZipFile; ZipFile('#{path_to_output_file}', mode='w').write('#{path_to_input_file}')"
     cleanup_command: |
       rm #{path_to_output_file}
@@ -109,12 +115,14 @@ atomic_tests:
   - description: |
       Requires Python
     prereq_command: |
-      which_python=`which python`; $which_python -V
+      which python || which python3
     get_prereq_command: |
+      echo "please install python to run this test"; exit 1
   executor:
     name: bash
     elevation_required: false
     command: |
+      which_python=`which python || which python3`
       $which_python -c "from zipfile import ZipFile; ZipFile('#{path_to_output_file}', mode='w').write('#{path_to_input_file}')" 
     cleanup_command: |
       rm #{path_to_output_file}
