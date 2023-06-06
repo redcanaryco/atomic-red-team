@@ -11,11 +11,11 @@ atomic_tests:
   input_arguments:
     syslog_path:
       description: path of syslog file to delete. On macos it's /var/log/system.log*, on linux, it's /var/log/syslog*. Also note for File events, that on macos, /var/ is a link to /private/var/.
-      type: String
+      type: string
       default: /var/log/system.log
     macos_audit_path:
       description: path of audit file to delete
-      type: String
+      type: string
       default: /var/audit/20220725213300.202208110700021
   dependency_executor_name: sh
   dependencies:
@@ -53,7 +53,7 @@ atomic_tests:
   input_arguments:
     system_log_path:
       description: path of system log to delete.
-      type: String
+      type: string
       default: /var/log/system.log
   dependency_executor_name: sh
   dependencies:
@@ -78,7 +78,7 @@ atomic_tests:
   input_arguments:
     system_log_path:
       description: path of system log to delete.
-      type: String
+      type: string
       default: /var/log/system.log
   dependency_executor_name: sh
   dependencies:
@@ -103,15 +103,15 @@ atomic_tests:
   input_arguments:
     system_log_name1:
       description: name or prefix of system log to delete.
-      type: String
+      type: string
       default: system.log
     system_log_name2:
       description: name or prefix of system log to delete.
-      type: String
+      type: string
       default: system.log.97.gz
     system_log_name3:
       description: name or prefix of system log to delete.
-      type: String
+      type: string
       default: system.log.98.gz
   dependency_executor_name: sh
   dependencies:
@@ -137,7 +137,7 @@ atomic_tests:
   input_arguments:
     system_log_path:
       description: path to system.log
-      type: String
+      type: string
       default: /var/log/system.log
   executor:
     command: |
@@ -153,7 +153,7 @@ atomic_tests:
   input_arguments:
     system_log_path:
       description: path to system.log
-      type: String
+      type: string
       default: /var/log/system.log
   executor:
     command: |
@@ -169,7 +169,7 @@ atomic_tests:
   input_arguments:
     system_log_path:
       description: path to system.log
-      type: String
+      type: string
       default: /var/log/system.log
   dependency_executor_name: sh
   dependencies:
@@ -193,7 +193,7 @@ atomic_tests:
   input_arguments:
     system_log_path:
       description: path to system.log
-      type: String
+      type: string
       default: /var/log/system.log
   dependency_executor_name: sh
   dependencies:
@@ -219,11 +219,11 @@ atomic_tests:
   input_arguments:
     system_log_path:
       description: path to system.log
-      type: String
+      type: string
       default: /var/log/system.log
     system_log_folder:
       description: path to log parent folder
-      type: String
+      type: string
       default: /var/log/
   dependency_executor_name: sh
   dependencies:
@@ -248,7 +248,7 @@ atomic_tests:
   input_arguments:
     system_log_path:
       description: path to system.log
-      type: String
+      type: string
       default: /var/log/system.log
   dependency_executor_name: sh
   dependencies:
@@ -274,7 +274,7 @@ atomic_tests:
   input_arguments:
     system_log_path:
       description: path to system.log
-      type: String
+      type: string
       default: /var/log/system.log
   dependency_executor_name: sh
   dependencies:
@@ -298,7 +298,7 @@ atomic_tests:
   input_arguments:
     journal_folder:
       description: path to journal logs
-      type: String
+      type: string
       default: /var/log/journal
   dependency_executor_name: sh
   dependencies:
