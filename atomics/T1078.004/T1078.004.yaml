@@ -80,17 +80,40 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
+      Check if terraform is installed.
+    prereq_command: |
+      terraform version
+    get_prereq_command: |
+        echo Please install terraform.
+  - description: |
       Install-Module -Name Az
     prereq_command: |
       try {if (Get-InstalledModule -Name Az -ErrorAction SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
     get_prereq_command: |
       Install-Module -Name Az -Scope CurrentUser -Force
+  - description: |
+      Check if the user is logged into Azure.
+    prereq_command: |
+      az account show
+    get_prereq_command: |
+      echo Configure your Azure account using: az login. 
+  - description: |
+      Create dependency resources using terraform
+    prereq_command: |
+      try {if (Test-Path $PathToAtomicsFolder/T1078.004/src/T1078.004-2/terraform.tfstate ){ exit 0 } else {exit 1}} catch {exit 1}
+    get_prereq_command: |
+      cd $PathToAtomicsFolder/T1078.004/src/T1078.004-2/
+      terraform init
+      terraform apply -auto-approve
   executor:
     command: |
       $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
       $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
       Connect-AzAccount -Credential $creds
       New-AzAutomationRunbook -Name #{runbook_name} -Type PowerShell -ResourceGroupName #{resource_group} -Description 'my-test-runbook' -AutomationAccountName #{automation_account_name}
-      Remove-AzAutomationRunbook -AutomationAccountName #{automation_account_name} -Name #{runbook_name} -ResourceGroupName #{resource_group} -Force
     name: powershell
     elevation_required: false
+    cleanup_command: |
+      Remove-AzAutomationRunbook -AutomationAccountName #{automation_account_name} -Name #{runbook_name} -ResourceGroupName #{resource_group} -Force
+      cd $PathToAtomicsFolder/T1078.004/src/T1078.004-2/
+      terraform destroy -auto-approve

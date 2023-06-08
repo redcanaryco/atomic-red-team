@@ -626,6 +626,7 @@
   - Atomic Test #6: AWS - Remove VPC Flow Logs using Stratus [linux, macos]
   - Atomic Test #7: AWS - CloudWatch Log Group Deletes [iaas:aws]
   - Atomic Test #8: AWS CloudWatch Log Stream Deletes [iaas:aws]
+  - Atomic Test #9: Office 365 - Set Audit Bypass For a Mailbox [office-365]
 - [T1564.003 Hide Artifacts: Hidden Window](../../T1564.003/T1564.003.md)
   - Atomic Test #1: Hidden Window [windows]
 - T1147 Hidden Users [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
