@@ -75,6 +75,11 @@ atomic_tests:
 
   supported_platforms:
   - windows
+    input_arguments:
+      working_dir:
+        description: Working directory where the files will be downloaded and extracted
+        type: string
+        default: $env:TEMP
   executor:
     command: |-
 
@@ -84,20 +89,23 @@ atomic_tests:
       # uBlock Origin Lite to test side-loading
       $extension = "https://github.com/gorhill/uBlock/releases/download/uBOLite_0.1.23.6055/uBOLite_0.1.23.6055.chromium.mv3.zip"
 
-      Set-Location $env:TEMP
+      Set-Location "#{working_dir}"
 
-      Invoke-WebRequest -URI $chromium -OutFile $env:TEMP\chrome.zip
-      Invoke-WebRequest -URI $extension -OutFile $env:TEMP\extension.zip
+      Set-Variable ProgressPreference SilentlyContinue
+      Invoke-WebRequest -URI $chromium -OutFile "#{working_dir}\chrome.zip"
+      Invoke-WebRequest -URI $extension -OutFile "#{working_dir}\extension.zip"
 
 
-      Expand-Archive chrome.zip -DestinationPath $env:TEMP -Force
+      Expand-Archive chrome.zip -DestinationPath "#{working_dir}" -Force
       Expand-Archive extension.zip -Force
 
-      $chrome = Start-Process .\chrome-win\chrome.exe --load-extension="$env:TEMP\extension\" -PassThru
+      Start-Process .\chrome-win\chrome.exe --load-extension="#{working_dir}\extension\" -PassThru
 
     cleanup_command: |-
-      Stop-Process -Id $chrome.Id
+      Set-Location "#{working_dir}"
+      Stop-Process -Name chrome -Force
       Remove-Item .\chrome.zip, .\chrome-win, .\extension, .\extension.zip -Recurse -Force
+      Set-Variable ProgressPreference Continue
 
     name: powershell
     elevation_required: true
