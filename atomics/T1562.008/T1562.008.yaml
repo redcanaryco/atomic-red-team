@@ -439,3 +439,32 @@ atomic_tests:
       Disconnect-ExchangeOnline -Confirm:$false
     name: powershell
     elevation_required: false
+- name: GCP - Delete Activity Event Log
+  description: |
+    GCP provides 4 types of Cloud Audit Logs: Admin Activity, Data Access, System Events, and Policy Denied.
+    An adversary may attempt to delete logs in order to hide their activity. However, Admin Activity, System Events, and Policy Deny events logs cannot be deleted. 
+    
+    This Atomic attempts to delete the Activity Event log. An event is generated under the method name of `google.logging.v2.LoggingServiceV2.DeleteLog` with a Serverity of `ERROR`.
+  supported_platforms:
+  - iaas:gcp
+
+  input_arguments:
+    project-id:
+      description: ID of the GCP Project you to execute the command against.
+      type: string
+      default: atomic-project-1
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      gcloud auth login --no-launch-browser
+      gcloud config set project #{project-id}
+      gcloud logging logs delete projects/#{project-id}/logs/cloudaudit.googleapis.com%2Factivity --quiet
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Requires gcloud
+    prereq_command: |
+      if [ -x "$(command -v gcloud)" ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      echo "Please Install Google Cloud SDK before running this atomic test : https://cloud.google.com/sdk/docs/install"
