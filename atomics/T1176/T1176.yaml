@@ -64,3 +64,49 @@ atomic_tests:
       2. Click 'Get'
     name: manual
 
+- name: Google Chrome Load Unpacked Extension With Command Line
+  auto_generated_guid: 7a714703-9f6b-461c-b06d-e6aeac650f27
+
+  description: |-
+    This test loads an unpacked extension in Google Chrome with the `--load-extension` parameter. This technique was previously used by the Grandoreiro malware to load a malicious extension that would capture the browsing history, steal cookies and other user information. Other malwares also leverage this technique to hijack searches, steal passwords, inject ads, and more.
+    
+    References:
+    https://attack.mitre.org/techniques/T1176/
+    https://securityintelligence.com/posts/grandoreiro-malware-now-targeting-banks-in-spain/
+
+  supported_platforms:
+  - windows
+  input_arguments:
+    working_dir:
+      description: Working directory where the files will be downloaded and extracted
+      type: string
+      default: $env:TEMP
+  executor:
+    command: |-
+
+      # Chromium
+      $chromium =  "https://commondatastorage.googleapis.com/chromium-browser-snapshots/Win_x64/1153778/chrome-win.zip"
+
+      # uBlock Origin Lite to test side-loading
+      $extension = "https://github.com/gorhill/uBlock/releases/download/uBOLite_0.1.23.6055/uBOLite_0.1.23.6055.chromium.mv3.zip"
+
+      Set-Location "#{working_dir}"
+
+      Set-Variable ProgressPreference SilentlyContinue
+      Invoke-WebRequest -URI $chromium -OutFile "#{working_dir}\chrome.zip"
+      Invoke-WebRequest -URI $extension -OutFile "#{working_dir}\extension.zip"
+
+
+      Expand-Archive chrome.zip -DestinationPath "#{working_dir}" -Force
+      Expand-Archive extension.zip -Force
+
+      Start-Process .\chrome-win\chrome.exe --load-extension="#{working_dir}\extension\" -PassThru
+
+    cleanup_command: |-
+      Set-Location "#{working_dir}"
+      Stop-Process -Name chrome -Force
+      Remove-Item .\chrome.zip, .\chrome-win, .\extension, .\extension.zip -Recurse -Force
+      Set-Variable ProgressPreference Continue
+
+    name: powershell
+    elevation_required: true
