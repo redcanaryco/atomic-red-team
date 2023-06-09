@@ -119,12 +119,6 @@ atomic_tests:
       description: Path where captured results will be placed
       type: path
       default: /tmp/T1087.001.txt
-  dependency_executor_name: sh
-  dependencies:
-  - description: |
-      Check if lastlog command exists on the machine
-    prereq_command: |
-      if [ -x "$(command -v lastlogin)" ]; then exit 0; else exit 1; fi
   executor:
     command: |
       lastlogin > #{output_file}

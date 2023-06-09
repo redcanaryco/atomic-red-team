@@ -60,12 +60,6 @@ atomic_tests:
     Upon successful execution, sh will spawn multiple commands and output will be via stdout.
   supported_platforms:
   - freebsd
-  dependency_executor_name: sh
-  dependencies:
-  - description: |
-      Check if arp command exists on the machine
-    prereq_command: |
-      if [ -x "$(command -v arp)" ]; then exit 0; else exit 1; fi;
   executor:
     command: |
       if [ -x "$(command -v arp)" ]; then arp -a; else echo "arp is missing from the machine. skipping..."; fi;

@@ -287,12 +287,6 @@ atomic_tests:
     Use the netstat command to display the kernels routing tables.
   supported_platforms:
   - freebsd
-  dependency_executor_name: sh
-  dependencies:
-  - description: |
-      Check if ip command exists on the machine
-    prereq_command: |
-      if [ -x "$(command -v netstat)" ]; then exit 0; else exit 1; fi;
   executor:
     command: |
       netstat -r | grep default
