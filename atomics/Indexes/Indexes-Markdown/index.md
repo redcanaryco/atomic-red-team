@@ -1330,6 +1330,7 @@
   - Atomic Test #2: Chrome (Chrome Web Store) [linux, windows, macos]
   - Atomic Test #3: Firefox [linux, windows, macos]
   - Atomic Test #4: Edge Chromium Addon - VPN [windows, macos]
+  - Atomic Test #5: Google Chrome Load Unpacked Extension With Command Line [windows]
 - T1058 Service Registry Permissions Weakness [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1137.005 Outlook Rules [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.011 Event Triggered Execution: Application Shimming](../../T1546.011/T1546.011.md)
