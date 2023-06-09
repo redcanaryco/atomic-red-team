@@ -77,22 +77,28 @@ atomic_tests:
   supported_platforms:
   - iaas:gcp
   input_arguments:
-    project-id:
+    project_id:
       description: ID of the GCP Project you to execute the command against.
       type: string
       default: atomic-test-1
-    bucket-name:
+    bucket_name:
       description: The name of the bucket to delete.
       type: string
       default: atomic-red-team-bucket
+    location:
+      description: Region to be deployed
+      type: string
+      default: US
   executor:
     name: sh
     elevation_required: false
     command: |
-      gcloud auth login --no-launch-browser
-      gcloud config set project #{project-id}
-      gcloud storage buckets create gs://#{bucket-name}
-      gcloud storage buckets delete gs://#{bucket-name}
+      gcloud config set project #{project_id}
+      gcloud storage buckets delete gs://#{bucket_name}
+    cleanup_command: |
+      cd $PathToAtomicsFolder/T1485/src/T1485-4/
+      terraform state rm google_storage_bucket.bucket
+      terraform destroy -auto-approve
   dependency_executor_name: sh
   dependencies:
   - description: |
@@ -101,3 +107,23 @@ atomic_tests:
       if [ -x "$(command -v gcloud)" ]; then exit 0; else exit 1; fi;
     get_prereq_command: |
       echo "Please Install Google Cloud SDK before running this atomic test : https://cloud.google.com/sdk/docs/install"
+  - description: | 
+      Check if user is logged in 
+    prereq_command: |
+      gcloud config get-value account
+    get_prereq_command: |
+      gcloud auth login --no-launch-browser
+  - description: |
+      Check if terraform is installed.
+    prereq_command: |
+      terraform version
+    get_prereq_command: |
+        echo Please install the terraform.
+  - description: |
+      Create dependency resources using terraform
+    prereq_command: |
+      stat $PathToAtomicsFolder/T1485/src/T1485-4/terraform.tfstate
+    get_prereq_command: |
+      cd $PathToAtomicsFolder/T1485/src/T1485-4/
+      terraform init
+      terraform apply -auto-approve
