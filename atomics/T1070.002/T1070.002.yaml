@@ -150,14 +150,9 @@ atomic_tests:
     This test reads real-time system log file and writes empty string to it, thus clearing the log file without tampering with the logging process
   supported_platforms:
   - macos
-  input_arguments:
-    system_log_path:
-      description: path to system.log
-      type: string
-      default: /var/log/system.log
   executor:
     command: |
-      sudo log -f /var/log/system.log | : > #{system_log_path}
+      sudo log -f /var/log/system.log | : > /var/log/system.log
     name: sh
     elevation_required: true
 - name: Delete system log files via unlink utility
