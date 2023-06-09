@@ -15,7 +15,6 @@ atomic_tests:
     name: sh
     elevation_required: true
 - name: rm -rf
-  auto_generated_guid: 
   description: |
     Delete messages and security logs
   supported_platforms:
@@ -52,7 +51,6 @@ atomic_tests:
     name: sh
     elevation_required: true
 - name: Truncate system log files via truncate utility (freebsd)
-  auto_generated_guid: 
   description: |
     This test truncates the system log files using the truncate utility with (-s 0 or --size=0) parameter which sets file size to zero, thus emptying the file content
   supported_platforms:
@@ -77,7 +75,6 @@ atomic_tests:
     name: sh
     elevation_required: true
 - name: Delete log files via cat utility by appending /dev/null or /dev/zero (freebsd)
-  auto_generated_guid: 
   description: |
     The first sub-test truncates the log file to zero bytes via /dev/null and the second sub-test fills the log file with null bytes(zeroes) via /dev/zero, using cat utility
   supported_platforms:
@@ -114,7 +111,6 @@ atomic_tests:
     name: sh
     elevation_required: true
 - name: Overwrite FreeBSD system log via echo utility
-  auto_generated_guid: 
   description: |
     This test overwrites the contents of system log file with an empty string using echo utility
   supported_platforms:
@@ -148,11 +144,10 @@ atomic_tests:
     name: sh
     elevation_required: true
 - name: Delete system log files via unlink utility (freebsd)
-  auto_generated_guid: 
   description: |
     This test deletes the messages log file using unlink utility
   supported_platforms:
-  - macos
+  - freebsd
   executor:
     command: |
       unlink /var/log/messages

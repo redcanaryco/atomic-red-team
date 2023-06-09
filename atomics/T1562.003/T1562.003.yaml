@@ -19,7 +19,6 @@ atomic_tests:
       #{evil_command}
     name: sh
 - name: Disable history collection (freebsd)
-  auto_generated_guid: 
   description: |
     Disables history collection in shells
   supported_platforms:
@@ -119,7 +118,6 @@ atomic_tests:
     cleanup_command: |
       export HISTCONTROL=$(echo $TEST)
 - name: Setting the HISTSIZE environment variable
-  auto_generated_guid: 
   description: |
     An Adversary may set the sh history files size environment variable (HISTSIZE) to zero to prevent the logging of commands to the history file after they log out of the system.
 
@@ -157,7 +155,6 @@ atomic_tests:
     cleanup_command: |
       export HISTFILE=$(echo $TEST)
 - name: Setting the HISTFILE environment variable (freebsd)
-  auto_generated_guid: 
   description: |
     An Adversary may clear, unset or redirect the history environment variable HISTFILE to prevent logging of commands to the history file after they log out of the system.
 

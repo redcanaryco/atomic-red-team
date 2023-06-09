@@ -119,7 +119,6 @@ atomic_tests:
     cleanup_command: |
       userdel -r art 
 - name: Create local account (FreeBSD)
-  auto_generated_guid: 
   description: |
     An adversary may wish to create an account with admin privileges to work with. In this test we create a "art" user with the password art, switch to art, execute whoami, exit and delete the art user.
   supported_platforms:
@@ -158,7 +157,6 @@ atomic_tests:
     cleanup_command: |
       userdel -r art 
 - name: Reactivate a locked/expired account (FreeBSD)
-  auto_generated_guid: 
   description: |
     A system administrator may have locked and expired a user account rather than deleting it. "the user is coming back, at some stage" An adversary may reactivate a inactive account in an attempt to appear legitimate. 
 
@@ -202,7 +200,6 @@ atomic_tests:
       cat /etc/passwd |grep nobody 
       # -> nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
 - name: Login as nobody (freebsd)
-  auto_generated_guid: 
   description: |
     An adversary may try to re-purpose a system account to appear legitimate. In this test change the login shell of the nobody account, change its password to nobody, su to nobody, exit, then reset nobody's shell to /usr/sbin/nologin.
   supported_platforms:

@@ -54,7 +54,6 @@ atomic_tests:
       if [ -x "$(command -v netstat)" ]; then netstat -ant | awk '{print $NF}' | grep -v '[a-z]' | sort | uniq -c; else echo "netstat is missing from the machine. skipping..."; fi;
     name: sh
 - name: System Network Configuration Discovery (freebsd)
-  auto_generated_guid: 
   description: |
     Identify network configuration information.
 
