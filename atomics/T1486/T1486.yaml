@@ -214,34 +214,6 @@ atomic_tests:
       rm #{encrypted_file_name}
     name: sh
     elevation_required: false  
-- name: Encrypt files using ccrypt utility - macOS
-  description: |
-    This test encrypts the file(s) using the ccrypt utility
-  supported_platforms:
-  - macos
-  dependency_executor_name: sh
-  dependencies:
-  - description: |
-      Check if ccrypt command exists on the machine
-    prereq_command: |
-      ccrypt --version
-    get_prereq_command: |
-      echo Installing 7z, using brew
-      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-      brew install ccrypt
-  input_arguments:
-    input_file_path:
-      description: Path to the file that you want to encrypt
-      type: Path
-      default: ~/test.txt 
-  executor:
-    command: |
-      ccrypt #{input_file_path}
-      echo hello
-    cleanup_command: |
-      rm #{input_file_path}.cpt
-    name: sh
-    elevation_required: true 
     
 - name: Encrypt files using openssl utility - macOS
   description: |
@@ -256,7 +228,7 @@ atomic_tests:
     input_file_path:
       description: Path to the file that you want to encrypt
       type: Path
-      default: /etc/passwd 
+      default: ~/test.txt
     output_file_name:
       description: Path to the file that you want to encrypt
       type: String
