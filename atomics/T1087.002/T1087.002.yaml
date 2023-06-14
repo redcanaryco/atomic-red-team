@@ -194,7 +194,7 @@ atomic_tests:
       default: $env:UserDnsDomain
     uac_prop:
       description: UAC Property to search
-      type: string
+      type: integer
       default: 524288
   dependencies:
   - description: |
@@ -313,7 +313,7 @@ atomic_tests:
       cd $env:temp
       .\kerbrute.exe userenum -d #{Domain} --dc #{DomainController} $env:TEMP\username.txt
     name: powershell
-- name: Wevtutil - Discover NTLM Users Remote 
+- name: Wevtutil - Discover NTLM Users Remote
   auto_generated_guid: b8a563d4-a836-4993-a74e-0a19b8481bfe
   description: |
     This test discovers users who have authenticated against a Domain Controller via NTLM. 
@@ -329,3 +329,86 @@ atomic_tests:
     cleanup_command: |
       Remove-Item -Path \\$IpAddress\c$\ntlmusers.evtx
     name: powershell
+
+- name: Suspicious LAPS Attributes Query with Get-ADComputer all properties
+  auto_generated_guid: 394012d9-2164-4d4f-b9e5-acf30ba933fe
+  description: This test executes LDAP query using powershell command Get-ADComputer and lists all the properties including Microsoft LAPS attributes ms-mcs-AdmPwd and ms-mcs-AdmPwdExpirationTime  
+  supported_platforms:
+  - windows
+  input_arguments:
+    hostname:
+      description: Name of the host
+      type: string
+      default: $env:computername
+  executor:
+    command: 'Get-ADComputer #{hostname} -Properties *'
+    cleanup_command: 
+    name: powershell
+    elevation_required: false
+
+- name: Suspicious LAPS Attributes Query with Get-ADComputer ms-Mcs-AdmPwd property
+  auto_generated_guid: 6e85bdf9-7bc4-4259-ac0f-f0cb39964443
+  description: This test executes LDAP query using powershell command Get-ADComputer and lists Microsoft LAPS attributes ms-mcs-AdmPwd and ms-mcs-AdmPwdExpirationTime
+  supported_platforms:
+  - windows
+  input_arguments:
+    hostname:
+      description: Name of the host
+      type: string
+      default: $env:computername
+  executor:
+    command: 'Get-ADComputer #{hostname} -Properties ms-Mcs-AdmPwd, ms-Mcs-AdmPwdExpirationTime'
+    cleanup_command: 
+    name: powershell
+    elevation_required: false
+  
+- name: Suspicious LAPS Attributes Query with Get-ADComputer all properties and SearchScope 
+  auto_generated_guid: ffbcfd62-15d6-4989-a21a-80bfc8e58bb5
+  description: This test executes LDAP query using powershell command Get-ADComputer with SearchScope as subtree and lists all the properties including Microsoft LAPS attributes ms-mcs-AdmPwd and ms-mcs-AdmPwdExpirationTime
+  supported_platforms:
+  - windows
+  executor:
+    command: Get-adcomputer -SearchScope subtree -filter "name -like '*'" -Properties *
+    cleanup_command: 
+    name: powershell
+    elevation_required: false
+  
+- name: Suspicious LAPS Attributes Query with adfind all properties
+  auto_generated_guid: abf00f6c-9983-4d9a-afbc-6b1c6c6448e1
+  description: This test executes LDAP query using adfind command and lists all the attributes including Microsoft LAPS attributes ms-mcs-AdmPwd and ms-mcs-AdmPwdExpirationTime
+  supported_platforms:
+  - windows
+  input_arguments:
+    adfind_path:
+      description: Path to adfind
+      type: string
+      default: C:\AtomicRedTeam\atomics\T1087.002\src\AdFind.exe
+    domain:
+      description: Domain of the host
+      type: string
+      default: $env:USERDOMAIN
+  executor:
+    command: '#{adfind_path} -h #{domain} -s subtree -f "objectclass=computer" *'
+    cleanup_command: 
+    name: powershell
+    elevation_required: false
+
+- name: Suspicious LAPS Attributes Query with adfind ms-Mcs-AdmPwd
+  auto_generated_guid: 51a98f96-0269-4e09-a10f-e307779a8b05
+  description: This test executes LDAP query using adfind command and lists Microsoft LAPS attributes ms-mcs-AdmPwd and ms-mcs-AdmPwdExpirationTime
+  supported_platforms:
+  - windows
+  input_arguments:
+    adfind_path:
+      description: Path to adfind
+      type: string
+      default: C:\AtomicRedTeam\atomics\T1087.002\src\AdFind.exe
+    domain:
+      description: Domain of the host
+      type: string
+      default: $env:USERDOMAIN
+  executor:
+    command: '#{adfind_path} -h #{domain} -s subtree -f "objectclass=computer" ms-Mcs-AdmPwd, ms-Mcs-AdmPwdExpirationTime'
+    cleanup_command: 
+    name: powershell
+    elevation_required: false

@@ -1,6 +1,8 @@
 # Linux Atomic Tests by ATT&CK Tactic & Technique
 # defense-evasion
+- T1205.002 Socket Filters [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1066 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1027.009 Embedded Payloads [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1556.003 Modify Authentication Process: Pluggable Authentication Modules](../../T1556.003/T1556.003.md)
   - Atomic Test #1: Malicious PAM rule [linux]
   - Atomic Test #2: Malicious PAM module [linux]
@@ -31,6 +33,7 @@
 - T1542.003 Bootkit [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1036.005 Masquerading: Match Legitimate Name or Location](../../T1036.005/T1036.005.md)
   - Atomic Test #1: Execute a process from a directory masquerading as the current parent directory. [macos, linux]
+- T1036.008 Masquerade File Type [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1564 Hide Artifacts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1497.001 Virtualization/Sandbox Evasion: System Checks](../../T1497.001/T1497.001.md)
   - Atomic Test #1: Detect Virtualization Environment (Linux) [linux]
@@ -40,6 +43,8 @@
   - Atomic Test #14: Overwrite Linux Mail Spool [linux]
   - Atomic Test #15: Overwrite Linux Log [linux]
 - T1089 Disabling Security Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1027.008 Stripped Payloads [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1070.007 Clear Network Connection History and Configurations [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1070.003 Indicator Removal on Host: Clear Command History](../../T1070.003/T1070.003.md)
   - Atomic Test #1: Clear Bash history (rm) [linux, macos]
   - Atomic Test #2: Clear Bash history (echo) [linux]
@@ -56,10 +61,14 @@
   - Atomic Test #5: Base64 decoding with shell utilities [linux, macos]
   - Atomic Test #6: Hex decoding with shell utilities [linux, macos]
   - Atomic Test #7: Linux Base64 Encoded Shebang in CLI [linux, macos]
+  - Atomic Test #8: XOR decoding and command execution using Python [linux, macos]
 - [T1562 Impair Defenses](../../T1562/T1562.md)
   - Atomic Test #2: Disable journal logging via systemctl utility [linux]
   - Atomic Test #3: Disable journal logging via sed utility [linux]
 - T1036 Masquerading [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1070.008 Email Collection: Mailbox Manipulation](../../T1070.008/T1070.008.md)
+  - Atomic Test #2: Copy and Delete Mailbox Data on Linux [linux]
+  - Atomic Test #5: Copy and Modify Mailbox Data on Linux [linux]
 - T1055 Process Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1218 Signed Binary Proxy Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -81,6 +90,8 @@
   - Atomic Test #13: Edit UFW firewall sysctl.conf file [linux]
   - Atomic Test #14: Edit UFW firewall main configuration file [linux]
   - Atomic Test #15: Tail the UFW firewall log file [linux]
+  - Atomic Test #16: Disable iptables [linux]
+  - Atomic Test #17: Modify/delete iptables firewall rules [linux]
 - T1107 File Deletion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1027.001 Obfuscated Files or Information: Binary Padding](../../T1027.001/T1027.001.md)
   - Atomic Test #1: Pad Binary to Change Hash - Linux/macOS dd [macos, linux]
@@ -139,10 +150,12 @@
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1027 Obfuscated Files or Information](../../T1027/T1027.md)
   - Atomic Test #1: Decode base64 Data into Script [macos, linux]
+- T1556.006 Multi-Factor Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1564.006 Run Virtual Instance [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1553 Subvert Trust Controls [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1036.003 Masquerading: Rename System Utilities](../../T1036.003/T1036.003.md)
   - Atomic Test #2: Masquerading as Linux crond process. [linux]
+- T1562.011 Spoof Security Alerting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.003 Steganography [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1553.004 Subvert Trust Controls: Install Root Certificate](../../T1553.004/T1553.004.md)
@@ -156,8 +169,10 @@
 - T1564.003 Hide Artifacts: Hidden Window [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1500 Compile After Delivery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1055.009 Proc Memory [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1070.009 Clear Persistence [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1146 Clear Command History [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.006 HTML Smuggling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1027.010 Command Obfuscation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1130 Install Root Certificate [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1070.004 Indicator Removal on Host: File Deletion](../../T1070.004/T1070.004.md)
   - Atomic Test #1: Delete a single file - Linux/macOS [linux, macos]
@@ -184,65 +199,8 @@
   - Atomic Test #10: Login as nobody (Linux) [linux]
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 
-# collection
-- [T1560.001 Archive Collected Data: Archive via Utility](../../T1560.001/T1560.001.md)
-  - Atomic Test #5: Data Compressed - nix - zip [linux, macos]
-  - Atomic Test #6: Data Compressed - nix - gzip Single File [linux, macos]
-  - Atomic Test #7: Data Compressed - nix - tar Folder or File [linux, macos]
-  - Atomic Test #8: Data Encrypted with zip and gpg symmetric [macos, linux]
-- [T1113 Screen Capture](../../T1113/T1113.md)
-  - Atomic Test #3: X Windows Capture [linux]
-  - Atomic Test #4: Capture Linux Desktop using Import Tool [linux]
-- T1557 Adversary-in-the-Middle [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1056.001 Input Capture: Keylogging](../../T1056.001/T1056.001.md)
-  - Atomic Test #2: Living off the land Terminal Input Capture on Linux with pam.d [linux]
-  - Atomic Test #3: Logging bash history to syslog [linux]
-  - Atomic Test #4: Bash session based keylogger [linux]
-  - Atomic Test #5: SSHD PAM keylogger [linux]
-  - Atomic Test #6: Auditd keylogger [linux]
-- T1123 Audio Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1560.003 Archive via Custom Method [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1114 Email Collection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1025 Data from Removable Media [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1074.001 Data Staged: Local Data Staging](../../T1074.001/T1074.001.md)
-  - Atomic Test #2: Stage data from Discovery.sh [linux, macos]
-- T1119 Automated Collection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1115 Clipboard Data](../../T1115/T1115.md)
-  - Atomic Test #5: Add or copy content to clipboard with xClip [linux]
-- T1074.002 Remote Data Staging [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1005 Data from Local System [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1560.002 Archive Collected Data: Archive via Library](../../T1560.002/T1560.002.md)
-  - Atomic Test #1: Compressing data using GZip in Python (Linux) [linux]
-  - Atomic Test #2: Compressing data using bz2 in Python (Linux) [linux]
-  - Atomic Test #3: Compressing data using zipfile in Python (Linux) [linux]
-  - Atomic Test #4: Compressing data using tarfile in Python (Linux) [linux]
-- T1560 Archive Collected Data [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1557.003 DHCP Spoofing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1056.003 Web Portal Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1125 Video Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1114.003 Email Collection: Email Forwarding Rule [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1074 Data Staged [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1056.002 Input Capture: GUI Input Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1039 Data from Network Shared Drive [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1056 Input Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1557.002 ARP Cache Poisoning [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1213 Data from Information Repositories [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-
-# lateral-movement
-- T1021.005 VNC [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1080 Taint Shared Content [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1021.004 SSH [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1017 Application Deployment Software [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1563.001 SSH Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1021 Remote Services [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1563 Remote Service Session Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1072 Software Deployment Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1210 Exploitation of Remote Services [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1534 Internal Spearphishing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1570 Lateral Tool Transfer [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1184 SSH Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-
 # persistence
+- T1205.002 Socket Filters [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1156 Malicious Shell Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1067 Bootkit [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -296,6 +254,7 @@
   - Atomic Test #3: Create a system level transient systemd service and timer [linux]
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1556.006 Multi-Factor Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1154 Trap [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1546 Event Triggered Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.004 Event Triggered Execution: .bash_profile and .bashrc](../../T1546.004/T1546.004.md)
@@ -310,6 +269,7 @@
 - T1100 Web Shell [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1505 Server Software Component [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1546.016 Installer Packages [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1158 Hidden Files and Directories [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1037.004 Boot or Logon Initialization Scripts: Rc.common](../../T1037.004/T1037.004.md)
   - Atomic Test #2: rc.common [linux]
@@ -327,6 +287,129 @@
   - Atomic Test #8: Create local account (Linux) [linux]
   - Atomic Test #9: Reactivate a locked/expired account (Linux) [linux]
   - Atomic Test #10: Login as nobody (Linux) [linux]
+
+# command-and-control
+- T1205.002 Socket Filters [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1132.001 Data Encoding: Standard Encoding](../../T1132.001/T1132.001.md)
+  - Atomic Test #1: Base64 Encoded data. [macos, linux]
+- T1568.002 Domain Generation Algorithms [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1071.004 Application Layer Protocol: DNS [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1172 Domain Fronting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1573.001 Symmetric Cryptography [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1568.001 Fast Flux DNS [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1071 Application Layer Protocol [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1024 Custom Cryptographic Protocol [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1219 Remote Access Software [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1079 Multilayer Encryption [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1205 Traffic Signaling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1032 Standard Cryptographic Protocol [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1572 Protocol Tunneling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1483 Domain Generation Algorithms [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1071.003 Mail Protocols [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1092 Communication Through Removable Media [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1090.002 External Proxy [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1090 Proxy [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1568 Dynamic Resolution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1188 Multi-hop Proxy [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1102 Web Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1568.003 DNS Calculation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1104 Multi-Stage Channels [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1205.001 Port Knocking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1026 Multiband Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1071.002 File Transfer Protocols [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1102.003 One-Way Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1090.003 Proxy: Multi-hop Proxy](../../T1090.003/T1090.003.md)
+  - Atomic Test #3: Tor Proxy Usage - Debian/Ubuntu [linux]
+- T1001 Data Obfuscation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1571 Non-Standard Port](../../T1571/T1571.md)
+  - Atomic Test #2: Testing usage of uncommonly used port [linux, macos]
+- T1573 Encrypted Channel [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1102.002 Bidirectional Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1573.002 Asymmetric Cryptography [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1095 Non-Application Layer Protocol [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1001.003 Protocol Impersonation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1065 Uncommonly Used Port [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1090.004 Domain Fronting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1132 Data Encoding [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1132.002 Non-Standard Encoding [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1071.001 Application Layer Protocol: Web Protocols](../../T1071.001/T1071.001.md)
+  - Atomic Test #3: Malicious User Agents - Nix [linux, macos]
+- [T1105 Ingress Tool Transfer](../../T1105/T1105.md)
+  - Atomic Test #1: rsync remote file copy (push) [linux, macos]
+  - Atomic Test #2: rsync remote file copy (pull) [linux, macos]
+  - Atomic Test #3: scp remote file copy (push) [linux, macos]
+  - Atomic Test #4: scp remote file copy (pull) [linux, macos]
+  - Atomic Test #5: sftp remote file copy (push) [linux, macos]
+  - Atomic Test #6: sftp remote file copy (pull) [linux, macos]
+  - Atomic Test #14: whois file download [linux, macos]
+  - Atomic Test #27: Linux Download File and Run [linux]
+- T1001.002 Steganography [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1008 Fallback Channels [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1090.001 Proxy: Internal Proxy](../../T1090.001/T1090.001.md)
+  - Atomic Test #1: Connection Proxy [macos, linux]
+- T1094 Custom Command and Control Protocol [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1102.001 Dead Drop Resolver [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1001.001 Junk Data [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1043 Commonly Used Port [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+
+# collection
+- [T1560.001 Archive Collected Data: Archive via Utility](../../T1560.001/T1560.001.md)
+  - Atomic Test #5: Data Compressed - nix - zip [linux, macos]
+  - Atomic Test #6: Data Compressed - nix - gzip Single File [linux, macos]
+  - Atomic Test #7: Data Compressed - nix - tar Folder or File [linux, macos]
+  - Atomic Test #8: Data Encrypted with zip and gpg symmetric [macos, linux]
+  - Atomic Test #9: Encrypts collected data with AES-256 and Base64 [linux, macos]
+- [T1113 Screen Capture](../../T1113/T1113.md)
+  - Atomic Test #3: X Windows Capture [linux]
+  - Atomic Test #4: Capture Linux Desktop using Import Tool [linux]
+- T1557 Adversary-in-the-Middle [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1056.001 Input Capture: Keylogging](../../T1056.001/T1056.001.md)
+  - Atomic Test #2: Living off the land Terminal Input Capture on Linux with pam.d [linux]
+  - Atomic Test #3: Logging bash history to syslog [linux]
+  - Atomic Test #4: Bash session based keylogger [linux]
+  - Atomic Test #5: SSHD PAM keylogger [linux]
+  - Atomic Test #6: Auditd keylogger [linux]
+- T1123 Audio Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1560.003 Archive via Custom Method [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1114 Email Collection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1025 Data from Removable Media [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1074.001 Data Staged: Local Data Staging](../../T1074.001/T1074.001.md)
+  - Atomic Test #2: Stage data from Discovery.sh [linux, macos]
+- T1119 Automated Collection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1115 Clipboard Data](../../T1115/T1115.md)
+  - Atomic Test #5: Add or copy content to clipboard with xClip [linux]
+- T1074.002 Remote Data Staging [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1005 Data from Local System [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1560.002 Archive Collected Data: Archive via Library](../../T1560.002/T1560.002.md)
+  - Atomic Test #1: Compressing data using GZip in Python (Linux) [linux]
+  - Atomic Test #2: Compressing data using bz2 in Python (Linux) [linux]
+  - Atomic Test #3: Compressing data using zipfile in Python (Linux) [linux]
+  - Atomic Test #4: Compressing data using tarfile in Python (Linux) [linux]
+- T1560 Archive Collected Data [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1557.003 DHCP Spoofing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1056.003 Web Portal Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1125 Video Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1114.003 Email Collection: Email Forwarding Rule [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1074 Data Staged [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1056.002 Input Capture: GUI Input Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1039 Data from Network Shared Drive [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1056 Input Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1557.002 ARP Cache Poisoning [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1213 Data from Information Repositories [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+
+# lateral-movement
+- T1021.005 VNC [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1080 Taint Shared Content [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1021.004 SSH [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1017 Application Deployment Software [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1563.001 SSH Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1021 Remote Services [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1563 Remote Service Session Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1072 Software Deployment Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1210 Exploitation of Remote Services [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1534 Internal Spearphishing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1570 Lateral Tool Transfer [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1184 SSH Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 
 # privilege-escalation
 - T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -385,6 +468,7 @@
 - T1100 Web Shell [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1055.009 Proc Memory [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1546.016 Installer Packages [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1037.004 Boot or Logon Initialization Scripts: Rc.common](../../T1037.004/T1037.004.md)
   - Atomic Test #2: rc.common [linux]
   - Atomic Test #3: rc.local [linux]
@@ -446,6 +530,7 @@
   - Atomic Test #5: Copy the users GnuPG directory with rsync [macos, linux]
 - T1110.003 Brute Force: Password Spraying [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1056.003 Web Portal Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1649 Steal or Forge Authentication Certificates [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1552.003 Unsecured Credentials: Bash History](../../T1552.003/T1552.003.md)
   - Atomic Test #1: Search Through Bash History [linux, macos]
 - [T1552.001 Unsecured Credentials: Credentials In Files](../../T1552.001/T1552.001.md)
@@ -460,6 +545,7 @@
 - T1110 Brute Force [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1110.004 Brute Force: Credential Stuffing](../../T1110.004/T1110.004.md)
   - Atomic Test #1: SSH Credential Stuffing From Linux [linux]
+- T1556.006 Multi-Factor Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1081 Credentials in Files [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1056 Input Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1557.002 ARP Cache Poisoning [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -476,6 +562,7 @@
   - Atomic Test #2: System Owner/User Discovery [linux, macos]
 - T1016.001 Internet Connection Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1069 Permission Groups Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1652 Device Driver Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1087.002 Account Discovery: Domain Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1087.001 Account Discovery: Local Account](../../T1087.001/T1087.001.md)
   - Atomic Test #1: Enumerate all accounts (Local) [linux]
@@ -548,69 +635,6 @@
 - T1518 Software Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1622 Debugger Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 
-# command-and-control
-- [T1132.001 Data Encoding: Standard Encoding](../../T1132.001/T1132.001.md)
-  - Atomic Test #1: Base64 Encoded data. [macos, linux]
-- T1568.002 Domain Generation Algorithms [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1071.004 Application Layer Protocol: DNS [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1172 Domain Fronting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1573.001 Symmetric Cryptography [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1568.001 Fast Flux DNS [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1071 Application Layer Protocol [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1024 Custom Cryptographic Protocol [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1219 Remote Access Software [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1079 Multilayer Encryption [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1205 Traffic Signaling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1032 Standard Cryptographic Protocol [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1572 Protocol Tunneling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1483 Domain Generation Algorithms [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1071.003 Mail Protocols [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1092 Communication Through Removable Media [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1090.002 External Proxy [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1090 Proxy [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1568 Dynamic Resolution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1188 Multi-hop Proxy [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1102 Web Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1568.003 DNS Calculation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1104 Multi-Stage Channels [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1205.001 Port Knocking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1026 Multiband Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1071.002 File Transfer Protocols [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1102.003 One-Way Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1090.003 Proxy: Multi-hop Proxy](../../T1090.003/T1090.003.md)
-  - Atomic Test #3: Tor Proxy Usage - Debian/Ubuntu [linux]
-- T1001 Data Obfuscation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1571 Non-Standard Port](../../T1571/T1571.md)
-  - Atomic Test #2: Testing usage of uncommonly used port [linux, macos]
-- T1573 Encrypted Channel [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1102.002 Bidirectional Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1573.002 Asymmetric Cryptography [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1095 Non-Application Layer Protocol [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1001.003 Protocol Impersonation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1065 Uncommonly Used Port [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1090.004 Domain Fronting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1132 Data Encoding [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1132.002 Non-Standard Encoding [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1071.001 Application Layer Protocol: Web Protocols](../../T1071.001/T1071.001.md)
-  - Atomic Test #3: Malicious User Agents - Nix [linux, macos]
-- [T1105 Ingress Tool Transfer](../../T1105/T1105.md)
-  - Atomic Test #1: rsync remote file copy (push) [linux, macos]
-  - Atomic Test #2: rsync remote file copy (pull) [linux, macos]
-  - Atomic Test #3: scp remote file copy (push) [linux, macos]
-  - Atomic Test #4: scp remote file copy (pull) [linux, macos]
-  - Atomic Test #5: sftp remote file copy (push) [linux, macos]
-  - Atomic Test #6: sftp remote file copy (pull) [linux, macos]
-  - Atomic Test #14: whois file download [linux, macos]
-  - Atomic Test #27: Linux Download File and Run [linux]
-- T1001.002 Steganography [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1008 Fallback Channels [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1090.001 Proxy: Internal Proxy](../../T1090.001/T1090.001.md)
-  - Atomic Test #1: Connection Proxy [macos, linux]
-- T1094 Custom Command and Control Protocol [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1102.001 Dead Drop Resolver [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1001.001 Junk Data [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1043 Commonly Used Port [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-
 # impact
 - T1561.002 Disk Structure Wipe [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1498.001 Direct Network Flood [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -629,7 +653,8 @@
 - T1491 Defacement [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1491.001 Defacement: Internal Defacement [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1565 Data Manipulation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1531 Account Access Removal [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1531 Account Access Removal](../../T1531/T1531.md)
+  - Atomic Test #4: Change User Password via passwd [macos, linux]
 - [T1486 Data Encrypted for Impact](../../T1486/T1486.md)
   - Atomic Test #1: Encrypt files using gpg (Linux) [linux]
   - Atomic Test #2: Encrypt files using 7z (Linux) [linux]
@@ -747,6 +772,7 @@
   - Atomic Test #2: Exfiltration Over Alternative Protocol - SSH [macos, linux]
 - T1052.001 Exfiltration over USB [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1002 Data Compressed [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1567.003 Exfiltration to Text Storage Sites [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1567.002 Exfiltration Over Web Service: Exfiltration to Cloud Storage [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1030 Data Transfer Size Limits](../../T1030/T1030.md)
   - Atomic Test #1: Data Transfer Size Limits [macos, linux]

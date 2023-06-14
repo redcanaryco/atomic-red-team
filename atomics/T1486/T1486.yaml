@@ -244,17 +244,18 @@ atomic_tests:
 - name: Data Encrypted with GPG4Win
   auto_generated_guid: 4541e2c2-33c8-44b1-be79-9161440f1718
   description:
-      Gpg4win is a Windows tool (also called Kleopatra which is the preferred certificate manager) that uses email and file encryption packages for symmetric encryption. It is used by attackers to encrypt disks. User will need to add pass phrase to encrypt file as automation is not allowed under newer versions.  
+      Gpg4win is a Windows tool (also called Kleopatra which is the preferred certificate manager) that uses email and file encryption packages for symmetric encryption. 
+      It is used by attackers to encrypt disks. User will need to add pass phrase to encrypt file as automation is not allowed under newer versions.
   supported_platforms:
     - windows
   input_arguments:
     GPG_Exe_Location:
       description: Path of the GPG program
-      type: Path
+      type: path
       default: 'C:\Program Files (x86)\GnuPG\bin\gpg.exe'
     File_to_Encrypt_Location:
       description: Path of File
-      type: Path
+      type: path
       default: '$env:temp\test.txt'
   dependencies:
     - description: |
