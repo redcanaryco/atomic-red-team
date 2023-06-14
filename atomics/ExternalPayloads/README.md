@@ -1,1 +1,0 @@
-The atomics\ExternalPayloads folder is a reserved location for atomics to download prerequisites into.
