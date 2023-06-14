@@ -243,3 +243,39 @@ atomic_tests:
     cleanup_command: |
       del #{output_path}\#{output_file}
     name: command_prompt
+- name: Active Directory Domain Search Using LDAP
+  auto_generated_guid: 
+  description: |
+    Output information from LDAPSearch. LDAP Password is the admin-user password on Active Directory
+  supported_platforms:
+  - linux
+  input_arguments:
+    domain:
+      description: The domain to be tested
+      type: string
+      default: example
+    top_level_domain:
+      description: The top level domain (.com, .test, .remote, etc... following domain, minus the .)
+      type: string
+      default: test
+    admin_user:
+      description: username@domain of a user with admin privileges
+      type: string
+      default: admin@example.test
+    domain_controller:
+      description: Name of the domain_controller machine, defined in etc/hosts
+      type: string
+      default: adVM
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Packages sssd-ad sssd-tools realmd adcli installed and realm available
+    prereq_command: |
+      sudo apt-get -V sssd-ad sssd-tools realmd adcli && realm list | grep #domain && echo domain found
+    get_prereq_command:
+  executor:
+    elevation_required: false
+    command: |
+      ldapsearch -h #{domain_controller} -p 389 -x -D #{admin_user} -W -b "CN=Users,DC=#{domain},DC=#{top_level_domain}" -s sub -a always -z 1000 dn
+    cleanup_command: 
+    name: sh
