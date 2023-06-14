@@ -635,7 +635,9 @@
   - Atomic Test #4: Change User Password via passwd [macos, linux]
   - Atomic Test #5: Delete User via dscl utility [macos]
   - Atomic Test #6: Delete User via sysadminctl utility [macos]
-- T1486 Data Encrypted for Impact [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1486 Data Encrypted for Impact](../../T1486/T1486.md)
+  - Atomic Test #6: Encrypt files using 7z utility - macOS [macos]
+  - Atomic Test #7: Encrypt files using openssl utility - macOS [macos]
 - T1488 Disk Content Wipe [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1499 Endpoint Denial of Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1494 Runtime Data Manipulation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

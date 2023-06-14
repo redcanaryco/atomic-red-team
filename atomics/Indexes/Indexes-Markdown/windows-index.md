@@ -1751,7 +1751,7 @@
   - Atomic Test #3: Remove Account From Domain Admin Group [windows]
 - [T1486 Data Encrypted for Impact](../../T1486/T1486.md)
   - Atomic Test #5: PureLocker Ransom Note [windows]
-  - Atomic Test #6: Data Encrypted with GPG4Win [windows]
+  - Atomic Test #8: Data Encrypted with GPG4Win [windows]
 - T1488 Disk Content Wipe [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1499 Endpoint Denial of Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1494 Runtime Data Manipulation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
