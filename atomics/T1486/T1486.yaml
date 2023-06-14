@@ -209,7 +209,7 @@ atomic_tests:
       default: ~/test.txt
   executor:
     command: |
-      7z a -p#{file_password} -mhe=on #{encrypted_file_name} #{input_file_path}
+      7z a -p #{file_password} -mhe=on #{encrypted_file_name} #{input_file_path}
     cleanup_command: |
       rm #{encrypted_file_name}
     name: sh
