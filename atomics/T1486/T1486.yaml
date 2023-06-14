@@ -1,6 +1,5 @@
 attack_technique: T1486
 display_name: Data Encrypted for Impact
-
 atomic_tests:
 - name: Encrypt files using gpg (Linux)
   auto_generated_guid: 7b8ce084-3922-4618-8d22-95f996173765
@@ -41,7 +40,6 @@ atomic_tests:
     cleanup_command: |
       rm #{encrypted_file_path}
 
-
 - name: Encrypt files using 7z (Linux)
   auto_generated_guid: 53e6735a-4727-44cc-b35b-237682a151ad
   description: |
@@ -76,7 +74,6 @@ atomic_tests:
     cleanup_command: |
       $which_7z e #{encrypted_file_path}
       rm #{encrypted_file_path}
-
 
 - name: Encrypt files using ccrypt (Linux)
   auto_generated_guid: 08cbf59f-85da-4369-a5f4-049cffd7709f
@@ -119,7 +116,6 @@ atomic_tests:
       if [[ $USER == "root" ]]; then $which_ccencrypt #{root_input_file_path}; file #{root_input_file_path}.cpt; #{impact_command}; else $which_ccencrypt #{user_input_file_path}; file #{user_input_file_path}.cpt; #{impact_command}; fi
     cleanup_command: |
       if [[ $USER == "root" ]]; then mv #{cped_file_path} #{root_input_file_path}; else cp #{cped_file_path} #{user_input_file_path}; fi 
-
 
 - name: Encrypt files using openssl (Linux)
   auto_generated_guid: 142752dc-ca71-443b-9359-cf6f497315f1
@@ -188,6 +184,16 @@ atomic_tests:
     This test encrypts the file(s) using the 7z utility
   supported_platforms:
   - macos
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Check if 7z command exists on the machine
+    prereq_command: |
+      which 7z
+    get_prereq_command: |
+      echo Installing 7z, using brew
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      brew install p7zip
   input_arguments:
     file_password:
       description: Password to be provided for archiving the file
@@ -200,32 +206,42 @@ atomic_tests:
     input_file_path:
       description: Path to the file that you want to encrypt
       type: Path
-      default: /etc/passwd 
+      default: ~/test.txt
   executor:
     command: |
       7z a -p#{file_password} -mhe=on #{encrypted_file_name} #{input_file_path}
     cleanup_command: |
       rm #{encrypted_file_name}
-    name: command_prompt
-    elevation_required: false
-    
+    name: sh
+    elevation_required: false  
 - name: Encrypt files using ccrypt utility - macOS
   description: |
     This test encrypts the file(s) using the ccrypt utility
   supported_platforms:
   - macos
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Check if ccrypt command exists on the machine
+    prereq_command: |
+      ccrypt --version
+    get_prereq_command: |
+      echo Installing 7z, using brew
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      brew install ccrypt
   input_arguments:
     input_file_path:
       description: Path to the file that you want to encrypt
       type: Path
-      default: /etc/passwd 
+      default: ~/test.txt 
   executor:
     command: |
-      ccrypt #{input_file_path} #alternate parameters that can be used "-e", "--encrypt", "ccencrypt", "-S .suf"
+      ccrypt #{input_file_path}
+      echo hello
     cleanup_command: |
-      rm #{input_file_path}.cpt #in case of custom suffix, change from ".cpt" to ".suf"
-    name: command_prompt
-    elevation_required: false 
+      rm #{input_file_path}.cpt
+    name: sh
+    elevation_required: true 
     
 - name: Encrypt files using openssl utility - macOS
   description: |
@@ -250,13 +266,13 @@ atomic_tests:
       openssl enc #{encryption_option} -in #{input_file_path} -out #{output_file_name}
     cleanup_command: |
       rm #{output_file_name}
-    name: command_prompt
+    name: sh
     elevation_required: false     
+
 - name: Data Encrypted with GPG4Win
   auto_generated_guid: 4541e2c2-33c8-44b1-be79-9161440f1718
   description:
-      Gpg4win is a Windows tool (also called Kleopatra which is the preferred certificate manager) that uses email and file encryption packages for symmetric encryption. 
-      It is used by attackers to encrypt disks. User will need to add pass phrase to encrypt file as automation is not allowed under newer versions.  
+      Gpg4win is a Windows tool (also called Kleopatra which is the preferred certificate manager) that uses email and file encryption packages for symmetric encryption. It is used by attackers to encrypt disks. User will need to add pass phrase to encrypt file as automation is not allowed under newer versions.  
   supported_platforms:
     - windows
   input_arguments:
