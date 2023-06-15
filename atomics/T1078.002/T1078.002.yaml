@@ -47,7 +47,7 @@ atomic_tests:
        ldapadd -h #{domain_controller} -p 389 -x -D #{admin_user} -w #{admin_password} -f tempadmin.ldif
     cleanup_command: |
        echo "dn: cn=John Smith, cn=Users,dc=scwxscratch,dc=dev\nchangetype: delete" > deleteuser.ldif
-       ldapdelete -h #{domain_controller} -p 389 -x -D "cn=#{admin_user},dc=#{domain},dc=#{top_level_domain}" -w #{admin_password} -f deleteuser.ldif
+       ldapdelete -h #{domain_controller} -p 389 -x -D #{admin_user} -w #{admin_password} -f deleteuser.ldif
        rm deleteuser.ldif
        rm tempadmin.ldif
     name: sh
