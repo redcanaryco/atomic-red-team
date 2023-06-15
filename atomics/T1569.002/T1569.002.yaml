@@ -119,13 +119,23 @@ atomic_tests:
       description: Target hostname to attempt psexec connection to for emulation of lateral movement.
       type: string
       default: $ENV:COMPUTERNAME
+  dependencies:
+  - description: |
+      PsExec must exist on disk at "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe"
+    prereq_command: |
+      if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\PsTools.zip"
+      Expand-Archive PathToAtomicsFolder\..\ExternalPayloads\PsTools.zip PathToAtomicsFolder\..\ExternalPayloads\PsTools -Force
+      New-Item -ItemType Directory (Split-Path "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe") -Force | Out-Null
+      Copy-Item PathToAtomicsFolder\..\ExternalPayloads\PsTools\PsExec.exe "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe" -Force
   executor:
     command: |
       cmd.exe /c "wmic 	csproduct 	get UUID" 
       cmd.exe /c "fsutil behavior 	set SymlinkEvaluation R2L:1" 
       cmd.exe /c "fsutil behavior set 	SymlinkEvaluation R2R:1"
       reg    add    HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters    /v MaxMpxCt /d 65535 /t REG_DWORD /f      
-      copy $pathtoatomicsfolder\T1569.002\bin\PsExec.exe $env:temp
+      copy "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe" $env:temp
       cmd.exe /c "$env:temp\psexec.exe  -accepteula  \\#{targethost} cmd.exe  /c echo "--access-token""
     cleanup_command: |
       reg delete HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters /v MaxMpxCt /f
