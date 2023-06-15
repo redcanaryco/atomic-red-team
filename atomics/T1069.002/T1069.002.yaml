@@ -276,7 +276,7 @@ atomic_tests:
   - description: |
       Packages sssd-ad sssd-tools realmd adcli installed and realm available
     prereq_command: |
-      sudo apt-get -V sssd-ad sssd-tools realmd adcli && realm list | grep #domain && echo domain found
+      dpkg -l | grep sssd-ad -e sssd-tools -e realmd -e adcli
     get_prereq_command:
   executor:
     elevation_required: false
