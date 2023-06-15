@@ -266,10 +266,13 @@ atomic_tests:
       description: Name of the domain_controller machine, defined in etc/hosts
       type: string
       default: adVM
-  dependency_executor_name: powershell
+  dependency_executor_name: sh
   dependencies:
   - description: |
       Packages sssd-ad sssd-tools realmd adcli installed and realm available
+    prereq_command: |
+      dpkg -s sssd-ad | grep -q installed
+    get_prereq_command:
   executor:
     elevation_required: false
     command: |
