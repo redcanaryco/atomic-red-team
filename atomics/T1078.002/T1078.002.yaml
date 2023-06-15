@@ -42,6 +42,7 @@ atomic_tests:
   executor:
     elevation_required: false
     command: |
-      ldapadd
-    cleanup_command: 
+       echo -e "dn: uid=temp,ou=People,dc=#{domain_controller},dc=#{top_level_domain}\nchangetype: add\nobjectClass: inetOrgPerson\ndescription: tempuser\ncn: John Smith\nsn: Smith\nuid: jsmith1" > tempadmin.ldif
+       ldapadd -h #{domain_controller} -p 389 -x -D #{admin_user} -w #{admin_password} -b "CN=Users,DC=#{domain},DC=#{top_level_domain}" -f tempadmin.ldif
+    cleanup_command: rm ./tempadmin.ldif
     name: sh
