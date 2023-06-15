@@ -272,7 +272,11 @@ atomic_tests:
       Packages sssd-ad sssd-tools realmd adcli installed and realm available
     prereq_command: |
       dpkg -s sssd-ad | grep -q installed
-    get_prereq_command:
+      dpkg -s sssd-tools | grep -q installed
+      dpkg -s realmd | grep -q installed
+      dpkg -s adcli | grep -q installed
+    get_prereq_command: |
+      apt-get install -y sssd-ad sssd-tools relamd adcli
   executor:
     elevation_required: false
     command: |
