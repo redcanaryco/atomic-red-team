@@ -284,6 +284,7 @@ atomic_tests:
   executor:
     elevation_required: false
     command: |
+      echo ldapsearch -h #{domain_controller} -p 389 -x -D #{admin_user} -w #{admin_password} -b "CN=Users,DC=#{domain},DC=#{top_level_domain}" -s sub -a always -z 1000 dn
       ldapsearch -h #{domain_controller} -p 389 -x -D #{admin_user} -w #{admin_password} -b "CN=Users,DC=#{domain},DC=#{top_level_domain}" -s sub -a always -z 1000 dn
     cleanup_command: 
     name: sh
