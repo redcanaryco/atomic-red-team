@@ -42,8 +42,8 @@ atomic_tests:
   executor:
     elevation_required: false
     command: |
-       echo "dn: cn=domainadmins,ou=groups,dc=#{domain},dc={top_level_domain}\nchangetype: modify\nadd: member\n member:uid=testuser,ou=users,dc=#{domain},dc=#{top_level_domain}" > tempadmin.ldif
-       echo ldapadd -h #{domain_controller} -p 389 -D "cn=#{admin_user},dc=#{domain},dc=#{top_level_domain}" -w #{admin_password} -f tempadmin.ldif
+       echo "dn: cn=domainadmins,ou=groups,dc=#{domain},dc=#{top_level_domain}\nchangetype: modify\nadd: member\n member:uid=testuser,ou=users,dc=#{domain},dc=#{top_level_domain}" > tempadmin.ldif
+       echo ldapadd -h #{domain_controller} -p 389 -w #{admin_password} -D #{admin_user} -f tempadmin.ldif
        ldapadd -h #{domain_controller} -p 389 -w #{admin_password} -D #{admin_user} -f tempadmin.ldif
     cleanup_command:
     name: sh
