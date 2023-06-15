@@ -206,7 +206,7 @@ atomic_tests:
       if (Test-Path PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe" -OutFile PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe
+      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/bin/AdFind.exe" -OutFile PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe
   executor:
     command: |
       PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe -f (objectcategory=computer)
@@ -226,7 +226,7 @@ atomic_tests:
       if (Test-Path PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe" -OutFile PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe
+      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/bin/AdFind.exe" -OutFile PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe
   executor:
     command: |
       PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe -sc dclist
