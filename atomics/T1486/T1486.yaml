@@ -265,8 +265,9 @@ atomic_tests:
       prereq_command: |
         if (test-path '#{GPG_Exe_Location}'){exit 0} else {exit 1}
       get_prereq_command: |
-        invoke-webrequest "https://files.gpg4win.org/gpg4win-4.1.0.exe" -outfile "$env:temp\gpginstall.exe"
-        cmd /c "$env:temp\gpginstall.exe" /S
+        New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+        invoke-webrequest "https://files.gpg4win.org/gpg4win-4.1.0.exe" -outfile "PathToAtomicsFolder\..\ExternalPayloads\gpginstall.exe"
+        cmd /c "PathToAtomicsFolder\..\ExternalPayloads\gpginstall.exe" /S
   executor:
     name: powershell
     elevation_required: false

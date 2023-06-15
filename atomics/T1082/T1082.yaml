@@ -304,11 +304,12 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      The SkyArk AzureStealth module must exist in $env:temp.
+      The SkyArk AzureStealth module must exist in PathToAtomicsFolder\..\ExternalPayloads.
     prereq_command: |
-      if (test-path $env:temp\AzureStealth.ps1){exit 0} else {exit 1}
+      if (test-path PathToAtomicsFolder\..\ExternalPayloads\AzureStealth.ps1){exit 0} else {exit 1}
     get_prereq_command: |
-      invoke-webrequest "https://raw.githubusercontent.com/cyberark/SkyArk/3293ee145e95061a8980dd7b5da0030edc4da5c0/AzureStealth/AzureStealth.ps1" -outfile "$env:temp\AzureStealth.ps1"
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      invoke-webrequest "https://raw.githubusercontent.com/cyberark/SkyArk/3293ee145e95061a8980dd7b5da0030edc4da5c0/AzureStealth/AzureStealth.ps1" -outfile "PathToAtomicsFolder\..\ExternalPayloads\AzureStealth.ps1"
   - description: |
       The AzureAD module must be installed.
     prereq_command: |
@@ -323,7 +324,7 @@ atomic_tests:
       Install-Module -Name Az -Force
   executor:
     command: |
-      Import-Module $env:temp\AzureStealth.ps1 -force      
+      Import-Module PathToAtomicsFolder\..\ExternalPayloads\AzureStealth.ps1 -force      
       $Password = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
       $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Password
       Connect-AzAccount -Credential $Credential

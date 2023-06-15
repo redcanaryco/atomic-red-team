@@ -90,17 +90,18 @@ atomic_tests:
     prereq_command: |
       if (Test-Path "#{virtualbox_exe}") {exit 0} else {exit 1}
     get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       $wc = New-Object System.Net.WebClient
-      $wc.DownloadFile("#{virtualbox_download}","$env:TEMP\#{virtualbox_installer}")
-      start-process -FilePath "$env:TEMP\#{virtualbox_installer}" -ArgumentList "--silent" -Wait
+      $wc.DownloadFile("#{virtualbox_download}","PathToAtomicsFolder\..\ExternalPayloads\#{virtualbox_installer}")
+      start-process -FilePath "PathToAtomicsFolder\..\ExternalPayloads\#{virtualbox_installer}" -ArgumentList "--silent" -Wait
   - description: |
       VBoxManage must exist on disk at specified locations (#{vboxmanage_exe})
     prereq_command: |
       if (Test-Path "#{vboxmanage_exe}") {exit 0} else {exit 1}
     get_prereq_command: |
       $wc = New-Object System.Net.WebClient
-      $wc.DownloadFile("#{virtualbox_download}","$env:TEMP\#{virtualbox_installer}")
-      start-process -FilePath "$env:TEMP\#{virtualbox_installer}" -ArgumentList "--silent" -Wait
+      $wc.DownloadFile("#{virtualbox_download}","PathToAtomicsFolder\..\ExternalPayloads\#{virtualbox_installer}")
+      start-process -FilePath "PathToAtomicsFolder\..\ExternalPayloads\#{virtualbox_installer}" -ArgumentList "--silent" -Wait
   executor:
     name: command_prompt
     elevation_required: false
