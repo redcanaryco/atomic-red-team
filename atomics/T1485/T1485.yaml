@@ -12,11 +12,11 @@ atomic_tests:
     sdelete_exe:
       description: Path of sdelete executable
       type: path
-      default: $env:TEMP\Sdelete\sdelete.exe
+      default: PathToAtomicsFolder\..\ExternalPayloads\Sdelete\sdelete.exe
     file_to_delete:
       description: Path of file to delete
       type: path
-      default: $env:TEMP\T1485.txt
+      default: PathToAtomicsFolder\..\ExternalPayloads\T1485.txt
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -24,9 +24,10 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{sdelete_exe}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://download.sysinternals.com/files/SDelete.zip" -OutFile "$env:TEMP\SDelete.zip"
-      Expand-Archive $env:TEMP\SDelete.zip $env:TEMP\Sdelete -Force
-      Remove-Item $env:TEMP\SDelete.zip -Force
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://download.sysinternals.com/files/SDelete.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\SDelete.zip"
+      Expand-Archive PathToAtomicsFolder\..\ExternalPayloads\SDelete.zip PathToAtomicsFolder\..\ExternalPayloads\Sdelete -Force
+      Remove-Item PathToAtomicsFolder\..\ExternalPayloads\SDelete.zip -Force
   executor:
     command: |
       if (-not (Test-Path #{file_to_delete})) { New-Item #{file_to_delete} -Force }

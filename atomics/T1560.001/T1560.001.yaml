@@ -107,9 +107,10 @@ atomic_tests:
       cmd /c 'if not exist "#{winzip_exe}" (echo 1) else (echo 0)'
     get_prereq_command: |
       IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1" -UseBasicParsing)
-      if(Invoke-WebRequestVerifyHash "#{winzip_url}" "$env:Temp\winzip.exe" #{winzip_hash}){
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      if(Invoke-WebRequestVerifyHash "#{winzip_url}" "PathToAtomicsFolder\..\ExternalPayloads\winzip.exe" #{winzip_hash}){
         Write-Host Follow the installation prompts to continue
-        cmd /c "$env:Temp\winzip.exe"
+        cmd /c "PathToAtomicsFolder\..\ExternalPayloads\winzip.exe"
       }
   executor:
     name: command_prompt

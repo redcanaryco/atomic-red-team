@@ -214,7 +214,7 @@ atomic_tests:
     uacme_exe:
       description: Path to uacme executable
       type: path
-      default: '%temp%\uacme\23 Akagi64.exe'
+      default: 'PathToAtomicsFolder\..\ExternalPayloads\uacme\23 Akagi64.exe'
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -223,9 +223,11 @@ atomic_tests:
       $tempPath = cmd /c echo #{uacme_exe}
       if (Test-Path "$tempPath") {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1548.002/bin/uacme.zip" -OutFile "$env:TEMP\uacme.zip"
-      Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
-      Remove-Item $env:TEMP\uacme.zip -Force
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1548.002/bin/uacme.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\uacme.zip"
+      Expand-Archive PathToAtomicsFolder\..\ExternalPayloads\uacme.zip PathToAtomicsFolder\..\ExternalPayloads\uacme -Force
+      Remove-Item PathToAtomicsFolder\..\ExternalPayloads\uacme.zip -Force
   executor:
     command: |
       "#{uacme_exe}"
@@ -260,7 +262,7 @@ atomic_tests:
     uacme_exe:
       description: Path to uacme executable
       type: path
-      default: '%temp%\uacme\31 Akagi64.exe'
+      default: 'PathToAtomicsFolder\..\ExternalPayloads\uacme\31 Akagi64.exe'
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -269,9 +271,10 @@ atomic_tests:
       $tempPath = cmd /c echo #{uacme_exe}
       if (Test-Path "$tempPath") {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1548.002/bin/uacme.zip" -OutFile "$env:TEMP\uacme.zip"
-      Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
-      Remove-Item $env:TEMP\uacme.zip -Force
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1548.002/bin/uacme.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\uacme.zip"
+      Expand-Archive PathToAtomicsFolder\..\ExternalPayloads\uacme.zip PathToAtomicsFolder\..\ExternalPayloads\uacme -Force
+      Remove-Item PathToAtomicsFolder\..\ExternalPayloads\uacme.zip -Force
   executor:
     command: |
       "#{uacme_exe}"
@@ -306,7 +309,7 @@ atomic_tests:
     uacme_exe:
       description: Path to uacme executable
       type: path
-      default: '%temp%\uacme\33 Akagi64.exe'
+      default: 'PathToAtomicsFolder\..\ExternalPayloads\uacme\33 Akagi64.exe'
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -315,9 +318,10 @@ atomic_tests:
       $tempPath = cmd /c echo #{uacme_exe}
       if (Test-Path "$tempPath") {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1548.002/bin/uacme.zip" -OutFile "$env:TEMP\uacme.zip"
-      Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
-      Remove-Item $env:TEMP\uacme.zip -Force
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1548.002/bin/uacme.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\uacme.zip"
+      Expand-Archive PathToAtomicsFolder\..\ExternalPayloads\uacme.zip PathToAtomicsFolder\..\ExternalPayloads\uacme -Force
+      Remove-Item PathToAtomicsFolder\..\ExternalPayloads\uacme.zip -Force
   executor:
     command: |
       "#{uacme_exe}"
@@ -352,7 +356,7 @@ atomic_tests:
     uacme_exe:
       description: Path to uacme executable
       type: path
-      default: '%temp%\uacme\34 Akagi64.exe'
+      default: 'PathToAtomicsFolder\..\ExternalPayloads\uacme\34 Akagi64.exe'
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -361,9 +365,10 @@ atomic_tests:
       $tempPath = cmd /c echo #{uacme_exe}
       if (Test-Path "$tempPath") {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1548.002/bin/uacme.zip" -OutFile "$env:TEMP\uacme.zip"
-      Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
-      Remove-Item $env:TEMP\uacme.zip -Force
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1548.002/bin/uacme.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\uacme.zip"
+      Expand-Archive PathToAtomicsFolder\..\ExternalPayloads\uacme.zip PathToAtomicsFolder\..\ExternalPayloads\uacme -Force
+      Remove-Item PathToAtomicsFolder\..\ExternalPayloads\uacme.zip -Force
   executor:
     command: |
       "#{uacme_exe}"
@@ -398,7 +403,7 @@ atomic_tests:
     uacme_exe:
       description: Path to uacme executable
       type: path
-      default: '%temp%\uacme\39 Akagi64.exe'
+      default: 'PathToAtomicsFolder\..\ExternalPayloads\uacme\39 Akagi64.exe'
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -407,9 +412,10 @@ atomic_tests:
       $tempPath = cmd /c echo #{uacme_exe}
       if (Test-Path "$tempPath") {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1548.002/bin/uacme.zip" -OutFile "$env:TEMP\uacme.zip"
-      Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
-      Remove-Item $env:TEMP\uacme.zip -Force
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1548.002/bin/uacme.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\uacme.zip"
+      Expand-Archive PathToAtomicsFolder\..\ExternalPayloads\uacme.zip PathToAtomicsFolder\..\ExternalPayloads\uacme -Force
+      Remove-Item PathToAtomicsFolder\..\ExternalPayloads\uacme.zip -Force
   executor:
     command: |
       "#{uacme_exe}"
@@ -444,7 +450,7 @@ atomic_tests:
     uacme_exe:
       description: Path to uacme executable
       type: path
-      default: '%temp%\uacme\56 Akagi64.exe'
+      default: 'PathToAtomicsFolder\..\ExternalPayloads\uacme\56 Akagi64.exe'
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -453,9 +459,10 @@ atomic_tests:
       $tempPath = cmd /c echo #{uacme_exe}
       if (Test-Path "$tempPath") {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1548.002/bin/uacme.zip" -OutFile "$env:TEMP\uacme.zip"
-      Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
-      Remove-Item $env:TEMP\uacme.zip -Force
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1548.002/bin/uacme.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\uacme.zip"
+      Expand-Archive PathToAtomicsFolder\..\ExternalPayloads\uacme.zip PathToAtomicsFolder\..\ExternalPayloads\uacme -Force
+      Remove-Item PathToAtomicsFolder\..\ExternalPayloads\uacme.zip -Force
   executor:
     command: |
       "#{uacme_exe}"
@@ -490,7 +497,7 @@ atomic_tests:
     uacme_exe:
       description: Path to uacme executable
       type: path
-      default: '%temp%\uacme\59 Akagi64.exe'
+      default: 'PathToAtomicsFolder\..\ExternalPayloads\uacme\59 Akagi64.exe'
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -499,9 +506,10 @@ atomic_tests:
       $tempPath = cmd /c echo #{uacme_exe}
       if (Test-Path "$tempPath") {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1548.002/bin/uacme.zip" -OutFile "$env:TEMP\uacme.zip"
-      Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
-      Remove-Item $env:TEMP\uacme.zip -Force
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1548.002/bin/uacme.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\uacme.zip"
+      Expand-Archive PathToAtomicsFolder\..\ExternalPayloads\uacme.zip PathToAtomicsFolder\..\ExternalPayloads\uacme -Force
+      Remove-Item PathToAtomicsFolder\..\ExternalPayloads\uacme.zip -Force
   executor:
     command: |
       "#{uacme_exe}"
@@ -536,7 +544,7 @@ atomic_tests:
     uacme_exe:
       description: Path to uacme executable
       type: path
-      default: '%temp%\uacme\61 Akagi64.exe'
+      default: 'PathToAtomicsFolder\..\ExternalPayloads\uacme\61 Akagi64.exe'
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -545,9 +553,10 @@ atomic_tests:
       $tempPath = cmd /c echo #{uacme_exe}
       if (Test-Path "$tempPath") {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1548.002/bin/uacme.zip" -OutFile "$env:TEMP\uacme.zip"
-      Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
-      Remove-Item $env:TEMP\uacme.zip -Force
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1548.002/bin/uacme.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\uacme.zip"
+      Expand-Archive PathToAtomicsFolder\..\ExternalPayloads\uacme.zip PathToAtomicsFolder\..\ExternalPayloads\uacme -Force
+      Remove-Item PathToAtomicsFolder\..\ExternalPayloads\uacme.zip -Force
   executor:
     command: |
       "#{uacme_exe}"
