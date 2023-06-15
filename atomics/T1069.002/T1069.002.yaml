@@ -262,6 +262,10 @@ atomic_tests:
       description: username@domain of a user with admin privileges
       type: string
       default: admin@example.test
+    admin_password:
+      description: password of the user with admin privileges referenced in admin_user
+      type: string
+      default: s3CurePssw0rD!
     domain_controller:
       description: Name of the domain_controller machine, defined in etc/hosts
       type: string
@@ -280,6 +284,6 @@ atomic_tests:
   executor:
     elevation_required: false
     command: |
-      ldapsearch -h #{domain_controller} -p 389 -x -D #{admin_user} -W -b "CN=Users,DC=#{domain},DC=#{top_level_domain}" -s sub -a always -z 1000 dn
+      echo ldapsearch -h #{domain_controller} -p 389 -x -D #{admin_user} -W -b "CN=Users,DC=#{domain},DC=#{top_level_domain}" -s sub -a always -z 1000 dn
     cleanup_command: 
     name: sh
