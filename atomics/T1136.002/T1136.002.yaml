@@ -125,7 +125,7 @@ atomic_tests:
   executor:
     elevation_required: false
     command: |
-       echo "dn: cn=Atomic User, cn=Users,dc=#{domain},dc=#{top_level_domain}\nobjectClass: person\ncn: Atomic User\nsn: User" > tempadmin.ldif
+       echo "dn: cn=Atomic User, cn=Users, OU=Domain Admins, dc=#{domain},dc=#{top_level_domain}\nobjectClass: top\nobjectClass: person\n\nobjectClass: organizationalPerson\nobjectClass: user\ncn: Atomic User\nsn: User\ngivenName: Atomic User\nmail: domainadmin@example.com\nuid: domainadmin\nuserPassword:: {CLEARTEXT}s3CureP4ssword!" > tempadmin.ldif
        echo ldapadd -h #{domain_controller} -p 389 -x -D #{admin_user} -w #{admin_password} -f tempadmin.ldif
        ldapadd -h #{domain_controller} -p 389 -x -D #{admin_user} -w #{admin_password} -f tempadmin.ldif
     cleanup_command: |
