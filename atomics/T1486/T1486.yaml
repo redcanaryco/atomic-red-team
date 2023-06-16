@@ -1,6 +1,5 @@
 attack_technique: T1486
 display_name: Data Encrypted for Impact
-
 atomic_tests:
 - name: Encrypt files using gpg (Linux)
   auto_generated_guid: 7b8ce084-3922-4618-8d22-95f996173765
@@ -41,7 +40,6 @@ atomic_tests:
     cleanup_command: |
       rm #{encrypted_file_path}
 
-
 - name: Encrypt files using 7z (Linux)
   auto_generated_guid: 53e6735a-4727-44cc-b35b-237682a151ad
   description: |
@@ -76,7 +74,6 @@ atomic_tests:
     cleanup_command: |
       $which_7z e #{encrypted_file_path}
       rm #{encrypted_file_path}
-
 
 - name: Encrypt files using ccrypt (Linux)
   auto_generated_guid: 08cbf59f-85da-4369-a5f4-049cffd7709f
@@ -119,7 +116,6 @@ atomic_tests:
       if [[ $USER == "root" ]]; then $which_ccencrypt #{root_input_file_path}; file #{root_input_file_path}.cpt; #{impact_command}; else $which_ccencrypt #{user_input_file_path}; file #{user_input_file_path}.cpt; #{impact_command}; fi
     cleanup_command: |
       if [[ $USER == "root" ]]; then mv #{cped_file_path} #{root_input_file_path}; else cp #{cped_file_path} #{user_input_file_path}; fi 
-
 
 - name: Encrypt files using openssl (Linux)
   auto_generated_guid: 142752dc-ca71-443b-9359-cf6f497315f1
@@ -182,6 +178,71 @@ atomic_tests:
       echo T1486 - Purelocker Ransom Note > %USERPROFILE%\Desktop\YOUR_FILES.txt
     cleanup_command: |
       del %USERPROFILE%\Desktop\YOUR_FILES.txt >nul 2>&1
+
+- name: Encrypt files using 7z utility - macOS
+  auto_generated_guid: 645f0f5a-ef09-48d8-b9bc-f0e24c642d72
+  description: |
+    This test encrypts the file(s) using the 7z utility
+  supported_platforms:
+  - macos
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Check if 7z command exists on the machine
+    prereq_command: |
+      which 7z
+    get_prereq_command: |
+      echo Installing 7z, using brew
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      brew install p7zip
+  input_arguments:
+    file_password:
+      description: Password to be provided for archiving the file
+      type: string
+      default: ARTPass
+    encrypted_file_name:
+      description: Name of the archive to be created
+      type: string
+      default: ARTArchive.7z
+    input_file_path:
+      description: Path to the file that you want to encrypt
+      type: path
+      default: ~/test.txt
+  executor:
+    command: |
+      7z a -p #{file_password} -mhe=on #{encrypted_file_name} #{input_file_path}
+    cleanup_command: |
+      rm #{encrypted_file_name}
+    name: sh
+    elevation_required: false  
+    
+- name: Encrypt files using openssl utility - macOS
+  auto_generated_guid: 1a01f6b8-b1e8-418e-bbe3-78a6f822759e
+  description: |
+    This test encrypts the file(s) using the openssl utility
+  supported_platforms:
+  - macos
+  input_arguments:
+    encryption_option:
+      description: Specifiy the required encryption option
+      type: string
+      default: -pbkdf2  
+    input_file_path:
+      description: Path to the file that you want to encrypt
+      type: path
+      default: ~/test.txt
+    output_file_name:
+      description: Path to the file that you want to encrypt
+      type: string
+      default: ARTFile      
+  executor:
+    command: |
+      openssl enc #{encryption_option} -in #{input_file_path} -out #{output_file_name}
+    cleanup_command: |
+      rm #{output_file_name}
+    name: sh
+    elevation_required: false     
+
 - name: Data Encrypted with GPG4Win
   auto_generated_guid: 4541e2c2-33c8-44b1-be79-9161440f1718
   description:
@@ -204,8 +265,9 @@ atomic_tests:
       prereq_command: |
         if (test-path '#{GPG_Exe_Location}'){exit 0} else {exit 1}
       get_prereq_command: |
-        invoke-webrequest "https://files.gpg4win.org/gpg4win-4.1.0.exe" -outfile "$env:temp\gpginstall.exe"
-        cmd /c "$env:temp\gpginstall.exe" /S
+        New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+        invoke-webrequest "https://files.gpg4win.org/gpg4win-4.1.0.exe" -outfile "PathToAtomicsFolder\..\ExternalPayloads\gpginstall.exe"
+        cmd /c "PathToAtomicsFolder\..\ExternalPayloads\gpginstall.exe" /S
   executor:
     name: powershell
     elevation_required: false
@@ -213,4 +275,3 @@ atomic_tests:
       cmd /c '#{GPG_Exe_Location}' -c '#{File_to_Encrypt_Location}'
     cleanup_command: |
       remove-item '#{File_to_Encrypt_Location}.gpg' -force -erroraction silentlycontinue | out-null
-
