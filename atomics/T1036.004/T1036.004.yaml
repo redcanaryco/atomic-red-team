@@ -48,12 +48,9 @@ atomic_tests:
   executor:
     name: sh
     command: |
-      #{exe_path} &
-      ps
+      #{exe_path} & ps
       TMP=`ps | grep totally_legit`
-      if [ -z "${TMP}" ] ; then
-        echo "renamed process NOT FOUND in process list" && exit 1
-      fi
+      if [ -z "${TMP}" ] ; then echo "renamed process NOT FOUND in process list" && exit 1; fi
       exit 0
     cleanup_command: |
       rm -f #{exe_path}
