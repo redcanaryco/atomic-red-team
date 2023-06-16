@@ -19,9 +19,9 @@ atomic_tests:
     admin_user:
       description: username@domain of a user with admin privileges
       type: string
-      default: admin@example.test
+      default: user@example.test
     admin_password:
-      description: password of the user with admin privileges referenced in admin_user
+      description: password of the user
       type: string
       default: s3CurePssw0rD!
     domain_controller:
@@ -31,14 +31,12 @@ atomic_tests:
   dependency_executor_name: sh
   dependencies:
   - description: |
-      Packages sssd-ad sssd-tools realmd adcli installed and realm available
+      Packages sssd-ad sssd-tools realmd adcli installed and realm available, ldapadd, ldapmodify
     prereq_command: |
-      dpkg -s sssd-ad | grep -q installed
-      dpkg -s sssd-tools | grep -q installed
-      dpkg -s realmd | grep -q installed
-      dpkg -s adcli | grep -q installed
+      which ldapadd
+      which ldapmodify
     get_prereq_command: |
-      apt-get install -y sssd-ad sssd-tools relamd adcli
+      echo ldapadd or ldapmodify not found; exit 1
   executor:
     elevation_required: false
     command: |

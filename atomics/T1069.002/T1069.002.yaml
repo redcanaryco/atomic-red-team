@@ -257,34 +257,29 @@ atomic_tests:
     top_level_domain:
       description: The top level domain (.com, .test, .remote, etc... following domain, minus the .)
       type: string
-      default: test
-    admin_user:
-      description: username@domain of a user with admin privileges
+      default: com
+    user:
+      description: username@domain of a user
       type: string
-      default: admin@example.test
-    admin_password:
-      description: password of the user with admin privileges referenced in admin_user
+      default: user@example.com
+    password:
+      description: password of the user referenced inside user
       type: string
       default: s3CurePssw0rD!
     domain_controller:
       description: Name of the domain_controller machine, defined in etc/hosts
       type: string
-      default: adVM
+      default: adhostname
   dependency_executor_name: sh
   dependencies:
   - description: |
-      Packages sssd-ad sssd-tools realmd adcli installed and realm available
+      Packages sssd-ad sssd-tools realmd adcli installed and realm available, ldapsearch
     prereq_command: |
-      dpkg -s sssd-ad | grep -q installed
-      dpkg -s sssd-tools | grep -q installed
-      dpkg -s realmd | grep -q installed
-      dpkg -s adcli | grep -q installed
+      which ldapsearch
     get_prereq_command: |
-      apt-get install -y sssd-ad sssd-tools relamd adcli
+      echo missing ldapsearch command; exit 1
   executor:
     elevation_required: false
     command: |
-      echo ldapsearch -h #{domain_controller} -p 389 -x -D #{admin_user} -w #{admin_password} -b "CN=Users,DC=#{domain},DC=#{top_level_domain}" -s sub -a always -z 1000 dn
-      ldapsearch -h #{domain_controller} -p 389 -x -D #{admin_user} -w #{admin_password} -b "CN=Users,DC=#{domain},DC=#{top_level_domain}" -s sub -a always -z 1000 dn
-    cleanup_command: 
+      ldapsearch -h #{domain_controller} -p 389 -x -D #{user} -w #{password} -b "CN=Users,DC=#{domain},DC=#{top_level_domain}" -s sub -a always -z 1000 dn 
     name: sh
