@@ -42,10 +42,11 @@ atomic_tests:
   executor:
     elevation_required: false
     command: |
-       echo "dn: cn=John Smith, cn=Users,dc=#{domain},dc=#{top_level_domain}\nobjectClass: person\ncn: John Smith\nsn: Smith" > tempadmin.ldif
+       echo "dn: cn=Atomic User, cn=Users,dc=#{domain},dc=#{top_level_domain}\nobjectClass: person\ncn: Atomic User\nsn: User" > tempadmin.ldif
        echo ldapadd -h #{domain_controller} -p 389 -x -D #{admin_user} -w #{admin_password} -f tempadmin.ldif
        ldapadd -h #{domain_controller} -p 389 -x -D #{admin_user} -w #{admin_password} -f tempadmin.ldif
     cleanup_command: |
+       echo removing Atomic User (temporary user)
        echo "dn: cn=John Smith,cn=Users,dc=scwxscratch,dc=dev\nchangetype: delete" > deleteuser.ldif
        ldapmodify -h #{domain_controller} -p 389 -x -D #{admin_user} -w #{admin_password} -f deleteuser.ldif
        rm deleteuser.ldif
