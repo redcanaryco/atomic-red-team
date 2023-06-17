@@ -872,3 +872,15 @@ atomic_tests:
       $typicalPath = "HKLM:\SOFTWARE\Classes\.wav\OpenWithProgIds"; Remove-ItemProperty -Path $typicalPath -Name "AtomicSnake" -ErrorAction SilentlyContinue | Out-Null
     name: powershell
     elevation_required: true
+- name: Malware we read about about on a blog
+  description: |
+    a desc of the attack commands
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      $typicalPath = "HKLM:\SOFTWARE\Classes\.wav\OpenWithProgIds"; $randomBytes = New-Object Byte[] 0x1000; (New-Object Random).NextBytes($randomBytes); New-ItemProperty -Path $typicalPath -Name "AtomicSnake" -Value $randomBytes -PropertyType Binary -Force | Out-Null
+    cleanup_command: |
+      $typicalPath = "HKLM:\SOFTWARE\Classes\.wav\OpenWithProgIds"; Remove-ItemProperty -Path $typicalPath -Name "AtomicSnake" -ErrorAction SilentlyContinue | Out-Null
+    name: powershell
+    elevation_required: true
