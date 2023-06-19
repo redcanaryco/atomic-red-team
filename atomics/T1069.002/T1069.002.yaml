@@ -281,5 +281,5 @@ atomic_tests:
   executor:
     elevation_required: false
     command: |
-      ldapsearch -h #{domain_controller} -p 389 -x -D #{user} -w #{password} -b "CN=Domains,DC=#{domain},DC=#{top_level_domain}" -s sub -a always -z 1000 dn 
+      ldapsearch -h #{domain_controller} -p 389 -x -D #{user} -w #{password} -b "CN=Domain Users,DC=#{domain},DC=#{top_level_domain}" -s sub -a always -z 1000 dn 
     name: sh
