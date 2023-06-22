@@ -243,7 +243,7 @@ atomic_tests:
     cleanup_command: |
       del #{output_path}\#{output_file}
     name: command_prompt
-- name: Active Directory Domain Search Using LDAP
+- name: Active Directory Domain Search Using LDAP - Linux (Ubuntu)/macOS
   description: |
     Output information from LDAPSearch. LDAP Password is the admin-user password on Active Directory
   supported_platforms:
@@ -280,5 +280,5 @@ atomic_tests:
   executor:
     elevation_required: false
     command: |
-      ldapsearch -h #{domain_controller} -p 389 -x -D #{user} -w #{password} -b "CN=Users,DC=#{domain},DC=#{top_level_domain}" "(objectClass=group)" -s sub -a always -z 1000 dn 
+      ldapsearch -H #{domain}#{top_level_domain}:389 -x -D #{user} -w #{password} -b "CN=Users,DC=#{domain},DC=#{top_level_domain}" "(objectClass=group)" -s sub -a always -z 1000 dn 
     name: sh
