@@ -88,7 +88,7 @@ atomic_tests:
     ps_exec_location:
       description: Location of PSExec.
       type: string
-      default: $env:temp\pstools\PsExec.exe
+      default: PathToAtomicsFolder\..\ExternalPayloads\pstools\PsExec.exe
     session:
       description: The session to disable.
       type: string
@@ -102,8 +102,9 @@ atomic_tests:
   - description: PSExec must be installed on the machine.
     prereq_command: if (Test-Path "#{ps_exec_location}") {exit 0} else {exit 1}
     get_prereq_command: |-
-      start-bitstransfer -source "https://download.sysinternals.com/files/PSTools.zip" -destination "$env:temp\PStools.zip"
-      expand-archive -literalpath "$env:temp\PStools.zip" -destinationpath "$env:temp\pstools" -force
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\PStools.zip"
+      expand-archive -literalpath "PathToAtomicsFolder\..\ExternalPayloads\PStools.zip" -destinationpath "PathToAtomicsFolder\..\ExternalPayloads\pstools" -force
   executor:
     command: cmd /c "#{ps_exec_location}" -accepteula -i -s cmd.exe /c logman update trace "#{session}" --p "#{provider}" -ets
     cleanup_command: cmd /c "#{ps_exec_location}" -i -s cmd.exe /c logman update trace "#{session}" -p "#{provider}" -ets

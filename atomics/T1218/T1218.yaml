@@ -154,7 +154,7 @@ atomic_tests:
     renamed_binary:
       description: renamed Microsoft.Workflow.Compiler
       type: path
-      default: PathToAtomicsFolder\T1218\src\svchost.exe
+      default: PathToAtomicsFolder\..\ExternalPayloads\svchost.exe
     mwcpath:
       description: Default location of Microsoft.Workflow.Compiler.exe
       type: path
@@ -168,10 +168,10 @@ atomic_tests:
   - description: |
       .Net must be installed for this test to work correctly.
     prereq_command: |
-      Copy-Item #{mwcpath}\#{mwcname} "#{renamed_binary}" -Force
       if (Test-Path "#{renamed_binary}") {exit 0} else {exit 1}
     get_prereq_command: |
-      write-host "you need to rename workflow complier before you run this test"
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Copy-Item #{mwcpath}\#{mwcname} "#{renamed_binary}" -Force
   executor:
     command: |
       #{renamed_binary} #{xml_payload} output.txt

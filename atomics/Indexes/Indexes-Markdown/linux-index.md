@@ -117,7 +117,8 @@
 - T1036.002 Right-to-Left Override [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1542.002 Component Firmware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1070 Indicator Removal on Host [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1036.004 Masquerading: Masquerade Task or Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1036.004 Masquerading: Masquerade Task or Service](../../T1036.004/T1036.004.md)
+  - Atomic Test #3: linux rename /proc/pid/comm using prctl [linux]
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1064 Scripting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1562.010 Downgrade Attack [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -140,11 +141,11 @@
   - Atomic Test #2: Disable Cb Response [linux]
   - Atomic Test #3: Disable SELinux [linux]
   - Atomic Test #4: Stop Crowdstrike Falcon on Linux [linux]
-  - Atomic Test #39: Clear History [linux]
-  - Atomic Test #40: Suspend History [linux]
-  - Atomic Test #41: Reboot Linux Host via Kernel System Request [linux]
-  - Atomic Test #42: Clear Pagging Cache [linux]
-  - Atomic Test #43: Disable Memory Swap [linux]
+  - Atomic Test #38: Clear History [linux]
+  - Atomic Test #39: Suspend History [linux]
+  - Atomic Test #40: Reboot Linux Host via Kernel System Request [linux]
+  - Atomic Test #41: Clear Pagging Cache [linux]
+  - Atomic Test #42: Disable Memory Swap [linux]
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
