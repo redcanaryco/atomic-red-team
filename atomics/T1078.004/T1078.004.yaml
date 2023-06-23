@@ -30,12 +30,7 @@ atomic_tests:
       description: Email of the service account
       type: string
       default: gcp-art-service-account-1.json
-  - description: | 
-      Check if user is logged in 
-    prereq_command: |
-      gcloud config get-value account
-    get_prereq_command: |
-      gcloud auth login --no-launch-browser
+
   executor:
     name: sh
     elevation_required: false
@@ -53,6 +48,12 @@ atomic_tests:
       if [ -x "$(command -v gcloud)" ]; then exit 0; else exit 1; fi;
     get_prereq_command: |
       echo "Please Install Google Cloud SDK before running this atomic test : https://cloud.google.com/sdk/docs/install"
+  - description: | 
+      Check if user is logged in 
+    prereq_command: |
+      gcloud config get-value account
+    get_prereq_command: |
+      gcloud auth login --no-launch-browser
 - name: Azure Persistence Automation Runbook Created or Modified
   auto_generated_guid: 348f4d14-4bd3-4f6b-bd8a-61237f78b3ac
   description: |
@@ -121,7 +122,6 @@ atomic_tests:
       Remove-AzAutomationRunbook -AutomationAccountName #{automation_account_name} -Name #{runbook_name} -ResourceGroupName #{resource_group} -Force
       cd $PathToAtomicsFolder/T1078.004/src/T1078.004-2/
       terraform destroy -auto-approve
-
 - name: GCP - Create Custom IAM Role
   description: |
     This atomic will create a new IAM role. The default role permissions are: *IAM Service Account Get*. The idea for this Atomic came from a Rule published by the Elastic team.
@@ -157,7 +157,6 @@ atomic_tests:
     name: sh
     elevation_required: false
     command: |
-      gcloud auth login --no-launch-browser
       gcloud config set project #{project-id}
       gcloud iam roles create #{role-name} --description="#{role-description}" --permissions=#{roles} --project=#{project-id}
     cleanup_command: |
@@ -170,3 +169,9 @@ atomic_tests:
       if [ -x "$(command -v gcloud)" ]; then exit 0; else exit 1; fi;
     get_prereq_command: |
       echo "Please Install Google Cloud SDK before running this atomic test : https://cloud.google.com/sdk/docs/install"
+  - description: | 
+      Check if user is logged in 
+    prereq_command: |
+      gcloud config get-value account
+    get_prereq_command: |
+      gcloud auth login --no-launch-browser
