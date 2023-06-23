@@ -627,6 +627,7 @@
   - Atomic Test #7: AWS - CloudWatch Log Group Deletes [iaas:aws]
   - Atomic Test #8: AWS CloudWatch Log Stream Deletes [iaas:aws]
   - Atomic Test #9: Office 365 - Set Audit Bypass For a Mailbox [office-365]
+  - Atomic Test #10: GCP - Delete Activity Event Log [iaas:gcp]
 - [T1564.003 Hide Artifacts: Hidden Window](../../T1564.003/T1564.003.md)
   - Atomic Test #1: Hidden Window [windows]
 - T1147 Hidden Users [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -701,6 +702,7 @@
 - [T1078.004 Valid Accounts: Cloud Accounts](../../T1078.004/T1078.004.md)
   - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, iaas:gcp]
   - Atomic Test #2: Azure Persistence Automation Runbook Created or Modified [iaas:azure]
+  - Atomic Test #3: GCP - Create Custom IAM Role [iaas:gcp]
 - T1480.001 Environmental Keying [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1564.004 Hide Artifacts: NTFS File Attributes](../../T1564.004/T1564.004.md)
   - Atomic Test #1: Alternate Data Streams (ADS) [windows]
@@ -1044,6 +1046,7 @@
 - [T1078.004 Valid Accounts: Cloud Accounts](../../T1078.004/T1078.004.md)
   - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, iaas:gcp]
   - Atomic Test #2: Azure Persistence Automation Runbook Created or Modified [iaas:azure]
+  - Atomic Test #3: GCP - Create Custom IAM Role [iaas:gcp]
 - [T1053.002 Scheduled Task/Job: At](../../T1053.002/T1053.002.md)
   - Atomic Test #1: At.exe Scheduled task [windows]
   - Atomic Test #2: At - Schedule a job [linux]
@@ -1488,6 +1491,7 @@
   - Atomic Test #14: Domain Password Policy Check: No Lowercase Character in Password [windows]
   - Atomic Test #15: Domain Password Policy Check: Only Two Character Classes [windows]
   - Atomic Test #16: Domain Password Policy Check: Common Password Use [windows]
+  - Atomic Test #17: GCP - Delete Service Account Key [iaas:gcp]
 - [T1547.006 Boot or Logon Autostart Execution: Kernel Modules and Extensions](../../T1547.006/T1547.006.md)
   - Atomic Test #1: Linux - Load Kernel Module via insmod [linux]
   - Atomic Test #2: MacOS - Load Kernel Module via kextload and kmutil [macos]
@@ -1588,6 +1592,7 @@
 - [T1078.004 Valid Accounts: Cloud Accounts](../../T1078.004/T1078.004.md)
   - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, iaas:gcp]
   - Atomic Test #2: Azure Persistence Automation Runbook Created or Modified [iaas:azure]
+  - Atomic Test #3: GCP - Create Custom IAM Role [iaas:gcp]
 - [T1053.002 Scheduled Task/Job: At](../../T1053.002/T1053.002.md)
   - Atomic Test #1: At.exe Scheduled task [windows]
   - Atomic Test #2: At - Schedule a job [linux]
@@ -2548,6 +2553,7 @@
   - Atomic Test #1: Windows - Overwrite file with Sysinternals SDelete [windows]
   - Atomic Test #2: macOS/Linux - Overwrite file with DD [linux, macos]
   - Atomic Test #3: Overwrite deleted data on C drive [windows]
+  - Atomic Test #4: GCP - Delete Bucket [iaas:gcp]
 - T1498 Network Denial of Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1495 Firmware Corruption [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1490 Inhibit System Recovery](../../T1490/T1490.md)
@@ -2604,6 +2610,7 @@
 - [T1078.004 Valid Accounts: Cloud Accounts](../../T1078.004/T1078.004.md)
   - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, iaas:gcp]
   - Atomic Test #2: Azure Persistence Automation Runbook Created or Modified [iaas:azure]
+  - Atomic Test #3: GCP - Create Custom IAM Role [iaas:gcp]
 - T1566.003 Spearphishing via Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #1: Create local account with admin privileges [windows]

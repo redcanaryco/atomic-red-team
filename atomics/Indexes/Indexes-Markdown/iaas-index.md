@@ -20,12 +20,14 @@
   - Atomic Test #2: Azure - Eventhub Deletion [iaas:azure]
   - Atomic Test #7: AWS - CloudWatch Log Group Deletes [iaas:aws]
   - Atomic Test #8: AWS CloudWatch Log Stream Deletes [iaas:aws]
+  - Atomic Test #10: GCP - Delete Activity Event Log [iaas:gcp]
 - T1578.002 Create Cloud Instance [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1578.001 Create Snapshot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1550.001 Application Access Token [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1078.004 Valid Accounts: Cloud Accounts](../../T1078.004/T1078.004.md)
   - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, iaas:gcp]
   - Atomic Test #2: Azure Persistence Automation Runbook Created or Modified [iaas:azure]
+  - Atomic Test #3: GCP - Create Custom IAM Role [iaas:gcp]
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 
 # credential-access
@@ -60,7 +62,8 @@
 - T1486 Data Encrypted for Impact [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1499 Endpoint Denial of Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1496 Resource Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1485 Data Destruction [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1485 Data Destruction](../../T1485/T1485.md)
+  - Atomic Test #4: GCP - Delete Bucket [iaas:gcp]
 - T1498 Network Denial of Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1490 Inhibit System Recovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 
@@ -100,6 +103,7 @@
   - Atomic Test #3: AWS - Create a group and add a user to that group [iaas:aws]
   - Atomic Test #6: Azure - adding user to Azure role in subscription [iaas:azure]
   - Atomic Test #7: Azure - adding service principal to Azure role in subscription [iaas:azure]
+  - Atomic Test #17: GCP - Delete Service Account Key [iaas:gcp]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1556.006 Multi-Factor Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1546 Event Triggered Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -107,6 +111,7 @@
 - [T1078.004 Valid Accounts: Cloud Accounts](../../T1078.004/T1078.004.md)
   - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, iaas:gcp]
   - Atomic Test #2: Azure Persistence Automation Runbook Created or Modified [iaas:azure]
+  - Atomic Test #3: GCP - Create Custom IAM Role [iaas:gcp]
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 
 # collection
@@ -127,6 +132,7 @@
 - [T1078.004 Valid Accounts: Cloud Accounts](../../T1078.004/T1078.004.md)
   - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, iaas:gcp]
   - Atomic Test #2: Azure Persistence Automation Runbook Created or Modified [iaas:azure]
+  - Atomic Test #3: GCP - Create Custom IAM Role [iaas:gcp]
 
 # lateral-movement
 - T1550 Use Alternate Authentication Material [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -149,6 +155,7 @@
 - [T1078.004 Valid Accounts: Cloud Accounts](../../T1078.004/T1078.004.md)
   - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, iaas:gcp]
   - Atomic Test #2: Azure Persistence Automation Runbook Created or Modified [iaas:azure]
+  - Atomic Test #3: GCP - Create Custom IAM Role [iaas:gcp]
 
 # exfiltration
 - T1020.001 Traffic Duplication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
