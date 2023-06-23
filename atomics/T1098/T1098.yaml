@@ -964,30 +964,25 @@ atomic_tests:
   supported_platforms:
   - iaas:gcp
   input_arguments:
-    project-id:
+    project_id:
       description: ID of the GCP Project you to execute the command against.
       type: string
       default: atomic-test-1
-    service-name:
+    service_name:
       description: The name of the service account.
       type: string
       default: atomic-service-account
-    key-path:
-      description: Path to the key to be created from create keys command.
-      type: string
-      default: /tmp/key.json
   executor:
     name: sh
     elevation_required: false
     command: |
-      gcloud config set project #{project-id}
-      gcloud iam service-accounts create #{service-name}
-      gcloud iam service-accounts keys create #{key-path} --iam-account=#{service-name}@#{project-id}.iam.gserviceaccount.com
-      KEY = gcloud iam service-accounts keys list --iam-account=#{service-name}@#{project-id}.iam.gserviceaccount.com --format="value(KEY_ID)" --limit=1
-      gcloud iam service-accounts keys delete $KEY --iam-account=#{service-name}@#{project-id}.iam.gserviceaccount.com --quiet
-      gcloud iam service-accounts delete #{service-name}@#{project-id}.iam.gserviceaccount.com --quiet
+      gcloud config set project #{project_id}
+      KEY=`gcloud iam service-accounts keys list --iam-account=#{service_name}@#{project_id}.iam.gserviceaccount.com --format="value(KEY_ID)" --limit=1`
+      gcloud iam service-accounts keys delete $KEY --iam-account=#{service_name}@#{project_id}.iam.gserviceaccount.com --quiet
     cleanup_command: |
-      rm #{key-path}
+      cd $PathToAtomicsFolder/T1098/src/T1098-17/
+      terraform state rm google_service_account_key.key
+      terraform destroy -auto-approve
   dependency_executor_name: sh
   dependencies:
   - description: |
@@ -1002,3 +997,17 @@ atomic_tests:
       gcloud config get-value account
     get_prereq_command: |
       gcloud auth login --no-launch-browser
+  - description: |
+      Check if terraform is installed.
+    prereq_command: |
+      terraform version
+    get_prereq_command: |
+        echo Please install the terraform.
+  - description: |
+      Create dependency resources using terraform
+    prereq_command: |
+      stat $PathToAtomicsFolder/T1098/src/T1098-17/terraform.tfstate
+    get_prereq_command: |
+      cd $PathToAtomicsFolder/T1098/src/T1098-17/
+      terraform init
+      terraform apply -auto-approve
