@@ -980,7 +980,6 @@ atomic_tests:
     name: sh
     elevation_required: false
     command: |
-      gcloud auth login --no-launch-browser
       gcloud config set project #{project-id}
       gcloud iam service-accounts create #{service-name}
       gcloud iam service-accounts keys create #{key-path} --iam-account=#{service-name}@#{project-id}.iam.gserviceaccount.com
@@ -997,3 +996,9 @@ atomic_tests:
       if [ -x "$(command -v gcloud)" ]; then exit 0; else exit 1; fi;
     get_prereq_command: |
       echo "Please Install Google Cloud SDK before running this atomic test : https://cloud.google.com/sdk/docs/install"
+  - description: | 
+      Check if user is logged in 
+    prereq_command: |
+      gcloud config get-value account
+    get_prereq_command: |
+      gcloud auth login --no-launch-browser
