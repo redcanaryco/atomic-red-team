@@ -448,6 +448,7 @@ defense-evasion,T1562.008,Impair Defenses: Disable Cloud Logs,6,AWS - Remove VPC
 defense-evasion,T1562.008,Impair Defenses: Disable Cloud Logs,7,AWS - CloudWatch Log Group Deletes,89422c87-b57b-4a04-a8ca-802bb9d06121,sh
 defense-evasion,T1562.008,Impair Defenses: Disable Cloud Logs,8,AWS CloudWatch Log Stream Deletes,33ca84bc-4259-4943-bd36-4655dc420932,sh
 defense-evasion,T1562.008,Impair Defenses: Disable Cloud Logs,9,Office 365 - Set Audit Bypass For a Mailbox,c9a2f6fe-7197-488c-af6d-10c782121ca6,powershell
+defense-evasion,T1562.008,Impair Defenses: Disable Cloud Logs,10,GCP - Delete Activity Event Log,d56152ec-01d9-42a2-877c-aac1f6ebe8e6,sh
 defense-evasion,T1564.003,Hide Artifacts: Hidden Window,1,Hidden Window,f151ee37-9e2b-47e6-80e4-550b9f999b7a,powershell
 defense-evasion,T1027.006,HTML Smuggling,1,HTML Smuggling Remote Payload,30cbeda4-08d9-42f1-8685-197fad677734,powershell
 defense-evasion,T1070.004,Indicator Removal on Host: File Deletion,1,Delete a single file - Linux/macOS,562d737f-2fc6-4b09-8c2a-7f8ff0828480,sh
@@ -486,6 +487,7 @@ defense-evasion,T1564.001,Hide Artifacts: Hidden Files and Directories,7,Show al
 defense-evasion,T1564.001,Hide Artifacts: Hidden Files and Directories,8,Hide Files Through Registry,f650456b-bd49-4bc1-ae9d-271b5b9581e7,command_prompt
 defense-evasion,T1078.004,Valid Accounts: Cloud Accounts,1,Creating GCP Service Account and Service Account Key,9fdd83fd-bd53-46e5-a716-9dec89c8ae8e,sh
 defense-evasion,T1078.004,Valid Accounts: Cloud Accounts,2,Azure Persistence Automation Runbook Created or Modified,348f4d14-4bd3-4f6b-bd8a-61237f78b3ac,powershell
+defense-evasion,T1078.004,Valid Accounts: Cloud Accounts,3,GCP - Create Custom IAM Role,3a159042-69e6-4398-9a69-3308a4841c85,sh
 defense-evasion,T1564.004,Hide Artifacts: NTFS File Attributes,1,Alternate Data Streams (ADS),8822c3b0-d9f9-4daf-a043-49f4602364f4,command_prompt
 defense-evasion,T1564.004,Hide Artifacts: NTFS File Attributes,2,Store file in Alternate Data Stream (ADS),2ab75061-f5d5-4c1a-b666-ba2a50df5b02,powershell
 defense-evasion,T1564.004,Hide Artifacts: NTFS File Attributes,3,Create ADS command prompt,17e7637a-ddaf-4a82-8622-377e20de8fdb,command_prompt
@@ -691,6 +693,7 @@ privilege-escalation,T1037.001,Boot or Logon Initialization Scripts: Logon Scrip
 privilege-escalation,T1547.008,Boot or Logon Autostart Execution: LSASS Driver,1,Modify Registry to load Arbitrary DLL into LSASS - LsaDbExtPt,8ecef16d-d289-46b4-917b-0dba6dc81cf1,powershell
 privilege-escalation,T1078.004,Valid Accounts: Cloud Accounts,1,Creating GCP Service Account and Service Account Key,9fdd83fd-bd53-46e5-a716-9dec89c8ae8e,sh
 privilege-escalation,T1078.004,Valid Accounts: Cloud Accounts,2,Azure Persistence Automation Runbook Created or Modified,348f4d14-4bd3-4f6b-bd8a-61237f78b3ac,powershell
+privilege-escalation,T1078.004,Valid Accounts: Cloud Accounts,3,GCP - Create Custom IAM Role,3a159042-69e6-4398-9a69-3308a4841c85,sh
 privilege-escalation,T1053.002,Scheduled Task/Job: At,1,At.exe Scheduled task,4a6c0dc4-0f2a-4203-9298-a5a9bdc21ed8,command_prompt
 privilege-escalation,T1053.002,Scheduled Task/Job: At,2,At - Schedule a job,7266d898-ac82-4ec0-97c7-436075d0d08e,sh
 privilege-escalation,T1055.001,Process Injection: Dynamic-link Library Injection,1,Process Injection via mavinject.exe,74496461-11a1-4982-b439-4d87a550d254,powershell
@@ -956,6 +959,7 @@ persistence,T1098,Account Manipulation,13,Domain Password Policy Check: No Upper
 persistence,T1098,Account Manipulation,14,Domain Password Policy Check: No Lowercase Character in Password,945da11e-977e-4dab-85d2-f394d03c5887,powershell
 persistence,T1098,Account Manipulation,15,Domain Password Policy Check: Only Two Character Classes,784d1349-5a26-4d20-af5e-d6af53bae460,powershell
 persistence,T1098,Account Manipulation,16,Domain Password Policy Check: Common Password Use,81959d03-c51f-49a1-bb24-23f1ec885578,powershell
+persistence,T1098,Account Manipulation,17,GCP - Delete Service Account Key,7ece1dea-49f1-4d62-bdcc-5801e3292510,sh
 persistence,T1547.006,Boot or Logon Autostart Execution: Kernel Modules and Extensions,1,Linux - Load Kernel Module via insmod,687dcb93-9656-4853-9c36-9977315e9d23,bash
 persistence,T1547.006,Boot or Logon Autostart Execution: Kernel Modules and Extensions,2,MacOS - Load Kernel Module via kextload and kmutil,f4391089-d3a5-4dd1-ab22-0419527f2672,bash
 persistence,T1547.006,Boot or Logon Autostart Execution: Kernel Modules and Extensions,3,MacOS - Load Kernel Module via KextManagerLoadKextWithURL(),f0007753-beb3-41ea-9948-760785e4c1e5,bash
@@ -1006,6 +1010,7 @@ persistence,T1137.002,Office Application Startup: Office Test,1,Office Applicati
 persistence,T1547.008,Boot or Logon Autostart Execution: LSASS Driver,1,Modify Registry to load Arbitrary DLL into LSASS - LsaDbExtPt,8ecef16d-d289-46b4-917b-0dba6dc81cf1,powershell
 persistence,T1078.004,Valid Accounts: Cloud Accounts,1,Creating GCP Service Account and Service Account Key,9fdd83fd-bd53-46e5-a716-9dec89c8ae8e,sh
 persistence,T1078.004,Valid Accounts: Cloud Accounts,2,Azure Persistence Automation Runbook Created or Modified,348f4d14-4bd3-4f6b-bd8a-61237f78b3ac,powershell
+persistence,T1078.004,Valid Accounts: Cloud Accounts,3,GCP - Create Custom IAM Role,3a159042-69e6-4398-9a69-3308a4841c85,sh
 persistence,T1053.002,Scheduled Task/Job: At,1,At.exe Scheduled task,4a6c0dc4-0f2a-4203-9298-a5a9bdc21ed8,command_prompt
 persistence,T1053.002,Scheduled Task/Job: At,2,At - Schedule a job,7266d898-ac82-4ec0-97c7-436075d0d08e,sh
 persistence,T1546.007,Event Triggered Execution: Netsh Helper DLL,1,Netsh Helper DLL Registration,3244697d-5a3a-4dfc-941c-550f69f91a4d,command_prompt
@@ -1588,6 +1593,7 @@ impact,T1496,Resource Hijacking,1,macOS/Linux - Simulate CPU Load with Yes,904a5
 impact,T1485,Data Destruction,1,Windows - Overwrite file with Sysinternals SDelete,476419b5-aebf-4366-a131-ae3e8dae5fc2,powershell
 impact,T1485,Data Destruction,2,macOS/Linux - Overwrite file with DD,38deee99-fd65-4031-bec8-bfa4f9f26146,bash
 impact,T1485,Data Destruction,3,Overwrite deleted data on C drive,321fd25e-0007-417f-adec-33232252be19,command_prompt
+impact,T1485,Data Destruction,4,GCP - Delete Bucket,4ac71389-40f4-448a-b73f-754346b3f928,sh
 impact,T1490,Inhibit System Recovery,1,Windows - Delete Volume Shadow Copies,43819286-91a9-4369-90ed-d31fb4da2c01,command_prompt
 impact,T1490,Inhibit System Recovery,2,Windows - Delete Volume Shadow Copies via WMI,6a3ff8dd-f49c-4272-a658-11c2fe58bd88,command_prompt
 impact,T1490,Inhibit System Recovery,3,Windows - wbadmin Delete Windows Backup Catalog,263ba6cb-ea2b-41c9-9d4e-b652dadd002c,command_prompt
@@ -1617,6 +1623,7 @@ initial-access,T1078.001,Valid Accounts: Default Accounts,2,Activate Guest Accou
 initial-access,T1078.001,Valid Accounts: Default Accounts,3,Enable Guest Account on macOS,0315bdff-4178-47e9-81e4-f31a6d23f7e4,command_prompt
 initial-access,T1078.004,Valid Accounts: Cloud Accounts,1,Creating GCP Service Account and Service Account Key,9fdd83fd-bd53-46e5-a716-9dec89c8ae8e,sh
 initial-access,T1078.004,Valid Accounts: Cloud Accounts,2,Azure Persistence Automation Runbook Created or Modified,348f4d14-4bd3-4f6b-bd8a-61237f78b3ac,powershell
+initial-access,T1078.004,Valid Accounts: Cloud Accounts,3,GCP - Create Custom IAM Role,3a159042-69e6-4398-9a69-3308a4841c85,sh
 initial-access,T1078.003,Valid Accounts: Local Accounts,1,Create local account with admin privileges,a524ce99-86de-4db6-b4f9-e08f35a47a15,command_prompt
 initial-access,T1078.003,Valid Accounts: Local Accounts,2,Create local account with admin privileges - MacOS,f1275566-1c26-4b66-83e3-7f9f7f964daa,bash
 initial-access,T1078.003,Valid Accounts: Local Accounts,3,Create local account with admin privileges using sysadminctl utility - MacOS,191db57d-091a-47d5-99f3-97fde53de505,bash
