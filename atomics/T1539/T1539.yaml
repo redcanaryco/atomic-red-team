@@ -78,7 +78,6 @@ atomic_tests:
     name: powershell
     elevation_required: false
 - name: Steal Chrome Cookies via Remote Debugging (Mac)
-  auto_generated_guid: 
   description: |-
     The remote debugging functionality in Chrome can be used by malware for post-exploitation activities to obtain cookies without requiring keychain access. By initiating Chrome with a remote debug port, an attacker can sidestep encryption and employ Chrome's own mechanisms to access cookies.
 
@@ -91,14 +90,17 @@ atomic_tests:
   - macos 
   dependency_executor_name: bash
   dependencies:
-  - description: 'go and whitechocolatemacadamianut '
+  - description: 'Install Go'
     prereq_command: |-
       go version
+    get_prereq_command: |-
+      brew install go
+  - description: 'Download and compile WhiteChocolateMacademiaNut'
+    prereq_command: |-
       /tmp/WhiteChocolateMacademiaNut/chocolate -h
     get_prereq_command: |-
-      brew install go --force
-      git clone https://github.com/slyd0g/WhiteChocolateMacademiaNut.git
-      cd WhiteChocolateMacademiaNut
+      git clone https://github.com/slyd0g/WhiteChocolateMacademiaNut.git /tmp/WhiteChocolateMacademiaNut
+      cd /tmp/WhiteChocolateMacademiaNut
       go mod init chocolate
       go mod tidy
       go build
