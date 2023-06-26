@@ -47,7 +47,9 @@ atomic_tests:
   description: |
     PowerShell code to set Winlogon Notify key to execute a notification package DLL at logon.
 
-    Upon successful execution, PowerShell will modify a registry value to execute atomicNotificationPackage.dll upon logon/logoff.
+    Upon successful execution, PowerShell will modify a registry value to execute atomicNotificationPackage.dll upon logon.
+
+    Please note that Winlogon Notifications have been removed as of Windows Vista / Windows Server 2008 and that this test thus only applies to erlier versions of Windows.
   supported_platforms:
   - windows
   input_arguments:
@@ -55,10 +57,17 @@ atomic_tests:
       description: Path of notification package to execute
       type: path
       default: C:\Windows\Temp\atomicNotificationPackage.dll
+    function_to_execute:
+      description: Function in notification package to execute
+      type: string
+      default: AtomicTestFunction
   executor:
     command: |
-      New-Item "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify" -Force
-      Set-ItemProperty "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify" "logon" "#{binary_to_execute}" -Force
+      New-Item "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify\AtomicRedTeam" -Force
+      Set-ItemProperty "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify\AtomicRedTeam" "DllName" "#{binary_to_execute}" -Type ExpandString -Force
+      Set-ItemProperty "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify\AtomicRedTeam" "Logon" "#{function_to_execute}" -Force
+      Set-ItemProperty "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify\AtomicRedTeam" "Impersonate" 1 -Type DWord -Force
+      Set-ItemProperty "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify\AtomicRedTeam" "Asynchronous" 0 -Type DWord -Force
     cleanup_command: |
       Remove-Item "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify" -Force -ErrorAction Ignore
     name: powershell
