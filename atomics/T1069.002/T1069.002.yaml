@@ -243,3 +243,38 @@ atomic_tests:
     cleanup_command: |
       del #{output_path}\#{output_file}
     name: command_prompt
+- name: Active Directory Domain Search Using LDAP - Linux (Ubuntu)/macOS
+  description: |
+    Output information from LDAPSearch. LDAP Password is the admin-user password on Active Directory
+  supported_platforms:
+  - linux
+  input_arguments:
+    domain:
+      description: The domain to be tested
+      type: string
+      default: example
+    top_level_domain:
+      description: The top level domain (.com, .test, .remote, etc... following domain, minus the .)
+      type: string
+      default: com
+    user:
+      description: username@domain of a user
+      type: string
+      default: user@example.com
+    password:
+      description: password of the user referenced inside user
+      type: string
+      default: s3CurePssw0rD!
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Packages sssd-ad sssd-tools realmd adcli installed and realm available, ldapsearch
+    prereq_command: |
+      which ldapsearch
+    get_prereq_command: |
+      echo missing ldapsearch command; exit 1
+  executor:
+    elevation_required: false
+    command: |
+      ldapsearch -H ldap://#{domain}.#{top_level_domain}:389 -x -D #{user} -w #{password} -b "CN=Users,DC=#{domain},DC=#{top_level_domain}" "(objectClass=group)" -s sub -a always -z 1000 dn 
+    name: sh
