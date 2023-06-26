@@ -5,7 +5,6 @@ atomic_tests:
   description: Allows adversaries to abuse safe mode to disable endpoint defenses that may not start with limited boot
   supported_platforms:
   - windows
-  dependencies: 
   executor:
     command: bcdedit /set safeboot network
     cleanup_command: bcdedit /deletevalue {current} safeboot
