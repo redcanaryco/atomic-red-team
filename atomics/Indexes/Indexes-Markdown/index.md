@@ -1421,6 +1421,8 @@
   - Atomic Test #1: Create a new Windows domain admin user [windows]
   - Atomic Test #2: Create a new account similar to ANONYMOUS LOGON [windows]
   - Atomic Test #3: Create a new Domain Account using PowerShell [windows]
+  - Atomic Test #4: Active Directory Create Admin Account [linux]
+  - Atomic Test #5: Active Directory Create User Account (Non-elevated) [linux]
 - T1542.002 Component Firmware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1137.001 Office Template Macros [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1138 Application Shimming [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -2173,6 +2175,7 @@
   - Atomic Test #20: Suspicious LAPS Attributes Query with Get-ADComputer all properties and SearchScope [windows]
   - Atomic Test #21: Suspicious LAPS Attributes Query with adfind all properties [windows]
   - Atomic Test #22: Suspicious LAPS Attributes Query with adfind ms-Mcs-AdmPwd [windows]
+  - Atomic Test #23: Active Directory Domain Search [linux]
 - T1063 Security Software Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1087.001 Account Discovery: Local Account](../../T1087.001/T1087.001.md)
   - Atomic Test #1: Enumerate all accounts (Local) [linux]
@@ -2205,6 +2208,7 @@
   - Atomic Test #12: Get-DomainGroupMember with PowerView [windows]
   - Atomic Test #13: Get-DomainGroup with PowerView [windows]
   - Atomic Test #14: Active Directory Enumeration with LDIFDE [windows]
+  - Atomic Test #15: Active Directory Domain Search Using LDAP - Linux (Ubuntu)/macOS [linux]
 - [T1007 System Service Discovery](../../T1007/T1007.md)
   - Atomic Test #1: System Service Discovery [windows]
   - Atomic Test #2: System Service Discovery - net.exe [windows]
