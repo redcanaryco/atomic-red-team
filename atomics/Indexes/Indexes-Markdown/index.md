@@ -2267,6 +2267,7 @@
   - Atomic Test #23: Azure Security Scan with SkyArk [azure-ad]
   - Atomic Test #24: Linux List Kernel Modules [linux]
   - Atomic Test #25: System Information Discovery with WMIC [windows]
+  - Atomic Test #26: Driver Enumeration using DriverQuery [windows]
 - [T1010 Application Window Discovery](../../T1010/T1010.md)
   - Atomic Test #1: List Process Main Windows - C# .NET [windows]
 - T1087.003 Email Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
