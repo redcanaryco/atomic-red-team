@@ -491,7 +491,8 @@
   - Atomic Test #7: MacOS Swift Keylogger [macos]
 - T1110.001 Brute Force: Password Guessing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1003 OS Credential Dumping [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1539 Steal Web Session Cookie [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1539 Steal Web Session Cookie](../../T1539/T1539.md)
+  - Atomic Test #3: Steal Chrome Cookies via Remote Debugging (Mac) [macos]
 - T1555.002 Securityd Memory [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1110.002 Brute Force: Password Cracking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1555.001 Credentials from Password Stores: Keychain](../../T1555.001/T1555.001.md)
