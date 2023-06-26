@@ -371,3 +371,16 @@ atomic_tests:
       wmic OS get Caption,OSArchitecture,Version
       wmic DISKDRIVE get Caption
     name: command_prompt
+- name: Driver Enumeration using DriverQuery
+  description: |
+    Executes the driverquery command to list drivers installed on the system. Adversaries utilize the feature to enumerate the driver and it can be
+    used for Exploitation. 
+    command /v - provide verbose output but not valid for signed drivers
+            /si - provide information about signed drivers 
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      driverquery /v
+      driverquery /si
+    name: command_prompt
