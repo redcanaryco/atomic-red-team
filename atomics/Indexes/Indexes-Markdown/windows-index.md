@@ -72,7 +72,8 @@
   - Atomic Test #3: Create an "Administrator " user (with a space on the end) [windows]
   - Atomic Test #4: Create and Hide a Service with sc.exe [windows]
 - T1484.002 Domain Trust Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1562.009 Safe Mode Boot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1562.009 Impair Defenses: Safe Boot Mode](../../T1562.009/T1562.009.md)
+  - Atomic Test #1: Safe Mode Boot [windows]
 - [T1497.001 Virtualization/Sandbox Evasion: System Checks](../../T1497.001/T1497.001.md)
   - Atomic Test #2: Detect Virtualization Environment (Windows) [windows]
   - Atomic Test #4: Detect Virtualization Environment via WMI Manufacturer/Model Listing (Windows) [windows]

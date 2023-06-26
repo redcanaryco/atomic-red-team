@@ -103,7 +103,8 @@
 - [T1484.002 Domain Trust Modification](../../T1484.002/T1484.002.md)
   - Atomic Test #1: Add Federation to Azure AD [azure-ad]
 - T1527 Application Access Token [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1562.009 Safe Mode Boot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1562.009 Impair Defenses: Safe Boot Mode](../../T1562.009/T1562.009.md)
+  - Atomic Test #1: Safe Mode Boot [windows]
 - T1542.005 TFTP Boot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1497.001 Virtualization/Sandbox Evasion: System Checks](../../T1497.001/T1497.001.md)
   - Atomic Test #1: Detect Virtualization Environment (Linux) [linux]
