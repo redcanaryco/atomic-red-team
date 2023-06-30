@@ -389,6 +389,7 @@
   - Atomic Test #36: WMIC Tamper with Windows Defender Evade Scanning Folder [windows]
   - Atomic Test #37: Delete Windows Defender Scheduled Tasks [windows]
   - Atomic Test #43: Disable Hypervisor-Enforced Code Integrity (HVCI) [windows]
+  - Atomic Test #44: AMSI Bypass - Override AMSI via COM [windows]
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
