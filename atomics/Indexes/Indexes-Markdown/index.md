@@ -1868,7 +1868,9 @@
 - T1210 Exploitation of Remote Services [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1534 Internal Spearphishing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1097 Pass the Ticket [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1570 Lateral Tool Transfer [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1570 Lateral Tool Transfer](../../T1570/T1570.md)
+  - Atomic Test #1: Exfiltration Over SMB over QUIC (New-SmbMapping) [windows]
+  - Atomic Test #2: Exfiltration Over SMB over QUIC (NET USE) [windows]
 - T1184 SSH Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1075 Pass the Hash [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1028 Windows Remote Management [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
