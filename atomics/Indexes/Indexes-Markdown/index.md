@@ -623,9 +623,9 @@
   - Atomic Test #1: AWS - CloudTrail Changes [iaas:aws]
   - Atomic Test #2: Azure - Eventhub Deletion [iaas:azure]
   - Atomic Test #3: Office 365 - Exchange Audit Log Disabled [office-365]
-  - Atomic Test #4: AWS - Disable CloudTrail Logging Through Event Selectors using Stratus [linux, macos]
+  - Atomic Test #4: AWS - Disable CloudTrail Logging Through Event Selectors using Stratus [linux, macos, iaas:aws]
   - Atomic Test #5: AWS - CloudTrail Logs Impairment Through S3 Lifecycle Rule using Stratus [linux, macos]
-  - Atomic Test #6: AWS - Remove VPC Flow Logs using Stratus [linux, macos]
+  - Atomic Test #6: AWS - Remove VPC Flow Logs using Stratus [linux, macos, iaas:aws]
   - Atomic Test #7: AWS - CloudWatch Log Group Deletes [iaas:aws]
   - Atomic Test #8: AWS CloudWatch Log Stream Deletes [iaas:aws]
   - Atomic Test #9: Office 365 - Set Audit Bypass For a Mailbox [office-365]
@@ -1980,7 +1980,7 @@
   - Atomic Test #7: WinPwn - Loot local Credentials - Wifi Credentials [windows]
   - Atomic Test #8: WinPwn - Loot local Credentials - Decrypt Teamviewer Passwords [windows]
 - [T1552 Unsecured Credentials](../../T1552/T1552.md)
-  - Atomic Test #1: AWS - Retrieve EC2 Password Data using stratus [linux, macos]
+  - Atomic Test #1: AWS - Retrieve EC2 Password Data using stratus [linux, macos, iaas:aws]
 - T1139 Bash History [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1503 Credentials from Web Browsers [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1556.007 Hybrid Identity [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -2275,7 +2275,7 @@
 - T1087.003 Email Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1497.003 Time Based Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1580 Cloud Infrastructure Discovery](../../T1580/T1580.md)
-  - Atomic Test #1: AWS - EC2 Enumeration from Cloud Instance [linux, macos]
+  - Atomic Test #1: AWS - EC2 Enumeration from Cloud Instance [linux, macos, iaas:aws]
 - [T1217 Browser Bookmark Discovery](../../T1217/T1217.md)
   - Atomic Test #1: List Mozilla Firefox Bookmark Database Files on Linux [linux]
   - Atomic Test #2: List Mozilla Firefox Bookmark Database Files on macOS [macos]
@@ -2319,7 +2319,7 @@
   - Atomic Test #4: System Discovery using SharpView [windows]
 - T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1619 Cloud Storage Object Discovery](../../T1619/T1619.md)
-  - Atomic Test #1: AWS S3 Enumeration [iaas:azure]
+  - Atomic Test #1: AWS S3 Enumeration [iaas:aws]
 - T1087.004 Cloud Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1057 Process Discovery](../../T1057/T1057.md)
   - Atomic Test #1: Process Discovery - ps [macos, linux]
