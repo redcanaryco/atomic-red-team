@@ -476,3 +476,31 @@ atomic_tests:
       gcloud config get-value account
     get_prereq_command: |
       gcloud auth login --no-launch-browser
+- name: AWS - GuardDuty Suspension or Deletion
+  auto_generated_guid: 
+  description: |
+    Enables GuardDuty in AWS, upon successful creation this test will suspend and then delete the GuardDuty configuration.
+  supported_platforms:
+  - iaas:aws
+  input_arguments:
+    region:
+      description: Name of the specified region
+      type: string
+      default: us-east-1
+  dependency_executor_name: bash
+  dependencies:
+  - description: |
+      Check if ~/.aws/credentials file has a default stanza is configured
+    prereq_command: |
+      cat ~/.aws/credentials | grep "default"
+    get_prereq_command: |
+      echo "Please install the aws-cli and configure your AWS default profile using: aws configure"
+  executor:
+    command: |
+      detectorId=$(aws guardduty create-detector --enable --region "#{region}" | grep -oP '(?<="DetectorId": ")[^"]*')
+      aws guardduty update-detector --no-enable --detector-id $detectorId
+      aws guardduty delete-detector --detector-id $detectorId
+    cleanup_command: |
+      echo "If test successfully ran, no cleanup required."
+    name: bash
+    elevation_required: false
