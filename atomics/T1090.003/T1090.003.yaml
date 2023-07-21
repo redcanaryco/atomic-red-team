@@ -54,7 +54,7 @@ atomic_tests:
     TorExe:
       description: Location of tor.exe file.
       type: string
-      default: $env:temp\tor\Tor\tor.exe
+      default: PathToAtomicsFolder\..\ExternalPayloads\tor\Tor\tor.exe
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -62,8 +62,9 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{TorExe}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Start-BitsTransfer -Source "https://archive.torproject.org/tor-package-archive/torbrowser/11.0.6/tor-win32-0.4.6.9.zip" -Destination "$env:temp\tor.zip" -dynamic
-      expand-archive -LiteralPath "$env:temp\tor.zip" -DestinationPath "$env:temp\tor"
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://archive.torproject.org/tor-package-archive/torbrowser/11.0.6/tor-win32-0.4.6.9.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\tor.zip"
+      expand-archive -LiteralPath "PathToAtomicsFolder\..\ExternalPayloads\tor.zip" -DestinationPath "PathToAtomicsFolder\..\ExternalPayloads\tor"
   executor:
     command: |
       invoke-expression 'cmd /c start powershell -Command {cmd /c #{TorExe}}'

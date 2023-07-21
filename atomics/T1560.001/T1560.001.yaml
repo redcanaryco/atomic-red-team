@@ -107,9 +107,10 @@ atomic_tests:
       cmd /c 'if not exist "#{winzip_exe}" (echo 1) else (echo 0)'
     get_prereq_command: |
       IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1" -UseBasicParsing)
-      if(Invoke-WebRequestVerifyHash "#{winzip_url}" "$env:Temp\winzip.exe" #{winzip_hash}){
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      if(Invoke-WebRequestVerifyHash "#{winzip_url}" "PathToAtomicsFolder\..\ExternalPayloads\winzip.exe" #{winzip_hash}){
         Write-Host Follow the installation prompts to continue
-        cmd /c "$env:Temp\winzip.exe"
+        cmd /c "PathToAtomicsFolder\..\ExternalPayloads\winzip.exe"
       }
   executor:
     name: command_prompt
@@ -143,7 +144,7 @@ atomic_tests:
       if not exist "#{7zip_exe}" (exit /b 1)
     get_prereq_command: |
       echo Downloading 7-zip installer
-      bitsadmin /transfer myDownloadJob /download /priority normal "https://www.7-zip.org/a/7z2002-x64.exe" #{7zip_installer}
+      bitsadmin /transfer myDownloadJob /download /priority normal "https://www.7-zip.org/a/7z2301-x64.exe" #{7zip_installer}
       #{7zip_installer} /S
   executor:
     name: command_prompt
@@ -154,6 +155,8 @@ atomic_tests:
       echo "This file will be encrypted" > .\encrypted_file.txt
       "#{7zip_exe}" u archive.7z *txt -pblue
       dir
+    cleanup_command: |
+      rmdir /s /Q $PathToAtomicsFolder\T1560.001\victim-files >nul 2>&1
 - name: Data Compressed - nix - zip
   auto_generated_guid: c51cec55-28dd-4ad2-9461-1eacbc82c3a0
   description: |

@@ -72,7 +72,8 @@
   - Atomic Test #3: Create an "Administrator " user (with a space on the end) [windows]
   - Atomic Test #4: Create and Hide a Service with sc.exe [windows]
 - T1484.002 Domain Trust Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1562.009 Safe Mode Boot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1562.009 Impair Defenses: Safe Boot Mode](../../T1562.009/T1562.009.md)
+  - Atomic Test #1: Safe Mode Boot [windows]
 - [T1497.001 Virtualization/Sandbox Evasion: System Checks](../../T1497.001/T1497.001.md)
   - Atomic Test #2: Detect Virtualization Environment (Windows) [windows]
   - Atomic Test #4: Detect Virtualization Environment via WMI Manufacturer/Model Listing (Windows) [windows]
@@ -376,19 +377,19 @@
   - Atomic Test #23: Tamper with Windows Defender Evade Scanning -Extension [windows]
   - Atomic Test #24: Tamper with Windows Defender Evade Scanning -Process [windows]
   - Atomic Test #26: Disable Windows Defender with DISM [windows]
-  - Atomic Test #27: Disable Defender with Defender Control [windows]
-  - Atomic Test #28: Disable Defender Using NirSoft AdvancedRun [windows]
-  - Atomic Test #29: Kill antimalware protected processes using Backstab [windows]
-  - Atomic Test #30: WinPwn - Kill the event log services for stealth [windows]
-  - Atomic Test #31: Tamper with Windows Defender ATP using Aliases - PowerShell [windows]
-  - Atomic Test #32: LockBit Black - Disable Privacy Settings Experience Using Registry -cmd [windows]
-  - Atomic Test #33: LockBit Black - Use Registry Editor to turn on automatic logon -cmd [windows]
-  - Atomic Test #34: LockBit Black - Disable Privacy Settings Experience Using Registry -Powershell [windows]
-  - Atomic Test #35: Lockbit Black - Use Registry Editor to turn on automatic logon -Powershell [windows]
-  - Atomic Test #36: Disable Windows Defender with PwSh Disable-WindowsOptionalFeature [windows]
-  - Atomic Test #37: WMIC Tamper with Windows Defender Evade Scanning Folder [windows]
-  - Atomic Test #38: Delete Windows Defender Scheduled Tasks [windows]
-  - Atomic Test #44: Disable Hypervisor-Enforced Code Integrity (HVCI) [windows]
+  - Atomic Test #27: Disable Defender Using NirSoft AdvancedRun [windows]
+  - Atomic Test #28: Kill antimalware protected processes using Backstab [windows]
+  - Atomic Test #29: WinPwn - Kill the event log services for stealth [windows]
+  - Atomic Test #30: Tamper with Windows Defender ATP using Aliases - PowerShell [windows]
+  - Atomic Test #31: LockBit Black - Disable Privacy Settings Experience Using Registry -cmd [windows]
+  - Atomic Test #32: LockBit Black - Use Registry Editor to turn on automatic logon -cmd [windows]
+  - Atomic Test #33: LockBit Black - Disable Privacy Settings Experience Using Registry -Powershell [windows]
+  - Atomic Test #34: Lockbit Black - Use Registry Editor to turn on automatic logon -Powershell [windows]
+  - Atomic Test #35: Disable Windows Defender with PwSh Disable-WindowsOptionalFeature [windows]
+  - Atomic Test #36: WMIC Tamper with Windows Defender Evade Scanning Folder [windows]
+  - Atomic Test #37: Delete Windows Defender Scheduled Tasks [windows]
+  - Atomic Test #43: Disable Hypervisor-Enforced Code Integrity (HVCI) [windows]
+  - Atomic Test #44: AMSI Bypass - Override AMSI via COM [windows]
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -946,6 +947,7 @@
   - Atomic Test #2: Chrome (Chrome Web Store) [linux, windows, macos]
   - Atomic Test #3: Firefox [linux, windows, macos]
   - Atomic Test #4: Edge Chromium Addon - VPN [windows, macos]
+  - Atomic Test #5: Google Chrome Load Unpacked Extension With Command Line [windows]
 - T1058 Service Registry Permissions Weakness [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1137.005 Outlook Rules [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.011 Event Triggered Execution: Application Shimming](../../T1546.011/T1546.011.md)
@@ -1165,6 +1167,7 @@
   - Atomic Test #1: DNS over HTTPS Large Query Volume [windows]
   - Atomic Test #2: DNS over HTTPS Regular Beaconing [windows]
   - Atomic Test #3: DNS over HTTPS Long Domain Query [windows]
+  - Atomic Test #4: run ngrok [windows]
 - T1483 Domain Generation Algorithms [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1071.003 Mail Protocols [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1092 Communication Through Removable Media [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1323,7 +1326,9 @@
 - T1210 Exploitation of Remote Services [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1534 Internal Spearphishing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1097 Pass the Ticket [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1570 Lateral Tool Transfer [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1570 Lateral Tool Transfer](../../T1570/T1570.md)
+  - Atomic Test #1: Exfiltration Over SMB over QUIC (New-SmbMapping) [windows]
+  - Atomic Test #2: Exfiltration Over SMB over QUIC (NET USE) [windows]
 - T1075 Pass the Hash [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1028 Windows Remote Management [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1563.002 Remote Service Session Hijacking: RDP Hijacking](../../T1563.002/T1563.002.md)
@@ -1616,6 +1621,7 @@
   - Atomic Test #21: WinPwn - PowerSharpPack - Sharpup checking common Privesc vectors [windows]
   - Atomic Test #22: WinPwn - PowerSharpPack - Seatbelt [windows]
   - Atomic Test #25: System Information Discovery with WMIC [windows]
+  - Atomic Test #26: Driver Enumeration using DriverQuery [windows]
 - [T1010 Application Window Discovery](../../T1010/T1010.md)
   - Atomic Test #1: List Process Main Windows - C# .NET [windows]
 - T1087.003 Email Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1750,7 +1756,7 @@
   - Atomic Test #3: Remove Account From Domain Admin Group [windows]
 - [T1486 Data Encrypted for Impact](../../T1486/T1486.md)
   - Atomic Test #5: PureLocker Ransom Note [windows]
-  - Atomic Test #6: Data Encrypted with GPG4Win [windows]
+  - Atomic Test #8: Data Encrypted with GPG4Win [windows]
 - T1488 Disk Content Wipe [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1499 Endpoint Denial of Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1494 Runtime Data Manipulation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
