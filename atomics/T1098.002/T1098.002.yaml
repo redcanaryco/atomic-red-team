@@ -1,0 +1,54 @@
+attack_technique: T1098.002
+display_name: 'Account Manipulation: Additional Email Delegate Permissions'
+atomic_tests:
+- name: EXO - Full access mailbox permission granted to a user
+  auto_generated_guid: 17d046be-fdd0-4cbb-b5c7-55c85d9d0714
+  description: |
+    Give a nominated user, full mailbox delegation access of another user.
+    This can be used by an adversary to maintain persistent access to a target's mailbox in M365.
+  supported_platforms:
+  - office-365
+  input_arguments:
+    username:
+      description: office-365 username
+      type: string
+      default: o365_user_test@contoso.com
+    password:
+      description: office-365 password
+      type: string
+      default: o365_password_test
+    delegate_target:
+      description: office-365 target_email
+      type: string
+      default: delegate@contoso.com
+    operator_mailbox:
+      description: office-365 target_email
+      type: string
+      default: operator@contoso.com
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      ExchangeOnlineManagement PowerShell module must be installed
+    prereq_command: |
+      $RequiredModule = Get-Module -Name ExchangeOnlineManagement -ListAvailable
+      if (-not $RequiredModule) {exit 1}
+      if (-not $RequiredModule.ExportedCommands['Connect-ExchangeOnline']) {exit 1} else {exit 0}
+    get_prereq_command: |
+      Install-Module -Name ExchangeOnlineManagement         
+  executor:
+    command: |
+      Import-Module ExchangeOnlineManagement
+      $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
+      $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
+      Connect-ExchangeOnline -Credential $creds
+      Add-MailboxPermission -Identity "#{delegate_target}" -User "#{operator_mailbox}" -AccessRights FullAccess -InheritanceType All
+      Disconnect-ExchangeOnline -Confirm:$false
+    cleanup_command: |
+      Import-Module ExchangeOnlineManagement
+      $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
+      $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
+      Connect-ExchangeOnline -Credential $creds
+      Remove-MailboxPermission -Identity "#{delegate_target}" -User "#{operator_mailbox}" -AccessRights FullAccess -InheritanceType All -Confirm:$false
+      Disconnect-ExchangeOnline -Confirm:$false
+    name: powershell
+    elevation_required: false
