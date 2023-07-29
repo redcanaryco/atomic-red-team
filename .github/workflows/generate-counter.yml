@@ -10,18 +10,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Install poetry
+        run: pipx install poetry
       - uses: actions/setup-python@v4
         with:
           python-version: '3.11.2' 
           cache: 'poetry'
+      - name: Install dependencies
+        run: poetry install --no-interaction --no-root
       - name: Generate shields.io URL
-        run: python generate_shield.py atomics/
-        id: shield
-      - name: Generate shields.io URL
-        run: python generate_counter.py -d atomics/
+        run: poetry run python bin/generate_counter.py -f atomics/
         id: counter
       - name: Update README
         run: |
+          echo ${{ steps.counter.outputs.result }}
           sed -i "s|https://img.shields.io/badge/Atomics-.*-flat.svg|${{ steps.counter.outputs.result }}|" README.md
         shell: bash
       - name: update github with new site
