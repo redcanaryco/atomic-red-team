@@ -18,19 +18,19 @@ atomic_tests:
       default: 0
   executor:
     command: |
+      if( $(get-service -Name spooler).StartType -eq "Disabled") {Set-Service -Name "spooler" -StartupType Automatic}
       net stop spooler
-      Copy-Item $PathToAtomicsFolder\T1547.012\bin\PrintProcessor.dll C:\Windows\System32\spool\prtprocs\x64\PrintProcessor.dll
-      reg add "HKLM\SYSTEM\CurrentControlSet\Control\Print\Environments\Windows x64\Print Processors\AtomicRedTeam" /v "Driver" /d "PrintProcessor.dll" /t REG_SZ /f
-      reg delete "HKLM\SYSTEM\CurrentControlSet\Control\Print\Environments\Windows x64\Print Processors\AtomicRedTeam" /f >nul 2>&1
+      Copy-Item $PathToAtomicsFolder\T1547.012\bin\AtomicTest.dll C:\Windows\System32\spool\prtprocs\x64\AtomicTest.dll
+      reg add "HKLM\SYSTEM\CurrentControlSet\Control\Print\Environments\Windows x64\Print Processors\AtomicRedTeam" /v "Driver" /d "AtomicTest.dll" /t REG_SZ /f
       net start spooler
       if(#{restart}){
         Restart-Computer
       }
     cleanup_command: |
       net stop spooler
-      rm -force C:\Windows\System32\spool\prtprocs\x64\PrintProcessor.dll
-      rm -force C:\Users\Public\AtomicRedTeam.txt
-      reg delete "HKLM\SYSTEM\CurrentControlSet\Control\Print\Environments\Windows x64\Print Processors\AtomicRedTeam" /f >nul 2>&1
+      rm -force C:\Windows\System32\spool\prtprocs\x64\AtomicTest.dll -ErrorAction SilentlyContinue
+      rm -force C:\Users\Public\AtomicTest.txt -ErrorAction SilentlyContinue
+      remove-item "HKLM:\SYSTEM\CurrentControlSet\Control\Print\Environments\Windows x64\Print Processors\AtomicRedTeam" -Force -ErrorAction SilentlyContinue
       net start spooler
     name: powershell
     elevation_required: true
