@@ -1,23 +1,33 @@
-#include "pch.h"
 #include <windows.h>
 #include <stdio.h>
-#include <fstream> 
 
 #define DllExport __declspec(dllexport)
 
-extern "C" __declspec(dllexport) void PayloadFunction()
+__declspec(dllexport) void PayloadFunction()
 {
-    std::ofstream outfile("C:\\Users\\Public\\AtomicTest.txt");
-    outfile << "AtomicRedTeam test for T1547.012" << std::endl;
-    outfile.close();
+    HANDLE hFile;
+    hFile = CreateFile("C:\\Users\\Public\\AtomicTest.txt", 
+                        GENERIC_WRITE, 
+                        0,
+                        NULL,
+                        CREATE_ALWAYS,
+                        FILE_ATTRIBUTE_NORMAL,
+                        NULL);
+
+   if (hFile == INVALID_HANDLE_VALUE) 
+    { 
+        printf("Unable to create file\n");
+        return -1;
+    }
+
 }
 
-extern "C" DllExport BOOL ClosePrintProcessor(HANDLE hPrintProcessor)
+BOOL ClosePrintProcessor(HANDLE hPrintProcessor)
 {
     return 1;
 }
 
-extern "C" DllExport BOOL ControlPrintProcessor(HANDLE hPrintProcessor, DWORD Command)
+BOOL ControlPrintProcessor(HANDLE hPrintProcessor, DWORD Command)
 {
     return 1;
 }
@@ -25,10 +35,11 @@ extern "C" DllExport BOOL ControlPrintProcessor(HANDLE hPrintProcessor, DWORD Co
 BOOL EnumPrintProcessorDatatypesW(LPWSTR pName, LPWSTR pPrintProcessorName, DWORD Level, LPBYTE pDatatypes, DWORD cbBuf, LPDWORD pcbNeeded, LPDWORD pcReturned)
 {
     // executes when DLL is loaded
+    PayloadFunction();
     return 1;
 }
 
-extern "C" DllExport DWORD GetPrintProcessorCapabilities(LPTSTR pValueName, DWORD dwAttributes, LPBYTE pData, DWORD nSize, LPDWORD pcbNeeded)
+DWORD GetPrintProcessorCapabilities(LPTSTR pValueName, DWORD dwAttributes, LPBYTE pData, DWORD nSize, LPDWORD pcbNeeded)
 {
     return 0;
 }
@@ -43,12 +54,12 @@ typedef struct _PRINTPROCESSOROPENDATA {
     LPWSTR   pPrinterName;
 } PRINTPROCESSOROPENDATA, * PPRINTPROCESSOROPENDATA, * LPPRINTPROCESSOROPENDATA;
 
-extern "C" DllExport HANDLE OpenPrintProcessor(LPWSTR pPrinterName, PPRINTPROCESSOROPENDATA pPrintProcessorOpenData)
+HANDLE OpenPrintProcessor(LPWSTR pPrinterName, PPRINTPROCESSOROPENDATA pPrintProcessorOpenData)
 {
     return (HANDLE)11;
 }
 
-extern "C" DllExport BOOL PrintDocumentOnPrintProcessor(HANDLE hPrintProcessor, LPWSTR pDocumentName)
+BOOL PrintDocumentOnPrintProcessor(HANDLE hPrintProcessor, LPWSTR pDocumentName)
 {
     return 1;
 }
@@ -58,10 +69,11 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
     switch (fdwReason)
     {
     case DLL_PROCESS_ATTACH:
-        PayloadFunction();
         break;
     case DLL_THREAD_ATTACH:
+        break;
     case DLL_PROCESS_DETACH:
+        break;
     case DLL_THREAD_DETACH:
         break;
     }
