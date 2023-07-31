@@ -1,25 +1,49 @@
 attack_technique: T1547.005
 display_name: 'Boot or Logon Autostart Execution: Security Support Provider'
 atomic_tests:
-- name: Modify SSP configuration in registry
+- name: Modify HKLM:\System\CurrentControlSet\Control\Lsa SSP configuration in registry
   auto_generated_guid: afdfd7e3-8a0b-409f-85f7-886fdf249c9e
   description: Add a value to a Windows registry SSP key, simulating an adversarial modification of those keys.
   supported_platforms:
   - windows
   input_arguments:
-    fake_ssp_dll:
+    payload:
       description: Value added to registry key. Normally refers to a DLL name in C:\Windows\System32.
       type: string
       default: not-a-ssp
   executor:
     command: |
-      # run these in sequence
-      $SecurityPackages = Get-ItemProperty HKLM:\System\CurrentControlSet\Control\Lsa -Name 'Security Packages' | Select-Object -ExpandProperty 'Security Packages'
-      $SecurityPackagesUpdated = $SecurityPackages
-      $SecurityPackagesUpdated += "#{fake_ssp_dll}"
-      Set-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Lsa -Name 'Security Packages' -Value $SecurityPackagesUpdated
+      $oldvalue = $(Get-ItemProperty HKLM:\System\CurrentControlSet\Control\Lsa -Name 'Security Packages' | Select-Object -ExpandProperty 'Security Packages');
+      Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Lsa" -Name 'Security Packages old' -Value "$oldvalue";
+      $newvalue = $oldvalue + " #{payload}";
+      HKLM:\SYSTEM\CurrentControlSet\Control\Lsa -Name 'Security Packages' -Value $newvalue
+      
+    cleanup_command: |-
+      $oldvalue = $(Get-ItemPropertyValue -Path  "HKLM:\System\CurrentControlSet\Control\Lsa" -Name 'Security Packages old' | Select-Object -ExpandProperty 'Security Packages');
+      Set-ItemProperty -Path HKLM:\System\CurrentControlSet\Control\Lsa -Name 'Security Packages' -Value "$oldvalue";
+      Remove-ItemProperty -Path  "HKLM:\System\CurrentControlSet\Control\Lsa" -Name 'Security Packages old'
+    name: powershell
+    elevation_required: true
 
-      # revert (before reboot)
-      Set-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Lsa -Name 'Security Packages' -Value $SecurityPackages
+- name: Modify HKLM:\System\CurrentControlSet\Control\Lsa\OSConfig SSP configuration in registry
+  description: Add a value to a Windows registry SSP key, simulating an adversarial modification of those keys.
+  supported_platforms:
+  - windows
+  input_arguments:
+    payload:
+      description: Value added to registry key. Normally refers to a DLL name in C:\Windows\System32.
+      type: string
+      default: not-a-ssp
+  executor:
+    command: |
+      $oldvalue = $(Get-ItemProperty HKLM:\System\CurrentControlSet\Control\Lsa\OSConfig -Name 'Security Packages' | Select-Object -ExpandProperty 'Security Packages');
+      Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Lsa\OSConfig" -Name 'Security Packages old' -Value "$oldvalue";
+      $newvalue = $oldvalue + " #{payload}";
+      HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\OSConfig -Name 'Security Packages' -Value $newvalue
+      
+    cleanup_command: |-
+      $oldvalue = $(Get-ItemPropertyValue -Path  "HKLM:\System\CurrentControlSet\Control\Lsa\OSConfig" -Name 'Security Packages old' | Select-Object -ExpandProperty 'Security Packages');
+      Set-ItemProperty -Path HKLM:\System\CurrentControlSet\Control\Lsa\OSConfig -Name 'Security Packages' -Value "$oldvalue";
+      Remove-ItemProperty -Path  "HKLM:\System\CurrentControlSet\Control\Lsa\OSConfig" -Name 'Security Packages old'
     name: powershell
     elevation_required: true
