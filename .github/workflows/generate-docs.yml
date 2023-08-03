@@ -1,18 +1,16 @@
 name: generate-docs
 on:
   push:
-    branches:
-      - master
+    branches: ["master"]
+
 jobs:
   generate-docs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout repo
-        uses: actions/checkout@v2
-        with: 
+        uses: actions/checkout@v3
+        with:
           token: ${{ secrets.PROTECTED_BRANCH_PUSH_TOKEN }}
-          ref: 'master'
-      
       - name: setup ruby
         uses: ruby/setup-ruby@v1
         with:
