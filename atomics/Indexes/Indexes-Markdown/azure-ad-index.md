@@ -61,7 +61,8 @@
 - T1078.004 Valid Accounts: Cloud Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 
 # persistence
-- T1098.003 Additional Cloud Roles [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1098.003 Account Manipulation: Additional Cloud Roles](../../T1098.003/T1098.003.md)
+  - Atomic Test #1: Azure AD - Add Company Administrator Role to a user [azure-ad]
 - T1556.007 Hybrid Identity [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078.001 Valid Accounts: Default Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
