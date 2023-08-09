@@ -35,7 +35,6 @@ atomic_tests:
     name: sh
     elevation_required: false
     command: |
-      gcloud auth login --no-launch-browser
       gcloud config set project #{project-id}
       gcloud iam service-accounts create #{service-account-name}
       gcloud iam service-accounts keys create #{output-key-file} --iam-account=#{service-account-email}
@@ -49,6 +48,12 @@ atomic_tests:
       if [ -x "$(command -v gcloud)" ]; then exit 0; else exit 1; fi;
     get_prereq_command: |
       echo "Please Install Google Cloud SDK before running this atomic test : https://cloud.google.com/sdk/docs/install"
+  - description: | 
+      Check if user is logged in 
+    prereq_command: |
+      gcloud config get-value account
+    get_prereq_command: |
+      gcloud auth login --no-launch-browser
 - name: Azure Persistence Automation Runbook Created or Modified
   auto_generated_guid: 348f4d14-4bd3-4f6b-bd8a-61237f78b3ac
   description: |
@@ -80,17 +85,94 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
+      Check if terraform is installed.
+    prereq_command: |
+      terraform version
+    get_prereq_command: |
+        echo Please install terraform.
+  - description: |
       Install-Module -Name Az
     prereq_command: |
       try {if (Get-InstalledModule -Name Az -ErrorAction SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
     get_prereq_command: |
       Install-Module -Name Az -Scope CurrentUser -Force
+  - description: |
+      Check if the user is logged into Azure.
+    prereq_command: |
+      az account show
+    get_prereq_command: |
+      echo Configure your Azure account using: az login. 
+  - description: |
+      Create dependency resources using terraform
+    prereq_command: |
+      try {if (Test-Path $PathToAtomicsFolder/T1078.004/src/T1078.004-2/terraform.tfstate ){ exit 0 } else {exit 1}} catch {exit 1}
+    get_prereq_command: |
+      cd $PathToAtomicsFolder/T1078.004/src/T1078.004-2/
+      terraform init
+      terraform apply -auto-approve
   executor:
     command: |
       $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
       $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
       Connect-AzAccount -Credential $creds
       New-AzAutomationRunbook -Name #{runbook_name} -Type PowerShell -ResourceGroupName #{resource_group} -Description 'my-test-runbook' -AutomationAccountName #{automation_account_name}
-      Remove-AzAutomationRunbook -AutomationAccountName #{automation_account_name} -Name #{runbook_name} -ResourceGroupName #{resource_group} -Force
     name: powershell
     elevation_required: false
+    cleanup_command: |
+      Remove-AzAutomationRunbook -AutomationAccountName #{automation_account_name} -Name #{runbook_name} -ResourceGroupName #{resource_group} -Force
+      cd $PathToAtomicsFolder/T1078.004/src/T1078.004-2/
+      terraform destroy -auto-approve
+- name: GCP - Create Custom IAM Role
+  auto_generated_guid: 3a159042-69e6-4398-9a69-3308a4841c85
+  description: |
+    This atomic will create a new IAM role. The default role permissions are: *IAM Service Account Get*. The idea for this Atomic came from a Rule published by the Elastic team.
+
+    Identifies an Identity and Access Management (IAM) custom role creation in Google Cloud Platform (GCP). 
+    Custom roles are user-defined, and allow for the bundling of one or more supported permissions to meet specific needs. 
+    Custom roles will not be updated automatically and could lead to privilege creep if not carefully scrutinized.
+    
+    This atomic will create a new IAM role. The default role permissions are: *IAM Service Account Get*
+    
+    Reference: https://github.com/elastic/detection-rules/blob/main/rules/integrations/gcp/initial_access_gcp_iam_custom_role_creation.toml
+    
+  supported_platforms:
+  - iaas:gcp
+  input_arguments:
+    project-id:
+      description: ID of the GCP Project you to execute the command against.
+      type: string
+      default: atomic-test-1
+    role-name:
+      description: The name of the role to be created.
+      type: string
+      default: AtomicRedTeamRole
+    role-description:
+      description: The description of the role to be created.
+      type: string
+      default: Atomic Red Team Custom IAM Role
+    roles:
+      description: List of roles to be applied
+      type: string
+      default: iam.serviceAccounts.get
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      gcloud config set project #{project-id}
+      gcloud iam roles create #{role-name} --description="#{role-description}" --permissions=#{roles} --project=#{project-id}
+    cleanup_command: |
+      gcloud iam roles delete #{role-name} --project=#{project-id}
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Requires gcloud
+    prereq_command: |
+      if [ -x "$(command -v gcloud)" ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      echo "Please Install Google Cloud SDK before running this atomic test : https://cloud.google.com/sdk/docs/install"
+  - description: | 
+      Check if user is logged in 
+    prereq_command: |
+      gcloud config get-value account
+    get_prereq_command: |
+      gcloud auth login --no-launch-browser

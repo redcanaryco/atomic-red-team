@@ -168,6 +168,7 @@ atomic_tests:
   supported_platforms:
   - linux
   - macos
+  - iaas:aws
   input_arguments:
     stratus_path:
       description: Path of stratus binary
@@ -275,6 +276,7 @@ atomic_tests:
   supported_platforms:
   - linux
   - macos
+  - iaas:aws
   input_arguments:
     stratus_path:
       description: Path of stratus binary
@@ -394,3 +396,83 @@ atomic_tests:
     cleanup_command:
     name: sh
     elevation_required: false
+- name: Office 365 - Set Audit Bypass For a Mailbox
+  auto_generated_guid: c9a2f6fe-7197-488c-af6d-10c782121ca6
+  description: |
+    Use Exchange Management Shell to Mailbox auditing to bypass. It will prevent any mailbox audit logging entries being generated for the target e-mail box.
+    https://learn.microsoft.com/en-us/powershell/module/exchange/set-mailboxauditbypassassociation?view=exchange-ps
+  supported_platforms:
+  - office-365
+  input_arguments:
+    username:
+      description: office-365 username
+      type: string
+      default: o365_user_test
+    password:
+      description: office-365 password
+      type: string
+      default: o365_password_test
+    target_email:
+      description: office-365 target_email
+      type: string
+      default: o365_email_test
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      ExchangeOnlineManagement PowerShell module must be installed
+    prereq_command: |
+      $RequiredModule = Get-Module -Name ExchangeOnlineManagement -ListAvailable
+      if (-not $RequiredModule) {exit 1}
+      if (-not $RequiredModule.ExportedCommands['Connect-ExchangeOnline']) {exit 1} else {exit 0}
+    get_prereq_command: |
+      Install-Module -Name ExchangeOnlineManagement         
+      Import-Module ExchangeOnlineManagement
+  executor:
+    command: |
+      $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
+      $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
+      Connect-ExchangeOnline -Credential $creds
+      Set-MailboxAuditBypassAssociation -Identity "#{target_email}" -AuditBypassEnabled $true
+    cleanup_command: |
+      $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
+      $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
+      Connect-ExchangeOnline -Credential $creds
+      Set-MailboxAuditBypassAssociation -Identity "#{target_email}" -AuditBypassEnabled $false
+      Disconnect-ExchangeOnline -Confirm:$false
+    name: powershell
+    elevation_required: false
+- name: GCP - Delete Activity Event Log
+  auto_generated_guid: d56152ec-01d9-42a2-877c-aac1f6ebe8e6
+  description: |
+    GCP provides 4 types of Cloud Audit Logs: Admin Activity, Data Access, System Events, and Policy Denied.
+    An adversary may attempt to delete logs in order to hide their activity. However, Admin Activity, System Events, and Policy Deny events logs cannot be deleted. 
+    
+    This Atomic attempts to delete the Activity Event log. An event is generated under the method name of `google.logging.v2.LoggingServiceV2.DeleteLog` with a Serverity of `ERROR`.
+  supported_platforms:
+  - iaas:gcp
+
+  input_arguments:
+    project-id:
+      description: ID of the GCP Project you to execute the command against.
+      type: string
+      default: atomic-project-1
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      gcloud config set project #{project-id}
+      gcloud logging logs delete projects/#{project-id}/logs/cloudaudit.googleapis.com%2Factivity --quiet
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Requires gcloud
+    prereq_command: |
+      if [ -x "$(command -v gcloud)" ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      echo "Please Install Google Cloud SDK before running this atomic test : https://cloud.google.com/sdk/docs/install"
+  - description: | 
+      Check if user is logged in 
+    prereq_command: |
+      gcloud config get-value account
+    get_prereq_command: |
+      gcloud auth login --no-launch-browser

@@ -98,7 +98,7 @@ atomic_tests:
     Ammyy_Admin_Path:
       description: Path of Ammyy Admin executable
       type: path
-      default: $env:temp\ammyy.exe
+      default: PathToAtomicsFolder\..\ExternalPayloads\ammyy.exe
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -106,7 +106,8 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{Ammyy_Admin_Path}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://web.archive.org/web/20140625232737/http://www.ammyy.com/AA_v3.exe" -OutFile "$env:temp\ammyy.exe" -UseBasicParsing
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://web.archive.org/web/20140625232737/http://www.ammyy.com/AA_v3.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\ammyy.exe" -UseBasicParsing
   executor:
     command: |
       Start-Process #{Ammyy_Admin_Path}
@@ -125,7 +126,7 @@ atomic_tests:
     RemotePC_Path:
       description: Path of RemotePC executable
       type: path
-      default: $env:temp\RemotePC.exe
+      default: PathToAtomicsFolder\..\ExternalPayloads\RemotePC.exe
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -133,6 +134,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{RemotePC_Path}) {exit 0} else {exit 1}
     get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       Invoke-WebRequest "https://static.remotepc.com/downloads/rpc/140422/RemotePC.exe" -OutFile "#{RemotePC_Path}" -UseBasicParsing
   executor:
     command: |
@@ -160,7 +162,7 @@ atomic_tests:
     NetSupport_Path:
       description: Path to the NetSupport executable.
       type: path
-      default: $env:temp\T1219_NetSupport.exe
+      default: PathToAtomicsFolder\..\ExternalPayloads\T1219_NetSupport.exe
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -168,6 +170,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{NetSupport_Path}) {exit 0} else {exit 1}
     get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       (New-Object Net.WebClient).DownloadFile("https://nsproducts.azureedge.net/nsm-1270/en/Setup.exe","#{NetSupport_Path}")
   executor:
     command: |
@@ -186,7 +189,7 @@ atomic_tests:
     UltraViewer_Path:
       description: Path to the UltraViewer executable.
       type: path
-      default: $env:temp\T1219_UltraViewer.exe
+      default: PathToAtomicsFolder\..\ExternalPayloads\T1219_UltraViewer.exe
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -194,6 +197,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{UltraViewer_Path}) {exit 0} else {exit 1}
     get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       (New-Object Net.WebClient).DownloadFile("https://www.ultraviewer.net/en/UltraViewer_setup_6.5_en.exe","#{UltraViewer_Path}")
   executor:
     command: |
@@ -222,8 +226,9 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{UltraVNC_Viewer_Path}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Start-BitsTransfer -Source "https://www.uvnc.eu/download/1381/UltraVNC_1_3_81_X64_Setup.exe" -Destination $env:temp\vncsetup.exe -dynamic
-      start-process $env:temp\vncsetup.exe /silent
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://www.uvnc.eu/download/1381/UltraVNC_1_3_81_X64_Setup.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\vncsetup.exe"
+      start-process PathToAtomicsFolder\..\ExternalPayloads\vncsetup.exe /silent
   executor:
     command: |
       Start-Process #{UltraVNC_Viewer_Path}
@@ -250,8 +255,9 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{MSP360_Connect_Path}) {exit 0} else {exit 1}
     get_prereq_command: |
-       Invoke-WebRequest -OutFile $env:temp\msp360connect.exe "https://s3.amazonaws.com/cb_setups/_current/cbra/setup.exe?X-Amz-Expires=604800&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA2WIZE3YN7NOSY65U/20230515/us-east-1/s3/aws4_request&X-Amz-Date=20230515T024742Z&X-Amz-SignedHeaders=host&response-content-disposition=attachment;filename=ConnectStandaloneSetup_v3.3.0.15_netv4.5.1_cFA9100C6.exe&X-Amz-Signature=1fe3ddf93f8431b182fac90341f80a4ebf8665ddcc0e36dd385ee20d0ce865c9"
-       start-process $env:temp\msp360connect.exe /S    
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest -OutFile PathToAtomicsFolder\..\ExternalPayloads\msp360connect.exe "https://s3.amazonaws.com/cb_setups/_current/cbra/setup.exe?X-Amz-Expires=604800&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA2WIZE3YN7NOSY65U/20230515/us-east-1/s3/aws4_request&X-Amz-Date=20230515T024742Z&X-Amz-SignedHeaders=host&response-content-disposition=attachment;filename=ConnectStandaloneSetup_v3.3.0.15_netv4.5.1_cFA9100C6.exe&X-Amz-Signature=1fe3ddf93f8431b182fac90341f80a4ebf8665ddcc0e36dd385ee20d0ce865c9"
+      start-process PathToAtomicsFolder\..\ExternalPayloads\msp360connect.exe /S    
   executor:
     command: |
       Start-Process #{MSP360_Connect_Path}

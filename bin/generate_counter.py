@@ -30,6 +30,7 @@ url = 'https://img.shields.io/badge/{}-{}-{}.svg'.format(
     urllib.parse.quote_plus(params['style'])
 )
 
-# Print the shields.io badge URL
-print(url)
+# Save shields URL in Github Output to be used in the next step.
+with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
+    print(f'result={url}', file=fh)
 
