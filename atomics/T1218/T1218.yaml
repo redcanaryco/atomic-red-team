@@ -349,10 +349,9 @@ atomic_tests:
       Copy-Item -Path "C:\windows\system32\customshellhost.exe" -Destination "#{dest_path}\customshellhost.exe" -Force
       Copy-Item -Path "C:\windows\system32\calc.exe" -Destination "#{dest_path}\explorer.exe" -Force
   executor:
-    name: powershell
     command: |
       #{dest_path}\customshellhost.exe
-  elevation_required: true
-  cleanup:
-    command: |
+    cleanup_command: | 
       Remove-Item -Path #{dest_path} -Recurse -Force
+    name: powershell
+    elevation_required: true
