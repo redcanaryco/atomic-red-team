@@ -322,3 +322,37 @@ atomic_tests:
       del %TEMP%\ie4uinit.exe >nul 2>&1
       del %TEMP%\ieuinit.inf >nul 2>&1
     name: command_prompt
+- name: LOLBAS CustomShellHost to Spawn Process
+  description: |
+    This test simulates an adversary copying `customshellhost.exe` and `calc.exe` from `C:\windows\system32\` to `C:\temp\`, renaming `calc.exe` to `explorer.exe`.
+    Upon execution, customshellhost.exe will spawn calc.exe.
+    Note this will only work on Windows 10 or 11.
+    [LOLBAS](https://lolbas-project.github.io/lolbas/Binaries/CustomShellHost/)
+    [BishopFox](https://bishopfox.com/blog/edr-bypass-with-lolbins)
+  supported_platforms:
+    - windows
+  input_arguments:
+    dest_path:
+      description: Directory to copy files into
+      type: path
+      default: C:\test
+  dependencies:
+  - description: |
+      customshellhost.exe must exist on disk at a new location
+    prereq_command: |
+      if (Test-Path #{dest_path}\customshellhost.exe) {exit 0} else {exit 1}
+    get_prereq_command: |
+      if (-not (Test-Path #{dest_path})) {
+        New-Item -Path #{dest_path} -ItemType Directory
+        } else {
+      Write-Host "Directory #{dest_path} already exists." }
+      Copy-Item -Path "C:\windows\system32\customshellhost.exe" -Destination "#{dest_path}\customshellhost.exe" -Force
+      Copy-Item -Path "C:\windows\system32\calc.exe" -Destination "#{dest_path}\explorer.exe" -Force
+  executor:
+    name: powershell
+    command: |
+      #{dest_path}\customshellhost.exe
+  elevation_required: true
+  cleanup:
+    command: |
+      Remove-Item -Path #{dest_path} -Recurse -Force
