@@ -336,20 +336,14 @@ atomic_tests:
       description: Directory to copy files into
       type: path
       default: C:\test
-  dependencies:
-  - description: |
-      customshellhost.exe must exist on disk at a new location
-    prereq_command: |
-      if (Test-Path #{dest_path}\customshellhost.exe) {exit 0} else {exit 1}
-    get_prereq_command: |
+  executor:
+    command: |
       if (-not (Test-Path #{dest_path})) {
-        New-Item -Path #{dest_path} -ItemType Directory
-        } else {
+      New-Item -Path #{dest_path} -ItemType Directory
+      } else {
       Write-Host "Directory #{dest_path} already exists." }
       Copy-Item -Path "C:\windows\system32\customshellhost.exe" -Destination "#{dest_path}\customshellhost.exe" -Force
       Copy-Item -Path "C:\windows\system32\calc.exe" -Destination "#{dest_path}\explorer.exe" -Force
-  executor:
-    command: |
       #{dest_path}\customshellhost.exe
     cleanup_command: | 
       Remove-Item -Path #{dest_path} -Recurse -Force
