@@ -226,6 +226,7 @@
   - Atomic Test #10: Lolbin Gpscript logon option [windows]
   - Atomic Test #11: Lolbin Gpscript startup option [windows]
   - Atomic Test #12: Lolbas ie4uinit.exe use as proxy [windows]
+  - Atomic Test #13: LOLBAS CustomShellHost to Spawn Process [windows]
 - T1038 DLL Search Order Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1070.006 Indicator Removal on Host: Timestomp](../../T1070.006/T1070.006.md)
   - Atomic Test #1: Set a file's access timestamp [linux, macos]
