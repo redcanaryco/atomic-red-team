@@ -88,3 +88,39 @@ atomic_tests:
       sc.exe delete #{service_name}
     name: command_prompt
     elevation_required: true
+- name: Command Execution with NirCmd
+  description: |
+    NirCmd is used by threat actors to execute commands, which can include recon and privilege escalation via running commands via the SYSTEM account
+    See https://www.kroll.com/en/insights/publications/cyber/black-basta-technical-analysis
+  supported_platforms:
+  - windows
+  input_arguments:
+    nircmd_location:
+      description: Location of nircmd executable
+      type: Path
+      default: PathToAtomicsFolder\..\ExternalPayloads\nircmd.exe
+    command_to_execute:
+      description: Command for nircmd to execute
+      type: Path
+      default: win child class "Shell_TrayWnd" hide class "TrayClockWClass"
+    cleanup_command_to_execute:
+      description: Cleanup command to undo the arbitrary command ran by nircmd
+      type: Path
+      default: win child class "Shell_TrayWnd" show class "TrayClockWClass"
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      The Nircmd executable must exist at (#{nircmd_location})
+    prereq_command: |
+      if (Test-Path #{nircmd_location}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      invoke-webrequest "https://www.nirsoft.net/utils/nircmd-x64.zip" -outfile "PathToAtomicsFolder\..\ExternalPayloads\nircmd.zip" 
+      expand-archive -path "PathToAtomicsFolder\..\ExternalPayloads\nircmd.zip" -destinationpath PathToAtomicsFolder\..\ExternalPayloads\
+  executor:
+    command: |
+      cmd /c #{nircmd_location} #{command_to_execute}
+    cleanup_command: |
+      cmd /c #{nircmd_location} #{cleanup_command_to_execute} -erroraction silentlycontinue | out-null
+    name: powershell
+    elevation_required: false
