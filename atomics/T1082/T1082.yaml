@@ -339,10 +339,11 @@ atomic_tests:
 - name: System Information Discovery
   auto_generated_guid: 4060ee98-01ae-4c8e-8aad-af8300519cc7
   description: |
-    The script gathernetworkinfo.vbs is employed to collect system information such as the operating system, DNS details, firewall configuration, etc. Outputs are stored in c:\Windows\System32\config or c:\Windows\System32\reg.
+    The script gathernetworkinfo.vbs is employed to collect system information such as the operating system, DNS details, firewall configuration, etc. Outputs are stored in c:\Windows\System32\config or c:\Windows\System32\reg. https://www.verboon.info/2011/06/the-gathernetworkinfo-vbs-script/
   supported_platforms:
   - windows
   executor:
     command: |
       wscript.exe C:\Windows\System32\gatherNetworkInfo.vbs
+    elevation_required: true 
     name: command_prompt
