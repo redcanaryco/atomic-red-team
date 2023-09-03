@@ -114,7 +114,7 @@ atomic_tests:
   auto_generated_guid: c6952f41-6cf0-450a-b352-2cajg7t7c178
   description: |
     This test used the Windows undocumented remote-fork API RtlCreateProcessReflection to create a cloned process of the parent process
-    with shellcode written in its memory. The shellcode is executed after forked to the child process. The technique was first presented on 
+    with shellcode written in its memory. The shellcode is executed after being forked to the child process. The technique was first presented on 
     BlackHat Europe 2022. Shellcode will open a messsage box and a notepad.
   supported_platforms:
   - windows
@@ -125,6 +125,6 @@ atomic_tests:
       default: (Start-Process calc.exe -PassThru).Id
   executor:
     command: 'Start-Process $PathToAtomicsFolder\T1055\bin\x64\redVanity.exe #{pid}'
-    cleanup_command: 'try { Stop-Process #{pid} -ErrorAction Stop } catch {}'
+    cleanup_command: 'Get-Process -Name calc, CalculatorApp -ErrorAction SilentlyContinue | Stop-Process -Force'
     name: powershell
     elevation_required: false
