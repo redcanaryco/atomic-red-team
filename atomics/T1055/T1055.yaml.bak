@@ -125,6 +125,6 @@ atomic_tests:
       default: (Start-Process calc.exe -PassThru).Id
   executor:
     command: 'Start-Process $PathToAtomicsFolder\T1055\bin\x64\redVanity.exe #{pid}'
-    cleanup_command: 'Get-Process -Name calc, CalculatorApp -ErrorAction SilentlyContinue | Stop-Process -Force'
+    cleanup_command: 'try { Stop-Process #{pid} -ErrorAction Stop } catch {}'
     name: powershell
     elevation_required: false

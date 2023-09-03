@@ -1,0 +1,1 @@
+cl.exe /nologo /Ox /MT /W0 /GS- /DNDEBUG /Tp red_vanity.c /link /OUT:VanityApp.exe /SUBSYSTEM:CONSOLE
