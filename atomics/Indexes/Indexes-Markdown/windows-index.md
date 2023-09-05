@@ -1348,6 +1348,7 @@
   - Atomic Test #1: RDP to DomainController [windows]
   - Atomic Test #2: Changing RDP Port to Non Standard Port via Powershell [windows]
   - Atomic Test #3: Changing RDP Port to Non Standard Port via Command_Prompt [windows]
+  - Atomic Test #4: Disable NLA for RDP via Command Prompt [windows]
 - T1077 Windows Admin Shares [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 
 # credential-access
@@ -1629,6 +1630,7 @@
   - Atomic Test #22: WinPwn - PowerSharpPack - Seatbelt [windows]
   - Atomic Test #25: System Information Discovery with WMIC [windows]
   - Atomic Test #26: Driver Enumeration using DriverQuery [windows]
+  - Atomic Test #27: System Information Discovery [windows]
 - [T1010 Application Window Discovery](../../T1010/T1010.md)
   - Atomic Test #1: List Process Main Windows - C# .NET [windows]
 - T1087.003 Email Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
