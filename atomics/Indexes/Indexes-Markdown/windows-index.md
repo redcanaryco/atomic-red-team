@@ -512,6 +512,7 @@
   - Atomic Test #2: Store file in Alternate Data Stream (ADS) [windows]
   - Atomic Test #3: Create ADS command prompt [windows]
   - Atomic Test #4: Create ADS PowerShell [windows]
+  - Atomic Test #5: Create Hidden Directory via $index_allocation [windows]
 - T1096 NTFS File Attributes [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1055.001 Process Injection: Dynamic-link Library Injection](../../T1055.001/T1055.001.md)
   - Atomic Test #1: Process Injection via mavinject.exe [windows]
