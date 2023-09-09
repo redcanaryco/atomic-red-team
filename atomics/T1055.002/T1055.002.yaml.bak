@@ -9,7 +9,7 @@ atomic_tests:
   executor:
     command: |-
       Start-Process $PathToAtomicsFolder\T1055.002\bin\RedInjection.exe
-      Start-Sleep -Seconds 7
+      Start-Sleep -Seconds 6
       Get-Process -Name Notepad -ErrorAction SilentlyContinue | Stop-Process -Force
     cleanup_command: 'Get-Process -Name Notepad -ErrorAction SilentlyContinue | Stop-Process -Force'
     name: powershell
