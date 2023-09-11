@@ -16,7 +16,7 @@
 
 # Atomic Red Team
 
-![GitHub Action Status](https://github.com/redcanaryco/atomic-red-team/actions/workflows/validate-atomics.yml/badge.svg?branch=master) ![Atomics](https://img.shields.io/badge/Atomics-1363-flat.svg) ![GitHub Action Status](https://github.com/redcanaryco/atomic-red-team/actions/workflows/generate-docs.yml/badge.svg?branch=master)
+![GitHub Action Status](https://github.com/redcanaryco/atomic-red-team/actions/workflows/validate-atomics.yml/badge.svg?branch=master) ![Atomics](https://img.shields.io/badge/Atomics-1367-flat.svg) ![GitHub Action Status](https://github.com/redcanaryco/atomic-red-team/actions/workflows/generate-docs.yml/badge.svg?branch=master)
 
 
 

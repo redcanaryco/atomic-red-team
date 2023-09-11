@@ -94,3 +94,22 @@ atomic_tests:
       net start TermService >nul 2>&1
     name: command_prompt
     elevation_required: true
+- name: Disable NLA for RDP via Command Prompt
+  auto_generated_guid: 01d1c6c0-faf0-408e-b368-752a02285cb2
+  description: |
+    Disables network-level authentication (NLA) for RDP by changing a registry key via Command Prompt
+    Disabling NLA for RDP can allow remote user interaction with the Windows sign-in screen prior to authentication. According to Microsoft, Flax Typhoon actors used this technique implementation to achieve persistence on victim systems: https://www.microsoft.com/en-us/security/blog/2023/08/24/flax-typhoon-using-legitimate-software-to-quietly-access-taiwanese-organizations/
+    See also: https://github.com/EmpireProject/Empire/blob/master/lib/modules/powershell/management/enable_rdp.py
+  supported_platforms:
+  - windows
+  input_arguments:
+    Default_UserAuthentication:
+      description: Default UserAuthentication registry value
+      type: string
+      default: "1"
+  executor:
+    command: |
+      reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v UserAuthentication /d 0 /t REG_DWORD /f
+    cleanup_command: |
+      reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v UserAuthentication /d #{Default_UserAuthentication} /t REG_DWORD -f >nul 2>&1
+    name: command_prompt
