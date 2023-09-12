@@ -138,6 +138,7 @@
   - Atomic Test #1: Shellcode execution via VBA [windows]
   - Atomic Test #2: Remote Process Injection in LSASS via mimikatz [windows]
   - Atomic Test #3: Section View Injection [windows]
+  - Atomic Test #4: Dirty Vanity process Injection [windows]
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1218 Signed Binary Proxy Execution](../../T1218/T1218.md)
   - Atomic Test #1: mavinject - Inject DLL into running process [windows]
@@ -616,6 +617,7 @@
   - Atomic Test #1: Shellcode execution via VBA [windows]
   - Atomic Test #2: Remote Process Injection in LSASS via mimikatz [windows]
   - Atomic Test #3: Section View Injection [windows]
+  - Atomic Test #4: Dirty Vanity process Injection [windows]
 - T1038 DLL Search Order Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1050 New Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1611 Escape to Host [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1303,7 +1305,7 @@
   - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
 
 # lateral-movement
-- T1021.005 VNC [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1021.005 Remote Services:VNC [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1080 Taint Shared Content [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1017 Application Deployment Software [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1091 Replication Through Removable Media](../../T1091/T1091.md)

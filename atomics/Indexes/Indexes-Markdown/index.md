@@ -213,6 +213,7 @@
   - Atomic Test #1: Shellcode execution via VBA [windows]
   - Atomic Test #2: Remote Process Injection in LSASS via mimikatz [windows]
   - Atomic Test #3: Section View Injection [windows]
+  - Atomic Test #4: Dirty Vanity process Injection [windows]
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1218 Signed Binary Proxy Execution](../../T1218/T1218.md)
   - Atomic Test #1: mavinject - Inject DLL into running process [windows]
@@ -848,6 +849,7 @@
   - Atomic Test #1: Shellcode execution via VBA [windows]
   - Atomic Test #2: Remote Process Injection in LSASS via mimikatz [windows]
   - Atomic Test #3: Section View Injection [windows]
+  - Atomic Test #4: Dirty Vanity process Injection [windows]
 - T1038 DLL Search Order Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1050 New Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1611 Escape to Host](../../T1611/T1611.md)
@@ -1320,6 +1322,7 @@
   - Atomic Test #1: Office Application Startup - Outlook as a C2 [windows]
 - [T1098.003 Account Manipulation: Additional Cloud Roles](../../T1098.003/T1098.003.md)
   - Atomic Test #1: Azure AD - Add Company Administrator Role to a user [azure-ad]
+  - Atomic Test #2: Simulate - Post BEC persistence via user password reset followed by user added to company administrator role [azure-ad]
 - [T1547.012 Boot or Logon Autostart Execution: Print Processors](../../T1547.012/T1547.012.md)
   - Atomic Test #1: Print Processors [windows]
 - [T1574.001 Hijack Execution Flow: DLL Search Order Hijacking](../../T1574.001/T1574.001.md)
@@ -1844,7 +1847,8 @@
   - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
 
 # lateral-movement
-- T1021.005 VNC [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1021.005 Remote Services:VNC](../../T1021.005/T1021.005.md)
+  - Atomic Test #1: Enable Apple Remote Desktop Agent [macos]
 - T1080 Taint Shared Content [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1527 Application Access Token [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1021.004 SSH [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
