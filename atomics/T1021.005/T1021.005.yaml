@@ -1,0 +1,19 @@
+attack_technique: T1021.005
+display_name: 'Remote Services:VNC'
+atomic_tests:
+- name: Enable Apple Remote Desktop Agent
+  auto_generated_guid: 8a930abe-841c-4d4f-a877-72e9fe90b9ea
+  description: |
+    ARD leverages a blend of protocols, including VNC to send the screen and control buffers and SSH for secure file transfer. 
+    Adversaries can abuse ARD to gain remote code execution and perform lateral movement.
+
+    References:  https://www.mandiant.com/resources/blog/leveraging-apple-remote-desktop-for-good-and-evil
+  supported_platforms:
+  - macos
+  executor:
+    name: sh
+    command: |
+      sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate -configure -allowAccessFor -allUsers -privs -all -quiet
+    cleanup_command: |
+      sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -deactivate -stop -configure -privs -none -quiet
+    elevation_required: true

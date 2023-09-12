@@ -25,7 +25,7 @@ usage! if technique_id.nil?
 technique_id = technique_id.upcase
 technique_atomic_test_file = "#{File.dirname(File.dirname(__FILE__))}/atomics/#{technique_id}/#{technique_id}.yaml"
 
-if File.exists? technique_atomic_test_file
+if File.exist? technique_atomic_test_file
   puts "Atomic tests for #{technique_id} already exist - adding a new atomic test to the end"
   File.open(technique_atomic_test_file, 'a') { |f| f.write("\n#{template_technique_atomic_test}") }
 

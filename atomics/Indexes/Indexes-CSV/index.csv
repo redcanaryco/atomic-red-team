@@ -65,6 +65,7 @@ defense-evasion,T1564,Hide Artifacts,1,Extract binary files via VBA,6afe288a-8a8
 defense-evasion,T1564,Hide Artifacts,2,"Create a Hidden User Called ""$""",2ec63cc2-4975-41a6-bf09-dffdfb610778,command_prompt
 defense-evasion,T1564,Hide Artifacts,3,"Create an ""Administrator "" user (with a space on the end)",5bb20389-39a5-4e99-9264-aeb92a55a85c,powershell
 defense-evasion,T1564,Hide Artifacts,4,Create and Hide a Service with sc.exe,333c7de0-6fbe-42aa-ac2b-c7e40b18246a,command_prompt
+defense-evasion,T1564,Hide Artifacts,5,Command Execution with NirCmd,2748ab4a-1e0b-4cf2-a2b0-8ef765bec7be,powershell
 defense-evasion,T1484.002,Domain Trust Modification,1,Add Federation to Azure AD,8906c5d0-3ee5-4f63-897a-f6cafd3fdbb7,powershell
 defense-evasion,T1562.009,Impair Defenses: Safe Boot Mode,1,Safe Mode Boot,2a78362e-b79a-4482-8e24-be397bce4d85,command_prompt
 defense-evasion,T1497.001,Virtualization/Sandbox Evasion: System Checks,1,Detect Virtualization Environment (Linux),dfbd1a21-540d-4574-9731-e852bd6fe840,sh
@@ -151,6 +152,7 @@ defense-evasion,T1070.008,Email Collection: Mailbox Manipulation,6,Copy and Modi
 defense-evasion,T1055,Process Injection,1,Shellcode execution via VBA,1c91e740-1729-4329-b779-feba6e71d048,powershell
 defense-evasion,T1055,Process Injection,2,Remote Process Injection in LSASS via mimikatz,3203ad24-168e-4bec-be36-f79b13ef8a83,command_prompt
 defense-evasion,T1055,Process Injection,3,Section View Injection,c6952f41-6cf0-450a-b352-2ca8dae7c178,powershell
+defense-evasion,T1055,Process Injection,4,Dirty Vanity process Injection,49543237-25db-497b-90df-d0a0a6e8fe2c,powershell
 defense-evasion,T1218,Signed Binary Proxy Execution,1,mavinject - Inject DLL into running process,c426dacf-575d-4937-8611-a148a86a5e61,command_prompt
 defense-evasion,T1218,Signed Binary Proxy Execution,2,Register-CimProvider - Execute evil dll,ad2c17ed-f626-4061-b21e-b9804a6f3655,command_prompt
 defense-evasion,T1218,Signed Binary Proxy Execution,3,InfDefaultInstall.exe .inf Execution,54ad7d5a-a1b5-472c-b6c4-f8090fb2daef,command_prompt
@@ -163,6 +165,7 @@ defense-evasion,T1218,Signed Binary Proxy Execution,9,Load Arbitrary DLL via Wua
 defense-evasion,T1218,Signed Binary Proxy Execution,10,Lolbin Gpscript logon option,5bcda9cd-8e85-48fa-861d-b5a85d91d48c,command_prompt
 defense-evasion,T1218,Signed Binary Proxy Execution,11,Lolbin Gpscript startup option,f8da74bb-21b8-4af9-8d84-f2c8e4a220e3,command_prompt
 defense-evasion,T1218,Signed Binary Proxy Execution,12,Lolbas ie4uinit.exe use as proxy,13c0804e-615e-43ad-b223-2dfbacd0b0b3,command_prompt
+defense-evasion,T1218,Signed Binary Proxy Execution,13,LOLBAS CustomShellHost to Spawn Process,b1eeb683-90bb-4365-bbc2-2689015782fe,powershell
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,1,Set a file's access timestamp,5f9113d5-ed75-47ed-ba23-ea3573d05810,sh
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,2,Set a file's modification timestamp,20ef1523-8758-4898-b5a2-d026cc3d2c52,sh
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,3,Set a file's creation timestamp,8164a4a6-f99c-4661-ac4f-80f5e4e78d2b,sh
@@ -260,6 +263,7 @@ defense-evasion,T1112,Modify Registry,53,Windows Auto Update Option to Notify be
 defense-evasion,T1112,Modify Registry,54,Do Not Connect To Win Update,d1de3767-99c2-4c6c-8c5a-4ba4586474c8,command_prompt
 defense-evasion,T1112,Modify Registry,55,Tamper Win Defender Protection,3b625eaa-c10d-4635-af96-3eae7d2a2f3c,command_prompt
 defense-evasion,T1112,Modify Registry,56,Snake Malware Registry Blob,8318ad20-0488-4a64-98f4-72525a012f6b,powershell
+defense-evasion,T1112,Modify Registry,57,Allow Simultaneous Download Registry,37950714-e923-4f92-8c7c-51e4b6fffbf6,command_prompt
 defense-evasion,T1574.008,Hijack Execution Flow: Path Interception by Search Order Hijacking,1,powerShell Persistence via hijacking default modules - Get-Variable.exe,1561de08-0b4b-498e-8261-e922f3494aae,powershell
 defense-evasion,T1027.001,Obfuscated Files or Information: Binary Padding,1,Pad Binary to Change Hash - Linux/macOS dd,ffe2346c-abd5-4b45-a713-bf5f1ebd573a,sh
 defense-evasion,T1027.001,Obfuscated Files or Information: Binary Padding,2,Pad Binary to Change Hash using truncate command - Linux/macOS,e22a9e89-69c7-410f-a473-e6c212cd2292,sh
@@ -391,6 +395,7 @@ defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,41,Clear Pagg
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,42,Disable Memory Swap,e74e4c63-6fde-4ad2-9ee8-21c3a1733114,sh
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,43,Disable Hypervisor-Enforced Code Integrity (HVCI),70bd71e6-eba4-4e00-92f7-617911dbe020,powershell
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,44,AMSI Bypass - Override AMSI via COM,17538258-5699-4ff1-92d1-5ac9b0dc21f5,command_prompt
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,45,AWS - GuardDuty Suspension or Deletion,11e65d8d-e7e4-470e-a3ff-82bc56ad938e,bash
 defense-evasion,T1055.012,Process Injection: Process Hollowing,1,Process Hollowing using PowerShell,562427b4-39ef-4e8c-af88-463a78e70b9c,powershell
 defense-evasion,T1055.012,Process Injection: Process Hollowing,2,RunPE via VBA,3ad4a037-1598-4136-837c-4027e4fa319b,powershell
 defense-evasion,T1027,Obfuscated Files or Information,1,Decode base64 Data into Script,f45df6be-2e1e-4136-a384-8f18ab3826fb,sh
@@ -494,6 +499,7 @@ defense-evasion,T1564.004,Hide Artifacts: NTFS File Attributes,1,Alternate Data 
 defense-evasion,T1564.004,Hide Artifacts: NTFS File Attributes,2,Store file in Alternate Data Stream (ADS),2ab75061-f5d5-4c1a-b666-ba2a50df5b02,powershell
 defense-evasion,T1564.004,Hide Artifacts: NTFS File Attributes,3,Create ADS command prompt,17e7637a-ddaf-4a82-8622-377e20de8fdb,command_prompt
 defense-evasion,T1564.004,Hide Artifacts: NTFS File Attributes,4,Create ADS PowerShell,0045ea16-ed3c-4d4c-a9ee-15e44d1560d1,powershell
+defense-evasion,T1564.004,Hide Artifacts: NTFS File Attributes,5,Create Hidden Directory via $index_allocation,3e6791e7-232c-481c-a680-a52f86b83fdf,command_prompt
 defense-evasion,T1055.001,Process Injection: Dynamic-link Library Injection,1,Process Injection via mavinject.exe,74496461-11a1-4982-b439-4d87a550d254,powershell
 defense-evasion,T1055.001,Process Injection: Dynamic-link Library Injection,2,WinPwn - Get SYSTEM shell - Bind System Shell using UsoClient DLL load technique,8b56f787-73d9-4f1d-87e8-d07e89cbc7f5,powershell
 defense-evasion,T1216,Signed Script Proxy Execution,1,SyncAppvPublishingServer Signed Script PowerShell Command Execution,275d963d-3f36-476c-8bef-a2a3960ee6eb,command_prompt
@@ -566,6 +572,7 @@ privilege-escalation,T1543.003,Create or Modify System Process: Windows Service,
 privilege-escalation,T1053.003,Scheduled Task/Job: Cron,1,Cron - Replace crontab with referenced file,435057fb-74b1-410e-9403-d81baf194f75,bash
 privilege-escalation,T1053.003,Scheduled Task/Job: Cron,2,Cron - Add script to all cron subfolders,b7d42afa-9086-4c8a-b7b0-8ea3faa6ebb0,bash
 privilege-escalation,T1053.003,Scheduled Task/Job: Cron,3,Cron - Add script to /var/spool/cron/crontabs/ folder,2d943c18-e74a-44bf-936f-25ade6cccab4,bash
+privilege-escalation,T1547.012,Boot or Logon Autostart Execution: Print Processors,1,Print Processors,f7d38f47-c61b-47cc-a59d-fc0368f47ed0,powershell
 privilege-escalation,T1574.001,Hijack Execution Flow: DLL Search Order Hijacking,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
 privilege-escalation,T1055.003,Thread Execution Hijacking,1,Thread Execution Hijacking,578025d5-faa9-4f6d-8390-aae527d503e1,powershell
 privilege-escalation,T1546.011,Event Triggered Execution: Application Shimming,1,Application Shim Installation,9ab27e22-ee62-4211-962b-d36d9a0e6a18,command_prompt
@@ -576,11 +583,13 @@ privilege-escalation,T1037.002,Boot or Logon Initialization Scripts: Logon Scrip
 privilege-escalation,T1055,Process Injection,1,Shellcode execution via VBA,1c91e740-1729-4329-b779-feba6e71d048,powershell
 privilege-escalation,T1055,Process Injection,2,Remote Process Injection in LSASS via mimikatz,3203ad24-168e-4bec-be36-f79b13ef8a83,command_prompt
 privilege-escalation,T1055,Process Injection,3,Section View Injection,c6952f41-6cf0-450a-b352-2ca8dae7c178,powershell
+privilege-escalation,T1055,Process Injection,4,Dirty Vanity process Injection,49543237-25db-497b-90df-d0a0a6e8fe2c,powershell
 privilege-escalation,T1611,Escape to Host,1,Deploy container using nsenter container escape,0b2f9520-a17a-4671-9dba-3bd034099fff,sh
 privilege-escalation,T1611,Escape to Host,2,Mount host filesystem to escape privileged Docker container,6c499943-b098-4bc6-8d38-0956fc182984,sh
 privilege-escalation,T1547.009,Boot or Logon Autostart Execution: Shortcut Modification,1,Shortcut Modification,ce4fc678-364f-4282-af16-2fb4c78005ce,command_prompt
 privilege-escalation,T1547.009,Boot or Logon Autostart Execution: Shortcut Modification,2,Create shortcut to cmd in startup folders,cfdc954d-4bb0-4027-875b-a1893ce406f2,powershell
-privilege-escalation,T1547.005,Boot or Logon Autostart Execution: Security Support Provider,1,Modify SSP configuration in registry,afdfd7e3-8a0b-409f-85f7-886fdf249c9e,powershell
+privilege-escalation,T1547.005,Boot or Logon Autostart Execution: Security Support Provider,1,Modify HKLM:\System\CurrentControlSet\Control\Lsa Security Support Provider configuration in registry,afdfd7e3-8a0b-409f-85f7-886fdf249c9e,powershell
+privilege-escalation,T1547.005,Boot or Logon Autostart Execution: Security Support Provider,2,Modify HKLM:\System\CurrentControlSet\Control\Lsa\OSConfig Security Support Provider configuration in registry,de3f8e74-3351-4fdb-a442-265dbf231738,powershell
 privilege-escalation,T1543.004,Create or Modify System Process: Launch Daemon,1,Launch Daemon,03ab8df5-3a6b-4417-b6bd-bb7a5cfd74cf,bash
 privilege-escalation,T1574.008,Hijack Execution Flow: Path Interception by Search Order Hijacking,1,powerShell Persistence via hijacking default modules - Get-Variable.exe,1561de08-0b4b-498e-8261-e922f3494aae,powershell
 privilege-escalation,T1484.001,Domain Policy Modification: Group Policy Modification,1,LockBit Black - Modify Group policy settings -cmd,9ab80952-74ee-43da-a98c-1e740a985f28,command_prompt
@@ -858,6 +867,9 @@ persistence,T1053.003,Scheduled Task/Job: Cron,1,Cron - Replace crontab with ref
 persistence,T1053.003,Scheduled Task/Job: Cron,2,Cron - Add script to all cron subfolders,b7d42afa-9086-4c8a-b7b0-8ea3faa6ebb0,bash
 persistence,T1053.003,Scheduled Task/Job: Cron,3,Cron - Add script to /var/spool/cron/crontabs/ folder,2d943c18-e74a-44bf-936f-25ade6cccab4,bash
 persistence,T1137,Office Application Startup,1,Office Application Startup - Outlook as a C2,bfe6ac15-c50b-4c4f-a186-0fc6b8ba936c,command_prompt
+persistence,T1098.003,Account Manipulation: Additional Cloud Roles,1,Azure AD - Add Company Administrator Role to a user,4d77f913-56f5-4a14-b4b1-bf7bb24298ad,powershell
+persistence,T1098.003,Account Manipulation: Additional Cloud Roles,2,Simulate - Post BEC persistence via user password reset followed by user added to company administrator role,14f3af20-61f1-45b8-ad31-4637815f3f44,powershell
+persistence,T1547.012,Boot or Logon Autostart Execution: Print Processors,1,Print Processors,f7d38f47-c61b-47cc-a59d-fc0368f47ed0,powershell
 persistence,T1574.001,Hijack Execution Flow: DLL Search Order Hijacking,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
 persistence,T1137.006,Office Application Startup: Add-ins,1,Code Executed Via Excel Add-in File (XLL),441b1a0f-a771-428a-8af0-e99e4698cda3,powershell
 persistence,T1137.006,Office Application Startup: Add-ins,2,Persistent Code Execution Via Excel Add-in File (XLL),9c307886-9fef-41d5-b344-073a0f5b2f5f,powershell
@@ -879,7 +891,8 @@ persistence,T1547.010,Boot or Logon Autostart Execution: Port Monitors,1,Add Por
 persistence,T1037.002,Boot or Logon Initialization Scripts: Logon Script (Mac),1,Logon Scripts - Mac,f047c7de-a2d9-406e-a62b-12a09d9516f4,manual
 persistence,T1547.009,Boot or Logon Autostart Execution: Shortcut Modification,1,Shortcut Modification,ce4fc678-364f-4282-af16-2fb4c78005ce,command_prompt
 persistence,T1547.009,Boot or Logon Autostart Execution: Shortcut Modification,2,Create shortcut to cmd in startup folders,cfdc954d-4bb0-4027-875b-a1893ce406f2,powershell
-persistence,T1547.005,Boot or Logon Autostart Execution: Security Support Provider,1,Modify SSP configuration in registry,afdfd7e3-8a0b-409f-85f7-886fdf249c9e,powershell
+persistence,T1547.005,Boot or Logon Autostart Execution: Security Support Provider,1,Modify HKLM:\System\CurrentControlSet\Control\Lsa Security Support Provider configuration in registry,afdfd7e3-8a0b-409f-85f7-886fdf249c9e,powershell
+persistence,T1547.005,Boot or Logon Autostart Execution: Security Support Provider,2,Modify HKLM:\System\CurrentControlSet\Control\Lsa\OSConfig Security Support Provider configuration in registry,de3f8e74-3351-4fdb-a442-265dbf231738,powershell
 persistence,T1543.004,Create or Modify System Process: Launch Daemon,1,Launch Daemon,03ab8df5-3a6b-4417-b6bd-bb7a5cfd74cf,bash
 persistence,T1574.008,Hijack Execution Flow: Path Interception by Search Order Hijacking,1,powerShell Persistence via hijacking default modules - Get-Variable.exe,1561de08-0b4b-498e-8261-e922f3494aae,powershell
 persistence,T1505.003,Server Software Component: Web Shell,1,Web Shell Written to Disk,0a2ce662-1efa-496f-a472-2fe7b080db16,command_prompt
@@ -1009,6 +1022,7 @@ persistence,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,
 persistence,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,3,Append to existing loginwindow for Re-Opened Applications,766b6c3c-9353-4033-8b7e-38b309fa3a93,sh
 persistence,T1574.002,Hijack Execution Flow: DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
 persistence,T1574.002,Hijack Execution Flow: DLL Side-Loading,2,DLL Side-Loading using the dotnet startup hook environment variable,d322cdd7-7d60-46e3-9111-648848da7c02,command_prompt
+persistence,T1098.002,Account Manipulation: Additional Email Delegate Permissions,1,EXO - Full access mailbox permission granted to a user,17d046be-fdd0-4cbb-b5c7-55c85d9d0714,powershell
 persistence,T1037.001,Boot or Logon Initialization Scripts: Logon Script (Windows),1,Logon Scripts,d6042746-07d4-4c92-9ad8-e644c114a231,command_prompt
 persistence,T1137.002,Office Application Startup: Office Test,1,Office Application Startup Test Persistence (HKCU),c3e35b58-fe1c-480b-b540-7600fb612563,powershell
 persistence,T1547.008,Boot or Logon Autostart Execution: LSASS Driver,1,Modify Registry to load Arbitrary DLL into LSASS - LsaDbExtPt,8ecef16d-d289-46b4-917b-0dba6dc81cf1,powershell
@@ -1151,6 +1165,7 @@ collection,T1056.002,Input Capture: GUI Input Capture,2,PowerShell - Prompt User
 collection,T1039,Data from Network Shared Drive,1,Copy a sensitive File over Administrative share with copy,6ed67921-1774-44ba-bac6-adb51ed60660,command_prompt
 collection,T1039,Data from Network Shared Drive,2,Copy a sensitive File over Administrative share with Powershell,7762e120-5879-44ff-97f8-008b401b9a98,powershell
 collection,T1056.004,Input Capture: Credential API Hooking,1,Hook PowerShell TLS Encrypt/Decrypt Messages,de1934ea-1fbf-425b-8795-65fb27dd7e33,powershell
+lateral-movement,T1021.005,Remote Services:VNC,1,Enable Apple Remote Desktop Agent,8a930abe-841c-4d4f-a877-72e9fe90b9ea,sh
 lateral-movement,T1091,Replication Through Removable Media,1,USB Malware Spread Simulation,d44b7297-622c-4be8-ad88-ec40d7563c75,powershell
 lateral-movement,T1021.002,Remote Services: SMB/Windows Admin Shares,1,Map admin share,3386975b-367a-4fbb-9d77-4dcf3639ffd3,command_prompt
 lateral-movement,T1021.002,Remote Services: SMB/Windows Admin Shares,2,Map Admin Share PowerShell,514e9cd7-9207-4882-98b1-c8f791bae3c5,powershell
@@ -1173,6 +1188,7 @@ lateral-movement,T1550.002,Use Alternate Authentication Material: Pass the Hash,
 lateral-movement,T1021.001,Remote Services: Remote Desktop Protocol,1,RDP to DomainController,355d4632-8cb9-449d-91ce-b566d0253d3e,powershell
 lateral-movement,T1021.001,Remote Services: Remote Desktop Protocol,2,Changing RDP Port to Non Standard Port via Powershell,2f840dd4-8a2e-4f44-beb3-6b2399ea3771,powershell
 lateral-movement,T1021.001,Remote Services: Remote Desktop Protocol,3,Changing RDP Port to Non Standard Port via Command_Prompt,74ace21e-a31c-4f7d-b540-53e4eb6d1f73,command_prompt
+lateral-movement,T1021.001,Remote Services: Remote Desktop Protocol,4,Disable NLA for RDP via Command Prompt,01d1c6c0-faf0-408e-b368-752a02285cb2,command_prompt
 credential-access,T1556.003,Modify Authentication Process: Pluggable Authentication Modules,1,Malicious PAM rule,4b9dde80-ae22-44b1-a82a-644bf009eb9c,sh
 credential-access,T1556.003,Modify Authentication Process: Pluggable Authentication Modules,2,Malicious PAM module,65208808-3125-4a2e-8389-a0a00e9ab326,sh
 credential-access,T1056.001,Input Capture: Keylogging,1,Input Capture,d9b633ca-8efb-45e6-b838-70f595c6ae26,powershell
@@ -1460,6 +1476,7 @@ discovery,T1082,System Information Discovery,23,Azure Security Scan with SkyArk,
 discovery,T1082,System Information Discovery,24,Linux List Kernel Modules,034fe21c-3186-49dd-8d5d-128b35f181c7,sh
 discovery,T1082,System Information Discovery,25,System Information Discovery with WMIC,8851b73a-3624-4bf7-8704-aa312411565c,command_prompt
 discovery,T1082,System Information Discovery,26,Driver Enumeration using DriverQuery,bd85e3d1-4aeb-4a1d-850f-7be3cb8d60b9,command_prompt
+discovery,T1082,System Information Discovery,27,System Information Discovery,4060ee98-01ae-4c8e-8aad-af8300519cc7,command_prompt
 discovery,T1010,Application Window Discovery,1,List Process Main Windows - C# .NET,fe94a1c3-3e22-4dc9-9fdf-3a8bdbc10dc4,command_prompt
 discovery,T1580,Cloud Infrastructure Discovery,1,AWS - EC2 Enumeration from Cloud Instance,99ee161b-dcb1-4276-8ecb-7cfdcb207820,sh
 discovery,T1217,Browser Bookmark Discovery,1,List Mozilla Firefox Bookmark Database Files on Linux,3a41f169-a5ab-407f-9269-abafdb5da6c2,sh
@@ -1567,6 +1584,7 @@ discovery,T1046,Network Service Discovery,6,WinPwn - MS17-10,97585b04-5be2-40e9-
 discovery,T1046,Network Service Discovery,7,WinPwn - bluekeep,1cca5640-32a9-46e6-b8e0-fabbe2384a73,powershell
 discovery,T1046,Network Service Discovery,8,WinPwn - fruit,bb037826-cbe8-4a41-93ea-b94059d6bb98,powershell
 discovery,T1046,Network Service Discovery,9,Network Service Discovery for Containers,06eaafdb-8982-426e-8a31-d572da633caa,sh
+discovery,T1046,Network Service Discovery,10,Port-Scanning /24 Subnet with PowerShell,05df2a79-dba6-4088-a804-9ca0802ca8e4,powershell
 discovery,T1518,Software Discovery,1,Find and Display Internet Explorer Browser Version,68981660-6670-47ee-a5fa-7e74806420a4,command_prompt
 discovery,T1518,Software Discovery,2,Applications Installed,c49978f6-bd6e-4221-ad2c-9e3e30cc1e3b,powershell
 discovery,T1518,Software Discovery,3,Find and Display Safari Browser Version,103d6533-fd2a-4d08-976a-4a598565280f,sh
@@ -1614,6 +1632,7 @@ impact,T1490,Inhibit System Recovery,6,Windows - Delete Backup Files,6b1dbaf6-cc
 impact,T1490,Inhibit System Recovery,7,Windows - wbadmin Delete systemstatebackup,584331dd-75bc-4c02-9e0b-17f5fd81c748,command_prompt
 impact,T1490,Inhibit System Recovery,8,Windows - Disable the SR scheduled task,1c68c68d-83a4-4981-974e-8993055fa034,command_prompt
 impact,T1490,Inhibit System Recovery,9,Disable System Restore Through Registry,66e647d1-8741-4e43-b7c1-334760c2047f,command_prompt
+impact,T1490,Inhibit System Recovery,10,Windows - vssadmin Resize Shadowstorage Volume,da558b07-69ae-41b9-b9d4-4d98154a7049,powershell
 impact,T1529,System Shutdown/Reboot,1,Shutdown System - Windows,ad254fa8-45c0-403b-8c77-e00b3d3e7a64,command_prompt
 impact,T1529,System Shutdown/Reboot,2,Restart System - Windows,f4648f0d-bf78-483c-bafc-3ec99cd1c302,command_prompt
 impact,T1529,System Shutdown/Reboot,3,Restart System via `shutdown` - macOS/Linux,6326dbc4-444b-4c04-88f4-27e94d0327cb,bash
