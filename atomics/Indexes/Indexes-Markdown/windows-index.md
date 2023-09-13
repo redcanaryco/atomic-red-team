@@ -309,7 +309,8 @@
   - Atomic Test #4: Execute LNK file from ISO [windows]
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1064 Scripting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1055.002 Portable Executable Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1055.002 Process Injection: Portable Executable Injection](../../T1055.002/T1055.002.md)
+  - Atomic Test #1: Portable Executable Injection [windows]
 - T1218.012 Verclsid [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1562.010 Downgrade Attack [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -668,7 +669,8 @@
 - T1138 Application Shimming [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.009 Event Triggered Execution: AppCert DLLs](../../T1546.009/T1546.009.md)
   - Atomic Test #1: Create registry persistence via AppCert DLL [windows]
-- T1055.002 Portable Executable Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1055.002 Process Injection: Portable Executable Injection](../../T1055.002/T1055.002.md)
+  - Atomic Test #1: Portable Executable Injection [windows]
 - [T1134.001 Access Token Manipulation: Token Impersonation/Theft](../../T1134.001/T1134.001.md)
   - Atomic Test #1: Named pipe client impersonation [windows]
   - Atomic Test #2: `SeDebugPrivilege` token duplication [windows]

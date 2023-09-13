@@ -430,7 +430,8 @@
 - T1064 Scripting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1612 Build Image on Host](../../T1612/T1612.md)
   - Atomic Test #1: Build Image On Host [containers]
-- T1055.002 Portable Executable Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1055.002 Process Injection: Portable Executable Injection](../../T1055.002/T1055.002.md)
+  - Atomic Test #1: Portable Executable Injection [windows]
 - T1218.012 Verclsid [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1562.010 Downgrade Attack [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -922,7 +923,8 @@
 - T1138 Application Shimming [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.009 Event Triggered Execution: AppCert DLLs](../../T1546.009/T1546.009.md)
   - Atomic Test #1: Create registry persistence via AppCert DLL [windows]
-- T1055.002 Portable Executable Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1055.002 Process Injection: Portable Executable Injection](../../T1055.002/T1055.002.md)
+  - Atomic Test #1: Portable Executable Injection [windows]
 - [T1547.015 Boot or Logon Autostart Execution: Login Items](../../T1547.015/T1547.015.md)
   - Atomic Test #1: Persistence by modifying Windows Terminal profile [windows]
   - Atomic Test #2: Add macOS LoginItem using Applescript [macos]
