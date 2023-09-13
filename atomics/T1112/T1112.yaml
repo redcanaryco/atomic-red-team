@@ -887,3 +887,25 @@ atomic_tests:
       reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v "MaxConnectionsPer1_0Server" /f
     name: command_prompt
     elevation_required: true
+- name: Modify Internet Zone Protocol Defaults in Current User Registry - cmd
+  description: |
+    This test simulates an adversary modifying the Internet Zone Protocol Defaults in the registry of the currently logged-in user using the reg.exe utility via the command prompt. Such modifications can be indicative of an adversary trying to weaken browser security settings. Upon execution, if successful, the message "The operation completed successfully." will be displayed.
+    To verify the effects of the test:
+    1. Open the Registry Editor (regedit.exe).
+    2. Navigate to "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\ProtocolDefaults".
+    3. Check for the presence of the "http" and "https" DWORD values set to `0`.
+    Or run:
+    ```batch
+    reg query "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\ProtocolDefaults"
+    ```
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\ProtocolDefaults" /v http /t REG_DWORD /d 0 /F
+      reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\ProtocolDefaults" /v https /t REG_DWORD /d 0 /F
+    cleanup_command: |
+      reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\ProtocolDefaults" /v http /t REG_DWORD /d 3 /F
+      reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\ProtocolDefaults" /v https /t REG_DWORD /d 3 /F
+    name: command_prompt
+
