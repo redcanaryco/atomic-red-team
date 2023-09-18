@@ -1,0 +1,55 @@
+attack_technique: T1005
+display_name: 'Data from Local System'
+atomic_tests:
+- name: Search files of interest and save them to a single zip file (Windows)                                  
+  auto_generated_guid:
+  description: |
+    This test searches for files of certain extensions and saves them to a single zip file prior to extraction.                              
+  supported_platforms:
+  - windows
+  input_arguments:
+    starting_directory:
+      description: Path to starting directory for the search
+      type: Path
+      default: C:\Users
+    output_zip_folder_path:
+      description: Path to directory for saving the generated zip file
+      type: Path
+      default: PathToAtomicsFolder\..\ExternalPayloads\T1005
+    file_extensions:
+      description: List of file extensions to be searched and zipped, separated by comma and space
+      type: string
+      default: .doc, .docx, .txt
+  executor:
+    command: |
+      $startingDirectory = "#{starting_directory}"
+      $outputZip = "#{output_zip_folder_path}"
+      $fileExtensionsString = "#{file_extensions}" 
+      $fileExtensions = $fileExtensionsString -split ", "
+
+      New-Item -Type Directory $outputZip -ErrorAction Ignore -Force | Out-Null
+
+      Function Search-Files {
+        param (
+          [string]$directory
+        )
+        $files = Get-ChildItem -Path $directory -File -Recurse | Where-Object {
+          $fileExtensions -contains $_.Extension.ToLower()
+        }
+        return $files
+      }
+
+      $foundFiles = Search-Files -directory $startingDirectory
+      if ($foundFiles.Count -gt 0) {
+        $foundFilePaths = $foundFiles.FullName
+        Compress-Archive -Path $foundFilePaths -DestinationPath "$outputZip\data.zip"
+
+        Write-Host "Zip file created: $outputZip\data.zip"
+        } else {
+            Write-Host "No files found with the specified extensions."
+        }
+    cleanup_command: |
+      Remove-Item -Path  $outputZip\data.zip -Force
+
+    name: powershell
+    elevation_required: false
