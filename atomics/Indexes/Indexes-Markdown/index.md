@@ -348,6 +348,7 @@
   - Atomic Test #56: Snake Malware Registry Blob [windows]
   - Atomic Test #57: Allow Simultaneous Download Registry [windows]
   - Atomic Test #58: Modify Internet Zone Protocol Defaults in Current User Registry - cmd [windows]
+  - Atomic Test #59: Modify Internet Zone Protocol Defaults in Current User Registry - PowerShell [windows]
 - [T1574.008 Hijack Execution Flow: Path Interception by Search Order Hijacking](../../T1574.008/T1574.008.md)
   - Atomic Test #1: powerShell Persistence via hijacking default modules - Get-Variable.exe [windows]
 - T1535 Unused/Unsupported Cloud Regions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
