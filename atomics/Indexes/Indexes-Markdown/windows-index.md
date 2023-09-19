@@ -1284,7 +1284,8 @@
   - Atomic Test #2: Execute Commands from Clipboard using PowerShell [windows]
   - Atomic Test #4: Collect Clipboard Data via VBA [windows]
 - T1074.002 Remote Data Staging [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1005 Data from Local System [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1005 Data from Local System](../../T1005/T1005.md)
+  - Atomic Test #1: Search files of interest and save them to a single zip file (Windows) [windows]
 - T1560.002 Archive Collected Data: Archive via Library [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1560 Archive Collected Data](../../T1560/T1560.md)
   - Atomic Test #1: Compress Data for Exfiltration With PowerShell [windows]

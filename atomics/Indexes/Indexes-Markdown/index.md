@@ -1816,7 +1816,8 @@
   - Atomic Test #2: Azure - Scan for Anonymous Access to Azure Storage (Powershell) [iaas:azure]
   - Atomic Test #3: AWS - Scan for Anonymous Access to S3 [iaas:aws]
 - T1074.002 Remote Data Staging [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1005 Data from Local System [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1005 Data from Local System](../../T1005/T1005.md)
+  - Atomic Test #1: Search files of interest and save them to a single zip file (Windows) [windows]
 - [T1560.002 Archive Collected Data: Archive via Library](../../T1560.002/T1560.002.md)
   - Atomic Test #1: Compressing data using GZip in Python (Linux) [linux]
   - Atomic Test #2: Compressing data using bz2 in Python (Linux) [linux]
