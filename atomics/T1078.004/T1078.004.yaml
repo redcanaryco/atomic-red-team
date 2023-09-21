@@ -105,9 +105,9 @@ atomic_tests:
   - description: |
       Create dependency resources using terraform
     prereq_command: |
-      try {if (Test-Path $PathToAtomicsFolder/T1078.004/src/T1078.004-2/terraform.tfstate ){ exit 0 } else {exit 1}} catch {exit 1}
+      try {if (Test-Path "$PathToAtomicsFolder/T1078.004/src/T1078.004-2/terraform.tfstate" ){ exit 0 } else {exit 1}} catch {exit 1}
     get_prereq_command: |
-      cd $PathToAtomicsFolder/T1078.004/src/T1078.004-2/
+      cd "$PathToAtomicsFolder/T1078.004/src/T1078.004-2/""
       terraform init
       terraform apply -auto-approve
   executor:
@@ -120,7 +120,7 @@ atomic_tests:
     elevation_required: false
     cleanup_command: |
       Remove-AzAutomationRunbook -AutomationAccountName #{automation_account_name} -Name #{runbook_name} -ResourceGroupName #{resource_group} -Force
-      cd $PathToAtomicsFolder/T1078.004/src/T1078.004-2/
+      cd "$PathToAtomicsFolder/T1078.004/src/T1078.004-2/""
       terraform destroy -auto-approve
 - name: GCP - Create Custom IAM Role
   auto_generated_guid: 3a159042-69e6-4398-9a69-3308a4841c85

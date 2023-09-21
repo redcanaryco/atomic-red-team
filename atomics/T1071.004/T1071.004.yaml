@@ -65,7 +65,7 @@ atomic_tests:
       default: 20
   executor:
     command: |
-      Set-Location PathToAtomicsFolder
+      Set-Location "PathToAtomicsFolder"
       .\T1071.004\src\T1071-dns-beacon.ps1 -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type} -C2Interval #{c2_interval} -C2Jitter #{c2_jitter} -RunTime #{runtime}
     name: powershell
 - name: DNS Long Domain Query
@@ -91,7 +91,7 @@ atomic_tests:
       default: 127.0.0.1.xip.io
   executor:
     command: |
-      Set-Location PathToAtomicsFolder
+      Set-Location "PathToAtomicsFolder"
       .\T1071.004\src\T1071-dns-domain-length.ps1 -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type}
     name: powershell
 - name: DNS C2

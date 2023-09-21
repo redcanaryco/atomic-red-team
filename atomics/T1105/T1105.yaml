@@ -460,11 +460,11 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{curl_path}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://curl.se/windows/dl-7.79.1/curl-7.79.1-win64-mingw.zip" -Outfile PathToAtomicsFolder\..\ExternalPayloads\curl.zip
-      Expand-Archive -Path PathToAtomicsFolder\..\ExternalPayloads\curl.zip -DestinationPath PathToAtomicsFolder\..\ExternalPayloads\curl
-      Copy-Item PathToAtomicsFolder\..\ExternalPayloads\curl\curl-7.79.1-win64-mingw\bin\curl.exe C:\Windows\System32\Curl.exe
-      Remove-Item PathToAtomicsFolder\..\ExternalPayloads\curl
-      Remove-Item PathToAtomicsFolder\..\ExternalPayloads\curl.zip
+      Invoke-WebRequest "https://curl.se/windows/dl-7.79.1/curl-7.79.1-win64-mingw.zip" -Outfile "PathToAtomicsFolder\..\ExternalPayloads\curl.zip"
+      Expand-Archive -Path "PathToAtomicsFolder\..\ExternalPayloads\curl.zip" -DestinationPath "PathToAtomicsFolder\..\ExternalPayloads\curl"
+      Copy-Item "PathToAtomicsFolder\..\ExternalPayloads\curl\curl-7.79.1-win64-mingw\bin\curl.exe" C:\Windows\System32\Curl.exe
+      Remove-Item "PathToAtomicsFolder\..\ExternalPayloads\curl"
+      Remove-Item "PathToAtomicsFolder\..\ExternalPayloads\curl.zip"
   executor:
     command: |
       #{curl_path} -k #{file_download} -o c:\users\public\music\allthethingsx64.dll
@@ -505,11 +505,11 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{curl_path}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest “https://curl.se/windows/dl-7.79.1/curl-7.79.1-win64-mingw.zip” -Outfile PathToAtomicsFolder\..\ExternalPayloads\curl.zip
-      Expand-Archive -Path PathToAtomicsFolder\..\ExternalPayloads\curl.zip -DestinationPath PathToAtomicsFolder\..\ExternalPayloads\curl
-      Copy-Item PathToAtomicsFolder\..\ExternalPayloads\curl\curl-7.79.1-win64-mingw\bin\curl.exe C:\Windows\System32\Curl.exe
-      Remove-Item PathToAtomicsFolder\..\ExternalPayloads\curl
-      Remove-Item PathToAtomicsFolder\..\ExternalPayloads\curl.zip
+      Invoke-WebRequest "https://curl.se/windows/dl-7.79.1/curl-7.79.1-win64-mingw.zip" -Outfile PathToAtomicsFolder\..\ExternalPayloads\curl.zip
+      Expand-Archive -Path "PathToAtomicsFolder\..\ExternalPayloads\curl.zip" -DestinationPath "PathToAtomicsFolder\..\ExternalPayloads\curl"
+      Copy-Item "PathToAtomicsFolder\..\ExternalPayloads\curl\curl-7.79.1-win64-mingw\bin\curl.exe" C:\Windows\System32\Curl.exe
+      Remove-Item "PathToAtomicsFolder\..\ExternalPayloads\curl"
+      Remove-Item "PathToAtomicsFolder\..\ExternalPayloads\curl.zip"
   - description: |
       A file must be created to upload
     prereq_command: |
@@ -789,9 +789,9 @@ atomic_tests:
       if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\nimgrab.exe") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "https://nim-lang.org/download/nim-1.6.6_x64.zip" -Outfile PathToAtomicsFolder\..\ExternalPayloads\nim.zip
-      Expand-Archive -Path PathToAtomicsFolder\..\ExternalPayloads\nim.zip -DestinationPath PathToAtomicsFolder\..\ExternalPayloads\nim -Force
-      Copy-Item PathToAtomicsFolder\..\ExternalPayloads\nim\nim-1.6.6\bin\nimgrab.exe "PathToAtomicsFolder\..\ExternalPayloads\nimgrab.exe"
+      Invoke-WebRequest "https://nim-lang.org/download/nim-1.6.6_x64.zip" -Outfile "PathToAtomicsFolder\..\ExternalPayloads\nim.zip"
+      Expand-Archive -Path "PathToAtomicsFolder\..\ExternalPayloads\nim.zip" -DestinationPath "PathToAtomicsFolder\..\ExternalPayloads\nim" -Force
+      Copy-Item "PathToAtomicsFolder\..\ExternalPayloads\nim\nim-1.6.6\bin\nimgrab.exe" "PathToAtomicsFolder\..\ExternalPayloads\nimgrab.exe"
 - name: iwr or Invoke Web-Request download
   auto_generated_guid: c01cad7f-7a4c-49df-985e-b190dcf6a279
   description: |

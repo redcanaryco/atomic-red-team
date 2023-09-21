@@ -139,10 +139,10 @@ atomic_tests:
     get_prereq_command: |
       $parentpath = Split-Path "#{dirlister_path}"
       New-Item -ItemType Directory -Force -Path $parentpath | Out-Null
-      Invoke-WebRequest https://github.com/SanderSade/DirLister/releases/download/v2.beta4/DirLister.v2.beta4.zip -OutFile PathToAtomicsFolder\..\ExternalPayloads\TDirLister.v2.beta4.zip
-      Expand-Archive -Path PathToAtomicsFolder\..\ExternalPayloads\TDirLister.v2.beta4.zip -DestinationPath PathToAtomicsFolder\..\ExternalPayloads\TDirLister.v2.beta4 -Force
-      Copy-Item PathToAtomicsFolder\..\ExternalPayloads\TDirLister.v2.beta4\* $parentpath -Recurse
-      Remove-Item PathToAtomicsFolder\..\ExternalPayloads\TDirLister.v2.beta4.zip,PathToAtomicsFolder\..\ExternalPayloads\TDirLister.v2.beta4 -Recurse -ErrorAction Ignore
+      Invoke-WebRequest https://github.com/SanderSade/DirLister/releases/download/v2.beta4/DirLister.v2.beta4.zip -OutFile "PathToAtomicsFolder\..\ExternalPayloads\TDirLister.v2.beta4.zip"
+      Expand-Archive -Path "PathToAtomicsFolder\..\ExternalPayloads\TDirLister.v2.beta4.zip" -DestinationPath "PathToAtomicsFolder\..\ExternalPayloads\TDirLister.v2.beta4 -Force"
+      Copy-Item "PathToAtomicsFolder\..\ExternalPayloads\TDirLister.v2.beta4\*" "$parentpath" -Recurse
+      Remove-Item "PathToAtomicsFolder\..\ExternalPayloads\TDirLister.v2.beta4.zip","PathToAtomicsFolder\..\ExternalPayloads\TDirLister.v2.beta4" -Recurse -ErrorAction Ignore
   executor:
     command: |
       Start-Process #{dirlister_path}

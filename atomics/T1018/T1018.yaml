@@ -203,13 +203,13 @@ atomic_tests:
   - description: |
       AdFind.exe must exist on disk at specified location (PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe)
     prereq_command: |
-      if (Test-Path PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe) {exit 0} else {exit 1}
+      if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/bin/AdFind.exe" -OutFile PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe
+      New-Item -Type Directory (split-path "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe") -ErrorAction ignore | Out-Null
+      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/bin/AdFind.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe"
   executor:
     command: |
-      PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe -f (objectcategory=computer)
+      "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" -f (objectcategory=computer)
     name: command_prompt
 - name: Adfind - Enumerate Active Directory Domain Controller Objects
   auto_generated_guid: 5838c31e-a0e2-4b9f-b60a-d79d2cb7995e
@@ -223,13 +223,13 @@ atomic_tests:
   - description: |
       AdFind.exe must exist on disk at specified location (PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe)
     prereq_command: |
-      if (Test-Path PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe) {exit 0} else {exit 1}
+      if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/bin/AdFind.exe" -OutFile PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe
+      New-Item -Type Directory (split-path "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe") -ErrorAction ignore | Out-Null
+      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/bin/AdFind.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe"
   executor:
     command: |
-      PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe -sc dclist
+      "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" -sc dclist
     name: command_prompt
 
 - name: Remote System Discovery - ip neighbour

@@ -26,7 +26,7 @@ atomic_tests:
   - description: |
       The Invoke-EnumerateAzureBlobs module must exist in PathToAtomicsFolder\..\ExternalPayloads.
     prereq_command: |
-      if (test-path PathToAtomicsFolder\..\ExternalPayloads\Invoke-EnumerateAzureBlobs.ps1){exit 0} else {exit 1}
+      if (test-path "PathToAtomicsFolder\..\ExternalPayloads\Invoke-EnumerateAzureBlobs.ps1"){exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       invoke-webrequest "https://raw.githubusercontent.com/NetSPI/MicroBurst/156c4e9f4253b482b2b68eda4651116b9f0f2e17/Misc/Invoke-EnumerateAzureBlobs.ps1" -outfile "PathToAtomicsFolder\..\ExternalPayloads\Invoke-EnumerateAzureBlobs.ps1"

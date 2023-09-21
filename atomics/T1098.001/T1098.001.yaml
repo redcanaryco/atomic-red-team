@@ -165,11 +165,11 @@ atomic_tests:
       echo Please run atomic test T1136.003, before running this atomic
   executor:
     command: |
-      aws iam create-access-key --user-name #{username} > $PathToAtomicsFolder/T1098.001/bin/aws_secret.creds
-      cd $PathToAtomicsFolder/T1098.001/bin/
+      aws iam create-access-key --user-name #{username} > "$PathToAtomicsFolder/T1098.001/bin/aws_secret.creds"
+      cd "$PathToAtomicsFolder/T1098.001/bin/""
       ./aws_secret.sh
     cleanup_command: |
-      access_key=`cat $PathToAtomicsFolder/T1098.001/bin/aws_secret.creds| jq -r '.AccessKey.AccessKeyId'`
+      access_key=`cat "$PathToAtomicsFolder/T1098.001/bin/aws_secret.creds" | jq -r '.AccessKey.AccessKeyId'`
       aws iam delete-access-key --access-key-id $access_key --user-name #{username}
-      rm $PathToAtomicsFolder/T1098.001/bin/aws_secret.creds
+      rm "$PathToAtomicsFolder/T1098.001/bin/aws_secret.creds"
     name: sh

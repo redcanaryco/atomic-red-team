@@ -30,15 +30,15 @@ atomic_tests:
       Invoke-WebRequest "https://hashcat.net/files/hashcat-6.1.1.7z" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\hashcat6.7z"
       Start-Process cmd.exe -Args  "/c %temp%\7z\7z.exe x %temp%\hashcat6.7z -aoa -o%temp%\hashcat-unzip" -Wait
       New-Item -ItemType Directory (Split-Path $(cmd /c echo #{hashcat_exe})) -Force | Out-Null
-      Move-Item PathToAtomicsFolder\..\ExternalPayloads\hashcat-unzip\hashcat-6.1.1\* $(cmd /c echo #{hashcat_exe}\..) -Force -ErrorAction Ignore
+      Move-Item "PathToAtomicsFolder\..\ExternalPayloads\hashcat-unzip\hashcat-6.1.1\*"" $(cmd /c echo #{hashcat_exe}\..) -Force -ErrorAction Ignore
   executor:
     command: |-
       cd #{hashcat_exe}\..
       #{hashcat_exe} -a 0 -m 1000 -r .\rules\Incisive-leetspeak.rule #{input_file_sam} #{input_file_passwords}
     cleanup_command: |-
-      del PathToAtomicsFolder\..\ExternalPayloads\hashcat6.7z >nul 2>&1
-      del PathToAtomicsFolder\..\ExternalPayloads\7z1900.exe >nul 2>&1
-      del PathToAtomicsFolder\..\ExternalPayloads\7z /Q /S >nul 2>&1
-      del PathToAtomicsFolder\..\ExternalPayloads\hashcat-unzip /Q /S >nul 2>&1
+      del "PathToAtomicsFolder\..\ExternalPayloads\hashcat6.7z" >nul 2>&1
+      del "PathToAtomicsFolder\..\ExternalPayloads\7z1900.exe" >nul 2>&1
+      del "PathToAtomicsFolder\..\ExternalPayloads\7z" /Q /S >nul 2>&1
+      del "PathToAtomicsFolder\..\ExternalPayloads\hashcat-unzip" /Q /S >nul 2>&1
     name: command_prompt
     elevation_required: true

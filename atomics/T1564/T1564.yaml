@@ -117,7 +117,7 @@ atomic_tests:
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       invoke-webrequest "https://www.nirsoft.net/utils/nircmd-x64.zip" -outfile "PathToAtomicsFolder\..\ExternalPayloads\nircmd.zip" 
-      expand-archive -path "PathToAtomicsFolder\..\ExternalPayloads\nircmd.zip" -destinationpath PathToAtomicsFolder\..\ExternalPayloads\
+      expand-archive -path "PathToAtomicsFolder\..\ExternalPayloads\nircmd.zip" -destinationpath "PathToAtomicsFolder\..\ExternalPayloads\""
   executor:
     command: |
       cmd /c #{nircmd_location} #{command_to_execute}

@@ -92,15 +92,15 @@ atomic_tests:
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       $installer = "PathToAtomicsFolder\..\ExternalPayloads\ChromeStandaloneSetup64.msi"
-      Invoke-WebRequest -OutFile PathToAtomicsFolder\..\ExternalPayloads\ChromeStandaloneSetup64.msi https://dl.google.com/chrome/install/googlechromestandaloneenterprise64.msi
+      Invoke-WebRequest -OutFile "PathToAtomicsFolder\..\ExternalPayloads\ChromeStandaloneSetup64.msi" https://dl.google.com/chrome/install/googlechromestandaloneenterprise64.msi
       msiexec /i $installer /qn
       Start-Process -FilePath "chrome.exe"
       Stop-Process -Name "chrome"
   executor:
     name: powershell
     command: |
-      Copy-Item "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Login Data" -Destination PathToAtomicsFolder\..\ExternalPayloads
-      Copy-Item "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Login Data For Account" -Destination PathToAtomicsFolder\..\ExternalPayloads
+      Copy-Item "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Login Data" -Destination "PathToAtomicsFolder\..\ExternalPayloads"
+      Copy-Item "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Login Data For Account" -Destination "PathToAtomicsFolder\..\ExternalPayloads"
     cleanup_command: |
       Remove-Item -Path "PathToAtomicsFolder\..\ExternalPayloads\Login Data" -Force -ErrorAction Ignore
       Remove-Item -Path "PathToAtomicsFolder\..\ExternalPayloads\Login Data For Account" -Force -ErrorAction Ignore
@@ -118,7 +118,7 @@ atomic_tests:
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       $installer = "PathToAtomicsFolder\..\ExternalPayloads\OperaStandaloneInstaller.exe"
-      Invoke-WebRequest -OutFile PathToAtomicsFolder\..\ExternalPayloads\OperaStandaloneInstaller.exe https://get.geo.opera.com/pub/opera/desktop/82.0.4227.43/win/Opera_82.0.4227.43_Setup.exe
+      Invoke-WebRequest -OutFile "PathToAtomicsFolder\..\ExternalPayloads\OperaStandaloneInstaller.exe" https://get.geo.opera.com/pub/opera/desktop/82.0.4227.43/win/Opera_82.0.4227.43_Setup.exe
       Start-Process $installer -ArgumentList '/install /silent /launchopera=1 /setdefaultbrowser=0'
       Start-Sleep -s 180
       Stop-Process -Name "opera"
@@ -130,7 +130,7 @@ atomic_tests:
   executor:
     name: powershell
     command: |
-      Copy-Item "$env:APPDATA\Opera Software\Opera Stable\Login Data" -Destination PathToAtomicsFolder\..\ExternalPayloads
+      Copy-Item "$env:APPDATA\Opera Software\Opera Stable\Login Data" -Destination "PathToAtomicsFolder\..\ExternalPayloads"
     cleanup_command: |
       Remove-Item -Path "PathToAtomicsFolder\..\ExternalPayloads\Login Data" -Force -ErrorAction Ignore
 - name: Simulating access to Windows Firefox Login Data
@@ -163,7 +163,7 @@ atomic_tests:
   executor:
     name: powershell
     command: |
-      Copy-Item "$env:APPDATA\Mozilla\Firefox\Profiles\" -Destination PathToAtomicsFolder\..\ExternalPayloads -Force -Recurse
+      Copy-Item "$env:APPDATA\Mozilla\Firefox\Profiles\" -Destination "PathToAtomicsFolder\..\ExternalPayloads" -Force -Recurse
     cleanup_command: |
       Remove-Item -Path "PathToAtomicsFolder\..\ExternalPayloads\Profiles" -Force -ErrorAction Ignore -Recurse
 - name: Simulating access to Windows Edge Login Data
@@ -191,7 +191,7 @@ atomic_tests:
   executor:
     name: powershell
     command: |
-      Copy-Item "$env:LOCALAPPDATA\Microsoft\Edge\User Data\Default" -Destination PathToAtomicsFolder\..\ExternalPayloads\Edge -Force -Recurse
+      Copy-Item "$env:LOCALAPPDATA\Microsoft\Edge\User Data\Default" -Destination "PathToAtomicsFolder\..\ExternalPayloads\Edge" -Force -Recurse
     cleanup_command: |
       Remove-Item -Path "PathToAtomicsFolder\..\ExternalPayloads\Edge" -Force -ErrorAction Ignore -Recurse
 - name: Decrypt Mozilla Passwords with Firepwd.py
@@ -251,7 +251,7 @@ atomic_tests:
       if (Test-Path "#{Python_Path}") {exit 0} else {exit 1}
     get_prereq_command: |
       invoke-webrequest "https://www.python.org/ftp/python/3.10.4/python-3.10.4-amd64.exe" -outfile "PathToAtomicsFolder\..\ExternalPayloads\python_setup.exe"
-      Start-Process -FilePath PathToAtomicsFolder\..\ExternalPayloads\python_setup.exe -ArgumentList "/quiet InstallAllUsers=1 PrependPath=1 Include_test=0" -Wait
+      Start-Process -FilePath "PathToAtomicsFolder\..\ExternalPayloads\python_setup.exe" -ArgumentList "/quiet InstallAllUsers=1 PrependPath=1 Include_test=0" -Wait
   - description: |
       Pip must be installed.
     prereq_command: |
@@ -432,7 +432,7 @@ atomic_tests:
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       $installer = "PathToAtomicsFolder\..\ExternalPayloads\ChromeStandaloneSetup64.msi"
-      Invoke-WebRequest -OutFile PathToAtomicsFolder\..\ExternalPayloads\ChromeStandaloneSetup64.msi https://dl.google.com/chrome/install/googlechromestandaloneenterprise64.msi
+      Invoke-WebRequest -OutFile "PathToAtomicsFolder\..\ExternalPayloads\ChromeStandaloneSetup64.msi" https://dl.google.com/chrome/install/googlechromestandaloneenterprise64.msi
       msiexec /i $installer /qn
       Start-Process -FilePath "chrome.exe"
       Stop-Process -Name "chrome"

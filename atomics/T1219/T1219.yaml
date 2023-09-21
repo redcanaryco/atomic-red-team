@@ -67,7 +67,7 @@ atomic_tests:
       $file1 = "C:\Users\" + $env:username + "\Downloads\GoToAssist.exe"
       Start-Process $file1 /S;
     cleanup_command: 
-      try{$PathToAtomicsFolder/T1219/bin/GoToCleanup.ps1} catch{}
+      try{"$PathToAtomicsFolder/T1219/bin/GoToCleanup.ps1"} catch{}
     name: powershell
     elevation_required: true
 - name: ScreenConnect Application Download and Install on Windows
@@ -228,7 +228,7 @@ atomic_tests:
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       Invoke-WebRequest "https://www.uvnc.eu/download/1381/UltraVNC_1_3_81_X64_Setup.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\vncsetup.exe"
-      start-process PathToAtomicsFolder\..\ExternalPayloads\vncsetup.exe /silent
+      start-process "PathToAtomicsFolder\..\ExternalPayloads\vncsetup.exe" /silent
   executor:
     command: |
       Start-Process #{UltraVNC_Viewer_Path}
@@ -256,8 +256,8 @@ atomic_tests:
       if (Test-Path #{MSP360_Connect_Path}) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest -OutFile PathToAtomicsFolder\..\ExternalPayloads\msp360connect.exe "https://s3.amazonaws.com/cb_setups/_current/cbra/setup.exe?X-Amz-Expires=604800&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA2WIZE3YN7NOSY65U/20230515/us-east-1/s3/aws4_request&X-Amz-Date=20230515T024742Z&X-Amz-SignedHeaders=host&response-content-disposition=attachment;filename=ConnectStandaloneSetup_v3.3.0.15_netv4.5.1_cFA9100C6.exe&X-Amz-Signature=1fe3ddf93f8431b182fac90341f80a4ebf8665ddcc0e36dd385ee20d0ce865c9"
-      start-process PathToAtomicsFolder\..\ExternalPayloads\msp360connect.exe /S    
+      Invoke-WebRequest -OutFile "PathToAtomicsFolder\..\ExternalPayloads\msp360connect.exe" "https://s3.amazonaws.com/cb_setups/_current/cbra/setup.exe?X-Amz-Expires=604800&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA2WIZE3YN7NOSY65U/20230515/us-east-1/s3/aws4_request&X-Amz-Date=20230515T024742Z&X-Amz-SignedHeaders=host&response-content-disposition=attachment;filename=ConnectStandaloneSetup_v3.3.0.15_netv4.5.1_cFA9100C6.exe&X-Amz-Signature=1fe3ddf93f8431b182fac90341f80a4ebf8665ddcc0e36dd385ee20d0ce865c9"
+      start-process "PathToAtomicsFolder\..\ExternalPayloads\msp360connect.exe" /S    
   executor:
     command: |
       Start-Process #{MSP360_Connect_Path}
