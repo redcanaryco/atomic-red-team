@@ -981,7 +981,7 @@ atomic_tests:
       KEY=`gcloud iam service-accounts keys list --iam-account=#{service_name}@#{project_id}.iam.gserviceaccount.com --format="value(KEY_ID)" --limit=1`
       gcloud iam service-accounts keys delete $KEY --iam-account=#{service_name}@#{project_id}.iam.gserviceaccount.com --quiet
     cleanup_command: |
-      cd "$PathToAtomicsFolder/T1098/src/T1098-17/""
+      cd "$PathToAtomicsFolder/T1098/src/T1098-17/"
       terraform state rm google_service_account_key.key
       terraform destroy -auto-approve
   dependency_executor_name: sh
@@ -1009,6 +1009,6 @@ atomic_tests:
     prereq_command: |
       stat "$PathToAtomicsFolder/T1098/src/T1098-17/terraform.tfstate"
     get_prereq_command: |
-      cd "$PathToAtomicsFolder/T1098/src/T1098-17/""
+      cd "$PathToAtomicsFolder/T1098/src/T1098-17/"
       terraform init
       terraform apply -auto-approve

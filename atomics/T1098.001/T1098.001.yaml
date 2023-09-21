@@ -166,7 +166,7 @@ atomic_tests:
   executor:
     command: |
       aws iam create-access-key --user-name #{username} > "$PathToAtomicsFolder/T1098.001/bin/aws_secret.creds"
-      cd "$PathToAtomicsFolder/T1098.001/bin/""
+      cd "$PathToAtomicsFolder/T1098.001/bin/"
       ./aws_secret.sh
     cleanup_command: |
       access_key=`cat "$PathToAtomicsFolder/T1098.001/bin/aws_secret.creds" | jq -r '.AccessKey.AccessKeyId'`

@@ -25,7 +25,7 @@ atomic_tests:
   - description: |
       AtomicRedTeamPWFilter.dll must exist on disk at specified location (#{dll_path}\#{dll_name})
     prereq_command: |
-      if (Test-Path #{dll_path}\#{dll_name}) {exit 0} else {exit 1}
+      if (Test-Path "#{dll_path}\#{dll_name}") {exit 0} else {exit 1}
     get_prereq_command: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       Invoke-WebRequest "https://github.com/redcanaryco/atomicredteam/atomics/T1556.002/bin/AtomicRedTeamPWFilter.dll" -OutFile "#{dll_path}\#{dll_name}"

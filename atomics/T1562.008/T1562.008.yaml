@@ -38,7 +38,7 @@ atomic_tests:
       prereq_command: |
         if [ -f "$PathToAtomicsFolder/T1562.008/src/T1562.008-1/terraform.tfstate" ]; then exit 0; else exit 1; fi;
       get_prereq_command: |
-        cd "$PathToAtomicsFolder/T1562.008/src/T1562.008-1/""
+        cd "$PathToAtomicsFolder/T1562.008/src/T1562.008-1/"
         terraform init
         terraform apply -auto-approve
   executor:
@@ -47,7 +47,7 @@ atomic_tests:
        aws cloudtrail stop-logging --name #{cloudtrail_name} --region #{region}
        aws cloudtrail delete-trail --name #{cloudtrail_name} --region #{region}
     cleanup_command: |
-      cd "$PathToAtomicsFolder/T1562.008/src/T1562.008-1/""
+      cd "$PathToAtomicsFolder/T1562.008/src/T1562.008-1/"
       terraform destroy -auto-approve
     name: sh
     elevation_required: false
@@ -106,7 +106,7 @@ atomic_tests:
     prereq_command: |
       try {if (Test-Path "$PathToAtomicsFolder/T1562.008/src/T1562.008-2/terraform.tfstate" ){ exit 0 } else {exit 1}} catch {exit 1}
     get_prereq_command: |
-      cd "$PathToAtomicsFolder/T1562.008/src/T1562.008-2/""
+      cd "$PathToAtomicsFolder/T1562.008/src/T1562.008-2/"
       terraform init
       terraform apply -auto-approve
   executor:
@@ -118,7 +118,7 @@ atomic_tests:
     name: powershell
     elevation_required: false
     cleanup_command: |
-      cd "$PathToAtomicsFolder/T1562.008/src/T1562.008-2/""
+      cd "$PathToAtomicsFolder/T1562.008/src/T1562.008-2/"
       terraform destroy -auto-approve
 - name: Office 365 - Exchange Audit Log Disabled
   auto_generated_guid: 1ee572f3-056c-4632-a7fc-7e7c42b1543c

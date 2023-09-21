@@ -23,13 +23,13 @@ atomic_tests:
     prereq_command: |
       if (Test-Path "#{helper_file}") { exit 0} else { exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{helper_file}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{helper_file}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.007/bin/NetshHelper.dll" -OutFile "#{helper_file}"
   executor:
     command: |
-      netsh.exe add helper #{helper_file}
+      netsh.exe add helper "#{helper_file}"
       taskkill /im notepad.exe /t /f > NUL 2>&1
     cleanup_command: |
-      netsh.exe delete helper #{helper_file}
+      netsh.exe delete helper "#{helper_file}"
     name: command_prompt
     elevation_required: true

@@ -98,13 +98,13 @@ atomic_tests:
   - description: |
       Exe file to copy must exist on disk at specified location (#{inputfile})
     prereq_command: |
-      if (Test-Path #{inputfile}) {exit 0} else {exit 1}
+      if (Test-Path "#{inputfile}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{inputfile}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{inputfile}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1036.003/bin/T1036.003.exe" -OutFile "#{inputfile}"
   executor:
     command: |
-      copy #{inputfile} #{outputfile}
+      copy "#{inputfile}" #{outputfile}
       $myT1036_003 = (Start-Process -PassThru -FilePath #{outputfile}).Id
       Stop-Process -ID $myT1036_003
     cleanup_command: |
@@ -127,7 +127,7 @@ atomic_tests:
       default: $env:ComSpec
   executor:
     command: |
-      copy #{inputfile} #{outputfile}
+      copy "#{inputfile}" #{outputfile}
       $myT1036_003 = (Start-Process -PassThru -FilePath #{outputfile}).Id
       Stop-Process -ID $myT1036_003
     cleanup_command: |
@@ -177,28 +177,28 @@ atomic_tests:
   - description: |
       File to copy must exist on disk at specified location (#{vbs_path})
     prereq_command: |
-      if (Test-Path #{vbs_path}) {exit 0} else {exit 1}
+      if (Test-Path "#{vbs_path}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{vbs_path}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{vbs_path}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1036.003/src/T1036.003_masquerading.vbs" -OutFile "#{vbs_path}"
   - description: |
       File to copy must exist on disk at specified location (#{ps1_path})
     prereq_command: |
-      if (Test-Path #{ps1_path}) {exit 0} else {exit 1}
+      if (Test-Path "#{ps1_path}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{ps1_path}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{ps1_path}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1036.003/src/T1036.003_masquerading.ps1" -OutFile "#{ps1_path}"
   executor:
     command: |
-      copy #{exe_path} %temp%\T1036.003_masquerading.docx.exe /Y
-      copy #{exe_path} %temp%\T1036.003_masquerading.pdf.exe /Y
-      copy #{exe_path} %temp%\T1036.003_masquerading.ps1.exe /Y
-      copy #{vbs_path} %temp%\T1036.003_masquerading.xls.vbs /Y
-      copy #{vbs_path} %temp%\T1036.003_masquerading.xlsx.vbs /Y
-      copy #{vbs_path} %temp%\T1036.003_masquerading.png.vbs /Y
-      copy #{ps1_path} %temp%\T1036.003_masquerading.doc.ps1 /Y
-      copy #{ps1_path} %temp%\T1036.003_masquerading.pdf.ps1 /Y
-      copy #{ps1_path} %temp%\T1036.003_masquerading.rtf.ps1 /Y
+      copy "#{exe_path}" %temp%\T1036.003_masquerading.docx.exe /Y
+      copy "#{exe_path}" %temp%\T1036.003_masquerading.pdf.exe /Y
+      copy "#{exe_path}" %temp%\T1036.003_masquerading.ps1.exe /Y
+      copy "#{vbs_path}" %temp%\T1036.003_masquerading.xls.vbs /Y
+      copy "#{vbs_path}" %temp%\T1036.003_masquerading.xlsx.vbs /Y
+      copy "#{vbs_path}" %temp%\T1036.003_masquerading.png.vbs /Y
+      copy "#{ps1_path}" %temp%\T1036.003_masquerading.doc.ps1 /Y
+      copy "#{ps1_path}" %temp%\T1036.003_masquerading.pdf.ps1 /Y
+      copy "#{ps1_path}" %temp%\T1036.003_masquerading.rtf.ps1 /Y
       %temp%\T1036.003_masquerading.docx.exe
       %temp%\T1036.003_masquerading.pdf.exe
       %temp%\T1036.003_masquerading.ps1.exe

@@ -104,13 +104,13 @@ atomic_tests:
   - description: |
       Ammyy Admin must exist on disk at the specified location (#{Ammyy_Admin_Path})
     prereq_command: |
-      if (Test-Path #{Ammyy_Admin_Path}) {exit 0} else {exit 1}
+      if (Test-Path "#{Ammyy_Admin_Path}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       Invoke-WebRequest "https://web.archive.org/web/20140625232737/http://www.ammyy.com/AA_v3.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\ammyy.exe" -UseBasicParsing
   executor:
     command: |
-      Start-Process #{Ammyy_Admin_Path}
+      Start-Process "#{Ammyy_Admin_Path}"
     cleanup_command: |
       Stop-Process -Name "Ammyy" -force -erroraction silentlycontinue
     name: powershell
@@ -132,13 +132,13 @@ atomic_tests:
   - description: |
       RemotePC must exist on disk at the specified location (#{RemotePC_Path})
     prereq_command: |
-      if (Test-Path #{RemotePC_Path}) {exit 0} else {exit 1}
+      if (Test-Path "#{RemotePC_Path}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       Invoke-WebRequest "https://static.remotepc.com/downloads/rpc/140422/RemotePC.exe" -OutFile "#{RemotePC_Path}" -UseBasicParsing
   executor:
     command: |
-      Start-Process #{RemotePC_Path}
+      Start-Process "#{RemotePC_Path}"
     cleanup_command: |
       Unregister-ScheduledTask -TaskName "RemotePC" -Confirm:$False -ErrorAction SilentlyContinue
       Unregister-ScheduledTask -TaskName "RPCServiceHealthCheck" -Confirm:$False -ErrorAction SilentlyContinue
@@ -168,13 +168,13 @@ atomic_tests:
   - description: |
       NetSupport must be downloaded and exist on the disk at the specified location. (#{NetSupport_Path})
     prereq_command: |
-      if (Test-Path #{NetSupport_Path}) {exit 0} else {exit 1}
+      if (Test-Path "#{NetSupport_Path}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       (New-Object Net.WebClient).DownloadFile("https://nsproducts.azureedge.net/nsm-1270/en/Setup.exe","#{NetSupport_Path}")
   executor:
     command: |
-      Start-Process #{NetSupport_Path} -ArgumentList "/S /v/qn"
+      Start-Process "#{NetSupport_Path}" -ArgumentList "/S /v/qn"
     cleanup_command: |
       Stop-Process -Name "client32" -force -erroraction silentlycontinue
     name: powershell
@@ -195,7 +195,7 @@ atomic_tests:
   - description: |
       Ultraviewer installer must be downloaded and exist on the disk at the specified location. (#{UltraViewer_Path})
     prereq_command: |
-      if (Test-Path #{UltraViewer_Path}) {exit 0} else {exit 1}
+      if (Test-Path "#{UltraViewer_Path}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       (New-Object Net.WebClient).DownloadFile("https://www.ultraviewer.net/en/UltraViewer_setup_6.5_en.exe","#{UltraViewer_Path}")

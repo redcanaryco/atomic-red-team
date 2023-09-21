@@ -33,13 +33,13 @@ atomic_tests:
   - description: |
       The wordlist file for search permutations must exist in PathToAtomicsFolder\..\ExternalPayloads.
     prereq_command: |
-      if (test-path #{wordlist}){exit 0} else {exit 1}
+      if (test-path "#{wordlist}"){exit 0} else {exit 1}
     get_prereq_command: |
       invoke-webrequest "https://raw.githubusercontent.com/NetSPI/MicroBurst/156c4e9f4253b482b2b68eda4651116b9f0f2e17/Misc/permutations.txt" -outfile "#{wordlist}"
   executor:
     command: |
       import-module "PathToAtomicsFolder\..\ExternalPayloads\Invoke-EnumerateAzureBlobs.ps1"
-      Invoke-EnumerateAzureBlobs -base #{base} -permutations #{wordlist} -outputfile "#{output_file}"
+      Invoke-EnumerateAzureBlobs -base #{base} -permutations "#{wordlist}" -outputfile "#{output_file}"
     cleanup_command: |
       remove-item #{output_file} -erroraction silentlycontinue
     name: powershell

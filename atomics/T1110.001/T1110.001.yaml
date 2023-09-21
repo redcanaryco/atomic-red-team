@@ -57,7 +57,7 @@ atomic_tests:
       [System.Reflection.Assembly]::LoadWithPartialName("System.DirectoryServices.Protocols") | Out-Null
       $di = new-object System.DirectoryServices.Protocols.LdapDirectoryIdentifier("#{domain}",389)
 
-      $passwordList = Get-Content -Path #{passwords_path}
+      $passwordList = Get-Content -Path "#{passwords_path}"
       foreach ($password in $passwordList){
         $credz = new-object System.Net.NetworkCredential("#{user}", $password, "#{domain}")
         $conn = new-object System.DirectoryServices.Protocols.LdapConnection($di, $credz, [System.DirectoryServices.Protocols.AuthType]::#{auth})

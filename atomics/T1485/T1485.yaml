@@ -94,7 +94,7 @@ atomic_tests:
       gcloud config set project #{project_id}
       gcloud storage buckets delete gs://#{bucket_name}
     cleanup_command: |
-      cd "$PathToAtomicsFolder/T1485/src/T1485-4/""
+      cd "$PathToAtomicsFolder/T1485/src/T1485-4/"
       terraform state rm google_storage_bucket.bucket
       terraform destroy -auto-approve
   dependency_executor_name: sh
@@ -122,6 +122,6 @@ atomic_tests:
     prereq_command: |
       stat "$PathToAtomicsFolder/T1485/src/T1485-4/terraform.tfstate"
     get_prereq_command: |
-      cd "$PathToAtomicsFolder/T1485/src/T1485-4/""
+      cd "$PathToAtomicsFolder/T1485/src/T1485-4/"
       terraform init
       terraform apply -auto-approve

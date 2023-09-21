@@ -350,7 +350,7 @@ atomic_tests:
       default: mytemplate.db
   executor:
     command: |
-      secedit /import /db #{secedit_db} /cfg #{ini_file}
+      secedit /import /db #{secedit_db} /cfg "#{ini_file}"
       secedit /configure /db #{secedit_db}
     cleanup_command: REG DELETE "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /V "calc" /f >nul 2>&1
     name: command_prompt
