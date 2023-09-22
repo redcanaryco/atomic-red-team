@@ -21,10 +21,10 @@ atomic_tests:
   - description: |
       Shim database file must exist on disk at specified location (#{file_path})
     prereq_command: |
-      if (Test-Path #{file_path}) {exit 0} else {exit 1}
+      if (Test-Path "#{file_path}") {exit 0} else {exit 1}
     get_prereq_command: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      New-Item -Type Directory (split-path #{file_path}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{file_path}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.011/bin/AtomicShimx86.sdb" -OutFile "#{file_path}"
   - description: |
       AtomicTest.dll must exist at c:\Tools\AtomicTest.dll
@@ -35,9 +35,9 @@ atomic_tests:
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.011/bin/AtomicTest.dll" -OutFile c:\Tools\AtomicTest.dll
   executor:
     command: |
-      sdbinst.exe #{file_path}
+      sdbinst.exe "#{file_path}"
     cleanup_command: |
-      sdbinst.exe -u #{file_path} >nul 2>&1
+      sdbinst.exe -u "#{file_path}" >nul 2>&1
     name: command_prompt
     elevation_required: true
 - name: New shim database files created in the default shim database directory
@@ -50,8 +50,8 @@ atomic_tests:
   - windows
   executor:
     command: |
-      Copy-Item $PathToAtomicsFolder\T1546.011\bin\T1546.011CompatDatabase.sdb C:\Windows\apppatch\Custom\T1546.011CompatDatabase.sdb
-      Copy-Item $PathToAtomicsFolder\T1546.011\bin\T1546.011CompatDatabase.sdb C:\Windows\apppatch\Custom\Custom64\T1546.011CompatDatabase.sdb
+      Copy-Item "$PathToAtomicsFolder\T1546.011\bin\T1546.011CompatDatabase.sdb" C:\Windows\apppatch\Custom\T1546.011CompatDatabase.sdb
+      Copy-Item "$PathToAtomicsFolder\T1546.011\bin\T1546.011CompatDatabase.sdb" C:\Windows\apppatch\Custom\Custom64\T1546.011CompatDatabase.sdb
     cleanup_command: |
       Remove-Item C:\Windows\apppatch\Custom\T1546.011CompatDatabase.sdb -ErrorAction Ignore
       Remove-Item C:\Windows\apppatch\Custom\Custom64\T1546.011CompatDatabase.sdb -ErrorAction Ignore

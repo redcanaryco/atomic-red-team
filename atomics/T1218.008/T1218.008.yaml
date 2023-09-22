@@ -17,9 +17,9 @@ atomic_tests:
   - description: |
       T1218-2.dll must exist on disk at specified location (#{dll_payload})
     prereq_command: |
-      if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
+      if (Test-Path "#{dll_payload}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{dll_payload}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.008/src/Win32/T1218-2.dll" -OutFile "#{dll_payload}"
   executor:
     command: |
@@ -46,12 +46,12 @@ atomic_tests:
   - description: |
       T1218.008.rsp must exist on disk at specified location (#{rsp_file_path}#{rsp_file_name})
     prereq_command: |
-      if (Test-Path #{rsp_file_path}#{rsp_file_name}) {exit 0} else {exit 1}
+      if (Test-Path "#{rsp_file_path}#{rsp_file_name}") {exit 0} else {exit 1}
     get_prereq_command: |
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.008/bin/T1218.008.rsp" -OutFile "#{rsp_file_path}#{rsp_file_name}"
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.008/bin/o.dll" -OutFile "#{rsp_file_path}\o.dll"
   executor:
     command: |
-      cd #{rsp_file_path}
-      odbcconf.exe -f #{rsp_file_name}
+      cd "#{rsp_file_path}"
+      odbcconf.exe -f "#{rsp_file_name}"
     name: command_prompt

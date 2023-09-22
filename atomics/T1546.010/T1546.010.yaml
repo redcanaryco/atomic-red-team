@@ -26,10 +26,10 @@ atomic_tests:
   - description: |
       Reg files must exist on disk at specified locations (#{registry_file} and #{registry_cleanup_file})
     prereq_command: |
-      if ((Test-Path #{registry_file}) -and (Test-Path #{registry_cleanup_file})) {exit 0} else {exit 1}
+      if ((Test-Path "#{registry_file}") -and (Test-Path "#{registry_cleanup_file}")) {exit 0} else {exit 1}
     get_prereq_command: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      New-Item -Type Directory (split-path #{registry_file}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{registry_file}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.010/src/T1546.010.reg" -OutFile "#{registry_file}"
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.010/src/T1546.010-cleanup.reg" -OutFile "#{registry_cleanup_file}"
   - description: |
@@ -42,8 +42,8 @@ atomic_tests:
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.010/bin/T1546.010x86.dll" -OutFile C:\Tools\T1546.010x86.dll
   executor:
     command: |
-      reg.exe import #{registry_file}
+      reg.exe import "#{registry_file}"
     cleanup_command: |
-      reg.exe import #{registry_cleanup_file} >nul 2>&1
+      reg.exe import "#{registry_cleanup_file}" >nul 2>&1
     name: command_prompt
     elevation_required: true

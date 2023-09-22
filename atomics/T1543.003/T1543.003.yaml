@@ -49,15 +49,15 @@ atomic_tests:
   - description: |
       Service binary must exist on disk at specified location (#{binary_path})
     prereq_command: |
-      if (Test-Path #{binary_path}) {exit 0} else {exit 1}
+      if (Test-Path "#{binary_path}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{binary_path}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{binary_path}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1543.003/bin/AtomicService.exe" -OutFile "#{binary_path}"
   executor:
     name: command_prompt
     elevation_required: true
     command: |
-      sc.exe create #{service_name} binPath= #{binary_path} start=#{startup_type}  type=#{service_type}
+      sc.exe create #{service_name} binPath= "#{binary_path}" start=#{startup_type}  type=#{service_type}
       sc.exe start #{service_name}
     cleanup_command: |
       sc.exe stop #{service_name} >nul 2>&1
@@ -84,9 +84,9 @@ atomic_tests:
   - description: |
       Service binary must exist on disk at specified location (#{binary_path})
     prereq_command: |
-      if (Test-Path #{binary_path}) {exit 0} else {exit 1}
+      if (Test-Path "#{binary_path}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{binary_path}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{binary_path}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1543.003/bin/AtomicService.exe" -OutFile "#{binary_path}"
   executor:
     name: powershell
@@ -113,7 +113,7 @@ atomic_tests:
       default: $PathToAtomicsFolder\T1543.003\bin\w64time.dll
   executor:
     command: |-
-      copy #{dllfilename} %systemroot%\system32\
+      copy "#{dllfilename}" %systemroot%\system32\
       sc create W64Time binPath= "c:\Windows\System32\svchost.exe -k TimeService" type= share start=auto
       sc config W64Time DisplayName= "Windows 64 Time"
       sc description W64Time "Maintain date and time synch on all clients and services in the network"
@@ -161,15 +161,15 @@ atomic_tests:
   - description: |
       Service binary must exist on disk at specified location (#{binary_path})
     prereq_command: |
-      if (Test-Path #{binary_path}) {exit 0} else {exit 1}
+      if (Test-Path "#{binary_path}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{binary_path}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{binary_path}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1543.003/bin/AtomicService.exe" -OutFile "#{binary_path}"
   executor:
     name: command_prompt
     elevation_required: true
     command: |
-      sc.exe \\#{remote_host} create #{service_name} binPath= #{binary_path} start=#{startup_type} type=#{service_type}
+      sc.exe \\#{remote_host} create #{service_name} binPath= "#{binary_path}" start=#{startup_type} type=#{service_type}
       sc.exe \\#{remote_host} start #{service_name}
     cleanup_command: |
       sc.exe \\#{remote_host} stop #{service_name} >nul 2>&1

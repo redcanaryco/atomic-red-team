@@ -61,11 +61,11 @@ atomic_tests:
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\PsTools.zip"
-      Expand-Archive PathToAtomicsFolder\..\ExternalPayloads\PsTools.zip PathToAtomicsFolder\..\ExternalPayloads\PsTools -Force
-      Copy-Item PathToAtomicsFolder\..\ExternalPayloads\PsTools\PsExec.exe "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe" -Force
+      Expand-Archive "PathToAtomicsFolder\..\ExternalPayloads\PsTools.zip" "PathToAtomicsFolder\..\ExternalPayloads\PsTools" -Force
+      Copy-Item "PathToAtomicsFolder\..\ExternalPayloads\PsTools\PsExec.exe" "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe" -Force
   executor:
     command: |
-      PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe \\#{remote_host} -u #{user_name} -p #{password} -accepteula "C:\Windows\System32\calc.exe"
+      "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe" \\#{remote_host} -u #{user_name} -p #{password} -accepteula "C:\Windows\System32\calc.exe"
     name: command_prompt
 - name: psexec.py (Impacket)
   auto_generated_guid: edbcd8c9-3639-4844-afad-455c91e95a35
@@ -126,9 +126,9 @@ atomic_tests:
       if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe") {exit 0} else {exit 1}
     get_prereq_command: |
       Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\PsTools.zip"
-      Expand-Archive PathToAtomicsFolder\..\ExternalPayloads\PsTools.zip PathToAtomicsFolder\..\ExternalPayloads\PsTools -Force
+      Expand-Archive "PathToAtomicsFolder\..\ExternalPayloads\PsTools.zip" "PathToAtomicsFolder\..\ExternalPayloads\PsTools" -Force
       New-Item -ItemType Directory (Split-Path "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe") -Force | Out-Null
-      Copy-Item PathToAtomicsFolder\..\ExternalPayloads\PsTools\PsExec.exe "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe" -Force
+      Copy-Item "PathToAtomicsFolder\..\ExternalPayloads\PsTools\PsExec.exe" "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe" -Force
   executor:
     command: |
       cmd.exe /c "wmic 	csproduct 	get UUID" 
