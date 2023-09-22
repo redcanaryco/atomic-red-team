@@ -2585,7 +2585,7 @@
   - Atomic Test #1: macOS/Linux - Simulate CPU Load with Yes [macos, linux]
 - T1565.002 Transmitted Data Manipulation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1485 Data Destruction](../../T1485/T1485.md)
-  - Atomic Test #1: Windows - Overwrite file with Sysinternals SDelete [windows]
+  - Atomic Test #1: Windows - Overwrite file with SysInternals SDelete [windows]
   - Atomic Test #2: macOS/Linux - Overwrite file with DD [linux, macos]
   - Atomic Test #3: Overwrite deleted data on C drive [windows]
   - Atomic Test #4: GCP - Delete Bucket [iaas:gcp]
