@@ -17,6 +17,7 @@ atomic_tests:
     prereq_command: |
       if ((Test-Path "PathToAtomicsFolder\..\ExternalPayloads\build\namedpipes_executor.exe") -and (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\build\namedpipes_client.exe") -and (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\build\namedpipes_server.exe")) {exit 0} else {exit 1}
     get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction ignore -Force | Out-Null
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-FetchFromZip.ps1" -UseBasicParsing)
       $zipUrl  = "https://github.com/center-for-threat-informed-defense/adversary_emulation_library/raw/master/micro_emulation_plans/src/named_pipes/named_pipes.zip"
