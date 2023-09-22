@@ -417,6 +417,6 @@ atomic_tests:
     command: |-
       Cd "C:\ProgramData\Microsoft\Windows\Start Menu\Programs"
       New-ItemProperty -Path Registry::HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office\16.0\Excel\Security -Name "VBAWarnings" -Value "1" -PropertyType DWORD -Force | Out-Null
-      & '.\Excel 2016.lnk' PathToAtomicsFolder\T1204.002\bin\mirrorblast_emulation.xlsm
+      & '.\Excel 2016.lnk' "PathToAtomicsFolder\T1204.002\bin\mirrorblast_emulation.xlsm"
     cleanup_command: reg delete "HKCU\SOFTWARE\Microsoft\Office\16.0\Excel\Security" /v "VBAWarnings" /f
     name: powershell

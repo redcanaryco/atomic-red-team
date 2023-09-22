@@ -26,9 +26,9 @@ atomic_tests:
   - description: |
       The MSI file must exist on disk at specified location (#{msi_payload})
     prereq_command: |
-      if (Test-Path #{msi_payload}) {exit 0} else {exit 1}
+      if (Test-Path "#{msi_payload}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{msi_payload}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{msi_payload}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/T1218.007_JScript.msi" -OutFile "#{msi_payload}"
   executor:
     command: |
@@ -59,9 +59,9 @@ atomic_tests:
   - description: |
       The MSI file must exist on disk at specified location (#{msi_payload})
     prereq_command: |
-      if (Test-Path #{msi_payload}) {exit 0} else {exit 1}
+      if (Test-Path "#{msi_payload}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{msi_payload}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{msi_payload}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/T1218.007_VBScript.msi" -OutFile "#{msi_payload}"
   executor:
     command: |
@@ -92,9 +92,9 @@ atomic_tests:
   - description: |
       The MSI file must exist on disk at specified location (#{msi_payload})
     prereq_command: |
-      if (Test-Path #{msi_payload}) {exit 0} else {exit 1}
+      if (Test-Path "#{msi_payload}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{msi_payload}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{msi_payload}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/T1218.007_DLL.msi" -OutFile "#{msi_payload}"
   executor:
     command: |
@@ -125,9 +125,9 @@ atomic_tests:
   - description: |
       The MSI file must exist on disk at specified location (#{msi_payload})
     prereq_command: |
-      if (Test-Path #{msi_payload}) {exit 0} else {exit 1}
+      if (Test-Path "#{msi_payload}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{msi_payload}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{msi_payload}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/T1218.007_EXE.msi" -OutFile "#{msi_payload}"
   executor:
     command: |
@@ -154,9 +154,9 @@ atomic_tests:
   - description: |
       The MSI file must exist on disk at specified location (#{msi_payload})
     prereq_command: |
-      if (Test-Path #{msi_payload}) {exit 0} else {exit 1}
+      if (Test-Path "#{msi_payload}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{msi_payload}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{msi_payload}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/T1218.007_JScript.msi" -OutFile "#{msi_payload}"
   executor:
     command: |
@@ -183,9 +183,9 @@ atomic_tests:
   - description: |
       The MSI file must exist on disk at specified location (#{msi_payload})
     prereq_command: |
-      if (Test-Path #{msi_payload}) {exit 0} else {exit 1}
+      if (Test-Path "#{msi_payload}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{msi_payload}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{msi_payload}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/T1218.007_VBScript.msi" -OutFile "#{msi_payload}"
   executor:
     command: |
@@ -212,9 +212,9 @@ atomic_tests:
   - description: |
       The MSI file must exist on disk at specified location (#{msi_payload})
     prereq_command: |
-      if (Test-Path #{msi_payload}) {exit 0} else {exit 1}
+      if (Test-Path "#{msi_payload}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{msi_payload}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{msi_payload}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/T1218.007_DLL.msi" -OutFile "#{msi_payload}"
   executor:
     command: |
@@ -241,9 +241,9 @@ atomic_tests:
   - description: |
       The MSI file must exist on disk at specified location (#{msi_payload})
     prereq_command: |
-      if (Test-Path #{msi_payload}) {exit 0} else {exit 1}
+      if (Test-Path "#{msi_payload}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{msi_payload}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{msi_payload}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/T1218.007_EXE.msi" -OutFile "#{msi_payload}"
   executor:
     command: |
@@ -269,9 +269,9 @@ atomic_tests:
   - description: |
       The DLL must exist on disk at specified location (#{dll_payload})
     prereq_command: |
-      if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
+      if (Test-Path "#{dll_payload}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{dll_payload}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/MSIRunner.dll -OutFile "#{dll_payload}"
   executor:
     command: |
@@ -297,9 +297,9 @@ atomic_tests:
   - description: |
       The DLL must exist on disk at specified location (#{dll_payload})
     prereq_command: |
-      if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
+      if (Test-Path "#{dll_payload}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{dll_payload}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/MSIRunner.dll -OutFile "#{dll_payload}"
   executor:
     command: |
