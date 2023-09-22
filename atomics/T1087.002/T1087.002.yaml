@@ -288,7 +288,7 @@ atomic_tests:
     prereq_command: |
       if (test-path "PathToAtomicsFolder\..\ExternalPayloads\username.txt"){exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path PathToAtomicsFolder\..\ExternalPayloads\username.txt -ErrorAction ignore -Force | Out-Null
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction ignore -Force | Out-Null
       invoke-webrequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1087.002/src/username.txt?raw=true" -outfile "PathToAtomicsFolder\..\ExternalPayloads\username.txt"
   executor:
     command: |-
