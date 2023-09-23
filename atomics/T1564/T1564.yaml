@@ -113,15 +113,15 @@ atomic_tests:
   - description: |
       The Nircmd executable must exist at (#{nircmd_location})
     prereq_command: |
-      if (Test-Path #{nircmd_location}) {exit 0} else {exit 1}
+      if (Test-Path "#{nircmd_location}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       invoke-webrequest "https://www.nirsoft.net/utils/nircmd-x64.zip" -outfile "PathToAtomicsFolder\..\ExternalPayloads\nircmd.zip" 
-      expand-archive -path "PathToAtomicsFolder\..\ExternalPayloads\nircmd.zip" -destinationpath PathToAtomicsFolder\..\ExternalPayloads\
+      expand-archive -path "PathToAtomicsFolder\..\ExternalPayloads\nircmd.zip" -destinationpath "PathToAtomicsFolder\..\ExternalPayloads\"
   executor:
     command: |
-      cmd /c #{nircmd_location} #{command_to_execute}
+      cmd /c "#{nircmd_location}" #{command_to_execute}
     cleanup_command: |
-      cmd /c #{nircmd_location} #{cleanup_command_to_execute} -erroraction silentlycontinue | out-null
+      cmd /c "#{nircmd_location}" #{cleanup_command_to_execute} -erroraction silentlycontinue | out-null
     name: powershell
     elevation_required: false

