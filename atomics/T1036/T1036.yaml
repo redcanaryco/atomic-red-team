@@ -32,10 +32,10 @@ atomic_tests:
       Invoke-WebRequest -OutFile "PathToAtomicsFolder\..\ExternalPayloads\T1036.zip" #{url}
   executor:
     command: |-
-      Expand-Archive -Path "PathToAtomicsFolder\..\ExternalPayloads\T1036.zip" -DestinationPath "PathToAtomicsFolder\..\ExternalPayloads\T1036" -Force
-      cd "PathToAtomicsFolder\..\ExternalPayloads\T1036"
-      cmd /c "PathToAtomicsFolder\..\ExternalPayloads\T1036\README.cmd" >$null 2>$null
+      Expand-Archive -Path "PathToAtomicsFolder\..\ExternalPayloads\T1036.zip" -DestinationPath "$env:userprofile\Downloads\T1036" -Force
+      cd "$env:userprofile\Downloadss\T1036"
+      cmd /c "$env:userprofile\Downloads\T1036\README.cmd" >$null 2>$null
     cleanup_command: |-
       taskkill /IM Calculator.exe /f >$null 2>$null
-      Remove-Item "PathToAtomicsFolder\..\ExternalPayloads\T1036" -recurse -ErrorAction Ignore
+      Remove-Item "$env:userprofile\Downloads\T1036" -recurse -ErrorAction Ignore
     name: powershell
