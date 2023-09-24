@@ -92,15 +92,15 @@ atomic_tests:
     prereq_command: if (test-path "#{tshark_path}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest -OutFile PathToAtomicsFolder\..\ExternalPayloads\wireshark_installer.exe #{wireshark_url}
-      Start-Process PathToAtomicsFolder\..\ExternalPayloads\wireshark_installer.exe /S
+      Invoke-WebRequest -OutFile "PathToAtomicsFolder\..\ExternalPayloads\wireshark_installer.exe" #{wireshark_url}
+      Start-Process "PathToAtomicsFolder\..\ExternalPayloads\wireshark_installer.exe" /S
   - description: |
       npcap must be installed.
     prereq_command: if (test-path "#{npcap_path}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest -OutFile PathToAtomicsFolder\..\ExternalPayloads\npcap_installer.exe #{npcap_url}
-      Start-Process PathToAtomicsFolder\..\ExternalPayloads\npcap_installer.exe
+      Invoke-WebRequest -OutFile "PathToAtomicsFolder\..\ExternalPayloads\npcap_installer.exe" #{npcap_url}
+      Start-Process "PathToAtomicsFolder\..\ExternalPayloads\npcap_installer.exe"
   executor:
     command: |
       "c:\Program Files\Wireshark\tshark.exe" -i #{interface} -c 5

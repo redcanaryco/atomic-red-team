@@ -1783,7 +1783,7 @@
 - T1496 Resource Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1565.002 Transmitted Data Manipulation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1485 Data Destruction](../../T1485/T1485.md)
-  - Atomic Test #1: Windows - Overwrite file with Sysinternals SDelete [windows]
+  - Atomic Test #1: Windows - Overwrite file with SysInternals SDelete [windows]
   - Atomic Test #3: Overwrite deleted data on C drive [windows]
 - T1498 Network Denial of Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1495 Firmware Corruption [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

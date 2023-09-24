@@ -22,9 +22,9 @@ atomic_tests:
   - description: |
       C# file must exist on disk at specified location (#{input_file})
     prereq_command: |
-      if (Test-Path #{input_file}) {exit 0} else {exit 1}
+      if (Test-Path "#{input_file}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{input_file}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{input_file}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027.004/src/calc.cs" -OutFile "#{input_file}"
   executor:
     command: |
@@ -51,12 +51,12 @@ atomic_tests:
   - description: |
       exe file must exist on disk at specified location (#{input_file})
     prereq_command: |
-      if (Test-Path #{input_file}) {exit 0} else {exit 1}
+      if (Test-Path "#{input_file}") {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027.004/bin/T1027.004_DynamicCompile.exe -OutFile #{input_file}
+      Invoke-WebRequest https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027.004/bin/T1027.004_DynamicCompile.exe -OutFile "#{input_file}"
   executor:
     command: |
-      Invoke-Expression #{input_file}
+      Invoke-Expression "#{input_file}"
     name: powershell
 
 - name: C compile
@@ -78,7 +78,7 @@ atomic_tests:
     prereq_command: |
       if [ -e  #{input_file} ]; then exit 0; else exit 1; fi
     get_prereq_command: |
-      wget https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027.004/src/T1027-004-test.c -O #{input_file}
+      wget https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027.004/src/T1027-004-test.c -O "#{input_file}"
   executor:
     command: |
       gcc #{input_file} && ./a.out
