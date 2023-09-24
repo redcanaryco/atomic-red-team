@@ -14,7 +14,7 @@ cl -DWINDOW -nologo -Os -O2 -Gm- -GR- -EHa -Oi -GS- -w ewm.c
 
 ren ewm.exe T1055.011_x86.exe
 move /Y T1055.011_x86.exe ..\bin\
-move /Y payload.exe32.bin ..\bin\
+move /Y payload.exe32.bin ..\bin\payload.exe_x86.bin
 
 echo "Cleaning files"
 del /Q *.obj

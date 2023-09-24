@@ -14,7 +14,7 @@ cl -DWINDOW -D_WIN64 -D_MSC_VER -nologo -Os -O2 -Gm- -GR- -EHa -Oi -GS- -w ewm.c
 
 ren ewm.exe T1055.011_x64.exe
 move /Y T1055.011_x64.exe ..\bin\
-move /Y payload.exe64.bin ..\bin\
+move /Y payload.exe64.bin ..\bin\payload.exe_x64.bin
 
 echo "Cleaning files"
 del /Q *.obj

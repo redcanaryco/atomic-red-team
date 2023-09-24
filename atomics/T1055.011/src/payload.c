@@ -48,21 +48,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg,
 {
     WinExec_t pWinExec;
     DWORD     szWinExec[2],
-              szCalc[2];
+              szNotepad[2];
     
-    // now call WinExec to start calc.exe
-    // WinExec
-    szWinExec[0]=0x456E6957;
-    szWinExec[1]=0x00636578;
-
-    // calc
-    szCalc[0] = 0x636C6163;
-    szCalc[1] = 0;
+    // now call WinExec to start notepad
+    szWinExec[0] = *(DWORD*)"WinE";
+    szWinExec[1] = *(DWORD*)"xec\0";
+    
+    szNotepad[0] = *(DWORD*)"note";
+    szNotepad[1] = *(DWORD*)"pad\0";
 
     pWinExec = (WinExec_t)xGetProcAddress(szWinExec);
     
     if(pWinExec != NULL) {
-      pWinExec((LPSTR)szCalc, SW_SHOW);
+      pWinExec((LPSTR)szNotepad, SW_SHOW);
     }
 
     return 0;
