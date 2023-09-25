@@ -235,6 +235,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\temp_T1027js.zip\T1027js.js") {exit 0} else {exit 1}
     get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       Invoke-WebRequest "#{url_path}" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\T1027js.zip"
       Expand-Archive -path "PathToAtomicsFolder\..\ExternalPayloads\T1027js.zip" -DestinationPath "PathToAtomicsFolder\..\ExternalPayloads\temp_T1027js.zip\" -Force
