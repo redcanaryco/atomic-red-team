@@ -371,6 +371,7 @@ atomic_tests:
       wmic path win32_VideoController get VideoModeDescription
       wmic OS get Caption,OSArchitecture,Version
       wmic DISKDRIVE get Caption
+      Get-WmiObject win32_bios
     name: command_prompt
 - name: Driver Enumeration using DriverQuery
   auto_generated_guid: bd85e3d1-4aeb-4a1d-850f-7be3cb8d60b9
@@ -396,4 +397,26 @@ atomic_tests:
     command: |
       wscript.exe C:\Windows\System32\gatherNetworkInfo.vbs
     elevation_required: true
+    name: command_prompt
+- name: Check computer location
+  description: |
+    Looks up country code configured in the registry, likely geofence. Upon execution, country code info will be displayed.
+    - https://tria.ge/210111-eaz8mqhgh6/behavioral1
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg query "HKEY_CURRENT_USER\Control Panel\International\Geo"
+    name: command_prompt
+- name: BIOS Information Discovery through Registry 
+  description: |
+    Looks up for BIOS information in the registry. BIOS information is often read in order to detect sandboxing environments.  Upon execution, BIOS information will be displayed.
+    - https://tria.ge/210111-eaz8mqhgh6/behavioral1
+    - https://evasions.checkpoint.com/techniques/registry.html
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg query HKEY_LOCAL_MACHINE\HARDWARE\DESCRIPTION\System /v SystemBiosVersion
+      reg query HKEY_LOCAL_MACHINE\HARDWARE\DESCRIPTION\System /v VideoBiosVersion
     name: command_prompt
