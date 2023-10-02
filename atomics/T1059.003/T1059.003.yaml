@@ -129,3 +129,24 @@ atomic_tests:
       cmd /r cmd<"#{input_file}"
     name: command_prompt
     elevation_required: false
+
+- name: Command prompt writing script to file then executes it
+  description: |2-
+        Simulate DarkGate malware's second stage by writing a VBscript to disk directly from the command prompt then executing it.
+        The script will execute 'whoami' then exit.
+  supported_platforms:
+  - windows
+  input_arguments:
+    script_path:
+      description: Path in which the script will be written.
+      type: path
+      default: '%TEMP%\'
+    script_name:
+      description: Script name (without the extension)
+      type: string
+      default: AtomicTest
+  executor:
+    command: ' c:\windows\system32\cmd.exe /c cd /d #{script_path} & echo Set objShell = CreateObject("WScript.Shell"):Set objExec = objShell.Exec("whoami"):Set objExec = Nothing:Set objShell = Nothing > #{script_name}.vbs & #{script_name}.vbs'
+    cleanup_command: del "#{script_name}.vbs" >nul 2>&1
+    name: command_prompt
+    elevation_required: true

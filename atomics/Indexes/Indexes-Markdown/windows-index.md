@@ -296,6 +296,7 @@
 - T1542.002 Component Firmware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1070 Indicator Removal on Host](../../T1070/T1070.md)
   - Atomic Test #1: Indicator Removal using FSUtil [windows]
+  - Atomic Test #2: Indicator Manipulation using FSUtil [windows]
 - [T1550.003 Use Alternate Authentication Material: Pass the Ticket](../../T1550.003/T1550.003.md)
   - Atomic Test #1: Mimikatz Kerberos Ticket Attack [windows]
   - Atomic Test #2: Rubeus Kerberos Pass The Ticket [windows]
@@ -1641,6 +1642,8 @@
   - Atomic Test #25: System Information Discovery with WMIC [windows]
   - Atomic Test #26: Driver Enumeration using DriverQuery [windows]
   - Atomic Test #27: System Information Discovery [windows]
+  - Atomic Test #28: Check computer location [windows]
+  - Atomic Test #29: BIOS Information Discovery through Registry [windows]
 - [T1010 Application Window Discovery](../../T1010/T1010.md)
   - Atomic Test #1: List Process Main Windows - C# .NET [windows]
 - T1087.003 Email Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
