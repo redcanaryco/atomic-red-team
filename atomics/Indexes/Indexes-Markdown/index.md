@@ -1,6 +1,7 @@
 # All Atomic Tests by ATT&CK Tactic & Technique
 # defense-evasion
-- T1055.011 Extra Window Memory Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1055.011 Process Injection: Extra Window Memory Injection](../../T1055.011/T1055.011.md)
+  - Atomic Test #1: Process Injection via Extra Window Memory (EWM) x64 executable [windows]
 - T1205.002 Socket Filters [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1066 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.011 Fileless Storage [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -759,7 +760,8 @@
   - Atomic Test #3: Registry-free process scope COR_PROFILER [windows]
 
 # privilege-escalation
-- T1055.011 Extra Window Memory Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1055.011 Process Injection: Extra Window Memory Injection](../../T1055.011/T1055.011.md)
+  - Atomic Test #1: Process Injection via Extra Window Memory (EWM) x64 executable [windows]
 - [T1053.005 Scheduled Task/Job: Scheduled Task](../../T1053.005/T1053.005.md)
   - Atomic Test #1: Scheduled Task Startup Script [windows]
   - Atomic Test #2: Scheduled task Local [windows]

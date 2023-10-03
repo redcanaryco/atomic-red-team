@@ -227,7 +227,7 @@ atomic_tests:
     url_path:
       description: url to download JScript file
       type: url
-      default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027/bin/T1027js.zip
+      default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027/bin/t1027js.zip
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -241,7 +241,7 @@ atomic_tests:
       Expand-Archive -path "PathToAtomicsFolder\..\ExternalPayloads\T1027js.zip" -DestinationPath "PathToAtomicsFolder\..\ExternalPayloads\temp_T1027js.zip\" -Force
   executor:
     command: |
-      "%temp%\temp_T1027js.zip\T1027js.js"
+      "PathToAtomicsFolder\..\ExternalPayloads\temp_T1027js.zip\T1027js.js"
     cleanup_command: |
       taskkill /f /im calculator.exe >nul 2>nul
     name: command_prompt
