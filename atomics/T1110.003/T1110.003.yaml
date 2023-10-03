@@ -283,6 +283,7 @@ atomic_tests:
     prereq_command: |
       if (test-path "PathToAtomicsFolder\..\ExternalPayloads\passwordspray.txt"){exit 0} else {exit 1}
     get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       invoke-webrequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1110.003/src/passwordspray.txt?raw=true" -outfile "PathToAtomicsFolder\..\ExternalPayloads\passwordspray.txt"
   executor:
     name: powershell
