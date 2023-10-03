@@ -1,4 +1,5 @@
 Tactic,Technique #,Technique Name,Test #,Test Name,Test GUID,Executor Name
+defense-evasion,T1055.011,Process Injection: Extra Window Memory Injection,1,Process Injection via Extra Window Memory (EWM) x64 executable,93ca40d2-336c-446d-bcef-87f14d438018,powershell
 defense-evasion,T1218.011,Signed Binary Proxy Execution: Rundll32,1,Rundll32 execute JavaScript Remote Payload With GetObject,57ba4ce9-ee7a-4f27-9928-3c70c489b59d,command_prompt
 defense-evasion,T1218.011,Signed Binary Proxy Execution: Rundll32,2,Rundll32 execute VBscript command,638730e7-7aed-43dc-bf8c-8117f805f5bb,command_prompt
 defense-evasion,T1218.011,Signed Binary Proxy Execution: Rundll32,3,Rundll32 execute VBscript command using Ordinal number,32d1cf1b-cbc2-4c09-8d05-07ec5c83a821,command_prompt
@@ -363,6 +364,7 @@ defense-evasion,T1127,Trusted Developer Utilities Proxy Execution,2,Lolbin Jsc.e
 defense-evasion,T1574.012,Hijack Execution Flow: COR_PROFILER,1,User scope COR_PROFILER,9d5f89dc-c3a5-4f8a-a4fc-a6ed02e7cb5a,powershell
 defense-evasion,T1574.012,Hijack Execution Flow: COR_PROFILER,2,System Scope COR_PROFILER,f373b482-48c8-4ce4-85ed-d40c8b3f7310,powershell
 defense-evasion,T1574.012,Hijack Execution Flow: COR_PROFILER,3,Registry-free process scope COR_PROFILER,79d57242-bbef-41db-b301-9d01d9f6e817,powershell
+privilege-escalation,T1055.011,Process Injection: Extra Window Memory Injection,1,Process Injection via Extra Window Memory (EWM) x64 executable,93ca40d2-336c-446d-bcef-87f14d438018,powershell
 privilege-escalation,T1053.005,Scheduled Task/Job: Scheduled Task,1,Scheduled Task Startup Script,fec27f65-db86-4c2d-b66c-61945aee87c2,command_prompt
 privilege-escalation,T1053.005,Scheduled Task/Job: Scheduled Task,2,Scheduled task Local,42f53695-ad4a-4546-abb6-7d837f644a71,command_prompt
 privilege-escalation,T1053.005,Scheduled Task/Job: Scheduled Task,3,Scheduled task Remote,2e5eac3e-327b-4a88-a0c0-c4057039a8dd,command_prompt
@@ -894,6 +896,7 @@ credential-access,T1003.001,OS Credential Dumping: LSASS Memory,9,Create Mini Du
 credential-access,T1003.001,OS Credential Dumping: LSASS Memory,10,Powershell Mimikatz,66fb0bc1-3c3f-47e9-a298-550ecfefacbc,powershell
 credential-access,T1003.001,OS Credential Dumping: LSASS Memory,11,Dump LSASS with createdump.exe from .Net v5,9d0072c8-7cca-45c4-bd14-f852cfa35cf0,powershell
 credential-access,T1003.001,OS Credential Dumping: LSASS Memory,12,Dump LSASS.exe using imported Microsoft DLLs,86fc3f40-237f-4701-b155-81c01c48d697,powershell
+credential-access,T1003.001,OS Credential Dumping: LSASS Memory,13,Dump LSASS.exe using lolbin rdrleakdiag.exe,47a539d1-61b9-4364-bf49-a68bc2a95ef0,powershell
 credential-access,T1110.003,Brute Force: Password Spraying,1,Password Spray all Domain Users,90bc2e54-6c84-47a5-9439-0a2a92b4b175,command_prompt
 credential-access,T1110.003,Brute Force: Password Spraying,2,Password Spray (DomainPasswordSpray),263ae743-515f-4786-ac7d-41ef3a0d4b2b,powershell
 credential-access,T1110.003,Brute Force: Password Spraying,3,Password spray all Active Directory domain users with a single password via LDAP against domain controller (NTLM or Kerberos),f14d956a-5b6e-4a93-847f-0c415142f07d,powershell
@@ -1076,6 +1079,9 @@ discovery,T1518.001,Software Discovery: Security Software Discovery,1,Security S
 discovery,T1518.001,Software Discovery: Security Software Discovery,2,Security Software Discovery - powershell,7f566051-f033-49fb-89de-b6bacab730f0,powershell
 discovery,T1518.001,Software Discovery: Security Software Discovery,5,Security Software Discovery - Sysmon Service,fe613cf3-8009-4446-9a0f-bc78a15b66c9,command_prompt
 discovery,T1518.001,Software Discovery: Security Software Discovery,6,Security Software Discovery - AV Discovery via WMI,1553252f-14ea-4d3b-8a08-d7a4211aa945,command_prompt
+discovery,T1518.001,Software Discovery: Security Software Discovery,7,Security Software Discovery - AV Discovery via Get-CimInstance and Get-WmiObject cmdlets,015cd268-996e-4c32-8347-94c80c6286ee,command_prompt
+discovery,T1518.001,Software Discovery: Security Software Discovery,8,Security Software Discovery - Windows Defender Enumeration,d3415a0e-66ef-429b-acf4-a768876954f6,powershell
+discovery,T1518.001,Software Discovery: Security Software Discovery,9,Security Software Discovery - Windows Firewall Enumeration,9dca5a1d-f78c-4a8d-accb-d6de67cfed6b,powershell
 discovery,T1018,Remote System Discovery,1,Remote System Discovery - net,85321a9c-897f-4a60-9f20-29788e50bccd,command_prompt
 discovery,T1018,Remote System Discovery,2,Remote System Discovery - net group Domain Computers,f1bf6c8f-9016-4edf-aff9-80b65f5d711f,command_prompt
 discovery,T1018,Remote System Discovery,3,Remote System Discovery - nltest,52ab5108-3f6f-42fb-8ba3-73bc054f22c8,command_prompt

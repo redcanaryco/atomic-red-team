@@ -1,6 +1,7 @@
 # All Atomic Tests by ATT&CK Tactic & Technique
 # defense-evasion
-- T1055.011 Extra Window Memory Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1055.011 Process Injection: Extra Window Memory Injection](../../T1055.011/T1055.011.md)
+  - Atomic Test #1: Process Injection via Extra Window Memory (EWM) x64 executable [windows]
 - T1205.002 Socket Filters [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1066 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.011 Fileless Storage [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -759,7 +760,8 @@
   - Atomic Test #3: Registry-free process scope COR_PROFILER [windows]
 
 # privilege-escalation
-- T1055.011 Extra Window Memory Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1055.011 Process Injection: Extra Window Memory Injection](../../T1055.011/T1055.011.md)
+  - Atomic Test #1: Process Injection via Extra Window Memory (EWM) x64 executable [windows]
 - [T1053.005 Scheduled Task/Job: Scheduled Task](../../T1053.005/T1053.005.md)
   - Atomic Test #1: Scheduled Task Startup Script [windows]
   - Atomic Test #2: Scheduled task Local [windows]
@@ -2059,6 +2061,7 @@
   - Atomic Test #10: Powershell Mimikatz [windows]
   - Atomic Test #11: Dump LSASS with createdump.exe from .Net v5 [windows]
   - Atomic Test #12: Dump LSASS.exe using imported Microsoft DLLs [windows]
+  - Atomic Test #13: Dump LSASS.exe using lolbin rdrleakdiag.exe [windows]
 - T1179 Hooking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1110.003 Brute Force: Password Spraying](../../T1110.003/T1110.003.md)
   - Atomic Test #1: Password Spray all Domain Users [windows]
@@ -2400,6 +2403,9 @@
   - Atomic Test #4: Security Software Discovery - ps (Linux) [linux]
   - Atomic Test #5: Security Software Discovery - Sysmon Service [windows]
   - Atomic Test #6: Security Software Discovery - AV Discovery via WMI [windows]
+  - Atomic Test #7: Security Software Discovery - AV Discovery via Get-CimInstance and Get-WmiObject cmdlets [windows]
+  - Atomic Test #8: Security Software Discovery - Windows Defender Enumeration [windows]
+  - Atomic Test #9: Security Software Discovery - Windows Firewall Enumeration [windows]
 - [T1526 Cloud Service Discovery](../../T1526/T1526.md)
   - Atomic Test #1: Azure - Dump Subscription Data with MicroBurst [iaas:azure]
 - [T1018 Remote System Discovery](../../T1018/T1018.md)
