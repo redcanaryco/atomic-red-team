@@ -19,6 +19,9 @@ atomic_tests:
       netsh.exe firewall show state
       netsh.exe firewall show config
       sc query windefend
+      powershell.exe /c "Get-Process | Where-Object { $_.ProcessName -eq 'Sysmon' }"
+      powershell.exe /c "Get-Service | where-object {$_.DisplayName -like '*sysm*'}"
+      powershell.exe /c "Get-CimInstance Win32_Service -Filter 'Description = ''System Monitor service'''"
       tasklist.exe
       tasklist.exe | findstr /i virus
       tasklist.exe | findstr /i cb
@@ -73,18 +76,15 @@ atomic_tests:
 - name: Security Software Discovery - Sysmon Service
   auto_generated_guid: fe613cf3-8009-4446-9a0f-bc78a15b66c9
   description: |
-    Discovery of an installed Sysinternals Sysmon service using driver altitude (even if the name is changed) and various other methods.
+    Discovery of an installed Sysinternals Sysmon service using driver altitude (even if the name is changed).
 
-    when sucessfully executed, the test is going to display sysmon driver instance,processes,service if it is installed.
+    when sucessfully executed, the test is going to display sysmon driver instance if it is installed.
   supported_platforms:
   - windows
   executor:
     command: |
       fltmc.exe | findstr.exe 385201
-      Get-Process | Where-Object { $_.ProcessName -eq "Sysmon" }
-      Get-Service | where-object {$_.DisplayName -like "*sysm*"}
-      Get-CimInstance win32_service -Filter "Description = 'System Monitor service'"
-    name: powershell
+    name: command_prompt
     elevation_required: true
 - name: Security Software Discovery - AV Discovery via WMI
   auto_generated_guid: 1553252f-14ea-4d3b-8a08-d7a4211aa945
