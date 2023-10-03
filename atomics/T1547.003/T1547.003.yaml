@@ -15,7 +15,7 @@ atomic_tests:
   executor:
     command: |
       net stop w32time
-      Copy-Item $PathToAtomicsFolder\T1547.003\bin\AtomicTest.dll C:\Users\Public\AtomicTest.dll
+      Copy-Item "$PathToAtomicsFolder\T1547.003\bin\AtomicTest.dll" C:\Users\Public\AtomicTest.dll
       reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\W32Time\TimeProviders\AtomicTest" /t REG_SZ /v "DllName" /d "C:\Users\Public\AtomicTest.dll" /f
       reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\W32Time\TimeProviders\AtomicTest" /t REG_DWORD /v "Enabled" /d "1" /f
       reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\W32Time\TimeProviders\AtomicTest" /t REG_DWORD /v "InputProvider" /d "1" /f
@@ -42,7 +42,7 @@ atomic_tests:
   executor:
     command: |
       net stop w32time
-      Copy-Item $PathToAtomicsFolder\T1547.003\bin\AtomicTest.dll C:\Users\Public\AtomicTest.dll
+      Copy-Item "$PathToAtomicsFolder\T1547.003\bin\AtomicTest.dll" C:\Users\Public\AtomicTest.dll
       reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\W32Time\TimeProviders\NtpServer" /t REG_SZ /v "DllName" /d "C:\Users\Public\AtomicTest.dll" /f
       reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\W32Time\TimeProviders\NtpServer" /t REG_DWORD /v "Enabled" /d "1" /f
       reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\W32Time\TimeProviders\NtpServer" /t REG_DWORD /v "InputProvider" /d "1" /f

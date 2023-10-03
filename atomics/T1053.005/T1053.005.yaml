@@ -143,9 +143,9 @@ atomic_tests:
   - description: |
       File to copy must exist on disk at specified location (#{xml_path})
     prereq_command: |
-      if (Test-Path #{xml_path}) {exit 0} else {exit 1}
+      if (Test-Path "#{xml_path}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{xml_path}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{xml_path}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1053.005/src/T1053_005_WMI.xml" -OutFile "#{xml_path}"
   executor:
     name: powershell
@@ -195,9 +195,9 @@ atomic_tests:
   - description: |
       File to copy must exist on disk at specified location (#{xml_path})
     prereq_command: |
-      if (Test-Path #{xml_path}) {exit 0} else {exit 1}
+      if (Test-Path "#{xml_path}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{xml_path}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{xml_path}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1053.005/src/T1053_05_SCTASK_HIDDEN_ATTRIB.xml" -OutFile "#{xml_path}"
   executor:
     name: powershell
