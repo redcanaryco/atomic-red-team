@@ -1,0 +1,37 @@
+attack_technique: T1055.011
+display_name: "Process Injection: Extra Window Memory Injection"
+atomic_tests:
+  - name: Process Injection via Extra Window Memory (EWM) x64 executable
+    description: Hooks functions of main process to inject a payload via Extra Window Memory (EWM) injection technique
+    supported_platforms:
+      - windows
+    input_arguments:
+      arch:
+        description: Architecture of payload
+        type: string
+        default: x64
+        choices:
+          - x64
+          - x86
+      exe_binary:
+        description: PE binary for EWM injection
+        type: path
+        default: PathToAtomicsFolder\T1055.011\bin\T1055.011_#{arch}.exe
+      payload_file:
+        description: raw payload to inject
+        type: path
+        default: PathToAtomicsFolder\T1055.011\bin\payload.exe_#{arch}.bin
+    dependency_executor_name: powershell
+    dependencies:
+      - description: "T1055.011x64.exe and payload must exist on disk at specified location (#{exe_binary} and #{payload_file})"
+        prereq_command: "if (Test-Path #{exe_binary}) {exit 0} else {exit 1}"
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{exe_binary}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1055.011/bin/T1055.011_#{arch}.exe" -OutFile "#{exe_binary}" -UseBasicParsing
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1055.011/bin/payload.exe_#{arch}.bin" -OutFile "#{payload_file}" -UseBasicParsing
+    executor:
+      command: |-
+        #{exe_binary}
+      cleanup_command: 'Get-Process -Name Notepad -ErrorAction SilentlyContinue | Stop-Process -Force'
+      name: powershell
+      elevation_required: false
