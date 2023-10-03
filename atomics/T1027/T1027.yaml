@@ -241,7 +241,7 @@ atomic_tests:
       Expand-Archive -path "PathToAtomicsFolder\..\ExternalPayloads\T1027js.zip" -DestinationPath "PathToAtomicsFolder\..\ExternalPayloads\temp_T1027js.zip\" -Force
   executor:
     command: |
-      "%temp%\temp_T1027js.zip\T1027js.js"
+      "PathToAtomicsFolder\..\ExternalPayloads\temp_T1027js.zip\T1027js.js"
     cleanup_command: |
       taskkill /f /im calculator.exe >nul 2>nul
     name: command_prompt
