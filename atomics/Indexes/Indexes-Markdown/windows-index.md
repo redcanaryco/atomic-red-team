@@ -1467,6 +1467,7 @@
   - Atomic Test #10: Powershell Mimikatz [windows]
   - Atomic Test #11: Dump LSASS with createdump.exe from .Net v5 [windows]
   - Atomic Test #12: Dump LSASS.exe using imported Microsoft DLLs [windows]
+  - Atomic Test #13: Dump LSASS.exe using lolbin rdrleakdiag.exe [windows]
 - T1179 Hooking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1110.003 Brute Force: Password Spraying](../../T1110.003/T1110.003.md)
   - Atomic Test #1: Password Spray all Domain Users [windows]
@@ -1718,6 +1719,9 @@
   - Atomic Test #2: Security Software Discovery - powershell [windows]
   - Atomic Test #5: Security Software Discovery - Sysmon Service [windows]
   - Atomic Test #6: Security Software Discovery - AV Discovery via WMI [windows]
+  - Atomic Test #7: Security Software Discovery - AV Discovery via Get-CimInstance and Get-WmiObject cmdlets [windows]
+  - Atomic Test #8: Security Software Discovery - Windows Defender Enumeration [windows]
+  - Atomic Test #9: Security Software Discovery - Windows Firewall Enumeration [windows]
 - [T1018 Remote System Discovery](../../T1018/T1018.md)
   - Atomic Test #1: Remote System Discovery - net [windows]
   - Atomic Test #2: Remote System Discovery - net group Domain Computers [windows]
