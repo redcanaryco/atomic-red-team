@@ -652,3 +652,18 @@ atomic_tests:
     cleanup_command: |
       Remove-Item #{commandpath} -Recurse -Force
     name: powershell
+- name: Disable UAC - Switch to the secure desktop when prompting for elevation via registry key
+  auto_generated_guid: 85f3a526-4cfa-4fe7-98c1-dea99be025c7
+  description: |
+    User Account Control (UAC) is a security mechanism for limiting the elevation of privileges, including administrative accounts, unless authorized. 
+    This setting ensures that the elevation prompt is only used in secure desktop mode.
+    Disable User Account Conrol (UAC) for secure desktop by setting the registry key HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\PromptOnSecureDesktop to 0.
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      Set-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -Name PromptOnSecureDesktop -Value 0 -Type Dword -Force
+    cleanup_command: |
+      Set-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -Name PromptOnSecureDesktop -Value 1 -Type Dword -Force
+    name: powershell
+    elevation_required: true
