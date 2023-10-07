@@ -90,7 +90,7 @@ atomic_tests:
     cleanup_command: |
       reg add "HKLM\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v PortNumber /t REG_DWORD /d #{OLD_Remote_Port} /f >nul 2>&1
       netsh advfirewall firewall delete rule name="RDPPORTLatest-TCP-In" >nul 2>&1
-      net stop TermService >nul 2>&1
+      net stop TermService /y >nul 2>&1
       net start TermService >nul 2>&1
     name: command_prompt
     elevation_required: true
