@@ -111,11 +111,10 @@ atomic_tests:
       Expand-Archive -path "PathToAtomicsFolder\..\ExternalPayloads\T1027.zip" -DestinationPath "PathToAtomicsFolder\..\ExternalPayloads\temp_T1027.zip\" -Force
   executor:
     command: |
-      "%temp%\temp_T1027.zip\T1027.exe"
+      "PathToAtomicsFolder\..\ExternalPayloads\temp_T1027.zip\T1027.exe"
     cleanup_command: |
       taskkill /f /im calculator.exe >nul 2>nul
-      rmdir /S /Q %temp%\temp_T1027.zip >nul 2>nul
-      del /Q "%temp%\T1027.zip" >nul 2>nul
+      taskkill /f /im CalculatorApp.exe >nul 2>nul
     name: command_prompt
 - name: DLP Evasion via Sensitive Data in VBA Macro over email
   auto_generated_guid: 129edb75-d7b8-42cd-a8ba-1f3db64ec4ad
