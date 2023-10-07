@@ -26,7 +26,7 @@ atomic_tests:
     user:
       description: User to identify what groups a user is a member of
       type: string
-      default: administrator
+      default: $env:USERNAME
   executor:
     command: |
       get-ADPrincipalGroupMembership #{user} | select name
