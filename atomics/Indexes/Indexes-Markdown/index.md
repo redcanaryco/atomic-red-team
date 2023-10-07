@@ -1847,6 +1847,7 @@
 - [T1056.002 Input Capture: GUI Input Capture](../../T1056.002/T1056.002.md)
   - Atomic Test #1: AppleScript - Prompt User for Password [macos]
   - Atomic Test #2: PowerShell - Prompt User for Password [windows]
+  - Atomic Test #3: AppleScript - Spoofing a credential prompt using osascript [macos]
 - [T1039 Data from Network Shared Drive](../../T1039/T1039.md)
   - Atomic Test #1: Copy a sensitive File over Administrative share with copy [windows]
   - Atomic Test #2: Copy a sensitive File over Administrative share with Powershell [windows]
@@ -2112,6 +2113,7 @@
 - [T1056.002 Input Capture: GUI Input Capture](../../T1056.002/T1056.002.md)
   - Atomic Test #1: AppleScript - Prompt User for Password [macos]
   - Atomic Test #2: PowerShell - Prompt User for Password [windows]
+  - Atomic Test #3: AppleScript - Spoofing a credential prompt using osascript [macos]
 - T1110 Brute Force [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1110.004 Brute Force: Credential Stuffing](../../T1110.004/T1110.004.md)
   - Atomic Test #1: SSH Credential Stuffing From Linux [linux]
