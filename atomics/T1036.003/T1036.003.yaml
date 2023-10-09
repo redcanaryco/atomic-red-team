@@ -67,10 +67,6 @@ atomic_tests:
     command: |
       copy %SystemRoot%\System32\wscript.exe %APPDATA%\svchost.exe /Y
       cmd.exe /c %APPDATA%\svchost.exe "PathToAtomicsFolder\..\ExternalPayloads\T1036.003\src\T1036.003_masquerading.vbs"
-  executor:
-    command: |
-      copy %SystemRoot%\System32\wscript.exe %APPDATA%\svchost.exe /Y
-      cmd.exe /c %APPDATA%\svchost.exe /B
     cleanup_command: |
       del /Q /F %APPDATA%\svchost.exe >nul 2>&1
     name: command_prompt
