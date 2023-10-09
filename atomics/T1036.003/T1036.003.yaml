@@ -114,7 +114,8 @@ atomic_tests:
   executor:
     command: |
       copy "#{inputfile}" #{outputfile}
-      $myT1036_003 = (Start-Process -PassThru -FilePath #{outputfile}).Id
+      try { $myT1036_003 = (Start-Process -PassThru -FilePath #{outputfile}).Id }
+      catch { $_; exit $_.Exception.HResult}
       Stop-Process -ID $myT1036_003
     cleanup_command: |
       Remove-Item #{outputfile} -Force -ErrorAction Ignore
