@@ -54,10 +54,19 @@ atomic_tests:
     Upon execution, no windows will remain open but wscript will have been renamed to svchost and ran out of the temp folder
   supported_platforms:
   - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Wscript file to execute must exist on disk
+    prereq_command: |
+      if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\T1036.003\src\T1036.003_masquerading.vbs") {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path "PathToAtomicsFolder\..\ExternalPayloads\T1036.003\src\T1036.003_masquerading.vbs") -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1036.003/src/T1036.003_masquerading.vbs" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\T1036.003\src\T1036.003_masquerading.vbs"
   executor:
     command: |
       copy %SystemRoot%\System32\wscript.exe %APPDATA%\svchost.exe /Y
-      cmd.exe /c %APPDATA%\svchost.exe /B
+      cmd.exe /c %APPDATA%\svchost.exe "PathToAtomicsFolder\..\ExternalPayloads\T1036.003\src\T1036.003_masquerading.vbs"
     cleanup_command: |
       del /Q /F %APPDATA%\svchost.exe >nul 2>&1
     name: command_prompt
@@ -105,7 +114,8 @@ atomic_tests:
   executor:
     command: |
       copy "#{inputfile}" #{outputfile}
-      $myT1036_003 = (Start-Process -PassThru -FilePath #{outputfile}).Id
+      try { $myT1036_003 = (Start-Process -PassThru -FilePath #{outputfile}).Id }
+      catch { $_; exit $_.Exception.HResult}
       Stop-Process -ID $myT1036_003
     cleanup_command: |
       Remove-Item #{outputfile} -Force -ErrorAction Ignore
