@@ -364,7 +364,8 @@ atomic_tests:
     name: powershell
     elevation_required: false
     command: |
-      get-wmiobject -class ds_computer -namespace root\directory\ldap
+      try { get-wmiobject -class ds_computer -namespace root\directory\ldap -ErrorAction Stop }
+      catch { $_; exit $_.Exception.HResult }
 - name: Remote System Discovery - net group Domain Controller
   auto_generated_guid: 5843529a-5056-4bc1-9c13-a311e2af4ca0
   description: |
