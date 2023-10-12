@@ -21,8 +21,8 @@ atomic_tests:
       Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.007/src/sys_info.js" -OutFile "#{jscript}"
   executor:
     command: |
-      cscript "#{jscript}" > $env:TEMP\T1059.007.out.txt
-    cleanup_command: del $env:TEMP\T1059.007.out.txt >nul 2>&1
+      cscript "#{jscript}" > %tmp%\T1059.007.out.txt
+    cleanup_command: del %tmp%\T1059.007.out.txt >nul 2>&1
     name: command_prompt
 - name: JScript execution to gather local computer information via wscript
   auto_generated_guid: 0709945e-4fec-4c49-9faf-c3c292a74484
