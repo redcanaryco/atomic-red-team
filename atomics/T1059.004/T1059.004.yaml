@@ -230,3 +230,13 @@ atomic_tests:
       ls -la /tmp/art.txt      
     cleanup_command: |
       rm /tmp/art.txt
+- name: Current kernel information enumeration
+  description: |
+    An adversary may want to enumerate the kernel information to tailor their attacks for that particular kernel. The following command will enumerate the kernel information.
+  supported_platforms:
+  - linux
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      uname -srm
