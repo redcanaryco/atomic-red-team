@@ -37,7 +37,8 @@ atomic_tests:
   executor:
     command: |
       import-module "PathToAtomicsFolder\..\ExternalPayloads\SharpHound.ps1"
-      Invoke-BloodHound -OutputDirectory $env:Temp
+      try { Invoke-BloodHound -OutputDirectory $env:Temp }
+      catch { $_; exit $_.Exception.HResult}
       Start-Sleep 5
     cleanup_command: |
       Remove-Item $env:Temp\*BloodHound.zip -Force
