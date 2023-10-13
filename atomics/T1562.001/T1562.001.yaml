@@ -924,3 +924,19 @@ atomic_tests:
       echo "If test successfully ran, no cleanup required."
     name: bash
     elevation_required: false
+- name: Tamper with Defender ATP on Linux/MacOS
+  auto_generated_guid: 
+  description: With root privileges, an adversary can disable real time protection. Note, this test assumes Defender is not in passive mode and real-time protection is enabled. The use of a managed.json on Linux or Defender .plist on MacOS will prevent these changes. Tamper protection will also prevent this (available on MacOS, but not Linux at the time of writing).
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments: 
+  dependency_executor_name: 
+  dependencies: 
+  executor:
+    command: sudo mdatp config real-time-protection --value disabled
+    cleanup_command: sudo mdatp config real-time-protection --value enabled
+    name: sh
+    elevation_required: true
+  
+  
