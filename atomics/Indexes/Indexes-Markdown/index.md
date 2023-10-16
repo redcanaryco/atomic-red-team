@@ -1222,6 +1222,7 @@
   - Atomic Test #10: Change login shell [linux]
   - Atomic Test #11: Environment variable scripts [linux]
   - Atomic Test #12: Detecting pipe-to-shell [linux]
+  - Atomic Test #13: Current kernel information enumeration [linux]
 - [T1559 Inter-Process Communication](../../T1559/T1559.md)
   - Atomic Test #1: Cobalt Strike Artifact Kit pipe [windows]
   - Atomic Test #2: Cobalt Strike Lateral Movement (psexec_psh) pipe [windows]
