@@ -11,11 +11,13 @@ atomic_tests:
   executor:
     elevation_required: true
     command: |
-      $ACL = Get-Acl $fileName
+      $termsrvDll = "C:\Windows\System32\termsrv.dll"
+
+      $ACL = Get-Acl $termsrvDll
       $permission = "Administrators","FullControl","Allow"
       $accessRule = New-Object System.Security.AccessControl.FileSystemAccessRule $permission
       $ACL.SetAccessRule($accessRule)
-      Set-Acl -Path $fileName -AclObject $ACL
+      Set-Acl -Path $termsrvDll -AclObject $ACL
 
       Copy-Item -Path "C:\Windows\System32\termsrv.dll" -Destination "C:\Windows\System32\termsrv_backup.dll" -ErrorAction Ignore
       Add-Content -Path "C:\Windows\System32\termsrv.dll" -Value "`n" -NoNewline -ErrorAction Ignore
@@ -23,3 +25,42 @@ atomic_tests:
     cleanup_command: |
       Move-Item -Path "C:\Windows\System32\termsrv_backup.dll" -Destination "C:\Windows\System32\termsrv.dll" -Force -ErrorAction Ignore
     name: powershell
+
+- name: Modify Terminal Services DLL Path
+  auto_generated_guid: 
+  description: This atomic test simulates the modification of the ServiceDll value in HKLM\System\CurrentControlSet\services\TermService\Parameters. This technique may be leveraged by adversaries to establish persistence by loading a patched version of the DLL containing malicious code.
+  supported_platforms:
+  - windows
+  input_arguments: 
+  dependency_executor_name: 
+  dependencies: 
+  executor:
+    command: |-
+      $termsrvDll = "C:\Windows\System32\termsrv.dll"
+
+      $ACL = Get-Acl $termsrvDll
+      $permission = "Administrators","FullControl","Allow"
+      $accessRule = New-Object System.Security.AccessControl.FileSystemAccessRule $permission
+      $ACL.SetAccessRule($accessRule)
+      Set-Acl -Path $termsrvDll -AclObject $ACL
+
+      Copy-Item -Path $termsrvDll -Destination "$HOME\AtomicTest.dll"
+
+      $newServiceDll = "$HOME\AtomicTest.dll"
+
+      $registryPath = "HKLM:\System\CurrentControlSet\services\TermService\Parameters"
+
+      # Check if the registry key exists
+      if (Test-Path -Path $registryPath) {
+          # Modify the ServiceDll value in the registry
+          Set-ItemProperty -Path $registryPath -Name "ServiceDll" -Value $newServiceDll
+          Write-Host "ServiceDll value in the registry has been updated to: $newServiceDll"
+      } else {
+          Write-Host "Registry key not found. Make sure the 'TermService\Parameters' key exists."
+      }
+
+    cleanup_command: Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\services\TermService\Parameters" -Name "ServiceDll" -Value "C:\Windows\System32\termsrv.dll"
+
+    name: powershell
+
+    elevation_required: true
