@@ -713,6 +713,8 @@
   - Atomic Test #6: Hide a Directory [macos]
   - Atomic Test #7: Show all hidden files [macos]
   - Atomic Test #8: Hide Files Through Registry [windows]
+  - Atomic Test #9: Create Windows Hidden File with powershell [windows]
+  - Atomic Test #10: Create Windows System File with powershell [windows]
 - T1578.001 Create Snapshot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1550.001 Application Access Token [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1078.004 Valid Accounts: Cloud Accounts](../../T1078.004/T1078.004.md)
@@ -1356,6 +1358,7 @@
   - Atomic Test #1: Install and Register Password Filter DLL [windows]
 - [T1505.005 Server Software Component: Terminal Services DLL](../../T1505.005/T1505.005.md)
   - Atomic Test #1: Simulate Patching termsrv.dll [windows]
+  - Atomic Test #2: Modify Terminal Services DLL Path [windows]
 - [T1176 Browser Extensions](../../T1176/T1176.md)
   - Atomic Test #1: Chrome (Developer Mode) [linux, windows, macos]
   - Atomic Test #2: Chrome (Chrome Web Store) [linux, windows, macos]
