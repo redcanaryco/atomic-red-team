@@ -713,6 +713,8 @@
   - Atomic Test #6: Hide a Directory [macos]
   - Atomic Test #7: Show all hidden files [macos]
   - Atomic Test #8: Hide Files Through Registry [windows]
+  - Atomic Test #9: Create Windows Hidden File with powershell [windows]
+  - Atomic Test #10: Create Windows System File with powershell [windows]
 - T1578.001 Create Snapshot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1550.001 Application Access Token [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1078.004 Valid Accounts: Cloud Accounts](../../T1078.004/T1078.004.md)

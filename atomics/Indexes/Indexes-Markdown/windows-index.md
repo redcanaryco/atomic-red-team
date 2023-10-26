@@ -516,6 +516,8 @@
   - Atomic Test #3: Create Windows System File with Attrib [windows]
   - Atomic Test #4: Create Windows Hidden File with Attrib [windows]
   - Atomic Test #8: Hide Files Through Registry [windows]
+  - Atomic Test #9: Create Windows Hidden File with powershell [windows]
+  - Atomic Test #10: Create Windows System File with powershell [windows]
 - T1480.001 Environmental Keying [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1564.004 Hide Artifacts: NTFS File Attributes](../../T1564.004/T1564.004.md)
   - Atomic Test #1: Alternate Data Streams (ADS) [windows]
