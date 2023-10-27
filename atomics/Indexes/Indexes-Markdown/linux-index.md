@@ -146,6 +146,7 @@
   - Atomic Test #40: Reboot Linux Host via Kernel System Request [linux]
   - Atomic Test #41: Clear Pagging Cache [linux]
   - Atomic Test #42: Disable Memory Swap [linux]
+  - Atomic Test #46: Tamper with Defender ATP on Linux/MacOS [linux, macos]
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

@@ -551,6 +551,7 @@
   - Atomic Test #43: Disable Hypervisor-Enforced Code Integrity (HVCI) [windows]
   - Atomic Test #44: AMSI Bypass - Override AMSI via COM [windows]
   - Atomic Test #45: AWS - GuardDuty Suspension or Deletion [iaas:aws]
+  - Atomic Test #46: Tamper with Defender ATP on Linux/MacOS [linux, macos]
 - T1601 Modify System Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

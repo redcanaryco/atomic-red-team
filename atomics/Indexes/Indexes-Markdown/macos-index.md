@@ -129,6 +129,7 @@
   - Atomic Test #7: Disable OpenDNS Umbrella [macos]
   - Atomic Test #8: Disable macOS Gatekeeper [macos]
   - Atomic Test #9: Stop and unload Crowdstrike Falcon on macOS [macos]
+  - Atomic Test #46: Tamper with Defender ATP on Linux/MacOS [linux, macos]
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
