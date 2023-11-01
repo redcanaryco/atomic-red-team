@@ -72,6 +72,7 @@ defense-evasion,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,6
 defense-evasion,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,7,Do reconnaissance for files that have the setgid bit set,3fb46e17-f337-4c14-9f9a-a471946533e2,sh
 defense-evasion,T1562.006,Impair Defenses: Indicator Blocking,1,Auditing Configuration Changes on Linux Host,212cfbcf-4770-4980-bc21-303e37abd0e3,bash
 defense-evasion,T1562.006,Impair Defenses: Indicator Blocking,2,Logging Configuration Changes on Linux Host,7d40bc58-94c7-4fbb-88d9-ebce9fcdb60c,bash
+defense-evasion,T1036.004,Masquerading: Masquerade Task or Service,3,linux rename /proc/pid/comm using prctl,f0e3aaea-5cd9-4db6-a077-631dd19b27a8,sh
 defense-evasion,T1562.003,Impair Defenses: HISTCONTROL,1,Disable history collection,4eafdb45-0f79-4d66-aa86-a3e2c08791f5,sh
 defense-evasion,T1562.003,Impair Defenses: HISTCONTROL,2,Mac HISTCONTROL,468566d5-83e5-40c1-b338-511e1659628d,manual
 defense-evasion,T1562.003,Impair Defenses: HISTCONTROL,3,Clear bash history,878794f7-c511-4199-a950-8c28b3ed8e5b,bash
@@ -83,11 +84,12 @@ defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,1,Disable sys
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,2,Disable Cb Response,ae8943f7-0f8d-44de-962d-fbc2e2f03eb8,sh
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,3,Disable SELinux,fc225f36-9279-4c39-b3f9-5141ab74f8d8,sh
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,4,Stop Crowdstrike Falcon on Linux,828a1278-81cc-4802-96ab-188bf29ca77d,sh
-defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,39,Clear History,23b88394-091b-4968-a42d-fb8076992443,sh
-defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,40,Suspend History,94f6a1c9-aae7-46a4-9083-2bb1f5768ec4,sh
-defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,41,Reboot Linux Host via Kernel System Request,6d6d3154-1a52-4d1a-9d51-92ab8148b32e,sh
-defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,42,Clear Pagging Cache,f790927b-ea85-4a16-b7b2-7eb44176a510,sh
-defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,43,Disable Memory Swap,e74e4c63-6fde-4ad2-9ee8-21c3a1733114,sh
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,38,Clear History,23b88394-091b-4968-a42d-fb8076992443,sh
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,39,Suspend History,94f6a1c9-aae7-46a4-9083-2bb1f5768ec4,sh
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,40,Reboot Linux Host via Kernel System Request,6d6d3154-1a52-4d1a-9d51-92ab8148b32e,sh
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,41,Clear Pagging Cache,f790927b-ea85-4a16-b7b2-7eb44176a510,sh
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,42,Disable Memory Swap,e74e4c63-6fde-4ad2-9ee8-21c3a1733114,sh
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,46,Tamper with Defender ATP on Linux/MacOS,40074085-dbc8-492b-90a3-11bcfc52fda8,sh
 defense-evasion,T1027,Obfuscated Files or Information,1,Decode base64 Data into Script,f45df6be-2e1e-4136-a384-8f18ab3826fb,sh
 defense-evasion,T1036.003,Masquerading: Rename System Utilities,2,Masquerading as Linux crond process.,a315bfff-7a98-403b-b442-2ea1b255e556,sh
 defense-evasion,T1553.004,Subvert Trust Controls: Install Root Certificate,1,Install root CA on CentOS/RHEL,9c096ec4-fd42-419d-a762-d64cc950627e,sh
@@ -121,6 +123,8 @@ persistence,T1574.006,Hijack Execution Flow: LD_PRELOAD,2,Shared Library Injecti
 persistence,T1136.001,Create Account: Local Account,1,Create a user account on a Linux system,40d8eabd-e394-46f6-8785-b9bfa1d011d2,bash
 persistence,T1136.001,Create Account: Local Account,5,Create a new user in Linux with `root` UID and GID.,a1040a30-d28b-4eda-bd99-bb2861a4616c,bash
 persistence,T1098.004,SSH Authorized Keys,1,Modify SSH Authorized Keys,342cc723-127c-4d3a-8292-9c0c6b4ecadc,bash
+persistence,T1136.002,Create Account: Domain Account,4,Active Directory Create Admin Account,562aa072-524e-459a-ba2b-91f1afccf5ab,sh
+persistence,T1136.002,Create Account: Domain Account,5,Active Directory Create User Account (Non-elevated),8c992cb3-a46e-4fd5-b005-b1bab185af31,sh
 persistence,T1547.006,Boot or Logon Autostart Execution: Kernel Modules and Extensions,1,Linux - Load Kernel Module via insmod,687dcb93-9656-4853-9c36-9977315e9d23,bash
 persistence,T1053.006,Scheduled Task/Job: Systemd Timers,1,Create Systemd Service and Timer,f4983098-bb13-44fb-9b2c-46149961807b,bash
 persistence,T1053.006,Scheduled Task/Job: Systemd Timers,2,Create a user level transient systemd service and timer,3de33f5b-62e5-4e63-a2a0-6fd8808c80ec,sh
@@ -238,6 +242,7 @@ credential-access,T1003.008,OS Credential Dumping: /etc/passwd and /etc/shadow,2
 credential-access,T1003.008,OS Credential Dumping: /etc/passwd and /etc/shadow,3,"Access /etc/{shadow,passwd} with a standard bin that's not cat",df1a55ae-019d-4120-bc35-94f4bc5c4b0a,bash
 credential-access,T1003.008,OS Credential Dumping: /etc/passwd and /etc/shadow,4,"Access /etc/{shadow,passwd} with shell builtins",f5aa6543-6cb2-4fae-b9c2-b96e14721713,bash
 discovery,T1033,System Owner/User Discovery,2,System Owner/User Discovery,2a9b677d-a230-44f4-ad86-782df1ef108c,sh
+discovery,T1087.002,Account Discovery: Domain Account,23,Active Directory Domain Search,096b6d2a-b63f-4100-8fa0-525da4cd25ca,sh
 discovery,T1087.001,Account Discovery: Local Account,1,Enumerate all accounts (Local),f8aab3dd-5990-4bf8-b8ab-2226c951696f,sh
 discovery,T1087.001,Account Discovery: Local Account,2,View sudoers access,fed9be70-0186-4bde-9f8a-20945f9370c2,sh
 discovery,T1087.001,Account Discovery: Local Account,3,View accounts with UID 0,c955a599-3653-4fe5-b631-f11c00eb0397,sh
@@ -245,6 +250,7 @@ discovery,T1087.001,Account Discovery: Local Account,4,List opened files by user
 discovery,T1087.001,Account Discovery: Local Account,5,Show if a user account has ever logged in remotely,0f0b6a29-08c3-44ad-a30b-47fd996b2110,sh
 discovery,T1087.001,Account Discovery: Local Account,6,Enumerate users and groups,e6f36545-dc1e-47f0-9f48-7f730f54a02e,sh
 discovery,T1497.001,Virtualization/Sandbox Evasion: System Checks,1,Detect Virtualization Environment (Linux),dfbd1a21-540d-4574-9731-e852bd6fe840,sh
+discovery,T1069.002,Permission Groups Discovery: Domain Groups,15,Active Directory Domain Search Using LDAP - Linux (Ubuntu)/macOS,d58d749c-4450-4975-a9e9-8b1d562755c2,sh
 discovery,T1007,System Service Discovery,3,System Service Discovery - systemctl,f4b26bce-4c2c-46c0-bcc5-fce062d38bef,bash
 discovery,T1040,Network Sniffing,1,Packet Capture Linux using tshark or tcpdump,7fe741f7-b265-4951-a7c7-320889083b3e,bash
 discovery,T1040,Network Sniffing,9,"Packet Capture Linux socket AF_PACKET,SOCK_RAW with sudo",10c710c9-9104-4d5f-8829-5b65391e2a29,bash
@@ -313,6 +319,7 @@ execution,T1059.004,Command and Scripting Interpreter: Bash,9,Obfuscated command
 execution,T1059.004,Command and Scripting Interpreter: Bash,10,Change login shell,c7ac59cb-13cc-4622-81dc-6d2fee9bfac7,bash
 execution,T1059.004,Command and Scripting Interpreter: Bash,11,Environment variable scripts,bdaebd56-368b-4970-a523-f905ff4a8a51,bash
 execution,T1059.004,Command and Scripting Interpreter: Bash,12,Detecting pipe-to-shell,fca246a8-a585-4f28-a2df-6495973976a1,bash
+execution,T1059.004,Command and Scripting Interpreter: Bash,13,Current kernel information enumeration,3a53734a-9e26-4f4b-ad15-059e767f5f14,sh
 execution,T1059.006,Command and Scripting Interpreter: Python,1,Execute shell script via python's command mode arguement,3a95cdb2-c6ea-4761-b24e-02b71889b8bb,sh
 execution,T1059.006,Command and Scripting Interpreter: Python,2,Execute Python via scripts (Linux),6c4d1dcb-33c7-4c36-a8df-c6cfd0408be8,sh
 execution,T1059.006,Command and Scripting Interpreter: Python,3,Execute Python via Python executables (Linux),0b44d79b-570a-4b27-a31f-3bf2156e5eaa,sh

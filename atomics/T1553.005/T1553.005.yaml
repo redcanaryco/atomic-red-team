@@ -17,9 +17,9 @@ atomic_tests:
   - description: |
       T1553.005.iso must exist on disk at specified location (#{path_of_iso})
     prereq_command: |
-      if (Test-Path #{path_of_iso}) {exit 0} else {exit 1}
+      if (Test-Path "#{path_of_iso}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{path_of_iso}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{path_of_iso}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1553.005/bin/T1553.005.iso -OutFile "#{path_of_iso}"
   executor:
     command: |
@@ -45,13 +45,14 @@ atomic_tests:
   - description: |
       FeelTheBurn.iso must exist on disk at specified location (#{path_of_iso})
     prereq_command: |
-      if (Test-Path #{path_of_iso}) {exit 0} else {exit 1}
+      if (Test-Path "#{path_of_iso}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{path_of_iso}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{path_of_iso}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1553.005/bin/FeelTheBurn.iso -OutFile "#{path_of_iso}"
   executor:
     command: |
-      $keep = Mount-DiskImage -ImagePath "#{path_of_iso}" -StorageType ISO -Access ReadOnly
+      Mount-DiskImage -ImagePath "#{path_of_iso}" -StorageType ISO -Access ReadOnly
+      $keep = Get-Volume -FileSystemLabel "TestIso"
       $driveLetter = ($keep | Get-Volume).DriveLetter
       invoke-item "$($driveLetter):\hello.exe"
     cleanup_command: |
@@ -104,9 +105,9 @@ atomic_tests:
   - description: |
       AllTheThings.iso must exist on disk at specified location (#{path_of_iso})
     prereq_command: |
-      if (Test-Path #{path_of_iso}) {exit 0} else {exit 1}
+      if (Test-Path "#{path_of_iso}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{path_of_iso}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{path_of_iso}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1553.005/bin/AllTheThings.iso -OutFile "#{path_of_iso}"
   executor:
     command: |

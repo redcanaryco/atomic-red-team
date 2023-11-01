@@ -110,9 +110,18 @@ class GithubAPI:
                         count = -1
                     elif line.startswith("+"):  # only take count of added lines
                         changed_lines.append(start + count)
+                    elif line.startswith("-"):
+                        count -= 1
                     count += 1
-                for index, t in enumerate(data["atomic_tests"]):
-                    if t["__line__"] in changed_lines:
+                atomics = data["atomic_tests"]
+                for index, t in enumerate(atomics):
+                    curr_atomic_start = atomics[index]["__line__"]
+                    if index+1<len(atomics):
+                        curr_atomic_end = atomics[index+1]["__line__"]
+                    else:
+                        curr_atomic_end = start+60
+                    changes_in_current_atomic = [i for i in changed_lines if i > curr_atomic_start and i < curr_atomic_end]
+                    if len(changes_in_current_atomic) > 0:
                         tests.append(ChangedAtomic(technique=technique, test_number=index + 1,
                                                    data=t))
 

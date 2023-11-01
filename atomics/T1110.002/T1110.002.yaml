@@ -10,7 +10,7 @@ atomic_tests:
     hashcat_exe:
       description: Path to Hashcat executable
       type: string
-      default: '%temp%\hashcat6\hashcat-6.1.1\hashcat.exe'
+      default: 'PathToAtomicsFolder\..\ExternalPayloads\hashcat6\hashcat-6.1.1\hashcat.exe'
     input_file_sam:
       description: Path to SAM file
       type: string
@@ -22,22 +22,24 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: Hashcat must exist on disk at specified location (#{hashcat_exe})
-    prereq_command: 'if (Test-Path  $(cmd /c echo #{hashcat_exe})) {exit 0} else {exit 1}'
+    prereq_command: |
+      if (Test-Path  $(cmd /c echo "#{hashcat_exe}")) {exit 0} else {exit 1}
     get_prereq_command: |-
-      Invoke-WebRequest "https://www.7-zip.org/a/7z1900.exe" -OutFile "$env:TEMP\7z1900.exe"
-      Start-Process -FilePath "$env:Temp\7z1900.exe" -ArgumentList "/S /D=$env:temp\7zi" -NoNewWindow
-      Invoke-WebRequest "https://hashcat.net/files/hashcat-6.1.1.7z" -OutFile "$env:TEMP\hashcat6.7z"
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://www.7-zip.org/a/7z1900.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\7z1900.exe"
+      Start-Process -FilePath "PathToAtomicsFolder\..\ExternalPayloads\7z1900.exe" -ArgumentList "/S /D=PathToAtomicsFolder\..\ExternalPayloads\7zi" -NoNewWindow
+      Invoke-WebRequest "https://hashcat.net/files/hashcat-6.1.1.7z" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\hashcat6.7z"
       Start-Process cmd.exe -Args  "/c %temp%\7z\7z.exe x %temp%\hashcat6.7z -aoa -o%temp%\hashcat-unzip" -Wait
       New-Item -ItemType Directory (Split-Path $(cmd /c echo #{hashcat_exe})) -Force | Out-Null
-      Move-Item $env:Temp\hashcat-unzip\hashcat-6.1.1\* $(cmd /c echo #{hashcat_exe}\..) -Force -ErrorAction Ignore
+      Move-Item "PathToAtomicsFolder\..\ExternalPayloads\hashcat-unzip\hashcat-6.1.1\*" $(cmd /c echo #{hashcat_exe}\..) -Force -ErrorAction Ignore
   executor:
     command: |-
       cd #{hashcat_exe}\..
       #{hashcat_exe} -a 0 -m 1000 -r .\rules\Incisive-leetspeak.rule #{input_file_sam} #{input_file_passwords}
     cleanup_command: |-
-      del %temp%\hashcat6.7z >nul 2>&1
-      del %temp%\7z1900.exe >nul 2>&1
-      del %temp%\7z /Q /S >nul 2>&1
-      del %temp%\hashcat-unzip /Q /S >nul 2>&1
+      del "PathToAtomicsFolder\..\ExternalPayloads\hashcat6.7z" >nul 2>&1
+      del "PathToAtomicsFolder\..\ExternalPayloads\7z1900.exe" >nul 2>&1
+      del "PathToAtomicsFolder\..\ExternalPayloads\7z" /Q /S >nul 2>&1
+      del "PathToAtomicsFolder\..\ExternalPayloads\hashcat-unzip" /Q /S >nul 2>&1
     name: command_prompt
     elevation_required: true

@@ -123,8 +123,9 @@ atomic_tests:
       NMap must be installed
     prereq_command: 'if (cmd /c "nmap 2>nul") {exit 0} else {exit 1}'
     get_prereq_command: |
-      Invoke-WebRequest -OutFile $env:temp\nmap-7.80-setup.exe #{nmap_url}
-      Start-Process $env:temp\nmap-7.80-setup.exe /S
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest -OutFile "PathToAtomicsFolder\..\ExternalPayloads\nmap-7.80-setup.exe" #{nmap_url}
+      Start-Process "PathToAtomicsFolder\..\ExternalPayloads\nmap-7.80-setup.exe" /S
   executor:
     command: |-
       nmap #{host_to_scan}
@@ -155,7 +156,7 @@ atomic_tests:
       echo "Python 3 must be installed manually"
   executor:
     command: |
-      python #{filename} -i #{host_ip}
+      python "#{filename}" -i #{host_ip}
     name: powershell
 - name: WinPwn - spoolvulnscan
   auto_generated_guid: 54574908-f1de-4356-9021-8053dd57439a
@@ -228,4 +229,53 @@ atomic_tests:
       docker stop t1046_container
       docker rmi -f t1046
     name: sh
+- name: Port-Scanning /24 Subnet with PowerShell
+  auto_generated_guid: 05df2a79-dba6-4088-a804-9ca0802ca8e4
+  description: |
+    Scanning common ports in a /24 subnet. If no IP address for the target subnet is specified the test tries to determine the attacking machine's "primary" IPv4 address first and then scans that address with a /24 netmask.
+    The connection attempts to use a timeout parameter in milliseconds to speed up the scan. Please note the atomic might not print any output until the scans are completed.
+  supported_platforms:
+  - windows
+  input_arguments:
+    ip_address:
+      description: IP-Address within the target subnet. Default is empty and script tries to determine local IP address of attacking machine.
+      type: string
+      default: ""
+    port_list:
+      description: Comma separated list of ports to scan
+      type: string
+      default: "445, 3389"
+    timeout_ms:
+      description: Connection timeout in milliseconds
+      type: string
+      default: "200"
+  executor:
+    command: |
+      $ipAddr = "#{ip_address}"
+      if ($ipAddr -eq "") {
+          # Assumes the "primary" interface is shown at the top
+          $interface = Get-NetIPInterface -AddressFamily IPv4 -ConnectionState Connected | Select-Object -ExpandProperty InterfaceAlias -First 1
+          Write-Host "[i] Using Interface $interface"
+          $ipAddr = Get-NetIPAddress -AddressFamily IPv4 -InterfaceAlias $interface | Select-Object -ExpandProperty IPAddress
+      }
+      Write-Host "[i] Base IP-Address for Subnet: $ipAddr"
+      $subnetSubstring = $ipAddr.Substring(0, $ipAddr.LastIndexOf('.') + 1)
+      # Always assumes /24 subnet
+      Write-Host "[i] Assuming /24 subnet. scanning $subnetSubstring'1' to $subnetSubstring'254'"
 
+      $ports = #{port_list}
+      $subnetIPs = 1..254 | ForEach-Object { "$subnetSubstring$_" }
+
+      foreach ($ip in $subnetIPs) {
+          foreach ($port in $ports) {
+            try {
+                $tcp = New-Object Net.Sockets.TcpClient
+                $tcp.ConnectAsync($ip, $port).Wait(#{timeout_ms}) | Out-Null
+            } catch {}
+            if ($tcp.Connected) {
+                $tcp.Close()
+                Write-Host "Port $port is open on $ip"
+            }
+          }
+      }
+    name: powershell

@@ -22,23 +22,23 @@ atomic_tests:
   - description: |
       MSI file must exist on disk at specified location (#{msi_file_path})
     prereq_command: |
-      if (Test-Path #{msi_file_path}) {exit 0} else {exit 1}
+      if (Test-Path "#{msi_file_path}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{msi_file_path}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{msi_file_path}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1564.006/bin/Virtualbox_52.msi" -OutFile "#{msi_file_path}"
   - description: |
       CAB file must exist on disk at specified location (#{cab_file_path})
     prereq_command: |
-      if (Test-Path #{cab_file_path}) {exit 0} else {exit 1}
+      if (Test-Path "#{cab_file_path}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{cab_file_path}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{cab_file_path}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1564.006/bin/common.cab" -OutFile "#{cab_file_path}" 
   - description: |
       Old version of Virtualbox must be installed
     prereq_command: |
       if (Test-Path "C:\Program Files\Oracle\VirtualBox\VboxC.dll") {exit 0} else {exit 1}
     get_prereq_command: |
-      msiexec /i #{msi_file_path} /qn
+      msiexec /i "#{msi_file_path}" /qn
   executor:
     command: |
       "C:\Program Files\Oracle\VirtualBox\VBoxSVC.exe" /reregserver
@@ -50,7 +50,7 @@ atomic_tests:
       sc stop VBoxDRV
       sc delete VBoxDRV
       regsvr32 /u /S "C:\Program Files\Oracle\VirtualBox\VboxC.dll"
-      msiexec /x #{msi_file_path} /qn
+      msiexec /x "#{msi_file_path}" /qn
     name: command_prompt
 - name: Create and start VirtualBox virtual machine
   auto_generated_guid: 88b81702-a1c0-49a9-95b2-2dd53d755767
@@ -90,17 +90,18 @@ atomic_tests:
     prereq_command: |
       if (Test-Path "#{virtualbox_exe}") {exit 0} else {exit 1}
     get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       $wc = New-Object System.Net.WebClient
-      $wc.DownloadFile("#{virtualbox_download}","$env:TEMP\#{virtualbox_installer}")
-      start-process -FilePath "$env:TEMP\#{virtualbox_installer}" -ArgumentList "--silent" -Wait
+      $wc.DownloadFile("#{virtualbox_download}","PathToAtomicsFolder\..\ExternalPayloads\#{virtualbox_installer}")
+      start-process -FilePath "PathToAtomicsFolder\..\ExternalPayloads\#{virtualbox_installer}" -ArgumentList "--silent" -Wait
   - description: |
       VBoxManage must exist on disk at specified locations (#{vboxmanage_exe})
     prereq_command: |
       if (Test-Path "#{vboxmanage_exe}") {exit 0} else {exit 1}
     get_prereq_command: |
       $wc = New-Object System.Net.WebClient
-      $wc.DownloadFile("#{virtualbox_download}","$env:TEMP\#{virtualbox_installer}")
-      start-process -FilePath "$env:TEMP\#{virtualbox_installer}" -ArgumentList "--silent" -Wait
+      $wc.DownloadFile("#{virtualbox_download}","PathToAtomicsFolder\..\ExternalPayloads\#{virtualbox_installer}")
+      start-process -FilePath "PathToAtomicsFolder\..\ExternalPayloads\#{virtualbox_installer}" -ArgumentList "--silent" -Wait
   executor:
     name: command_prompt
     elevation_required: false

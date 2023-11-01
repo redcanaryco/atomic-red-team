@@ -1,4 +1,5 @@
 Tactic,Technique #,Technique Name,Test #,Test Name,Test GUID,Executor Name
+defense-evasion,T1055.011,Process Injection: Extra Window Memory Injection,1,Process Injection via Extra Window Memory (EWM) x64 executable,93ca40d2-336c-446d-bcef-87f14d438018,powershell
 defense-evasion,T1218.011,Signed Binary Proxy Execution: Rundll32,1,Rundll32 execute JavaScript Remote Payload With GetObject,57ba4ce9-ee7a-4f27-9928-3c70c489b59d,command_prompt
 defense-evasion,T1218.011,Signed Binary Proxy Execution: Rundll32,2,Rundll32 execute VBscript command,638730e7-7aed-43dc-bf8c-8117f805f5bb,command_prompt
 defense-evasion,T1218.011,Signed Binary Proxy Execution: Rundll32,3,Rundll32 execute VBscript command using Ordinal number,32d1cf1b-cbc2-4c09-8d05-07ec5c83a821,command_prompt
@@ -37,6 +38,7 @@ defense-evasion,T1548.002,Abuse Elevation Control Mechanism: Bypass User Account
 defense-evasion,T1548.002,Abuse Elevation Control Mechanism: Bypass User Account Control,21,WinPwn - UAC Bypass DccwBypassUAC technique,2b61977b-ae2d-4ae4-89cb-5c36c89586be,powershell
 defense-evasion,T1548.002,Abuse Elevation Control Mechanism: Bypass User Account Control,22,Disable UAC admin consent prompt via ConsentPromptBehaviorAdmin registry key,251c5936-569f-42f4-9ac2-87a173b9e9b8,powershell
 defense-evasion,T1548.002,Abuse Elevation Control Mechanism: Bypass User Account Control,23,UAC Bypass with WSReset Registry Modification,3b96673f-9c92-40f1-8a3e-ca060846f8d9,powershell
+defense-evasion,T1548.002,Abuse Elevation Control Mechanism: Bypass User Account Control,24,Disable UAC - Switch to the secure desktop when prompting for elevation via registry key,85f3a526-4cfa-4fe7-98c1-dea99be025c7,powershell
 defense-evasion,T1574.011,Hijack Execution Flow: Services Registry Permissions Weakness,1,Service Registry Permissions Weakness,f7536d63-7fd4-466f-89da-7e48d550752a,powershell
 defense-evasion,T1574.011,Hijack Execution Flow: Services Registry Permissions Weakness,2,Service ImagePath Change with reg.exe,f38e9eea-e1d7-4ba6-b716-584791963827,command_prompt
 defense-evasion,T1036.005,Masquerading: Match Legitimate Name or Location,2,Masquerade as a built-in system executable,35eb8d16-9820-4423-a2a1-90c4f5edd9ca,powershell
@@ -44,6 +46,8 @@ defense-evasion,T1564,Hide Artifacts,1,Extract binary files via VBA,6afe288a-8a8
 defense-evasion,T1564,Hide Artifacts,2,"Create a Hidden User Called ""$""",2ec63cc2-4975-41a6-bf09-dffdfb610778,command_prompt
 defense-evasion,T1564,Hide Artifacts,3,"Create an ""Administrator "" user (with a space on the end)",5bb20389-39a5-4e99-9264-aeb92a55a85c,powershell
 defense-evasion,T1564,Hide Artifacts,4,Create and Hide a Service with sc.exe,333c7de0-6fbe-42aa-ac2b-c7e40b18246a,command_prompt
+defense-evasion,T1564,Hide Artifacts,5,Command Execution with NirCmd,2748ab4a-1e0b-4cf2-a2b0-8ef765bec7be,powershell
+defense-evasion,T1562.009,Impair Defenses: Safe Boot Mode,1,Safe Mode Boot,2a78362e-b79a-4482-8e24-be397bce4d85,command_prompt
 defense-evasion,T1497.001,Virtualization/Sandbox Evasion: System Checks,2,Detect Virtualization Environment (Windows),502a7dc4-9d6f-4d28-abf2-f0e84692562d,powershell
 defense-evasion,T1497.001,Virtualization/Sandbox Evasion: System Checks,4,Detect Virtualization Environment via WMI Manufacturer/Model Listing (Windows),4a41089a-48e0-47aa-82cb-5b81a463bc78,powershell
 defense-evasion,T1218.004,Signed Binary Proxy Execution: InstallUtil,1,CheckIfInstallable method call,ffd9c807-d402-47d2-879d-f915cf2a3a94,powershell
@@ -89,6 +93,7 @@ defense-evasion,T1070.008,Email Collection: Mailbox Manipulation,4,Copy and Modi
 defense-evasion,T1055,Process Injection,1,Shellcode execution via VBA,1c91e740-1729-4329-b779-feba6e71d048,powershell
 defense-evasion,T1055,Process Injection,2,Remote Process Injection in LSASS via mimikatz,3203ad24-168e-4bec-be36-f79b13ef8a83,command_prompt
 defense-evasion,T1055,Process Injection,3,Section View Injection,c6952f41-6cf0-450a-b352-2ca8dae7c178,powershell
+defense-evasion,T1055,Process Injection,4,Dirty Vanity process Injection,49543237-25db-497b-90df-d0a0a6e8fe2c,powershell
 defense-evasion,T1218,Signed Binary Proxy Execution,1,mavinject - Inject DLL into running process,c426dacf-575d-4937-8611-a148a86a5e61,command_prompt
 defense-evasion,T1218,Signed Binary Proxy Execution,2,Register-CimProvider - Execute evil dll,ad2c17ed-f626-4061-b21e-b9804a6f3655,command_prompt
 defense-evasion,T1218,Signed Binary Proxy Execution,3,InfDefaultInstall.exe .inf Execution,54ad7d5a-a1b5-472c-b6c4-f8090fb2daef,command_prompt
@@ -101,6 +106,8 @@ defense-evasion,T1218,Signed Binary Proxy Execution,9,Load Arbitrary DLL via Wua
 defense-evasion,T1218,Signed Binary Proxy Execution,10,Lolbin Gpscript logon option,5bcda9cd-8e85-48fa-861d-b5a85d91d48c,command_prompt
 defense-evasion,T1218,Signed Binary Proxy Execution,11,Lolbin Gpscript startup option,f8da74bb-21b8-4af9-8d84-f2c8e4a220e3,command_prompt
 defense-evasion,T1218,Signed Binary Proxy Execution,12,Lolbas ie4uinit.exe use as proxy,13c0804e-615e-43ad-b223-2dfbacd0b0b3,command_prompt
+defense-evasion,T1218,Signed Binary Proxy Execution,13,LOLBAS CustomShellHost to Spawn Process,b1eeb683-90bb-4365-bbc2-2689015782fe,powershell
+defense-evasion,T1218,Signed Binary Proxy Execution,14,Provlaunch.exe Executes Arbitrary Command via Registry Key,ab76e34f-28bf-441f-a39c-8db4835b89cc,command_prompt
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,5,Windows - Modify file creation timestamp with PowerShell,b3b2c408-2ff0-4a33-b89b-1cb46a9e6a9c,powershell
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,6,Windows - Modify file last modified timestamp with PowerShell,f8f6634d-93e1-4238-8510-f8a90a20dcf2,powershell
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,7,Windows - Modify file last access timestamp with PowerShell,da627f63-b9bd-4431-b6f8-c5b44d061a62,powershell
@@ -125,6 +132,7 @@ defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,6,A
 defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,18,LockBit Black - Unusual Windows firewall registry modification -cmd,a4651931-ebbb-4cde-9363-ddf3d66214cb,command_prompt
 defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,19,LockBit Black - Unusual Windows firewall registry modification -Powershell,80b453d1-eec5-4144-bf08-613a6c3ffe12,powershell
 defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,20,Blackbit - Disable Windows Firewall using netsh firewall,91f348e6-3760-4997-a93b-2ceee7f254ee,command_prompt
+defense-evasion,T1553.003,Subvert Trust Controls: SIP and Trust Provider Hijacking,1,SIP (Subject Interface Package) Hijacking via Custom DLL,e12f5d8d-574a-4e9d-8a84-c0e8b4a8a675,command_prompt
 defense-evasion,T1207,Rogue Domain Controller,1,DCShadow (Active Directory),0f4c5eb0-98a0-4496-9c3d-656b4f2bc8f6,powershell
 defense-evasion,T1112,Modify Registry,1,Modify Registry of Current User Profile - cmd,1324796b-d0f6-455a-b4ae-21ffee6aa6b9,command_prompt
 defense-evasion,T1112,Modify Registry,2,Modify Registry of Local Machine - cmd,282f929a-6bc5-42b8-bd93-960c3ba35afe,command_prompt
@@ -182,6 +190,9 @@ defense-evasion,T1112,Modify Registry,53,Windows Auto Update Option to Notify be
 defense-evasion,T1112,Modify Registry,54,Do Not Connect To Win Update,d1de3767-99c2-4c6c-8c5a-4ba4586474c8,command_prompt
 defense-evasion,T1112,Modify Registry,55,Tamper Win Defender Protection,3b625eaa-c10d-4635-af96-3eae7d2a2f3c,command_prompt
 defense-evasion,T1112,Modify Registry,56,Snake Malware Registry Blob,8318ad20-0488-4a64-98f4-72525a012f6b,powershell
+defense-evasion,T1112,Modify Registry,57,Allow Simultaneous Download Registry,37950714-e923-4f92-8c7c-51e4b6fffbf6,command_prompt
+defense-evasion,T1112,Modify Registry,58,Modify Internet Zone Protocol Defaults in Current User Registry - cmd,c88ef166-50fa-40d5-a80c-e2b87d4180f7,command_prompt
+defense-evasion,T1112,Modify Registry,59,Modify Internet Zone Protocol Defaults in Current User Registry - PowerShell,b1a4d687-ba52-4057-81ab-757c3dc0d3b5,powershell
 defense-evasion,T1574.008,Hijack Execution Flow: Path Interception by Search Order Hijacking,1,powerShell Persistence via hijacking default modules - Get-Variable.exe,1561de08-0b4b-498e-8261-e922f3494aae,powershell
 defense-evasion,T1484.001,Domain Policy Modification: Group Policy Modification,1,LockBit Black - Modify Group policy settings -cmd,9ab80952-74ee-43da-a98c-1e740a985f28,command_prompt
 defense-evasion,T1484.001,Domain Policy Modification: Group Policy Modification,2,LockBit Black - Modify Group policy settings -Powershell,b51eae65-5441-4789-b8e8-64783c26c1d1,powershell
@@ -200,6 +211,7 @@ defense-evasion,T1562.006,Impair Defenses: Indicator Blocking,5,Disable .NET Eve
 defense-evasion,T1562.006,Impair Defenses: Indicator Blocking,6,LockBit Black - Disable the ETW Provider of Windows Defender -cmd,f6df0b8e-2c83-44c7-ba5e-0fa4386bec41,command_prompt
 defense-evasion,T1562.006,Impair Defenses: Indicator Blocking,7,LockBit Black - Disable the ETW Provider of Windows Defender -Powershell,69fc085b-5444-4879-8002-b24c8e1a3e02,powershell
 defense-evasion,T1070,Indicator Removal on Host,1,Indicator Removal using FSUtil,b4115c7a-0e92-47f0-a61e-17e7218b2435,command_prompt
+defense-evasion,T1070,Indicator Removal on Host,2,Indicator Manipulation using FSUtil,96e86706-6afd-45b6-95d6-108d23eaf2e9,powershell
 defense-evasion,T1550.003,Use Alternate Authentication Material: Pass the Ticket,1,Mimikatz Kerberos Ticket Attack,dbf38128-7ba7-4776-bedf-cc2eed432098,command_prompt
 defense-evasion,T1550.003,Use Alternate Authentication Material: Pass the Ticket,2,Rubeus Kerberos Pass The Ticket,a2fc4ec5-12c6-4fb4-b661-961f23f359cb,powershell
 defense-evasion,T1036.004,Masquerading: Masquerade Task or Service,1,Creating W32Time similar named service using schtasks,f9f2fe59-96f7-4a7d-ba9f-a9783200d4c9,command_prompt
@@ -209,6 +221,7 @@ defense-evasion,T1553.005,Subvert Trust Controls: Mark-of-the-Web Bypass,1,Mount
 defense-evasion,T1553.005,Subvert Trust Controls: Mark-of-the-Web Bypass,2,Mount an ISO image and run executable from the ISO,42f22b00-0242-4afc-a61b-0da05041f9cc,powershell
 defense-evasion,T1553.005,Subvert Trust Controls: Mark-of-the-Web Bypass,3,Remove the Zone.Identifier alternate data stream,64b12afc-18b8-4d3f-9eab-7f6cae7c73f9,powershell
 defense-evasion,T1553.005,Subvert Trust Controls: Mark-of-the-Web Bypass,4,Execute LNK file from ISO,c2587b8d-743d-4985-aa50-c83394eaeb68,powershell
+defense-evasion,T1055.002,Process Injection: Portable Executable Injection,1,Portable Executable Injection,578025d5-faa9-4f6d-8390-aae739d503e1,powershell
 defense-evasion,T1218.005,Signed Binary Proxy Execution: Mshta,1,Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject,1483fab9-4f52-4217-a9ce-daa9d7747cae,command_prompt
 defense-evasion,T1218.005,Signed Binary Proxy Execution: Mshta,2,Mshta executes VBScript to execute malicious command,906865c3-e05f-4acc-85c4-fbc185455095,command_prompt
 defense-evasion,T1218.005,Signed Binary Proxy Execution: Mshta,3,Mshta Executes Remote HTML Application (HTA),c4b97eeb-5249-4455-a607-59f95485cb45,powershell
@@ -258,19 +271,19 @@ defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,22,Tamper wit
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,23,Tamper with Windows Defender Evade Scanning -Extension,315f4be6-2240-4552-b3e1-d1047f5eecea,powershell
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,24,Tamper with Windows Defender Evade Scanning -Process,a123ce6a-3916-45d6-ba9c-7d4081315c27,powershell
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,26,Disable Windows Defender with DISM,871438ac-7d6e-432a-b27d-3e7db69faf58,command_prompt
-defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,27,Disable Defender with Defender Control,178136d8-2778-4d7a-81f3-d517053a4fd6,powershell
-defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,28,Disable Defender Using NirSoft AdvancedRun,81ce22fd-9612-4154-918e-8a1f285d214d,powershell
-defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,29,Kill antimalware protected processes using Backstab,24a12b91-05a7-4deb-8d7f-035fa98591bc,powershell
-defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,30,WinPwn - Kill the event log services for stealth,7869d7a3-3a30-4d2c-a5d2-f1cd9c34ce66,powershell
-defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,31,Tamper with Windows Defender ATP using Aliases - PowerShell,c531aa6e-9c97-4b29-afee-9b7be6fc8a64,powershell
-defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,32,LockBit Black - Disable Privacy Settings Experience Using Registry -cmd,d6d22332-d07d-498f-aea0-6139ecb7850e,command_prompt
-defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,33,LockBit Black - Use Registry Editor to turn on automatic logon -cmd,9719d0e1-4fe0-4b2e-9a72-7ad3ee8ddc70,command_prompt
-defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,34,LockBit Black - Disable Privacy Settings Experience Using Registry -Powershell,d8c57eaa-497a-4a08-961e-bd5efd7c9374,powershell
-defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,35,Lockbit Black - Use Registry Editor to turn on automatic logon -Powershell,5e27f36d-5132-4537-b43b-413b0d5eec9a,powershell
-defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,36,Disable Windows Defender with PwSh Disable-WindowsOptionalFeature,f542ffd3-37b4-4528-837f-682874faa012,powershell
-defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,37,WMIC Tamper with Windows Defender Evade Scanning Folder,59d386fc-3a4b-41b8-850d-9e3eee24dfe4,command_prompt
-defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,38,Delete Windows Defender Scheduled Tasks,4b841aa1-0d05-4b32-bbe7-7564346e7c76,command_prompt
-defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,44,Disable Hypervisor-Enforced Code Integrity (HVCI),70bd71e6-eba4-4e00-92f7-617911dbe020,powershell
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,27,Disable Defender Using NirSoft AdvancedRun,81ce22fd-9612-4154-918e-8a1f285d214d,powershell
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,28,Kill antimalware protected processes using Backstab,24a12b91-05a7-4deb-8d7f-035fa98591bc,powershell
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,29,WinPwn - Kill the event log services for stealth,7869d7a3-3a30-4d2c-a5d2-f1cd9c34ce66,powershell
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,30,Tamper with Windows Defender ATP using Aliases - PowerShell,c531aa6e-9c97-4b29-afee-9b7be6fc8a64,powershell
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,31,LockBit Black - Disable Privacy Settings Experience Using Registry -cmd,d6d22332-d07d-498f-aea0-6139ecb7850e,command_prompt
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,32,LockBit Black - Use Registry Editor to turn on automatic logon -cmd,9719d0e1-4fe0-4b2e-9a72-7ad3ee8ddc70,command_prompt
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,33,LockBit Black - Disable Privacy Settings Experience Using Registry -Powershell,d8c57eaa-497a-4a08-961e-bd5efd7c9374,powershell
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,34,Lockbit Black - Use Registry Editor to turn on automatic logon -Powershell,5e27f36d-5132-4537-b43b-413b0d5eec9a,powershell
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,35,Disable Windows Defender with PwSh Disable-WindowsOptionalFeature,f542ffd3-37b4-4528-837f-682874faa012,powershell
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,36,WMIC Tamper with Windows Defender Evade Scanning Folder,59d386fc-3a4b-41b8-850d-9e3eee24dfe4,command_prompt
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,37,Delete Windows Defender Scheduled Tasks,4b841aa1-0d05-4b32-bbe7-7564346e7c76,command_prompt
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,43,Disable Hypervisor-Enforced Code Integrity (HVCI),70bd71e6-eba4-4e00-92f7-617911dbe020,powershell
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,44,AMSI Bypass - Override AMSI via COM,17538258-5699-4ff1-92d1-5ac9b0dc21f5,command_prompt
 defense-evasion,T1055.012,Process Injection: Process Hollowing,1,Process Hollowing using PowerShell,562427b4-39ef-4e8c-af88-463a78e70b9c,powershell
 defense-evasion,T1055.012,Process Injection: Process Hollowing,2,RunPE via VBA,3ad4a037-1598-4136-837c-4027e4fa319b,powershell
 defense-evasion,T1027,Obfuscated Files or Information,2,Execute base64-encoded PowerShell,a50d5a97-2531-499e-a1de-5544c74432c6,powershell
@@ -314,6 +327,7 @@ defense-evasion,T1197,BITS Jobs,4,Bits download using desktopimgdownldr.exe (cmd
 defense-evasion,T1127.001,Trusted Developer Utilities Proxy Execution: MSBuild,1,MSBuild Bypass Using Inline Tasks (C#),58742c0f-cb01-44cd-a60b-fb26e8871c93,command_prompt
 defense-evasion,T1127.001,Trusted Developer Utilities Proxy Execution: MSBuild,2,MSBuild Bypass Using Inline Tasks (VB),ab042179-c0c5-402f-9bc8-42741f5ce359,command_prompt
 defense-evasion,T1564.003,Hide Artifacts: Hidden Window,1,Hidden Window,f151ee37-9e2b-47e6-80e4-550b9f999b7a,powershell
+defense-evasion,T1564.003,Hide Artifacts: Hidden Window,2,Headless Browser Accessing Mockbin,0ad9ab92-c48c-4f08-9b20-9633277c4646,command_prompt
 defense-evasion,T1027.006,HTML Smuggling,1,HTML Smuggling Remote Payload,30cbeda4-08d9-42f1-8685-197fad677734,powershell
 defense-evasion,T1070.004,Indicator Removal on Host: File Deletion,4,Delete a single file - Windows cmd,861ea0b4-708a-4d17-848d-186c9c7f17e3,command_prompt
 defense-evasion,T1070.004,Indicator Removal on Host: File Deletion,5,Delete an entire folder - Windows cmd,ded937c4-2add-42f7-9c2c-c742b7a98698,command_prompt
@@ -334,10 +348,13 @@ defense-evasion,T1220,XSL Script Processing,4,WMIC bypass using remote XSL file,
 defense-evasion,T1564.001,Hide Artifacts: Hidden Files and Directories,3,Create Windows System File with Attrib,f70974c8-c094-4574-b542-2c545af95a32,command_prompt
 defense-evasion,T1564.001,Hide Artifacts: Hidden Files and Directories,4,Create Windows Hidden File with Attrib,dadb792e-4358-4d8d-9207-b771faa0daa5,command_prompt
 defense-evasion,T1564.001,Hide Artifacts: Hidden Files and Directories,8,Hide Files Through Registry,f650456b-bd49-4bc1-ae9d-271b5b9581e7,command_prompt
+defense-evasion,T1564.001,Hide Artifacts: Hidden Files and Directories,9,Create Windows Hidden File with powershell,7f66d539-4fbe-4cfa-9a56-4a2bf660c58a,powershell
+defense-evasion,T1564.001,Hide Artifacts: Hidden Files and Directories,10,Create Windows System File with powershell,d380c318-0b34-45cb-9dad-828c11891e43,powershell
 defense-evasion,T1564.004,Hide Artifacts: NTFS File Attributes,1,Alternate Data Streams (ADS),8822c3b0-d9f9-4daf-a043-49f4602364f4,command_prompt
 defense-evasion,T1564.004,Hide Artifacts: NTFS File Attributes,2,Store file in Alternate Data Stream (ADS),2ab75061-f5d5-4c1a-b666-ba2a50df5b02,powershell
 defense-evasion,T1564.004,Hide Artifacts: NTFS File Attributes,3,Create ADS command prompt,17e7637a-ddaf-4a82-8622-377e20de8fdb,command_prompt
 defense-evasion,T1564.004,Hide Artifacts: NTFS File Attributes,4,Create ADS PowerShell,0045ea16-ed3c-4d4c-a9ee-15e44d1560d1,powershell
+defense-evasion,T1564.004,Hide Artifacts: NTFS File Attributes,5,Create Hidden Directory via $index_allocation,3e6791e7-232c-481c-a680-a52f86b83fdf,command_prompt
 defense-evasion,T1055.001,Process Injection: Dynamic-link Library Injection,1,Process Injection via mavinject.exe,74496461-11a1-4982-b439-4d87a550d254,powershell
 defense-evasion,T1055.001,Process Injection: Dynamic-link Library Injection,2,WinPwn - Get SYSTEM shell - Bind System Shell using UsoClient DLL load technique,8b56f787-73d9-4f1d-87e8-d07e89cbc7f5,powershell
 defense-evasion,T1216,Signed Script Proxy Execution,1,SyncAppvPublishingServer Signed Script PowerShell Command Execution,275d963d-3f36-476c-8bef-a2a3960ee6eb,command_prompt
@@ -350,6 +367,7 @@ defense-evasion,T1127,Trusted Developer Utilities Proxy Execution,2,Lolbin Jsc.e
 defense-evasion,T1574.012,Hijack Execution Flow: COR_PROFILER,1,User scope COR_PROFILER,9d5f89dc-c3a5-4f8a-a4fc-a6ed02e7cb5a,powershell
 defense-evasion,T1574.012,Hijack Execution Flow: COR_PROFILER,2,System Scope COR_PROFILER,f373b482-48c8-4ce4-85ed-d40c8b3f7310,powershell
 defense-evasion,T1574.012,Hijack Execution Flow: COR_PROFILER,3,Registry-free process scope COR_PROFILER,79d57242-bbef-41db-b301-9d01d9f6e817,powershell
+privilege-escalation,T1055.011,Process Injection: Extra Window Memory Injection,1,Process Injection via Extra Window Memory (EWM) x64 executable,93ca40d2-336c-446d-bcef-87f14d438018,powershell
 privilege-escalation,T1053.005,Scheduled Task/Job: Scheduled Task,1,Scheduled Task Startup Script,fec27f65-db86-4c2d-b66c-61945aee87c2,command_prompt
 privilege-escalation,T1053.005,Scheduled Task/Job: Scheduled Task,2,Scheduled task Local,42f53695-ad4a-4546-abb6-7d837f644a71,command_prompt
 privilege-escalation,T1053.005,Scheduled Task/Job: Scheduled Task,3,Scheduled task Remote,2e5eac3e-327b-4a88-a0c0-c4057039a8dd,command_prompt
@@ -383,6 +401,7 @@ privilege-escalation,T1548.002,Abuse Elevation Control Mechanism: Bypass User Ac
 privilege-escalation,T1548.002,Abuse Elevation Control Mechanism: Bypass User Account Control,21,WinPwn - UAC Bypass DccwBypassUAC technique,2b61977b-ae2d-4ae4-89cb-5c36c89586be,powershell
 privilege-escalation,T1548.002,Abuse Elevation Control Mechanism: Bypass User Account Control,22,Disable UAC admin consent prompt via ConsentPromptBehaviorAdmin registry key,251c5936-569f-42f4-9ac2-87a173b9e9b8,powershell
 privilege-escalation,T1548.002,Abuse Elevation Control Mechanism: Bypass User Account Control,23,UAC Bypass with WSReset Registry Modification,3b96673f-9c92-40f1-8a3e-ca060846f8d9,powershell
+privilege-escalation,T1548.002,Abuse Elevation Control Mechanism: Bypass User Account Control,24,Disable UAC - Switch to the secure desktop when prompting for elevation via registry key,85f3a526-4cfa-4fe7-98c1-dea99be025c7,powershell
 privilege-escalation,T1574.011,Hijack Execution Flow: Services Registry Permissions Weakness,1,Service Registry Permissions Weakness,f7536d63-7fd4-466f-89da-7e48d550752a,powershell
 privilege-escalation,T1574.011,Hijack Execution Flow: Services Registry Permissions Weakness,2,Service ImagePath Change with reg.exe,f38e9eea-e1d7-4ba6-b716-584791963827,command_prompt
 privilege-escalation,T1547,Boot or Logon Autostart Execution,1,Add a driver,cb01b3da-b0e7-4e24-bf6d-de5223526785,command_prompt
@@ -394,6 +413,7 @@ privilege-escalation,T1543.003,Create or Modify System Process: Windows Service,
 privilege-escalation,T1543.003,Create or Modify System Process: Windows Service,3,Service Installation PowerShell,491a4af6-a521-4b74-b23b-f7b3f1ee9e77,powershell
 privilege-escalation,T1543.003,Create or Modify System Process: Windows Service,4,TinyTurla backdoor service w64time,ef0581fd-528e-4662-87bc-4c2affb86940,command_prompt
 privilege-escalation,T1543.003,Create or Modify System Process: Windows Service,5,Remote Service Installation CMD,fb4151a2-db33-4f8c-b7f8-78ea8790f961,command_prompt
+privilege-escalation,T1547.012,Boot or Logon Autostart Execution: Print Processors,1,Print Processors,f7d38f47-c61b-47cc-a59d-fc0368f47ed0,powershell
 privilege-escalation,T1574.001,Hijack Execution Flow: DLL Search Order Hijacking,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
 privilege-escalation,T1055.003,Thread Execution Hijacking,1,Thread Execution Hijacking,578025d5-faa9-4f6d-8390-aae527d503e1,powershell
 privilege-escalation,T1546.011,Event Triggered Execution: Application Shimming,1,Application Shim Installation,9ab27e22-ee62-4211-962b-d36d9a0e6a18,command_prompt
@@ -403,9 +423,11 @@ privilege-escalation,T1547.010,Boot or Logon Autostart Execution: Port Monitors,
 privilege-escalation,T1055,Process Injection,1,Shellcode execution via VBA,1c91e740-1729-4329-b779-feba6e71d048,powershell
 privilege-escalation,T1055,Process Injection,2,Remote Process Injection in LSASS via mimikatz,3203ad24-168e-4bec-be36-f79b13ef8a83,command_prompt
 privilege-escalation,T1055,Process Injection,3,Section View Injection,c6952f41-6cf0-450a-b352-2ca8dae7c178,powershell
+privilege-escalation,T1055,Process Injection,4,Dirty Vanity process Injection,49543237-25db-497b-90df-d0a0a6e8fe2c,powershell
 privilege-escalation,T1547.009,Boot or Logon Autostart Execution: Shortcut Modification,1,Shortcut Modification,ce4fc678-364f-4282-af16-2fb4c78005ce,command_prompt
 privilege-escalation,T1547.009,Boot or Logon Autostart Execution: Shortcut Modification,2,Create shortcut to cmd in startup folders,cfdc954d-4bb0-4027-875b-a1893ce406f2,powershell
-privilege-escalation,T1547.005,Boot or Logon Autostart Execution: Security Support Provider,1,Modify SSP configuration in registry,afdfd7e3-8a0b-409f-85f7-886fdf249c9e,powershell
+privilege-escalation,T1547.005,Boot or Logon Autostart Execution: Security Support Provider,1,Modify HKLM:\System\CurrentControlSet\Control\Lsa Security Support Provider configuration in registry,afdfd7e3-8a0b-409f-85f7-886fdf249c9e,powershell
+privilege-escalation,T1547.005,Boot or Logon Autostart Execution: Security Support Provider,2,Modify HKLM:\System\CurrentControlSet\Control\Lsa\OSConfig Security Support Provider configuration in registry,de3f8e74-3351-4fdb-a442-265dbf231738,powershell
 privilege-escalation,T1574.008,Hijack Execution Flow: Path Interception by Search Order Hijacking,1,powerShell Persistence via hijacking default modules - Get-Variable.exe,1561de08-0b4b-498e-8261-e922f3494aae,powershell
 privilege-escalation,T1484.001,Domain Policy Modification: Group Policy Modification,1,LockBit Black - Modify Group policy settings -cmd,9ab80952-74ee-43da-a98c-1e740a985f28,command_prompt
 privilege-escalation,T1484.001,Domain Policy Modification: Group Policy Modification,2,LockBit Black - Modify Group policy settings -Powershell,b51eae65-5441-4789-b8e8-64783c26c1d1,powershell
@@ -428,6 +450,7 @@ privilege-escalation,T1546.008,Event Triggered Execution: Accessibility Features
 privilege-escalation,T1546.008,Event Triggered Execution: Accessibility Features,3,Create Symbolic Link From osk.exe to cmd.exe,51ef369c-5e87-4f33-88cd-6d61be63edf2,command_prompt
 privilege-escalation,T1055.004,Process Injection: Asynchronous Procedure Call,1,Process Injection via C#,611b39b7-e243-4c81-87a4-7145a90358b1,command_prompt
 privilege-escalation,T1546.009,Event Triggered Execution: AppCert DLLs,1,Create registry persistence via AppCert DLL,a5ad6104-5bab-4c43-b295-b4c44c7c6b05,powershell
+privilege-escalation,T1055.002,Process Injection: Portable Executable Injection,1,Portable Executable Injection,578025d5-faa9-4f6d-8390-aae739d503e1,powershell
 privilege-escalation,T1134.001,Access Token Manipulation: Token Impersonation/Theft,1,Named pipe client impersonation,90db9e27-8e7c-4c04-b602-a45927884966,powershell
 privilege-escalation,T1134.001,Access Token Manipulation: Token Impersonation/Theft,2,`SeDebugPrivilege` token duplication,34f0a430-9d04-4d98-bcb5-1989f14719f0,powershell
 privilege-escalation,T1134.001,Access Token Manipulation: Token Impersonation/Theft,3,Launch NSudo Executable,7be1bc0f-d8e5-4345-9333-f5f67d742cb9,powershell
@@ -504,7 +527,7 @@ execution,T1047,Windows Management Instrumentation,5,WMI Execute Local Process,b
 execution,T1047,Windows Management Instrumentation,6,WMI Execute Remote Process,9c8ef159-c666-472f-9874-90c8d60d136b,command_prompt
 execution,T1047,Windows Management Instrumentation,7,Create a Process using WMI Query and an Encoded Command,7db7a7f9-9531-4840-9b30-46220135441c,command_prompt
 execution,T1047,Windows Management Instrumentation,8,Create a Process using obfuscated Win32_Process,10447c83-fc38-462a-a936-5102363b1c43,powershell
-execution,T1047,Windows Management Instrumentation,9,WMI Execute rundll32,00738d2a-4651-4d76-adf2-c43a41dfb243,powershell
+execution,T1047,Windows Management Instrumentation,9,WMI Execute rundll32,00738d2a-4651-4d76-adf2-c43a41dfb243,command_prompt
 execution,T1047,Windows Management Instrumentation,10,Application uninstall using WMIC,c510d25b-1667-467d-8331-a56d3e9bc4ff,command_prompt
 execution,T1059.007,Command and Scripting Interpreter: JavaScript,1,JScript execution to gather local computer information via cscript,01d75adf-ca1b-4dd1-ac96-7c9550ad1035,command_prompt
 execution,T1059.007,Command and Scripting Interpreter: JavaScript,2,JScript execution to gather local computer information via wscript,0709945e-4fec-4c49-9faf-c3c292a74484,command_prompt
@@ -560,6 +583,7 @@ execution,T1059.003,Command and Scripting Interpreter: Windows Command Shell,2,W
 execution,T1059.003,Command and Scripting Interpreter: Windows Command Shell,3,Suspicious Execution via Windows Command Shell,d0eb3597-a1b3-4d65-b33b-2cda8d397f20,command_prompt
 execution,T1059.003,Command and Scripting Interpreter: Windows Command Shell,4,Simulate BlackByte Ransomware Print Bombing,6b2903ac-8f36-450d-9ad5-b220e8a2dcb9,powershell
 execution,T1059.003,Command and Scripting Interpreter: Windows Command Shell,5,Command Prompt read contents from CMD file and execute,df81db1b-066c-4802-9bc8-b6d030c3ba8e,command_prompt
+execution,T1059.003,Command and Scripting Interpreter: Windows Command Shell,6,Command prompt writing script to file then executes it,00682c9f-7df4-4df8-950b-6dcaaa3ad9af,command_prompt
 execution,T1059.005,Command and Scripting Interpreter: Visual Basic,1,Visual Basic script execution to gather local computer information,1620de42-160a-4fe5-bbaf-d3fef0181ce9,powershell
 execution,T1059.005,Command and Scripting Interpreter: Visual Basic,2,Encoded VBS code execution,e8209d5f-e42d-45e6-9c2f-633ac4f1eefa,powershell
 execution,T1059.005,Command and Scripting Interpreter: Visual Basic,3,Extract Memory via VBA,8faff437-a114-4547-9a60-749652a03df6,powershell
@@ -592,6 +616,7 @@ persistence,T1543.003,Create or Modify System Process: Windows Service,3,Service
 persistence,T1543.003,Create or Modify System Process: Windows Service,4,TinyTurla backdoor service w64time,ef0581fd-528e-4662-87bc-4c2affb86940,command_prompt
 persistence,T1543.003,Create or Modify System Process: Windows Service,5,Remote Service Installation CMD,fb4151a2-db33-4f8c-b7f8-78ea8790f961,command_prompt
 persistence,T1137,Office Application Startup,1,Office Application Startup - Outlook as a C2,bfe6ac15-c50b-4c4f-a186-0fc6b8ba936c,command_prompt
+persistence,T1547.012,Boot or Logon Autostart Execution: Print Processors,1,Print Processors,f7d38f47-c61b-47cc-a59d-fc0368f47ed0,powershell
 persistence,T1574.001,Hijack Execution Flow: DLL Search Order Hijacking,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
 persistence,T1137.006,Office Application Startup: Add-ins,1,Code Executed Via Excel Add-in File (XLL),441b1a0f-a771-428a-8af0-e99e4698cda3,powershell
 persistence,T1137.006,Office Application Startup: Add-ins,2,Persistent Code Execution Via Excel Add-in File (XLL),9c307886-9fef-41d5-b344-073a0f5b2f5f,powershell
@@ -601,6 +626,7 @@ persistence,T1137.006,Office Application Startup: Add-ins,5,Persistent Code Exec
 persistence,T1505.002,Server Software Component: Transport Agent,1,Install MS Exchange Transport Agent Persistence,43e92449-ff60-46e9-83a3-1a38089df94d,powershell
 persistence,T1556.002,Modify Authentication Process: Password Filter DLL,1,Install and Register Password Filter DLL,a7961770-beb5-4134-9674-83d7e1fa865c,powershell
 persistence,T1505.005,Server Software Component: Terminal Services DLL,1,Simulate Patching termsrv.dll,0b2eadeb-4a64-4449-9d43-3d999f4a317b,powershell
+persistence,T1505.005,Server Software Component: Terminal Services DLL,2,Modify Terminal Services DLL Path,18136e38-0530-49b2-b309-eed173787471,powershell
 persistence,T1176,Browser Extensions,1,Chrome (Developer Mode),3ecd790d-2617-4abf-9a8c-4e8d47da9ee1,manual
 persistence,T1176,Browser Extensions,2,Chrome (Chrome Web Store),4c83940d-8ca5-4bb2-8100-f46dc914bc3f,manual
 persistence,T1176,Browser Extensions,3,Firefox,cb790029-17e6-4c43-b96f-002ce5f10938,manual
@@ -612,7 +638,8 @@ persistence,T1546.011,Event Triggered Execution: Application Shimming,3,Registry
 persistence,T1547.010,Boot or Logon Autostart Execution: Port Monitors,1,Add Port Monitor persistence in Registry,d34ef297-f178-4462-871e-9ce618d44e50,command_prompt
 persistence,T1547.009,Boot or Logon Autostart Execution: Shortcut Modification,1,Shortcut Modification,ce4fc678-364f-4282-af16-2fb4c78005ce,command_prompt
 persistence,T1547.009,Boot or Logon Autostart Execution: Shortcut Modification,2,Create shortcut to cmd in startup folders,cfdc954d-4bb0-4027-875b-a1893ce406f2,powershell
-persistence,T1547.005,Boot or Logon Autostart Execution: Security Support Provider,1,Modify SSP configuration in registry,afdfd7e3-8a0b-409f-85f7-886fdf249c9e,powershell
+persistence,T1547.005,Boot or Logon Autostart Execution: Security Support Provider,1,Modify HKLM:\System\CurrentControlSet\Control\Lsa Security Support Provider configuration in registry,afdfd7e3-8a0b-409f-85f7-886fdf249c9e,powershell
+persistence,T1547.005,Boot or Logon Autostart Execution: Security Support Provider,2,Modify HKLM:\System\CurrentControlSet\Control\Lsa\OSConfig Security Support Provider configuration in registry,de3f8e74-3351-4fdb-a442-265dbf231738,powershell
 persistence,T1574.008,Hijack Execution Flow: Path Interception by Search Order Hijacking,1,powerShell Persistence via hijacking default modules - Get-Variable.exe,1561de08-0b4b-498e-8261-e922f3494aae,powershell
 persistence,T1505.003,Server Software Component: Web Shell,1,Web Shell Written to Disk,0a2ce662-1efa-496f-a472-2fe7b080db16,command_prompt
 persistence,T1078.001,Valid Accounts: Default Accounts,1,Enable Guest account with RDP capability and admin privileges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
@@ -719,6 +746,7 @@ command-and-control,T1219,Remote Access Software,11,MSP360 Connect Execution,b1b
 command-and-control,T1572,Protocol Tunneling,1,DNS over HTTPS Large Query Volume,ae9ef4b0-d8c1-49d4-8758-06206f19af0a,powershell
 command-and-control,T1572,Protocol Tunneling,2,DNS over HTTPS Regular Beaconing,0c5f9705-c575-42a6-9609-cbbff4b2fc9b,powershell
 command-and-control,T1572,Protocol Tunneling,3,DNS over HTTPS Long Domain Query,748a73d5-cea4-4f34-84d8-839da5baa99c,powershell
+command-and-control,T1572,Protocol Tunneling,4,run ngrok,4cdc9fc7-53fb-4894-9f0c-64836943ea60,powershell
 command-and-control,T1090.003,Proxy: Multi-hop Proxy,1,Psiphon,14d55ca0-920e-4b44-8425-37eedd72b173,powershell
 command-and-control,T1090.003,Proxy: Multi-hop Proxy,2,Tor Proxy Usage - Windows,7b9d85e5-c4ce-4434-8060-d3de83595e69,powershell
 command-and-control,T1571,Non-Standard Port,1,Testing usage of uncommonly used port with PowerShell,21fe622f-8e53-4b31-ba83-6d333c2583f4,powershell
@@ -769,6 +797,7 @@ collection,T1119,Automated Collection,4,Recon information for export with Comman
 collection,T1115,Clipboard Data,1,Utilize Clipboard to store or execute commands from,0cd14633-58d4-4422-9ede-daa2c9474ae7,command_prompt
 collection,T1115,Clipboard Data,2,Execute Commands from Clipboard using PowerShell,d6dc21af-bec9-4152-be86-326b6babd416,powershell
 collection,T1115,Clipboard Data,4,Collect Clipboard Data via VBA,9c8d5a72-9c98-48d3-b9bf-da2cc43bdf52,powershell
+collection,T1005,Data from Local System,1,Search files of interest and save them to a single zip file (Windows),d3d9af44-b8ad-4375-8b0a-4bff4b7e419c,powershell
 collection,T1560,Archive Collected Data,1,Compress Data for Exfiltration With PowerShell,41410c60-614d-4b9d-b66e-b0192dd9c597,powershell
 collection,T1557.001,Adversary-in-the-Middle: LLMNR/NBT-NS Poisoning and SMB Relay,1,LLMNR Poisoning with Inveigh (PowerShell),deecd55f-afe0-4a62-9fba-4d1ba2deb321,powershell
 collection,T1125,Video Capture,1,Registry artefact when application use webcam,6581e4a7-42e3-43c5-a0d2-5a0d62f9702a,command_prompt
@@ -789,6 +818,8 @@ lateral-movement,T1550.003,Use Alternate Authentication Material: Pass the Ticke
 lateral-movement,T1550.003,Use Alternate Authentication Material: Pass the Ticket,2,Rubeus Kerberos Pass The Ticket,a2fc4ec5-12c6-4fb4-b661-961f23f359cb,powershell
 lateral-movement,T1072,Software Deployment Tools,1,Radmin Viewer Utility,b4988cad-6ed2-434d-ace5-ea2670782129,command_prompt
 lateral-movement,T1072,Software Deployment Tools,2,PDQ Deploy RAT,e447b83b-a698-4feb-bed1-a7aaf45c3443,command_prompt
+lateral-movement,T1570,Lateral Tool Transfer,1,Exfiltration Over SMB over QUIC (New-SmbMapping),d8d13303-159e-4f33-89f4-9f07812d016f,powershell
+lateral-movement,T1570,Lateral Tool Transfer,2,Exfiltration Over SMB over QUIC (NET USE),183235ca-8e6c-422c-88c2-3aa28c4825d9,powershell
 lateral-movement,T1563.002,Remote Service Session Hijacking: RDP Hijacking,1,RDP hijacking,a37ac520-b911-458e-8aed-c5f1576d9f46,command_prompt
 lateral-movement,T1550.002,Use Alternate Authentication Material: Pass the Hash,1,Mimikatz Pass the Hash,ec23cef9-27d9-46e4-a68d-6f75f7b86908,command_prompt
 lateral-movement,T1550.002,Use Alternate Authentication Material: Pass the Hash,2,crackmapexec Pass the Hash,eb05b028-16c8-4ad8-adea-6f5b219da9a9,command_prompt
@@ -796,6 +827,7 @@ lateral-movement,T1550.002,Use Alternate Authentication Material: Pass the Hash,
 lateral-movement,T1021.001,Remote Services: Remote Desktop Protocol,1,RDP to DomainController,355d4632-8cb9-449d-91ce-b566d0253d3e,powershell
 lateral-movement,T1021.001,Remote Services: Remote Desktop Protocol,2,Changing RDP Port to Non Standard Port via Powershell,2f840dd4-8a2e-4f44-beb3-6b2399ea3771,powershell
 lateral-movement,T1021.001,Remote Services: Remote Desktop Protocol,3,Changing RDP Port to Non Standard Port via Command_Prompt,74ace21e-a31c-4f7d-b540-53e4eb6d1f73,command_prompt
+lateral-movement,T1021.001,Remote Services: Remote Desktop Protocol,4,Disable NLA for RDP via Command Prompt,01d1c6c0-faf0-408e-b368-752a02285cb2,command_prompt
 credential-access,T1056.001,Input Capture: Keylogging,1,Input Capture,d9b633ca-8efb-45e6-b838-70f595c6ae26,powershell
 credential-access,T1110.001,Brute Force: Password Guessing,1,Brute Force Credentials of single Active Directory domain users via SMB,09480053-2f98-4854-be6e-71ae5f672224,command_prompt
 credential-access,T1110.001,Brute Force: Password Guessing,2,Brute Force Credentials of single Active Directory domain user via LDAP against domain controller (NTLM or Kerberos),c2969434-672b-4ec8-8df0-bbb91f40e250,powershell
@@ -868,6 +900,7 @@ credential-access,T1003.001,OS Credential Dumping: LSASS Memory,9,Create Mini Du
 credential-access,T1003.001,OS Credential Dumping: LSASS Memory,10,Powershell Mimikatz,66fb0bc1-3c3f-47e9-a298-550ecfefacbc,powershell
 credential-access,T1003.001,OS Credential Dumping: LSASS Memory,11,Dump LSASS with createdump.exe from .Net v5,9d0072c8-7cca-45c4-bd14-f852cfa35cf0,powershell
 credential-access,T1003.001,OS Credential Dumping: LSASS Memory,12,Dump LSASS.exe using imported Microsoft DLLs,86fc3f40-237f-4701-b155-81c01c48d697,powershell
+credential-access,T1003.001,OS Credential Dumping: LSASS Memory,13,Dump LSASS.exe using lolbin rdrleakdiag.exe,47a539d1-61b9-4364-bf49-a68bc2a95ef0,powershell
 credential-access,T1110.003,Brute Force: Password Spraying,1,Password Spray all Domain Users,90bc2e54-6c84-47a5-9439-0a2a92b4b175,command_prompt
 credential-access,T1110.003,Brute Force: Password Spraying,2,Password Spray (DomainPasswordSpray),263ae743-515f-4786-ac7d-41ef3a0d4b2b,powershell
 credential-access,T1110.003,Brute Force: Password Spraying,3,Password spray all Active Directory domain users with a single password via LDAP against domain controller (NTLM or Kerberos),f14d956a-5b6e-4a93-847f-0c415142f07d,powershell
@@ -995,6 +1028,10 @@ discovery,T1082,System Information Discovery,20,WinPwn - PowerSharpPack - Watson
 discovery,T1082,System Information Discovery,21,WinPwn - PowerSharpPack - Sharpup checking common Privesc vectors,efb79454-1101-4224-a4d0-30c9c8b29ffc,powershell
 discovery,T1082,System Information Discovery,22,WinPwn - PowerSharpPack - Seatbelt,5c16ceb4-ba3a-43d7-b848-a13c1f216d95,powershell
 discovery,T1082,System Information Discovery,25,System Information Discovery with WMIC,8851b73a-3624-4bf7-8704-aa312411565c,command_prompt
+discovery,T1082,System Information Discovery,26,Driver Enumeration using DriverQuery,bd85e3d1-4aeb-4a1d-850f-7be3cb8d60b9,command_prompt
+discovery,T1082,System Information Discovery,27,System Information Discovery,4060ee98-01ae-4c8e-8aad-af8300519cc7,command_prompt
+discovery,T1082,System Information Discovery,28,Check computer location,96be6002-9200-47db-94cb-c3e27de1cb36,command_prompt
+discovery,T1082,System Information Discovery,29,BIOS Information Discovery through Registry,f2f91612-d904-49d7-87c2-6c165d23bead,command_prompt
 discovery,T1010,Application Window Discovery,1,List Process Main Windows - C# .NET,fe94a1c3-3e22-4dc9-9fdf-3a8bdbc10dc4,command_prompt
 discovery,T1217,Browser Bookmark Discovery,4,List Google Chrome / Opera Bookmarks on Windows with powershell,faab755e-4299-48ec-8202-fc7885eb6545,powershell
 discovery,T1217,Browser Bookmark Discovery,5,List Google Chrome / Edge Chromium Bookmarks on Windows with command prompt,76f71e2f-480e-4bed-b61e-398fe17499d5,command_prompt
@@ -1030,7 +1067,7 @@ discovery,T1057,Process Discovery,6,Discover Specific Process - tasklist,11ba69e
 discovery,T1069.001,Permission Groups Discovery: Local Groups,2,Basic Permission Groups Discovery Windows (Local),1f454dd6-e134-44df-bebb-67de70fb6cd8,command_prompt
 discovery,T1069.001,Permission Groups Discovery: Local Groups,3,Permission Groups Discovery PowerShell (Local),a580462d-2c19-4bc7-8b9a-57a41b7d3ba4,powershell
 discovery,T1069.001,Permission Groups Discovery: Local Groups,4,SharpHound3 - LocalAdmin,e03ada14-0980-4107-aff1-7783b2b59bb1,powershell
-discovery,T1069.001,Permission Groups Discovery: Local Groups,5,Wmic Group Discovery,7413be50-be8e-430f-ad4d-07bf197884b2,powershell
+discovery,T1069.001,Permission Groups Discovery: Local Groups,5,Wmic Group Discovery,7413be50-be8e-430f-ad4d-07bf197884b2,command_prompt
 discovery,T1069.001,Permission Groups Discovery: Local Groups,6,WMIObject Group Discovery,69119e58-96db-4110-ad27-954e48f3bb13,powershell
 discovery,T1201,Password Policy Discovery,5,Examine local password policy - Windows,4588d243-f24e-4549-b2e3-e627acc089f6,command_prompt
 discovery,T1201,Password Policy Discovery,6,Examine domain password policy - Windows,46c2c362-2679-4ef5-aec9-0e958e135be4,command_prompt
@@ -1046,6 +1083,9 @@ discovery,T1518.001,Software Discovery: Security Software Discovery,1,Security S
 discovery,T1518.001,Software Discovery: Security Software Discovery,2,Security Software Discovery - powershell,7f566051-f033-49fb-89de-b6bacab730f0,powershell
 discovery,T1518.001,Software Discovery: Security Software Discovery,5,Security Software Discovery - Sysmon Service,fe613cf3-8009-4446-9a0f-bc78a15b66c9,command_prompt
 discovery,T1518.001,Software Discovery: Security Software Discovery,6,Security Software Discovery - AV Discovery via WMI,1553252f-14ea-4d3b-8a08-d7a4211aa945,command_prompt
+discovery,T1518.001,Software Discovery: Security Software Discovery,7,Security Software Discovery - AV Discovery via Get-CimInstance and Get-WmiObject cmdlets,015cd268-996e-4c32-8347-94c80c6286ee,command_prompt
+discovery,T1518.001,Software Discovery: Security Software Discovery,8,Security Software Discovery - Windows Defender Enumeration,d3415a0e-66ef-429b-acf4-a768876954f6,powershell
+discovery,T1518.001,Software Discovery: Security Software Discovery,9,Security Software Discovery - Windows Firewall Enumeration,9dca5a1d-f78c-4a8d-accb-d6de67cfed6b,powershell
 discovery,T1018,Remote System Discovery,1,Remote System Discovery - net,85321a9c-897f-4a60-9f20-29788e50bccd,command_prompt
 discovery,T1018,Remote System Discovery,2,Remote System Discovery - net group Domain Computers,f1bf6c8f-9016-4edf-aff9-80b65f5d711f,command_prompt
 discovery,T1018,Remote System Discovery,3,Remote System Discovery - nltest,52ab5108-3f6f-42fb-8ba3-73bc054f22c8,command_prompt
@@ -1067,6 +1107,7 @@ discovery,T1046,Network Service Discovery,5,WinPwn - spoolvulnscan,54574908-f1de
 discovery,T1046,Network Service Discovery,6,WinPwn - MS17-10,97585b04-5be2-40e9-8c31-82157b8af2d6,powershell
 discovery,T1046,Network Service Discovery,7,WinPwn - bluekeep,1cca5640-32a9-46e6-b8e0-fabbe2384a73,powershell
 discovery,T1046,Network Service Discovery,8,WinPwn - fruit,bb037826-cbe8-4a41-93ea-b94059d6bb98,powershell
+discovery,T1046,Network Service Discovery,10,Port-Scanning /24 Subnet with PowerShell,05df2a79-dba6-4088-a804-9ca0802ca8e4,powershell
 discovery,T1518,Software Discovery,1,Find and Display Internet Explorer Browser Version,68981660-6670-47ee-a5fa-7e74806420a4,command_prompt
 discovery,T1518,Software Discovery,2,Applications Installed,c49978f6-bd6e-4221-ad2c-9e3e30cc1e3b,powershell
 discovery,T1518,Software Discovery,4,WinPwn - Dotnetsearch,7e79a1b6-519e-433c-ad55-3ff293667101,powershell
@@ -1085,8 +1126,8 @@ impact,T1531,Account Access Removal,1,Change User Password - Windows,1b99ef28-f8
 impact,T1531,Account Access Removal,2,Delete User - Windows,f21a1d7d-a62f-442a-8c3a-2440d43b19e5,command_prompt
 impact,T1531,Account Access Removal,3,Remove Account From Domain Admin Group,43f71395-6c37-498e-ab17-897d814a0947,powershell
 impact,T1486,Data Encrypted for Impact,5,PureLocker Ransom Note,649349c7-9abf-493b-a7a2-b1aa4d141528,command_prompt
-impact,T1486,Data Encrypted for Impact,6,Data Encrypted with GPG4Win,4541e2c2-33c8-44b1-be79-9161440f1718,powershell
-impact,T1485,Data Destruction,1,Windows - Overwrite file with Sysinternals SDelete,476419b5-aebf-4366-a131-ae3e8dae5fc2,powershell
+impact,T1486,Data Encrypted for Impact,8,Data Encrypted with GPG4Win,4541e2c2-33c8-44b1-be79-9161440f1718,powershell
+impact,T1485,Data Destruction,1,Windows - Overwrite file with SysInternals SDelete,476419b5-aebf-4366-a131-ae3e8dae5fc2,powershell
 impact,T1485,Data Destruction,3,Overwrite deleted data on C drive,321fd25e-0007-417f-adec-33232252be19,command_prompt
 impact,T1490,Inhibit System Recovery,1,Windows - Delete Volume Shadow Copies,43819286-91a9-4369-90ed-d31fb4da2c01,command_prompt
 impact,T1490,Inhibit System Recovery,2,Windows - Delete Volume Shadow Copies via WMI,6a3ff8dd-f49c-4272-a658-11c2fe58bd88,command_prompt
@@ -1097,6 +1138,7 @@ impact,T1490,Inhibit System Recovery,6,Windows - Delete Backup Files,6b1dbaf6-cc
 impact,T1490,Inhibit System Recovery,7,Windows - wbadmin Delete systemstatebackup,584331dd-75bc-4c02-9e0b-17f5fd81c748,command_prompt
 impact,T1490,Inhibit System Recovery,8,Windows - Disable the SR scheduled task,1c68c68d-83a4-4981-974e-8993055fa034,command_prompt
 impact,T1490,Inhibit System Recovery,9,Disable System Restore Through Registry,66e647d1-8741-4e43-b7c1-334760c2047f,command_prompt
+impact,T1490,Inhibit System Recovery,10,Windows - vssadmin Resize Shadowstorage Volume,da558b07-69ae-41b9-b9d4-4d98154a7049,powershell
 impact,T1529,System Shutdown/Reboot,1,Shutdown System - Windows,ad254fa8-45c0-403b-8c77-e00b3d3e7a64,command_prompt
 impact,T1529,System Shutdown/Reboot,2,Restart System - Windows,f4648f0d-bf78-483c-bafc-3ec99cd1c302,command_prompt
 impact,T1529,System Shutdown/Reboot,10,Logoff System - Windows,3d8c25b5-7ff5-4c9d-b21f-85ebd06654a4,command_prompt
@@ -1114,6 +1156,7 @@ exfiltration,T1020,Automated Exfiltration,1,IcedID Botnet HTTP PUT,9c780d3d-3a14
 exfiltration,T1048.002,Exfiltration Over Alternative Protocol - Exfiltration Over Asymmetric Encrypted Non-C2 Protocol,1,Exfiltrate data HTTPS using curl windows,1cdf2fb0-51b6-4fd8-96af-77020d5f1bf0,command_prompt
 exfiltration,T1041,Exfiltration Over C2 Channel,1,C2 Data Exfiltration,d1253f6e-c29b-49dc-b466-2147a6191932,powershell
 exfiltration,T1048,Exfiltration Over Alternative Protocol,3,DNSExfiltration (doh),c943d285-ada3-45ca-b3aa-7cd6500c6a48,powershell
+exfiltration,T1567.003,Exfiltration Over Web Service: Exfiltration to Text Storage Sites,1,Exfiltrate data with HTTP POST to text storage sites - pastebin.com (Windows),c2e8ab6e-431e-460a-a2aa-3bc6a32022e3,powershell
 exfiltration,T1567.002,Exfiltration Over Web Service: Exfiltration to Cloud Storage,1,Exfiltrate data with rclone to cloud Storage - Mega (Windows),8529ee44-279a-4a19-80bf-b846a40dda58,powershell
 exfiltration,T1048.003,Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,2,Exfiltration Over Alternative Protocol - ICMP,dd4b4421-2e25-4593-90ae-7021947ad12e,powershell
 exfiltration,T1048.003,Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,4,Exfiltration Over Alternative Protocol - HTTP,6aa58451-1121-4490-a8e9-1dada3f1c68c,powershell

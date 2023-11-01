@@ -285,7 +285,6 @@ atomic_tests:
       ls -la /tmp/art.txt      
     cleanup_command: |
       rm /tmp/art.txt
-
 - name: Detecting pipe-to-shell (freebsd)
   description: |
     An adversary may develop a useful utility or subvert the CI/CD pipe line of a legitimate utility developer, who requires or suggests installing their utility by piping a curl download directly into bash. Of-course this is a very bad idea. The adversary may also take advantage of this BLIND install method and selectively running extra commands in the install script for those who DO pipe to bash and not for those who DO NOT. This test uses curl to download the pipe-to-shell.sh script, the first time without piping it to bash and the second piping it into bash which executes the echo command.
@@ -305,6 +304,12 @@ atomic_tests:
       if [ -x "$(command -v curl)" ]; then echo "curl is installed"; else echo "curl is NOT installed"; exit 1; fi
     get_prereq_command: |
       pkg update && pkg install -y curl
+- name: Current kernel information enumeration
+  auto_generated_guid: 3a53734a-9e26-4f4b-ad15-059e767f5f14
+  description: |
+    An adversary may want to enumerate the kernel information to tailor their attacks for that particular kernel. The following command will enumerate the kernel information.
+  supported_platforms:
+  - linux
   executor:
     name: sh
     elevation_required: false
@@ -316,3 +321,4 @@ atomic_tests:
       ls -la /tmp/art.txt      
     cleanup_command: |
       rm /tmp/art.txt
+      uname -srm

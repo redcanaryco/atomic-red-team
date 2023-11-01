@@ -29,11 +29,12 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      The Get-AzDomainInfo script must exist in $env:temp.
+      The Get-AzDomainInfo script must exist in PathToAtomicsFolder\..\ExternalPayloads.
     prereq_command: |
-      if (test-path $env:temp\Get-AzDomainInfo.ps1){exit 0} else {exit 1}
+      if (test-path "PathToAtomicsFolder\..\ExternalPayloads\Get-AzDomainInfo.ps1"){exit 0} else {exit 1}
     get_prereq_command: |
-      invoke-webrequest "https://raw.githubusercontent.com/NetSPI/MicroBurst/c771c665a2c71f9c5ba474869cd1c211ebee68fd/Az/Get-AzDomainInfo.ps1" -outfile "$env:temp\Get-AzDomainInfo.ps1"
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      invoke-webrequest "https://raw.githubusercontent.com/NetSPI/MicroBurst/c771c665a2c71f9c5ba474869cd1c211ebee68fd/Az/Get-AzDomainInfo.ps1" -outfile "PathToAtomicsFolder\..\ExternalPayloads\Get-AzDomainInfo.ps1"
   - description: |
       The Az module must be installed.
     prereq_command: |
@@ -42,7 +43,7 @@ atomic_tests:
       Install-Module -Name Az -Force
   executor:
     command: |
-      import-module "$env:temp\Get-AzDomainInfo.ps1"
+      import-module "PathToAtomicsFolder\..\ExternalPayloads\Get-AzDomainInfo.ps1"
       $Password = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
       $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Password
       Connect-AzAccount -Credential $Credential | out-null

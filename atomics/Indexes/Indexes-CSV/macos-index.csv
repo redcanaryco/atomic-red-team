@@ -63,6 +63,7 @@ defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,6,Disable Lit
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,7,Disable OpenDNS Umbrella,07f43b33-1e15-4e99-be70-bc094157c849,sh
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,8,Disable macOS Gatekeeper,2a821573-fb3f-4e71-92c3-daac7432f053,sh
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,9,Stop and unload Crowdstrike Falcon on macOS,b3e7510c-2d4c-4249-a33f-591a2bc83eef,sh
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,46,Tamper with Defender ATP on Linux/MacOS,40074085-dbc8-492b-90a3-11bcfc52fda8,sh
 defense-evasion,T1027,Obfuscated Files or Information,1,Decode base64 Data into Script,f45df6be-2e1e-4136-a384-8f18ab3826fb,sh
 defense-evasion,T1553.004,Subvert Trust Controls: Install Root Certificate,3,Install root CA on macOS,cc4a0b8c-426f-40ff-9426-4e10e5bf4c49,sh
 defense-evasion,T1027.004,Obfuscated Files or Information: Compile After Delivery,3,C compile,d0377aa6-850a-42b2-95f0-de558d80be57,bash
@@ -139,6 +140,8 @@ collection,T1123,Audio Capture,3,using Quicktime Player,c7a0bb71-70ce-4a53-b115-
 collection,T1074.001,Data Staged: Local Data Staging,2,Stage data from Discovery.sh,39ce0303-ae16-4b9e-bb5b-4f53e8262066,bash
 collection,T1115,Clipboard Data,3,Execute commands from clipboard,1ac2247f-65f8-4051-b51f-b0ccdfaaa5ff,bash
 collection,T1056.002,Input Capture: GUI Input Capture,1,AppleScript - Prompt User for Password,76628574-0bc1-4646-8fe2-8f4427b47d15,bash
+collection,T1056.002,Input Capture: GUI Input Capture,3,AppleScript - Spoofing a credential prompt using osascript,b7037b89-947a-427a-ba29-e7e9f09bc045,bash
+lateral-movement,T1021.005,Remote Services:VNC,1,Enable Apple Remote Desktop Agent,8a930abe-841c-4d4f-a877-72e9fe90b9ea,sh
 privilege-escalation,T1548.003,Abuse Elevation Control Mechanism: Sudo and Sudo Caching,1,Sudo usage,150c3a08-ee6e-48a6-aeaf-3659d24ceb4e,sh
 privilege-escalation,T1548.003,Abuse Elevation Control Mechanism: Sudo and Sudo Caching,2,Unlimited sudo cache timeout,a7b17659-dd5e-46f7-b7d1-e6792c91d0bc,sh
 privilege-escalation,T1548.003,Abuse Elevation Control Mechanism: Sudo and Sudo Caching,3,Disable tty_tickets for sudo caching,91a60b03-fb75-4d24-a42e-2eb8956e8de1,sh
@@ -171,6 +174,7 @@ privilege-escalation,T1078.003,Valid Accounts: Local Accounts,3,Create local acc
 privilege-escalation,T1078.003,Valid Accounts: Local Accounts,4,Enable root account using dsenableroot utility - MacOS,20b40ea9-0e17-4155-b8e6-244911a678ac,bash
 privilege-escalation,T1078.003,Valid Accounts: Local Accounts,5,Add a new/existing user to the admin group using dseditgroup utility - macOS,433842ba-e796-4fd5-a14f-95d3a1970875,bash
 credential-access,T1056.001,Input Capture: Keylogging,7,MacOS Swift Keylogger,aee3a097-4c5c-4fff-bbd3-0a705867ae29,bash
+credential-access,T1539,Steal Web Session Cookie,3,Steal Chrome Cookies via Remote Debugging (Mac),e43cfdaf-3fb8-4a45-8de0-7eee8741d072,bash
 credential-access,T1555.001,Credentials from Password Stores: Keychain,1,Keychain,1864fdec-ff86-4452-8c30-f12507582a93,sh
 credential-access,T1040,Network Sniffing,2,Packet Capture macOS using tcpdump or tshark,9d04efee-eff5-4240-b8d2-07792b873608,bash
 credential-access,T1040,Network Sniffing,7,Packet Capture macOS using /dev/bpfN with sudo,e6fe5095-545d-4c8b-a0ae-e863914be3aa,bash
@@ -187,6 +191,7 @@ credential-access,T1552.001,Unsecured Credentials: Credentials In Files,2,Extrac
 credential-access,T1552.001,Unsecured Credentials: Credentials In Files,3,Extract passwords with grep,bd4cf0d1-7646-474e-8610-78ccf5a097c4,sh
 credential-access,T1552.001,Unsecured Credentials: Credentials In Files,6,Find and Access Github Credentials,da4f751a-020b-40d7-b9ff-d433b7799803,bash
 credential-access,T1056.002,Input Capture: GUI Input Capture,1,AppleScript - Prompt User for Password,76628574-0bc1-4646-8fe2-8f4427b47d15,bash
+credential-access,T1056.002,Input Capture: GUI Input Capture,3,AppleScript - Spoofing a credential prompt using osascript,b7037b89-947a-427a-ba29-e7e9f09bc045,bash
 credential-access,T1110.004,Brute Force: Credential Stuffing,2,SSH Credential Stuffing From MacOS,d546a3d9-0be5-40c7-ad82-5a7d79e1b66b,bash
 discovery,T1033,System Owner/User Discovery,2,System Owner/User Discovery,2a9b677d-a230-44f4-ad86-782df1ef108c,sh
 discovery,T1087.001,Account Discovery: Local Account,2,View sudoers access,fed9be70-0186-4bde-9f8a-20945f9370c2,sh
@@ -224,6 +229,8 @@ discovery,T1518,Software Discovery,3,Find and Display Safari Browser Version,103
 impact,T1531,Account Access Removal,4,Change User Password via passwd,3c717bf3-2ecc-4d79-8ac8-0bfbf08fbce6,sh
 impact,T1531,Account Access Removal,5,Delete User via dscl utility,4d938c43-2fe8-4d70-a5b3-5bf239aa7846,sh
 impact,T1531,Account Access Removal,6,Delete User via sysadminctl utility,d3812c4e-30ee-466a-a0aa-07e355b561d6,sh
+impact,T1486,Data Encrypted for Impact,6,Encrypt files using 7z utility - macOS,645f0f5a-ef09-48d8-b9bc-f0e24c642d72,sh
+impact,T1486,Data Encrypted for Impact,7,Encrypt files using openssl utility - macOS,1a01f6b8-b1e8-418e-bbe3-78a6f822759e,sh
 impact,T1496,Resource Hijacking,1,macOS/Linux - Simulate CPU Load with Yes,904a5a0e-fb02-490d-9f8d-0e256eb37549,bash
 impact,T1485,Data Destruction,2,macOS/Linux - Overwrite file with DD,38deee99-fd65-4031-bec8-bfa4f9f26146,bash
 impact,T1529,System Shutdown/Reboot,3,Restart System via `shutdown` - macOS/Linux,6326dbc4-444b-4c04-88f4-27e94d0327cb,bash

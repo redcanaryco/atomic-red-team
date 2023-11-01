@@ -15,3 +15,29 @@ atomic_tests:
       fsutil usn createjournal m=1000 a=100 c:
     name: command_prompt
     elevation_required: true
+- name: Indicator Manipulation using FSUtil
+  auto_generated_guid: 96e86706-6afd-45b6-95d6-108d23eaf2e9
+  description: |
+    Finds a file by user name (if Disk Quotas are enabled), queries allocated ranges for a file, sets a file's short name, sets a file's valid data length, sets zero data for a file, or creates a new file. Upon execution, no output
+    will be displayed. More information about fsutil can be found at https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/fsutil-file
+    - https://tria.ge/230601-x8x6bsgb24/behavioral2
+  supported_platforms:
+  - windows
+  input_arguments:
+    file_to_manipulate:
+      description: Path of file to manipulate
+      type: path
+      default: PathToAtomicsFolder\..\ExternalPayloads\T1070-2.txt
+    file_data_length:
+      description: Data length to setzero
+      type: integer
+      default: 10
+  executor:
+    command: |
+      if (-not (Test-Path "#{file_to_manipulate}")) { New-Item "#{file_to_manipulate}" -Force } 
+      echo "1234567890" > "#{file_to_manipulate}"
+      fsutil  file setZeroData offset=0 length=#{file_data_length} "#{file_to_manipulate}"
+    cleanup_command: |
+      rm "#{file_to_manipulate}"
+    name: powershell
+    elevation_required: false

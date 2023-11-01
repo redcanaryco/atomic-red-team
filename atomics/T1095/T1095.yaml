@@ -34,11 +34,11 @@ atomic_tests:
     ncat_exe:
       description: The location of ncat.exe
       type: path
-      default: $env:TEMP\T1095\nmap-7.80\ncat.exe
+      default: PathToAtomicsFolder\..\ExternalPayloads\T1095\nmap-7.80\ncat.exe
     ncat_path:
       description: The folder path of ncat.exe
       type: path
-      default: $env:TEMP\T1095
+      default: PathToAtomicsFolder\..\ExternalPayloads\T1095
     server_ip:
       description: The IP address or domain name of the listening server
       type: string
@@ -51,7 +51,7 @@ atomic_tests:
       if( Test-Path "#{ncat_exe}") {exit 0} else {exit 1}
     get_prereq_command: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      New-Item -ItemType Directory -Force -Path #{ncat_path} | Out-Null
+      New-Item -ItemType Directory -Force -Path "#{ncat_path}" | Out-Null
       $parentpath = Split-Path (Split-Path "#{ncat_exe}"); $zippath = "$parentpath\nmap.zip"
       Invoke-WebRequest  "https://nmap.org/dist/nmap-7.80-win32.zip" -OutFile "$zippath"
         Expand-Archive $zippath $parentpath -Force
@@ -61,7 +61,7 @@ atomic_tests:
       }
   executor:
     command: |
-      cmd /c #{ncat_exe} #{server_ip} #{server_port}
+      cmd /c "#{ncat_exe}" #{server_ip} #{server_port}
     name: powershell
 - name: Powercat C2
   auto_generated_guid: 3e0e0e7f-6aa2-4a61-b61d-526c2cc9330e

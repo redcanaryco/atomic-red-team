@@ -69,7 +69,7 @@ atomic_tests:
     psexec_exe:
       description: Path to PsExec
       type: string
-      default: C:\PSTools\PsExec.exe
+      default: PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -77,13 +77,14 @@ atomic_tests:
     prereq_command: |
       if (Test-Path "#{psexec_exe}") { exit 0} else { exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
-      Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\PsTools.zip"
+      Expand-Archive "PathToAtomicsFolder\..\ExternalPayloads\PsTools.zip" "PathToAtomicsFolder\..\ExternalPayloads\PsTools" -Force
       New-Item -ItemType Directory (Split-Path "#{psexec_exe}") -Force | Out-Null
-      Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_exe}" -Force
+      Copy-Item "PathToAtomicsFolder\..\ExternalPayloads\PsTools\PsExec.exe" "#{psexec_exe}" -Force
   executor:
     command: |
-      #{psexec_exe} #{remote_host} -accepteula -c #{command_path}
+      "#{psexec_exe}" #{remote_host} -accepteula -c #{command_path}
     name: command_prompt
     elevation_required: true
 - name: Execute command writing output to local Admin Share

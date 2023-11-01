@@ -117,7 +117,8 @@
 - T1036.002 Right-to-Left Override [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1542.002 Component Firmware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1070 Indicator Removal on Host [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1036.004 Masquerading: Masquerade Task or Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1036.004 Masquerading: Masquerade Task or Service](../../T1036.004/T1036.004.md)
+  - Atomic Test #3: linux rename /proc/pid/comm using prctl [linux]
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1064 Scripting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1562.010 Downgrade Attack [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -140,11 +141,12 @@
   - Atomic Test #2: Disable Cb Response [linux]
   - Atomic Test #3: Disable SELinux [linux]
   - Atomic Test #4: Stop Crowdstrike Falcon on Linux [linux]
-  - Atomic Test #39: Clear History [linux]
-  - Atomic Test #40: Suspend History [linux]
-  - Atomic Test #41: Reboot Linux Host via Kernel System Request [linux]
-  - Atomic Test #42: Clear Pagging Cache [linux]
-  - Atomic Test #43: Disable Memory Swap [linux]
+  - Atomic Test #38: Clear History [linux]
+  - Atomic Test #39: Suspend History [linux]
+  - Atomic Test #40: Reboot Linux Host via Kernel System Request [linux]
+  - Atomic Test #41: Clear Pagging Cache [linux]
+  - Atomic Test #42: Disable Memory Swap [linux]
+  - Atomic Test #46: Tamper with Defender ATP on Linux/MacOS [linux, macos]
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -240,7 +242,9 @@
 - [T1098.004 SSH Authorized Keys](../../T1098.004/T1098.004.md)
   - Atomic Test #1: Modify SSH Authorized Keys [macos, linux]
 - T1215 Kernel Modules and Extensions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1136.002 Create Account: Domain Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1136.002 Create Account: Domain Account](../../T1136.002/T1136.002.md)
+  - Atomic Test #4: Active Directory Create Admin Account [linux]
+  - Atomic Test #5: Active Directory Create User Account (Non-elevated) [linux]
 - T1542.002 Component Firmware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1205.001 Port Knocking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -398,7 +402,7 @@
 - T1213 Data from Information Repositories [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 
 # lateral-movement
-- T1021.005 VNC [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1021.005 Remote Services:VNC [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1080 Taint Shared Content [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1021.004 SSH [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1017 Application Deployment Software [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -516,7 +520,7 @@
 - T1558 Steal or Forge Kerberos Tickets [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1555 Credentials from Password Stores [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1552 Unsecured Credentials](../../T1552/T1552.md)
-  - Atomic Test #1: AWS - Retrieve EC2 Password Data using stratus [linux, macos]
+  - Atomic Test #1: AWS - Retrieve EC2 Password Data using stratus [linux, macos, iaas:aws]
 - T1139 Bash History [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1503 Credentials from Web Browsers [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1145 Private Keys [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -563,7 +567,8 @@
 - T1016.001 Internet Connection Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1069 Permission Groups Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1652 Device Driver Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1087.002 Account Discovery: Domain Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1087.002 Account Discovery: Domain Account](../../T1087.002/T1087.002.md)
+  - Atomic Test #23: Active Directory Domain Search [linux]
 - [T1087.001 Account Discovery: Local Account](../../T1087.001/T1087.001.md)
   - Atomic Test #1: Enumerate all accounts (Local) [linux]
   - Atomic Test #2: View sudoers access [linux, macos]
@@ -573,7 +578,8 @@
   - Atomic Test #6: Enumerate users and groups [linux, macos]
 - [T1497.001 Virtualization/Sandbox Evasion: System Checks](../../T1497.001/T1497.001.md)
   - Atomic Test #1: Detect Virtualization Environment (Linux) [linux]
-- T1069.002 Permission Groups Discovery: Domain Groups [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1069.002 Permission Groups Discovery: Domain Groups](../../T1069.002/T1069.002.md)
+  - Atomic Test #15: Active Directory Domain Search Using LDAP - Linux (Ubuntu)/macOS [linux]
 - [T1007 System Service Discovery](../../T1007/T1007.md)
   - Atomic Test #3: System Service Discovery - systemctl [linux]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
@@ -715,6 +721,7 @@
   - Atomic Test #10: Change login shell [linux]
   - Atomic Test #11: Environment variable scripts [linux]
   - Atomic Test #12: Detecting pipe-to-shell [linux]
+  - Atomic Test #13: Current kernel information enumeration [linux]
 - T1559 Inter-Process Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1154 Trap [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1203 Exploitation for Client Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -772,7 +779,7 @@
   - Atomic Test #2: Exfiltration Over Alternative Protocol - SSH [macos, linux]
 - T1052.001 Exfiltration over USB [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1002 Data Compressed [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1567.003 Exfiltration to Text Storage Sites [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1567.003 Exfiltration Over Web Service: Exfiltration to Text Storage Sites [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1567.002 Exfiltration Over Web Service: Exfiltration to Cloud Storage [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1030 Data Transfer Size Limits](../../T1030/T1030.md)
   - Atomic Test #1: Data Transfer Size Limits [macos, linux]

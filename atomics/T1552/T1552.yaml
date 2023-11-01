@@ -8,6 +8,7 @@ atomic_tests:
   supported_platforms:
   - linux
   - macos
+  - iaas:aws
   input_arguments:
     stratus_path:
       description: Path of stratus binary
@@ -28,7 +29,7 @@ atomic_tests:
       then DOWNLOAD_URL=$(curl -s https://api.github.com/repos/DataDog/stratus-red-team/releases/latest | grep browser_download_url | grep Darwin_x86_64 | cut -d '"' -f 4); wget -q -O #{stratus_path}/stratus-red-team-latest.tar.gz $DOWNLOAD_URL
         tar -xzvf #{stratus_path}/stratus-red-team-latest.tar.gz --directory #{stratus_path}/
       elif [ "$(expr substr $(uname) 1 5)" == "Linux" ]
-      then DOWNLOAD_URL=$(curl -s https://api.github.com/repos/DataDog/stratus-red-team/releases/latest | grep browser_download_url | grep linux_x86_64 | cut -d '"' -f 4) 
+      then DOWNLOAD_URL=$(curl -s https://api.github.com/repos/DataDog/stratus-red-team/releases/latest | grep browser_download_url | grep Linux_x86_64 | cut -d '"' -f 4) 
         wget -q -O #{stratus_path}/stratus-red-team-latest.tar.gz $DOWNLOAD_URL
         tar -xzvf #{stratus_path}/stratus-red-team-latest.tar.gz --directory #{stratus_path}/
       fi
@@ -48,7 +49,6 @@ atomic_tests:
       ./stratus detonate aws.credential-access.ec2-get-password-data --force
     cleanup_command: |
       export AWS_REGION=#{aws_region}
-
       echo "Cleanup detonation"
       cd #{stratus_path}
       ./stratus cleanup --all

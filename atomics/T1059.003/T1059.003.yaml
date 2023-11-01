@@ -15,21 +15,21 @@ atomic_tests:
     script_path:
       description: Script path.
       type: path
-      default: $env:TEMP\T1059.003_script.bat
+      default: PathToAtomicsFolder\..\ExternalPayloads\T1059.003_script.bat
   dependency_executor_name: powershell
   dependencies:
   - description: |
       Batch file must exist on disk at specified location (#{script_path})
     prereq_command: |
-      if (Test-Path #{script_path}) {exit 0} else {exit 1}
+      if (Test-Path "#{script_path}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item #{script_path} -Force | Out-Null
-      Set-Content -Path #{script_path} -Value "#{command_to_execute}"
+      New-Item "#{script_path}" -Force | Out-Null
+      Set-Content -Path "#{script_path}" -Value "#{command_to_execute}"
   executor:
     command: |
-      Start-Process #{script_path}
+      Start-Process "#{script_path}"
     cleanup_command: |
-      Remove-Item #{script_path} -Force -ErrorAction Ignore
+      Remove-Item "#{script_path}" -Force -ErrorAction Ignore
     name: powershell
 - name: Writes text to a file and displays it.
   auto_generated_guid: 127b4afe-2346-4192-815c-69042bec570e
@@ -83,7 +83,7 @@ atomic_tests:
     file_to_print:
       description: File to be opened/printed by Wordpad.
       type: string
-      default: $env:temp\T1059_003note.txt
+      default: PathToAtomicsFolder\..\ExternalPayloads\T1059_003note.txt
     max_to_print:
       description: The maximum number of Wordpad windows the test will open/print.
       type: integer
@@ -95,7 +95,7 @@ atomic_tests:
     prereq_command: |
       if (test-path "#{file_to_print}"){exit 0} else {exit 1}
     get_prereq_command: |
-      new-item #{file_to_print} -value "This file has been created by T1059.003 Test 4" -Force | Out-Null
+      new-item "#{file_to_print}" -value "This file has been created by T1059.003 Test 4" -Force | Out-Null
   executor:
     command: |
       cmd /c "for /l %x in (1,1,#{max_to_print}) do start wordpad.exe /p #{file_to_print}" | out-null
@@ -120,12 +120,34 @@ atomic_tests:
   - description: |
       CMD file must exist on disk at specified location (#{input_file})
     prereq_command: |
-      if (Test-Path #{input_file}) {exit 0} else {exit 1}
+      if (Test-Path "#{input_file}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{input_file}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{input_file}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1059.003/src/t1059.003_cmd.cmd" -OutFile "#{input_file}"
   executor:
     command: |
-      cmd /r cmd<#{input_file}
+      cmd /r cmd<"#{input_file}"
     name: command_prompt
     elevation_required: false
+
+- name: Command prompt writing script to file then executes it
+  auto_generated_guid: 00682c9f-7df4-4df8-950b-6dcaaa3ad9af
+  description: |2-
+        Simulate DarkGate malware's second stage by writing a VBscript to disk directly from the command prompt then executing it.
+        The script will execute 'whoami' then exit.
+  supported_platforms:
+  - windows
+  input_arguments:
+    script_path:
+      description: Path in which the script will be written.
+      type: path
+      default: '%TEMP%\'
+    script_name:
+      description: Script name (without the extension)
+      type: string
+      default: AtomicTest
+  executor:
+    command: ' c:\windows\system32\cmd.exe /c cd /d #{script_path} & echo Set objShell = CreateObject("WScript.Shell"):Set objExec = objShell.Exec("whoami"):Set objExec = Nothing:Set objShell = Nothing > #{script_name}.vbs & #{script_name}.vbs'
+    cleanup_command: del "#{script_name}.vbs" >nul 2>&1
+    name: command_prompt
+    elevation_required: true

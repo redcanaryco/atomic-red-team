@@ -20,25 +20,26 @@ atomic_tests:
     wordlist:
       description: File path to keywords for search permutations
       type: string
-      default: $env:temp\permutations.txt
+      default: PathToAtomicsFolder\..\ExternalPayloads\permutations.txt
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      The Invoke-EnumerateAzureBlobs module must exist in $env:temp.
+      The Invoke-EnumerateAzureBlobs module must exist in PathToAtomicsFolder\..\ExternalPayloads.
     prereq_command: |
-      if (test-path $env:temp\Invoke-EnumerateAzureBlobs.ps1){exit 0} else {exit 1}
+      if (test-path "PathToAtomicsFolder\..\ExternalPayloads\Invoke-EnumerateAzureBlobs.ps1"){exit 0} else {exit 1}
     get_prereq_command: |
-      invoke-webrequest "https://raw.githubusercontent.com/NetSPI/MicroBurst/156c4e9f4253b482b2b68eda4651116b9f0f2e17/Misc/Invoke-EnumerateAzureBlobs.ps1" -outfile "$env:temp\Invoke-EnumerateAzureBlobs.ps1"
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      invoke-webrequest "https://raw.githubusercontent.com/NetSPI/MicroBurst/156c4e9f4253b482b2b68eda4651116b9f0f2e17/Misc/Invoke-EnumerateAzureBlobs.ps1" -outfile "PathToAtomicsFolder\..\ExternalPayloads\Invoke-EnumerateAzureBlobs.ps1"
   - description: |
-      The wordlist file for search permutations must exist in $env:temp.
+      The wordlist file for search permutations must exist in PathToAtomicsFolder\..\ExternalPayloads.
     prereq_command: |
-      if (test-path #{wordlist}){exit 0} else {exit 1}
+      if (test-path "#{wordlist}"){exit 0} else {exit 1}
     get_prereq_command: |
       invoke-webrequest "https://raw.githubusercontent.com/NetSPI/MicroBurst/156c4e9f4253b482b2b68eda4651116b9f0f2e17/Misc/permutations.txt" -outfile "#{wordlist}"
   executor:
     command: |
-      import-module "$env:temp\Invoke-EnumerateAzureBlobs.ps1"
-      Invoke-EnumerateAzureBlobs -base #{base} -permutations #{wordlist} -outputfile "#{output_file}"
+      import-module "PathToAtomicsFolder\..\ExternalPayloads\Invoke-EnumerateAzureBlobs.ps1"
+      Invoke-EnumerateAzureBlobs -base #{base} -permutations "#{wordlist}" -outputfile "#{output_file}"
     cleanup_command: |
       remove-item #{output_file} -erroraction silentlycontinue
     name: powershell

