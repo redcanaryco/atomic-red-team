@@ -4,12 +4,13 @@ atomic_tests:
 - name: Exfiltration Over Alternative Protocol - HTTP
   auto_generated_guid: 1d1abbd6-a3d3-4b2e-bef5-c59293f46eff
   description: |
-    A firewall rule (iptables or firewalld) will be needed to allow exfiltration on port 1337.
+    A firewall rule (ipfw,pf,iptables or firewalld) will be needed to allow exfiltration on port 1337.
 
     Upon successful execution, sh will be used to make a directory (/tmp/victim-staging-area), write a txt file, and host the directory with Python on port 1337, to be later downloaded.
   supported_platforms:
   - macos
   - linux
+  - freebsd
   executor:
     steps: |
       1. Victim System Configuration:
@@ -52,6 +53,7 @@ atomic_tests:
   description: |
     Exfiltration of specified file over DNS protocol.
   supported_platforms:
+  - freebsd
   - linux
   executor:
     steps: |
@@ -216,3 +218,13 @@ atomic_tests:
     elevation_required: false
     command: |
       if [ $(which python3) ]; then cd /tmp; python3 -m http.server 9090 & PID=$!; sleep 10; kill $PID; unset PID; fi
+- name: Python3 http.server (freebsd)
+  description: |
+    An adversary may use the python3 standard library module http.server to exfiltrate data. This test checks if python3.9 is available and if so, creates a HTTP server on port 9090, captures the PID, sleeps for 10 seconds, then kills the PID and unsets the $PID variable.
+  supported_platforms:
+  - freebsd
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      if [ $(which python3.9) ]; then cd /tmp; python3.9 -m http.server 9090 & PID=$!; sleep 10; kill $PID; unset PID; fi

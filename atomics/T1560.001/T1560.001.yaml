@@ -193,6 +193,7 @@ atomic_tests:
   description: |
     An adversary may compress data (e.g., sensitive documents) that is collected prior to exfiltration. This test uses standard gzip compression.
   supported_platforms:
+  - freebsd
   - linux
   - macos
   input_arguments:
@@ -216,6 +217,7 @@ atomic_tests:
   description: |
     An adversary may compress data (e.g., sensitive documents) that is collected prior to exfiltration. This test uses standard gzip compression.
   supported_platforms:
+  - freebsd
   - linux
   - macos
   input_arguments:
@@ -246,6 +248,7 @@ atomic_tests:
   description: |
     Encrypt data for exiltration
   supported_platforms:
+  - freebsd
   - macos
   - linux
   input_arguments:
@@ -267,7 +270,7 @@ atomic_tests:
     prereq_command: |
       if [ ! -x "$(command -v gpg)" ] || [ ! -x "$(command -v zip)" ]; then exit 1; fi;
     get_prereq_command: |
-      (which yum && yum -y install epel-release zip gpg)||(which apt-get && apt-get install -y zip gpg)
+      (which pkg && pkg install -y gnupg zip)||(which yum && yum -y install epel-release zip gpg)||(which apt-get && apt-get install -y zip gpg)
   executor:
     name: sh
     elevation_required: false
