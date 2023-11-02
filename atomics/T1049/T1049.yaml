@@ -27,13 +27,14 @@ atomic_tests:
     command: |
       Get-NetTCPConnection
     name: powershell
-- name: System Network Connections Discovery Linux & MacOS
+- name: System Network Connections Discovery FreeBSD, Linux & MacOS
   auto_generated_guid: 9ae28d3f-190f-4fa0-b023-c7bd3e0eabf2
   description: |
     Get a listing of network connections.
 
     Upon successful execution, sh will execute `netstat` and `who -a`. Results will output via stdout.
   supported_platforms:
+  - freebsd
   - linux
   - macos
   dependency_executor_name: sh

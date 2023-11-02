@@ -33,6 +33,36 @@ atomic_tests:
       rm /tmp/encoded.dat 
       rm /tmp/art.sh
     name: sh
+- name: Decode base64 Data into Script
+  description: |
+    Creates a base64-encoded data file and decodes it into an executable shell script
+
+    Upon successful execution, sh will execute art.sh, which is a base64 encoded command, that echoes `Hello from the Atomic Red Team` 
+    and uname -v
+  supported_platforms:
+  - freebsd
+  input_arguments:
+    shell_command:
+      description: command to encode
+      type: string
+      default: "echo Hello from the Atomic Red Team && uname -v"
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      encode the command into base64 file
+    prereq_command: |
+      exit 1
+    get_prereq_command: |
+      echo "#{shell_command}" | b64encode -r - > /tmp/encoded.dat
+  executor:
+    command: |
+      cat /tmp/encoded.dat | b64decode -r > /tmp/art.sh
+      chmod +x /tmp/art.sh
+      /tmp/art.sh
+    cleanup_command: |
+      rm /tmp/encoded.dat 
+      rm /tmp/art.sh
+    name: sh
 - name: Execute base64-encoded PowerShell
   auto_generated_guid: a50d5a97-2531-499e-a1de-5544c74432c6
   description: |

@@ -112,6 +112,30 @@ atomic_tests:
     cleanup_command: |
       ufw enable
       ufw status verbose
+- name: Stop/Start Packet Filter
+  description: |
+    Stop the Packet Filter if installed.
+  supported_platforms:
+  - freebsd
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Check if pfctl is installed on the machine.
+    prereq_command: |
+      if [ ! -x "$(command -v pfctl)" ]; then echo -e "\n***** PF NOT installed *****\n"; exit 1; fi
+      if [ "$(kldstat -n pf)" = "" ]; then echo -e "\n***** PF inactive *****\n"; exit 1; fi 
+    get_prereq_command: |
+      echo ""
+  executor:
+    name: sh
+    elevation_required: true
+    command: |
+      service pf stop
+      service pf disable
+    cleanup_command: |
+      service pf enable
+      service pf start
+      service pf status
 - name: Stop/Start UFW firewall systemctl
   auto_generated_guid: 9fd99609-1854-4f3c-b47b-97d9a5972bd1
   description: |
@@ -183,6 +207,31 @@ atomic_tests:
     cleanup_command: |
       { echo y; echo response; } | ufw delete 1
       ufw status numbered
+- name: Add and delete Packet Filter rules
+  description: |
+    Add and delete a rule on the Packet Filter (PF) if installed and enabled. 
+  supported_platforms:
+  - freebsd
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Check if pf is installed on the machine and enabled.
+    prereq_command: |
+      if [ ! -x "$(command -v pfctl)" ]; then echo -e "\n***** PF NOT installed *****\n"; exit 1; fi
+      if [ "$(kldstat -n pf)" = "" ]; then echo -e "\n***** PF inactive *****\n"; exit 1; fi 
+    get_prereq_command: |
+      echo "anchor pf-rules >> /etc/pf.conf"
+      pfctl -f /etc/pf.conf
+  executor:
+    name: sh
+    elevation_required: true
+    command: |
+      echo "block in proto tcp from 1.2.3.4 to any" | pfctl -a pf-rules -f -
+      pfctl -a pf-rules -s rules
+    cleanup_command: |
+      pfctl -a pf-rules -F rules
+      sed -i "" '/anchor pf-rules/d'
+      pfctl -f /etc/pf.conf
 - name: Edit UFW firewall user.rules file
   auto_generated_guid: beaf815a-c883-4194-97e9-fdbbb2bbdd7c
   description: |

@@ -69,6 +69,33 @@ atomic_tests:
     cleanup_command: |
       rm #{output_file}
     name: bash
+- name: X Windows Capture (freebsd)
+  description: |
+    Use xwd command to collect a full desktop screenshot and review file with xwud
+  supported_platforms:
+  - freebsd
+  input_arguments:
+    output_file:
+      description: Output file path
+      type: path
+      default: /tmp/T1113_desktop.xwd
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Package with XWD and XWUD must exist on device
+    prereq_command: |
+      if [ -x "$(command -v xwd)" ]; then exit 0; else exit 1; fi
+      if [ -x "$(command -v xwud)" ]; then exit 0; else exit 1; fi
+    get_prereq_command: |
+      pkg install -y xwd xwud 
+  executor:
+    command: |
+      xwd -root -out #{output_file}
+      xwud -in #{output_file}
+    cleanup_command: |
+      rm #{output_file}
+    name: sh
+
 - name: Capture Linux Desktop using Import Tool
   auto_generated_guid: 9cd1cccb-91e4-4550-9139-e20a586fcea1
   description: |
@@ -93,6 +120,29 @@ atomic_tests:
     cleanup_command: |
       rm #{output_file}
     name: bash
+- name: Capture Linux Desktop using Import Tool (freebsd)
+  description: |
+    Use import command from ImageMagick to collect a full desktop screenshot
+  supported_platforms:
+  - freebsd
+  input_arguments:
+    output_file:
+      description: Output file path
+      type: path
+      default: /tmp/T1113_desktop.png
+  dependencies:
+  - description: |
+      ImageMagick must be installed
+    prereq_command: |
+      if import -help > /dev/null 2>&1; then exit 0; else exit 1; fi
+    get_prereq_command: |
+      pkg install -y ImageMagick7
+  executor:
+    command: |
+      import -window root #{output_file}
+    cleanup_command: |
+      rm #{output_file}
+    name: sh
 - name: Windows Screencapture
   auto_generated_guid: 3c898f62-626c-47d5-aad2-6de873d69153
   description: |
