@@ -36,6 +36,7 @@ class GithubAPI:
     labels = {
         "windows": "windows",
         "macos": "macOS",
+        "freebsd": "freebsd",
         "linux": "linux",
         "azure-ad": "ADFS",
         "containers": "containers",
@@ -50,6 +51,7 @@ class GithubAPI:
         "windows": ["clr2of8", "MHaggis"],
         "linux": ["josehelps", "cyberbuff"],
         "macos": ["josehelps", "cyberbuff"],
+        "freebsd": ["josehelps", "cyberbuff"],
         "containers": ["patel-bhavin"],
         "iaas:gcp": ["patel-bhavin"],
         "iaas:aws": ["patel-bhavin"],

@@ -39,6 +39,22 @@ atomic_tests:
       #{cleanup_command}
     name: sh
     elevation_required: true
+- name: Disable syslog (freebsd)
+  auto_generated_guid: db9de996-441e-4ae0-947b-61b6871e2fdf
+  description: |
+    Disables syslog collection
+  supported_platforms:
+  - freebsd
+  executor:
+    command: |
+      service syslogd stop
+      sysrc syslogd_enable="NO"
+    cleanup_command: |
+      sysrc syslogd_enable="YES"
+      service syslogd start
+    name: sh
+    elevation_required: true
+
 - name: Disable Cb Response
   auto_generated_guid: ae8943f7-0f8d-44de-962d-fbc2e2f03eb8
   description: |
@@ -832,8 +848,9 @@ atomic_tests:
   auto_generated_guid: e74e4c63-6fde-4ad2-9ee8-21c3a1733114
   description: |
     disable swapping of device paging that impaire the compromised host to swap data if the RAM is full. Awfulshred wiper used this technique as an additional 
-    payload to the compromised host and to make sure that there will be no recoverable data due to swap feature of linux.
+    payload to the compromised host and to make sure that there will be no recoverable data due to swap feature of FreeBSD/linux.
   supported_platforms:
+  - freebsd
   - linux
   executor:
     command: |

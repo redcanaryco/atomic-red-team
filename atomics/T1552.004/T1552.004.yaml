@@ -16,8 +16,9 @@ atomic_tests:
 - name: Discover Private SSH Keys
   auto_generated_guid: 46959285-906d-40fa-9437-5a439accd878
   description: |
-    Discover private SSH keys on a macOS or Linux system.
+    Discover private SSH keys on a FreeBSD, macOS or Linux system.
   supported_platforms:
+  - freebsd
   - macos
   - linux
   input_arguments:
@@ -59,6 +60,36 @@ atomic_tests:
     cleanup_command: |
       rm -rf #{output_folder}
     name: sh
+- name: Copy Private SSH Keys with CP (freebsd)
+  auto_generated_guid: 12e4a260-a7fd-4ed8-bf18-1a28c1395775
+  description: |
+    Copy private SSH keys on a FreeBSD system to a staging folder using the `cp` command.
+  supported_platforms:
+  - freebsd
+  input_arguments:
+    search_path:
+      description: Path where to start searching from.
+      type: path
+      default: /
+    output_folder:
+      description: Output folder containing copies of SSH private key files
+      type: path
+      default: /tmp/art-staging
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Install GNU cp from coreutils package.
+    prereq_command: |
+      if [ ! -x "$(command -v gcp)" ]; then exit 1; else exit 0; fi;
+    get_prereq_command: |
+      (which pkg && pkg install -y coreutils)
+  executor:
+    command: |
+      mkdir #{output_folder}
+      find #{search_path} -name id_rsa 2>/dev/null -exec gcp --parents {} #{output_folder} \;
+    cleanup_command: |
+      rm -rf #{output_folder}
+    name: sh
 - name: Copy Private SSH Keys with rsync
   auto_generated_guid: 864bb0b2-6bb5-489a-b43b-a77b3a16d68a
   description: |
@@ -83,6 +114,36 @@ atomic_tests:
     cleanup_command: |
       rm -rf #{output_folder}
     name: sh
+- name: Copy Private SSH Keys with rsync (freebsd)
+  auto_generated_guid: 922b1080-0b95-42b0-9585-b9a5ea0af044
+  description: |
+    Copy private SSH keys on a FreeBSD system to a staging folder using the `rsync` command.
+  supported_platforms:
+  - freebsd
+  input_arguments:
+    search_path:
+      description: Path where to start searching from.
+      type: path
+      default: /
+    output_folder:
+      description: Output folder containing copies of SSH private key files
+      type: path
+      default: /tmp/art-staging
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Check if rsync is installed.
+    prereq_command: |
+      if [ ! -x "$(command -v rsync)" ]; then exit 1; else exit 0; fi;
+    get_prereq_command: |
+      (which pkg && pkg install -y rsync)
+  executor:
+    command: |
+      mkdir #{output_folder}
+      find #{search_path} -name id_rsa 2>/dev/null -exec rsync -R {} #{output_folder} \;
+    cleanup_command: |
+      rm -rf #{output_folder}
+    name: sh
 - name: Copy the users GnuPG directory with rsync
   auto_generated_guid: 2a5a0601-f5fb-4e2e-aa09-73282ae6afca
   description: |
@@ -104,6 +165,36 @@ atomic_tests:
       mkdir #{output_folder}
       find #{search_path} -type d -name '.gnupg' 2>/dev/null -exec rsync -Rr {} #{output_folder} \;
       exit 0
+    cleanup_command: |
+      rm -rf #{output_folder}
+    name: sh
+- name: Copy the users GnuPG directory with rsync (freebsd)
+  auto_generated_guid: b05ac39b-515f-48e9-88e9-2f141b5bcad0
+  description: |
+    Copy the users GnuPG (.gnupg) directory on a FreeBSD system to a staging folder using the `rsync` command.
+  supported_platforms:
+  - freebsd
+  input_arguments:
+    search_path:
+      description: Path where to start searching from
+      type: path
+      default: /
+    output_folder:
+      description: Output folder containing a copy of the .gnupg directory
+      type: path
+      default: /tmp/GnuPG
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Check if rsync is installed.
+    prereq_command: |
+      if [ ! -x "$(command -v rsync)" ]; then exit 1; else exit 0; fi;
+    get_prereq_command: |
+      (which pkg && pkg install -y rsync)
+  executor:
+    command: |
+      mkdir #{output_folder}
+      find #{search_path} -type d -name '.gnupg' 2>/dev/null -exec rsync -Rr {} #{output_folder} \;
     cleanup_command: |
       rm -rf #{output_folder}
     name: sh

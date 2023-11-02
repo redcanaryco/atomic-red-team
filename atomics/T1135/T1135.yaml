@@ -46,6 +46,35 @@ atomic_tests:
       sudo smbstatus --shares
     name: bash
     elevation_required: true
+- name: Network Share Discovery - FreeBSD
+  auto_generated_guid: 77e468a6-3e5c-45a1-9948-c4b5603747cb
+  description: |
+    Network Share Discovery using smbstatus
+  supported_platforms:
+  - freebsd
+  input_arguments:
+    package_checker:
+      description: Package checking command. pkg info -x samba
+      type: string
+      default: (pkg info -x samba &>/dev/null)
+    package_installer:
+      description: Package installer command. pkg install -y samba413
+      type: string
+      default: (which pkg && pkg install -y samba413)
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Package with smbstatus (samba) must exist on device
+    prereq_command: |
+      if #{package_checker} > /dev/null; then exit 0; else exit 1; fi
+    get_prereq_command: |
+      #{package_installer} 
+  executor:
+    command: |
+      smbstatus --shares
+    name: sh
+    elevation_required: true
+
 - name: Network Share Discovery command prompt
   auto_generated_guid: 20f1097d-81c1-405c-8380-32174d493bbb
   description: |
