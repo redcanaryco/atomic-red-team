@@ -37,7 +37,7 @@ atomic_tests:
   description: |
     Delete messages and security logs
   supported_platforms:
-  - freebsd
+  - linux:freebsd
   executor:
     command: |
       rm -rf /var/log/messages
@@ -86,7 +86,7 @@ atomic_tests:
   description: |
     This test truncates the system log files using the truncate utility with (-s 0 or --size=0) parameter which sets file size to zero, thus emptying the file content
   supported_platforms:
-  - freebsd
+  - linux:freebsd
   executor:
     command: |
       truncate -s 0 /var/log/messages #size parameter shorthand
@@ -124,7 +124,7 @@ atomic_tests:
   description: |
     The first sub-test truncates the log file to zero bytes via /dev/null and the second sub-test fills the log file with null bytes(zeroes) via /dev/zero, using cat utility
   supported_platforms:
-  - freebsd
+  - linux:freebsd
   executor:
     command: |
       cat /dev/null > /var/log/messages #truncating the file to zero bytes
@@ -187,7 +187,7 @@ atomic_tests:
   description: |
     This test overwrites the contents of system log file with an empty string using echo utility
   supported_platforms:
-  - freebsd
+  - linux:freebsd
   executor:
     command: |
       echo '' > /var/log/messages
@@ -234,7 +234,7 @@ atomic_tests:
   description: |
     This test deletes the messages log file using unlink utility
   supported_platforms:
-  - freebsd
+  - linux:freebsd
   executor:
     command: |
       unlink /var/log/messages

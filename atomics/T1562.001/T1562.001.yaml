@@ -44,7 +44,7 @@ atomic_tests:
   description: |
     Disables syslog collection
   supported_platforms:
-  - freebsd
+  - linux:freebsd
   executor:
     command: |
       service syslogd stop
@@ -850,7 +850,7 @@ atomic_tests:
     disable swapping of device paging that impaire the compromised host to swap data if the RAM is full. Awfulshred wiper used this technique as an additional 
     payload to the compromised host and to make sure that there will be no recoverable data due to swap feature of FreeBSD/linux.
   supported_platforms:
-  - freebsd
+  - linux:freebsd
   - linux
   executor:
     command: |

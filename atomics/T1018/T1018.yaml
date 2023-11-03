@@ -87,7 +87,7 @@ atomic_tests:
 
     Upon successful execution, sh will execute arp to list out the arp cache. Output will be via stdout.
   supported_platforms:
-  - freebsd
+  - linux:freebsd
   - linux
   - macos
   dependency_executor_name: sh
@@ -109,7 +109,7 @@ atomic_tests:
 
     Upon successful execution, sh will perform a ping sweep on the 192.168.1.1/24 and echo via stdout if an IP is active.
   supported_platforms:
-  - freebsd
+  - linux:freebsd
   - linux
   - macos
   input_arguments:
@@ -277,7 +277,7 @@ atomic_tests:
   description: |
     Use the netstat command to display the kernels routing tables.
   supported_platforms:
-  - freebsd
+  - linux:freebsd
   executor:
     command: |
       netstat -r | grep default

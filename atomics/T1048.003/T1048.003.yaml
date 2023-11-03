@@ -10,7 +10,7 @@ atomic_tests:
   supported_platforms:
   - macos
   - linux
-  - freebsd
+  - linux:freebsd
   executor:
     steps: |
       1. Victim System Configuration:
@@ -53,7 +53,7 @@ atomic_tests:
   description: |
     Exfiltration of specified file over DNS protocol.
   supported_platforms:
-  - freebsd
+  - linux:freebsd
   - linux
   executor:
     steps: |
@@ -223,7 +223,7 @@ atomic_tests:
   description: |
     An adversary may use the python3 standard library module http.server to exfiltrate data. This test checks if python3.9 is available and if so, creates a HTTP server on port 9090, captures the PID, sleeps for 10 seconds, then kills the PID and unsets the $PID variable.
   supported_platforms:
-  - freebsd
+  - linux:freebsd
   executor:
     name: sh
     elevation_required: false
