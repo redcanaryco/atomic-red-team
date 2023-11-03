@@ -58,6 +58,6 @@ atomic_tests:
   executor:
     command: |
       copy c:\windows\system32\calc.exe 'C:\users\#{user}\AppData\local\Microsoft\WindowsApps\foxprow.exe'
-      $com = [System.Activator]::CreateInstance([type]::GetTypeFromProgID("Excel.Application","localhost"))
+      $com = [System.Activator]::CreateInstance([type]::GetTypeFromProgID("Excel.Application","#{computer_name}"))
       $com.ActivateMicrosoftApp("5")
     name: powershell
