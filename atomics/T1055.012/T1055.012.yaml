@@ -27,7 +27,7 @@ atomic_tests:
       default: notepad
   executor:
     command: |
-      . $PathToAtomicsFolder\T1055.012\src\Start-Hollow.ps1
+      . "$PathToAtomicsFolder\T1055.012\src\Start-Hollow.ps1"
       $ppid=Get-Process #{parent_process_name} | select -expand id
       Start-Hollow -Sponsor "#{sponsor_binary_path}" -Hollow "#{hollow_binary_path}" -ParentPID $ppid -Verbose
     cleanup_command: |

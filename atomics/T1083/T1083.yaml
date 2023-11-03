@@ -47,6 +47,7 @@ atomic_tests:
 
     https://perishablepress.com/list-files-folders-recursively-terminal/
   supported_platforms:
+  - freebsd  
   - macos
   - linux
   input_arguments:
@@ -72,6 +73,7 @@ atomic_tests:
   description: |
     Find or discover files on the file system
   supported_platforms:
+  - freebsd
   - macos
   - linux
   input_arguments:
@@ -129,23 +131,23 @@ atomic_tests:
     dirlister_path:
       description: 'Path to the DirLister executable '
       type: string
-      default: PathToAtomicsFolder..\ExternalPayloads\DirLister.exe
+      default: PathToAtomicsFolder\..\ExternalPayloads\DirLister.exe
   dependency_executor_name: powershell
   dependencies:
   - description: |
       DirLister.exe must exist in the specified path #{dirlister_path}
     prereq_command: |
-      if (Test-Path #{dirlister_path}) {exit 0} else {exit 1}
+      if (Test-Path "#{dirlister_path}") {exit 0} else {exit 1}
     get_prereq_command: |
       $parentpath = Split-Path "#{dirlister_path}"
       New-Item -ItemType Directory -Force -Path $parentpath | Out-Null
-      Invoke-WebRequest https://github.com/SanderSade/DirLister/releases/download/v2.beta4/DirLister.v2.beta4.zip -OutFile PathToAtomicsFolder\..\ExternalPayloads\TDirLister.v2.beta4.zip
-      Expand-Archive -Path PathToAtomicsFolder\..\ExternalPayloads\TDirLister.v2.beta4.zip -DestinationPath PathToAtomicsFolder\..\ExternalPayloads\TDirLister.v2.beta4 -Force
-      Copy-Item PathToAtomicsFolder\..\ExternalPayloads\TDirLister.v2.beta4\* $parentpath -Recurse
-      Remove-Item PathToAtomicsFolder\..\ExternalPayloads\TDirLister.v2.beta4.zip,PathToAtomicsFolder\..\ExternalPayloads\TDirLister.v2.beta4 -Recurse -ErrorAction Ignore
+      Invoke-WebRequest https://github.com/SanderSade/DirLister/releases/download/v2.beta4/DirLister.v2.beta4.zip -OutFile "PathToAtomicsFolder\..\ExternalPayloads\TDirLister.v2.beta4.zip"
+      Expand-Archive -Path "PathToAtomicsFolder\..\ExternalPayloads\TDirLister.v2.beta4.zip" -DestinationPath "PathToAtomicsFolder\..\ExternalPayloads\TDirLister.v2.beta4" -Force
+      Copy-Item "PathToAtomicsFolder\..\ExternalPayloads\TDirLister.v2.beta4\*" "$parentpath" -Recurse
+      Remove-Item "PathToAtomicsFolder\..\ExternalPayloads\TDirLister.v2.beta4.zip","PathToAtomicsFolder\..\ExternalPayloads\TDirLister.v2.beta4" -Recurse -ErrorAction Ignore
   executor:
     command: |
-      Start-Process #{dirlister_path}
+      Start-Process "#{dirlister_path}"
       Start-Sleep -Second 4
       Stop-Process -Name "DirLister"
     name: powershell

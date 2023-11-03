@@ -27,13 +27,14 @@ atomic_tests:
     command: |
       Get-NetTCPConnection
     name: powershell
-- name: System Network Connections Discovery Linux & MacOS
+- name: System Network Connections Discovery FreeBSD, Linux & MacOS
   auto_generated_guid: 9ae28d3f-190f-4fa0-b023-c7bd3e0eabf2
   description: |
     Get a listing of network connections.
 
     Upon successful execution, sh will execute `netstat` and `who -a`. Results will output via stdout.
   supported_platforms:
+  - freebsd
   - linux
   - macos
   dependency_executor_name: sh
@@ -77,9 +78,9 @@ atomic_tests:
   - description: |
       Sharpview.exe must exist on disk at specified location (#{SharpView})
     prereq_command: |
-      if (Test-Path #{SharpView}) {exit 0} else {exit 1}
+      if (Test-Path "#{SharpView}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{SharpView}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{SharpView}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest #{SharpView_url} -OutFile "#{SharpView}"
   executor:
     name: powershell

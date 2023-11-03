@@ -18,14 +18,15 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: PsExec from Sysinternals must exist on disk at specified location (#{psexec_exe})
-    prereq_command: 'if (Test-Path #{psexec_exe}) {exit 0} else {exit 1}'
+    prereq_command: 'if (Test-Path "#{psexec_exe}") {exit 0} else {exit 1}'
     get_prereq_command: |-
       Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\PSTools.zip"
-      Expand-Archive PathToAtomicsFolder\..\ExternalPayloads\PSTools.zip PathToAtomicsFolder\..\ExternalPayloads\PSTools -Force
-      New-Item -ItemType Directory (Split-Path #{psexec_exe}) -Force | Out-Null
-      Copy-Item PathToAtomicsFolder\..\ExternalPayloads\PSTools\PsExec.exe #{psexec_exe} -Force
+      Expand-Archive "PathToAtomicsFolder\..\ExternalPayloads\PSTools.zip" "PathToAtomicsFolder\..\ExternalPayloads\PSTools" -Force
+      New-Item -ItemType Directory (Split-Path "#{psexec_exe}") -Force | Out-Null
+      Copy-Item "PathToAtomicsFolder\..\ExternalPayloads\PSTools\PsExec.exe" "#{psexec_exe}" -Force
   executor:
-    command: '#{psexec_exe} -accepteula -s reg save HKLM\security\policy\secrets %temp%\secrets /y'
+    command: |
+      "#{psexec_exe}" -accepteula -s reg save HKLM\security\policy\secrets %temp%\secrets /y
     cleanup_command: del %temp%\secrets >nul 2> nul
     name: command_prompt
     elevation_required: true

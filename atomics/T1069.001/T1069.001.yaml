@@ -6,6 +6,7 @@ atomic_tests:
   description: |
     Permission Groups Discovery
   supported_platforms:
+  - freebsd
   - macos
   - linux
   executor:
@@ -87,8 +88,8 @@ atomic_tests:
   - windows
   executor:
     command: |
-      wmic.exe group get name
-    name: powershell
+      wmic group get name
+    name: command_prompt
 
 - name: WMIObject Group Discovery
   auto_generated_guid: 69119e58-96db-4110-ad27-954e48f3bb13

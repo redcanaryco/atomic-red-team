@@ -69,7 +69,7 @@ class Validator:
                         if deps:
                             commands += [d.get("get_prereq_command") for d in deps]
                             commands += [d.get("prereq_command") for d in deps]
-                        commands = filter(lambda x: x is not None, commands)
+                        commands = list(filter(lambda x: x is not None, commands))
 
                         if not any([variable in c for c in commands]):
                             self.errors[file.path].append(UnusedArgument(file.path, k, index + 1))

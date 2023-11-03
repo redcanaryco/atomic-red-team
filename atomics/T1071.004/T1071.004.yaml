@@ -25,10 +25,10 @@ atomic_tests:
     domain:
       description: Default domain to simulate against
       type: string
-      default: 127.0.0.1.xip.io
+      default: 127.0.0.1.nip.io
   executor:
     command: |
-      for($i=0; $i -le #{query_volume}; $i++) { Resolve-DnsName -type "#{query_type}" "#{subdomain}.$(Get-Random -Minimum 1 -Maximum 999999).#{domain}" -QuickTimeout}
+      for($i=0; $i -le #{query_volume}; $i++) { Resolve-DnsName -type "#{query_type}" "#{subdomain}-$(Get-Random -Minimum 1 -Maximum 999999).#{domain}" -QuickTimeout}
     name: powershell
 - name: DNS Regular Beaconing
   auto_generated_guid: 3efc144e-1af8-46bb-8ca2-1376bb6db8b6
@@ -46,7 +46,7 @@ atomic_tests:
     domain:
       description: Default domain to simulate against
       type: string
-      default: 127.0.0.1.xip.io
+      default: 127.0.0.1.nip.io
     subdomain:
       description: Subdomain prepended to the domain name
       type: string
@@ -65,7 +65,7 @@ atomic_tests:
       default: 20
   executor:
     command: |
-      Set-Location PathToAtomicsFolder
+      Set-Location "PathToAtomicsFolder"
       .\T1071.004\src\T1071-dns-beacon.ps1 -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type} -C2Interval #{c2_interval} -C2Jitter #{c2_jitter} -RunTime #{runtime}
     name: powershell
 - name: DNS Long Domain Query
@@ -88,10 +88,10 @@ atomic_tests:
     domain:
       description: Default domain to simulate against
       type: string
-      default: 127.0.0.1.xip.io
+      default: 127.0.0.1.nip.io
   executor:
     command: |
-      Set-Location PathToAtomicsFolder
+      Set-Location "PathToAtomicsFolder"
       .\T1071.004\src\T1071-dns-domain-length.ps1 -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type}
     name: powershell
 - name: DNS C2

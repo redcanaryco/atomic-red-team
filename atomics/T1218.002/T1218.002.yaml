@@ -18,11 +18,11 @@ atomic_tests:
   - description: |
       Cpl file must exist on disk at specified location (#{cpl_file_path})
     prereq_command: |
-      if (Test-Path #{cpl_file_path}) {exit 0} else {exit 1}
+      if (Test-Path "#{cpl_file_path}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{cpl_file_path}) -ErrorAction ignore | Out-Null
+      New-Item -Type Directory (split-path "#{cpl_file_path}") -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.002/bin/calc.cpl" -OutFile "#{cpl_file_path}"
   executor:
     command: |
-      control.exe #{cpl_file_path}
+      control.exe "#{cpl_file_path}"
     name: command_prompt

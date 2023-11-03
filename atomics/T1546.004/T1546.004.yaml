@@ -1,5 +1,5 @@
 attack_technique: T1546.004
-display_name: 'Event Triggered Execution: .bash_profile and .bashrc'
+display_name: 'Event Triggered Execution: .bash_profile .bashrc and .shrc'
 atomic_tests:
 - name: Add command to .bash_profile
   auto_generated_guid: 94500ae1-7e31-47e3-886b-c328da46872f
@@ -39,11 +39,30 @@ atomic_tests:
       head -n '-2' ~/.bashrc > /tmp/T1546.004
       mv /tmp/T1546.004 ~/.bashrc
     name: sh
+- name: Add command to .shrc
+  auto_generated_guid: 41502021-591a-4649-8b6e-83c9192aff53
+  description: |
+    Adds a command to the .shrc file of the current user
+  supported_platforms:
+  - freebsd
+  input_arguments:
+    command_to_add:
+      description: Command to add to the .shrc file
+      type: string
+      default: echo "Hello from Atomic Red Team T1546.004" > /tmp/T1546.004
+  executor:
+    command: |
+      echo '#{command_to_add}' >> ~/.shrc
+    cleanup_command: |
+      head -n '-2' ~/.shrc > /tmp/T1546.004
+      mv /tmp/T1546.004 ~/.shrc
+    name: sh
 - name: Append to the system shell profile
   auto_generated_guid: 694b3cc8-6a78-4d35-9e74-0123d009e94b
   description: |
     An adversary may wish to establish persistence by executing malicious commands from the systems /etc/profile every time "any" user logs in.
   supported_platforms:
+  - freebsd
   - linux
   input_arguments:
     text_to_append:
@@ -62,6 +81,7 @@ atomic_tests:
   description: |
     An adversary may wish to establish persistence by executing malicious commands from the users ~/.profile every time the "user" logs in.
   supported_platforms:
+  - freebsd
   - linux
   input_arguments:
     text_to_append:

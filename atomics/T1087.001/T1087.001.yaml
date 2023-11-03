@@ -6,6 +6,7 @@ atomic_tests:
   description: |
     Enumerate all accounts by copying /etc/passwd to another file
   supported_platforms:
+  - freebsd
   - linux
   input_arguments:
     output_file:
@@ -24,6 +25,7 @@ atomic_tests:
   description: |
     (requires root)
   supported_platforms:
+  - freebsd
   - linux
   - macos
   input_arguments:
@@ -33,7 +35,8 @@ atomic_tests:
       default: /tmp/T1087.001.txt
   executor:
     command: |
-      sudo cat /etc/sudoers > #{output_file}
+      if [ -f /etc/sudoers ]; then sudo cat /etc/sudoers > #{output_file}; fi;
+      if [ -f /usr/local/etc/sudoers ]; then sudo cat /usr/local/etc/sudoers > #{output_file}; fi;
       cat #{output_file}
     cleanup_command: |
       rm -f #{output_file}
@@ -44,6 +47,7 @@ atomic_tests:
   description: |
     View accounts with UID 0
   supported_platforms:
+  - freebsd
   - linux
   - macos
   input_arguments:
@@ -54,6 +58,7 @@ atomic_tests:
   executor:
     command: |
       grep 'x:0:' /etc/passwd > #{output_file}
+      grep '*:0:' /etc/passwd >> #{output_file}
       cat #{output_file} 2>/dev/null
     cleanup_command: |
       rm -f #{output_file} 2>/dev/null
@@ -63,6 +68,7 @@ atomic_tests:
   description: |
     List opened files by user
   supported_platforms:
+  - freebsd
   - linux
   - macos
   executor:
@@ -76,7 +82,7 @@ atomic_tests:
     prereq_command: |
       which lsof
     get_prereq_command: |
-      (which yum && yum -y install lsof)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y lsof)
+      (which pkg && pkg install -y lsof)||(which yum && yum -y install lsof)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y lsof)
 - name: Show if a user account has ever logged in remotely
   auto_generated_guid: 0f0b6a29-08c3-44ad-a30b-47fd996b2110
   description: |
@@ -103,11 +109,31 @@ atomic_tests:
     cleanup_command: |
       rm -f #{output_file}
     name: sh
+- name: Show if a user account has ever logged in remotely (freebsd)
+  auto_generated_guid: 0f73418f-d680-4383-8a24-87bc97fe4e35
+  description: |
+    Show if a user account has ever logged in remotely
+  supported_platforms:
+  - freebsd
+  input_arguments:
+    output_file:
+      description: Path where captured results will be placed
+      type: path
+      default: /tmp/T1087.001.txt
+  executor:
+    command: |
+      lastlogin > #{output_file}
+      cat #{output_file}
+    cleanup_command: |
+      rm -f #{output_file}
+    name: sh
+
 - name: Enumerate users and groups
   auto_generated_guid: e6f36545-dc1e-47f0-9f48-7f730f54a02e
   description: |
     Utilize groups and id to enumerate users and groups
   supported_platforms:
+  - freebsd
   - linux
   - macos
   executor:

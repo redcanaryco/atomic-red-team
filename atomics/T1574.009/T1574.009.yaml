@@ -16,8 +16,8 @@ atomic_tests:
       default: PathToAtomicsFolder\T1574.009\bin\WindowsServiceExample.exe
   executor:
     command: |
-      copy #{service_executable} "C:\Program Files\windows_service.exe"
-      copy #{service_executable} "C:\program.exe"
+      copy "#{service_executable}" "C:\Program Files\windows_service.exe"
+      copy "#{service_executable}" "C:\program.exe"
       sc create "Example Service" binpath= "C:\Program Files\windows_service.exe" Displayname= "Example Service" start= auto
       sc start "Example Service"
     cleanup_command: |
