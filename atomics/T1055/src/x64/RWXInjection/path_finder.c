@@ -1,5 +1,5 @@
 /**
-Author: Thomas X Meng ENU
+Author: Thomas X Meng
 The code scans for PE sections with WRX permission. It does it sequentially which
 is not as efficient as parallel processing. I did not find a equivalent 3rd lib in C as pefile 
 Windows defender bypassed, engine Version: 1.1.23100.2009
