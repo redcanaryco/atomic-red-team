@@ -2,9 +2,11 @@ attack_technique: T1654
 display_name: "Log Enumeration"
 atomic_tests:
 - name: Get-EventLog To Enumerate Windows Security Log
-  auto_generated_guid: 
   description: |-
     Uses the built-in PowerShell commandlet Get-EventLog to search for 'SYSTEM' keyword and saves results to a text file.
+
+    This technique was observed in a (TheDFIRReport case)[https://thedfirreport.com/2023/04/03/malicious-iso-file-leads-to-domain-wide-ransomware/] 
+    where the threat actor enumerated the Windows Security audit log to determine user accounts and associated IPv4 addresses.
 
     Successful execution will save matching log events to the users temp folder.
   supported_platforms:
