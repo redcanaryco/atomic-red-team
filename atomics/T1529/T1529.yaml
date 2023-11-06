@@ -38,9 +38,8 @@ atomic_tests:
   description: |
     This test restarts a FreeBSD/macOS/Linux system.
   supported_platforms:
-  - freebsd
-  - macos
   - linux
+  - macos
   input_arguments:
     timeout:
       description: Time to restart (can be minutes or specific time)
@@ -56,9 +55,8 @@ atomic_tests:
   description: |
     This test shuts down a FreeBSD/macOS/Linux system using a halt.
   supported_platforms:
-  - freebsd
-  - macos
   - linux
+  - macos
   input_arguments:
     timeout:
       description: Time to shutdown (can be minutes or specific time)
@@ -74,9 +72,8 @@ atomic_tests:
   description: |
     This test restarts a FreeBSD/macOS/Linux system via `reboot`.
   supported_platforms:
-  - freebsd
-  - macos
   - linux
+  - macos
   executor:
     command: |
       reboot
@@ -87,7 +84,6 @@ atomic_tests:
   description: |
     This test shuts down a FreeBSD/Linux system using `halt`.
   supported_platforms:
-  - freebsd
   - linux
   executor:
     command: |
@@ -99,7 +95,7 @@ atomic_tests:
   description: |
     This test restarts a FreeBSD system using `halt`.
   supported_platforms:
-  - freebsd
+  - linux
   executor:
     command: |
       halt -r
@@ -121,7 +117,6 @@ atomic_tests:
   description: |
     This test shuts down a FreeBSD/Linux system using `poweroff`.
   supported_platforms:
-  - freebsd
   - linux
   executor:
     command: |
@@ -133,7 +128,7 @@ atomic_tests:
   description: |
     This test restarts a FreeBSD system using `poweroff`.
   supported_platforms:
-  - freebsd
+  - linux
   executor:
     command: |
       poweroff -r 3

@@ -123,7 +123,7 @@ atomic_tests:
   description: |
     An adversary may wish to create an account with admin privileges to work with. In this test we create a "art" user with the password art, switch to art, execute whoami, exit and delete the art user.
   supported_platforms:
-  - freebsd
+  - linux
   executor:
     name: sh
     elevation_required: true
@@ -164,7 +164,7 @@ atomic_tests:
 
     In this test we create a "art" user with the password art, lock and expire the account, try to su to art and fail, unlock and renew the account, su successfully, then delete the account.
   supported_platforms:
-  - freebsd
+  - linux
   executor:
     name: sh
     elevation_required: true
@@ -206,7 +206,7 @@ atomic_tests:
   description: |
     An adversary may try to re-purpose a system account to appear legitimate. In this test change the login shell of the nobody account, change its password to nobody, su to nobody, exit, then reset nobody's shell to /usr/sbin/nologin.
   supported_platforms:
-  - freebsd
+  - linux
   executor:
     name: sh
     elevation_required: true
