@@ -17,7 +17,7 @@ atomic_tests:
   description: |
     Clears sh history via rm
   supported_platforms:
-  - linux:freebsd
+  - linux
   executor:
     command: |
       rm ~/.sh_history
@@ -38,7 +38,7 @@ atomic_tests:
   description: |
     Clears sh history via echo
   supported_platforms:
-  - linux:freebsd
+  - linux
   executor:
     command: |
       echo "" > ~/.sh_history
@@ -59,7 +59,7 @@ atomic_tests:
   description: |
     Clears sh history via cat /dev/null
   supported_platforms:
-  - linux:freebsd
+  - linux
   executor:
     command: |
       cat /dev/null > ~/.sh_history
@@ -81,7 +81,7 @@ atomic_tests:
   description: |
     Clears sh history via a symlink to /dev/null
   supported_platforms:
-  - linux:freebsd
+  - linux
   executor:
     command: |
       ln -sf /dev/null ~/.sh_history
@@ -101,7 +101,7 @@ atomic_tests:
   description: |
     Clears sh history via truncate
   supported_platforms:
-  - linux:freebsd
+  - linux
   executor:
     command: |
       truncate -s0 ~/.sh_history
@@ -124,7 +124,7 @@ atomic_tests:
   description: |
     Clears the history of a bunch of different shell types by setting the history size to zero
   supported_platforms:
-  - linux:freebsd
+  - linux
   executor:
     command: |
       unset HISTFILE
@@ -192,7 +192,7 @@ atomic_tests:
   description: |
     Keeps history clear and stays out of lastlog,wtmp,btmp ssh -T keeps the ssh client from catching a proper TTY, which is what usually gets logged on lastlog
   supported_platforms:
-  - linux:freebsd
+  - linux
   dependencies:
   - description: |
       Install sshpass and create user account used for excuting

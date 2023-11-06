@@ -6,7 +6,6 @@ atomic_tests:
   description: |
     Creates and executes a simple sh script.
   supported_platforms:
-  - linux:freebsd
   - linux
   - macos
   input_arguments:
@@ -30,7 +29,6 @@ atomic_tests:
 
     Upon successful execution, sh will download via curl and wget the specified payload (echo-art-fish.sh) and set a marker file in `/tmp/art-fish.txt`.
   supported_platforms:
-  - linux:freebsd
   - linux
   - macos
   executor:
@@ -105,7 +103,6 @@ atomic_tests:
   description: |
     An attacker may create script files in the /tmp directory using the mktemp utility and execute them. The following commands creates a temp file and places a pointer to it in the variable $TMPFILE, echos the string id into it, and then executes the file using bash, which results in the id command being executed.
   supported_platforms:
-  - linux:freebsd
   - linux
   executor:
     name: sh
@@ -122,7 +119,6 @@ atomic_tests:
   description: |
     An adversary will want to discover what shell is running so that they can tailor their attacks accordingly. The following commands will discover what shell is running.
   supported_platforms:
-  - linux:freebsd
   - linux
   executor:
     name: sh
@@ -136,7 +132,6 @@ atomic_tests:
   description: |
     An adversary may want to discover which shell's are available so that they might switch to that shell to tailor their attacks to suit that shell. The following commands will discover what shells are available on the host.
   supported_platforms:
-  - linux:freebsd
   - linux
   executor:
     name: sh
@@ -148,7 +143,6 @@ atomic_tests:
   description: |
     An adversary may type in elaborate multi-line shell commands into a terminal session because they can't or don't wish to create script files on the host. The following command is a simple loop, echoing out Atomic Red Team was here!
   supported_platforms:
-  - linux:freebsd
   - linux
   executor:
     name: sh
@@ -173,7 +167,7 @@ atomic_tests:
   description: |
     An adversary may pre-compute the base64 representations of the terminal commands that they wish to execute in an attempt to avoid or frustrate detection. The following commands base64 encodes the text string id, then base64 decodes the string, then pipes it as a command to bash, which results in the id command being executed.
   supported_platforms:
-  - linux:freebsd
+  - linux
   executor:
     name: sh
     elevation_required: false
@@ -210,7 +204,7 @@ atomic_tests:
   description: |
     An adversary may want to use a different login shell. The chsh command changes the user login shell. The following test, creates an art user with a /bin/sh shell, changes the users shell to sh, then deletes the art user. 
   supported_platforms:
-  - linux:freebsd
+  - linux
   dependencies:
   - description: |
       chsh - change login shell, must be installed
@@ -247,7 +241,7 @@ atomic_tests:
   description: |
     An adversary may place scripts in an environment variable because they can't or don't wish to create script files on the host. The following test, in a bash shell, exports the ART variable containing an echo command, then pipes the variable to /bin/sh
   supported_platforms:
-  - linux:freebsd
+  - linux
   executor:
     name: sh
     elevation_required: false 
@@ -293,7 +287,7 @@ atomic_tests:
   description: |
     An adversary may develop a useful utility or subvert the CI/CD pipe line of a legitimate utility developer, who requires or suggests installing their utility by piping a curl download directly into bash. Of-course this is a very bad idea. The adversary may also take advantage of this BLIND install method and selectively running extra commands in the install script for those who DO pipe to bash and not for those who DO NOT. This test uses curl to download the pipe-to-shell.sh script, the first time without piping it to bash and the second piping it into bash which executes the echo command.
   supported_platforms:
-  - linux:freebsd
+  - linux
   input_arguments:
     remote_url:
       description: url of remote payload

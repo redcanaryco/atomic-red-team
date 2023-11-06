@@ -6,9 +6,8 @@ atomic_tests:
   description: |
     Permission Groups Discovery
   supported_platforms:
-  - linux:freebsd
-  - macos
   - linux
+  - macos
   executor:
     command: |
       if [ -x "$(command -v dscacheutil)" ]; then dscacheutil -q group; else echo "dscacheutil is missing from the machine. skipping..."; fi;
