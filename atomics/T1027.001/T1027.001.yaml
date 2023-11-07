@@ -8,14 +8,14 @@ atomic_tests:
 
     Upon successful execution, dd will modify `/tmp/evil-binary`, therefore the expected hash will change.
   supported_platforms:
-  - macos
   - linux
+  - macos
   input_arguments:
     file_to_pad:
       description: Path of binary to be padded
       type: path
       default: /tmp/evil-binary
-  dependency_executor_name: bash
+  dependency_executor_name: sh
   dependencies:
   - description: |
       The binary must exist on disk at specified location (#{file_to_pad})
@@ -39,14 +39,14 @@ atomic_tests:
 
     Upon successful execution, truncate will modify `/tmp/evil-binary`, therefore the expected hash will change.
   supported_platforms:
-  - macos
   - linux
+  - macos
   input_arguments:
     file_to_pad:
       description: Path of binary to be padded
       type: path
       default: /tmp/evil-binary
-  dependency_executor_name: bash
+  dependency_executor_name: sh
   dependencies:
   - description: |
       The binary must exist on disk at specified location (#{file_to_pad})

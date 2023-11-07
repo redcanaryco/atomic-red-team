@@ -1,5 +1,5 @@
 attack_technique: T1543.002
-display_name: 'Create or Modify System Process: Systemd Service'
+display_name: 'Create or Modify System Process: SysV/Systemd Service'
 atomic_tests:
 - name: Create Systemd Service
   auto_generated_guid: d9e4f24f-aa67-4c6e-bcbf-85622b697a7c
@@ -65,7 +65,51 @@ atomic_tests:
       rm -rf #{systemd_service_path}/#{systemd_service_file}
       systemctl daemon-reload
     name: bash
-
+- name: Create SysV Service
+  auto_generated_guid: 760fe8d2-79d9-494f-905e-a239a3df86f6
+  description: |
+    This test creates a SysV service unit file and enables it as a service.
+  supported_platforms:
+  - linux
+  input_arguments:
+    rc_service_path:
+      description: Path to rc service file
+      type: path
+      default: /usr/local/etc/rc.d
+    rc_service_file:
+      description: File name of rc service file
+      type: string
+      default: art-test
+  executor:
+    command: |
+      echo '#\!/bin/sh' > #{rc_service_path}/#{rc_service_file}
+      echo ' ' >> #{rc_service_path}/#{rc_service_file}
+      echo '#' >> #{rc_service_path}/#{rc_service_file}
+      echo '# PROVIDE: art-test' >> #{rc_service_path}/#{rc_service_file}
+      echo '# REQUIRE: LOGIN' >> #{rc_service_path}/#{rc_service_file}
+      echo '# KEYWORD: shutdown' >> #{rc_service_path}/#{rc_service_file}
+      echo ' ' >> #{rc_service_path}/#{rc_service_file}
+      echo '. /etc/rc.subr' >> #{rc_service_path}/#{rc_service_file}
+      echo ' ' >> #{rc_service_path}/#{rc_service_file}
+      echo 'name="art_test"' >> #{rc_service_path}/#{rc_service_file}
+      echo 'rcvar=art_test_enable' >> #{rc_service_path}/#{rc_service_file}
+      echo 'load_rc_config ${name}' >> #{rc_service_path}/#{rc_service_file}
+      echo 'command="/usr/bin/touch"' >> #{rc_service_path}/#{rc_service_file}
+      echo 'start_cmd="art_test_start"' >> #{rc_service_path}/#{rc_service_file}
+      echo '' >> #{rc_service_path}/#{rc_service_file}
+      echo 'art_test_start()' >> #{rc_service_path}/#{rc_service_file}     
+      echo '{' >> #{rc_service_path}/#{rc_service_file}
+      echo '  ${command} /tmp/art-test.marker' >> #{rc_service_path}/#{rc_service_file}
+      echo '}' >> #{rc_service_path}/#{rc_service_file}
+      echo ' ' >> #{rc_service_path}/#{rc_service_file}     
+      echo 'run_rc_command "$1"' >> #{rc_service_path}/#{rc_service_file}
+      chmod +x #{rc_service_path}/#{rc_service_file}
+      service art-test enable
+      service art-test start
+    cleanup_command: |
+      sysrc -x art_test_enable
+      rm -f #{rc_service_path}/#{rc_service_file}
+    name: sh
 
 - name: Create Systemd Service file,  Enable the service , Modify and Reload the service.
   auto_generated_guid: c35ac4a8-19de-43af-b9f8-755da7e89c89

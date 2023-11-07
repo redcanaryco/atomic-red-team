@@ -79,12 +79,12 @@ atomic_tests:
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\PsTools.zip"
-      Expand-Archive PathToAtomicsFolder\..\ExternalPayloads\PsTools.zip PathToAtomicsFolder\..\ExternalPayloads\PsTools -Force
+      Expand-Archive "PathToAtomicsFolder\..\ExternalPayloads\PsTools.zip" "PathToAtomicsFolder\..\ExternalPayloads\PsTools" -Force
       New-Item -ItemType Directory (Split-Path "#{psexec_exe}") -Force | Out-Null
-      Copy-Item PathToAtomicsFolder\..\ExternalPayloads\PsTools\PsExec.exe "#{psexec_exe}" -Force
+      Copy-Item "PathToAtomicsFolder\..\ExternalPayloads\PsTools\PsExec.exe" "#{psexec_exe}" -Force
   executor:
     command: |
-      #{psexec_exe} #{remote_host} -accepteula -c #{command_path}
+      "#{psexec_exe}" #{remote_host} -accepteula -c #{command_path}
     name: command_prompt
     elevation_required: true
 - name: Execute command writing output to local Admin Share

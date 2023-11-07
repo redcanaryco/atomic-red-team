@@ -12,7 +12,16 @@ atomic_tests:
   - windows
   executor:
     command: |
-      netsh.exe advfirewall  show allprofiles
+      netsh.exe advfirewall  show allprofiles 
+      netsh.exe advfirewall firewall dump
+      netsh.exe advfirewall show currentprofile
+      netsh.exe advfirewall firewall show rule name=all
+      netsh.exe firewall show state
+      netsh.exe firewall show config
+      sc query windefend
+      powershell.exe /c "Get-Process | Where-Object { $_.ProcessName -eq 'Sysmon' }"
+      powershell.exe /c "Get-Service | where-object {$_.DisplayName -like '*sysm*'}"
+      powershell.exe /c "Get-CimInstance Win32_Service -Filter 'Description = ''System Monitor service'''"
       tasklist.exe
       tasklist.exe | findstr /i virus
       tasklist.exe | findstr /i cb
@@ -40,6 +49,7 @@ atomic_tests:
       get-process | ?{$_.Description -like "*cylance*"}
       get-process | ?{$_.Description -like "*mc*"}
       get-process | ?{$_.ProcessName -like "*mc*"}
+      get-process | Where-Object { $_.ProcessName -eq "Sysmon" }
     name: powershell
 - name: Security Software Discovery - ps (macOS)
   auto_generated_guid: ba62ce11-e820-485f-9c17-6f3c857cd840
@@ -62,6 +72,17 @@ atomic_tests:
   executor:
     command: |
       ps aux | egrep 'falcond|nessusd|cbagentd|td-agent|packetbeat|filebeat|auditbeat|osqueryd'
+    name: sh
+- name: Security Software Discovery - pgrep (FreeBSD)
+  auto_generated_guid: fa96c21c-5fd6-4428-aa28-51a2fbecdbdc
+  description: |
+    Methods to identify Security Software on an endpoint
+    when sucessfully executed, command shell is going to display AV/Security software it is running.
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      pgrep -l 'bareos-fd|icinga2|cbagentd|wazuh-agent|packetbeat|filebeat|osqueryd'
     name: sh
 - name: Security Software Discovery - Sysmon Service
   auto_generated_guid: fe613cf3-8009-4446-9a0f-bc78a15b66c9
@@ -87,4 +108,47 @@ atomic_tests:
   executor:
     command: wmic.exe /Namespace:\\root\SecurityCenter2 Path AntiVirusProduct Get displayName /Format:List
     name: command_prompt
+    elevation_required: true
+- name: Security Software Discovery - AV Discovery via Get-CimInstance and Get-WmiObject cmdlets
+  auto_generated_guid: 015cd268-996e-4c32-8347-94c80c6286ee
+  description: |
+    Discovery of installed antivirus products via Get-CimInstance and Get-WmiObject cmdlets of powershell.
+
+    when sucessfully executed, information about installed AV software is displayed..
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      powershell Get-CimInstance -Namespace root/securityCenter2 -classname antivirusproduct
+      powershell Get-WmiObject -Namespace root\securitycenter2 -Class antivirusproduct
+    name: command_prompt 
+    elevation_required: true
+- name: Security Software Discovery - Windows Defender Enumeration
+  auto_generated_guid: d3415a0e-66ef-429b-acf4-a768876954f6
+  description: |
+    Windows Defender Enumeration via different built-in windows native tools.
+    when sucessfully executed, information about windows defender is displayed.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      Get-Service WinDefend #check the service state of Windows Defender
+      Get-MpComputerStatus #provides the current status of security solution elements, including Anti-Spyware, Antivirus, LoavProtection, Real-time protection, etc
+      Get-MpThreat #threats details that have been detected using MS Defender
+    name: powershell 
+    elevation_required: true
+- name: Security Software Discovery - Windows Firewall Enumeration
+  auto_generated_guid: 9dca5a1d-f78c-4a8d-accb-d6de67cfed6b
+  description: |
+    Enumerates windows firewall to retrieves firewall rules from the target computer.
+
+    when sucessfully executed, details of windows firewall is displayed.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      Get-NetFirewallProfile | Format-Table Name, Enabled
+      Get-NetFirewallSetting
+      Get-NetFirewallRule | select DisplayName, Enabled, Description
+    name: powershell 
     elevation_required: true

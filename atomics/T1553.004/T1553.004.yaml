@@ -27,6 +27,32 @@ atomic_tests:
       update-ca-trust
     name: sh
     elevation_required: true
+- name: Install root CA on FreeBSD
+  auto_generated_guid: f4568003-1438-44ab-a234-b3252ea7e7a3
+  description: |
+    Creates a root CA with openssl
+  supported_platforms:
+  - linux
+  input_arguments:
+    cert_filename:
+      description: Path of the CA certificate we create
+      type: path
+      default: rootCA.crt
+    key_filename:
+      description: Key we create that is used to create the CA certificate
+      type: path
+      default: rootCA.key
+  executor:
+    command: |
+      openssl genrsa -out #{key_filename} 4096
+      openssl req -x509 -new -nodes -key #{key_filename} -sha256 -days 365 -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=www.example.com" -out #{cert_filename}
+      cp #{cert_filename} /usr/local/share/certs/
+      certctl rehash
+    cleanup_command: |
+      rm /usr/local/share/certs/#{cert_filename}
+      certctl rehash
+    name: sh
+    elevation_required: true
 - name: Install root CA on Debian/Ubuntu
   auto_generated_guid: 53bcf8a0-1549-4b85-b919-010c56d724ff
   description: |

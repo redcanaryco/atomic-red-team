@@ -5,20 +5,24 @@
 - T1027.009 Embedded Payloads [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1556.003 Modify Authentication Process: Pluggable Authentication Modules](../../T1556.003/T1556.003.md)
   - Atomic Test #1: Malicious PAM rule [linux]
-  - Atomic Test #2: Malicious PAM module [linux]
+  - Atomic Test #2: Malicious PAM rule (freebsd) [linux]
+  - Atomic Test #3: Malicious PAM module [linux]
 - T1148 HISTCONTROL [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1222.002 File and Directory Permissions Modification: Linux and Mac File and Directory Permissions Modification](../../T1222.002/T1222.002.md)
-  - Atomic Test #1: chmod - Change file or folder mode (numeric mode) [macos, linux]
-  - Atomic Test #2: chmod - Change file or folder mode (symbolic mode) [macos, linux]
-  - Atomic Test #3: chmod - Change file or folder mode (numeric mode) recursively [macos, linux]
-  - Atomic Test #4: chmod - Change file or folder mode (symbolic mode) recursively [macos, linux]
+- [T1222.002 File and Directory Permissions Modification: FreeBSD, Linux and Mac File and Directory Permissions Modification](../../T1222.002/T1222.002.md)
+  - Atomic Test #1: chmod - Change file or folder mode (numeric mode) [linux, macos]
+  - Atomic Test #2: chmod - Change file or folder mode (symbolic mode) [linux, macos]
+  - Atomic Test #3: chmod - Change file or folder mode (numeric mode) recursively [linux, macos]
+  - Atomic Test #4: chmod - Change file or folder mode (symbolic mode) recursively [linux, macos]
   - Atomic Test #5: chown - Change file or folder ownership and group [macos, linux]
   - Atomic Test #6: chown - Change file or folder ownership and group recursively [macos, linux]
-  - Atomic Test #7: chown - Change file or folder mode ownership only [macos, linux]
+  - Atomic Test #7: chown - Change file or folder mode ownership only [linux, macos]
   - Atomic Test #8: chown - Change file or folder ownership recursively [macos, linux]
   - Atomic Test #9: chattr - Remove immutable file attribute [macos, linux]
-  - Atomic Test #10: Chmod through c script [macos, linux]
-  - Atomic Test #11: Chown through c script [macos, linux]
+  - Atomic Test #10: chflags - Remove immutable file attribute [linux]
+  - Atomic Test #11: Chmod through c script [macos, linux]
+  - Atomic Test #12: Chmod through c script (freebsd) [linux]
+  - Atomic Test #13: Chown through c script [macos, linux]
+  - Atomic Test #14: Chown through c script (freebsd) [linux]
 - T1564.008 Email Hiding Rules [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1014 Rootkit](../../T1014/T1014.md)
   - Atomic Test #1: Loadable Kernel Module based Rootkit [linux]
@@ -28,8 +32,11 @@
 - T1099 Timestomp [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1548.003 Abuse Elevation Control Mechanism: Sudo and Sudo Caching](../../T1548.003/T1548.003.md)
   - Atomic Test #1: Sudo usage [macos, linux]
-  - Atomic Test #2: Unlimited sudo cache timeout [macos, linux]
-  - Atomic Test #3: Disable tty_tickets for sudo caching [macos, linux]
+  - Atomic Test #2: Sudo usage (freebsd) [linux]
+  - Atomic Test #3: Unlimited sudo cache timeout [macos, linux]
+  - Atomic Test #4: Unlimited sudo cache timeout (freebsd) [linux]
+  - Atomic Test #5: Disable tty_tickets for sudo caching [macos, linux]
+  - Atomic Test #6: Disable tty_tickets for sudo caching (freebsd) [linux]
 - T1542.003 Bootkit [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1036.005 Masquerading: Match Legitimate Name or Location](../../T1036.005/T1036.005.md)
   - Atomic Test #1: Execute a process from a directory masquerading as the current parent directory. [macos, linux]
@@ -37,31 +44,46 @@
 - T1564 Hide Artifacts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1497.001 Virtualization/Sandbox Evasion: System Checks](../../T1497.001/T1497.001.md)
   - Atomic Test #1: Detect Virtualization Environment (Linux) [linux]
-- [T1070.002 Indicator Removal on Host: Clear Linux or Mac System Logs](../../T1070.002/T1070.002.md)
+  - Atomic Test #2: Detect Virtualization Environment (FreeBSD) [linux]
+- [T1070.002 Indicator Removal on Host: Clear FreeBSD, Linux or Mac System Logs](../../T1070.002/T1070.002.md)
   - Atomic Test #1: rm -rf [macos, linux]
-  - Atomic Test #13: Delete system journal logs via rm and journalctl utilities [linux]
-  - Atomic Test #14: Overwrite Linux Mail Spool [linux]
-  - Atomic Test #15: Overwrite Linux Log [linux]
+  - Atomic Test #2: rm -rf [linux]
+  - Atomic Test #5: Truncate system log files via truncate utility (freebsd) [linux]
+  - Atomic Test #7: Delete log files via cat utility by appending /dev/null or /dev/zero (freebsd) [linux]
+  - Atomic Test #10: Overwrite FreeBSD system log via echo utility [linux]
+  - Atomic Test #13: Delete system log files via unlink utility (freebsd) [linux]
+  - Atomic Test #18: Delete system journal logs via rm and journalctl utilities [linux]
+  - Atomic Test #19: Overwrite Linux Mail Spool [linux]
+  - Atomic Test #20: Overwrite Linux Log [linux]
 - T1089 Disabling Security Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.008 Stripped Payloads [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1070.007 Clear Network Connection History and Configurations [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1070.003 Indicator Removal on Host: Clear Command History](../../T1070.003/T1070.003.md)
   - Atomic Test #1: Clear Bash history (rm) [linux, macos]
-  - Atomic Test #2: Clear Bash history (echo) [linux]
-  - Atomic Test #3: Clear Bash history (cat dev/null) [linux, macos]
-  - Atomic Test #4: Clear Bash history (ln dev/null) [linux, macos]
-  - Atomic Test #5: Clear Bash history (truncate) [linux]
-  - Atomic Test #6: Clear history of a bunch of shells [linux, macos]
-  - Atomic Test #7: Clear and Disable Bash History Logging [linux, macos]
-  - Atomic Test #8: Use Space Before Command to Avoid Logging to History [linux, macos]
-  - Atomic Test #9: Disable Bash History Logging with SSH -T [linux]
+  - Atomic Test #2: Clear sh history (rm) [linux]
+  - Atomic Test #3: Clear Bash history (echo) [linux]
+  - Atomic Test #4: Clear sh history (echo) [linux]
+  - Atomic Test #5: Clear Bash history (cat dev/null) [linux, macos]
+  - Atomic Test #6: Clear sh history (cat dev/null) [linux]
+  - Atomic Test #7: Clear Bash history (ln dev/null) [linux, macos]
+  - Atomic Test #8: Clear sh history (ln dev/null) [linux]
+  - Atomic Test #9: Clear Bash history (truncate) [linux]
+  - Atomic Test #10: Clear sh history (truncate) [linux]
+  - Atomic Test #11: Clear history of a bunch of shells [linux, macos]
+  - Atomic Test #12: Clear history of a bunch of shells (freebsd) [linux]
+  - Atomic Test #13: Clear and Disable Bash History Logging [linux, macos]
+  - Atomic Test #14: Use Space Before Command to Avoid Logging to History [linux, macos]
+  - Atomic Test #15: Disable Bash History Logging with SSH -T [linux]
+  - Atomic Test #16: Disable sh History Logging with SSH -T (freebsd) [linux]
 - [T1140 Deobfuscate/Decode Files or Information](../../T1140/T1140.md)
   - Atomic Test #3: Base64 decoding with Python [linux, macos]
   - Atomic Test #4: Base64 decoding with Perl [linux, macos]
   - Atomic Test #5: Base64 decoding with shell utilities [linux, macos]
-  - Atomic Test #6: Hex decoding with shell utilities [linux, macos]
-  - Atomic Test #7: Linux Base64 Encoded Shebang in CLI [linux, macos]
-  - Atomic Test #8: XOR decoding and command execution using Python [linux, macos]
+  - Atomic Test #6: Base64 decoding with shell utilities (freebsd) [linux]
+  - Atomic Test #7: FreeBSD b64encode Shebang in CLI [linux]
+  - Atomic Test #8: Hex decoding with shell utilities [linux, macos]
+  - Atomic Test #9: Linux Base64 Encoded Shebang in CLI [linux, macos]
+  - Atomic Test #10: XOR decoding and command execution using Python [linux, macos]
 - [T1562 Impair Defenses](../../T1562/T1562.md)
   - Atomic Test #2: Disable journal logging via systemctl utility [linux]
   - Atomic Test #3: Disable journal logging via sed utility [linux]
@@ -82,20 +104,22 @@
 - T1009 Binary Padding [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1562.004 Impair Defenses: Disable or Modify System Firewall](../../T1562.004/T1562.004.md)
   - Atomic Test #7: Stop/Start UFW firewall [linux]
-  - Atomic Test #8: Stop/Start UFW firewall systemctl [linux]
-  - Atomic Test #9: Turn off UFW logging [linux]
-  - Atomic Test #10: Add and delete UFW firewall rules [linux]
-  - Atomic Test #11: Edit UFW firewall user.rules file [linux]
-  - Atomic Test #12: Edit UFW firewall ufw.conf file [linux]
-  - Atomic Test #13: Edit UFW firewall sysctl.conf file [linux]
-  - Atomic Test #14: Edit UFW firewall main configuration file [linux]
-  - Atomic Test #15: Tail the UFW firewall log file [linux]
-  - Atomic Test #16: Disable iptables [linux]
-  - Atomic Test #17: Modify/delete iptables firewall rules [linux]
+  - Atomic Test #8: Stop/Start Packet Filter [linux]
+  - Atomic Test #9: Stop/Start UFW firewall systemctl [linux]
+  - Atomic Test #10: Turn off UFW logging [linux]
+  - Atomic Test #11: Add and delete UFW firewall rules [linux]
+  - Atomic Test #12: Add and delete Packet Filter rules [linux]
+  - Atomic Test #13: Edit UFW firewall user.rules file [linux]
+  - Atomic Test #14: Edit UFW firewall ufw.conf file [linux]
+  - Atomic Test #15: Edit UFW firewall sysctl.conf file [linux]
+  - Atomic Test #16: Edit UFW firewall main configuration file [linux]
+  - Atomic Test #17: Tail the UFW firewall log file [linux]
+  - Atomic Test #18: Disable iptables [linux]
+  - Atomic Test #19: Modify/delete iptables firewall rules [linux]
 - T1107 File Deletion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1027.001 Obfuscated Files or Information: Binary Padding](../../T1027.001/T1027.001.md)
-  - Atomic Test #1: Pad Binary to Change Hash - Linux/macOS dd [macos, linux]
-  - Atomic Test #2: Pad Binary to Change Hash using truncate command - Linux/macOS [macos, linux]
+  - Atomic Test #1: Pad Binary to Change Hash - Linux/macOS dd [linux, macos]
+  - Atomic Test #2: Pad Binary to Change Hash using truncate command - Linux/macOS [linux, macos]
 - T1078.001 Valid Accounts: Default Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1574.006 Hijack Execution Flow: LD_PRELOAD](../../T1574.006/T1574.006.md)
   - Atomic Test #1: Shared Library Injection via /etc/ld.so.preload [linux]
@@ -104,16 +128,21 @@
 - T1548 Abuse Elevation Control Mechanism [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1548.001 Abuse Elevation Control Mechanism: Setuid and Setgid](../../T1548.001/T1548.001.md)
   - Atomic Test #1: Make and modify binary from C source [macos, linux]
-  - Atomic Test #2: Set a SetUID flag on file [macos, linux]
-  - Atomic Test #3: Set a SetGID flag on file [macos, linux]
-  - Atomic Test #4: Make and modify capabilities of a binary [linux]
-  - Atomic Test #5: Provide the SetUID capability to a file [linux]
-  - Atomic Test #6: Do reconnaissance for files that have the setuid bit set [linux]
-  - Atomic Test #7: Do reconnaissance for files that have the setgid bit set [linux]
+  - Atomic Test #2: Make and modify binary from C source (freebsd) [linux]
+  - Atomic Test #3: Set a SetUID flag on file [macos, linux]
+  - Atomic Test #4: Set a SetUID flag on file (freebsd) [linux]
+  - Atomic Test #5: Set a SetGID flag on file [macos, linux]
+  - Atomic Test #6: Set a SetGID flag on file (freebsd) [linux]
+  - Atomic Test #7: Make and modify capabilities of a binary [linux]
+  - Atomic Test #8: Provide the SetUID capability to a file [linux]
+  - Atomic Test #9: Do reconnaissance for files that have the setuid bit set [linux]
+  - Atomic Test #10: Do reconnaissance for files that have the setgid bit set [linux]
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1562.006 Impair Defenses: Indicator Blocking](../../T1562.006/T1562.006.md)
   - Atomic Test #1: Auditing Configuration Changes on Linux Host [linux]
-  - Atomic Test #2: Logging Configuration Changes on Linux Host [linux]
+  - Atomic Test #2: Auditing Configuration Changes on FreeBSD Host [linux]
+  - Atomic Test #3: Logging Configuration Changes on Linux Host [linux]
+  - Atomic Test #4: Logging Configuration Changes on FreeBSD Host [linux]
 - T1036.002 Right-to-Left Override [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1542.002 Component Firmware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1070 Indicator Removal on Host [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -128,40 +157,47 @@
 - T1564.002 Hide Artifacts: Hidden Users [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1562.003 Impair Defenses: HISTCONTROL](../../T1562.003/T1562.003.md)
   - Atomic Test #1: Disable history collection [linux, macos]
-  - Atomic Test #2: Mac HISTCONTROL [macos, linux]
-  - Atomic Test #3: Clear bash history [linux]
-  - Atomic Test #4: Setting the HISTCONTROL environment variable [linux]
-  - Atomic Test #5: Setting the HISTFILESIZE environment variable [linux]
-  - Atomic Test #6: Setting the HISTFILE environment variable [linux]
-  - Atomic Test #7: Setting the HISTIGNORE environment variable [linux]
+  - Atomic Test #2: Disable history collection (freebsd) [linux]
+  - Atomic Test #3: Mac HISTCONTROL [macos, linux]
+  - Atomic Test #4: Clear bash history [linux]
+  - Atomic Test #5: Setting the HISTCONTROL environment variable [linux]
+  - Atomic Test #6: Setting the HISTFILESIZE environment variable [linux]
+  - Atomic Test #7: Setting the HISTSIZE environment variable [linux]
+  - Atomic Test #8: Setting the HISTFILE environment variable [linux]
+  - Atomic Test #9: Setting the HISTFILE environment variable (freebsd) [linux]
+  - Atomic Test #10: Setting the HISTIGNORE environment variable [linux]
 - T1497.002 User Activity Based Checks [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1055.014 VDSO Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1562.001 Impair Defenses: Disable or Modify Tools](../../T1562.001/T1562.001.md)
   - Atomic Test #1: Disable syslog [linux]
-  - Atomic Test #2: Disable Cb Response [linux]
-  - Atomic Test #3: Disable SELinux [linux]
-  - Atomic Test #4: Stop Crowdstrike Falcon on Linux [linux]
-  - Atomic Test #38: Clear History [linux]
-  - Atomic Test #39: Suspend History [linux]
-  - Atomic Test #40: Reboot Linux Host via Kernel System Request [linux]
-  - Atomic Test #41: Clear Pagging Cache [linux]
-  - Atomic Test #42: Disable Memory Swap [linux]
+  - Atomic Test #2: Disable syslog (freebsd) [linux]
+  - Atomic Test #3: Disable Cb Response [linux]
+  - Atomic Test #4: Disable SELinux [linux]
+  - Atomic Test #5: Stop Crowdstrike Falcon on Linux [linux]
+  - Atomic Test #39: Clear History [linux]
+  - Atomic Test #40: Suspend History [linux]
+  - Atomic Test #41: Reboot Linux Host via Kernel System Request [linux]
+  - Atomic Test #42: Clear Pagging Cache [linux]
+  - Atomic Test #43: Disable Memory Swap [linux]
+  - Atomic Test #47: Tamper with Defender ATP on Linux/MacOS [linux, macos]
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1027 Obfuscated Files or Information](../../T1027/T1027.md)
   - Atomic Test #1: Decode base64 Data into Script [macos, linux]
+  - Atomic Test #2: Decode base64 Data into Script [linux]
 - T1556.006 Multi-Factor Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1564.006 Run Virtual Instance [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1553 Subvert Trust Controls [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1036.003 Masquerading: Rename System Utilities](../../T1036.003/T1036.003.md)
-  - Atomic Test #2: Masquerading as Linux crond process. [linux]
+  - Atomic Test #2: Masquerading as FreeBSD or Linux crond process. [linux]
 - T1562.011 Spoof Security Alerting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.003 Steganography [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1553.004 Subvert Trust Controls: Install Root Certificate](../../T1553.004/T1553.004.md)
   - Atomic Test #1: Install root CA on CentOS/RHEL [linux]
-  - Atomic Test #2: Install root CA on Debian/Ubuntu [linux]
+  - Atomic Test #2: Install root CA on FreeBSD [linux]
+  - Atomic Test #3: Install root CA on Debian/Ubuntu [linux]
 - [T1027.004 Obfuscated Files or Information: Compile After Delivery](../../T1027.004/T1027.004.md)
   - Atomic Test #3: C compile [linux, macos]
   - Atomic Test #4: CC compile [linux, macos]
@@ -176,10 +212,11 @@
 - T1027.010 Command Obfuscation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1130 Install Root Certificate [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1070.004 Indicator Removal on Host: File Deletion](../../T1070.004/T1070.004.md)
-  - Atomic Test #1: Delete a single file - Linux/macOS [linux, macos]
-  - Atomic Test #2: Delete an entire folder - Linux/macOS [linux, macos]
+  - Atomic Test #1: Delete a single file - FreeBSD/Linux/macOS [linux, macos]
+  - Atomic Test #2: Delete an entire folder - FreeBSD/Linux/macOS [linux, macos]
   - Atomic Test #3: Overwrite and delete a file with shred [linux]
   - Atomic Test #8: Delete Filesystem - Linux [linux]
+  - Atomic Test #9: Delete Filesystem - FreeBSD [linux]
 - T1158 Hidden Files and Directories [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1027.002 Obfuscated Files or Information: Software Packing](../../T1027.002/T1027.002.md)
   - Atomic Test #1: Binary simply packed by UPX (linux) [linux]
@@ -189,6 +226,7 @@
 - T1622 Debugger Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1036.006 Masquerading: Space after Filename](../../T1036.006/T1036.006.md)
   - Atomic Test #2: Space After Filename [macos, linux]
+  - Atomic Test #3: Space After Filename (FreeBSD) [linux]
 - T1055.008 Ptrace System Calls [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1564.001 Hide Artifacts: Hidden Files and Directories](../../T1564.001/T1564.001.md)
   - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
@@ -196,8 +234,11 @@
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #8: Create local account (Linux) [linux]
-  - Atomic Test #9: Reactivate a locked/expired account (Linux) [linux]
-  - Atomic Test #10: Login as nobody (Linux) [linux]
+  - Atomic Test #9: Create local account (FreeBSD) [linux]
+  - Atomic Test #10: Reactivate a locked/expired account (Linux) [linux]
+  - Atomic Test #11: Reactivate a locked/expired account (FreeBSD) [linux]
+  - Atomic Test #12: Login as nobody (Linux) [linux]
+  - Atomic Test #13: Login as nobody (freebsd) [linux]
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 
 # persistence
@@ -207,7 +248,8 @@
 - T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1556.003 Modify Authentication Process: Pluggable Authentication Modules](../../T1556.003/T1556.003.md)
   - Atomic Test #1: Malicious PAM rule [linux]
-  - Atomic Test #2: Malicious PAM module [linux]
+  - Atomic Test #2: Malicious PAM rule (freebsd) [linux]
+  - Atomic Test #3: Malicious PAM module [linux]
 - T1044 File System Permissions Weakness [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1501 Systemd Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1543 Create or Modify System Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -215,31 +257,36 @@
 - T1542.003 Bootkit [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1547 Boot or Logon Autostart Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1053.003 Scheduled Task/Job: Cron](../../T1053.003/T1053.003.md)
-  - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
+  - Atomic Test #1: Cron - Replace crontab with referenced file [linux, macos]
   - Atomic Test #2: Cron - Add script to all cron subfolders [macos, linux]
-  - Atomic Test #3: Cron - Add script to /var/spool/cron/crontabs/ folder [linux]
+  - Atomic Test #3: Cron - Add script to /etc/cron.d folder [linux]
+  - Atomic Test #4: Cron - Add script to /var/spool/cron/crontabs/ folder [linux]
 - T1505.002 Server Software Component: Transport Agent [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1176 Browser Extensions](../../T1176/T1176.md)
-  - Atomic Test #1: Chrome (Developer Mode) [linux, windows, macos]
-  - Atomic Test #2: Chrome (Chrome Web Store) [linux, windows, macos]
+  - Atomic Test #1: Chrome/Chromium (Developer Mode) [linux, windows, macos]
+  - Atomic Test #2: Chrome/Chromium (Chrome Web Store) [linux, windows, macos]
   - Atomic Test #3: Firefox [linux, windows, macos]
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1505.003 Server Software Component: Web Shell [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078.001 Valid Accounts: Default Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.005 Event Triggered Execution: Trap](../../T1546.005/T1546.005.md)
   - Atomic Test #1: Trap EXIT [macos, linux]
-  - Atomic Test #2: Trap SIGINT [macos, linux]
+  - Atomic Test #2: Trap EXIT (freebsd) [linux]
+  - Atomic Test #3: Trap SIGINT [macos, linux]
+  - Atomic Test #4: Trap SIGINT (freebsd) [linux]
 - [T1574.006 Hijack Execution Flow: LD_PRELOAD](../../T1574.006/T1574.006.md)
   - Atomic Test #1: Shared Library Injection via /etc/ld.so.preload [linux]
   - Atomic Test #2: Shared Library Injection via LD_PRELOAD [linux]
 - [T1136.001 Create Account: Local Account](../../T1136.001/T1136.001.md)
   - Atomic Test #1: Create a user account on a Linux system [linux]
-  - Atomic Test #5: Create a new user in Linux with `root` UID and GID. [linux]
+  - Atomic Test #2: Create a user account on a FreeBSD system [linux]
+  - Atomic Test #6: Create a new user in Linux with `root` UID and GID. [linux]
+  - Atomic Test #7: Create a new user in FreeBSD with `root` GID. [linux]
 - T1053.001 At (Linux) [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1098.004 SSH Authorized Keys](../../T1098.004/T1098.004.md)
-  - Atomic Test #1: Modify SSH Authorized Keys [macos, linux]
+  - Atomic Test #1: Modify SSH Authorized Keys [linux, macos]
 - T1215 Kernel Modules and Extensions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1136.002 Create Account: Domain Account](../../T1136.002/T1136.002.md)
   - Atomic Test #4: Active Directory Create Admin Account [linux]
@@ -260,13 +307,14 @@
 - T1556.006 Multi-Factor Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1154 Trap [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1546 Event Triggered Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1546.004 Event Triggered Execution: .bash_profile and .bashrc](../../T1546.004/T1546.004.md)
+- [T1546.004 Event Triggered Execution: .bash_profile .bashrc and .shrc](../../T1546.004/T1546.004.md)
   - Atomic Test #1: Add command to .bash_profile [macos, linux]
   - Atomic Test #2: Add command to .bashrc [macos, linux]
-  - Atomic Test #3: Append to the system shell profile [linux]
-  - Atomic Test #4: Append commands user shell profile [linux]
-  - Atomic Test #5: System shell profile scripts [linux]
-  - Atomic Test #6: Create/Append to .bash_logout [linux]
+  - Atomic Test #3: Add command to .shrc [linux]
+  - Atomic Test #4: Append to the system shell profile [linux]
+  - Atomic Test #5: Append commands user shell profile [linux]
+  - Atomic Test #6: System shell profile scripts [linux]
+  - Atomic Test #7: Create/Append to .bash_logout [linux]
 - T1168 Local Job Scheduling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1166 Setuid and Setgid [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1100 Web Shell [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -277,24 +325,31 @@
 - [T1037.004 Boot or Logon Initialization Scripts: Rc.common](../../T1037.004/T1037.004.md)
   - Atomic Test #2: rc.common [linux]
   - Atomic Test #3: rc.local [linux]
-- [T1543.002 Create or Modify System Process: Systemd Service](../../T1543.002/T1543.002.md)
+  - Atomic Test #4: rc.local (FreeBSD) [linux]
+- [T1543.002 Create or Modify System Process: SysV/Systemd Service](../../T1543.002/T1543.002.md)
   - Atomic Test #1: Create Systemd Service [linux]
-  - Atomic Test #2: Create Systemd Service file,  Enable the service , Modify and Reload the service. [linux]
+  - Atomic Test #2: Create SysV Service [linux]
+  - Atomic Test #3: Create Systemd Service file,  Enable the service , Modify and Reload the service. [linux]
 - T1136 Create Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1547.013 XDG Autostart Entries [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1053.002 Scheduled Task/Job: At](../../T1053.002/T1053.002.md)
   - Atomic Test #2: At - Schedule a job [linux]
+  - Atomic Test #3: At - Schedule a job freebsd [linux]
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1505.001 SQL Stored Procedures [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #8: Create local account (Linux) [linux]
-  - Atomic Test #9: Reactivate a locked/expired account (Linux) [linux]
-  - Atomic Test #10: Login as nobody (Linux) [linux]
+  - Atomic Test #9: Create local account (FreeBSD) [linux]
+  - Atomic Test #10: Reactivate a locked/expired account (Linux) [linux]
+  - Atomic Test #11: Reactivate a locked/expired account (FreeBSD) [linux]
+  - Atomic Test #12: Login as nobody (Linux) [linux]
+  - Atomic Test #13: Login as nobody (freebsd) [linux]
 
 # command-and-control
 - T1205.002 Socket Filters [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1132.001 Data Encoding: Standard Encoding](../../T1132.001/T1132.001.md)
   - Atomic Test #1: Base64 Encoded data. [macos, linux]
+  - Atomic Test #2: Base64 Encoded data (freebsd) [linux]
 - T1568.002 Domain Generation Algorithms [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1071.004 Application Layer Protocol: DNS [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1172 Domain Fronting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -323,6 +378,7 @@
 - T1102.003 One-Way Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1090.003 Proxy: Multi-hop Proxy](../../T1090.003/T1090.003.md)
   - Atomic Test #3: Tor Proxy Usage - Debian/Ubuntu [linux]
+  - Atomic Test #5: Tor Proxy Usage - FreeBSD [linux]
 - T1001 Data Obfuscation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1571 Non-Standard Port](../../T1571/T1571.md)
   - Atomic Test #2: Testing usage of uncommonly used port [linux, macos]
@@ -349,7 +405,7 @@
 - T1001.002 Steganography [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1008 Fallback Channels [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1090.001 Proxy: Internal Proxy](../../T1090.001/T1090.001.md)
-  - Atomic Test #1: Connection Proxy [macos, linux]
+  - Atomic Test #1: Connection Proxy [linux, macos]
 - T1094 Custom Command and Control Protocol [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1102.001 Dead Drop Resolver [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1001.001 Junk Data [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -360,34 +416,38 @@
   - Atomic Test #5: Data Compressed - nix - zip [linux, macos]
   - Atomic Test #6: Data Compressed - nix - gzip Single File [linux, macos]
   - Atomic Test #7: Data Compressed - nix - tar Folder or File [linux, macos]
-  - Atomic Test #8: Data Encrypted with zip and gpg symmetric [macos, linux]
+  - Atomic Test #8: Data Encrypted with zip and gpg symmetric [linux, macos]
   - Atomic Test #9: Encrypts collected data with AES-256 and Base64 [linux, macos]
 - [T1113 Screen Capture](../../T1113/T1113.md)
   - Atomic Test #3: X Windows Capture [linux]
-  - Atomic Test #4: Capture Linux Desktop using Import Tool [linux]
+  - Atomic Test #4: X Windows Capture (freebsd) [linux]
+  - Atomic Test #5: Capture Linux Desktop using Import Tool [linux]
+  - Atomic Test #6: Capture Linux Desktop using Import Tool (freebsd) [linux]
 - T1557 Adversary-in-the-Middle [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1056.001 Input Capture: Keylogging](../../T1056.001/T1056.001.md)
   - Atomic Test #2: Living off the land Terminal Input Capture on Linux with pam.d [linux]
   - Atomic Test #3: Logging bash history to syslog [linux]
-  - Atomic Test #4: Bash session based keylogger [linux]
-  - Atomic Test #5: SSHD PAM keylogger [linux]
-  - Atomic Test #6: Auditd keylogger [linux]
+  - Atomic Test #4: Logging sh history to syslog/messages [linux]
+  - Atomic Test #5: Bash session based keylogger [linux]
+  - Atomic Test #6: SSHD PAM keylogger [linux]
+  - Atomic Test #7: Auditd keylogger [linux]
 - T1123 Audio Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1560.003 Archive via Custom Method [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1114 Email Collection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1025 Data from Removable Media [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1074.001 Data Staged: Local Data Staging](../../T1074.001/T1074.001.md)
   - Atomic Test #2: Stage data from Discovery.sh [linux, macos]
+  - Atomic Test #3: Stage data from Discovery.sh (freebsd) [linux]
 - T1119 Automated Collection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1115 Clipboard Data](../../T1115/T1115.md)
   - Atomic Test #5: Add or copy content to clipboard with xClip [linux]
 - T1074.002 Remote Data Staging [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1005 Data from Local System [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1560.002 Archive Collected Data: Archive via Library](../../T1560.002/T1560.002.md)
-  - Atomic Test #1: Compressing data using GZip in Python (Linux) [linux]
-  - Atomic Test #2: Compressing data using bz2 in Python (Linux) [linux]
-  - Atomic Test #3: Compressing data using zipfile in Python (Linux) [linux]
-  - Atomic Test #4: Compressing data using tarfile in Python (Linux) [linux]
+  - Atomic Test #1: Compressing data using GZip in Python (FreeBSD/Linux) [linux]
+  - Atomic Test #2: Compressing data using bz2 in Python (FreeBSD/Linux) [linux]
+  - Atomic Test #3: Compressing data using zipfile in Python (FreeBSD/Linux) [linux]
+  - Atomic Test #4: Compressing data using tarfile in Python (FreeBSD/Linux) [linux]
 - T1560 Archive Collected Data [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1557.003 DHCP Spoofing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1056.003 Web Portal Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -420,21 +480,27 @@
 - T1543 Create or Modify System Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1548.003 Abuse Elevation Control Mechanism: Sudo and Sudo Caching](../../T1548.003/T1548.003.md)
   - Atomic Test #1: Sudo usage [macos, linux]
-  - Atomic Test #2: Unlimited sudo cache timeout [macos, linux]
-  - Atomic Test #3: Disable tty_tickets for sudo caching [macos, linux]
+  - Atomic Test #2: Sudo usage (freebsd) [linux]
+  - Atomic Test #3: Unlimited sudo cache timeout [macos, linux]
+  - Atomic Test #4: Unlimited sudo cache timeout (freebsd) [linux]
+  - Atomic Test #5: Disable tty_tickets for sudo caching [macos, linux]
+  - Atomic Test #6: Disable tty_tickets for sudo caching (freebsd) [linux]
 - T1547 Boot or Logon Autostart Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1206 Sudo Caching [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1053.003 Scheduled Task/Job: Cron](../../T1053.003/T1053.003.md)
-  - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
+  - Atomic Test #1: Cron - Replace crontab with referenced file [linux, macos]
   - Atomic Test #2: Cron - Add script to all cron subfolders [macos, linux]
-  - Atomic Test #3: Cron - Add script to /var/spool/cron/crontabs/ folder [linux]
+  - Atomic Test #3: Cron - Add script to /etc/cron.d folder [linux]
+  - Atomic Test #4: Cron - Add script to /var/spool/cron/crontabs/ folder [linux]
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1055 Process Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1611 Escape to Host [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078.001 Valid Accounts: Default Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.005 Event Triggered Execution: Trap](../../T1546.005/T1546.005.md)
   - Atomic Test #1: Trap EXIT [macos, linux]
-  - Atomic Test #2: Trap SIGINT [macos, linux]
+  - Atomic Test #2: Trap EXIT (freebsd) [linux]
+  - Atomic Test #3: Trap SIGINT [macos, linux]
+  - Atomic Test #4: Trap SIGINT (freebsd) [linux]
 - [T1574.006 Hijack Execution Flow: LD_PRELOAD](../../T1574.006/T1574.006.md)
   - Atomic Test #1: Shared Library Injection via /etc/ld.so.preload [linux]
   - Atomic Test #2: Shared Library Injection via LD_PRELOAD [linux]
@@ -442,12 +508,15 @@
 - T1548 Abuse Elevation Control Mechanism [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1548.001 Abuse Elevation Control Mechanism: Setuid and Setgid](../../T1548.001/T1548.001.md)
   - Atomic Test #1: Make and modify binary from C source [macos, linux]
-  - Atomic Test #2: Set a SetUID flag on file [macos, linux]
-  - Atomic Test #3: Set a SetGID flag on file [macos, linux]
-  - Atomic Test #4: Make and modify capabilities of a binary [linux]
-  - Atomic Test #5: Provide the SetUID capability to a file [linux]
-  - Atomic Test #6: Do reconnaissance for files that have the setuid bit set [linux]
-  - Atomic Test #7: Do reconnaissance for files that have the setgid bit set [linux]
+  - Atomic Test #2: Make and modify binary from C source (freebsd) [linux]
+  - Atomic Test #3: Set a SetUID flag on file [macos, linux]
+  - Atomic Test #4: Set a SetUID flag on file (freebsd) [linux]
+  - Atomic Test #5: Set a SetGID flag on file [macos, linux]
+  - Atomic Test #6: Set a SetGID flag on file (freebsd) [linux]
+  - Atomic Test #7: Make and modify capabilities of a binary [linux]
+  - Atomic Test #8: Provide the SetUID capability to a file [linux]
+  - Atomic Test #9: Do reconnaissance for files that have the setuid bit set [linux]
+  - Atomic Test #10: Do reconnaissance for files that have the setgid bit set [linux]
 - T1055.014 VDSO Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1169 Sudo [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1547.006 Boot or Logon Autostart Execution: Kernel Modules and Extensions](../../T1547.006/T1547.006.md)
@@ -460,13 +529,14 @@
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1068 Exploitation for Privilege Escalation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1546 Event Triggered Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1546.004 Event Triggered Execution: .bash_profile and .bashrc](../../T1546.004/T1546.004.md)
+- [T1546.004 Event Triggered Execution: .bash_profile .bashrc and .shrc](../../T1546.004/T1546.004.md)
   - Atomic Test #1: Add command to .bash_profile [macos, linux]
   - Atomic Test #2: Add command to .bashrc [macos, linux]
-  - Atomic Test #3: Append to the system shell profile [linux]
-  - Atomic Test #4: Append commands user shell profile [linux]
-  - Atomic Test #5: System shell profile scripts [linux]
-  - Atomic Test #6: Create/Append to .bash_logout [linux]
+  - Atomic Test #3: Add command to .shrc [linux]
+  - Atomic Test #4: Append to the system shell profile [linux]
+  - Atomic Test #5: Append commands user shell profile [linux]
+  - Atomic Test #6: System shell profile scripts [linux]
+  - Atomic Test #7: Create/Append to .bash_logout [linux]
 - T1166 Setuid and Setgid [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1100 Web Shell [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -475,47 +545,60 @@
 - [T1037.004 Boot or Logon Initialization Scripts: Rc.common](../../T1037.004/T1037.004.md)
   - Atomic Test #2: rc.common [linux]
   - Atomic Test #3: rc.local [linux]
-- [T1543.002 Create or Modify System Process: Systemd Service](../../T1543.002/T1543.002.md)
+  - Atomic Test #4: rc.local (FreeBSD) [linux]
+- [T1543.002 Create or Modify System Process: SysV/Systemd Service](../../T1543.002/T1543.002.md)
   - Atomic Test #1: Create Systemd Service [linux]
-  - Atomic Test #2: Create Systemd Service file,  Enable the service , Modify and Reload the service. [linux]
+  - Atomic Test #2: Create SysV Service [linux]
+  - Atomic Test #3: Create Systemd Service file,  Enable the service , Modify and Reload the service. [linux]
 - T1547.013 XDG Autostart Entries [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1055.008 Ptrace System Calls [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1053.002 Scheduled Task/Job: At](../../T1053.002/T1053.002.md)
   - Atomic Test #2: At - Schedule a job [linux]
+  - Atomic Test #3: At - Schedule a job freebsd [linux]
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #8: Create local account (Linux) [linux]
-  - Atomic Test #9: Reactivate a locked/expired account (Linux) [linux]
-  - Atomic Test #10: Login as nobody (Linux) [linux]
+  - Atomic Test #9: Create local account (FreeBSD) [linux]
+  - Atomic Test #10: Reactivate a locked/expired account (Linux) [linux]
+  - Atomic Test #11: Reactivate a locked/expired account (FreeBSD) [linux]
+  - Atomic Test #12: Login as nobody (Linux) [linux]
+  - Atomic Test #13: Login as nobody (freebsd) [linux]
 
 # credential-access
 - T1557 Adversary-in-the-Middle [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1556.003 Modify Authentication Process: Pluggable Authentication Modules](../../T1556.003/T1556.003.md)
   - Atomic Test #1: Malicious PAM rule [linux]
-  - Atomic Test #2: Malicious PAM module [linux]
+  - Atomic Test #2: Malicious PAM rule (freebsd) [linux]
+  - Atomic Test #3: Malicious PAM module [linux]
 - [T1056.001 Input Capture: Keylogging](../../T1056.001/T1056.001.md)
   - Atomic Test #2: Living off the land Terminal Input Capture on Linux with pam.d [linux]
   - Atomic Test #3: Logging bash history to syslog [linux]
-  - Atomic Test #4: Bash session based keylogger [linux]
-  - Atomic Test #5: SSHD PAM keylogger [linux]
-  - Atomic Test #6: Auditd keylogger [linux]
+  - Atomic Test #4: Logging sh history to syslog/messages [linux]
+  - Atomic Test #5: Bash session based keylogger [linux]
+  - Atomic Test #6: SSHD PAM keylogger [linux]
+  - Atomic Test #7: Auditd keylogger [linux]
 - [T1110.001 Brute Force: Password Guessing](../../T1110.001/T1110.001.md)
   - Atomic Test #5: SUDO Brute Force - Debian [linux]
   - Atomic Test #6: SUDO Brute Force - Redhat [linux]
+  - Atomic Test #7: SUDO Brute Force - FreeBSD [linux]
 - T1003 OS Credential Dumping [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1539 Steal Web Session Cookie [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1555.002 Securityd Memory [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1110.002 Brute Force: Password Cracking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1003.007 OS Credential Dumping: Proc Filesystem](../../T1003.007/T1003.007.md)
   - Atomic Test #1: Dump individual process memory with sh (Local) [linux]
-  - Atomic Test #2: Dump individual process memory with Python (Local) [linux]
-  - Atomic Test #3: Capture Passwords with MimiPenguin [linux]
+  - Atomic Test #2: Dump individual process memory with sh on FreeBSD (Local) [linux]
+  - Atomic Test #3: Dump individual process memory with Python (Local) [linux]
+  - Atomic Test #4: Capture Passwords with MimiPenguin [linux]
 - T1555.005 Password Managers [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #1: Packet Capture Linux using tshark or tcpdump [linux]
-  - Atomic Test #9: Packet Capture Linux socket AF_PACKET,SOCK_RAW with sudo [linux]
-  - Atomic Test #10: Packet Capture Linux socket AF_INET,SOCK_RAW,TCP with sudo [linux]
-  - Atomic Test #11: Packet Capture Linux socket AF_INET,SOCK_PACKET,UDP with sudo [linux]
-  - Atomic Test #12: Packet Capture Linux socket AF_PACKET,SOCK_RAW with BPF filter for UDP with sudo [linux]
+  - Atomic Test #2: Packet Capture FreeBSD using tshark or tcpdump [linux]
+  - Atomic Test #10: Packet Capture FreeBSD using /dev/bpfN with sudo [linux]
+  - Atomic Test #11: Filtered Packet Capture FreeBSD using /dev/bpfN with sudo [linux]
+  - Atomic Test #12: Packet Capture Linux socket AF_PACKET,SOCK_RAW with sudo [linux]
+  - Atomic Test #13: Packet Capture Linux socket AF_INET,SOCK_RAW,TCP with sudo [linux]
+  - Atomic Test #14: Packet Capture Linux socket AF_INET,SOCK_PACKET,UDP with sudo [linux]
+  - Atomic Test #15: Packet Capture Linux socket AF_PACKET,SOCK_RAW with BPF filter for UDP with sudo [linux]
 - T1558 Steal or Forge Kerberos Tickets [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1555 Credentials from Password Stores [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1552 Unsecured Credentials](../../T1552/T1552.md)
@@ -527,19 +610,23 @@
   - Atomic Test #9: LaZagne.py - Dump Credentials from Firefox Browser [linux]
 - T1557.003 DHCP Spoofing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1552.004 Unsecured Credentials: Private Keys](../../T1552.004/T1552.004.md)
-  - Atomic Test #2: Discover Private SSH Keys [macos, linux]
+  - Atomic Test #2: Discover Private SSH Keys [linux, macos]
   - Atomic Test #3: Copy Private SSH Keys with CP [linux]
-  - Atomic Test #4: Copy Private SSH Keys with rsync [macos, linux]
-  - Atomic Test #5: Copy the users GnuPG directory with rsync [macos, linux]
+  - Atomic Test #4: Copy Private SSH Keys with CP (freebsd) [linux]
+  - Atomic Test #5: Copy Private SSH Keys with rsync [macos, linux]
+  - Atomic Test #6: Copy Private SSH Keys with rsync (freebsd) [linux]
+  - Atomic Test #7: Copy the users GnuPG directory with rsync [macos, linux]
+  - Atomic Test #8: Copy the users GnuPG directory with rsync (freebsd) [linux]
 - T1110.003 Brute Force: Password Spraying [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1056.003 Web Portal Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1649 Steal or Forge Authentication Certificates [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1552.003 Unsecured Credentials: Bash History](../../T1552.003/T1552.003.md)
   - Atomic Test #1: Search Through Bash History [linux, macos]
+  - Atomic Test #2: Search Through sh History [linux]
 - [T1552.001 Unsecured Credentials: Credentials In Files](../../T1552.001/T1552.001.md)
   - Atomic Test #1: Find AWS credentials [macos, linux]
-  - Atomic Test #3: Extract passwords with grep [macos, linux]
-  - Atomic Test #6: Find and Access Github Credentials [macos, linux]
+  - Atomic Test #3: Extract passwords with grep [linux, macos]
+  - Atomic Test #6: Find and Access Github Credentials [linux, macos]
 - T1606.001 Web Cookies [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1606 Forge Web Credentials [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1621 Multi-Factor Authentication Request Generation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -548,15 +635,17 @@
 - T1110 Brute Force [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1110.004 Brute Force: Credential Stuffing](../../T1110.004/T1110.004.md)
   - Atomic Test #1: SSH Credential Stuffing From Linux [linux]
+  - Atomic Test #3: SSH Credential Stuffing From FreeBSD [linux]
 - T1556.006 Multi-Factor Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1081 Credentials in Files [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1056 Input Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1557.002 ARP Cache Poisoning [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1003.008 OS Credential Dumping: /etc/passwd and /etc/shadow](../../T1003.008/T1003.008.md)
+- [T1003.008 OS Credential Dumping: /etc/passwd, /etc/master.passwd and /etc/shadow](../../T1003.008/T1003.008.md)
   - Atomic Test #1: Access /etc/shadow (Local) [linux]
-  - Atomic Test #2: Access /etc/passwd (Local) [linux]
-  - Atomic Test #3: Access /etc/{shadow,passwd} with a standard bin that's not cat [linux]
-  - Atomic Test #4: Access /etc/{shadow,passwd} with shell builtins [linux]
+  - Atomic Test #2: Access /etc/master.passwd (Local) [linux]
+  - Atomic Test #3: Access /etc/passwd (Local) [linux]
+  - Atomic Test #4: Access /etc/{shadow,passwd,master.passwd} with a standard bin that's not cat [linux]
+  - Atomic Test #5: Access /etc/{shadow,passwd,master.passwd} with shell builtins [linux]
 - T1111 Multi-Factor Authentication Interception [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 
@@ -574,52 +663,64 @@
   - Atomic Test #3: View accounts with UID 0 [linux, macos]
   - Atomic Test #4: List opened files by user [linux, macos]
   - Atomic Test #5: Show if a user account has ever logged in remotely [linux]
-  - Atomic Test #6: Enumerate users and groups [linux, macos]
+  - Atomic Test #6: Show if a user account has ever logged in remotely (freebsd) [linux]
+  - Atomic Test #7: Enumerate users and groups [linux, macos]
 - [T1497.001 Virtualization/Sandbox Evasion: System Checks](../../T1497.001/T1497.001.md)
   - Atomic Test #1: Detect Virtualization Environment (Linux) [linux]
+  - Atomic Test #2: Detect Virtualization Environment (FreeBSD) [linux]
 - [T1069.002 Permission Groups Discovery: Domain Groups](../../T1069.002/T1069.002.md)
   - Atomic Test #15: Active Directory Domain Search Using LDAP - Linux (Ubuntu)/macOS [linux]
 - [T1007 System Service Discovery](../../T1007/T1007.md)
   - Atomic Test #3: System Service Discovery - systemctl [linux]
+  - Atomic Test #4: System Service Discovery - service [linux]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #1: Packet Capture Linux using tshark or tcpdump [linux]
-  - Atomic Test #9: Packet Capture Linux socket AF_PACKET,SOCK_RAW with sudo [linux]
-  - Atomic Test #10: Packet Capture Linux socket AF_INET,SOCK_RAW,TCP with sudo [linux]
-  - Atomic Test #11: Packet Capture Linux socket AF_INET,SOCK_PACKET,UDP with sudo [linux]
-  - Atomic Test #12: Packet Capture Linux socket AF_PACKET,SOCK_RAW with BPF filter for UDP with sudo [linux]
+  - Atomic Test #2: Packet Capture FreeBSD using tshark or tcpdump [linux]
+  - Atomic Test #10: Packet Capture FreeBSD using /dev/bpfN with sudo [linux]
+  - Atomic Test #11: Filtered Packet Capture FreeBSD using /dev/bpfN with sudo [linux]
+  - Atomic Test #12: Packet Capture Linux socket AF_PACKET,SOCK_RAW with sudo [linux]
+  - Atomic Test #13: Packet Capture Linux socket AF_INET,SOCK_RAW,TCP with sudo [linux]
+  - Atomic Test #14: Packet Capture Linux socket AF_INET,SOCK_PACKET,UDP with sudo [linux]
+  - Atomic Test #15: Packet Capture Linux socket AF_PACKET,SOCK_RAW with BPF filter for UDP with sudo [linux]
 - [T1135 Network Share Discovery](../../T1135/T1135.md)
   - Atomic Test #2: Network Share Discovery - linux [linux]
+  - Atomic Test #3: Network Share Discovery - FreeBSD [linux]
 - T1120 Peripheral Device Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1082 System Information Discovery](../../T1082/T1082.md)
   - Atomic Test #3: List OS Information [linux, macos]
   - Atomic Test #4: Linux VM Check via Hardware [linux]
   - Atomic Test #5: Linux VM Check via Kernel Modules [linux]
-  - Atomic Test #7: Hostname Discovery [linux, macos]
-  - Atomic Test #11: Environment variables discovery on macos and linux [macos, linux]
-  - Atomic Test #24: Linux List Kernel Modules [linux]
+  - Atomic Test #6: FreeBSD VM Check via Kernel Modules [linux]
+  - Atomic Test #8: Hostname Discovery [linux, macos]
+  - Atomic Test #12: Environment variables discovery on freebsd, macos and linux [linux, macos]
+  - Atomic Test #25: Linux List Kernel Modules [linux]
+  - Atomic Test #26: FreeBSD List Kernel Modules [linux]
 - T1010 Application Window Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1497.003 Time Based Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1217 Browser Bookmark Discovery](../../T1217/T1217.md)
-  - Atomic Test #1: List Mozilla Firefox Bookmark Database Files on Linux [linux]
+  - Atomic Test #1: List Mozilla Firefox Bookmark Database Files on FreeBSD/Linux [linux]
+  - Atomic Test #4: List Google Chromium Bookmark JSON Files on FreeBSD [linux]
 - [T1016 System Network Configuration Discovery](../../T1016/T1016.md)
   - Atomic Test #3: System Network Configuration Discovery [macos, linux]
+  - Atomic Test #4: System Network Configuration Discovery (freebsd) [linux]
 - T1087 Account Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1083 File and Directory Discovery](../../T1083/T1083.md)
-  - Atomic Test #3: Nix File and Directory Discovery [macos, linux]
-  - Atomic Test #4: Nix File and Directory Discovery 2 [macos, linux]
+  - Atomic Test #3: Nix File and Directory Discovery [linux, macos]
+  - Atomic Test #4: Nix File and Directory Discovery 2 [linux, macos]
 - [T1049 System Network Connections Discovery](../../T1049/T1049.md)
-  - Atomic Test #3: System Network Connections Discovery Linux & MacOS [linux, macos]
+  - Atomic Test #3: System Network Connections Discovery FreeBSD, Linux & MacOS [linux, macos]
 - T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1057 Process Discovery](../../T1057/T1057.md)
-  - Atomic Test #1: Process Discovery - ps [macos, linux]
+  - Atomic Test #1: Process Discovery - ps [linux, macos]
 - T1497.002 User Activity Based Checks [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1069.001 Permission Groups Discovery: Local Groups](../../T1069.001/T1069.001.md)
-  - Atomic Test #1: Permission Groups Discovery (Local) [macos, linux]
+  - Atomic Test #1: Permission Groups Discovery (Local) [linux, macos]
 - [T1201 Password Policy Discovery](../../T1201/T1201.md)
   - Atomic Test #1: Examine password complexity policy - Ubuntu [linux]
-  - Atomic Test #2: Examine password complexity policy - CentOS/RHEL 7.x [linux]
-  - Atomic Test #3: Examine password complexity policy - CentOS/RHEL 6.x [linux]
-  - Atomic Test #4: Examine password expiration policy - All Linux [linux]
+  - Atomic Test #2: Examine password complexity policy - FreeBSD [linux]
+  - Atomic Test #3: Examine password complexity policy - CentOS/RHEL 7.x [linux]
+  - Atomic Test #4: Examine password complexity policy - CentOS/RHEL 6.x [linux]
+  - Atomic Test #5: Examine password expiration policy - All Linux [linux]
 - [T1614.001 System Location Discovery: System Language Discovery](../../T1614.001/T1614.001.md)
   - Atomic Test #3: Discover System Language with locale [linux]
   - Atomic Test #4: Discover System Language with localectl [linux]
@@ -628,15 +729,18 @@
 - T1614 System Location Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1518.001 Software Discovery: Security Software Discovery](../../T1518.001/T1518.001.md)
   - Atomic Test #4: Security Software Discovery - ps (Linux) [linux]
+  - Atomic Test #5: Security Software Discovery - pgrep (FreeBSD) [linux]
 - [T1018 Remote System Discovery](../../T1018/T1018.md)
   - Atomic Test #6: Remote System Discovery - arp nix [linux, macos]
   - Atomic Test #7: Remote System Discovery - sweep [linux, macos]
   - Atomic Test #12: Remote System Discovery - ip neighbour [linux]
   - Atomic Test #13: Remote System Discovery - ip route [linux]
-  - Atomic Test #14: Remote System Discovery - ip tcp_metrics [linux]
+  - Atomic Test #14: Remote System Discovery - netstat [linux]
+  - Atomic Test #15: Remote System Discovery - ip tcp_metrics [linux]
 - [T1046 Network Service Discovery](../../T1046/T1046.md)
   - Atomic Test #1: Port Scan [linux, macos]
   - Atomic Test #2: Port Scan Nmap [linux, macos]
+  - Atomic Test #3: Port Scan Nmap for FreeBSD [linux]
 - T1518 Software Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1622 Debugger Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 
@@ -661,39 +765,42 @@
 - [T1531 Account Access Removal](../../T1531/T1531.md)
   - Atomic Test #4: Change User Password via passwd [macos, linux]
 - [T1486 Data Encrypted for Impact](../../T1486/T1486.md)
-  - Atomic Test #1: Encrypt files using gpg (Linux) [linux]
-  - Atomic Test #2: Encrypt files using 7z (Linux) [linux]
-  - Atomic Test #3: Encrypt files using ccrypt (Linux) [linux]
-  - Atomic Test #4: Encrypt files using openssl (Linux) [linux]
+  - Atomic Test #1: Encrypt files using gpg (FreeBSD/Linux) [linux]
+  - Atomic Test #2: Encrypt files using 7z (FreeBSD/Linux) [linux]
+  - Atomic Test #3: Encrypt files using ccrypt (FreeBSD/Linux) [linux]
+  - Atomic Test #4: Encrypt files using openssl (FreeBSD/Linux) [linux]
 - T1488 Disk Content Wipe [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1499 Endpoint Denial of Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1494 Runtime Data Manipulation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1493 Transmitted Data Manipulation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1496 Resource Hijacking](../../T1496/T1496.md)
-  - Atomic Test #1: macOS/Linux - Simulate CPU Load with Yes [macos, linux]
+  - Atomic Test #1: FreeBSD/macOS/Linux - Simulate CPU Load with Yes [linux, macos]
 - T1565.002 Transmitted Data Manipulation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1485 Data Destruction](../../T1485/T1485.md)
-  - Atomic Test #2: macOS/Linux - Overwrite file with DD [linux, macos]
+  - Atomic Test #2: FreeBSD/macOS/Linux - Overwrite file with DD [linux, macos]
 - T1498 Network Denial of Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1495 Firmware Corruption [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1490 Inhibit System Recovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1561.001 Disk Content Wipe [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1529 System Shutdown/Reboot](../../T1529/T1529.md)
-  - Atomic Test #3: Restart System via `shutdown` - macOS/Linux [macos, linux]
-  - Atomic Test #4: Shutdown System via `shutdown` - macOS/Linux [macos, linux]
-  - Atomic Test #5: Restart System via `reboot` - macOS/Linux [macos, linux]
-  - Atomic Test #6: Shutdown System via `halt` - Linux [linux]
-  - Atomic Test #7: Reboot System via `halt` - Linux [linux]
-  - Atomic Test #8: Shutdown System via `poweroff` - Linux [linux]
-  - Atomic Test #9: Reboot System via `poweroff` - Linux [linux]
+  - Atomic Test #3: Restart System via `shutdown` - FreeBSD/macOS/Linux [linux, macos]
+  - Atomic Test #4: Shutdown System via `shutdown` - FreeBSD/macOS/Linux [linux, macos]
+  - Atomic Test #5: Restart System via `reboot` - FreeBSD/macOS/Linux [linux, macos]
+  - Atomic Test #6: Shutdown System via `halt` - FreeBSD/Linux [linux]
+  - Atomic Test #7: Reboot System via `halt` - FreeBSD [linux]
+  - Atomic Test #8: Reboot System via `halt` - Linux [linux]
+  - Atomic Test #9: Shutdown System via `poweroff` - FreeBSD/Linux [linux]
+  - Atomic Test #10: Reboot System via `poweroff` - FreeBSD [linux]
+  - Atomic Test #11: Reboot System via `poweroff` - Linux [linux]
 
 # execution
 - T1059.007 Command and Scripting Interpreter: JavaScript [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1204.002 User Execution: Malicious File [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1053.003 Scheduled Task/Job: Cron](../../T1053.003/T1053.003.md)
-  - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
+  - Atomic Test #1: Cron - Replace crontab with referenced file [linux, macos]
   - Atomic Test #2: Cron - Add script to all cron subfolders [macos, linux]
-  - Atomic Test #3: Cron - Add script to /var/spool/cron/crontabs/ folder [linux]
+  - Atomic Test #3: Cron - Add script to /etc/cron.d folder [linux]
+  - Atomic Test #4: Cron - Add script to /var/spool/cron/crontabs/ folder [linux]
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1106 Native API [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1153 Source [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -708,8 +815,8 @@
   - Atomic Test #3: Create a system level transient systemd service and timer [linux]
 - T1061 Graphical User Interface [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1059.004 Command and Scripting Interpreter: Bash](../../T1059.004/T1059.004.md)
-  - Atomic Test #1: Create and Execute Bash Shell Script [macos, linux]
-  - Atomic Test #2: Command-Line Interface [macos, linux]
+  - Atomic Test #1: Create and Execute Bash Shell Script [linux, macos]
+  - Atomic Test #2: Command-Line Interface [linux, macos]
   - Atomic Test #3: Harvest SUID executable files [linux]
   - Atomic Test #4: LinEnum tool execution [linux]
   - Atomic Test #5: New script file in the tmp directory [linux]
@@ -717,17 +824,22 @@
   - Atomic Test #7: What shells are available [linux]
   - Atomic Test #8: Command line scripts [linux]
   - Atomic Test #9: Obfuscated command line scripts [linux]
-  - Atomic Test #10: Change login shell [linux]
-  - Atomic Test #11: Environment variable scripts [linux]
-  - Atomic Test #12: Detecting pipe-to-shell [linux]
+  - Atomic Test #10: Obfuscated command line scripts (freebsd) [linux]
+  - Atomic Test #11: Change login shell [linux]
+  - Atomic Test #12: Change login shell (freebsd) [linux]
+  - Atomic Test #13: Environment variable scripts [linux]
+  - Atomic Test #14: Environment variable scripts (freebsd) [linux]
+  - Atomic Test #15: Detecting pipe-to-shell [linux]
+  - Atomic Test #16: Detecting pipe-to-shell (freebsd) [linux]
+  - Atomic Test #17: Current kernel information enumeration [linux]
 - T1559 Inter-Process Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1154 Trap [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1203 Exploitation for Client Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1168 Local Job Scheduling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1059.006 Command and Scripting Interpreter: Python](../../T1059.006/T1059.006.md)
   - Atomic Test #1: Execute shell script via python's command mode arguement [linux]
-  - Atomic Test #2: Execute Python via scripts (Linux) [linux]
-  - Atomic Test #3: Execute Python via Python executables (Linux) [linux]
+  - Atomic Test #2: Execute Python via scripts [linux]
+  - Atomic Test #3: Execute Python via Python executables [linux]
   - Atomic Test #4: Python pty module and spawn function used to spawn sh or bash [linux]
 - T1569 System Services [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1059.005 Command and Scripting Interpreter: Visual Basic [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -735,6 +847,7 @@
 - T1204.001 Malicious Link [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1053.002 Scheduled Task/Job: At](../../T1053.002/T1053.002.md)
   - Atomic Test #2: At - Schedule a job [linux]
+  - Atomic Test #3: At - Schedule a job freebsd [linux]
 
 # initial-access
 - T1133 External Remote Services [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -758,8 +871,11 @@
 - T1566.003 Spearphishing via Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #8: Create local account (Linux) [linux]
-  - Atomic Test #9: Reactivate a locked/expired account (Linux) [linux]
-  - Atomic Test #10: Login as nobody (Linux) [linux]
+  - Atomic Test #9: Create local account (FreeBSD) [linux]
+  - Atomic Test #10: Reactivate a locked/expired account (Linux) [linux]
+  - Atomic Test #11: Reactivate a locked/expired account (FreeBSD) [linux]
+  - Atomic Test #12: Login as nobody (Linux) [linux]
+  - Atomic Test #13: Login as nobody (freebsd) [linux]
 
 # exfiltration
 - T1567 Exfiltration Over Web Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -770,7 +886,7 @@
 - T1048.001 Exfiltration Over Symmetric Encrypted Non-C2 Protocol [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1567.001 Exfiltration to Code Repository [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1048.002 Exfiltration Over Alternative Protocol - Exfiltration Over Asymmetric Encrypted Non-C2 Protocol](../../T1048.002/T1048.002.md)
-  - Atomic Test #2: Exfiltrate data HTTPS using curl linux [macos, linux]
+  - Atomic Test #2: Exfiltrate data HTTPS using curl freebsd,linux or macos [macos, linux]
 - T1041 Exfiltration Over C2 Channel [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1048 Exfiltration Over Alternative Protocol](../../T1048/T1048.md)
   - Atomic Test #1: Exfiltration Over Alternative Protocol - SSH [macos, linux]
@@ -787,4 +903,5 @@
   - Atomic Test #1: Exfiltration Over Alternative Protocol - HTTP [macos, linux]
   - Atomic Test #3: Exfiltration Over Alternative Protocol - DNS [linux]
   - Atomic Test #8: Python3 http.server [linux]
+  - Atomic Test #9: Python3 http.server (freebsd) [linux]
 

@@ -15,6 +15,27 @@ atomic_tests:
     cleanup_command: |
       rm -f /tmp/art-fish.txt
     name: sh
+- name: Trap EXIT (freebsd)
+  auto_generated_guid: be1a5d70-6865-44aa-ab50-42244c9fd16f
+  description: |
+    Launch bash shell with command arg to create TRAP on EXIT.
+    The trap executes script that writes to /tmp/art-fish.txt
+  supported_platforms:
+  - linux
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Check if bash is installed.
+    prereq_command: |
+      if [ ! -x "$(command -v bash)" ]; then exit 1; else exit 0; fi;
+    get_prereq_command: |
+      (which pkg && pkg install -y bash)
+  executor:
+    command: |
+      bash -c 'trap "nohup sh $PathToAtomicsFolder/T1546.005/src/echo-art-fish.sh" EXIT'
+    cleanup_command: |
+      rm -f /tmp/art-fish.txt
+    name: sh
 - name: Trap SIGINT
   auto_generated_guid: a547d1ba-1d7a-4cc5-a9cb-8d65e8809636
   description: |
@@ -23,6 +44,27 @@ atomic_tests:
   supported_platforms:
   - macos
   - linux
+  executor:
+    command: |
+      bash -c 'trap "nohup sh $PathToAtomicsFolder/T1546.005/src/echo-art-fish.sh" SIGINT && kill -SIGINT $$'
+    cleanup_command: |
+      rm -f /tmp/art-fish.txt
+    name: sh
+- name: Trap SIGINT (freebsd)
+  auto_generated_guid: ade10242-1eac-43df-8412-be0d4c704ada
+  description: |
+    Launch bash shell with command arg to create TRAP on SIGINT (CTRL+C), then send SIGINT signal.
+    The trap executes script that writes to /tmp/art-fish.txt
+  supported_platforms:
+  - linux
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Check if bash is installed.
+    prereq_command: |
+      if [ ! -x "$(command -v bash)" ]; then exit 1; else exit 0; fi;
+    get_prereq_command: |
+      (which pkg && pkg install -y bash)
   executor:
     command: |
       bash -c 'trap "nohup sh $PathToAtomicsFolder/T1546.005/src/echo-art-fish.sh" SIGINT && kill -SIGINT $$'

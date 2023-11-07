@@ -1,16 +1,16 @@
 attack_technique: T1496
 display_name: Resource Hijacking
 atomic_tests:
-- name: macOS/Linux - Simulate CPU Load with Yes
+- name: FreeBSD/macOS/Linux - Simulate CPU Load with Yes
   auto_generated_guid: 904a5a0e-fb02-490d-9f8d-0e256eb37549
   description: |
     This test simulates a high CPU load as you might observe during cryptojacking attacks.
     End the test by using CTRL/CMD+C to break.
   supported_platforms:
-  - macos
   - linux
+  - macos
   executor:
     command: |
       yes > /dev/null
-    name: bash
+    name: sh
 

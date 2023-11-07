@@ -25,3 +25,26 @@ atomic_tests:
     command: |
       cat #{bash_history_filename} | grep #{bash_history_grep_args} > #{output_file}
     name: sh
+- name: Search Through sh History
+  auto_generated_guid: d87d3b94-05b4-40f2-a80f-99864ffa6803
+  description: |
+    Search through sh history for specifice commands we want to capture
+  supported_platforms:
+  - linux
+  input_arguments:
+    output_file:
+      description: Path where captured results will be placed
+      type: path
+      default: ~/loot.txt
+    sh_history_grep_args:
+      description: grep arguments that filter out specific commands we want to capture
+      type: path
+      default: -e '-p ' -e 'pass' -e 'ssh'
+    sh_history_filename:
+      description: Path of the sh history file to capture
+      type: path
+      default: ~/.history
+  executor:
+    command: |
+      cat #{sh_history_filename} | grep #{sh_history_grep_args} > #{output_file}
+    name: sh

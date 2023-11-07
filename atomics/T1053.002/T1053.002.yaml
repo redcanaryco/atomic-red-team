@@ -54,3 +54,35 @@ atomic_tests:
     elevation_required: false
     command: |-
       echo "#{at_command}" | at #{time_spec}
+- name: At - Schedule a job freebsd
+  auto_generated_guid: 549863fb-1c91-467e-97fc-1fa32b9f356b
+  description: |
+    This test submits a command to be run in the future by the `at` daemon.
+
+  supported_platforms:
+  - linux
+
+  input_arguments:
+    time_spec:
+      description: Time specification of when the command should run
+      type: string
+      default: now + 1 minute
+    at_command:
+      description: The command to be run
+      type: string
+      default: echo Hello from Atomic Red Team
+
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      The `at` executable must exist in the PATH
+    prereq_command: |
+      which at
+    get_prereq_command: |
+      echo 'Please install `at` ; they were not found in the PATH (Package name: `at`)'
+
+  executor:
+    name: sh
+    elevation_required: false
+    command: |-
+      echo "#{at_command}" | at #{time_spec}

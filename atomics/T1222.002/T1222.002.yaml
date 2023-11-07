@@ -1,13 +1,13 @@
 attack_technique: T1222.002
-display_name: 'File and Directory Permissions Modification: Linux and Mac File and Directory Permissions Modification'
+display_name: 'File and Directory Permissions Modification: FreeBSD, Linux and Mac File and Directory Permissions Modification'
 atomic_tests:
 - name: chmod - Change file or folder mode (numeric mode)
   auto_generated_guid: 34ca1464-de9d-40c6-8c77-690adf36a135
   description: |
     Changes a file or folder's permissions using chmod and a specified numeric mode.
   supported_platforms:
-  - macos
   - linux
+  - macos
   input_arguments:
     numeric_mode:
       description: Specified numeric mode value
@@ -20,14 +20,14 @@ atomic_tests:
   executor:
     command: |
       chmod #{numeric_mode} #{file_or_folder}
-    name: bash
+    name: sh
 - name: chmod - Change file or folder mode (symbolic mode)
   auto_generated_guid: fc9d6695-d022-4a80-91b1-381f5c35aff3
   description: |
     Changes a file or folder's permissions using chmod and a specified symbolic mode.
   supported_platforms:
-  - macos
   - linux
+  - macos
   input_arguments:
     symbolic_mode:
       description: Specified symbolic mode value
@@ -40,14 +40,14 @@ atomic_tests:
   executor:
     command: |
       chmod #{symbolic_mode} #{file_or_folder}
-    name: bash
+    name: sh
 - name: chmod - Change file or folder mode (numeric mode) recursively
   auto_generated_guid: ea79f937-4a4d-4348-ace6-9916aec453a4
   description: |
     Changes a file or folder's permissions recursively using chmod and a specified numeric mode.
   supported_platforms:
-  - macos
   - linux
+  - macos
   input_arguments:
     numeric_mode:
       description: Specified numeric mode value
@@ -60,14 +60,14 @@ atomic_tests:
   executor:
     command: |
       chmod -R #{numeric_mode} #{file_or_folder}
-    name: bash
+    name: sh
 - name: chmod - Change file or folder mode (symbolic mode) recursively
   auto_generated_guid: 0451125c-b5f6-488f-993b-5a32b09f7d8f
   description: |
     Changes a file or folder's permissions recursively using chmod and a specified symbolic mode.
   supported_platforms:
-  - macos
   - linux
+  - macos
   input_arguments:
     symbolic_mode:
       description: Specified symbolic mode value
@@ -134,8 +134,8 @@ atomic_tests:
   description: |
     Changes a file or folder's ownership only using chown.
   supported_platforms:
-  - macos
   - linux
+  - macos
   input_arguments:
     owner:
       description: Username of desired owner
@@ -148,7 +148,7 @@ atomic_tests:
   executor:
     command: |
       chown #{owner} #{file_or_folder}
-    name: bash
+    name: sh
 - name: chown - Change file or folder ownership recursively
   auto_generated_guid: 3b015515-b3d8-44e9-b8cd-6fa84faf30b2
   description: |
@@ -186,6 +186,24 @@ atomic_tests:
     command: |
       chattr -i #{file_to_modify}
     name: sh
+- name: chflags - Remove immutable file attribute
+  auto_generated_guid: 60eee3ea-2ebd-453b-a666-c52ce08d2709
+  description: |
+    Remove's a file's `immutable` attribute using `chflags`.
+    This technique was used by the threat actor Rocke during the compromise of Linux web servers.
+  supported_platforms:
+  - linux
+  input_arguments:
+    file_to_modify:
+      description: Path of the file
+      type: path
+      default: /tmp/T1222.002.txt
+  executor:
+    command: |
+      touch #{file_to_modify}
+      chflags simmutable #{file_to_modify}
+      chflags nosimmutable #{file_to_modify}
+    name: sh
 - name: Chmod through c script
   auto_generated_guid: 973631cf-6680-4ffa-a053-045e1b6b67ab
   description: |
@@ -214,6 +232,34 @@ atomic_tests:
     command: |
       #{compiled_file} /tmp/ T1222002
     name: sh
+- name: Chmod through c script (freebsd)
+  auto_generated_guid: da40b5fe-3098-4b3b-a410-ff177e49ee2e
+  description: |
+    chmods a file using a c script
+  supported_platforms:
+  - linux
+  input_arguments:
+    source_file:
+      description: Path of c source file
+      type: path
+      default: PathToAtomicsFolder/T1222.002/src/T1222.002.c
+    compiled_file:
+      description: Path of compiled file
+      type: path
+      default: /tmp/T1222002
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Compile the script from (#{source_file}). Destination is #{compiled_file}
+    prereq_command: |
+      cc #{source_file} -o #{compiled_file}
+    get_prereq_command: |
+      cc #{source_file} -o #{compiled_file}
+  executor:
+    command: |
+      #{compiled_file} /tmp/ T1222002
+    name: sh
+
 - name: Chown through c script
   auto_generated_guid: 18592ba1-5f88-4e3c-abc8-ab1c6042e389
   description: |
@@ -241,5 +287,33 @@ atomic_tests:
   executor:
     command: |
       sudo #{compiled_file} #{source_file}
+    name: sh
+    elevation_required: true
+- name: Chown through c script (freebsd)
+  auto_generated_guid: eb577a19-b730-4918-9b03-c5edcf51dc4e
+  description: |
+    chowns a file to root using a c script
+  supported_platforms:
+  - linux
+  input_arguments:
+    source_file:
+      description: Path of c source file
+      type: path
+      default: PathToAtomicsFolder/T1222.002/src/chown.c
+    compiled_file:
+      description: Path of compiled file
+      type: path
+      default: /tmp/T1222002own
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Compile the script from (#{source_file}). Destination is #{compiled_file}
+    prereq_command: |
+      cc #{source_file} -o #{compiled_file}
+    get_prereq_command: |
+      cc #{source_file} -o #{compiled_file}
+  executor:
+    command: |
+      #{compiled_file} #{source_file}
     name: sh
     elevation_required: true

@@ -26,10 +26,34 @@ atomic_tests:
       sudo rm /tmp/hello.c
     name: sh
     elevation_required: true
+- name: Make and modify binary from C source (freebsd)
+  auto_generated_guid: dd580455-d84b-481b-b8b0-ac96f3b1dc4c
+  description: |
+    Make, change owner, and change file attributes on a C source code file
+  supported_platforms:
+  - linux
+  input_arguments:
+    payload:
+      description: hello.c payload
+      type: path
+      default: PathToAtomicsFolder/T1548.001/src/hello.c
+  executor:
+    command: |
+      cp #{payload} /tmp/hello.c
+      chown root /tmp/hello.c
+      make /tmp/hello
+      chown root /tmp/hello
+      chmod u+s /tmp/hello
+      /tmp/hello
+    cleanup_command: |
+      rm /tmp/hello
+      rm /tmp/hello.c
+    name: sh
+    elevation_required: true
 - name: Set a SetUID flag on file
   auto_generated_guid: 759055b3-3885-4582-a8ec-c00c9d64dd79
   description: |
-    This test sets the SetUID flag on a file in Linux and macOS.
+    This test sets the SetUID flag on a file in FreeBSD.
   supported_platforms:
   - macos
   - linux
@@ -45,6 +69,26 @@ atomic_tests:
       sudo chmod u+xs #{file_to_setuid}
     cleanup_command: |
       sudo rm #{file_to_setuid}
+    name: sh
+    elevation_required: true
+- name: Set a SetUID flag on file (freebsd)
+  auto_generated_guid: 9be9b827-ff47-4e1b-bef8-217db6fb7283
+  description: |
+    This test sets the SetUID flag on a file in FreeBSD.
+  supported_platforms:
+  - linux
+  input_arguments:
+    file_to_setuid:
+      description: Path of file to set SetUID flag
+      type: path
+      default: /tmp/evilBinary
+  executor:
+    command: |
+      touch #{file_to_setuid}
+      chown root #{file_to_setuid}
+      chmod u+xs #{file_to_setuid}
+    cleanup_command: |
+      rm #{file_to_setuid}
     name: sh
     elevation_required: true
 - name: Set a SetGID flag on file
@@ -66,6 +110,26 @@ atomic_tests:
       sudo chmod g+xs #{file_to_setuid}
     cleanup_command: |
       sudo rm #{file_to_setuid}
+    name: sh
+    elevation_required: true
+- name: Set a SetGID flag on file (freebsd)
+  auto_generated_guid: 1f73af33-62a8-4bf1-bd10-3bea931f2c0d
+  description: |
+    This test sets the SetGID flag on a file in FreeBSD.
+  supported_platforms:
+  - linux
+  input_arguments:
+    file_to_setuid:
+      description: Path of file to set SetGID flag
+      type: path
+      default: /tmp/evilBinary
+  executor:
+    command: |
+      touch #{file_to_setuid}
+      chown root #{file_to_setuid}
+      chmod g+xs #{file_to_setuid}
+    cleanup_command: |
+      rm #{file_to_setuid}
     name: sh
     elevation_required: true
 - name: Make and modify capabilities of a binary

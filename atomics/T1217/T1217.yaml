@@ -1,10 +1,10 @@
 attack_technique: T1217
 display_name: Browser Bookmark Discovery
 atomic_tests:
-- name: List Mozilla Firefox Bookmark Database Files on Linux
+- name: List Mozilla Firefox Bookmark Database Files on FreeBSD/Linux
   auto_generated_guid: 3a41f169-a5ab-407f-9269-abafdb5da6c2
   description: |
-    Searches for Mozilla Firefox's places.sqlite file (on Linux distributions) that contains bookmarks and lists any found instances to a text file.
+    Searches for Mozilla Firefox's places.sqlite file (on FreeBSD or Linux distributions) that contains bookmarks and lists any found instances to a text file.
   supported_platforms:
   - linux
   input_arguments:
@@ -51,6 +51,24 @@ atomic_tests:
   executor:
     command: |
       find / -path "*/Google/Chrome/*/Bookmarks" -exec echo {} >> #{output_file} \;
+      cat #{output_file} 2>/dev/null
+    cleanup_command: |
+      rm -f #{output_file} 2>/dev/null
+    name: sh
+- name: List Google Chromium Bookmark JSON Files on FreeBSD
+  auto_generated_guid: 88ca025b-3040-44eb-9168-bd8af22b82fa
+  description: |
+    Searches for Google Chromium's Bookmark file (on FreeBSD) that contains bookmarks in JSON format and lists any found instances to a text file.
+  supported_platforms:
+  - linux
+  input_arguments:
+    output_file:
+      description: Path where captured results will be placed.
+      type: path
+      default: /tmp/T1217-Chrome.txt
+  executor:
+    command: |
+      find / -path "*/.config/chromium/*/Bookmarks" -exec echo {} >> #{output_file} \;
       cat #{output_file} 2>/dev/null
     cleanup_command: |
       rm -f #{output_file} 2>/dev/null
