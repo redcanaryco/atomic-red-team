@@ -11,9 +11,6 @@ atomic_tests:
     Successful execution will save matching log events to the users temp folder.
   supported_platforms:
   - windows
-  input_arguments: 
-  dependency_executor_name: 
-  dependencies: 
   executor:
     command: powershell -c "get-eventlog 'Security' | where {$_.Message -like '*SYSTEM*'} | export-csv $env:temp\T1654_events.txt"
     cleanup_command: powershell -c "remove-item $env:temp\T1654_events.txt -ErrorAction Ignore"
