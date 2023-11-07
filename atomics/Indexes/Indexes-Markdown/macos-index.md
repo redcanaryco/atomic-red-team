@@ -1,7 +1,9 @@
 # macOS Atomic Tests by ATT&CK Tactic & Technique
 # defense-evasion
+- T1205.002 Socket Filters [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1066 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1143 Hidden Window [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1027.009 Embedded Payloads [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1150 Plist Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1556.003 Modify Authentication Process: Pluggable Authentication Modules [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1148 HISTCONTROL [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -27,15 +29,29 @@
 - T1116 Code Signing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1036.005 Masquerading: Match Legitimate Name or Location](../../T1036.005/T1036.005.md)
   - Atomic Test #1: Execute a process from a directory masquerading as the current parent directory. [macos, linux]
+- T1036.008 Masquerade File Type [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1564 Hide Artifacts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1497.001 Virtualization/Sandbox Evasion: System Checks](../../T1497.001/T1497.001.md)
   - Atomic Test #3: Detect Virtualization Environment (MacOS) [macos]
 - [T1070.002 Indicator Removal on Host: Clear Linux or Mac System Logs](../../T1070.002/T1070.002.md)
   - Atomic Test #1: rm -rf [macos, linux]
+  - Atomic Test #2: Delete log files using built-in log utility [macos]
+  - Atomic Test #3: Truncate system log files via truncate utility [macos]
+  - Atomic Test #4: Delete log files via cat utility by appending /dev/null or /dev/zero [macos]
+  - Atomic Test #5: System log file deletion via find utility [macos]
+  - Atomic Test #6: Overwrite macOS system log via echo utility [macos]
+  - Atomic Test #7: Real-time system log clearance/deletion [macos]
+  - Atomic Test #8: Delete system log files via unlink utility [macos]
+  - Atomic Test #9: Delete system log files using shred utility [macos]
+  - Atomic Test #10: Delete system log files using srm utility [macos]
+  - Atomic Test #11: Delete system log files using OSAScript [macos]
+  - Atomic Test #12: Delete system log files using Applescript [macos]
 - T1089 Disabling Security Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1027.008 Stripped Payloads [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1553.001 Subvert Trust Controls: Gatekeeper Bypass](../../T1553.001/T1553.001.md)
   - Atomic Test #1: Gatekeeper Bypass [macos]
 - T1553.002 Code Signing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1070.007 Clear Network Connection History and Configurations [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1070.003 Indicator Removal on Host: Clear Command History](../../T1070.003/T1070.003.md)
   - Atomic Test #1: Clear Bash history (rm) [linux, macos]
   - Atomic Test #3: Clear Bash history (cat dev/null) [linux, macos]
@@ -48,8 +64,13 @@
   - Atomic Test #4: Base64 decoding with Perl [linux, macos]
   - Atomic Test #5: Base64 decoding with shell utilities [linux, macos]
   - Atomic Test #6: Hex decoding with shell utilities [linux, macos]
+  - Atomic Test #7: Linux Base64 Encoded Shebang in CLI [linux, macos]
+  - Atomic Test #8: XOR decoding and command execution using Python [linux, macos]
 - T1562 Impair Defenses [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1036 Masquerading [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1070.008 Email Collection: Mailbox Manipulation](../../T1070.008/T1070.008.md)
+  - Atomic Test #3: Copy and Delete Mailbox Data on macOS [macos]
+  - Atomic Test #6: Copy and Modify Mailbox Data on macOS [macos]
 - T1055 Process Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1218 Signed Binary Proxy Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -67,7 +88,9 @@
 - T1107 File Deletion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1027.001 Obfuscated Files or Information: Binary Padding](../../T1027.001/T1027.001.md)
   - Atomic Test #1: Pad Binary to Change Hash - Linux/macOS dd [macos, linux]
-- T1078.001 Valid Accounts: Default Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+  - Atomic Test #2: Pad Binary to Change Hash using truncate command - Linux/macOS [macos, linux]
+- [T1078.001 Valid Accounts: Default Accounts](../../T1078.001/T1078.001.md)
+  - Atomic Test #3: Enable Guest Account on macOS [macos]
 - [T1574.006 Hijack Execution Flow: LD_PRELOAD](../../T1574.006/T1574.006.md)
   - Atomic Test #3: Dylib Injection via DYLD_INSERT_LIBRARIES [macos]
 - T1222 File and Directory Permissions Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -112,11 +135,13 @@
 - T1564.009 Resource Forking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1027 Obfuscated Files or Information](../../T1027/T1027.md)
   - Atomic Test #1: Decode base64 Data into Script [macos, linux]
+- T1556.006 Multi-Factor Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1036.001 Invalid Code Signature [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1564.006 Run Virtual Instance [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1553 Subvert Trust Controls [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1548.004 Elevated Execution with Prompt [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1036.003 Masquerading: Rename System Utilities [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1562.011 Spoof Security Alerting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.003 Steganography [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1553.004 Subvert Trust Controls: Install Root Certificate](../../T1553.004/T1553.004.md)
@@ -129,8 +154,10 @@
 - T1564.003 Hide Artifacts: Hidden Window [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1147 Hidden Users [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1500 Compile After Delivery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1070.009 Clear Persistence [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1146 Clear Command History [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.006 HTML Smuggling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1027.010 Command Obfuscation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1130 Install Root Certificate [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1070.004 Indicator Removal on Host: File Deletion](../../T1070.004/T1070.004.md)
   - Atomic Test #1: Delete a single file - Linux/macOS [linux, macos]
@@ -156,61 +183,13 @@
 - T1574.004 Dylib Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #2: Create local account with admin privileges - MacOS [macos]
+  - Atomic Test #3: Create local account with admin privileges using sysadminctl utility - MacOS [macos]
+  - Atomic Test #4: Enable root account using dsenableroot utility - MacOS [macos]
+  - Atomic Test #5: Add a new/existing user to the admin group using dseditgroup utility - macOS [macos]
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 
-# collection
-- [T1560.001 Archive Collected Data: Archive via Utility](../../T1560.001/T1560.001.md)
-  - Atomic Test #5: Data Compressed - nix - zip [linux, macos]
-  - Atomic Test #6: Data Compressed - nix - gzip Single File [linux, macos]
-  - Atomic Test #7: Data Compressed - nix - tar Folder or File [linux, macos]
-  - Atomic Test #8: Data Encrypted with zip and gpg symmetric [macos, linux]
-- [T1113 Screen Capture](../../T1113/T1113.md)
-  - Atomic Test #1: Screencapture [macos]
-  - Atomic Test #2: Screencapture (silent) [macos]
-- T1557 Adversary-in-the-Middle [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1056.001 Input Capture: Keylogging](../../T1056.001/T1056.001.md)
-  - Atomic Test #7: MacOS Swift Keylogger [macos]
-- [T1123 Audio Capture](../../T1123/T1123.md)
-  - Atomic Test #3: using Quicktime Player [macos]
-- T1560.003 Archive via Custom Method [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1114 Email Collection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1025 Data from Removable Media [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1074.001 Data Staged: Local Data Staging](../../T1074.001/T1074.001.md)
-  - Atomic Test #2: Stage data from Discovery.sh [linux, macos]
-- T1119 Automated Collection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1115 Clipboard Data](../../T1115/T1115.md)
-  - Atomic Test #3: Execute commands from clipboard [macos]
-- T1074.002 Remote Data Staging [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1005 Data from Local System [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1560.002 Archive Collected Data: Archive via Library [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1560 Archive Collected Data [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1557.003 DHCP Spoofing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1056.003 Web Portal Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1125 Video Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1114.003 Email Collection: Email Forwarding Rule [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1074 Data Staged [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1056.002 Input Capture: GUI Input Capture](../../T1056.002/T1056.002.md)
-  - Atomic Test #1: AppleScript - Prompt User for Password [macos]
-- T1039 Data from Network Shared Drive [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1056 Input Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1557.002 ARP Cache Poisoning [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1213 Data from Information Repositories [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-
-# lateral-movement
-- T1021.005 VNC [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1080 Taint Shared Content [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1021.004 SSH [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1017 Application Deployment Software [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1563.001 SSH Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1021 Remote Services [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1563 Remote Service Session Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1072 Software Deployment Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1210 Exploitation of Remote Services [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1534 Internal Spearphishing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1570 Lateral Tool Transfer [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1184 SSH Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-
 # persistence
+- T1205.002 Socket Filters [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1156 Malicious Shell Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1161 LC_LOAD_DYLIB Addition [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -240,7 +219,8 @@
 - [T1543.004 Create or Modify System Process: Launch Daemon](../../T1543.004/T1543.004.md)
   - Atomic Test #1: Launch Daemon [macos]
 - T1505.003 Server Software Component: Web Shell [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1078.001 Valid Accounts: Default Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1078.001 Valid Accounts: Default Accounts](../../T1078.001/T1078.001.md)
+  - Atomic Test #3: Enable Guest Account on macOS [macos]
 - [T1546.005 Event Triggered Execution: Trap](../../T1546.005/T1546.005.md)
   - Atomic Test #1: Trap EXIT [macos, linux]
   - Atomic Test #2: Trap SIGINT [macos, linux]
@@ -271,6 +251,7 @@
 - T1157 Dylib Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1556.006 Multi-Factor Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1154 Trap [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1546 Event Triggered Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.004 Event Triggered Execution: .bash_profile and .bashrc](../../T1546.004/T1546.004.md)
@@ -287,6 +268,7 @@
   - Atomic Test #2: Event Monitor Daemon Persistence [macos]
 - T1519 Emond [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1505 Server Software Component [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1546.016 Installer Packages [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1158 Hidden Files and Directories [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1037.004 Boot or Logon Initialization Scripts: Rc.common](../../T1037.004/T1037.004.md)
   - Atomic Test #1: rc.common [macos]
@@ -302,207 +284,12 @@
 - T1574.004 Dylib Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #2: Create local account with admin privileges - MacOS [macos]
-
-# privilege-escalation
-- T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1150 Plist Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1044 File System Permissions Weakness [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1514 Elevated Execution with Prompt [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1543 Create or Modify System Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1546.006 LC_LOAD_DYLIB Addition [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1548.003 Abuse Elevation Control Mechanism: Sudo and Sudo Caching](../../T1548.003/T1548.003.md)
-  - Atomic Test #1: Sudo usage [macos, linux]
-  - Atomic Test #2: Unlimited sudo cache timeout [macos, linux]
-  - Atomic Test #3: Disable tty_tickets for sudo caching [macos, linux]
-- T1547 Boot or Logon Autostart Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1206 Sudo Caching [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1053.003 Scheduled Task/Job: Cron](../../T1053.003/T1053.003.md)
-  - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
-  - Atomic Test #2: Cron - Add script to all cron subfolders [macos, linux]
-- T1165 Startup Items [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1037.002 Boot or Logon Initialization Scripts: Logon Script (Mac)](../../T1037.002/T1037.002.md)
-  - Atomic Test #1: Logon Scripts - Mac [macos]
-- T1055 Process Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1543.004 Create or Modify System Process: Launch Daemon](../../T1543.004/T1543.004.md)
-  - Atomic Test #1: Launch Daemon [macos]
-- T1078.001 Valid Accounts: Default Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1546.005 Event Triggered Execution: Trap](../../T1546.005/T1546.005.md)
-  - Atomic Test #1: Trap EXIT [macos, linux]
-  - Atomic Test #2: Trap SIGINT [macos, linux]
-- [T1574.006 Hijack Execution Flow: LD_PRELOAD](../../T1574.006/T1574.006.md)
-  - Atomic Test #3: Dylib Injection via DYLD_INSERT_LIBRARIES [macos]
-- T1547.011 Plist Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1548 Abuse Elevation Control Mechanism [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1548.001 Abuse Elevation Control Mechanism: Setuid and Setgid](../../T1548.001/T1548.001.md)
-  - Atomic Test #1: Make and modify binary from C source [macos, linux]
-  - Atomic Test #2: Set a SetUID flag on file [macos, linux]
-  - Atomic Test #3: Set a SetGID flag on file [macos, linux]
-- [T1547.015 Boot or Logon Autostart Execution: Login Items](../../T1547.015/T1547.015.md)
-  - Atomic Test #2: Add macOS LoginItem using Applescript [macos]
-- T1053.004 Launchd [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1546.014 Event Triggered Execution: Emond](../../T1546.014/T1546.014.md)
-  - Atomic Test #1: Persistance with Event Monitor - emond [macos]
-- T1169 Sudo [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1547.006 Boot or Logon Autostart Execution: Kernel Modules and Extensions](../../T1547.006/T1547.006.md)
-  - Atomic Test #2: MacOS - Load Kernel Module via kextload and kmutil [macos]
-  - Atomic Test #3: MacOS - Load Kernel Module via KextManagerLoadKextWithURL() [macos]
-- T1157 Dylib Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1068 Exploitation for Privilege Escalation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1546 Event Triggered Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1546.004 Event Triggered Execution: .bash_profile and .bashrc](../../T1546.004/T1546.004.md)
-  - Atomic Test #1: Add command to .bash_profile [macos, linux]
-  - Atomic Test #2: Add command to .bashrc [macos, linux]
-- T1548.004 Elevated Execution with Prompt [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1166 Setuid and Setgid [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1037.005 Boot or Logon Initialization Scripts: Startup Items](../../T1037.005/T1037.005.md)
-  - Atomic Test #1: Add file to Local Library StartupItems [macos]
-- T1100 Web Shell [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1543.001 Create or Modify System Process: Launch Agent](../../T1543.001/T1543.001.md)
-  - Atomic Test #1: Launch Agent [macos]
-  - Atomic Test #2: Event Monitor Daemon Persistence [macos]
-- T1519 Emond [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1037.004 Boot or Logon Initialization Scripts: Rc.common](../../T1037.004/T1037.004.md)
-  - Atomic Test #1: rc.common [macos]
-- [T1547.007 Boot or Logon Autostart Execution: Re-opened Applications](../../T1547.007/T1547.007.md)
-  - Atomic Test #1: Copy in loginwindow.plist for Re-Opened Applications [macos]
-  - Atomic Test #2: Re-Opened Applications using LoginHook [macos]
-  - Atomic Test #3: Append to existing loginwindow for Re-Opened Applications [macos]
-- T1160 Launch Daemon [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1053.002 Scheduled Task/Job: At [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1574.004 Dylib Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
-  - Atomic Test #2: Create local account with admin privileges - MacOS [macos]
-
-# credential-access
-- T1557 Adversary-in-the-Middle [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1556.003 Modify Authentication Process: Pluggable Authentication Modules [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1056.001 Input Capture: Keylogging](../../T1056.001/T1056.001.md)
-  - Atomic Test #7: MacOS Swift Keylogger [macos]
-- T1110.001 Brute Force: Password Guessing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1003 OS Credential Dumping [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1539 Steal Web Session Cookie [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1555.002 Securityd Memory [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1110.002 Brute Force: Password Cracking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1555.001 Credentials from Password Stores: Keychain](../../T1555.001/T1555.001.md)
-  - Atomic Test #1: Keychain [macos]
-- T1167 Securityd Memory [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1555.005 Password Managers [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1040 Network Sniffing](../../T1040/T1040.md)
-  - Atomic Test #2: Packet Capture macOS using tcpdump or tshark [macos]
-  - Atomic Test #7: Packet Capture macOS using /dev/bpfN with sudo [macos]
-  - Atomic Test #8: Filtered Packet Capture macOS using /dev/bpfN with sudo [macos]
-- T1558 Steal or Forge Kerberos Tickets [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1555 Credentials from Password Stores [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1552 Unsecured Credentials](../../T1552/T1552.md)
-  - Atomic Test #1: AWS - Retrieve EC2 Password Data using stratus [linux, macos]
-- T1139 Bash History [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1503 Credentials from Web Browsers [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1145 Private Keys [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1555.003 Credentials from Password Stores: Credentials from Web Browsers](../../T1555.003/T1555.003.md)
-  - Atomic Test #2: Search macOS Safari Cookies [macos]
-  - Atomic Test #14: Simulating Access to Chrome Login Data - MacOS [macos]
-- T1557.003 DHCP Spoofing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1552.004 Unsecured Credentials: Private Keys](../../T1552.004/T1552.004.md)
-  - Atomic Test #2: Discover Private SSH Keys [macos, linux]
-  - Atomic Test #4: Copy Private SSH Keys with rsync [macos, linux]
-  - Atomic Test #5: Copy the users GnuPG directory with rsync [macos, linux]
-- T1110.003 Brute Force: Password Spraying [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1056.003 Web Portal Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1552.003 Unsecured Credentials: Bash History](../../T1552.003/T1552.003.md)
-  - Atomic Test #1: Search Through Bash History [linux, macos]
-- [T1552.001 Unsecured Credentials: Credentials In Files](../../T1552.001/T1552.001.md)
-  - Atomic Test #1: Extract Browser and System credentials with LaZagne [macos]
-  - Atomic Test #2: Extract passwords with grep [macos, linux]
-  - Atomic Test #5: Find and Access Github Credentials [macos, linux]
-- T1606.001 Web Cookies [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1141 Input Prompt [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1606 Forge Web Credentials [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1621 Multi-Factor Authentication Request Generation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1212 Exploitation for Credential Access [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1142 Keychain [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1056.002 Input Capture: GUI Input Capture](../../T1056.002/T1056.002.md)
-  - Atomic Test #1: AppleScript - Prompt User for Password [macos]
-- T1110 Brute Force [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1110.004 Brute Force: Credential Stuffing](../../T1110.004/T1110.004.md)
-  - Atomic Test #2: SSH Credential Stuffing From MacOS [macos]
-- T1081 Credentials in Files [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1056 Input Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1557.002 ARP Cache Poisoning [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1111 Multi-Factor Authentication Interception [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-
-# discovery
-- [T1033 System Owner/User Discovery](../../T1033/T1033.md)
-  - Atomic Test #2: System Owner/User Discovery [linux, macos]
-- T1016.001 Internet Connection Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1069 Permission Groups Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1087.002 Account Discovery: Domain Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1063 Security Software Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1087.001 Account Discovery: Local Account](../../T1087.001/T1087.001.md)
-  - Atomic Test #2: View sudoers access [linux, macos]
-  - Atomic Test #3: View accounts with UID 0 [linux, macos]
-  - Atomic Test #4: List opened files by user [linux, macos]
-  - Atomic Test #6: Enumerate users and groups [linux, macos]
-  - Atomic Test #7: Enumerate users and groups [macos]
-- [T1497.001 Virtualization/Sandbox Evasion: System Checks](../../T1497.001/T1497.001.md)
-  - Atomic Test #3: Detect Virtualization Environment (MacOS) [macos]
-- T1069.002 Permission Groups Discovery: Domain Groups [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1007 System Service Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1040 Network Sniffing](../../T1040/T1040.md)
-  - Atomic Test #2: Packet Capture macOS using tcpdump or tshark [macos]
-  - Atomic Test #7: Packet Capture macOS using /dev/bpfN with sudo [macos]
-  - Atomic Test #8: Filtered Packet Capture macOS using /dev/bpfN with sudo [macos]
-- [T1135 Network Share Discovery](../../T1135/T1135.md)
-  - Atomic Test #1: Network Share Discovery [macos]
-- T1120 Peripheral Device Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1082 System Information Discovery](../../T1082/T1082.md)
-  - Atomic Test #2: System Information Discovery [macos]
-  - Atomic Test #3: List OS Information [linux, macos]
-  - Atomic Test #7: Hostname Discovery [linux, macos]
-  - Atomic Test #11: Environment variables discovery on macos and linux [macos, linux]
-  - Atomic Test #12: Show System Integrity Protection status (MacOS) [macos]
-- T1010 Application Window Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1497.003 Time Based Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1217 Browser Bookmark Discovery](../../T1217/T1217.md)
-  - Atomic Test #2: List Mozilla Firefox Bookmark Database Files on macOS [macos]
-  - Atomic Test #3: List Google Chrome Bookmark JSON Files on macOS [macos]
-  - Atomic Test #8: List Safari Bookmarks on MacOS [macos]
-- [T1016 System Network Configuration Discovery](../../T1016/T1016.md)
-  - Atomic Test #3: System Network Configuration Discovery [macos, linux]
-  - Atomic Test #8: List macOS Firewall Rules [macos]
-- T1087 Account Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1083 File and Directory Discovery](../../T1083/T1083.md)
-  - Atomic Test #3: Nix File and Directory Discovery [macos, linux]
-  - Atomic Test #4: Nix File and Directory Discovery 2 [macos, linux]
-- [T1049 System Network Connections Discovery](../../T1049/T1049.md)
-  - Atomic Test #3: System Network Connections Discovery Linux & MacOS [linux, macos]
-- T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1057 Process Discovery](../../T1057/T1057.md)
-  - Atomic Test #1: Process Discovery - ps [macos, linux]
-- T1497.002 User Activity Based Checks [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1069.001 Permission Groups Discovery: Local Groups](../../T1069.001/T1069.001.md)
-  - Atomic Test #1: Permission Groups Discovery (Local) [macos, linux]
-- [T1201 Password Policy Discovery](../../T1201/T1201.md)
-  - Atomic Test #7: Examine password policy - macOS [macos]
-- T1614.001 System Location Discovery: System Language Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1614 System Location Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1518.001 Software Discovery: Security Software Discovery](../../T1518.001/T1518.001.md)
-  - Atomic Test #3: Security Software Discovery - ps (macOS) [macos]
-- [T1018 Remote System Discovery](../../T1018/T1018.md)
-  - Atomic Test #6: Remote System Discovery - arp nix [linux, macos]
-  - Atomic Test #7: Remote System Discovery - sweep [linux, macos]
-- [T1046 Network Service Scanning](../../T1046/T1046.md)
-  - Atomic Test #1: Port Scan [linux, macos]
-  - Atomic Test #2: Port Scan Nmap [linux, macos]
-- [T1518 Software Discovery](../../T1518/T1518.md)
-  - Atomic Test #3: Find and Display Safari Browser Version [macos]
-- T1622 Debugger Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+  - Atomic Test #3: Create local account with admin privileges using sysadminctl utility - MacOS [macos]
+  - Atomic Test #4: Enable root account using dsenableroot utility - MacOS [macos]
+  - Atomic Test #5: Add a new/existing user to the admin group using dseditgroup utility - macOS [macos]
 
 # command-and-control
+- T1205.002 Socket Filters [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1132.001 Data Encoding: Standard Encoding](../../T1132.001/T1132.001.md)
   - Atomic Test #1: Base64 Encoded data. [macos, linux]
 - T1568.002 Domain Generation Algorithms [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -565,6 +352,269 @@
 - T1001.001 Junk Data [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1043 Commonly Used Port [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 
+# collection
+- [T1560.001 Archive Collected Data: Archive via Utility](../../T1560.001/T1560.001.md)
+  - Atomic Test #5: Data Compressed - nix - zip [linux, macos]
+  - Atomic Test #6: Data Compressed - nix - gzip Single File [linux, macos]
+  - Atomic Test #7: Data Compressed - nix - tar Folder or File [linux, macos]
+  - Atomic Test #8: Data Encrypted with zip and gpg symmetric [macos, linux]
+  - Atomic Test #9: Encrypts collected data with AES-256 and Base64 [linux, macos]
+- [T1113 Screen Capture](../../T1113/T1113.md)
+  - Atomic Test #1: Screencapture [macos]
+  - Atomic Test #2: Screencapture (silent) [macos]
+- T1557 Adversary-in-the-Middle [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1056.001 Input Capture: Keylogging](../../T1056.001/T1056.001.md)
+  - Atomic Test #7: MacOS Swift Keylogger [macos]
+- [T1123 Audio Capture](../../T1123/T1123.md)
+  - Atomic Test #3: using Quicktime Player [macos]
+- T1560.003 Archive via Custom Method [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1114 Email Collection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1025 Data from Removable Media [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1074.001 Data Staged: Local Data Staging](../../T1074.001/T1074.001.md)
+  - Atomic Test #2: Stage data from Discovery.sh [linux, macos]
+- T1119 Automated Collection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1115 Clipboard Data](../../T1115/T1115.md)
+  - Atomic Test #3: Execute commands from clipboard [macos]
+- T1074.002 Remote Data Staging [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1005 Data from Local System [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1560.002 Archive Collected Data: Archive via Library [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1560 Archive Collected Data [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1557.003 DHCP Spoofing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1056.003 Web Portal Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1125 Video Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1114.003 Email Collection: Email Forwarding Rule [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1074 Data Staged [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1056.002 Input Capture: GUI Input Capture](../../T1056.002/T1056.002.md)
+  - Atomic Test #1: AppleScript - Prompt User for Password [macos]
+- T1039 Data from Network Shared Drive [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1056 Input Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1557.002 ARP Cache Poisoning [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1213 Data from Information Repositories [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+
+# lateral-movement
+- [T1021.005 Remote Services:VNC](../../T1021.005/T1021.005.md)
+  - Atomic Test #1: Enable Apple Remote Desktop Agent [macos]
+- T1080 Taint Shared Content [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1021.004 SSH [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1017 Application Deployment Software [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1563.001 SSH Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1021 Remote Services [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1563 Remote Service Session Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1072 Software Deployment Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1210 Exploitation of Remote Services [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1534 Internal Spearphishing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1570 Lateral Tool Transfer [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1184 SSH Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+
+# privilege-escalation
+- T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1150 Plist Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1044 File System Permissions Weakness [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1514 Elevated Execution with Prompt [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1543 Create or Modify System Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1546.006 LC_LOAD_DYLIB Addition [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1548.003 Abuse Elevation Control Mechanism: Sudo and Sudo Caching](../../T1548.003/T1548.003.md)
+  - Atomic Test #1: Sudo usage [macos, linux]
+  - Atomic Test #2: Unlimited sudo cache timeout [macos, linux]
+  - Atomic Test #3: Disable tty_tickets for sudo caching [macos, linux]
+- T1547 Boot or Logon Autostart Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1206 Sudo Caching [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1053.003 Scheduled Task/Job: Cron](../../T1053.003/T1053.003.md)
+  - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
+  - Atomic Test #2: Cron - Add script to all cron subfolders [macos, linux]
+- T1165 Startup Items [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1037.002 Boot or Logon Initialization Scripts: Logon Script (Mac)](../../T1037.002/T1037.002.md)
+  - Atomic Test #1: Logon Scripts - Mac [macos]
+- T1055 Process Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1543.004 Create or Modify System Process: Launch Daemon](../../T1543.004/T1543.004.md)
+  - Atomic Test #1: Launch Daemon [macos]
+- [T1078.001 Valid Accounts: Default Accounts](../../T1078.001/T1078.001.md)
+  - Atomic Test #3: Enable Guest Account on macOS [macos]
+- [T1546.005 Event Triggered Execution: Trap](../../T1546.005/T1546.005.md)
+  - Atomic Test #1: Trap EXIT [macos, linux]
+  - Atomic Test #2: Trap SIGINT [macos, linux]
+- [T1574.006 Hijack Execution Flow: LD_PRELOAD](../../T1574.006/T1574.006.md)
+  - Atomic Test #3: Dylib Injection via DYLD_INSERT_LIBRARIES [macos]
+- T1547.011 Plist Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1548 Abuse Elevation Control Mechanism [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1548.001 Abuse Elevation Control Mechanism: Setuid and Setgid](../../T1548.001/T1548.001.md)
+  - Atomic Test #1: Make and modify binary from C source [macos, linux]
+  - Atomic Test #2: Set a SetUID flag on file [macos, linux]
+  - Atomic Test #3: Set a SetGID flag on file [macos, linux]
+- [T1547.015 Boot or Logon Autostart Execution: Login Items](../../T1547.015/T1547.015.md)
+  - Atomic Test #2: Add macOS LoginItem using Applescript [macos]
+- T1053.004 Launchd [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1546.014 Event Triggered Execution: Emond](../../T1546.014/T1546.014.md)
+  - Atomic Test #1: Persistance with Event Monitor - emond [macos]
+- T1169 Sudo [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1547.006 Boot or Logon Autostart Execution: Kernel Modules and Extensions](../../T1547.006/T1547.006.md)
+  - Atomic Test #2: MacOS - Load Kernel Module via kextload and kmutil [macos]
+  - Atomic Test #3: MacOS - Load Kernel Module via KextManagerLoadKextWithURL() [macos]
+- T1157 Dylib Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1068 Exploitation for Privilege Escalation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1546 Event Triggered Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1546.004 Event Triggered Execution: .bash_profile and .bashrc](../../T1546.004/T1546.004.md)
+  - Atomic Test #1: Add command to .bash_profile [macos, linux]
+  - Atomic Test #2: Add command to .bashrc [macos, linux]
+- T1548.004 Elevated Execution with Prompt [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1166 Setuid and Setgid [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1037.005 Boot or Logon Initialization Scripts: Startup Items](../../T1037.005/T1037.005.md)
+  - Atomic Test #1: Add file to Local Library StartupItems [macos]
+- T1100 Web Shell [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1543.001 Create or Modify System Process: Launch Agent](../../T1543.001/T1543.001.md)
+  - Atomic Test #1: Launch Agent [macos]
+  - Atomic Test #2: Event Monitor Daemon Persistence [macos]
+- T1519 Emond [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1546.016 Installer Packages [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1037.004 Boot or Logon Initialization Scripts: Rc.common](../../T1037.004/T1037.004.md)
+  - Atomic Test #1: rc.common [macos]
+- [T1547.007 Boot or Logon Autostart Execution: Re-opened Applications](../../T1547.007/T1547.007.md)
+  - Atomic Test #1: Copy in loginwindow.plist for Re-Opened Applications [macos]
+  - Atomic Test #2: Re-Opened Applications using LoginHook [macos]
+  - Atomic Test #3: Append to existing loginwindow for Re-Opened Applications [macos]
+- T1160 Launch Daemon [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1053.002 Scheduled Task/Job: At [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1574.004 Dylib Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
+  - Atomic Test #2: Create local account with admin privileges - MacOS [macos]
+  - Atomic Test #3: Create local account with admin privileges using sysadminctl utility - MacOS [macos]
+  - Atomic Test #4: Enable root account using dsenableroot utility - MacOS [macos]
+  - Atomic Test #5: Add a new/existing user to the admin group using dseditgroup utility - macOS [macos]
+
+# credential-access
+- T1557 Adversary-in-the-Middle [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1556.003 Modify Authentication Process: Pluggable Authentication Modules [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1056.001 Input Capture: Keylogging](../../T1056.001/T1056.001.md)
+  - Atomic Test #7: MacOS Swift Keylogger [macos]
+- T1110.001 Brute Force: Password Guessing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1003 OS Credential Dumping [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1539 Steal Web Session Cookie](../../T1539/T1539.md)
+  - Atomic Test #3: Steal Chrome Cookies via Remote Debugging (Mac) [macos]
+- T1555.002 Securityd Memory [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1110.002 Brute Force: Password Cracking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1555.001 Credentials from Password Stores: Keychain](../../T1555.001/T1555.001.md)
+  - Atomic Test #1: Keychain [macos]
+- T1167 Securityd Memory [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1555.005 Password Managers [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1040 Network Sniffing](../../T1040/T1040.md)
+  - Atomic Test #2: Packet Capture macOS using tcpdump or tshark [macos]
+  - Atomic Test #7: Packet Capture macOS using /dev/bpfN with sudo [macos]
+  - Atomic Test #8: Filtered Packet Capture macOS using /dev/bpfN with sudo [macos]
+- T1558 Steal or Forge Kerberos Tickets [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1555 Credentials from Password Stores [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1552 Unsecured Credentials](../../T1552/T1552.md)
+  - Atomic Test #1: AWS - Retrieve EC2 Password Data using stratus [linux, macos, iaas:aws]
+- T1139 Bash History [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1503 Credentials from Web Browsers [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1145 Private Keys [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1555.003 Credentials from Password Stores: Credentials from Web Browsers](../../T1555.003/T1555.003.md)
+  - Atomic Test #2: Search macOS Safari Cookies [macos]
+  - Atomic Test #14: Simulating Access to Chrome Login Data - MacOS [macos]
+- T1557.003 DHCP Spoofing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1552.004 Unsecured Credentials: Private Keys](../../T1552.004/T1552.004.md)
+  - Atomic Test #2: Discover Private SSH Keys [macos, linux]
+  - Atomic Test #4: Copy Private SSH Keys with rsync [macos, linux]
+  - Atomic Test #5: Copy the users GnuPG directory with rsync [macos, linux]
+- T1110.003 Brute Force: Password Spraying [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1056.003 Web Portal Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1649 Steal or Forge Authentication Certificates [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1552.003 Unsecured Credentials: Bash History](../../T1552.003/T1552.003.md)
+  - Atomic Test #1: Search Through Bash History [linux, macos]
+- [T1552.001 Unsecured Credentials: Credentials In Files](../../T1552.001/T1552.001.md)
+  - Atomic Test #1: Find AWS credentials [macos, linux]
+  - Atomic Test #2: Extract Browser and System credentials with LaZagne [macos]
+  - Atomic Test #3: Extract passwords with grep [macos, linux]
+  - Atomic Test #6: Find and Access Github Credentials [macos, linux]
+- T1606.001 Web Cookies [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1141 Input Prompt [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1606 Forge Web Credentials [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1621 Multi-Factor Authentication Request Generation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1212 Exploitation for Credential Access [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1142 Keychain [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1056.002 Input Capture: GUI Input Capture](../../T1056.002/T1056.002.md)
+  - Atomic Test #1: AppleScript - Prompt User for Password [macos]
+- T1110 Brute Force [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1110.004 Brute Force: Credential Stuffing](../../T1110.004/T1110.004.md)
+  - Atomic Test #2: SSH Credential Stuffing From MacOS [macos]
+- T1556.006 Multi-Factor Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1081 Credentials in Files [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1056 Input Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1557.002 ARP Cache Poisoning [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1111 Multi-Factor Authentication Interception [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+
+# discovery
+- [T1033 System Owner/User Discovery](../../T1033/T1033.md)
+  - Atomic Test #2: System Owner/User Discovery [linux, macos]
+- T1016.001 Internet Connection Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1069 Permission Groups Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1652 Device Driver Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1087.002 Account Discovery: Domain Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1063 Security Software Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1087.001 Account Discovery: Local Account](../../T1087.001/T1087.001.md)
+  - Atomic Test #2: View sudoers access [linux, macos]
+  - Atomic Test #3: View accounts with UID 0 [linux, macos]
+  - Atomic Test #4: List opened files by user [linux, macos]
+  - Atomic Test #6: Enumerate users and groups [linux, macos]
+  - Atomic Test #7: Enumerate users and groups [macos]
+- [T1497.001 Virtualization/Sandbox Evasion: System Checks](../../T1497.001/T1497.001.md)
+  - Atomic Test #3: Detect Virtualization Environment (MacOS) [macos]
+- T1069.002 Permission Groups Discovery: Domain Groups [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1007 System Service Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1040 Network Sniffing](../../T1040/T1040.md)
+  - Atomic Test #2: Packet Capture macOS using tcpdump or tshark [macos]
+  - Atomic Test #7: Packet Capture macOS using /dev/bpfN with sudo [macos]
+  - Atomic Test #8: Filtered Packet Capture macOS using /dev/bpfN with sudo [macos]
+- [T1135 Network Share Discovery](../../T1135/T1135.md)
+  - Atomic Test #1: Network Share Discovery [macos]
+- T1120 Peripheral Device Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1082 System Information Discovery](../../T1082/T1082.md)
+  - Atomic Test #2: System Information Discovery [macos]
+  - Atomic Test #3: List OS Information [linux, macos]
+  - Atomic Test #7: Hostname Discovery [linux, macos]
+  - Atomic Test #11: Environment variables discovery on macos and linux [macos, linux]
+  - Atomic Test #12: Show System Integrity Protection status (MacOS) [macos]
+- T1010 Application Window Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1497.003 Time Based Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1217 Browser Bookmark Discovery](../../T1217/T1217.md)
+  - Atomic Test #2: List Mozilla Firefox Bookmark Database Files on macOS [macos]
+  - Atomic Test #3: List Google Chrome Bookmark JSON Files on macOS [macos]
+  - Atomic Test #8: List Safari Bookmarks on MacOS [macos]
+- [T1016 System Network Configuration Discovery](../../T1016/T1016.md)
+  - Atomic Test #3: System Network Configuration Discovery [macos, linux]
+  - Atomic Test #8: List macOS Firewall Rules [macos]
+- T1087 Account Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1083 File and Directory Discovery](../../T1083/T1083.md)
+  - Atomic Test #3: Nix File and Directory Discovery [macos, linux]
+  - Atomic Test #4: Nix File and Directory Discovery 2 [macos, linux]
+- [T1049 System Network Connections Discovery](../../T1049/T1049.md)
+  - Atomic Test #3: System Network Connections Discovery Linux & MacOS [linux, macos]
+- T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1057 Process Discovery](../../T1057/T1057.md)
+  - Atomic Test #1: Process Discovery - ps [macos, linux]
+- T1497.002 User Activity Based Checks [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1069.001 Permission Groups Discovery: Local Groups](../../T1069.001/T1069.001.md)
+  - Atomic Test #1: Permission Groups Discovery (Local) [macos, linux]
+- [T1201 Password Policy Discovery](../../T1201/T1201.md)
+  - Atomic Test #7: Examine password policy - macOS [macos]
+- T1614.001 System Location Discovery: System Language Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1614 System Location Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1518.001 Software Discovery: Security Software Discovery](../../T1518.001/T1518.001.md)
+  - Atomic Test #3: Security Software Discovery - ps (macOS) [macos]
+- [T1018 Remote System Discovery](../../T1018/T1018.md)
+  - Atomic Test #6: Remote System Discovery - arp nix [linux, macos]
+  - Atomic Test #7: Remote System Discovery - sweep [linux, macos]
+- [T1046 Network Service Discovery](../../T1046/T1046.md)
+  - Atomic Test #1: Port Scan [linux, macos]
+  - Atomic Test #2: Port Scan Nmap [linux, macos]
+- [T1518 Software Discovery](../../T1518/T1518.md)
+  - Atomic Test #3: Find and Display Safari Browser Version [macos]
+- T1622 Debugger Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+
 # impact
 - T1561.002 Disk Structure Wipe [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1498.001 Direct Network Flood [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -583,8 +633,13 @@
 - T1491 Defacement [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1491.001 Defacement: Internal Defacement [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1565 Data Manipulation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1531 Account Access Removal [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1486 Data Encrypted for Impact [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1531 Account Access Removal](../../T1531/T1531.md)
+  - Atomic Test #4: Change User Password via passwd [macos, linux]
+  - Atomic Test #5: Delete User via dscl utility [macos]
+  - Atomic Test #6: Delete User via sysadminctl utility [macos]
+- [T1486 Data Encrypted for Impact](../../T1486/T1486.md)
+  - Atomic Test #6: Encrypt files using 7z utility - macOS [macos]
+  - Atomic Test #7: Encrypt files using openssl utility - macOS [macos]
 - T1488 Disk Content Wipe [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1499 Endpoint Denial of Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1494 Runtime Data Manipulation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -604,7 +659,7 @@
   - Atomic Test #5: Restart System via `reboot` - macOS/Linux [macos, linux]
 
 # execution
-- T1059.007 JavaScript [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1059.007 Command and Scripting Interpreter: JavaScript [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1204.002 User Execution: Malicious File [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1053.003 Scheduled Task/Job: Cron](../../T1053.003/T1053.003.md)
   - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
@@ -648,7 +703,8 @@
 - T1195.003 Compromise Hardware Supply Chain [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1195 Supply Chain Compromise [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1190 Exploit Public-Facing Application [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1078.001 Valid Accounts: Default Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1078.001 Valid Accounts: Default Accounts](../../T1078.001/T1078.001.md)
+  - Atomic Test #3: Enable Guest Account on macOS [macos]
 - T1193 Spearphishing Attachment [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1199 Trusted Relationship [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1566 Phishing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -661,6 +717,9 @@
 - T1566.003 Spearphishing via Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #2: Create local account with admin privileges - MacOS [macos]
+  - Atomic Test #3: Create local account with admin privileges using sysadminctl utility - MacOS [macos]
+  - Atomic Test #4: Enable root account using dsenableroot utility - MacOS [macos]
+  - Atomic Test #5: Add a new/existing user to the admin group using dseditgroup utility - macOS [macos]
 
 # exfiltration
 - T1567 Exfiltration Over Web Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -678,6 +737,7 @@
   - Atomic Test #2: Exfiltration Over Alternative Protocol - SSH [macos, linux]
 - T1052.001 Exfiltration over USB [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1002 Data Compressed [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1567.003 Exfiltration Over Web Service: Exfiltration to Text Storage Sites [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1567.002 Exfiltration Over Web Service: Exfiltration to Cloud Storage [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1030 Data Transfer Size Limits](../../T1030/T1030.md)
   - Atomic Test #1: Data Transfer Size Limits [macos, linux]

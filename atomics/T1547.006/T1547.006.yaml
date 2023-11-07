@@ -10,19 +10,19 @@ atomic_tests:
   input_arguments:
     module_name:
       description: Name of the kernel module name.
-      type: String
+      type: string
       default: T1547006
     module_path:
       description: Folder used to store the module.
-      type: Path
+      type: path
       default: /tmp/T1547.006/T1547006.ko
     temp_folder:
       description: Temp folder used to compile the code.
-      type: Path
+      type: path
       default: /tmp/T1547.006
     module_source_path:
       description: Path to download Gsecdump binary file
-      type: Url
+      type: url
       default: PathToAtomicsFolder/T1547.006/src
   dependency_executor_name: bash
   dependencies:
@@ -52,7 +52,7 @@ atomic_tests:
   input_arguments:
     module_path:
       description: Folder used to store the module.
-      type: Path
+      type: path
       default: /Library/Extensions/SoftRAID.kext
   dependency_executor_name: bash
   dependencies:
@@ -83,11 +83,11 @@ atomic_tests:
   input_arguments:
     src_path:
       description: Folder used to store the module.
-      type: Path
+      type: path
       default: PathToAtomicsFolder/T1547.006/src/macos_kextload.c
     exe_path:
       description: Folder used to store the module.
-      type: Path
+      type: path
       default: /tmp/T1547006_iokit_loader
   dependency_executor_name: bash
   dependencies:
@@ -106,3 +106,19 @@ atomic_tests:
     elevation_required: true
     cleanup_command: |
       rm -f #{exe_path}
+- name: Snake Malware Kernel Driver Comadmin
+  auto_generated_guid: e5cb5564-cc7b-4050-86e8-f2d9eec1941f
+  description: |
+    The following Atomic Test will write an file, comadmin.dat, to disk. From the report, Snake's installer drops the kernel driver and a custom DLL which is used to load the driver into a
+    single AES encrypted file on disk. Typically, this file is named “comadmin.dat” and is stored in the %windows%\system32\Com directory. 
+    This Atomic Test will write a hardcoded named file to disk in the com directory named comadmin.dat.
+    [Snake Malware - CISA](https://media.defense.gov/2023/May/09/2003218554/-1/-1/0/JOINT_CSA_HUNTING_RU_INTEL_SNAKE_MALWARE_20230509.PDF)  
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      $examplePath = Join-Path $env:windir "system32\Com"; if (-not (Test-Path $examplePath)) { New-Item -ItemType Directory -Path $examplePath | Out-Null }; $exampleName = "comadmin.dat"; $exampleFullPath = Join-Path $examplePath $exampleName; $randomBytes = New-Object Byte[] 0x1000; (New-Object Random).NextBytes($randomBytes); [System.IO.File]::WriteAllBytes($exampleFullPath, $randomBytes)
+    cleanup_command: |
+      $examplePath = Join-Path $env:windir "system32\Com"; $exampleName = "comadmin.dat"; $exampleFullPath = Join-Path $examplePath $exampleName; if (Test-Path $exampleFullPath) { Remove-Item $exampleFullPath -Force }
+    name: powershell
+    elevation_required: true

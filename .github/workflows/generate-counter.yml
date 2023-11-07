@@ -1,0 +1,40 @@
+name: generate-svg-counter
+
+on:
+  push:
+    branches: ["master"]
+
+jobs:
+  generate-counter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.PROTECTED_BRANCH_PUSH_TOKEN }}
+      - name: Install poetry
+        run: pipx install poetry
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11.2' 
+          cache: 'poetry'
+      - name: Install dependencies
+        run: poetry install --no-interaction --no-root
+      - name: Generate shields.io URL
+        run: poetry run python bin/generate_counter.py -f atomics/
+        id: counter
+      - name: Update README
+        run: |
+          echo ${{ steps.counter.outputs.result }}
+          sed -i "s|https://img.shields.io/badge/Atomics-.*-flat.svg|${{ steps.counter.outputs.result }}|" README.md
+        shell: bash
+      - name: update github with new site
+        run: |
+          # configure git to prep for commit
+          git config user.email "opensource@redcanary.com"
+          git config user.name "publish bot"
+          git config --global push.default simple
+          git add README.md
+          git commit --allow-empty -m "updating atomics count in README.md [ci skip]"
+          # push quietly to prevent showing the token in log
+          # no need to provide any credentials
+          git push --force

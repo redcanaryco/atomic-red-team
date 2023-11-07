@@ -25,3 +25,81 @@ atomic_tests:
     command: |
       chcp
     name: command_prompt
+- name: Discover System Language with locale
+  auto_generated_guid: 837d609b-845e-4519-90ce-edc3b4b0e138
+  description: |
+    Identify System language with the `locale` command.
+
+    Upon successful execution, the output will contain the environment variables that indicate
+    the 5 character locale that can be looked up to correlate the language and territory.
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      locale
+    name: sh
+- name: Discover System Language with localectl
+  auto_generated_guid: 07ce871a-b3c3-44a3-97fa-a20118fdc7c9
+  description: |
+    Identify System language with the `localectl` command.
+
+    Upon successful execution, the key `System Locale` from the output will contain the
+    `LANG` environment variable that has the 5 character locale result that can be looked
+    up to correlate the language and territory.
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      localectl status
+    name: sh
+- name: Discover System Language by locale file
+  auto_generated_guid: 5d7057c9-2c8a-4026-91dd-13b5584daa69
+  description: |
+    Identify System language with the by reading the locale configuration file.
+
+    The locale configuration file contains the `LANG` environment variable which
+    will contain the 5 character locale that can be looked up to correlate the
+    language and territory.
+  supported_platforms:
+  - linux
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Check the location of the locale configuration file.
+    prereq_command: |
+      [ -f /etc/locale.conf ] || [ -f /etc/default/locale ] && exit 0 || exit 1
+    get_prereq_command: |
+      echo "Test only valid for systems that have locale file"
+  executor:
+    command: |
+      [ -f /etc/locale.conf ] && cat /etc/locale.conf || cat /etc/default/locale
+    name: sh
+- name: Discover System Language by Environment Variable Query
+  auto_generated_guid: cb8f7cdc-36c4-4ed0-befc-7ad7d24dfd7a
+  description: |
+   Identify System language by checking the environment variables
+
+   Upon successful execution, the 5 character locale result can be looked up to
+   correlate the language and territory. Environment query commands are likely
+   to run with a pattern match command e.g. `env | grep LANG`
+
+   Note: `env` and `printenv` will usually provide the same results. `set` is
+   also used as a builtin command that does not generate syscall telemetry but
+   does provide a list of the environment variables.
+  supported_platforms:
+  - linux
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Check if printenv command exists on the machine
+    prereq_command: |
+      [ -x "$(command -v printenv)" ] && exit 0 || exit 1
+    get_prereq_command: |
+      echo "printenv command does not exist"
+      exit 1
+  executor:
+    command: |
+      env | grep LANG
+      printenv LANG
+      set | grep LANG
+    name: sh

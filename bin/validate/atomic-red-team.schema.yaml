@@ -1,0 +1,156 @@
+$id: https://json-schema.org/draft/2020-12/schema
+title: Atomic Schema
+description: A schema for atomics within the atomic-red-team project
+type: object
+properties:
+  attack_technique:
+    description: A MITRE ATT&CK Technique ID with a capital T
+    type: string
+    format: technique_id
+    pattern: T[\.\d]{4,8}
+  display_name:
+    description: Name of the technique as defined by ATT&CK.
+    type: string
+  atomic_tests:
+    description: One or more Atomic tests for a technique
+    type: array
+    items:
+      $ref: "#/$defs/test"
+    minItems: 1
+    uniqueItems: true
+$defs:
+  test:
+    type: object
+    required:
+      - name
+      - description
+      - supported_platforms
+      - executor
+    properties:
+      name:
+        type: string
+        description: The name of the test.
+      auto_generated_guid:
+        type: string
+        description: A unique test GUID
+      description:
+        type: string
+        description: A description about the test
+      supported_platforms:
+        type: array
+        description: One or more supported operating system platforms for this test
+        uniqueItems: true
+        items:
+          type: string
+          enum:
+            - windows
+            - macos
+            - linux
+            - office-365
+            - azure-ad
+            - google-workspace
+            - saas
+            - iaas
+            - containers
+            - iaas:gcp
+            - iaas:azure
+            - iaas:aws
+      input_arguments:
+        type: object
+        additionalProperties: false
+        properties:
+          "/": {}
+        patternProperties:
+          "^[\\w-]+$":
+            type: integer
+            type: object
+            required:
+              - description
+            properties:
+              description:
+                type: string
+            anyOf:
+              - required:
+                  - type
+                properties:
+                  type:
+                    type: string
+                    enum:
+                      - integer
+                      - float
+                      - Integer
+                      - Float
+                  default:
+                    type:
+                      - number
+                      - "null"
+              - required:
+                  - type
+                properties:
+                  type:
+                    type: string
+                    enum:
+                      - path
+                      - url
+                      - string
+                      - Path
+                      - Url
+                      - String
+                  default:
+                    type:
+                      - string
+                      - "null"
+      dependency_executor_name:
+        type: string
+        enum:
+          - command_prompt
+          - powershell
+          - sh
+          - bash
+          - manual
+      dependencies:
+        type: array
+        unique: true
+        items:
+          type: object
+          properties:
+            description:
+              type: string
+            prereq_command:
+              type: string
+            get_prereq_command:
+              type: string
+          required:
+            - description
+            - prereq_command
+            - get_prereq_command
+      executor:
+        type: object
+        required:
+          - name
+        properties:
+          name:
+            type: string
+            enum:
+              - command_prompt
+              - powershell
+              - sh
+              - bash
+              - manual
+        oneOf:
+          - required:
+              - command
+            properties:
+              elevation_required:
+                type: boolean
+              command:
+                type: string
+              cleanup_command:
+                type:
+                  - string
+                  - "null"
+          - required:
+              - steps
+            properties:
+              steps:
+                type: string

@@ -1,0 +1,59 @@
+name: assign-labels
+
+on:
+  workflow_run:
+    workflows: ["validate-atomics"]
+    types:
+      - completed
+
+jobs:
+  assign-labels:
+    runs-on: ubuntu-latest
+    steps:
+      - name: download-artifact
+        uses: actions/github-script@v6
+        with:
+          script: |
+            let allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               run_id: context.payload.workflow_run.id,
+            });
+            let matchArtifact = allArtifacts.data.artifacts.filter((artifact) => {
+              return artifact.name == "labels.json"
+            })[0];
+            let download = await github.rest.actions.downloadArtifact({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               artifact_id: matchArtifact.id,
+               archive_format: 'zip',
+            });
+            let fs = require('fs');
+            fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/labels.zip`, Buffer.from(download.data));
+
+      - name: unzip-artifact
+        run: unzip labels.zip
+
+      - name: assign-labels-and-reviewers
+        uses: actions/github-script@v6
+        with:
+          script: |
+            let fs = require('fs');
+            const obj = JSON.parse(fs.readFileSync('./labels.json'));
+            console.log(obj)
+            if(obj.labels.length > 0){
+              await github.rest.issues.addLabels({
+                issue_number: obj.pr,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                labels: obj.labels
+               })
+            }
+            if(obj.maintainers.length > 0){
+              await github.rest.issues.addAssignees({
+                issue_number: obj.pr,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                assignees: obj.maintainers
+              });
+            }

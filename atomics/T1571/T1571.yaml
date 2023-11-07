@@ -11,11 +11,11 @@ atomic_tests:
   input_arguments:
     port:
       description: Specify uncommon port number
-      type: String
+      type: string
       default: "8081"
     domain:
       description: Specify target hostname
-      type: String
+      type: string
       default: google.com
   executor:
     command: |
@@ -31,13 +31,22 @@ atomic_tests:
   input_arguments:
     port:
       description: Specify uncommon port number
-      type: String
+      type: string
       default: "8081"
     domain:
       description: Specify target hostname
-      type: String
+      type: string
       default: google.com
+  dependency_executor_name: sh
+  dependencies:
+    - description: |
+        Requires telnet
+      prereq_command: |
+        which telnet
+      get_prereq_command: |
+        echo "please install telnet to run this test"; exit 1
   executor:
     command: |
-      telnet #{domain} #{port}
+      echo quit | telnet #{domain} #{port}
+      exit 0
     name: sh

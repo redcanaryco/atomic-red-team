@@ -11,7 +11,7 @@ atomic_tests:
   input_arguments:
     executable:
       description: name of executable
-      type: Path
+      type: path
       default: C:\Windows\System32\calc.exe
   executor:
     command: |
@@ -30,7 +30,7 @@ atomic_tests:
   input_arguments:
     executable:
       description: name of executable/file to decode
-      type: Path
+      type: path
       default: C:\Windows\System32\calc.exe
   executor:
     command: |
@@ -52,19 +52,19 @@ atomic_tests:
   input_arguments:
     message:
       description: Message to print to the screen
-      type: String
+      type: string
       default: Hello from Atomic Red Team test T1140!
     encoded_file:
       description: File to temporarily save encoded text
-      type: Path
+      type: path
       default: /tmp/T1140.encoded
   dependencies:
-    - description: |
-        Python must be present
-      prereq_command: |
-        which python3
-      get_prereq_command: |
-        echo "Please install Python 3"
+  - description: |
+      Python must be present
+    prereq_command: |
+      which python3
+    get_prereq_command: |
+      echo "Please install Python 3"
   executor:
     name: sh
     elevation_required: false
@@ -86,19 +86,19 @@ atomic_tests:
   input_arguments:
     message:
       description: Message to print to the screen
-      type: String
+      type: string
       default: Hello from Atomic Red Team test T1140!
     encoded_file:
       description: File to temporarily save encoded text
-      type: Path
+      type: path
       default: /tmp/T1140.encoded
   dependencies:
-    - description: |
-        Perl must be present
-      prereq_command: |
-        which perl
-      get_prereq_command: |
-        echo "Please install Perl"
+  - description: |
+      Perl must be present
+    prereq_command: |
+      which perl
+    get_prereq_command: |
+      echo "Please install Perl"
   executor:
     name: sh
     elevation_required: false
@@ -117,11 +117,11 @@ atomic_tests:
   input_arguments:
     message:
       description: Message to print to the screen
-      type: String
+      type: string
       default: Hello from Atomic Red Team test T1140!
     encoded_file:
       description: File to temporarily save encoded text
-      type: Path
+      type: path
       default: /tmp/T1140.encoded
   executor:
     name: sh
@@ -146,19 +146,19 @@ atomic_tests:
   input_arguments:
     message:
       description: Message to print to the screen
-      type: String
+      type: string
       default: Hello from Atomic Red Team test T1140!
     encoded_file:
       description: File to temporarily save encoded text
-      type: Path
+      type: path
       default: /tmp/T1140.encoded
   dependencies:
-    - description: |
-        xxd must be present
-      prereq_command: |
-        which xxd
-      get_prereq_command: |
-        echo "Please install xxd"
+  - description: |
+      xxd must be present
+    prereq_command: |
+      which xxd
+    get_prereq_command: |
+      echo "Please install xxd"
   executor:
     name: sh
     elevation_required: false
@@ -171,3 +171,68 @@ atomic_tests:
       echo $ENCODED > #{encoded_file} && xxd -r -p < #{encoded_file}
       echo $ENCODED > #{encoded_file} && cat #{encoded_file} | xxd -r -p
       echo $ENCODED > #{encoded_file} && cat < #{encoded_file} | xxd -r -p
+- name: Linux Base64 Encoded Shebang in CLI
+  auto_generated_guid: 3a15c372-67c1-4430-ac8e-ec06d641ce4d
+  description: |
+    Using Linux Base64 Encoded shell scripts that have Shebang in them. This is commonly how attackers obfuscate passing and executing a shell script. Seen [here](https://www.trendmicro.com/pl_pl/research/20/i/the-evolution-of-malicious-shell-scripts.html) by TrendMicro, as well as [LinPEAS](https://github.com/carlospolop/PEASS-ng/tree/master/linPEAS). Also a there is a great Sigma rule [here](https://github.com/SigmaHQ/sigma/blob/master/rules/linux/process_creation/proc_creation_lnx_base64_shebang_cli.yml) for it. 
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
+    bash_encoded:
+      description: Encoded #!/bin/bash script
+      type: string
+      default: IyEvYmluL2Jhc2gKZWNobyAiaHR0cHM6Ly93d3cueW91dHViZS5jb20vQGF0b21pY3NvbmFmcmlkYXkgRlRXIgo=
+    dash_encoded:
+      description: Encoded #!/bin/dash script
+      type: string
+      default: IyEvYmluL2Rhc2gKZWNobyAiaHR0cHM6Ly93d3cueW91dHViZS5jb20vQGF0b21pY3NvbmFmcmlkYXkgRlRXIgo=
+    fish_encoded:
+      description: Encoded #!/bin/fish script
+      type: string
+      default: IyEvYmluL2Rhc2gKZWNobyAiaHR0cHM6Ly93d3cueW91dHViZS5jb20vQGF0b21pY3NvbmFmcmlkYXkgRlRXIgo=
+    sh_encoded:
+      description: Encoded #!/bin/sh script
+      type: string
+      default: IyEvYmluL3NoCmVjaG8gImh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL0BhdG9taWNzb25hZnJpZGF5IEZUVyIK
+  dependencies:
+  - description: |
+      base64 must be present
+    prereq_command: |
+      which base64
+    get_prereq_command: |
+      echo "please install base64"
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      echo #{bash_encoded} | base64 -d | bash
+      echo #{dash_encoded} | base64 -d | bash
+      echo #{fish_encoded} | base64 -d | bash
+      echo #{sh_encoded} | base64 -d | bash
+- name: 'XOR decoding and command execution using Python'
+  auto_generated_guid: c3b65cd5-ee51-4e98-b6a3-6cbdec138efc
+  description: An adversary can obfuscate malicious commands or payloads using XOR and execute them on the victim's machine. This test uses Python to decode and execute commands on the machine.
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
+    xor_key:
+      description: 'Key used to decrypt the command '
+      type: string
+      default: waEHleblxiQjoxFJQaIMLdHKz
+    encrypted_command:
+      description: Encrypted command that will be executed
+      type: string
+      default: AAkqKQEM
+  dependency_executor_name: bash
+  dependencies:
+  - description: Python3 must be installed
+    prereq_command: which python3
+    get_prereq_command: echo "Install Python3"
+  executor:
+    command: "python3 -c 'import base64; import subprocess; xor_decrypt = lambda text, key: \"\".join([chr(c ^ ord(k)) for c, k in zip(base64.b64decode(text.encode()), key)]); command = \"#{encrypted_command}\"; key = \"#{xor_key}\"; exec = xor_decrypt(command, key); subprocess.call(exec, shell=True)'"
+    cleanup_command: 
+    name: bash
+    elevation_required: false
+      

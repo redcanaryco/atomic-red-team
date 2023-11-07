@@ -11,7 +11,7 @@ atomic_tests:
   input_arguments:
     evil_command:
       description: Command to run after shell history collection is disabled
-      type: String
+      type: string
       default: whoami
   executor:
     command: |
@@ -35,3 +35,119 @@ atomic_tests:
       3. ls
       4. whoami > recon.txt
     name: manual
+- name: Clear bash history
+  auto_generated_guid: 878794f7-c511-4199-a950-8c28b3ed8e5b
+  description: |
+    An attacker may clear the bash history cache and the history file as their last act before logging off to remove the record of their command line activities. 
+
+    In this test we use the $HISTFILE variable throughout to 1. confirms the $HISTFILE variable is set 2. echo "" into it 3..5 confirm the file is empty 6 clear the history cache 7. confirm the history cache is empty. This is when the attacker would logoff.
+  supported_platforms:
+  - linux
+  executor:
+    name: bash
+    elevation_required: false
+    command: |
+      cp $HISTFILE $HISTFILE.OLD
+      if ((${#HISTFILE[@]})); then echo $HISTFILE; fi
+      echo "" > $HISTFILE
+      if [ $(wc -c <$HISTFILE) -gt 1 ]; then echo "$HISTFILE is larger than 1k"; fi
+      ls -la $HISTFILE 
+      cat $HISTFILE
+      history -c 
+      if [ $(history |wc -l) -eq 1 ]; then echo "History cache cleared"; fi
+    cleanup_command: |
+      mv -f $HISTFILE.OLD $HISTFILE 
+- name: Setting the HISTCONTROL environment variable
+  auto_generated_guid: 10ab786a-028e-4465-96f6-9e83ca6c5f24
+  description: |
+    An attacker may exploit the space before a command (e.g. " ls") or the duplicate command suppression feature in Bash history to prevent their commands from being recorded in the history file or to obscure the order of commands used. 
+
+    In this test we 1. sets $HISTCONTROL to ignoreboth 2. clears the history cache 3. executes ls -la with a space in-front of it 4. confirms that ls -la is not in the history cache 5. sets $HISTCONTROL to erasedups 6. clears the history cache 7..9 executes ls -la $HISTFILE 3 times 10. confirms that their is only one command in history
+  supported_platforms:
+  - linux
+  executor:
+    name: bash
+    elevation_required: false
+    command: |
+      TEST=$(echo $HISTCONTROL)
+      if [ "$HISTCONTROL" != "ignoreboth" ]; then export HISTCONTROL="ignoreboth"; fi
+      history -c 
+      ls -la $HISTFILE # " ls -la $HISTFILE"
+      if [ $(history |wc -l) -eq 1 ]; then echo "ls -la is not in history cache"; fi
+      # -> ls -la is not in history cache
+      if [ "$HISTCONTROL" != "erasedups" ]; then export HISTCONTROL="erasedups"; fi
+      history -c 
+      ls -la $HISTFILE
+      ls -la $HISTFILE
+      ls -la $HISTFILE
+      if [ $(history |wc -l) -eq 2 ]; then echo "Their is only one entry for ls -la $HISTFILE"; fi
+    cleanup_command: |
+      export HISTCONTROL=$(echo $TEST)
+- name: Setting the HISTFILESIZE environment variable
+  auto_generated_guid: 5cafd6c1-2f43-46eb-ac47-a5301ba0a618
+  description: |
+    An Adversary may set the bash history files size environment variable (HISTFILESIZE) to zero to prevent the logging of commands to the history file after they log out of the system.
+
+    Note: we don't wish to log out, so we are just confirming the value of HISTFILESIZE. In this test we 1. echo HISTFILESIZE 2. set it to zero 3. confirm that HISTFILESIZE is set to zero.
+  supported_platforms:
+  - linux
+  executor:
+    name: bash
+    elevation_required: false
+    command: |
+      TEST=$(echo $HISTFILESIZE)
+      echo $HISTFILESIZE
+      export HISTFILESIZE=0
+      if [ $(echo $HISTFILESIZE) -eq 0 ]; then echo "\$HISTFILESIZE is zero"; fi
+      # -> $HISTFILESIZE is zero
+    cleanup_command: |
+      export HISTCONTROL=$(echo $TEST)
+- name: Setting the HISTFILE environment variable 
+  auto_generated_guid: b3dacb6c-a9e3-44ec-bf87-38db60c5cad1
+  description: |
+    An Adversary may clear, unset or redirect the history environment variable HISTFILE to prevent logging of commands to the history file after they log out of the system.
+
+    Note: we don't wish to log out, so we are just confirming the value of HISTFILE. In this test we 1. echo HISTFILE 2. set it to /dev/null 3. confirm that HISTFILE is set to /dev/null.
+  supported_platforms:
+  - linux
+  executor:
+    name: bash
+    elevation_required: false
+    command: |
+      TEST=$(echo $HISTFILE)
+      echo $HISTFILE
+      export HISTFILE="/dev/null"
+      if [ $(echo $HISTFILE) == "/dev/null" ]; then echo "\$HISTFILE is /dev/null"; fi
+      # -> $HISTFILE is /dev/null
+    cleanup_command: |
+      export HISTFILE=$(echo $TEST)
+- name: Setting the HISTIGNORE environment variable 
+  auto_generated_guid: f12acddb-7502-4ce6-a146-5b62c59592f1
+  description: |
+    An Adversary may take advantage of the HISTIGNORE environment variable either to ignore particular commands or all commands. 
+
+    In this test we 1. set HISTIGNORE to ignore ls, rm and ssh commands 2. clear this history cache 3..4 execute ls commands 5. confirm that the ls commands are not in the history cache 6. unset HISTIGNORE variable 7.. same again, but ignoring ALL commands.
+  supported_platforms:
+  - linux
+  executor:
+    name: bash
+    elevation_required: false
+    command: |
+      if ((${#HISTIGNORE[@]})); then echo "\$HISTIGNORE = $HISTIGNORE"; else export HISTIGNORE='ls*:rm*:ssh*'; echo "\$HISTIGNORE = $HISTIGNORE"; fi
+      # -> $HISTIGNORE = ls*:rm*:ssh*
+      history -c 
+      ls -la $HISTFILE
+      ls -la ~/.bash_logout
+      if [ $(history |wc -l) -eq 1 ]; then echo "ls commands are not in history"; fi
+      # -> ls commands are not in history
+      unset HISTIGNORE
+
+      if ((${#HISTIGNORE[@]})); then echo "\$HISTIGNORE = $HISTIGNORE"; else export HISTIGNORE='*'; echo "\$HISTIGNORE = $HISTIGNORE"; fi
+      # -> $HISTIGNORE = *
+      history -c 
+      whoami
+      groups
+      if [ $(history |wc -l) -eq 0 ]; then echo "History cache is empty"; fi
+      # -> History cache is empty
+    cleanup_command: |
+      unset HISTIGNORE

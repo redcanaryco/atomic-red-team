@@ -15,7 +15,7 @@ atomic_tests:
   input_arguments:
     domain:
       description: target SSH domain
-      type: Url
+      type: url
       default: target.example.com
   executor:
     command: |
@@ -35,15 +35,15 @@ atomic_tests:
   input_arguments:
     user_name:
       description: username for domain
-      type: String
+      type: string
       default: atomic
     password:
       description: password for user
-      type: String
+      type: string
       default: atomic
     domain:
       description: target SSH domain
-      type: Url
+      type: url
       default: target.example.com
   executor:
     command: |
@@ -52,7 +52,7 @@ atomic_tests:
 - name: DNSExfiltration (doh)
   auto_generated_guid: c943d285-ada3-45ca-b3aa-7cd6500c6a48
   description: |
-    DNSExfiltrator allows for transfering (exfiltrate) a file over a DNS request covert channel. This is basically a data leak testing tool allowing to exfiltrate data over a covert channel.
+    DNSExfiltrator allows for transferring (exfiltrate) a file over a DNS request covert channel. This is basically a data leak testing tool allowing to exfiltrate data over a covert channel.
     !!! Test will fail without a domain under your control with A record and NS record !!! 
     See this github page for more details - https://github.com/Arno0x/DNSExfiltrator
   supported_platforms:
@@ -60,28 +60,28 @@ atomic_tests:
   input_arguments:
     password:
       description: Password used to encrypt the data to be exfiltrated
-      type: String
+      type: string
       default: atomic
     domain:
       description: The domain name to use for DNS requests
-      type: String
+      type: string
       default: target.example.com
     ps_module:
       description: DNSExfiltrator powershell ps_module
-      type: Path
-      default: '$env:Temp\dnsexfil.ps1'
+      type: path
+      default: 'PathToAtomicsFolder\..\ExternalPayloads\dnsexfil.ps1'
     doh:
       description: Google or CloudFlare DoH (DNS over HTTP) server
-      type: String
+      type: string
       default: google
     time:
       description: The time in milliseconds to wait between each DNS request
-      type: String
-      default: 500
+      type: string
+      default: "500"
     encoding:
       description: Set to '-b32' to use base32 encoding of data. Might be required by some DNS resolvers.
-      type: String
-      default: null
+      type: string
+      default:
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -89,6 +89,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{ps_module}) {exit 0} else {exit 1}
     get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       IWR "https://raw.githubusercontent.com/Arno0x/DNSExfiltrator/8faa972408b0384416fffd5b4d42a7aa00526ca8/Invoke-DNSExfiltrator.ps1" -OutFile #{ps_module}
   executor:
     command: |

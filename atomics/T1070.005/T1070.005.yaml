@@ -10,7 +10,7 @@ atomic_tests:
   input_arguments:
     share_name:
       description: Share to add.
-      type: String
+      type: string
       default: '\\test\share'
   executor:
     command: |
@@ -26,7 +26,7 @@ atomic_tests:
   input_arguments:
     share_name:
       description: Share to remove.
-      type: String
+      type: string
       default: '\\test\share'
   executor:
     command: |
@@ -41,7 +41,7 @@ atomic_tests:
   input_arguments:
     share_name:
       description: Share to remove.
-      type: String
+      type: string
       default: '\\test\share'
   executor:
     command: |
@@ -60,13 +60,13 @@ atomic_tests:
   - windows
   executor:
     command: |
-       reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v AutoShareServer /t REG_DWORD /d 0 /f
-       reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v AutoShareWks /t REG_DWORD /d 0 /f
+      reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v AutoShareServer /t REG_DWORD /d 0 /f
+      reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v AutoShareWks /t REG_DWORD /d 0 /f
     cleanup_command: |
-       reg delete "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v AutoShareServer /f
-       reg delete "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v AutoShareWks /f
+      reg delete "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v AutoShareServer /f
+      reg delete "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v AutoShareWks /f
     name: command_prompt
-    elevation_required: true 
+    elevation_required: true
 - name: Remove Administrative Shares
   auto_generated_guid: 4299eff5-90f1-4446-b2f3-7f4f5cfd5d62
   description: |

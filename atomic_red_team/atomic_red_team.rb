@@ -32,6 +32,29 @@ class AtomicRedTeam
   #
   # Returns the individual Atomic Tests for a given identifer, passed as either a string (T1234) or an ATT&CK technique object
   #
+  def atomic_tests_for_technique_by_platform(technique_or_technique_identifier, platform)
+    technique_identifier = if technique_or_technique_identifier.is_a? Hash
+      ATTACK_API.technique_identifier_for_technique technique_or_technique_identifier
+    else
+      technique_or_technique_identifier
+    end
+
+    test_list = Array.new
+    atomic_tests.find do |atomic_yaml| 
+      if atomic_yaml.fetch('attack_technique').upcase == technique_identifier.upcase
+        atomic_yaml['atomic_tests'].each do |a_test|
+          if a_test["supported_platforms"].include?(platform[:platform])
+              test_list.append(a_test)
+          end
+        end
+      end
+    end
+    test_list
+  end
+
+  #
+  # Returns the individual Atomic Tests for a given identifer, passed as either a string (T1234) or an ATT&CK technique object
+  #
   def atomic_tests_for_technique(technique_or_technique_identifier)
     technique_identifier = if technique_or_technique_identifier.is_a? Hash
       ATTACK_API.technique_identifier_for_technique technique_or_technique_identifier
@@ -55,7 +78,7 @@ class AtomicRedTeam
     yaml_file = "#{ATOMICS_DIRECTORY}/#{technique_identifier}/#{technique_identifier}.yaml"
     markdown_file = "#{ATOMICS_DIRECTORY}/#{technique_identifier}/#{technique_identifier}.md"
 
-    if atomic_yaml_has_test_for_platform(yaml_file, only_platform) && (File.exists? markdown_file)
+    if atomic_yaml_has_test_for_platform(yaml_file, only_platform) && (File.exist? markdown_file)
       # we have a file for this technique, so link to it's Markdown file
       "[#{link_display}](../../#{technique_identifier}/#{technique_identifier}.md)"
     else
@@ -66,7 +89,7 @@ class AtomicRedTeam
 
   def atomic_yaml_has_test_for_platform(yaml_file, only_platform)
     has_test_for_platform = false
-    if File.exists? yaml_file
+    if File.exist? yaml_file
       yaml = YAML.load_file(yaml_file)
       yaml['atomic_tests'].each_with_index do |atomic, i|
         if atomic["supported_platforms"].any? {|platform| platform.downcase =~ only_platform}

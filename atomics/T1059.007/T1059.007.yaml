@@ -1,0 +1,44 @@
+attack_technique: T1059.007
+display_name: "Command and Scripting Interpreter: JavaScript"
+atomic_tests:
+- name: JScript execution to gather local computer information via cscript
+  auto_generated_guid: 01d75adf-ca1b-4dd1-ac96-7c9550ad1035
+  description: JScript execution test, execute JScript via cscript command. When successful, system information will be written to $env:TEMP\T1059.007.out.txt
+  supported_platforms:
+  - windows
+  input_arguments:
+    jscript:
+      description: Path to sample script
+      type: string
+      default: PathToAtomicsFolder\T1059.007\src\sys_info.js
+  dependency_executor_name: powershell
+  dependencies:
+  - description: Sample script must exist on disk at specified location (#{jscript})
+    prereq_command: "if (Test-Path #{jscript}) {exit 0} else {exit 1} "
+    get_prereq_command: |-
+      New-Item -ItemType Directory (Split-Path #{jscript}) -Force | Out-Null
+      Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.007/src/sys_info.js" -OutFile "#{jscript}"
+  executor:
+    command: "cscript #{jscript} > $env:TEMP\\T1059.007.out.txt'"
+    cleanup_command: Remove-Item $env:TEMP\T1059.007.out.txt -ErrorAction Ignore
+    name: command_prompt
+- name: JScript execution to gather local computer information via wscript
+  auto_generated_guid: 0709945e-4fec-4c49-9faf-c3c292a74484
+  description: JScript execution test, execute JScript via wscript command. When successful, system information will be shown with four message boxes.
+  supported_platforms:
+  - windows
+  input_arguments:
+    jscript:
+      description: Path to sample script
+      type: string
+      default: PathToAtomicsFolder\T1059.007\src\sys_info.js
+  dependency_executor_name: powershell
+  dependencies:
+  - description: Sample script must exist on disk at specified location (#{jscript})
+    prereq_command: "if (Test-Path #{jscript}) {exit 0} else {exit 1} "
+    get_prereq_command: |-
+      New-Item -ItemType Directory (Split-Path #{jscript}) -Force | Out-Null
+      Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.007/src/sys_info.js" -OutFile "#{jscript}"
+  executor:
+    command: "wscript #{jscript}"
+    name: command_prompt

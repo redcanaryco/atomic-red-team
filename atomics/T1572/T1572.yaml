@@ -12,23 +12,23 @@ atomic_tests:
   input_arguments:
     doh_server:
       description: Default DoH resolver
-      type: String
+      type: string
       default: https://8.8.8.8/resolve
     query_type:
       description: DNS query type
-      type: String
+      type: string
       default: TXT
     subdomain:
       description: Subdomain prepended to the domain name
-      type: String
+      type: string
       default: atomicredteam
     query_volume:
       description: Number of DNS queries to send
-      type: Integer
-      default: "1000"
+      type: integer
+      default: 1000
     domain:
       description: Default domain to simulate against
-      type: String
+      type: string
       default: 127.0.0.1.xip.io
   executor:
     command: |
@@ -45,31 +45,31 @@ atomic_tests:
   input_arguments:
     doh_server:
       description: Default DoH resolver
-      type: String
+      type: string
       default: https://8.8.8.8/resolve
     runtime:
       description: Time in minutes to run the simulation
-      type: Integer
+      type: integer
       default: 30
     domain:
       description: Default domain to simulate against
-      type: String
+      type: string
       default: 127.0.0.1.xip.io
     subdomain:
       description: Subdomain prepended to the domain name
-      type: String
+      type: string
       default: atomicredteam
     query_type:
       description: DNS query type
-      type: String
+      type: string
       default: TXT
     c2_interval:
       description: Seconds between C2 requests to the command and control server
-      type: Integer
+      type: integer
       default: 30
     c2_jitter:
       description: Percentage of jitter to add to the C2 interval to create variance in the times between C2 requests
-      type: Integer
+      type: integer
       default: 20
   executor:
     command: |
@@ -87,22 +87,64 @@ atomic_tests:
   input_arguments:
     doh_server:
       description: Default DoH resolver
-      type: String
+      type: string
       default: https://8.8.8.8/resolve
     query_type:
       description: DNS query type
-      type: String
+      type: string
       default: TXT
     subdomain:
       description: Subdomain prepended to the domain name (should be 63 characters to test maximum length)
-      type: String
+      type: string
       default: atomicredteamatomicredteamatomicredteamatomicredteamatomicredte
     domain:
       description: Default domain to simulate against
-      type: String
+      type: string
       default: 127.0.0.1.xip.io
   executor:
     command: |
       Set-Location PathToAtomicsFolder
       .\T1572\src\T1572-doh-domain-length.ps1 -DohServer #{doh_server} -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type}
     name: powershell
+- name: run ngrok
+  auto_generated_guid: 4cdc9fc7-53fb-4894-9f0c-64836943ea60
+  description: |
+    Download and run ngrok. Create tunnel to chosen port.
+
+  supported_platforms:
+  - windows
+  input_arguments:
+    api_token:
+      description: ngrok API
+      type: string
+      default: N/A
+    port_num:
+      description: port number for tunnel
+      type: integer
+      default: 3389
+    download:
+      description: link to download ngrok
+      type: string
+      default: https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-windows-amd64.zip
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Download ngrok
+    prereq_command: |
+      if (Test-Path C:\Users\Public\ngrok) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Path C:\Users\Public\ngrok -ItemType Directory | Out-Null
+      Invoke-WebRequest #{download} -OutFile C:\Users\Public\ngrok\ngrok-v3-stable-windows-amd64.zip
+      Expand-Archive C:\Users\Public\ngrok\ngrok-v3-stable-windows-amd64.zip -DestinationPath C:\Users\Public\ngrok
+  executor:
+    command: |
+      C:\Users\Public\ngrok\ngrok.exe config add-authtoken #{api_token} | Out-Null
+      Start-Job -ScriptBlock { C:\Users\Public\ngrok\ngrok.exe tcp #{port_num} } | Out-Null
+      Start-Sleep -s 5 
+      Stop-Job -Name Job1 | Out-Null
+    cleanup_command: |
+      Remove-Item C:\Users\Public\ngrok -Recurse -ErrorAction Ignore
+      Remove-Item C:\%userprofile%\AppData\Local\ngrok -ErrorAction Ignore
+    name: powershell
+    elevation_required: true
+

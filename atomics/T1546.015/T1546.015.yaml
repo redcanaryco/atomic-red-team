@@ -16,8 +16,8 @@ atomic_tests:
       default: Apartment
     dllpath:
       description: Path to the DLL.
-      type: String
-      default: $env:TEMP\AtomicTest.dll
+      type: string
+      default: PathToAtomicsFolder\..\ExternalPayloads\AtomicTest.dll
     clsid:
       description: Class ID to hijack.
       type: string
@@ -30,7 +30,9 @@ atomic_tests:
   dependencies:
   - description: DLL For testing
     prereq_command: 'if (Test-Path #{dllpath}) {exit 0} else {exit 1}'
-    get_prereq_command: Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.015/bin/AtomicTest.dll" -OutFile "#{dllpath}"
+    get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.015/bin/AtomicTest.dll" -OutFile "#{dllpath}"
   executor:
     command: |-
       New-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}' -Value '#{clsid_description}'
@@ -42,9 +44,9 @@ atomic_tests:
     name: powershell
 - name: Powershell Execute COM Object
   auto_generated_guid: 752191b1-7c71-445c-9dbe-21bb031b18eb
-  description: |- 
-       Use the PowerShell to execute COM CLSID object.
-       Reference: https://pentestlab.blog/2020/05/20/persistence-com-hijacking/
+  description: |-
+    Use the PowerShell to execute COM CLSID object.
+    Reference: https://pentestlab.blog/2020/05/20/persistence-com-hijacking/
   supported_platforms:
   - windows
   executor:
@@ -71,8 +73,8 @@ atomic_tests:
       default: Both
     dll_path:
       description: Path to the DLL.
-      type: String
-      default: $env:temp\T1546.015_calc.dll
+      type: string
+      default: PathToAtomicsFolder\..\ExternalPayloads\T1546.015_calc.dll
     clsid:
       description: Class ID to hijack.
       type: string
@@ -85,7 +87,9 @@ atomic_tests:
   dependencies:
   - description: DLL For testing
     prereq_command: 'if (Test-Path #{dll_path}) {exit 0} else {exit 1}'
-    get_prereq_command: Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.015/bin/T1546.015_calc.dll" -OutFile "#{dll_path}"
+    get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.015/bin/T1546.015_calc.dll" -OutFile "#{dll_path}"
   executor:
     command: |-
       New-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}' -Value '#{clsid_description}'

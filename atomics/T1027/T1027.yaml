@@ -14,7 +14,7 @@ atomic_tests:
   input_arguments:
     shell_command:
       description: command to encode
-      type: String
+      type: string
       default: "echo Hello from the Atomic Red Team && uname -v"
   dependency_executor_name: sh
   dependencies:
@@ -44,7 +44,7 @@ atomic_tests:
   input_arguments:
     powershell_command:
       description: PowerShell command to encode
-      type: String
+      type: string
       default: Write-Host "Hey, Atomic!"
   executor:
     command: |
@@ -65,15 +65,15 @@ atomic_tests:
   input_arguments:
     registry_key_storage:
       description: Windows Registry Key to store code
-      type: String
+      type: string
       default: HKCU:Software\Microsoft\Windows\CurrentVersion
     powershell_command:
       description: PowerShell command to encode
-      type: String
+      type: string
       default: Write-Host "Hey, Atomic!"
     registry_entry_storage:
       description: Windows Registry entry to store code under key
-      type: String
+      type: string
       default: Debug
   executor:
     command: |
@@ -96,18 +96,19 @@ atomic_tests:
   input_arguments:
     url_path:
       description: url to download Exe
-      type: Url
+      type: url
       default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027/bin/T1027.zip
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      T1027.exe must exist on disk at $env:temp\temp_T1027.zip\T1027.exe
+      T1027.exe must exist on disk at PathToAtomicsFolder\..\ExternalPayloads\temp_T1027.zip\T1027.exe
     prereq_command: |
-      if (Test-Path $env:temp\temp_T1027.zip\T1027.exe) {exit 0} else {exit 1}
+      if (Test-Path PathToAtomicsFolder\..\ExternalPayloads\temp_T1027.zip\T1027.exe) {exit 0} else {exit 1}
     get_prereq_command: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      Invoke-WebRequest "#{url_path}" -OutFile "$env:temp\T1027.zip"
-      Expand-Archive -path "$env:temp\T1027.zip" -DestinationPath "$env:temp\temp_T1027.zip\" -Force
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "#{url_path}" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\T1027.zip"
+      Expand-Archive -path "PathToAtomicsFolder\..\ExternalPayloads\T1027.zip" -DestinationPath "PathToAtomicsFolder\..\ExternalPayloads\temp_T1027.zip\" -Force
   executor:
     command: |
       "%temp%\temp_T1027.zip\T1027.exe"
@@ -126,19 +127,19 @@ atomic_tests:
   input_arguments:
     input_file:
       description: Path of the XLSM file
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1027\src\T1027-cc-macro.xlsm
     sender:
       description: sender email
-      type: String
+      type: string
       default: test@corp.com
     receiver:
       description: receiver email
-      type: String
+      type: string
       default: test@corp.com
     smtp_server:
       description: SMTP Server IP Address
-      type: String
+      type: string
       default: 127.0.0.1
   executor:
     command: |
@@ -154,11 +155,11 @@ atomic_tests:
   input_arguments:
     input_file:
       description: Path of the XLSM file
-      type: Path
+      type: path
       default: PathToAtomicsFolder\T1027\src\T1027-cc-macro.xlsm
     ip_address:
       description: Destination IP address
-      type: String
+      type: string
       default: 127.0.0.1
   executor:
     command: |
@@ -185,11 +186,11 @@ atomic_tests:
   input_arguments:
     remote_file:
       description: URL of file to download
-      type: Url
+      type: url
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
     local_path:
-      description: Local path/filename to save the dowloaded file to
-      type: Path
+      description: Local path/filename to save the downloaded file to
+      type: path
       default: Atomic-license.txt
   executor:
     steps: |
@@ -202,3 +203,44 @@ atomic_tests:
       2. Press enter to execute the command. You will find the file or webpage you specified saved to the file you specified in the command.
 
     name: manual
+- name: Snake Malware Encrypted crmlog file
+  auto_generated_guid: 7e47ee60-9dd1-4269-9c4f-97953b183268
+  description: |
+    The following Atomic Test will create a file with a specific name and sets its attributes to Hidden, System, and Archive. This was related to the Snake Malware campaign and is later decrypted by Snake's kernel driver.
+    [Snake Malware - CISA](https://media.defense.gov/2023/May/09/2003218554/-1/-1/0/JOINT_CSA_HUNTING_RU_INTEL_SNAKE_MALWARE_20230509.PDF)  
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      $file = New-Item $env:windir\registration\04e53197-72be-4dd8-88b1-533fe6eed577.04e53197-72be-4dd8-88b1-533fe6eed577.crmlog; $file.Attributes = 'Hidden', 'System', 'Archive'; Write-Host "File created: $($file.FullName)"
+    cleanup_command: |
+      $fileNameToDelete = '04e53197-72be-4dd8-88b1-533fe6eed577.04e53197-72be-4dd8-88b1-533fe6eed577.crmlog'; $filePathToDelete = "$env:windir\registration\"; $fullPathToDelete = Join-Path $filePathToDelete $fileNameToDelete; if (Test-Path $fullPathToDelete) { Remove-Item -Path $fullPathToDelete -Force; Write-Host "File deleted: $fullPathToDelete" } else { Write-Host "File not found: $fullPathToDelete" }
+    name: powershell
+    elevation_required: true
+- name: Execution from Compressed JScript File
+  auto_generated_guid: fad04df1-5229-4185-b016-fb6010cd87ac
+  description: |
+    Mimic execution of compressed JavaScript file. When successfully executed, calculator.exe will open. This test is meant to help emulate Gootloader as per https://redcanary.com/blog/gootloader/
+  supported_platforms:
+  - windows
+  input_arguments:
+    url_path:
+      description: url to download JScript file
+      type: url
+      default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027/bin/T1027js.zip
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      T1027.js must exist on disk at PathToAtomicsFolder\..\ExternalPayloads\temp_T1027js.zip\T1027js.js
+    prereq_command: |
+      if (Test-Path PathToAtomicsFolder\..\ExternalPayloads\temp_T1027js.zip\T1027js.js) {exit 0} else {exit 1}
+    get_prereq_command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      Invoke-WebRequest "#{url_path}" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\T1027js.zip"
+      Expand-Archive -path "PathToAtomicsFolder\..\ExternalPayloads\T1027js.zip" -DestinationPath "PathToAtomicsFolder\..\ExternalPayloads\temp_T1027js.zip\" -Force
+  executor:
+    command: |
+      "%temp%\temp_T1027js.zip\T1027js.js"
+    cleanup_command: |
+      taskkill /f /im calculator.exe >nul 2>nul
+    name: command_prompt

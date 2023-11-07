@@ -6,14 +6,14 @@ atomic_tests:
   description: |
     Test execution of a remote script using rundll32.exe. Upon execution notepad.exe will be opened. 
     This has been used by Win32/Poweliks malware and works as described [here](https://www.stormshield.com/news/poweliks-command-line-confusion/)
-    
+
     Note: The GetObject function is no longer supported in Internet Explorer v9 (2011) and later so this technique would only work where very old versions of IE are installed. 
   supported_platforms:
   - windows
   input_arguments:
     file_url:
       description: location of the payload
-      type: Url
+      type: url
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1218.011/src/T1218.011.sct
   executor:
     command: |
@@ -32,7 +32,7 @@ atomic_tests:
   input_arguments:
     command_to_execute:
       description: Command for rundll32.exe to execute
-      type: String
+      type: string
       default: calc.exe
   executor:
     command: |
@@ -49,7 +49,7 @@ atomic_tests:
   input_arguments:
     command_to_execute:
       description: Command for rundll32.exe to execute
-      type: String
+      type: string
       default: calc.exe
   executor:
     command: |
@@ -66,7 +66,7 @@ atomic_tests:
   input_arguments:
     inf_to_execute:
       description: Local location of inf file
-      type: String
+      type: string
       default: PathToAtomicsFolder\T1218.011\src\T1218.011.inf
   dependency_executor_name: powershell
   dependencies:
@@ -93,7 +93,7 @@ atomic_tests:
   input_arguments:
     inf_to_execute:
       description: Local location of inf file
-      type: String
+      type: string
       default: PathToAtomicsFolder\T1218.011\src\T1218.011.inf
   dependency_executor_name: powershell
   dependencies:
@@ -119,7 +119,7 @@ atomic_tests:
   input_arguments:
     inf_to_execute:
       description: Local location of inf file
-      type: String
+      type: string
       default: PathToAtomicsFolder\T1218.011\src\T1218.011_DefaultInstall.inf
   dependency_executor_name: powershell
   dependencies:
@@ -145,7 +145,7 @@ atomic_tests:
   input_arguments:
     inf_to_execute:
       description: Local location of inf file
-      type: String
+      type: string
       default: PathToAtomicsFolder\T1218.011\src\T1218.011_DefaultInstall.inf
   dependency_executor_name: powershell
   dependencies:
@@ -167,7 +167,7 @@ atomic_tests:
       rundll32.exe url.dll,OpenURL %PUBLIC%\index.hta
     Trickbot uses this TTP as follows:
       rundll32.exe URL.dll,FileProtocolHandler C:\\..\\Detail\\akteullen.vbs
-    
+
     In this atomic, the sample hta file opens the calculator and the vbs file shows a message dialog with "rundll32 spawned wscript"
   supported_platforms:
   - windows
@@ -185,7 +185,7 @@ atomic_tests:
   input_arguments:
     exe_to_launch:
       description: Path of the executable to launch
-      type: Path
+      type: path
       default: '%windir%\System32\notepad.exe'
   executor:
     command: |
@@ -196,27 +196,27 @@ atomic_tests:
   description: |
     Rundll32.exe running non-dll 
   supported_platforms:
-      - windows
+  - windows
   input_arguments:
     input_url:
       description: Url to download the DLL
-      type: Url
+      type: url
       default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1047/bin/calc.dll
     input_file:
       description: Non-dll file
-      type: String
+      type: string
       default: C:\Users\$env:username\Downloads\calc.png
-  dependency_executor_name: powershell 
-  dependencies: 
+  dependency_executor_name: powershell
+  dependencies:
   - description: |
       Non-dll file must exist on disk at specified location
-    prereq_command: | 
+    prereq_command: |
       if (Test-Path #{input_file}) {exit 0} else {exit 1}
-    get_prereq_command: | 
+    get_prereq_command: |
       Invoke-WebRequest "#{input_url}" -OutFile "#{input_file}"
   executor:
     name: powershell
-    command: | 
+    command: |
       rundll32.exe #{input_file}, StartW
 - name: Rundll32 with Ordinal Value
   auto_generated_guid: 9fd5a74b-ba89-482a-8a3e-a5feaa3697b0
@@ -224,54 +224,54 @@ atomic_tests:
     Rundll32.exe loading dll using ordinal value #2 to DLLRegisterServer. 
     Upon successful execution, Calc.exe will spawn.
   supported_platforms:
-      - windows
+  - windows
   input_arguments:
     input_url:
       description: Url to download the DLL
-      type: Url
+      type: url
       default: https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1218.010/bin/AllTheThingsx64.dll
     input_file:
       description: DLL File
-      type: String
+      type: string
       default: PathToAtomicsFolder\T1218.010\bin\AllTheThingsx64.dll
-  dependency_executor_name: powershell 
-  dependencies: 
+  dependency_executor_name: powershell
+  dependencies:
   - description: |
       DLL file must exist on disk at specified location
-    prereq_command: | 
+    prereq_command: |
       if (Test-Path #{input_file}) {exit 0} else {exit 1}
-    get_prereq_command: | 
+    get_prereq_command: |
       Invoke-WebRequest "#{input_url}" -OutFile "#{input_file}"
   executor:
     name: command_prompt
-    command: | 
+    command: |
       rundll32.exe #{input_file},#2
 - name: Rundll32 with Control_RunDLL
   auto_generated_guid: e4c04b6f-c492-4782-82c7-3bf75eb8077e
   description: |
     Rundll32.exe loading dll with 'control_rundll' within the command-line, loading a .cpl or another file type related to CVE-2021-40444. 
   supported_platforms:
-      - windows
+  - windows
   input_arguments:
     input_url:
       description: Url to download the DLL
-      type: Url
+      type: url
       default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1047/bin/calc.dll
     input_file:
       description: DLL File
-      type: String
+      type: string
       default: PathToAtomicsFolder\T1047\bin\calc.dll
-  dependency_executor_name: powershell 
-  dependencies: 
+  dependency_executor_name: powershell
+  dependencies:
   - description: |
       DLL file must exist on disk at specified location
-    prereq_command: | 
+    prereq_command: |
       if (Test-Path #{input_file}) {exit 0} else {exit 1}
-    get_prereq_command: | 
+    get_prereq_command: |
       Invoke-WebRequest "#{input_url}" -OutFile "#{input_file}"
   executor:
     name: command_prompt
-    command: | 
+    command: |
       rundll32.exe shell32.dll,Control_RunDLL #{input_file}
 - name: Rundll32 with desk.cpl
   auto_generated_guid: 83a95136-a496-423c-81d3-1c6750133917
@@ -280,19 +280,18 @@ atomic_tests:
     Reference: 
       - [LOLBAS - Libraries/Desk](https://lolbas-project.github.io/lolbas/Libraries/Desk/)
     SIGMA rules:
-      - [SCR File Write Event](https://github.com/SigmaHQ/sigma/blob/master/rules/windows/file_event/file_event_win_new_src_file.yml)
-      - [Rundll32 InstallScreenSaver Execution](https://github.com/SigmaHQ/sigma/blob/master/rules/windows/process_creation/proc_creation_win_rundll32_installscreensaver.yml)
+      - [SCR File Write Event](https://github.com/SigmaHQ/sigma/blob/b53f08b081e0a50099be9b9e8eced82097fdbaf2/rules/windows/file_event/file_event_win_new_src_file.yml)
+      - [Rundll32 InstallScreenSaver Execution](https://github.com/SigmaHQ/sigma/blob/b53f08b081e0a50099be9b9e8eced82097fdbaf2/rules/windows/process_creation/proc_creation_win_lolbin_rundll32_installscreensaver.yml)
   supported_platforms:
-      - windows
+  - windows
   input_arguments:
     exe_to_launch:
       description: Path of the executable to launch
-      type: Path
+      type: path
       default: '%windir%\System32\calc.exe'
   executor:
     name: command_prompt
-    command: | 
+    command: |
       copy #{exe_to_launch} not_an_scr.scr
       rundll32.exe desk.cpl,InstallScreenSaver not_an_scr.scr
-    cleanup_command: 
-      del not_an_scr.scr
+    cleanup_command: del not_an_scr.scr

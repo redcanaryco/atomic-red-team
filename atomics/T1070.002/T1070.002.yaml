@@ -8,12 +8,307 @@ atomic_tests:
   supported_platforms:
   - macos
   - linux
+  input_arguments:
+    syslog_path:
+      description: path of syslog file to delete. On macos it's /var/log/system.log*, on linux, it's /var/log/syslog*. Also note for File events, that on macos, /var/ is a link to /private/var/.
+      type: string
+      default: /var/log/system.log
+    macos_audit_path:
+      description: path of audit file to delete
+      type: string
+      default: /var/audit/20220725213300.202208110700021
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      target files must exist
+    prereq_command: |
+      if [ -d /var/audit ] ; then stat #{macos_audit_path} ; fi && stat #{syslog_path}
+    get_prereq_command: |
+      touch #{syslog_path}
+      if [ -d /var/audit ] ; then touch #{macos_audit_path} ; fi
   executor:
     command: |
-      sudo rm -rf /private/var/log/system.log*
-      sudo rm -rf /private/var/audit/*
+      sudo rm -rf #{syslog_path}
+      if [ -d /var/audit ] ; then sudo rm -rf #{macos_audit_path} ; fi
     name: sh
     elevation_required: true
+- name: Delete log files using built-in log utility 
+  auto_generated_guid: 653d39cd-bae7-499a-898c-9fb96b8b5cd1
+  description: |
+    This test deletes main log datastore, inflight log data, time-to-live data(TTL), fault and error content
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+      sudo log erase --all
+      sudo log erase --ttl #Deletes only time-to-live log content
+    name: sh
+    elevation_required: true
+- name: Truncate system log files via truncate utility
+  auto_generated_guid: 6290f8a8-8ee9-4661-b9cf-390031bf6973
+  description: |
+    This test truncates the system log files using the truncate utility with (-s 0 or --size=0) parameter which sets file size to zero, thus emptying the file content
+  supported_platforms:
+  - macos
+  input_arguments:
+    system_log_path:
+      description: path of system log to delete.
+      type: string
+      default: /var/log/system.log
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      target files must exist
+    prereq_command: |
+      stat #{system_log_path}
+    get_prereq_command: |
+      touch #{system_log_path}
+  executor:
+    command: |
+      sudo truncate -s 0 #{system_log_path} #size parameter shorthand
+      sudo truncate --size=0 #{system_log_path} #size parameter 
+    name: sh
+    elevation_required: true
+- name: Delete log files via cat utility by appending /dev/null or /dev/zero
+  auto_generated_guid: c23bdb88-928d-493e-b46d-df2906a50941
+  description: |
+    The first sub-test truncates the log file to zero bytes via /dev/null and the second sub-test fills the log file with null bytes(zeroes) via /dev/zero, using cat utility
+  supported_platforms:
+  - macos
+  input_arguments:
+    system_log_path:
+      description: path of system log to delete.
+      type: string
+      default: /var/log/system.log
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      target files must exist
+    prereq_command: |
+      stat #{system_log_path}
+    get_prereq_command: |
+      touch #{system_log_path}
+  executor:
+    command: |
+      sudo cat /dev/null > #{system_log_path} #truncating the file to zero bytes
+      sudo dd if=/dev/zero bs=1000 count=5 of=#{system_log_path} #log file filled with null bytes(zeros)
+    name: sh
+    elevation_required: true
+- name: System log file deletion via find utility
+  auto_generated_guid: bc8eeb4a-cc3e-45ec-aa6e-41e973da2558
+  description: |
+    This test finds and deletes the system log files within /var/log/ directory using various executions(rm, shred, unlink)
+  supported_platforms:
+  - macos
+  input_arguments:
+    system_log_name1:
+      description: name or prefix of system log to delete.
+      type: string
+      default: system.log
+    system_log_name2:
+      description: name or prefix of system log to delete.
+      type: string
+      default: system.log.97.gz
+    system_log_name3:
+      description: name or prefix of system log to delete.
+      type: string
+      default: system.log.98.gz
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      target files must exist
+    prereq_command: |
+      stat /var/log/#{system_log_name1} /var/log/#{system_log_name2} /var/log/#{system_log_name3}
+    get_prereq_command: |
+      touch /var/log/#{system_log_name1} /var/log/#{system_log_name2} /var/log/#{system_log_name3}
+  executor:
+    command: |
+      sudo find /var/log -name '#{system_log_name1}.*' -exec rm {} \; #using "rm" execution
+      sudo find /var/log/ -name "#{system_log_name2}.*" -exec shred -u -z -n 3 {} \; #using "shred" execution
+      sudo find /var/log/ -name "#{system_log_name3}.*" -exec unlink {} \; #using "unlink" execution
+    name: sh
+    elevation_required: true
+- name: Overwrite macOS system log via echo utility
+  auto_generated_guid: 0208ea60-98f1-4e8c-8052-930dce8f742c
+  description: |
+    This test overwrites the contents of system log file with an empty string using echo utility
+  supported_platforms:
+  - macos
+  input_arguments:
+    system_log_path:
+      description: path to system.log
+      type: string
+      default: /var/log/system.log
+  executor:
+    command: |
+      sudo echo '' > #{system_log_path}
+    name: sh
+    elevation_required: true
+- name: Real-time system log clearance/deletion
+  auto_generated_guid: 848e43b3-4c0a-4e4c-b4c9-d1e8cea9651c
+  description: |
+    This test reads real-time system log file and writes empty string to it, thus clearing the log file without tampering with the logging process
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+      sudo log -f /var/log/system.log | : > /var/log/system.log
+    name: sh
+    elevation_required: true
+- name: Delete system log files via unlink utility
+  auto_generated_guid: 03013b4b-01db-437d-909b-1fdaa5010ee8
+  description: |
+    This test deletes the system log file using unlink utility
+  supported_platforms:
+  - macos
+  input_arguments:
+    system_log_path:
+      description: path to system.log
+      type: string
+      default: /var/log/system.log
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      target files must exist
+    prereq_command: |
+      stat #{system_log_path}
+    get_prereq_command: |
+      touch #{system_log_path}
+  executor:
+    command: |
+      sudo unlink #{system_log_path}
+    name: sh
+    elevation_required: true
+- name: Delete system log files using shred utility
+  auto_generated_guid: 86f0e4d5-3ca7-45fb-829d-4eda32b232bb
+  description: |
+    This test overwrites the contents of the log file with zero bytes(-z) using three passes(-n 3) of data, and then delete the file(-u) securely
+  supported_platforms:
+  - macos
+  input_arguments:
+    system_log_path:
+      description: path to system.log
+      type: string
+      default: /var/log/system.log
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      target files must exist
+    prereq_command: |
+      stat #{system_log_path}
+    get_prereq_command: |
+      touch #{system_log_path}
+  executor:
+    command: |
+      sudo shred -u -z -n 3 #{system_log_path}
+    name: sh
+    elevation_required: true
+- name: Delete system log files using srm utility
+  auto_generated_guid: b0768a5e-0f32-4e75-ae5b-d036edcf96b6
+  description: |
+    This test securely deletes the system log files individually and recursively using the srm utility.
+    Install srm using Homebrew with the command: brew install khell/homebrew-srm/srm
+    Refer: https://github.com/khell/homebrew-srm/issues/1 for installation
+  supported_platforms:
+  - macos
+  input_arguments:
+    system_log_path:
+      description: path to system.log
+      type: string
+      default: /var/log/system.log
+    system_log_folder:
+      description: path to log parent folder
+      type: string
+      default: /var/log/
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      target files must exist
+    prereq_command: |
+      stat #{system_log_path} #{system_log_folder}
+    get_prereq_command: |
+      mkdir -p #{system_log_folder} && touch #{system_log_path} #{system_log_folder}/system.log
+  executor:
+    command: |
+      sudo srm #{system_log_path} #system log file deletion
+      sudo srm -r #{system_log_folder} #recursive deletion of log files
+    name: sh
+    elevation_required: true
+- name: Delete system log files using OSAScript
+  auto_generated_guid: 810a465f-cd4f-47bc-b43e-d2de3b033ecc
+  description: |
+    This test deletes the system log file using osascript via "do shell script"(sh/bash by default) which in-turn spawns rm utility, requires admin privileges
+  supported_platforms:
+  - macos
+  input_arguments:
+    system_log_path:
+      description: path to system.log
+      type: string
+      default: /var/log/system.log
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      target files must exist
+    prereq_command: |
+      stat #{system_log_path}
+    get_prereq_command: |
+      touch #{system_log_path}
+  executor:
+    command: |
+      osascript -e 'do shell script "rm #{system_log_path}" with administrator privileges'
+    name: sh
+    elevation_required: true
+- name: Delete system log files using Applescript
+  auto_generated_guid: e62f8694-cbc7-468f-862c-b10cd07e1757
+  description: |
+    This test deletes the system log file using applescript using osascript via Finder application
+    Note: The user may be prompted to grant access to the Finder application before the command can be executed successfully as part of TCC(Transparency, Consent, and Control) Framework.
+    Refer: https://www.rainforestqa.com/blog/macos-tcc-db-deep-dive
+  supported_platforms:
+  - macos
+  input_arguments:
+    system_log_path:
+      description: path to system.log
+      type: string
+      default: /var/log/system.log
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      target files must exist
+    prereq_command: |
+      stat #{system_log_path}
+    get_prereq_command: |
+      touch #{system_log_path}
+  executor:
+    command: |
+      osascript -e 'tell application "Finder" to delete POSIX file "#{system_log_path}"'
+    name: sh
+    elevation_required: true
+- name: Delete system journal logs via rm and journalctl utilities
+  auto_generated_guid: ca50dd85-81ff-48ca-92e1-61f119cb1dcf
+  description: |
+    The first sub-test deletes the journal files using rm utility in the "/var/log/journal/" directory and the second sub-test clears the journal by modifiying time period of logs that should be retained to zero.
+  supported_platforms:
+  - linux
+  input_arguments:
+    journal_folder:
+      description: path to journal logs
+      type: string
+      default: /var/log/journal
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      target files must exist
+    prereq_command: |
+      stat #{journal_folder}
+    get_prereq_command: |
+      mkdir -p #{journal_folder} && touch #{journal_folder}/T1070_002.journal
+  executor:
+    command: |
+      sudo rm #{journal_folder}/* #physically deletes the journal files, and not just their content
+      sudo journalctl --vacuum-time=0 #clears the journal while still keeping the journal files in place
+    name: sh
+    elevation_required: true 
 - name: Overwrite Linux Mail Spool
   auto_generated_guid: 1602ff76-ed7f-4c94-b550-2f727b4782d4
   description: |
@@ -23,9 +318,18 @@ atomic_tests:
   input_arguments:
     username:
       description: Username of mail spool
-      type: String
+      type: string
       default: root
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      target files must exist
+    prereq_command: |
+      stat /var/spool/mail/#{username}
+    get_prereq_command: |
+      touch /var/spool/mail/#{username}
   executor:
+    elevation_required: true
     command: |
       echo 0> /var/spool/mail/#{username}
     name: bash
@@ -38,9 +342,12 @@ atomic_tests:
   input_arguments:
     log_path:
       description: Path of specified log
-      type: Path
+      type: path
       default: /var/log/secure
   executor:
     command: |
       echo 0> #{log_path}
     name: bash
+    elevation_required: true
+    cleanup_command: |
+      if [ "/var/log/secure" != "#{log_path}" ] ; then rm -f #{log_path} ; fi

@@ -27,3 +27,31 @@ atomic_tests:
       sc delete win32times
     name: command_prompt
     elevation_required: true
+- name: linux rename /proc/pid/comm using prctl
+  auto_generated_guid: f0e3aaea-5cd9-4db6-a077-631dd19b27a8
+  description: |
+    Runs a C program that calls prctl(PR_SET_NAME) to modify /proc/pid/comm value to "totally_legit".  This will show up as process name in simple 'ps' listings.
+  supported_platforms:
+  - linux
+  input_arguments:
+    exe_path:
+      description: Output Binary Path
+      type: path
+      default: /tmp/T1036_004_prctl_rename
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      #{exe_path} must be exist on system.
+    prereq_command: |
+      stat #{exe_path}
+    get_prereq_command: |
+      cc -o #{exe_path} PathToAtomicsFolder/T1036.004/src/prctl_rename.c
+  executor:
+    name: sh
+    command: |
+      #{exe_path} & ps
+      TMP=`ps | grep totally_legit`
+      if [ -z "${TMP}" ] ; then echo "renamed process NOT FOUND in process list" && exit 1; fi
+      exit 0
+    cleanup_command: |
+      rm -f #{exe_path}

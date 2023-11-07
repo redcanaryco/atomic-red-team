@@ -107,7 +107,7 @@ class Attack
     @attack_stix ||= begin
       # load the full attack library
       local_attack_json_to_try = "#{File.dirname(__FILE__)}/enterprise-attack.json"
-      if File.exists? local_attack_json_to_try
+      if File.exist? local_attack_json_to_try
         JSON.parse File.read(local_attack_json_to_try)
       else
         JSON.parse open('https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json').read

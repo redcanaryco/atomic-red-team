@@ -25,7 +25,7 @@ atomic_tests:
   input_arguments:
     new_executable:
       description: New executable to run on startup instead of Windows Defender
-      type: String
+      type: string
       default: calc.exe
   executor:
     command: |
@@ -62,7 +62,7 @@ atomic_tests:
   input_arguments:
     bad_domain:
       description: Domain to add to trusted site zone
-      type: String
+      type: string
       default: bad-domain.com
   executor:
     command: |
@@ -99,7 +99,7 @@ atomic_tests:
   input_arguments:
     default_execution_policy:
       description: Specify the default poweshell execution policy
-      type: String
+      type: string
       default: Default
   executor:
     command: |
@@ -225,7 +225,7 @@ atomic_tests:
       reg delete "HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v shutdownwithoutlogon /f >nul 2>&1
     name: command_prompt
     elevation_required: true
-- name: Disable Windows LogOff Button 
+- name: Disable Windows LogOff Button
   auto_generated_guid: e246578a-c24d-46a7-9237-0213ff86fb0c
   description: |
     Modify the registry of the currently logged in user using reg.exe via cmd console to disable the windows logoff button.
@@ -343,7 +343,7 @@ atomic_tests:
     cleanup_command: |
       reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoFileMenu /f >nul 2>&1
     name: command_prompt
-    elevation_required: true  
+    elevation_required: true
 - name: Activate Windows NoClose Group Policy Feature
   auto_generated_guid: 12f50e15-dbc6-478b-a801-a746e8ba1723
   description: |
@@ -358,7 +358,7 @@ atomic_tests:
     cleanup_command: |
       reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoClose /f >nul 2>&1
     name: command_prompt
-    elevation_required: true 
+    elevation_required: true
 - name: Activate Windows NoSetTaskbar Group Policy Feature
   auto_generated_guid: d29b7faf-7355-4036-9ed3-719bd17951ed
   description: |
@@ -399,7 +399,7 @@ atomic_tests:
   - windows
   executor:
     command: |
-      reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoPropertiesMyDocuments /t REG_DWORD /d 1 
+      reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoPropertiesMyDocuments /t REG_DWORD /d 1 /f
     cleanup_command: |
       reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoPropertiesMyDocuments /f >nul 2>&1
     name: command_prompt
@@ -622,8 +622,8 @@ atomic_tests:
 - name: Ursnif Malware Registry Key Creation
   auto_generated_guid: c375558d-7c25-45e9-bd64-7b23a97c1db0
   description: |
-      Ursnif downloads additional modules from the C&C server and saves these in the registry folder HKEY_CURRENT_USER\Software\AppDataLow\Software\Microsoft\
-      More information - https://blog.trendmicro.com/trendlabs-security-intelligence/phishing-campaign-uses-hijacked-emails-to-deliver-ursnif-by-replying-to-ongoing-threads/
+    Ursnif downloads additional modules from the C&C server and saves these in the registry folder HKEY_CURRENT_USER\Software\AppDataLow\Software\Microsoft\
+    More information - https://blog.trendmicro.com/trendlabs-security-intelligence/phishing-campaign-uses-hijacked-emails-to-deliver-ursnif-by-replying-to-ongoing-threads/
   supported_platforms:
   - windows
   executor:
@@ -636,7 +636,7 @@ atomic_tests:
 - name: Terminal Server Client Connection History Cleared
   auto_generated_guid: 3448824b-3c35-4a9e-a8f5-f887f68bea21
   description: |
-      The built-in Windows Remote Desktop Connection (RDP) client (mstsc.exe) saves the remote computer name (or IP address) and the username that is used to login after each successful connection to the remote computer
+    The built-in Windows Remote Desktop Connection (RDP) client (mstsc.exe) saves the remote computer name (or IP address) and the username that is used to login after each successful connection to the remote computer
   supported_platforms:
   - windows
   dependency_executor_name: powershell
@@ -695,7 +695,9 @@ atomic_tests:
 - name: Enabling Restricted Admin Mode via Command_Prompt
   auto_generated_guid: fe7974e5-5813-477b-a7bd-311d4f535e83
   description: |
-    Enabling Restricted Admin Mode via Command_Prompt,enables an attacker to perform a pass-the-hash attack using RDP
+    Enabling Restricted Admin Mode via Command_Prompt,enables an attacker to perform a pass-the-hash attack using RDP.
+
+    See [Passing the Hash with Remote Desktop](https://www.kali.org/blog/passing-hash-remote-desktop/)
   supported_platforms:
   - windows
   executor:
@@ -705,3 +707,230 @@ atomic_tests:
       reg delete "hklm\system\currentcontrolset\control\lsa" /f /v DisableRestrictedAdmin >nul 2>&1
     name: command_prompt
     elevation_required: true
+- name: Mimic Ransomware - Enable Multiple User Sessions
+  auto_generated_guid: 39f1f378-ba8a-42b3-96dc-2a6540cfc1e3
+  description: |
+    This test emulates Mimic ransomware's ability to enable multiple user sessions by modifying the AllowMultipleTSSessions value within the Winlogon registry key. 
+    See [Mimic Ransomware Overview] (https://www.trendmicro.com/en_us/research/23/a/new-mimic-ransomware-abuses-everything-apis-for-its-encryption-p.html)
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Winlogon /t REG_DWORD /v AllowMultipleTSSessions /d 1 /f
+    cleanup_command: |
+      reg delete HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Winlogon /v AllowMultipleTSSessions /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: Mimic Ransomware - Allow Multiple RDP Sessions per User
+  auto_generated_guid: 35727d9e-7a7f-4d0c-a259-dc3906d6e8b9
+  description: |
+    This test emulates Mimic ransomware's ability to enable multiple RDP sessions per user by modifying the fSingleSessionPerUser value within the Terminal Server registry key. 
+    See [Mimic Ransomware Overview] (https://www.trendmicro.com/en_us/research/23/a/new-mimic-ransomware-abuses-everything-apis-for-its-encryption-p.html)
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKLM\System\CurrentControlSet\Control\Terminal Server" /v fSingleSessionPerUser /t REG_DWORD /d 0 /f
+    cleanup_command: |
+      reg delete "HKLM\System\CurrentControlSet\Control\Terminal Server" /v fSingleSessionPerUser /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: Event Viewer Registry Modification - Redirection URL
+  auto_generated_guid: 6174be7f-5153-4afd-92c5-e0c3b7cdb5ae
+  description: Modify event viewer registry values to alter the behavior of the online help redirection. Upon opening an event in event viewer and attempting to view the help page for the event, it will open the URL or execute the program defined in the redirection URL registry entry.
+  supported_platforms:
+  - windows
+  input_arguments:
+    redirection_url:
+      description: URL to open or file URI to execute upon opening the event help
+      type: url
+      default: file://C:\windows\system32\notepad.exe
+  executor:
+    command: reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Event Viewer" /v MicrosoftRedirectionURL /t REG_SZ /d "#{redirection_url}" /f
+    cleanup_command: reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Event Viewer" /v MicrosoftRedirectionURL /t REG_SZ /d "http://go.microsoft.com/fwlink/events.asp" /f
+    name: command_prompt
+    elevation_required: true
+- name: Event Viewer Registry Modification - Redirection Program
+  auto_generated_guid: 81483501-b8a5-4225-8b32-52128e2f69db
+  description: Modify event viewer registry values to alter the behavior of the online help redirection. Upon opening an event in event viewer and attempting to view the help page for the event, it will execute the program defined in the redirection program registry entry.
+  supported_platforms:
+  - windows
+  input_arguments:
+    redirection_program:
+      description: Path of the program to execute upon opening the event help
+      type: path
+      default: C:\windows\system32\notepad.exe
+  executor:
+    command: reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Event Viewer" /v MicrosoftRedirectionProgram /t REG_EXPAND_SZ /d "#{redirection_program}" /f
+    cleanup_command: reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Event Viewer" /v MicrosoftRedirectionProgram /t REG_EXPAND_SZ /f
+    name: command_prompt
+    elevation_required: true
+- name: Enabling Remote Desktop Protocol via Remote Registry
+  auto_generated_guid: e3ad8e83-3089-49ff-817f-e52f8c948090
+  description: |
+    Enabling RDP through remote registry.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "hklm\SYSTEM\CurrentControlSet\Control\Terminal Server\Winstations\RDP-Tcp" /v SecurityLayer /t REG_DWORD /d 0 /f
+    cleanup_command: |
+      reg add "hklm\SYSTEM\CurrentControlSet\Control\Terminal Server\Winstations\RDP-Tcp" /v SecurityLayer /t REG_DWORD /d 2 /f
+    name: command_prompt
+    elevation_required: true
+- name: Disable Win Defender Notification
+  auto_generated_guid: 12e03af7-79f9-4f95-af48-d3f12f28a260
+  description: |
+    Disable Win Defender Notification. Redline is using this to disable this win defender feature.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Notifications" /v "DisableNotifications" /t REG_DWORD /d 1 /f
+    cleanup_command: |
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Notifications" /v "DisableNotifications" /t REG_DWORD /d 0 /f
+    name: command_prompt
+    elevation_required: true
+- name: Disable Windows OS Auto Update
+  auto_generated_guid: 01b20ca8-c7a3-4d86-af59-059f15ed5474
+  description: |
+    Disable Auto Update Windows OS feature. Redline is using this as part of its defense evasion.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAutoUpdate" /t REG_DWORD /d 1 /f
+    cleanup_command: |
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAutoUpdate" /t REG_DWORD /d 0 /f
+    name: command_prompt
+    elevation_required: true
+- name: Disable Windows Auto Reboot for current logon user
+  auto_generated_guid: 396f997b-c5f8-4a96-bb2c-3c8795cf459d
+  description: |
+    Disable Windows Auto Reboot for current logon user. Redline is using this as part of its defense evasion.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAutoRebootWithLoggedOnUsers" /t REG_DWORD /d 1 /f
+    cleanup_command: |
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAutoRebootWithLoggedOnUsers" /t REG_DWORD /d 0 /f
+    name: command_prompt
+    elevation_required: true
+- name: Windows Auto Update Option to Notify before download
+  auto_generated_guid: 335a6b15-b8d2-4a3f-a973-ad69aa2620d7
+  description: |
+    Windows Auto Update Option to Notify before download. Redline is using this as part of its defense evasion.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "AUOptions" /t REG_DWORD /d 2 /f
+    cleanup_command: |
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "AUOptions" /t REG_DWORD /d 3 /f
+    name: command_prompt
+    elevation_required: true
+- name: Do Not Connect To Win Update
+  auto_generated_guid: d1de3767-99c2-4c6c-8c5a-4ba4586474c8
+  description: |
+    Do Not Connect To Win Update. Redline is using this as part of its defense evasion.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "DoNotConnectToWindowsUpdateInternetLocations" /t REG_DWORD /d 1 /f
+    cleanup_command: |
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "DoNotConnectToWindowsUpdateInternetLocations" /t REG_DWORD /d 0 /f
+    name: command_prompt
+    elevation_required: true
+- name: Tamper Win Defender Protection
+  auto_generated_guid: 3b625eaa-c10d-4635-af96-3eae7d2a2f3c
+  description: |
+    Tamper Win Defender Protection. RedLine Stealer is executing another component file to modify this win defender feature in registry. 
+    Take note that this modification might not be enough to disable this feature but can be a good indicator of malicious process that 
+    tries to tamper this Win Defender feature settings.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKLM\SOFTWARE\Microsoft\Windows Defender\Features" /v "TamperProtection" /t REG_DWORD /d 0 /f
+    cleanup_command: |
+      reg add "HKLM\SOFTWARE\Microsoft\Windows Defender\Features" /v "TamperProtection" /t REG_DWORD /d 5 /f
+    name: command_prompt
+    elevation_required: true
+- name: Snake Malware Registry Blob
+  auto_generated_guid: 8318ad20-0488-4a64-98f4-72525a012f6b
+  description: |
+    The following Atomic Test creates a registry blob in HKLM:\SOFTWARE\Classes\.wav\OpenWithProgIds, which is related to Snake Malware. Per the report, upon execution, Snake's WerFault.exe will attempt to decrypt an encrypted blob within the Windows
+    registry that is typically found at HKLM:\SOFTWARE\Classes\.wav\OpenWithProgIds. The encrypted data includes the AES key, IV, and path that is used to find and decrypt the file containing Snake's kernel driver and kernel driver loader.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      $typicalPath = "HKLM:\SOFTWARE\Classes\.wav\OpenWithProgIds"; $randomBytes = New-Object Byte[] 0x1000; (New-Object Random).NextBytes($randomBytes); New-ItemProperty -Path $typicalPath -Name "AtomicSnake" -Value $randomBytes -PropertyType Binary -Force | Out-Null
+    cleanup_command: |
+      $typicalPath = "HKLM:\SOFTWARE\Classes\.wav\OpenWithProgIds"; Remove-ItemProperty -Path $typicalPath -Name "AtomicSnake" -ErrorAction SilentlyContinue | Out-Null
+    name: powershell
+    elevation_required: true
+- name: Allow Simultaneous Download Registry
+  auto_generated_guid: 37950714-e923-4f92-8c7c-51e4b6fffbf6
+  description: |
+    A registry modification to allow Simultaneous download in the system.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v "MaxConnectionsPerServer" /t REG_DWORD /d 10 /f
+      reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v "MaxConnectionsPer1_0Server" /t REG_DWORD /d 10 /f
+    cleanup_command: |
+      reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v "MaxConnectionsPerServer" /f
+      reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v "MaxConnectionsPer1_0Server" /f
+    name: command_prompt
+    elevation_required: true
+- name: Modify Internet Zone Protocol Defaults in Current User Registry - cmd
+  auto_generated_guid: c88ef166-50fa-40d5-a80c-e2b87d4180f7
+  description: |
+    This test simulates an adversary modifying the Internet Zone Protocol Defaults in the registry of the currently logged-in user using the reg.exe utility via the command prompt. Such modifications can be indicative of an adversary trying to weaken browser security settings. Upon execution, if successful, the message "The operation completed successfully." will be displayed.
+    To verify the effects of the test:
+    1. Open the Registry Editor (regedit.exe).
+    2. Navigate to "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\ProtocolDefaults".
+    3. Check for the presence of the "http" and "https" DWORD values set to `0`.
+    Or run:
+    ```batch
+    reg query "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\ProtocolDefaults"
+    ```
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\ProtocolDefaults" /v http /t REG_DWORD /d 0 /F
+      reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\ProtocolDefaults" /v https /t REG_DWORD /d 0 /F
+    cleanup_command: |
+      reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\ProtocolDefaults" /v http /t REG_DWORD /d 3 /F
+      reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\ProtocolDefaults" /v https /t REG_DWORD /d 3 /F
+    name: command_prompt
+- name: Modify Internet Zone Protocol Defaults in Current User Registry - PowerShell
+  auto_generated_guid: b1a4d687-ba52-4057-81ab-757c3dc0d3b5
+  description: |
+    This test simulates an adversary modifying the Internet Zone Protocol Defaults in the registry of the currently logged-in user using PowerShell. Such modifications can be indicative of an adversary attempting to weaken browser security settings. 
+    To verify the effects of the test:
+    1. Open the Registry Editor (regedit.exe).
+    2. Navigate to "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\ProtocolDefaults".
+    3. Check for the presence of the "http" and "https" DWORD values set to `0`.
+    Or run:
+    ```powershell
+    Get-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\ProtocolDefaults' | Select-Object http,https
+    ```
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      # Set the registry values for http and https to 0
+      Set-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\ProtocolDefaults' -Name 'http' -Value 0
+      Set-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\ProtocolDefaults' -Name 'https' -Value 0
+    cleanup_command: |
+      # Restore the registry values for http and https to 3
+      Set-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\ProtocolDefaults' -Name 'http' -Value 3
+      Set-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\ProtocolDefaults' -Name 'https' -Value 3
+    name: powershell
+
