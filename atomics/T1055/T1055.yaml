@@ -129,3 +129,36 @@ atomic_tests:
     cleanup_command: 'Get-Process -Name calc, CalculatorApp -ErrorAction SilentlyContinue | Stop-Process -Force'
     name: powershell
     elevation_required: false
+- name: Read-Write-Execute process Injection
+  auto_generated_guid: 49543237-25db-497b-90df-d0a0a6e8fe2c
+  description: |
+    This test exploited the vulnerability in legitimate PE formats where sections have RWX permission and enough space for shellcode.
+    The RWX injection avoided the use of VirtualAlloc, WriteVirtualMemory, and ProtectVirtualMemory, thus evading detection mechanisms 
+    that relied on API call sequences and heuristics. The RWX injection utilises API call sequences: LoadLibrary --> GetModuleInformation --> GetModuleHandleA --> RtlCopyMemory --> CreateThread.
+    The injected shellcode will open a message box and a notepad.
+    RWX Process Injection, also known as MockingJay, was introduced to the security community by SecurityJoes.
+    More details can be found at https://www.securityjoes.com/post/process-mockingjay-echoing-rwx-in-userland-to-achieve-code-execution.
+    The original injector and idea were developed for game cheats, as visible at https://github.com/M-r-J-o-h-n/SWH-Injector.
+  supported_platforms:
+  - windows
+  input_arguments:
+    vuln_dll:
+      description: vulnerable DLL 
+      type: path
+      default: PathToAtomicsFolder\T1055\bin\x64\vuln_dll\msys-2.0.dll
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Utility to inject must exist on disk at specified location (#{vuln_dll})
+    prereq_command: |
+      if (Test-Path "#{vuln_dll}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path "#{vuln_dll}") -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1055/bin/x64/vuln_dll/msys-2.0.dll" -OutFile "#{vuln_dll}"
+  executor:
+    command: |
+      $address = (& "$PathToAtomicsFolder\T1055\bin\x64\searchVuln.exe" "$PathToAtomicsFolder\T1055\bin\x64\vuln_dll\" | Out-String | Select-String -Pattern "VirtualAddress: (\w+)").Matches.Groups[1].Value
+      & "PathToAtomicsFolder\T1055\bin\x64\RWXinjectionLocal.exe" "#{vuln_dll}" $address
+    cleanup_command: 'Get-Process -Name Notepad -ErrorAction SilentlyContinue | Stop-Process -Force'
+    name: powershell
+    elevation_required: true
