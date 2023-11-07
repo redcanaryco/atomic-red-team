@@ -259,6 +259,7 @@ privilege-escalation,T1548.001,Abuse Elevation Control Mechanism: Setuid and Set
 privilege-escalation,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,8,Provide the SetUID capability to a file,1ac3272f-9bcf-443a-9888-4b1d3de785c1,sh
 privilege-escalation,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,9,Do reconnaissance for files that have the setuid bit set,8e36da01-cd29-45fd-be72-8a0fcaad4481,sh
 privilege-escalation,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,10,Do reconnaissance for files that have the setgid bit set,3fb46e17-f337-4c14-9f9a-a471946533e2,sh
+privilege-escalation,T1098.004,SSH Authorized Keys,1,Modify SSH Authorized Keys,342cc723-127c-4d3a-8292-9c0c6b4ecadc,sh
 privilege-escalation,T1547.006,Boot or Logon Autostart Execution: Kernel Modules and Extensions,1,Linux - Load Kernel Module via insmod,687dcb93-9656-4853-9c36-9977315e9d23,bash
 privilege-escalation,T1053.006,Scheduled Task/Job: Systemd Timers,1,Create Systemd Service and Timer,f4983098-bb13-44fb-9b2c-46149961807b,bash
 privilege-escalation,T1053.006,Scheduled Task/Job: Systemd Timers,2,Create a user level transient systemd service and timer,3de33f5b-62e5-4e63-a2a0-6fd8808c80ec,sh
@@ -390,22 +391,6 @@ discovery,T1018,Remote System Discovery,15,Remote System Discovery - ip tcp_metr
 discovery,T1046,Network Service Discovery,1,Port Scan,68e907da-2539-48f6-9fc9-257a78c05540,bash
 discovery,T1046,Network Service Discovery,2,Port Scan Nmap,515942b0-a09f-4163-a7bb-22fefb6f185f,sh
 discovery,T1046,Network Service Discovery,3,Port Scan Nmap for FreeBSD,f03d59dc-0e3b-428a-baeb-3499552c7048,sh
-impact,T1531,Account Access Removal,4,Change User Password via passwd,3c717bf3-2ecc-4d79-8ac8-0bfbf08fbce6,sh
-impact,T1486,Data Encrypted for Impact,1,Encrypt files using gpg (FreeBSD/Linux),7b8ce084-3922-4618-8d22-95f996173765,sh
-impact,T1486,Data Encrypted for Impact,2,Encrypt files using 7z (FreeBSD/Linux),53e6735a-4727-44cc-b35b-237682a151ad,sh
-impact,T1486,Data Encrypted for Impact,3,Encrypt files using ccrypt (FreeBSD/Linux),08cbf59f-85da-4369-a5f4-049cffd7709f,sh
-impact,T1486,Data Encrypted for Impact,4,Encrypt files using openssl (FreeBSD/Linux),142752dc-ca71-443b-9359-cf6f497315f1,sh
-impact,T1496,Resource Hijacking,1,FreeBSD/macOS/Linux - Simulate CPU Load with Yes,904a5a0e-fb02-490d-9f8d-0e256eb37549,sh
-impact,T1485,Data Destruction,2,FreeBSD/macOS/Linux - Overwrite file with DD,38deee99-fd65-4031-bec8-bfa4f9f26146,sh
-impact,T1529,System Shutdown/Reboot,3,Restart System via `shutdown` - FreeBSD/macOS/Linux,6326dbc4-444b-4c04-88f4-27e94d0327cb,sh
-impact,T1529,System Shutdown/Reboot,4,Shutdown System via `shutdown` - FreeBSD/macOS/Linux,4963a81e-a3ad-4f02-adda-812343b351de,sh
-impact,T1529,System Shutdown/Reboot,5,Restart System via `reboot` - FreeBSD/macOS/Linux,47d0b042-a918-40ab-8cf9-150ffe919027,sh
-impact,T1529,System Shutdown/Reboot,6,Shutdown System via `halt` - FreeBSD/Linux,918f70ab-e1ef-49ff-bc57-b27021df84dd,sh
-impact,T1529,System Shutdown/Reboot,7,Reboot System via `halt` - FreeBSD,7b1cee42-320f-4890-b056-d65c8b884ba5,sh
-impact,T1529,System Shutdown/Reboot,8,Reboot System via `halt` - Linux,78f92e14-f1e9-4446-b3e9-f1b921f2459e,bash
-impact,T1529,System Shutdown/Reboot,9,Shutdown System via `poweroff` - FreeBSD/Linux,73a90cd2-48a2-4ac5-8594-2af35fa909fa,sh
-impact,T1529,System Shutdown/Reboot,10,Reboot System via `poweroff` - FreeBSD,5a282e50-86ff-438d-8cef-8ae01c9e62e1,sh
-impact,T1529,System Shutdown/Reboot,11,Reboot System via `poweroff` - Linux,61303105-ff60-427b-999e-efb90b314e41,bash
 execution,T1053.003,Scheduled Task/Job: Cron,1,Cron - Replace crontab with referenced file,435057fb-74b1-410e-9403-d81baf194f75,sh
 execution,T1053.003,Scheduled Task/Job: Cron,2,Cron - Add script to all cron subfolders,b7d42afa-9086-4c8a-b7b0-8ea3faa6ebb0,bash
 execution,T1053.003,Scheduled Task/Job: Cron,3,Cron - Add script to /etc/cron.d folder,078e69eb-d9fb-450e-b9d0-2e118217c846,sh
@@ -436,6 +421,22 @@ execution,T1059.006,Command and Scripting Interpreter: Python,3,Execute Python v
 execution,T1059.006,Command and Scripting Interpreter: Python,4,Python pty module and spawn function used to spawn sh or bash,161d694c-b543-4434-85c3-c3a433e33792,sh
 execution,T1053.002,Scheduled Task/Job: At,2,At - Schedule a job,7266d898-ac82-4ec0-97c7-436075d0d08e,sh
 execution,T1053.002,Scheduled Task/Job: At,3,At - Schedule a job freebsd,549863fb-1c91-467e-97fc-1fa32b9f356b,sh
+impact,T1531,Account Access Removal,4,Change User Password via passwd,3c717bf3-2ecc-4d79-8ac8-0bfbf08fbce6,sh
+impact,T1486,Data Encrypted for Impact,1,Encrypt files using gpg (FreeBSD/Linux),7b8ce084-3922-4618-8d22-95f996173765,sh
+impact,T1486,Data Encrypted for Impact,2,Encrypt files using 7z (FreeBSD/Linux),53e6735a-4727-44cc-b35b-237682a151ad,sh
+impact,T1486,Data Encrypted for Impact,3,Encrypt files using ccrypt (FreeBSD/Linux),08cbf59f-85da-4369-a5f4-049cffd7709f,sh
+impact,T1486,Data Encrypted for Impact,4,Encrypt files using openssl (FreeBSD/Linux),142752dc-ca71-443b-9359-cf6f497315f1,sh
+impact,T1496,Resource Hijacking,1,FreeBSD/macOS/Linux - Simulate CPU Load with Yes,904a5a0e-fb02-490d-9f8d-0e256eb37549,sh
+impact,T1485,Data Destruction,2,FreeBSD/macOS/Linux - Overwrite file with DD,38deee99-fd65-4031-bec8-bfa4f9f26146,sh
+impact,T1529,System Shutdown/Reboot,3,Restart System via `shutdown` - FreeBSD/macOS/Linux,6326dbc4-444b-4c04-88f4-27e94d0327cb,sh
+impact,T1529,System Shutdown/Reboot,4,Shutdown System via `shutdown` - FreeBSD/macOS/Linux,4963a81e-a3ad-4f02-adda-812343b351de,sh
+impact,T1529,System Shutdown/Reboot,5,Restart System via `reboot` - FreeBSD/macOS/Linux,47d0b042-a918-40ab-8cf9-150ffe919027,sh
+impact,T1529,System Shutdown/Reboot,6,Shutdown System via `halt` - FreeBSD/Linux,918f70ab-e1ef-49ff-bc57-b27021df84dd,sh
+impact,T1529,System Shutdown/Reboot,7,Reboot System via `halt` - FreeBSD,7b1cee42-320f-4890-b056-d65c8b884ba5,sh
+impact,T1529,System Shutdown/Reboot,8,Reboot System via `halt` - Linux,78f92e14-f1e9-4446-b3e9-f1b921f2459e,bash
+impact,T1529,System Shutdown/Reboot,9,Shutdown System via `poweroff` - FreeBSD/Linux,73a90cd2-48a2-4ac5-8594-2af35fa909fa,sh
+impact,T1529,System Shutdown/Reboot,10,Reboot System via `poweroff` - FreeBSD,5a282e50-86ff-438d-8cef-8ae01c9e62e1,sh
+impact,T1529,System Shutdown/Reboot,11,Reboot System via `poweroff` - Linux,61303105-ff60-427b-999e-efb90b314e41,bash
 initial-access,T1078.003,Valid Accounts: Local Accounts,8,Create local account (Linux),02a91c34-8a5b-4bed-87af-501103eb5357,bash
 initial-access,T1078.003,Valid Accounts: Local Accounts,9,Create local account (FreeBSD),95158cc9-8f6d-4889-9531-9be3f7f095e0,sh
 initial-access,T1078.003,Valid Accounts: Local Accounts,10,Reactivate a locked/expired account (Linux),d2b95631-62d7-45a3-aaef-0972cea97931,bash

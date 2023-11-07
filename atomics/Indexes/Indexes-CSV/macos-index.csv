@@ -156,6 +156,7 @@ privilege-escalation,T1574.006,Hijack Execution Flow: LD_PRELOAD,3,Dylib Injecti
 privilege-escalation,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,1,Make and modify binary from C source,896dfe97-ae43-4101-8e96-9a7996555d80,sh
 privilege-escalation,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,3,Set a SetUID flag on file,759055b3-3885-4582-a8ec-c00c9d64dd79,sh
 privilege-escalation,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,5,Set a SetGID flag on file,db55f666-7cba-46c6-9fe6-205a05c3242c,sh
+privilege-escalation,T1098.004,SSH Authorized Keys,1,Modify SSH Authorized Keys,342cc723-127c-4d3a-8292-9c0c6b4ecadc,sh
 privilege-escalation,T1547.015,Boot or Logon Autostart Execution: Login Items,2,Add macOS LoginItem using Applescript,716e756a-607b-41f3-8204-b214baf37c1d,bash
 privilege-escalation,T1546.014,Event Triggered Execution: Emond,1,Persistance with Event Monitor - emond,23c9c127-322b-4c75-95ca-eff464906114,sh
 privilege-escalation,T1547.006,Boot or Logon Autostart Execution: Kernel Modules and Extensions,2,MacOS - Load Kernel Module via kextload and kmutil,f4391089-d3a5-4dd1-ab22-0419527f2672,bash
@@ -226,6 +227,12 @@ discovery,T1018,Remote System Discovery,7,Remote System Discovery - sweep,96db26
 discovery,T1046,Network Service Discovery,1,Port Scan,68e907da-2539-48f6-9fc9-257a78c05540,bash
 discovery,T1046,Network Service Discovery,2,Port Scan Nmap,515942b0-a09f-4163-a7bb-22fefb6f185f,sh
 discovery,T1518,Software Discovery,3,Find and Display Safari Browser Version,103d6533-fd2a-4d08-976a-4a598565280f,sh
+execution,T1053.003,Scheduled Task/Job: Cron,1,Cron - Replace crontab with referenced file,435057fb-74b1-410e-9403-d81baf194f75,sh
+execution,T1053.003,Scheduled Task/Job: Cron,2,Cron - Add script to all cron subfolders,b7d42afa-9086-4c8a-b7b0-8ea3faa6ebb0,bash
+execution,T1059.002,Command and Scripting Interpreter: AppleScript,1,AppleScript,3600d97d-81b9-4171-ab96-e4386506e2c2,sh
+execution,T1569.001,System Services: Launchctl,1,Launchctl,6fb61988-724e-4755-a595-07743749d4e2,bash
+execution,T1059.004,Command and Scripting Interpreter: Bash,1,Create and Execute Bash Shell Script,7e7ac3ed-f795-4fa5-b711-09d6fbe9b873,sh
+execution,T1059.004,Command and Scripting Interpreter: Bash,2,Command-Line Interface,d0c88567-803d-4dca-99b4-7ce65e7b257c,sh
 impact,T1531,Account Access Removal,4,Change User Password via passwd,3c717bf3-2ecc-4d79-8ac8-0bfbf08fbce6,sh
 impact,T1531,Account Access Removal,5,Delete User via dscl utility,4d938c43-2fe8-4d70-a5b3-5bf239aa7846,sh
 impact,T1531,Account Access Removal,6,Delete User via sysadminctl utility,d3812c4e-30ee-466a-a0aa-07e355b561d6,sh
@@ -236,12 +243,6 @@ impact,T1485,Data Destruction,2,FreeBSD/macOS/Linux - Overwrite file with DD,38d
 impact,T1529,System Shutdown/Reboot,3,Restart System via `shutdown` - FreeBSD/macOS/Linux,6326dbc4-444b-4c04-88f4-27e94d0327cb,sh
 impact,T1529,System Shutdown/Reboot,4,Shutdown System via `shutdown` - FreeBSD/macOS/Linux,4963a81e-a3ad-4f02-adda-812343b351de,sh
 impact,T1529,System Shutdown/Reboot,5,Restart System via `reboot` - FreeBSD/macOS/Linux,47d0b042-a918-40ab-8cf9-150ffe919027,sh
-execution,T1053.003,Scheduled Task/Job: Cron,1,Cron - Replace crontab with referenced file,435057fb-74b1-410e-9403-d81baf194f75,sh
-execution,T1053.003,Scheduled Task/Job: Cron,2,Cron - Add script to all cron subfolders,b7d42afa-9086-4c8a-b7b0-8ea3faa6ebb0,bash
-execution,T1059.002,Command and Scripting Interpreter: AppleScript,1,AppleScript,3600d97d-81b9-4171-ab96-e4386506e2c2,sh
-execution,T1569.001,System Services: Launchctl,1,Launchctl,6fb61988-724e-4755-a595-07743749d4e2,bash
-execution,T1059.004,Command and Scripting Interpreter: Bash,1,Create and Execute Bash Shell Script,7e7ac3ed-f795-4fa5-b711-09d6fbe9b873,sh
-execution,T1059.004,Command and Scripting Interpreter: Bash,2,Command-Line Interface,d0c88567-803d-4dca-99b4-7ce65e7b257c,sh
 initial-access,T1078.001,Valid Accounts: Default Accounts,3,Enable Guest Account on macOS,0315bdff-4178-47e9-81e4-f31a6d23f7e4,command_prompt
 initial-access,T1078.003,Valid Accounts: Local Accounts,2,Create local account with admin privileges - MacOS,f1275566-1c26-4b66-83e3-7f9f7f964daa,bash
 initial-access,T1078.003,Valid Accounts: Local Accounts,3,Create local account with admin privileges using sysadminctl utility - MacOS,191db57d-091a-47d5-99f3-97fde53de505,bash
