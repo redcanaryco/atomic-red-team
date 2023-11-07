@@ -6,7 +6,6 @@ atomic_tests:
   description: |
     Delete a single file from the temporary directory
   supported_platforms:
-  - freebsd
   - linux
   - macos
   input_arguments:
@@ -37,7 +36,6 @@ atomic_tests:
   description: |
     Recursively delete the temporary directory and all files contained within it
   supported_platforms:
-  - freebsd
   - linux
   - macos
   input_arguments:
@@ -182,7 +180,7 @@ atomic_tests:
   description: |
     This test deletes the entire root filesystem of a FreeBSD system. This technique was used by Amnesia IoT malware to avoid analysis. This test is dangerous and destructive, do NOT use on production equipment.
   supported_platforms:
-  - freebsd
+  - linux
   executor:
     command: |
       chflags -R 0 /

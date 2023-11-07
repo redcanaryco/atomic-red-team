@@ -28,7 +28,6 @@ atomic_tests:
   description: |
     Identify System Info
   supported_platforms:
-  - freebsd
   - linux
   - macos
   input_arguments:
@@ -85,7 +84,7 @@ atomic_tests:
   description: |
     Identify virtual machine host kernel modules.
   supported_platforms:
-  - freebsd
+  - linux
   executor:
     command: |
       kldstat | grep -i "vmm"
@@ -106,7 +105,6 @@ atomic_tests:
   description: |
     Identify system hostname for FreeBSD, Linux and macOS systems.
   supported_platforms:
-  - freebsd
   - linux
   - macos
   executor:
@@ -165,9 +163,8 @@ atomic_tests:
   description: |
     Identify all environment variables. Upon execution, environments variables and your path info will be displayed.
   supported_platforms:
-  - freebsd
-  - macos
   - linux
+  - macos
   executor:
     command: |
       env
@@ -369,7 +366,7 @@ atomic_tests:
   description: |
     Enumerate kernel modules loaded. Upon successful execution stdout will display kernel modules loaded, followed by list of modules matching 'vmm' if present.
   supported_platforms:
-  - freebsd
+  - linux
   executor:
     command: |
       kldstat
