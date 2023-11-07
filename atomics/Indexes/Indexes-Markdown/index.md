@@ -239,6 +239,7 @@
   - Atomic Test #2: Remote Process Injection in LSASS via mimikatz [windows]
   - Atomic Test #3: Section View Injection [windows]
   - Atomic Test #4: Dirty Vanity process Injection [windows]
+  - Atomic Test #5: Read-Write-Execute process Injection [windows]
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1218 Signed Binary Proxy Execution](../../T1218/T1218.md)
   - Atomic Test #1: mavinject - Inject DLL into running process [windows]
@@ -919,6 +920,7 @@
   - Atomic Test #2: Remote Process Injection in LSASS via mimikatz [windows]
   - Atomic Test #3: Section View Injection [windows]
   - Atomic Test #4: Dirty Vanity process Injection [windows]
+  - Atomic Test #5: Read-Write-Execute process Injection [windows]
 - T1038 DLL Search Order Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1050 New Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1611 Escape to Host](../../T1611/T1611.md)
