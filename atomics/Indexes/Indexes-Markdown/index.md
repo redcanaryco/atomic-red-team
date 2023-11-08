@@ -824,6 +824,7 @@
   - Atomic Test #7: Scheduled Task Executing Base64 Encoded Commands From Registry [windows]
   - Atomic Test #8: Import XML Schedule Task with Hidden Attribute [windows]
   - Atomic Test #9: PowerShell Modify A Scheduled Task [windows]
+  - Atomic Test #10: Scheduled Task ("Ghost Task") via Registry Key Manipulation [windows]
 - T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1150 Plist Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574.007 Path Interception by PATH Environment Variable [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1206,6 +1207,7 @@
   - Atomic Test #7: Scheduled Task Executing Base64 Encoded Commands From Registry [windows]
   - Atomic Test #8: Import XML Schedule Task with Hidden Attribute [windows]
   - Atomic Test #9: PowerShell Modify A Scheduled Task [windows]
+  - Atomic Test #10: Scheduled Task ("Ghost Task") via Registry Key Manipulation [windows]
 - [T1047 Windows Management Instrumentation](../../T1047/T1047.md)
   - Atomic Test #1: WMI Reconnaissance Users [windows]
   - Atomic Test #2: WMI Reconnaissance Processes [windows]
@@ -1390,6 +1392,7 @@
   - Atomic Test #7: Scheduled Task Executing Base64 Encoded Commands From Registry [windows]
   - Atomic Test #8: Import XML Schedule Task with Hidden Attribute [windows]
   - Atomic Test #9: PowerShell Modify A Scheduled Task [windows]
+  - Atomic Test #10: Scheduled Task ("Ghost Task") via Registry Key Manipulation [windows]
 - T1205.002 Socket Filters [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1156 Malicious Shell Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1067 Bootkit [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
