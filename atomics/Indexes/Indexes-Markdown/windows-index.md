@@ -1365,6 +1365,7 @@
   - Atomic Test #3: WinRM Access with Evil-WinRM [windows]
 - [T1021.003 Remote Services: Distributed Component Object Model](../../T1021.003/T1021.003.md)
   - Atomic Test #1: PowerShell Lateral Movement using MMC20 [windows]
+  - Atomic Test #2: PowerShell Lateral Movement Using Excel Application Object [windows]
 - T1175 Component Object Model and Distributed COM [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1550.003 Use Alternate Authentication Material: Pass the Ticket](../../T1550.003/T1550.003.md)
   - Atomic Test #1: Mimikatz Kerberos Ticket Attack [windows]
