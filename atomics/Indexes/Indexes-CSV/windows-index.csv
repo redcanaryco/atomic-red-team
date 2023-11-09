@@ -94,6 +94,7 @@ defense-evasion,T1055,Process Injection,1,Shellcode execution via VBA,1c91e740-1
 defense-evasion,T1055,Process Injection,2,Remote Process Injection in LSASS via mimikatz,3203ad24-168e-4bec-be36-f79b13ef8a83,command_prompt
 defense-evasion,T1055,Process Injection,3,Section View Injection,c6952f41-6cf0-450a-b352-2ca8dae7c178,powershell
 defense-evasion,T1055,Process Injection,4,Dirty Vanity process Injection,49543237-25db-497b-90df-d0a0a6e8fe2c,powershell
+defense-evasion,T1055,Process Injection,5,Read-Write-Execute process Injection,49543237-25db-497b-90df-d0a0a6e8fe2c,powershell
 defense-evasion,T1218,Signed Binary Proxy Execution,1,mavinject - Inject DLL into running process,c426dacf-575d-4937-8611-a148a86a5e61,command_prompt
 defense-evasion,T1218,Signed Binary Proxy Execution,2,Register-CimProvider - Execute evil dll,ad2c17ed-f626-4061-b21e-b9804a6f3655,command_prompt
 defense-evasion,T1218,Signed Binary Proxy Execution,3,InfDefaultInstall.exe .inf Execution,54ad7d5a-a1b5-472c-b6c4-f8090fb2daef,command_prompt
@@ -377,6 +378,7 @@ privilege-escalation,T1053.005,Scheduled Task/Job: Scheduled Task,6,WMI Invoke-C
 privilege-escalation,T1053.005,Scheduled Task/Job: Scheduled Task,7,Scheduled Task Executing Base64 Encoded Commands From Registry,e895677d-4f06-49ab-91b6-ae3742d0a2ba,command_prompt
 privilege-escalation,T1053.005,Scheduled Task/Job: Scheduled Task,8,Import XML Schedule Task with Hidden Attribute,cd925593-fbb4-486d-8def-16cbdf944bf4,powershell
 privilege-escalation,T1053.005,Scheduled Task/Job: Scheduled Task,9,PowerShell Modify A Scheduled Task,dda6fc7b-c9a6-4c18-b98d-95ec6542af6d,powershell
+privilege-escalation,T1053.005,Scheduled Task/Job: Scheduled Task,10,"Scheduled Task (""Ghost Task"") via Registry Key Manipulation",704333ca-cc12-4bcf-9916-101844881f54,command_prompt
 privilege-escalation,T1546.013,Event Triggered Execution: PowerShell Profile,1,Append malicious start-process cmdlet,090e5aa5-32b6-473b-a49b-21e843a56896,powershell
 privilege-escalation,T1548.002,Abuse Elevation Control Mechanism: Bypass User Account Control,1,Bypass UAC using Event Viewer (cmd),5073adf8-9a50-4bd9-b298-a9bd2ead8af9,command_prompt
 privilege-escalation,T1548.002,Abuse Elevation Control Mechanism: Bypass User Account Control,2,Bypass UAC using Event Viewer (PowerShell),a6ce9acf-842a-4af6-8f79-539be7608e2b,powershell
@@ -424,6 +426,7 @@ privilege-escalation,T1055,Process Injection,1,Shellcode execution via VBA,1c91e
 privilege-escalation,T1055,Process Injection,2,Remote Process Injection in LSASS via mimikatz,3203ad24-168e-4bec-be36-f79b13ef8a83,command_prompt
 privilege-escalation,T1055,Process Injection,3,Section View Injection,c6952f41-6cf0-450a-b352-2ca8dae7c178,powershell
 privilege-escalation,T1055,Process Injection,4,Dirty Vanity process Injection,49543237-25db-497b-90df-d0a0a6e8fe2c,powershell
+privilege-escalation,T1055,Process Injection,5,Read-Write-Execute process Injection,49543237-25db-497b-90df-d0a0a6e8fe2c,powershell
 privilege-escalation,T1547.009,Boot or Logon Autostart Execution: Shortcut Modification,1,Shortcut Modification,ce4fc678-364f-4282-af16-2fb4c78005ce,command_prompt
 privilege-escalation,T1547.009,Boot or Logon Autostart Execution: Shortcut Modification,2,Create shortcut to cmd in startup folders,cfdc954d-4bb0-4027-875b-a1893ce406f2,powershell
 privilege-escalation,T1547.005,Boot or Logon Autostart Execution: Security Support Provider,1,Modify HKLM:\System\CurrentControlSet\Control\Lsa Security Support Provider configuration in registry,afdfd7e3-8a0b-409f-85f7-886fdf249c9e,powershell
@@ -481,6 +484,16 @@ privilege-escalation,T1547.001,Boot or Logon Autostart Execution: Registry Run K
 privilege-escalation,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,15,HKLM - Modify default System Shell - Winlogon Shell KEY Value ,1d958c61-09c6-4d9e-b26b-4130314e520e,powershell
 privilege-escalation,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,16,secedit used to create a Run key in the HKLM Hive,14fdc3f1-6fc3-4556-8d36-aa89d9d42d02,command_prompt
 privilege-escalation,T1547.001,Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder,17,Modify BootExecute Value,befc2b40-d487-4a5a-8813-c11085fb5672,powershell
+privilege-escalation,T1098,Account Manipulation,1,Admin Account Manipulate,5598f7cb-cf43-455e-883a-f6008c5d46af,powershell
+privilege-escalation,T1098,Account Manipulation,2,Domain Account and Group Manipulate,a55a22e9-a3d3-42ce-bd48-2653adb8f7a9,powershell
+privilege-escalation,T1098,Account Manipulation,9,Password Change on Directory Service Restore Mode (DSRM) Account,d5b886d9-d1c7-4b6e-a7b0-460041bf2823,command_prompt
+privilege-escalation,T1098,Account Manipulation,10,Domain Password Policy Check: Short Password,fc5f9414-bd67-4f5f-a08e-e5381e29cbd1,powershell
+privilege-escalation,T1098,Account Manipulation,11,Domain Password Policy Check: No Number in Password,68190529-069b-4ffc-a942-919704158065,powershell
+privilege-escalation,T1098,Account Manipulation,12,Domain Password Policy Check: No Special Character in Password,7d984ef2-2db2-4cec-b090-e637e1698f61,powershell
+privilege-escalation,T1098,Account Manipulation,13,Domain Password Policy Check: No Uppercase Character in Password,b299c120-44a7-4d68-b8e2-8ba5a28511ec,powershell
+privilege-escalation,T1098,Account Manipulation,14,Domain Password Policy Check: No Lowercase Character in Password,945da11e-977e-4dab-85d2-f394d03c5887,powershell
+privilege-escalation,T1098,Account Manipulation,15,Domain Password Policy Check: Only Two Character Classes,784d1349-5a26-4d20-af5e-d6af53bae460,powershell
+privilege-escalation,T1098,Account Manipulation,16,Domain Password Policy Check: Common Password Use,81959d03-c51f-49a1-bb24-23f1ec885578,powershell
 privilege-escalation,T1055.012,Process Injection: Process Hollowing,1,Process Hollowing using PowerShell,562427b4-39ef-4e8c-af88-463a78e70b9c,powershell
 privilege-escalation,T1055.012,Process Injection: Process Hollowing,2,RunPE via VBA,3ad4a037-1598-4136-837c-4027e4fa319b,powershell
 privilege-escalation,T1546,Event Triggered Execution,1,Persistence with Custom AutodialDLL,aca9ae16-7425-4b6d-8c30-cad306fdbd5b,powershell
@@ -519,6 +532,7 @@ execution,T1053.005,Scheduled Task/Job: Scheduled Task,6,WMI Invoke-CimMethod Sc
 execution,T1053.005,Scheduled Task/Job: Scheduled Task,7,Scheduled Task Executing Base64 Encoded Commands From Registry,e895677d-4f06-49ab-91b6-ae3742d0a2ba,command_prompt
 execution,T1053.005,Scheduled Task/Job: Scheduled Task,8,Import XML Schedule Task with Hidden Attribute,cd925593-fbb4-486d-8def-16cbdf944bf4,powershell
 execution,T1053.005,Scheduled Task/Job: Scheduled Task,9,PowerShell Modify A Scheduled Task,dda6fc7b-c9a6-4c18-b98d-95ec6542af6d,powershell
+execution,T1053.005,Scheduled Task/Job: Scheduled Task,10,"Scheduled Task (""Ghost Task"") via Registry Key Manipulation",704333ca-cc12-4bcf-9916-101844881f54,command_prompt
 execution,T1047,Windows Management Instrumentation,1,WMI Reconnaissance Users,c107778c-dcf5-47c5-af2e-1d058a3df3ea,command_prompt
 execution,T1047,Windows Management Instrumentation,2,WMI Reconnaissance Processes,5750aa16-0e59-4410-8b9a-8a47ca2788e2,command_prompt
 execution,T1047,Windows Management Instrumentation,3,WMI Reconnaissance Software,718aebaa-d0e0-471a-8241-c5afa69c7414,command_prompt
@@ -602,6 +616,7 @@ persistence,T1053.005,Scheduled Task/Job: Scheduled Task,6,WMI Invoke-CimMethod 
 persistence,T1053.005,Scheduled Task/Job: Scheduled Task,7,Scheduled Task Executing Base64 Encoded Commands From Registry,e895677d-4f06-49ab-91b6-ae3742d0a2ba,command_prompt
 persistence,T1053.005,Scheduled Task/Job: Scheduled Task,8,Import XML Schedule Task with Hidden Attribute,cd925593-fbb4-486d-8def-16cbdf944bf4,powershell
 persistence,T1053.005,Scheduled Task/Job: Scheduled Task,9,PowerShell Modify A Scheduled Task,dda6fc7b-c9a6-4c18-b98d-95ec6542af6d,powershell
+persistence,T1053.005,Scheduled Task/Job: Scheduled Task,10,"Scheduled Task (""Ghost Task"") via Registry Key Manipulation",704333ca-cc12-4bcf-9916-101844881f54,command_prompt
 persistence,T1546.013,Event Triggered Execution: PowerShell Profile,1,Append malicious start-process cmdlet,090e5aa5-32b6-473b-a49b-21e843a56896,powershell
 persistence,T1133,External Remote Services,1,Running Chrome VPN Extensions via the Registry 2 vpn extension,4c8db261-a58b-42a6-a866-0a294deedde4,powershell
 persistence,T1574.011,Hijack Execution Flow: Services Registry Permissions Weakness,1,Service Registry Permissions Weakness,f7536d63-7fd4-466f-89da-7e48d550752a,powershell
@@ -814,6 +829,7 @@ lateral-movement,T1021.006,Remote Services: Windows Remote Management,1,Enable W
 lateral-movement,T1021.006,Remote Services: Windows Remote Management,2,Remote Code Execution with PS Credentials Using Invoke-Command,5295bd61-bd7e-4744-9d52-85962a4cf2d6,powershell
 lateral-movement,T1021.006,Remote Services: Windows Remote Management,3,WinRM Access with Evil-WinRM,efe86d95-44c4-4509-ae42-7bfd9d1f5b3d,powershell
 lateral-movement,T1021.003,Remote Services: Distributed Component Object Model,1,PowerShell Lateral Movement using MMC20,6dc74eb1-c9d6-4c53-b3b5-6f50ae339673,powershell
+lateral-movement,T1021.003,Remote Services: Distributed Component Object Model,2,PowerShell Lateral Movement Using Excel Application Object,505f24be-1c11-4694-b614-e01ae1cd2570,powershell
 lateral-movement,T1550.003,Use Alternate Authentication Material: Pass the Ticket,1,Mimikatz Kerberos Ticket Attack,dbf38128-7ba7-4776-bedf-cc2eed432098,command_prompt
 lateral-movement,T1550.003,Use Alternate Authentication Material: Pass the Ticket,2,Rubeus Kerberos Pass The Ticket,a2fc4ec5-12c6-4fb4-b661-961f23f359cb,powershell
 lateral-movement,T1072,Software Deployment Tools,1,Radmin Viewer Utility,b4988cad-6ed2-434d-ace5-ea2670782129,command_prompt
@@ -1059,6 +1075,7 @@ discovery,T1083,File and Directory Discovery,6,Launch DirLister Executable,c5bec
 discovery,T1049,System Network Connections Discovery,1,System Network Connections Discovery,0940a971-809a-48f1-9c4d-b1d785e96ee5,command_prompt
 discovery,T1049,System Network Connections Discovery,2,System Network Connections Discovery with PowerShell,f069f0f1-baad-4831-aa2b-eddac4baac4a,powershell
 discovery,T1049,System Network Connections Discovery,4,System Discovery using SharpView,96f974bb-a0da-4d87-a744-ff33e73367e9,powershell
+discovery,T1654,Log Enumeration,1,Get-EventLog To Enumerate Windows Security Log,a9030b20-dd4b-4405-875e-3462c6078fdc,powershell
 discovery,T1057,Process Discovery,2,Process Discovery - tasklist,c5806a4f-62b8-4900-980b-c7ec004e9908,command_prompt
 discovery,T1057,Process Discovery,3,Process Discovery - Get-Process,3b3809b6-a54b-4f5b-8aff-cb51f2e97b34,powershell
 discovery,T1057,Process Discovery,4,Process Discovery - get-wmiObject,b51239b4-0129-474f-a2b4-70f855b9f2c2,powershell

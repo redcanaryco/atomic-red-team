@@ -23,7 +23,7 @@ atomic_tests:
   description: |
     Disables history collection in shells
   supported_platforms:
-  - freebsd
+  - linux
   input_arguments:
     evil_command:
       description: Command to run after shell history collection is disabled
@@ -125,7 +125,7 @@ atomic_tests:
 
     Note: we don't wish to log out, so we are just confirming the value of HISTSIZE. In this test we 1. echo HISTSIZE 2. set it to zero 3. confirm that HISTSIZE is set to zero.
   supported_platforms:
-  - freebsd
+  - linux
   executor:
     name: sh
     elevation_required: false
@@ -163,7 +163,7 @@ atomic_tests:
 
     Note: we don't wish to log out, so we are just confirming the value of HISTFILE. In this test we 1. echo HISTFILE 2. set it to /dev/null 3. confirm that HISTFILE is set to /dev/null.
   supported_platforms:
-  - freebsd
+  - linux
   executor:
     name: sh
     elevation_required: false

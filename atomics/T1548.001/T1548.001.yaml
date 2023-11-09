@@ -31,7 +31,7 @@ atomic_tests:
   description: |
     Make, change owner, and change file attributes on a C source code file
   supported_platforms:
-  - freebsd
+  - linux
   input_arguments:
     payload:
       description: hello.c payload
@@ -76,7 +76,7 @@ atomic_tests:
   description: |
     This test sets the SetUID flag on a file in FreeBSD.
   supported_platforms:
-  - freebsd
+  - linux
   input_arguments:
     file_to_setuid:
       description: Path of file to set SetUID flag
@@ -117,7 +117,7 @@ atomic_tests:
   description: |
     This test sets the SetGID flag on a file in FreeBSD.
   supported_platforms:
-  - freebsd
+  - linux
   input_arguments:
     file_to_setuid:
       description: Path of file to set SetGID flag
@@ -180,7 +180,6 @@ atomic_tests:
   description: |
     This test simulates a command that can be run to enumerate files that have the setuid bit set
   supported_platforms:
-  - freebsd
   - linux
   executor:
     command: |
@@ -191,7 +190,6 @@ atomic_tests:
   description: |
     This test simulates a command that can be run to enumerate files that have the setgid bit set
   supported_platforms:
-  - freebsd
   - linux
   executor:
     command: |

