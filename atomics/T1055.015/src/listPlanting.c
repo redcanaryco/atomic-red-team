@@ -5,7 +5,7 @@ Author: Thomas X Meng
 ListPlanting is a method of executing arbitrary code in the address space 
 of a remote benign process. Code executed via ListPlanting may also evade 
 detection from security products since the execution is masked under a legitimate 
-process and triggered by SendMessage. Detection: detect the suspicious process call 
+process and triggered by PostMessage. Detection: detect the suspicious process call 
 child SysListView32 of high privilege victim process detect the PostMessage or 
 SendMessage API with suspicious payload that resides in section with RWX permissions 
 with behavioural analysis.
