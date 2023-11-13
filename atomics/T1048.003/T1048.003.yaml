@@ -215,15 +215,5 @@ atomic_tests:
     name: sh
     elevation_required: false
     command: |
+      if [ $(uname) = 'FreeBSD' ]; then alias python3=python3.9; fi;
       if [ $(which python3) ]; then cd /tmp; python3 -m http.server 9090 & PID=$!; sleep 10; kill $PID; unset PID; fi
-- name: Python3 http.server (freebsd)
-  auto_generated_guid: 57a303a2-0bc6-400d-b144-4f3292920a0b
-  description: |
-    An adversary may use the python3 standard library module http.server to exfiltrate data. This test checks if python3.9 is available and if so, creates a HTTP server on port 9090, captures the PID, sleeps for 10 seconds, then kills the PID and unsets the $PID variable.
-  supported_platforms:
-  - linux
-  executor:
-    name: sh
-    elevation_required: false
-    command: |
-      if [ $(which python3.9) ]; then cd /tmp; python3.9 -m http.server 9090 & PID=$!; sleep 10; kill $PID; unset PID; fi

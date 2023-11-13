@@ -23,41 +23,18 @@ atomic_tests:
     prereq_command: |
       if [ -e "/tmp/encoded.dat" ]; then exit 0; else exit 1; fi
     get_prereq_command: |
-      echo "#{shell_command}" | base64 > /tmp/encoded.dat
+      if [ $(uname) = 'FreeBSD' ]; then
+        echo "#{shell_command}" | b64encode -r - > /tmp/encoded.dat
+      else
+        echo "#{shell_command}" | base64 > /tmp/encoded.dat  
+      fi
   executor:
     command: |
-      cat /tmp/encoded.dat | base64 -d > /tmp/art.sh
-      chmod +x /tmp/art.sh
-      /tmp/art.sh
-    cleanup_command: |
-      rm /tmp/encoded.dat 
-      rm /tmp/art.sh
-    name: sh
-- name: Decode base64 Data into Script
-  auto_generated_guid: 197ed693-08e6-4958-bfd8-5974e291be6c
-  description: |
-    Creates a base64-encoded data file and decodes it into an executable shell script
-
-    Upon successful execution, sh will execute art.sh, which is a base64 encoded command, that echoes `Hello from the Atomic Red Team` 
-    and uname -v
-  supported_platforms:
-  - linux
-  input_arguments:
-    shell_command:
-      description: command to encode
-      type: string
-      default: "echo Hello from the Atomic Red Team && uname -v"
-  dependency_executor_name: sh
-  dependencies:
-  - description: |
-      encode the command into base64 file
-    prereq_command: |
-      exit 1
-    get_prereq_command: |
-      echo "#{shell_command}" | b64encode -r - > /tmp/encoded.dat
-  executor:
-    command: |
-      cat /tmp/encoded.dat | b64decode -r > /tmp/art.sh
+      if [ $(uname) = 'FreeBSD' ]; then
+        cat /tmp/encoded.dat | b64decode -r > /tmp/art.sh
+      else
+        cat /tmp/encoded.dat | base64 -d > /tmp/art.sh
+      fi;
       chmod +x /tmp/art.sh
       /tmp/art.sh
     cleanup_command: |

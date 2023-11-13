@@ -23,29 +23,16 @@ atomic_tests:
   - macos
   - linux
   executor:
-    name: bash
-    command: |
-      mkdir -p /tmp/atomic-test-T1036.006
-      cd /tmp/atomic-test-T1036.006
-      mkdir -p 'testdirwithspaceend '
-      /usr/bin/echo -e "%d\na\n#!/usr/bin/perl\nprint \"running T1035.006 with space after filename to masquerade init\\n\";\nqx/cp \/usr\/bin\/perl 'init  '/;\nqx/'.\/init  ' -e 'sleep 5'/;\n.\nwq\n" | ed 'testdirwithspaceend /init ' >/dev/null
-      chmod +x 'testdirwithspaceend /init '
-      './testdirwithspaceend /init '
-    cleanup_command:
-      rm -rf /tmp/atomic-test-T1036.006
-- name: Space After Filename (FreeBSD)
-  auto_generated_guid: cfc1fbb5-caae-4f4c-bfa8-1b7c8b5cc4e8
-  description: |
-    Space after filename.
-  supported_platforms:
-  - linux
-  executor:
     name: sh
     command: |
       mkdir -p /tmp/atomic-test-T1036.006
       cd /tmp/atomic-test-T1036.006
       mkdir -p 'testdirwithspaceend '
-      /bin/echo "#\!/bin/sh" > "testdirwithspaceend /init " && echo 'echo "print(\"running T1035.006 with space after filename to masquerade init\")" | python3.9' >> "testdirwithspaceend /init " && echo "exit" >> "testdirwithspaceend /init "      
+      if [ $(uname) = 'FreeBSD' ]; then
+        /bin/echo "#\!/bin/sh" > "testdirwithspaceend /init " && echo 'echo "print(\"running T1035.006 with space after filename to masquerade init\")" | python3.9' >> "testdirwithspaceend /init " && echo "exit" >> "testdirwithspaceend /init "
+      else
+        /usr/bin/echo -e "%d\na\n#!/usr/bin/perl\nprint \"running T1035.006 with space after filename to masquerade init\\n\";\nqx/cp \/usr\/bin\/perl 'init  '/;\nqx/'.\/init  ' -e 'sleep 5'/;\n.\nwq\n" | ed 'testdirwithspaceend /init ' >/dev/null
+      fi;
       chmod +x 'testdirwithspaceend /init '
       './testdirwithspaceend /init '
     cleanup_command:
