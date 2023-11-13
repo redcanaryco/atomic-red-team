@@ -53,7 +53,7 @@ atomic_tests:
       Expand-Archive -Path "PathToAtomicsFolder\..\ExternalPayloads\NSudo_8.2_All_Components.zip" -DestinationPath "PathToAtomicsFolder\..\ExternalPayloads\NSudo_8.2_All_Components" -Force
       Copy-Item "PathToAtomicsFolder\..\ExternalPayloads\NSudo_8.2_All_Components\NSudo Launcher\x64\NSudoLG.exe" "#{nsudo_path}"
       Remove-Item "PathToAtomicsFolder\..\ExternalPayloads\NSudo_8.2_All_Components.zip" -Recurse -ErrorAction Ignore
-	  Remove-Item "PathToAtomicsFolder\..\ExternalPayloads\NSudo_8.2_All_Components" -Recurse -ErrorAction Ignore
+      Remove-Item "PathToAtomicsFolder\..\ExternalPayloads\NSudo_8.2_All_Components" -Recurse -ErrorAction Ignore
   executor:
     command: |
       Start-Process "#{nsudo_path}" -Argument "-U:T -P:E cmd"
