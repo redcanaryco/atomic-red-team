@@ -215,5 +215,5 @@ atomic_tests:
     name: sh
     elevation_required: false
     command: |
-      if [ $(uname) = 'FreeBSD' ]; then alias python3=python3.9; fi;
+      [ "$(uname)" = 'FreeBSD' ] && alias python3=python3.9
       if [ $(which python3) ]; then cd /tmp; python3 -m http.server 9090 & PID=$!; sleep 10; kill $PID; unset PID; fi

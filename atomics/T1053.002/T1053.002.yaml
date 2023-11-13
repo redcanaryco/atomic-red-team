@@ -39,7 +39,7 @@ atomic_tests:
   - description: |
       The `at` and `atd` executables must exist in the PATH
     prereq_command: |
-      if [ $(uname) = 'FreeBSD' ]; then which at; else which at && which atd; fi;
+      if [ "$(uname)" = 'FreeBSD' ]; then which at; else which at && which atd; fi;
     get_prereq_command: |
       echo 'Please install `at` and `atd`; they were not found in the PATH (Package name: `at`)'
   - description: |
