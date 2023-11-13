@@ -189,7 +189,6 @@
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1027 Obfuscated Files or Information](../../T1027/T1027.md)
   - Atomic Test #1: Decode base64 Data into Script [macos, linux]
-  - Atomic Test #2: Decode base64 Data into Script [linux]
 - T1556.006 Multi-Factor Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1564.006 Run Virtual Instance [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1553 Subvert Trust Controls [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -231,7 +230,6 @@
 - T1622 Debugger Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1036.006 Masquerading: Space after Filename](../../T1036.006/T1036.006.md)
   - Atomic Test #2: Space After Filename [macos, linux]
-  - Atomic Test #3: Space After Filename (FreeBSD) [linux]
 - T1055.008 Ptrace System Calls [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1564.001 Hide Artifacts: Hidden Files and Directories](../../T1564.001/T1564.001.md)
   - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
@@ -331,7 +329,6 @@
 - [T1037.004 Boot or Logon Initialization Scripts: Rc.common](../../T1037.004/T1037.004.md)
   - Atomic Test #2: rc.common [linux]
   - Atomic Test #3: rc.local [linux]
-  - Atomic Test #4: rc.local (FreeBSD) [linux]
 - [T1543.002 Create or Modify System Process: SysV/Systemd Service](../../T1543.002/T1543.002.md)
   - Atomic Test #1: Create Systemd Service [linux]
   - Atomic Test #2: Create SysV Service [linux]
@@ -341,7 +338,6 @@
 - T1653 Power Settings [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1053.002 Scheduled Task/Job: At](../../T1053.002/T1053.002.md)
   - Atomic Test #2: At - Schedule a job [linux]
-  - Atomic Test #3: At - Schedule a job freebsd [linux]
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1505.001 SQL Stored Procedures [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
@@ -558,7 +554,6 @@
 - [T1037.004 Boot or Logon Initialization Scripts: Rc.common](../../T1037.004/T1037.004.md)
   - Atomic Test #2: rc.common [linux]
   - Atomic Test #3: rc.local [linux]
-  - Atomic Test #4: rc.local (FreeBSD) [linux]
 - [T1543.002 Create or Modify System Process: SysV/Systemd Service](../../T1543.002/T1543.002.md)
   - Atomic Test #1: Create Systemd Service [linux]
   - Atomic Test #2: Create SysV Service [linux]
@@ -567,7 +562,6 @@
 - T1055.008 Ptrace System Calls [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1053.002 Scheduled Task/Job: At](../../T1053.002/T1053.002.md)
   - Atomic Test #2: At - Schedule a job [linux]
-  - Atomic Test #3: At - Schedule a job freebsd [linux]
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #8: Create local account (Linux) [linux]
   - Atomic Test #9: Create local account (FreeBSD) [linux]
@@ -684,8 +678,7 @@
 - [T1069.002 Permission Groups Discovery: Domain Groups](../../T1069.002/T1069.002.md)
   - Atomic Test #15: Active Directory Domain Search Using LDAP - Linux (Ubuntu)/macOS [linux]
 - [T1007 System Service Discovery](../../T1007/T1007.md)
-  - Atomic Test #3: System Service Discovery - systemctl [linux]
-  - Atomic Test #4: System Service Discovery - service [linux]
+  - Atomic Test #3: System Service Discovery - systemctl/service [linux]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #1: Packet Capture Linux using tshark or tcpdump [linux]
   - Atomic Test #2: Packet Capture FreeBSD using tshark or tcpdump [linux]
@@ -716,7 +709,6 @@
   - Atomic Test #4: List Google Chromium Bookmark JSON Files on FreeBSD [linux]
 - [T1016 System Network Configuration Discovery](../../T1016/T1016.md)
   - Atomic Test #3: System Network Configuration Discovery [macos, linux]
-  - Atomic Test #4: System Network Configuration Discovery (freebsd) [linux]
 - T1087 Account Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1083 File and Directory Discovery](../../T1083/T1083.md)
   - Atomic Test #3: Nix File and Directory Discovery [linux, macos]
@@ -755,7 +747,6 @@
 - [T1046 Network Service Discovery](../../T1046/T1046.md)
   - Atomic Test #1: Port Scan [linux, macos]
   - Atomic Test #2: Port Scan Nmap [linux, macos]
-  - Atomic Test #3: Port Scan Nmap for FreeBSD [linux]
 - T1518 Software Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1622 Debugger Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 
@@ -814,7 +805,6 @@
 - T1204.001 Malicious Link [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1053.002 Scheduled Task/Job: At](../../T1053.002/T1053.002.md)
   - Atomic Test #2: At - Schedule a job [linux]
-  - Atomic Test #3: At - Schedule a job freebsd [linux]
 
 # impact
 - T1561.002 Disk Structure Wipe [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -923,5 +913,4 @@
   - Atomic Test #1: Exfiltration Over Alternative Protocol - HTTP [macos, linux]
   - Atomic Test #3: Exfiltration Over Alternative Protocol - DNS [linux]
   - Atomic Test #8: Python3 http.server [linux]
-  - Atomic Test #9: Python3 http.server (freebsd) [linux]
 

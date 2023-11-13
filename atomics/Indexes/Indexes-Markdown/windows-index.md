@@ -413,15 +413,15 @@
   - Atomic Test #1: Process Hollowing using PowerShell [windows]
   - Atomic Test #2: RunPE via VBA [windows]
 - [T1027 Obfuscated Files or Information](../../T1027/T1027.md)
-  - Atomic Test #3: Execute base64-encoded PowerShell [windows]
-  - Atomic Test #4: Execute base64-encoded PowerShell from Windows Registry [windows]
-  - Atomic Test #5: Execution from Compressed File [windows]
-  - Atomic Test #6: DLP Evasion via Sensitive Data in VBA Macro over email [windows]
-  - Atomic Test #7: DLP Evasion via Sensitive Data in VBA Macro over HTTP [windows]
-  - Atomic Test #8: Obfuscated Command in PowerShell [windows]
-  - Atomic Test #9: Obfuscated Command Line using special Unicode characters [windows]
-  - Atomic Test #10: Snake Malware Encrypted crmlog file [windows]
-  - Atomic Test #11: Execution from Compressed JScript File [windows]
+  - Atomic Test #2: Execute base64-encoded PowerShell [windows]
+  - Atomic Test #3: Execute base64-encoded PowerShell from Windows Registry [windows]
+  - Atomic Test #4: Execution from Compressed File [windows]
+  - Atomic Test #5: DLP Evasion via Sensitive Data in VBA Macro over email [windows]
+  - Atomic Test #6: DLP Evasion via Sensitive Data in VBA Macro over HTTP [windows]
+  - Atomic Test #7: Obfuscated Command in PowerShell [windows]
+  - Atomic Test #8: Obfuscated Command Line using special Unicode characters [windows]
+  - Atomic Test #9: Snake Malware Encrypted crmlog file [windows]
+  - Atomic Test #10: Execution from Compressed JScript File [windows]
 - T1556.006 Multi-Factor Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1036.001 Invalid Code Signature [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1564.006 Run Virtual Instance](../../T1564.006/T1564.006.md)
@@ -1691,11 +1691,11 @@
 - [T1016 System Network Configuration Discovery](../../T1016/T1016.md)
   - Atomic Test #1: System Network Configuration Discovery on Windows [windows]
   - Atomic Test #2: List Windows Firewall Rules [windows]
-  - Atomic Test #5: System Network Configuration Discovery (TrickBot Style) [windows]
-  - Atomic Test #6: List Open Egress Ports [windows]
-  - Atomic Test #7: Adfind - Enumerate Active Directory Subnet Objects [windows]
-  - Atomic Test #8: Qakbot Recon [windows]
-  - Atomic Test #10: DNS Server Discovery Using nslookup [windows]
+  - Atomic Test #4: System Network Configuration Discovery (TrickBot Style) [windows]
+  - Atomic Test #5: List Open Egress Ports [windows]
+  - Atomic Test #6: Adfind - Enumerate Active Directory Subnet Objects [windows]
+  - Atomic Test #7: Qakbot Recon [windows]
+  - Atomic Test #9: DNS Server Discovery Using nslookup [windows]
 - T1087 Account Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1482 Domain Trust Discovery](../../T1482/T1482.md)
   - Atomic Test #1: Windows - Discover domain trusts with dsquery [windows]
@@ -1770,13 +1770,13 @@
   - Atomic Test #20: Get-WmiObject to Enumerate Domain Controllers [windows]
   - Atomic Test #21: Remote System Discovery - net group Domain Controller [windows]
 - [T1046 Network Service Discovery](../../T1046/T1046.md)
-  - Atomic Test #4: Port Scan NMap for Windows [windows]
-  - Atomic Test #5: Port Scan using python [windows]
-  - Atomic Test #6: WinPwn - spoolvulnscan [windows]
-  - Atomic Test #7: WinPwn - MS17-10 [windows]
-  - Atomic Test #8: WinPwn - bluekeep [windows]
-  - Atomic Test #9: WinPwn - fruit [windows]
-  - Atomic Test #11: Port-Scanning /24 Subnet with PowerShell [windows]
+  - Atomic Test #3: Port Scan NMap for Windows [windows]
+  - Atomic Test #4: Port Scan using python [windows]
+  - Atomic Test #5: WinPwn - spoolvulnscan [windows]
+  - Atomic Test #6: WinPwn - MS17-10 [windows]
+  - Atomic Test #7: WinPwn - bluekeep [windows]
+  - Atomic Test #8: WinPwn - fruit [windows]
+  - Atomic Test #10: Port-Scanning /24 Subnet with PowerShell [windows]
 - [T1518 Software Discovery](../../T1518/T1518.md)
   - Atomic Test #1: Find and Display Internet Explorer Browser Version [windows]
   - Atomic Test #2: Applications Installed [windows]
