@@ -94,9 +94,7 @@ atomic_tests:
   executor:
     command: |
       testcat(){ (while read line; do echo $line >> #{output_file}; done < $1) }
-      if [ $(uname) = 'FreeBSD' ]; then
-        testcat /etc/master.passwd
-      fi
+      if [ $(uname) = 'FreeBSD' ]; then testcat /etc/master.passwd; fi;
       testcat /etc/passwd
       testcat /etc/shadow
     cleanup_command: |

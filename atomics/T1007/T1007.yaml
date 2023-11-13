@@ -43,9 +43,5 @@ atomic_tests:
   - linux
   executor:
     command: |
-      if [ $(uname) = 'FreeBSD' ]; then
-        service -e
-      else
-        systemctl --type=service
-      fi
+      if [ $(uname) = 'FreeBSD' ]; then service -e; else systemctl --type=service; fi;
     name: bash
