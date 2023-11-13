@@ -23,18 +23,12 @@ atomic_tests:
     prereq_command: |
       if [ -e "/tmp/encoded.dat" ]; then exit 0; else exit 1; fi
     get_prereq_command: |
-      if [ $(uname) = 'FreeBSD' ]; then
-        echo "#{shell_command}" | b64encode -r - > /tmp/encoded.dat
-      else
-        echo "#{shell_command}" | base64 > /tmp/encoded.dat  
-      fi
+      if [ $(uname) = 'FreeBSD' ]; then cmd="b64encode -r -"; else cmd="base64"; fi;
+      echo "#{shell_command}" | $cmd > /tmp/encoded.dat
   executor:
     command: |
-      if [ $(uname) = 'FreeBSD' ]; then
-        cat /tmp/encoded.dat | b64decode -r > /tmp/art.sh
-      else
-        cat /tmp/encoded.dat | base64 -d > /tmp/art.sh
-      fi;
+      if [ $(uname) = 'FreeBSD' ]; then cmd="b64decode -r"; else cmd="base64 -d"; fi;
+      cat /tmp/encoded.dat | $cmd > /tmp/art.sh
       chmod +x /tmp/art.sh
       /tmp/art.sh
     cleanup_command: |

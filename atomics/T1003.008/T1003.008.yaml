@@ -69,13 +69,9 @@ atomic_tests:
       type: path
       default: /tmp/T1003.008.txt
   executor:
-    command: |
+    command: | 
       unamestr=$(uname)
-      if [ "$unamestr" = 'Linux' ]; then
-        echo -e "e /etc/passwd\n,p\ne /etc/shadow\n,p\n" | ed > #{output_file}
-      elif [ "$unamestr" = 'FreeBSD' ]; then
-        echo -e "e /etc/passwd\n,p\ne /etc/master.passwd\n,p\ne /etc/shadow\n,p\n" | ed > #{output_file}
-      fi
+      if [ "$unamestr" = 'Linux' ]; then echo -e "e /etc/passwd\n,p\ne /etc/shadow\n,p\n" | ed > ${output_file}; elif [ "$unamestr" = 'FreeBSD' ]; then echo -e "e /etc/passwd\n,p\ne /etc/master.passwd\n,p\ne /etc/shadow\n,p\n" | ed > ${output_file}; fi
     cleanup_command: |
       rm -f #{output_file}
     name: sh

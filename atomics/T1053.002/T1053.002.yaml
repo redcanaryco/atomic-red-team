@@ -41,11 +41,7 @@ atomic_tests:
     prereq_command: |
       if [ $(uname) = 'FreeBSD' ]; then which at; else which at && which atd; fi;
     get_prereq_command: |
-      if [ $(uname) = 'FreeBSD' ]; then 
-        echo 'Please install `at` ; they were not found in the PATH (Package name: `at`)'
-      else
-        echo 'Please install `at` and `atd`; they were not found in the PATH (Package name: `at`)'
-      fi;
+      echo 'Please install `at` and `atd`; they were not found in the PATH (Package name: `at`)'
   - description: |
       The `atd` daemon must be running
     prereq_command: |
