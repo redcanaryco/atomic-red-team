@@ -601,7 +601,7 @@
   - Atomic Test #9: List Safari Bookmarks on MacOS [macos]
 - [T1016 System Network Configuration Discovery](../../T1016/T1016.md)
   - Atomic Test #3: System Network Configuration Discovery [macos, linux]
-  - Atomic Test #9: List macOS Firewall Rules [macos]
+  - Atomic Test #8: List macOS Firewall Rules [macos]
 - T1087 Account Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1083 File and Directory Discovery](../../T1083/T1083.md)
   - Atomic Test #3: Nix File and Directory Discovery [linux, macos]
