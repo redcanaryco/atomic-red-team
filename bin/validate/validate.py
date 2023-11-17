@@ -50,9 +50,7 @@ class Validator:
     errors = defaultdict(list)
 
     def __init__(self):
-        schema_path = (
-            f"{os.path.dirname(os.path.abspath(__file__))}/atomic-red-team.schema.yaml"
-        )
+        schema_path = f"{os.path.dirname(os.path.abspath(__file__))}/atomic-red-team.schema.yaml"
         used_guids_path = "./atomics/used_guids.txt"
         with open(used_guids_path, "r") as f:
             self.used_guids = [x.strip() for x in f.readlines()]
