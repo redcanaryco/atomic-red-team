@@ -591,6 +591,8 @@
   - Atomic Test #45: AMSI Bypass - Override AMSI via COM [windows]
   - Atomic Test #46: AWS - GuardDuty Suspension or Deletion [iaas:aws]
   - Atomic Test #47: Tamper with Defender ATP on Linux/MacOS [linux, macos]
+  - Atomic Test #48: Tamper with Windows Defender Registry - Reg.exe [windows]
+  - Atomic Test #49: Tamper with Windows Defender Registry - Powershell [windows]
 - T1601 Modify System Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -741,7 +743,8 @@
 - T1126 Network Share Connection Removal [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1055.008 Ptrace System Calls [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.007 Dynamic API Resolution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1055.015 ListPlanting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1055.015 Process Injection: ListPlanting](../../T1055.015/T1055.015.md)
+  - Atomic Test #1: Process injection ListPlanting [windows]
 - T1484 Domain Policy Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1220 XSL Script Processing](../../T1220/T1220.md)
   - Atomic Test #1: MSXSL Bypass using local files [windows]
@@ -1156,7 +1159,8 @@
 - T1055.008 Ptrace System Calls [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1037.001 Boot or Logon Initialization Scripts: Logon Script (Windows)](../../T1037.001/T1037.001.md)
   - Atomic Test #1: Logon Scripts [windows]
-- T1055.015 ListPlanting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1055.015 Process Injection: ListPlanting](../../T1055.015/T1055.015.md)
+  - Atomic Test #1: Process injection ListPlanting [windows]
 - T1484 Domain Policy Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1547.008 Boot or Logon Autostart Execution: LSASS Driver](../../T1547.008/T1547.008.md)
   - Atomic Test #1: Modify Registry to load Arbitrary DLL into LSASS - LsaDbExtPt [windows]
@@ -1529,6 +1533,7 @@
   - Atomic Test #6: Create a new user in Linux with `root` UID and GID. [linux]
   - Atomic Test #7: Create a new user in FreeBSD with `root` GID. [linux]
   - Atomic Test #8: Create a new Windows admin user [windows]
+  - Atomic Test #9: Create a new Windows admin user via .NET [windows]
 - T1053.001 At (Linux) [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1179 Hooking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1547.011 Plist Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

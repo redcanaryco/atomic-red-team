@@ -405,6 +405,8 @@
   - Atomic Test #38: Delete Windows Defender Scheduled Tasks [windows]
   - Atomic Test #44: Disable Hypervisor-Enforced Code Integrity (HVCI) [windows]
   - Atomic Test #45: AMSI Bypass - Override AMSI via COM [windows]
+  - Atomic Test #48: Tamper with Windows Defender Registry - Reg.exe [windows]
+  - Atomic Test #49: Tamper with Windows Defender Registry - Powershell [windows]
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -509,7 +511,8 @@
   - Atomic Test #2: DLL Side-Loading using the dotnet startup hook environment variable [windows]
 - T1126 Network Share Connection Removal [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.007 Dynamic API Resolution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1055.015 ListPlanting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1055.015 Process Injection: ListPlanting](../../T1055.015/T1055.015.md)
+  - Atomic Test #1: Process injection ListPlanting [windows]
 - T1484 Domain Policy Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1220 XSL Script Processing](../../T1220/T1220.md)
   - Atomic Test #1: MSXSL Bypass using local files [windows]
@@ -781,7 +784,8 @@
 - T1098.002 Account Manipulation: Additional Email Delegate Permissions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1037.001 Boot or Logon Initialization Scripts: Logon Script (Windows)](../../T1037.001/T1037.001.md)
   - Atomic Test #1: Logon Scripts [windows]
-- T1055.015 ListPlanting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1055.015 Process Injection: ListPlanting](../../T1055.015/T1055.015.md)
+  - Atomic Test #1: Process injection ListPlanting [windows]
 - T1484 Domain Policy Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1547.008 Boot or Logon Autostart Execution: LSASS Driver](../../T1547.008/T1547.008.md)
   - Atomic Test #1: Modify Registry to load Arbitrary DLL into LSASS - LsaDbExtPt [windows]
@@ -1032,6 +1036,7 @@
   - Atomic Test #4: Create a new user in a command prompt [windows]
   - Atomic Test #5: Create a new user in PowerShell [windows]
   - Atomic Test #8: Create a new Windows admin user [windows]
+  - Atomic Test #9: Create a new Windows admin user via .NET [windows]
 - T1179 Hooking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1547.004 Boot or Logon Autostart Execution: Winlogon Helper DLL](../../T1547.004/T1547.004.md)
   - Atomic Test #1: Winlogon Shell Key Persistence - PowerShell [windows]
