@@ -23,6 +23,19 @@ class InvalidFileName(BaseError):
         return f"Invalid filename. Rename file from .yml to .yaml"
 
 
+class ReusedGuid(BaseError):
+    def __init__(self, path, guid, test_number):
+        super().__init__(path)
+        self.guid = guid
+        self.test_number = test_number
+
+    def __str__(self):
+        return (
+            f"GUID {self.guid} reused for test {self.test_number}. GUIDs are auto generated."
+            f"You can remove atomic_tests[{self.test_number}].auto_generated_guid"
+        )
+
+
 class UnusedArgument(BaseError):
     def __init__(self, path, argument, test_number):
         super().__init__(path)
@@ -37,8 +50,15 @@ class Validator:
     errors = defaultdict(list)
 
     def __init__(self):
-        with open(f"{os.path.dirname(os.path.abspath(__file__))}/atomic-red-team.schema.yaml", "r") as f:
+        schema_path = (
+            f"{os.path.dirname(os.path.abspath(__file__))}/atomic-red-team.schema.yaml"
+        )
+        used_guids_path = "./atomics/used_guids.txt"
+        with open(used_guids_path, "r") as f:
+            self.used_guids = [x.strip() for x in f.readlines()]
+        with open(schema_path, "r") as f:
             self.schema = yaml.safe_load(f)
+        self.guids = []
 
     def validate(self, obj: DirEntry):
         if obj.is_file():
@@ -50,14 +70,21 @@ class Validator:
     def validate_file(self, file: DirEntry):
         """Performs file validation"""
         self.validate_yaml_extension(file)
-        self.validate_input_args(file)
+        self.validate_atomic(file)
         self.validate_json_schema(file)
 
-    def validate_input_args(self, file: DirEntry):
+    def validate_atomic(self, file: DirEntry):
         """Validates whether the defined input args are used."""
         with open(file.path, "r") as f:
             atomic = yaml.safe_load(f)
             for index, t in enumerate(atomic["atomic_tests"]):
+                if t.get("auto_generated_guid"):
+                    if t["auto_generated_guid"] not in self.guids:
+                        self.guids.append(t["auto_generated_guid"])
+                    else:
+                        self.errors[file.path].append(
+                            ReusedGuid(file.path, t["auto_generated_guid"], index + 1)
+                        )
                 if args := t.get("input_arguments"):
                     for k in list(args.keys()):
                         variable = f"#{{{k}}}"
@@ -65,7 +92,11 @@ class Validator:
                         deps = t.get("dependencies", [])
 
                         if executor:
-                            commands = [executor.get("command"), executor.get("cleanup_command"), executor.get("steps")]
+                            commands = [
+                                executor.get("command"),
+                                executor.get("cleanup_command"),
+                                executor.get("steps"),
+                            ]
                         if deps:
                             commands += [d.get("get_prereq_command") for d in deps]
                             commands += [d.get("prereq_command") for d in deps]
@@ -96,7 +127,7 @@ class Validator:
         self.validate_directory_path(directory)
 
     def validate_directory_path(self, directory: DirEntry):
-        """Validated whether the directory is a allowed directory name (`src` or `bin`) """
+        """Validated whether the directory is a allowed directory name (`src` or `bin`)"""
         if directory.name not in ["src", "bin"]:
             self.errors[directory.path].append(InvalidPath(directory.path))
 
