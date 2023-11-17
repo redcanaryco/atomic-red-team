@@ -591,6 +591,8 @@
   - Atomic Test #45: AMSI Bypass - Override AMSI via COM [windows]
   - Atomic Test #46: AWS - GuardDuty Suspension or Deletion [iaas:aws]
   - Atomic Test #47: Tamper with Defender ATP on Linux/MacOS [linux, macos]
+  - Atomic Test #48: Tamper with Windows Defender Registry - Reg.exe [windows]
+  - Atomic Test #49: Tamper with Windows Defender Registry - Powershell [windows]
 - T1601 Modify System Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
