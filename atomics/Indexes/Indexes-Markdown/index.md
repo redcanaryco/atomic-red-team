@@ -1533,6 +1533,7 @@
   - Atomic Test #6: Create a new user in Linux with `root` UID and GID. [linux]
   - Atomic Test #7: Create a new user in FreeBSD with `root` GID. [linux]
   - Atomic Test #8: Create a new Windows admin user [windows]
+  - Atomic Test #9: Create a new Windows admin user via .NET [windows]
 - T1053.001 At (Linux) [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1179 Hooking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1547.011 Plist Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

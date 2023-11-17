@@ -1036,6 +1036,7 @@
   - Atomic Test #4: Create a new user in a command prompt [windows]
   - Atomic Test #5: Create a new user in PowerShell [windows]
   - Atomic Test #8: Create a new Windows admin user [windows]
+  - Atomic Test #9: Create a new Windows admin user via .NET [windows]
 - T1179 Hooking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1547.004 Boot or Logon Autostart Execution: Winlogon Helper DLL](../../T1547.004/T1547.004.md)
   - Atomic Test #1: Winlogon Shell Key Persistence - PowerShell [windows]
