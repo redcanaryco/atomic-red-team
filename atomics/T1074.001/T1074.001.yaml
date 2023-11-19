@@ -42,6 +42,8 @@ atomic_tests:
   executor:
     command: |
       curl -s https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074.001/src/Discovery.sh | sh -s > #{output_file}
+    cleanup_command: |
+      rm #{output_file}
     name: sh
 - name: Zip a Folder with PowerShell for Staging in Temp
   auto_generated_guid: a57fbe4b-3440-452a-88a7-943531ac872a
