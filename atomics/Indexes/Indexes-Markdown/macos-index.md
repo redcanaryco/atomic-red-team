@@ -81,6 +81,7 @@
   - Atomic Test #2: Set a file's modification timestamp [linux, macos]
   - Atomic Test #3: Set a file's creation timestamp [linux, macos]
   - Atomic Test #4: Modify file timestamps using reference file [linux, macos]
+  - Atomic Test #9: MacOS - Timestomp Date Modified [macos]
 - T1620 Reflective Code Loading [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1564.011 Ignore Process Interrupts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1497.003 Time Based Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
