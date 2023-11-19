@@ -23,7 +23,6 @@ atomic_tests:
   auto_generated_guid: 515942b0-a09f-4163-a7bb-22fefb6f185f
   description: |
     Scan ports to check for listening ports with Nmap.
-
     Upon successful execution, sh will utilize nmap, telnet, and nc to contact a single or range of addresses on port 80 to determine if listening. Results will be via stdout.
   supported_platforms:
   - linux
@@ -48,13 +47,13 @@ atomic_tests:
     prereq_command: |
       if [ -x "$(command -v nmap)" ]; then exit 0; else exit 1; fi;
     get_prereq_command: |
-      (which yum && yum -y install epel-release nmap)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y nmap)
+      (which yum && yum -y install epel-release nmap)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y nmap)||(which pkg && pkg install -y nmap)
   - description: |
       Check if nc command exists on the machine
     prereq_command: |
       if [ -x "$(command -v nc)" ]; then exit 0; else exit 1; fi;
     get_prereq_command: |
-      (which yum && yum -y install epel-release nc)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y netcat)
+      (which yum && yum -y install epel-release nc)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y netcat)||(which pkg && pkg install -y netcat)
   - description: |
       Check if telnet command exists on the machine
     prereq_command: |
@@ -64,42 +63,6 @@ atomic_tests:
   executor:
     command: |
       sudo nmap -sS #{network_range} -p #{port}
-      telnet #{host} #{port}
-      nc -nv #{host} #{port}
-    name: sh
-    elevation_required: true
-- name: Port Scan Nmap for FreeBSD
-  auto_generated_guid: f03d59dc-0e3b-428a-baeb-3499552c7048
-  description: |
-    Scan ports to check for listening ports with Nmap.
-
-    Upon successful execution, sh will utilize nmap, telnet, and nc to contact a single or range of addresses on port 80 to determine if listening. Results will be via stdout.
-  supported_platforms:
-  - linux
-  input_arguments:
-    host:
-      description: Host to scan.
-      type: string
-      default: 192.168.1.1
-    port:
-      description: Ports to scan.
-      type: string
-      default: "80"
-    network_range:
-      description: Network Range to Scan.
-      type: string
-      default: 192.168.1.0/24
-  dependency_executor_name: sh
-  dependencies:
-  - description: |
-      Check if nmap command exists on the machine
-    prereq_command: |
-      if [ -x "$(command -v nmap)" ]; then exit 0; else exit 1; fi;
-    get_prereq_command: |
-      (which pkg && pkg install -y nmap)
-  executor:
-    command: |
-      nmap -sS #{network_range} -p #{port}
       telnet #{host} #{port}
       nc -nv #{host} #{port}
     name: sh

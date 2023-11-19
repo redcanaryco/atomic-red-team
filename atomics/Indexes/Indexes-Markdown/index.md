@@ -591,6 +591,8 @@
   - Atomic Test #45: AMSI Bypass - Override AMSI via COM [windows]
   - Atomic Test #46: AWS - GuardDuty Suspension or Deletion [iaas:aws]
   - Atomic Test #47: Tamper with Defender ATP on Linux/MacOS [linux, macos]
+  - Atomic Test #48: Tamper with Windows Defender Registry - Reg.exe [windows]
+  - Atomic Test #49: Tamper with Windows Defender Registry - Powershell [windows]
 - T1601 Modify System Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -602,16 +604,15 @@
 - T1564.009 Resource Forking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1027 Obfuscated Files or Information](../../T1027/T1027.md)
   - Atomic Test #1: Decode base64 Data into Script [macos, linux]
-  - Atomic Test #2: Decode base64 Data into Script [linux]
-  - Atomic Test #3: Execute base64-encoded PowerShell [windows]
-  - Atomic Test #4: Execute base64-encoded PowerShell from Windows Registry [windows]
-  - Atomic Test #5: Execution from Compressed File [windows]
-  - Atomic Test #6: DLP Evasion via Sensitive Data in VBA Macro over email [windows]
-  - Atomic Test #7: DLP Evasion via Sensitive Data in VBA Macro over HTTP [windows]
-  - Atomic Test #8: Obfuscated Command in PowerShell [windows]
-  - Atomic Test #9: Obfuscated Command Line using special Unicode characters [windows]
-  - Atomic Test #10: Snake Malware Encrypted crmlog file [windows]
-  - Atomic Test #11: Execution from Compressed JScript File [windows]
+  - Atomic Test #2: Execute base64-encoded PowerShell [windows]
+  - Atomic Test #3: Execute base64-encoded PowerShell from Windows Registry [windows]
+  - Atomic Test #4: Execution from Compressed File [windows]
+  - Atomic Test #5: DLP Evasion via Sensitive Data in VBA Macro over email [windows]
+  - Atomic Test #6: DLP Evasion via Sensitive Data in VBA Macro over HTTP [windows]
+  - Atomic Test #7: Obfuscated Command in PowerShell [windows]
+  - Atomic Test #8: Obfuscated Command Line using special Unicode characters [windows]
+  - Atomic Test #9: Snake Malware Encrypted crmlog file [windows]
+  - Atomic Test #10: Execution from Compressed JScript File [windows]
 - T1556.006 Multi-Factor Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1036.001 Invalid Code Signature [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1564.006 Run Virtual Instance](../../T1564.006/T1564.006.md)
@@ -732,7 +733,6 @@
 - [T1036.006 Masquerading: Space after Filename](../../T1036.006/T1036.006.md)
   - Atomic Test #1: Space After Filename (Manual) [macos]
   - Atomic Test #2: Space After Filename [macos, linux]
-  - Atomic Test #3: Space After Filename (FreeBSD) [linux]
 - [T1550.002 Use Alternate Authentication Material: Pass the Hash](../../T1550.002/T1550.002.md)
   - Atomic Test #1: Mimikatz Pass the Hash [windows]
   - Atomic Test #2: crackmapexec Pass the Hash [windows]
@@ -743,7 +743,8 @@
 - T1126 Network Share Connection Removal [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1055.008 Ptrace System Calls [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.007 Dynamic API Resolution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1055.015 ListPlanting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1055.015 Process Injection: ListPlanting](../../T1055.015/T1055.015.md)
+  - Atomic Test #1: Process injection ListPlanting [windows]
 - T1484 Domain Policy Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1220 XSL Script Processing](../../T1220/T1220.md)
   - Atomic Test #1: MSXSL Bypass using local files [windows]
@@ -1138,7 +1139,6 @@
   - Atomic Test #1: rc.common [macos]
   - Atomic Test #2: rc.common [linux]
   - Atomic Test #3: rc.local [linux]
-  - Atomic Test #4: rc.local (FreeBSD) [linux]
 - T1134 Access Token Manipulation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1543.002 Create or Modify System Process: SysV/Systemd Service](../../T1543.002/T1543.002.md)
   - Atomic Test #1: Create Systemd Service [linux]
@@ -1159,7 +1159,8 @@
 - T1055.008 Ptrace System Calls [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1037.001 Boot or Logon Initialization Scripts: Logon Script (Windows)](../../T1037.001/T1037.001.md)
   - Atomic Test #1: Logon Scripts [windows]
-- T1055.015 ListPlanting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1055.015 Process Injection: ListPlanting](../../T1055.015/T1055.015.md)
+  - Atomic Test #1: Process injection ListPlanting [windows]
 - T1484 Domain Policy Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1547.008 Boot or Logon Autostart Execution: LSASS Driver](../../T1547.008/T1547.008.md)
   - Atomic Test #1: Modify Registry to load Arbitrary DLL into LSASS - LsaDbExtPt [windows]
@@ -1170,7 +1171,6 @@
 - [T1053.002 Scheduled Task/Job: At](../../T1053.002/T1053.002.md)
   - Atomic Test #1: At.exe Scheduled task [windows]
   - Atomic Test #2: At - Schedule a job [linux]
-  - Atomic Test #3: At - Schedule a job freebsd [linux]
 - [T1055.001 Process Injection: Dynamic-link Library Injection](../../T1055.001/T1055.001.md)
   - Atomic Test #1: Process Injection via mavinject.exe [windows]
   - Atomic Test #2: WinPwn - Get SYSTEM shell - Bind System Shell using UsoClient DLL load technique [windows]
@@ -1376,7 +1376,6 @@
 - [T1053.002 Scheduled Task/Job: At](../../T1053.002/T1053.002.md)
   - Atomic Test #1: At.exe Scheduled task [windows]
   - Atomic Test #2: At - Schedule a job [linux]
-  - Atomic Test #3: At - Schedule a job freebsd [linux]
 - T1035 Service Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1086 PowerShell [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1118 InstallUtil [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1534,6 +1533,7 @@
   - Atomic Test #6: Create a new user in Linux with `root` UID and GID. [linux]
   - Atomic Test #7: Create a new user in FreeBSD with `root` GID. [linux]
   - Atomic Test #8: Create a new Windows admin user [windows]
+  - Atomic Test #9: Create a new Windows admin user via .NET [windows]
 - T1053.001 At (Linux) [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1179 Hooking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1547.011 Plist Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1715,7 +1715,6 @@
   - Atomic Test #1: rc.common [macos]
   - Atomic Test #2: rc.common [linux]
   - Atomic Test #3: rc.local [linux]
-  - Atomic Test #4: rc.local (FreeBSD) [linux]
 - T1209 Time Providers [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1159 Launch Agent [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1543.002 Create or Modify System Process: SysV/Systemd Service](../../T1543.002/T1543.002.md)
@@ -1749,7 +1748,6 @@
 - [T1053.002 Scheduled Task/Job: At](../../T1053.002/T1053.002.md)
   - Atomic Test #1: At.exe Scheduled task [windows]
   - Atomic Test #2: At - Schedule a job [linux]
-  - Atomic Test #3: At - Schedule a job freebsd [linux]
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.007 Event Triggered Execution: Netsh Helper DLL](../../T1546.007/T1546.007.md)
   - Atomic Test #1: Netsh Helper DLL Registration [windows]
@@ -2403,8 +2401,7 @@
 - [T1007 System Service Discovery](../../T1007/T1007.md)
   - Atomic Test #1: System Service Discovery [windows]
   - Atomic Test #2: System Service Discovery - net.exe [windows]
-  - Atomic Test #3: System Service Discovery - systemctl [linux]
-  - Atomic Test #4: System Service Discovery - service [linux]
+  - Atomic Test #3: System Service Discovery - systemctl/service [linux]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #1: Packet Capture Linux using tshark or tcpdump [linux]
   - Atomic Test #2: Packet Capture FreeBSD using tshark or tcpdump [linux]
@@ -2488,13 +2485,12 @@
   - Atomic Test #1: System Network Configuration Discovery on Windows [windows]
   - Atomic Test #2: List Windows Firewall Rules [windows]
   - Atomic Test #3: System Network Configuration Discovery [macos, linux]
-  - Atomic Test #4: System Network Configuration Discovery (freebsd) [linux]
-  - Atomic Test #5: System Network Configuration Discovery (TrickBot Style) [windows]
-  - Atomic Test #6: List Open Egress Ports [windows]
-  - Atomic Test #7: Adfind - Enumerate Active Directory Subnet Objects [windows]
-  - Atomic Test #8: Qakbot Recon [windows]
-  - Atomic Test #9: List macOS Firewall Rules [macos]
-  - Atomic Test #10: DNS Server Discovery Using nslookup [windows]
+  - Atomic Test #4: System Network Configuration Discovery (TrickBot Style) [windows]
+  - Atomic Test #5: List Open Egress Ports [windows]
+  - Atomic Test #6: Adfind - Enumerate Active Directory Subnet Objects [windows]
+  - Atomic Test #7: Qakbot Recon [windows]
+  - Atomic Test #8: List macOS Firewall Rules [macos]
+  - Atomic Test #9: DNS Server Discovery Using nslookup [windows]
 - T1087 Account Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1482 Domain Trust Discovery](../../T1482/T1482.md)
   - Atomic Test #1: Windows - Discover domain trusts with dsquery [windows]
@@ -2602,15 +2598,14 @@
 - [T1046 Network Service Discovery](../../T1046/T1046.md)
   - Atomic Test #1: Port Scan [linux, macos]
   - Atomic Test #2: Port Scan Nmap [linux, macos]
-  - Atomic Test #3: Port Scan Nmap for FreeBSD [linux]
-  - Atomic Test #4: Port Scan NMap for Windows [windows]
-  - Atomic Test #5: Port Scan using python [windows]
-  - Atomic Test #6: WinPwn - spoolvulnscan [windows]
-  - Atomic Test #7: WinPwn - MS17-10 [windows]
-  - Atomic Test #8: WinPwn - bluekeep [windows]
-  - Atomic Test #9: WinPwn - fruit [windows]
-  - Atomic Test #10: Network Service Discovery for Containers [containers]
-  - Atomic Test #11: Port-Scanning /24 Subnet with PowerShell [windows]
+  - Atomic Test #3: Port Scan NMap for Windows [windows]
+  - Atomic Test #4: Port Scan using python [windows]
+  - Atomic Test #5: WinPwn - spoolvulnscan [windows]
+  - Atomic Test #6: WinPwn - MS17-10 [windows]
+  - Atomic Test #7: WinPwn - bluekeep [windows]
+  - Atomic Test #8: WinPwn - fruit [windows]
+  - Atomic Test #9: Network Service Discovery for Containers [containers]
+  - Atomic Test #10: Port-Scanning /24 Subnet with PowerShell [windows]
 - [T1518 Software Discovery](../../T1518/T1518.md)
   - Atomic Test #1: Find and Display Internet Explorer Browser Version [windows]
   - Atomic Test #2: Applications Installed [windows]
@@ -2893,5 +2888,4 @@
   - Atomic Test #6: MAZE FTP Upload [windows]
   - Atomic Test #7: Exfiltration Over Alternative Protocol - FTP - Rclone [windows]
   - Atomic Test #8: Python3 http.server [linux]
-  - Atomic Test #9: Python3 http.server (freebsd) [linux]
 

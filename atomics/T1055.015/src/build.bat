@@ -1,0 +1,1 @@
+cl.exe /nologo /Ox /MT /W0 /GS- /DNDEBUG /listPlanting.c /link /OUT:ListPlanting.exe.exe /SUBSYSTEM:CONSOLE /MACHINE:x64
