@@ -266,6 +266,7 @@
   - Atomic Test #6: Windows - Modify file last modified timestamp with PowerShell [windows]
   - Atomic Test #7: Windows - Modify file last access timestamp with PowerShell [windows]
   - Atomic Test #8: Windows - Timestomp a File [windows]
+  - Atomic Test #9: MacOS - Timestomp Date Modified [macos]
 - [T1620 Reflective Code Loading](../../T1620/T1620.md)
   - Atomic Test #1: WinPwn - Reflectively load Mimik@tz into memory [windows]
 - T1564.011 Ignore Process Interrupts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
