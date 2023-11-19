@@ -69,8 +69,9 @@ atomic_tests:
       type: path
       default: /tmp/T1003.008.txt
   executor:
-    command: |
-      echo -e "e /etc/passwd\n,p\ne /etc/master.passwd\n,p\ne /etc/shadow\n,p\n" | ed > #{output_file}
+    command: | 
+      unamestr=$(uname)
+      if [ "$unamestr" = 'Linux' ]; then echo -e "e /etc/passwd\n,p\ne /etc/shadow\n,p\n" | ed > ${output_file}; elif [ "$unamestr" = 'FreeBSD' ]; then echo -e "e /etc/passwd\n,p\ne /etc/master.passwd\n,p\ne /etc/shadow\n,p\n" | ed > ${output_file}; fi
     cleanup_command: |
       rm -f #{output_file}
     name: sh
@@ -89,8 +90,8 @@ atomic_tests:
   executor:
     command: |
       testcat(){ (while read line; do echo $line >> #{output_file}; done < $1) }
+      [ "$(uname)" = 'FreeBSD' ] && testcat /etc/master.passwd
       testcat /etc/passwd
-      testcat /etc/master.passwd
       testcat /etc/shadow
     cleanup_command: |
       rm -f #{output_file}
