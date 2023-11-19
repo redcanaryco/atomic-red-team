@@ -5,22 +5,32 @@ atomic_tests:
   auto_generated_guid: a934276e-2be5-4a36-93fd-98adbb5bd4fc
   description: |
     Clears bash history via rm
+  input_arguments:
+    history_path:
+      description: Bash history path
+      type: path
+      default: ~/.bash_history
   supported_platforms:
   - linux
   - macos
   executor:
     command: |
-      rm ~/.bash_history
+      rm #{history_path}
     name: sh
 - name: Clear Bash history (echo)
   auto_generated_guid: cbf506a5-dd78-43e5-be7e-a46b7c7a0a11
   description: |
     Clears bash history via echo
+  input_arguments:
+    history_path:
+      description: Bash history path
+      type: path
+      default: ~/.bash_history
   supported_platforms:
   - linux
   executor:
     command: |
-      echo "" > ~/.bash_history
+      echo "" > #{history_path}
     name: sh
 - name: Clear Bash history (cat dev/null)
   auto_generated_guid: b1251c35-dcd3-4ea1-86da-36d27b54f31f
@@ -29,9 +39,14 @@ atomic_tests:
   supported_platforms:
   - linux
   - macos
+  input_arguments:
+    history_path:
+      description: Bash history path
+      type: path
+      default: ~/.bash_history
   executor:
     command: |
-      cat /dev/null > ~/.bash_history
+      cat /dev/null > #{history_path}
     name: sh
 - name: Clear Bash history (ln dev/null)
   auto_generated_guid: 23d348f3-cc5c-4ba9-bd0a-ae09069f0914
@@ -40,9 +55,14 @@ atomic_tests:
   supported_platforms:
   - linux
   - macos
+  input_arguments:
+    history_path:
+      description: Bash history path
+      type: path
+      default: ~/.bash_history
   executor:
     command: |
-      ln -sf /dev/null ~/.bash_history
+      ln -sf /dev/null #{history_path}
     name: sh
 - name: Clear Bash history (truncate)
   auto_generated_guid: 47966a1d-df4f-4078-af65-db6d9aa20739
@@ -50,9 +70,14 @@ atomic_tests:
     Clears bash history via truncate
   supported_platforms:
   - linux
+  input_arguments:
+    history_path:
+      description: Bash history path
+      type: path
+      default: ~/.bash_history
   executor:
     command: |
-      truncate -s0 ~/.bash_history
+      truncate -s0 #{history_path}
     name: sh
 - name: Clear history of a bunch of shells
   auto_generated_guid: 7e6721df-5f08-4370-9255-f06d8a77af4c
