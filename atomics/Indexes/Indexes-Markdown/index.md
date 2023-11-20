@@ -2192,6 +2192,7 @@
   - Atomic Test #11: Dump LSASS with createdump.exe from .Net v5 [windows]
   - Atomic Test #12: Dump LSASS.exe using imported Microsoft DLLs [windows]
   - Atomic Test #13: Dump LSASS.exe using lolbin rdrleakdiag.exe [windows]
+  - Atomic Test #14: Dump LSASS.exe Memory through Silent Process Exit [windows]
 - T1179 Hooking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1110.003 Brute Force: Password Spraying](../../T1110.003/T1110.003.md)
   - Atomic Test #1: Password Spray all Domain Users [windows]
