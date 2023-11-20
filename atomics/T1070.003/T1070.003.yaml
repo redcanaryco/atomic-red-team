@@ -5,43 +5,32 @@ atomic_tests:
   auto_generated_guid: a934276e-2be5-4a36-93fd-98adbb5bd4fc
   description: |
     Clears bash history via rm
+  input_arguments:
+    history_path:
+      description: Bash history path
+      type: path
+      default: ~/.bash_history
   supported_platforms:
   - linux
   - macos
   executor:
     command: |
-      rm ~/.bash_history
+      rm #{history_path}
     name: sh
-- name: Clear sh history (rm)
-  auto_generated_guid: 448893f8-1d5d-4ae2-9017-7fcd73a7e100
-  description: |
-    Clears sh history via rm
-  supported_platforms:
-  - linux
-  executor:
-    command: |
-      rm ~/.sh_history
-    name: sh
-
 - name: Clear Bash history (echo)
   auto_generated_guid: cbf506a5-dd78-43e5-be7e-a46b7c7a0a11
   description: |
     Clears bash history via echo
+  input_arguments:
+    history_path:
+      description: Bash history path
+      type: path
+      default: ~/.bash_history
   supported_platforms:
   - linux
   executor:
     command: |
-      echo "" > ~/.bash_history
-    name: sh
-- name: Clear sh history (echo)
-  auto_generated_guid: a4d63cb3-9ed9-4837-9480-5bf6b09a6c96
-  description: |
-    Clears sh history via echo
-  supported_platforms:
-  - linux
-  executor:
-    command: |
-      echo "" > ~/.sh_history
+      echo "" > #{history_path}
     name: sh
 - name: Clear Bash history (cat dev/null)
   auto_generated_guid: b1251c35-dcd3-4ea1-86da-36d27b54f31f
@@ -50,21 +39,15 @@ atomic_tests:
   supported_platforms:
   - linux
   - macos
+  input_arguments:
+    history_path:
+      description: Bash history path
+      type: path
+      default: ~/.bash_history
   executor:
     command: |
-      cat /dev/null > ~/.bash_history
+      cat /dev/null > #{history_path}
     name: sh
-- name: Clear sh history (cat dev/null)
-  auto_generated_guid: ecaefd53-6fa4-4781-ba51-d9d6fb94dbdc
-  description: |
-    Clears sh history via cat /dev/null
-  supported_platforms:
-  - linux
-  executor:
-    command: |
-      cat /dev/null > ~/.sh_history
-    name: sh
-
 - name: Clear Bash history (ln dev/null)
   auto_generated_guid: 23d348f3-cc5c-4ba9-bd0a-ae09069f0914
   description: |
@@ -72,39 +55,29 @@ atomic_tests:
   supported_platforms:
   - linux
   - macos
+  input_arguments:
+    history_path:
+      description: Bash history path
+      type: path
+      default: ~/.bash_history
   executor:
     command: |
-      ln -sf /dev/null ~/.bash_history
+      ln -sf /dev/null #{history_path}
     name: sh
-- name: Clear sh history (ln dev/null)
-  auto_generated_guid: 3126aa7a-8768-456f-ae05-6ab2d4accfdd
-  description: |
-    Clears sh history via a symlink to /dev/null
-  supported_platforms:
-  - linux
-  executor:
-    command: |
-      ln -sf /dev/null ~/.sh_history
-    name: sh     
 - name: Clear Bash history (truncate)
   auto_generated_guid: 47966a1d-df4f-4078-af65-db6d9aa20739
   description: |
     Clears bash history via truncate
   supported_platforms:
   - linux
+  input_arguments:
+    history_path:
+      description: Bash history path
+      type: path
+      default: ~/.bash_history
   executor:
     command: |
-      truncate -s0 ~/.bash_history
-    name: sh
-- name: Clear sh history (truncate)
-  auto_generated_guid: e14d9bb0-c853-4503-aa89-739d5c0a5818
-  description: |
-    Clears sh history via truncate
-  supported_platforms:
-  - linux
-  executor:
-    command: |
-      truncate -s0 ~/.sh_history
+      truncate -s0 #{history_path}
     name: sh
 - name: Clear history of a bunch of shells
   auto_generated_guid: 7e6721df-5f08-4370-9255-f06d8a77af4c
@@ -119,21 +92,6 @@ atomic_tests:
       export HISTFILESIZE=0
       history -c
     name: sh
-- name: Clear history of a bunch of shells (freebsd)
-  auto_generated_guid: 9bf7c8af-5e12-42ea-bf6b-b0348fb9dfb0
-  description: |
-    Clears the history of a bunch of different shell types by setting the history size to zero
-  supported_platforms:
-  - linux
-  executor:
-    command: |
-      unset HISTFILE
-      unset histfile
-      export HISTFILESIZE=0
-      export HISTSIZE=0
-      history -c
-    name: sh
-
 - name:  Clear and Disable Bash History Logging
   auto_generated_guid: 784e4011-bd1a-4ecd-a63a-8feb278512e6
   description: |
@@ -177,38 +135,15 @@ atomic_tests:
     prereq_command: |
       $(getent passwd testuser1 >/dev/null) && $(which sshpass >/dev/null)
     get_prereq_command: |
-      /usr/sbin/useradd testuser1
-      echo -e 'pwd101!\npwd101!' | passwd testuser1
-      (which yum && yum -y install epel-release sshpass)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y sshpass)
+      [ "$(uname)" = 'FreeBSD' ] && pw useradd testuser1 -g wheel -s /bin/sh || /usr/sbin/useradd testuser1
+      [ "$(uname)" = 'FreeBSD' ] && echo 'pwd101!' | pw mod user testuser1 -h 0 || echo -e 'pwd101!\npwd101!' | passwd testuser1
+      (which yum && yum -y install epel-release sshpass)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y sshpass)||(which pkg && pkg install -y sshpass)
   executor:
     command: |
       sshpass -p 'pwd101!' ssh testuser1@localhost -T hostname
     cleanup_command: |
-      userdel -f testuser1
+      [ "$(uname)" = 'FreeBSD' ] && rmuser -y testuser1 || userdel -f testuser1
     name: sh
-
-- name:  Disable sh History Logging with SSH -T (freebsd)
-  auto_generated_guid: ec3f2306-dd19-4c4b-bed7-92d20e9b1dee
-  description: |
-    Keeps history clear and stays out of lastlog,wtmp,btmp ssh -T keeps the ssh client from catching a proper TTY, which is what usually gets logged on lastlog
-  supported_platforms:
-  - linux
-  dependencies:
-  - description: |
-      Install sshpass and create user account used for excuting
-    prereq_command: |
-      $(getent passwd testuser1 >/dev/null) && $(which sshpass >/dev/null)
-    get_prereq_command: |
-      pw useradd testuser1 -g wheel -s /bin/sh
-      echo 'pwd101!' | pw mod user testuser1 -h 0
-      (which pkg && pkg install -y sshpass)
-  executor:
-    command: |
-      sshpass -p 'pwd101!' ssh testuser1@localhost -T hostname
-    cleanup_command: |
-      rmuser -y testuser1
-    name: sh
-
 - name:  Prevent Powershell History Logging
   auto_generated_guid: 2f898b81-3e97-4abb-bc3f-a95138988370
   description: |
