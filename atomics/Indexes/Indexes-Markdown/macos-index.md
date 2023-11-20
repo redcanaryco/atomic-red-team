@@ -56,11 +56,11 @@
 - T1070.007 Clear Network Connection History and Configurations [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1070.003 Indicator Removal on Host: Clear Command History](../../T1070.003/T1070.003.md)
   - Atomic Test #1: Clear Bash history (rm) [linux, macos]
-  - Atomic Test #5: Clear Bash history (cat dev/null) [linux, macos]
-  - Atomic Test #7: Clear Bash history (ln dev/null) [linux, macos]
-  - Atomic Test #11: Clear history of a bunch of shells [linux, macos]
-  - Atomic Test #13: Clear and Disable Bash History Logging [linux, macos]
-  - Atomic Test #14: Use Space Before Command to Avoid Logging to History [linux, macos]
+  - Atomic Test #3: Clear Bash history (cat dev/null) [linux, macos]
+  - Atomic Test #4: Clear Bash history (ln dev/null) [linux, macos]
+  - Atomic Test #6: Clear history of a bunch of shells [linux, macos]
+  - Atomic Test #7: Clear and Disable Bash History Logging [linux, macos]
+  - Atomic Test #8: Use Space Before Command to Avoid Logging to History [linux, macos]
 - [T1140 Deobfuscate/Decode Files or Information](../../T1140/T1140.md)
   - Atomic Test #3: Base64 decoding with Python [linux, macos]
   - Atomic Test #4: Base64 decoding with Perl [linux, macos]
@@ -574,8 +574,8 @@
   - Atomic Test #2: View sudoers access [linux, macos]
   - Atomic Test #3: View accounts with UID 0 [linux, macos]
   - Atomic Test #4: List opened files by user [linux, macos]
-  - Atomic Test #7: Enumerate users and groups [linux, macos]
-  - Atomic Test #8: Enumerate users and groups [macos]
+  - Atomic Test #6: Enumerate users and groups [linux, macos]
+  - Atomic Test #7: Enumerate users and groups [macos]
 - [T1497.001 Virtualization/Sandbox Evasion: System Checks](../../T1497.001/T1497.001.md)
   - Atomic Test #4: Detect Virtualization Environment (MacOS) [macos]
 - T1069.002 Permission Groups Discovery: Domain Groups [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

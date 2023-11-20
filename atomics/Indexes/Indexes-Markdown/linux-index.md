@@ -62,21 +62,14 @@
 - T1070.007 Clear Network Connection History and Configurations [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1070.003 Indicator Removal on Host: Clear Command History](../../T1070.003/T1070.003.md)
   - Atomic Test #1: Clear Bash history (rm) [linux, macos]
-  - Atomic Test #2: Clear sh history (rm) [linux]
-  - Atomic Test #3: Clear Bash history (echo) [linux]
-  - Atomic Test #4: Clear sh history (echo) [linux]
-  - Atomic Test #5: Clear Bash history (cat dev/null) [linux, macos]
-  - Atomic Test #6: Clear sh history (cat dev/null) [linux]
-  - Atomic Test #7: Clear Bash history (ln dev/null) [linux, macos]
-  - Atomic Test #8: Clear sh history (ln dev/null) [linux]
-  - Atomic Test #9: Clear Bash history (truncate) [linux]
-  - Atomic Test #10: Clear sh history (truncate) [linux]
-  - Atomic Test #11: Clear history of a bunch of shells [linux, macos]
-  - Atomic Test #12: Clear history of a bunch of shells (freebsd) [linux]
-  - Atomic Test #13: Clear and Disable Bash History Logging [linux, macos]
-  - Atomic Test #14: Use Space Before Command to Avoid Logging to History [linux, macos]
-  - Atomic Test #15: Disable Bash History Logging with SSH -T [linux]
-  - Atomic Test #16: Disable sh History Logging with SSH -T (freebsd) [linux]
+  - Atomic Test #2: Clear Bash history (echo) [linux]
+  - Atomic Test #3: Clear Bash history (cat dev/null) [linux, macos]
+  - Atomic Test #4: Clear Bash history (ln dev/null) [linux, macos]
+  - Atomic Test #5: Clear Bash history (truncate) [linux]
+  - Atomic Test #6: Clear history of a bunch of shells [linux, macos]
+  - Atomic Test #7: Clear and Disable Bash History Logging [linux, macos]
+  - Atomic Test #8: Use Space Before Command to Avoid Logging to History [linux, macos]
+  - Atomic Test #9: Disable Bash History Logging with SSH -T [linux]
 - [T1140 Deobfuscate/Decode Files or Information](../../T1140/T1140.md)
   - Atomic Test #3: Base64 decoding with Python [linux, macos]
   - Atomic Test #4: Base64 decoding with Perl [linux, macos]
@@ -220,7 +213,6 @@
   - Atomic Test #2: Delete an entire folder - FreeBSD/Linux/macOS [linux, macos]
   - Atomic Test #3: Overwrite and delete a file with shred [linux]
   - Atomic Test #8: Delete Filesystem - Linux [linux]
-  - Atomic Test #9: Delete Filesystem - FreeBSD [linux]
 - T1158 Hidden Files and Directories [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1027.002 Obfuscated Files or Information: Software Packing](../../T1027.002/T1027.002.md)
   - Atomic Test #1: Binary simply packed by UPX (linux) [linux]
@@ -237,11 +229,10 @@
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #8: Create local account (Linux) [linux]
-  - Atomic Test #9: Create local account (FreeBSD) [linux]
-  - Atomic Test #10: Reactivate a locked/expired account (Linux) [linux]
-  - Atomic Test #11: Reactivate a locked/expired account (FreeBSD) [linux]
-  - Atomic Test #12: Login as nobody (Linux) [linux]
-  - Atomic Test #13: Login as nobody (freebsd) [linux]
+  - Atomic Test #9: Reactivate a locked/expired account (Linux) [linux]
+  - Atomic Test #10: Reactivate a locked/expired account (FreeBSD) [linux]
+  - Atomic Test #11: Login as nobody (Linux) [linux]
+  - Atomic Test #12: Login as nobody (freebsd) [linux]
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 
 # persistence
@@ -342,11 +333,10 @@
 - T1505.001 SQL Stored Procedures [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #8: Create local account (Linux) [linux]
-  - Atomic Test #9: Create local account (FreeBSD) [linux]
-  - Atomic Test #10: Reactivate a locked/expired account (Linux) [linux]
-  - Atomic Test #11: Reactivate a locked/expired account (FreeBSD) [linux]
-  - Atomic Test #12: Login as nobody (Linux) [linux]
-  - Atomic Test #13: Login as nobody (freebsd) [linux]
+  - Atomic Test #9: Reactivate a locked/expired account (Linux) [linux]
+  - Atomic Test #10: Reactivate a locked/expired account (FreeBSD) [linux]
+  - Atomic Test #11: Login as nobody (Linux) [linux]
+  - Atomic Test #12: Login as nobody (freebsd) [linux]
 
 # command-and-control
 - T1205.002 Socket Filters [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -381,8 +371,7 @@
 - T1071.002 File Transfer Protocols [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1102.003 One-Way Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1090.003 Proxy: Multi-hop Proxy](../../T1090.003/T1090.003.md)
-  - Atomic Test #3: Tor Proxy Usage - Debian/Ubuntu [linux]
-  - Atomic Test #5: Tor Proxy Usage - FreeBSD [linux]
+  - Atomic Test #3: Tor Proxy Usage - Debian/Ubuntu/FreeBSD [linux]
 - T1001 Data Obfuscation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1571 Non-Standard Port](../../T1571/T1571.md)
   - Atomic Test #2: Testing usage of uncommonly used port [linux, macos]
@@ -441,7 +430,6 @@
 - T1025 Data from Removable Media [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1074.001 Data Staged: Local Data Staging](../../T1074.001/T1074.001.md)
   - Atomic Test #2: Stage data from Discovery.sh [linux, macos]
-  - Atomic Test #3: Stage data from Discovery.sh (freebsd) [linux]
 - T1119 Automated Collection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1115 Clipboard Data](../../T1115/T1115.md)
   - Atomic Test #5: Add or copy content to clipboard with xClip [linux]
@@ -564,11 +552,10 @@
   - Atomic Test #2: At - Schedule a job [linux]
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #8: Create local account (Linux) [linux]
-  - Atomic Test #9: Create local account (FreeBSD) [linux]
-  - Atomic Test #10: Reactivate a locked/expired account (Linux) [linux]
-  - Atomic Test #11: Reactivate a locked/expired account (FreeBSD) [linux]
-  - Atomic Test #12: Login as nobody (Linux) [linux]
-  - Atomic Test #13: Login as nobody (freebsd) [linux]
+  - Atomic Test #9: Reactivate a locked/expired account (Linux) [linux]
+  - Atomic Test #10: Reactivate a locked/expired account (FreeBSD) [linux]
+  - Atomic Test #11: Login as nobody (Linux) [linux]
+  - Atomic Test #12: Login as nobody (freebsd) [linux]
 
 # credential-access
 - T1557 Adversary-in-the-Middle [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -670,8 +657,7 @@
   - Atomic Test #3: View accounts with UID 0 [linux, macos]
   - Atomic Test #4: List opened files by user [linux, macos]
   - Atomic Test #5: Show if a user account has ever logged in remotely [linux]
-  - Atomic Test #6: Show if a user account has ever logged in remotely (freebsd) [linux]
-  - Atomic Test #7: Enumerate users and groups [linux, macos]
+  - Atomic Test #6: Enumerate users and groups [linux, macos]
 - [T1497.001 Virtualization/Sandbox Evasion: System Checks](../../T1497.001/T1497.001.md)
   - Atomic Test #1: Detect Virtualization Environment (Linux) [linux]
   - Atomic Test #2: Detect Virtualization Environment (FreeBSD) [linux]
@@ -782,14 +768,10 @@
   - Atomic Test #7: What shells are available [linux]
   - Atomic Test #8: Command line scripts [linux]
   - Atomic Test #9: Obfuscated command line scripts [linux]
-  - Atomic Test #10: Obfuscated command line scripts (freebsd) [linux]
-  - Atomic Test #11: Change login shell [linux]
-  - Atomic Test #12: Change login shell (freebsd) [linux]
-  - Atomic Test #13: Environment variable scripts [linux]
-  - Atomic Test #14: Environment variable scripts (freebsd) [linux]
-  - Atomic Test #15: Detecting pipe-to-shell [linux]
-  - Atomic Test #16: Detecting pipe-to-shell (freebsd) [linux]
-  - Atomic Test #17: Current kernel information enumeration [linux]
+  - Atomic Test #10: Change login shell [linux]
+  - Atomic Test #11: Environment variable scripts [linux]
+  - Atomic Test #12: Detecting pipe-to-shell [linux]
+  - Atomic Test #13: Current kernel information enumeration [linux]
 - T1559 Inter-Process Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1154 Trap [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1203 Exploitation for Client Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -880,11 +862,10 @@
 - T1566.003 Spearphishing via Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #8: Create local account (Linux) [linux]
-  - Atomic Test #9: Create local account (FreeBSD) [linux]
-  - Atomic Test #10: Reactivate a locked/expired account (Linux) [linux]
-  - Atomic Test #11: Reactivate a locked/expired account (FreeBSD) [linux]
-  - Atomic Test #12: Login as nobody (Linux) [linux]
-  - Atomic Test #13: Login as nobody (freebsd) [linux]
+  - Atomic Test #9: Reactivate a locked/expired account (Linux) [linux]
+  - Atomic Test #10: Reactivate a locked/expired account (FreeBSD) [linux]
+  - Atomic Test #11: Login as nobody (Linux) [linux]
+  - Atomic Test #12: Login as nobody (freebsd) [linux]
 
 # exfiltration
 - T1567 Exfiltration Over Web Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
