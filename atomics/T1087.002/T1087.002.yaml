@@ -453,22 +453,16 @@ atomic_tests:
     prereq_command: if [ -x "$(command -v pip --version)" ]; then exit 0; else exit 1; fi;
     get_prereq_command: |-
       wget -O /tmp/get-pip.py https://bootstrap.pypa.io/pip/3.6/get-pip.py
-      sudo python3 /tmp/get-pip.py
+      python3 /tmp/get-pip.py
   - description: The ldapdomaindump module must be installed
     prereq_command: python3 -c 'import ldapdomaindump' 2>/dev/null
-    get_prereq_command: sudo pip install ldapdomaindump
+    get_prereq_command: pip install ldapdomaindump
   - description: The future module must be installed
     prereq_command: python3 -c 'import future' 2>/dev/null
-    get_prereq_command: sudo pip install future
-  - description: The ldap3 module must be installed
-    prereq_command: python3 -c 'import ldap3' 2>/dev/null
-    get_prereq_command: sudo pip install ldap3
-  - description: The dns module must be installed
-    prereq_command: python3 -c 'import dns' 2>/dev/null
-    get_prereq_command: sudo pip install dns
+    get_prereq_command: pip install future
   executor:
     command: 'ldapdomaindump -u #{username} -p #{password} #{target_ip} -o /tmp/T1087'
     cleanup_command: |
       rm -rf /tmp/T1087/ 2>/dev/null 
     name: sh
-    elevation_required: false    
+    elevation_required: false
