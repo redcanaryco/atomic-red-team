@@ -56,9 +56,5 @@ atomic_tests:
       } else {
           Write-Host "Registry key not found. Make sure the 'TermService\Parameters' key exists."
       }
-
     cleanup_command: Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\services\TermService\Parameters" -Name "ServiceDll" -Value "C:\Windows\System32\termsrv.dll"
-
     name: powershell
-
-    elevation_required: true

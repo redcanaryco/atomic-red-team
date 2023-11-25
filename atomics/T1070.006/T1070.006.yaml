@@ -230,3 +230,32 @@ atomic_tests:
       import-module "#{file_path}\timestomp.ps1"
       timestomp -dest "#{file_path}\kxwn.lock"
     name: powershell
+- name: MacOS - Timestomp Date Modified
+  auto_generated_guid: 87fffff4-d371-4057-a539-e3b24c37e564
+  description: |
+    Stomps on the modification timestamp of a file using MacOS's SetFile utility
+  supported_platforms: 
+    - macos
+  input_arguments: 
+    target_filename:
+      description: |
+        Path of file that we are going to stomp on last modified time
+      type: path
+      default: /tmp/T1070.006-modified.txt
+    target_date:
+      description: Date to replace original timestamps with
+      type: string
+      default: 01/01/1970
+  dependencies:
+  - description: |
+      The file must exist in order to be timestomped
+    prereq_command: |
+      test -e #{target_filename} && exit 0 || exit 1
+    get_prereq_command: |
+      echo 'T1070.006 MacOS file modified timestomp test' > #{target_filename}
+  executor:
+    name: sh
+    command: |
+      SetFile -m #{target_date} #{target_filename}
+    cleanup_command: |
+      rm -f #{target_filename}
