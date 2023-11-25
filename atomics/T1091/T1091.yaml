@@ -6,7 +6,7 @@ atomic_tests:
   description: |
     Simulates an adversary copying malware to all connected removable drives. 
   supported_platforms:
-    - windows
+  - windows
   executor:
     name: powershell
     command: |
@@ -17,7 +17,7 @@ atomic_tests:
       write-host "Removable Drive Found:" $Drive
       New-Item -Path $Drive/T1091Test1.txt -ItemType "file" -Force -Value "T1091 Test 1 has created this file to simulate malware spread to removable drives."
       }
-    cleanup_command: |
+    cleanup_command: |-
       $RemovableDrives = Get-WmiObject -Class Win32_LogicalDisk -filter "drivetype=2" | select-object -expandproperty DeviceID
       ForEach ($Drive in $RemovableDrives)
       {

@@ -31,5 +31,4 @@ atomic_tests:
       [ "$(uname)" = 'FreeBSD' ] && /bin/echo "#\!/bin/sh" > "testdirwithspaceend /init " && echo 'echo "print(\"running T1035.006 with space after filename to masquerade init\")" | python3.9' >> "testdirwithspaceend /init " && echo "exit" >> "testdirwithspaceend /init " || /usr/bin/echo -e "%d\na\n#!/usr/bin/perl\nprint \"running T1035.006 with space after filename to masquerade init\\n\";\nqx/cp \/usr\/bin\/perl 'init  '/;\nqx/'.\/init  ' -e 'sleep 5'/;\n.\nwq\n" | ed 'testdirwithspaceend /init ' >/dev/null
       chmod +x 'testdirwithspaceend /init '
       './testdirwithspaceend /init '
-    cleanup_command:
-      rm -rf /tmp/atomic-test-T1036.006
+    cleanup_command: rm -rf /tmp/atomic-test-T1036.006

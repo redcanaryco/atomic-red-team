@@ -126,5 +126,5 @@ atomic_tests:
       useradd --create-home --shell /bin/bash art
       su --login art
       echo 'echo "Atomic Red Team was here... T1546.004" >> $HOME/art.txt' >> $HOME/.bash_logout
-    cleanup_command: |
+    cleanup_command: |-
       userdel -fr art

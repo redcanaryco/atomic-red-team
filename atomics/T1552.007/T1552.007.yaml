@@ -101,5 +101,5 @@ atomic_tests:
     command: |
       kubectl --context kind-atomic-cluster exec atomic-pod -- cat /run/secrets/kubernetes.io/serviceaccount/token
     name: sh
-    cleanup_command: |
+    cleanup_command: |-
       kubectl --context kind-atomic-cluster delete pod atomic-pod

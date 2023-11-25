@@ -12,7 +12,7 @@ atomic_tests:
     output_file:
       description: Location to save downloaded discovery.bat file
       type: path
-      default: $env:TEMP\discovery.bat        
+      default: $env:TEMP\discovery.bat
   executor:
     command: |
       Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074.001/src/Discovery.bat" -OutFile #{output_file}

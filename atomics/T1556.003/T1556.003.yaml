@@ -105,5 +105,5 @@ atomic_tests:
     elevation_required: true
     command: |
       sudo sed -i "#{index}s,^,#{pam_rule}\n,g" #{path_to_pam_conf}
-    cleanup_command: |
+    cleanup_command: |-
       sudo sed -i "\,#{pam_rule},d" #{path_to_pam_conf}

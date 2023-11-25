@@ -21,31 +21,31 @@ atomic_tests:
       type: string
       default: "us-east-1"
   dependencies:
-    - description: |
-        Check if ~/.aws/credentials file has a default stanza is configured
-      prereq_command: |
-        cat ~/.aws/credentials | grep "default"
-      get_prereq_command: |
-        echo Please install the aws-cli and configure your AWS default profile using: aws configure
-    - description: |
-        Check if terraform is installed.
-      prereq_command: |
-        terraform version
-      get_prereq_command: |
-        echo Please install the terraform and configure your aws default profile 
-    - description: |
-        Check if the dependency resources are already present.
-      prereq_command: |
-        if [ -f "$PathToAtomicsFolder/T1562.008/src/T1562.008-1/terraform.tfstate" ]; then exit 0; else exit 1; fi;
-      get_prereq_command: |
-        cd "$PathToAtomicsFolder/T1562.008/src/T1562.008-1/"
-        terraform init
-        terraform apply -auto-approve
+  - description: |
+      Check if ~/.aws/credentials file has a default stanza is configured
+    prereq_command: |
+      cat ~/.aws/credentials | grep "default"
+    get_prereq_command: |
+      echo Please install the aws-cli and configure your AWS default profile using: aws configure
+  - description: |
+      Check if terraform is installed.
+    prereq_command: |
+      terraform version
+    get_prereq_command: |
+      echo Please install the terraform and configure your aws default profile 
+  - description: |
+      Check if the dependency resources are already present.
+    prereq_command: |
+      if [ -f "$PathToAtomicsFolder/T1562.008/src/T1562.008-1/terraform.tfstate" ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      cd "$PathToAtomicsFolder/T1562.008/src/T1562.008-1/"
+      terraform init
+      terraform apply -auto-approve
   executor:
     command: |
-       aws cloudtrail update-trail --name #{cloudtrail_name} --s3-bucket-name #{s3_bucket_name}  --is-multi-region-trail --region #{region}
-       aws cloudtrail stop-logging --name #{cloudtrail_name} --region #{region}
-       aws cloudtrail delete-trail --name #{cloudtrail_name} --region #{region}
+      aws cloudtrail update-trail --name #{cloudtrail_name} --s3-bucket-name #{s3_bucket_name}  --is-multi-region-trail --region #{region}
+      aws cloudtrail stop-logging --name #{cloudtrail_name} --region #{region}
+      aws cloudtrail delete-trail --name #{cloudtrail_name} --region #{region}
     cleanup_command: |
       cd "$PathToAtomicsFolder/T1562.008/src/T1562.008-1/"
       terraform destroy -auto-approve
@@ -94,7 +94,7 @@ atomic_tests:
     prereq_command: |
       terraform version
     get_prereq_command: |
-        echo Please install the terraform.
+      echo Please install the terraform.
   - description: |
       Check if the user is logged into Azure.
     prereq_command: |
@@ -446,7 +446,7 @@ atomic_tests:
   description: |
     GCP provides 4 types of Cloud Audit Logs: Admin Activity, Data Access, System Events, and Policy Denied.
     An adversary may attempt to delete logs in order to hide their activity. However, Admin Activity, System Events, and Policy Deny events logs cannot be deleted. 
-    
+
     This Atomic attempts to delete the Activity Event log. An event is generated under the method name of `google.logging.v2.LoggingServiceV2.DeleteLog` with a Serverity of `ERROR`.
   supported_platforms:
   - iaas:gcp
@@ -470,9 +470,9 @@ atomic_tests:
       if [ -x "$(command -v gcloud)" ]; then exit 0; else exit 1; fi;
     get_prereq_command: |
       echo "Please Install Google Cloud SDK before running this atomic test : https://cloud.google.com/sdk/docs/install"
-  - description: | 
+  - description: |
       Check if user is logged in 
     prereq_command: |
       gcloud config get-value account
-    get_prereq_command: |
+    get_prereq_command: |-
       gcloud auth login --no-launch-browser

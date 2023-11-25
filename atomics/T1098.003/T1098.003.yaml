@@ -23,7 +23,7 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
-     MSOnline module must be installed.
+      MSOnline module must be installed.
     prereq_command: |
       try {if (Get-InstalledModule -Name MSOnline -ErrorAction SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
     get_prereq_command: |
@@ -66,7 +66,7 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
-     MSOnline and AzureAD modules must be installed.
+      MSOnline and AzureAD modules must be installed.
     prereq_command: |
       $required_mods = 'AzureAD', 'MSOnline'
       $installed_mods = @((Get-Module $required_mods -ListAvailable -ErrorAction SilentlyContinue).Name  | Select-Object -Unique)
@@ -95,13 +95,13 @@ atomic_tests:
       $targetsecurepw = ConvertTo-SecureString -String "#{target_password}" -AsPlainText -Force
       Connect-MsolService -Credential $credential -ErrorAction:SilentlyContinue
       Connect-AzureAD -Credential $credential -ErrorAction:SilentlyContinue
-      
+
       #Saving the ObjectId of the target_user into a variable
       $target_objid = Get-AzureADUser -filter "userPrincipalName eq '#{target_user}'" | Select-Object -ExpandProperty ObjectId
-      
+
       #Reset the password of the target_user
       Set-AzureADUserPassword -ObjectId  $target_objid -Password $targetsecurepw -ErrorAction:SilentlyContinue
-    
+
       #Adding target_user
       Add-MsolRoleMember -RoleName "Company Administrator" -RoleMemberEmailAddress "#{target_user}"
       Add-MsolRoleMember -RoleName "Global Reader" -RoleMemberEmailAddress "#{target_user}"

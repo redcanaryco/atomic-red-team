@@ -178,13 +178,13 @@ atomic_tests:
       echo "Automated installer not implemented yet, please install chsh manually"
   executor:
     name: bash
-    elevation_required: true 
+    elevation_required: true
     command: |
       [ "$(uname)" = 'FreeBSD' ] && pw useradd art -g wheel -s /bin/csh || useradd -s /bin/bash art
       cat /etc/passwd |grep ^art
       chsh -s /bin/sh art
       cat /etc/passwd |grep ^art
-    cleanup_command: | 
+    cleanup_command: |
       [ "$(uname)" = 'FreeBSD' ] && rmuser -y art || userdel art
 - name: Environment variable scripts
   auto_generated_guid: bdaebd56-368b-4970-a523-f905ff4a8a51
@@ -194,11 +194,11 @@ atomic_tests:
   - linux
   executor:
     name: sh
-    elevation_required: false 
+    elevation_required: false
     command: |
       export ART='echo "Atomic Red Team was here... T1059.004"'
       echo $ART |/bin/sh
-    cleanup_command: | 
+    cleanup_command: |
       unset ART
 - name: Detecting pipe-to-shell
   auto_generated_guid: fca246a8-a585-4f28-a2df-6495973976a1
@@ -237,5 +237,5 @@ atomic_tests:
   executor:
     name: sh
     elevation_required: false
-    command: |
+    command: |-
       uname -srm

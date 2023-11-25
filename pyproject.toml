@@ -2,17 +2,28 @@
 name = "atomic-red-team"
 version = "0.1.0"
 description = ""
-authors = ["Maintainers <opensource@redcanary.com"]
+authors = ["Maintainers <opensource@redcanary.com>"]
 readme = "README.md"
-packages = [{include = "atomic_red_team"}]
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.10"
 pyyaml = "^6.0"
 jsonschema = "^4.20.0"
 requests = "^2.31.0"
+yamlfix = "^1.16.0"
 
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.yamlfix]
+line_length = 1000
+explicit_start = false
+indent_offset = 0
+indent_sequence = 2
+sequence_style = "block_style"
+comments_min_spaces_from_content = 1
+comments_require_starting_space = false
+whitelines = 1
+preserve_quotes = true

@@ -47,7 +47,7 @@ atomic_tests:
   description: |
     Use Python to decode a base64-encoded text string and echo it to the console
   supported_platforms:
-  - linux 
+  - linux
   - macos
   input_arguments:
     message:
@@ -297,8 +297,6 @@ atomic_tests:
     get_prereq_command: echo "Install Python3"
   executor:
     command: "python3 -c 'import base64; import subprocess; xor_decrypt = lambda text, key: \"\".join([chr(c ^ ord(k)) for c, k in zip(base64.b64decode(text.encode()), key)]); command = \"#{encrypted_command}\"; key = \"#{xor_key}\"; exec = xor_decrypt(command, key); subprocess.call(exec, shell=True)'"
-    cleanup_command: 
+    cleanup_command:
     name: bash
     elevation_required: false
-      
-

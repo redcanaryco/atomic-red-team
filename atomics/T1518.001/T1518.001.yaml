@@ -121,7 +121,7 @@ atomic_tests:
     command: |
       powershell Get-CimInstance -Namespace root/securityCenter2 -classname antivirusproduct
       powershell Get-WmiObject -Namespace root\securitycenter2 -Class antivirusproduct
-    name: command_prompt 
+    name: command_prompt
     elevation_required: true
 - name: Security Software Discovery - Windows Defender Enumeration
   auto_generated_guid: d3415a0e-66ef-429b-acf4-a768876954f6
@@ -135,7 +135,7 @@ atomic_tests:
       Get-Service WinDefend #check the service state of Windows Defender
       Get-MpComputerStatus #provides the current status of security solution elements, including Anti-Spyware, Antivirus, LoavProtection, Real-time protection, etc
       Get-MpThreat #threats details that have been detected using MS Defender
-    name: powershell 
+    name: powershell
     elevation_required: true
 - name: Security Software Discovery - Windows Firewall Enumeration
   auto_generated_guid: 9dca5a1d-f78c-4a8d-accb-d6de67cfed6b
@@ -150,5 +150,5 @@ atomic_tests:
       Get-NetFirewallProfile | Format-Table Name, Enabled
       Get-NetFirewallSetting
       Get-NetFirewallRule | select DisplayName, Enabled, Description
-    name: powershell 
+    name: powershell
     elevation_required: true

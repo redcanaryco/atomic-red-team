@@ -3,78 +3,82 @@ name: validate-atomics
 on:
   pull_request:
     branches:
-      - master
+    - master
 
 jobs:
   validate-atomics:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout repo
-        uses: actions/checkout@v3
-      - name: Install poetry
-        run: pipx install poetry
-      - name: setup python3.11
-        uses: actions/setup-python@v4
-        id: setup-python
-        with:
-          python-version: "3.11.2"
-          cache: "poetry"
+    - name: checkout repo
+      uses: actions/checkout@v3
+    - name: Install poetry
+      run: pipx install poetry
+    - name: setup python3.11
+      uses: actions/setup-python@v4
+      id: setup-python
+      with:
+        python-version: "3.11.2"
+        cache: "poetry"
 
-      - name: Install dependencies
-        run: poetry install --no-interaction --no-root
+    - name: Install dependencies
+      run: poetry install --no-interaction --no-root
 
-      - name: validate the format of atomics tests against the spec
-        run: |
-          poetry run python bin/validate/validate.py
+    - name: validate yaml
+      run: |
+        poetry run yamlfix atomics/T*
+
+    - name: validate the format of atomics tests against the spec
+      run: |
+        poetry run python bin/validate/validate.py
 
   validate-terraform:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: hashicorp/setup-terraform@v2
+    - uses: actions/checkout@v3
+    - uses: hashicorp/setup-terraform@v2
 
-      - name: Terraform fmt
-        id: fmt
-        run: terraform fmt -recursive -check
-        continue-on-error: false
+    - name: Terraform fmt
+      id: fmt
+      run: terraform fmt -recursive -check
+      continue-on-error: false
 
   upload:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout repo
-        uses: actions/checkout@v3
-      - name: Install poetry
-        run: pipx install poetry
-      - name: setup python3.11
-        uses: actions/setup-python@v4
-        id: setup-python
-        with:
-          python-version: "3.11.2"
-          cache: "poetry"
-      - uses: actions/github-script@v6
-        id: get_pr_number
-        with:
-          script: |
-            if (context.issue.number) {
-              // Return issue number if present
-              return context.issue.number;
-            } else {
-              // Otherwise return issue number from commit
-              return (
-                await github.rest.repos.listPullRequestsAssociatedWithCommit({
-                  commit_sha: context.sha,
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                })
-              ).data[0].number;
-            }
-          result-encoding: string
-      - name: Install dependencies
-        run: poetry install --no-interaction --no-root
-      - name: save labels and reviewers into a file.
-        run: |
-          poetry run python bin/generate_labels.py  -t  ${{ secrets.GITHUB_TOKEN }} -pr '${{steps.get_pr_number.outputs.result}}'
-      - uses: actions/upload-artifact@v3
-        with:
-          name: labels.json
-          path: pr/
+    - name: checkout repo
+      uses: actions/checkout@v3
+    - name: Install poetry
+      run: pipx install poetry
+    - name: setup python3.11
+      uses: actions/setup-python@v4
+      id: setup-python
+      with:
+        python-version: "3.11.2"
+        cache: "poetry"
+    - uses: actions/github-script@v6
+      id: get_pr_number
+      with:
+        script: |
+          if (context.issue.number) {
+            // Return issue number if present
+            return context.issue.number;
+          } else {
+            // Otherwise return issue number from commit
+            return (
+              await github.rest.repos.listPullRequestsAssociatedWithCommit({
+                commit_sha: context.sha,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+              })
+            ).data[0].number;
+          }
+        result-encoding: string
+    - name: Install dependencies
+      run: poetry install --no-interaction --no-root
+    - name: save labels and reviewers into a file.
+      run: |
+        poetry run python bin/generate_labels.py  -t  ${{ secrets.GITHUB_TOKEN }} -pr '${{steps.get_pr_number.outputs.result}}'
+    - uses: actions/upload-artifact@v3
+      with:
+        name: labels.json
+        path: pr/

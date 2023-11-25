@@ -78,7 +78,7 @@ atomic_tests:
       dseditgroup -o edit -d art-user -t user admin
     name: bash
     elevation_required: true
-- name: WinPwn - Loot local Credentials - powerhell kittie 
+- name: WinPwn - Loot local Credentials - powerhell kittie
   auto_generated_guid: 9e9fd066-453d-442f-88c1-ad7911d32912
   description: Loot local Credentials - powerhell kittie technique via function of WinPwn
   supported_platforms:
@@ -200,8 +200,7 @@ atomic_tests:
       su nobody
       whoami
       exit
-    cleanup_command: |
+    cleanup_command: |-
       pw usermod nobody -s /usr/sbin/nologin
       cat /etc/passwd |grep nobody
       # -> nobody:*:65534:65534:Unprivileged user:/nonexistent:/usr/sbin/nologin
-

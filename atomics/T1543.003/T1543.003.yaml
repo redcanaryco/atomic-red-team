@@ -17,8 +17,7 @@ atomic_tests:
     command: |
       sc config Fax binPath= "C:\windows\system32\WindowsPowerShell\v1.0\powershell.exe -noexit -c \"write-host 'T1543.003 Test'\""
       sc start Fax
-    cleanup_command:
-      sc config Fax binPath= "C:\WINDOWS\system32\fxssvc.exe" >nul 2>&1
+    cleanup_command: sc config Fax binPath= "C:\WINDOWS\system32\fxssvc.exe" >nul 2>&1
 - name: Service Installation CMD
   auto_generated_guid: 981e2942-e433-44e9-afc1-8c957a1496b6
   description: |
@@ -171,6 +170,6 @@ atomic_tests:
     command: |
       sc.exe \\#{remote_host} create #{service_name} binPath= "#{binary_path}" start=#{startup_type} type=#{service_type}
       sc.exe \\#{remote_host} start #{service_name}
-    cleanup_command: |
+    cleanup_command: |-
       sc.exe \\#{remote_host} stop #{service_name} >nul 2>&1
       sc.exe \\#{remote_host} delete #{service_name} >nul 2>&1

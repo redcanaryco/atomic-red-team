@@ -79,12 +79,12 @@ atomic_tests:
   supported_platforms:
   - linux
   dependencies:
-    - description: |
-        SELinux must be installed
-      prereq_command: |
-        which setenforce
-      get_prereq_command: |
-        echo "SELinux is not installed"; exit 1
+  - description: |
+      SELinux must be installed
+    prereq_command: |
+      which setenforce
+    get_prereq_command: |
+      echo "SELinux is not installed"; exit 1
   executor:
     command: |
       setenforce 0
@@ -381,7 +381,6 @@ atomic_tests:
   description: |
     Gorgon group may disable Office security features so that their code can run. Upon execution, an external document will not
     show any warning before editing the document.
-
 
     https://unit42.paloaltonetworks.com/unit42-gorgon-group-slithering-nation-state-cybercrime/
   supported_platforms:
@@ -1047,5 +1046,4 @@ atomic_tests:
       Set-ItemProperty "HKLM:\software\microsoft\windows defender\spynet" -Name "SubmitSamplesConsent" -Value 1 
       Set-ItemProperty "HKLM:\Software\Microsoft\Windows Defender" -Name "PUAProtection" -Value 1 
     name: powershell
-    elevation_required: true 
-  
+    elevation_required: true

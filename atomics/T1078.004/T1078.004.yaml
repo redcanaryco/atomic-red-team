@@ -48,7 +48,7 @@ atomic_tests:
       if [ -x "$(command -v gcloud)" ]; then exit 0; else exit 1; fi;
     get_prereq_command: |
       echo "Please Install Google Cloud SDK before running this atomic test : https://cloud.google.com/sdk/docs/install"
-  - description: | 
+  - description: |
       Check if user is logged in 
     prereq_command: |
       gcloud config get-value account
@@ -65,23 +65,23 @@ atomic_tests:
     username:
       description: Azure username
       type: string
-      default: null
+      default:
     password:
       description: Azure password
       type: string
-      default: null
+      default:
     resource_group:
       description: Name of the resource group
       type: string
-      default: null
+      default:
     runbook_name:
       description: Name of the runbook name
       type: string
-      default: null
+      default:
     automation_account_name:
       description: Name of the automation account name
       type: string
-      default: null
+      default:
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -89,7 +89,7 @@ atomic_tests:
     prereq_command: |
       terraform version
     get_prereq_command: |
-        echo Please install terraform.
+      echo Please install terraform.
   - description: |
       Install-Module -Name Az
     prereq_command: |
@@ -130,11 +130,11 @@ atomic_tests:
     Identifies an Identity and Access Management (IAM) custom role creation in Google Cloud Platform (GCP). 
     Custom roles are user-defined, and allow for the bundling of one or more supported permissions to meet specific needs. 
     Custom roles will not be updated automatically and could lead to privilege creep if not carefully scrutinized.
-    
+
     This atomic will create a new IAM role. The default role permissions are: *IAM Service Account Get*
-    
+
     Reference: https://github.com/elastic/detection-rules/blob/main/rules/integrations/gcp/initial_access_gcp_iam_custom_role_creation.toml
-    
+
   supported_platforms:
   - iaas:gcp
   input_arguments:
@@ -170,9 +170,9 @@ atomic_tests:
       if [ -x "$(command -v gcloud)" ]; then exit 0; else exit 1; fi;
     get_prereq_command: |
       echo "Please Install Google Cloud SDK before running this atomic test : https://cloud.google.com/sdk/docs/install"
-  - description: | 
+  - description: |
       Check if user is logged in 
     prereq_command: |
       gcloud config get-value account
-    get_prereq_command: |
+    get_prereq_command: |-
       gcloud auth login --no-launch-browser
