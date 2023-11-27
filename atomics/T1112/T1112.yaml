@@ -933,4 +933,14 @@ atomic_tests:
       Set-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\ProtocolDefaults' -Name 'http' -Value 3
       Set-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\ProtocolDefaults' -Name 'https' -Value 3
     name: powershell
-
+- name: Activities To Disable Secondary Authentication Detected By Modified Registry Value.
+  description: |
+    Detect the disable secondary authentication activities that adversary attempt to bypass MFA and to get the unauthorized access to the system or sensitive data.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\SecondaryAuthenticationFactor" /v "AllowSecondaryAuthenticationDevice" /t REG_DWORD /d 0 /f
+    cleanup_command: |
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\SecondaryAuthenticationFactor" /v "AllowSecondaryAuthenticationDevice" /t REG_DWORD /d 1 /f
+    name: command_prompt
