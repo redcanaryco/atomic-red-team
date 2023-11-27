@@ -29,8 +29,7 @@ atomic_tests:
       security import #{cert_export} -k
     name: sh
 
-- name: Keychain Dump
-  auto_generated_guid: 
+- name: Keychain Dump 
   description: |-
     This command will dump keychain credential information from login.keychain. 
     Source: https://www.loobins.io/binaries/security/
@@ -38,6 +37,5 @@ atomic_tests:
   - macos
   executor:
     command: sudo security dump-keychain -d login.keychain
-    cleanup_command: 
     name: sh
     elevation_required: true
