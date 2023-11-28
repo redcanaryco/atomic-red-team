@@ -2,10 +2,12 @@ import fnmatch
 import glob
 import os
 from os import DirEntry
-import yaml
 import sys
 from jsonschema import validate, ValidationError
 from collections import defaultdict
+from ruamel.yaml import YAML
+
+yaml = YAML(typ="safe")
 
 
 class BaseError(Exception):
@@ -15,12 +17,12 @@ class BaseError(Exception):
 
 class InvalidPath(BaseError):
     def __str__(self):
-        return f"Invalid path. `src` and `bin` are the only two directories supported."
+        return "Invalid path. `src` and `bin` are the only two directories supported."
 
 
 class InvalidFileName(BaseError):
     def __str__(self):
-        return f"Invalid filename. Rename file from .yml to .yaml"
+        return "Invalid filename. Rename file from .yml to .yaml"
 
 
 class ReusedGuid(BaseError):
@@ -55,7 +57,7 @@ class Validator:
         with open(used_guids_path, "r") as f:
             self.used_guids = [x.strip() for x in f.readlines()]
         with open(schema_path, "r") as f:
-            self.schema = yaml.safe_load(f)
+            self.schema = yaml.load(f)
         self.guids = []
 
     def validate(self, obj: DirEntry):
@@ -74,7 +76,7 @@ class Validator:
     def validate_atomic(self, file: DirEntry):
         """Validates whether the defined input args are used."""
         with open(file.path, "r") as f:
-            atomic = yaml.safe_load(f)
+            atomic = yaml.load(f)
             for index, t in enumerate(atomic["atomic_tests"]):
                 if t.get("auto_generated_guid"):
                     if t["auto_generated_guid"] not in self.guids:
@@ -111,7 +113,7 @@ class Validator:
     def validate_json_schema(self, file: DirEntry):
         """Validates the yaml file against the schema."""
         with open(file.path, "r") as f:
-            atomic = yaml.safe_load(f)
+            atomic = yaml.load(f)
             try:
                 validate(
                     instance=atomic,
@@ -125,7 +127,7 @@ class Validator:
         self.validate_directory_path(directory)
 
     def validate_directory_path(self, directory: DirEntry):
-        """Validated whether the directory is a allowed directory name (`src` or `bin`)"""
+        """Validated whether the directory is allowed directory name (`src` or `bin`)"""
         if directory.name not in ["src", "bin"]:
             self.errors[directory.path].append(InvalidPath(directory.path))
 
