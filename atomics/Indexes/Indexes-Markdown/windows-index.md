@@ -116,9 +116,9 @@
   - Atomic Test #1: Install and Register Password Filter DLL [windows]
 - T1070.007 Clear Network Connection History and Configurations [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1070.003 Indicator Removal on Host: Clear Command History](../../T1070.003/T1070.003.md)
-  - Atomic Test #17: Prevent Powershell History Logging [windows]
-  - Atomic Test #18: Clear Powershell History by Deleting History File [windows]
-  - Atomic Test #19: Set Custom AddToHistoryHandler to Avoid History File Logging [windows]
+  - Atomic Test #10: Prevent Powershell History Logging [windows]
+  - Atomic Test #11: Clear Powershell History by Deleting History File [windows]
+  - Atomic Test #12: Set Custom AddToHistoryHandler to Avoid History File Logging [windows]
 - [T1202 Indirect Command Execution](../../T1202/T1202.md)
   - Atomic Test #1: Indirect Command Execution - pcalua.exe [windows]
   - Atomic Test #2: Indirect Command Execution - forfiles.exe [windows]
@@ -492,8 +492,8 @@
   - Atomic Test #5: Delete an entire folder - Windows cmd [windows]
   - Atomic Test #6: Delete a single file - Windows PowerShell [windows]
   - Atomic Test #7: Delete an entire folder - Windows PowerShell [windows]
-  - Atomic Test #10: Delete Prefetch File [windows]
-  - Atomic Test #11: Delete TeamViewer Log Files [windows]
+  - Atomic Test #9: Delete Prefetch File [windows]
+  - Atomic Test #10: Delete TeamViewer Log Files [windows]
 - T1158 Hidden Files and Directories [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1221 Template Injection](../../T1221/T1221.md)
   - Atomic Test #1: WINWORD Remote Template Injection [windows]
@@ -1310,7 +1310,7 @@
 - T1025 Data from Removable Media [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1074.001 Data Staged: Local Data Staging](../../T1074.001/T1074.001.md)
   - Atomic Test #1: Stage data from Discovery.bat [windows]
-  - Atomic Test #4: Zip a Folder with PowerShell for Staging in Temp [windows]
+  - Atomic Test #3: Zip a Folder with PowerShell for Staging in Temp [windows]
 - [T1114.001 Email Collection: Local Email Collection](../../T1114.001/T1114.001.md)
   - Atomic Test #1: Email Collection with PowerShell Get-Inbox [windows]
 - [T1119 Automated Collection](../../T1119/T1119.md)
@@ -1501,6 +1501,7 @@
   - Atomic Test #11: Dump LSASS with createdump.exe from .Net v5 [windows]
   - Atomic Test #12: Dump LSASS.exe using imported Microsoft DLLs [windows]
   - Atomic Test #13: Dump LSASS.exe using lolbin rdrleakdiag.exe [windows]
+  - Atomic Test #14: Dump LSASS.exe Memory through Silent Process Exit [windows]
 - T1179 Hooking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1110.003 Brute Force: Password Spraying](../../T1110.003/T1110.003.md)
   - Atomic Test #1: Password Spray all Domain Users [windows]
@@ -1622,9 +1623,9 @@
   - Atomic Test #22: Suspicious LAPS Attributes Query with adfind ms-Mcs-AdmPwd [windows]
 - T1063 Security Software Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1087.001 Account Discovery: Local Account](../../T1087.001/T1087.001.md)
-  - Atomic Test #9: Enumerate all accounts on Windows (Local) [windows]
-  - Atomic Test #10: Enumerate all accounts via PowerShell (Local) [windows]
-  - Atomic Test #11: Enumerate logged on users via CMD (Local) [windows]
+  - Atomic Test #8: Enumerate all accounts on Windows (Local) [windows]
+  - Atomic Test #9: Enumerate all accounts via PowerShell (Local) [windows]
+  - Atomic Test #10: Enumerate logged on users via CMD (Local) [windows]
 - [T1497.001 Virtualization/Sandbox Evasion: System Checks](../../T1497.001/T1497.001.md)
   - Atomic Test #3: Detect Virtualization Environment (Windows) [windows]
   - Atomic Test #5: Detect Virtualization Environment via WMI Manufacturer/Model Listing (Windows) [windows]

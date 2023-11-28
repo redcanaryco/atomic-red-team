@@ -112,29 +112,11 @@ atomic_tests:
     name: bash
     elevation_required: true
     command: |
-      useradd --shell /bin/bash --create-home --password $(openssl passwd -1 art) art
-      su art
-      whoami
-      exit
+      password=$(openssl passwd -1 art)
+      ([ "$(uname)" = 'Linux' ] && useradd --shell /bin/bash --create-home --password $password art) || (pw useradd art -g wheel -s /bin/sh && (echo $password | pw mod user testuser1 -h 0))
+      su art -c "whoami; exit"
     cleanup_command: |
-      userdel -r art 
-- name: Create local account (FreeBSD)
-  auto_generated_guid: 95158cc9-8f6d-4889-9531-9be3f7f095e0
-  description: |
-    An adversary may wish to create an account with admin privileges to work with. In this test we create a "art" user with the password art, switch to art, execute whoami, exit and delete the art user.
-  supported_platforms:
-  - linux
-  executor:
-    name: sh
-    elevation_required: true
-    command: |
-      pw useradd art -g wheel -s /bin/sh
-      echo $(openssl passwd -1 art) | pw mod user testuser1 -h 0      
-      su art
-      whoami
-      exit
-    cleanup_command: |
-      rmuser -y art
+      [ "$(uname)" = 'Linux' ] && userdel art -rf || rmuser -y art
 - name: Reactivate a locked/expired account (Linux)
   auto_generated_guid: d2b95631-62d7-45a3-aaef-0972cea97931
   description: |

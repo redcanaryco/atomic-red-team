@@ -74,7 +74,7 @@ atomic_tests:
       stop-process -name "tor" | out-null
     name: powershell
     elevation_required: false
-- name: Tor Proxy Usage - Debian/Ubuntu
+- name: Tor Proxy Usage - Debian/Ubuntu/FreeBSD
   auto_generated_guid: 5ff9d047-6e9c-4357-b39b-5cf89d9b59c7
   description: |
     This test is designed to launch the tor proxy service, which is what is utilized in the background by the Tor Browser and other applications with add-ons in order to provide onion routing functionality.
@@ -88,12 +88,12 @@ atomic_tests:
     prereq_command: |
       if [ -x "$(command -v tor --version)" ]; then exit 0; else exit 1; fi
     get_prereq_command: |
-      sudo apt-get -y install tor
+      (which apt && sudo apt-get -y install tor) || (which pkg && pkg install -y tor)
   executor:
     command: |
-      sudo systemctl start tor 
+      [ "$(uname)" = 'FreeBSD' ] && sysrc tor_enable="YES" && service tor start || sudo systemctl start tor
     cleanup_command: |
-      sudo systemctl stop tor
+      [ "$(uname)" = 'FreeBSD' ] && service tor stop && sysrc -x tor_enable || sudo systemctl stop tor
     name: sh
     elevation_required: true
 - name: Tor Proxy Usage - MacOS
@@ -118,27 +118,3 @@ atomic_tests:
     cleanup_command: |
       killall tor > /dev/null 2>&1
     name: sh
-- name: Tor Proxy Usage - FreeBSD
-  auto_generated_guid: 550ec67d-a99e-408b-816a-689271b27d2a
-  description: |
-    This test is designed to launch the tor proxy service, which is what is utilized in the background by the Tor Browser and other applications with add-ons in order to provide onion routing functionality.
-    Upon successful execution, the tor proxy service will be launched. 
-  supported_platforms:
-  - linux
-  dependency_executor_name: sh
-  dependencies:
-  - description: |
-      Tor must be installed on the machine 
-    prereq_command: |
-      if [ -x "$(command -v tor --version)" ]; then exit 0; else exit 1; fi
-    get_prereq_command: |
-      pkg install -y tor
-  executor:
-    command: |
-      sysrc tor_enable="YES"
-      service tor start
-    cleanup_command: |
-      service tor stop
-      sysrc -x tor_enable
-    name: sh
-    elevation_required: true

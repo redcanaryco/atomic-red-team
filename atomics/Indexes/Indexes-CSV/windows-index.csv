@@ -76,9 +76,9 @@ defense-evasion,T1218.007,Signed Binary Proxy Execution: Msiexec,9,Msiexec.exe -
 defense-evasion,T1218.007,Signed Binary Proxy Execution: Msiexec,10,Msiexec.exe - Execute the DllUnregisterServer function of a DLL,ab09ec85-4955-4f9c-b8e0-6851baf4d47f,command_prompt
 defense-evasion,T1218.007,Signed Binary Proxy Execution: Msiexec,11,Msiexec.exe - Execute Remote MSI file,44a4bedf-ffe3-452e-bee4-6925ab125662,command_prompt
 defense-evasion,T1556.002,Modify Authentication Process: Password Filter DLL,1,Install and Register Password Filter DLL,a7961770-beb5-4134-9674-83d7e1fa865c,powershell
-defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,17,Prevent Powershell History Logging,2f898b81-3e97-4abb-bc3f-a95138988370,powershell
-defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,18,Clear Powershell History by Deleting History File,da75ae8d-26d6-4483-b0fe-700e4df4f037,powershell
-defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,19,Set Custom AddToHistoryHandler to Avoid History File Logging,1d0d9aa6-6111-4f89-927b-53e8afae7f94,powershell
+defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,10,Prevent Powershell History Logging,2f898b81-3e97-4abb-bc3f-a95138988370,powershell
+defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,11,Clear Powershell History by Deleting History File,da75ae8d-26d6-4483-b0fe-700e4df4f037,powershell
+defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,12,Set Custom AddToHistoryHandler to Avoid History File Logging,1d0d9aa6-6111-4f89-927b-53e8afae7f94,powershell
 defense-evasion,T1202,Indirect Command Execution,1,Indirect Command Execution - pcalua.exe,cecfea7a-5f03-4cdd-8bc8-6f7c22862440,command_prompt
 defense-evasion,T1202,Indirect Command Execution,2,Indirect Command Execution - forfiles.exe,8b34a448-40d9-4fc3-a8c8-4bb286faf7dc,command_prompt
 defense-evasion,T1202,Indirect Command Execution,3,Indirect Command Execution - conhost.exe,cf3391e0-b482-4b02-87fc-ca8362269b29,command_prompt
@@ -336,8 +336,8 @@ defense-evasion,T1070.004,Indicator Removal on Host: File Deletion,4,Delete a si
 defense-evasion,T1070.004,Indicator Removal on Host: File Deletion,5,Delete an entire folder - Windows cmd,ded937c4-2add-42f7-9c2c-c742b7a98698,command_prompt
 defense-evasion,T1070.004,Indicator Removal on Host: File Deletion,6,Delete a single file - Windows PowerShell,9dee89bd-9a98-4c4f-9e2d-4256690b0e72,powershell
 defense-evasion,T1070.004,Indicator Removal on Host: File Deletion,7,Delete an entire folder - Windows PowerShell,edd779e4-a509-4cba-8dfa-a112543dbfb1,powershell
-defense-evasion,T1070.004,Indicator Removal on Host: File Deletion,10,Delete Prefetch File,36f96049-0ad7-4a5f-8418-460acaeb92fb,powershell
-defense-evasion,T1070.004,Indicator Removal on Host: File Deletion,11,Delete TeamViewer Log Files,69f50a5f-967c-4327-a5bb-e1a9a9983785,powershell
+defense-evasion,T1070.004,Indicator Removal on Host: File Deletion,9,Delete Prefetch File,36f96049-0ad7-4a5f-8418-460acaeb92fb,powershell
+defense-evasion,T1070.004,Indicator Removal on Host: File Deletion,10,Delete TeamViewer Log Files,69f50a5f-967c-4327-a5bb-e1a9a9983785,powershell
 defense-evasion,T1221,Template Injection,1,WINWORD Remote Template Injection,1489e08a-82c7-44ee-b769-51b72d03521d,command_prompt
 defense-evasion,T1550.002,Use Alternate Authentication Material: Pass the Hash,1,Mimikatz Pass the Hash,ec23cef9-27d9-46e4-a68d-6f75f7b86908,command_prompt
 defense-evasion,T1550.002,Use Alternate Authentication Material: Pass the Hash,2,crackmapexec Pass the Hash,eb05b028-16c8-4ad8-adea-6f5b219da9a9,command_prompt
@@ -808,7 +808,7 @@ collection,T1056.001,Input Capture: Keylogging,1,Input Capture,d9b633ca-8efb-45e
 collection,T1123,Audio Capture,1,using device audio capture commandlet,9c3ad250-b185-4444-b5a9-d69218a10c95,powershell
 collection,T1123,Audio Capture,2,Registry artefact when application use microphone,7a21cce2-6ada-4f7c-afd9-e1e9c481e44a,command_prompt
 collection,T1074.001,Data Staged: Local Data Staging,1,Stage data from Discovery.bat,107706a5-6f9f-451a-adae-bab8c667829f,powershell
-collection,T1074.001,Data Staged: Local Data Staging,4,Zip a Folder with PowerShell for Staging in Temp,a57fbe4b-3440-452a-88a7-943531ac872a,powershell
+collection,T1074.001,Data Staged: Local Data Staging,3,Zip a Folder with PowerShell for Staging in Temp,a57fbe4b-3440-452a-88a7-943531ac872a,powershell
 collection,T1114.001,Email Collection: Local Email Collection,1,Email Collection with PowerShell Get-Inbox,3f1b5096-0139-4736-9b78-19bcb02bb1cb,powershell
 collection,T1119,Automated Collection,1,Automated Collection Command Prompt,cb379146-53f1-43e0-b884-7ce2c635ff5b,command_prompt
 collection,T1119,Automated Collection,2,Automated Collection PowerShell,634bd9b9-dc83-4229-b19f-7f83ba9ad313,powershell
@@ -922,6 +922,7 @@ credential-access,T1003.001,OS Credential Dumping: LSASS Memory,10,Powershell Mi
 credential-access,T1003.001,OS Credential Dumping: LSASS Memory,11,Dump LSASS with createdump.exe from .Net v5,9d0072c8-7cca-45c4-bd14-f852cfa35cf0,powershell
 credential-access,T1003.001,OS Credential Dumping: LSASS Memory,12,Dump LSASS.exe using imported Microsoft DLLs,86fc3f40-237f-4701-b155-81c01c48d697,powershell
 credential-access,T1003.001,OS Credential Dumping: LSASS Memory,13,Dump LSASS.exe using lolbin rdrleakdiag.exe,47a539d1-61b9-4364-bf49-a68bc2a95ef0,powershell
+credential-access,T1003.001,OS Credential Dumping: LSASS Memory,14,Dump LSASS.exe Memory through Silent Process Exit,eb5adf16-b601-4926-bca7-dad22adffb37,command_prompt
 credential-access,T1110.003,Brute Force: Password Spraying,1,Password Spray all Domain Users,90bc2e54-6c84-47a5-9439-0a2a92b4b175,command_prompt
 credential-access,T1110.003,Brute Force: Password Spraying,2,Password Spray (DomainPasswordSpray),263ae743-515f-4786-ac7d-41ef3a0d4b2b,powershell
 credential-access,T1110.003,Brute Force: Password Spraying,3,Password spray all Active Directory domain users with a single password via LDAP against domain controller (NTLM or Kerberos),f14d956a-5b6e-4a93-847f-0c415142f07d,powershell
@@ -999,9 +1000,9 @@ discovery,T1087.002,Account Discovery: Domain Account,19,Suspicious LAPS Attribu
 discovery,T1087.002,Account Discovery: Domain Account,20,Suspicious LAPS Attributes Query with Get-ADComputer all properties and SearchScope,ffbcfd62-15d6-4989-a21a-80bfc8e58bb5,powershell
 discovery,T1087.002,Account Discovery: Domain Account,21,Suspicious LAPS Attributes Query with adfind all properties,abf00f6c-9983-4d9a-afbc-6b1c6c6448e1,powershell
 discovery,T1087.002,Account Discovery: Domain Account,22,Suspicious LAPS Attributes Query with adfind ms-Mcs-AdmPwd,51a98f96-0269-4e09-a10f-e307779a8b05,powershell
-discovery,T1087.001,Account Discovery: Local Account,9,Enumerate all accounts on Windows (Local),80887bec-5a9b-4efc-a81d-f83eb2eb32ab,command_prompt
-discovery,T1087.001,Account Discovery: Local Account,10,Enumerate all accounts via PowerShell (Local),ae4b6361-b5f8-46cb-a3f9-9cf108ccfe7b,powershell
-discovery,T1087.001,Account Discovery: Local Account,11,Enumerate logged on users via CMD (Local),a138085e-bfe5-46ba-a242-74a6fb884af3,command_prompt
+discovery,T1087.001,Account Discovery: Local Account,8,Enumerate all accounts on Windows (Local),80887bec-5a9b-4efc-a81d-f83eb2eb32ab,command_prompt
+discovery,T1087.001,Account Discovery: Local Account,9,Enumerate all accounts via PowerShell (Local),ae4b6361-b5f8-46cb-a3f9-9cf108ccfe7b,powershell
+discovery,T1087.001,Account Discovery: Local Account,10,Enumerate logged on users via CMD (Local),a138085e-bfe5-46ba-a242-74a6fb884af3,command_prompt
 discovery,T1497.001,Virtualization/Sandbox Evasion: System Checks,3,Detect Virtualization Environment (Windows),502a7dc4-9d6f-4d28-abf2-f0e84692562d,powershell
 discovery,T1497.001,Virtualization/Sandbox Evasion: System Checks,5,Detect Virtualization Environment via WMI Manufacturer/Model Listing (Windows),4a41089a-48e0-47aa-82cb-5b81a463bc78,powershell
 discovery,T1069.002,Permission Groups Discovery: Domain Groups,1,Basic Permission Groups Discovery Windows (Domain),dd66d77d-8998-48c0-8024-df263dc2ce5d,command_prompt

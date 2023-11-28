@@ -184,24 +184,17 @@
 - T1600.001 Reduce Key Space [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1070.003 Indicator Removal on Host: Clear Command History](../../T1070.003/T1070.003.md)
   - Atomic Test #1: Clear Bash history (rm) [linux, macos]
-  - Atomic Test #2: Clear sh history (rm) [linux]
-  - Atomic Test #3: Clear Bash history (echo) [linux]
-  - Atomic Test #4: Clear sh history (echo) [linux]
-  - Atomic Test #5: Clear Bash history (cat dev/null) [linux, macos]
-  - Atomic Test #6: Clear sh history (cat dev/null) [linux]
-  - Atomic Test #7: Clear Bash history (ln dev/null) [linux, macos]
-  - Atomic Test #8: Clear sh history (ln dev/null) [linux]
-  - Atomic Test #9: Clear Bash history (truncate) [linux]
-  - Atomic Test #10: Clear sh history (truncate) [linux]
-  - Atomic Test #11: Clear history of a bunch of shells [linux, macos]
-  - Atomic Test #12: Clear history of a bunch of shells (freebsd) [linux]
-  - Atomic Test #13: Clear and Disable Bash History Logging [linux, macos]
-  - Atomic Test #14: Use Space Before Command to Avoid Logging to History [linux, macos]
-  - Atomic Test #15: Disable Bash History Logging with SSH -T [linux]
-  - Atomic Test #16: Disable sh History Logging with SSH -T (freebsd) [linux]
-  - Atomic Test #17: Prevent Powershell History Logging [windows]
-  - Atomic Test #18: Clear Powershell History by Deleting History File [windows]
-  - Atomic Test #19: Set Custom AddToHistoryHandler to Avoid History File Logging [windows]
+  - Atomic Test #2: Clear Bash history (echo) [linux]
+  - Atomic Test #3: Clear Bash history (cat dev/null) [linux, macos]
+  - Atomic Test #4: Clear Bash history (ln dev/null) [linux, macos]
+  - Atomic Test #5: Clear Bash history (truncate) [linux]
+  - Atomic Test #6: Clear history of a bunch of shells [linux, macos]
+  - Atomic Test #7: Clear and Disable Bash History Logging [linux, macos]
+  - Atomic Test #8: Use Space Before Command to Avoid Logging to History [linux, macos]
+  - Atomic Test #9: Disable Bash History Logging with SSH -T [linux]
+  - Atomic Test #10: Prevent Powershell History Logging [windows]
+  - Atomic Test #11: Clear Powershell History by Deleting History File [windows]
+  - Atomic Test #12: Set Custom AddToHistoryHandler to Avoid History File Logging [windows]
 - [T1202 Indirect Command Execution](../../T1202/T1202.md)
   - Atomic Test #1: Indirect Command Execution - pcalua.exe [windows]
   - Atomic Test #2: Indirect Command Execution - forfiles.exe [windows]
@@ -715,9 +708,8 @@
   - Atomic Test #6: Delete a single file - Windows PowerShell [windows]
   - Atomic Test #7: Delete an entire folder - Windows PowerShell [windows]
   - Atomic Test #8: Delete Filesystem - Linux [linux]
-  - Atomic Test #9: Delete Filesystem - FreeBSD [linux]
-  - Atomic Test #10: Delete Prefetch File [windows]
-  - Atomic Test #11: Delete TeamViewer Log Files [windows]
+  - Atomic Test #9: Delete Prefetch File [windows]
+  - Atomic Test #10: Delete TeamViewer Log Files [windows]
 - T1158 Hidden Files and Directories [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1221 Template Injection](../../T1221/T1221.md)
   - Atomic Test #1: WINWORD Remote Template Injection [windows]
@@ -797,11 +789,10 @@
   - Atomic Test #6: WinPwn - Loot local Credentials - powerhell kittie [windows]
   - Atomic Test #7: WinPwn - Loot local Credentials - Safetykatz [windows]
   - Atomic Test #8: Create local account (Linux) [linux]
-  - Atomic Test #9: Create local account (FreeBSD) [linux]
-  - Atomic Test #10: Reactivate a locked/expired account (Linux) [linux]
-  - Atomic Test #11: Reactivate a locked/expired account (FreeBSD) [linux]
-  - Atomic Test #12: Login as nobody (Linux) [linux]
-  - Atomic Test #13: Login as nobody (freebsd) [linux]
+  - Atomic Test #9: Reactivate a locked/expired account (Linux) [linux]
+  - Atomic Test #10: Reactivate a locked/expired account (FreeBSD) [linux]
+  - Atomic Test #11: Login as nobody (Linux) [linux]
+  - Atomic Test #12: Login as nobody (freebsd) [linux]
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1127 Trusted Developer Utilities Proxy Execution](../../T1127/T1127.md)
   - Atomic Test #1: Lolbin Jsc.exe compile javascript to exe [windows]
@@ -1187,11 +1178,10 @@
   - Atomic Test #6: WinPwn - Loot local Credentials - powerhell kittie [windows]
   - Atomic Test #7: WinPwn - Loot local Credentials - Safetykatz [windows]
   - Atomic Test #8: Create local account (Linux) [linux]
-  - Atomic Test #9: Create local account (FreeBSD) [linux]
-  - Atomic Test #10: Reactivate a locked/expired account (Linux) [linux]
-  - Atomic Test #11: Reactivate a locked/expired account (FreeBSD) [linux]
-  - Atomic Test #12: Login as nobody (Linux) [linux]
-  - Atomic Test #13: Login as nobody (freebsd) [linux]
+  - Atomic Test #9: Reactivate a locked/expired account (Linux) [linux]
+  - Atomic Test #10: Reactivate a locked/expired account (FreeBSD) [linux]
+  - Atomic Test #11: Login as nobody (Linux) [linux]
+  - Atomic Test #12: Login as nobody (freebsd) [linux]
 - [T1574.012 Hijack Execution Flow: COR_PROFILER](../../T1574.012/T1574.012.md)
   - Atomic Test #1: User scope COR_PROFILER [windows]
   - Atomic Test #2: System Scope COR_PROFILER [windows]
@@ -1324,14 +1314,10 @@
   - Atomic Test #7: What shells are available [linux]
   - Atomic Test #8: Command line scripts [linux]
   - Atomic Test #9: Obfuscated command line scripts [linux]
-  - Atomic Test #10: Obfuscated command line scripts (freebsd) [linux]
-  - Atomic Test #11: Change login shell [linux]
-  - Atomic Test #12: Change login shell (freebsd) [linux]
-  - Atomic Test #13: Environment variable scripts [linux]
-  - Atomic Test #14: Environment variable scripts (freebsd) [linux]
-  - Atomic Test #15: Detecting pipe-to-shell [linux]
-  - Atomic Test #16: Detecting pipe-to-shell (freebsd) [linux]
-  - Atomic Test #17: Current kernel information enumeration [linux]
+  - Atomic Test #10: Change login shell [linux]
+  - Atomic Test #11: Environment variable scripts [linux]
+  - Atomic Test #12: Detecting pipe-to-shell [linux]
+  - Atomic Test #13: Current kernel information enumeration [linux]
 - [T1559 Inter-Process Communication](../../T1559/T1559.md)
   - Atomic Test #1: Cobalt Strike Artifact Kit pipe [windows]
   - Atomic Test #2: Cobalt Strike Lateral Movement (psexec_psh) pipe [windows]
@@ -1764,11 +1750,10 @@
   - Atomic Test #6: WinPwn - Loot local Credentials - powerhell kittie [windows]
   - Atomic Test #7: WinPwn - Loot local Credentials - Safetykatz [windows]
   - Atomic Test #8: Create local account (Linux) [linux]
-  - Atomic Test #9: Create local account (FreeBSD) [linux]
-  - Atomic Test #10: Reactivate a locked/expired account (Linux) [linux]
-  - Atomic Test #11: Reactivate a locked/expired account (FreeBSD) [linux]
-  - Atomic Test #12: Login as nobody (Linux) [linux]
-  - Atomic Test #13: Login as nobody (freebsd) [linux]
+  - Atomic Test #9: Reactivate a locked/expired account (Linux) [linux]
+  - Atomic Test #10: Reactivate a locked/expired account (FreeBSD) [linux]
+  - Atomic Test #11: Login as nobody (Linux) [linux]
+  - Atomic Test #12: Login as nobody (freebsd) [linux]
 - [T1574.012 Hijack Execution Flow: COR_PROFILER](../../T1574.012/T1574.012.md)
   - Atomic Test #1: User scope COR_PROFILER [windows]
   - Atomic Test #2: System Scope COR_PROFILER [windows]
@@ -1829,9 +1814,8 @@
 - [T1090.003 Proxy: Multi-hop Proxy](../../T1090.003/T1090.003.md)
   - Atomic Test #1: Psiphon [windows]
   - Atomic Test #2: Tor Proxy Usage - Windows [windows]
-  - Atomic Test #3: Tor Proxy Usage - Debian/Ubuntu [linux]
+  - Atomic Test #3: Tor Proxy Usage - Debian/Ubuntu/FreeBSD [linux]
   - Atomic Test #4: Tor Proxy Usage - MacOS [macos]
-  - Atomic Test #5: Tor Proxy Usage - FreeBSD [linux]
 - T1001 Data Obfuscation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1571 Non-Standard Port](../../T1571/T1571.md)
   - Atomic Test #1: Testing usage of uncommonly used port with PowerShell [windows]
@@ -1936,8 +1920,7 @@
 - [T1074.001 Data Staged: Local Data Staging](../../T1074.001/T1074.001.md)
   - Atomic Test #1: Stage data from Discovery.bat [windows]
   - Atomic Test #2: Stage data from Discovery.sh [linux, macos]
-  - Atomic Test #3: Stage data from Discovery.sh (freebsd) [linux]
-  - Atomic Test #4: Zip a Folder with PowerShell for Staging in Temp [windows]
+  - Atomic Test #3: Zip a Folder with PowerShell for Staging in Temp [windows]
 - [T1114.001 Email Collection: Local Email Collection](../../T1114.001/T1114.001.md)
   - Atomic Test #1: Email Collection with PowerShell Get-Inbox [windows]
 - [T1119 Automated Collection](../../T1119/T1119.md)
@@ -2107,6 +2090,7 @@
   - Atomic Test #1: Password Cracking with Hashcat [windows]
 - [T1555.001 Credentials from Password Stores: Keychain](../../T1555.001/T1555.001.md)
   - Atomic Test #1: Keychain [macos]
+  - Atomic Test #2: Keychain Dump [macos]
 - [T1003.004 OS Credential Dumping: LSA Secrets](../../T1003.004/T1003.004.md)
   - Atomic Test #1: Dumping LSA Secrets [windows]
 - [T1606.002 Forge Web Credentials: SAML token](../../T1606.002/T1606.002.md)
@@ -2209,6 +2193,7 @@
   - Atomic Test #11: Dump LSASS with createdump.exe from .Net v5 [windows]
   - Atomic Test #12: Dump LSASS.exe using imported Microsoft DLLs [windows]
   - Atomic Test #13: Dump LSASS.exe using lolbin rdrleakdiag.exe [windows]
+  - Atomic Test #14: Dump LSASS.exe Memory through Silent Process Exit [windows]
 - T1179 Hooking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1110.003 Brute Force: Password Spraying](../../T1110.003/T1110.003.md)
   - Atomic Test #1: Password Spray all Domain Users [windows]
@@ -2371,12 +2356,11 @@
   - Atomic Test #3: View accounts with UID 0 [linux, macos]
   - Atomic Test #4: List opened files by user [linux, macos]
   - Atomic Test #5: Show if a user account has ever logged in remotely [linux]
-  - Atomic Test #6: Show if a user account has ever logged in remotely (freebsd) [linux]
-  - Atomic Test #7: Enumerate users and groups [linux, macos]
-  - Atomic Test #8: Enumerate users and groups [macos]
-  - Atomic Test #9: Enumerate all accounts on Windows (Local) [windows]
-  - Atomic Test #10: Enumerate all accounts via PowerShell (Local) [windows]
-  - Atomic Test #11: Enumerate logged on users via CMD (Local) [windows]
+  - Atomic Test #6: Enumerate users and groups [linux, macos]
+  - Atomic Test #7: Enumerate users and groups [macos]
+  - Atomic Test #8: Enumerate all accounts on Windows (Local) [windows]
+  - Atomic Test #9: Enumerate all accounts via PowerShell (Local) [windows]
+  - Atomic Test #10: Enumerate logged on users via CMD (Local) [windows]
 - [T1497.001 Virtualization/Sandbox Evasion: System Checks](../../T1497.001/T1497.001.md)
   - Atomic Test #1: Detect Virtualization Environment (Linux) [linux]
   - Atomic Test #2: Detect Virtualization Environment (FreeBSD) [linux]
@@ -2843,11 +2827,10 @@
   - Atomic Test #6: WinPwn - Loot local Credentials - powerhell kittie [windows]
   - Atomic Test #7: WinPwn - Loot local Credentials - Safetykatz [windows]
   - Atomic Test #8: Create local account (Linux) [linux]
-  - Atomic Test #9: Create local account (FreeBSD) [linux]
-  - Atomic Test #10: Reactivate a locked/expired account (Linux) [linux]
-  - Atomic Test #11: Reactivate a locked/expired account (FreeBSD) [linux]
-  - Atomic Test #12: Login as nobody (Linux) [linux]
-  - Atomic Test #13: Login as nobody (freebsd) [linux]
+  - Atomic Test #9: Reactivate a locked/expired account (Linux) [linux]
+  - Atomic Test #10: Reactivate a locked/expired account (FreeBSD) [linux]
+  - Atomic Test #11: Login as nobody (Linux) [linux]
+  - Atomic Test #12: Login as nobody (freebsd) [linux]
 
 # exfiltration
 - T1567 Exfiltration Over Web Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
