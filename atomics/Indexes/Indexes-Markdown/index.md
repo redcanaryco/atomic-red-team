@@ -2090,6 +2090,7 @@
   - Atomic Test #1: Password Cracking with Hashcat [windows]
 - [T1555.001 Credentials from Password Stores: Keychain](../../T1555.001/T1555.001.md)
   - Atomic Test #1: Keychain [macos]
+  - Atomic Test #2: Keychain Dump [macos]
 - [T1003.004 OS Credential Dumping: LSA Secrets](../../T1003.004/T1003.004.md)
   - Atomic Test #1: Dumping LSA Secrets [windows]
 - [T1606.002 Forge Web Credentials: SAML token](../../T1606.002/T1606.002.md)
