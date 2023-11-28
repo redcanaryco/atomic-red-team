@@ -46064,20 +46064,25 @@ credential-access:
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
       identifier: T1555.001
     atomic_tests:
-    - name: Keychain
+    - name: Keychain Dump
+      auto_generated_guid: 88e1fa00-bf63-4e5b-a3e1-e2ea51c8cca6
+      description: "This command will dump keychain credential information from login.keychain.
+        \nSource: https://www.loobins.io/binaries/security/\n\n### Keychain File path\n
+        \ ~/Library/Keychains/\n  /Library/Keychains/\n  /Network/Library/Keychains/\n
+        \ [Security Reference](https://developer.apple.com/legacy/library/documentation/Darwin/Reference/ManPages/man1/security.1.html)\n
+        \ "
+      supported_platforms:
+      - macos
+      executor:
+        command: sudo security dump-keychain -d login.keychain
+        name: sh
+        elevation_required: true
+    - name: Export Certificate Item(s)
       auto_generated_guid: 1864fdec-ff86-4452-8c30-f12507582a93
-      description: |
-        ### Keychain Files
+      description: 'This command finds all certificate items and sends the output
+        to local file in pem format.
 
-          ~/Library/Keychains/
-
-          /Library/Keychains/
-
-          /Network/Library/Keychains/
-
-          [Security Reference](https://developer.apple.com/legacy/library/documentation/Darwin/Reference/ManPages/man1/security.1.html)
-
-          [Keychain dumper](https://github.com/juuso/keychaindump)
+        '
       supported_platforms:
       - macos
       input_arguments:
@@ -46086,21 +46091,30 @@ credential-access:
           type: path
           default: "/tmp/certs.pem"
       executor:
-        command: |
-          security -h
-          security find-certificate -a -p > #{cert_export}
-          security import #{cert_export} -k
+        command: 'security find-certificate -a -p > #{cert_export}
+
+          '
+        cleanup_command: 'rm #{cert_export}'
         name: sh
-    - name: Keychain Dump
-      auto_generated_guid: 88e1fa00-bf63-4e5b-a3e1-e2ea51c8cca6
-      description: "This command will dump keychain credential information from login.keychain.
-        \nSource: https://www.loobins.io/binaries/security/"
+        elevation_required: false
+    - name: Import Certificate Item(s) into Keychain
+      auto_generated_guid: e544bbcb-c4e0-4bd0-b614-b92131635f59
+      description: 'This command will import a certificate pem file into a keychain.
+
+        '
       supported_platforms:
       - macos
+      input_arguments:
+        cert_export:
+          description: Specify the path of the pem certificate file to import.
+          type: path
+          default: "/tmp/certs.pem"
       executor:
-        command: sudo security dump-keychain -d login.keychain
+        command: 'security import #{cert_export} -k
+
+          '
         name: sh
-        elevation_required: true
+        elevation_required: false
   T1003.004:
     technique:
       x_mitre_platforms:
