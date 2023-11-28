@@ -512,6 +512,7 @@
 - T1110.002 Brute Force: Password Cracking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1555.001 Credentials from Password Stores: Keychain](../../T1555.001/T1555.001.md)
   - Atomic Test #1: Keychain [macos]
+  - Atomic Test #2: Keychain Dump [macos]
 - T1167 Securityd Memory [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1555.005 Password Managers [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1040 Network Sniffing](../../T1040/T1040.md)
