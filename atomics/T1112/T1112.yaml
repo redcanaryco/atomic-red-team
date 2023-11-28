@@ -933,4 +933,29 @@ atomic_tests:
       Set-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\ProtocolDefaults' -Name 'http' -Value 3
       Set-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\ProtocolDefaults' -Name 'https' -Value 3
     name: powershell
-
+- name: Scarab Ransomware Defense Evasion Activities Detected
+  description: |
+    Detect the Scarab Ransomware defense evasion activities that can abuse the registry values to modified the settings of the Credential Security Support Provider for the purpose to overcome potential RDP connection issues.
+    Scarab Ransomware Article (https://www.welivesecurity.com/en/eset-research/scarabs-colon-izing-vulnerable-servers/)
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+     reg add “HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System\CredSSP\Parameters" /f /v AllowEncryptionOracle /t REG_DWORD /d 2 /f
+    cleanup_command: |
+      reg add “HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System\CredSSP\Parameters" /f /v AllowEncryptionOracle /t REG_DWORD /d 0 /f
+    name: command_prompt
+- name: MERDOOR BackDoor Behaviors Persistence By Detection of Deletion Registry
+  description: |
+    Detect suspicious behavior of Merdoor Backdoor persistence activities. 
+    Merdoor Backdoor Article (detect suspicious behavior of Merdoor Backdoor by deletion of registry values.)
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+     reg add “HKLM\SOFTWARE\Classes\.ecdf" /f /v ecdffile /t REG_DWORD /d 1 /f
+     reg add “HKLM\SOFTWARE\Classes\.ptdf" /f /v ptdffile /t REG_DWORD /d 1 /f
+    cleanup_command: |
+      reg add “HKLM\SOFTWARE\Classes\.ecdf" /f /v ecdffile /t REG_DWORD /d 0 /f
+      reg add “HKLM\SOFTWARE\Classes\.ptdf" /f /v ptdffile /t REG_DWORD /d 0 /f
+    name: command_prompt
