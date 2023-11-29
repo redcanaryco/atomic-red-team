@@ -941,21 +941,8 @@ atomic_tests:
   - windows
   executor:
     command: |
-     reg add “HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System\CredSSP\Parameters" /f /v AllowEncryptionOracle /t REG_DWORD /d 2 /f
+     reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System\CredSSP\Parameters" /f /v AllowEncryptionOracle /t REG_DWORD /d 2 /f
     cleanup_command: |
-      reg add “HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System\CredSSP\Parameters" /f /v AllowEncryptionOracle /t REG_DWORD /d 0 /f
+      reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System\CredSSP\Parameters" /f /v AllowEncryptionOracle /t REG_DWORD /d 0 /f
     name: command_prompt
-- name: MERDOOR BackDoor Behaviors Persistence By Detection of Deletion Registry
-  description: |
-    Detect suspicious behavior of Merdoor Backdoor persistence activities. 
-    Merdoor Backdoor Article (https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/lancefly-merdoor-zxshell-custom-backdoor)
-  supported_platforms:
-  - windows
-  executor:
-    command: |
-     reg add “HKLM\SOFTWARE\Classes\.ecdf" /f /v ecdffile /t REG_DWORD /d 1 /f
-     reg add “HKLM\SOFTWARE\Classes\.ptdf" /f /v ptdffile /t REG_DWORD /d 1 /f
-    cleanup_command: |
-      reg add “HKLM\SOFTWARE\Classes\.ecdf" /f /v ecdffile /t REG_DWORD /d 0 /f
-      reg add “HKLM\SOFTWARE\Classes\.ptdf" /f /v ptdffile /t REG_DWORD /d 0 /f
-    name: command_prompt
+
