@@ -604,6 +604,7 @@
 - T1652 Device Driver Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1087.002 Account Discovery: Domain Account](../../T1087.002/T1087.002.md)
   - Atomic Test #23: Active Directory Domain Search [linux]
+  - Atomic Test #24: Account Enumeration with LDAPDomainDump [linux]
 - [T1087.001 Account Discovery: Local Account](../../T1087.001/T1087.001.md)
   - Atomic Test #1: Enumerate all accounts (Local) [linux]
   - Atomic Test #2: View sudoers access [linux, macos]

@@ -2163,6 +2163,7 @@
   - Atomic Test #21: Suspicious LAPS Attributes Query with adfind all properties [windows]
   - Atomic Test #22: Suspicious LAPS Attributes Query with adfind ms-Mcs-AdmPwd [windows]
   - Atomic Test #23: Active Directory Domain Search [linux]
+  - Atomic Test #24: Account Enumeration with LDAPDomainDump [linux]
 - [T1087.001 Account Discovery: Local Account](../../T1087.001/T1087.001.md)
   - Atomic Test #1: Enumerate all accounts (Local) [linux]
   - Atomic Test #2: View sudoers access [linux, macos]
