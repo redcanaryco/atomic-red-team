@@ -163,7 +163,6 @@ atomic_tests:
     name: powershell
     elevation_required: true
 - name: Process Injection with Go using UuidFromStringA WinAPI
-  auto_generated_guid:
   description: |
     Uses WinAPI UuidFromStringA to load shellcode to a memory address then executes the shellcode using EnumSystemLocalesA.
     With this technique, memory is allocated on the heap and does not use commonly suspicious APIs such as VirtualAlloc, WriteProcessMemory, or CreateThread 
@@ -182,7 +181,6 @@ atomic_tests:
     cleanup_command: |
        Stop-Process -Name CalculatorApp -ErrorAction SilentlyContinue
 - name: Process Injection with Go using EtwpCreateEtwThread WinAPI
-  auto_generated_guid:
   description: |
     Uses EtwpCreateEtwThread function from ntdll.dll to execute shellcode within the application's process.
     This program loads the DLLs and gets a handle to the used procedures itself instead of using the windows package directly.
@@ -208,7 +206,6 @@ atomic_tests:
     cleanup_command: |
        Stop-Process -Name CalculatorApp -ErrorAction SilentlyContinue
 - name: Remote Process Injection with Go using RtlCreateUserThread WinAPI
-  auto_generated_guid:
   description: |
     Executes shellcode in a remote process.
 
@@ -244,7 +241,6 @@ atomic_tests:
        Stop-Process -Name CalculatorApp -ErrorAction SilentlyContinue
        Stop-Process -Name #{spawn_process_name} -ErrorAction SilentlyContinue
 - name: Remote Process Injection with Go using CreateRemoteThread WinAPI
-  auto_generated_guid:
   description: |
     Leverages the Windows CreateRemoteThread function from Kernel32.dll to execute shellocde in a remote process.
 
@@ -282,7 +278,6 @@ atomic_tests:
        Stop-Process -Name CalculatorApp -ErrorAction SilentlyContinue
        Stop-Process -Name #{spawn_process_name} -ErrorAction SilentlyContinue
 - name: Remote Process Injection with Go using CreateRemoteThread WinAPI (Natively)
-  auto_generated_guid:
   description: |
     Leverages the Windows CreateRemoteThread function from Kernel32.dll to execute shellcode in a remote process.
 
@@ -317,7 +312,6 @@ atomic_tests:
        Stop-Process -Name CalculatorApp -ErrorAction SilentlyContinue
        Stop-Process -Name #{spawn_process_name} -ErrorAction SilentlyContinue
 - name: Process Injection with Go using CreateThread WinAPI
-  auto_generated_guid:
   description: |
     This program executes shellcode in the current process using the following steps
     1. Allocate memory for the shellcode with VirtualAlloc setting the page permissions to Read/Write
@@ -339,7 +333,6 @@ atomic_tests:
     cleanup_command: |
        Stop-Process -Name CalculatorApp -ErrorAction SilentlyContinue
 - name: Process Injection with Go using CreateThread WinAPI (Natively)
-  auto_generated_guid:
   description: |
     This program executes shellcode in the current process using the following steps
     1. Allocate memory for the shellcode with VirtualAlloc setting the page permissions to Read/Write
