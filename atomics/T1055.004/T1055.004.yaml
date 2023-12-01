@@ -34,6 +34,7 @@ atomic_tests:
       "#{exe_binary}"
     name: command_prompt
 - name: EarlyBird APC Queue Injection in Go
+  auto_generated_guid: 73785dd2-323b-4205-ab16-bb6f06677e14
   description: |
     Creates a process in a suspended state and calls QueueUserAPC WinAPI to add a UserAPC to the child process that points to allocated shellcode. 
     ResumeThread is called which then calls NtTestAlert to execute the created UserAPC which then executes the shellcode.
@@ -62,6 +63,7 @@ atomic_tests:
        Stop-Process -Name CalculatorApp -ErrorAction SilentlyContinue
        Stop-Process -Name "#{spawn_process_name}" -ErrorAction SilentlyContinue
 - name: Remote Process Injection with Go using NtQueueApcThreadEx WinAPI
+  auto_generated_guid: 4cc571b1-f450-414a-850f-879baf36aa06
   description: |
     Uses the undocumented NtQueueAPCThreadEx WinAPI to create a "Special User APC" in the current thread of the current process to execute shellcode. 
     Since the shellcode is loaded and executed in the current process it is considered local shellcode execution.

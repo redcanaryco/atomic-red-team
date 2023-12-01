@@ -64,6 +64,7 @@ atomic_tests:
       Invoke-MalDoc -macroFile "PathToAtomicsFolder\T1055.012\src\T1055.012-macrocode.txt" -officeProduct "#{ms_product}" -sub "Exploit"
     name: powershell
 - name: Process Hollowing in Go using CreateProcessW WinAPI
+  auto_generated_guid: c8f98fe1-c89b-4c49-a7e3-d60ee4bc2f5a
   description: |
     Creates a process in a suspended state, executes shellcode to spawn calc.exe in a child process, and then resumes the original process.
     - PoC Credit: (https://github.com/Ne0nd0g/go-shellcode#createprocess)
@@ -87,6 +88,7 @@ atomic_tests:
        Stop-Process -Name CalculatorApp -ErrorAction SilentlyContinue
        Stop-Process -Name "#{hollow_process_name}" -ErrorAction SilentlyContinue
 - name: Process Hollowing in Go using CreateProcessW and CreatePipe WinAPIs (T1055.012)
+  auto_generated_guid: 94903cc5-d462-498a-b919-b1e5ab155fee
   description: |
     Create a process in a suspended state, execute shellcode to spawn calc.exe in a child process, and then resume the original process.
     This test uses the CreatePipe function to create an anonymous pipe that parent and child processes can communicate over. This anonymous pipe
