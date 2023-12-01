@@ -221,6 +221,13 @@
   - Atomic Test #3: Section View Injection [windows]
   - Atomic Test #4: Dirty Vanity process Injection [windows]
   - Atomic Test #5: Read-Write-Execute process Injection [windows]
+  - Atomic Test #6: Process Injection with Go using UuidFromStringA WinAPI [windows]
+  - Atomic Test #7: Process Injection with Go using EtwpCreateEtwThread WinAPI [windows]
+  - Atomic Test #8: Remote Process Injection with Go using RtlCreateUserThread WinAPI [windows]
+  - Atomic Test #9: Remote Process Injection with Go using CreateRemoteThread WinAPI [windows]
+  - Atomic Test #10: Remote Process Injection with Go using CreateRemoteThread WinAPI (Natively) [windows]
+  - Atomic Test #11: Process Injection with Go using CreateThread WinAPI [windows]
+  - Atomic Test #12: Process Injection with Go using CreateThread WinAPI (Natively) [windows]
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1218 Signed Binary Proxy Execution](../../T1218/T1218.md)
   - Atomic Test #1: mavinject - Inject DLL into running process [windows]
@@ -428,6 +435,8 @@
   - Atomic Test #3: linux rename /proc/pid/comm using prctl [linux]
 - [T1055.004 Process Injection: Asynchronous Procedure Call](../../T1055.004/T1055.004.md)
   - Atomic Test #1: Process Injection via C# [windows]
+  - Atomic Test #2: EarlyBird APC Queue Injection in Go [windows]
+  - Atomic Test #3: Remote Process Injection with Go using NtQueueApcThreadEx WinAPI [windows]
 - [T1647 Plist File Modification](../../T1647/T1647.md)
   - Atomic Test #1: Plist Modification [macos]
 - [T1553.005 Subvert Trust Controls: Mark-of-the-Web Bypass](../../T1553.005/T1553.005.md)
@@ -563,6 +572,8 @@
 - [T1055.012 Process Injection: Process Hollowing](../../T1055.012/T1055.012.md)
   - Atomic Test #1: Process Hollowing using PowerShell [windows]
   - Atomic Test #2: RunPE via VBA [windows]
+  - Atomic Test #3: Process Hollowing in Go using CreateProcessW WinAPI [windows]
+  - Atomic Test #4: Process Hollowing in Go using CreateProcessW and CreatePipe WinAPIs (T1055.012) [windows]
 - T1564.009 Resource Forking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1027 Obfuscated Files or Information](../../T1027/T1027.md)
   - Atomic Test #1: Decode base64 Data into Script [macos, linux]
@@ -861,6 +872,13 @@
   - Atomic Test #3: Section View Injection [windows]
   - Atomic Test #4: Dirty Vanity process Injection [windows]
   - Atomic Test #5: Read-Write-Execute process Injection [windows]
+  - Atomic Test #6: Process Injection with Go using UuidFromStringA WinAPI [windows]
+  - Atomic Test #7: Process Injection with Go using EtwpCreateEtwThread WinAPI [windows]
+  - Atomic Test #8: Remote Process Injection with Go using RtlCreateUserThread WinAPI [windows]
+  - Atomic Test #9: Remote Process Injection with Go using CreateRemoteThread WinAPI [windows]
+  - Atomic Test #10: Remote Process Injection with Go using CreateRemoteThread WinAPI (Natively) [windows]
+  - Atomic Test #11: Process Injection with Go using CreateThread WinAPI [windows]
+  - Atomic Test #12: Process Injection with Go using CreateThread WinAPI (Natively) [windows]
 - [T1611 Escape to Host](../../T1611/T1611.md)
   - Atomic Test #1: Deploy container using nsenter container escape [containers]
   - Atomic Test #2: Mount host filesystem to escape privileged Docker container [containers]
@@ -929,6 +947,8 @@
   - Atomic Test #3: Create Symbolic Link From osk.exe to cmd.exe [windows]
 - [T1055.004 Process Injection: Asynchronous Procedure Call](../../T1055.004/T1055.004.md)
   - Atomic Test #1: Process Injection via C# [windows]
+  - Atomic Test #2: EarlyBird APC Queue Injection in Go [windows]
+  - Atomic Test #3: Remote Process Injection with Go using NtQueueApcThreadEx WinAPI [windows]
 - [T1546.009 Event Triggered Execution: AppCert DLLs](../../T1546.009/T1546.009.md)
   - Atomic Test #1: Create registry persistence via AppCert DLL [windows]
 - T1098.005 Device Registration [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1014,6 +1034,8 @@
 - [T1055.012 Process Injection: Process Hollowing](../../T1055.012/T1055.012.md)
   - Atomic Test #1: Process Hollowing using PowerShell [windows]
   - Atomic Test #2: RunPE via VBA [windows]
+  - Atomic Test #3: Process Hollowing in Go using CreateProcessW WinAPI [windows]
+  - Atomic Test #4: Process Hollowing in Go using CreateProcessW and CreatePipe WinAPIs (T1055.012) [windows]
 - T1068 Exploitation for Privilege Escalation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546 Event Triggered Execution](../../T1546/T1546.md)
   - Atomic Test #1: Persistence with Custom AutodialDLL [windows]
@@ -1172,6 +1194,7 @@
   - Atomic Test #2: WinPwn - Get SYSTEM shell - Pop System Shell using CreateProcess technique [windows]
   - Atomic Test #3: WinPwn - Get SYSTEM shell - Bind System Shell using CreateProcess technique [windows]
   - Atomic Test #4: WinPwn - Get SYSTEM shell - Pop System Shell using NamedPipe Impersonation technique [windows]
+  - Atomic Test #5: Run Shellcode via Syscall in Go [windows]
 - T1059.009 Cloud API [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1610 Deploy a container](../../T1610/T1610.md)
   - Atomic Test #1: Deploy Docker container [containers]
