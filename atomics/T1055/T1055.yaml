@@ -162,3 +162,201 @@ atomic_tests:
     cleanup_command: 'Get-Process -Name Notepad -ErrorAction SilentlyContinue | Stop-Process -Force'
     name: powershell
     elevation_required: true
+- name: Process Injection with Go using UuidFromStringA WinAPI
+  auto_generated_guid:
+  description: |
+    Uses WinAPI UuidFromStringA to load shellcode to a memory address then executes the shellcode using EnumSystemLocalesA.
+    With this technique, memory is allocated on the heap and does not use commonly suspicious APIs such as VirtualAlloc, WriteProcessMemory, or CreateThread 
+    - PoC Credit: (https://github.com/Ne0nd0g/go-shellcode/tree/master#uuidfromstringa)
+    - References: 
+      - https://research.nccgroup.com/2021/01/23/rift-analysing-a-lazarus-shellcode-execution-method/
+      - https://twitter.com/_CPResearch_/status/1352310521752662018
+      - https://blog.securehat.co.uk/process-injection/shellcode-execution-via-enumsystemlocala
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $PathToAtomicsFolder\T1055\bin\x64\UuidFromStringA.exe -debug
+    cleanup_command: |
+       Stop-Process -Name CalculatorApp -ErrorAction SilentlyContinue
+- name: Process Injection with Go using EtwpCreateEtwThread WinAPI
+  auto_generated_guid:
+  description: |
+    Uses EtwpCreateEtwThread function from ntdll.dll to execute shellcode within the application's process.
+    This program loads the DLLs and gets a handle to the used procedures itself instead of using the windows package directly.
+
+    Steps taken with this technique
+    1. Allocate memory for the shellcode with VirtualAlloc setting the page permissions to Read/Write
+    2. Use the RtlCopyMemory macro to copy the shellcode to the allocated memory space
+    3. Change the memory page permissions to Execute/Read with VirtualProtect
+    4. Call EtwpCreateEtwThread on shellcode address
+    5. Call WaitForSingleObject so the program does not end before the shellcode is executed
+
+    - PoC Credit: (https://github.com/Ne0nd0g/go-shellcode/tree/master#EtwpCreateEtwThread)
+    - References: 
+      - https://gist.github.com/TheWover/b2b2e427d3a81659942f4e8b9a978dc3
+      - https://www.geoffchappell.com/studies/windows/win32/ntdll/api/etw/index.htm
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $PathToAtomicsFolder\T1055\bin\x64\EtwpCreateEtwThread.exe -debug
+    cleanup_command: |
+       Stop-Process -Name CalculatorApp -ErrorAction SilentlyContinue
+- name: Remote Process Injection with Go using RtlCreateUserThread WinAPI
+  auto_generated_guid:
+  description: |
+    Executes shellcode in a remote process.
+
+    Steps taken with this technique
+    1. Get a handle to the target process
+    2. Allocate memory for the shellcode with VirtualAllocEx setting the page permissions to Read/Write
+    3. Use the WriteProcessMemory to copy the shellcode to the allocated memory space in the remote process
+    4. Change the memory page permissions to Execute/Read with VirtualProtectEx
+    5. Execute the entrypoint of the shellcode in the remote process with RtlCreateUserThread
+    6. Close the handle to the remote process
+
+    - PoC Credit: (https://github.com/Ne0nd0g/go-shellcode/tree/master#rtlcreateuserthread)
+    - References: 
+      - https://www.cobaltstrike.com/blog/cobalt-strikes-process-injection-the-details-cobalt-strike
+  supported_platforms:
+  - windows
+  input_arguments:
+    spawn_process_path:
+      description: Path of the binary to spawn
+      type: string
+      default: 'C:\Windows\System32\werfault.exe'
+    spawn_process_name:
+      description: Name of the process spawned
+      type: string
+      default: werfault
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $process = Start-Process #{spawn_process_path} -passthru
+      $PathToAtomicsFolder\T1055\bin\x64\RtlCreateUserThread.exe -pid $process.Id -debug
+    cleanup_command: |
+       Stop-Process -Name CalculatorApp -ErrorAction SilentlyContinue
+       Stop-Process -Name #{spawn_process_name} -ErrorAction SilentlyContinue
+- name: Remote Process Injection with Go using CreateRemoteThread WinAPI
+  auto_generated_guid:
+  description: |
+    Leverages the Windows CreateRemoteThread function from Kernel32.dll to execute shellocde in a remote process.
+
+    This application leverages functions from the golang.org/x/sys/windows package, where feasible, like the windows.OpenProcess().
+
+    Steps taken with this technique
+    1. Get a handle to the target process
+    2. Allocate memory for the shellcode with VirtualAllocEx setting the page permissions to Read/Write
+    3. Use the WriteProcessMemory to copy the shellcode to the allocated memory space in the remote process
+    4. Change the memory page permissions to Execute/Read with VirtualProtectEx
+    5. Execute the entrypoint of the shellcode in the remote process with CreateRemoteThread
+    6. Close the handle to the remote process
+
+    - PoC Credit: (https://github.com/Ne0nd0g/go-shellcode#createremotethread)
+     - References:
+      - https://www.ired.team/offensive-security/code-injection-process-injection/process-injection
+  supported_platforms:
+  - windows
+  input_arguments:
+    spawn_process_path:
+      description: Path of the binary to spawn
+      type: string
+      default: 'C:\Windows\System32\werfault.exe'
+    spawn_process_name:
+      description: Name of the process spawned
+      type: string
+      default: werfault
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $process = Start-Process #{spawn_process_path} -passthru
+      $PathToAtomicsFolder\T1055\bin\x64\CreateRemoteThread.exe -pid $process.Id -debug
+    cleanup_command: |
+       Stop-Process -Name CalculatorApp -ErrorAction SilentlyContinue
+       Stop-Process -Name #{spawn_process_name} -ErrorAction SilentlyContinue
+- name: Remote Process Injection with Go using CreateRemoteThread WinAPI (Natively)
+  auto_generated_guid:
+  description: |
+    Leverages the Windows CreateRemoteThread function from Kernel32.dll to execute shellcode in a remote process.
+
+    This program loads the DLLs and gets a handle to the used procedures itself instead of using the windows package directly.
+
+    1. Get a handle to the target process
+    2. Allocate memory for the shellcode with VirtualAllocEx setting the page permissions to Read/Write
+    3. Use the WriteProcessMemory to copy the shellcode to the allocated memory space in the remote process
+    4. Change the memory page permissions to Execute/Read with VirtualProtectEx
+    5. Execute the entrypoint of the shellcode in the remote process with CreateRemoteThread
+    6. Close the handle to the remote process
+
+    - PoC Credit: (https://github.com/Ne0nd0g/go-shellcode#createremotethreadnative)
+  supported_platforms:
+  - windows
+  input_arguments:
+    spawn_process_path:
+      description: Path of the binary to spawn
+      type: string
+      default: 'C:\Windows\System32\werfault.exe'
+    spawn_process_name:
+      description: Name of the process spawned
+      type: string
+      default: werfault
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $process = Start-Process #{spawn_process_path} -passthru
+      $PathToAtomicsFolder\T1055\bin\x64\CreateRemoteThreadNative.exe -pid $process.Id -debug
+    cleanup_command: |
+       Stop-Process -Name CalculatorApp -ErrorAction SilentlyContinue
+       Stop-Process -Name #{spawn_process_name} -ErrorAction SilentlyContinue
+- name: Process Injection with Go using CreateThread WinAPI
+  auto_generated_guid:
+  description: |
+    This program executes shellcode in the current process using the following steps
+    1. Allocate memory for the shellcode with VirtualAlloc setting the page permissions to Read/Write
+    2. Use the RtlCopyMemory macro to copy the shellcode to the allocated memory space
+    3. Change the memory page permissions to Execute/Read with VirtualProtect
+    4. Call CreateThread on shellcode address
+    5. Call WaitForSingleObject so the program does not end before the shellcode is executed
+
+    This program leverages the functions from golang.org/x/sys/windows to call Windows procedures instead of manually loading them
+
+    - PoC Credit: (https://github.com/Ne0nd0g/go-shellcode#createthread)
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $PathToAtomicsFolder\T1055\bin\x64\CreateThread.exe -debug
+    cleanup_command: |
+       Stop-Process -Name CalculatorApp -ErrorAction SilentlyContinue
+- name: Process Injection with Go using CreateThread WinAPI (Natively)
+  auto_generated_guid:
+  description: |
+    This program executes shellcode in the current process using the following steps
+    1. Allocate memory for the shellcode with VirtualAlloc setting the page permissions to Read/Write
+    2. Use the RtlCopyMemory macro to copy the shellcode to the allocated memory space
+    3. Change the memory page permissions to Execute/Read with VirtualProtect
+    4. Call CreateThread on shellcode address
+    5. Call WaitForSingleObject so the program does not end before the shellcode is executed
+
+    This program loads the DLLs and gets a handle to the used procedures itself instead of using the windows package directly.
+
+    - PoC Credit: (https://github.com/Ne0nd0g/go-shellcode#createthreadnative)
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $PathToAtomicsFolder\T1055\bin\x64\CreateThreadNative.exe -debug
+    cleanup_command: |
+       Stop-Process -Name CalculatorApp -ErrorAction SilentlyContinue
