@@ -947,6 +947,7 @@ atomic_tests:
     cleanup_command: |
       reg add "HKLM\SOFTWARE\Policies\Microsoft\SecondaryAuthenticationFactor" /v "AllowSecondaryAuthenticationDevice" /t REG_DWORD /d 1 /f
     name: command_prompt
+    
 - name: Activities To Disable Microsoft [FIDO Aka Fast IDentity Online] Authentication Detected By Modified Registry Value.
   auto_generated_guid: ffeddced-bb9f-49c6-97f0-3d07a509bf94
   description: |
@@ -961,10 +962,12 @@ atomic_tests:
       reg add "HKLM\SOFTWARE\Policies\Microsoft\FIDO" /v "AllowExternalDeviceSignon" /t REG_DWORD /d 1 /f
     name: command_prompt  
 
-- name: Scarab Ransomware Defense Evasion Activities Detected
+- name: Scarab Ransomware Defense Evasion Activities
   description: |
-    Detect the Scarab Ransomware defense evasion activities that can abuse the registry values to modified the settings of the Credential Security Support Provider for the purpose to overcome potential RDP connection issues.
-    Scarab Ransomware Article (https://www.welivesecurity.com/en/eset-research/scarabs-colon-izing-vulnerable-servers/)
+    Scarab Ransomware defense evasion activities that can abuse the registry values to modify the settings of the Credential Security Support Provider to overcome potential RDP connection issues.
+    [Scarab Ransomware Article](https://www.welivesecurity.com/en/eset-research/scarabs-colon-izing-vulnerable-servers/)
+  supported_platforms:
+  - windows
   executor:
     command: |
       reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System\CredSSP\Parameters" /v AllowEncryptionOracle /t REG_DWORD /d 2 /f
