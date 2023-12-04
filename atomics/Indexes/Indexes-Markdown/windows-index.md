@@ -1376,6 +1376,7 @@
   - Atomic Test #13: WinPwn - PowerSharpPack - Sharpweb for Browser Credentials [windows]
   - Atomic Test #15: WebBrowserPassView - Credentials from Browser [windows]
   - Atomic Test #16: BrowserStealer (Chrome / Firefox / Microsoft Edge) [windows]
+  - Atomic Test #17: Dump Chrome Login Data with esentutl [windows]
 - T1557.003 DHCP Spoofing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1552.004 Unsecured Credentials: Private Keys](../../T1552.004/T1552.004.md)
   - Atomic Test #1: Private Keys [windows]
