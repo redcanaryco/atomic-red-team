@@ -933,6 +933,7 @@ atomic_tests:
       Set-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\ProtocolDefaults' -Name 'http' -Value 3
       Set-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\ProtocolDefaults' -Name 'https' -Value 3
     name: powershell
+
 - name: Activities To Disable Secondary Authentication Detected By Modified Registry Value.
   auto_generated_guid: c26fb85a-fa50-4fab-a64a-c51f5dc538d5
   description: |
@@ -946,6 +947,7 @@ atomic_tests:
     cleanup_command: |
       reg add "HKLM\SOFTWARE\Policies\Microsoft\SecondaryAuthenticationFactor" /v "AllowSecondaryAuthenticationDevice" /t REG_DWORD /d 1 /f
     name: command_prompt
+    
 - name: Activities To Disable Microsoft [FIDO Aka Fast IDentity Online] Authentication Detected By Modified Registry Value.
   auto_generated_guid: ffeddced-bb9f-49c6-97f0-3d07a509bf94
   description: |
@@ -959,3 +961,16 @@ atomic_tests:
     cleanup_command: |
       reg add "HKLM\SOFTWARE\Policies\Microsoft\FIDO" /v "AllowExternalDeviceSignon" /t REG_DWORD /d 1 /f
     name: command_prompt  
+
+- name: Scarab Ransomware Defense Evasion Activities
+  description: |
+    Scarab Ransomware defense evasion activities that can abuse the registry values to modify the settings of the Credential Security Support Provider to overcome potential RDP connection issues.
+    [Scarab Ransomware Article](https://www.welivesecurity.com/en/eset-research/scarabs-colon-izing-vulnerable-servers/)
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System\CredSSP\Parameters" /v AllowEncryptionOracle /t REG_DWORD /d 2 /f
+    cleanup_command: |
+       reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System\CredSSP\Parameters" /v AllowEncryptionOracle /t REG_DWORD /d 0 /f
+    name: command_prompt
