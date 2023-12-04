@@ -367,6 +367,7 @@
   - Atomic Test #59: Modify Internet Zone Protocol Defaults in Current User Registry - PowerShell [windows]
   - Atomic Test #60: Activities To Disable Secondary Authentication Detected By Modified Registry Value. [windows]
   - Atomic Test #61: Activities To Disable Microsoft [FIDO Aka Fast IDentity Online] Authentication Detected By Modified Registry Value. [windows]
+  - Atomic Test #62: Scarab Ransomware Defense Evasion Activities [windows]
 - [T1574.008 Hijack Execution Flow: Path Interception by Search Order Hijacking](../../T1574.008/T1574.008.md)
   - Atomic Test #1: powerShell Persistence via hijacking default modules - Get-Variable.exe [windows]
 - T1535 Unused/Unsupported Cloud Regions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
