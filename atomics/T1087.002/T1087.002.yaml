@@ -425,3 +425,45 @@ atomic_tests:
     command: |
       ldapsearch -H ldap://#{domain}.#{top_level_domain}:389 -x -D #{user} -w #{password} -b "CN=Users,DC=#{domain},DC=#{top_level_domain}" -s sub -a always -z 1000 dn
     name: sh
+- name: Account Enumeration with LDAPDomainDump
+  auto_generated_guid: a54d497e-8dbe-4558-9895-44944baa395f
+  description: |
+    This test uses LDAPDomainDump to perform account enumeration on a domain.
+    [Reference](https://securityonline.info/ldapdomaindump-active-directory-information-dumper-via-ldap/)
+  supported_platforms:
+  - linux
+  input_arguments:
+    username:
+      description: Username and domain to authenticate with
+      type: string
+      default: domain\user
+    target_ip:
+      description: IP to connect to
+      type: string
+      default: 127.0.0.1
+    password:
+      description: Password to authenticate with
+      type: string
+      default: password
+  dependency_executor_name: sh
+  dependencies:
+  - description: Python3 must be installed
+    prereq_command: if [ -x "$(command -v python3 --version)" ]; then exit 0; else exit 1; fi;
+    get_prereq_command: sudo apt-get -y install python3
+  - description: Pip must be installed
+    prereq_command: if [ -x "$(command -v pip --version)" ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |-
+      wget -O /tmp/get-pip.py https://bootstrap.pypa.io/pip/3.6/get-pip.py
+      python3 /tmp/get-pip.py
+  - description: The ldapdomaindump module must be installed
+    prereq_command: python3 -c 'import ldapdomaindump' 2>/dev/null
+    get_prereq_command: pip install ldapdomaindump
+  - description: The future module must be installed
+    prereq_command: python3 -c 'import future' 2>/dev/null
+    get_prereq_command: pip install future
+  executor:
+    command: 'ldapdomaindump -u #{username} -p #{password} #{target_ip} -o /tmp/T1087'
+    cleanup_command: |
+      rm -rf /tmp/T1087/ 2>/dev/null 
+    name: sh
+    elevation_required: false

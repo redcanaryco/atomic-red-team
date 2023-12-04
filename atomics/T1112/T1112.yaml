@@ -933,16 +933,41 @@ atomic_tests:
       Set-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\ProtocolDefaults' -Name 'http' -Value 3
       Set-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\ProtocolDefaults' -Name 'https' -Value 3
     name: powershell
-- name: Scarab Ransomware Defense Evasion Activities Detected
+
+- name: Activities To Disable Secondary Authentication Detected By Modified Registry Value.
+  auto_generated_guid: c26fb85a-fa50-4fab-a64a-c51f5dc538d5
   description: |
-    Detect the Scarab Ransomware defense evasion activities that can abuse the registry values to modified the settings of the Credential Security Support Provider for the purpose to overcome potential RDP connection issues.
-    Scarab Ransomware Article (https://www.welivesecurity.com/en/eset-research/scarabs-colon-izing-vulnerable-servers/)
+    Detect the disable secondary authentication activities that adversary attempt to bypass MFA and to get the unauthorized access to the system or sensitive data.
+    See the related article (https://admx.help/?Category=Windows_10_2016&Policy=Microsoft.Policies.SecondaryAuthenticationFactor::MSSecondaryAuthFactor_AllowSecondaryAuthenticationDevice).
   supported_platforms:
   - windows
   executor:
     command: |
-     reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System\CredSSP\Parameters" /v AllowEncryptionOracle /t REG_DWORD /d 2 /f
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\SecondaryAuthenticationFactor" /v "AllowSecondaryAuthenticationDevice" /t REG_DWORD /d 0 /f
+    cleanup_command: |
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\SecondaryAuthenticationFactor" /v "AllowSecondaryAuthenticationDevice" /t REG_DWORD /d 1 /f
+    name: command_prompt
+- name: Activities To Disable Microsoft [FIDO Aka Fast IDentity Online] Authentication Detected By Modified Registry Value.
+  auto_generated_guid: ffeddced-bb9f-49c6-97f0-3d07a509bf94
+  description: |
+    Detect the Microsoft FIDO authentication disable activities that adversary attempt to gains access to login credentials (e.g., passwords), they may be able to impersonate the user and access sensitive accounts or data and also increases the risk of falling victim to phishing attacks.
+    See the related article (https://admx.help/?Category=Windows_10_2016&Policy=Microsoft.Policies.FidoAuthentication::AllowFidoDeviceSignon).
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\FIDO" /v "AllowExternalDeviceSignon" /t REG_DWORD /d 0 /f
+    cleanup_command: |
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\FIDO" /v "AllowExternalDeviceSignon" /t REG_DWORD /d 1 /f
+    name: command_prompt  
+
+- name: Scarab Ransomware Defense Evasion Activities Detected
+  description: |
+    Detect the Scarab Ransomware defense evasion activities that can abuse the registry values to modified the settings of the Credential Security Support Provider for the purpose to overcome potential RDP connection issues.
+    Scarab Ransomware Article (https://www.welivesecurity.com/en/eset-research/scarabs-colon-izing-vulnerable-servers/)
+  executor:
+    command: |
+      reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System\CredSSP\Parameters" /v AllowEncryptionOracle /t REG_DWORD /d 2 /f
     cleanup_command: |
        reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System\CredSSP\Parameters" /v AllowEncryptionOracle /t REG_DWORD /d 0 /f
     name: command_prompt
-
