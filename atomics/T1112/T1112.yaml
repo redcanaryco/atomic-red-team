@@ -975,3 +975,17 @@ atomic_tests:
     cleanup_command: |
        reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System\CredSSP\Parameters" /v AllowEncryptionOracle /t REG_DWORD /d 0 /f
     name: command_prompt
+- name: Possible Packet Spoofing Attacks Detected By Disable (IP Source Routing Protection Against Packet Spoofing) Registry Values.
+  description: |
+    Detect the disable (IP Source Routing Protection Against Packet Spoofing) defense evasion activities that adversary to manipulate IP packet headers to spoof or alter the source address of packets.
+    See the related article (https://admx.help/?Category=security-compliance-toolkit&Policy=Microsoft.Policies.MSS::Pol_MSS_DisableIPSourceRouting)
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKLM\System\CurrentControlSet\Services\Tcpip\Parameters" /v DisableIPSourceRouting /t REG_DWORD /d 0 /f
+    cleanup_command: |
+       reg add "HKLM\System\CurrentControlSet\Services\Tcpip\Parameters" /v DisableIPSourceRouting /t REG_DWORD /d 1 /f
+       reg add "HKLM\System\CurrentControlSet\Services\Tcpip\Parameters" /v DisableIPSourceRouting /t REG_DWORD /d 2 /f
+    name: command_prompt
+  
