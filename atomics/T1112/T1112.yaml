@@ -975,3 +975,88 @@ atomic_tests:
     cleanup_command: |
        reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System\CredSSP\Parameters" /v AllowEncryptionOracle /t REG_DWORD /d 0 /f
     name: command_prompt
+
+- name: Disable Remote Desktop Anti-Alias Setting Through Registry
+  auto_generated_guid: 61d35188-f113-4334-8245-8c6556d43909
+  description: |
+    A modification registry to disable RDP anti-alias settings. This technique was seen in DarkGate malware as part of its installation
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows NT\Terminal Services" /v "DisableRemoteDesktopAntiAlias" /t REG_DWORD /d 1 /f
+    cleanup_command: |
+       reg add "HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows NT\Terminal Services" /v "DisableRemoteDesktopAntiAlias" /t REG_DWORD /d 0 /f
+    name: command_prompt
+  
+- name: Disable Remote Desktop Security Settings Through Registry
+  auto_generated_guid: 4b81bcfa-fb0a-45e9-90c2-e3efe5160140
+  description: |
+    A modification registry to disable RDP security settings. This technique was seen in DarkGate malware as part of its installation
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows NT\Terminal Services" /v "DisableSecuritySettings" /t REG_DWORD /d 1 /f
+    cleanup_command: |
+       reg add "HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows NT\Terminal Services" /v "DisableSecuritySettings" /t REG_DWORD /d 0 /f
+    name: command_prompt
+
+- name: Disabling ShowUI Settings of Windows Error Reporting (WER)
+  auto_generated_guid: 09147b61-40f6-4b2a-b6fb-9e73a3437c96
+  description: |
+    A modification registry to disable ShowUI settings of Windows Error Report. This registry setting can influence the behavior of error reporting dialogs or prompt box. 
+   This technique was seen in DarkGate malware as part of its installation.
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKCU\Software\Microsoft\Windows\Windows Error Reporting" /v DontShowUI /t REG_DWORD /d 1 /f
+    cleanup_command: |
+       reg add "HKCU\Software\Microsoft\Windows\Windows Error Reporting" /v DontShowUI /t REG_DWORD /d 0 /f
+    name: command_prompt
+
+- name: Enable Proxy Settings
+  auto_generated_guid: eb0ba433-63e5-4a8c-a9f0-27c4192e1336
+  description: |
+    A modification registry to enable proxy settings. 
+   This technique was seen in DarkGate malware as part of its installation.
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyEnable /t REG_DWORD /d 1 /f
+    cleanup_command: |
+       reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyEnable /t REG_DWORD /d 0 /f
+    name: command_prompt
+
+- name: Set-Up Proxy Server
+  auto_generated_guid: d88a3d3b-d016-4939-a745-03638aafd21b
+  description: |
+    A modification registry to setup proxy server. 
+   This technique was seen in DarkGate malware as part of its installation.
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyServer /t REG_SZ /d "proxy.atomic-test.com:8080" /f
+Collapse
+    cleanup_command: |
+       reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyServer
+    name: command_prompt
+
+
+- name: RDP Authentication Level Override
+  auto_generated_guid: 7e7b62e9-5f83-477d-8935-48600f38a3c6
+  description: |
+    A modification registry to override RDP Authentication Level. 
+   This technique was seen in DarkGate malware as part of its installation.
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKCU\Software\Microsoft\Terminal Server Client" /v AuthenticationLevelOverride /t REG_DWORD /d 0 /f
+Collapse
+    cleanup_command: |
+       reg delete "HKCU\Software\Microsoft\Terminal Server Client" /v AuthenticationLevelOverride
+    name: command_prompt
