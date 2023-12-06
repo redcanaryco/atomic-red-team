@@ -975,3 +975,15 @@ atomic_tests:
     cleanup_command: |
        reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System\CredSSP\Parameters" /v AllowEncryptionOracle /t REG_DWORD /d 0 /f
     name: command_prompt
+- name: SYN Flood Attacks Detected By Disable (SynAttackProtect) Registry.
+  description: |
+    Detect the disable (SynAttackProtect) registry value defense evasion activities that adversary to abuse the SYN Flood to attack target system with a large number of TCP connection requests (SYN packets) by sending the final ACK packet.
+    [See the related article Article](https://admx.help/?Category=security-compliance-toolkit&Policy=Microsoft.Policies.MSS::Pol_MSS_SynAttackProtect)
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKLM\System\CurrentControlSet\Services\Tcpip\Parameters" /v SynAttackProtect /t REG_DWORD /d 0 /f
+    cleanup_command: |
+       reg add "HKLM\System\CurrentControlSet\Services\Tcpip\Parameters" /v SynAttackProtect /t REG_DWORD /d 1 /f
+    name: command_prompt
