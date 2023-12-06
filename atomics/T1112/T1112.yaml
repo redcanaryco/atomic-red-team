@@ -1038,7 +1038,6 @@ atomic_tests:
   executor:
     command: | 
        reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyServer /t REG_SZ /d "proxy.atomic-test.com:8080" /f
-Collapse
     cleanup_command: |
        reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyServer
     name: command_prompt
@@ -1053,7 +1052,6 @@ Collapse
   executor:
     command: | 
        reg add "HKCU\Software\Microsoft\Terminal Server Client" /v AuthenticationLevelOverride /t REG_DWORD /d 0 /f
-Collapse
     cleanup_command: |
        reg delete "HKCU\Software\Microsoft\Terminal Server Client" /v AuthenticationLevelOverride
     name: command_prompt
