@@ -975,3 +975,15 @@ atomic_tests:
     cleanup_command: |
        reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System\CredSSP\Parameters" /v AllowEncryptionOracle /t REG_DWORD /d 0 /f
     name: command_prompt
+- name: Pass-the-Hash Attacks Detected By Modified Registry Value To Dsiable (Do not allow password expiration time longer than required by policy) LAPS Service.
+  description: |
+     Detect the LAPS service (Do not allow password expiration time longer than required by policy) registry value disable defense evasion activities that can adversary to abuse the Longer-lived passwords increase the resilience of pass-the-hash attacks without needing to crack the password.
+    [See the related article](https://admx.help/?Category=security-compliance-toolkit&Policy=FullArmor.Policies.C9E1D975_EA58_48C3_958E_3BC214D89A2E::POL_AdmPwd_DontAllowPwdExpirationBehindPolicy)
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKLM\Software\Policies\Microsoft Services\AdmPwd" /v PwdExpirationProtectionEnabled /t REG_DWORD /d 0 /f
+    cleanup_command: |
+       reg add "HKLM\Software\Policies\Microsoft Services\AdmPwd" /v PwdExpirationProtectionEnabled /t REG_DWORD /d 1 /f
+    name: command_prompt
