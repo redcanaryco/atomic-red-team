@@ -167,6 +167,9 @@ atomic_tests:
       IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
       $macrocode = "   Open `"#{bat_path}`" For Output As #1`n   Write #1, `"calc.exe`"`n   Close #1`n   a = Shell(`"cmd.exe /c #{bat_path} `", vbNormalFocus)`n"
       Invoke-MalDoc -macroCode $macrocode -officeProduct #{ms_product}
+    cleanup_command: |
+      Remove-Item #{bat_path} -ErrorAction Ignore
+      Get-Process | Where-Object { $_.MainModule.FileName -like "*calculator*" } | Stop-Process
     name: powershell
 - name: Excel 4 Macro
   auto_generated_guid: 4ea1fc97-8a46-4b4e-ba48-af43d2a98052
