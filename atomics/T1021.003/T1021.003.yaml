@@ -45,8 +45,6 @@ atomic_tests:
       } catch { exit 1 }
     get_prereq_command: |
       Write-Host "You will need to install Microsoft Excel manually to meet this requirement"
-    cleanup_command: |
-      Remove-Item 'C:\users\#{user}\AppData\local\Microsoft\WindowsApps\foxprow.exe'
   input_arguments:
     computer_name:
       description: Hostname or IP
@@ -62,3 +60,5 @@ atomic_tests:
       $com = [System.Activator]::CreateInstance([type]::GetTypeFromProgID("Excel.Application","#{computer_name}"))
       $com.ActivateMicrosoftApp("5")
     name: powershell
+    cleanup_command: |
+      Remove-Item 'C:\users\#{user}\AppData\local\Microsoft\WindowsApps\foxprow.exe'
