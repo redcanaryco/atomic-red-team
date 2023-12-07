@@ -259,6 +259,12 @@
   - Atomic Test #60: Activities To Disable Secondary Authentication Detected By Modified Registry Value. [windows]
   - Atomic Test #61: Activities To Disable Microsoft [FIDO Aka Fast IDentity Online] Authentication Detected By Modified Registry Value. [windows]
   - Atomic Test #62: Scarab Ransomware Defense Evasion Activities [windows]
+  - Atomic Test #63: Disable Remote Desktop Anti-Alias Setting Through Registry [windows]
+  - Atomic Test #64: Disable Remote Desktop Security Settings Through Registry [windows]
+  - Atomic Test #65: Disabling ShowUI Settings of Windows Error Reporting (WER) [windows]
+  - Atomic Test #66: Enable Proxy Settings [windows]
+  - Atomic Test #67: Set-Up Proxy Server [windows]
+  - Atomic Test #68: RDP Authentication Level Override [windows]
 - [T1574.008 Hijack Execution Flow: Path Interception by Search Order Hijacking](../../T1574.008/T1574.008.md)
   - Atomic Test #1: powerShell Persistence via hijacking default modules - Get-Variable.exe [windows]
 - T1027.001 Obfuscated Files or Information: Binary Padding [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
