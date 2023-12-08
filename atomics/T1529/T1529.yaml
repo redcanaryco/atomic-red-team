@@ -156,3 +156,85 @@ atomic_tests:
       shutdown /l 
     name: command_prompt
     elevation_required: true
+- name: ESXi - Terminates VMs using pkill
+  auto_generated_guid: 987c9b4d-a637-42db-b1cb-e9e242c3991b
+  description: |
+    In VMWARE ESXi, process names starting with vmx are associated with running VMs. An adversary can use the pkill command to kill all processes with a prefix vmx.
+    [Reference](https://www.crowdstrike.com/blog/hypervisor-jackpotting-ecrime-actors-increase-targeting-of-esxi-servers/)
+  supported_platforms:
+  - linux
+  input_arguments:
+    vm_host:
+      description: Specify the host name of the ESXi Server
+      type: string
+      default: atomic.local
+    vm_user:
+      description: Specify the privilege user account on ESXi Server
+      type: string
+      default: root
+    vm_pass:
+      description: Specify the privilege user password on ESXi Server
+      type: string
+      default: pass
+    plink_file:
+      description: Path to plink
+      type: path
+      default: 'PathToAtomicsFolder\..\atomics\T1529\bin\plink.exe'
+    cli_script:
+      description: Path to text with commands
+      type: path
+      default: PathToAtomicsFolder\T1529\src\esx_pkill.txt  
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Check if plink is available.
+    prereq_command: |
+      if (Test-Path "#{plink_file}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe" -OutFile "#{plink_file}"
+  executor:
+    command: |
+       echo "" | "#{plink_file}" "#{vm_host}" -ssh  -l "#{vm_user}" -pw "#{vm_pass}" -m "#{cli_script}"
+    name: command_prompt
+    elevation_required: false
+- name: ESXi - Avoslocker enumerates VMs and forcefully kills VMs
+  auto_generated_guid: 189f7d6e-9442-4160-9bc3-5e4104d93ece
+  description: |
+    Avoslocker malware has inbuilt functionality to enumerate the VM instances and uses the esxcli command to forcefully power off them.
+    [Reference](https://blogs.vmware.com/security/2022/02/avoslocker-modern-linux-ransomware-threats.html)
+  supported_platforms:
+  - linux
+  input_arguments:
+    vm_host:
+      description: Specify the host name of the ESXi Server
+      type: string
+      default: atomic.local
+    vm_user:
+      description: Specify the privilege user account on ESXi Server
+      type: string
+      default: root
+    vm_pass:
+      description: Specify the privilege user password on ESXi Server
+      type: string
+      default: pass
+    plink_file:
+      description: Path to plink
+      type: path
+      default: 'PathToAtomicsFolder\..\atomics\T1529\bin\plink.exe'
+    cli_script:
+      description: Path to text with commands
+      type: path
+      default: PathToAtomicsFolder\T1529\src\esx_avoslocker_kill_vm.txt  
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Check if plink is available.
+    prereq_command: |
+      if (Test-Path "#{plink_file}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe" -OutFile "#{plink_file}"
+  executor:
+    command: |
+       echo "" | "#{plink_file}" "#{vm_host}" -ssh  -l "#{vm_user}" -pw "#{vm_pass}" -m "#{cli_script}"
+    name: command_prompt
+    elevation_required: false

@@ -1,0 +1,2 @@
+esxcli --formatter=csv --format-param=fields=="WorldID,DisplayName" vm process list | tail -n +2 | awk -F ',' '{system("esxcli vm process kill --type=force --world-id=" $1)}'
+exit
