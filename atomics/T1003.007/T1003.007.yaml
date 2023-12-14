@@ -243,6 +243,8 @@ atomic_tests:
       sudo apt-get -y install python3-pip
   - description: |
       Install the dependencies for Lazagne
+    prereq_command: |
+      if [ -f "/tmp/lazagne/LaZagne-2.4.5/requirements.txt" ]; then exit 0; else exit 1; fi;
     get_prereq_command: |
       pip install -r /tmp/lazagne/LaZagne-2.4.5/requirements.txt
   executor:
