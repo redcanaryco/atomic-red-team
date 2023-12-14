@@ -459,7 +459,9 @@
 - [T1055.002 Process Injection: Portable Executable Injection](../../T1055.002/T1055.002.md)
   - Atomic Test #1: Portable Executable Injection [windows]
 - T1218.012 Verclsid [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1562.010 Downgrade Attack [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1562.010 Impair Defenses: Downgrade Attack](../../T1562.010/T1562.010.md)
+  - Atomic Test #1: ESXi - Change VIB acceptance level to CommunitySupported via PowerCLI [linux]
+  - Atomic Test #2: ESXi - Change VIB acceptance level to CommunitySupported via ESXCLI [linux]
 - T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1218.005 Signed Binary Proxy Execution: Mshta](../../T1218.005/T1218.005.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
@@ -573,6 +575,7 @@
   - Atomic Test #47: Tamper with Defender ATP on Linux/MacOS [linux, macos]
   - Atomic Test #48: Tamper with Windows Defender Registry - Reg.exe [windows]
   - Atomic Test #49: Tamper with Windows Defender Registry - Powershell [windows]
+  - Atomic Test #50: ESXi - Disable Account Lockout Policy via PowerCLI [linux]
 - T1601 Modify System Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1165,7 +1168,8 @@
   - Atomic Test #8: Create a Process using obfuscated Win32_Process [windows]
   - Atomic Test #9: WMI Execute rundll32 [windows]
   - Atomic Test #10: Application uninstall using WMIC [windows]
-- T1129 Shared Modules [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1129 Server Software Component](../../T1129/T1129.md)
+  - Atomic Test #1: ESXi - Install a custom VIB on an ESXi host [windows]
 - [T1059.007 Command and Scripting Interpreter: JavaScript](../../T1059.007/T1059.007.md)
   - Atomic Test #1: JScript execution to gather local computer information via cscript [windows]
   - Atomic Test #2: JScript execution to gather local computer information via wscript [windows]
@@ -1849,7 +1853,8 @@
 - [T1021.005 Remote Services:VNC](../../T1021.005/T1021.005.md)
   - Atomic Test #1: Enable Apple Remote Desktop Agent [macos]
 - T1080 Taint Shared Content [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1021.004 SSH [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1021.004 Remote Services: SSH](../../T1021.004/T1021.004.md)
+  - Atomic Test #1: ESXi - Enable SSH via PowerCLI [linux]
 - [T1091 Replication Through Removable Media](../../T1091/T1091.md)
   - Atomic Test #1: USB Malware Spread Simulation [windows]
 - T1021.008 Direct Cloud VM Connections [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -2295,6 +2300,8 @@
   - Atomic Test #29: System Information Discovery [windows]
   - Atomic Test #30: Check computer location [windows]
   - Atomic Test #31: BIOS Information Discovery through Registry [windows]
+  - Atomic Test #32: ESXi - VM Discovery using ESXCLI [linux]
+  - Atomic Test #33: ESXi - Darkside system information discovery [linux]
 - T1016.002 Wi-Fi Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1010 Application Window Discovery](../../T1010/T1010.md)
   - Atomic Test #1: List Process Main Windows - C# .NET [windows]
@@ -2339,6 +2346,7 @@
   - Atomic Test #4: Nix File and Directory Discovery 2 [linux, macos]
   - Atomic Test #5: Simulating MAZE Directory Enumeration [windows]
   - Atomic Test #6: Launch DirLister Executable [windows]
+  - Atomic Test #7: ESXi - Enumerate VMDKs available on an ESXi Host [linux]
 - [T1049 System Network Connections Discovery](../../T1049/T1049.md)
   - Atomic Test #1: System Network Connections Discovery [windows]
   - Atomic Test #2: System Network Connections Discovery with PowerShell [windows]
@@ -2623,6 +2631,8 @@
   - Atomic Test #10: Reboot System via `poweroff` - FreeBSD [linux]
   - Atomic Test #11: Reboot System via `poweroff` - Linux [linux]
   - Atomic Test #12: Logoff System - Windows [windows]
+  - Atomic Test #13: ESXi - Terminates VMs using pkill [linux]
+  - Atomic Test #14: ESXi - Avoslocker enumerates VMs and forcefully kills VMs [linux]
 
 # initial-access
 - [T1133 External Remote Services](../../T1133/T1133.md)

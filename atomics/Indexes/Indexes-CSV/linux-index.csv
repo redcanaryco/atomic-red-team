@@ -95,6 +95,8 @@ defense-evasion,T1562.006,Impair Defenses: Indicator Blocking,2,Auditing Configu
 defense-evasion,T1562.006,Impair Defenses: Indicator Blocking,3,Logging Configuration Changes on Linux Host,7d40bc58-94c7-4fbb-88d9-ebce9fcdb60c,bash
 defense-evasion,T1562.006,Impair Defenses: Indicator Blocking,4,Logging Configuration Changes on FreeBSD Host,6b8ca3ab-5980-4321-80c3-bcd77c8daed8,sh
 defense-evasion,T1036.004,Masquerading: Masquerade Task or Service,3,linux rename /proc/pid/comm using prctl,f0e3aaea-5cd9-4db6-a077-631dd19b27a8,sh
+defense-evasion,T1562.010,Impair Defenses: Downgrade Attack,1,ESXi - Change VIB acceptance level to CommunitySupported via PowerCLI,062f92c9-28b1-4391-a5f8-9d8ca6852091,powershell
+defense-evasion,T1562.010,Impair Defenses: Downgrade Attack,2,ESXi - Change VIB acceptance level to CommunitySupported via ESXCLI,14d55b96-b2f5-428d-8fed-49dc4d9dd616,command_prompt
 defense-evasion,T1562.003,Impair Defenses: HISTCONTROL,1,Disable history collection,4eafdb45-0f79-4d66-aa86-a3e2c08791f5,sh
 defense-evasion,T1562.003,Impair Defenses: HISTCONTROL,2,Disable history collection (freebsd),cada55b4-8251-4c60-819e-8ec1b33c9306,sh
 defense-evasion,T1562.003,Impair Defenses: HISTCONTROL,3,Mac HISTCONTROL,468566d5-83e5-40c1-b338-511e1659628d,manual
@@ -116,6 +118,7 @@ defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,41,Reboot Lin
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,42,Clear Pagging Cache,f790927b-ea85-4a16-b7b2-7eb44176a510,sh
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,43,Disable Memory Swap,e74e4c63-6fde-4ad2-9ee8-21c3a1733114,sh
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,47,Tamper with Defender ATP on Linux/MacOS,40074085-dbc8-492b-90a3-11bcfc52fda8,sh
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,50,ESXi - Disable Account Lockout Policy via PowerCLI,091a6290-cd29-41cb-81ea-b12f133c66cb,powershell
 defense-evasion,T1027,Obfuscated Files or Information,1,Decode base64 Data into Script,f45df6be-2e1e-4136-a384-8f18ab3826fb,sh
 defense-evasion,T1036.003,Masquerading: Rename System Utilities,2,Masquerading as FreeBSD or Linux crond process.,a315bfff-7a98-403b-b442-2ea1b255e556,sh
 defense-evasion,T1553.004,Subvert Trust Controls: Install Root Certificate,1,Install root CA on CentOS/RHEL,9c096ec4-fd42-419d-a762-d64cc950627e,sh
@@ -218,6 +221,7 @@ collection,T1560.002,Archive Collected Data: Archive via Library,1,Compressing d
 collection,T1560.002,Archive Collected Data: Archive via Library,2,Compressing data using bz2 in Python (FreeBSD/Linux),c75612b2-9de0-4d7c-879c-10d7b077072d,sh
 collection,T1560.002,Archive Collected Data: Archive via Library,3,Compressing data using zipfile in Python (FreeBSD/Linux),001a042b-859f-44d9-bf81-fd1c4e2200b0,sh
 collection,T1560.002,Archive Collected Data: Archive via Library,4,Compressing data using tarfile in Python (FreeBSD/Linux),e86f1b4b-fcc1-4a2a-ae10-b49da01458db,sh
+lateral-movement,T1021.004,Remote Services: SSH,1,ESXi - Enable SSH via PowerCLI,8f6c14d1-f13d-4616-b7fc-98cc69fe56ec,powershell
 privilege-escalation,T1548.003,Abuse Elevation Control Mechanism: Sudo and Sudo Caching,1,Sudo usage,150c3a08-ee6e-48a6-aeaf-3659d24ceb4e,sh
 privilege-escalation,T1548.003,Abuse Elevation Control Mechanism: Sudo and Sudo Caching,2,Sudo usage (freebsd),2bf9a018-4664-438a-b435-cc6f8c6f71b1,sh
 privilege-escalation,T1548.003,Abuse Elevation Control Mechanism: Sudo and Sudo Caching,3,Unlimited sudo cache timeout,a7b17659-dd5e-46f7-b7d1-e6792c91d0bc,sh
@@ -343,11 +347,14 @@ discovery,T1082,System Information Discovery,8,Hostname Discovery,486e88ea-4f56-
 discovery,T1082,System Information Discovery,12,"Environment variables discovery on freebsd, macos and linux",fcbdd43f-f4ad-42d5-98f3-0218097e2720,sh
 discovery,T1082,System Information Discovery,25,Linux List Kernel Modules,034fe21c-3186-49dd-8d5d-128b35f181c7,sh
 discovery,T1082,System Information Discovery,26,FreeBSD List Kernel Modules,4947897f-643a-4b75-b3f5-bed6885749f6,sh
+discovery,T1082,System Information Discovery,32,ESXi - VM Discovery using ESXCLI,2040405c-eea6-4c1c-aef3-c2acc430fac9,command_prompt
+discovery,T1082,System Information Discovery,33,ESXi - Darkside system information discovery,f89812e5-67d1-4f49-86fa-cbc6609ea86a,command_prompt
 discovery,T1217,Browser Bookmark Discovery,1,List Mozilla Firefox Bookmark Database Files on FreeBSD/Linux,3a41f169-a5ab-407f-9269-abafdb5da6c2,sh
 discovery,T1217,Browser Bookmark Discovery,4,List Google Chromium Bookmark JSON Files on FreeBSD,88ca025b-3040-44eb-9168-bd8af22b82fa,sh
 discovery,T1016,System Network Configuration Discovery,3,System Network Configuration Discovery,c141bbdb-7fca-4254-9fd6-f47e79447e17,sh
 discovery,T1083,File and Directory Discovery,3,Nix File and Directory Discovery,ffc8b249-372a-4b74-adcd-e4c0430842de,sh
 discovery,T1083,File and Directory Discovery,4,Nix File and Directory Discovery 2,13c5e1ae-605b-46c4-a79f-db28c77ff24e,sh
+discovery,T1083,File and Directory Discovery,7,ESXi - Enumerate VMDKs available on an ESXi Host,4a233a40-caf7-4cf1-890a-c6331bbc72cf,command_prompt
 discovery,T1049,System Network Connections Discovery,3,"System Network Connections Discovery FreeBSD, Linux & MacOS",9ae28d3f-190f-4fa0-b023-c7bd3e0eabf2,sh
 discovery,T1057,Process Discovery,1,Process Discovery - ps,4ff64f0b-aaf2-4866-b39d-38d9791407cc,sh
 discovery,T1069.001,Permission Groups Discovery: Local Groups,1,Permission Groups Discovery (Local),952931a4-af0b-4335-bbbe-73c8c5b327ae,sh
@@ -411,6 +418,8 @@ impact,T1529,System Shutdown/Reboot,8,Reboot System via `halt` - Linux,78f92e14-
 impact,T1529,System Shutdown/Reboot,9,Shutdown System via `poweroff` - FreeBSD/Linux,73a90cd2-48a2-4ac5-8594-2af35fa909fa,sh
 impact,T1529,System Shutdown/Reboot,10,Reboot System via `poweroff` - FreeBSD,5a282e50-86ff-438d-8cef-8ae01c9e62e1,sh
 impact,T1529,System Shutdown/Reboot,11,Reboot System via `poweroff` - Linux,61303105-ff60-427b-999e-efb90b314e41,bash
+impact,T1529,System Shutdown/Reboot,13,ESXi - Terminates VMs using pkill,987c9b4d-a637-42db-b1cb-e9e242c3991b,command_prompt
+impact,T1529,System Shutdown/Reboot,14,ESXi - Avoslocker enumerates VMs and forcefully kills VMs,189f7d6e-9442-4160-9bc3-5e4104d93ece,command_prompt
 initial-access,T1078.003,Valid Accounts: Local Accounts,8,Create local account (Linux),02a91c34-8a5b-4bed-87af-501103eb5357,bash
 initial-access,T1078.003,Valid Accounts: Local Accounts,9,Reactivate a locked/expired account (Linux),d2b95631-62d7-45a3-aaef-0972cea97931,bash
 initial-access,T1078.003,Valid Accounts: Local Accounts,10,Reactivate a locked/expired account (FreeBSD),09e3380a-fae5-4255-8b19-9950be0252cf,sh

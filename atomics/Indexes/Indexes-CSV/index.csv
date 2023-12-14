@@ -359,6 +359,8 @@ defense-evasion,T1553.005,Subvert Trust Controls: Mark-of-the-Web Bypass,3,Remov
 defense-evasion,T1553.005,Subvert Trust Controls: Mark-of-the-Web Bypass,4,Execute LNK file from ISO,c2587b8d-743d-4985-aa50-c83394eaeb68,powershell
 defense-evasion,T1612,Build Image on Host,1,Build Image On Host,2db30061-589d-409b-b125-7b473944f9b3,sh
 defense-evasion,T1055.002,Process Injection: Portable Executable Injection,1,Portable Executable Injection,578025d5-faa9-4f6d-8390-aae739d503e1,powershell
+defense-evasion,T1562.010,Impair Defenses: Downgrade Attack,1,ESXi - Change VIB acceptance level to CommunitySupported via PowerCLI,062f92c9-28b1-4391-a5f8-9d8ca6852091,powershell
+defense-evasion,T1562.010,Impair Defenses: Downgrade Attack,2,ESXi - Change VIB acceptance level to CommunitySupported via ESXCLI,14d55b96-b2f5-428d-8fed-49dc4d9dd616,command_prompt
 defense-evasion,T1218.005,Signed Binary Proxy Execution: Mshta,1,Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject,1483fab9-4f52-4217-a9ce-daa9d7747cae,command_prompt
 defense-evasion,T1218.005,Signed Binary Proxy Execution: Mshta,2,Mshta executes VBScript to execute malicious command,906865c3-e05f-4acc-85c4-fbc185455095,command_prompt
 defense-evasion,T1218.005,Signed Binary Proxy Execution: Mshta,3,Mshta Executes Remote HTML Application (HTA),c4b97eeb-5249-4455-a607-59f95485cb45,powershell
@@ -453,6 +455,7 @@ defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,46,AWS - Guar
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,47,Tamper with Defender ATP on Linux/MacOS,40074085-dbc8-492b-90a3-11bcfc52fda8,sh
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,48,Tamper with Windows Defender Registry - Reg.exe,1f6743da-6ecc-4a93-b03f-dc357e4b313f,command_prompt
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,49,Tamper with Windows Defender Registry - Powershell,a72cfef8-d252-48b3-b292-635d332625c3,powershell
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,50,ESXi - Disable Account Lockout Policy via PowerCLI,091a6290-cd29-41cb-81ea-b12f133c66cb,powershell
 defense-evasion,T1055.012,Process Injection: Process Hollowing,1,Process Hollowing using PowerShell,562427b4-39ef-4e8c-af88-463a78e70b9c,powershell
 defense-evasion,T1055.012,Process Injection: Process Hollowing,2,RunPE via VBA,3ad4a037-1598-4136-837c-4027e4fa319b,powershell
 defense-evasion,T1055.012,Process Injection: Process Hollowing,3,Process Hollowing in Go using CreateProcessW WinAPI,c8f98fe1-c89b-4c49-a7e3-d60ee4bc2f5a,powershell
@@ -863,6 +866,7 @@ execution,T1047,Windows Management Instrumentation,7,Create a Process using WMI 
 execution,T1047,Windows Management Instrumentation,8,Create a Process using obfuscated Win32_Process,10447c83-fc38-462a-a936-5102363b1c43,powershell
 execution,T1047,Windows Management Instrumentation,9,WMI Execute rundll32,00738d2a-4651-4d76-adf2-c43a41dfb243,command_prompt
 execution,T1047,Windows Management Instrumentation,10,Application uninstall using WMIC,c510d25b-1667-467d-8331-a56d3e9bc4ff,command_prompt
+execution,T1129,Server Software Component,1,ESXi - Install a custom VIB on an ESXi host,7f843046-abf2-443f-b880-07a83cf968ec,command_prompt
 execution,T1059.007,Command and Scripting Interpreter: JavaScript,1,JScript execution to gather local computer information via cscript,01d75adf-ca1b-4dd1-ac96-7c9550ad1035,command_prompt
 execution,T1059.007,Command and Scripting Interpreter: JavaScript,2,JScript execution to gather local computer information via wscript,0709945e-4fec-4c49-9faf-c3c292a74484,command_prompt
 execution,T1053.007,Kubernetes Cronjob,1,ListCronjobs,ddfb0bc1-3c3f-47e9-a298-550ecfefacbd,bash
@@ -1311,6 +1315,7 @@ collection,T1039,Data from Network Shared Drive,1,Copy a sensitive File over Adm
 collection,T1039,Data from Network Shared Drive,2,Copy a sensitive File over Administrative share with Powershell,7762e120-5879-44ff-97f8-008b401b9a98,powershell
 collection,T1056.004,Input Capture: Credential API Hooking,1,Hook PowerShell TLS Encrypt/Decrypt Messages,de1934ea-1fbf-425b-8795-65fb27dd7e33,powershell
 lateral-movement,T1021.005,Remote Services:VNC,1,Enable Apple Remote Desktop Agent,8a930abe-841c-4d4f-a877-72e9fe90b9ea,sh
+lateral-movement,T1021.004,Remote Services: SSH,1,ESXi - Enable SSH via PowerCLI,8f6c14d1-f13d-4616-b7fc-98cc69fe56ec,powershell
 lateral-movement,T1091,Replication Through Removable Media,1,USB Malware Spread Simulation,d44b7297-622c-4be8-ad88-ec40d7563c75,powershell
 lateral-movement,T1021.002,Remote Services: SMB/Windows Admin Shares,1,Map admin share,3386975b-367a-4fbb-9d77-4dcf3639ffd3,command_prompt
 lateral-movement,T1021.002,Remote Services: SMB/Windows Admin Shares,2,Map Admin Share PowerShell,514e9cd7-9207-4882-98b1-c8f791bae3c5,powershell
@@ -1652,6 +1657,8 @@ discovery,T1082,System Information Discovery,28,Driver Enumeration using DriverQ
 discovery,T1082,System Information Discovery,29,System Information Discovery,4060ee98-01ae-4c8e-8aad-af8300519cc7,command_prompt
 discovery,T1082,System Information Discovery,30,Check computer location,96be6002-9200-47db-94cb-c3e27de1cb36,command_prompt
 discovery,T1082,System Information Discovery,31,BIOS Information Discovery through Registry,f2f91612-d904-49d7-87c2-6c165d23bead,command_prompt
+discovery,T1082,System Information Discovery,32,ESXi - VM Discovery using ESXCLI,2040405c-eea6-4c1c-aef3-c2acc430fac9,command_prompt
+discovery,T1082,System Information Discovery,33,ESXi - Darkside system information discovery,f89812e5-67d1-4f49-86fa-cbc6609ea86a,command_prompt
 discovery,T1010,Application Window Discovery,1,List Process Main Windows - C# .NET,fe94a1c3-3e22-4dc9-9fdf-3a8bdbc10dc4,command_prompt
 discovery,T1580,Cloud Infrastructure Discovery,1,AWS - EC2 Enumeration from Cloud Instance,99ee161b-dcb1-4276-8ecb-7cfdcb207820,sh
 discovery,T1217,Browser Bookmark Discovery,1,List Mozilla Firefox Bookmark Database Files on FreeBSD/Linux,3a41f169-a5ab-407f-9269-abafdb5da6c2,sh
@@ -1686,6 +1693,7 @@ discovery,T1083,File and Directory Discovery,3,Nix File and Directory Discovery,
 discovery,T1083,File and Directory Discovery,4,Nix File and Directory Discovery 2,13c5e1ae-605b-46c4-a79f-db28c77ff24e,sh
 discovery,T1083,File and Directory Discovery,5,Simulating MAZE Directory Enumeration,c6c34f61-1c3e-40fb-8a58-d017d88286d8,powershell
 discovery,T1083,File and Directory Discovery,6,Launch DirLister Executable,c5bec457-43c9-4a18-9a24-fe151d8971b7,powershell
+discovery,T1083,File and Directory Discovery,7,ESXi - Enumerate VMDKs available on an ESXi Host,4a233a40-caf7-4cf1-890a-c6331bbc72cf,command_prompt
 discovery,T1049,System Network Connections Discovery,1,System Network Connections Discovery,0940a971-809a-48f1-9c4d-b1d785e96ee5,command_prompt
 discovery,T1049,System Network Connections Discovery,2,System Network Connections Discovery with PowerShell,f069f0f1-baad-4831-aa2b-eddac4baac4a,powershell
 discovery,T1049,System Network Connections Discovery,3,"System Network Connections Discovery FreeBSD, Linux & MacOS",9ae28d3f-190f-4fa0-b023-c7bd3e0eabf2,sh
@@ -1828,6 +1836,8 @@ impact,T1529,System Shutdown/Reboot,9,Shutdown System via `poweroff` - FreeBSD/L
 impact,T1529,System Shutdown/Reboot,10,Reboot System via `poweroff` - FreeBSD,5a282e50-86ff-438d-8cef-8ae01c9e62e1,sh
 impact,T1529,System Shutdown/Reboot,11,Reboot System via `poweroff` - Linux,61303105-ff60-427b-999e-efb90b314e41,bash
 impact,T1529,System Shutdown/Reboot,12,Logoff System - Windows,3d8c25b5-7ff5-4c9d-b21f-85ebd06654a4,command_prompt
+impact,T1529,System Shutdown/Reboot,13,ESXi - Terminates VMs using pkill,987c9b4d-a637-42db-b1cb-e9e242c3991b,command_prompt
+impact,T1529,System Shutdown/Reboot,14,ESXi - Avoslocker enumerates VMs and forcefully kills VMs,189f7d6e-9442-4160-9bc3-5e4104d93ece,command_prompt
 initial-access,T1133,External Remote Services,1,Running Chrome VPN Extensions via the Registry 2 vpn extension,4c8db261-a58b-42a6-a866-0a294deedde4,powershell
 initial-access,T1566.001,Phishing: Spearphishing Attachment,1,Download Macro-Enabled Phishing Attachment,114ccff9-ae6d-4547-9ead-4cd69f687306,powershell
 initial-access,T1566.001,Phishing: Spearphishing Attachment,2,Word spawned a command shell and used an IP address in the command line,cbb6799a-425c-4f83-9194-5447a909d67f,powershell
