@@ -1,0 +1,62 @@
+attack_technique: T1129
+display_name: 'Server Software Component'
+atomic_tests:
+- name: ESXi - Install a custom VIB on an ESXi host 
+  auto_generated_guid: 7f843046-abf2-443f-b880-07a83cf968ec
+  description: |
+    An adversary can maintain persistence within an ESXi host by installing malicious vSphere Installation Bundles (VIBs).
+    [Reference](https://www.mandiant.com/resources/blog/esxi-hypervisors-malware-persistence)
+  supported_platforms:
+  - windows
+  input_arguments:
+    vm_host:
+      description: Specify the host name of the ESXi Server
+      type: string
+      default: atomic.local
+    vm_user:
+      description: Specify the privilege user account on ESXi Server
+      type: string
+      default: root
+    vm_pass:
+      description: Specify the privilege user password on ESXi Server
+      type: string
+      default: pass
+    plink_file:
+      description: Path to plink
+      type: path
+      default: 'PathToAtomicsFolder\..\ExternalPayloads\plink.exe'
+    pscp_file:
+      description: Path to Pscp
+      type: path
+      default: 'PathToAtomicsFolder\..\ExternalPayloads\pscp.exe'
+    vib_install:
+      description: Path to script with commands to install the vib
+      type: path
+      default: PathToAtomicsFolder\..\atomics\T1129\src\esxi_vibinstall.txt
+    vib_remove:
+      description: Path to script with commands to remove the vib
+      type: path
+      default: PathToAtomicsFolder\..\atomics\T1129\src\esxi_vibremove.txt
+    vib_file:
+      description: Path to the dummy vib
+      type: path
+      default: PathToAtomicsFolder\..\atomics\T1129\src\atomicvibes.vib
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Check if plink and pscp are available.
+    prereq_command: |
+      if (Test-Path "#{plink_file}") {exit 0} else {exit 1}
+      if (Test-Path "#{pscp_file}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\plink.exe"
+      Invoke-WebRequest "https://the.earth.li/~sgtatham/putty/latest/w64/pscp.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\pscp.exe"
+  executor:
+    command: |
+       #{pscp_file} -pw #{vm_pass} #{vib_file} #{vm_user}@#{vm_host}:/tmp
+       echo "" | "#{plink_file}" "#{vm_host}" -ssh  -l "#{vm_user}" -pw "#{vm_pass}" -m "#{vib_install}"
+    cleanup_command: |
+       echo "" | "#{plink_file}" "#{vm_host}" -ssh  -l "#{vm_user}" -pw "#{vm_pass}" -m "#{vib_remove}"
+    name: command_prompt
+    elevation_required: false
