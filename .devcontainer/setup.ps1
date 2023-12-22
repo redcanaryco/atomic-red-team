@@ -1,8 +1,7 @@
 New-Item $PROFILE -Force
-Invoke-Expression (Invoke-WebRequest 'https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/install-atomicredteam.ps1' -UseBasicParsing);
-Install-AtomicRedTeam
+Set-Variable -Name "InvokePath" -Value (Get-Item /usr/local/share/powershell/Modules/Invoke-AtomicRedTeam/**/Invoke-AtomicRedTeam.psd1).FullName
 Write-Output @"
-Import-Module $HOME/AtomicRedTeam/invoke-atomicredteam/Invoke-AtomicRedTeam.psd1 -Force
+Import-Module $InvokePath -Force
 `$PSDefaultParameterValues`["Invoke-AtomicTest:PathToAtomicsFolder"] = "/workspaces/atomic-red-team/atomics";
 `$PSDefaultParameterValues`["Invoke-AtomicTest:ExecutionLogPath"]="$HOME/AtomicRedTeam/execution.csv";
 "@ > $PROFILE
