@@ -148,7 +148,7 @@ atomic_tests:
       Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/bin/AdFind.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe"
   executor:
     command: |
-      "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" -f (objectcategory=subnet)
+      "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" -f (objectcategory=subnet) -c
     name: command_prompt
 
 - name: Qakbot Recon

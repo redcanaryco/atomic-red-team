@@ -81,7 +81,7 @@ atomic_tests:
       Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/bin/AdFind.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe"
   executor:
     command: |
-      "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" -f (objectcategory=organizationalUnit)
+      "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" -f (objectcategory=organizationalUnit) -c
     name: command_prompt
 - name: Adfind - Enumerate Active Directory Trusts
   auto_generated_guid: 15fe436d-e771-4ff3-b655-2dca9ba52834
@@ -101,7 +101,7 @@ atomic_tests:
       Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/bin/AdFind.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe"
   executor:
     command: |
-      "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" -gcb -sc trustdmp
+      "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" -c -gcb -sc trustdmp
     name: command_prompt
 
 - name: Get-DomainTrust with PowerView
