@@ -2,8 +2,24 @@
   "image": "mcr.microsoft.com/devcontainers/universal:2",
   "features": {
     "ghcr.io/devcontainers/features/powershell:1": {},
-        "ghcr.io/natescherer/devcontainers-custom-features/powershell-resources:1": {
-      "resources": "powershell-yaml,invoke-atomicredteam"
+    "ghcr.io/natescherer/devcontainers-custom-features/powershell-resources:1": {
+      "resources": "powershell-yaml"
+    }
+  },
+  "onCreateCommand": "pwsh /workspaces/atomic-red-team/.devcontainer/setup.ps1",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.powershell"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "pwsh",
+        "terminal.integrated.profiles.linux": {
+          "pwsh": {
+            "path": "/usr/bin/pwsh"
+          }
+        }
+      }
     }
   }
 }
