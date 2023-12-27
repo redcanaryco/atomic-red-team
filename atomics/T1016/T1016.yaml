@@ -137,6 +137,11 @@ atomic_tests:
     reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
   supported_platforms:
   - windows
+  input_arguments:
+    optional_args:
+      description: Allows defining arguments to add to the adfind command to tailor it to the specific needs of the environment. Use "-arg" notation to add arguments separated by spaces.
+      type: string
+      default:
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -148,7 +153,7 @@ atomic_tests:
       Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/bin/AdFind.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe"
   executor:
     command: |
-      "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" -f (objectcategory=subnet) -c
+      "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" -f (objectcategory=subnet) #{optional_args}
     name: command_prompt
 
 - name: Qakbot Recon
