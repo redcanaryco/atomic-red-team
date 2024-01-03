@@ -157,6 +157,7 @@
   - Atomic Test #12: Lolbas ie4uinit.exe use as proxy [windows]
   - Atomic Test #13: LOLBAS CustomShellHost to Spawn Process [windows]
   - Atomic Test #14: Provlaunch.exe Executes Arbitrary Command via Registry Key [windows]
+  - Atomic Test #15: LOLBAS Msedge to Spawn Process [windows]
 - [T1070.006 Indicator Removal on Host: Timestomp](../../T1070.006/T1070.006.md)
   - Atomic Test #5: Windows - Modify file creation timestamp with PowerShell [windows]
   - Atomic Test #6: Windows - Modify file last modified timestamp with PowerShell [windows]
