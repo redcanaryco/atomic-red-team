@@ -51,6 +51,6 @@ becoming a contributor, check out these resources:
   for more information about contributing directly to this repository.
 - Check the [license](LICENSE.txt) for information regarding the distribution
   and modification of Atomic Red Team.
-- Contribute to linux atomics quickly from Github Codespaces. For more details, click [here](https://github.com/redcanaryco/atomic-red-team/wiki/Github-Codespaces)
+- Contribute to linux atomics quickly from GitHub Codespaces. For more details, click [here](https://github.com/redcanaryco/atomic-red-team/wiki/Github-Codespaces)
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/redcanaryco/atomic-red-team)
