@@ -125,7 +125,7 @@ atomic_tests:
 - name: Compress Data and lock with password for Exfiltration with 7zip
   auto_generated_guid: d1334303-59cb-4a03-8313-b3e24d02c198
   description: |
-    Note: Requires 7zip installation
+    Note: This test requires 7zip installation
   supported_platforms:
   - windows
   input_arguments:
@@ -246,8 +246,8 @@ atomic_tests:
   description: |
     Encrypt data for exiltration
   supported_platforms:
-  - macos
   - linux
+  - macos
   input_arguments:
     test_folder:
       description: Path used to store files.
@@ -267,7 +267,7 @@ atomic_tests:
     prereq_command: |
       if [ ! -x "$(command -v gpg)" ] || [ ! -x "$(command -v zip)" ]; then exit 1; fi;
     get_prereq_command: |
-      (which yum && yum -y install epel-release zip gpg)||(which apt-get && apt-get install -y zip gpg)
+      (which pkg && pkg install -y gnupg zip)||(which yum && yum -y install epel-release zip gpg)||(which apt-get && apt-get install -y zip gpg)
   executor:
     name: sh
     elevation_required: false
@@ -382,3 +382,5 @@ atomic_tests:
       rm c:\temp\loghost.txt
     name: powershell
     elevation_required: true
+
+  

