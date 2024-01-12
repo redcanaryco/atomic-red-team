@@ -667,3 +667,16 @@ atomic_tests:
       Set-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System -Name PromptOnSecureDesktop -Value 1 -Type Dword -Force
     name: powershell
     elevation_required: true
+
+- name: Disable UAC notification via registry keys
+  description: |
+    Detect the BlotchyQuasar RAT defense evasion activities that the adversary to disable UAC notifications makes it easier for malware and malicious software to execute with elevated privileges.
+    [Article](https://securityintelligence.com/x-force/x-force-hive0129-targeting-financial-institutions-latam-banking-trojan/)
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKLM\SOFTWARE\Microsoft\Security Center" /v UACDisableNotify /t REG_DWORD /d 1 /f
+    cleanup_command: |
+       reg delete "HKLM\SOFTWARE\Microsoft\Security Center" /v UACDisableNotify 
+    name: command_prompt
