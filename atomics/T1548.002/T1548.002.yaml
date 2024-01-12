@@ -677,7 +677,7 @@ atomic_tests:
     command: |
       reg add "HKLM\SOFTWARE\Microsoft\Security Center" /v UACDisableNotify /t REG_DWORD /d 1 /f
     cleanup_command: |
-       reg delete "HKLM\SOFTWARE\Microsoft\Security Center" /v UACDisableNotify 
+       reg add "HKLM\SOFTWARE\Microsoft\Security Center" /v UACDisableNotify /t REG_DWORD /d 0 /f
     name: command_prompt
 
 - name: Disable ConsentPromptBehaviorAdmin via registry keys
