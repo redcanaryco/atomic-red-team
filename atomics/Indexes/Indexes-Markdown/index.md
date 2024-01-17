@@ -854,6 +854,7 @@
   - Atomic Test #3: Service Installation PowerShell [windows]
   - Atomic Test #4: TinyTurla backdoor service w64time [windows]
   - Atomic Test #5: Remote Service Installation CMD [windows]
+  - Atomic Test #6: Modify Service to Run Arbitrary Binary (Powershell) [windows]
 - [T1053.003 Scheduled Task/Job: Cron](../../T1053.003/T1053.003.md)
   - Atomic Test #1: Cron - Replace crontab with referenced file [linux, macos]
   - Atomic Test #2: Cron - Add script to all cron subfolders [macos, linux]
@@ -1350,6 +1351,7 @@
   - Atomic Test #3: Service Installation PowerShell [windows]
   - Atomic Test #4: TinyTurla backdoor service w64time [windows]
   - Atomic Test #5: Remote Service Installation CMD [windows]
+  - Atomic Test #6: Modify Service to Run Arbitrary Binary (Powershell) [windows]
 - [T1053.003 Scheduled Task/Job: Cron](../../T1053.003/T1053.003.md)
   - Atomic Test #1: Cron - Replace crontab with referenced file [linux, macos]
   - Atomic Test #2: Cron - Add script to all cron subfolders [macos, linux]
