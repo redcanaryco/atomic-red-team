@@ -174,3 +174,33 @@ atomic_tests:
     cleanup_command: |
       sc.exe \\#{remote_host} stop #{service_name} >nul 2>&1
       sc.exe \\#{remote_host} delete #{service_name} >nul 2>&1
+- name: Modify Service to Run Arbitrary Binary (Powershell)
+  description: |
+     This test will use PowerShell to temporarily modify a service to run an arbitrary executable by changing its binary path and will then revert the binary path change, restoring the service to its original state.
+     This technique was previously observed through SnapMC's use of Powerspolit's invoke-serviceabuse function. 
+     [Reference](https://blog.fox-it.com/2021/10/11/snapmc-skips-ransomware-steals-data/)
+  supported_platforms:
+  - windows
+  input_arguments:
+    service_name:
+      description: Name of the service to modify
+      type: string
+      default: fax
+    new_bin_path:
+      description: Path of the new service binary
+      type: String
+      default: '$env:windir\system32\notepad.exe'
+    original_bin_path:
+      description: Path of the original service binary
+      type: String
+      default: '$env:windir\system32\fxssvc.exe'
+  executor:
+    command: |-
+      Stop-Service -Name "#{service_name}" -force -erroraction silentlycontinue | Out-Null
+      set-servicebinarypath -name "#{service_name}" -path "#{new_bin_path}"
+      start-service -Name "#{service_name}" -erroraction silentlycontinue | out-null
+    cleanup_command: |-
+      Stop-Service -Name "#{service_name}" -force -erroraction silentlycontinue | Out-Null
+      set-servicebinarypath -name "#{service_name}" -path "#{original_bin_path}" -erroraction silentlycontinue | out-null
+    name: powershell
+    elevation_required: true      
