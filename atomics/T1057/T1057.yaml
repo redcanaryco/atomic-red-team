@@ -86,3 +86,16 @@ atomic_tests:
     command: |
       tasklist | findstr #{process_to_enumerate}
     name: command_prompt
+- name: Process Discovery - Get-WmiObject Win32_Process | select Processname, ProcessId
+  auto_generated_guid: f6eea8e5-88a1-458e-9ac2-5a085fa8edcf
+  description: |
+    Simulate the discovery of processes using the `Get-WmiObject Win32_Process` cmdlet on Windows systems.
+    Use `Get-WmiObject` to query the `Win32_Process` class and select the "Processname" and "ProcessId" properties to retrieve information about running processes.
+  supported_platforms:
+    - windows
+  input_arguments: {}
+  executor:
+    command: |
+      Get-WmiObject Win32_Process | select Processname, ProcessId
+    cleanup_command: ""
+    name: powershell
