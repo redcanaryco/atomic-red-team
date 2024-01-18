@@ -125,9 +125,6 @@ atomic_tests:
       echo User Domain: %USERDOMAIN% >> %file%
       net users >> %file%
       query user >> %file%
-  cleanup_commands:
-    - "del #{output_file_path}\\user_info_*.tmp"
-        net users >> %file%
-        query user >> %file%
-    cleanup_commands:
-      - "del %output_file_path%\\user_info_*.tmp"
+  cleanup_command: |
+    del #{output_file_path}\\user_info_*.tmp
+  name: "command_prompt"
