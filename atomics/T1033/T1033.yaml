@@ -120,10 +120,10 @@ atomic_tests:
     name: "command_prompt"
     elevation_required: false
     command: |
-      set file=%output_path%\user_info_%random%.tmp
+      set file=%TEMP%\user_info_%random%.tmp
       echo Username: %USERNAME% > %file%
       echo User Domain: %USERDOMAIN% >> %file%
       net users >> %file%
       query user >> %file%
   cleanup_commands:
-    - "del %output_path%\\user_info_*.tmp"
+    - "del %TEMP%\\user_info_*.tmp"
