@@ -86,6 +86,10 @@ atomic_tests:
     - description: Check if AWS CLI is installed and configured.
       prereq_command: |
         aws sts get-caller-identity --profile #{aws_profile}
+      get_prereq_command: |
+        if ! aws sts get-caller-identity --profile #{aws_profile}; then
+          echo "AWS CLI not properly configured. Please configure AWS CLI."
+        fi
   
   cleanup_commands:
     - description: No specific cleanup required as this test only reads information.
