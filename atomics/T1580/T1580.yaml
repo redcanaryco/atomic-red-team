@@ -54,3 +54,44 @@ atomic_tests:
       rm -rf stratus*
     name: sh
     elevation_required: false
+    
+- name: AWS - EC2 Security Group Enumeration
+  description: "Simulate an attacker's action to enumerate EC2 Security Groups in a compromised AWS environment."
+  supported_platforms:
+    - Linux
+    - macOS
+    - Windows
+    - IaaS: AWS
+  input_arguments:
+    aws_profile:
+      description: AWS CLI profile name
+      type: string
+      default: default
+    output_format:
+      description: Desired output format (text, table, json)
+      type: string
+      default: json
+  
+  executor:
+    name: command_prompt
+    command: |
+      aws ec2 describe-security-groups --profile #{aws_profile} --output #{output_format}
+  
+  dependencies:
+    - description: AWS CLI installed and configured with the necessary access rights.
+      get_prereq_command: |
+        if [ "$(uname)" = "Darwin" ] || [ "$(expr substr $(uname) 1 5)" = "Linux" ]; then
+          curl "https://aws.amazon.com/cli/" -o "Install-AWSCLI.sh" && sh Install-AWSCLI.sh
+        elif [ "$(expr substr $(uname) 1 5)" = "MINGW" ]; then
+          Invoke-WebRequest -Uri "https://aws.amazon.com/cli/" -OutFile "Install-AWSCLI.ps1"; .\Install-AWSCLI.ps1
+        fi
+    - description: Check if AWS CLI is installed and configured.
+      prereq_command: |
+        aws sts get-caller-identity --profile #{aws_profile}
+  
+  cleanup_commands:
+    - description: No specific cleanup required as this test only reads information.
+  
+  notes:
+    - Ensure that this test is conducted in a controlled environment to prevent accidental exposure of sensitive information.
+    - The effectiveness of this test relies on the permissions associated with the AWS profile used. It should have read access to EC2 security groups.
