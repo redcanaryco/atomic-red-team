@@ -602,6 +602,7 @@
   - Atomic Test #3: Service Installation PowerShell [windows]
   - Atomic Test #4: TinyTurla backdoor service w64time [windows]
   - Atomic Test #5: Remote Service Installation CMD [windows]
+  - Atomic Test #6: Modify Service to Run Arbitrary Binary (Powershell) [windows]
 - [T1547.012 Boot or Logon Autostart Execution: Print Processors](../../T1547.012/T1547.012.md)
   - Atomic Test #1: Print Processors [windows]
 - [T1574.001 Hijack Execution Flow: DLL Search Order Hijacking](../../T1574.001/T1574.001.md)
@@ -931,6 +932,7 @@
   - Atomic Test #3: Service Installation PowerShell [windows]
   - Atomic Test #4: TinyTurla backdoor service w64time [windows]
   - Atomic Test #5: Remote Service Installation CMD [windows]
+  - Atomic Test #6: Modify Service to Run Arbitrary Binary (Powershell) [windows]
 - [T1137 Office Application Startup](../../T1137/T1137.md)
   - Atomic Test #1: Office Application Startup - Outlook as a C2 [windows]
 - [T1547.012 Boot or Logon Autostart Execution: Print Processors](../../T1547.012/T1547.012.md)
@@ -1794,6 +1796,7 @@
 - T1011.001 Exfiltration Over Bluetooth [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1020 Automated Exfiltration](../../T1020/T1020.md)
   - Atomic Test #1: IcedID Botnet HTTP PUT [windows]
+  - Atomic Test #2: Exfiltration via Encrypted FTP [windows]
 - T1048.001 Exfiltration Over Symmetric Encrypted Non-C2 Protocol [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1567.001 Exfiltration to Code Repository [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1048.002 Exfiltration Over Alternative Protocol - Exfiltration Over Asymmetric Encrypted Non-C2 Protocol](../../T1048.002/T1048.002.md)
