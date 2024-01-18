@@ -1796,6 +1796,7 @@
 - T1011.001 Exfiltration Over Bluetooth [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1020 Automated Exfiltration](../../T1020/T1020.md)
   - Atomic Test #1: IcedID Botnet HTTP PUT [windows]
+  - Atomic Test #2: Exfiltration via Encrypted FTP [windows]
 - T1048.001 Exfiltration Over Symmetric Encrypted Non-C2 Protocol [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1567.001 Exfiltration to Code Repository [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1048.002 Exfiltration Over Alternative Protocol - Exfiltration Over Asymmetric Encrypted Non-C2 Protocol](../../T1048.002/T1048.002.md)
