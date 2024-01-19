@@ -66,3 +66,42 @@ atomic_tests:
     elevation_required: true
     command: |
       "%PROGRAMFILES(x86)%/#{PDQ_Deploy_exe}"
+
+- name: Deploy 7-Zip Using Chocolatey
+  auto_generated_guid: 2169e8b0-2ee7-44cb-8a6e-d816a5db7d8a
+  description: |
+    An adversary may use Chocolatey to remotely deploy the 7-Zip file archiver utility.
+  supported_platforms:
+  - windows
+  input_arguments:
+    chocolatey_installer:
+      description: Path to the Chocolatey installer.
+      type: path
+      default: chocolatey-install.ps1
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        7-Zip will be installed at the specified location (#{chocolatey_installer})
+      prereq_command: |
+        if (Test-Path "${env:ProgramFiles(x86)}\7-Zip\7z.exe") {exit 0} else {exit 1}
+      get_prereq_command: |
+        Write-Host Downloading Chocolatey installer
+        Invoke-WebRequest -Uri "https://chocolatey.org/install.ps1" -OutFile "#{chocolatey_installer}"
+        Write-Host Installing Chocolatey
+        Start-Process -FilePath "powershell.exe" -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File #{chocolatey_installer}" -Wait
+        Write-Host Installing 7-Zip
+        choco install -y 7zip
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      # Deploy 7-Zip using Chocolatey
+      choco install -y 7zip
+  prerequisites:
+    - Internet access to download Chocolatey and 7-Zip.
+    - Proper authorization and consent for testing on the local system.
+  cleanup:
+    - Remove downloaded Chocolatey installer and any temporary files.
+  detection:
+    - Monitor for suspicious use of Chocolatey on the local system.
+
