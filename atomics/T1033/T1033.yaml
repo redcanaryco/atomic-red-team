@@ -111,7 +111,6 @@ atomic_tests:
   description: "Identify the system owner or current user using native Windows command prompt utilities."
   supported_platforms:
     - "windows"
-  auto_generated_guid: 35b88076-7edb-4eb5-bdc5-11ede7f45c6a
   input_arguments:
     output_file_path:
       description: "Location of output file."
@@ -126,5 +125,5 @@ atomic_tests:
       echo User Domain: %USERDOMAIN% >> %file%
       net users >> %file%
       query user >> %file%
-  cleanup_command: |
-    del #{output_file_path}\\user_info_*.tmp
+    cleanup_command: |
+      del #{output_file_path}\\user_info_*.tmp
