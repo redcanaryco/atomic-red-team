@@ -105,3 +105,25 @@ atomic_tests:
     cleanup_command: |
       Remove-Item -Path #{output_path}\rad*.tmp -Force
     name: powershell
+    
+- name: "System Owner/User Discovery Using Command Prompt"
+  description: "Identify the system owner or current user using native Windows command prompt utilities."
+  supported_platforms:
+    - "windows"
+  auto_generated_guid: "9f12ab45-c332-4f5a-8e9b-6c81a8343e2e"
+  input_arguments:
+    output_file_path:
+      description: "Location of output file."
+      type: "string"
+      default: "$env:temp"
+  executor:
+    name: "command_prompt"
+    elevation_required: false
+    command: |
+      set file=#{output_file_path}\user_info_%random%.tmp
+      echo Username: %USERNAME% > %file%
+      echo User Domain: %USERDOMAIN% >> %file%
+      net users >> %file%
+      query user >> %file%
+  cleanup_command: |
+    del #{output_file_path}\\user_info_*.tmp
