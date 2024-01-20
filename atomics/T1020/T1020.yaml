@@ -57,5 +57,5 @@ atomic_tests:
       $ftpUrl = "#{ftpServer}"
       $creds = Get-Credential -Credential "#{credentials}"
       Invoke-WebRequest -Uri $ftpUrl -Method Put -InFile "#{sampleFile}" -Credential $creds
-  cleanup_command: |
-    Remove-Item -Path "#{sampleFile}" -ErrorAction Ignore
+    cleanup_command: |
+      Remove-Item -Path "#{sampleFile}" -ErrorAction Ignore
