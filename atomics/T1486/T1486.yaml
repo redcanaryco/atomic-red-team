@@ -280,7 +280,7 @@ atomic_tests:
   description: |
     DiskCryptor, an open source encryption utility, can be exploited by adversaries for encrypting all disk partitions, including system partitions. This tool was identified in a ransomware campaign, as reported on https://thedfirreport.com/2021/11/15/exchange-exploit-leads-to-domain-wide-ransomware/. The documentation for DiskCryptor can be found at https://github.com/DavidXanatos/DiskCryptor. During the installation process, running dcrypt.exe starts the encryption console. It's important to note that a system reboot is necessary as part of the installation.
   supported_platforms:
-  - windows
+    - windows
   input_arguments:
     dcrypt_exe:
       description: The dcrypt.exe executable from dcrypt_setup.exe
@@ -288,7 +288,7 @@ atomic_tests:
       default: 'dcrypt.exe'
   dependency_executor_name: powershell
   dependencies:
-  - description: |
+    - description: |
       dcrypt_setup will be installed at specified location (#{dcrypt_exe})
     prereq_command: |
       if (Test-Path "${env:ProgramFiles}/dcrypt/#{dcrypt_exe}") {exit 0} else {exit 1}
