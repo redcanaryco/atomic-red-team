@@ -669,6 +669,7 @@ atomic_tests:
     elevation_required: true
 
 - name: Disable UAC notification via registry keys
+  auto_generated_guid: 160a7c77-b00e-4111-9e45-7c2a44eda3fd
   description: |
     This atomic regarding UACDisableNotify pertains to the notification behavior of UAC. UAC is a critical security feature in Windows that prevents unauthorized changes to the operating system. It prompts the user for permission or an administrator password before allowing actions that could affect the system's operation or change settings that affect other users. The BlotchyQuasar RAT defense evasion activities that the adversary to disable UAC notifications makes it easier for malware and malicious software to execute with elevated privileges. [Article](https://securityintelligence.com/x-force/x-force-hive0129-targeting-financial-institutions-latam-banking-trojan/)
   supported_platforms:
@@ -681,6 +682,7 @@ atomic_tests:
     name: command_prompt
 
 - name: Disable ConsentPromptBehaviorAdmin via registry keys
+  auto_generated_guid: a768aaa2-2442-475c-8990-69cf33af0f4e
   description: |
     This atomic regarding setting ConsentPromptBehaviorAdmin to 0 configures the UAC so that it does not prompt for consent or credentials when actions requiring elevated privileges are performed by users in the administrators group. This means that any operation that would normally trigger a UAC prompt will proceed automatically without user interaction.
   supported_platforms:

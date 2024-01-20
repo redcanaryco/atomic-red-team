@@ -52,6 +52,8 @@
   - Atomic Test #22: Disable UAC admin consent prompt via ConsentPromptBehaviorAdmin registry key [windows]
   - Atomic Test #23: UAC Bypass with WSReset Registry Modification [windows]
   - Atomic Test #24: Disable UAC - Switch to the secure desktop when prompting for elevation via registry key [windows]
+  - Atomic Test #25: Disable UAC notification via registry keys [windows]
+  - Atomic Test #26: Disable ConsentPromptBehaviorAdmin via registry keys [windows]
 - T1542.001 System Firmware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1574.011 Hijack Execution Flow: Services Registry Permissions Weakness](../../T1574.011/T1574.011.md)
   - Atomic Test #1: Service Registry Permissions Weakness [windows]
@@ -586,6 +588,8 @@
   - Atomic Test #22: Disable UAC admin consent prompt via ConsentPromptBehaviorAdmin registry key [windows]
   - Atomic Test #23: UAC Bypass with WSReset Registry Modification [windows]
   - Atomic Test #24: Disable UAC - Switch to the secure desktop when prompting for elevation via registry key [windows]
+  - Atomic Test #25: Disable UAC notification via registry keys [windows]
+  - Atomic Test #26: Disable ConsentPromptBehaviorAdmin via registry keys [windows]
 - [T1574.011 Hijack Execution Flow: Services Registry Permissions Weakness](../../T1574.011/T1574.011.md)
   - Atomic Test #1: Service Registry Permissions Weakness [windows]
   - Atomic Test #2: Service ImagePath Change with reg.exe [windows]
