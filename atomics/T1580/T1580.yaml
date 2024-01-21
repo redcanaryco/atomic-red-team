@@ -90,10 +90,5 @@ atomic_tests:
         if ! aws sts get-caller-identity --profile #{aws_profile}; then
           echo "AWS CLI not properly configured. Please configure AWS CLI."
         fi
-  
-  cleanup_commands:
-    - description: No specific cleanup required as this test only reads information.
-  
-  notes:
     - Ensure that this test is conducted in a controlled environment to prevent accidental exposure of sensitive information.
     - The effectiveness of this test relies on the permissions associated with the AWS profile used. It should have read access to EC2 security groups.
