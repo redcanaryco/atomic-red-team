@@ -83,7 +83,7 @@ atomic_tests:
         elif [ "$(expr substr $(uname) 1 5)" = "MINGW" ]; then
           Invoke-WebRequest -Uri "https://aws.amazon.com/cli/" -OutFile "Install-AWSCLI.ps1"; .\Install-AWSCLI.ps1
         fi
-    - description: Check if AWS CLI is installed and configured.
+      #Check if AWS CLI is installed and configured.
       prereq_command: |
         aws sts get-caller-identity --profile #{aws_profile}
       get_prereq_command: |
