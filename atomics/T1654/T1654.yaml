@@ -13,7 +13,7 @@ atomic_tests:
   supported_platforms:
   - windows
   executor:
-    command: powershell -c "get-eventlog 'Security' | where {$_.Message -like '*SYSTEM*'} | export-csv $env:temp\T1654_events.txt"
+    command: powershell -c {get-eventlog 'Security' | where {$_.Message -like '*SYSTEM*'} | export-csv $env:temp\T1654_events.txt}
     cleanup_command: powershell -c "remove-item $env:temp\T1654_events.txt -ErrorAction Ignore"
     name: powershell
     elevation_required: true
