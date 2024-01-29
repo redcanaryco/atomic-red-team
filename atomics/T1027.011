@@ -1,0 +1,33 @@
+atomic_tests:
+  - name: Store and Retrieve Data in Windows Registry
+    description: |
+      Demonstrates storing and retrieving data filelessly using the Windows Registry. The test first checks if the specified registry key path exists; if not, it creates the path. It then generates a simple test value, stores this data in the registry, and retrieves it. The registry key is removed in the cleanup phase.
+    supported_platforms:
+    - windows
+    input_arguments:
+      registry_key_path:
+        description: The registry key path to store the data.
+        type: String
+        default: HKCU:\Software\MyTestKey
+      registry_value_name:
+        description: The name of the registry value.
+        type: String
+        default: TestValue
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        # Check if the registry key path exists, if not create it
+        if (!(Test-Path "#{registry_key_path}")) { New-Item "#{registry_key_path}" -Force }
+
+        # Generate a simple test value
+        $data_to_store = "Test data generated on $(Get-Date)"
+        
+        # Store the data in the registry
+        Set-ItemProperty -Path #{registry_key_path} -Name #{registry_value_name} -Value "$data_to_store"
+        
+        # Retrieve the data from the registry
+        Get-ItemProperty -Path #{registry_key_path} -Name #{registry_value_name}
+      cleanup_command: |
+        # Remove the test data and registry key
+        Remove-Item "#{registry_key_path}" -Force
