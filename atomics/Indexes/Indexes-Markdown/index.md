@@ -2708,6 +2708,7 @@
   - Atomic Test #2: Exfiltrate data HTTPS using curl freebsd,linux or macos [macos, linux]
 - [T1041 Exfiltration Over C2 Channel](../../T1041/T1041.md)
   - Atomic Test #1: C2 Data Exfiltration [windows]
+  - Atomic Test #2: Text Based Data Exfiltration using DNS subdomains [windows]
 - [T1048 Exfiltration Over Alternative Protocol](../../T1048/T1048.md)
   - Atomic Test #1: Exfiltration Over Alternative Protocol - SSH [macos, linux]
   - Atomic Test #2: Exfiltration Over Alternative Protocol - SSH [macos, linux]
