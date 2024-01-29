@@ -370,6 +370,6 @@ int main()
     printf("[+] Successful! Ctrl+C to exit.\n");
 
 
-	Sleep(900000);
+	Sleep(1000);
     return 0;
 }
