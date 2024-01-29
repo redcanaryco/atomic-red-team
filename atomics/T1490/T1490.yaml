@@ -149,7 +149,15 @@ atomic_tests:
 - name: "Modify VSS Service Permissions"
   auto_generated_guid: "d6a0c593-be3c-41b9-913d-763b1d3bc3eb"
   description: |
-    "Modify permissions of the VSS service to inhibit system recovery. This test alters the security settings of the Volume Shadow Copy Service (VSS), potentially impacting system recovery operations. It should be conducted only in a controlled environment. The executor must have administrative privileges to modify service permissions. Note that this test does not include a cleanup command; thus, the changes will persist after execution. Ensure that you have a backup or a system recovery plan in place before running this test. Running this test on a production system or critical environment is not recommended without proper precautions."
+    "This atomic test alters the security settings of the Volume Shadow Copy Service (VSS) by modifying its permissions, potentially impacting system recovery operations. The specific permissions set by the command are as follows:
+    - Deny Generic All (GA) permissions to Network Users (NU)
+    - Deny GA permissions to Everyone (WD)
+    - Deny GA permissions to Anonymous (AN)
+    - Allow Full Access (FA) and Generic All (GA) permissions to Everyone (WD) in System ACL (SACL)
+    - Allow Object Inherit and Inherit Only (OIIO) Full Access (FA) and GA permissions to Everyone (WD) in SACL
+    These permissions can significantly restrict VSS functionalities, including backup and restore operations. As such, it is essential to run this test only in a controlled environment with administrative privileges.
+    A cleanup command is provided to reset VSS permissions to a common default configuration, which should be verified against your specific system's configuration. 
+    It's crucial to use this cleanup command after testing to ensure the system's backup and recovery capabilities remain functional. Running this test on a production system or critical environment is not recommended without proper precautions and a robust recovery plan."
   supported_platforms:
   - windows
   executor:
@@ -157,4 +165,7 @@ atomic_tests:
     elevation_required: true
     command: |
       sc sdset VSS D:(D;;GA;;;NU)(D;;GA;;;WD)(D;;GA;;;AN)S:(AU;FA;GA;;;WD)(AU;OIIOFA;GA;;;WD)
+  cleanup_command: |
+    sc sdset VSS D:(A;;CCLCSWRPWPDTLOCRRC;;;SY)(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;BA)(A;;LC;;;BU)S:(AU;FA;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;WD)
+
   
