@@ -321,7 +321,8 @@
 - [T1055.002 Process Injection: Portable Executable Injection](../../T1055.002/T1055.002.md)
   - Atomic Test #1: Portable Executable Injection [windows]
 - T1218.012 Verclsid [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1562.010 Impair Defenses: Downgrade Attack [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1562.010 Impair Defenses: Downgrade Attack](../../T1562.010/T1562.010.md)
+  - Atomic Test #3: PowerShell Version 2 Downgrade [windows]
 - T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1218.005 Signed Binary Proxy Execution: Mshta](../../T1218.005/T1218.005.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
@@ -859,17 +860,16 @@
   - Atomic Test #9: Powershell invoke mshta.exe download [windows]
   - Atomic Test #10: Powershell Invoke-DownloadCradle [windows]
   - Atomic Test #11: PowerShell Fileless Script Execution [windows]
-  - Atomic Test #12: PowerShell Downgrade Attack [windows]
-  - Atomic Test #13: NTFS Alternate Data Stream Access [windows]
-  - Atomic Test #14: PowerShell Session Creation and Use [windows]
-  - Atomic Test #15: ATHPowerShellCommandLineParameter -Command parameter variations [windows]
-  - Atomic Test #16: ATHPowerShellCommandLineParameter -Command parameter variations with encoded arguments [windows]
-  - Atomic Test #17: ATHPowerShellCommandLineParameter -EncodedCommand parameter variations [windows]
-  - Atomic Test #18: ATHPowerShellCommandLineParameter -EncodedCommand parameter variations with encoded arguments [windows]
-  - Atomic Test #19: PowerShell Command Execution [windows]
-  - Atomic Test #20: PowerShell Invoke Known Malicious Cmdlets [windows]
-  - Atomic Test #21: PowerUp Invoke-AllChecks [windows]
-  - Atomic Test #22: Abuse Nslookup with DNS Records [windows]
+  - Atomic Test #12: NTFS Alternate Data Stream Access [windows]
+  - Atomic Test #13: PowerShell Session Creation and Use [windows]
+  - Atomic Test #14: ATHPowerShellCommandLineParameter -Command parameter variations [windows]
+  - Atomic Test #15: ATHPowerShellCommandLineParameter -Command parameter variations with encoded arguments [windows]
+  - Atomic Test #16: ATHPowerShellCommandLineParameter -EncodedCommand parameter variations [windows]
+  - Atomic Test #17: ATHPowerShellCommandLineParameter -EncodedCommand parameter variations with encoded arguments [windows]
+  - Atomic Test #18: PowerShell Command Execution [windows]
+  - Atomic Test #19: PowerShell Invoke Known Malicious Cmdlets [windows]
+  - Atomic Test #20: PowerUp Invoke-AllChecks [windows]
+  - Atomic Test #21: Abuse Nslookup with DNS Records [windows]
 - [T1559 Inter-Process Communication](../../T1559/T1559.md)
   - Atomic Test #1: Cobalt Strike Artifact Kit pipe [windows]
   - Atomic Test #2: Cobalt Strike Lateral Movement (psexec_psh) pipe [windows]
@@ -1758,6 +1758,7 @@
   - Atomic Test #8: Windows - Disable the SR scheduled task [windows]
   - Atomic Test #9: Disable System Restore Through Registry [windows]
   - Atomic Test #10: Windows - vssadmin Resize Shadowstorage Volume [windows]
+  - Atomic Test #11: Modify VSS Service Permissions [windows]
 - T1561.001 Disk Content Wipe [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1529 System Shutdown/Reboot](../../T1529/T1529.md)
   - Atomic Test #1: Shutdown System - Windows [windows]
@@ -1811,6 +1812,7 @@
   - Atomic Test #1: Exfiltrate data HTTPS using curl windows [windows]
 - [T1041 Exfiltration Over C2 Channel](../../T1041/T1041.md)
   - Atomic Test #1: C2 Data Exfiltration [windows]
+  - Atomic Test #2: Text Based Data Exfiltration using DNS subdomains [windows]
 - [T1048 Exfiltration Over Alternative Protocol](../../T1048/T1048.md)
   - Atomic Test #3: DNSExfiltration (doh) [windows]
 - T1052.001 Exfiltration over USB [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
