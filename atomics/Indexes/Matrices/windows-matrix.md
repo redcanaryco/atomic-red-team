@@ -77,7 +77,7 @@
 |  |  | [Hijack Execution Flow: DLL Side-Loading](../../T1574.002/T1574.002.md) |  | Pre-OS Boot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
 |  |  | Account Manipulation: Additional Email Delegate Permissions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  | [Process Injection: Portable Executable Injection](../../T1055.002/T1055.002.md) |  |  |  |  |  |  |  |
 |  |  | Power Settings [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  | Verclsid [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
-|  |  | [Boot or Logon Initialization Scripts: Logon Script (Windows)](../../T1037.001/T1037.001.md) |  | Impair Defenses: Downgrade Attack [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
+|  |  | [Boot or Logon Initialization Scripts: Logon Script (Windows)](../../T1037.001/T1037.001.md) |  | [Impair Defenses: Downgrade Attack](../../T1562.010/T1562.010.md) |  |  |  |  |  |  |  |
 |  |  | [Office Application Startup: Office Test](../../T1137.002/T1137.002.md) |  | Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
 |  |  | [Boot or Logon Autostart Execution: LSASS Driver](../../T1547.008/T1547.008.md) |  | [Signed Binary Proxy Execution: Mshta](../../T1218.005/T1218.005.md) |  |  |  |  |  |  |  |
 |  |  | [Scheduled Task/Job: At](../../T1053.002/T1053.002.md) |  | Execution Guardrails [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
