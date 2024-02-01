@@ -29,7 +29,10 @@ atomic_tests:
   auto_generated_guid: 6a3ff8dd-f49c-4272-a658-11c2fe58bd88
   description: |
     Deletes Windows Volume Shadow Copies via WMI. This technique is used by numerous ransomware families and APT malware such as Olympic Destroyer.
-    Shadow copies can only be created on Windows server or Windows 8.
+    prereq_command: |
+      if(!(vssadmin.exe list shadows | findstr "No items found that satisfy the query.")) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      wmic shadowcopy call create Volume='C:\'
   supported_platforms:
   - windows
   executor:
@@ -145,3 +148,25 @@ atomic_tests:
     command: 'vssadmin resize shadowstorage /For=C: /On=C: /MaxSize=20%'
     name: powershell
     elevation_required: true
+
+- name: "Modify VSS Service Permissions"
+  auto_generated_guid: a4420f93-5386-4290-b780-f4f66abc7070
+  description: |
+    This atomic test alters the security settings of the Volume Shadow Copy Service (VSS) by modifying its permissions, potentially impacting system recovery operations. The specific permissions set by the command are as follows:
+    - Deny Generic All (GA) permissions to Network Users (NU)
+    - Deny GA permissions to Everyone (WD)
+    - Deny GA permissions to Anonymous (AN)
+    - Allow Full Access (FA) and Generic All (GA) permissions to Everyone (WD) in System ACL (SACL)
+    - Allow Object Inherit and Inherit Only (OIIO) Full Access (FA) and GA permissions to Everyone (WD) in SACL
+    These permissions can significantly restrict VSS functionalities, including backup and restore operations. As such, it is essential to run this test only in a controlled environment with administrative privileges.
+    A cleanup command is provided to reset VSS permissions to a common default configuration, which should be verified against your specific system's configuration. It's crucial to use this cleanup command after testing to ensure the system's backup and recovery capabilities remain functional. Running this test on a production system or critical environment is not recommended without proper precautions and a robust recovery plan.
+  supported_platforms:
+  - windows
+  executor:
+    name: "command_prompt"
+    elevation_required: true
+    command: |
+      sc sdset VSS D:(D;;GA;;;NU)(D;;GA;;;WD)(D;;GA;;;AN)S:(AU;FA;GA;;;WD)(AU;OIIOFA;GA;;;WD)
+    cleanup_command: |
+      sc sdset VSS D:(A;;CCLCSWRPWPDTLOCRRC;;;SY)(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;BA)(A;;LC;;;BU)S:(AU;FA;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;WD)
+
