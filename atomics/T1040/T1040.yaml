@@ -440,3 +440,21 @@ atomic_tests:
       rm -f #{program_path}
     name: bash
     elevation_required: true
+- name: PowerShell Network Sniffing
+  auto_generated_guid: 9c15a7de-de14-46c3-bc2a-6d94130986ae
+  description: |-
+    PowerShell Built-in Cmdlets to capture network traffic.
+    https://learn.microsoft.com/en-us/powershell/module/neteventpacketcapture/new-neteventsession?view=windowsserver2022-ps
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      New-NetEventSession -Name Capture007 -LocalFilePath "$ENV:Temp\sniff.etl"
+      Add-NetEventPacketCaptureProvider -SessionName Capture007 -TruncationLength 100
+	    Start-NetEventSession -Name Capture007
+	    Stop-NetEventSession -Name Capture007
+	    Remove-NetEventSession -Name Capture007
+    cleanup_command: |-
+      del $ENV:Temp\sniff.etl
+    name: command_prompt
+    elevation_required: true
