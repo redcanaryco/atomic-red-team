@@ -1358,6 +1358,7 @@
   - Atomic Test #5: Windows Internal Packet Capture [windows]
   - Atomic Test #6: Windows Internal pktmon capture [windows]
   - Atomic Test #7: Windows Internal pktmon set filter [windows]
+  - Atomic Test #16: PowerShell Network Sniffing [windows]
 - [T1552.002 Unsecured Credentials: Credentials in Registry](../../T1552.002/T1552.002.md)
   - Atomic Test #1: Enumeration for Credentials in Registry [windows]
   - Atomic Test #2: Enumeration for PuTTY Credentials in Registry [windows]
@@ -1565,6 +1566,7 @@
   - Atomic Test #5: Windows Internal Packet Capture [windows]
   - Atomic Test #6: Windows Internal pktmon capture [windows]
   - Atomic Test #7: Windows Internal pktmon set filter [windows]
+  - Atomic Test #16: PowerShell Network Sniffing [windows]
 - [T1135 Network Share Discovery](../../T1135/T1135.md)
   - Atomic Test #4: Network Share Discovery command prompt [windows]
   - Atomic Test #5: Network Share Discovery PowerShell [windows]
