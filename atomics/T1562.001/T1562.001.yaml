@@ -1088,10 +1088,6 @@ atomic_tests:
   description: This test simulates the deletion of the ASR rules loaded by Microsoft Defender using the registry. Depending on the deployment, rules can be pushed either using GPO or InTune, This test simulates an InTune-based rules deployment.
   supported_platforms:
   - windows
-  input_arguments: 
-  dependency_executor_name: 
-  dependencies: 
-  executor:
     command: |-
       $registryPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Policy Manager"
 
@@ -1113,16 +1109,13 @@ atomic_tests:
 
       Remove-ItemProperty -Path $registryPath -Name $registryValueName
       Write-Host "Registry value deleted: $registryValueName"
-      cleanup_command: 
-      name: powershell
-      elevation_required: true
+    cleanup_command: 
+    name: powershell
+    elevation_required: true
 - name: Delete Microsoft Defender ASR Rules - GPO
   description: This test simulates the deletion of the ASR rules loaded by Microsoft Defender using the registry. Depending on the deployment, rules can be pushed either using GPO or InTune, This test simulates a GPO-based rules deployment.
   supported_platforms:
   - windows
-  input_arguments: 
-  dependency_executor_name: 
-  dependencies: 
   executor:
     command: |-
       $registryPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\ASR\Rules"
