@@ -1094,29 +1094,29 @@ atomic_tests:
   dependencies: 
   executor:
     command: |-
-    $registryPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Policy Manager"
+      $registryPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Policy Manager"
 
-    if (-not (Test-Path $registryPath)) {
-      New-Item -Path $registryPath -Force
-      Write-Host "Registry key created: $registryPath"
-    }
+      if (-not (Test-Path $registryPath)) {
+        New-Item -Path $registryPath -Force
+        Write-Host "Registry key created: $registryPath"
+      }
 
-    $registryValueName = "ASRRules"
+      $registryValueName = "ASRRules"
 
-    if (Test-Path "$registryPath\$registryValueName") {
+      if (Test-Path "$registryPath\$registryValueName") {
+        Remove-ItemProperty -Path $registryPath -Name $registryValueName
+        Write-Host "Registry value deleted: $registryValueName"
+      } else {
+        New-ItemProperty -Path $registryPath -Name $registryValueName -PropertyType String -Value "36190899-1602-49e8-8b27-eb1d0a1ce869=1" -Force
+        Write-Host "Registry value created: $registryValueName"
+      }
+
+
       Remove-ItemProperty -Path $registryPath -Name $registryValueName
       Write-Host "Registry value deleted: $registryValueName"
-    } else {
-      New-ItemProperty -Path $registryPath -Name $registryValueName -PropertyType String -Value "36190899-1602-49e8-8b27-eb1d0a1ce869=1" -Force
-      Write-Host "Registry value created: $registryValueName"
-    }
-
-
-    Remove-ItemProperty -Path $registryPath -Name $registryValueName
-    Write-Host "Registry value deleted: $registryValueName"
-    cleanup_command: 
-    name: powershell
-    elevation_required: true
+      cleanup_command: 
+      name: powershell
+      elevation_required: true
 - name: Delete Microsoft Defender ASR Rules - GPO
   auto_generated_guid: 
   description: This test simulates the deletion of the ASR rules loaded by Microsoft Defender using the registry. Depending on the deployment, rules can be pushed either using GPO or InTune, This test simulates a GPO-based rules deployment.
