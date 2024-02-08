@@ -1987,6 +1987,7 @@
   - Atomic Test #13: Packet Capture Linux socket AF_INET,SOCK_RAW,TCP with sudo [linux]
   - Atomic Test #14: Packet Capture Linux socket AF_INET,SOCK_PACKET,UDP with sudo [linux]
   - Atomic Test #15: Packet Capture Linux socket AF_PACKET,SOCK_RAW with BPF filter for UDP with sudo [linux]
+  - Atomic Test #16: PowerShell Network Sniffing [windows]
 - [T1552.002 Unsecured Credentials: Credentials in Registry](../../T1552.002/T1552.002.md)
   - Atomic Test #1: Enumeration for Credentials in Registry [windows]
   - Atomic Test #2: Enumeration for PuTTY Credentials in Registry [windows]
@@ -2264,6 +2265,7 @@
   - Atomic Test #13: Packet Capture Linux socket AF_INET,SOCK_RAW,TCP with sudo [linux]
   - Atomic Test #14: Packet Capture Linux socket AF_INET,SOCK_PACKET,UDP with sudo [linux]
   - Atomic Test #15: Packet Capture Linux socket AF_PACKET,SOCK_RAW with BPF filter for UDP with sudo [linux]
+  - Atomic Test #16: PowerShell Network Sniffing [windows]
 - [T1135 Network Share Discovery](../../T1135/T1135.md)
   - Atomic Test #1: Network Share Discovery [macos]
   - Atomic Test #2: Network Share Discovery - linux [linux]
