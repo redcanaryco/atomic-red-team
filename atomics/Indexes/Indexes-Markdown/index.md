@@ -230,6 +230,7 @@
   - Atomic Test #10: Remote Process Injection with Go using CreateRemoteThread WinAPI (Natively) [windows]
   - Atomic Test #11: Process Injection with Go using CreateThread WinAPI [windows]
   - Atomic Test #12: Process Injection with Go using CreateThread WinAPI (Natively) [windows]
+  - Atomic Test #13: UUID custom process Injection [windows]
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1218 Signed Binary Proxy Execution](../../T1218/T1218.md)
   - Atomic Test #1: mavinject - Inject DLL into running process [windows]
@@ -898,6 +899,7 @@
   - Atomic Test #10: Remote Process Injection with Go using CreateRemoteThread WinAPI (Natively) [windows]
   - Atomic Test #11: Process Injection with Go using CreateThread WinAPI [windows]
   - Atomic Test #12: Process Injection with Go using CreateThread WinAPI (Natively) [windows]
+  - Atomic Test #13: UUID custom process Injection [windows]
 - [T1611 Escape to Host](../../T1611/T1611.md)
   - Atomic Test #1: Deploy container using nsenter container escape [containers]
   - Atomic Test #2: Mount host filesystem to escape privileged Docker container [containers]
