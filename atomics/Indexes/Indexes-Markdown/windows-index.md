@@ -501,7 +501,8 @@
 - [T1574.002 Hijack Execution Flow: DLL Side-Loading](../../T1574.002/T1574.002.md)
   - Atomic Test #1: DLL Side-Loading using the Notepad++ GUP.exe binary [windows]
   - Atomic Test #2: DLL Side-Loading using the dotnet startup hook environment variable [windows]
-- T1027.007 Dynamic API Resolution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1027.007 Obfuscated Files or Information: Dynamic API Resolution](../../T1027.007/T1027.007.md)
+  - Atomic Test #1: Dynamic API Resolution-Ninja-syscall [windows]
 - [T1055.015 Process Injection: ListPlanting](../../T1055.015/T1055.015.md)
   - Atomic Test #1: Process injection ListPlanting [windows]
 - T1484 Domain Policy Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1358,6 +1359,7 @@
   - Atomic Test #5: Windows Internal Packet Capture [windows]
   - Atomic Test #6: Windows Internal pktmon capture [windows]
   - Atomic Test #7: Windows Internal pktmon set filter [windows]
+  - Atomic Test #16: PowerShell Network Sniffing [windows]
 - [T1552.002 Unsecured Credentials: Credentials in Registry](../../T1552.002/T1552.002.md)
   - Atomic Test #1: Enumeration for Credentials in Registry [windows]
   - Atomic Test #2: Enumeration for PuTTY Credentials in Registry [windows]
@@ -1565,6 +1567,7 @@
   - Atomic Test #5: Windows Internal Packet Capture [windows]
   - Atomic Test #6: Windows Internal pktmon capture [windows]
   - Atomic Test #7: Windows Internal pktmon set filter [windows]
+  - Atomic Test #16: PowerShell Network Sniffing [windows]
 - [T1135 Network Share Discovery](../../T1135/T1135.md)
   - Atomic Test #4: Network Share Discovery command prompt [windows]
   - Atomic Test #5: Network Share Discovery PowerShell [windows]
