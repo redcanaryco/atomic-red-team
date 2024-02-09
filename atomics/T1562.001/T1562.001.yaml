@@ -1084,3 +1084,53 @@ atomic_tests:
       Disconnect-VIServer -Confirm:$false
     name: powershell
     elevation_required: true  
+- name: Delete Microsoft Defender ASR Rules - InTune
+  description: This test simulates the deletion of the ASR rules loaded by Microsoft Defender using the registry. Depending on the deployment, rules can be pushed either using GPO or InTune, This test simulates an InTune-based rules deployment.
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $registryPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Policy Manager"
+
+      if (-not (Test-Path $registryPath)) {
+        New-Item -Path $registryPath -Force
+        Write-Host "Registry key created: $registryPath"
+      }
+
+      $registryValueName = "ASRRules"
+
+      if (Test-Path "$registryPath\$registryValueName") {
+        Remove-ItemProperty -Path $registryPath -Name $registryValueName
+        Write-Host "Registry value deleted: $registryValueName"
+      } else {
+        New-ItemProperty -Path $registryPath -Name $registryValueName -PropertyType String -Value "36190899-1602-49e8-8b27-eb1d0a1ce869=1" -Force
+        Write-Host "Registry value created: $registryValueName"
+      }
+
+
+      Remove-ItemProperty -Path $registryPath -Name $registryValueName
+      Write-Host "Registry value deleted: $registryValueName"
+    name: powershell
+    elevation_required: true
+- name: Delete Microsoft Defender ASR Rules - GPO
+  description: This test simulates the deletion of the ASR rules loaded by Microsoft Defender using the registry. Depending on the deployment, rules can be pushed either using GPO or InTune, This test simulates a GPO-based rules deployment.
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      $registryPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Windows Defender Exploit Guard\ASR\Rules"
+  
+      if (-not (Test-Path $registryPath)) {
+          New-Item -Path $registryPath -Force
+          Write-Host "Registry key created: $registryPath"
+      }
+  
+      $newValueName = "36190899-1602-49e8-8b27-eb1d0a1ce869"
+      $newValueData = "1"
+      New-ItemProperty -Path $registryPath -Name $newValueName -PropertyType String -Value $newValueData -Force
+      Write-Host "Registry value created: $newValueName with data $newValueData"
+  
+      Remove-ItemProperty -Path $registryPath -Name $newValueName
+      Write-Host "Registry value deleted: $newValueName"
+    name: powershell
+    elevation_required: true
