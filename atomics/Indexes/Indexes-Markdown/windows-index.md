@@ -405,6 +405,8 @@
   - Atomic Test #45: AMSI Bypass - Override AMSI via COM [windows]
   - Atomic Test #48: Tamper with Windows Defender Registry - Reg.exe [windows]
   - Atomic Test #49: Tamper with Windows Defender Registry - Powershell [windows]
+  - Atomic Test #51: Delete Microsoft Defender ASR Rules - InTune [windows]
+  - Atomic Test #52: Delete Microsoft Defender ASR Rules - GPO [windows]
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
