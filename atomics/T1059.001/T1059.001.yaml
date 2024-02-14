@@ -427,7 +427,7 @@ atomic_tests:
     user:
       description: Username for authentication
       type: string
-      default: administrator@attackrange.local
+      default: $env:USERNAME
     password:
       description: Password for authentication
       type: string
@@ -435,7 +435,7 @@ atomic_tests:
     domain:
       description: Domain for authentication
       type: string
-      default: ATTACKRANGE.LOCAL
+      default: $env:USERDOMAIN
     dc:
       description: Domain Controller IP
       type: string
@@ -451,11 +451,11 @@ atomic_tests:
     soaphound_path:
       description: Path to SOAPHound binary
       type: string
-      default: PathToAtomicsFolder\T1059.001\src\SOAPHound.exe
+      default: PathToAtomicsFolder\T1059.001\bin\SOAPHound.exe
   executor:
     command: |
       #{soaphound_path} --user #{user} --password #{password} --domain #{domain} --dc #{dc} --bhdump --cachefilename #{cachefilename} --outputdirectory #{outputdirectory}
-    name: command_prompt
+    name: powershell
 - name: SOAPHound - Build Cache
   description: |
     Build cache using SOAPHound. Upon execution, a cache will be built and stored in the specified cache filename.
@@ -466,7 +466,7 @@ atomic_tests:
     user:
       description: Username for authentication
       type: string
-      default: administrator@attackrange.local
+      default: $env:USERNAME
     password:
       description: Password for authentication
       type: string
@@ -474,7 +474,7 @@ atomic_tests:
     domain:
       description: Domain for authentication
       type: string
-      default: ATTACKRANGE.LOCAL
+      default: $env:USERDOMAIN
     dc:
       description: Domain Controller IP
       type: string
@@ -486,8 +486,9 @@ atomic_tests:
     soaphound_path:
       description: Path to SOAPHound binary
       type: string
-      default: PathToAtomicsFolder\T1059.001\src\SOAPHound.exe
+      default: PathToAtomicsFolder\T1059.001\bin\SOAPHound.exe
   executor:
     command: |
-      #{soaphound_path} --user #{user} --password #{password} --domain #{domain} --dc #{dc} --buildcache --cachefilename #{cachefilename}
-    name: command_prompt
+      #{soaphound_path} --user $(#{user})@$(#{domain}) --password #{password} --dc #{dc} --buildcache --cachefilename #{cachefilename}
+    name: powershell
+
