@@ -1256,6 +1256,8 @@
   - Atomic Test #18: PowerShell Invoke Known Malicious Cmdlets [windows]
   - Atomic Test #19: PowerUp Invoke-AllChecks [windows]
   - Atomic Test #20: Abuse Nslookup with DNS Records [windows]
+  - Atomic Test #21: SOAPHound - Dump BloodHound Data [windows]
+  - Atomic Test #22: SOAPHound - Build Cache [windows]
 - [T1053.006 Scheduled Task/Job: Systemd Timers](../../T1053.006/T1053.006.md)
   - Atomic Test #1: Create Systemd Service and Timer [linux]
   - Atomic Test #2: Create a user level transient systemd service and timer [linux]

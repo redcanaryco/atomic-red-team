@@ -1,22 +1,8 @@
-<p><img src="https://redcanary.com/wp-content/uploads/Atomic-Red-Team-Logo.png" width="150px" />
-<a
-    href="https://opensourcesecurityindex.io/"
-    target="_blank"
-    rel="noopener"
->
-<img
-        style="width: 282px; height: 56px"
-        src="https://opensourcesecurityindex.io/badge.svg"
-        alt="Open Source Security Index - Fastest Growing Open Source Security Projects"
-        width="282"
-        height="56"
-/>
-</a>
-</p>
+<p><img src="https://redcanary.com/wp-content/uploads/Atomic-Red-Team-Logo.png" width="150px" /></p>
 
 # Atomic Red Team
 
-![GitHub Action Status](https://github.com/redcanaryco/atomic-red-team/actions/workflows/validate-atomics.yml/badge.svg?branch=master) ![Atomics](https://img.shields.io/badge/Atomics-1514-flat.svg) ![GitHub Action Status](https://github.com/redcanaryco/atomic-red-team/actions/workflows/generate-docs.yml/badge.svg?branch=master)
+![GitHub Action Status](https://github.com/redcanaryco/atomic-red-team/actions/workflows/validate-atomics.yml/badge.svg?branch=master) ![Atomics](https://img.shields.io/badge/Atomics-1519-flat.svg) ![GitHub Action Status](https://github.com/redcanaryco/atomic-red-team/actions/workflows/generate-docs.yml/badge.svg?branch=master)
 
 Atomic Red Team™ is a library of tests mapped to the
 [MITRE ATT&CK®](https://attack.mitre.org/) framework. Security teams can use
