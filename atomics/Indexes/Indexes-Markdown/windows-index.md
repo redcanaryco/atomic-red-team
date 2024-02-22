@@ -874,6 +874,8 @@
   - Atomic Test #18: PowerShell Invoke Known Malicious Cmdlets [windows]
   - Atomic Test #19: PowerUp Invoke-AllChecks [windows]
   - Atomic Test #20: Abuse Nslookup with DNS Records [windows]
+  - Atomic Test #21: SOAPHound - Dump BloodHound Data [windows]
+  - Atomic Test #22: SOAPHound - Build Cache [windows]
 - [T1559 Inter-Process Communication](../../T1559/T1559.md)
   - Atomic Test #1: Cobalt Strike Artifact Kit pipe [windows]
   - Atomic Test #2: Cobalt Strike Lateral Movement (psexec_psh) pipe [windows]
