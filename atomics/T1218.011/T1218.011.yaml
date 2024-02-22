@@ -313,7 +313,7 @@ atomic_tests:
       default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.011/bin/_WT.init
   dependency_executor_name: powershell
   dependencies:
-  - description: Pull file
+  - description: The DLL file to be called must exist at the specified location (#{dll_file})
     prereq_command: if (Test-Path "#{dll_file}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{dll_file}") -ErrorAction ignore | Out-Null
