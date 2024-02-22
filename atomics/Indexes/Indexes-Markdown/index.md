@@ -230,6 +230,7 @@
   - Atomic Test #10: Remote Process Injection with Go using CreateRemoteThread WinAPI (Natively) [windows]
   - Atomic Test #11: Process Injection with Go using CreateThread WinAPI [windows]
   - Atomic Test #12: Process Injection with Go using CreateThread WinAPI (Natively) [windows]
+  - Atomic Test #13: UUID custom process Injection [windows]
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1218 Signed Binary Proxy Execution](../../T1218/T1218.md)
   - Atomic Test #1: mavinject - Inject DLL into running process [windows]
@@ -580,6 +581,8 @@
   - Atomic Test #48: Tamper with Windows Defender Registry - Reg.exe [windows]
   - Atomic Test #49: Tamper with Windows Defender Registry - Powershell [windows]
   - Atomic Test #50: ESXi - Disable Account Lockout Policy via PowerCLI [linux]
+  - Atomic Test #51: Delete Microsoft Defender ASR Rules - InTune [windows]
+  - Atomic Test #52: Delete Microsoft Defender ASR Rules - GPO [windows]
 - T1601 Modify System Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -718,7 +721,8 @@
   - Atomic Test #1: DLL Side-Loading using the Notepad++ GUP.exe binary [windows]
   - Atomic Test #2: DLL Side-Loading using the dotnet startup hook environment variable [windows]
 - T1055.008 Ptrace System Calls [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1027.007 Dynamic API Resolution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1027.007 Obfuscated Files or Information: Dynamic API Resolution](../../T1027.007/T1027.007.md)
+  - Atomic Test #1: Dynamic API Resolution-Ninja-syscall [windows]
 - [T1055.015 Process Injection: ListPlanting](../../T1055.015/T1055.015.md)
   - Atomic Test #1: Process injection ListPlanting [windows]
 - T1484 Domain Policy Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -897,6 +901,7 @@
   - Atomic Test #10: Remote Process Injection with Go using CreateRemoteThread WinAPI (Natively) [windows]
   - Atomic Test #11: Process Injection with Go using CreateThread WinAPI [windows]
   - Atomic Test #12: Process Injection with Go using CreateThread WinAPI (Natively) [windows]
+  - Atomic Test #13: UUID custom process Injection [windows]
 - [T1611 Escape to Host](../../T1611/T1611.md)
   - Atomic Test #1: Deploy container using nsenter container escape [containers]
   - Atomic Test #2: Mount host filesystem to escape privileged Docker container [containers]
@@ -1234,24 +1239,25 @@
   - Atomic Test #1: Mimikatz [windows]
   - Atomic Test #2: Run BloodHound from local disk [windows]
   - Atomic Test #3: Run Bloodhound from Memory using Download Cradle [windows]
-  - Atomic Test #4: Obfuscation Tests [windows]
-  - Atomic Test #5: Mimikatz - Cradlecraft PsSendKeys [windows]
-  - Atomic Test #6: Invoke-AppPathBypass [windows]
-  - Atomic Test #7: Powershell MsXml COM object - with prompt [windows]
-  - Atomic Test #8: Powershell XML requests [windows]
-  - Atomic Test #9: Powershell invoke mshta.exe download [windows]
-  - Atomic Test #10: Powershell Invoke-DownloadCradle [windows]
-  - Atomic Test #11: PowerShell Fileless Script Execution [windows]
-  - Atomic Test #12: NTFS Alternate Data Stream Access [windows]
-  - Atomic Test #13: PowerShell Session Creation and Use [windows]
-  - Atomic Test #14: ATHPowerShellCommandLineParameter -Command parameter variations [windows]
-  - Atomic Test #15: ATHPowerShellCommandLineParameter -Command parameter variations with encoded arguments [windows]
-  - Atomic Test #16: ATHPowerShellCommandLineParameter -EncodedCommand parameter variations [windows]
-  - Atomic Test #17: ATHPowerShellCommandLineParameter -EncodedCommand parameter variations with encoded arguments [windows]
-  - Atomic Test #18: PowerShell Command Execution [windows]
-  - Atomic Test #19: PowerShell Invoke Known Malicious Cmdlets [windows]
-  - Atomic Test #20: PowerUp Invoke-AllChecks [windows]
-  - Atomic Test #21: Abuse Nslookup with DNS Records [windows]
+  - Atomic Test #4: Mimikatz - Cradlecraft PsSendKeys [windows]
+  - Atomic Test #5: Invoke-AppPathBypass [windows]
+  - Atomic Test #6: Powershell MsXml COM object - with prompt [windows]
+  - Atomic Test #7: Powershell XML requests [windows]
+  - Atomic Test #8: Powershell invoke mshta.exe download [windows]
+  - Atomic Test #9: Powershell Invoke-DownloadCradle [windows]
+  - Atomic Test #10: PowerShell Fileless Script Execution [windows]
+  - Atomic Test #11: NTFS Alternate Data Stream Access [windows]
+  - Atomic Test #12: PowerShell Session Creation and Use [windows]
+  - Atomic Test #13: ATHPowerShellCommandLineParameter -Command parameter variations [windows]
+  - Atomic Test #14: ATHPowerShellCommandLineParameter -Command parameter variations with encoded arguments [windows]
+  - Atomic Test #15: ATHPowerShellCommandLineParameter -EncodedCommand parameter variations [windows]
+  - Atomic Test #16: ATHPowerShellCommandLineParameter -EncodedCommand parameter variations with encoded arguments [windows]
+  - Atomic Test #17: PowerShell Command Execution [windows]
+  - Atomic Test #18: PowerShell Invoke Known Malicious Cmdlets [windows]
+  - Atomic Test #19: PowerUp Invoke-AllChecks [windows]
+  - Atomic Test #20: Abuse Nslookup with DNS Records [windows]
+  - Atomic Test #21: SOAPHound - Dump BloodHound Data [windows]
+  - Atomic Test #22: SOAPHound - Build Cache [windows]
 - [T1053.006 Scheduled Task/Job: Systemd Timers](../../T1053.006/T1053.006.md)
   - Atomic Test #1: Create Systemd Service and Timer [linux]
   - Atomic Test #2: Create a user level transient systemd service and timer [linux]
@@ -1987,6 +1993,7 @@
   - Atomic Test #13: Packet Capture Linux socket AF_INET,SOCK_RAW,TCP with sudo [linux]
   - Atomic Test #14: Packet Capture Linux socket AF_INET,SOCK_PACKET,UDP with sudo [linux]
   - Atomic Test #15: Packet Capture Linux socket AF_PACKET,SOCK_RAW with BPF filter for UDP with sudo [linux]
+  - Atomic Test #16: PowerShell Network Sniffing [windows]
 - [T1552.002 Unsecured Credentials: Credentials in Registry](../../T1552.002/T1552.002.md)
   - Atomic Test #1: Enumeration for Credentials in Registry [windows]
   - Atomic Test #2: Enumeration for PuTTY Credentials in Registry [windows]
@@ -2264,6 +2271,7 @@
   - Atomic Test #13: Packet Capture Linux socket AF_INET,SOCK_RAW,TCP with sudo [linux]
   - Atomic Test #14: Packet Capture Linux socket AF_INET,SOCK_PACKET,UDP with sudo [linux]
   - Atomic Test #15: Packet Capture Linux socket AF_PACKET,SOCK_RAW with BPF filter for UDP with sudo [linux]
+  - Atomic Test #16: PowerShell Network Sniffing [windows]
 - [T1135 Network Share Discovery](../../T1135/T1135.md)
   - Atomic Test #1: Network Share Discovery [macos]
   - Atomic Test #2: Network Share Discovery - linux [linux]
