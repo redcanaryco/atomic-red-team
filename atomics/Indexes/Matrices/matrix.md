@@ -170,7 +170,7 @@
 |  |  |  |  | [Use Alternate Authentication Material: Pass the Hash](../../T1550.002/T1550.002.md) |  |  |  |  |  |  |  |
 |  |  |  |  | [Hijack Execution Flow: DLL Side-Loading](../../T1574.002/T1574.002.md) |  |  |  |  |  |  |  |
 |  |  |  |  | Ptrace System Calls [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
-|  |  |  |  | Dynamic API Resolution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
+|  |  |  |  | [Obfuscated Files or Information: Dynamic API Resolution](../../T1027.007/T1027.007.md) |  |  |  |  |  |  |  |
 |  |  |  |  | [Process Injection: ListPlanting](../../T1055.015/T1055.015.md) |  |  |  |  |  |  |  |
 |  |  |  |  | Domain Policy Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
 |  |  |  |  | [XSL Script Processing](../../T1220/T1220.md) |  |  |  |  |  |  |  |

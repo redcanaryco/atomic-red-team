@@ -1,0 +1,32 @@
+attack_technique: T1027.007
+display_name: 'Obfuscated Files or Information: Dynamic API Resolution'
+atomic_tests:
+- name: Dynamic API Resolution-Ninja-syscall
+  auto_generated_guid: 578025d5-faa9-4f6d-8390-aae739d507e1
+  description: |
+    This test calls NtCreateFile via API hashing and dynamic syscall resolution. I have dubbed this particular combination of techniques 'Ninja-syscall'. When successful, a new file named 'hello.log' will be created in the default user's temporary folder, which is a common location for a dropper.
+    
+  supported_platforms:
+  - windows
+  input_arguments:
+    exe_binary:
+      description: PE binary
+      type: path
+      default: PathToAtomicsFolder\T1027.007\bin\ninja_syscall1.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Portable Executable to run must exist at specified location (#{exe_binary})
+    prereq_command: |
+      if (Test-Path "#{exe_binary}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path "#{exe_binary}") -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027.007/bin/ninja_syscall1.exe" -OutFile "#{exe_binary}"
+  executor:
+    command: |
+      Start-Process "#{exe_binary}"
+      Start-Sleep -Seconds 7
+      if (Test-Path "C:\Users\Default\AppData\Local\Temp\hello.log") { Remove-Item "C:\Users\Default\AppData\Local\Temp\hello.log" -Force; Write-Host "[+] hello.log removed." }
+    cleanup_command: 'if (Test-Path "C:\Users\Default\AppData\Local\Temp\hello.log") { Remove-Item "C:\Users\Default\AppData\Local\Temp\hello.log" -Force; Write-Host "[+] hello.log removed." }'
+    name: powershell
+    elevation_required: true

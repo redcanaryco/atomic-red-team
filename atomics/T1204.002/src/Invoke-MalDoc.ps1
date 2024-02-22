@@ -1,10 +1,10 @@
 function Invoke-MalDoc {
     <#
     .SYNOPSIS
-    A module to programatically execute Microsoft Word and Exel Documents containing macros.
+    A module to programatically execute Microsoft Word and Excel Documents containing macros.
 
     .DESCRIPTION
-    A module to programatically execute Microsoft Word and Exel Documents containing macros. The module will temporarily add a registry key to allow PowerShell to interact with VBA.
+    A module to programatically execute Microsoft Word and Excel Documents containing macros. The module will temporarily add a registry key to allow PowerShell to interact with VBA.
     .PARAMETER macroCode
     [Required] The VBA code to be executed. By default, this macro code will be wrapped in a sub routine, called "Test" by default. If you don't want your macro code to be wrapped in a subroutine use the `-noWrap` flag. To specify the subroutine name use the `-sub` parameter.
     .PARAMETER macroFile
