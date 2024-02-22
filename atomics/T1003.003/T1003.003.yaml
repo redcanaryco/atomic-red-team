@@ -246,7 +246,6 @@ atomic_tests:
 - name: Create Volume Shadow Copy with diskshadow
   description: |
     This test is intended to be run on a domain controller
-
     An alternative to using vssadmin to create a Volume Shadow Copy for extracting ntds.dit
   supported_platforms:
   - windows
@@ -255,12 +254,9 @@ atomic_tests:
       description: Location of the script
       type: Path
       default: PathToAtomicsFolder\T1003.003\src\diskshadow.txt
-  dependency_executor_name: 
-  dependencies: 
   executor:
     command: |
       mkdir c:\exfil
       diskshadow.exe /s #{filename}
-    cleanup_command: 
     name: command_prompt
     elevation_required: true
