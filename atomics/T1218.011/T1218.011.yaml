@@ -295,3 +295,30 @@ atomic_tests:
       copy #{exe_to_launch} not_an_scr.scr
       rundll32.exe desk.cpl,InstallScreenSaver not_an_scr.scr
     cleanup_command: del not_an_scr.scr
+
+- name: Running DLL with .init extension and function
+  description: |
+    This test, based on common Gamarue tradecraft, consists of a DLL file with a .init extension being run by rundll32.exe. When this DLL file's 'krnl' function is called, it launches a Windows pop-up.
+    DLL created with the AtomicTestHarnesses Portable Executable Builder script.
+  supported_platforms:
+  - windows
+  input_arguments:
+    dll_file:
+      description: The DLL file to be called
+      type: string
+      default: PathToAtomicsFolder\T1218.011\bin\_WT.init
+    dll_url:
+      description: The URL to the DLL file that must be downloaded
+      type: url
+      default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.011/bin/_WT.init
+  dependency_executor_name: powershell
+  dependencies:
+  - description: The DLL file to be called must exist at the specified location (#{dll_file})
+    prereq_command: if (Test-Path "#{dll_file}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path "#{dll_file}") -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "#{dll_url}" -OutFile "#{dll_file}"
+  executor:
+    command: |
+      rundll32.exe #{dll_file},krnl
+    name: command_prompt
