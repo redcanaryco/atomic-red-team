@@ -74,7 +74,7 @@ jobs:
       - name: save labels and reviewers into a file.
         run: |
           poetry run python bin/generate_labels.py  -t  ${{ secrets.GITHUB_TOKEN }} -pr '${{steps.get_pr_number.outputs.result}}'
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: labels.json
           path: pr/
