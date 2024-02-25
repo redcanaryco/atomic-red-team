@@ -31,11 +31,6 @@ atomic_tests:
           $which_python -c 'import requests' 2>/dev/null; echo $?
         get_prereq_command: |
           pip install requests
-      - description: |
-          pip-autoremove must be installed 
-        prereq_command: |
-          pip-autoremove -h >nul 2>&1
-          exit /b %errorlevel%
     executor: 
       command: |
         which_python=$(which python || which python3 || which python3.9 || which python2)
