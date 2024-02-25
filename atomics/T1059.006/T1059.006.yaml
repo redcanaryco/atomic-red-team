@@ -31,6 +31,11 @@ atomic_tests:
           $which_python -c 'import requests' 2>/dev/null; echo $?
         get_prereq_command: |
           pip install requests
+      - description: |
+          pip-autoremove must be installed 
+        prereq_command: |
+          pip-autoremove -h >nul 2>&1
+          exit /b %errorlevel%
     executor: 
       command: |
         which_python=$(which python || which python3 || which python3.9 || which python2)
@@ -38,6 +43,7 @@ atomic_tests:
       name: sh
       cleanup_command: |
         rm #{payload_file_name} 
+        pip-autoremove pypykatz >nul 2> nul
   - name: 'Execute Python via scripts'
     auto_generated_guid: 6c4d1dcb-33c7-4c36-a8df-c6cfd0408be8
     description: Create Python file (.py) that downloads and executes shell script via executor arguments
