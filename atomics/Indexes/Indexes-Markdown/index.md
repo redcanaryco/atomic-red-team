@@ -2381,6 +2381,7 @@
   - Atomic Test #1: AWS S3 Enumeration [iaas:aws]
 - [T1654 Log Enumeration](../../T1654/T1654.md)
   - Atomic Test #1: Get-EventLog To Enumerate Windows Security Log [windows]
+  - Atomic Test #2: Enumerate Windows Security Log via WevtUtil [windows]
 - T1087.004 Cloud Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1057 Process Discovery](../../T1057/T1057.md)
   - Atomic Test #1: Process Discovery - ps [linux, macos]
