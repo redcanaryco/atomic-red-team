@@ -265,3 +265,22 @@ atomic_tests:
       Stop-Process -Name "Connect" -force -erroraction silentlycontinue
     name: powershell
     elevation_required: true
+- name: RustDesk Files Detected Test on Windows
+  auto_generated_guid: 
+  description: An adversary may attempt to trick the user into downloading RustDesk and use this to maintain access to the machine. Download of RustDesk installer will be at the destination location when successfully executed.
+  supported_platforms:
+  - windows
+  input_arguments: 
+  dependency_executor_name: 
+  dependencies: 
+  executor:
+    command: |-
+      $file = Join-Path $env:USERPROFILE "Desktop\rustdesk-1.2.3-1-x86_64.exe"
+      Invoke-WebRequest  -OutFile $file https://github.com/rustdesk/rustdesk/releases/download/1.2.3-1/rustdesk-1.2.3-1-x86_64.exe
+      Start-Process -FilePath $file "/S"
+    cleanup_command: |-
+      $file = Join-Path $env:USERPROFILE "Desktop\rustdesk-1.2.3-1-x86_64.exe"
+      Remove-Item $file1 -ErrorAction Ignore
+    name: powershell
+    elevation_required: false
+  
