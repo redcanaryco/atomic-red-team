@@ -38,6 +38,7 @@ atomic_tests:
       name: sh
       cleanup_command: |
         rm #{payload_file_name} 
+        pip-autoremove pypykatz >nul 2> nul
   - name: 'Execute Python via scripts'
     auto_generated_guid: 6c4d1dcb-33c7-4c36-a8df-c6cfd0408be8
     description: Create Python file (.py) that downloads and executes shell script via executor arguments

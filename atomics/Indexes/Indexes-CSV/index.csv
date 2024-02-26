@@ -13,6 +13,7 @@ defense-evasion,T1218.011,Signed Binary Proxy Execution: Rundll32,10,Execution o
 defense-evasion,T1218.011,Signed Binary Proxy Execution: Rundll32,11,Rundll32 with Ordinal Value,9fd5a74b-ba89-482a-8a3e-a5feaa3697b0,command_prompt
 defense-evasion,T1218.011,Signed Binary Proxy Execution: Rundll32,12,Rundll32 with Control_RunDLL,e4c04b6f-c492-4782-82c7-3bf75eb8077e,command_prompt
 defense-evasion,T1218.011,Signed Binary Proxy Execution: Rundll32,13,Rundll32 with desk.cpl,83a95136-a496-423c-81d3-1c6750133917,command_prompt
+defense-evasion,T1218.011,Signed Binary Proxy Execution: Rundll32,14,Running DLL with .init extension and function,2d5029f0-ae20-446f-8811-e7511b58e8b6,command_prompt
 defense-evasion,T1556.003,Modify Authentication Process: Pluggable Authentication Modules,1,Malicious PAM rule,4b9dde80-ae22-44b1-a82a-644bf009eb9c,sh
 defense-evasion,T1556.003,Modify Authentication Process: Pluggable Authentication Modules,2,Malicious PAM rule (freebsd),b17eacac-282d-4ca8-a240-46602cf863e3,sh
 defense-evasion,T1556.003,Modify Authentication Process: Pluggable Authentication Modules,3,Malicious PAM module,65208808-3125-4a2e-8389-a0a00e9ab326,sh
@@ -238,6 +239,7 @@ defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,19,
 defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,20,LockBit Black - Unusual Windows firewall registry modification -cmd,a4651931-ebbb-4cde-9363-ddf3d66214cb,command_prompt
 defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,21,LockBit Black - Unusual Windows firewall registry modification -Powershell,80b453d1-eec5-4144-bf08-613a6c3ffe12,powershell
 defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,22,Blackbit - Disable Windows Firewall using netsh firewall,91f348e6-3760-4997-a93b-2ceee7f254ee,command_prompt
+defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,23,ESXi - Disable Firewall via Esxcli,bac8a340-be64-4491-a0cc-0985cb227f5a,command_prompt
 defense-evasion,T1553.003,Subvert Trust Controls: SIP and Trust Provider Hijacking,1,SIP (Subject Interface Package) Hijacking via Custom DLL,e12f5d8d-574a-4e9d-8a84-c0e8b4a8a675,command_prompt
 defense-evasion,T1207,Rogue Domain Controller,1,DCShadow (Active Directory),0f4c5eb0-98a0-4496-9c3d-656b4f2bc8f6,powershell
 defense-evasion,T1610,Deploy a container,1,Deploy Docker container,59aa6f26-7620-417e-9318-589e0fb7a372,bash
@@ -1082,6 +1084,7 @@ persistence,T1136.002,Create Account: Domain Account,2,Create a new account simi
 persistence,T1136.002,Create Account: Domain Account,3,Create a new Domain Account using PowerShell,5a3497a4-1568-4663-b12a-d4a5ed70c7d7,powershell
 persistence,T1136.002,Create Account: Domain Account,4,Active Directory Create Admin Account,562aa072-524e-459a-ba2b-91f1afccf5ab,sh
 persistence,T1136.002,Create Account: Domain Account,5,Active Directory Create User Account (Non-elevated),8c992cb3-a46e-4fd5-b005-b1bab185af31,sh
+persistence,T1137.001,Office Application Startup: Office Template Macros.,1,Injecting a Macro into the Word Normal.dotm Template for Persistence via PowerShell,940db09e-80b6-4dd0-8d4d-7764f89b47a8,powershell
 persistence,T1546.009,Event Triggered Execution: AppCert DLLs,1,Create registry persistence via AppCert DLL,a5ad6104-5bab-4c43-b295-b4c44c7c6b05,powershell
 persistence,T1547.015,Boot or Logon Autostart Execution: Login Items,1,Persistence by modifying Windows Terminal profile,ec5d76ef-82fe-48da-b931-bdb25a62bc65,powershell
 persistence,T1547.015,Boot or Logon Autostart Execution: Login Items,2,Add macOS LoginItem using Applescript,716e756a-607b-41f3-8204-b214baf37c1d,bash
@@ -1278,6 +1281,7 @@ collection,T1560.001,Archive Collected Data: Archive via Utility,6,Data Compress
 collection,T1560.001,Archive Collected Data: Archive via Utility,7,Data Compressed - nix - tar Folder or File,7af2b51e-ad1c-498c-aca8-d3290c19535a,sh
 collection,T1560.001,Archive Collected Data: Archive via Utility,8,Data Encrypted with zip and gpg symmetric,0286eb44-e7ce-41a0-b109-3da516e05a5f,sh
 collection,T1560.001,Archive Collected Data: Archive via Utility,9,Encrypts collected data with AES-256 and Base64,a743e3a6-e8b2-4a30-abe7-ca85d201b5d3,bash
+collection,T1560.001,Archive Collected Data: Archive via Utility,10,ESXi - Remove Syslog remote IP,36c62584-d360-41d6-886f-d194654be7c2,powershell
 collection,T1113,Screen Capture,1,Screencapture,0f47ceb1-720f-4275-96b8-21f0562217ac,bash
 collection,T1113,Screen Capture,2,Screencapture (silent),deb7d358-5fbd-4dc4-aecc-ee0054d2d9a4,bash
 collection,T1113,Screen Capture,3,X Windows Capture,8206dd0c-faf6-4d74-ba13-7fbe13dce6ac,bash
@@ -1373,6 +1377,7 @@ credential-access,T1110.001,Brute Force: Password Guessing,4,Password Brute User
 credential-access,T1110.001,Brute Force: Password Guessing,5,SUDO Brute Force - Debian,ba1bf0b6-f32b-4db0-b7cc-d78cacc76700,bash
 credential-access,T1110.001,Brute Force: Password Guessing,6,SUDO Brute Force - Redhat,4097bc00-5eeb-4d56-aaf9-287d60351d95,bash
 credential-access,T1110.001,Brute Force: Password Guessing,7,SUDO Brute Force - FreeBSD,abcde488-e083-4ee7-bc85-a5684edd7541,bash
+credential-access,T1110.001,Brute Force: Password Guessing,8,ESXi - Brute Force Until Account Lockout,ed6c2c87-bba6-4a28-ac6e-c8af3d6c2ab5,powershell
 credential-access,T1003,OS Credential Dumping,1,Gsecdump,96345bfc-8ae7-4b6a-80b7-223200f24ef9,command_prompt
 credential-access,T1003,OS Credential Dumping,2,Credential Dumping with NPPSpy,9e2173c0-ba26-4cdf-b0ed-8c54b27e3ad6,powershell
 credential-access,T1003,OS Credential Dumping,3,Dump svchost.exe to gather RDP credentials,d400090a-d8ca-4be0-982e-c70598a23de9,powershell
@@ -1533,6 +1538,7 @@ credential-access,T1003.003,OS Credential Dumping: NTDS,5,Create Volume Shadow C
 credential-access,T1003.003,OS Credential Dumping: NTDS,6,Create Volume Shadow Copy remotely (WMI) with esentutl,21c7bf80-3e8b-40fa-8f9d-f5b194ff2865,command_prompt
 credential-access,T1003.003,OS Credential Dumping: NTDS,7,Create Volume Shadow Copy with Powershell,542bb97e-da53-436b-8e43-e0a7d31a6c24,powershell
 credential-access,T1003.003,OS Credential Dumping: NTDS,8,Create Symlink to Volume Shadow Copy,21748c28-2793-4284-9e07-d6d028b66702,command_prompt
+credential-access,T1003.003,OS Credential Dumping: NTDS,9,Create Volume Shadow Copy with diskshadow,b385996c-0e7d-4e27-95a4-aca046b119a7,command_prompt
 credential-access,T1558.003,Steal or Forge Kerberos Tickets: Kerberoasting,1,Request for service tickets,3f987809-3681-43c8-bcd8-b3ff3a28533a,powershell
 credential-access,T1558.003,Steal or Forge Kerberos Tickets: Kerberoasting,2,Rubeus kerberoast,14625569-6def-4497-99ac-8e7817105b55,powershell
 credential-access,T1558.003,Steal or Forge Kerberos Tickets: Kerberoasting,3,Extract all accounts in use as SPN using setspn,e6f4affd-d826-4871-9a62-6c9004b8fe06,command_prompt
@@ -1718,6 +1724,7 @@ discovery,T1049,System Network Connections Discovery,3,"System Network Connectio
 discovery,T1049,System Network Connections Discovery,4,System Discovery using SharpView,96f974bb-a0da-4d87-a744-ff33e73367e9,powershell
 discovery,T1619,Cloud Storage Object Discovery,1,AWS S3 Enumeration,3c7094f8-71ec-4917-aeb8-a633d7ec4ef5,sh
 discovery,T1654,Log Enumeration,1,Get-EventLog To Enumerate Windows Security Log,a9030b20-dd4b-4405-875e-3462c6078fdc,powershell
+discovery,T1654,Log Enumeration,2,Enumerate Windows Security Log via WevtUtil,fef0ace1-3550-4bf1-a075-9fea55a778dd,command_prompt
 discovery,T1057,Process Discovery,1,Process Discovery - ps,4ff64f0b-aaf2-4866-b39d-38d9791407cc,sh
 discovery,T1057,Process Discovery,2,Process Discovery - tasklist,c5806a4f-62b8-4900-980b-c7ec004e9908,command_prompt
 discovery,T1057,Process Discovery,3,Process Discovery - Get-Process,3b3809b6-a54b-4f5b-8aff-cb51f2e97b34,powershell

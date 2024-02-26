@@ -18,6 +18,7 @@
   - Atomic Test #11: Rundll32 with Ordinal Value [windows]
   - Atomic Test #12: Rundll32 with Control_RunDLL [windows]
   - Atomic Test #13: Rundll32 with desk.cpl [windows]
+  - Atomic Test #14: Running DLL with .init extension and function [windows]
 - T1027.009 Embedded Payloads [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1216.001 Signed Script Proxy Execution: Pubprn](../../T1216.001/T1216.001.md)
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
@@ -194,6 +195,7 @@
   - Atomic Test #20: LockBit Black - Unusual Windows firewall registry modification -cmd [windows]
   - Atomic Test #21: LockBit Black - Unusual Windows firewall registry modification -Powershell [windows]
   - Atomic Test #22: Blackbit - Disable Windows Firewall using netsh firewall [windows]
+  - Atomic Test #23: ESXi - Disable Firewall via Esxcli [windows]
 - [T1553.003 Subvert Trust Controls: SIP and Trust Provider Hijacking](../../T1553.003/T1553.003.md)
   - Atomic Test #1: SIP (Subject Interface Package) Hijacking via Custom DLL [windows]
 - T1556.007 Hybrid Identity [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1021,7 +1023,8 @@
   - Atomic Test #2: Create a new account similar to ANONYMOUS LOGON [windows]
   - Atomic Test #3: Create a new Domain Account using PowerShell [windows]
 - T1542.002 Component Firmware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1137.001 Office Template Macros [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1137.001 Office Application Startup: Office Template Macros.](../../T1137.001/T1137.001.md)
+  - Atomic Test #1: Injecting a Macro into the Word Normal.dotm Template for Persistence via PowerShell [windows]
 - [T1546.009 Event Triggered Execution: AppCert DLLs](../../T1546.009/T1546.009.md)
   - Atomic Test #1: Create registry persistence via AppCert DLL [windows]
 - T1098.005 Device Registration [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1230,6 +1233,7 @@
   - Atomic Test #2: Compress Data and lock with password for Exfiltration with winrar [windows]
   - Atomic Test #3: Compress Data and lock with password for Exfiltration with winzip [windows]
   - Atomic Test #4: Compress Data and lock with password for Exfiltration with 7zip [windows]
+  - Atomic Test #10: ESXi - Remove Syslog remote IP [windows]
 - [T1113 Screen Capture](../../T1113/T1113.md)
   - Atomic Test #7: Windows Screencapture [windows]
   - Atomic Test #8: Windows Screen Capture (CopyFromScreen) [windows]
@@ -1335,6 +1339,7 @@
   - Atomic Test #1: Brute Force Credentials of single Active Directory domain users via SMB [windows]
   - Atomic Test #2: Brute Force Credentials of single Active Directory domain user via LDAP against domain controller (NTLM or Kerberos) [windows]
   - Atomic Test #4: Password Brute User using Kerbrute Tool [windows]
+  - Atomic Test #8: ESXi - Brute Force Until Account Lockout [windows]
 - [T1003 OS Credential Dumping](../../T1003/T1003.md)
   - Atomic Test #1: Gsecdump [windows]
   - Atomic Test #2: Credential Dumping with NPPSpy [windows]
@@ -1487,6 +1492,7 @@
   - Atomic Test #6: Create Volume Shadow Copy remotely (WMI) with esentutl [windows]
   - Atomic Test #7: Create Volume Shadow Copy with Powershell [windows]
   - Atomic Test #8: Create Symlink to Volume Shadow Copy [windows]
+  - Atomic Test #9: Create Volume Shadow Copy with diskshadow [windows]
 - [T1558.003 Steal or Forge Kerberos Tickets: Kerberoasting](../../T1558.003/T1558.003.md)
   - Atomic Test #1: Request for service tickets [windows]
   - Atomic Test #2: Rubeus kerberoast [windows]
@@ -1645,6 +1651,7 @@
 - T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1654 Log Enumeration](../../T1654/T1654.md)
   - Atomic Test #1: Get-EventLog To Enumerate Windows Security Log [windows]
+  - Atomic Test #2: Enumerate Windows Security Log via WevtUtil [windows]
 - [T1057 Process Discovery](../../T1057/T1057.md)
   - Atomic Test #2: Process Discovery - tasklist [windows]
   - Atomic Test #3: Process Discovery - Get-Process [windows]
