@@ -17,3 +17,16 @@ atomic_tests:
     cleanup_command: powershell -c "remove-item $env:temp\T1654_events.txt -ErrorAction Ignore"
     name: powershell
     elevation_required: true
+- name: Enumerate Windows Security Log via WevtUtil
+  description: |- 
+    WevtUtil is a command line tool that can be utilised by adversaries to gather intelligence on a targeted Windows system's logging infrastructure. 
+  
+    By executing this command, malicious actors can enumerate all available event logs, including both default logs such as Application, Security, and System
+    as well as any custom logs created by administrators. 
+  
+    This information provides valuable insight into the system's logging mechanisms, potentially allowing attackers to identify gaps or weaknesses in the logging configuration
+  supported_platforms:
+  - windows
+  executor:
+    command: wevtutil enum-logs
+    name: command_prompt
