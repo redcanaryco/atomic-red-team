@@ -40,18 +40,18 @@ atomic_tests:
   input_arguments:
     source_file_path:
       description: "Path to the source file to transfer."
-      type: "path"
+      type: path
       default: "[User specified]"
     destination_url:
       description: "URL of the destination server."
-      type: "string"
+      type: url
       default: "http://example.com"
     chunk_size:
       description: "Size of each data chunk (in KB)."
-      type: "integer"
+      type: integer
       default: 1024
   executor:
-    name: "powershell"
+    name: powershell
     elevation_required: false
     command: |
       $file = [System.IO.File]::OpenRead(#{source_file_path})
