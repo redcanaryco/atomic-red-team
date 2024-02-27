@@ -49,6 +49,19 @@ atomic_tests:
       reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 0 /f >nul 2>&1
     name: command_prompt
     elevation_required: true
+- name: Use Powershell to Modify registry to store logon credentials
+  description: |
+    Sets registry key using Powershell that will tell windows to store plaintext passwords (making the system vulnerable to clear text / cleartext password dumping).
+    Open Registry Editor to view the modified entry in HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      powershell.exe  Set-ItemProperty -Force -Path  'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest' -Name  'UseLogonCredential' -Value '1' -ErrorAction Ignore
+    cleanup_command: |
+      powershell.exe  Set-ItemProperty -Force -Path  'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest' -Name  'UseLogonCredential' -Value '0' -ErrorAction Ignore
+    name: powershell
+    elevation_required: true
 - name: Add domain to Trusted sites Zone
   auto_generated_guid: cf447677-5a4e-4937-a82c-e47d254afd57
   description: |
