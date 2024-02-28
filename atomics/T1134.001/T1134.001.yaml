@@ -102,7 +102,7 @@ atomic_tests:
       default: PathToAtomicsFolder\..\ExternalPayloads\JuicyPotato.exe 
     listening_port:
       description: 'COM server listen port'
-      type: string
+      type: integer
       default: 7777
     target_exe:
       description: 'Target executable to launch with system privileges'
@@ -110,7 +110,7 @@ atomic_tests:
       default: $env:windir\system32\notepad.exe
     target_CLSID:
       description: 'Vulnerable CLSID to impersonate privileges'
-      type: path
+      type: string
       default: '{F7FD3FD6-9994-452D-8DA7-9A8FD87AEEF4}'
   dependency_executor_name: powershell
   dependencies:
