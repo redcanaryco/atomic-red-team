@@ -1,0 +1,38 @@
+attack_technique: T1059
+display_name: 'Command and Scripting Interpreter'
+atomic_tests:
+- name: AutoIt Script Execution
+  auto_generated_guid: a9b93f17-31cb-435d-a462-5e838a2a6026
+  description: |
+    An adversary may attempt to execute suspicious or malicious script using AutoIt software instead of regular terminal like powershell or cmd. Calculator will popup when the script is executed successfully.
+  supported_platforms:
+  - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      AutoIt executable file must exist on disk at the specified location (#{autoit_path})
+    prereq_command: |
+      if(Test-Path "#{autoit_path}") {
+          exit 0
+      } else {
+          exit 1
+      }
+    get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      $AutoItURL = "https://www.autoitscript.com/cgi-bin/getfile.pl?autoit3/autoit-v3-setup.exe"
+      $InstallerPath = "$PathToAtomicsFolder\..\ExternalPayloads\autoit-v3-setup.exe"
+      Invoke-WebRequest -Uri $AutoItURL -OutFile $InstallerPath
+      Start-Process -FilePath $InstallerPath -ArgumentList "/S" -Wait
+  input_arguments:
+    script_path:
+      description: AutoIt Script Path
+      type: path
+      default: PathToAtomicsFolder\T1059\src\calc.au3
+    autoit_path:
+      description: AutoIt Executable File Path
+      type: path
+      default: C:\Program Files (x86)\AutoIt3\AutoIt3.exe
+  executor:
+    command: |
+      Start-Process -FilePath "#{autoit_path}" -ArgumentList "#{script_path}"
+    name: powershell
