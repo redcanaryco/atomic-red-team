@@ -488,6 +488,7 @@
   - Atomic Test #2: `SeDebugPrivilege` token duplication [windows]
   - Atomic Test #3: Launch NSudo Executable [windows]
   - Atomic Test #4: Bad Potato [windows]
+  - Atomic Test #5: Juicy Potato [windows]
 - T1205.001 Port Knocking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.012 LNK Icon Smuggling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1564.002 Hide Artifacts: Hidden Users](../../T1564.002/T1564.002.md)
@@ -989,6 +990,7 @@
   - Atomic Test #2: `SeDebugPrivilege` token duplication [windows]
   - Atomic Test #3: Launch NSudo Executable [windows]
   - Atomic Test #4: Bad Potato [windows]
+  - Atomic Test #5: Juicy Potato [windows]
 - [T1098.001 Account Manipulation: Additional Cloud Credentials](../../T1098.001/T1098.001.md)
   - Atomic Test #1: Azure AD Application Hijacking - Service Principal [azure-ad]
   - Atomic Test #2: Azure AD Application Hijacking - App Registration [azure-ad]

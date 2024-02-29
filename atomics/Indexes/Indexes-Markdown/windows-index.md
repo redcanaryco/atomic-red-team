@@ -345,6 +345,7 @@
   - Atomic Test #2: `SeDebugPrivilege` token duplication [windows]
   - Atomic Test #3: Launch NSudo Executable [windows]
   - Atomic Test #4: Bad Potato [windows]
+  - Atomic Test #5: Juicy Potato [windows]
 - T1205.001 Port Knocking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.012 LNK Icon Smuggling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1564.002 Hide Artifacts: Hidden Users](../../T1564.002/T1564.002.md)
@@ -695,6 +696,7 @@
   - Atomic Test #2: `SeDebugPrivilege` token duplication [windows]
   - Atomic Test #3: Launch NSudo Executable [windows]
   - Atomic Test #4: Bad Potato [windows]
+  - Atomic Test #5: Juicy Potato [windows]
 - T1134.003 Make and Impersonate Token [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.003 Event Triggered Execution: Windows Management Instrumentation Event Subscription](../../T1546.003/T1546.003.md)
   - Atomic Test #1: Persistence via WMI Event Subscription - CommandLineEventConsumer [windows]
