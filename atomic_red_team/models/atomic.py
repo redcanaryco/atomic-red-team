@@ -3,7 +3,6 @@ from functools import reduce
 from typing import Dict, List, Literal, Optional, Union
 from uuid import UUID
 
-from attackcti import attack_client
 from pydantic import (
     AnyUrl,
     IPvAnyAddress,
@@ -14,15 +13,13 @@ from pydantic import (
     conlist,
     constr,
     field_validator,
-    field_serializer, StringConstraints,
+    field_serializer,
+    StringConstraints,
 )
 from pydantic_core import PydanticCustomError
 from pydantic_core.core_schema import FieldValidationInfo
-from snakemd import Heading, Code, Raw, Table, Element, MDList
+from snakemd import Heading, Code, Raw, Table
 from typing_extensions import Annotated, TypedDict
-
-lift = attack_client()
-all_techniques = lift.get_techniques()
 
 InputArgType = Literal["url", "string", "float", "integer", "path"]
 Platform = Literal[
@@ -41,12 +38,11 @@ Platform = Literal[
 ]
 ExecutorType = Literal["manual", "powershell", "sh", "bash", "command_prompt"]
 DomainName = Annotated[
-    str, StringConstraints(pattern=r"^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$")]
-
-
-def get_technique_description(technique_id: str):
-    return list(filter(lambda x: x["external_references"][0]["external_id"] == technique_id, all_techniques))[0][
-        "description"]
+    str,
+    StringConstraints(
+        pattern=r"^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$"
+    ),
+]
 
 
 def extract_mustached_keys(commands: List[Optional[str]]) -> List[str]:
@@ -73,7 +69,7 @@ def get_supported_platform(platform: Platform):
         "iaas:azure": "Azure",
         "iaas:gcp": "GCP",
         "google-workspace": "Google Workspace",
-        "containers": "Containers"
+        "containers": "Containers",
     }
     return platforms[platform]
 
@@ -114,7 +110,9 @@ class FloatArg(BaseArgument):
     type: Literal["float", "Float"]
 
 
-Argument = Annotated[Union[FloatArg, IntArg, UrlArg, StringArg], Field(discriminator="type")]
+Argument = Annotated[
+    Union[FloatArg, IntArg, UrlArg, StringArg], Field(discriminator="type")
+]
 
 from pydantic import ConfigDict
 
@@ -130,10 +128,7 @@ class ManualExecutor(Executor):
 
     @property
     def markdown(self):
-        return [
-            Heading("Run it with these steps! ", level=4),
-            self.steps
-        ]
+        return [Heading("Run it with these steps! ", level=4), self.steps]
 
 
 class CommandExecutor(Executor):
@@ -160,7 +155,7 @@ class CommandExecutor(Executor):
             elements.extend(
                 [
                     Heading(text="Cleanup Commands:", level=4),
-                    Code(self.cleanup_command.strip(), lang=get_language(self.name))
+                    Code(self.cleanup_command.strip(), lang=get_language(self.name)),
                 ]
             )
         return elements
@@ -181,6 +176,7 @@ class Dependency(BaseModel):
 class Atomic(BaseModel):
     model_config = ConfigDict(validate_default=True)
 
+    test_number: Optional[str] = None
     name: constr(min_length=1)
     description: constr(min_length=1)
     supported_platforms: conlist(Platform, min_length=1)
@@ -228,75 +224,60 @@ class Atomic(BaseModel):
 
     @property
     def markdown(self) -> List[Raw | Heading]:
-        supported_platforms = ",".join([get_supported_platform(i) for i in self.supported_platforms])
+        supported_platforms = ",".join(
+            [get_supported_platform(i) for i in self.supported_platforms]
+        )
         elements = [
             Raw(self.description.strip()),
             Raw(f"**Supported Platforms:** {supported_platforms}"),
-            Raw(f"**auto_generated_guid:** {self.auto_generated_guid}")
+            Raw(f"**auto_generated_guid:** {self.auto_generated_guid}"),
         ]
         if len(self.input_arguments) > 0:
             elements.append(Heading("Inputs:", 4))
             input_args = []
             for key, value in self.input_arguments.items():
-                input_args.append([key, value["description"], value["type"], value["default"]])
+                input_args.append(
+                    [key, value["description"], value["type"], value["default"]]
+                )
             elements.append(Raw("\n"))
-            elements.append(Table(header=["Name", "Description", "Type", "Default Value"], body=input_args))
+            elements.append(
+                Table(
+                    header=["Name", "Description", "Type", "Default Value"],
+                    body=input_args,
+                )
+            )
         elements.extend(self.executor.markdown)
         if len(self.dependencies) > 0:
             if self.dependency_executor_name:
                 dependency_executor = self.dependency_executor_name
             else:
                 dependency_executor = self.executor.name
-            elements.append(Heading(f"Dependencies:  Run with `{dependency_executor}`!", level=4))
+            elements.append(
+                Heading(f"Dependencies:  Run with `{dependency_executor}`!", level=4)
+            )
             for dependency in self.dependencies:
-                elements.append(Heading(text=f"Description: {dependency.description}", level=5))
+                elements.append(
+                    Heading(text=f"Description: {dependency.description}", level=5)
+                )
                 if dependency.prereq_command:
-                    elements.extend([
-                        Heading("Check Prereq Commands:", level=5),
-                        Code(dependency.prereq_command.strip(), lang=get_language(dependency_executor))
-                    ])
+                    elements.extend(
+                        [
+                            Heading("Check Prereq Commands:", level=5),
+                            Code(
+                                dependency.prereq_command.strip(),
+                                lang=get_language(dependency_executor),
+                            ),
+                        ]
+                    )
                 if dependency.get_prereq_command:
-                    elements.extend([
-                        Heading("Get Prereq Commands:", level=5),
-                        Code(dependency.get_prereq_command.strip(), lang=get_language(dependency_executor))
-                    ])
+                    elements.extend(
+                        [
+                            Heading("Get Prereq Commands:", level=5),
+                            Code(
+                                dependency.get_prereq_command.strip(),
+                                lang=get_language(dependency_executor),
+                            ),
+                        ]
+                    )
         elements.append(Raw("<br/>\n<br/>"))
-        return elements
-
-
-class Technique(BaseModel):
-    attack_technique: str
-    display_name: str
-    atomic_tests: List[Atomic]
-
-    @property
-    def title(self) -> Heading:
-        return Heading(text=f"{self.attack_technique.upper()} - {self.display_name}", level=1)
-
-    @property
-    def mitre_url(self):
-        url = self.attack_technique.upper().replace('.', '/')
-        url = f"https://attack.mitre.org/techniques/{url}"
-        return Heading(text=f"[Description from ATT&CK]({url})", level=2)
-
-    @property
-    def atomic_tests_toc(self):
-        replace_all_special_chars = lambda x: re.sub('[^A-Za-z0-9-]+', '', x.lower().replace(' ', '-'))
-        items = [f"Atomic Test #{index + 1} - {test.name}" for index, test in enumerate(self.atomic_tests)]
-        items = [f"[{item}](#{replace_all_special_chars(item)})" for item in items]
-        return MDList(items=items, ordered=False)
-
-    @property
-    def markdown(self) -> [Element]:
-        elements = [
-            self.title,
-            self.mitre_url,
-            Raw(f"<blockquote>{get_technique_description(self.attack_technique)}</blockquote>"),
-            Heading("Atomic Tests", level=2),
-            self.atomic_tests_toc,
-            Raw("<br/>"),
-        ]
-        for index, test in enumerate(self.atomic_tests):
-            elements.append(Heading(f"Atomic Test #{index + 1} - {test.name}".strip(), level=2))
-            elements.extend(test.markdown)
         return elements
