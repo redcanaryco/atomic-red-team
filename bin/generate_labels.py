@@ -18,6 +18,7 @@ def get_technique_from_filename(filename):
 @dataclass
 class ChangedAtomic:
     """Returns atomic technique with test number which can be later used to run atomics in CI/CD pipelines."""
+
     technique: str
     test_number: int
     data: dict
@@ -28,7 +29,7 @@ class SafeLineLoader(SafeLoader):
         """Add line number to each block of the atomic test."""
         mapping = super(SafeLineLoader, self).construct_mapping(node, deep=deep)
         # Add 1 so line numbering starts at 1
-        mapping['__line__'] = node.start_mark.line + 1
+        mapping["__line__"] = node.start_mark.line + 1
         return mapping
 
 
@@ -43,7 +44,7 @@ class GithubAPI:
         "iaas:aws": "cloud",
         "iaas:azure": "cloud",
         "office-365": "cloud",
-        "google-workspace":"cloud"
+        "google-workspace": "cloud",
     }
 
     maintainers = {
@@ -56,7 +57,7 @@ class GithubAPI:
         "iaas:azure": ["patel-bhavin"],
         "azure-ad": ["patel-bhavin"],
         "google-workspace": ["patel-bhavin"],
-        "office-365": ["patel-bhavin"]
+        "office-365": ["patel-bhavin"],
     }
 
     def __init__(self, token):
@@ -67,7 +68,7 @@ class GithubAPI:
         return {
             "Authorization": f"Bearer {self.token}",
             "X-GitHub-Api-Version": "2022-11-28",
-            "Accept": "application/vnd.github+json"
+            "Accept": "application/vnd.github+json",
         }
 
     def get_atomic_with_lines(self, file_url: str):
@@ -78,13 +79,18 @@ class GithubAPI:
 
     def get_files_for_pr(self, pr):
         """Get new and modified files in the `atomics` directory changed in a PR."""
-        response = requests.get(f"https://api.github.com/repos/{os.getenv('GITHUB_REPOSITORY')}/pulls/{pr}/files",
-                                headers=self.headers, timeout=15)
+        response = requests.get(
+            f"https://api.github.com/repos/{os.getenv('GITHUB_REPOSITORY')}/pulls/{pr}/files",
+            headers=self.headers,
+            timeout=15,
+        )
         assert response.status_code == 200
         files = response.json()
         return filter(
-            lambda x: x["status"] in ["added", "modified"] and fnmatch.fnmatch(x["filename"], "atomics/T*/T*.yaml"),
-            files)
+            lambda x: x["status"] in ["added", "modified"]
+            and fnmatch.fnmatch(x["filename"], "atomics/T*/T*.yaml"),
+            files,
+        )
 
     def get_tests_changed(self, pr: str):
         """Get all the tests changed in a PR"""
@@ -96,8 +102,10 @@ class GithubAPI:
             technique = get_technique_from_filename(file["filename"])
             if file["status"] == "added":
                 # New file; run the entire technique; Invoke-AtomicTest Txxxx
-                tests += [ChangedAtomic(technique=technique, test_number=index + 1, data=t)
-                          for index, t in enumerate(data["atomic_tests"])]
+                tests += [
+                    ChangedAtomic(technique=technique, test_number=index + 1, data=t)
+                    for index, t in enumerate(data["atomic_tests"])
+                ]
             else:
                 changed_lines = []
                 count = 0
@@ -114,14 +122,21 @@ class GithubAPI:
                 atomics = data["atomic_tests"]
                 for index, t in enumerate(atomics):
                     curr_atomic_start = atomics[index]["__line__"]
-                    if index+1<len(atomics):
-                        curr_atomic_end = atomics[index+1]["__line__"]
+                    if index + 1 < len(atomics):
+                        curr_atomic_end = atomics[index + 1]["__line__"]
                     else:
-                        curr_atomic_end = start+60
-                    changes_in_current_atomic = [i for i in changed_lines if i > curr_atomic_start and i < curr_atomic_end]
+                        curr_atomic_end = start + 60
+                    changes_in_current_atomic = [
+                        i
+                        for i in changed_lines
+                        if i > curr_atomic_start and i < curr_atomic_end
+                    ]
                     if len(changes_in_current_atomic) > 0:
-                        tests.append(ChangedAtomic(technique=technique, test_number=index + 1,
-                                                   data=t))
+                        tests.append(
+                            ChangedAtomic(
+                                technique=technique, test_number=index + 1, data=t
+                            )
+                        )
 
         return tests
 
@@ -145,19 +160,18 @@ class GithubAPI:
             f.write(json.dumps(x))
 
         with open("pr/labels.json", "w") as f:
-            j = {
-                "pr": pr,
-                "labels": labels,
-                "maintainers": maintainers
-            }
+            j = {"pr": pr, "labels": labels, "maintainers": maintainers}
             f.write(json.dumps(j))
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Generate an SVG counter for a folder with a list of YAML files.')
-    parser.add_argument('-pr', '--pull-request', type=str,
-                        help="Current pull request number")
-    parser.add_argument('-t', '--token', type=str, help="Github Token to be used")
+    parser = argparse.ArgumentParser(
+        description="Generate an SVG counter for a folder with a list of YAML files."
+    )
+    parser.add_argument(
+        "-pr", "--pull-request", type=str, help="Current pull request number"
+    )
+    parser.add_argument("-t", "--token", type=str, help="Github Token to be used")
     args = parser.parse_args()
 
     api = GithubAPI(args.token)

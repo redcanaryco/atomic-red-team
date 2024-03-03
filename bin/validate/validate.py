@@ -1,10 +1,11 @@
 import fnmatch
 import glob
 import os
-from os import DirEntry
 import sys
-from jsonschema import validate, ValidationError
 from collections import defaultdict
+from os import DirEntry
+
+from jsonschema import ValidationError, validate
 from ruamel.yaml import YAML
 
 yaml = YAML(typ="safe")
@@ -45,14 +46,18 @@ class UnusedArgument(BaseError):
         self.test_number = test_number
 
     def __str__(self):
-        return f"Unused Input Argument {self.argument} for test number {self.test_number}"
+        return (
+            f"Unused Input Argument {self.argument} for test number {self.test_number}"
+        )
 
 
 class Validator:
     errors = defaultdict(list)
 
     def __init__(self):
-        schema_path = f"{os.path.dirname(os.path.abspath(__file__))}/atomic-red-team.schema.yaml"
+        schema_path = (
+            f"{os.path.dirname(os.path.abspath(__file__))}/atomic-red-team.schema.yaml"
+        )
         used_guids_path = "./atomics/used_guids.txt"
         with open(used_guids_path, "r") as f:
             self.used_guids = [x.strip() for x in f.readlines()]
@@ -103,7 +108,9 @@ class Validator:
                         commands = list(filter(lambda x: x is not None, commands))
 
                         if not any([variable in c for c in commands]):
-                            self.errors[file.path].append(UnusedArgument(file.path, k, index + 1))
+                            self.errors[file.path].append(
+                                UnusedArgument(file.path, k, index + 1)
+                            )
 
     def validate_yaml_extension(self, file: DirEntry):
         """Validates the yaml extension"""
@@ -115,10 +122,7 @@ class Validator:
         with open(file.path, "r") as f:
             atomic = yaml.load(f)
             try:
-                validate(
-                    instance=atomic,
-                    schema=self.schema
-                )
+                validate(instance=atomic, schema=self.schema)
             except Exception as e:
                 self.errors[file.path].append(e)
 
@@ -141,11 +145,15 @@ class Validator:
                     print(f"\n\t{error}\n")
                 elif isinstance(error, ValidationError):
                     if "auto_generated_guid" in error.json_path:
-                        print(f"\n\tGUIDs are auto generated. You can remove {error.json_path}\n")
+                        print(
+                            f"\n\tGUIDs are auto generated. You can remove {error.json_path}\n"
+                        )
                     else:
                         if (context := error.context) and len(context) > 0:
-                            print("\n\tIt failed because of one of the following reasons:")
-                            messages = '\n\t\t'.join([c.message for c in context])
+                            print(
+                                "\n\tIt failed because of one of the following reasons:"
+                            )
+                            messages = "\n\t\t".join([c.message for c in context])
                             print(f"\n\t\t{messages}")
                         else:
                             print(f"\n\t{error}\n")
@@ -156,7 +164,7 @@ class Validator:
 
 validator = Validator()
 
-for folder in glob.glob('./atomics/T*'):
+for folder in glob.glob("./atomics/T*"):
     for item in os.scandir(folder):
         validator.validate(item)
 

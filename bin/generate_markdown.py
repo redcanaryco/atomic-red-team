@@ -1,6 +1,6 @@
 import glob
 import sys
-from os.path import dirname, abspath
+from os.path import abspath, dirname
 
 from ruamel.yaml import YAML
 from snakemd import Document
@@ -24,13 +24,16 @@ def get_language(executor):
 
 def generate_markdown():
     root_dir = dirname(dirname(abspath(__file__)))
-    for file in glob.glob(f'{root_dir}/atomics/**/T*.yaml'):
+    for file in glob.glob(f"{root_dir}/atomics/**/T*.yaml"):
         with open(file, "r") as f:
             atomic = yaml.load(f)
             try:
                 technique = Technique(**atomic)
                 doc = Document(elements=technique.markdown)
-                doc.dump(f"{technique.attack_technique}", directory=f"atomics/{technique.attack_technique}")
+                doc.dump(
+                    f"{technique.attack_technique}",
+                    directory=f"atomics/{technique.attack_technique}",
+                )
             except Exception as e:
                 print(f"Error with {file}: {str(e)}")
                 sys.exit(1)

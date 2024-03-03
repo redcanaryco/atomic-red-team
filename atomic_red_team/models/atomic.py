@@ -5,20 +5,21 @@ from uuid import UUID
 
 from pydantic import (
     AnyUrl,
-    IPvAnyAddress,
     BaseModel,
+    ConfigDict,
     Field,
+    IPvAnyAddress,
     StrictFloat,
     StrictInt,
+    StringConstraints,
     conlist,
     constr,
-    field_validator,
     field_serializer,
-    StringConstraints,
+    field_validator,
 )
 from pydantic_core import PydanticCustomError
 from pydantic_core.core_schema import FieldValidationInfo
-from snakemd import Heading, Code, Raw, Table
+from snakemd import Code, Heading, Raw, Table
 from typing_extensions import Annotated, TypedDict
 
 InputArgType = Literal["url", "string", "float", "integer", "path"]
@@ -113,8 +114,6 @@ class FloatArg(BaseArgument):
 Argument = Annotated[
     Union[FloatArg, IntArg, UrlArg, StringArg], Field(discriminator="type")
 ]
-
-from pydantic import ConfigDict
 
 
 class Executor(BaseModel):
