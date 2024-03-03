@@ -115,7 +115,7 @@ atomic_tests:
   - description: |
       Check if python exists on the machine
     prereq_command: |
-      if (python --version) {exit 0} else {exit 1}
+      if (Get-Command py -errorAction SilentlyContinue) { exit 0 } else { exit 1 }
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction ignore -Force | Out-Null
       invoke-webrequest "https://www.python.org/ftp/python/3.10.4/python-3.10.4-amd64.exe" -outfile "PathToAtomicsFolder\..\ExternalPayloads\python_setup.exe"
