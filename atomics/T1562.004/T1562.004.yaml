@@ -478,3 +478,30 @@ atomic_tests:
       #{plink_file} -ssh #{vm_host} -l #{username} -pw #{password} -m PathToAtomicsFolder\..\atomics\T1562.004\src\esxi_enable_firewall.txt
     name: command_prompt
     elevation_required: false
+- name: Set a firewall rule using New-NetFirewallRule
+  auto_generated_guid: 94be7646-25f6-467e-af23-585fb13000c8
+  description: This test will attempt to create a new inbound/outbound firewall rule using the New-NetFirewallRule commandlet. 
+  supported_platforms:
+  - windows
+  input_arguments:
+    direction:
+      description: Direction can be Inbound or Outbound
+      type: string
+      default: Inbound
+    local_port:
+      description: This is the local port you wish to test opening
+      type: integer
+      default: 1350
+    protocol:
+      description: This is the protocol
+      type: string
+      default: TCP
+    action:
+      description: This is the action
+      type: string
+      default: allow
+  executor:
+    command: New-NetFirewallRule -DisplayName "New rule" -Direction "#{direction}" -LocalPort "#{local_port}" -Protocol "#{protocol}" -Action "#{action}"
+    cleanup_command: Remove-NetFirewallRule -DisplayName "New rule"
+    name: powershell
+    elevation_required: true
