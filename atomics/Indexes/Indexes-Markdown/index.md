@@ -2200,7 +2200,8 @@
   - Atomic Test #6: System Discovery - SocGholish whoami [windows]
   - Atomic Test #7: System Owner/User Discovery Using Command Prompt [windows]
 - [T1613 Container and Resource Discovery](../../T1613/T1613.md)
-  - Atomic Test #1: Container and ResourceDiscovery [containers]
+  - Atomic Test #1: Docker Container and Resource Discovery [containers]
+  - Atomic Test #2: Podman Container and Resource Discovery [containers]
 - T1016.001 Internet Connection Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1069 Permission Groups Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1069.003 Cloud Groups [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
