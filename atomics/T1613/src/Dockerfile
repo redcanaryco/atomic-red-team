@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
-MAINTAINER Group12
-RUN echo "Group 12"
+FROM ubuntu:24.04
+LABEL = "canonical"
+RUN echo "canonical"
 ENTRYPOINT ["tail", "-f", "/dev/null"]
