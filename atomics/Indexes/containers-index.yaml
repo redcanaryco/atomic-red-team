@@ -7993,7 +7993,7 @@ defense-evasion:
   T1562.003:
     technique:
       modified: '2023-03-30T21:01:47.940Z'
-      name: 'Impair Defenses: HISTCONTROL'
+      name: 'Impair Defenses: Impair Command History Logging'
       description: "Adversaries may impair command history logging to hide commands
         they run on a compromised system. Various command interpreters keep track
         of the commands users type in their terminal so that users can retrace what
@@ -36790,7 +36790,7 @@ command-and-control:
           & Control Understanding, Denying and Detecting. Retrieved April 20, 2016.
         source_name: University of Birmingham C2
       modified: '2020-03-15T00:37:58.963Z'
-      name: Steganography
+      name: Data Obfuscation via Steganography
       description: 'Adversaries may use steganographic techniques to hide command
         and control traffic to make detection efforts more difficult. Steganographic
         techniques can be used to hide data in digital messages that are transferred
@@ -36812,6 +36812,7 @@ command-and-control:
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
       x_mitre_data_sources:
       - 'Network Traffic: Network Traffic Content'
+      identifier: T1001.002
     atomic_tests: []
   T1008:
     technique:
@@ -46136,15 +46137,15 @@ discovery:
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
       identifier: T1613
     atomic_tests:
-    - name: Container and ResourceDiscovery
-      auto_generated_guid: 8a895923-f99f-4668-acf2-6cc59a44f05e
+    - name: Docker Container and Resource Discovery
+      auto_generated_guid: ea2255df-d781-493b-9693-ac328f9afc3f
       description: Adversaries may attempt to discover containers and other resources
         that are available within a containers environment.
       supported_platforms:
       - containers
       dependency_executor_name: sh
       dependencies:
-      - description: Verify docker is installed.
+      - description: Verify Docker is installed.
         prereq_command: 'which docker
 
           '
@@ -46154,23 +46155,55 @@ discovery:
           echo "Docker installed"; fi
 
           '
-      - description: Verify docker service is running.
-        prereq_command: 'sudo systemctl status docker  --no-pager
+      - description: Verify Docker service is running.
+        prereq_command: 'sudo systemctl status docker --no-pager
 
           '
-        get_prereq_command: 'sudo systemctl start docker
-
-          '
+        get_prereq_command: "sudo systemctl start docker \n"
       executor:
         command: |-
-          docker build -t t1613  $PathtoAtomicsFolder/T1613/src/
-          docker run --name t1613_container  -d -t t1613
+          docker build -t t1613 $PathtoAtomicsFolder/T1613/src/
+          docker run --name t1613_container -d -t t1613
           docker ps
           docker stats --no-stream
           docker inspect $(docker ps -l -q --filter ancestor=t1613)
         cleanup_command: |-
           docker stop t1613_container
           docker rmi -f t1613_container
+        name: sh
+    - name: Podman Container and Resource Discovery
+      auto_generated_guid: fc631702-3f03-4f2b-8d8a-6b3d055580a1
+      description: Adversaries may attempt to discover containers and other resources
+        that are available within a containers environment.
+      supported_platforms:
+      - containers
+      dependency_executor_name: sh
+      dependencies:
+      - description: Verify Podman is installed.
+        prereq_command: 'which podman
+
+          '
+        get_prereq_command: "if [ \"\" == \"`which podman`\" ]; then echo \"Podman
+          Not Found\"; if [ -n \"`which apt-get`\" ]; then sudo apt-get -y install
+          podman ; elif [ -n \"`which yum`\" ]; then sudo yum -y install podman ;
+          elif [ -n \"`which pacman`\" ]; then sudo pacman -Sy podman --noconfirm
+          ; elif [ -n \"`which brew`\" ]; then brew install podman ; else echo \"Unsupported
+          package manager\"; fi ; else echo \"Podman installed\"; fi        \n"
+      - description: Verify Podman service is running.
+        prereq_command: 'sudo systemctl status podman --no-pager
+
+          '
+        get_prereq_command: "sudo systemctl start podman \n"
+      executor:
+        command: |-
+          podman build -t t1613 $PathtoAtomicsFolder/T1613/src/
+          podman run --name t1613_container -d -t t1613
+          podman ps
+          podman stats --no-stream
+          podman inspect $(podman ps -l -q --filter ancestor=t1613)
+        cleanup_command: |-
+          podman stop t1613_container
+          podman rmi -f t1613_container
         name: sh
   T1016.001:
     technique:

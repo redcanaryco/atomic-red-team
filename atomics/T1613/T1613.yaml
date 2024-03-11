@@ -1,33 +1,60 @@
----
 attack_technique: T1613
 display_name: "Container and Resource Discovery"
 atomic_tests:
-- name: Container and ResourceDiscovery
-  auto_generated_guid: 8a895923-f99f-4668-acf2-6cc59a44f05e
+- name: Docker Container and Resource Discovery
+  auto_generated_guid: ea2255df-d781-493b-9693-ac328f9afc3f
   description: Adversaries may attempt to discover containers and other resources that are available within a containers environment. 
   supported_platforms:
   - containers
   dependency_executor_name: sh
   dependencies: 
-  - description: Verify docker is installed.
+  - description: Verify Docker is installed.
     prereq_command: |
       which docker
     get_prereq_command: |
       if [ "" == "`which docker`" ]; then echo "Docker Not Found"; if [ -n "`which apt-get`" ]; then sudo apt-get -y install docker ; elif [ -n "`which yum`" ]; then sudo yum -y install docker ; fi ; else echo "Docker installed"; fi
-  
-  - description: Verify docker service is running.
+  - description: Verify Docker service is running.
     prereq_command: |
-      sudo systemctl status docker  --no-pager
+      sudo systemctl status docker --no-pager
     get_prereq_command: |
-      sudo systemctl start docker
+      sudo systemctl start docker 
   executor:
     command: |-
-      docker build -t t1613  $PathtoAtomicsFolder/T1613/src/
-      docker run --name t1613_container  -d -t t1613
+      docker build -t t1613 $PathtoAtomicsFolder/T1613/src/
+      docker run --name t1613_container -d -t t1613
       docker ps
       docker stats --no-stream
       docker inspect $(docker ps -l -q --filter ancestor=t1613)
     cleanup_command: |-
       docker stop t1613_container
       docker rmi -f t1613_container
+    name: sh
+
+- name: Podman Container and Resource Discovery
+  auto_generated_guid: fc631702-3f03-4f2b-8d8a-6b3d055580a1
+  description: Adversaries may attempt to discover containers and other resources that are available within a containers environment. 
+  supported_platforms:
+  - containers
+  dependency_executor_name: sh
+  dependencies: 
+  - description: Verify Podman is installed.
+    prereq_command: |
+      which podman
+    get_prereq_command: |
+      if [ "" == "`which podman`" ]; then echo "Podman Not Found"; if [ -n "`which apt-get`" ]; then sudo apt-get -y install podman ; elif [ -n "`which yum`" ]; then sudo yum -y install podman ; elif [ -n "`which pacman`" ]; then sudo pacman -Sy podman --noconfirm ; elif [ -n "`which brew`" ]; then brew install podman ; else echo "Unsupported package manager"; fi ; else echo "Podman installed"; fi        
+  - description: Verify Podman service is running.
+    prereq_command: |
+      sudo systemctl status podman --no-pager
+    get_prereq_command: |
+      sudo systemctl start podman 
+  executor:
+    command: |-
+      podman build -t t1613 $PathtoAtomicsFolder/T1613/src/
+      podman run --name t1613_container -d -t t1613
+      podman ps
+      podman stats --no-stream
+      podman inspect $(podman ps -l -q --filter ancestor=t1613)
+    cleanup_command: |-
+      podman stop t1613_container
+      podman rmi -f t1613_container
     name: sh

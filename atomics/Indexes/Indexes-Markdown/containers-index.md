@@ -1,7 +1,8 @@
 # Containers Atomic Tests by ATT&CK Tactic & Technique
 # discovery
 - [T1613 Container and Resource Discovery](../../T1613/T1613.md)
-  - Atomic Test #1: Container and ResourceDiscovery [containers]
+  - Atomic Test #1: Docker Container and Resource Discovery [containers]
+  - Atomic Test #2: Podman Container and Resource Discovery [containers]
 - T1069 Permission Groups Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1046 Network Service Discovery](../../T1046/T1046.md)
   - Atomic Test #9: Network Service Discovery for Containers [containers]

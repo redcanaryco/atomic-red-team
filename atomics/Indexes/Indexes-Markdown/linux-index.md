@@ -146,7 +146,7 @@
 - T1480 Execution Guardrails [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1205.001 Port Knocking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1564.002 Hide Artifacts: Hidden Users [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1562.003 Impair Defenses: HISTCONTROL](../../T1562.003/T1562.003.md)
+- [T1562.003 Impair Defenses: Impair Command History Logging](../../T1562.003/T1562.003.md)
   - Atomic Test #1: Disable history collection [linux, macos]
   - Atomic Test #2: Disable history collection (freebsd) [linux]
   - Atomic Test #3: Mac HISTCONTROL [macos, linux]
@@ -365,7 +365,7 @@
   - Atomic Test #6: sftp remote file copy (pull) [linux, macos]
   - Atomic Test #14: whois file download [linux, macos]
   - Atomic Test #27: Linux Download File and Run [linux]
-- T1001.002 Steganography [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1001.002 Data Obfuscation via Steganography [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1008 Fallback Channels [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1090.001 Proxy: Internal Proxy](../../T1090.001/T1090.001.md)
   - Atomic Test #1: Connection Proxy [linux, macos]
