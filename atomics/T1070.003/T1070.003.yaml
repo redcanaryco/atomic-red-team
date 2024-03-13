@@ -151,11 +151,6 @@ atomic_tests:
     Clears Docker container logs using the Docker CLI and the truncate command, removing all log entries.
   supported_platforms:
   - linux
-  dependencies:
-    - description: |
-        Install Docker CLI
-      prereq_command: |
-        (which docker >/dev/null) || (curl -fsSL https://get.docker.com/ | sh)
   executor:
     command: |
       docker container prune -f && sudo truncate -s 0 /var/lib/docker/containers/*/*-json.log
