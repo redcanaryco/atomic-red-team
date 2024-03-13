@@ -166,29 +166,35 @@ atomic_tests:
       description: hostname or ip address to connect to.
       type: string
       default: "192.168.1.1"
+    venv_path:
+      description: Path to the folder for the tactics venv
+      type: string
+      default: PathToAtomicsFolder\..\ExternalPayloads\venv_t1018
   dependency_executor_name: powershell
   dependencies:
   - description: |
       Computer must have python 3 installed
     prereq_command: |
-      if (python --version) {exit 0} else {exit 1}
+      if (Get-Command py -errorAction SilentlyContinue) { exit 0 } else { exit 1 }
     get_prereq_command: |
-      echo "Python 3 must be installed manually"
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction ignore -Force | Out-Null
+      invoke-webrequest "https://www.python.org/ftp/python/3.10.4/python-3.10.4-amd64.exe" -outfile "PathToAtomicsFolder\..\ExternalPayloads\python_setup.exe"
+      Start-Process -FilePath "PathToAtomicsFolder\..\ExternalPayloads\python_setup.exe" -ArgumentList "/quiet InstallAllUsers=1 PrependPath=1 Include_test=0" -Wait
   - description: |
-      Computer must have pip installed
+      Computer must have venv configured at #{venv_path}
     prereq_command: |
-      if (pip3 -V) {exit 0} else {exit 1}
+      if (Test-Path -Path "#{venv_path}" ) { exit 0 } else { exit 1 }
     get_prereq_command: |
-      echo "PIP must be installed manually"
+      py -m venv "#{venv_path}"
   - description: |
-      adidnsdump must be installed and part of PATH
+      adidnsdump must be installed
     prereq_command: |
-      if (cmd /c adidnsdump -h) {exit 0} else {exit 1}
+      if (Get-Command "#{venv_path}\Scripts\adidnsdump" -errorAction SilentlyContinue) { exit 0 } else { exit 1 }
     get_prereq_command: |
-      pip3 install adidnsdump
+      & "#{venv_path}\Scripts\pip.exe" install --no-cache-dir adidnsdump 2>&1 | Out-Null
   executor:
     command: |
-      adidnsdump -u #{user_name} -p #{acct_pass} --print-zones #{host_name}
+      "#{venv_path}\Scripts\adidnsdump" -u #{user_name} -p #{acct_pass} --print-zones #{host_name}
     name: command_prompt
     elevation_required: true
 - name: Adfind - Enumerate Active Directory Computer Objects

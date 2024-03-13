@@ -49,6 +49,20 @@ atomic_tests:
       reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 0 /f >nul 2>&1
     name: command_prompt
     elevation_required: true
+- name: Use Powershell to Modify registry to store logon credentials
+  auto_generated_guid: 68254a85-aa42-4312-a695-38b7276307f8
+  description: |
+    Sets registry key using Powershell that will tell windows to store plaintext passwords (making the system vulnerable to clear text / cleartext password dumping).
+    Open Registry Editor to view the modified entry in HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      Set-ItemProperty -Force -Path  'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest' -Name  'UseLogonCredential' -Value '1' -ErrorAction Ignore
+    cleanup_command: |
+      Set-ItemProperty -Force -Path  'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest' -Name  'UseLogonCredential' -Value '0' -ErrorAction Ignore
+    name: powershell
+    elevation_required: true
 - name: Add domain to Trusted sites Zone
   auto_generated_guid: cf447677-5a4e-4937-a82c-e47d254afd57
   description: |
@@ -507,7 +521,6 @@ atomic_tests:
       reg  add HKCU\Software\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging /v EnableScriptBlockLogging /t REG_DWORD /d 0 /f
       reg  add HKCU\Software\Policies\Microsoft\Windows\PowerShell\Transcription /v EnableTranscripting /t REG_DWORD /d 0 /f
       reg  add HKCU\Software\Policies\Microsoft\Windows\PowerShell /v EnableScripts /t REG_DWORD /d 0 /f
-      REM do a little cleanup immediately to avoid execution issues with later tests
       reg delete HKCU\Software\Policies\Microsoft\Windows\PowerShell /v EnableScripts /f >nul 2>&1
     cleanup_command: |
       reg delete HKCU\Software\Policies\Microsoft\Windows\PowerShell\ModuleLogging /v EnableModuleLogging /f >nul 2>&1

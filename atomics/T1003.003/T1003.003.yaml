@@ -242,3 +242,22 @@ atomic_tests:
       mklink /D #{symlink_path} \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1
     name: command_prompt
     elevation_required: true
+
+- name: Create Volume Shadow Copy with diskshadow
+  auto_generated_guid: b385996c-0e7d-4e27-95a4-aca046b119a7
+  description: |
+    This test is intended to be run on a domain controller
+    An alternative to using vssadmin to create a Volume Shadow Copy for extracting ntds.dit
+  supported_platforms:
+  - windows
+  input_arguments: 
+    filename:
+      description: Location of the script
+      type: Path
+      default: PathToAtomicsFolder\T1003.003\src\diskshadow.txt
+  executor:
+    command: |
+      mkdir c:\exfil
+      diskshadow.exe /s #{filename}
+    name: command_prompt
+    elevation_required: true
