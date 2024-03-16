@@ -185,9 +185,10 @@
   - Atomic Test #7: Clear and Disable Bash History Logging [linux, macos]
   - Atomic Test #8: Use Space Before Command to Avoid Logging to History [linux, macos]
   - Atomic Test #9: Disable Bash History Logging with SSH -T [linux]
-  - Atomic Test #10: Prevent Powershell History Logging [windows]
-  - Atomic Test #11: Clear Powershell History by Deleting History File [windows]
-  - Atomic Test #12: Set Custom AddToHistoryHandler to Avoid History File Logging [windows]
+  - Atomic Test #10: Clear Docker Container Logs [linux]
+  - Atomic Test #11: Prevent Powershell History Logging [windows]
+  - Atomic Test #12: Clear Powershell History by Deleting History File [windows]
+  - Atomic Test #13: Set Custom AddToHistoryHandler to Avoid History File Logging [windows]
 - [T1202 Indirect Command Execution](../../T1202/T1202.md)
   - Atomic Test #1: Indirect Command Execution - pcalua.exe [windows]
   - Atomic Test #2: Indirect Command Execution - forfiles.exe [windows]
@@ -2347,6 +2348,7 @@
 - T1497.003 Time Based Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1580 Cloud Infrastructure Discovery](../../T1580/T1580.md)
   - Atomic Test #1: AWS - EC2 Enumeration from Cloud Instance [linux, macos, iaas:aws]
+  - Atomic Test #2: AWS - EC2 Security Group Enumeration [iaas:aws]
 - [T1217 Browser Bookmark Discovery](../../T1217/T1217.md)
   - Atomic Test #1: List Mozilla Firefox Bookmark Database Files on FreeBSD/Linux [linux]
   - Atomic Test #2: List Mozilla Firefox Bookmark Database Files on macOS [macos]
