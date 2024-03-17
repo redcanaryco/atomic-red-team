@@ -66,3 +66,27 @@ atomic_tests:
     elevation_required: true
     command: |
       "%PROGRAMFILES(x86)%/#{PDQ_Deploy_exe}"
+
+- name: Deploy 7-Zip Using Chocolatey
+  auto_generated_guid: 2169e8b0-2ee7-44cb-8a6e-d816a5db7d8a
+  description: |
+    An adversary may use Chocolatey to remotely deploy the 7-Zip file archiver utility.
+  supported_platforms:
+  - windows
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        Chocolatey must be installed to deploy 7-Zip.
+      prereq_command: |
+        if (Test-Path "${env:ProgramFiles(x86)}\Chocolatey\choco.exe") {exit 0} else {exit 1}
+      get_prereq_command: |
+        Write-Host Downloading Chocolatey installer
+        Invoke-WebRequest -Uri "https://chocolatey.org/install.ps1" -OutFile "chocolatey-install.ps1"
+        Write-Host Installing Chocolatey
+        Start-Process -FilePath "powershell.exe" -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File chocolatey-install.ps1" -Wait
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      # Deploy 7-Zip using Chocolatey
+      choco install -y 7zip
