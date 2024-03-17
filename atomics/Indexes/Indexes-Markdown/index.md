@@ -185,9 +185,10 @@
   - Atomic Test #7: Clear and Disable Bash History Logging [linux, macos]
   - Atomic Test #8: Use Space Before Command to Avoid Logging to History [linux, macos]
   - Atomic Test #9: Disable Bash History Logging with SSH -T [linux]
-  - Atomic Test #10: Prevent Powershell History Logging [windows]
-  - Atomic Test #11: Clear Powershell History by Deleting History File [windows]
-  - Atomic Test #12: Set Custom AddToHistoryHandler to Avoid History File Logging [windows]
+  - Atomic Test #10: Clear Docker Container Logs [linux]
+  - Atomic Test #11: Prevent Powershell History Logging [windows]
+  - Atomic Test #12: Clear Powershell History by Deleting History File [windows]
+  - Atomic Test #13: Set Custom AddToHistoryHandler to Avoid History File Logging [windows]
 - [T1202 Indirect Command Execution](../../T1202/T1202.md)
   - Atomic Test #1: Indirect Command Execution - pcalua.exe [windows]
   - Atomic Test #2: Indirect Command Execution - forfiles.exe [windows]
@@ -303,6 +304,7 @@
   - Atomic Test #21: LockBit Black - Unusual Windows firewall registry modification -Powershell [windows]
   - Atomic Test #22: Blackbit - Disable Windows Firewall using netsh firewall [windows]
   - Atomic Test #23: ESXi - Disable Firewall via Esxcli [windows]
+  - Atomic Test #24: Set a firewall rule using New-NetFirewallRule [windows]
 - [T1553.003 Subvert Trust Controls: SIP and Trust Provider Hijacking](../../T1553.003/T1553.003.md)
   - Atomic Test #1: SIP (Subject Interface Package) Hijacking via Custom DLL [windows]
 - T1556.007 Hybrid Identity [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1769,6 +1771,7 @@
   - Atomic Test #27: Linux Download File and Run [linux]
   - Atomic Test #28: Nimgrab - Transfer Files [windows]
   - Atomic Test #29: iwr or Invoke Web-Request download [windows]
+  - Atomic Test #30: Arbitrary file download using the Notepad++ GUP.exe binary [windows]
 - [T1001.002 Data Obfuscation via Steganography](../../T1001.002/T1001.002.md)
   - Atomic Test #1: Steganographic Tarball Embedding [windows]
   - Atomic Test #2: Embedded Script in Image Execution via Extract-Invoke-PSImage [windows]
@@ -2347,6 +2350,7 @@
 - T1497.003 Time Based Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1580 Cloud Infrastructure Discovery](../../T1580/T1580.md)
   - Atomic Test #1: AWS - EC2 Enumeration from Cloud Instance [linux, macos, iaas:aws]
+  - Atomic Test #2: AWS - EC2 Security Group Enumeration [iaas:aws]
 - [T1217 Browser Bookmark Discovery](../../T1217/T1217.md)
   - Atomic Test #1: List Mozilla Firefox Bookmark Database Files on FreeBSD/Linux [linux]
   - Atomic Test #2: List Mozilla Firefox Bookmark Database Files on macOS [macos]
