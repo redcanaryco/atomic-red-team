@@ -1770,6 +1770,7 @@
   - Atomic Test #27: Linux Download File and Run [linux]
   - Atomic Test #28: Nimgrab - Transfer Files [windows]
   - Atomic Test #29: iwr or Invoke Web-Request download [windows]
+  - Atomic Test #30: Arbitrary file download using the Notepad++ GUP.exe binary [windows]
 - [T1001.002 Data Obfuscation via Steganography](../../T1001.002/T1001.002.md)
   - Atomic Test #1: Steganographic Tarball Embedding [windows]
   - Atomic Test #2: Embedded Script in Image Execution via Extract-Invoke-PSImage [windows]
