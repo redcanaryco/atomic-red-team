@@ -142,9 +142,10 @@ defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,6,Cle
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,7,Clear and Disable Bash History Logging,784e4011-bd1a-4ecd-a63a-8feb278512e6,sh
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,8,Use Space Before Command to Avoid Logging to History,53b03a54-4529-4992-852d-a00b4b7215a6,sh
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,9,Disable Bash History Logging with SSH -T,5f8abd62-f615-43c5-b6be-f780f25790a1,sh
-defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,10,Prevent Powershell History Logging,2f898b81-3e97-4abb-bc3f-a95138988370,powershell
-defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,11,Clear Powershell History by Deleting History File,da75ae8d-26d6-4483-b0fe-700e4df4f037,powershell
-defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,12,Set Custom AddToHistoryHandler to Avoid History File Logging,1d0d9aa6-6111-4f89-927b-53e8afae7f94,powershell
+defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,10,Clear Docker Container Logs,553b39f9-1e8c-47b1-abf5-8daf7b0391e9,bash
+defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,11,Prevent Powershell History Logging,2f898b81-3e97-4abb-bc3f-a95138988370,powershell
+defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,12,Clear Powershell History by Deleting History File,da75ae8d-26d6-4483-b0fe-700e4df4f037,powershell
+defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,13,Set Custom AddToHistoryHandler to Avoid History File Logging,1d0d9aa6-6111-4f89-927b-53e8afae7f94,powershell
 defense-evasion,T1202,Indirect Command Execution,1,Indirect Command Execution - pcalua.exe,cecfea7a-5f03-4cdd-8bc8-6f7c22862440,command_prompt
 defense-evasion,T1202,Indirect Command Execution,2,Indirect Command Execution - forfiles.exe,8b34a448-40d9-4fc3-a8c8-4bb286faf7dc,command_prompt
 defense-evasion,T1202,Indirect Command Execution,3,Indirect Command Execution - conhost.exe,cf3391e0-b482-4b02-87fc-ca8362269b29,command_prompt
@@ -1279,6 +1280,7 @@ command-and-control,T1105,Ingress Tool Transfer,26,Download a file using wscript
 command-and-control,T1105,Ingress Tool Transfer,27,Linux Download File and Run,bdc373c5-e9cf-4563-8a7b-a9ba720a90f3,sh
 command-and-control,T1105,Ingress Tool Transfer,28,Nimgrab - Transfer Files,b1729c57-9384-4d1c-9b99-9b220afb384e,command_prompt
 command-and-control,T1105,Ingress Tool Transfer,29,iwr or Invoke Web-Request download,c01cad7f-7a4c-49df-985e-b190dcf6a279,command_prompt
+command-and-control,T1105,Ingress Tool Transfer,30,Arbitrary file download using the Notepad++ GUP.exe binary,66ee226e-64cb-4dae-80e3-5bf5763e4a51,command_prompt
 command-and-control,T1001.002,Data Obfuscation via Steganography,1,Steganographic Tarball Embedding,c7921449-8b62-4c4d-8a83-d9281ac0190b,powershell
 command-and-control,T1001.002,Data Obfuscation via Steganography,2,Embedded Script in Image Execution via Extract-Invoke-PSImage,04bb8e3d-1670-46ab-a3f1-5cee64da29b6,powershell
 command-and-control,T1090.001,Proxy: Internal Proxy,1,Connection Proxy,0ac21132-4485-4212-a681-349e8a6637cd,sh
@@ -1571,7 +1573,8 @@ discovery,T1033,System Owner/User Discovery,4,User Discovery With Env Vars Power
 discovery,T1033,System Owner/User Discovery,5,GetCurrent User with PowerShell Script,1392bd0f-5d5a-429e-81d9-eb9d4d4d5b3b,powershell
 discovery,T1033,System Owner/User Discovery,6,System Discovery - SocGholish whoami,3d257a03-eb80-41c5-b744-bb37ac7f65c7,powershell
 discovery,T1033,System Owner/User Discovery,7,System Owner/User Discovery Using Command Prompt,ba38e193-37a6-4c41-b214-61b33277fe36,command_prompt
-discovery,T1613,Container and Resource Discovery,1,Container and ResourceDiscovery,8a895923-f99f-4668-acf2-6cc59a44f05e,sh
+discovery,T1613,Container and Resource Discovery,1,Docker Container and Resource Discovery,ea2255df-d781-493b-9693-ac328f9afc3f,sh
+discovery,T1613,Container and Resource Discovery,2,Podman Container and Resource Discovery,fc631702-3f03-4f2b-8d8a-6b3d055580a1,sh
 discovery,T1615,Group Policy Discovery,1,Display group policy information via gpresult,0976990f-53b1-4d3f-a185-6df5be429d3b,command_prompt
 discovery,T1615,Group Policy Discovery,2,Get-DomainGPO to display group policy information via PowerView,4e524c4e-0e02-49aa-8df5-93f3f7959b9f,powershell
 discovery,T1615,Group Policy Discovery,3,WinPwn - GPOAudit,bc25c04b-841e-4965-855f-d1f645d7ab73,powershell
@@ -1698,6 +1701,7 @@ discovery,T1082,System Information Discovery,32,ESXi - VM Discovery using ESXCLI
 discovery,T1082,System Information Discovery,33,ESXi - Darkside system information discovery,f89812e5-67d1-4f49-86fa-cbc6609ea86a,command_prompt
 discovery,T1010,Application Window Discovery,1,List Process Main Windows - C# .NET,fe94a1c3-3e22-4dc9-9fdf-3a8bdbc10dc4,command_prompt
 discovery,T1580,Cloud Infrastructure Discovery,1,AWS - EC2 Enumeration from Cloud Instance,99ee161b-dcb1-4276-8ecb-7cfdcb207820,sh
+discovery,T1580,Cloud Infrastructure Discovery,2,AWS - EC2 Security Group Enumeration,99b38f24-5acc-4aa3-85e5-b7f97a5d37ac,command_prompt
 discovery,T1217,Browser Bookmark Discovery,1,List Mozilla Firefox Bookmark Database Files on FreeBSD/Linux,3a41f169-a5ab-407f-9269-abafdb5da6c2,sh
 discovery,T1217,Browser Bookmark Discovery,2,List Mozilla Firefox Bookmark Database Files on macOS,1ca1f9c7-44bc-46bb-8c85-c50e2e94267b,sh
 discovery,T1217,Browser Bookmark Discovery,3,List Google Chrome Bookmark JSON Files on macOS,b789d341-154b-4a42-a071-9111588be9bc,sh
