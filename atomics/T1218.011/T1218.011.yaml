@@ -323,20 +323,20 @@ atomic_tests:
     command: |
       rundll32.exe #{dll_file},krnl
     name: command_prompt
-name: Rundll32 execute command via FileProtocolHandler
-auto_generated_guid: f3ad3c5b-1db1-45c1-81bf-d3370ebab6c8
-description: |
-  Test execution of a command using rundll32.exe and the FileProtocolHandler technique.
-  Upon execution, calc.exe will be launched.
-  This technique is documented by Levan Abesadze - https://medium.com/@Wolverineisstillalive/system-binary-proxy-execution-rundll32-bypass-method-790871e1f2b7
-supported_platforms:
-- windows
-input_arguments:
-  command_to_execute:
-    description: Command for rundll32.exe to execute
-    type: string
-    default: calc.exe
-executor:
-  command: |
-    rundll32.exe url.dll,FileProtocolHandler #{command_to_execute}
-  name: command_prompt
+- name: Rundll32 execute command via FileProtocolHandler
+  auto_generated_guid: f3ad3c5b-1db1-45c1-81bf-d3370ebab6c8
+  description: |
+    Test execution of a command using rundll32.exe and the FileProtocolHandler technique.
+    Upon execution, calc.exe will be launched.
+    This technique is documented by Levan Abesadze - https://medium.com/@Wolverineisstillalive/system-binary-proxy-execution-rundll32-bypass-method-790871e1f2b7
+  supported_platforms:
+  - windows
+  input_arguments:
+    command_to_execute:
+      description: Command for rundll32.exe to execute
+      type: string
+      default: calc.exe
+  executor:
+    command: |
+      rundll32.exe url.dll,FileProtocolHandler #{command_to_execute}
+    name: command_prompt
