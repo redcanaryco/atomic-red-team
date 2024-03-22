@@ -41,7 +41,7 @@ atomic_tests:
     command: |
       cert = New-SelfSignedCertificate -Subject "CN=PowerShell Application" -CertStoreLocation "Cert:\CurrentUser\My" -KeyExportPolicy Exportable -KeySpec Signature -KeyLength 2048 -KeyAlgorithm RSA -HashAlgorithm SHA256
       $reqResourceAccess = ( @{ "resourceAccess" = (@{"id"= "570282fd-fa5c-430d-a7fd-fc8dc98a9dca"; "type"= "Scope"}, @{ "id"= "7427e0e9-2fba-42fe-b0c0-848c9e6a8182"; "type"= "Scope"}, @{"id"= "37f7f235-527c-4136-accd-4a02d197296e"; "type"= "Scope"}, @{"id"= "14dad69e-099b-42c9-810b-d002981feec1"; "type"= "Scope"}, @{ "id"= "e1fe6dd8-ba31-4d61-89e7-88639da4683d"; "type"= "Scope"}, @{ "id"= "810c84a8-4a9e-49e6-bf7d-12d183f40d01"; "type"= "Role"}); "resourceAppId" = "00000003-0000-0000-c000-000000000000" })
-      connect-mggraph -Scopes AppRoleAssignment.ReadWrite.All,Application.ReadWrite.All,User.Read -NoWelcome
+      connect-mggraph -Scopes AppRoleAssignment.ReadWrite.All,Application.ReadWrite.All,User.Read
       $context = Get-MgContext       
       $users = get-MgUser
       $app = New-MgApplication -DisplayName "T1114.002 Atomic Test #1 - Office365 - Remote Email Collection" -RequiredResourceAccess $reqResourceAccess -Web @{ RedirectUris="http://localhost"; } -KeyCredentials @(@{ Type="AsymmetricX509Cert"; Usage="Verify"; Key=$cert.RawData })
