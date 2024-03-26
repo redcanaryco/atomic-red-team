@@ -164,8 +164,6 @@ atomic_tests:
         description: Image file to be embedded
         type: String
         default: PathToAtomicsFolder/image.jpg
-    dependency_executor_name: 
-    dependencies: 
     executor:
       command: cat "#{script}" | base64 | xxd -p | sed 's/../& /g' | xargs -n1 | xxd -r -p | cat "#{image}" - > "#{evil_image}"; strings "#{evil_image}" | tail -n 1 | base64 -d | sh
       cleanup_command: rm "#{evil_image}"
