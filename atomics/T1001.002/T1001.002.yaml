@@ -145,4 +145,27 @@ atomic_tests:
         Set-ExecutionPolicy Bypass -Scope Process -Force -ErrorAction Ignore
         Remove-Item -Path "$HOME\result.ps1" -Force -ErrorAction Ignore 
         Remove-Item -Path "$HOME\textExtraction.ps1" -Force -ErrorAction Ignore
-        Remove-Item -Path "$HOME\decoded.ps1" -Force -ErrorAction Ignore
+        Remove-Item -Path "$HOME\decoded.ps1" -Force -ErrorAction Ignore        
+
+  - name: Execute Embedded Script in Image via Steganography
+    description: This atomic test demonstrates the execution of an embedded script in an image file using steganography techniques. The script is first encoded in base64 and then embedded within the pixels of the image. The modified image is created, and the script is extracted and executed on the target system.
+    supported_platforms:
+    - linux
+    input_arguments:
+      script:
+        description: Shell Script file to be embedded and executed
+        type: String
+        default: PathToAtomicsFolder/script.sh
+      evil_image:
+        description: The modified image with embedded script
+        type: String
+        default: PathToAtomicsFolder/evil_image.jpg
+      image:
+        description: Image file to be embedded
+        type: String
+        default: PathToAtomicsFolder/image.jpg
+    executor:
+      command: cat "#{script}" | base64 | xxd -p | sed 's/../& /g' | xargs -n1 | xxd -r -p | cat "#{image}" - > "#{evil_image}"; strings "#{evil_image}" | tail -n 1 | base64 -d | sh
+      cleanup_command: rm "#{evil_image}"
+      name: sh
+      elevation_required: false
