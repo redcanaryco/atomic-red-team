@@ -1,3 +1,4 @@
+
 attack_technique: T1112
 display_name: Modify Registry
 atomic_tests:
@@ -1052,7 +1053,7 @@ atomic_tests:
     command: | 
        reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyServer /t REG_SZ /d "proxy.atomic-test.com:8080" /f
     cleanup_command: |
-       reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyServer
+       reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyServer /f
     name: command_prompt
 
 
