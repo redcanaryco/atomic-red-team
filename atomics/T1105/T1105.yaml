@@ -872,3 +872,24 @@ atomic_tests:
     cleanup_command: rmdir /s /q "C:\Temp\Sample" >nul 2>nul
     name: command_prompt
     elevation_required: true
+- name: File download via nscurl
+  description: |
+     Use nscurl to download and write a file/payload from the internet.
+     -k = Disable certificate checking
+     -o = Output destination
+  supported_platforms:
+  - macos
+  input_arguments:
+    remote_file:
+      description: URL of remote file to download
+      type: url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
+    destination_path:
+      description: Local path to place remote file
+      type: path
+      default: license.txt
+  executor:
+    command: nscurl -k #{remote_file} -o #{destination_path}
+    cleanup_command: rm #{destination_path}
+    name: sh
+    elevation_required: false
