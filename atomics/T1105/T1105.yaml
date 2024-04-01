@@ -889,7 +889,7 @@ atomic_tests:
       type: path
       default: license.txt
   executor:
-    command: nscurl -k #{remote_file} -o #{destination_path}
-    cleanup_command: rm #{destination_path}
+    command: nscurl -k "#{remote_file}" -o "#{destination_path}"
+    cleanup_command: rm "#{destination_path}"
     name: sh
     elevation_required: false
