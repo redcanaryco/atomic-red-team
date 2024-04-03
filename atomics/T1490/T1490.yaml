@@ -173,4 +173,13 @@ atomic_tests:
       sc sdset VSS D:(D;;GA;;;NU)(D;;GA;;;WD)(D;;GA;;;AN)S:(AU;FA;GA;;;WD)(AU;OIIOFA;GA;;;WD)
     cleanup_command: |
       sc sdset VSS D:(A;;CCLCSWRPWPDTLOCRRC;;;SY)(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;BA)(A;;LC;;;BU)S:(AU;FA;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;WD)
-
+- name: Disable Time Machine 
+  description: |
+     Disables Time Machine which is Apple's automated backup utility software. Attackers can use this to prevent backups from occurring and hinder the victim's ability to recover from any damage.
+  supported_platforms:
+  - macos
+  executor:
+    command: sudo tmutil disable
+    cleanup_command: sudo tmutil enable
+    name: sh
+    elevation_required: true
