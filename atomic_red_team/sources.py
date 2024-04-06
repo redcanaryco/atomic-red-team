@@ -1,7 +1,7 @@
 import glob
 import os.path
 from os.path import abspath, dirname
-from typing import List
+from typing import List, Optional
 
 from attackcti import attack_client
 
@@ -13,7 +13,8 @@ class AttackAPI:
     lift = attack_client()
 
     def __init__(self):
-        self.techniques = self.lift.get_techniques()
+        self.lift.COMPOSITE_DS.data_sources = [self.lift.TC_ENTERPRISE_SOURCE]
+        self.techniques = self.lift.remove_revoked_deprecated(self.lift.get_techniques())
 
     def get_mitre_technique(self, technique_id: str):
         return list(
@@ -36,6 +37,15 @@ class AttackAPI:
 
     def get_tactics(self):
         return [tactic["x_mitre_shortname"] for tactic in self.lift.get_tactics()]
+
+    def get_techniques_by_tactic(self, tactic: str, platform: Optional[str] = None):
+        techniques = []
+        for tech in self.techniques:
+            if 'kill_chain_phases' in tech.keys():
+                if tactic.lower() in tech['kill_chain_phases'][0]['phase_name'].lower():
+                    if not platform or platform in tech["x_mitre_platforms"]:
+                        techniques.append(tech)
+        return techniques
 
 
 class AtomicRedTeam:

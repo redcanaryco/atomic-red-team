@@ -7,6 +7,7 @@ from atomic_red_team.sources import Atomic, AtomicRedTeam, AttackAPI, Platform, 
 all_platforms: List[Platform] = list(get_args(Platform))
 atomic_red_team = AtomicRedTeam()
 attack_api = AttackAPI()
+contrib_link = "[CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)"
 
 TACTICS = [
     "reconnaissance",
@@ -82,3 +83,12 @@ for platform in all_platforms:
     atomics = atomic_red_team.get_atomics_by_platform(platform)
     file_path = f"{csv_index}/{platform.replace(':', '-')}-index.csv"
     create_index_csv(file_path, atomics)
+
+# def generate_markdown_index(platform: Platform):
+#     markdown = ""
+#     for tactic in TACTICS:
+#     techniques = attack_api.get_techniques_by_tactic("discovery", platform="azure-ad")
+#     print(techniques)
+
+techniques = attack_api.get_techniques_by_tactic("discovery", platform="azure-ad")
+print(techniques)
