@@ -17859,10 +17859,10 @@ privilege-escalation:
           echo "#{command}" > /etc/cron.monthly/#{cron_script_name}
           echo "#{command}" > /etc/cron.weekly/#{cron_script_name}
         cleanup_command: |
-          rm /etc/cron.daily/#{cron_script_name}
-          rm /etc/cron.hourly/#{cron_script_name}
-          rm /etc/cron.monthly/#{cron_script_name}
-          rm /etc/cron.weekly/#{cron_script_name}
+          rm /etc/cron.daily/#{cron_script_name} -f
+          rm /etc/cron.hourly/#{cron_script_name} -f
+          rm /etc/cron.monthly/#{cron_script_name} -f
+          rm /etc/cron.weekly/#{cron_script_name} -f
   T1098.003:
     technique:
       modified: '2023-10-03T17:37:41.250Z'
@@ -26371,10 +26371,10 @@ execution:
           echo "#{command}" > /etc/cron.monthly/#{cron_script_name}
           echo "#{command}" > /etc/cron.weekly/#{cron_script_name}
         cleanup_command: |
-          rm /etc/cron.daily/#{cron_script_name}
-          rm /etc/cron.hourly/#{cron_script_name}
-          rm /etc/cron.monthly/#{cron_script_name}
-          rm /etc/cron.weekly/#{cron_script_name}
+          rm /etc/cron.daily/#{cron_script_name} -f
+          rm /etc/cron.hourly/#{cron_script_name} -f
+          rm /etc/cron.monthly/#{cron_script_name} -f
+          rm /etc/cron.weekly/#{cron_script_name} -f
   T1559.001:
     technique:
       x_mitre_platforms:
@@ -27074,7 +27074,7 @@ execution:
           type: path
           default: "/System/Applications/Calculator.app/Contents/MacOS/Calculator"
         label_name:
-          description: Path of the executable to run.
+          description: Unique label to assign this job to launchd.
           type: string
           default: evil
       executor:
@@ -29892,10 +29892,10 @@ persistence:
           echo "#{command}" > /etc/cron.monthly/#{cron_script_name}
           echo "#{command}" > /etc/cron.weekly/#{cron_script_name}
         cleanup_command: |
-          rm /etc/cron.daily/#{cron_script_name}
-          rm /etc/cron.hourly/#{cron_script_name}
-          rm /etc/cron.monthly/#{cron_script_name}
-          rm /etc/cron.weekly/#{cron_script_name}
+          rm /etc/cron.daily/#{cron_script_name} -f
+          rm /etc/cron.hourly/#{cron_script_name} -f
+          rm /etc/cron.monthly/#{cron_script_name} -f
+          rm /etc/cron.weekly/#{cron_script_name} -f
   T1137:
     technique:
       x_mitre_platforms:
@@ -40442,6 +40442,28 @@ command-and-control:
         cleanup_command: 'rm -f #{output_file}
 
           '
+    - name: File download via nscurl
+      auto_generated_guid: 5bcefe5f-3f30-4f1c-a61a-8d7db3f4450c
+      description: |
+        Use nscurl to download and write a file/payload from the internet.
+        -k = Disable certificate checking
+        -o = Output destination
+      supported_platforms:
+      - macos
+      input_arguments:
+        remote_file:
+          description: URL of remote file to download
+          type: url
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
+        destination_path:
+          description: Local path to place remote file
+          type: path
+          default: license.txt
+      executor:
+        command: nscurl -k "#{remote_file}" -o "#{destination_path}"
+        cleanup_command: rm "#{destination_path}"
+        name: sh
+        elevation_required: false
   T1001.002:
     technique:
       x_mitre_platforms:
@@ -43027,7 +43049,7 @@ collection:
   T1114.002:
     technique:
       modified: '2023-05-31T12:34:03.420Z'
-      name: Remote Email Collection
+      name: 'Email Collection: Remote Email Collection'
       description: Adversaries may target an Exchange server, Office 365, or Google
         Workspace to collect sensitive information. Adversaries may leverage a user's
         credentials and interact directly with the Exchange server to acquire information
@@ -43068,6 +43090,7 @@ collection:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       x_mitre_attack_spec_version: 3.1.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      identifier: T1114.002
     atomic_tests: []
   T1056:
     technique:
@@ -61324,7 +61347,21 @@ impact:
       x_mitre_attack_spec_version: 3.2.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
       identifier: T1490
-    atomic_tests: []
+    atomic_tests:
+    - name: Disable Time Machine
+      auto_generated_guid: ed952f70-91d4-445a-b7ff-30966bfb1aff
+      description: 'Disables Time Machine which is Apple''s automated backup utility
+        software. Attackers can use this to prevent backups from occurring and hinder
+        the victim''s ability to recover from any damage.
+
+        '
+      supported_platforms:
+      - macos
+      executor:
+        command: sudo tmutil disable
+        cleanup_command: sudo tmutil enable
+        name: sh
+        elevation_required: true
   T1561.001:
     technique:
       modified: '2023-04-12T23:42:59.868Z'

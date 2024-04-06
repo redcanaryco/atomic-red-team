@@ -33,7 +33,8 @@
 - T1530 Data from Cloud Storage Object [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1114.003 Email Collection: Email Forwarding Rule](../../T1114.003/T1114.003.md)
   - Atomic Test #1: Office365 - Email Forwarding [office-365]
-- T1114.002 Remote Email Collection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1114.002 Email Collection: Remote Email Collection](../../T1114.002/T1114.002.md)
+  - Atomic Test #1: Office365 - Remote Mail Collected [office-365]
 - T1213 Data from Information Repositories [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 
 # defense-evasion
