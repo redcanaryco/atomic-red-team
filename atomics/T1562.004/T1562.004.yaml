@@ -439,3 +439,69 @@ atomic_tests:
       netsh firewall set opmode mode=enable >nul 2>&1
     name: command_prompt
     elevation_required: true
+- name: ESXi - Disable Firewall via Esxcli
+  auto_generated_guid: bac8a340-be64-4491-a0cc-0985cb227f5a
+  description: |
+    Adversaries may disable the ESXI firewall via ESXCLI
+  supported_platforms:
+  - windows
+  input_arguments:
+    vm_host:
+      description: Specify the host name of the ESXi Server
+      type: string
+      default: atomic.local
+    plink_file:
+      description: Path to Putty
+      type: path
+      default: 'PathToAtomicsFolder\..\ExternalPayloads\plink.exe'
+    username:
+      description: username used to log into ESXi
+      type: string
+      default: root
+    password:
+      description: password used to log into ESXI
+      type: string
+      default: n/a
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      The plink executable must be found in the ExternalPayloads folder.
+    prereq_command: |
+      if (Test-Path "#{plink_file}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe" -OutFile "#{plink_file}"
+  executor:
+    command: |
+      #{plink_file} -ssh #{vm_host} -l #{username} -pw #{password} -m PathToAtomicsFolder\..\atomics\T1562.004\src\esxi_disable_firewall.txt
+    cleanup_command: |
+      #{plink_file} -ssh #{vm_host} -l #{username} -pw #{password} -m PathToAtomicsFolder\..\atomics\T1562.004\src\esxi_enable_firewall.txt
+    name: command_prompt
+    elevation_required: false
+- name: Set a firewall rule using New-NetFirewallRule
+  auto_generated_guid: 94be7646-25f6-467e-af23-585fb13000c8
+  description: This test will attempt to create a new inbound/outbound firewall rule using the New-NetFirewallRule commandlet. 
+  supported_platforms:
+  - windows
+  input_arguments:
+    direction:
+      description: Direction can be Inbound or Outbound
+      type: string
+      default: Inbound
+    local_port:
+      description: This is the local port you wish to test opening
+      type: integer
+      default: 21
+    protocol:
+      description: This is the protocol
+      type: string
+      default: TCP
+    action:
+      description: This is the action
+      type: string
+      default: allow
+  executor:
+    command: New-NetFirewallRule -DisplayName "New rule" -Direction "#{direction}" -LocalPort "#{local_port}" -Protocol "#{protocol}" -Action "#{action}"
+    cleanup_command: Remove-NetFirewallRule -DisplayName "New rule"
+    name: powershell
+    elevation_required: true

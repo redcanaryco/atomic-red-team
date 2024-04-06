@@ -66,6 +66,7 @@
   - Atomic Test #7: Clear and Disable Bash History Logging [linux, macos]
   - Atomic Test #8: Use Space Before Command to Avoid Logging to History [linux, macos]
   - Atomic Test #9: Disable Bash History Logging with SSH -T [linux]
+  - Atomic Test #10: Clear Docker Container Logs [linux]
 - [T1140 Deobfuscate/Decode Files or Information](../../T1140/T1140.md)
   - Atomic Test #3: Base64 decoding with Python [linux, macos]
   - Atomic Test #4: Base64 decoding with Perl [linux, macos]
@@ -139,12 +140,14 @@
 - [T1036.004 Masquerading: Masquerade Task or Service](../../T1036.004/T1036.004.md)
   - Atomic Test #3: linux rename /proc/pid/comm using prctl [linux]
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1562.010 Downgrade Attack [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1562.010 Impair Defenses: Downgrade Attack](../../T1562.010/T1562.010.md)
+  - Atomic Test #1: ESXi - Change VIB acceptance level to CommunitySupported via PowerCLI [linux]
+  - Atomic Test #2: ESXi - Change VIB acceptance level to CommunitySupported via ESXCLI [linux]
 - T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1480 Execution Guardrails [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1205.001 Port Knocking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1564.002 Hide Artifacts: Hidden Users [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1562.003 Impair Defenses: HISTCONTROL](../../T1562.003/T1562.003.md)
+- [T1562.003 Impair Defenses: Impair Command History Logging](../../T1562.003/T1562.003.md)
   - Atomic Test #1: Disable history collection [linux, macos]
   - Atomic Test #2: Disable history collection (freebsd) [linux]
   - Atomic Test #3: Mac HISTCONTROL [macos, linux]
@@ -169,6 +172,7 @@
   - Atomic Test #42: Clear Pagging Cache [linux]
   - Atomic Test #43: Disable Memory Swap [linux]
   - Atomic Test #47: Tamper with Defender ATP on Linux/MacOS [linux, macos]
+  - Atomic Test #50: ESXi - Disable Account Lockout Policy via PowerCLI [linux]
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -362,7 +366,8 @@
   - Atomic Test #6: sftp remote file copy (pull) [linux, macos]
   - Atomic Test #14: whois file download [linux, macos]
   - Atomic Test #27: Linux Download File and Run [linux]
-- T1001.002 Steganography [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1001.002 Data Obfuscation via Steganography](../../T1001.002/T1001.002.md)
+  - Atomic Test #3: Execute Embedded Script in Image via Steganography [linux]
 - T1008 Fallback Channels [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1090.001 Proxy: Internal Proxy](../../T1090.001/T1090.001.md)
   - Atomic Test #1: Connection Proxy [linux, macos]
@@ -421,7 +426,8 @@
 # lateral-movement
 - T1021.005 Remote Services:VNC [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1080 Taint Shared Content [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1021.004 SSH [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1021.004 Remote Services: SSH](../../T1021.004/T1021.004.md)
+  - Atomic Test #1: ESXi - Enable SSH via PowerCLI [linux]
 - T1563.001 SSH Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1021 Remote Services [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1563 Remote Service Session Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -641,6 +647,8 @@
   - Atomic Test #12: Environment variables discovery on freebsd, macos and linux [linux, macos]
   - Atomic Test #25: Linux List Kernel Modules [linux]
   - Atomic Test #26: FreeBSD List Kernel Modules [linux]
+  - Atomic Test #32: ESXi - VM Discovery using ESXCLI [linux]
+  - Atomic Test #33: ESXi - Darkside system information discovery [linux]
 - T1016.002 Wi-Fi Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1010 Application Window Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1497.003 Time Based Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -653,6 +661,7 @@
 - [T1083 File and Directory Discovery](../../T1083/T1083.md)
   - Atomic Test #3: Nix File and Directory Discovery [linux, macos]
   - Atomic Test #4: Nix File and Directory Discovery 2 [linux, macos]
+  - Atomic Test #7: ESXi - Enumerate VMDKs available on an ESXi Host [linux]
 - [T1049 System Network Connections Discovery](../../T1049/T1049.md)
   - Atomic Test #3: System Network Connections Discovery FreeBSD, Linux & MacOS [linux, macos]
 - T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -691,7 +700,7 @@
 - T1622 Debugger Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 
 # execution
-- T1129 Shared Modules [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1129 Server Software Component [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1059.007 Command and Scripting Interpreter: JavaScript [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1204.002 User Execution: Malicious File [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1053.003 Scheduled Task/Job: Cron](../../T1053.003/T1053.003.md)
@@ -779,6 +788,8 @@
   - Atomic Test #9: Shutdown System via `poweroff` - FreeBSD/Linux [linux]
   - Atomic Test #10: Reboot System via `poweroff` - FreeBSD [linux]
   - Atomic Test #11: Reboot System via `poweroff` - Linux [linux]
+  - Atomic Test #13: ESXi - Terminates VMs using pkill [linux]
+  - Atomic Test #14: ESXi - Avoslocker enumerates VMs and forcefully kills VMs [linux]
 
 # initial-access
 - T1133 External Remote Services [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
