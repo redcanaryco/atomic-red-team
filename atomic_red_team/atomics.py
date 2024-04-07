@@ -30,12 +30,14 @@ mitre_platforms_to_platforms = {
     "Office 365": "office-365",
     "Azure AD": "azure-ad",
     "Google Workspace": "google-workspace",
-    "SaaS": "saas",
     "IaaS": "iaas",
     "Containers": "containers",
+    "All": "",
 }
 platforms = list(Platform.__args__)
 platforms.append("")
+# We dont have any SaaS tests yet. So disabling indexing for SaaS
+platforms.remove("saas")
 
 
 class Atomics:
@@ -67,7 +69,7 @@ class Atomics:
         return attack_patterns_to_tactics
 
     def generate_platform_to_tactics_to_techniques(self) -> dict:
-        platform_to_tactics_to_techniques = {}
+        platform_to_tactics_to_techniques = {"": defaultdict(list)}
         for p in platforms:
             platform_to_tactics_to_techniques[p] = defaultdict(list)
         attack_patterns = self.get_techniques()
@@ -77,14 +79,15 @@ class Atomics:
             kill_chain_phases = list(
                 set([p.phase_name for p in ap.kill_chain_phases]) & set(ordered_tactics)
             )
+            index = {"id": attack_id, "name": ap.name}
             for phase in kill_chain_phases:
+                platform_to_tactics_to_techniques[""][phase].append(index)
                 for platform in ap.x_mitre_platforms:
                     if platform not in mitre_platforms_to_platforms:
                         continue
+                    art_platform = mitre_platforms_to_platforms[platform]
+                    platform_to_tactics_to_techniques[art_platform][phase].append(index)
 
-                    platform_to_tactics_to_techniques[
-                        mitre_platforms_to_platforms[platform]
-                    ][phase].append({"id": attack_id, "name": ap.name})
         return platform_to_tactics_to_techniques
 
     def generate_index(self):
@@ -150,6 +153,9 @@ class Atomics:
 
     def generate_md_indices(self):
         generated_index = self.generate_platform_to_tactics_to_techniques()
+        art_platforms_to_mitre = dict(
+            (v, k) for k, v in mitre_platforms_to_platforms.items()
+        )
 
         for p in generated_index.keys():
             filename = f"{atomics_path}/Indexes/Indexes-Markdown/"
@@ -159,6 +165,10 @@ class Atomics:
                 filename += "index.md"
 
             with open(filename, mode="w") as file:
+                if len(generated_index[p].values()) > 0:
+                    file.write(
+                        f"# {art_platforms_to_mitre[p]} Atomic Tests by ATT&CK Tactic & Technique\n"
+                    )
                 for tactic in ordered_tactics:
                     ts = generated_index[p][tactic]
                     if len(ts) > 0:
@@ -170,20 +180,20 @@ class Atomics:
                                     self.techniques,
                                 )
                             )
-                            if len(t) > 0 and any(
-                                [
-                                    p in atomic.supported_platforms
-                                    for atomic in t[0].atomic_tests
-                                ]
-                            ):
+                            if len(t) > 0 and (any(
+                                    [
+                                        p in atomic.supported_platforms
+                                        for atomic in t[0].atomic_tests
+                                    ]
+                            ) or p == ""):
                                 display_name = t[0].display_name
                                 file.write(
                                     f"- [{technique['id']} {display_name}](../../{technique['id']}/{technique['id']}.md)\n"
                                 )
                                 for test in t[0].atomic_tests:
-                                    if p in test.supported_platforms:
+                                    if p in test.supported_platforms or p == "":
                                         file.write(
-                                            f"  - Atomic Test #{test.test_number.split('-')[1]}: {test.name} [{p}]\n"
+                                            f"  - Atomic Test #{test.test_number.split('-')[1]}: {test.name} [{p or ','.join(test.supported_platforms)}]\n"
                                         )
                             else:
                                 file.write(
