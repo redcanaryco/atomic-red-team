@@ -32,7 +32,7 @@ mitre_platforms_to_platforms = {
     "Google Workspace": "google-workspace",
     "SaaS": "saas",
     "IaaS": "iaas",
-    "Containers": "containers"
+    "Containers": "containers",
 }
 platforms = list(Platform.__args__)
 platforms.append("")
@@ -82,10 +82,9 @@ class Atomics:
                     if platform not in mitre_platforms_to_platforms:
                         continue
 
-                    platform_to_tactics_to_techniques[mitre_platforms_to_platforms[platform]][phase].append({
-                        "id": attack_id,
-                        "name": ap.name
-                    })
+                    platform_to_tactics_to_techniques[
+                        mitre_platforms_to_platforms[platform]
+                    ][phase].append({"id": attack_id, "name": ap.name})
         return platform_to_tactics_to_techniques
 
     def generate_index(self):
@@ -165,8 +164,18 @@ class Atomics:
                     if len(ts) > 0:
                         file.write(f"# {tactic}\n")
                         for technique in sorted(ts, key=lambda x: x["id"]):
-                            t = list(filter(lambda x: x.attack_technique == technique["id"], self.techniques))
-                            if len(t) > 0 and any([p in atomic.supported_platforms for atomic in t[0].atomic_tests]):
+                            t = list(
+                                filter(
+                                    lambda x: x.attack_technique == technique["id"],
+                                    self.techniques,
+                                )
+                            )
+                            if len(t) > 0 and any(
+                                [
+                                    p in atomic.supported_platforms
+                                    for atomic in t[0].atomic_tests
+                                ]
+                            ):
                                 display_name = t[0].display_name
                                 file.write(
                                     f"- [{technique['id']} {display_name}](../../{technique['id']}/{technique['id']}.md)\n"
