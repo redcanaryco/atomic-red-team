@@ -24,8 +24,7 @@ jobs:
         run: poetry install --no-interaction --no-root
 
       - name: validate the format of atomics tests against the spec
-        run: |
-          poetry run python bin/validate/validate.py
+        run: poetry run python atomic_red_team/runner.py validate
 
   upload:
     runs-on: ubuntu-latest
@@ -62,7 +61,7 @@ jobs:
         run: poetry install --no-interaction --no-root
       - name: save labels and reviewers into a file.
         run: |
-          poetry run python bin/generate_labels.py  -t  ${{ secrets.GITHUB_TOKEN }} -pr '${{steps.get_pr_number.outputs.result}}'
+          poetry run python atomic_red_team/runner.py generate-labels --pr '${{steps.get_pr_number.outputs.result}}' --token ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/upload-artifact@v4
         with:
           name: labels.json
