@@ -4,7 +4,7 @@ from typing import List
 
 from ruamel.yaml import YAML
 
-from atomic_red_team.files import used_guids_file
+from files import used_guids_file
 
 yaml = YAML(typ="safe")
 

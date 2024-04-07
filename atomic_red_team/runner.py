@@ -10,14 +10,14 @@ from typing import Annotated
 import typer
 from pydantic import ValidationError
 
-from atomic_red_team.files import used_guids_file, base_path
-from atomic_red_team.guid import (
+from files import used_guids_file, base_path
+from guid import (
     generate_guids_for_yaml,
     get_unique_guid,
 )
-from atomic_red_team.labels import GithubAPI
-from atomic_red_team.models import Technique
-from atomic_red_team.validator import Validator, format_validation_error, yaml
+from labels import GithubAPI
+from models import Technique
+from validator import Validator, format_validation_error, yaml
 
 app = typer.Typer(help="Atomic Red Team Maintenance tool CLI helper")
 
@@ -67,8 +67,8 @@ def generate_counter():
 
 @app.command()
 def generate_labels(
-    pull_request: Annotated[str, typer.Option("--pr")],
-    token: Annotated[str, typer.Option("--token")],
+        pull_request: Annotated[str, typer.Option("--pr")],
+        token: Annotated[str, typer.Option("--token")],
 ):
     """Generate labels for a pull request."""
     api = GithubAPI(token)
