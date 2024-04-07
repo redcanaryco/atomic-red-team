@@ -206,3 +206,35 @@ class Technique(BaseModel):
         for index in range(len(self.atomic_tests)):
             test_number = f"{self.attack_technique}-{index + 1}"
             self.atomic_tests[index].test_number = test_number
+
+
+class Index(BaseModel):
+    tactic: str
+    platform: str
+    attack_technique: str
+    display_name: str
+    test_number: str
+    name: str
+    auto_generated_guid: str
+    executor: str
+
+    def to_csv(self):
+        return [
+            self.tactic,
+            self.attack_technique,
+            self.display_name,
+            self.test_number,
+            self.name,
+            self.auto_generated_guid,
+            self.executor,
+        ]
+
+    def __eq__(self, other):
+        if other.__class__ is self.__class__:
+            return (
+                self.test_number == other.test_number
+                and self.attack_technique == other.attack_technique
+            )
+
+    def __hash__(self):
+        return hash(self.attack_technique + self.test_number)

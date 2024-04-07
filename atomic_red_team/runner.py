@@ -10,7 +10,8 @@ from typing import Annotated
 import typer
 from pydantic import ValidationError
 
-from files import used_guids_file, base_path
+from atomics import Atomics
+from common import used_guids_file, atomics_path
 from guid import (
     generate_guids_for_yaml,
     get_unique_guid,
@@ -23,12 +24,20 @@ app = typer.Typer(help="Atomic Red Team Maintenance tool CLI helper")
 
 
 @app.command()
+def generate_index():
+    """Generate the index for the atomic techniques"""
+    atomics = Atomics()
+    atomics.generate_csv_indices()
+    atomics.generate_md_indices()
+
+
+@app.command()
 def generate_guids():
     """Generates missing GUIDs for the atomic files"""
     with open(used_guids_file, "r") as file:
         used_guids = file.readlines()
 
-    for file in glob.glob(f"{base_path}/T*/T*.yaml"):
+    for file in glob.glob(f"{atomics_path}/T*/T*.yaml"):
         generate_guids_for_yaml(file, partial(get_unique_guid, guids=used_guids))
 
 
@@ -47,7 +56,7 @@ def generate_schemas():
 def generate_counter():
     """Generate atomic tests count svg"""
     test_count = 0
-    for file in glob.glob(f"{base_path}/T*/T*.yaml"):
+    for file in glob.glob(f"{atomics_path}/T*/T*.yaml"):
         with open(file, "r") as f:
             yaml_data = yaml.load(f)
             if yaml_data is not None and "atomic_tests" in yaml_data:
@@ -84,7 +93,7 @@ def validate():
     validator = Validator()
     errors = defaultdict(list)
 
-    for folder in glob.glob(f"{base_path}/atomics/T*"):
+    for folder in glob.glob(f"{atomics_path}/atomics/T*"):
         for item in os.scandir(folder):
             try:
                 validator.validate(item)
@@ -96,7 +105,7 @@ def validate():
     else:
         print("Validation failed")
         for i, errors in errors.items():
-            print(f"Error occurred with {i.replace(f'{base_path}/', '')}.")
+            print(f"Error occurred with {i.replace(f'{atomics_path}/', '')}.")
             print("Each of the following are why it failed:")
             for error in errors:
                 if isinstance(error, ValidationError):
