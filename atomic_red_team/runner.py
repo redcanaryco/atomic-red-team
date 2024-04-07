@@ -17,7 +17,7 @@ from atomic_red_team.guid import (
 )
 from atomic_red_team.labels import GithubAPI
 from atomic_red_team.models import Technique
-from atomic_red_team.validate import Validator, format_validation_error, yaml
+from atomic_red_team.validator import Validator, format_validation_error, yaml
 
 app = typer.Typer(help="Atomic Red Team Maintenance tool CLI helper")
 
