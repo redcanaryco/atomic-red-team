@@ -40661,9 +40661,8 @@ command-and-control:
         command: |
           networksetup -setwebproxy #{interface} #{proxy_server} #{proxy_port}
           networksetup -setsecurewebproxy #{interface} #{proxy_server} #{proxy_port}
-        cleanup_command: |
-          networksetup -setwebproxystate #{interface} off
-          networksetup -setsecurewebproxystate #{interface} off
+        cleanup_command: "networksetup -setwebproxystate #{interface} off\nnetworksetup
+          -setsecurewebproxystate #{interface} off  \n"
   T1102.001:
     technique:
       x_mitre_platforms:
