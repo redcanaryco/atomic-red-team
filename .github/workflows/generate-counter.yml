@@ -18,9 +18,7 @@ jobs:
           python-version: '3.11.2'
           cache: 'poetry'
       - name: Install dependencies
-        run: poetry install --no-interaction && pip install -e .
-        env:
-          PYTHONPATH: ${{ github.workspace }}
+        run: poetry install --no-interaction --no-root
       - name: Generate shields.io URL
         run: poetry run python atomic_red_team/runner.py generate-counter
         id: counter
