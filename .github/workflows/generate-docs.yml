@@ -13,6 +13,11 @@ jobs:
           token: ${{ secrets.PROTECTED_BRANCH_PUSH_TOKEN }}
       - name: Install poetry
         run: pipx install poetry
+      - name: setup ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7
+          bundler-cache: true
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11.2"
@@ -29,19 +34,6 @@ jobs:
         shell: bash
       - name: Generate and commit unique GUIDs for each atomic test
         run: poetry run python atomic_red_team/runner.py generate-guids
-  generate-docs:
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout repo
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.PROTECTED_BRANCH_PUSH_TOKEN }}
-      - name: setup ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 2.7
-          bundler-cache: true
-
       - name: generate markdown docs for atomics
         run: |
           bin/generate-atomic-docs.rb
