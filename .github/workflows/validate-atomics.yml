@@ -25,8 +25,8 @@ jobs:
         env:
           PYTHONPATH: ${{ github.workspace }}
       - name: validate the format of atomics tests against the spec
-        run: poetry run python atomic_red_team/runner.py validate
-
+        run: poetry run python runner.py validate
+        working-directory: atomic_red_team
   upload:
     runs-on: ubuntu-latest
     steps:
