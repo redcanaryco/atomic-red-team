@@ -10,6 +10,8 @@ jobs:
     steps:
       - name: checkout repo
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PROTECTED_BRANCH_PUSH_TOKEN }}
       - name: Install poetry
         run: pipx install poetry
       - uses: actions/setup-python@v5
