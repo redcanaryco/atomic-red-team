@@ -2,7 +2,7 @@ name: generate-svg-counter
 
 on:
   push:
-    branches: ["master"]
+    branches: [ "master" ]
 
 jobs:
   generate-counter:
@@ -15,18 +15,20 @@ jobs:
         run: pipx install poetry
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11.2' 
+          python-version: '3.11.2'
           cache: 'poetry'
       - name: Install dependencies
         run: poetry install --no-interaction --no-root
       - name: Generate shields.io URL
-        run: poetry run python bin/generate_counter.py -f atomics/
+        run: poetry run python atomic_red_team/runner.py generate-counter
         id: counter
       - name: Update README
         run: |
           echo ${{ steps.counter.outputs.result }}
           sed -i "s|https://img.shields.io/badge/Atomics-.*-flat.svg|${{ steps.counter.outputs.result }}|" README.md
         shell: bash
+      - name: Generate and commit unique GUIDs for each atomic test
+        run: poetry run python atomic_red_team/runner.py generate-guids
       - name: update github with new site
         run: |
           # configure git to prep for commit
@@ -34,7 +36,7 @@ jobs:
           git config user.name "publish bot"
           git config --global push.default simple
           git add README.md
-          git commit --allow-empty -m "updating atomics count in README.md [ci skip]"
+          git commit --allow-empty -m "updating atomics count and guids [ci skip]"
           # push quietly to prevent showing the token in log
           # no need to provide any credentials
           git push --force
