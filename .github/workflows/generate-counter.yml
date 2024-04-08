@@ -8,17 +8,16 @@ jobs:
   generate-counter:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.PROTECTED_BRANCH_PUSH_TOKEN }}
+      - name: checkout repo
+        uses: actions/checkout@v4
       - name: Install poetry
         run: pipx install poetry
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11.2'
-          cache: 'poetry'
+          python-version: "3.11.2"
+          cache: "poetry"
       - name: Install dependencies
-        run: poetry install --no-interaction --no-root
+        run: poetry install --no-interaction
       - name: Generate shields.io URL
         run: poetry run python atomic_red_team/runner.py generate-counter
         id: counter
