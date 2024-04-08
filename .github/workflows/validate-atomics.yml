@@ -22,8 +22,10 @@ jobs:
 
       - name: Install dependencies
         run: poetry install --no-interaction --no-root
+
       - name: validate the format of atomics tests against the spec
         run: poetry run python atomic_red_team/runner.py validate
+
   upload:
     runs-on: ubuntu-latest
     steps:
