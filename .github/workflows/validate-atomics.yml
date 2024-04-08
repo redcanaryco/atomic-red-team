@@ -21,7 +21,7 @@ jobs:
           cache: "poetry"
 
       - name: Install dependencies
-        run: poetry install --no-interaction --no-root
+        run: poetry install --no-interaction
 
       - name: validate the format of atomics tests against the spec
         run: poetry run python atomic_red_team/runner.py validate
@@ -58,7 +58,7 @@ jobs:
             }
           result-encoding: string
       - name: Install dependencies
-        run: poetry install --no-interaction --no-root
+        run: poetry install --no-interaction
       - name: save labels and reviewers into a file.
         run: |
           poetry run python atomic_red_team/runner.py generate-labels --pr '${{steps.get_pr_number.outputs.result}}' --token ${{ secrets.GITHUB_TOKEN }}
