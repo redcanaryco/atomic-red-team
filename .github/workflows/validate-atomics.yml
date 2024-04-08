@@ -22,7 +22,8 @@ jobs:
 
       - name: Install dependencies
         run: poetry install --no-interaction
-
+        env:
+          PYTHONPATH: ${{ github.workspace }}
       - name: validate the format of atomics tests against the spec
         run: poetry run python atomic_red_team/runner.py validate
 
