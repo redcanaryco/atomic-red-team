@@ -18,13 +18,12 @@ jobs:
           python-version: '3.11.2'
           cache: 'poetry'
       - name: Install dependencies
-        run: poetry install --no-interaction
+        run: poetry install --no-interaction && pip install -e .
         env:
           PYTHONPATH: ${{ github.workspace }}
       - name: Generate shields.io URL
-        run: poetry run python runner.py generate-counter
+        run: poetry run python atomic_red_team/runner.py generate-counter
         id: counter
-        working-directory: atomic_red_team
       - name: Update README
         run: |
           echo ${{ steps.counter.outputs.result }}
