@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 from pydantic import ValidationError
 
-from atomic_red_team.validator import Validator
+from ..validator import Validator
 
 test_data_path = f"{dirname(dirname(realpath(__file__)))}/test_data"
 

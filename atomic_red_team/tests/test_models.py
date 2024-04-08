@@ -3,7 +3,7 @@ from hypothesis.provisional import urls
 from pydantic import AnyUrl
 from pydantic.networks import IPvAnyAddress
 
-from atomic_red_team.models import (
+from ..models import (
     Technique,
     Atomic,
     StringArg,
