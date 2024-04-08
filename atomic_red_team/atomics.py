@@ -1,9 +1,11 @@
 import csv
 import glob
+import json
 from collections import defaultdict
-from functools import cache
+from functools import lru_cache
 from itertools import chain
 
+from attack import MitreEnrichedTechnique
 from common import atomics_path, attack
 from models import Technique, Index, Platform
 from validator import yaml
@@ -41,7 +43,8 @@ platforms.remove("saas")
 
 
 class Atomics:
-    techniques = []
+    techniques = []  # contains Atomic Red Team techniques
+    attack_techniques = []  # contains MITRE ATT&CK techniques
 
     def __init__(self):
         for file in glob.glob(f"{atomics_path}/T*/T*.yaml"):
@@ -49,53 +52,39 @@ class Atomics:
                 atomic = yaml.load(f)
                 self.techniques.append(Technique(**atomic))
 
-    @cache
+    @lru_cache(maxsize=None)
     def get_techniques(self):
-        return attack.get_techniques(
+        ts = {t.attack_technique: t for t in self.techniques}
+        attack_patterns = attack.get_techniques(
             include_subtechniques=True, remove_revoked_deprecated=True
         )
-
-    @cache
-    def generate_attack_patterns_to_tactics(self) -> dict:
-        attack_patterns_to_tactics = {}
-        attack_patterns = self.get_techniques()
-
+        techniques = []
         for ap in attack_patterns:
-            attack_id = ap.external_references[0].external_id
-            kill_chain_phases = [p.phase_name for p in ap.kill_chain_phases]
-            attack_patterns_to_tactics[attack_id] = list(
-                set(kill_chain_phases) & set(ordered_tactics)
-            )
-        return attack_patterns_to_tactics
+            t = MitreEnrichedTechnique(**json.loads(ap.serialize()))
+            t.technique = ts.get(t.attack_id)
+            techniques.append(t)
+        return techniques
 
     def generate_platform_to_tactics_to_techniques(self) -> dict:
-        platform_to_tactics_to_techniques = {"": defaultdict(list)}
-        for p in platforms:
-            platform_to_tactics_to_techniques[p] = defaultdict(list)
-        attack_patterns = self.get_techniques()
+        platform_to_tactics_to_techniques = {p: defaultdict(list) for p in platforms}
 
-        for ap in attack_patterns:
-            attack_id = ap.external_references[0].external_id
-            kill_chain_phases = list(
-                set([p.phase_name for p in ap.kill_chain_phases]) & set(ordered_tactics)
-            )
-            index = {"id": attack_id, "name": ap.name}
-            for phase in kill_chain_phases:
-                platform_to_tactics_to_techniques[""][phase].append(index)
-                for platform in ap.x_mitre_platforms:
+        for ap in self.get_techniques():
+            for phase in ap.phases:
+                platform_to_tactics_to_techniques[""][phase].append(ap)
+                for platform in ap.platforms:
                     if platform not in mitre_platforms_to_platforms:
                         continue
                     art_platform = mitre_platforms_to_platforms[platform]
-                    platform_to_tactics_to_techniques[art_platform][phase].append(index)
+                    platform_to_tactics_to_techniques[art_platform][phase].append(ap)
 
         return platform_to_tactics_to_techniques
 
     def generate_index(self):
-        index = {}
-        attack_patterns_to_tactics = self.generate_attack_patterns_to_tactics()
+        attack_patterns_to_tactics = {
+            t.attack_id: t.phases for t in self.get_techniques()
+        }
 
-        for platform in platforms:
-            index[platform] = defaultdict(set)
+        index = {platform: defaultdict(set) for platform in platforms}
 
         for technique in self.techniques:
             for atomic in technique.atomic_tests:
@@ -151,53 +140,46 @@ class Atomics:
                     csv_writer.writerow(headers)
                     csv_writer.writerows(rows)
 
-    def generate_md_indices(self):
+    def generate_markdown_index(self):
+        def fname(platform):
+            f = f"{atomics_path}/Indexes/Indexes-Markdown/"
+            if platform:
+                f += f'{platform.replace(":", "-")}-index.md'
+            else:
+                f += "index.md"
+            return f
+
         generated_index = self.generate_platform_to_tactics_to_techniques()
         art_platforms_to_mitre = dict(
             (v, k) for k, v in mitre_platforms_to_platforms.items()
         )
 
-        for p in generated_index.keys():
-            filename = f"{atomics_path}/Indexes/Indexes-Markdown/"
-            if p:
-                filename += f'{p.replace(":", "-")}-index.md'
-            else:
-                filename += "index.md"
+        for platform in mitre_platforms_to_platforms.values():
+            filename = fname(platform)
+            content = f"# {art_platforms_to_mitre[platform]} Atomic Tests by ATT&CK Tactic & Technique\n\n"
+            for tactic in ordered_tactics:
+                techniques = sorted(generated_index[platform][tactic], key=lambda x: x.attack_id)
+                if len(techniques) > 0:
+                    content += f"# {tactic}\n\n"
+                    for technique in techniques:
+                        if technique.technique and technique.includes_platform(platform):
+                            attack_id = technique.attack_id
+                            display_name = technique.technique.display_name
+                            content += f"- [{attack_id} {display_name}](../../{attack_id}/{attack_id}.md)\n"
 
-            with open(filename, mode="w") as file:
-                if len(generated_index[p].values()) > 0:
-                    file.write(
-                        f"# {art_platforms_to_mitre[p]} Atomic Tests by ATT&CK Tactic & Technique\n"
-                    )
-                for tactic in ordered_tactics:
-                    ts = generated_index[p][tactic]
-                    if len(ts) > 0:
-                        file.write(f"# {tactic}\n")
-                        for technique in sorted(ts, key=lambda x: x["id"]):
-                            t = list(
-                                filter(
-                                    lambda x: x.attack_technique == technique["id"],
-                                    self.techniques,
-                                )
-                            )
-                            if len(t) > 0 and (any(
-                                    [
-                                        p in atomic.supported_platforms
-                                        for atomic in t[0].atomic_tests
-                                    ]
-                            ) or p == ""):
-                                display_name = t[0].display_name
-                                file.write(
-                                    f"- [{technique['id']} {display_name}](../../{technique['id']}/{technique['id']}.md)\n"
-                                )
-                                for test in t[0].atomic_tests:
-                                    if p in test.supported_platforms or p == "":
-                                        file.write(
-                                            f"  - Atomic Test #{test.test_number.split('-')[1]}: {test.name} [{p or ','.join(test.supported_platforms)}]\n"
-                                        )
-                            else:
-                                file.write(
-                                    f"- {technique['id']} {technique['name']} [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)\n"
-                                )
-
-                        file.write("\n")
+                            for test in technique.technique.atomic_tests:
+                                test_platforms = None
+                                if "iaas" in platform:
+                                    test_platforms = ', '.join(
+                                        list(filter(lambda x: "iaas" in x, test.supported_platforms)))
+                                if platform == "":
+                                    test_platforms = ', '.join(test.supported_platforms)
+                                elif platform in test.supported_platforms:
+                                    test_platforms = platform
+                                if test_platforms:
+                                    content += f"  - Atomic Test #{test.test_number.split('-')[1]}: {test.name} [{test_platforms}]\n"
+                        else:
+                            content += f"- {technique.attack_id} {technique.name} [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)\n"
+                    content += "\n"
+                with open(filename, mode="w") as file:
+                    file.write(content)
