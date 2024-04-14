@@ -19,6 +19,8 @@ atomic_tests:
       auditctl -D
     name: sh
     elevation_required: true
+    cleanup_command: |
+      service auditd restart
 - name: Disable auditd using auditctl
   description: |
     The command `auditctl -e 0` disables the audit system. By setting the parameter to `0`, auditing is deactivated, halting the monitoring and recording of security-related events. This action stops the generation of audit logs, ceasing the collection of data regarding system activities. Disabling auditing may be done for various reasons, such as troubleshooting, performance optimization, or temporarily suspending auditing requirements, but it reduces visibility into system events and can impact security monitoring and compliance efforts.
@@ -37,3 +39,5 @@ atomic_tests:
       auditctl -e 0
     name: sh
     elevation_required: true
+    cleanup_command: |
+      auditctl -e 1
