@@ -211,6 +211,7 @@ atomic_tests:
     In Windows operating systems, command line auditing is controlled through the following registry value:
     
       Registry Path: HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System\Audit
+      
       Registry Value: ProcessCreationIncludeCmdLine_Enabled
     
     When command line auditing is enabled, the system records detailed information about command execution, including the command executed, the user account responsible for executing the command, and the timestamp of the execution.
@@ -230,10 +231,8 @@ atomic_tests:
     name: command_prompt
     elevation_required: true
     command: |
-      echo Commencing Attack - Disabling Registry Value
       reg add HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System\Audit /v ProcessCreationIncludeCmdLine_Enabled /t REG_DWORD /d 0 /f
     cleanup_command: |
-      echo Commencing Cleanup - Restoring Registry Value
       reg add HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System\Audit /v ProcessCreationIncludeCmdLine_Enabled /t REG_DWORD /d 1 /f
 - name: Disable Windows Command Line Auditing using Powershell Cmdlet
   auto_generated_guid: 95f5c72f-6dfe-45f3-a8c1-d8faa07176fa
@@ -241,6 +240,7 @@ atomic_tests:
     In Windows operating systems, command line auditing is controlled through the following registry value:
     
       Registry Path: HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System\Audit
+      
       Registry Value: ProcessCreationIncludeCmdLine_Enabled
     
     When command line auditing is enabled, the system records detailed information about command execution, including the command executed, the user account responsible for executing the command, and the timestamp of the execution.
@@ -261,9 +261,7 @@ atomic_tests:
     name: powershell
     elevation_required: true
     command: |
-      echo "Commencing Attack - Disabling Registry Value"
       New-ItemProperty -Path "HKLM:Software\Microsoft\Windows\CurrentVersion\Policies\System\Audit" -Name "ProcessCreationIncludeCmdLine_Enabled" -Value 0 -PropertyType DWORD -Force -ErrorAction Ignore
     cleanup_command: |
-      echo "Commencing Cleanup - Restoring Registry Value"
       New-ItemProperty -Path "HKLM:Software\Microsoft\Windows\CurrentVersion\Policies\System\Audit" -Name "ProcessCreationIncludeCmdLine_Enabled" -Value 1 -PropertyType DWORD -Force -ErrorAction Ignore
       

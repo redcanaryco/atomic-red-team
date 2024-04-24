@@ -181,3 +181,31 @@ atomic_tests:
       dir \\#{computer_ip}\admin$
       dir \\#{computer_ip}\IPC$
     name: command_prompt
+- name: Enumerate All Network Shares with SharpShares
+  description: |
+    SharpShares is a command line tool that can be integrated with Cobalt Strike's execute-assembly module, allowing for the enumeration of network shares. 
+    This technique has been utilized by various ransomware groups, including BianLian.
+    [Reference](https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-136a)
+  supported_platforms:
+  - windows
+  input_arguments:
+    output_path:
+      description: File to output enumeration results to
+      type: String
+      default: '$env:temp\T1135SharpSharesOutput.txt'
+    sharp_path:
+      description: Path to the SharpShares executable
+      type: String
+      default: PathToAtomicsFolder\..\ExternalPayloads\SharpShares.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: The SharpShares executable must exist on disk
+    prereq_command: if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\SharpShares.exe") {exit 0} else {exit 1}
+    get_prereq_command: |-
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://github.com/mitchmoser/SharpShares/releases/download/v2.4/SharpShares.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\SharpShares.exe"
+  executor:
+    command: cmd /c '#{sharp_path}' /ldap:all | out-file -filepath "#{output_path}"
+    cleanup_command: remove-item "#{output_path}" -force -erroraction silentlycontinue
+    name: powershell
+    elevation_required: false
