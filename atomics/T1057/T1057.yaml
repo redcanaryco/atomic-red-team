@@ -86,3 +86,32 @@ atomic_tests:
     command: |
       tasklist | findstr #{process_to_enumerate}
     name: command_prompt
+- name: Process Discovery - Process Hacker
+  description: Process Hacker can be exploited to infiltrate system processes, identify weak points, or achieve unauthorized control over systems. However, its malicious use can often be flagged by security defenses, rendering it a perilous tool for illegitimate purposes.
+  supported_platforms:
+  - windows
+  input_arguments:
+    uninstall_exe:
+      description: Process hacker uninstallation executables.
+      type: string
+      default: unins000.exe
+    processhacker_exe:
+      description: Process hacker installation executables.
+      type: string
+      default: ProcessHacker.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: Process Hacker must be installed in the location
+    prereq_command: |
+      if (Test-Path "c:\Program Files\Process Hacker 2\#{processhacker_exe}") {exit 0} else {exit 1}
+    get_prereq_command: |-
+      Write-Host Downloading Process Hacker
+      New-Item -Type Directory "C:\Temp\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://versaweb.dl.sourceforge.net/project/processhacker/processhacker2/processhacker-2.39-setup.exe" -OutFile "C:\Temp\ExternalPayloads\processhacker-2.39-setup.exe"
+      Write-Host Installing Process Hacker
+      Start-Process "c:\Temp\ExternalPayloads\processhacker-2.39-setup.exe" -Wait -ArgumentList "/s"
+  executor:
+    command: Start-Process -FilePath "$Env:ProgramFiles\Process Hacker 2\#{processhacker_exe}"
+    cleanup_command: Start-Process -FilePath "$Env:ProgramFiles\Process Hacker 2\#{uninstall_exe}"
+    name: powershell
+    elevation_required: true
