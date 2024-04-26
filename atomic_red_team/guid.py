@@ -14,7 +14,7 @@ def get_unique_guid(guids: List[str]):
     guid = str(uuid.uuid4())
     if guid not in guids:
         with open(used_guids_file, "a") as f:  # append mode
-            f.write(guid)
+            f.write(f"{guid}\n")
         return guid
     else:
         return get_unique_guid(guids)
