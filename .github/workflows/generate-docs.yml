@@ -32,7 +32,7 @@ jobs:
           sed -i "s|https://img.shields.io/badge/Atomics-.*-flat.svg|${{ steps.counter.outputs.result }}|" README.md
         shell: bash
       - name: Generate and commit unique GUIDs for each atomic test
-        run: poetry run runner.py generate-guids
+        run: poetry run python runner.py generate-guids
         working-directory: atomic_red_team
         env:
           PYTHONPATH: ${{ github.workspace }}
