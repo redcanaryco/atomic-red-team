@@ -1,14 +1,24 @@
 import csv
 import glob
 import json
+import os
 from collections import defaultdict
 from functools import lru_cache
 from itertools import chain
+from typing import List
 
-from attack import MitreEnrichedTechnique
-from common import atomics_path, attack
-from models import Technique, Index, Platform
-from validator import yaml
+from mitreattack.navlayers.core import (
+    Versions,
+    Gradient,
+    LegendItem,
+    Filter,
+    Layer,
+)
+
+from atomic_red_team.attack import MitreEnrichedTechnique
+from atomic_red_team.common import atomics_path, attack
+from atomic_red_team.models import Technique, Index, Platform
+from atomic_red_team.validator import yaml
 
 ordered_tactics = [
     "reconnaissance",
@@ -36,6 +46,7 @@ mitre_platforms_to_platforms = {
     "Containers": "containers",
     "All": "",
 }
+art_platforms_to_mitre = dict((v, k) for k, v in mitre_platforms_to_platforms.items())
 platforms = list(Platform.__args__)
 platforms.append("")
 # We dont have any SaaS tests yet. So disabling indexing for SaaS
@@ -53,7 +64,7 @@ class Atomics:
                 self.techniques.append(Technique(**atomic))
 
     @lru_cache(maxsize=None)
-    def get_techniques(self):
+    def get_techniques(self) -> List[MitreEnrichedTechnique]:
         ts = {t.attack_technique: t for t in self.techniques}
         attack_patterns = attack.get_techniques(
             include_subtechniques=True, remove_revoked_deprecated=True
@@ -150,19 +161,20 @@ class Atomics:
             return f
 
         generated_index = self.generate_platform_to_tactics_to_techniques()
-        art_platforms_to_mitre = dict(
-            (v, k) for k, v in mitre_platforms_to_platforms.items()
-        )
 
         for platform in mitre_platforms_to_platforms.values():
             filename = fname(platform)
             content = f"# {art_platforms_to_mitre[platform]} Atomic Tests by ATT&CK Tactic & Technique\n\n"
             for tactic in ordered_tactics:
-                techniques = sorted(generated_index[platform][tactic], key=lambda x: x.attack_id)
+                techniques = sorted(
+                    generated_index[platform][tactic], key=lambda x: x.attack_id
+                )
                 if len(techniques) > 0:
                     content += f"# {tactic}\n\n"
                     for technique in techniques:
-                        if technique.technique and technique.includes_platform(platform):
+                        if technique.technique and technique.includes_platform(
+                            platform
+                        ):
                             attack_id = technique.attack_id
                             display_name = technique.technique.display_name
                             content += f"- [{attack_id} {display_name}](../../{attack_id}/{attack_id}.md)\n"
@@ -170,10 +182,16 @@ class Atomics:
                             for test in technique.technique.atomic_tests:
                                 test_platforms = None
                                 if "iaas" in platform:
-                                    test_platforms = ', '.join(
-                                        list(filter(lambda x: "iaas" in x, test.supported_platforms)))
+                                    test_platforms = ", ".join(
+                                        list(
+                                            filter(
+                                                lambda x: "iaas" in x,
+                                                test.supported_platforms,
+                                            )
+                                        )
+                                    )
                                 if platform == "":
-                                    test_platforms = ', '.join(test.supported_platforms)
+                                    test_platforms = ", ".join(test.supported_platforms)
                                 elif platform in test.supported_platforms:
                                     test_platforms = platform
                                 if test_platforms:
@@ -183,3 +201,45 @@ class Atomics:
                     content += "\n"
                 with open(filename, mode="w") as file:
                     file.write(content)
+
+    def generate_nav_layers(self):
+        art_platforms_to_mitre["iaas:gcp"] = "GCP"
+        art_platforms_to_mitre["iaas:aws"] = "AWS"
+        art_platforms_to_mitre["iaas:azure"] = "Azure"
+        for platform in platforms:
+            nav_layer_techniques = []
+            for technique in self.get_techniques():
+                if technique.technique and technique.includes_platform(platform):
+                    nav_layer_techniques.append(technique.to_nav_layer_technique())
+            name = "Atomic Red Team"
+            filename = "art-navigator-layer"
+            f = Filter()
+            if platform != "":
+                name = f"{name} ({art_platforms_to_mitre[platform]})"
+                filename += f"-{platform}".replace(":", "-")
+                f.platforms = [platform.split(":")[0]]
+            else:
+                f.platforms = list(mitre_platforms_to_platforms.keys())
+                f.platforms.remove("All")
+
+            layer_dict = {
+                "name": name,
+                "domain": "enterprise-attack",
+                "description": f"{name} MITRE ATT&CK Navigator Layer",
+                "filters": f,
+                "versions": Versions(attack="15", navigator="4.9.5"),
+                "gradient": Gradient(
+                    colors=["#ffffff", "#ce232e"], minValue=0, maxValue=10
+                ),
+                "legendItems": [
+                    LegendItem(label="10 or more tests", color="#ce232e"),
+                    LegendItem(label="1 or more tests", color="#ffffff"),
+                ],
+                "techniques": nav_layer_techniques,
+            }
+            Layer(layer_dict).to_file(
+                os.path.join(
+                    atomics_path,
+                    f"Indexes/Attack-Navigator-Layers/{filename}.json",
+                )
+            )

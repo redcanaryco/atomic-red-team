@@ -25,10 +25,11 @@ app = typer.Typer(help="Atomic Red Team Maintenance tool CLI helper")
 
 @app.command()
 def generate_index():
-    """Generate the index for the atomic techniques"""
+    """Generate the indices, markdown, nav layers for the atomics"""
     atomics = Atomics()
     atomics.generate_csv_indices()
     atomics.generate_markdown_index()
+    atomics.generate_nav_layers()
 
 
 @app.command()
@@ -76,8 +77,8 @@ def generate_counter():
 
 @app.command()
 def generate_labels(
-        pull_request: Annotated[str, typer.Option("--pr")],
-        token: Annotated[str, typer.Option("--token")],
+    pull_request: Annotated[str, typer.Option("--pr")],
+    token: Annotated[str, typer.Option("--token")],
 ):
     """Generate labels for a pull request."""
     api = GithubAPI(token)
