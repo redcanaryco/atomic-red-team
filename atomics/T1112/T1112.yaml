@@ -1069,3 +1069,20 @@ atomic_tests:
     cleanup_command: |
        reg delete "HKCU\Software\Microsoft\Terminal Server Client" /v AuthenticationLevelOverride
     name: command_prompt
+- name: Enable RDP via Registry (fDenyTSConnections)
+  description: |
+    Modify the registry value of fDenyTSConnections to allow incoming RDP connections. 
+    This activity has been observed by multiple ransomware groups, including Hive ransomware. 
+    [Reference](https://www.rapid7.com/blog/post/2023/01/11/increasing-the-sting-of-hive-ransomware/)
+  supported_platforms:
+  - windows
+  input_arguments:
+    remove_rdp_access_during_cleanup:
+      description: Set to 1 if you want the cleanup to remove RDP access to machine
+      type: integer
+      default: "0"
+  executor:
+    command: reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
+    cleanup_command: 'if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1)'
+    name: command_prompt
+    elevation_required: true   
