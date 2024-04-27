@@ -3,6 +3,7 @@
 - T1205.002 Socket Filters [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.009 Embedded Payloads [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1556.003 Modify Authentication Process: Pluggable Authentication Modules [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1564.012 File/Path Exclusions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1222.002 File and Directory Permissions Modification: FreeBSD, Linux and Mac File and Directory Permissions Modification](../../T1222.002/T1222.002.md)
   - Atomic Test #1: chmod - Change file or folder mode (numeric mode) [linux, macos]
   - Atomic Test #2: chmod - Change file or folder mode (symbolic mode) [linux, macos]
@@ -17,6 +18,7 @@
   - Atomic Test #13: Chown through c script [macos, linux]
 - T1574.007 Path Interception by PATH Environment Variable [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1564.008 Email Hiding Rules [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1027.013 Encrypted/Encoded File [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1014 Rootkit [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1548.003 Abuse Elevation Control Mechanism: Sudo and Sudo Caching](../../T1548.003/T1548.003.md)
   - Atomic Test #1: Sudo usage [macos, linux]
@@ -79,6 +81,7 @@
 - T1564.011 Ignore Process Interrupts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1497.003 Time Based Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1562.004 Impair Defenses: Disable or Modify System Firewall [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1218.015 Electron Applications [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1553.006 Code Signing Policy Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1027.001 Obfuscated Files or Information: Binary Padding](../../T1027.001/T1027.001.md)
   - Atomic Test #1: Pad Binary to Change Hash - Linux/macOS dd [linux, macos]
@@ -157,6 +160,7 @@
 - [T1036.006 Masquerading: Space after Filename](../../T1036.006/T1036.006.md)
   - Atomic Test #1: Space After Filename (Manual) [macos]
   - Atomic Test #2: Space After Filename [macos, linux]
+- T1548.006 TCC Manipulation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1564.001 Hide Artifacts: Hidden Files and Directories](../../T1564.001/T1564.001.md)
   - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
   - Atomic Test #2: Mac Hidden file [macos]
@@ -214,7 +218,7 @@
 - [T1547.015 Boot or Logon Autostart Execution: Login Items](../../T1547.015/T1547.015.md)
   - Atomic Test #2: Add macOS LoginItem using Applescript [macos]
 - T1205.001 Port Knocking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1554 Compromise Client Software Binary [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1554 Compromise Host Software Binary [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.014 Event Triggered Execution: Emond](../../T1546.014/T1546.014.md)
   - Atomic Test #1: Persistance with Event Monitor - emond [macos]
 - T1098 Account Manipulation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -301,6 +305,7 @@
   - Atomic Test #6: sftp remote file copy (pull) [linux, macos]
   - Atomic Test #14: whois file download [linux, macos]
   - Atomic Test #31: File download via nscurl [macos]
+- T1665 Hide Infrastructure [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1001.002 Data Obfuscation via Steganography [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1008 Fallback Channels [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1090.001 Proxy: Internal Proxy](../../T1090.001/T1090.001.md)
@@ -424,6 +429,7 @@
   - Atomic Test #1: Copy in loginwindow.plist for Re-Opened Applications [macos]
   - Atomic Test #2: Re-Opened Applications using LoginHook [macos]
   - Atomic Test #3: Append to existing loginwindow for Re-Opened Applications [macos]
+- T1548.006 TCC Manipulation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1053.002 Scheduled Task/Job: At [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574.004 Dylib Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
@@ -558,6 +564,8 @@
 - [T1518 Software Discovery](../../T1518/T1518.md)
   - Atomic Test #3: Find and Display Safari Browser Version [macos]
 - T1622 Debugger Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1124 System Time Discovery](../../T1124/T1124.md)
+  - Atomic Test #3: System Time Discovery in FreeBSD/macOS [linux, macos]
 
 # execution
 - T1129 Server Software Component [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
