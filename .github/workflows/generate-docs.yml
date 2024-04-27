@@ -5,13 +5,13 @@ on:
 
 jobs:
   generate-docs:
-    name: Generate markdown docs for Atomic Red Team
     runs-on: ubuntu-latest
     steps:
       - name: checkout repo
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.PROTECTED_BRANCH_PUSH_TOKEN }}
+
       - name: Install poetry
         run: pipx install poetry
       - uses: actions/setup-python@v5
@@ -20,22 +20,26 @@ jobs:
           cache: "poetry"
       - name: Install dependencies
         run: poetry install --no-interaction
+
       - name: Generate shields.io URL
         run: poetry run python runner.py generate-counter
         id: counter
         working-directory: atomic_red_team
         env:
           PYTHONPATH: ${{ github.workspace }}
+
       - name: Update README
         run: |
           echo ${{ steps.counter.outputs.result }}
           sed -i "s|https://img.shields.io/badge/Atomics-.*-flat.svg|${{ steps.counter.outputs.result }}|" README.md
         shell: bash
+
       - name: Generate and commit unique GUIDs for each atomic test
         run: poetry run python runner.py generate-guids
         working-directory: atomic_red_team
         env:
           PYTHONPATH: ${{ github.workspace }}
+
       - name: setup ruby
         uses: ruby/setup-ruby@v1
         with:
