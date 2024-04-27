@@ -10,14 +10,14 @@ from typing import Annotated
 import typer
 from pydantic import ValidationError
 
-from common import used_guids_file, atomics_path
-from guid import (
+from atomic_red_team.common import used_guids_file, atomics_path
+from atomic_red_team.guid import (
     generate_guids_for_yaml,
     get_unique_guid,
 )
-from labels import GithubAPI
-from models import Technique
-from validator import Validator, format_validation_error, yaml
+from atomic_red_team.labels import GithubAPI
+from atomic_red_team.models import Technique
+from atomic_red_team.validator import Validator, format_validation_error, yaml
 
 app = typer.Typer(help="Atomic Red Team Maintenance tool CLI helper")
 

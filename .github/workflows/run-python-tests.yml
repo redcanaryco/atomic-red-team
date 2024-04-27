@@ -1,0 +1,29 @@
+name: validate-python-file-changes
+
+on:
+  pull_request:
+    branches:
+      - master
+    paths:
+      - "atomic_red_team/**/*.py"
+
+jobs:
+  validate-python-file-changes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v4
+      - name: Install poetry
+        run: pipx install poetry
+      - name: setup python3.11
+        uses: actions/setup-python@v5
+        id: setup-python
+        with:
+          python-version: "3.11.2"
+          cache: "poetry"
+
+      - name: Install dependencies
+        run: poetry install --no-interaction
+
+      - name: Run pytest
+        run: poetry run pytest atomic_red_team/tests
