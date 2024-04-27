@@ -2,7 +2,7 @@
 
 # Atomic Red Team
 
-![GitHub Action Status](https://github.com/redcanaryco/atomic-red-team/actions/workflows/validate-atomics.yml/badge.svg?branch=master) ![Atomics](https://img.shields.io/badge/Atomics-1545-flat.svg) ![GitHub Action Status](https://github.com/redcanaryco/atomic-red-team/actions/workflows/generate-docs.yml/badge.svg?branch=master)
+![GitHub Action Status](https://github.com/redcanaryco/atomic-red-team/actions/workflows/validate-atomics.yml/badge.svg?branch=master) ![Atomics](https://img.shields.io/badge/Atomics-100-flat.svg) ![GitHub Action Status](https://github.com/redcanaryco/atomic-red-team/actions/workflows/generate-docs.yml/badge.svg?branch=master)
 
 Atomic Red Team™ is a library of tests mapped to the
 [MITRE ATT&CK®](https://attack.mitre.org/) framework. Security teams can use
@@ -32,11 +32,13 @@ becoming a contributor, check out these resources:
 - Join our [Slack workspace](https://slack.atomicredteam.io) and get involved
   with the community. Don't forget to review the [code of conduct](CODE_OF_CONDUCT.md)
   before you join.
-- Report bugs and request new features by [submitting an issue](https://github.com/redcanaryco/atomic-red-team/issues/new/choose).
+- Report bugs and request new features
+  by [submitting an issue](https://github.com/redcanaryco/atomic-red-team/issues/new/choose).
 - Read our [contribution guide](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
   for more information about contributing directly to this repository.
 - Check the [license](LICENSE.txt) for information regarding the distribution
   and modification of Atomic Red Team.
-- Contribute to linux atomics quickly from GitHub Codespaces. For more details, click [here](https://github.com/redcanaryco/atomic-red-team/wiki/Github-Codespaces)
+- Contribute to linux atomics quickly from GitHub Codespaces. For more details,
+  click [here](https://github.com/redcanaryco/atomic-red-team/wiki/Github-Codespaces)
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/redcanaryco/atomic-red-team)

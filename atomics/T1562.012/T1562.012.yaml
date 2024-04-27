@@ -1,0 +1,45 @@
+attack_technique: T1562.012
+display_name: 'Impair Defenses: Disable or Modify Linux Audit System'
+atomic_tests:
+- name: Delete all auditd rules using auditctl
+  auto_generated_guid: 33a29ab1-cabb-407f-9448-269041bf2856
+  description: |
+    Using 'auditctl -D' deletes all existing audit rules, resulting in the loss of previously configured monitoring settings and the audit trail. This action reduces visibility into system activities, potentially leading to compliance concerns and hampering security monitoring efforts. Additionally, it poses a risk of covering unauthorized activities by erasing evidence from audit logs.
+  supported_platforms:
+  - linux
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Check if auditd is installed.
+    prereq_command: |
+      if [ $(command -v auditctl) ]; then exit 0; else exit 1; fi
+    get_prereq_command: |
+      (yum install auditd -y) || (apt-get install auditd -y) || (dnf install auditd -y)
+  executor:
+    command: |
+      auditctl -D
+    name: sh
+    elevation_required: true
+    cleanup_command: |
+      service auditd restart
+- name: Disable auditd using auditctl
+  auto_generated_guid: 7906f0a6-b527-46ee-9026-6e81a9184e08
+  description: |
+    The command `auditctl -e 0` disables the audit system. By setting the parameter to `0`, auditing is deactivated, halting the monitoring and recording of security-related events. This action stops the generation of audit logs, ceasing the collection of data regarding system activities. Disabling auditing may be done for various reasons, such as troubleshooting, performance optimization, or temporarily suspending auditing requirements, but it reduces visibility into system events and can impact security monitoring and compliance efforts.
+  supported_platforms:
+  - linux
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Check if auditd is installed.
+    prereq_command: |
+      if [ $(command -v auditctl) ]; then exit 0; else exit 1; fi
+    get_prereq_command: |
+      (yum install auditd -y) || (apt-get install auditd -y) || (dnf install auditd -y)
+  executor:
+    command: |
+      auditctl -e 0
+    name: sh
+    elevation_required: true
+    cleanup_command: |
+      auditctl -e 1
