@@ -23,7 +23,7 @@ jobs:
           cache: "poetry"
 
       - name: Install dependencies
-        run: poetry install --no-interaction --no-root
+        run: poetry install --no-interaction
 
       - name: Run pytest
-        run: poetry run pytest atomic_red_team
+        run: poetry run pytest atomic_red_team/tests
