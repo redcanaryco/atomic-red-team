@@ -4,7 +4,7 @@ from typing import List
 
 from ruamel.yaml import YAML
 
-from common import used_guids_file
+from atomic_red_team.common import used_guids_file
 
 yaml = YAML(typ="safe")
 
@@ -14,7 +14,7 @@ def get_unique_guid(guids: List[str]):
     guid = str(uuid.uuid4())
     if guid not in guids:
         with open(used_guids_file, "a") as f:  # append mode
-            f.write(guid)
+            f.write(f"{guid}\n")
         return guid
     else:
         return get_unique_guid(guids)

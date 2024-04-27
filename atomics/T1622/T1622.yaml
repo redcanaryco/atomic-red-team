@@ -1,0 +1,16 @@
+attack_technique: T1622
+display_name: Debugger Evasion
+atomic_tests:
+- name: Detect a Debugger Presence in the Machine
+  auto_generated_guid: 58bd8c8d-3a1a-4467-a69c-439c75469b07
+  description: Detecting a running debugger process or if the debugger is attached to a process via PowerShell
+  supported_platforms:
+  - windows 
+  executor:
+    command: |-
+      # Check for common debugger processes
+      $debuggerProcesses = Get-Process | Where-Object { $_.ProcessName -match "dbg" -or $_.ProcessName -match "debug" }
+      # Check for debugging flags
+      $debuggingFlags = [System.Diagnostics.Debugger]::IsAttached 
+    name: powershell
+    elevation_required: true
