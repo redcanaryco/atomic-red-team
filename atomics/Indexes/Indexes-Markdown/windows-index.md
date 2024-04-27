@@ -1375,6 +1375,7 @@
   - Atomic Test #4: Retrieve Microsoft IIS Service Account Credentials Using AppCmd (using list) [windows]
   - Atomic Test #5: Retrieve Microsoft IIS Service Account Credentials Using AppCmd (using config) [windows]
   - Atomic Test #6: Dump Credential Manager using keymgr.dll and rundll32.exe [windows]
+  - Atomic Test #7: Send NTLM Hash with RPC Test Connection [windows]
 - [T1539 Steal Web Session Cookie](../../T1539/T1539.md)
   - Atomic Test #1: Steal Firefox Cookies (Windows) [windows]
   - Atomic Test #2: Steal Chrome Cookies (Windows) [windows]
@@ -1501,6 +1502,7 @@
 - [T1187 Forced Authentication](../../T1187/T1187.md)
   - Atomic Test #1: PetitPotam [windows]
   - Atomic Test #2: WinPwn - PowerSharpPack - Retrieving NTLM Hashes without Touching LSASS [windows]
+  - Atomic Test #3: Trigger an authenticated RPC call to a target server with no Sign flag set [windows]
 - T1056 Input Capture [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1557.002 ARP Cache Poisoning [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1558.002 Steal or Forge Kerberos Tickets: Silver Ticket](../../T1558.002/T1558.002.md)
