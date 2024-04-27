@@ -505,7 +505,8 @@
 - T1027.002 Obfuscated Files or Information: Software Packing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1564.005 Hidden File System [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1055.005 Thread Local Storage [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1622 Debugger Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1622 Debugger Evasion](../../T1622/T1622.md)
+  - Atomic Test #1: Detect a Debugger Presence in the Machine [windows]
 - [T1550.002 Use Alternate Authentication Material: Pass the Hash](../../T1550.002/T1550.002.md)
   - Atomic Test #1: Mimikatz Pass the Hash [windows]
   - Atomic Test #2: crackmapexec Pass the Hash [windows]
@@ -1604,6 +1605,7 @@
   - Atomic Test #8: PowerView ShareFinder [windows]
   - Atomic Test #9: WinPwn - shareenumeration [windows]
   - Atomic Test #10: Network Share Discovery via dir command [windows]
+  - Atomic Test #11: Enumerate All Network Shares with SharpShares [windows]
 - [T1120 Peripheral Device Discovery](../../T1120/T1120.md)
   - Atomic Test #1: Win32_PnPEntity Hardware Inventory [windows]
   - Atomic Test #2: WinPwn - printercheck [windows]
@@ -1735,7 +1737,8 @@
   - Atomic Test #4: WinPwn - Dotnetsearch [windows]
   - Atomic Test #5: WinPwn - DotNet [windows]
   - Atomic Test #6: WinPwn - powerSQL [windows]
-- T1622 Debugger Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1622 Debugger Evasion](../../T1622/T1622.md)
+  - Atomic Test #1: Detect a Debugger Presence in the Machine [windows]
 - [T1124 System Time Discovery](../../T1124/T1124.md)
   - Atomic Test #1: System Time Discovery [windows]
   - Atomic Test #2: System Time Discovery - PowerShell [windows]

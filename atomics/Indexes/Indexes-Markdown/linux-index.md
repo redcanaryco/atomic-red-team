@@ -108,7 +108,9 @@
   - Atomic Test #17: Tail the UFW firewall log file [linux]
   - Atomic Test #18: Disable iptables [linux]
   - Atomic Test #19: Modify/delete iptables firewall rules [linux]
-- T1562.012 Disable or Modify Linux Audit System [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1562.012 Impair Defenses: Disable or Modify Linux Audit System](../../T1562.012/T1562.012.md)
+  - Atomic Test #1: Delete all auditd rules using auditctl [linux]
+  - Atomic Test #2: Disable auditd using auditctl [linux]
 - [T1027.001 Obfuscated Files or Information: Binary Padding](../../T1027.001/T1027.001.md)
   - Atomic Test #1: Pad Binary to Change Hash - Linux/macOS dd [linux, macos]
   - Atomic Test #2: Pad Binary to Change Hash using truncate command - Linux/macOS [linux, macos]
@@ -828,6 +830,8 @@
 - T1567.001 Exfiltration to Code Repository [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1048.002 Exfiltration Over Alternative Protocol - Exfiltration Over Asymmetric Encrypted Non-C2 Protocol](../../T1048.002/T1048.002.md)
   - Atomic Test #2: Exfiltrate data HTTPS using curl freebsd,linux or macos [macos, linux]
+  - Atomic Test #3: Exfiltrate data in a file over HTTPS using wget [linux]
+  - Atomic Test #4: Exfiltrate data as text over HTTPS using wget [linux]
 - T1041 Exfiltration Over C2 Channel [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1048 Exfiltration Over Alternative Protocol](../../T1048/T1048.md)
   - Atomic Test #1: Exfiltration Over Alternative Protocol - SSH [macos, linux]

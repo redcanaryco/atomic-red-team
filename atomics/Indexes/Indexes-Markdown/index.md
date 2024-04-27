@@ -309,7 +309,9 @@
 - [T1553.003 Subvert Trust Controls: SIP and Trust Provider Hijacking](../../T1553.003/T1553.003.md)
   - Atomic Test #1: SIP (Subject Interface Package) Hijacking via Custom DLL [windows]
 - T1556.007 Hybrid Identity [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1562.012 Disable or Modify Linux Audit System [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1562.012 Impair Defenses: Disable or Modify Linux Audit System](../../T1562.012/T1562.012.md)
+  - Atomic Test #1: Delete all auditd rules using auditctl [linux]
+  - Atomic Test #2: Disable auditd using auditctl [linux]
 - [T1207 Rogue Domain Controller](../../T1207/T1207.md)
   - Atomic Test #1: DCShadow (Active Directory) [windows]
 - T1553.006 Code Signing Policy Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -719,7 +721,8 @@
   - Atomic Test #4: Binary packed by UPX, with modified headers [macos]
 - T1564.005 Hidden File System [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1055.005 Thread Local Storage [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1622 Debugger Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1622 Debugger Evasion](../../T1622/T1622.md)
+  - Atomic Test #1: Detect a Debugger Presence in the Machine [windows]
 - [T1036.006 Masquerading: Space after Filename](../../T1036.006/T1036.006.md)
   - Atomic Test #1: Space After Filename (Manual) [macos]
   - Atomic Test #2: Space After Filename [macos, linux]
@@ -2311,6 +2314,7 @@
   - Atomic Test #8: PowerView ShareFinder [windows]
   - Atomic Test #9: WinPwn - shareenumeration [windows]
   - Atomic Test #10: Network Share Discovery via dir command [windows]
+  - Atomic Test #11: Enumerate All Network Shares with SharpShares [windows]
 - [T1120 Peripheral Device Discovery](../../T1120/T1120.md)
   - Atomic Test #1: Win32_PnPEntity Hardware Inventory [windows]
   - Atomic Test #2: WinPwn - printercheck [windows]
@@ -2502,7 +2506,8 @@
   - Atomic Test #5: WinPwn - DotNet [windows]
   - Atomic Test #6: WinPwn - powerSQL [windows]
 - T1538 Cloud Service Dashboard [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1622 Debugger Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1622 Debugger Evasion](../../T1622/T1622.md)
+  - Atomic Test #1: Detect a Debugger Presence in the Machine [windows]
 - [T1124 System Time Discovery](../../T1124/T1124.md)
   - Atomic Test #1: System Time Discovery [windows]
   - Atomic Test #2: System Time Discovery - PowerShell [windows]
@@ -2747,6 +2752,8 @@
 - [T1048.002 Exfiltration Over Alternative Protocol - Exfiltration Over Asymmetric Encrypted Non-C2 Protocol](../../T1048.002/T1048.002.md)
   - Atomic Test #1: Exfiltrate data HTTPS using curl windows [windows]
   - Atomic Test #2: Exfiltrate data HTTPS using curl freebsd,linux or macos [macos, linux]
+  - Atomic Test #3: Exfiltrate data in a file over HTTPS using wget [linux]
+  - Atomic Test #4: Exfiltrate data as text over HTTPS using wget [linux]
 - [T1041 Exfiltration Over C2 Channel](../../T1041/T1041.md)
   - Atomic Test #1: C2 Data Exfiltration [windows]
   - Atomic Test #2: Text Based Data Exfiltration using DNS subdomains [windows]

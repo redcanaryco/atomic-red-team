@@ -5887,7 +5887,7 @@ defense-evasion:
   T1562.012:
     technique:
       modified: '2023-10-03T03:44:46.935Z'
-      name: Disable or Modify Linux Audit System
+      name: 'Impair Defenses: Disable or Modify Linux Audit System'
       description: |-
         Adversaries may disable or modify the Linux audit system to hide malicious activity and avoid detection. Linux admins use the Linux Audit system to track security-relevant information on a system. The Linux Audit system operates at the kernel-level and maintains event logs on application and system activity such as process, network, file, and login events based on pre-configured rules.
 
@@ -5942,6 +5942,7 @@ defense-evasion:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       x_mitre_attack_spec_version: 3.2.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      identifier: T1562.012
     atomic_tests: []
   T1207:
     technique:
@@ -14224,6 +14225,7 @@ defense-evasion:
       - 'Command: Command Execution'
       x_mitre_attack_spec_version: 2.1.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      identifier: T1622
     atomic_tests: []
   T1036.006:
     technique:
@@ -40661,8 +40663,9 @@ command-and-control:
         command: |
           networksetup -setwebproxy #{interface} #{proxy_server} #{proxy_port}
           networksetup -setsecurewebproxy #{interface} #{proxy_server} #{proxy_port}
-        cleanup_command: "networksetup -setwebproxystate #{interface} off\nnetworksetup
-          -setsecurewebproxystate #{interface} off  \n"
+        cleanup_command: |
+          networksetup -setwebproxystate #{interface} off
+          networksetup -setsecurewebproxystate #{interface} off
   T1102.001:
     technique:
       x_mitre_platforms:
@@ -54413,6 +54416,7 @@ discovery:
       - 'Command: Command Execution'
       x_mitre_attack_spec_version: 2.1.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      identifier: T1622
     atomic_tests: []
   T1124:
     technique:
