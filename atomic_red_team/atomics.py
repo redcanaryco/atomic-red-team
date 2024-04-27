@@ -7,6 +7,7 @@ from functools import lru_cache
 from itertools import chain
 from typing import List
 
+import pandas as pd
 from mitreattack.navlayers.core import (
     Versions,
     Gradient,
@@ -201,6 +202,47 @@ class Atomics:
                     content += "\n"
                 with open(filename, mode="w") as file:
                     file.write(content)
+
+    def generate_matrix(self):
+        def fname(platform):
+            f = f"{atomics_path}/Indexes/Matrices/"
+            if platform:
+                f += f'{platform.replace(":", "-")}-matrix.md'
+            else:
+                f += "matrix.md"
+            return f
+
+        generated_index = self.generate_platform_to_tactics_to_techniques()
+
+        for platform in mitre_platforms_to_platforms.values():
+            filename = fname(platform)
+            ts = {}
+            for tactic in ordered_tactics:
+                ts[tactic] = []
+                techniques = sorted(
+                    generated_index[platform][tactic], key=lambda x: x.attack_id
+                )
+                if len(techniques) > 0:
+                    for technique in techniques:
+                        if technique.technique and technique.includes_platform(
+                            platform
+                        ):
+                            attack_id = technique.attack_id
+                            display_name = technique.technique.display_name
+                            ts[tactic].append(
+                                f"[{attack_id} {display_name}](../../{attack_id}/{attack_id}.md)"
+                            )
+                        else:
+                            ts[tactic].append(
+                                f"{technique.attack_id} {technique.name} [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)"
+                            )
+            with open(filename, mode="w") as file:
+                df = pd.DataFrame(
+                    dict([(key, pd.Series(value)) for key, value in ts.items()])
+                )
+                df.dropna(how="all", axis=1, inplace=True)
+                df.fillna("", inplace=True)
+                df.to_markdown(index=False, buf=file)
 
     def generate_nav_layers(self):
         art_platforms_to_mitre["iaas:gcp"] = "GCP"

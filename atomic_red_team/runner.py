@@ -30,6 +30,7 @@ def generate_index():
     atomics.generate_csv_indices()
     atomics.generate_markdown_index()
     atomics.generate_nav_layers()
+    atomics.generate_matrix()
 
 
 @app.command()

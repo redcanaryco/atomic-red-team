@@ -40,11 +40,18 @@ jobs:
         env:
           PYTHONPATH: ${{ github.workspace }}
 
+      - name: Generate index, matrix, markdown index and navigator layers
+        run: poetry run python runner.py generate-index
+        working-directory: atomic_red_team
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+
       - name: setup ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.7
           bundler-cache: true
+
       - name: generate markdown docs for atomics
         run: |
           bin/generate-atomic-docs.rb
@@ -54,7 +61,7 @@ jobs:
           echo ""
           echo ""
           git diff-index HEAD --
-
+          
           if git diff-index --quiet HEAD -- ; then
             echo "Not committing documentation because there are no changes"
           else
