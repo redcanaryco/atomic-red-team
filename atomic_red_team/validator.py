@@ -6,8 +6,8 @@ from pydantic import ValidationError
 from pydantic_core import InitErrorDetails, PydanticCustomError
 from ruamel.yaml import YAML
 
-from common import atomics_path
-from models import Technique
+from atomic_red_team.common import atomics_path
+from atomic_red_team.models import Technique
 
 yaml = YAML(typ="safe")
 
