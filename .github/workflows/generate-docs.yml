@@ -40,6 +40,12 @@ jobs:
         env:
           PYTHONPATH: ${{ github.workspace }}
 
+      - name: Generate index, matrix, markdown index and navigator layers
+        run: poetry run python runner.py generate-index
+        working-directory: atomic_red_team
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+
       - name: setup ruby
         uses: ruby/setup-ruby@v1
         with:

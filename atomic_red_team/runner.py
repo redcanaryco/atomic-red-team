@@ -10,6 +10,7 @@ from typing import Annotated
 import typer
 from pydantic import ValidationError
 
+from atomic_red_team.atomics import Atomics
 from atomic_red_team.common import used_guids_file, atomics_path
 from atomic_red_team.guid import (
     generate_guids_for_yaml,
@@ -20,6 +21,16 @@ from atomic_red_team.models import Technique
 from atomic_red_team.validator import Validator, format_validation_error, yaml
 
 app = typer.Typer(help="Atomic Red Team Maintenance tool CLI helper")
+
+
+@app.command()
+def generate_index():
+    """Generate the indices, markdown, nav layers for the atomics"""
+    atomics = Atomics()
+    atomics.generate_csv_indices()
+    atomics.generate_markdown_index()
+    atomics.generate_nav_layers()
+    atomics.generate_matrix()
 
 
 @app.command()
