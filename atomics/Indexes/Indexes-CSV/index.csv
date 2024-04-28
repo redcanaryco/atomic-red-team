@@ -245,6 +245,8 @@ defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,22,
 defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,23,ESXi - Disable Firewall via Esxcli,bac8a340-be64-4491-a0cc-0985cb227f5a,command_prompt
 defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,24,Set a firewall rule using New-NetFirewallRule,94be7646-25f6-467e-af23-585fb13000c8,powershell
 defense-evasion,T1553.003,Subvert Trust Controls: SIP and Trust Provider Hijacking,1,SIP (Subject Interface Package) Hijacking via Custom DLL,e12f5d8d-574a-4e9d-8a84-c0e8b4a8a675,command_prompt
+defense-evasion,T1562.012,Impair Defenses: Disable or Modify Linux Audit System,1,Delete all auditd rules using auditctl,33a29ab1-cabb-407f-9448-269041bf2856,sh
+defense-evasion,T1562.012,Impair Defenses: Disable or Modify Linux Audit System,2,Disable auditd using auditctl,7906f0a6-b527-46ee-9026-6e81a9184e08,sh
 defense-evasion,T1207,Rogue Domain Controller,1,DCShadow (Active Directory),0f4c5eb0-98a0-4496-9c3d-656b4f2bc8f6,powershell
 defense-evasion,T1610,Deploy a container,1,Deploy Docker container,59aa6f26-7620-417e-9318-589e0fb7a372,bash
 defense-evasion,T1112,Modify Registry,1,Modify Registry of Current User Profile - cmd,1324796b-d0f6-455a-b4ae-21ffee6aa6b9,command_prompt
@@ -316,6 +318,7 @@ defense-evasion,T1112,Modify Registry,66,Disabling ShowUI Settings of Windows Er
 defense-evasion,T1112,Modify Registry,67,Enable Proxy Settings,eb0ba433-63e5-4a8c-a9f0-27c4192e1336,command_prompt
 defense-evasion,T1112,Modify Registry,68,Set-Up Proxy Server,d88a3d3b-d016-4939-a745-03638aafd21b,command_prompt
 defense-evasion,T1112,Modify Registry,69,RDP Authentication Level Override,7e7b62e9-5f83-477d-8935-48600f38a3c6,command_prompt
+defense-evasion,T1112,Modify Registry,70,Enable RDP via Registry (fDenyTSConnections),16bdbe52-371c-4ccf-b708-79fba61f1db4,command_prompt
 defense-evasion,T1574.008,Hijack Execution Flow: Path Interception by Search Order Hijacking,1,powerShell Persistence via hijacking default modules - Get-Variable.exe,1561de08-0b4b-498e-8261-e922f3494aae,powershell
 defense-evasion,T1027.001,Obfuscated Files or Information: Binary Padding,1,Pad Binary to Change Hash - Linux/macOS dd,ffe2346c-abd5-4b45-a713-bf5f1ebd573a,sh
 defense-evasion,T1027.001,Obfuscated Files or Information: Binary Padding,2,Pad Binary to Change Hash using truncate command - Linux/macOS,e22a9e89-69c7-410f-a473-e6c212cd2292,sh
@@ -554,6 +557,7 @@ defense-evasion,T1027.002,Obfuscated Files or Information: Software Packing,1,Bi
 defense-evasion,T1027.002,Obfuscated Files or Information: Software Packing,2,"Binary packed by UPX, with modified headers (linux)",f06197f8-ff46-48c2-a0c6-afc1b50665e1,sh
 defense-evasion,T1027.002,Obfuscated Files or Information: Software Packing,3,Binary simply packed by UPX,b16ef901-00bb-4dda-b4fc-a04db5067e20,sh
 defense-evasion,T1027.002,Obfuscated Files or Information: Software Packing,4,"Binary packed by UPX, with modified headers",4d46e16b-5765-4046-9f25-a600d3e65e4d,sh
+defense-evasion,T1622,Debugger Evasion,1,Detect a Debugger Presence in the Machine,58bd8c8d-3a1a-4467-a69c-439c75469b07,powershell
 defense-evasion,T1036.006,Masquerading: Space after Filename,1,Space After Filename (Manual),89a7dd26-e510-4c9f-9b15-f3bae333360f,manual
 defense-evasion,T1036.006,Masquerading: Space after Filename,2,Space After Filename,b95ce2eb-a093-4cd8-938d-5258cef656ea,sh
 defense-evasion,T1550.002,Use Alternate Authentication Material: Pass the Hash,1,Mimikatz Pass the Hash,ec23cef9-27d9-46e4-a68d-6f75f7b86908,command_prompt
@@ -1405,6 +1409,7 @@ credential-access,T1003,OS Credential Dumping,3,Dump svchost.exe to gather RDP c
 credential-access,T1003,OS Credential Dumping,4,Retrieve Microsoft IIS Service Account Credentials Using AppCmd (using list),6c7a4fd3-5b0b-4b30-a93e-39411b25d889,powershell
 credential-access,T1003,OS Credential Dumping,5,Retrieve Microsoft IIS Service Account Credentials Using AppCmd (using config),42510244-5019-48fa-a0e5-66c3b76e6049,powershell
 credential-access,T1003,OS Credential Dumping,6,Dump Credential Manager using keymgr.dll and rundll32.exe,84113186-ed3c-4d0d-8a3c-8980c86c1f4a,powershell
+credential-access,T1003,OS Credential Dumping,7,Send NTLM Hash with RPC Test Connection,0b207037-813c-4444-ac3f-b597cf280a67,powershell
 credential-access,T1539,Steal Web Session Cookie,1,Steal Firefox Cookies (Windows),4b437357-f4e9-4c84-9fa6-9bcee6f826aa,powershell
 credential-access,T1539,Steal Web Session Cookie,2,Steal Chrome Cookies (Windows),26a6b840-4943-4965-8df5-ef1f9a282440,powershell
 credential-access,T1539,Steal Web Session Cookie,3,Steal Chrome Cookies via Remote Debugging (Mac),e43cfdaf-3fb8-4a45-8de0-7eee8741d072,bash
@@ -1543,6 +1548,7 @@ credential-access,T1110.004,Brute Force: Credential Stuffing,3,SSH Credential St
 credential-access,T1110.004,Brute Force: Credential Stuffing,4,Brute Force:Credential Stuffing using Kerbrute Tool,4852c630-87a9-409b-bb5e-5dc12c9ebcde,powershell
 credential-access,T1187,Forced Authentication,1,PetitPotam,485ce873-2e65-4706-9c7e-ae3ab9e14213,powershell
 credential-access,T1187,Forced Authentication,2,WinPwn - PowerSharpPack - Retrieving NTLM Hashes without Touching LSASS,7f06b25c-799e-40f1-89db-999c9cc84317,powershell
+credential-access,T1187,Forced Authentication,3,Trigger an authenticated RPC call to a target server with no Sign flag set,81cfdd7f-1f41-4cc5-9845-bb5149438e37,powershell
 credential-access,T1003.008,"OS Credential Dumping: /etc/passwd, /etc/master.passwd and /etc/shadow",1,Access /etc/shadow (Local),3723ab77-c546-403c-8fb4-bb577033b235,bash
 credential-access,T1003.008,"OS Credential Dumping: /etc/passwd, /etc/master.passwd and /etc/shadow",2,Access /etc/master.passwd (Local),5076874f-a8e6-4077-8ace-9e5ab54114a5,sh
 credential-access,T1003.008,"OS Credential Dumping: /etc/passwd, /etc/master.passwd and /etc/shadow",3,Access /etc/passwd (Local),60e860b6-8ae6-49db-ad07-5e73edd88f5d,sh
@@ -1670,6 +1676,7 @@ discovery,T1135,Network Share Discovery,7,Share Discovery with PowerView,b1636f0
 discovery,T1135,Network Share Discovery,8,PowerView ShareFinder,d07e4cc1-98ae-447e-9d31-36cb430d28c4,powershell
 discovery,T1135,Network Share Discovery,9,WinPwn - shareenumeration,987901d1-5b87-4558-a6d9-cffcabc638b8,powershell
 discovery,T1135,Network Share Discovery,10,Network Share Discovery via dir command,13daa2cf-195a-43df-a8bd-7dd5ffb607b5,command_prompt
+discovery,T1135,Network Share Discovery,11,Enumerate All Network Shares with SharpShares,d1fa2a69-b0a2-4e8a-9112-529b00c19a41,powershell
 discovery,T1120,Peripheral Device Discovery,1,Win32_PnPEntity Hardware Inventory,2cb4dbf2-2dca-4597-8678-4d39d207a3a5,powershell
 discovery,T1120,Peripheral Device Discovery,2,WinPwn - printercheck,cb6e76ca-861e-4a7f-be08-564caa3e6f75,powershell
 discovery,T1120,Peripheral Device Discovery,3,Peripheral Device Discovery via fsutil,424e18fd-48b8-4201-8d3a-bf591523a686,command_prompt
@@ -1831,6 +1838,7 @@ discovery,T1518,Software Discovery,3,Find and Display Safari Browser Version,103
 discovery,T1518,Software Discovery,4,WinPwn - Dotnetsearch,7e79a1b6-519e-433c-ad55-3ff293667101,powershell
 discovery,T1518,Software Discovery,5,WinPwn - DotNet,10ba02d0-ab76-4f80-940d-451633f24c5b,powershell
 discovery,T1518,Software Discovery,6,WinPwn - powerSQL,0bb64470-582a-4155-bde2-d6003a95ed34,powershell
+discovery,T1622,Debugger Evasion,1,Detect a Debugger Presence in the Machine,58bd8c8d-3a1a-4467-a69c-439c75469b07,powershell
 discovery,T1124,System Time Discovery,1,System Time Discovery,20aba24b-e61f-4b26-b4ce-4784f763ca20,command_prompt
 discovery,T1124,System Time Discovery,2,System Time Discovery - PowerShell,1d5711d6-655c-4a47-ae9c-6503c74fa877,powershell
 discovery,T1124,System Time Discovery,3,System Time Discovery in FreeBSD/macOS,f449c933-0891-407f-821e-7916a21a1a6f,sh
@@ -1917,6 +1925,8 @@ exfiltration,T1020,Automated Exfiltration,1,IcedID Botnet HTTP PUT,9c780d3d-3a14
 exfiltration,T1020,Automated Exfiltration,2,Exfiltration via Encrypted FTP,5b380e96-b0ef-4072-8a8e-f194cb9eb9ac,powershell
 exfiltration,T1048.002,Exfiltration Over Alternative Protocol - Exfiltration Over Asymmetric Encrypted Non-C2 Protocol,1,Exfiltrate data HTTPS using curl windows,1cdf2fb0-51b6-4fd8-96af-77020d5f1bf0,command_prompt
 exfiltration,T1048.002,Exfiltration Over Alternative Protocol - Exfiltration Over Asymmetric Encrypted Non-C2 Protocol,2,"Exfiltrate data HTTPS using curl freebsd,linux or macos",4a4f31e2-46ea-4c26-ad89-f09ad1d5fe01,bash
+exfiltration,T1048.002,Exfiltration Over Alternative Protocol - Exfiltration Over Asymmetric Encrypted Non-C2 Protocol,3,Exfiltrate data in a file over HTTPS using wget,7ccdfcfa-6707-46bc-b812-007ab6ff951c,sh
+exfiltration,T1048.002,Exfiltration Over Alternative Protocol - Exfiltration Over Asymmetric Encrypted Non-C2 Protocol,4,Exfiltrate data as text over HTTPS using wget,8bec51da-7a6d-4346-b941-51eca448c4b0,sh
 exfiltration,T1041,Exfiltration Over C2 Channel,1,C2 Data Exfiltration,d1253f6e-c29b-49dc-b466-2147a6191932,powershell
 exfiltration,T1041,Exfiltration Over C2 Channel,2,Text Based Data Exfiltration using DNS subdomains,c9207f3e-213d-4cc7-ad2a-7697a7237df9,powershell
 exfiltration,T1048,Exfiltration Over Alternative Protocol,1,Exfiltration Over Alternative Protocol - SSH,f6786cc8-beda-4915-a4d6-ac2f193bb988,sh
