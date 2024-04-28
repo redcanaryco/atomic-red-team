@@ -9,8 +9,6 @@ from pydantic import (
     ConfigDict,
     Field,
     IPvAnyAddress,
-    StrictFloat,
-    StrictInt,
     StringConstraints,
     conlist,
     constr,
@@ -105,12 +103,12 @@ class StringArg(BaseArgument):
 
 
 class IntArg(BaseArgument):
-    default: Optional[StrictInt]
+    default: Optional[int]
     type: Literal["integer", "Integer"]
 
 
 class FloatArg(BaseArgument):
-    default: Optional[StrictFloat]
+    default: Optional[float]
     type: Literal["float", "Float"]
 
 
