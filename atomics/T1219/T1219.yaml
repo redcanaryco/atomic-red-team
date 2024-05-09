@@ -281,3 +281,29 @@ atomic_tests:
       $file = Join-Path $env:USERPROFILE "Desktop\rustdesk-1.2.3-1-x86_64.exe"
       Remove-Item $file1 -ErrorAction Ignore
     name: powershell
+- name: Splashtop Streamer Execution
+  auto_generated_guid: 
+  description: An adversary may attempt to use Splashtop Streamer to gain unattended remote interactive access. Upon successful execution, Splashtop streamer will be executed.
+  supported_platforms:
+  - windows
+  input_arguments:
+    srserver_exe:
+      description: Splashtop streamer installation executables
+      type: string
+      default: SRServer.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: Splashtop Streamer must be installed in the location
+    prereq_command: |
+      if (Test-Path "C:\Program Files (x86)\Splashtop\Splashtop Remote\Server\#{srserver_exe}") {exit 0} else {exit 1}
+    get_prereq_command: |-
+      Write-Host Downloading Splashtop Streamer
+      New-Item -Type Directory "C:\Temp\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://download.splashtop.com/win/Splashtop_Streamer_Win_INSTALLER_v3.6.4.1.exe" -OutFile  "C:\Temp\ExternalPayloads\Splashtop.exe"
+      Write-Host Installing Splashtop Streamer
+      Start-Process "c:\Temp\ExternalPayloads\Splashtop.exe" -Wait -ArgumentList "/s"
+  executor:
+    command: |-
+      Start-Process -FilePath "C:Program Files (x86)\Splashtop\Splashtop Remote\Server\#{srserver_exe}"
+    name: powershell
+    elevation_required: true
