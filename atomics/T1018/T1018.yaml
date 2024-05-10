@@ -404,3 +404,32 @@ atomic_tests:
     command: |
       net group /domain "Domain controllers"
     name: command_prompt
+- name: Enumerate Remote Hosts with Netscan
+  description: This test uses Netscan to identify remote hosts in a specified network range. 
+  supported_platforms:
+  - windows
+  input_arguments:
+    netscan_path:
+      description: NetScan exe location
+      type: path
+      default: 'PathToAtomicsFolder\..\ExternalPayloads\netscan\64-bit\netscan.exe'
+    range_to_scan:
+      description: The IP range to scan with Netscan
+      type: string
+      default: '127.0.0.1-127.0.0.1'
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Netscan must be installed
+    prereq_command: 'if (Test-Path "#{netscan_path}") {exit 0} else {exit 1}'
+    get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest -OutFile "PathToAtomicsFolder\..\ExternalPayloads\netscan.zip" "https://www.softperfect.com/download/files/netscan_portable.zip"
+      Expand-Archive -LiteralPath "PathToAtomicsFolder\..\ExternalPayloads\netscan.zip" -DestinationPath "PathToAtomicsFolder\..\ExternalPayloads\netscan"
+  executor:
+    command: |-
+      cmd /c '#{netscan_path}' /hide /auto:"$env:temp\T1018NetscanOutput.txt" /range:'#{range_to_scan}'
+    cleanup_command: |
+      remove-item "$env:temp\T1018NetscanOutput.txt" -force -erroraction silentlycontinue
+    name: powershell
+    elevation_required: false
