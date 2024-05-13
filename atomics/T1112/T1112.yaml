@@ -1087,3 +1087,15 @@ atomic_tests:
     cleanup_command: 'if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1)'
     name: command_prompt
     elevation_required: true   
+- name: Disable Windows Prefetch Through Registry 
+  description: |
+    Modify the registry of the machine to disable prefetch. Disabling prefetch will remove one artifact for evidence of application execution. Restart is required post modification
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v "EnablePrefetcher" /t REG_DWORD /d 0 /f
+    cleanup_command: |
+       reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v "EnablePrefetcher" /t REG_DWORD /d 3 /f
+    name: command_prompt
+    elevation_required: true
