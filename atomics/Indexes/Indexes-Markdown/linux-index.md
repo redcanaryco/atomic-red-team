@@ -656,7 +656,7 @@
   - Atomic Test #26: FreeBSD List Kernel Modules [linux]
   - Atomic Test #32: ESXi - VM Discovery using ESXCLI [linux]
   - Atomic Test #33: ESXi - Darkside system information discovery [linux]
-- T1016.002 Wi-Fi Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1016.002 System Network Configuration Discovery: Wi-Fi Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1010 Application Window Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1497.003 Time Based Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1217 Browser Bookmark Discovery](../../T1217/T1217.md)
