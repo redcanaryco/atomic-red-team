@@ -208,7 +208,8 @@
 - T1218.015 Electron Applications [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1207 Rogue Domain Controller](../../T1207/T1207.md)
   - Atomic Test #1: DCShadow (Active Directory) [windows]
-- T1553.006 Code Signing Policy Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1553.006 Subvert Trust Controls: Code Signing Policy Modification](../../T1553.006/T1553.006.md)
+  - Atomic Test #1: Code Signing Policy Modification [windows]
 - [T1112 Modify Registry](../../T1112/T1112.md)
   - Atomic Test #1: Modify Registry of Current User Profile - cmd [windows]
   - Atomic Test #2: Modify Registry of Local Machine - cmd [windows]
@@ -280,6 +281,7 @@
   - Atomic Test #68: Set-Up Proxy Server [windows]
   - Atomic Test #69: RDP Authentication Level Override [windows]
   - Atomic Test #70: Enable RDP via Registry (fDenyTSConnections) [windows]
+  - Atomic Test #71: Disable Windows Prefetch Through Registry [windows]
 - [T1574.008 Hijack Execution Flow: Path Interception by Search Order Hijacking](../../T1574.008/T1574.008.md)
   - Atomic Test #1: powerShell Persistence via hijacking default modules - Get-Variable.exe [windows]
 - T1027.001 Obfuscated Files or Information: Binary Padding [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -924,6 +926,7 @@
   - Atomic Test #4: BlackCat pre-encryption cmds with Lateral Movement [windows]
   - Atomic Test #5: Use RemCom to execute a command on a remote host [windows]
   - Atomic Test #6: Snake Malware Service Create [windows]
+  - Atomic Test #7: Modifying ACL of Service Control Manager via SDET [windows]
 - [T1053.002 Scheduled Task/Job: At](../../T1053.002/T1053.002.md)
   - Atomic Test #1: At.exe Scheduled task [windows]
 
@@ -1182,6 +1185,7 @@
   - Atomic Test #10: UltraVNC Execution [windows]
   - Atomic Test #11: MSP360 Connect Execution [windows]
   - Atomic Test #12: RustDesk Files Detected Test on Windows [windows]
+  - Atomic Test #13: Splashtop Execution [windows]
 - T1659 Content Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1572 Protocol Tunneling](../../T1572/T1572.md)
@@ -1644,7 +1648,8 @@
   - Atomic Test #29: System Information Discovery [windows]
   - Atomic Test #30: Check computer location [windows]
   - Atomic Test #31: BIOS Information Discovery through Registry [windows]
-- T1016.002 Wi-Fi Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1016.002 System Network Configuration Discovery: Wi-Fi Discovery](../../T1016.002/T1016.002.md)
+  - Atomic Test #1: Enumerate Stored Wi-Fi Profiles And Passwords via netsh [windows]
 - [T1010 Application Window Discovery](../../T1010/T1010.md)
   - Atomic Test #1: List Process Main Windows - C# .NET [windows]
 - T1087.003 Email Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1737,6 +1742,7 @@
   - Atomic Test #19: Get-DomainController with PowerView [windows]
   - Atomic Test #20: Get-WmiObject to Enumerate Domain Controllers [windows]
   - Atomic Test #21: Remote System Discovery - net group Domain Controller [windows]
+  - Atomic Test #22: Enumerate Remote Hosts with Netscan [windows]
 - [T1046 Network Service Discovery](../../T1046/T1046.md)
   - Atomic Test #3: Port Scan NMap for Windows [windows]
   - Atomic Test #4: Port Scan using python [windows]

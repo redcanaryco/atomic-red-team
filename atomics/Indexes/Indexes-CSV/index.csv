@@ -248,6 +248,7 @@ defense-evasion,T1553.003,Subvert Trust Controls: SIP and Trust Provider Hijacki
 defense-evasion,T1562.012,Impair Defenses: Disable or Modify Linux Audit System,1,Delete all auditd rules using auditctl,33a29ab1-cabb-407f-9448-269041bf2856,sh
 defense-evasion,T1562.012,Impair Defenses: Disable or Modify Linux Audit System,2,Disable auditd using auditctl,7906f0a6-b527-46ee-9026-6e81a9184e08,sh
 defense-evasion,T1207,Rogue Domain Controller,1,DCShadow (Active Directory),0f4c5eb0-98a0-4496-9c3d-656b4f2bc8f6,powershell
+defense-evasion,T1553.006,Subvert Trust Controls: Code Signing Policy Modification,1,Code Signing Policy Modification,bb6b51e1-ab92-45b5-aeea-e410d06405f8,command_prompt
 defense-evasion,T1610,Deploy a container,1,Deploy Docker container,59aa6f26-7620-417e-9318-589e0fb7a372,bash
 defense-evasion,T1112,Modify Registry,1,Modify Registry of Current User Profile - cmd,1324796b-d0f6-455a-b4ae-21ffee6aa6b9,command_prompt
 defense-evasion,T1112,Modify Registry,2,Modify Registry of Local Machine - cmd,282f929a-6bc5-42b8-bd93-960c3ba35afe,command_prompt
@@ -319,6 +320,7 @@ defense-evasion,T1112,Modify Registry,67,Enable Proxy Settings,eb0ba433-63e5-4a8
 defense-evasion,T1112,Modify Registry,68,Set-Up Proxy Server,d88a3d3b-d016-4939-a745-03638aafd21b,command_prompt
 defense-evasion,T1112,Modify Registry,69,RDP Authentication Level Override,7e7b62e9-5f83-477d-8935-48600f38a3c6,command_prompt
 defense-evasion,T1112,Modify Registry,70,Enable RDP via Registry (fDenyTSConnections),16bdbe52-371c-4ccf-b708-79fba61f1db4,command_prompt
+defense-evasion,T1112,Modify Registry,71,Disable Windows Prefetch Through Registry,7979dd41-2045-48b2-a54e-b1bc2415c9da,command_prompt
 defense-evasion,T1574.008,Hijack Execution Flow: Path Interception by Search Order Hijacking,1,powerShell Persistence via hijacking default modules - Get-Variable.exe,1561de08-0b4b-498e-8261-e922f3494aae,powershell
 defense-evasion,T1027.001,Obfuscated Files or Information: Binary Padding,1,Pad Binary to Change Hash - Linux/macOS dd,ffe2346c-abd5-4b45-a713-bf5f1ebd573a,sh
 defense-evasion,T1027.001,Obfuscated Files or Information: Binary Padding,2,Pad Binary to Change Hash using truncate command - Linux/macOS,e22a9e89-69c7-410f-a473-e6c212cd2292,sh
@@ -994,6 +996,7 @@ execution,T1569.002,System Services: Service Execution,3,psexec.py (Impacket),ed
 execution,T1569.002,System Services: Service Execution,4,BlackCat pre-encryption cmds with Lateral Movement,31eb7828-97d7-4067-9c1e-c6feb85edc4b,powershell
 execution,T1569.002,System Services: Service Execution,5,Use RemCom to execute a command on a remote host,a5d8cdeb-be90-43a9-8b26-cc618deac1e0,command_prompt
 execution,T1569.002,System Services: Service Execution,6,Snake Malware Service Create,b8db787e-dbea-493c-96cb-9272296ddc49,command_prompt
+execution,T1569.002,System Services: Service Execution,7,Modifying ACL of Service Control Manager via SDET,bf07f520-3909-4ef5-aa22-877a50f2f77b,command_prompt
 execution,T1053.002,Scheduled Task/Job: At,1,At.exe Scheduled task,4a6c0dc4-0f2a-4203-9298-a5a9bdc21ed8,command_prompt
 execution,T1053.002,Scheduled Task/Job: At,2,At - Schedule a job,7266d898-ac82-4ec0-97c7-436075d0d08e,sh
 persistence,T1053.005,Scheduled Task/Job: Scheduled Task,1,Scheduled Task Startup Script,fec27f65-db86-4c2d-b66c-61945aee87c2,command_prompt
@@ -1241,6 +1244,7 @@ command-and-control,T1219,Remote Access Software,9,UltraViewer - RAT Execution,1
 command-and-control,T1219,Remote Access Software,10,UltraVNC Execution,42e51815-a6cc-4c75-b970-3f0ff54b610e,powershell
 command-and-control,T1219,Remote Access Software,11,MSP360 Connect Execution,b1b8128b-c5d4-4de9-bf70-e60419274562,powershell
 command-and-control,T1219,Remote Access Software,12,RustDesk Files Detected Test on Windows,f1641ba9-919a-4323-b74f-33372333bf0e,powershell
+command-and-control,T1219,Remote Access Software,13,Splashtop Execution,b025c580-029e-4023-888d-a42710d76934,powershell
 command-and-control,T1572,Protocol Tunneling,1,DNS over HTTPS Large Query Volume,ae9ef4b0-d8c1-49d4-8758-06206f19af0a,powershell
 command-and-control,T1572,Protocol Tunneling,2,DNS over HTTPS Regular Beaconing,0c5f9705-c575-42a6-9609-cbbff4b2fc9b,powershell
 command-and-control,T1572,Protocol Tunneling,3,DNS over HTTPS Long Domain Query,748a73d5-cea4-4f34-84d8-839da5baa99c,powershell
@@ -1714,6 +1718,7 @@ discovery,T1082,System Information Discovery,30,Check computer location,96be6002
 discovery,T1082,System Information Discovery,31,BIOS Information Discovery through Registry,f2f91612-d904-49d7-87c2-6c165d23bead,command_prompt
 discovery,T1082,System Information Discovery,32,ESXi - VM Discovery using ESXCLI,2040405c-eea6-4c1c-aef3-c2acc430fac9,command_prompt
 discovery,T1082,System Information Discovery,33,ESXi - Darkside system information discovery,f89812e5-67d1-4f49-86fa-cbc6609ea86a,command_prompt
+discovery,T1016.002,System Network Configuration Discovery: Wi-Fi Discovery,1,Enumerate Stored Wi-Fi Profiles And Passwords via netsh,53cf1903-0fa7-4177-ab14-f358ae809eec,command_prompt
 discovery,T1010,Application Window Discovery,1,List Process Main Windows - C# .NET,fe94a1c3-3e22-4dc9-9fdf-3a8bdbc10dc4,command_prompt
 discovery,T1580,Cloud Infrastructure Discovery,1,AWS - EC2 Enumeration from Cloud Instance,99ee161b-dcb1-4276-8ecb-7cfdcb207820,sh
 discovery,T1580,Cloud Infrastructure Discovery,2,AWS - EC2 Security Group Enumeration,99b38f24-5acc-4aa3-85e5-b7f97a5d37ac,command_prompt
@@ -1824,6 +1829,7 @@ discovery,T1018,Remote System Discovery,18,Enumerate Active Directory Computers 
 discovery,T1018,Remote System Discovery,19,Get-DomainController with PowerView,b9d2e8ca-5520-4737-8076-4f08913da2c4,powershell
 discovery,T1018,Remote System Discovery,20,Get-WmiObject to Enumerate Domain Controllers,e3cf5123-f6c9-4375-bdf2-1bb3ba43a1ad,powershell
 discovery,T1018,Remote System Discovery,21,Remote System Discovery - net group Domain Controller,5843529a-5056-4bc1-9c13-a311e2af4ca0,command_prompt
+discovery,T1018,Remote System Discovery,22,Enumerate Remote Hosts with Netscan,b8147c9a-84db-4ec1-8eee-4e0da75f0de5,powershell
 discovery,T1046,Network Service Discovery,1,Port Scan,68e907da-2539-48f6-9fc9-257a78c05540,bash
 discovery,T1046,Network Service Discovery,2,Port Scan Nmap,515942b0-a09f-4163-a7bb-22fefb6f185f,sh
 discovery,T1046,Network Service Discovery,3,Port Scan NMap for Windows,d696a3cb-d7a8-4976-8eb5-5af4abf2e3df,powershell
