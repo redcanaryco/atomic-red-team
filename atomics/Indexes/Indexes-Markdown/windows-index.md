@@ -282,6 +282,7 @@
   - Atomic Test #69: RDP Authentication Level Override [windows]
   - Atomic Test #70: Enable RDP via Registry (fDenyTSConnections) [windows]
   - Atomic Test #71: Disable Windows Prefetch Through Registry [windows]
+  - Atomic Test #72: Setting Shadow key in Registry for RDP Shadowing [windows]
 - [T1574.008 Hijack Execution Flow: Path Interception by Search Order Hijacking](../../T1574.008/T1574.008.md)
   - Atomic Test #1: powerShell Persistence via hijacking default modules - Get-Variable.exe [windows]
 - T1027.001 Obfuscated Files or Information: Binary Padding [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -423,6 +424,7 @@
   - Atomic Test #49: Tamper with Windows Defender Registry - Powershell [windows]
   - Atomic Test #51: Delete Microsoft Defender ASR Rules - InTune [windows]
   - Atomic Test #52: Delete Microsoft Defender ASR Rules - GPO [windows]
+  - Atomic Test #53: AMSI Bypass - Create AMSIEnable Reg Key [windows]
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
