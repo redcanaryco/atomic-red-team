@@ -1800,6 +1800,7 @@
   - Atomic Test #29: iwr or Invoke Web-Request download [windows]
   - Atomic Test #30: Arbitrary file download using the Notepad++ GUP.exe binary [windows]
   - Atomic Test #31: File download via nscurl [macos]
+  - Atomic Test #32: File Download with Sqlcmd.exe [windows]
 - T1665 Hide Infrastructure [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1001.002 Data Obfuscation via Steganography](../../T1001.002/T1001.002.md)
   - Atomic Test #1: Steganographic Tarball Embedding [windows]
