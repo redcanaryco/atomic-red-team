@@ -1700,6 +1700,7 @@
   - Atomic Test #5: Process Discovery - wmic process [windows]
   - Atomic Test #6: Discover Specific Process - tasklist [windows]
   - Atomic Test #7: Process Discovery - Process Hacker [windows]
+  - Atomic Test #8: Process Discovery - PC Hunter [windows]
 - T1497.002 User Activity Based Checks [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1069.001 Permission Groups Discovery: Local Groups](../../T1069.001/T1069.001.md)
   - Atomic Test #2: Basic Permission Groups Discovery Windows (Local) [windows]
