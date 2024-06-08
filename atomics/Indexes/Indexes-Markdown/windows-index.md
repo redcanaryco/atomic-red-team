@@ -1251,6 +1251,7 @@
   - Atomic Test #28: Nimgrab - Transfer Files [windows]
   - Atomic Test #29: iwr or Invoke Web-Request download [windows]
   - Atomic Test #30: Arbitrary file download using the Notepad++ GUP.exe binary [windows]
+  - Atomic Test #32: File Download with Sqlcmd.exe [windows]
 - T1665 Hide Infrastructure [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1001.002 Data Obfuscation via Steganography](../../T1001.002/T1001.002.md)
   - Atomic Test #1: Steganographic Tarball Embedding [windows]
@@ -1700,6 +1701,7 @@
   - Atomic Test #5: Process Discovery - wmic process [windows]
   - Atomic Test #6: Discover Specific Process - tasklist [windows]
   - Atomic Test #7: Process Discovery - Process Hacker [windows]
+  - Atomic Test #8: Process Discovery - PC Hunter [windows]
 - T1497.002 User Activity Based Checks [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1069.001 Permission Groups Discovery: Local Groups](../../T1069.001/T1069.001.md)
   - Atomic Test #2: Basic Permission Groups Discovery Windows (Local) [windows]

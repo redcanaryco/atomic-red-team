@@ -111,3 +111,28 @@ atomic_tests:
     command: Start-Process -FilePath "$Env:ProgramFiles\Process Hacker 2\#{processhacker_exe}"
     name: powershell
     elevation_required: true
+- name: Process Discovery - PC Hunter
+  auto_generated_guid: b4ca838d-d013-4461-bf2c-f7132617b409
+  description: PC Hunter is a toolkit with access to hundreds of settings including kernels, kernel modules, processes, network, startup, and more. When abused, this tool can allow threat actors to effectively access sensitive processes, collect system information, and terminate security software.
+  supported_platforms:
+  - windows
+  input_arguments:
+    pchunter64_exe:
+      description: Process hacker installation executables.
+      type: string
+      default: PChunter64.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: PCHunter must be present in device
+    prereq_command: |
+      if (Get-ChildItem -Path C:\ -Include *PCHunter64* -File -Recurse -ErrorAction SilentlyContinue) {exit 0} else {exit 1}
+    get_prereq_command: |-
+      Write-Host Downloading PC Hunter
+      New-Item -Type Directory "C:\Temp\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://www.snapfiles.com/directdl/PCHunter_free.zip" -OutFile "C:\Temp\ExternalPayloads\PCHunter_free.zip"
+      Expand-Archive -LiteralPath 'C:\Temp\ExternalPayloads\PCHunter_free.zip' -DestinationPath C:\Temp\ExternalPayloads
+      Write-Host Unzipping Installing Process Hunter
+  executor:
+    command: Start-Process -FilePath "C:\Temp\ExternalPayloads\PCHunter_free\#{pchunter64_exe}"
+    name: powershell
+    elevation_required: true
