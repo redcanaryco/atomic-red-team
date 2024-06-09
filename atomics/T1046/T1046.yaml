@@ -245,3 +245,13 @@ atomic_tests:
           }
       }
     name: powershell
+- name: Discovery of TCP connection status on host via PowerShell 
+  description: |
+    This command in PowerShell helps to understand TCP connection properties on the host system.Local port,localIP address,Remote IP Address, remote port and connection state are displayed
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       Get-NetTcpConnection | Select-Object LocalAddress,LocalPort,RemoteAddress,RemotePort,State| Sort-Object -Property LocalPort | Format-Table
+    name: powershell
+    elevation_required: true
