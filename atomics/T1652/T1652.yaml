@@ -1,0 +1,17 @@
+attack_technique: T1652
+display_name: "Device Driver Discovery"
+atomic_tests:
+
+- name: Device Driver Discovery
+  auto_generated_guid: 
+  description: Displays a list of installed device drivers on the local computer.
+  supported_platforms:
+  - windows
+  input_arguments: 
+  dependency_executor_name: 
+  dependencies: 
+  executor:
+    command: driverquery
+    cleanup_command: 
+    name: powershell
+    elevation_required: false
