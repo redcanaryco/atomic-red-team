@@ -395,6 +395,7 @@
   - Atomic Test #70: Enable RDP via Registry (fDenyTSConnections) [windows]
   - Atomic Test #71: Disable Windows Prefetch Through Registry [windows]
   - Atomic Test #72: Setting Shadow key in Registry for RDP Shadowing [windows]
+  - Atomic Test #73: Flush Shimcache [windows]
 - [T1574.008 Hijack Execution Flow: Path Interception by Search Order Hijacking](../../T1574.008/T1574.008.md)
   - Atomic Test #1: powerShell Persistence via hijacking default modules - Get-Variable.exe [windows]
 - T1535 Unused/Unsupported Cloud Regions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
