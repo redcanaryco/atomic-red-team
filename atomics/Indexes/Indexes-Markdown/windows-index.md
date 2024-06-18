@@ -1756,6 +1756,7 @@
   - Atomic Test #7: WinPwn - bluekeep [windows]
   - Atomic Test #8: WinPwn - fruit [windows]
   - Atomic Test #10: Port-Scanning /24 Subnet with PowerShell [windows]
+  - Atomic Test #11: Remote Desktop Services Discovery via PowerShell [windows]
 - [T1518 Software Discovery](../../T1518/T1518.md)
   - Atomic Test #1: Find and Display Internet Explorer Browser Version [windows]
   - Atomic Test #2: Applications Installed [windows]
