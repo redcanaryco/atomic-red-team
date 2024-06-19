@@ -1123,3 +1123,14 @@ atomic_tests:
        Invoke-CimMethod -ClassName StdRegProv -MethodName DeleteValue -Arguments @{hDefKey=[uint32]2147483650; sSubKeyName="Software\Policies\Microsoft\Windows NT\Terminal Services"; sValueName="Shadow"} -CimSession $s
     name: powershell
     elevation_required: true
+- name: Flush Shimcache 
+  auto_generated_guid: ecbd533e-b45d-4239-aeff-b857c6f6d68b
+  description: |-
+    The ShimCache is a component in Windows operating systems that stores information about recently executed applications. It is used by the operating system to speed up the launching process of applications. The ShimCache is also used by IR teams and Forensic teams. Forensic investigators can use the ShimCache to determine which programs have been executed on a system, even if they have been deleted or their logs have been cleared.Reference : https://blueteamops.medium.com/shimcache-flush-89daff28d15e
+  supported_platforms:
+  - windows 
+  executor:
+    command: |-
+       Rundll32.exe apphelp.dll,ShimFlushCache
+    name: command_prompt
+    elevation_required: true
