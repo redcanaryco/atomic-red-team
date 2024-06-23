@@ -530,3 +530,17 @@ atomic_tests:
        echo "" | "#{plink_file}" "#{vm_host}" -ssh  -l "#{vm_user}" -pw "#{vm_pass}" -m "#{cli_script}"
     name: command_prompt
     elevation_required: false
+- name: sysctl to gather macOS hardware info
+  auto_generated_guid: 
+  description: Gets the macOS hardware information, which can be used to determine whether the target macOS host is running on a physical or virtual machine. sysctl can be used to gather interesting macOS host data, including hardware information, memory size, logical cpu information, etc.
+  supported_platforms:
+  - macos
+  input_arguments: 
+  dependency_executor_name: 
+  dependencies: 
+  executor:
+    command: sysctl -n hw.model
+    cleanup_command: 
+    name: sh
+    elevation_required: false
+  
