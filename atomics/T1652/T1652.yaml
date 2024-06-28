@@ -1,0 +1,23 @@
+attack_technique: T1652
+display_name: "Device Driver Discovery"
+atomic_tests:
+
+- name: Device Driver Discovery
+  auto_generated_guid: 
+  description: |
+    Displays a list of installed device drivers on the local computer and their properties. Threat actors use this command to enumerate the existing drivers on the computer. 
+    Parameters: 
+    /v /fo list - Displays verbose output in a list format - the /v parameter is not valid for signed drivers
+    /si /fo list - Provides information about signed drivers and outputs it in a list format
+  supported_platforms:
+  - windows
+  input_arguments: 
+  dependency_executor_name: 
+  dependencies: 
+  executor:
+    command: |
+      driverquery /v /fo list
+      driverquery /si /fo list
+    cleanup_command: 
+    name: powershell
+    elevation_required: false
