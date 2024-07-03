@@ -198,6 +198,7 @@
   - Atomic Test #1: Indirect Command Execution - pcalua.exe [windows]
   - Atomic Test #2: Indirect Command Execution - forfiles.exe [windows]
   - Atomic Test #3: Indirect Command Execution - conhost.exe [windows]
+  - Atomic Test #4: Indirect Command Execution - Scriptrunner.exe [windows]
 - [T1140 Deobfuscate/Decode Files or Information](../../T1140/T1140.md)
   - Atomic Test #1: Deobfuscate/Decode Files Or Information [windows]
   - Atomic Test #2: Certutil Rename and Decode [windows]
