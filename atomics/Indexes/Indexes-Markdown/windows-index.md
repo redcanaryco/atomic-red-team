@@ -1563,7 +1563,8 @@
   - Atomic Test #3: WinPwn - GPOAudit [windows]
   - Atomic Test #4: WinPwn - GPORemoteAccessPolicy [windows]
   - Atomic Test #5: MSFT Get-GPO Cmdlet [windows]
-- T1652 Device Driver Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1652 Device Driver Discovery](../../T1652/T1652.md)
+  - Atomic Test #1: Device Driver Discovery [windows]
 - [T1087.002 Account Discovery: Domain Account](../../T1087.002/T1087.002.md)
   - Atomic Test #1: Enumerate all accounts (Domain) [windows]
   - Atomic Test #2: Enumerate all accounts via PowerShell (Domain) [windows]
@@ -1649,10 +1650,9 @@
   - Atomic Test #22: WinPwn - PowerSharpPack - Sharpup checking common Privesc vectors [windows]
   - Atomic Test #23: WinPwn - PowerSharpPack - Seatbelt [windows]
   - Atomic Test #27: System Information Discovery with WMIC [windows]
-  - Atomic Test #28: Driver Enumeration using DriverQuery [windows]
-  - Atomic Test #29: System Information Discovery [windows]
-  - Atomic Test #30: Check computer location [windows]
-  - Atomic Test #31: BIOS Information Discovery through Registry [windows]
+  - Atomic Test #28: System Information Discovery [windows]
+  - Atomic Test #29: Check computer location [windows]
+  - Atomic Test #30: BIOS Information Discovery through Registry [windows]
 - [T1016.002 System Network Configuration Discovery: Wi-Fi Discovery](../../T1016.002/T1016.002.md)
   - Atomic Test #1: Enumerate Stored Wi-Fi Profiles And Passwords via netsh [windows]
 - [T1010 Application Window Discovery](../../T1010/T1010.md)

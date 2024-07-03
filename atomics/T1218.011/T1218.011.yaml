@@ -340,3 +340,23 @@ atomic_tests:
     command: |
       rundll32.exe url.dll,FileProtocolHandler #{command_to_execute}
     name: command_prompt
+- name: Rundll32 execute payload by calling RouteTheCall
+  auto_generated_guid: 
+  description: |
+    Launch an executable payload by calling RouteTheCall. Test execution of a command using rundll32.exe to execute a payload{calc.exe} by calling RouteTheCall. Upon execution, calc.exe will be launched.
+    Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Zipfldr.yml
+  supported_platforms:
+  - windows
+  input_arguments:
+    exe_to_launch:
+      description: Path of the executable to launch
+      type: path
+      default: "'%windir%\\System32\\calc.exe'"
+  dependency_executor_name: 
+  dependencies: 
+  executor:
+    command: rundll32.exe zipfldr.dll,RouteTheCall "#{exe_to_launch}"
+    cleanup_command: 
+    name: powershell
+    elevation_required: false
+  
