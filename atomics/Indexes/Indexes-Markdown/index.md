@@ -20,6 +20,7 @@
   - Atomic Test #13: Rundll32 with desk.cpl [windows]
   - Atomic Test #14: Running DLL with .init extension and function [windows]
   - Atomic Test #15: Rundll32 execute command via FileProtocolHandler [windows]
+  - Atomic Test #16: Rundll32 execute payload by calling RouteTheCall [windows]
 - T1027.009 Embedded Payloads [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1556.003 Modify Authentication Process: Pluggable Authentication Modules](../../T1556.003/T1556.003.md)
   - Atomic Test #1: Malicious PAM rule [linux]
@@ -265,6 +266,7 @@
   - Atomic Test #7: Windows - Modify file last access timestamp with PowerShell [windows]
   - Atomic Test #8: Windows - Timestomp a File [windows]
   - Atomic Test #9: MacOS - Timestomp Date Modified [macos]
+  - Atomic Test #10: Event Log Manipulations- Time slipping via Powershell [windows]
 - [T1620 Reflective Code Loading](../../T1620/T1620.md)
   - Atomic Test #1: WinPwn - Reflectively load Mimik@tz into memory [windows]
 - T1564.011 Ignore Process Interrupts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -396,6 +398,17 @@
   - Atomic Test #71: Disable Windows Prefetch Through Registry [windows]
   - Atomic Test #72: Setting Shadow key in Registry for RDP Shadowing [windows]
   - Atomic Test #73: Flush Shimcache [windows]
+  - Atomic Test #74: Disable Windows Remote Desktop Protocol [windows]
+  - Atomic Test #75: Enforce Smart Card Authentication Through Registry [windows]
+  - Atomic Test #76: Requires the BitLocker PIN for Pre-boot authentication [windows]
+  - Atomic Test #77: Modify EnableBDEWithNoTPM Registry entry [windows]
+  - Atomic Test #78: Modify UseTPM Registry entry [windows]
+  - Atomic Test #79: Modify UseTPMPIN Registry entry [windows]
+  - Atomic Test #80: Modify UseTPMKey Registry entry [windows]
+  - Atomic Test #81: Modify UseTPMKeyPIN Registry entry [windows]
+  - Atomic Test #82: Modify EnableNonTPM Registry entry [windows]
+  - Atomic Test #83: Modify UsePartialEncryptionKey Registry entry [windows]
+  - Atomic Test #84: Modify UsePIN Registry entry [windows]
 - [T1574.008 Hijack Execution Flow: Path Interception by Search Order Hijacking](../../T1574.008/T1574.008.md)
   - Atomic Test #1: powerShell Persistence via hijacking default modules - Get-Variable.exe [windows]
 - T1535 Unused/Unsupported Cloud Regions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

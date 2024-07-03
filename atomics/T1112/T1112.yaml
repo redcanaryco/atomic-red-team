@@ -1134,3 +1134,146 @@ atomic_tests:
        Rundll32.exe apphelp.dll,ShimFlushCache
     name: command_prompt
     elevation_required: true
+- name: Disable Windows Remote Desktop Protocol
+  auto_generated_guid: 5f8e36de-37ca-455e-b054-a2584f043c06
+  description: |
+    Modify the registry of the machine to disable remote desktop protocol.
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKLM\System\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 1 /f
+    cleanup_command: |
+       reg delete "HKLM\System\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f
+    name: command_prompt
+    elevation_required: true
+- name: Enforce Smart Card Authentication Through Registry
+  auto_generated_guid: 4c4bf587-fe7f-448f-ba8d-1ecec9db88be
+  description: |
+    Enforce Smart Card Authentication Through Registry
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v scforceoption /t REG_DWORD /d 1 /f
+    cleanup_command: |
+       reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v scforceoption /f
+    name: command_prompt
+    elevation_required: true
+- name: Requires the BitLocker PIN for Pre-boot authentication
+  auto_generated_guid: 26fc7375-a551-4336-90d7-3f2817564304
+  description: |
+    Requires the BitLocker PIN for Pre-boot authentication
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v UseAdvancedStartup /t REG_DWORD /d 1 /f
+    cleanup_command: |
+       reg delete "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v UseAdvancedStartup /f
+    name: command_prompt
+    elevation_required: true
+- name: Modify EnableBDEWithNoTPM Registry entry 
+  auto_generated_guid: bacb3e73-8161-43a9-8204-a69fe0e4b482
+  description: |
+    Allow BitLocker without a compatible TPM (requires a password)
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v EnableBDEWithNoTPM /t REG_DWORD /d 1 /f
+    cleanup_command: |
+       reg delete ""HKLM\SOFTWARE\Policies\Microsoft\FVE"" /v EnableBDEWithNoTPM /f
+    name: command_prompt
+    elevation_required: true
+- name: Modify UseTPM Registry entry 
+  auto_generated_guid: 7c8c7bd8-0a5c-4514-a6a3-0814c5a98cf0
+  description: |
+    Use Trusted Platform Module (TPM) for Bitlocker tool
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v UseTPM /t REG_DWORD /d 2 /f
+    cleanup_command: |
+       reg delete ""HKLM\SOFTWARE\Policies\Microsoft\FVE"" /v UseTPM /f
+    name: command_prompt
+    elevation_required: true
+- name: Modify UseTPMPIN Registry entry 
+  auto_generated_guid: 10b33fb0-c58b-44cd-8599-b6da5ad6384c
+  description: |
+    Allow startup PIN with TPM for Bitlocker tool
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v UseTPMPIN /t REG_DWORD /d 2 /f
+    cleanup_command: |
+       reg delete "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v UseTPMPIN /f
+    name: command_prompt
+    elevation_required: true
+- name: Modify UseTPMKey Registry entry 
+  auto_generated_guid: c8480c83-a932-446e-a919-06a1fd1e512a
+  description: |
+    Allow startup key with TPM for Bitlocker tool
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v UseTPMKey /t REG_DWORD /d 2 /f
+    cleanup_command: |
+       reg delete "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v UseTPMKey /f
+    name: command_prompt
+    elevation_required: true
+- name: Modify UseTPMKeyPIN Registry entry 
+  auto_generated_guid: 02d8b9f7-1a51-4011-8901-2d55cca667f9
+  description: |
+    Allow startup key and PIN with TPM for Bitlocker tool
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v UseTPMKeyPIN /t REG_DWORD /d 2 /f
+    cleanup_command: |
+       reg delete "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v UseTPMKeyPIN /f
+    name: command_prompt
+    elevation_required: true
+- name: Modify EnableNonTPM Registry entry 
+  auto_generated_guid: 02d8b9f7-1a51-4011-8901-2d55cca667f9
+  description: |
+    Allow Bitlocker without TPM for Bitlocker tool
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v EnableNonTPM /t REG_DWORD /d 1 /f
+    cleanup_command: |
+       reg delete "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v EnableNonTPM /f
+    name: command_prompt
+    elevation_required: true
+- name: Modify UsePartialEncryptionKey Registry entry 
+  auto_generated_guid: b5169fd5-85c8-4b2c-a9b6-64cc0b9febef
+  description: |
+    Allow startup key with TPM for Bitlocker tool
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v UsePartialEncryptionKey /t REG_DWORD /d 2 /f
+    cleanup_command: |
+       reg delete "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v UsePartialEncryptionKey /f
+    name: command_prompt
+    elevation_required: true
+- name: Modify UsePIN Registry entry 
+  auto_generated_guid: 3ac0b30f-532f-43c6-8f01-fb657aaed7e4
+  description: |
+    Allow startup PIN with TPM for Bitlocker tool
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v UsePIN /t REG_DWORD /d 2 /f
+    cleanup_command: |
+       reg delete "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v UsePIN /f
+    name: command_prompt
+    elevation_required: true

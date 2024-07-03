@@ -15,6 +15,7 @@ defense-evasion,T1218.011,Signed Binary Proxy Execution: Rundll32,12,Rundll32 wi
 defense-evasion,T1218.011,Signed Binary Proxy Execution: Rundll32,13,Rundll32 with desk.cpl,83a95136-a496-423c-81d3-1c6750133917,command_prompt
 defense-evasion,T1218.011,Signed Binary Proxy Execution: Rundll32,14,Running DLL with .init extension and function,2d5029f0-ae20-446f-8811-e7511b58e8b6,command_prompt
 defense-evasion,T1218.011,Signed Binary Proxy Execution: Rundll32,15,Rundll32 execute command via FileProtocolHandler,f3ad3c5b-1db1-45c1-81bf-d3370ebab6c8,command_prompt
+defense-evasion,T1218.011,Signed Binary Proxy Execution: Rundll32,16,Rundll32 execute payload by calling RouteTheCall,8a7f56ee-10e7-444c-a139-0109438288eb,powershell
 defense-evasion,T1556.003,Modify Authentication Process: Pluggable Authentication Modules,1,Malicious PAM rule,4b9dde80-ae22-44b1-a82a-644bf009eb9c,sh
 defense-evasion,T1556.003,Modify Authentication Process: Pluggable Authentication Modules,2,Malicious PAM rule (freebsd),b17eacac-282d-4ca8-a240-46602cf863e3,sh
 defense-evasion,T1556.003,Modify Authentication Process: Pluggable Authentication Modules,3,Malicious PAM module,65208808-3125-4a2e-8389-a0a00e9ab326,sh
@@ -209,6 +210,7 @@ defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,6,Windows - Modif
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,7,Windows - Modify file last access timestamp with PowerShell,da627f63-b9bd-4431-b6f8-c5b44d061a62,powershell
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,8,Windows - Timestomp a File,d7512c33-3a75-4806-9893-69abc3ccdd43,powershell
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,9,MacOS - Timestomp Date Modified,87fffff4-d371-4057-a539-e3b24c37e564,sh
+defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,10,Event Log Manipulations- Time slipping via Powershell,7bcf83bf-f5ef-425c-9d9a-71618ad9ed12,powershell
 defense-evasion,T1620,Reflective Code Loading,1,WinPwn - Reflectively load Mimik@tz into memory,56b9589c-9170-4682-8c3d-33b86ecb5119,powershell
 defense-evasion,T1218.003,Signed Binary Proxy Execution: CMSTP,1,CMSTP Executing Remote Scriptlet,34e63321-9683-496b-bbc1-7566bc55e624,command_prompt
 defense-evasion,T1218.003,Signed Binary Proxy Execution: CMSTP,2,CMSTP Executing UAC Bypass,748cb4f6-2fb3-4e97-b7ad-b22635a09ab0,command_prompt
@@ -323,6 +325,17 @@ defense-evasion,T1112,Modify Registry,70,Enable RDP via Registry (fDenyTSConnect
 defense-evasion,T1112,Modify Registry,71,Disable Windows Prefetch Through Registry,7979dd41-2045-48b2-a54e-b1bc2415c9da,command_prompt
 defense-evasion,T1112,Modify Registry,72,Setting Shadow key in Registry for RDP Shadowing,ac494fe5-81a4-4897-af42-e774cf005ecb,powershell
 defense-evasion,T1112,Modify Registry,73,Flush Shimcache,ecbd533e-b45d-4239-aeff-b857c6f6d68b,command_prompt
+defense-evasion,T1112,Modify Registry,74,Disable Windows Remote Desktop Protocol,5f8e36de-37ca-455e-b054-a2584f043c06,command_prompt
+defense-evasion,T1112,Modify Registry,75,Enforce Smart Card Authentication Through Registry,4c4bf587-fe7f-448f-ba8d-1ecec9db88be,command_prompt
+defense-evasion,T1112,Modify Registry,76,Requires the BitLocker PIN for Pre-boot authentication,26fc7375-a551-4336-90d7-3f2817564304,command_prompt
+defense-evasion,T1112,Modify Registry,77,Modify EnableBDEWithNoTPM Registry entry,bacb3e73-8161-43a9-8204-a69fe0e4b482,command_prompt
+defense-evasion,T1112,Modify Registry,78,Modify UseTPM Registry entry,7c8c7bd8-0a5c-4514-a6a3-0814c5a98cf0,command_prompt
+defense-evasion,T1112,Modify Registry,79,Modify UseTPMPIN Registry entry,10b33fb0-c58b-44cd-8599-b6da5ad6384c,command_prompt
+defense-evasion,T1112,Modify Registry,80,Modify UseTPMKey Registry entry,c8480c83-a932-446e-a919-06a1fd1e512a,command_prompt
+defense-evasion,T1112,Modify Registry,81,Modify UseTPMKeyPIN Registry entry,02d8b9f7-1a51-4011-8901-2d55cca667f9,command_prompt
+defense-evasion,T1112,Modify Registry,82,Modify EnableNonTPM Registry entry,02d8b9f7-1a51-4011-8901-2d55cca667f9,command_prompt
+defense-evasion,T1112,Modify Registry,83,Modify UsePartialEncryptionKey Registry entry,b5169fd5-85c8-4b2c-a9b6-64cc0b9febef,command_prompt
+defense-evasion,T1112,Modify Registry,84,Modify UsePIN Registry entry,3ac0b30f-532f-43c6-8f01-fb657aaed7e4,command_prompt
 defense-evasion,T1574.008,Hijack Execution Flow: Path Interception by Search Order Hijacking,1,powerShell Persistence via hijacking default modules - Get-Variable.exe,1561de08-0b4b-498e-8261-e922f3494aae,powershell
 defense-evasion,T1027.001,Obfuscated Files or Information: Binary Padding,1,Pad Binary to Change Hash - Linux/macOS dd,ffe2346c-abd5-4b45-a713-bf5f1ebd573a,sh
 defense-evasion,T1027.001,Obfuscated Files or Information: Binary Padding,2,Pad Binary to Change Hash using truncate command - Linux/macOS,e22a9e89-69c7-410f-a473-e6c212cd2292,sh
