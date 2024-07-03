@@ -96,15 +96,9 @@ atomic_tests:
       description: Path of reference file to read timestamps from
       type: path
       default: /bin/sh
-  dependencies:
-  - description: |
-      The file must exist in order to be timestomped
-    prereq_command: |
-      test -e #{target_file_path} && exit 0 || exit 1
-    get_prereq_command: |
-      echo 'T1070.006 reference file timestomp test' > #{target_file_path}
   executor:
     command: |
+      touch #{target_file_path}
       touch -acmr #{reference_file_path} #{target_file_path}
     cleanup_command: |
       rm -f #{target_file_path}
