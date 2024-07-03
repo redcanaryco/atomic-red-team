@@ -35,36 +35,36 @@ atomic_tests:
         default: $env:TEMP\random_passwords.txt
     dependency_executor_name: powershell
     dependencies:
-      - description: |
-          Image file must exist
-        prereq_command: |
-          if (!(Test-Path "#{image_file}")) {exit 1} else {
-          {exit 0}
-          }
-        get_prereq_command: |
-          New-Item -Type Directory (split-path "#{image_file}") -ErrorAction ignore | Out-Null
-          Write-Output "Downloading image file..."
-          $imageUrl = "https://github.com/raghavsingh7/Pictures/raw/a9617d9fce289909441120a1e0366315c2c5e19d/lime.jpg"
-          Invoke-WebRequest -Uri $imageUrl -OutFile "#{image_file}"
-      - description: |
-          File to hide within tarz file must exist
-        prereq_command: |
-          if (!(Test-Path "#{passwords_file}")) {exit 1} else {
-          {exit 0}
-          }
-        get_prereq_command: |
-          Write-Output "Generating random passwords and saving to file..."
-          $passwords = 1..10 | ForEach-Object { Get-Random -InputObject ('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{}|;:,.<>?') -Count 12 }
-          $passwords | Out-File -FilePath "#{passwords_file}"    
-      - description: |
-          Tarz file to embed in image must exist 
-        prereq_command: |
-          if (!(Test-Path "#{tar_file}")) {exit 1} else {
-          {exit 0}
-          }
-        get_prereq_command: |  
-          Write-Output "Generating tarz file..."
-          tar -cvf "#{tar_file}" "#{passwords_file}"
+    - description: |
+        Image file must exist
+      prereq_command: |
+        if (!(Test-Path "#{image_file}")) {exit 1} else {
+        {exit 0}
+        }
+      get_prereq_command: |
+        New-Item -Type Directory (split-path "#{image_file}") -ErrorAction ignore | Out-Null
+        Write-Output "Downloading image file..."
+        $imageUrl = "https://github.com/raghavsingh7/Pictures/raw/a9617d9fce289909441120a1e0366315c2c5e19d/lime.jpg"
+        Invoke-WebRequest -Uri $imageUrl -OutFile "#{image_file}"
+    - description: |
+        File to hide within tarz file must exist
+      prereq_command: |
+        if (!(Test-Path "#{passwords_file}")) {exit 1} else {
+        {exit 0}
+        }
+      get_prereq_command: |
+        Write-Output "Generating random passwords and saving to file..."
+        $passwords = 1..10 | ForEach-Object { Get-Random -InputObject ('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{}|;:,.<>?') -Count 12 }
+        $passwords | Out-File -FilePath "#{passwords_file}"    
+    - description: |
+        Tarz file to embed in image must exist 
+      prereq_command: |
+        if (!(Test-Path "#{tar_file}")) {exit 1} else {
+        {exit 0}
+        }
+      get_prereq_command: |  
+        Write-Output "Generating tarz file..."
+        tar -cvf "#{tar_file}" "#{passwords_file}"
     executor:
       name: powershell
       elevation_required: true
