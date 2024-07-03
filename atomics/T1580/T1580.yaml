@@ -76,18 +76,18 @@ atomic_tests:
       aws ec2 describe-security-groups --profile #{aws_profile} --output #{output_format}
   
   dependencies:
-    - description: AWS CLI installed and configured with the necessary access rights.
-      prereq_command: type aws || aws --version
-      get_prereq_command: |
-        if [ "$(uname)" = "Darwin" ] || [ "$(expr substr $(uname) 1 5)" = "Linux" ]; then
-          curl "https://aws.amazon.com/cli/" -o "Install-AWSCLI.sh" && sh Install-AWSCLI.sh
-        elif [ "$(expr substr $(uname) 1 5)" = "MINGW" ]; then
-          Invoke-WebRequest -Uri "https://aws.amazon.com/cli/" -OutFile "Install-AWSCLI.ps1"; .\Install-AWSCLI.ps1
-        fi
-    - description: Check if AWS CLI is installed and configured.
-      prereq_command: |
-        aws sts get-caller-identity --profile #{aws_profile}
-      get_prereq_command: |
-        if ! aws sts get-caller-identity --profile #{aws_profile}; then
-          echo "AWS CLI not properly configured. Please configure AWS CLI."
-        fi
+  - description: AWS CLI installed and configured with the necessary access rights.
+    prereq_command: type aws || aws --version
+    get_prereq_command: |
+      if [ "$(uname)" = "Darwin" ] || [ "$(expr substr $(uname) 1 5)" = "Linux" ]; then
+        curl "https://aws.amazon.com/cli/" -o "Install-AWSCLI.sh" && sh Install-AWSCLI.sh
+      elif [ "$(expr substr $(uname) 1 5)" = "MINGW" ]; then
+        Invoke-WebRequest -Uri "https://aws.amazon.com/cli/" -OutFile "Install-AWSCLI.ps1"; .\Install-AWSCLI.ps1
+      fi
+  - description: Check if AWS CLI is installed and configured.
+    prereq_command: |
+      aws sts get-caller-identity --profile #{aws_profile}
+    get_prereq_command: |
+      if ! aws sts get-caller-identity --profile #{aws_profile}; then
+        echo "AWS CLI not properly configured. Please configure AWS CLI."
+      fi

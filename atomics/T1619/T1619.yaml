@@ -9,12 +9,12 @@ atomic_tests:
   supported_platforms:
   - iaas:aws
   dependencies:
-    - description: |
-        Check if ~/.aws/credentials file has a default stanza is configured
-      prereq_command: |
-        cat ~/.aws/credentials | grep "default"
-      get_prereq_command: |
-        echo Please install the aws-cli and configure your AWS default profile using: aws configure
+  - description: |
+      Check if ~/.aws/credentials file has a default stanza is configured
+    prereq_command: |
+      cat ~/.aws/credentials | grep "default"
+    get_prereq_command: |
+      echo Please install the aws-cli and configure your AWS default profile using: aws configure
   executor:
     command: |
       for bucket in "$(aws s3 ls | cut -d " " -f3)"; do aws s3api list-objects-v2 --bucket $bucket --output text; done

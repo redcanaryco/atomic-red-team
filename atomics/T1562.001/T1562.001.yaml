@@ -79,12 +79,12 @@ atomic_tests:
   supported_platforms:
   - linux
   dependencies:
-    - description: |
-        SELinux must be installed
-      prereq_command: |
-        which setenforce
-      get_prereq_command: |
-        echo "SELinux is not installed"; exit 1
+  - description: |
+      SELinux must be installed
+    prereq_command: |
+      which setenforce
+    get_prereq_command: |
+      echo "SELinux is not installed"; exit 1
   executor:
     command: |
       setenforce 0
