@@ -15,6 +15,7 @@ defense-evasion,T1218.011,Signed Binary Proxy Execution: Rundll32,12,Rundll32 wi
 defense-evasion,T1218.011,Signed Binary Proxy Execution: Rundll32,13,Rundll32 with desk.cpl,83a95136-a496-423c-81d3-1c6750133917,command_prompt
 defense-evasion,T1218.011,Signed Binary Proxy Execution: Rundll32,14,Running DLL with .init extension and function,2d5029f0-ae20-446f-8811-e7511b58e8b6,command_prompt
 defense-evasion,T1218.011,Signed Binary Proxy Execution: Rundll32,15,Rundll32 execute command via FileProtocolHandler,f3ad3c5b-1db1-45c1-81bf-d3370ebab6c8,command_prompt
+defense-evasion,T1218.011,Signed Binary Proxy Execution: Rundll32,16,Rundll32 execute payload by calling RouteTheCall,8a7f56ee-10e7-444c-a139-0109438288eb,powershell
 defense-evasion,T1556.003,Modify Authentication Process: Pluggable Authentication Modules,1,Malicious PAM rule,4b9dde80-ae22-44b1-a82a-644bf009eb9c,sh
 defense-evasion,T1556.003,Modify Authentication Process: Pluggable Authentication Modules,2,Malicious PAM rule (freebsd),b17eacac-282d-4ca8-a240-46602cf863e3,sh
 defense-evasion,T1556.003,Modify Authentication Process: Pluggable Authentication Modules,3,Malicious PAM module,65208808-3125-4a2e-8389-a0a00e9ab326,sh
@@ -150,6 +151,7 @@ defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,13,Se
 defense-evasion,T1202,Indirect Command Execution,1,Indirect Command Execution - pcalua.exe,cecfea7a-5f03-4cdd-8bc8-6f7c22862440,command_prompt
 defense-evasion,T1202,Indirect Command Execution,2,Indirect Command Execution - forfiles.exe,8b34a448-40d9-4fc3-a8c8-4bb286faf7dc,command_prompt
 defense-evasion,T1202,Indirect Command Execution,3,Indirect Command Execution - conhost.exe,cf3391e0-b482-4b02-87fc-ca8362269b29,command_prompt
+defense-evasion,T1202,Indirect Command Execution,4,Indirect Command Execution - Scriptrunner.exe,0fd14730-6226-4f5e-8d67-43c65f1be940,powershell
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,1,Deobfuscate/Decode Files Or Information,dc6fe391-69e6-4506-bd06-ea5eeb4082f8,command_prompt
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,2,Certutil Rename and Decode,71abc534-3c05-4d0c-80f7-cbe93cb2aa94,command_prompt
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,3,Base64 decoding with Python,356dc0e8-684f-4428-bb94-9313998ad608,sh
@@ -209,6 +211,7 @@ defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,6,Windows - Modif
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,7,Windows - Modify file last access timestamp with PowerShell,da627f63-b9bd-4431-b6f8-c5b44d061a62,powershell
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,8,Windows - Timestomp a File,d7512c33-3a75-4806-9893-69abc3ccdd43,powershell
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,9,MacOS - Timestomp Date Modified,87fffff4-d371-4057-a539-e3b24c37e564,sh
+defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,10,Event Log Manipulations- Time slipping via Powershell,7bcf83bf-f5ef-425c-9d9a-71618ad9ed12,powershell
 defense-evasion,T1620,Reflective Code Loading,1,WinPwn - Reflectively load Mimik@tz into memory,56b9589c-9170-4682-8c3d-33b86ecb5119,powershell
 defense-evasion,T1218.003,Signed Binary Proxy Execution: CMSTP,1,CMSTP Executing Remote Scriptlet,34e63321-9683-496b-bbc1-7566bc55e624,command_prompt
 defense-evasion,T1218.003,Signed Binary Proxy Execution: CMSTP,2,CMSTP Executing UAC Bypass,748cb4f6-2fb3-4e97-b7ad-b22635a09ab0,command_prompt
@@ -323,6 +326,17 @@ defense-evasion,T1112,Modify Registry,70,Enable RDP via Registry (fDenyTSConnect
 defense-evasion,T1112,Modify Registry,71,Disable Windows Prefetch Through Registry,7979dd41-2045-48b2-a54e-b1bc2415c9da,command_prompt
 defense-evasion,T1112,Modify Registry,72,Setting Shadow key in Registry for RDP Shadowing,ac494fe5-81a4-4897-af42-e774cf005ecb,powershell
 defense-evasion,T1112,Modify Registry,73,Flush Shimcache,ecbd533e-b45d-4239-aeff-b857c6f6d68b,command_prompt
+defense-evasion,T1112,Modify Registry,74,Disable Windows Remote Desktop Protocol,5f8e36de-37ca-455e-b054-a2584f043c06,command_prompt
+defense-evasion,T1112,Modify Registry,75,Enforce Smart Card Authentication Through Registry,4c4bf587-fe7f-448f-ba8d-1ecec9db88be,command_prompt
+defense-evasion,T1112,Modify Registry,76,Requires the BitLocker PIN for Pre-boot authentication,26fc7375-a551-4336-90d7-3f2817564304,command_prompt
+defense-evasion,T1112,Modify Registry,77,Modify EnableBDEWithNoTPM Registry entry,bacb3e73-8161-43a9-8204-a69fe0e4b482,command_prompt
+defense-evasion,T1112,Modify Registry,78,Modify UseTPM Registry entry,7c8c7bd8-0a5c-4514-a6a3-0814c5a98cf0,command_prompt
+defense-evasion,T1112,Modify Registry,79,Modify UseTPMPIN Registry entry,10b33fb0-c58b-44cd-8599-b6da5ad6384c,command_prompt
+defense-evasion,T1112,Modify Registry,80,Modify UseTPMKey Registry entry,c8480c83-a932-446e-a919-06a1fd1e512a,command_prompt
+defense-evasion,T1112,Modify Registry,81,Modify UseTPMKeyPIN Registry entry,02d8b9f7-1a51-4011-8901-2d55cca667f9,command_prompt
+defense-evasion,T1112,Modify Registry,82,Modify EnableNonTPM Registry entry,02d8b9f7-1a51-4011-8901-2d55cca667f9,command_prompt
+defense-evasion,T1112,Modify Registry,83,Modify UsePartialEncryptionKey Registry entry,b5169fd5-85c8-4b2c-a9b6-64cc0b9febef,command_prompt
+defense-evasion,T1112,Modify Registry,84,Modify UsePIN Registry entry,3ac0b30f-532f-43c6-8f01-fb657aaed7e4,command_prompt
 defense-evasion,T1574.008,Hijack Execution Flow: Path Interception by Search Order Hijacking,1,powerShell Persistence via hijacking default modules - Get-Variable.exe,1561de08-0b4b-498e-8261-e922f3494aae,powershell
 defense-evasion,T1027.001,Obfuscated Files or Information: Binary Padding,1,Pad Binary to Change Hash - Linux/macOS dd,ffe2346c-abd5-4b45-a713-bf5f1ebd573a,sh
 defense-evasion,T1027.001,Obfuscated Files or Information: Binary Padding,2,Pad Binary to Change Hash using truncate command - Linux/macOS,e22a9e89-69c7-410f-a473-e6c212cd2292,sh
@@ -1602,6 +1616,7 @@ discovery,T1615,Group Policy Discovery,2,Get-DomainGPO to display group policy i
 discovery,T1615,Group Policy Discovery,3,WinPwn - GPOAudit,bc25c04b-841e-4965-855f-d1f645d7ab73,powershell
 discovery,T1615,Group Policy Discovery,4,WinPwn - GPORemoteAccessPolicy,7230d01a-0a72-4bd5-9d7f-c6d472bc6a59,powershell
 discovery,T1615,Group Policy Discovery,5,MSFT Get-GPO Cmdlet,52778a8f-a10b-41a4-9eae-52ddb74072bf,powershell
+discovery,T1652,Device Driver Discovery,1,Device Driver Discovery,235b30a2-e5b1-441f-9705-be6231c88ddd,powershell
 discovery,T1087.002,Account Discovery: Domain Account,1,Enumerate all accounts (Domain),6fbc9e68-5ad7-444a-bd11-8bf3136c477e,command_prompt
 discovery,T1087.002,Account Discovery: Domain Account,2,Enumerate all accounts via PowerShell (Domain),8b8a6449-be98-4f42-afd2-dedddc7453b2,powershell
 discovery,T1087.002,Account Discovery: Domain Account,3,Enumerate logged on users via CMD (Domain),161dcd85-d014-4f5e-900c-d3eaae82a0f7,command_prompt
@@ -1717,12 +1732,11 @@ discovery,T1082,System Information Discovery,24,Azure Security Scan with SkyArk,
 discovery,T1082,System Information Discovery,25,Linux List Kernel Modules,034fe21c-3186-49dd-8d5d-128b35f181c7,sh
 discovery,T1082,System Information Discovery,26,FreeBSD List Kernel Modules,4947897f-643a-4b75-b3f5-bed6885749f6,sh
 discovery,T1082,System Information Discovery,27,System Information Discovery with WMIC,8851b73a-3624-4bf7-8704-aa312411565c,command_prompt
-discovery,T1082,System Information Discovery,28,Driver Enumeration using DriverQuery,bd85e3d1-4aeb-4a1d-850f-7be3cb8d60b9,command_prompt
-discovery,T1082,System Information Discovery,29,System Information Discovery,4060ee98-01ae-4c8e-8aad-af8300519cc7,command_prompt
-discovery,T1082,System Information Discovery,30,Check computer location,96be6002-9200-47db-94cb-c3e27de1cb36,command_prompt
-discovery,T1082,System Information Discovery,31,BIOS Information Discovery through Registry,f2f91612-d904-49d7-87c2-6c165d23bead,command_prompt
-discovery,T1082,System Information Discovery,32,ESXi - VM Discovery using ESXCLI,2040405c-eea6-4c1c-aef3-c2acc430fac9,command_prompt
-discovery,T1082,System Information Discovery,33,ESXi - Darkside system information discovery,f89812e5-67d1-4f49-86fa-cbc6609ea86a,command_prompt
+discovery,T1082,System Information Discovery,28,System Information Discovery,4060ee98-01ae-4c8e-8aad-af8300519cc7,command_prompt
+discovery,T1082,System Information Discovery,29,Check computer location,96be6002-9200-47db-94cb-c3e27de1cb36,command_prompt
+discovery,T1082,System Information Discovery,30,BIOS Information Discovery through Registry,f2f91612-d904-49d7-87c2-6c165d23bead,command_prompt
+discovery,T1082,System Information Discovery,31,ESXi - VM Discovery using ESXCLI,2040405c-eea6-4c1c-aef3-c2acc430fac9,command_prompt
+discovery,T1082,System Information Discovery,32,ESXi - Darkside system information discovery,f89812e5-67d1-4f49-86fa-cbc6609ea86a,command_prompt
 discovery,T1016.002,System Network Configuration Discovery: Wi-Fi Discovery,1,Enumerate Stored Wi-Fi Profiles And Passwords via netsh,53cf1903-0fa7-4177-ab14-f358ae809eec,command_prompt
 discovery,T1010,Application Window Discovery,1,List Process Main Windows - C# .NET,fe94a1c3-3e22-4dc9-9fdf-3a8bdbc10dc4,command_prompt
 discovery,T1580,Cloud Infrastructure Discovery,1,AWS - EC2 Enumeration from Cloud Instance,99ee161b-dcb1-4276-8ecb-7cfdcb207820,sh

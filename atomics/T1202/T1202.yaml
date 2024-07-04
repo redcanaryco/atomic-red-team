@@ -58,3 +58,22 @@ atomic_tests:
     command: |
       conhost.exe "#{process}"
     name: command_prompt
+- name: Indirect Command Execution - Scriptrunner.exe
+  auto_generated_guid: 0fd14730-6226-4f5e-8d67-43c65f1be940
+  description: |-
+    The "ScriptRunner.exe" binary can be abused to proxy execution through it and bypass possible whitelisting. Upon test execution, calc.exe should open
+    Reference: https://x.com/NickTyrer/status/914234924655312896
+  supported_platforms:
+  - windows
+  input_arguments:
+    payload_path:
+      description: Path to the executable
+      type: String
+      default: C:\Windows\System32\calc.exe
+  dependency_executor_name: 
+  executor:
+    command: Scriptrunner.exe -appvscript "#{payload_path}"
+    cleanup_command: 
+    name: powershell
+    elevation_required: false
+  

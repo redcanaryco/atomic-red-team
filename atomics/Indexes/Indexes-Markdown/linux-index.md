@@ -654,8 +654,8 @@
   - Atomic Test #12: Environment variables discovery on freebsd, macos and linux [linux, macos]
   - Atomic Test #25: Linux List Kernel Modules [linux]
   - Atomic Test #26: FreeBSD List Kernel Modules [linux]
-  - Atomic Test #32: ESXi - VM Discovery using ESXCLI [linux]
-  - Atomic Test #33: ESXi - Darkside system information discovery [linux]
+  - Atomic Test #31: ESXi - VM Discovery using ESXCLI [linux]
+  - Atomic Test #32: ESXi - Darkside system information discovery [linux]
 - T1016.002 System Network Configuration Discovery: Wi-Fi Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1010 Application Window Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1497.003 Time Based Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

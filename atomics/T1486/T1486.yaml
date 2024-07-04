@@ -261,14 +261,14 @@ atomic_tests:
       type: path
       default: '$env:temp\test.txt'
   dependencies:
-    - description: |
-        GPG must exist at (#{GPG_Exe_Location})
-      prereq_command: |
-        if (test-path '#{GPG_Exe_Location}'){exit 0} else {exit 1}
-      get_prereq_command: |
-        New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-        invoke-webrequest "https://files.gpg4win.org/gpg4win-4.1.0.exe" -outfile "PathToAtomicsFolder\..\ExternalPayloads\gpginstall.exe"
-        cmd /c "PathToAtomicsFolder\..\ExternalPayloads\gpginstall.exe" /S
+  - description: |
+      GPG must exist at (#{GPG_Exe_Location})
+    prereq_command: |
+      if (test-path '#{GPG_Exe_Location}'){exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      invoke-webrequest "https://files.gpg4win.org/gpg4win-4.1.0.exe" -outfile "PathToAtomicsFolder\..\ExternalPayloads\gpginstall.exe"
+      cmd /c "PathToAtomicsFolder\..\ExternalPayloads\gpginstall.exe" /S
   executor:
     name: powershell
     elevation_required: false
@@ -290,16 +290,16 @@ atomic_tests:
         default: 'dcrypt.exe'
   dependency_executor_name: powershell
   dependencies:
-    - description: |
-        dcrypt_setup will be installed at specified location (#{dcrypt_exe})
-      prereq_command: |
-        if (Test-Path "${env:ProgramFiles}/dcrypt/#{dcrypt_exe}") {exit 0} else {exit 1}
-      get_prereq_command: |
-        Write-Host Downloading DiskCryptor installer
-        New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-        Invoke-WebRequest "https://github.com/DavidXanatos/DiskCryptor/releases/download/1.1.846.118/dcrypt_setup_1.1.846.118.exe" -OutFile      "PathToAtomicsFolder\..\ExternalPayloads\dcrypt_setup_1.1.846.118.exe"
-        Write-Host Install DiskCryptor
-        Start-Process "PathToAtomicsFolder\..\ExternalPayloads\dcrypt_setup_1.1.846.118.exe" -Wait -ArgumentList "/s"
+  - description: |
+      dcrypt_setup will be installed at specified location (#{dcrypt_exe})
+    prereq_command: |
+      if (Test-Path "${env:ProgramFiles}/dcrypt/#{dcrypt_exe}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Write-Host Downloading DiskCryptor installer
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://github.com/DavidXanatos/DiskCryptor/releases/download/1.1.846.118/dcrypt_setup_1.1.846.118.exe" -OutFile      "PathToAtomicsFolder\..\ExternalPayloads\dcrypt_setup_1.1.846.118.exe"
+      Write-Host Install DiskCryptor
+      Start-Process "PathToAtomicsFolder\..\ExternalPayloads\dcrypt_setup_1.1.846.118.exe" -Wait -ArgumentList "/s"
   executor:
     name: command_prompt
     elevation_required: true

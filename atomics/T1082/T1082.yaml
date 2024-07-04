@@ -397,20 +397,7 @@ atomic_tests:
       wmic DISKDRIVE get Caption
       Get-WmiObject win32_bios
     name: command_prompt
-- name: Driver Enumeration using DriverQuery
-  auto_generated_guid: bd85e3d1-4aeb-4a1d-850f-7be3cb8d60b9
-  description: |
-    Executes the driverquery command to list drivers installed on the system. Adversaries utilize the feature to enumerate the driver and it can be
-    used for Exploitation. 
-    command /v - provide verbose output but not valid for signed drivers
-            /si - provide information about signed drivers 
-  supported_platforms:
-  - windows
-  executor:
-    command: |
-      driverquery /v
-      driverquery /si
-    name: command_prompt
+
 - name: System Information Discovery
   auto_generated_guid: 4060ee98-01ae-4c8e-8aad-af8300519cc7
   description: |
