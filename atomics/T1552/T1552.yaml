@@ -55,3 +55,14 @@ atomic_tests:
       rm -rf stratus*
     name: sh
     elevation_required: false
+- name: Search for Passwords in Powershell History
+  description: |
+    Find passwords in the powershell history files
+    Searching for following strings: "password", "-p", "key", "pwd", "pass"
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      ls -R C:\Users\*\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt | Select-String "password", "-p", "key", "pwd", "pass"
+    name: powershell
+    elevation_required: true
