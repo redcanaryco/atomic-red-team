@@ -526,6 +526,7 @@
   - Atomic Test #8: Hostname Discovery [linux, macos]
   - Atomic Test #12: Environment variables discovery on freebsd, macos and linux [linux, macos]
   - Atomic Test #13: Show System Integrity Protection status (MacOS) [macos]
+  - Atomic Test #33: sysctl to gather macOS hardware info [macos]
 - T1016.002 System Network Configuration Discovery: Wi-Fi Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1010 Application Window Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1497.003 Time Based Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
