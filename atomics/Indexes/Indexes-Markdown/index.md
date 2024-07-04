@@ -2397,6 +2397,7 @@
   - Atomic Test #30: BIOS Information Discovery through Registry [windows]
   - Atomic Test #31: ESXi - VM Discovery using ESXCLI [linux]
   - Atomic Test #32: ESXi - Darkside system information discovery [linux]
+  - Atomic Test #33: sysctl to gather macOS hardware info [macos]
 - [T1016.002 System Network Configuration Discovery: Wi-Fi Discovery](../../T1016.002/T1016.002.md)
   - Atomic Test #1: Enumerate Stored Wi-Fi Profiles And Passwords via netsh [windows]
 - [T1010 Application Window Discovery](../../T1010/T1010.md)
