@@ -245,3 +245,14 @@ atomic_tests:
           }
       }
     name: powershell
+- name: Remote Desktop Services Discovery via PowerShell 
+  auto_generated_guid: 9e55750e-4cbf-4013-9627-e9a045b541bf
+  description: |
+    Availability of remote desktop services can be checked using get- cmdlet of PowerShell
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       Get-Service -Name "Remote Desktop Services", "Remote Desktop Configuration"
+    name: powershell
+    elevation_required: true
