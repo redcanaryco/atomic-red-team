@@ -5215,20 +5215,10 @@ defense-evasion:
           description: Path of reference file to read timestamps from
           type: path
           default: "/bin/sh"
-      dependencies:
-      - description: 'The file must exist in order to be timestomped
-
-          '
-        prereq_command: 'test -e #{target_file_path} && exit 0 || exit 1
-
-          '
-        get_prereq_command: 'echo ''T1070.006 reference file timestomp test'' > #{target_file_path}
-
-          '
       executor:
-        command: 'touch -acmr #{reference_file_path} #{target_file_path}
-
-          '
+        command: |
+          touch #{target_file_path}
+          touch -acmr #{reference_file_path} #{target_file_path}
         cleanup_command: 'rm -f #{target_file_path}
 
           '
@@ -53814,6 +53804,7 @@ discovery:
       x_mitre_attack_spec_version: 3.1.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
       spec_version: '2.1'
+      identifier: T1652
     atomic_tests: []
   T1087.002:
     technique:
@@ -54741,6 +54732,18 @@ discovery:
 
           '
         name: sh
+    - name: sysctl to gather macOS hardware info
+      auto_generated_guid: c8d40da9-31bd-47da-a497-11ea55d1ef6c
+      description: Gets the macOS hardware information, which can be used to determine
+        whether the target macOS host is running on a physical or virtual machine.
+        sysctl can be used to gather interesting macOS host data, including hardware
+        information, memory size, logical cpu information, etc.
+      supported_platforms:
+      - macos
+      executor:
+        command: sysctl -n hw.model
+        name: sh
+        elevation_required: false
   T1016.002:
     technique:
       modified: '2023-10-05T11:35:30.887Z'

@@ -21,26 +21,26 @@ atomic_tests:
       type: string
       default: "us-east-1"
   dependencies:
-    - description: |
-        Check if ~/.aws/credentials file has a default stanza is configured
-      prereq_command: |
-        cat ~/.aws/credentials | grep "default"
-      get_prereq_command: |
-        echo Please install the aws-cli and configure your AWS default profile using: aws configure
-    - description: |
-        Check if terraform is installed.
-      prereq_command: |
-        terraform version
-      get_prereq_command: |
-        echo Please install the terraform and configure your aws default profile 
-    - description: |
-        Check if the dependency resources are already present.
-      prereq_command: |
-        if [ -f "$PathToAtomicsFolder/T1562.008/src/T1562.008-1/terraform.tfstate" ]; then exit 0; else exit 1; fi;
-      get_prereq_command: |
-        cd "$PathToAtomicsFolder/T1562.008/src/T1562.008-1/"
-        terraform init
-        terraform apply -auto-approve
+  - description: |
+      Check if ~/.aws/credentials file has a default stanza is configured
+    prereq_command: |
+      cat ~/.aws/credentials | grep "default"
+    get_prereq_command: |
+      echo Please install the aws-cli and configure your AWS default profile using: aws configure
+  - description: |
+      Check if terraform is installed.
+    prereq_command: |
+      terraform version
+    get_prereq_command: |
+      echo Please install the terraform and configure your aws default profile 
+  - description: |
+      Check if the dependency resources are already present.
+    prereq_command: |
+      if [ -f "$PathToAtomicsFolder/T1562.008/src/T1562.008-1/terraform.tfstate" ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      cd "$PathToAtomicsFolder/T1562.008/src/T1562.008-1/"
+      terraform init
+      terraform apply -auto-approve
   executor:
     command: |
        aws cloudtrail update-trail --name #{cloudtrail_name} --s3-bucket-name #{s3_bucket_name}  --is-multi-region-trail --region #{region}

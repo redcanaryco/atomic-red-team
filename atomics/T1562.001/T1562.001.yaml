@@ -79,12 +79,12 @@ atomic_tests:
   supported_platforms:
   - linux
   dependencies:
-    - description: |
-        SELinux must be installed
-      prereq_command: |
-        which setenforce
-      get_prereq_command: |
-        echo "SELinux is not installed"; exit 1
+  - description: |
+      SELinux must be installed
+    prereq_command: |
+      which setenforce
+    get_prereq_command: |
+      echo "SELinux is not installed"; exit 1
   executor:
     command: |
       setenforce 0
@@ -188,7 +188,7 @@ atomic_tests:
 - name: Unload Sysmon Filter Driver
   auto_generated_guid: 811b3e76-c41b-430c-ac0d-e2380bfaa164
   description: |
-    Unloads the Sysinternals Sysmon filter driver without stopping the Sysmon service. To verify successful execution, o verify successful execution,
+    Unloads the Sysinternals Sysmon filter driver without stopping the Sysmon service. To verify successful execution,
     run the prereq_command's and it should fail with an error of "sysmon filter must be loaded".
   supported_platforms:
   - windows
@@ -202,7 +202,7 @@ atomic_tests:
   - description: |
       Sysmon must be downloaded
     prereq_command: |
-      if (-not (cmd.exe /c "where.exe Sysmon.exe 2> nul | findstr Sysmon 2> nul") -or (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\Sysmon\Sysmon.exe")) { exit 0 } else { exit 1 }
+      if ((cmd.exe /c "where.exe Sysmon.exe 2> nul | findstr /i Sysmon 2> nul") -or (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\Sysmon\Sysmon.exe")) { exit 0 } else { exit 1 }
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       Invoke-WebRequest "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\Sysmon.zip"
