@@ -1816,6 +1816,7 @@
   - Atomic Test #5: PureLocker Ransom Note [windows]
   - Atomic Test #8: Data Encrypted with GPG4Win [windows]
   - Atomic Test #9: Data Encrypt Using DiskCryptor [windows]
+  - Atomic Test #10: Akira Ransomware drop Files with .akira Extension and Ransomnote [windows]
 - T1499 Endpoint Denial of Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1496 Resource Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1565.002 Transmitted Data Manipulation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
