@@ -34,3 +34,36 @@ atomic_tests:
       sudo launchctl unload /Library/LaunchDaemons/#{plist_filename}
       sudo rm /Library/LaunchDaemons/#{plist_filename}
       sudo rm /tmp/T1543_004_atomicredteam.txt
+- name: Launch Daemon - Users Directory
+  auto_generated_guid: 6f899f9d-8a8e-4143-89a5-26fc2c3ec438
+  description: |
+    Utilize LaunchDaemon in /Users directory  to touch temporary file in /tmp
+  supported_platforms:
+  - macos
+  input_arguments:
+    plist_filename:
+      description: filename
+      type: string
+      default: com.atomicredteam.T1543.004.plist
+    path_malicious_plist:
+      description: Name of file to store in cron folder
+      type: string
+      default: $PathToAtomicsFolder/T1543.004/src/atomicredteam_T1543_004.plist
+  dependency_executor_name: bash
+  dependencies:
+  - description: |
+      The shared library must exist on disk at specified location (#{path_malicious_plist})
+    prereq_command: |
+      if [ -f #{path_malicious_plist} ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      echo "The plist file doesn't exist. Check the path and try again."; exit 1;
+  executor:
+    name: bash
+    elevation_required: true
+    command: |
+      sudo cp #{path_malicious_plist} ~/Library/LaunchDaemons/#{plist_filename}
+      sudo launchctl load -w ~/Library/LaunchDaemons/#{plist_filename}
+    cleanup_command: |
+      sudo launchctl unload ~/Library/LaunchDaemons/#{plist_filename}
+      sudo rm ~/Library/LaunchDaemons/#{plist_filename}
+      sudo rm /tmp/T1543_004_atomicredteam.txt
