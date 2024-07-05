@@ -2673,6 +2673,10 @@
   - Atomic Test #1: Windows - Stop service using Service Controller [windows]
   - Atomic Test #2: Windows - Stop service using net.exe [windows]
   - Atomic Test #3: Windows - Stop service by killing process [windows]
+  - Atomic Test #4: Linux - Stop service using systemctl [linux]
+  - Atomic Test #5: Linux - Stop service by killing process using killall [linux]
+  - Atomic Test #6: Linux - Stop service by killing process using kill [linux]
+  - Atomic Test #7: Linux - Stop service by killing process using pkill [linux]
 - T1499.004 Application or System Exploitation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1565.003 Runtime Data Manipulation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1498.002 Reflection Amplification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
