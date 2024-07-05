@@ -2503,6 +2503,7 @@
   - Atomic Test #4: Discover System Language with localectl [linux]
   - Atomic Test #5: Discover System Language by locale file [linux]
   - Atomic Test #6: Discover System Language by Environment Variable Query [linux]
+  - Atomic Test #7: Discover System Language with dism.exe [windows]
 - [T1012 Query Registry](../../T1012/T1012.md)
   - Atomic Test #1: Query Registry [windows]
   - Atomic Test #2: Query Registry with Powershell cmdlets [windows]
