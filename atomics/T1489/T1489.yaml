@@ -59,3 +59,93 @@ atomic_tests:
     command: |
       taskkill.exe /f /im #{process_name}
     name: command_prompt
+- name: Linux - Stop service using systemctl
+  description: |
+    Stops a specified service using the systemctl command.
+    Upon execution, if the specified service was running, it will change to a state of inactive and it can be restarted by running the cleanup command.
+    You can list all available services with following command: "systemctl list-units --type=service"
+  supported_platforms:
+    - linux
+  input_arguments:
+    service_name:
+      description: Name of a service to stop
+      type: string
+      default: cron
+  executor:
+    command: |
+      sudo systemctl stop #{service_name}
+    cleanup_command: |
+      sudo systemctl start #{service_name} 2> /dev/null
+    name: sh
+    elevation_required: true
+- name: Linux - Stop service by killing process using killall
+  description: |
+    Stops a specified service by sending a SIGTERM signal to the linked process using the killall command.
+    Upon execution, if the service's main process was running, it will be terminated.
+    If the service was not running, no process will be found to kill and it can be restarted by running the cleanup command.
+    You can list all available services with following command: "systemctl list-units --type=service"
+  supported_platforms:
+    - linux
+  input_arguments:
+    process_name:
+      description: Name of a process to stop
+      type: string
+      default: cron
+    service_name:
+      description: Name of a service to restart
+      type: string
+      default: cron
+  executor:
+    command: |
+      sudo killall -SIGTERM #{process_name}
+    cleanup_command: |
+      sudo systemctl start #{service_name} 2> /dev/null
+    name: sh
+    elevation_required: true
+- name: Linux - Stop service by killing process using kill
+  description: |
+    Stops a specified service by sending a SIGTERM signal to the linked process using the kill command. Upon execution, if the service's main process was running, it will be terminated.
+    If the service was not running, no process will be found to kill and it can be restarted by running the cleanup command.
+    You can list all available services with following command: "systemctl list-units --type=service"
+  supported_platforms:
+    - linux
+  input_arguments:
+    process_name:
+      description: Name of a process to kill
+      type: string
+      default: cron
+    service_name:
+      description: Name of a service to restart
+      type: string
+      default: cron
+  executor:
+    command: |
+      sudo kill -SIGTERM $(pgrep #{process_name})
+    cleanup_command: |
+      sudo systemctl start #{service_name} 2> /dev/null
+    name: sh
+    elevation_required: true
+- name: Linux - Stop service by killing process using pkill
+  description: |
+    Stops a specified service by sending a SIGTERM signal to the linked process using pkill. This method is effective when multiple instances of the process may be running.
+    Upon execution, if any instances of the process were running, they will be terminated. If no instances were running, pkill will not find any processes to kill.
+    Stopped service can be restarted by running the cleanup command.
+    You can list all available services with following command: "systemctl list-units --type=service"
+  supported_platforms:
+    - linux
+  input_arguments:
+    process_pattern:
+      description: Pattern to match the name of the process to kill
+      type: string
+      default: ^cron$
+    service_name:
+      description: Name of a service to restart
+      type: string
+      default: cron
+  executor:
+    command: |
+      sudo pkill -SIGTERM #{process_pattern}
+    cleanup_command: |
+      sudo systemctl start #{service_name} 2> /dev/null
+    name: sh
+    elevation_required: true
