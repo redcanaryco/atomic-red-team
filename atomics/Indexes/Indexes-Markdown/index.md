@@ -954,6 +954,7 @@
   - Atomic Test #2: Modify HKLM:\System\CurrentControlSet\Control\Lsa\OSConfig Security Support Provider configuration in registry [windows]
 - [T1543.004 Create or Modify System Process: Launch Daemon](../../T1543.004/T1543.004.md)
   - Atomic Test #1: Launch Daemon [macos]
+  - Atomic Test #2: Launch Daemon - Users Directory [macos]
 - [T1574.008 Hijack Execution Flow: Path Interception by Search Order Hijacking](../../T1574.008/T1574.008.md)
   - Atomic Test #1: powerShell Persistence via hijacking default modules - Get-Variable.exe [windows]
 - [T1484.001 Domain Policy Modification: Group Policy Modification](../../T1484.001/T1484.001.md)
@@ -1131,6 +1132,8 @@
   - Atomic Test #1: Execution of program.exe as service with unquoted service path [windows]
 - [T1037.005 Boot or Logon Initialization Scripts: Startup Items](../../T1037.005/T1037.005.md)
   - Atomic Test #1: Add file to Local Library StartupItems [macos]
+  - Atomic Test #2: Add launch script to launch daemon [macos]
+  - Atomic Test #3: Add launch script to launch agent [macos]
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1037.003 Network Logon Script [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.010 Event Triggered Execution: AppInit DLLs](../../T1546.010/T1546.010.md)
@@ -1140,6 +1143,7 @@
 - [T1543.001 Create or Modify System Process: Launch Agent](../../T1543.001/T1543.001.md)
   - Atomic Test #1: Launch Agent [macos]
   - Atomic Test #2: Event Monitor Daemon Persistence [macos]
+  - Atomic Test #3: Launch Agent - Root Directory [macos]
 - T1055.009 Proc Memory [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1546.016 Installer Packages [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1037.004 Boot or Logon Initialization Scripts: Rc.common](../../T1037.004/T1037.004.md)
@@ -1468,6 +1472,7 @@
 - T1556.007 Hybrid Identity [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1543.004 Create or Modify System Process: Launch Daemon](../../T1543.004/T1543.004.md)
   - Atomic Test #1: Launch Daemon [macos]
+  - Atomic Test #2: Launch Daemon - Users Directory [macos]
 - [T1574.008 Hijack Execution Flow: Path Interception by Search Order Hijacking](../../T1574.008/T1574.008.md)
   - Atomic Test #1: powerShell Persistence via hijacking default modules - Get-Variable.exe [windows]
 - [T1505.003 Server Software Component: Web Shell](../../T1505.003/T1505.003.md)
@@ -1633,6 +1638,8 @@
   - Atomic Test #1: Execution of program.exe as service with unquoted service path [windows]
 - [T1037.005 Boot or Logon Initialization Scripts: Startup Items](../../T1037.005/T1037.005.md)
   - Atomic Test #1: Add file to Local Library StartupItems [macos]
+  - Atomic Test #2: Add launch script to launch daemon [macos]
+  - Atomic Test #3: Add launch script to launch agent [macos]
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1037.003 Network Logon Script [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1197 BITS Jobs](../../T1197/T1197.md)
@@ -1648,6 +1655,7 @@
 - [T1543.001 Create or Modify System Process: Launch Agent](../../T1543.001/T1543.001.md)
   - Atomic Test #1: Launch Agent [macos]
   - Atomic Test #2: Event Monitor Daemon Persistence [macos]
+  - Atomic Test #3: Launch Agent - Root Directory [macos]
 - T1505 Server Software Component [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1556.001 Domain Controller Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1556.005 Reversible Encryption [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -2084,6 +2092,7 @@
   - Atomic Test #8: WinPwn - Loot local Credentials - Decrypt Teamviewer Passwords [windows]
 - [T1552 Unsecured Credentials](../../T1552/T1552.md)
   - Atomic Test #1: AWS - Retrieve EC2 Password Data using stratus [linux, macos, iaas:aws]
+  - Atomic Test #2: Search for Passwords in Powershell History [windows]
 - T1556.007 Hybrid Identity [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1555.003 Credentials from Password Stores: Credentials from Web Browsers](../../T1555.003/T1555.003.md)
   - Atomic Test #1: Run Chrome-password Collector [windows]
@@ -2396,6 +2405,7 @@
   - Atomic Test #30: BIOS Information Discovery through Registry [windows]
   - Atomic Test #31: ESXi - VM Discovery using ESXCLI [linux]
   - Atomic Test #32: ESXi - Darkside system information discovery [linux]
+  - Atomic Test #33: sysctl to gather macOS hardware info [macos]
 - [T1016.002 System Network Configuration Discovery: Wi-Fi Discovery](../../T1016.002/T1016.002.md)
   - Atomic Test #1: Enumerate Stored Wi-Fi Profiles And Passwords via netsh [windows]
 - [T1010 Application Window Discovery](../../T1010/T1010.md)
@@ -2671,6 +2681,10 @@
   - Atomic Test #1: Windows - Stop service using Service Controller [windows]
   - Atomic Test #2: Windows - Stop service using net.exe [windows]
   - Atomic Test #3: Windows - Stop service by killing process [windows]
+  - Atomic Test #4: Linux - Stop service using systemctl [linux]
+  - Atomic Test #5: Linux - Stop service by killing process using killall [linux]
+  - Atomic Test #6: Linux - Stop service by killing process using kill [linux]
+  - Atomic Test #7: Linux - Stop service by killing process using pkill [linux]
 - T1499.004 Application or System Exploitation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1565.003 Runtime Data Manipulation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1498.002 Reflection Amplification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -2700,6 +2714,7 @@
   - Atomic Test #7: Encrypt files using openssl utility - macOS [macos]
   - Atomic Test #8: Data Encrypted with GPG4Win [windows]
   - Atomic Test #9: Data Encrypt Using DiskCryptor [windows]
+  - Atomic Test #10: Akira Ransomware drop Files with .akira Extension and Ransomnote [windows]
 - T1499 Endpoint Denial of Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1496 Resource Hijacking](../../T1496/T1496.md)
   - Atomic Test #1: FreeBSD/macOS/Linux - Simulate CPU Load with Yes [linux, macos]

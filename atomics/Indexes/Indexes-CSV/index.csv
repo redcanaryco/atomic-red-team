@@ -722,6 +722,7 @@ privilege-escalation,T1547.009,Boot or Logon Autostart Execution: Shortcut Modif
 privilege-escalation,T1547.005,Boot or Logon Autostart Execution: Security Support Provider,1,Modify HKLM:\System\CurrentControlSet\Control\Lsa Security Support Provider configuration in registry,afdfd7e3-8a0b-409f-85f7-886fdf249c9e,powershell
 privilege-escalation,T1547.005,Boot or Logon Autostart Execution: Security Support Provider,2,Modify HKLM:\System\CurrentControlSet\Control\Lsa\OSConfig Security Support Provider configuration in registry,de3f8e74-3351-4fdb-a442-265dbf231738,powershell
 privilege-escalation,T1543.004,Create or Modify System Process: Launch Daemon,1,Launch Daemon,03ab8df5-3a6b-4417-b6bd-bb7a5cfd74cf,bash
+privilege-escalation,T1543.004,Create or Modify System Process: Launch Daemon,2,Launch Daemon - Users Directory,6f899f9d-8a8e-4143-89a5-26fc2c3ec438,bash
 privilege-escalation,T1574.008,Hijack Execution Flow: Path Interception by Search Order Hijacking,1,powerShell Persistence via hijacking default modules - Get-Variable.exe,1561de08-0b4b-498e-8261-e922f3494aae,powershell
 privilege-escalation,T1484.001,Domain Policy Modification: Group Policy Modification,1,LockBit Black - Modify Group policy settings -cmd,9ab80952-74ee-43da-a98c-1e740a985f28,command_prompt
 privilege-escalation,T1484.001,Domain Policy Modification: Group Policy Modification,2,LockBit Black - Modify Group policy settings -Powershell,b51eae65-5441-4789-b8e8-64783c26c1d1,powershell
@@ -851,10 +852,13 @@ privilege-escalation,T1546.015,Event Triggered Execution: Component Object Model
 privilege-escalation,T1546.015,Event Triggered Execution: Component Object Model Hijacking,4,COM hijacking via TreatAs,33eacead-f117-4863-8eb0-5c6304fbfaa9,powershell
 privilege-escalation,T1574.009,Hijack Execution Flow: Path Interception by Unquoted Path,1,Execution of program.exe as service with unquoted service path,2770dea7-c50f-457b-84c4-c40a47460d9f,command_prompt
 privilege-escalation,T1037.005,Boot or Logon Initialization Scripts: Startup Items,1,Add file to Local Library StartupItems,134627c3-75db-410e-bff8-7a920075f198,sh
+privilege-escalation,T1037.005,Boot or Logon Initialization Scripts: Startup Items,2,Add launch script to launch daemon,fc369906-90c7-4a15-86fd-d37da624dde6,bash
+privilege-escalation,T1037.005,Boot or Logon Initialization Scripts: Startup Items,3,Add launch script to launch agent,10cf5bec-49dd-4ebf-8077-8f47e420096f,bash
 privilege-escalation,T1546.010,Event Triggered Execution: AppInit DLLs,1,Install AppInit Shim,a58d9386-3080-4242-ab5f-454c16503d18,command_prompt
 privilege-escalation,T1546.002,Event Triggered Execution: Screensaver,1,Set Arbitrary Binary as Screensaver,281201e7-de41-4dc9-b73d-f288938cbb64,command_prompt
 privilege-escalation,T1543.001,Create or Modify System Process: Launch Agent,1,Launch Agent,a5983dee-bf6c-4eaf-951c-dbc1a7b90900,bash
 privilege-escalation,T1543.001,Create or Modify System Process: Launch Agent,2,Event Monitor Daemon Persistence,11979f23-9b9d-482a-9935-6fc9cd022c3e,bash
+privilege-escalation,T1543.001,Create or Modify System Process: Launch Agent,3,Launch Agent - Root Directory,66774fa8-c562-4bae-a58d-5264a0dd9dd7,bash
 privilege-escalation,T1037.004,Boot or Logon Initialization Scripts: Rc.common,1,rc.common,97a48daa-8bca-4bc0-b1a9-c1d163e762de,bash
 privilege-escalation,T1037.004,Boot or Logon Initialization Scripts: Rc.common,2,rc.common,c33f3d80-5f04-419b-a13a-854d1cbdbf3a,bash
 privilege-escalation,T1037.004,Boot or Logon Initialization Scripts: Rc.common,3,rc.local,126f71af-e1c9-405c-94ef-26a47b16c102,sh
@@ -1079,6 +1083,7 @@ persistence,T1547.009,Boot or Logon Autostart Execution: Shortcut Modification,2
 persistence,T1547.005,Boot or Logon Autostart Execution: Security Support Provider,1,Modify HKLM:\System\CurrentControlSet\Control\Lsa Security Support Provider configuration in registry,afdfd7e3-8a0b-409f-85f7-886fdf249c9e,powershell
 persistence,T1547.005,Boot or Logon Autostart Execution: Security Support Provider,2,Modify HKLM:\System\CurrentControlSet\Control\Lsa\OSConfig Security Support Provider configuration in registry,de3f8e74-3351-4fdb-a442-265dbf231738,powershell
 persistence,T1543.004,Create or Modify System Process: Launch Daemon,1,Launch Daemon,03ab8df5-3a6b-4417-b6bd-bb7a5cfd74cf,bash
+persistence,T1543.004,Create or Modify System Process: Launch Daemon,2,Launch Daemon - Users Directory,6f899f9d-8a8e-4143-89a5-26fc2c3ec438,bash
 persistence,T1574.008,Hijack Execution Flow: Path Interception by Search Order Hijacking,1,powerShell Persistence via hijacking default modules - Get-Variable.exe,1561de08-0b4b-498e-8261-e922f3494aae,powershell
 persistence,T1505.003,Server Software Component: Web Shell,1,Web Shell Written to Disk,0a2ce662-1efa-496f-a472-2fe7b080db16,command_prompt
 persistence,T1078.001,Valid Accounts: Default Accounts,1,Enable Guest account with RDP capability and admin privileges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
@@ -1197,6 +1202,8 @@ persistence,T1546.015,Event Triggered Execution: Component Object Model Hijackin
 persistence,T1137.004,Office Application Startup: Outlook Home Page,1,Install Outlook Home Page Persistence,7a91ad51-e6d2-4d43-9471-f26362f5738e,command_prompt
 persistence,T1574.009,Hijack Execution Flow: Path Interception by Unquoted Path,1,Execution of program.exe as service with unquoted service path,2770dea7-c50f-457b-84c4-c40a47460d9f,command_prompt
 persistence,T1037.005,Boot or Logon Initialization Scripts: Startup Items,1,Add file to Local Library StartupItems,134627c3-75db-410e-bff8-7a920075f198,sh
+persistence,T1037.005,Boot or Logon Initialization Scripts: Startup Items,2,Add launch script to launch daemon,fc369906-90c7-4a15-86fd-d37da624dde6,bash
+persistence,T1037.005,Boot or Logon Initialization Scripts: Startup Items,3,Add launch script to launch agent,10cf5bec-49dd-4ebf-8077-8f47e420096f,bash
 persistence,T1197,BITS Jobs,1,Bitsadmin Download (cmd),3c73d728-75fb-4180-a12f-6712864d7421,command_prompt
 persistence,T1197,BITS Jobs,2,Bitsadmin Download (PowerShell),f63b8bc4-07e5-4112-acba-56f646f3f0bc,powershell
 persistence,T1197,BITS Jobs,3,"Persist, Download, & Execute",62a06ec5-5754-47d2-bcfc-123d8314c6ae,command_prompt
@@ -1205,6 +1212,7 @@ persistence,T1546.010,Event Triggered Execution: AppInit DLLs,1,Install AppInit 
 persistence,T1546.002,Event Triggered Execution: Screensaver,1,Set Arbitrary Binary as Screensaver,281201e7-de41-4dc9-b73d-f288938cbb64,command_prompt
 persistence,T1543.001,Create or Modify System Process: Launch Agent,1,Launch Agent,a5983dee-bf6c-4eaf-951c-dbc1a7b90900,bash
 persistence,T1543.001,Create or Modify System Process: Launch Agent,2,Event Monitor Daemon Persistence,11979f23-9b9d-482a-9935-6fc9cd022c3e,bash
+persistence,T1543.001,Create or Modify System Process: Launch Agent,3,Launch Agent - Root Directory,66774fa8-c562-4bae-a58d-5264a0dd9dd7,bash
 persistence,T1037.004,Boot or Logon Initialization Scripts: Rc.common,1,rc.common,97a48daa-8bca-4bc0-b1a9-c1d163e762de,bash
 persistence,T1037.004,Boot or Logon Initialization Scripts: Rc.common,2,rc.common,c33f3d80-5f04-419b-a13a-854d1cbdbf3a,bash
 persistence,T1037.004,Boot or Logon Initialization Scripts: Rc.common,3,rc.local,126f71af-e1c9-405c-94ef-26a47b16c102,sh
@@ -1486,6 +1494,7 @@ credential-access,T1555,Credentials from Password Stores,6,WinPwn - Loot local C
 credential-access,T1555,Credentials from Password Stores,7,WinPwn - Loot local Credentials - Wifi Credentials,afe369c2-b42e-447f-98a3-fb1f4e2b8552,powershell
 credential-access,T1555,Credentials from Password Stores,8,WinPwn - Loot local Credentials - Decrypt Teamviewer Passwords,db965264-3117-4bad-b7b7-2523b7856b92,powershell
 credential-access,T1552,Unsecured Credentials,1,AWS - Retrieve EC2 Password Data using stratus,a21118de-b11e-4ebd-b655-42f11142df0c,sh
+credential-access,T1552,Unsecured Credentials,2,Search for Passwords in Powershell History,f9c3d0ab-479b-4019-945f-22ace2b1731a,powershell
 credential-access,T1555.003,Credentials from Password Stores: Credentials from Web Browsers,1,Run Chrome-password Collector,8c05b133-d438-47ca-a630-19cc464c4622,powershell
 credential-access,T1555.003,Credentials from Password Stores: Credentials from Web Browsers,2,Search macOS Safari Cookies,c1402f7b-67ca-43a8-b5f3-3143abedc01b,sh
 credential-access,T1555.003,Credentials from Password Stores: Credentials from Web Browsers,3,LaZagne - Credentials from Browser,9a2915b3-3954-4cce-8c76-00fbf4dbd014,command_prompt
@@ -1737,6 +1746,7 @@ discovery,T1082,System Information Discovery,29,Check computer location,96be6002
 discovery,T1082,System Information Discovery,30,BIOS Information Discovery through Registry,f2f91612-d904-49d7-87c2-6c165d23bead,command_prompt
 discovery,T1082,System Information Discovery,31,ESXi - VM Discovery using ESXCLI,2040405c-eea6-4c1c-aef3-c2acc430fac9,command_prompt
 discovery,T1082,System Information Discovery,32,ESXi - Darkside system information discovery,f89812e5-67d1-4f49-86fa-cbc6609ea86a,command_prompt
+discovery,T1082,System Information Discovery,33,sysctl to gather macOS hardware info,c8d40da9-31bd-47da-a497-11ea55d1ef6c,sh
 discovery,T1016.002,System Network Configuration Discovery: Wi-Fi Discovery,1,Enumerate Stored Wi-Fi Profiles And Passwords via netsh,53cf1903-0fa7-4177-ab14-f358ae809eec,command_prompt
 discovery,T1010,Application Window Discovery,1,List Process Main Windows - C# .NET,fe94a1c3-3e22-4dc9-9fdf-3a8bdbc10dc4,command_prompt
 discovery,T1580,Cloud Infrastructure Discovery,1,AWS - EC2 Enumeration from Cloud Instance,99ee161b-dcb1-4276-8ecb-7cfdcb207820,sh
@@ -1877,6 +1887,10 @@ reconnaissance,T1592.001,Gather Victim Host Information: Hardware,1,Enumerate Pl
 impact,T1489,Service Stop,1,Windows - Stop service using Service Controller,21dfb440-830d-4c86-a3e5-2a491d5a8d04,command_prompt
 impact,T1489,Service Stop,2,Windows - Stop service using net.exe,41274289-ec9c-4213-bea4-e43c4aa57954,command_prompt
 impact,T1489,Service Stop,3,Windows - Stop service by killing process,f3191b84-c38b-400b-867e-3a217a27795f,command_prompt
+impact,T1489,Service Stop,4,Linux - Stop service using systemctl,42e3a5bd-1e45-427f-aa08-2a65fa29a820,sh
+impact,T1489,Service Stop,5,Linux - Stop service by killing process using killall,e5d95be6-02ee-4ff1-aebe-cf86013b6189,sh
+impact,T1489,Service Stop,6,Linux - Stop service by killing process using kill,332f4c76-7e96-41a6-8cc2-7361c49db8be,sh
+impact,T1489,Service Stop,7,Linux - Stop service by killing process using pkill,08b4718f-a8bf-4bb5-a552-294fc5178fea,sh
 impact,T1491.001,Defacement: Internal Defacement,1,Replace Desktop Wallpaper,30558d53-9d76-41c4-9267-a7bd5184bed3,powershell
 impact,T1491.001,Defacement: Internal Defacement,2,Configure LegalNoticeCaption and LegalNoticeText registry keys to display ransom message,ffcbfaab-c9ff-470b-928c-f086b326089b,powershell
 impact,T1531,Account Access Removal,1,Change User Password - Windows,1b99ef28-f83c-4ec5-8a08-1a56263a5bb2,command_prompt
@@ -1896,6 +1910,7 @@ impact,T1486,Data Encrypted for Impact,6,Encrypt files using 7z utility - macOS,
 impact,T1486,Data Encrypted for Impact,7,Encrypt files using openssl utility - macOS,1a01f6b8-b1e8-418e-bbe3-78a6f822759e,sh
 impact,T1486,Data Encrypted for Impact,8,Data Encrypted with GPG4Win,4541e2c2-33c8-44b1-be79-9161440f1718,powershell
 impact,T1486,Data Encrypted for Impact,9,Data Encrypt Using DiskCryptor,44b68e11-9da2-4d45-a0d9-893dabd60f30,command_prompt
+impact,T1486,Data Encrypted for Impact,10,Akira Ransomware drop Files with .akira Extension and Ransomnote,ab3f793f-2dcc-4da5-9c71-34988307263f,powershell
 impact,T1496,Resource Hijacking,1,FreeBSD/macOS/Linux - Simulate CPU Load with Yes,904a5a0e-fb02-490d-9f8d-0e256eb37549,sh
 impact,T1485,Data Destruction,1,Windows - Overwrite file with SysInternals SDelete,476419b5-aebf-4366-a131-ae3e8dae5fc2,powershell
 impact,T1485,Data Destruction,2,FreeBSD/macOS/Linux - Overwrite file with DD,38deee99-fd65-4031-bec8-bfa4f9f26146,sh
