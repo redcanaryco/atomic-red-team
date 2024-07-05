@@ -69,12 +69,7 @@ jobs:
         env:
           PYTHONPATH: ${{ github.workspace }}
 
-      - name: ls pr
-        run: |
-          ls -al
-          ls -al atomic_red_team
-
       - uses: actions/upload-artifact@v4
         with:
           name: labels.json
-          path: pr/
+          path: atomic_red_team/pr/
