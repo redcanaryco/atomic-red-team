@@ -1410,6 +1410,7 @@
   - Atomic Test #5: dump volume shadow copy hives with certutil [windows]
   - Atomic Test #6: dump volume shadow copy hives with System.IO.File [windows]
   - Atomic Test #7: WinPwn - Loot local Credentials - Dump SAM-File for NTLM Hashes [windows]
+  - Atomic Test #8: Dumping of SAM, creds, and secrets(Reg Export) [windows]
 - [T1110.002 Brute Force: Password Cracking](../../T1110.002/T1110.002.md)
   - Atomic Test #1: Password Cracking with Hashcat [windows]
 - [T1003.004 OS Credential Dumping: LSA Secrets](../../T1003.004/T1003.004.md)

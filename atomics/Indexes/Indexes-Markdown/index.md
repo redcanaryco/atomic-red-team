@@ -2034,6 +2034,7 @@
   - Atomic Test #5: dump volume shadow copy hives with certutil [windows]
   - Atomic Test #6: dump volume shadow copy hives with System.IO.File [windows]
   - Atomic Test #7: WinPwn - Loot local Credentials - Dump SAM-File for NTLM Hashes [windows]
+  - Atomic Test #8: Dumping of SAM, creds, and secrets(Reg Export) [windows]
 - [T1552.005 Unsecured Credentials: Cloud Instance Metadata API](../../T1552.005/T1552.005.md)
   - Atomic Test #1: Azure - Search Azure AD User Attributes for Passwords [azure-ad]
   - Atomic Test #2: Azure - Dump Azure Instance Metadata from Virtual Machines [iaas:azure]
