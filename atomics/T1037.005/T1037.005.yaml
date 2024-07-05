@@ -64,7 +64,7 @@ atomic_tests:
       sudo cp #{path_malicious_plist} /tmp/T1037_005_daemon.plist
       sudo /Library/StartupItems/atomic.sh start
     cleanup_command: |
-      sudo launchctl unload tmp/T1037_005_daemon.plist
+      sudo launchctl unload /tmp/T1037_005_daemon.plist
       sudo rm /tmp/T1037_005_daemon.plist
       sudo rm /Library/StartupItems/atomic.sh
       sudo rm /Library/StartupItems/StartupParameters.plist
@@ -118,7 +118,7 @@ atomic_tests:
       sudo cp #{path_malicious_plist} /tmp/T1037_005_agent.plist
       /Library/StartupItems/atomic.sh start
     cleanup_command: |
-      sudo launchctl unload tmp/T1037_005_agent.plist
+      sudo launchctl unload /tmp/T1037_005_agent.plist
       sudo rm /tmp/T1037_005_agent.plist
       sudo rm /Library/StartupItems/atomic.sh
       sudo rm /Library/StartupItems/StartupParameters.plist

@@ -61,7 +61,7 @@ atomic_tests:
     name: bash
     elevation_required: true
     command: |
-      sudo cp #{path_malicious_plist} ~/Library/LaunchDaemo
+      sudo cp #{path_malicious_plist} ~/Library/LaunchDaemons/#{plist_filename}
       sudo launchctl load -w ~/Library/LaunchDaemons/#{plist_filename}
     cleanup_command: |
       sudo launchctl unload ~/Library/LaunchDaemons/#{plist_filename}
