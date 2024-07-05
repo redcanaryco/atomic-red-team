@@ -200,6 +200,7 @@
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1543.004 Create or Modify System Process: Launch Daemon](../../T1543.004/T1543.004.md)
   - Atomic Test #1: Launch Daemon [macos]
+  - Atomic Test #2: Launch Daemon - Users Directory [macos]
 - T1505.003 Server Software Component: Web Shell [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1078.001 Valid Accounts: Default Accounts](../../T1078.001/T1078.001.md)
   - Atomic Test #3: Enable Guest Account on macOS [macos]
@@ -234,10 +235,13 @@
   - Atomic Test #2: Add command to .bashrc [macos, linux]
 - [T1037.005 Boot or Logon Initialization Scripts: Startup Items](../../T1037.005/T1037.005.md)
   - Atomic Test #1: Add file to Local Library StartupItems [macos]
+  - Atomic Test #2: Add launch script to launch daemon [macos]
+  - Atomic Test #3: Add launch script to launch agent [macos]
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1543.001 Create or Modify System Process: Launch Agent](../../T1543.001/T1543.001.md)
   - Atomic Test #1: Launch Agent [macos]
   - Atomic Test #2: Event Monitor Daemon Persistence [macos]
+  - Atomic Test #3: Launch Agent - Root Directory [macos]
 - T1505 Server Software Component [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1546.016 Installer Packages [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1037.004 Boot or Logon Initialization Scripts: Rc.common](../../T1037.004/T1037.004.md)
@@ -386,6 +390,7 @@
 - T1055 Process Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1543.004 Create or Modify System Process: Launch Daemon](../../T1543.004/T1543.004.md)
   - Atomic Test #1: Launch Daemon [macos]
+  - Atomic Test #2: Launch Daemon - Users Directory [macos]
 - [T1078.001 Valid Accounts: Default Accounts](../../T1078.001/T1078.001.md)
   - Atomic Test #3: Enable Guest Account on macOS [macos]
 - [T1546.005 Event Triggered Execution: Trap](../../T1546.005/T1546.005.md)
@@ -418,10 +423,13 @@
 - T1548.004 Elevated Execution with Prompt [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1037.005 Boot or Logon Initialization Scripts: Startup Items](../../T1037.005/T1037.005.md)
   - Atomic Test #1: Add file to Local Library StartupItems [macos]
+  - Atomic Test #2: Add launch script to launch daemon [macos]
+  - Atomic Test #3: Add launch script to launch agent [macos]
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1543.001 Create or Modify System Process: Launch Agent](../../T1543.001/T1543.001.md)
   - Atomic Test #1: Launch Agent [macos]
   - Atomic Test #2: Event Monitor Daemon Persistence [macos]
+  - Atomic Test #3: Launch Agent - Root Directory [macos]
 - T1546.016 Installer Packages [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1037.004 Boot or Logon Initialization Scripts: Rc.common](../../T1037.004/T1037.004.md)
   - Atomic Test #1: rc.common [macos]
