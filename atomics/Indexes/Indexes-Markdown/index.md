@@ -2047,6 +2047,7 @@
   - Atomic Test #3: Import Certificate Item(s) into Keychain [macos]
 - [T1003.004 OS Credential Dumping: LSA Secrets](../../T1003.004/T1003.004.md)
   - Atomic Test #1: Dumping LSA Secrets [windows]
+  - Atomic Test #2: Dump Kerberos Tickets from LSA using dumper.ps1 [windows]
 - [T1606.002 Forge Web Credentials: SAML token](../../T1606.002/T1606.002.md)
   - Atomic Test #1: Golden SAML [azure-ad]
 - [T1003.007 OS Credential Dumping: Proc Filesystem](../../T1003.007/T1003.007.md)
