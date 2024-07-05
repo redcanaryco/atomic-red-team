@@ -63,3 +63,42 @@ atomic_tests:
     cleanup_command: |-
       sudo rm #{script_destination}
       sudo rm /private/var/db/emondClients/#{empty_file}
+- name: Launch Agent - Root Directory
+  auto_generated_guid: 
+  description: |
+    Create a plist and execute it
+  supported_platforms:
+  - macos
+  input_arguments:
+    plist_filename:
+      description: filename
+      type: string
+      default: com.atomicredteam.T1543.001.plist
+    path_malicious_plist:
+      description: Name of file to store in cron folder
+      type: string
+      default: $PathToAtomicsFolder/T1543.001/src/atomicredteam_T1543_001.plist
+  dependency_executor_name: bash
+  dependencies:
+  - description: |
+      /Library/LaunchAgents must exist
+    prereq_command: |
+      if [ ! -d /Library/LaunchAgents ]; then mkdir /Library/LaunchAgents; exit 0; fi;
+    get_prereq_command: |
+      echo "Failed to create /Library/LaunchAgents"; exit 1;
+  - description: |
+      The shared library must exist on disk at specified location (#{path_malicious_plist})
+    prereq_command: |
+      if [ -f #{path_malicious_plist} ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      echo "The plist file doesn't exist. Check the path and try again."; exit 1;
+  executor:
+    name: bash
+    elevation_required: true
+    command: |
+      sudo cp #{path_malicious_plist} /Library/LaunchAgents/#{plist_filename}
+      launchctl load -w /Library/LaunchAgents/#{plist_filename}
+    cleanup_command: |
+      launchctl unload /Library/LaunchAgents/#{plist_filename}
+      sudo rm /Library/LaunchAgents/#{plist_filename}
+      sudo rm /tmp/T1543_001_atomicredteam.txt
