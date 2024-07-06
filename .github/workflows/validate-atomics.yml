@@ -80,7 +80,7 @@ jobs:
           path: atomic_red_team/pr/
 
   run-atomics:
-    name: Install Invoke-Atomic
+    name: Run atomics
     needs:
       - upload
     runs-on: ${{ matrix.os }}
@@ -93,17 +93,19 @@ jobs:
         with:
           name: changedfiles.json
 
-      - name: cat changedfiles.json
-        run: cat changedfiles.json
-
-      - name: Install Invoke-AtomicRedTeam
+      - name: Run atomics
         shell: pwsh
         run: |
-          IEX (IWR 'https://raw.githubusercontent.com/redcanaryco/master/install-atomicredteam.ps1' -UseBasicParsing);
+          IEX (IWR 'https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/install-atomicredteam.ps1' -UseBasicParsing);
           Install-AtomicRedTeam -Force
           if($error.contains("Installation of AtomicRedTeam Failed")){
             exit 1
           }
-          IEX (IWR 'https://raw.githubusercontent.com/redcanaryco/master/install-atomicsfolder.ps1' -UseBasicParsing);
-          Install-AtomicsFolder -RepoOwner ${{ github.event.pull_request.head.repo.full_name }} -Branch ${{ github.event.pull_request.head.ref }} -Force
-          Invoke-AtomicTest All -ShowDetailsBrief
+          IEX (IWR 'https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/install-atomicsfolder.ps1' -UseBasicParsing);
+          Install-AtomicsFolder -RepoOwner ${{ github.event.pull_request.head.repo.owner.login }} -Branch ${{ github.event.pull_request.head.ref }} -Force
+          $changedFiles = Get-Content .\changedfiles.json -Raw | ConvertFrom-Json 
+          $changedFiles | ForEach-Object {
+            Invoke-AtomicTest $_.name -TestNumbers $_.test_number -GetPreReqs
+            Invoke-AtomicTest $_.name -TestNumbers $_.test_number
+            Invoke-AtomicTest $_.name -TestNumbers $_.test_number -Cleanup
+          }
