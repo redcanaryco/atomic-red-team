@@ -73,3 +73,35 @@ jobs:
         with:
           name: labels.json
           path: atomic_red_team/pr/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: changedfiles.json
+          path: atomic_red_team/pr/
+
+  run-atomics:
+    name: Install Invoke-Atomic
+    runs-on: ${{ matrix.os }}
+    strategy:
+      max-parallel: 3
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/upload-artifact@v4
+        with:
+          name: changedfiles.json
+
+      - name: cat changedfiles.json
+        run: cat changedfiles.json
+
+      - name: Install Invoke-AtomicRedTeam
+        shell: pwsh
+        run: |
+          IEX (IWR 'https://raw.githubusercontent.com/redcanaryco/master/install-atomicredteam.ps1' -UseBasicParsing);
+          Install-AtomicRedTeam -Force
+          if($error.contains("Installation of AtomicRedTeam Failed")){
+            exit 1
+          }
+          IEX (IWR 'https://raw.githubusercontent.com/redcanaryco/master/install-atomicsfolder.ps1' -UseBasicParsing);
+          Install-AtomicsFolder -RepoOwner ${{ github.event.pull_request.head.repo.full_name }} -Branch ${{ github.event.pull_request.head.ref }} -Force
+          Invoke-AtomicTest All -ShowDetailsBrief
