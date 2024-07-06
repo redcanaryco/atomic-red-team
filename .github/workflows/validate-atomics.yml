@@ -81,6 +81,8 @@ jobs:
 
   run-atomics:
     name: Install Invoke-Atomic
+    needs:
+      - upload
     runs-on: ${{ matrix.os }}
     strategy:
       max-parallel: 3
