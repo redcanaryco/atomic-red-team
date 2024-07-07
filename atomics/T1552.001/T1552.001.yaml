@@ -175,3 +175,16 @@ atomic_tests:
       
     name: powershell
     elevation_required: true
+- name: List Credential Files via Command Prompt
+  description: |
+    Via Command Prompt,list files where credentials are stored in Windows Credential Manager
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      $usernameinfo = (Get-ChildItem Env:USERNAME).Value
+      dir /a:h C:\Users\abagchi\AppData\Local\Microsoft\Credentials\
+      dir /a:h C:\Users\abagchi\AppData\Roaming\Microsoft\Credentials\
+      
+    name: command_prompt
+    elevation_required: true
