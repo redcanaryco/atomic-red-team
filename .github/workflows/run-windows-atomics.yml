@@ -1,0 +1,12 @@
+name: run-windows-atomics
+
+on:
+  pull_request:
+    types: [labeled]
+
+jobs:
+  run-atomics:
+    if: ${{ github.event.label.name == 'windows' }}
+    runs-on: windows-latest
+    steps:
+      - uses: ./.github/actions/run-atomics

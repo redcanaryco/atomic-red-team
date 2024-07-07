@@ -78,34 +78,3 @@ jobs:
         with:
           name: changedfiles.json
           path: atomic_red_team/pr/
-
-  run-atomics:
-    name: Run atomics
-    needs:
-      - upload
-    runs-on: ${{ matrix.os }}
-    strategy:
-      max-parallel: 3
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: changedfiles.json
-
-      - name: Run atomics
-        shell: pwsh
-        run: |
-          IEX (IWR 'https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/install-atomicredteam.ps1' -UseBasicParsing);
-          Install-AtomicRedTeam -Force
-          if($error.contains("Installation of AtomicRedTeam Failed")){
-            exit 1
-          }
-          IEX (IWR 'https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/install-atomicsfolder.ps1' -UseBasicParsing);
-          Install-AtomicsFolder -RepoOwner ${{ github.event.pull_request.head.repo.owner.login }} -Branch ${{ github.event.pull_request.head.ref }} -Force
-          $changedFiles = Get-Content .\changedfiles.json -Raw | ConvertFrom-Json 
-          $changedFiles | ForEach-Object {
-            Invoke-AtomicTest $_.name -TestNumbers $_.test_number -GetPreReqs
-            Invoke-AtomicTest $_.name -TestNumbers $_.test_number
-            Invoke-AtomicTest $_.name -TestNumbers $_.test_number -Cleanup
-          }
