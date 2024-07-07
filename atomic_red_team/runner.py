@@ -72,7 +72,7 @@ def generate_labels(
 ):
     """Generate labels for a pull request."""
     api = GithubAPI(token)
-    api.save_labels_and_maintainers(pull_request)
+    api.save_labels_and_maintainers(int(pull_request))
 
 
 @app.command()

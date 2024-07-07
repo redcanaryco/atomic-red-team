@@ -3,9 +3,12 @@ import json
 import os
 import re
 from dataclasses import dataclass
+from typing import List
 
+import github.File
 import requests
 import yaml
+from github import Github
 from yaml.loader import SafeLoader
 
 
@@ -61,6 +64,8 @@ class GithubAPI:
 
     def __init__(self, token):
         self.token = token
+        self.github = Github(token)
+        self.repo = self.github.get_repo(os.getenv('GITHUB_REPOSITORY'))
 
     @property
     def headers(self):
@@ -76,18 +81,13 @@ class GithubAPI:
         assert r.status_code == 200
         return yaml.load(r.text, Loader=SafeLineLoader)
 
-    def get_files_for_pr(self, pr):
+    def get_files_for_pr(self, pr) -> List[github.File.File]:
         """Get new and modified files in the `atomics` directory changed in a PR."""
-        response = requests.get(
-            f"https://api.github.com/repos/{os.getenv('GITHUB_REPOSITORY')}/pulls/{pr}/files",
-            headers=self.headers,
-            timeout=15,
-        )
-        assert response.status_code == 200
-        files = response.json()
+        pull_request = self.repo.get_pull(pr)
+        files = pull_request.get_files()
         return filter(
-            lambda x: x["status"] in ["added", "modified"]
-            and fnmatch.fnmatch(x["filename"], "atomics/T*/T*.yaml"),
+            lambda x: x.status in ["added", "modified"] and
+            fnmatch.fnmatch(x.filename, "atomics/T*/T*.yaml"),
             files,
         )
 
@@ -97,9 +97,9 @@ class GithubAPI:
         start = 0
         files = self.get_files_for_pr(pr)
         for file in files:
-            data = self.get_atomic_with_lines(file["raw_url"])
-            technique = get_technique_from_filename(file["filename"])
-            if file["status"] == "added":
+            data = self.get_atomic_with_lines(file.raw_url)
+            technique = get_technique_from_filename(file.filename)
+            if file.status == "added":
                 # New file; run the entire technique; Invoke-AtomicTest Txxxx
                 tests += [
                     ChangedAtomic(technique=technique, test_number=index + 1, data=t)
@@ -108,7 +108,7 @@ class GithubAPI:
             else:
                 changed_lines = []
                 count = 0
-                for line in file["patch"].split("\n"):
+                for line in file.patch.split("\n"):
                     if line.startswith("@@"):
                         x, y = re.findall(r"\d{1,3},\d{1,3}", line)
                         start = int(x.split(",")[0])
@@ -128,7 +128,7 @@ class GithubAPI:
                     changes_in_current_atomic = [
                         i
                         for i in changed_lines
-                        if i > curr_atomic_start and i < curr_atomic_end
+                        if curr_atomic_start < i < curr_atomic_end
                     ]
                     if len(changes_in_current_atomic) > 0:
                         tests.append(
@@ -152,12 +152,13 @@ class GithubAPI:
                 labels.append(self.labels[p])
             if p in self.maintainers:
                 maintainers += self.maintainers[p]
+
+        pull_request = self.repo.get_pull(pr)
+        pull_request.set_labels(*labels)
+        pull_request.add_to_assignees(*maintainers)
+
         os.mkdir("pr")
 
         with open("pr/changedfiles.json", "w") as f:
             x = [{"name": t.technique, "test_number": t.test_number} for t in tests]
             f.write(json.dumps(x))
-
-        with open("pr/labels.json", "w") as f:
-            j = {"pr": pr, "labels": labels, "maintainers": maintainers}
-            f.write(json.dumps(j))
