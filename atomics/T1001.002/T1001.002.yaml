@@ -35,36 +35,36 @@ atomic_tests:
         default: $env:TEMP\random_passwords.txt
     dependency_executor_name: powershell
     dependencies:
-      - description: |
-          Image file must exist
-        prereq_command: |
-          if (!(Test-Path "#{image_file}")) {exit 1} else {
-          {exit 0}
-          }
-        get_prereq_command: |
-          New-Item -Type Directory (split-path "#{image_file}") -ErrorAction ignore | Out-Null
-          Write-Output "Downloading image file..."
-          $imageUrl = "https://github.com/raghavsingh7/Pictures/raw/a9617d9fce289909441120a1e0366315c2c5e19d/lime.jpg"
-          Invoke-WebRequest -Uri $imageUrl -OutFile "#{image_file}"
-      - description: |
-          File to hide within tarz file must exist
-        prereq_command: |
-          if (!(Test-Path "#{passwords_file}")) {exit 1} else {
-          {exit 0}
-          }
-        get_prereq_command: |
-          Write-Output "Generating random passwords and saving to file..."
-          $passwords = 1..10 | ForEach-Object { Get-Random -InputObject ('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{}|;:,.<>?') -Count 12 }
-          $passwords | Out-File -FilePath "#{passwords_file}"    
-      - description: |
-          Tarz file to embed in image must exist 
-        prereq_command: |
-          if (!(Test-Path "#{tar_file}")) {exit 1} else {
-          {exit 0}
-          }
-        get_prereq_command: |  
-          Write-Output "Generating tarz file..."
-          tar -cvf "#{tar_file}" "#{passwords_file}"
+    - description: |
+        Image file must exist
+      prereq_command: |
+        if (!(Test-Path "#{image_file}")) {exit 1} else {
+        {exit 0}
+        }
+      get_prereq_command: |
+        New-Item -Type Directory (split-path "#{image_file}") -ErrorAction ignore | Out-Null
+        Write-Output "Downloading image file..."
+        $imageUrl = "https://github.com/raghavsingh7/Pictures/raw/a9617d9fce289909441120a1e0366315c2c5e19d/lime.jpg"
+        Invoke-WebRequest -Uri $imageUrl -OutFile "#{image_file}"
+    - description: |
+        File to hide within tarz file must exist
+      prereq_command: |
+        if (!(Test-Path "#{passwords_file}")) {exit 1} else {
+        {exit 0}
+        }
+      get_prereq_command: |
+        Write-Output "Generating random passwords and saving to file..."
+        $passwords = 1..10 | ForEach-Object { Get-Random -InputObject ('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{}|;:,.<>?') -Count 12 }
+        $passwords | Out-File -FilePath "#{passwords_file}"    
+    - description: |
+        Tarz file to embed in image must exist 
+      prereq_command: |
+        if (!(Test-Path "#{tar_file}")) {exit 1} else {
+        {exit 0}
+        }
+      get_prereq_command: |  
+        Write-Output "Generating tarz file..."
+        tar -cvf "#{tar_file}" "#{passwords_file}"
     executor:
       name: powershell
       elevation_required: true
@@ -101,28 +101,28 @@ atomic_tests:
         default: PathToAtomicsFolder\ExternalPayloads\Extract-Invoke-PSImage.ps1
     dependency_executor_name: powershell
     dependencies:
-      - description: |
-          Image file must exist
-        prereq_command: |
-          if (!(Test-Path "#{image_file}")) {exit 1} else {
-          {exit 0}
-          }
-        get_prereq_command: |
-          New-Item -Type Directory (split-path "#{image_file}") -ErrorAction Ignore | Out-Null
-          Write-Output "Downloading image file..."
-          $imageUrl = "https://github.com/raghavsingh7/Pictures/raw/f73e7686cdd848ed06e63af07f6f1a5e72de6320/evil_kitten.jpg"
-          Invoke-WebRequest -Uri $imageUrl -OutFile #{image_file}
-      - description: |
-          Extract-Invoke-PSImage must exist
-        prereq_command: |
-          if (!(Test-Path "#{psimage_script}")) {exit 1} else {
-          {exit 0}
-          }
-        get_prereq_command: |
-          New-Item -Path "PathToAtomicsFolder\ExternalPayloads\" -ItemType Directory -Force | Out-Null
-          Write-Output "Downloading Extract-Invoke-PSImage.ps1 script..."
-          $scriptUrl = "https://github.com/raghavsingh7/Extract-Invoke-PSImage/raw/7d8c165d2f9bfe9c3965181079b7c82e03168ce1/Extract-Invoke-PSImage.ps1"
-          Invoke-WebRequest -Uri $scriptUrl -OutFile #{psimage_script}
+    - description: |
+        Image file must exist
+      prereq_command: |
+        if (!(Test-Path "#{image_file}")) {exit 1} else {
+        {exit 0}
+        }
+      get_prereq_command: |
+        New-Item -Type Directory (split-path "#{image_file}") -ErrorAction Ignore | Out-Null
+        Write-Output "Downloading image file..."
+        $imageUrl = "https://github.com/raghavsingh7/Pictures/raw/f73e7686cdd848ed06e63af07f6f1a5e72de6320/evil_kitten.jpg"
+        Invoke-WebRequest -Uri $imageUrl -OutFile #{image_file}
+    - description: |
+        Extract-Invoke-PSImage must exist
+      prereq_command: |
+        if (!(Test-Path "#{psimage_script}")) {exit 1} else {
+        {exit 0}
+        }
+      get_prereq_command: |
+        New-Item -Path "PathToAtomicsFolder\ExternalPayloads\" -ItemType Directory -Force | Out-Null
+        Write-Output "Downloading Extract-Invoke-PSImage.ps1 script..."
+        $scriptUrl = "https://github.com/raghavsingh7/Extract-Invoke-PSImage/raw/7d8c165d2f9bfe9c3965181079b7c82e03168ce1/Extract-Invoke-PSImage.ps1"
+        Invoke-WebRequest -Uri $scriptUrl -OutFile #{psimage_script}
     executor:
       name: powershell
       elevation_required: true

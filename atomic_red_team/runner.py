@@ -84,7 +84,7 @@ def validate():
     validator = Validator()
     errors = defaultdict(list)
 
-    for folder in glob.glob(f"{atomics_path}/atomics/T*"):
+    for folder in glob.glob(f"{atomics_path}/T*"):
         for item in os.scandir(folder):
             try:
                 validator.validate(item)

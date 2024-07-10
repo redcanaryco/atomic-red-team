@@ -39,12 +39,12 @@ atomic_tests:
       default: google.com
   dependency_executor_name: sh
   dependencies:
-    - description: |
-        Requires telnet
-      prereq_command: |
-        which telnet
-      get_prereq_command: |
-        echo "please install telnet to run this test"; exit 1
+  - description: |
+      Requires telnet
+    prereq_command: |
+      which telnet
+    get_prereq_command: |
+      echo "please install telnet to run this test"; exit 1
   executor:
     command: |
       echo quit | telnet #{domain} #{port}

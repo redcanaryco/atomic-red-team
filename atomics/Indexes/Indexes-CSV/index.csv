@@ -15,6 +15,7 @@ defense-evasion,T1218.011,Signed Binary Proxy Execution: Rundll32,12,Rundll32 wi
 defense-evasion,T1218.011,Signed Binary Proxy Execution: Rundll32,13,Rundll32 with desk.cpl,83a95136-a496-423c-81d3-1c6750133917,command_prompt
 defense-evasion,T1218.011,Signed Binary Proxy Execution: Rundll32,14,Running DLL with .init extension and function,2d5029f0-ae20-446f-8811-e7511b58e8b6,command_prompt
 defense-evasion,T1218.011,Signed Binary Proxy Execution: Rundll32,15,Rundll32 execute command via FileProtocolHandler,f3ad3c5b-1db1-45c1-81bf-d3370ebab6c8,command_prompt
+defense-evasion,T1218.011,Signed Binary Proxy Execution: Rundll32,16,Rundll32 execute payload by calling RouteTheCall,8a7f56ee-10e7-444c-a139-0109438288eb,powershell
 defense-evasion,T1556.003,Modify Authentication Process: Pluggable Authentication Modules,1,Malicious PAM rule,4b9dde80-ae22-44b1-a82a-644bf009eb9c,sh
 defense-evasion,T1556.003,Modify Authentication Process: Pluggable Authentication Modules,2,Malicious PAM rule (freebsd),b17eacac-282d-4ca8-a240-46602cf863e3,sh
 defense-evasion,T1556.003,Modify Authentication Process: Pluggable Authentication Modules,3,Malicious PAM module,65208808-3125-4a2e-8389-a0a00e9ab326,sh
@@ -150,6 +151,7 @@ defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,13,Se
 defense-evasion,T1202,Indirect Command Execution,1,Indirect Command Execution - pcalua.exe,cecfea7a-5f03-4cdd-8bc8-6f7c22862440,command_prompt
 defense-evasion,T1202,Indirect Command Execution,2,Indirect Command Execution - forfiles.exe,8b34a448-40d9-4fc3-a8c8-4bb286faf7dc,command_prompt
 defense-evasion,T1202,Indirect Command Execution,3,Indirect Command Execution - conhost.exe,cf3391e0-b482-4b02-87fc-ca8362269b29,command_prompt
+defense-evasion,T1202,Indirect Command Execution,4,Indirect Command Execution - Scriptrunner.exe,0fd14730-6226-4f5e-8d67-43c65f1be940,powershell
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,1,Deobfuscate/Decode Files Or Information,dc6fe391-69e6-4506-bd06-ea5eeb4082f8,command_prompt
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,2,Certutil Rename and Decode,71abc534-3c05-4d0c-80f7-cbe93cb2aa94,command_prompt
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,3,Base64 decoding with Python,356dc0e8-684f-4428-bb94-9313998ad608,sh
@@ -209,6 +211,7 @@ defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,6,Windows - Modif
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,7,Windows - Modify file last access timestamp with PowerShell,da627f63-b9bd-4431-b6f8-c5b44d061a62,powershell
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,8,Windows - Timestomp a File,d7512c33-3a75-4806-9893-69abc3ccdd43,powershell
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,9,MacOS - Timestomp Date Modified,87fffff4-d371-4057-a539-e3b24c37e564,sh
+defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,10,Event Log Manipulations- Time slipping via Powershell,7bcf83bf-f5ef-425c-9d9a-71618ad9ed12,powershell
 defense-evasion,T1620,Reflective Code Loading,1,WinPwn - Reflectively load Mimik@tz into memory,56b9589c-9170-4682-8c3d-33b86ecb5119,powershell
 defense-evasion,T1218.003,Signed Binary Proxy Execution: CMSTP,1,CMSTP Executing Remote Scriptlet,34e63321-9683-496b-bbc1-7566bc55e624,command_prompt
 defense-evasion,T1218.003,Signed Binary Proxy Execution: CMSTP,2,CMSTP Executing UAC Bypass,748cb4f6-2fb3-4e97-b7ad-b22635a09ab0,command_prompt
@@ -322,6 +325,18 @@ defense-evasion,T1112,Modify Registry,69,RDP Authentication Level Override,7e7b6
 defense-evasion,T1112,Modify Registry,70,Enable RDP via Registry (fDenyTSConnections),16bdbe52-371c-4ccf-b708-79fba61f1db4,command_prompt
 defense-evasion,T1112,Modify Registry,71,Disable Windows Prefetch Through Registry,7979dd41-2045-48b2-a54e-b1bc2415c9da,command_prompt
 defense-evasion,T1112,Modify Registry,72,Setting Shadow key in Registry for RDP Shadowing,ac494fe5-81a4-4897-af42-e774cf005ecb,powershell
+defense-evasion,T1112,Modify Registry,73,Flush Shimcache,ecbd533e-b45d-4239-aeff-b857c6f6d68b,command_prompt
+defense-evasion,T1112,Modify Registry,74,Disable Windows Remote Desktop Protocol,5f8e36de-37ca-455e-b054-a2584f043c06,command_prompt
+defense-evasion,T1112,Modify Registry,75,Enforce Smart Card Authentication Through Registry,4c4bf587-fe7f-448f-ba8d-1ecec9db88be,command_prompt
+defense-evasion,T1112,Modify Registry,76,Requires the BitLocker PIN for Pre-boot authentication,26fc7375-a551-4336-90d7-3f2817564304,command_prompt
+defense-evasion,T1112,Modify Registry,77,Modify EnableBDEWithNoTPM Registry entry,bacb3e73-8161-43a9-8204-a69fe0e4b482,command_prompt
+defense-evasion,T1112,Modify Registry,78,Modify UseTPM Registry entry,7c8c7bd8-0a5c-4514-a6a3-0814c5a98cf0,command_prompt
+defense-evasion,T1112,Modify Registry,79,Modify UseTPMPIN Registry entry,10b33fb0-c58b-44cd-8599-b6da5ad6384c,command_prompt
+defense-evasion,T1112,Modify Registry,80,Modify UseTPMKey Registry entry,c8480c83-a932-446e-a919-06a1fd1e512a,command_prompt
+defense-evasion,T1112,Modify Registry,81,Modify UseTPMKeyPIN Registry entry,02d8b9f7-1a51-4011-8901-2d55cca667f9,command_prompt
+defense-evasion,T1112,Modify Registry,82,Modify EnableNonTPM Registry entry,e672a340-a933-447c-954c-d68db38a09b1,command_prompt
+defense-evasion,T1112,Modify Registry,83,Modify UsePartialEncryptionKey Registry entry,b5169fd5-85c8-4b2c-a9b6-64cc0b9febef,command_prompt
+defense-evasion,T1112,Modify Registry,84,Modify UsePIN Registry entry,3ac0b30f-532f-43c6-8f01-fb657aaed7e4,command_prompt
 defense-evasion,T1574.008,Hijack Execution Flow: Path Interception by Search Order Hijacking,1,powerShell Persistence via hijacking default modules - Get-Variable.exe,1561de08-0b4b-498e-8261-e922f3494aae,powershell
 defense-evasion,T1027.001,Obfuscated Files or Information: Binary Padding,1,Pad Binary to Change Hash - Linux/macOS dd,ffe2346c-abd5-4b45-a713-bf5f1ebd573a,sh
 defense-evasion,T1027.001,Obfuscated Files or Information: Binary Padding,2,Pad Binary to Change Hash using truncate command - Linux/macOS,e22a9e89-69c7-410f-a473-e6c212cd2292,sh
@@ -707,6 +722,7 @@ privilege-escalation,T1547.009,Boot or Logon Autostart Execution: Shortcut Modif
 privilege-escalation,T1547.005,Boot or Logon Autostart Execution: Security Support Provider,1,Modify HKLM:\System\CurrentControlSet\Control\Lsa Security Support Provider configuration in registry,afdfd7e3-8a0b-409f-85f7-886fdf249c9e,powershell
 privilege-escalation,T1547.005,Boot or Logon Autostart Execution: Security Support Provider,2,Modify HKLM:\System\CurrentControlSet\Control\Lsa\OSConfig Security Support Provider configuration in registry,de3f8e74-3351-4fdb-a442-265dbf231738,powershell
 privilege-escalation,T1543.004,Create or Modify System Process: Launch Daemon,1,Launch Daemon,03ab8df5-3a6b-4417-b6bd-bb7a5cfd74cf,bash
+privilege-escalation,T1543.004,Create or Modify System Process: Launch Daemon,2,Launch Daemon - Users Directory,6f899f9d-8a8e-4143-89a5-26fc2c3ec438,bash
 privilege-escalation,T1574.008,Hijack Execution Flow: Path Interception by Search Order Hijacking,1,powerShell Persistence via hijacking default modules - Get-Variable.exe,1561de08-0b4b-498e-8261-e922f3494aae,powershell
 privilege-escalation,T1484.001,Domain Policy Modification: Group Policy Modification,1,LockBit Black - Modify Group policy settings -cmd,9ab80952-74ee-43da-a98c-1e740a985f28,command_prompt
 privilege-escalation,T1484.001,Domain Policy Modification: Group Policy Modification,2,LockBit Black - Modify Group policy settings -Powershell,b51eae65-5441-4789-b8e8-64783c26c1d1,powershell
@@ -836,10 +852,13 @@ privilege-escalation,T1546.015,Event Triggered Execution: Component Object Model
 privilege-escalation,T1546.015,Event Triggered Execution: Component Object Model Hijacking,4,COM hijacking via TreatAs,33eacead-f117-4863-8eb0-5c6304fbfaa9,powershell
 privilege-escalation,T1574.009,Hijack Execution Flow: Path Interception by Unquoted Path,1,Execution of program.exe as service with unquoted service path,2770dea7-c50f-457b-84c4-c40a47460d9f,command_prompt
 privilege-escalation,T1037.005,Boot or Logon Initialization Scripts: Startup Items,1,Add file to Local Library StartupItems,134627c3-75db-410e-bff8-7a920075f198,sh
+privilege-escalation,T1037.005,Boot or Logon Initialization Scripts: Startup Items,2,Add launch script to launch daemon,fc369906-90c7-4a15-86fd-d37da624dde6,bash
+privilege-escalation,T1037.005,Boot or Logon Initialization Scripts: Startup Items,3,Add launch script to launch agent,10cf5bec-49dd-4ebf-8077-8f47e420096f,bash
 privilege-escalation,T1546.010,Event Triggered Execution: AppInit DLLs,1,Install AppInit Shim,a58d9386-3080-4242-ab5f-454c16503d18,command_prompt
 privilege-escalation,T1546.002,Event Triggered Execution: Screensaver,1,Set Arbitrary Binary as Screensaver,281201e7-de41-4dc9-b73d-f288938cbb64,command_prompt
 privilege-escalation,T1543.001,Create or Modify System Process: Launch Agent,1,Launch Agent,a5983dee-bf6c-4eaf-951c-dbc1a7b90900,bash
 privilege-escalation,T1543.001,Create or Modify System Process: Launch Agent,2,Event Monitor Daemon Persistence,11979f23-9b9d-482a-9935-6fc9cd022c3e,bash
+privilege-escalation,T1543.001,Create or Modify System Process: Launch Agent,3,Launch Agent - Root Directory,66774fa8-c562-4bae-a58d-5264a0dd9dd7,bash
 privilege-escalation,T1037.004,Boot or Logon Initialization Scripts: Rc.common,1,rc.common,97a48daa-8bca-4bc0-b1a9-c1d163e762de,bash
 privilege-escalation,T1037.004,Boot or Logon Initialization Scripts: Rc.common,2,rc.common,c33f3d80-5f04-419b-a13a-854d1cbdbf3a,bash
 privilege-escalation,T1037.004,Boot or Logon Initialization Scripts: Rc.common,3,rc.local,126f71af-e1c9-405c-94ef-26a47b16c102,sh
@@ -1064,6 +1083,7 @@ persistence,T1547.009,Boot or Logon Autostart Execution: Shortcut Modification,2
 persistence,T1547.005,Boot or Logon Autostart Execution: Security Support Provider,1,Modify HKLM:\System\CurrentControlSet\Control\Lsa Security Support Provider configuration in registry,afdfd7e3-8a0b-409f-85f7-886fdf249c9e,powershell
 persistence,T1547.005,Boot or Logon Autostart Execution: Security Support Provider,2,Modify HKLM:\System\CurrentControlSet\Control\Lsa\OSConfig Security Support Provider configuration in registry,de3f8e74-3351-4fdb-a442-265dbf231738,powershell
 persistence,T1543.004,Create or Modify System Process: Launch Daemon,1,Launch Daemon,03ab8df5-3a6b-4417-b6bd-bb7a5cfd74cf,bash
+persistence,T1543.004,Create or Modify System Process: Launch Daemon,2,Launch Daemon - Users Directory,6f899f9d-8a8e-4143-89a5-26fc2c3ec438,bash
 persistence,T1574.008,Hijack Execution Flow: Path Interception by Search Order Hijacking,1,powerShell Persistence via hijacking default modules - Get-Variable.exe,1561de08-0b4b-498e-8261-e922f3494aae,powershell
 persistence,T1505.003,Server Software Component: Web Shell,1,Web Shell Written to Disk,0a2ce662-1efa-496f-a472-2fe7b080db16,command_prompt
 persistence,T1078.001,Valid Accounts: Default Accounts,1,Enable Guest account with RDP capability and admin privileges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
@@ -1182,6 +1202,8 @@ persistence,T1546.015,Event Triggered Execution: Component Object Model Hijackin
 persistence,T1137.004,Office Application Startup: Outlook Home Page,1,Install Outlook Home Page Persistence,7a91ad51-e6d2-4d43-9471-f26362f5738e,command_prompt
 persistence,T1574.009,Hijack Execution Flow: Path Interception by Unquoted Path,1,Execution of program.exe as service with unquoted service path,2770dea7-c50f-457b-84c4-c40a47460d9f,command_prompt
 persistence,T1037.005,Boot or Logon Initialization Scripts: Startup Items,1,Add file to Local Library StartupItems,134627c3-75db-410e-bff8-7a920075f198,sh
+persistence,T1037.005,Boot or Logon Initialization Scripts: Startup Items,2,Add launch script to launch daemon,fc369906-90c7-4a15-86fd-d37da624dde6,bash
+persistence,T1037.005,Boot or Logon Initialization Scripts: Startup Items,3,Add launch script to launch agent,10cf5bec-49dd-4ebf-8077-8f47e420096f,bash
 persistence,T1197,BITS Jobs,1,Bitsadmin Download (cmd),3c73d728-75fb-4180-a12f-6712864d7421,command_prompt
 persistence,T1197,BITS Jobs,2,Bitsadmin Download (PowerShell),f63b8bc4-07e5-4112-acba-56f646f3f0bc,powershell
 persistence,T1197,BITS Jobs,3,"Persist, Download, & Execute",62a06ec5-5754-47d2-bcfc-123d8314c6ae,command_prompt
@@ -1190,6 +1212,7 @@ persistence,T1546.010,Event Triggered Execution: AppInit DLLs,1,Install AppInit 
 persistence,T1546.002,Event Triggered Execution: Screensaver,1,Set Arbitrary Binary as Screensaver,281201e7-de41-4dc9-b73d-f288938cbb64,command_prompt
 persistence,T1543.001,Create or Modify System Process: Launch Agent,1,Launch Agent,a5983dee-bf6c-4eaf-951c-dbc1a7b90900,bash
 persistence,T1543.001,Create or Modify System Process: Launch Agent,2,Event Monitor Daemon Persistence,11979f23-9b9d-482a-9935-6fc9cd022c3e,bash
+persistence,T1543.001,Create or Modify System Process: Launch Agent,3,Launch Agent - Root Directory,66774fa8-c562-4bae-a58d-5264a0dd9dd7,bash
 persistence,T1037.004,Boot or Logon Initialization Scripts: Rc.common,1,rc.common,97a48daa-8bca-4bc0-b1a9-c1d163e762de,bash
 persistence,T1037.004,Boot or Logon Initialization Scripts: Rc.common,2,rc.common,c33f3d80-5f04-419b-a13a-854d1cbdbf3a,bash
 persistence,T1037.004,Boot or Logon Initialization Scripts: Rc.common,3,rc.local,126f71af-e1c9-405c-94ef-26a47b16c102,sh
@@ -1428,6 +1451,7 @@ credential-access,T1003.002,OS Credential Dumping: Security Account Manager,4,Po
 credential-access,T1003.002,OS Credential Dumping: Security Account Manager,5,dump volume shadow copy hives with certutil,eeb9751a-d598-42d3-b11c-c122d9c3f6c7,command_prompt
 credential-access,T1003.002,OS Credential Dumping: Security Account Manager,6,dump volume shadow copy hives with System.IO.File,9d77fed7-05f8-476e-a81b-8ff0472c64d0,powershell
 credential-access,T1003.002,OS Credential Dumping: Security Account Manager,7,WinPwn - Loot local Credentials - Dump SAM-File for NTLM Hashes,0c0f5f06-166a-4f4d-bb4a-719df9a01dbb,powershell
+credential-access,T1003.002,OS Credential Dumping: Security Account Manager,8,"Dumping of SAM, creds, and secrets(Reg Export)",21df41be-cdd8-4695-a650-c3981113aa3c,command_prompt
 credential-access,T1552.005,Unsecured Credentials: Cloud Instance Metadata API,1,Azure - Search Azure AD User Attributes for Passwords,ae9b2e3e-efa1-4483-86e2-fae529ab9fb6,powershell
 credential-access,T1552.005,Unsecured Credentials: Cloud Instance Metadata API,2,Azure - Dump Azure Instance Metadata from Virtual Machines,cc99e772-4e18-4f1f-b422-c5cdd1bfd7b7,powershell
 credential-access,T1110.002,Brute Force: Password Cracking,1,Password Cracking with Hashcat,6d27df5d-69d4-4c91-bc33-5983ffe91692,command_prompt
@@ -1435,6 +1459,7 @@ credential-access,T1555.001,Credentials from Password Stores: Keychain,1,Keychai
 credential-access,T1555.001,Credentials from Password Stores: Keychain,2,Export Certificate Item(s),1864fdec-ff86-4452-8c30-f12507582a93,sh
 credential-access,T1555.001,Credentials from Password Stores: Keychain,3,Import Certificate Item(s) into Keychain,e544bbcb-c4e0-4bd0-b614-b92131635f59,sh
 credential-access,T1003.004,OS Credential Dumping: LSA Secrets,1,Dumping LSA Secrets,55295ab0-a703-433b-9ca4-ae13807de12f,command_prompt
+credential-access,T1003.004,OS Credential Dumping: LSA Secrets,2,Dump Kerberos Tickets from LSA using dumper.ps1,2dfa3bff-9a27-46db-ab75-7faefdaca732,powershell
 credential-access,T1606.002,Forge Web Credentials: SAML token,1,Golden SAML,b16a03bc-1089-4dcc-ad98-30fe8f3a2b31,powershell
 credential-access,T1003.007,OS Credential Dumping: Proc Filesystem,1,Dump individual process memory with sh (Local),7e91138a-8e74-456d-a007-973d67a0bb80,sh
 credential-access,T1003.007,OS Credential Dumping: Proc Filesystem,2,Dump individual process memory with sh on FreeBSD (Local),fa37b633-e097-4415-b2b8-c5bf4c86e423,sh
@@ -1471,6 +1496,7 @@ credential-access,T1555,Credentials from Password Stores,6,WinPwn - Loot local C
 credential-access,T1555,Credentials from Password Stores,7,WinPwn - Loot local Credentials - Wifi Credentials,afe369c2-b42e-447f-98a3-fb1f4e2b8552,powershell
 credential-access,T1555,Credentials from Password Stores,8,WinPwn - Loot local Credentials - Decrypt Teamviewer Passwords,db965264-3117-4bad-b7b7-2523b7856b92,powershell
 credential-access,T1552,Unsecured Credentials,1,AWS - Retrieve EC2 Password Data using stratus,a21118de-b11e-4ebd-b655-42f11142df0c,sh
+credential-access,T1552,Unsecured Credentials,2,Search for Passwords in Powershell History,f9c3d0ab-479b-4019-945f-22ace2b1731a,powershell
 credential-access,T1555.003,Credentials from Password Stores: Credentials from Web Browsers,1,Run Chrome-password Collector,8c05b133-d438-47ca-a630-19cc464c4622,powershell
 credential-access,T1555.003,Credentials from Password Stores: Credentials from Web Browsers,2,Search macOS Safari Cookies,c1402f7b-67ca-43a8-b5f3-3143abedc01b,sh
 credential-access,T1555.003,Credentials from Password Stores: Credentials from Web Browsers,3,LaZagne - Credentials from Browser,9a2915b3-3954-4cce-8c76-00fbf4dbd014,command_prompt
@@ -1601,6 +1627,7 @@ discovery,T1615,Group Policy Discovery,2,Get-DomainGPO to display group policy i
 discovery,T1615,Group Policy Discovery,3,WinPwn - GPOAudit,bc25c04b-841e-4965-855f-d1f645d7ab73,powershell
 discovery,T1615,Group Policy Discovery,4,WinPwn - GPORemoteAccessPolicy,7230d01a-0a72-4bd5-9d7f-c6d472bc6a59,powershell
 discovery,T1615,Group Policy Discovery,5,MSFT Get-GPO Cmdlet,52778a8f-a10b-41a4-9eae-52ddb74072bf,powershell
+discovery,T1652,Device Driver Discovery,1,Device Driver Discovery,235b30a2-e5b1-441f-9705-be6231c88ddd,powershell
 discovery,T1087.002,Account Discovery: Domain Account,1,Enumerate all accounts (Domain),6fbc9e68-5ad7-444a-bd11-8bf3136c477e,command_prompt
 discovery,T1087.002,Account Discovery: Domain Account,2,Enumerate all accounts via PowerShell (Domain),8b8a6449-be98-4f42-afd2-dedddc7453b2,powershell
 discovery,T1087.002,Account Discovery: Domain Account,3,Enumerate logged on users via CMD (Domain),161dcd85-d014-4f5e-900c-d3eaae82a0f7,command_prompt
@@ -1716,12 +1743,12 @@ discovery,T1082,System Information Discovery,24,Azure Security Scan with SkyArk,
 discovery,T1082,System Information Discovery,25,Linux List Kernel Modules,034fe21c-3186-49dd-8d5d-128b35f181c7,sh
 discovery,T1082,System Information Discovery,26,FreeBSD List Kernel Modules,4947897f-643a-4b75-b3f5-bed6885749f6,sh
 discovery,T1082,System Information Discovery,27,System Information Discovery with WMIC,8851b73a-3624-4bf7-8704-aa312411565c,command_prompt
-discovery,T1082,System Information Discovery,28,Driver Enumeration using DriverQuery,bd85e3d1-4aeb-4a1d-850f-7be3cb8d60b9,command_prompt
-discovery,T1082,System Information Discovery,29,System Information Discovery,4060ee98-01ae-4c8e-8aad-af8300519cc7,command_prompt
-discovery,T1082,System Information Discovery,30,Check computer location,96be6002-9200-47db-94cb-c3e27de1cb36,command_prompt
-discovery,T1082,System Information Discovery,31,BIOS Information Discovery through Registry,f2f91612-d904-49d7-87c2-6c165d23bead,command_prompt
-discovery,T1082,System Information Discovery,32,ESXi - VM Discovery using ESXCLI,2040405c-eea6-4c1c-aef3-c2acc430fac9,command_prompt
-discovery,T1082,System Information Discovery,33,ESXi - Darkside system information discovery,f89812e5-67d1-4f49-86fa-cbc6609ea86a,command_prompt
+discovery,T1082,System Information Discovery,28,System Information Discovery,4060ee98-01ae-4c8e-8aad-af8300519cc7,command_prompt
+discovery,T1082,System Information Discovery,29,Check computer location,96be6002-9200-47db-94cb-c3e27de1cb36,command_prompt
+discovery,T1082,System Information Discovery,30,BIOS Information Discovery through Registry,f2f91612-d904-49d7-87c2-6c165d23bead,command_prompt
+discovery,T1082,System Information Discovery,31,ESXi - VM Discovery using ESXCLI,2040405c-eea6-4c1c-aef3-c2acc430fac9,command_prompt
+discovery,T1082,System Information Discovery,32,ESXi - Darkside system information discovery,f89812e5-67d1-4f49-86fa-cbc6609ea86a,command_prompt
+discovery,T1082,System Information Discovery,33,sysctl to gather macOS hardware info,c8d40da9-31bd-47da-a497-11ea55d1ef6c,sh
 discovery,T1016.002,System Network Configuration Discovery: Wi-Fi Discovery,1,Enumerate Stored Wi-Fi Profiles And Passwords via netsh,53cf1903-0fa7-4177-ab14-f358ae809eec,command_prompt
 discovery,T1010,Application Window Discovery,1,List Process Main Windows - C# .NET,fe94a1c3-3e22-4dc9-9fdf-3a8bdbc10dc4,command_prompt
 discovery,T1580,Cloud Infrastructure Discovery,1,AWS - EC2 Enumeration from Cloud Instance,99ee161b-dcb1-4276-8ecb-7cfdcb207820,sh
@@ -1799,9 +1826,11 @@ discovery,T1614.001,System Location Discovery: System Language Discovery,3,Disco
 discovery,T1614.001,System Location Discovery: System Language Discovery,4,Discover System Language with localectl,07ce871a-b3c3-44a3-97fa-a20118fdc7c9,sh
 discovery,T1614.001,System Location Discovery: System Language Discovery,5,Discover System Language by locale file,5d7057c9-2c8a-4026-91dd-13b5584daa69,sh
 discovery,T1614.001,System Location Discovery: System Language Discovery,6,Discover System Language by Environment Variable Query,cb8f7cdc-36c4-4ed0-befc-7ad7d24dfd7a,sh
+discovery,T1614.001,System Location Discovery: System Language Discovery,7,Discover System Language with dism.exe,69f625ba-938f-4900-bdff-82ada3df5d9c,command_prompt
 discovery,T1012,Query Registry,1,Query Registry,8f7578c4-9863-4d83-875c-a565573bbdf0,command_prompt
 discovery,T1012,Query Registry,2,Query Registry with Powershell cmdlets,0434d081-bb32-42ce-bcbb-3548e4f2628f,powershell
 discovery,T1012,Query Registry,3,Enumerate COM Objects in Registry with Powershell,0d80d088-a84c-4353-af1a-fc8b439f1564,powershell
+discovery,T1012,Query Registry,4,Reg query for AlwaysInstallElevated status,6fb4c4c5-f949-4fd2-8af5-ddbc61595223,command_prompt
 discovery,T1518.001,Software Discovery: Security Software Discovery,1,Security Software Discovery,f92a380f-ced9-491f-b338-95a991418ce2,command_prompt
 discovery,T1518.001,Software Discovery: Security Software Discovery,2,Security Software Discovery - powershell,7f566051-f033-49fb-89de-b6bacab730f0,powershell
 discovery,T1518.001,Software Discovery: Security Software Discovery,3,Security Software Discovery - ps (macOS),ba62ce11-e820-485f-9c17-6f3c857cd840,sh
@@ -1845,6 +1874,7 @@ discovery,T1046,Network Service Discovery,7,WinPwn - bluekeep,1cca5640-32a9-46e6
 discovery,T1046,Network Service Discovery,8,WinPwn - fruit,bb037826-cbe8-4a41-93ea-b94059d6bb98,powershell
 discovery,T1046,Network Service Discovery,9,Network Service Discovery for Containers,06eaafdb-8982-426e-8a31-d572da633caa,sh
 discovery,T1046,Network Service Discovery,10,Port-Scanning /24 Subnet with PowerShell,05df2a79-dba6-4088-a804-9ca0802ca8e4,powershell
+discovery,T1046,Network Service Discovery,11,Remote Desktop Services Discovery via PowerShell,9e55750e-4cbf-4013-9627-e9a045b541bf,powershell
 discovery,T1518,Software Discovery,1,Find and Display Internet Explorer Browser Version,68981660-6670-47ee-a5fa-7e74806420a4,command_prompt
 discovery,T1518,Software Discovery,2,Applications Installed,c49978f6-bd6e-4221-ad2c-9e3e30cc1e3b,powershell
 discovery,T1518,Software Discovery,3,Find and Display Safari Browser Version,103d6533-fd2a-4d08-976a-4a598565280f,sh
@@ -1861,6 +1891,10 @@ reconnaissance,T1592.001,Gather Victim Host Information: Hardware,1,Enumerate Pl
 impact,T1489,Service Stop,1,Windows - Stop service using Service Controller,21dfb440-830d-4c86-a3e5-2a491d5a8d04,command_prompt
 impact,T1489,Service Stop,2,Windows - Stop service using net.exe,41274289-ec9c-4213-bea4-e43c4aa57954,command_prompt
 impact,T1489,Service Stop,3,Windows - Stop service by killing process,f3191b84-c38b-400b-867e-3a217a27795f,command_prompt
+impact,T1489,Service Stop,4,Linux - Stop service using systemctl,42e3a5bd-1e45-427f-aa08-2a65fa29a820,sh
+impact,T1489,Service Stop,5,Linux - Stop service by killing process using killall,e5d95be6-02ee-4ff1-aebe-cf86013b6189,sh
+impact,T1489,Service Stop,6,Linux - Stop service by killing process using kill,332f4c76-7e96-41a6-8cc2-7361c49db8be,sh
+impact,T1489,Service Stop,7,Linux - Stop service by killing process using pkill,08b4718f-a8bf-4bb5-a552-294fc5178fea,sh
 impact,T1491.001,Defacement: Internal Defacement,1,Replace Desktop Wallpaper,30558d53-9d76-41c4-9267-a7bd5184bed3,powershell
 impact,T1491.001,Defacement: Internal Defacement,2,Configure LegalNoticeCaption and LegalNoticeText registry keys to display ransom message,ffcbfaab-c9ff-470b-928c-f086b326089b,powershell
 impact,T1531,Account Access Removal,1,Change User Password - Windows,1b99ef28-f83c-4ec5-8a08-1a56263a5bb2,command_prompt
@@ -1880,6 +1914,7 @@ impact,T1486,Data Encrypted for Impact,6,Encrypt files using 7z utility - macOS,
 impact,T1486,Data Encrypted for Impact,7,Encrypt files using openssl utility - macOS,1a01f6b8-b1e8-418e-bbe3-78a6f822759e,sh
 impact,T1486,Data Encrypted for Impact,8,Data Encrypted with GPG4Win,4541e2c2-33c8-44b1-be79-9161440f1718,powershell
 impact,T1486,Data Encrypted for Impact,9,Data Encrypt Using DiskCryptor,44b68e11-9da2-4d45-a0d9-893dabd60f30,command_prompt
+impact,T1486,Data Encrypted for Impact,10,Akira Ransomware drop Files with .akira Extension and Ransomnote,ab3f793f-2dcc-4da5-9c71-34988307263f,powershell
 impact,T1496,Resource Hijacking,1,FreeBSD/macOS/Linux - Simulate CPU Load with Yes,904a5a0e-fb02-490d-9f8d-0e256eb37549,sh
 impact,T1485,Data Destruction,1,Windows - Overwrite file with SysInternals SDelete,476419b5-aebf-4366-a131-ae3e8dae5fc2,powershell
 impact,T1485,Data Destruction,2,FreeBSD/macOS/Linux - Overwrite file with DD,38deee99-fd65-4031-bec8-bfa4f9f26146,sh
