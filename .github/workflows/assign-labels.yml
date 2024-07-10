@@ -58,11 +58,12 @@ jobs:
               });
             }
 
+
   run-windows-atomics:
     if: ${{ contains(github.event.pull_request.labels.*.name, 'windows') }}
     runs-on: windows-latest
     needs:
-      - upload
+      - assign-labels
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/run-atomics
@@ -71,7 +72,7 @@ jobs:
     if: ${{ contains(github.event.pull_request.labels.*.name, 'macos') }}
     runs-on: macos-latest
     needs:
-      - upload
+      - assign-labels
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/run-atomics
@@ -80,7 +81,7 @@ jobs:
     if: ${{ contains(github.event.pull_request.labels.*.name, 'linux') }}
     runs-on: ubuntu-latest
     needs:
-      - upload
+      - assign-labels
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/run-atomics
