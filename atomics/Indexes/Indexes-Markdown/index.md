@@ -1858,6 +1858,7 @@
   - Atomic Test #6: Capture Linux Desktop using Import Tool (freebsd) [linux]
   - Atomic Test #7: Windows Screencapture [windows]
   - Atomic Test #8: Windows Screen Capture (CopyFromScreen) [windows]
+  - Atomic Test #9: Windows Recall Feature Enabled - DisableAIDataAnalysis Value Deleted [windows]
 - T1557 Adversary-in-the-Middle [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1056.001 Input Capture: Keylogging](../../T1056.001/T1056.001.md)
   - Atomic Test #1: Input Capture [windows]
