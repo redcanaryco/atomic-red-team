@@ -67,8 +67,8 @@ def generate_counter():
 
 @app.command()
 def generate_labels(
-        pull_request: Annotated[str, typer.Option("--pr")],
-        token: Annotated[str, typer.Option("--token")],
+    pull_request: Annotated[str, typer.Option("--pr")],
+    token: Annotated[str, typer.Option("--token")],
 ):
     """Generate labels for a pull request."""
     api = GithubAPI(token)
