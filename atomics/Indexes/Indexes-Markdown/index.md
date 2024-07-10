@@ -2510,6 +2510,7 @@
   - Atomic Test #1: Query Registry [windows]
   - Atomic Test #2: Query Registry with Powershell cmdlets [windows]
   - Atomic Test #3: Enumerate COM Objects in Registry with Powershell [windows]
+  - Atomic Test #4: Reg query for AlwaysInstallElevated status [windows]
 - T1614 System Location Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1518.001 Software Discovery: Security Software Discovery](../../T1518.001/T1518.001.md)
   - Atomic Test #1: Security Software Discovery [windows]
