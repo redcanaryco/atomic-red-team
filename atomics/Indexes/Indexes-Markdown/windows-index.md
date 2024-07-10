@@ -1410,10 +1410,12 @@
   - Atomic Test #5: dump volume shadow copy hives with certutil [windows]
   - Atomic Test #6: dump volume shadow copy hives with System.IO.File [windows]
   - Atomic Test #7: WinPwn - Loot local Credentials - Dump SAM-File for NTLM Hashes [windows]
+  - Atomic Test #8: Dumping of SAM, creds, and secrets(Reg Export) [windows]
 - [T1110.002 Brute Force: Password Cracking](../../T1110.002/T1110.002.md)
   - Atomic Test #1: Password Cracking with Hashcat [windows]
 - [T1003.004 OS Credential Dumping: LSA Secrets](../../T1003.004/T1003.004.md)
   - Atomic Test #1: Dumping LSA Secrets [windows]
+  - Atomic Test #2: Dump Kerberos Tickets from LSA using dumper.ps1 [windows]
 - T1606.002 Forge Web Credentials: SAML token [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1555.005 Password Managers [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1040 Network Sniffing](../../T1040/T1040.md)
@@ -1734,10 +1736,12 @@
 - [T1614.001 System Location Discovery: System Language Discovery](../../T1614.001/T1614.001.md)
   - Atomic Test #1: Discover System Language by Registry Query [windows]
   - Atomic Test #2: Discover System Language with chcp [windows]
+  - Atomic Test #7: Discover System Language with dism.exe [windows]
 - [T1012 Query Registry](../../T1012/T1012.md)
   - Atomic Test #1: Query Registry [windows]
   - Atomic Test #2: Query Registry with Powershell cmdlets [windows]
   - Atomic Test #3: Enumerate COM Objects in Registry with Powershell [windows]
+  - Atomic Test #4: Reg query for AlwaysInstallElevated status [windows]
 - T1614 System Location Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1518.001 Software Discovery: Security Software Discovery](../../T1518.001/T1518.001.md)
   - Atomic Test #1: Security Software Discovery [windows]
