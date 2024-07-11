@@ -13,10 +13,14 @@ atomic_tests:
       description: Script path
       type: path
       default: /tmp/art.sh
+    host:
+        description: Host to ping
+        type: string
+        default: 8.8.8.8
   executor:
     command: |
       sh -c "echo 'echo Hello from the Atomic Red Team' > #{script_path}"
-      sh -c "echo 'ping -c 4 8.8.8.8' >> #{script_path}"
+      sh -c "echo 'ping -c 4 #{host}' >> #{script_path}"
       chmod +x #{script_path}
       sh #{script_path}
     cleanup_command: |

