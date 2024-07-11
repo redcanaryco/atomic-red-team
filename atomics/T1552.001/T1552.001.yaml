@@ -182,9 +182,8 @@ atomic_tests:
   - windows
   executor:
     command: |
-      $usernameinfo = (Get-ChildItem Env:USERNAME).Value
-      dir /a:h C:\Users\abagchi\AppData\Local\Microsoft\Credentials\
-      dir /a:h C:\Users\abagchi\AppData\Roaming\Microsoft\Credentials\
+      dir /a:h C:\Users\%USERNAME%\AppData\Local\Microsoft\Credentials\
+      dir /a:h C:\Users\%USERNAME%\AppData\Roaming\Microsoft\Credentials\
       
     name: command_prompt
     elevation_required: true
