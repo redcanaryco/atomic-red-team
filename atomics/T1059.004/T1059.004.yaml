@@ -246,14 +246,11 @@ atomic_tests:
 - name: Shell Creation using awk command
   auto_generated_guid: 
   description: |-
-    In awk the begin rule runs the first record without reading or interpreting it. This way a shell can be created with the awk command.
+    In awk the begin rule runs the first record without reading or interpreting it. This way a shell can be created and used to break out from restricted environments with the awk command.
     Reference - https://gtfobins.github.io/gtfobins/awk/#shell
   supported_platforms:
   - linux
   - macos
-  input_arguments: 
-  dependency_executor_name: 
-  dependencies: 
   executor:
-    command: awk 'BEGIN {system("/bin/sh")}'
+    command: awk 'BEGIN {system("/bin/sh &")}'
     name: sh
