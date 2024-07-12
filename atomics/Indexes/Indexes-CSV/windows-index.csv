@@ -236,7 +236,7 @@ defense-evasion,T1112,Modify Registry,78,Modify UseTPM Registry entry,7c8c7bd8-0
 defense-evasion,T1112,Modify Registry,79,Modify UseTPMPIN Registry entry,10b33fb0-c58b-44cd-8599-b6da5ad6384c,command_prompt
 defense-evasion,T1112,Modify Registry,80,Modify UseTPMKey Registry entry,c8480c83-a932-446e-a919-06a1fd1e512a,command_prompt
 defense-evasion,T1112,Modify Registry,81,Modify UseTPMKeyPIN Registry entry,02d8b9f7-1a51-4011-8901-2d55cca667f9,command_prompt
-defense-evasion,T1112,Modify Registry,82,Modify EnableNonTPM Registry entry,02d8b9f7-1a51-4011-8901-2d55cca667f9,command_prompt
+defense-evasion,T1112,Modify Registry,82,Modify EnableNonTPM Registry entry,e672a340-a933-447c-954c-d68db38a09b1,command_prompt
 defense-evasion,T1112,Modify Registry,83,Modify UsePartialEncryptionKey Registry entry,b5169fd5-85c8-4b2c-a9b6-64cc0b9febef,command_prompt
 defense-evasion,T1112,Modify Registry,84,Modify UsePIN Registry entry,3ac0b30f-532f-43c6-8f01-fb657aaed7e4,command_prompt
 defense-evasion,T1574.008,Hijack Execution Flow: Path Interception by Search Order Hijacking,1,powerShell Persistence via hijacking default modules - Get-Variable.exe,1561de08-0b4b-498e-8261-e922f3494aae,powershell
@@ -897,6 +897,7 @@ collection,T1560.001,Archive Collected Data: Archive via Utility,4,Compress Data
 collection,T1560.001,Archive Collected Data: Archive via Utility,10,ESXi - Remove Syslog remote IP,36c62584-d360-41d6-886f-d194654be7c2,powershell
 collection,T1113,Screen Capture,7,Windows Screencapture,3c898f62-626c-47d5-aad2-6de873d69153,powershell
 collection,T1113,Screen Capture,8,Windows Screen Capture (CopyFromScreen),e9313014-985a-48ef-80d9-cde604ffc187,powershell
+collection,T1113,Screen Capture,9,Windows Recall Feature Enabled - DisableAIDataAnalysis Value Deleted,5a496325-0115-4274-8eb9-755b649ad0fb,powershell
 collection,T1056.001,Input Capture: Keylogging,1,Input Capture,d9b633ca-8efb-45e6-b838-70f595c6ae26,powershell
 collection,T1123,Audio Capture,1,using device audio capture commandlet,9c3ad250-b185-4444-b5a9-d69218a10c95,powershell
 collection,T1123,Audio Capture,2,Registry artefact when application use microphone,7a21cce2-6ada-4f7c-afd9-e1e9c481e44a,command_prompt
@@ -1042,6 +1043,8 @@ credential-access,T1552.001,Unsecured Credentials: Credentials In Files,9,WinPwn
 credential-access,T1552.001,Unsecured Credentials: Credentials In Files,10,WinPwn - passhunt,00e3e3c7-6c3c-455e-bd4b-461c7f0e7797,powershell
 credential-access,T1552.001,Unsecured Credentials: Credentials In Files,11,WinPwn - SessionGopher,c9dc9de3-f961-4284-bd2d-f959c9f9fda5,powershell
 credential-access,T1552.001,Unsecured Credentials: Credentials In Files,12,"WinPwn - Loot local Credentials - AWS, Microsoft Azure, and Google Compute credentials",aaa87b0e-5232-4649-ae5c-f1724a4b2798,powershell
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,13,List Credential Files via PowerShell,0d4f2281-f720-4572-adc8-d5bb1618affe,powershell
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,14,List Credential Files via Command Prompt,b0cdacf6-8949-4ffe-9274-a9643a788e55,command_prompt
 credential-access,T1552.006,Unsecured Credentials: Group Policy Preferences,1,GPP Passwords (findstr),870fe8fb-5e23-4f5f-b89d-dd7fe26f3b5f,command_prompt
 credential-access,T1552.006,Unsecured Credentials: Group Policy Preferences,2,GPP Passwords (Get-GPPPassword),e9584f82-322c-474a-b831-940fd8b4455c,powershell
 credential-access,T1056.002,Input Capture: GUI Input Capture,2,PowerShell - Prompt User for Password,2b162bfd-0928-4d4c-9ec3-4d9f88374b52,powershell
@@ -1215,6 +1218,7 @@ discovery,T1614.001,System Location Discovery: System Language Discovery,7,Disco
 discovery,T1012,Query Registry,1,Query Registry,8f7578c4-9863-4d83-875c-a565573bbdf0,command_prompt
 discovery,T1012,Query Registry,2,Query Registry with Powershell cmdlets,0434d081-bb32-42ce-bcbb-3548e4f2628f,powershell
 discovery,T1012,Query Registry,3,Enumerate COM Objects in Registry with Powershell,0d80d088-a84c-4353-af1a-fc8b439f1564,powershell
+discovery,T1012,Query Registry,4,Reg query for AlwaysInstallElevated status,6fb4c4c5-f949-4fd2-8af5-ddbc61595223,command_prompt
 discovery,T1518.001,Software Discovery: Security Software Discovery,1,Security Software Discovery,f92a380f-ced9-491f-b338-95a991418ce2,command_prompt
 discovery,T1518.001,Software Discovery: Security Software Discovery,2,Security Software Discovery - powershell,7f566051-f033-49fb-89de-b6bacab730f0,powershell
 discovery,T1518.001,Software Discovery: Security Software Discovery,6,Security Software Discovery - Sysmon Service,fe613cf3-8009-4446-9a0f-bc78a15b66c9,command_prompt

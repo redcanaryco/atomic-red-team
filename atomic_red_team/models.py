@@ -10,7 +10,6 @@ from pydantic import (
     Field,
     IPvAnyAddress,
     StrictFloat,
-    StrictInt,
     StringConstraints,
     conlist,
     constr,
@@ -105,7 +104,7 @@ class StringArg(BaseArgument):
 
 
 class IntArg(BaseArgument):
-    default: Optional[StrictInt]
+    default: Optional[int]
     type: Literal["integer", "Integer"]
 
 
@@ -152,10 +151,8 @@ class Atomic(BaseModel):
     supported_platforms: conlist(Platform, min_length=1)
     executor: Union[ManualExecutor, CommandExecutor] = Field(..., discriminator="name")
     dependencies: Optional[List[Dependency]] = []
-    input_arguments: Optional[
-        Dict[constr(min_length=2, pattern=r"^[\w_-]+$"), Argument]
-    ] = {}
-    dependency_executor_name: Optional[ExecutorType] = None
+    input_arguments: Dict[constr(min_length=2, pattern=r"^[\w_-]+$"), Argument] = {}
+    dependency_executor_name: ExecutorType = "manual"
     auto_generated_guid: Optional[UUID] = None
 
     @classmethod
@@ -170,11 +167,28 @@ class Atomic(BaseModel):
             commands.extend([d.get_prereq_command, d.prereq_command])
         return extract_mustached_keys(commands)
 
+    @field_validator("dependency_executor_name", mode="before")  # noqa
+    @classmethod
+    def validate_dep_executor(cls, v, info: ValidationInfo):
+        if v is None:
+            raise PydanticCustomError(
+                "empty_dependency_executor_name",
+                "'dependency_executor_name' shouldn't be empty. Provide a valid value ['manual','powershell', 'sh', "
+                "'bash', 'command_prompt'] or remove the key from YAML",
+                {"loc": ["dependency_executor_name"], "input": None},
+            )
+        return v
+
     @field_validator("input_arguments", mode="before")  # noqa
     @classmethod
     def validate(cls, v, info: ValidationInfo):
         if v is None:
-            return v
+            raise PydanticCustomError(
+                "empty_input_arguments",
+                "'input_arguments' shouldn't be empty. Provide a valid value or remove the key from YAML",
+                {"loc": ["input_arguments"], "input": None},
+            )
+
         atomic = info.data
         keys = cls.extract_mustached_keys(atomic)
         for key, _value in v.items():
