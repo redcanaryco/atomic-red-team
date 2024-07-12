@@ -1512,6 +1512,8 @@
   - Atomic Test #10: WinPwn - passhunt [windows]
   - Atomic Test #11: WinPwn - SessionGopher [windows]
   - Atomic Test #12: WinPwn - Loot local Credentials - AWS, Microsoft Azure, and Google Compute credentials [windows]
+  - Atomic Test #13: List Credential Files via PowerShell [windows]
+  - Atomic Test #14: List Credential Files via Command Prompt [windows]
 - T1606.001 Web Cookies [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1552.006 Unsecured Credentials: Group Policy Preferences](../../T1552.006/T1552.006.md)
   - Atomic Test #1: GPP Passwords (findstr) [windows]
