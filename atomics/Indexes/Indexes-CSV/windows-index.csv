@@ -15,6 +15,7 @@ defense-evasion,T1218.011,Signed Binary Proxy Execution: Rundll32,12,Rundll32 wi
 defense-evasion,T1218.011,Signed Binary Proxy Execution: Rundll32,13,Rundll32 with desk.cpl,83a95136-a496-423c-81d3-1c6750133917,command_prompt
 defense-evasion,T1218.011,Signed Binary Proxy Execution: Rundll32,14,Running DLL with .init extension and function,2d5029f0-ae20-446f-8811-e7511b58e8b6,command_prompt
 defense-evasion,T1218.011,Signed Binary Proxy Execution: Rundll32,15,Rundll32 execute command via FileProtocolHandler,f3ad3c5b-1db1-45c1-81bf-d3370ebab6c8,command_prompt
+defense-evasion,T1218.011,Signed Binary Proxy Execution: Rundll32,16,Rundll32 execute payload by calling RouteTheCall,8a7f56ee-10e7-444c-a139-0109438288eb,powershell
 defense-evasion,T1216.001,Signed Script Proxy Execution: Pubprn,1,PubPrn.vbs Signed Script Bypass,9dd29a1f-1e16-4862-be83-913b10a88f6c,command_prompt
 defense-evasion,T1006,Direct Volume Access,1,Read volume boot sector via DOS device path (PowerShell),88f6327e-51ec-4bbf-b2e8-3fea534eab8b,powershell
 defense-evasion,T1548.002,Abuse Elevation Control Mechanism: Bypass User Account Control,1,Bypass UAC using Event Viewer (cmd),5073adf8-9a50-4bd9-b298-a9bd2ead8af9,command_prompt
@@ -87,6 +88,7 @@ defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,13,Se
 defense-evasion,T1202,Indirect Command Execution,1,Indirect Command Execution - pcalua.exe,cecfea7a-5f03-4cdd-8bc8-6f7c22862440,command_prompt
 defense-evasion,T1202,Indirect Command Execution,2,Indirect Command Execution - forfiles.exe,8b34a448-40d9-4fc3-a8c8-4bb286faf7dc,command_prompt
 defense-evasion,T1202,Indirect Command Execution,3,Indirect Command Execution - conhost.exe,cf3391e0-b482-4b02-87fc-ca8362269b29,command_prompt
+defense-evasion,T1202,Indirect Command Execution,4,Indirect Command Execution - Scriptrunner.exe,0fd14730-6226-4f5e-8d67-43c65f1be940,powershell
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,1,Deobfuscate/Decode Files Or Information,dc6fe391-69e6-4506-bd06-ea5eeb4082f8,command_prompt
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,2,Certutil Rename and Decode,71abc534-3c05-4d0c-80f7-cbe93cb2aa94,command_prompt
 defense-evasion,T1562,Impair Defenses,1,Windows Disable LSA Protection,40075d5f-3a70-4c66-9125-f72bee87247d,command_prompt
@@ -127,6 +129,7 @@ defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,5,Windows - Modif
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,6,Windows - Modify file last modified timestamp with PowerShell,f8f6634d-93e1-4238-8510-f8a90a20dcf2,powershell
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,7,Windows - Modify file last access timestamp with PowerShell,da627f63-b9bd-4431-b6f8-c5b44d061a62,powershell
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,8,Windows - Timestomp a File,d7512c33-3a75-4806-9893-69abc3ccdd43,powershell
+defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,10,Event Log Manipulations- Time slipping via Powershell,7bcf83bf-f5ef-425c-9d9a-71618ad9ed12,powershell
 defense-evasion,T1620,Reflective Code Loading,1,WinPwn - Reflectively load Mimik@tz into memory,56b9589c-9170-4682-8c3d-33b86ecb5119,powershell
 defense-evasion,T1218.003,Signed Binary Proxy Execution: CMSTP,1,CMSTP Executing Remote Scriptlet,34e63321-9683-496b-bbc1-7566bc55e624,command_prompt
 defense-evasion,T1218.003,Signed Binary Proxy Execution: CMSTP,2,CMSTP Executing UAC Bypass,748cb4f6-2fb3-4e97-b7ad-b22635a09ab0,command_prompt
@@ -224,6 +227,18 @@ defense-evasion,T1112,Modify Registry,69,RDP Authentication Level Override,7e7b6
 defense-evasion,T1112,Modify Registry,70,Enable RDP via Registry (fDenyTSConnections),16bdbe52-371c-4ccf-b708-79fba61f1db4,command_prompt
 defense-evasion,T1112,Modify Registry,71,Disable Windows Prefetch Through Registry,7979dd41-2045-48b2-a54e-b1bc2415c9da,command_prompt
 defense-evasion,T1112,Modify Registry,72,Setting Shadow key in Registry for RDP Shadowing,ac494fe5-81a4-4897-af42-e774cf005ecb,powershell
+defense-evasion,T1112,Modify Registry,73,Flush Shimcache,ecbd533e-b45d-4239-aeff-b857c6f6d68b,command_prompt
+defense-evasion,T1112,Modify Registry,74,Disable Windows Remote Desktop Protocol,5f8e36de-37ca-455e-b054-a2584f043c06,command_prompt
+defense-evasion,T1112,Modify Registry,75,Enforce Smart Card Authentication Through Registry,4c4bf587-fe7f-448f-ba8d-1ecec9db88be,command_prompt
+defense-evasion,T1112,Modify Registry,76,Requires the BitLocker PIN for Pre-boot authentication,26fc7375-a551-4336-90d7-3f2817564304,command_prompt
+defense-evasion,T1112,Modify Registry,77,Modify EnableBDEWithNoTPM Registry entry,bacb3e73-8161-43a9-8204-a69fe0e4b482,command_prompt
+defense-evasion,T1112,Modify Registry,78,Modify UseTPM Registry entry,7c8c7bd8-0a5c-4514-a6a3-0814c5a98cf0,command_prompt
+defense-evasion,T1112,Modify Registry,79,Modify UseTPMPIN Registry entry,10b33fb0-c58b-44cd-8599-b6da5ad6384c,command_prompt
+defense-evasion,T1112,Modify Registry,80,Modify UseTPMKey Registry entry,c8480c83-a932-446e-a919-06a1fd1e512a,command_prompt
+defense-evasion,T1112,Modify Registry,81,Modify UseTPMKeyPIN Registry entry,02d8b9f7-1a51-4011-8901-2d55cca667f9,command_prompt
+defense-evasion,T1112,Modify Registry,82,Modify EnableNonTPM Registry entry,e672a340-a933-447c-954c-d68db38a09b1,command_prompt
+defense-evasion,T1112,Modify Registry,83,Modify UsePartialEncryptionKey Registry entry,b5169fd5-85c8-4b2c-a9b6-64cc0b9febef,command_prompt
+defense-evasion,T1112,Modify Registry,84,Modify UsePIN Registry entry,3ac0b30f-532f-43c6-8f01-fb657aaed7e4,command_prompt
 defense-evasion,T1574.008,Hijack Execution Flow: Path Interception by Search Order Hijacking,1,powerShell Persistence via hijacking default modules - Get-Variable.exe,1561de08-0b4b-498e-8261-e922f3494aae,powershell
 defense-evasion,T1484.001,Domain Policy Modification: Group Policy Modification,1,LockBit Black - Modify Group policy settings -cmd,9ab80952-74ee-43da-a98c-1e740a985f28,command_prompt
 defense-evasion,T1484.001,Domain Policy Modification: Group Policy Modification,2,LockBit Black - Modify Group policy settings -Powershell,b51eae65-5441-4789-b8e8-64783c26c1d1,powershell
@@ -882,6 +897,7 @@ collection,T1560.001,Archive Collected Data: Archive via Utility,4,Compress Data
 collection,T1560.001,Archive Collected Data: Archive via Utility,10,ESXi - Remove Syslog remote IP,36c62584-d360-41d6-886f-d194654be7c2,powershell
 collection,T1113,Screen Capture,7,Windows Screencapture,3c898f62-626c-47d5-aad2-6de873d69153,powershell
 collection,T1113,Screen Capture,8,Windows Screen Capture (CopyFromScreen),e9313014-985a-48ef-80d9-cde604ffc187,powershell
+collection,T1113,Screen Capture,9,Windows Recall Feature Enabled - DisableAIDataAnalysis Value Deleted,5a496325-0115-4274-8eb9-755b649ad0fb,powershell
 collection,T1056.001,Input Capture: Keylogging,1,Input Capture,d9b633ca-8efb-45e6-b838-70f595c6ae26,powershell
 collection,T1123,Audio Capture,1,using device audio capture commandlet,9c3ad250-b185-4444-b5a9-d69218a10c95,powershell
 collection,T1123,Audio Capture,2,Registry artefact when application use microphone,7a21cce2-6ada-4f7c-afd9-e1e9c481e44a,command_prompt
@@ -949,8 +965,10 @@ credential-access,T1003.002,OS Credential Dumping: Security Account Manager,4,Po
 credential-access,T1003.002,OS Credential Dumping: Security Account Manager,5,dump volume shadow copy hives with certutil,eeb9751a-d598-42d3-b11c-c122d9c3f6c7,command_prompt
 credential-access,T1003.002,OS Credential Dumping: Security Account Manager,6,dump volume shadow copy hives with System.IO.File,9d77fed7-05f8-476e-a81b-8ff0472c64d0,powershell
 credential-access,T1003.002,OS Credential Dumping: Security Account Manager,7,WinPwn - Loot local Credentials - Dump SAM-File for NTLM Hashes,0c0f5f06-166a-4f4d-bb4a-719df9a01dbb,powershell
+credential-access,T1003.002,OS Credential Dumping: Security Account Manager,8,"Dumping of SAM, creds, and secrets(Reg Export)",21df41be-cdd8-4695-a650-c3981113aa3c,command_prompt
 credential-access,T1110.002,Brute Force: Password Cracking,1,Password Cracking with Hashcat,6d27df5d-69d4-4c91-bc33-5983ffe91692,command_prompt
 credential-access,T1003.004,OS Credential Dumping: LSA Secrets,1,Dumping LSA Secrets,55295ab0-a703-433b-9ca4-ae13807de12f,command_prompt
+credential-access,T1003.004,OS Credential Dumping: LSA Secrets,2,Dump Kerberos Tickets from LSA using dumper.ps1,2dfa3bff-9a27-46db-ab75-7faefdaca732,powershell
 credential-access,T1040,Network Sniffing,4,Packet Capture Windows Command Prompt,a5b2f6a0-24b4-493e-9590-c699f75723ca,command_prompt
 credential-access,T1040,Network Sniffing,5,Windows Internal Packet Capture,b5656f67-d67f-4de8-8e62-b5581630f528,command_prompt
 credential-access,T1040,Network Sniffing,6,Windows Internal pktmon capture,c67ba807-f48b-446e-b955-e4928cd1bf91,command_prompt
@@ -970,6 +988,7 @@ credential-access,T1555,Credentials from Password Stores,5,Enumerate credentials
 credential-access,T1555,Credentials from Password Stores,6,WinPwn - Loot local Credentials - lazagne,079ee2e9-6f16-47ca-a635-14efcd994118,powershell
 credential-access,T1555,Credentials from Password Stores,7,WinPwn - Loot local Credentials - Wifi Credentials,afe369c2-b42e-447f-98a3-fb1f4e2b8552,powershell
 credential-access,T1555,Credentials from Password Stores,8,WinPwn - Loot local Credentials - Decrypt Teamviewer Passwords,db965264-3117-4bad-b7b7-2523b7856b92,powershell
+credential-access,T1552,Unsecured Credentials,2,Search for Passwords in Powershell History,f9c3d0ab-479b-4019-945f-22ace2b1731a,powershell
 credential-access,T1555.003,Credentials from Password Stores: Credentials from Web Browsers,1,Run Chrome-password Collector,8c05b133-d438-47ca-a630-19cc464c4622,powershell
 credential-access,T1555.003,Credentials from Password Stores: Credentials from Web Browsers,3,LaZagne - Credentials from Browser,9a2915b3-3954-4cce-8c76-00fbf4dbd014,command_prompt
 credential-access,T1555.003,Credentials from Password Stores: Credentials from Web Browsers,4,Simulating access to Chrome Login Data,3d111226-d09a-4911-8715-fe11664f960d,powershell
@@ -1024,6 +1043,8 @@ credential-access,T1552.001,Unsecured Credentials: Credentials In Files,9,WinPwn
 credential-access,T1552.001,Unsecured Credentials: Credentials In Files,10,WinPwn - passhunt,00e3e3c7-6c3c-455e-bd4b-461c7f0e7797,powershell
 credential-access,T1552.001,Unsecured Credentials: Credentials In Files,11,WinPwn - SessionGopher,c9dc9de3-f961-4284-bd2d-f959c9f9fda5,powershell
 credential-access,T1552.001,Unsecured Credentials: Credentials In Files,12,"WinPwn - Loot local Credentials - AWS, Microsoft Azure, and Google Compute credentials",aaa87b0e-5232-4649-ae5c-f1724a4b2798,powershell
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,13,List Credential Files via PowerShell,0d4f2281-f720-4572-adc8-d5bb1618affe,powershell
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,14,List Credential Files via Command Prompt,b0cdacf6-8949-4ffe-9274-a9643a788e55,command_prompt
 credential-access,T1552.006,Unsecured Credentials: Group Policy Preferences,1,GPP Passwords (findstr),870fe8fb-5e23-4f5f-b89d-dd7fe26f3b5f,command_prompt
 credential-access,T1552.006,Unsecured Credentials: Group Policy Preferences,2,GPP Passwords (Get-GPPPassword),e9584f82-322c-474a-b831-940fd8b4455c,powershell
 credential-access,T1056.002,Input Capture: GUI Input Capture,2,PowerShell - Prompt User for Password,2b162bfd-0928-4d4c-9ec3-4d9f88374b52,powershell
@@ -1064,6 +1085,7 @@ discovery,T1615,Group Policy Discovery,2,Get-DomainGPO to display group policy i
 discovery,T1615,Group Policy Discovery,3,WinPwn - GPOAudit,bc25c04b-841e-4965-855f-d1f645d7ab73,powershell
 discovery,T1615,Group Policy Discovery,4,WinPwn - GPORemoteAccessPolicy,7230d01a-0a72-4bd5-9d7f-c6d472bc6a59,powershell
 discovery,T1615,Group Policy Discovery,5,MSFT Get-GPO Cmdlet,52778a8f-a10b-41a4-9eae-52ddb74072bf,powershell
+discovery,T1652,Device Driver Discovery,1,Device Driver Discovery,235b30a2-e5b1-441f-9705-be6231c88ddd,powershell
 discovery,T1087.002,Account Discovery: Domain Account,1,Enumerate all accounts (Domain),6fbc9e68-5ad7-444a-bd11-8bf3136c477e,command_prompt
 discovery,T1087.002,Account Discovery: Domain Account,2,Enumerate all accounts via PowerShell (Domain),8b8a6449-be98-4f42-afd2-dedddc7453b2,powershell
 discovery,T1087.002,Account Discovery: Domain Account,3,Enumerate logged on users via CMD (Domain),161dcd85-d014-4f5e-900c-d3eaae82a0f7,command_prompt
@@ -1140,10 +1162,9 @@ discovery,T1082,System Information Discovery,21,WinPwn - PowerSharpPack - Watson
 discovery,T1082,System Information Discovery,22,WinPwn - PowerSharpPack - Sharpup checking common Privesc vectors,efb79454-1101-4224-a4d0-30c9c8b29ffc,powershell
 discovery,T1082,System Information Discovery,23,WinPwn - PowerSharpPack - Seatbelt,5c16ceb4-ba3a-43d7-b848-a13c1f216d95,powershell
 discovery,T1082,System Information Discovery,27,System Information Discovery with WMIC,8851b73a-3624-4bf7-8704-aa312411565c,command_prompt
-discovery,T1082,System Information Discovery,28,Driver Enumeration using DriverQuery,bd85e3d1-4aeb-4a1d-850f-7be3cb8d60b9,command_prompt
-discovery,T1082,System Information Discovery,29,System Information Discovery,4060ee98-01ae-4c8e-8aad-af8300519cc7,command_prompt
-discovery,T1082,System Information Discovery,30,Check computer location,96be6002-9200-47db-94cb-c3e27de1cb36,command_prompt
-discovery,T1082,System Information Discovery,31,BIOS Information Discovery through Registry,f2f91612-d904-49d7-87c2-6c165d23bead,command_prompt
+discovery,T1082,System Information Discovery,28,System Information Discovery,4060ee98-01ae-4c8e-8aad-af8300519cc7,command_prompt
+discovery,T1082,System Information Discovery,29,Check computer location,96be6002-9200-47db-94cb-c3e27de1cb36,command_prompt
+discovery,T1082,System Information Discovery,30,BIOS Information Discovery through Registry,f2f91612-d904-49d7-87c2-6c165d23bead,command_prompt
 discovery,T1016.002,System Network Configuration Discovery: Wi-Fi Discovery,1,Enumerate Stored Wi-Fi Profiles And Passwords via netsh,53cf1903-0fa7-4177-ab14-f358ae809eec,command_prompt
 discovery,T1010,Application Window Discovery,1,List Process Main Windows - C# .NET,fe94a1c3-3e22-4dc9-9fdf-3a8bdbc10dc4,command_prompt
 discovery,T1217,Browser Bookmark Discovery,5,List Google Chrome / Opera Bookmarks on Windows with powershell,faab755e-4299-48ec-8202-fc7885eb6545,powershell
@@ -1193,9 +1214,11 @@ discovery,T1201,Password Policy Discovery,10,Enumerate Active Directory Password
 discovery,T1201,Password Policy Discovery,11,Use of SecEdit.exe to export the local security policy (including the password policy),510cc97f-56ac-4cd3-a198-d3218c23d889,command_prompt
 discovery,T1614.001,System Location Discovery: System Language Discovery,1,Discover System Language by Registry Query,631d4cf1-42c9-4209-8fe9-6bd4de9421be,command_prompt
 discovery,T1614.001,System Location Discovery: System Language Discovery,2,Discover System Language with chcp,d91473ca-944e-477a-b484-0e80217cd789,command_prompt
+discovery,T1614.001,System Location Discovery: System Language Discovery,7,Discover System Language with dism.exe,69f625ba-938f-4900-bdff-82ada3df5d9c,command_prompt
 discovery,T1012,Query Registry,1,Query Registry,8f7578c4-9863-4d83-875c-a565573bbdf0,command_prompt
 discovery,T1012,Query Registry,2,Query Registry with Powershell cmdlets,0434d081-bb32-42ce-bcbb-3548e4f2628f,powershell
 discovery,T1012,Query Registry,3,Enumerate COM Objects in Registry with Powershell,0d80d088-a84c-4353-af1a-fc8b439f1564,powershell
+discovery,T1012,Query Registry,4,Reg query for AlwaysInstallElevated status,6fb4c4c5-f949-4fd2-8af5-ddbc61595223,command_prompt
 discovery,T1518.001,Software Discovery: Security Software Discovery,1,Security Software Discovery,f92a380f-ced9-491f-b338-95a991418ce2,command_prompt
 discovery,T1518.001,Software Discovery: Security Software Discovery,2,Security Software Discovery - powershell,7f566051-f033-49fb-89de-b6bacab730f0,powershell
 discovery,T1518.001,Software Discovery: Security Software Discovery,6,Security Software Discovery - Sysmon Service,fe613cf3-8009-4446-9a0f-bc78a15b66c9,command_prompt
@@ -1226,6 +1249,7 @@ discovery,T1046,Network Service Discovery,6,WinPwn - MS17-10,97585b04-5be2-40e9-
 discovery,T1046,Network Service Discovery,7,WinPwn - bluekeep,1cca5640-32a9-46e6-b8e0-fabbe2384a73,powershell
 discovery,T1046,Network Service Discovery,8,WinPwn - fruit,bb037826-cbe8-4a41-93ea-b94059d6bb98,powershell
 discovery,T1046,Network Service Discovery,10,Port-Scanning /24 Subnet with PowerShell,05df2a79-dba6-4088-a804-9ca0802ca8e4,powershell
+discovery,T1046,Network Service Discovery,11,Remote Desktop Services Discovery via PowerShell,9e55750e-4cbf-4013-9627-e9a045b541bf,powershell
 discovery,T1518,Software Discovery,1,Find and Display Internet Explorer Browser Version,68981660-6670-47ee-a5fa-7e74806420a4,command_prompt
 discovery,T1518,Software Discovery,2,Applications Installed,c49978f6-bd6e-4221-ad2c-9e3e30cc1e3b,powershell
 discovery,T1518,Software Discovery,4,WinPwn - Dotnetsearch,7e79a1b6-519e-433c-ad55-3ff293667101,powershell
@@ -1247,6 +1271,7 @@ impact,T1531,Account Access Removal,3,Remove Account From Domain Admin Group,43f
 impact,T1486,Data Encrypted for Impact,5,PureLocker Ransom Note,649349c7-9abf-493b-a7a2-b1aa4d141528,command_prompt
 impact,T1486,Data Encrypted for Impact,8,Data Encrypted with GPG4Win,4541e2c2-33c8-44b1-be79-9161440f1718,powershell
 impact,T1486,Data Encrypted for Impact,9,Data Encrypt Using DiskCryptor,44b68e11-9da2-4d45-a0d9-893dabd60f30,command_prompt
+impact,T1486,Data Encrypted for Impact,10,Akira Ransomware drop Files with .akira Extension and Ransomnote,ab3f793f-2dcc-4da5-9c71-34988307263f,powershell
 impact,T1485,Data Destruction,1,Windows - Overwrite file with SysInternals SDelete,476419b5-aebf-4366-a131-ae3e8dae5fc2,powershell
 impact,T1485,Data Destruction,3,Overwrite deleted data on C drive,321fd25e-0007-417f-adec-33232252be19,command_prompt
 impact,T1490,Inhibit System Recovery,1,Windows - Delete Volume Shadow Copies,43819286-91a9-4369-90ed-d31fb4da2c01,command_prompt

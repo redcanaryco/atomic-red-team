@@ -654,8 +654,8 @@
   - Atomic Test #12: Environment variables discovery on freebsd, macos and linux [linux, macos]
   - Atomic Test #25: Linux List Kernel Modules [linux]
   - Atomic Test #26: FreeBSD List Kernel Modules [linux]
-  - Atomic Test #32: ESXi - VM Discovery using ESXCLI [linux]
-  - Atomic Test #33: ESXi - Darkside system information discovery [linux]
+  - Atomic Test #31: ESXi - VM Discovery using ESXCLI [linux]
+  - Atomic Test #32: ESXi - Darkside system information discovery [linux]
 - T1016.002 System Network Configuration Discovery: Wi-Fi Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1010 Application Window Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1497.003 Time Based Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -761,7 +761,11 @@
 - T1499.003 Application Exhaustion Flood [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1561 Disk Wipe [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1565.001 Stored Data Manipulation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1489 Service Stop [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1489 Service Stop](../../T1489/T1489.md)
+  - Atomic Test #4: Linux - Stop service using systemctl [linux]
+  - Atomic Test #5: Linux - Stop service by killing process using killall [linux]
+  - Atomic Test #6: Linux - Stop service by killing process using kill [linux]
+  - Atomic Test #7: Linux - Stop service by killing process using pkill [linux]
 - T1499.004 Application or System Exploitation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1565.003 Runtime Data Manipulation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1498.002 Reflection Amplification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
