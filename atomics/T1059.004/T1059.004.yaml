@@ -243,18 +243,17 @@ atomic_tests:
     elevation_required: false
     command: |
       uname -srm
-- name: Linux Shell Creation using awk command
+- name: Shell Creation using awk command
   auto_generated_guid: 
   description: |-
     In awk the begin rule runs the first record without reading or interpreting it. This way a shell can be created with the awk command.
     Reference - https://gtfobins.github.io/gtfobins/awk/#shell
   supported_platforms:
   - linux
+  - macos
   input_arguments: 
   dependency_executor_name: 
   dependencies: 
   executor:
     command: awk 'BEGIN {system("/bin/sh")}'
-    cleanup_command: 
     name: sh
-    elevation_required: false
