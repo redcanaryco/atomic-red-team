@@ -59,7 +59,7 @@ atomic_tests:
 - name: Truncate system log files via truncate utility
   auto_generated_guid: 6290f8a8-8ee9-4661-b9cf-390031bf6973
   description: |
-    This test truncates the system log files using the truncate utility with (-s 0 or --size=0) parameter which sets file size to zero, thus emptying the file content
+    This test truncates the system log files using the truncate utility with (-s 0) parameter which sets file size to zero, thus emptying the file content
   supported_platforms:
   - macos
   input_arguments:
@@ -78,7 +78,6 @@ atomic_tests:
   executor:
     command: |
       sudo truncate -s 0 #{system_log_path} #size parameter shorthand
-      sudo truncate --size=0 #{system_log_path} #size parameter 
     name: sh
     elevation_required: true
 - name: Truncate system log files via truncate utility (freebsd)
@@ -161,9 +160,9 @@ atomic_tests:
       touch /var/log/#{system_log_name1} /var/log/#{system_log_name2} /var/log/#{system_log_name3}
   executor:
     command: |
-      sudo find /var/log -name '#{system_log_name1}.*' -exec rm {} \; #using "rm" execution
-      sudo find /var/log/ -name "#{system_log_name2}.*" -exec shred -u -z -n 3 {} \; #using "shred" execution
-      sudo find /var/log/ -name "#{system_log_name3}.*" -exec unlink {} \; #using "unlink" execution
+      sudo find /var/log -name '#{system_log_name1}*' -exec rm {} \; #using "rm" execution
+      sudo find /var/log -name "#{system_log_name2}*" -exec shred -u -z -n 3 {} \; #using "shred" execution
+      sudo find /var/log -name "#{system_log_name3}*" -exec unlink {} \; #using "unlink" execution
     name: sh
     elevation_required: true
 - name: Overwrite macOS system log via echo utility
