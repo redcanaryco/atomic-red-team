@@ -2762,8 +2762,8 @@ defense-evasion:
     - name: Truncate system log files via truncate utility
       auto_generated_guid: 6290f8a8-8ee9-4661-b9cf-390031bf6973
       description: 'This test truncates the system log files using the truncate utility
-        with (-s 0 or --size=0) parameter which sets file size to zero, thus emptying
-        the file content
+        with (-s 0) parameter which sets file size to zero, thus emptying the file
+        content
 
         '
       supported_platforms:
@@ -2785,8 +2785,9 @@ defense-evasion:
 
           '
       executor:
-        command: "sudo truncate -s 0 #{system_log_path} #size parameter shorthand\nsudo
-          truncate --size=0 #{system_log_path} #size parameter \n"
+        command: 'sudo truncate -s 0 #{system_log_path} #size parameter shorthand
+
+          '
         name: sh
         elevation_required: true
     - name: Delete log files via cat utility by appending /dev/null or /dev/zero
