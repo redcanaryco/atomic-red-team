@@ -2856,9 +2856,9 @@ defense-evasion:
           '
       executor:
         command: |
-          sudo find /var/log -name '#{system_log_name1}.*' -exec rm {} \; #using "rm" execution
-          sudo find /var/log/ -name "#{system_log_name2}.*" -exec shred -u -z -n 3 {} \; #using "shred" execution
-          sudo find /var/log/ -name "#{system_log_name3}.*" -exec unlink {} \; #using "unlink" execution
+          sudo find /var/log -name '#{system_log_name1}*' -exec rm {} \; #using "rm" execution
+          sudo find /var/log -name "#{system_log_name2}*" -exec shred -u -z -n 3 {} \; #using "shred" execution
+          sudo find /var/log -name "#{system_log_name3}*" -exec unlink {} \; #using "unlink" execution
         name: sh
         elevation_required: true
     - name: Overwrite macOS system log via echo utility
@@ -29352,10 +29352,14 @@ execution:
           description: Script path
           type: path
           default: "/tmp/art.sh"
+        host:
+          description: Host to ping
+          type: string
+          default: 8.8.8.8
       executor:
         command: |
           sh -c "echo 'echo Hello from the Atomic Red Team' > #{script_path}"
-          sh -c "echo 'ping -c 4 8.8.8.8' >> #{script_path}"
+          sh -c "echo 'ping -c 4 #{host}' >> #{script_path}"
           chmod +x #{script_path}
           sh #{script_path}
         cleanup_command: 'rm #{script_path}
