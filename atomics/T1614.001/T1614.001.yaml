@@ -123,17 +123,22 @@ atomic_tests:
     Documentation for these functions is located here: [Reference](https://learn.microsoft.com/en-us/windows/win32/api/winuser/)    
   supported_platforms:
   - windows
+    input_arguments:
+      exe_path:
+        description: path to executable
+        type: path
+        default: PathToAtomicsFolder\..\ExternalPayloads\LanguageKeyboardLayout.exe
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      LanguageKeyboardLayout.exe must exist on disk at specified location (PathToAtomicsFolder\..\ExternalPayloads\LanguageKeyboardLayout.exe)
+      LanguageKeyboardLayout.exe must exist on disk (default location: PathToAtomicsFolder\..\ExternalPayloads\LanguageKeyboardLayout.exe)
     prereq_command: |
-      if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\LanguageKeyboardLayout.exe") {exit 0} else {exit 1}
+      if (Test-Path "#{exe_path}") {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory (split-path "PathToAtomicsFolder\..\ExternalPayloads\LanguageKeyboardLayout.exe") -ErrorAction Ignore | Out-Null
-      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1614.001/bin/LanguageKeyboardLayout.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\LanguageKeyboardLayout.exe"
+      New-Item -Type Directory (split-path "#{exe_path}") -ErrorAction Ignore | Out-Null
+      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1614.001/bin/LanguageKeyboardLayout.exe" -OutFile "#{exe_path}"
   executor:
-        name: command_prompt
-        elevation_required: false
-        command: |
-      "PathToAtomicsFolder\..\ExternalPayloads\LanguageKeyboardLayout.exe"
+    name: command_prompt
+    elevation_required: false
+    command: |
+      #{exe_path}
