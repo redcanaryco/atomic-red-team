@@ -249,6 +249,14 @@ atomic_tests:
     emacs can be used to break out from restricted environments by spawning an interactive system shell. Ref: https://gtfobins.github.io/gtfobins/emacs/  
   supported_platforms:
   - linux
+  dependency_executor_name: bash
+  dependencies:
+  - description: |
+      Check if emacs is installed on the machine.
+    prereq_command: |
+      if [ -x "$(command -v emacs)" ]; then echo "emacs is installed"; else echo "emacs is NOT installed"; exit 1; fi
+    get_prereq_command: |
+      which apt && apt update && apt install -y emacs || which pkg && pkg update && pkg install -y emacs
   executor:
     command: sudo emacs -Q -nw --eval '(term "/bin/sh")'
     name: sh
