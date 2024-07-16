@@ -352,6 +352,7 @@
   - Atomic Test #1: Portable Executable Injection [windows]
 - T1218.012 Verclsid [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1562.010 Impair Defenses: Downgrade Attack](../../T1562.010/T1562.010.md)
+  - Atomic Test #2: ESXi - Change VIB acceptance level to CommunitySupported via ESXCLI [windows]
   - Atomic Test #3: PowerShell Version 2 Downgrade [windows]
 - T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1218.005 Signed Binary Proxy Execution: Mshta](../../T1218.005/T1218.005.md)
@@ -1675,6 +1676,8 @@
   - Atomic Test #28: System Information Discovery [windows]
   - Atomic Test #29: Check computer location [windows]
   - Atomic Test #30: BIOS Information Discovery through Registry [windows]
+  - Atomic Test #31: ESXi - VM Discovery using ESXCLI [windows]
+  - Atomic Test #32: ESXi - Darkside system information discovery [windows]
 - [T1016.002 System Network Configuration Discovery: Wi-Fi Discovery](../../T1016.002/T1016.002.md)
   - Atomic Test #1: Enumerate Stored Wi-Fi Profiles And Passwords via netsh [windows]
 - [T1010 Application Window Discovery](../../T1010/T1010.md)
@@ -1709,6 +1712,7 @@
   - Atomic Test #2: File and Directory Discovery (PowerShell) [windows]
   - Atomic Test #5: Simulating MAZE Directory Enumeration [windows]
   - Atomic Test #6: Launch DirLister Executable [windows]
+  - Atomic Test #7: ESXi - Enumerate VMDKs available on an ESXi Host [windows]
 - [T1049 System Network Connections Discovery](../../T1049/T1049.md)
   - Atomic Test #1: System Network Connections Discovery [windows]
   - Atomic Test #2: System Network Connections Discovery with PowerShell [windows]
@@ -1852,6 +1856,8 @@
   - Atomic Test #1: Shutdown System - Windows [windows]
   - Atomic Test #2: Restart System - Windows [windows]
   - Atomic Test #12: Logoff System - Windows [windows]
+  - Atomic Test #13: ESXi - Terminates VMs using pkill [windows]
+  - Atomic Test #14: ESXi - Avoslocker enumerates VMs and forcefully kills VMs [windows]
 
 # initial-access
 - [T1133 External Remote Services](../../T1133/T1133.md)
