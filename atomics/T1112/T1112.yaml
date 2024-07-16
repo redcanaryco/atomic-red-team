@@ -1277,3 +1277,25 @@ atomic_tests:
        reg delete "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v UsePIN /f
     name: command_prompt
     elevation_required: true
+- name: Abusing Windows TelemetryController Registry Key for Persistence
+  description: |
+    The Windows Compatibility Telemetry system makes use of the CompatTelRunner.exe binary to run a variety of telemetry tasks. It relies on the registry for instructions on which commands to run. 
+    It will run any arbitrary command without restriction of location or type. Blog :https://www.trustedsec.com/blog/abusing-windows-telemetry-for-persistence
+  supported_platforms:
+  - windows
+  input_arguments:
+    new_key:
+      description: New Registry Key Added
+      type: string
+      default: NewKey  
+    new_executable:
+      description: Custom Executable to run
+      type: string
+      default: C:\Windows\System32\notepad.exe  
+  executor:
+    command: |
+      reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\TelemetryController\#{new_key}" /t REG_SZ /v Command /d #{new_executable} /f
+    cleanup_command: |
+      reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\TelemetryController\#{new_key}" /f
+    name: command_prompt
+    elevation_required: true
