@@ -377,6 +377,7 @@ atomic_tests:
       Remove-Item -Path "$PathToAtomicsFolder\T1547.001\src\SessionManagerBackup.reg" -Force
     name: powershell
     elevation_required: true
+
 - name: Allowing custom application to execute during new RDP logon session
   description: |
     When a users logs in to a computer via RDP,Windows will search for the key in HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\Wds\rdpwd registry
@@ -392,5 +393,22 @@ atomic_tests:
     command: |
       reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\Wds\rdpwd" /v StartupPrograms /t REG_SZ /d "#{malicious_app}"
     cleanup_command: reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\Wds\rdpwd" /v StartupPrograms /t REG_SZ /d "rdpclip"
+
+- name: Creating Boot Verification Program Key for application execution during successful boot
+  auto_generated_guid: 6e1666d5-3f2b-4b9a-80aa-f011322380d4
+  description: |
+    Microsoft allows users to define a custom boot verification program for those situations by creating the registry key “HKLM\System\CurrentControlSet\Control\BootVerificationProgram” and setting the value of ImagePath to the path of boot verification program.Threat Actor
+    can abuse by creating this registry key and providing a malicious application to be executed during successful boot
+  supported_platforms:
+  - windows
+  input_arguments:
+    malicious_file:
+      description: Application to be executed during successful boot
+      type: string
+      default: C:\Program Files\Internet Explorer\iexplore.exe
+  executor:
+    command: |
+      reg add HKLM\System\CurrentControlSet\Control\BootVerificationProgram /v ImagePath /t REG_SZ /d "#{malicious_file}"
+    cleanup_command: reg delete HKLM\System\CurrentControlSet\Control\BootVerificationProgram
     name: command_prompt    
     elevation_required: true

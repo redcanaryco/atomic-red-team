@@ -16,11 +16,15 @@ def format_validation_error(error: ValidationError):
     if len(error.errors()) == 1:
         err = error.errors()[0]
         message = ""
+        if err["type"] == "elevation_required_but_not_provided":
+            return {err["msg"]: list(err.get("loc")) + err.get("ctx").get("loc")}
         if err["input"] and err["type"] != "unused_input_argument":
             message += f"{err['input']} - "
         return {message + err["msg"]: err.get("loc")}
     inputs = collections.defaultdict(set)
     for e in error.errors():
+        if e["type"] == "elevation_required_but_not_provided":
+            return {e["msg"]: e.get("loc") + e.get("ctx").get("loc")}
         # If it's a union type, then it generates multiple errors for the same input arguments.
         # Here we collect only the common paths. For example,
         # [( input_arguments, url_parsing),(input_arguments, string_mismatch)] => (input_arguments)
