@@ -29384,6 +29384,17 @@ execution:
 
           '
         name: sh
+    - name: Shell Creation using awk command
+      auto_generated_guid: ee72b37d-b8f5-46a5-a9e7-0ff50035ffd5
+      description: |-
+        In awk the begin rule runs the first record without reading or interpreting it. This way a shell can be created and used to break out from restricted environments with the awk command.
+        Reference - https://gtfobins.github.io/gtfobins/awk/#shell
+      supported_platforms:
+      - linux
+      - macos
+      executor:
+        command: awk 'BEGIN {system("/bin/sh &")}'
+        name: sh
   T1559:
     technique:
       x_mitre_platforms:
