@@ -49,7 +49,7 @@ defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,4,Modify file tim
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,9,MacOS - Timestomp Date Modified,87fffff4-d371-4057-a539-e3b24c37e564,sh
 defense-evasion,T1027.001,Obfuscated Files or Information: Binary Padding,1,Pad Binary to Change Hash - Linux/macOS dd,ffe2346c-abd5-4b45-a713-bf5f1ebd573a,sh
 defense-evasion,T1027.001,Obfuscated Files or Information: Binary Padding,2,Pad Binary to Change Hash using truncate command - Linux/macOS,e22a9e89-69c7-410f-a473-e6c212cd2292,sh
-defense-evasion,T1078.001,Valid Accounts: Default Accounts,3,Enable Guest Account on macOS,0315bdff-4178-47e9-81e4-f31a6d23f7e4,command_prompt
+defense-evasion,T1078.001,Valid Accounts: Default Accounts,3,Enable Guest Account on macOS,0315bdff-4178-47e9-81e4-f31a6d23f7e4,sh
 defense-evasion,T1574.006,Hijack Execution Flow: LD_PRELOAD,3,Dylib Injection via DYLD_INSERT_LIBRARIES,4d66029d-7355-43fd-93a4-b63ba92ea1be,bash
 defense-evasion,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,1,Make and modify binary from C source,896dfe97-ae43-4101-8e96-9a7996555d80,sh
 defense-evasion,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,3,Set a SetUID flag on file,759055b3-3885-4582-a8ec-c00c9d64dd79,sh
@@ -94,7 +94,7 @@ persistence,T1176,Browser Extensions,4,Edge Chromium Addon - VPN,3d456e2b-a7db-4
 persistence,T1037.002,Boot or Logon Initialization Scripts: Logon Script (Mac),1,Logon Scripts - Mac,f047c7de-a2d9-406e-a62b-12a09d9516f4,manual
 persistence,T1543.004,Create or Modify System Process: Launch Daemon,1,Launch Daemon,03ab8df5-3a6b-4417-b6bd-bb7a5cfd74cf,bash
 persistence,T1543.004,Create or Modify System Process: Launch Daemon,2,Launch Daemon - Users Directory,6f899f9d-8a8e-4143-89a5-26fc2c3ec438,bash
-persistence,T1078.001,Valid Accounts: Default Accounts,3,Enable Guest Account on macOS,0315bdff-4178-47e9-81e4-f31a6d23f7e4,command_prompt
+persistence,T1078.001,Valid Accounts: Default Accounts,3,Enable Guest Account on macOS,0315bdff-4178-47e9-81e4-f31a6d23f7e4,sh
 persistence,T1546.005,Event Triggered Execution: Trap,1,Trap EXIT,a74b2e07-5952-4c03-8b56-56274b076b61,sh
 persistence,T1546.005,Event Triggered Execution: Trap,3,Trap SIGINT,a547d1ba-1d7a-4cc5-a9cb-8d65e8809636,sh
 persistence,T1574.006,Hijack Execution Flow: LD_PRELOAD,3,Dylib Injection via DYLD_INSERT_LIBRARIES,4d66029d-7355-43fd-93a4-b63ba92ea1be,bash
@@ -156,7 +156,7 @@ privilege-escalation,T1053.003,Scheduled Task/Job: Cron,2,Cron - Add script to a
 privilege-escalation,T1037.002,Boot or Logon Initialization Scripts: Logon Script (Mac),1,Logon Scripts - Mac,f047c7de-a2d9-406e-a62b-12a09d9516f4,manual
 privilege-escalation,T1543.004,Create or Modify System Process: Launch Daemon,1,Launch Daemon,03ab8df5-3a6b-4417-b6bd-bb7a5cfd74cf,bash
 privilege-escalation,T1543.004,Create or Modify System Process: Launch Daemon,2,Launch Daemon - Users Directory,6f899f9d-8a8e-4143-89a5-26fc2c3ec438,bash
-privilege-escalation,T1078.001,Valid Accounts: Default Accounts,3,Enable Guest Account on macOS,0315bdff-4178-47e9-81e4-f31a6d23f7e4,command_prompt
+privilege-escalation,T1078.001,Valid Accounts: Default Accounts,3,Enable Guest Account on macOS,0315bdff-4178-47e9-81e4-f31a6d23f7e4,sh
 privilege-escalation,T1546.005,Event Triggered Execution: Trap,1,Trap EXIT,a74b2e07-5952-4c03-8b56-56274b076b61,sh
 privilege-escalation,T1546.005,Event Triggered Execution: Trap,3,Trap SIGINT,a547d1ba-1d7a-4cc5-a9cb-8d65e8809636,sh
 privilege-escalation,T1574.006,Hijack Execution Flow: LD_PRELOAD,3,Dylib Injection via DYLD_INSERT_LIBRARIES,4d66029d-7355-43fd-93a4-b63ba92ea1be,bash
@@ -247,6 +247,7 @@ execution,T1059.002,Command and Scripting Interpreter: AppleScript,1,AppleScript
 execution,T1569.001,System Services: Launchctl,1,Launchctl,6fb61988-724e-4755-a595-07743749d4e2,bash
 execution,T1059.004,Command and Scripting Interpreter: Bash,1,Create and Execute Bash Shell Script,7e7ac3ed-f795-4fa5-b711-09d6fbe9b873,sh
 execution,T1059.004,Command and Scripting Interpreter: Bash,2,Command-Line Interface,d0c88567-803d-4dca-99b4-7ce65e7b257c,sh
+execution,T1059.004,Command and Scripting Interpreter: Bash,14,Shell Creation using awk command,ee72b37d-b8f5-46a5-a9e7-0ff50035ffd5,sh
 impact,T1531,Account Access Removal,4,Change User Password via passwd,3c717bf3-2ecc-4d79-8ac8-0bfbf08fbce6,sh
 impact,T1531,Account Access Removal,5,Delete User via dscl utility,4d938c43-2fe8-4d70-a5b3-5bf239aa7846,sh
 impact,T1531,Account Access Removal,6,Delete User via sysadminctl utility,d3812c4e-30ee-466a-a0aa-07e355b561d6,sh
@@ -258,7 +259,7 @@ impact,T1490,Inhibit System Recovery,12,Disable Time Machine,ed952f70-91d4-445a-
 impact,T1529,System Shutdown/Reboot,3,Restart System via `shutdown` - FreeBSD/macOS/Linux,6326dbc4-444b-4c04-88f4-27e94d0327cb,sh
 impact,T1529,System Shutdown/Reboot,4,Shutdown System via `shutdown` - FreeBSD/macOS/Linux,4963a81e-a3ad-4f02-adda-812343b351de,sh
 impact,T1529,System Shutdown/Reboot,5,Restart System via `reboot` - FreeBSD/macOS/Linux,47d0b042-a918-40ab-8cf9-150ffe919027,sh
-initial-access,T1078.001,Valid Accounts: Default Accounts,3,Enable Guest Account on macOS,0315bdff-4178-47e9-81e4-f31a6d23f7e4,command_prompt
+initial-access,T1078.001,Valid Accounts: Default Accounts,3,Enable Guest Account on macOS,0315bdff-4178-47e9-81e4-f31a6d23f7e4,sh
 initial-access,T1078.003,Valid Accounts: Local Accounts,2,Create local account with admin privileges - MacOS,f1275566-1c26-4b66-83e3-7f9f7f964daa,bash
 initial-access,T1078.003,Valid Accounts: Local Accounts,3,Create local account with admin privileges using sysadminctl utility - MacOS,191db57d-091a-47d5-99f3-97fde53de505,bash
 initial-access,T1078.003,Valid Accounts: Local Accounts,4,Enable root account using dsenableroot utility - MacOS,20b40ea9-0e17-4155-b8e6-244911a678ac,bash

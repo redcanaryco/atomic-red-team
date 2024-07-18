@@ -2762,8 +2762,8 @@ defense-evasion:
     - name: Truncate system log files via truncate utility
       auto_generated_guid: 6290f8a8-8ee9-4661-b9cf-390031bf6973
       description: 'This test truncates the system log files using the truncate utility
-        with (-s 0 or --size=0) parameter which sets file size to zero, thus emptying
-        the file content
+        with (-s 0) parameter which sets file size to zero, thus emptying the file
+        content
 
         '
       supported_platforms:
@@ -2785,8 +2785,9 @@ defense-evasion:
 
           '
       executor:
-        command: "sudo truncate -s 0 #{system_log_path} #size parameter shorthand\nsudo
-          truncate --size=0 #{system_log_path} #size parameter \n"
+        command: 'sudo truncate -s 0 #{system_log_path} #size parameter shorthand
+
+          '
         name: sh
         elevation_required: true
     - name: Delete log files via cat utility by appending /dev/null or /dev/zero
@@ -2856,9 +2857,9 @@ defense-evasion:
           '
       executor:
         command: |
-          sudo find /var/log -name '#{system_log_name1}.*' -exec rm {} \; #using "rm" execution
-          sudo find /var/log/ -name "#{system_log_name2}.*" -exec shred -u -z -n 3 {} \; #using "shred" execution
-          sudo find /var/log/ -name "#{system_log_name3}.*" -exec unlink {} \; #using "unlink" execution
+          sudo find /var/log -name '#{system_log_name1}*' -exec rm {} \; #using "rm" execution
+          sudo find /var/log -name "#{system_log_name2}*" -exec shred -u -z -n 3 {} \; #using "shred" execution
+          sudo find /var/log -name "#{system_log_name3}*" -exec unlink {} \; #using "unlink" execution
         name: sh
         elevation_required: true
     - name: Overwrite macOS system log via echo utility
@@ -7132,7 +7133,7 @@ defense-evasion:
       executor:
         command: sudo sysadminctl -guestAccount on
         cleanup_command: sudo sysadminctl -guestAccount off
-        name: command_prompt
+        name: sh
         elevation_required: true
   T1574.006:
     technique:
@@ -20403,7 +20404,7 @@ privilege-escalation:
       executor:
         command: sudo sysadminctl -guestAccount on
         cleanup_command: sudo sysadminctl -guestAccount off
-        name: command_prompt
+        name: sh
         elevation_required: true
   T1547.003:
     technique:
@@ -29383,6 +29384,17 @@ execution:
 
           '
         name: sh
+    - name: Shell Creation using awk command
+      auto_generated_guid: ee72b37d-b8f5-46a5-a9e7-0ff50035ffd5
+      description: |-
+        In awk the begin rule runs the first record without reading or interpreting it. This way a shell can be created and used to break out from restricted environments with the awk command.
+        Reference - https://gtfobins.github.io/gtfobins/awk/#shell
+      supported_platforms:
+      - linux
+      - macos
+      executor:
+        command: awk 'BEGIN {system("/bin/sh &")}'
+        name: sh
   T1559:
     technique:
       x_mitre_platforms:
@@ -33860,7 +33872,7 @@ persistence:
       executor:
         command: sudo sysadminctl -guestAccount on
         cleanup_command: sudo sysadminctl -guestAccount off
-        name: command_prompt
+        name: sh
         elevation_required: true
   T1547.003:
     technique:
@@ -66003,7 +66015,7 @@ initial-access:
       executor:
         command: sudo sysadminctl -guestAccount on
         cleanup_command: sudo sysadminctl -guestAccount off
-        name: command_prompt
+        name: sh
         elevation_required: true
   T1199:
     technique:

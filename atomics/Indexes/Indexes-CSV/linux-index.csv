@@ -99,7 +99,6 @@ defense-evasion,T1562.006,Impair Defenses: Indicator Blocking,3,Logging Configur
 defense-evasion,T1562.006,Impair Defenses: Indicator Blocking,4,Logging Configuration Changes on FreeBSD Host,6b8ca3ab-5980-4321-80c3-bcd77c8daed8,sh
 defense-evasion,T1036.004,Masquerading: Masquerade Task or Service,3,linux rename /proc/pid/comm using prctl,f0e3aaea-5cd9-4db6-a077-631dd19b27a8,sh
 defense-evasion,T1562.010,Impair Defenses: Downgrade Attack,1,ESXi - Change VIB acceptance level to CommunitySupported via PowerCLI,062f92c9-28b1-4391-a5f8-9d8ca6852091,powershell
-defense-evasion,T1562.010,Impair Defenses: Downgrade Attack,2,ESXi - Change VIB acceptance level to CommunitySupported via ESXCLI,14d55b96-b2f5-428d-8fed-49dc4d9dd616,command_prompt
 defense-evasion,T1562.003,Impair Defenses: Impair Command History Logging,1,Disable history collection,4eafdb45-0f79-4d66-aa86-a3e2c08791f5,sh
 defense-evasion,T1562.003,Impair Defenses: Impair Command History Logging,2,Disable history collection (freebsd),cada55b4-8251-4c60-819e-8ec1b33c9306,sh
 defense-evasion,T1562.003,Impair Defenses: Impair Command History Logging,3,Mac HISTCONTROL,468566d5-83e5-40c1-b338-511e1659628d,manual
@@ -351,14 +350,11 @@ discovery,T1082,System Information Discovery,8,Hostname Discovery,486e88ea-4f56-
 discovery,T1082,System Information Discovery,12,"Environment variables discovery on freebsd, macos and linux",fcbdd43f-f4ad-42d5-98f3-0218097e2720,sh
 discovery,T1082,System Information Discovery,25,Linux List Kernel Modules,034fe21c-3186-49dd-8d5d-128b35f181c7,sh
 discovery,T1082,System Information Discovery,26,FreeBSD List Kernel Modules,4947897f-643a-4b75-b3f5-bed6885749f6,sh
-discovery,T1082,System Information Discovery,31,ESXi - VM Discovery using ESXCLI,2040405c-eea6-4c1c-aef3-c2acc430fac9,command_prompt
-discovery,T1082,System Information Discovery,32,ESXi - Darkside system information discovery,f89812e5-67d1-4f49-86fa-cbc6609ea86a,command_prompt
 discovery,T1217,Browser Bookmark Discovery,1,List Mozilla Firefox Bookmark Database Files on FreeBSD/Linux,3a41f169-a5ab-407f-9269-abafdb5da6c2,sh
 discovery,T1217,Browser Bookmark Discovery,4,List Google Chromium Bookmark JSON Files on FreeBSD,88ca025b-3040-44eb-9168-bd8af22b82fa,sh
 discovery,T1016,System Network Configuration Discovery,3,System Network Configuration Discovery,c141bbdb-7fca-4254-9fd6-f47e79447e17,sh
 discovery,T1083,File and Directory Discovery,3,Nix File and Directory Discovery,ffc8b249-372a-4b74-adcd-e4c0430842de,sh
 discovery,T1083,File and Directory Discovery,4,Nix File and Directory Discovery 2,13c5e1ae-605b-46c4-a79f-db28c77ff24e,sh
-discovery,T1083,File and Directory Discovery,7,ESXi - Enumerate VMDKs available on an ESXi Host,4a233a40-caf7-4cf1-890a-c6331bbc72cf,command_prompt
 discovery,T1049,System Network Connections Discovery,3,"System Network Connections Discovery FreeBSD, Linux & MacOS",9ae28d3f-190f-4fa0-b023-c7bd3e0eabf2,sh
 discovery,T1057,Process Discovery,1,Process Discovery - ps,4ff64f0b-aaf2-4866-b39d-38d9791407cc,sh
 discovery,T1069.001,Permission Groups Discovery: Local Groups,1,Permission Groups Discovery (Local),952931a4-af0b-4335-bbbe-73c8c5b327ae,sh
@@ -402,6 +398,7 @@ execution,T1059.004,Command and Scripting Interpreter: Bash,10,Change login shel
 execution,T1059.004,Command and Scripting Interpreter: Bash,11,Environment variable scripts,bdaebd56-368b-4970-a523-f905ff4a8a51,sh
 execution,T1059.004,Command and Scripting Interpreter: Bash,12,Detecting pipe-to-shell,fca246a8-a585-4f28-a2df-6495973976a1,sh
 execution,T1059.004,Command and Scripting Interpreter: Bash,13,Current kernel information enumeration,3a53734a-9e26-4f4b-ad15-059e767f5f14,sh
+execution,T1059.004,Command and Scripting Interpreter: Bash,14,Shell Creation using awk command,ee72b37d-b8f5-46a5-a9e7-0ff50035ffd5,sh
 execution,T1059.006,Command and Scripting Interpreter: Python,1,Execute shell script via python's command mode arguement,3a95cdb2-c6ea-4761-b24e-02b71889b8bb,sh
 execution,T1059.006,Command and Scripting Interpreter: Python,2,Execute Python via scripts,6c4d1dcb-33c7-4c36-a8df-c6cfd0408be8,sh
 execution,T1059.006,Command and Scripting Interpreter: Python,3,Execute Python via Python executables,0b44d79b-570a-4b27-a31f-3bf2156e5eaa,sh
@@ -427,8 +424,6 @@ impact,T1529,System Shutdown/Reboot,8,Reboot System via `halt` - Linux,78f92e14-
 impact,T1529,System Shutdown/Reboot,9,Shutdown System via `poweroff` - FreeBSD/Linux,73a90cd2-48a2-4ac5-8594-2af35fa909fa,sh
 impact,T1529,System Shutdown/Reboot,10,Reboot System via `poweroff` - FreeBSD,5a282e50-86ff-438d-8cef-8ae01c9e62e1,sh
 impact,T1529,System Shutdown/Reboot,11,Reboot System via `poweroff` - Linux,61303105-ff60-427b-999e-efb90b314e41,bash
-impact,T1529,System Shutdown/Reboot,13,ESXi - Terminates VMs using pkill,987c9b4d-a637-42db-b1cb-e9e242c3991b,command_prompt
-impact,T1529,System Shutdown/Reboot,14,ESXi - Avoslocker enumerates VMs and forcefully kills VMs,189f7d6e-9442-4160-9bc3-5e4104d93ece,command_prompt
 initial-access,T1078.003,Valid Accounts: Local Accounts,8,Create local account (Linux),02a91c34-8a5b-4bed-87af-501103eb5357,bash
 initial-access,T1078.003,Valid Accounts: Local Accounts,9,Reactivate a locked/expired account (Linux),d2b95631-62d7-45a3-aaef-0972cea97931,bash
 initial-access,T1078.003,Valid Accounts: Local Accounts,10,Reactivate a locked/expired account (FreeBSD),09e3380a-fae5-4255-8b19-9950be0252cf,sh

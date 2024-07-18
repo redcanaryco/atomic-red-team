@@ -178,6 +178,7 @@
   - Atomic Test #11: Msiexec.exe - Execute Remote MSI file [windows]
 - [T1556.002 Modify Authentication Process: Password Filter DLL](../../T1556.002/T1556.002.md)
   - Atomic Test #1: Install and Register Password Filter DLL [windows]
+  - Atomic Test #2: Install Additional Authentication Packages [windows]
 - T1070.007 Clear Network Connection History and Configurations [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1600.001 Reduce Key Space [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1070.003 Indicator Removal on Host: Clear Command History](../../T1070.003/T1070.003.md)
@@ -410,6 +411,7 @@
   - Atomic Test #82: Modify EnableNonTPM Registry entry [windows]
   - Atomic Test #83: Modify UsePartialEncryptionKey Registry entry [windows]
   - Atomic Test #84: Modify UsePIN Registry entry [windows]
+  - Atomic Test #85: Abusing Windows TelemetryController Registry Key for Persistence [windows]
 - [T1574.008 Hijack Execution Flow: Path Interception by Search Order Hijacking](../../T1574.008/T1574.008.md)
   - Atomic Test #1: powerShell Persistence via hijacking default modules - Get-Variable.exe [windows]
 - T1535 Unused/Unsupported Cloud Regions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -497,7 +499,7 @@
 - T1218.012 Verclsid [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1562.010 Impair Defenses: Downgrade Attack](../../T1562.010/T1562.010.md)
   - Atomic Test #1: ESXi - Change VIB acceptance level to CommunitySupported via PowerCLI [linux]
-  - Atomic Test #2: ESXi - Change VIB acceptance level to CommunitySupported via ESXCLI [linux]
+  - Atomic Test #2: ESXi - Change VIB acceptance level to CommunitySupported via ESXCLI [windows]
   - Atomic Test #3: PowerShell Version 2 Downgrade [windows]
 - T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1218.005 Signed Binary Proxy Execution: Mshta](../../T1218.005/T1218.005.md)
@@ -1068,6 +1070,8 @@
   - Atomic Test #15: HKLM - Modify default System Shell - Winlogon Shell KEY Value  [windows]
   - Atomic Test #16: secedit used to create a Run key in the HKLM Hive [windows]
   - Atomic Test #17: Modify BootExecute Value [windows]
+  - Atomic Test #18: Allowing custom application to execute during new RDP logon session [windows]
+  - Atomic Test #19: Creating Boot Verification Program Key for application execution during successful boot [windows]
 - [T1098 Account Manipulation](../../T1098/T1098.md)
   - Atomic Test #1: Admin Account Manipulate [windows]
   - Atomic Test #2: Domain Account and Group Manipulate [windows]
@@ -1327,6 +1331,7 @@
   - Atomic Test #11: Environment variable scripts [linux]
   - Atomic Test #12: Detecting pipe-to-shell [linux]
   - Atomic Test #13: Current kernel information enumeration [linux]
+  - Atomic Test #14: Shell Creation using awk command [linux, macos]
 - [T1559 Inter-Process Communication](../../T1559/T1559.md)
   - Atomic Test #1: Cobalt Strike Artifact Kit pipe [windows]
   - Atomic Test #2: Cobalt Strike Lateral Movement (psexec_psh) pipe [windows]
@@ -1443,6 +1448,7 @@
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1556.002 Modify Authentication Process: Password Filter DLL](../../T1556.002/T1556.002.md)
   - Atomic Test #1: Install and Register Password Filter DLL [windows]
+  - Atomic Test #2: Install Additional Authentication Packages [windows]
 - [T1505.005 Server Software Component: Terminal Services DLL](../../T1505.005/T1505.005.md)
   - Atomic Test #1: Simulate Patching termsrv.dll [windows]
   - Atomic Test #2: Modify Terminal Services DLL Path [windows]
@@ -1571,6 +1577,8 @@
   - Atomic Test #15: HKLM - Modify default System Shell - Winlogon Shell KEY Value  [windows]
   - Atomic Test #16: secedit used to create a Run key in the HKLM Hive [windows]
   - Atomic Test #17: Modify BootExecute Value [windows]
+  - Atomic Test #18: Allowing custom application to execute during new RDP logon session [windows]
+  - Atomic Test #19: Creating Boot Verification Program Key for application execution during successful boot [windows]
 - [T1136.003 Create Account: Cloud Account](../../T1136.003/T1136.003.md)
   - Atomic Test #1: AWS - Create a new IAM user [iaas:aws]
   - Atomic Test #2: Azure AD - Create a new user [azure-ad]
@@ -2079,6 +2087,7 @@
   - Atomic Test #2: Enumeration for PuTTY Credentials in Registry [windows]
 - [T1556.002 Modify Authentication Process: Password Filter DLL](../../T1556.002/T1556.002.md)
   - Atomic Test #1: Install and Register Password Filter DLL [windows]
+  - Atomic Test #2: Install Additional Authentication Packages [windows]
 - [T1558.004 Steal or Forge Kerberos Tickets: AS-REP Roasting](../../T1558.004/T1558.004.md)
   - Atomic Test #1: Rubeus asreproast [windows]
   - Atomic Test #2: Get-DomainUser with PowerView [windows]
@@ -2182,6 +2191,8 @@
   - Atomic Test #10: WinPwn - passhunt [windows]
   - Atomic Test #11: WinPwn - SessionGopher [windows]
   - Atomic Test #12: WinPwn - Loot local Credentials - AWS, Microsoft Azure, and Google Compute credentials [windows]
+  - Atomic Test #13: List Credential Files via PowerShell [windows]
+  - Atomic Test #14: List Credential Files via Command Prompt [windows]
 - T1606.001 Web Cookies [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1528 Steal Application Access Token](../../T1528/T1528.md)
   - Atomic Test #1: Azure - Dump All Azure Key Vaults with Microburst [iaas:azure]
@@ -2406,8 +2417,8 @@
   - Atomic Test #28: System Information Discovery [windows]
   - Atomic Test #29: Check computer location [windows]
   - Atomic Test #30: BIOS Information Discovery through Registry [windows]
-  - Atomic Test #31: ESXi - VM Discovery using ESXCLI [linux]
-  - Atomic Test #32: ESXi - Darkside system information discovery [linux]
+  - Atomic Test #31: ESXi - VM Discovery using ESXCLI [windows]
+  - Atomic Test #32: ESXi - Darkside system information discovery [windows]
   - Atomic Test #33: sysctl to gather macOS hardware info [macos]
 - [T1016.002 System Network Configuration Discovery: Wi-Fi Discovery](../../T1016.002/T1016.002.md)
   - Atomic Test #1: Enumerate Stored Wi-Fi Profiles And Passwords via netsh [windows]
@@ -2455,7 +2466,7 @@
   - Atomic Test #4: Nix File and Directory Discovery 2 [linux, macos]
   - Atomic Test #5: Simulating MAZE Directory Enumeration [windows]
   - Atomic Test #6: Launch DirLister Executable [windows]
-  - Atomic Test #7: ESXi - Enumerate VMDKs available on an ESXi Host [linux]
+  - Atomic Test #7: ESXi - Enumerate VMDKs available on an ESXi Host [windows]
 - [T1049 System Network Connections Discovery](../../T1049/T1049.md)
   - Atomic Test #1: System Network Connections Discovery [windows]
   - Atomic Test #2: System Network Connections Discovery with PowerShell [windows]
@@ -2758,8 +2769,8 @@
   - Atomic Test #10: Reboot System via `poweroff` - FreeBSD [linux]
   - Atomic Test #11: Reboot System via `poweroff` - Linux [linux]
   - Atomic Test #12: Logoff System - Windows [windows]
-  - Atomic Test #13: ESXi - Terminates VMs using pkill [linux]
-  - Atomic Test #14: ESXi - Avoslocker enumerates VMs and forcefully kills VMs [linux]
+  - Atomic Test #13: ESXi - Terminates VMs using pkill [windows]
+  - Atomic Test #14: ESXi - Avoslocker enumerates VMs and forcefully kills VMs [windows]
 
 # initial-access
 - [T1133 External Remote Services](../../T1133/T1133.md)
