@@ -15,6 +15,7 @@ from pydantic import (
     constr,
     field_serializer,
     field_validator,
+    model_validator,
 )
 from pydantic_core import PydanticCustomError
 from pydantic_core.core_schema import ValidationInfo
@@ -178,6 +179,28 @@ class Atomic(BaseModel):
                 {"loc": ["dependency_executor_name"], "input": None},
             )
         return v
+
+    @model_validator(mode="after")
+    def validate_elevation_required(self):
+        if (
+            ("linux" in self.supported_platforms or "macos" in self.supported_platforms)
+            and not self.executor.elevation_required
+            and isinstance(self.executor, CommandExecutor)
+        ):
+            commands = [self.executor.command]
+            if self.executor.cleanup_command:
+                commands.append(self.executor.cleanup_command)
+
+            if any(["sudo" in cmd for cmd in commands]):
+                raise PydanticCustomError(
+                    "elevation_required_but_not_provided",
+                    "'elevation_required' shouldn't be empty/false. Since `sudo` is used, set `elevation_required` to true`",
+                    {
+                        "loc": ["executor", "elevation_required"],
+                        "input": self.executor.elevation_required,
+                    },
+                )
+        return self
 
     @field_validator("input_arguments", mode="before")  # noqa
     @classmethod
