@@ -268,6 +268,6 @@ atomic_tests:
     get_prereq_command: |
       which apt && apt update && apt install -y emacs || which pkg && pkg update && pkg install -y emacs
   executor:
-    command: sudo emacs -Q -nw --eval '(term "/bin/sh")'
+    command: sudo emacs -Q -nw --eval '(term "/bin/sh &")'
     name: sh
     elevation_required: true
