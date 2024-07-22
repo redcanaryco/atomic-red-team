@@ -40,7 +40,7 @@ class Program
         output += "-----------------------------------------------------------\n";
         foreach (var layout in layoutList)
         {
-            output += "Keyboard Layout: " + layout.ToString("x8") + "\n";
+            output += layout.ToString("x8") + "\n";
         }
 
         // Get and display user default UI language
