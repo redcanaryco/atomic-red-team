@@ -1302,7 +1302,7 @@ atomic_tests:
     name: command_prompt
     elevation_required: true
 
-- name: Modify RDP-Tcp Initial Program Registry Entry 
+- name: Modify RDP-Tcp Initial Program Registry Entry
   description: |
     If the fInheritInitialProgram value is set to 1, the exe indicated in the InitialProgram value is automatically started on RDP connection.
     Once the test commands are run, notepad will execute automatically on new RDP connection
@@ -1313,4 +1313,6 @@ atomic_tests:
       reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v fInheritInitialProgram /t REG_DWORD /d 1 /f
       reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v InitialProgram /t REG_SZ /d "C:\Windows\System32\notepad.exe" /f
     cleanup_command: |
-      reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v InitialProgram /t REG_SZ /d "" /f      
+      reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v InitialProgram /t REG_SZ /d "" /f
+      name: command_prompt
+      elevation_required: true
