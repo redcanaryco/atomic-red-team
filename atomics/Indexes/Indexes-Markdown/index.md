@@ -178,6 +178,7 @@
   - Atomic Test #11: Msiexec.exe - Execute Remote MSI file [windows]
 - [T1556.002 Modify Authentication Process: Password Filter DLL](../../T1556.002/T1556.002.md)
   - Atomic Test #1: Install and Register Password Filter DLL [windows]
+  - Atomic Test #2: Install Additional Authentication Packages [windows]
 - T1070.007 Clear Network Connection History and Configurations [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1600.001 Reduce Key Space [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1070.003 Indicator Removal on Host: Clear Command History](../../T1070.003/T1070.003.md)
@@ -410,6 +411,7 @@
   - Atomic Test #82: Modify EnableNonTPM Registry entry [windows]
   - Atomic Test #83: Modify UsePartialEncryptionKey Registry entry [windows]
   - Atomic Test #84: Modify UsePIN Registry entry [windows]
+  - Atomic Test #85: Abusing Windows TelemetryController Registry Key for Persistence [windows]
 - [T1574.008 Hijack Execution Flow: Path Interception by Search Order Hijacking](../../T1574.008/T1574.008.md)
   - Atomic Test #1: powerShell Persistence via hijacking default modules - Get-Variable.exe [windows]
 - T1535 Unused/Unsupported Cloud Regions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1446,6 +1448,7 @@
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1556.002 Modify Authentication Process: Password Filter DLL](../../T1556.002/T1556.002.md)
   - Atomic Test #1: Install and Register Password Filter DLL [windows]
+  - Atomic Test #2: Install Additional Authentication Packages [windows]
 - [T1505.005 Server Software Component: Terminal Services DLL](../../T1505.005/T1505.005.md)
   - Atomic Test #1: Simulate Patching termsrv.dll [windows]
   - Atomic Test #2: Modify Terminal Services DLL Path [windows]
@@ -2084,6 +2087,7 @@
   - Atomic Test #2: Enumeration for PuTTY Credentials in Registry [windows]
 - [T1556.002 Modify Authentication Process: Password Filter DLL](../../T1556.002/T1556.002.md)
   - Atomic Test #1: Install and Register Password Filter DLL [windows]
+  - Atomic Test #2: Install Additional Authentication Packages [windows]
 - [T1558.004 Steal or Forge Kerberos Tickets: AS-REP Roasting](../../T1558.004/T1558.004.md)
   - Atomic Test #1: Rubeus asreproast [windows]
   - Atomic Test #2: Get-DomainUser with PowerView [windows]
@@ -2514,6 +2518,7 @@
   - Atomic Test #5: Discover System Language by locale file [linux]
   - Atomic Test #6: Discover System Language by Environment Variable Query [linux]
   - Atomic Test #7: Discover System Language with dism.exe [windows]
+  - Atomic Test #8: Discover System Language by Windows API Query [windows]
 - [T1012 Query Registry](../../T1012/T1012.md)
   - Atomic Test #1: Query Registry [windows]
   - Atomic Test #2: Query Registry with Powershell cmdlets [windows]

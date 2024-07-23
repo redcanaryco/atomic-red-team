@@ -135,6 +135,7 @@ defense-evasion,T1218.007,Signed Binary Proxy Execution: Msiexec,9,Msiexec.exe -
 defense-evasion,T1218.007,Signed Binary Proxy Execution: Msiexec,10,Msiexec.exe - Execute the DllUnregisterServer function of a DLL,ab09ec85-4955-4f9c-b8e0-6851baf4d47f,command_prompt
 defense-evasion,T1218.007,Signed Binary Proxy Execution: Msiexec,11,Msiexec.exe - Execute Remote MSI file,44a4bedf-ffe3-452e-bee4-6925ab125662,command_prompt
 defense-evasion,T1556.002,Modify Authentication Process: Password Filter DLL,1,Install and Register Password Filter DLL,a7961770-beb5-4134-9674-83d7e1fa865c,powershell
+defense-evasion,T1556.002,Modify Authentication Process: Password Filter DLL,2,Install Additional Authentication Packages,91580da6-bc6e-431b-8b88-ac77180005f2,powershell
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,1,Clear Bash history (rm),a934276e-2be5-4a36-93fd-98adbb5bd4fc,sh
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,2,Clear Bash history (echo),cbf506a5-dd78-43e5-be7e-a46b7c7a0a11,sh
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,3,Clear Bash history (cat dev/null),b1251c35-dcd3-4ea1-86da-36d27b54f31f,sh
@@ -337,6 +338,7 @@ defense-evasion,T1112,Modify Registry,81,Modify UseTPMKeyPIN Registry entry,02d8
 defense-evasion,T1112,Modify Registry,82,Modify EnableNonTPM Registry entry,e672a340-a933-447c-954c-d68db38a09b1,command_prompt
 defense-evasion,T1112,Modify Registry,83,Modify UsePartialEncryptionKey Registry entry,b5169fd5-85c8-4b2c-a9b6-64cc0b9febef,command_prompt
 defense-evasion,T1112,Modify Registry,84,Modify UsePIN Registry entry,3ac0b30f-532f-43c6-8f01-fb657aaed7e4,command_prompt
+defense-evasion,T1112,Modify Registry,85,Abusing Windows TelemetryController Registry Key for Persistence,4469192c-2d2d-4a3a-9758-1f31d937a92b,command_prompt
 defense-evasion,T1574.008,Hijack Execution Flow: Path Interception by Search Order Hijacking,1,powerShell Persistence via hijacking default modules - Get-Variable.exe,1561de08-0b4b-498e-8261-e922f3494aae,powershell
 defense-evasion,T1027.001,Obfuscated Files or Information: Binary Padding,1,Pad Binary to Change Hash - Linux/macOS dd,ffe2346c-abd5-4b45-a713-bf5f1ebd573a,sh
 defense-evasion,T1027.001,Obfuscated Files or Information: Binary Padding,2,Pad Binary to Change Hash using truncate command - Linux/macOS,e22a9e89-69c7-410f-a473-e6c212cd2292,sh
@@ -1069,6 +1071,7 @@ persistence,T1137.006,Office Application Startup: Add-ins,4,Persistent Code Exec
 persistence,T1137.006,Office Application Startup: Add-ins,5,Persistent Code Execution Via PowerPoint VBA Add-in File (PPAM),f89e58f9-2b49-423b-ac95-1f3e7cfd8277,powershell
 persistence,T1505.002,Server Software Component: Transport Agent,1,Install MS Exchange Transport Agent Persistence,43e92449-ff60-46e9-83a3-1a38089df94d,powershell
 persistence,T1556.002,Modify Authentication Process: Password Filter DLL,1,Install and Register Password Filter DLL,a7961770-beb5-4134-9674-83d7e1fa865c,powershell
+persistence,T1556.002,Modify Authentication Process: Password Filter DLL,2,Install Additional Authentication Packages,91580da6-bc6e-431b-8b88-ac77180005f2,powershell
 persistence,T1505.005,Server Software Component: Terminal Services DLL,1,Simulate Patching termsrv.dll,0b2eadeb-4a64-4449-9d43-3d999f4a317b,powershell
 persistence,T1505.005,Server Software Component: Terminal Services DLL,2,Modify Terminal Services DLL Path,18136e38-0530-49b2-b309-eed173787471,powershell
 persistence,T1176,Browser Extensions,1,Chrome/Chromium (Developer Mode),3ecd790d-2617-4abf-9a8c-4e8d47da9ee1,manual
@@ -1490,6 +1493,7 @@ credential-access,T1040,Network Sniffing,16,PowerShell Network Sniffing,9c15a7de
 credential-access,T1552.002,Unsecured Credentials: Credentials in Registry,1,Enumeration for Credentials in Registry,b6ec082c-7384-46b3-a111-9a9b8b14e5e7,command_prompt
 credential-access,T1552.002,Unsecured Credentials: Credentials in Registry,2,Enumeration for PuTTY Credentials in Registry,af197fd7-e868-448e-9bd5-05d1bcd9d9e5,command_prompt
 credential-access,T1556.002,Modify Authentication Process: Password Filter DLL,1,Install and Register Password Filter DLL,a7961770-beb5-4134-9674-83d7e1fa865c,powershell
+credential-access,T1556.002,Modify Authentication Process: Password Filter DLL,2,Install Additional Authentication Packages,91580da6-bc6e-431b-8b88-ac77180005f2,powershell
 credential-access,T1558.004,Steal or Forge Kerberos Tickets: AS-REP Roasting,1,Rubeus asreproast,615bd568-2859-41b5-9aed-61f6a88e48dd,powershell
 credential-access,T1558.004,Steal or Forge Kerberos Tickets: AS-REP Roasting,2,Get-DomainUser with PowerView,d6139549-7b72-4e48-9ea1-324fc9bdf88a,powershell
 credential-access,T1558.004,Steal or Forge Kerberos Tickets: AS-REP Roasting,3,WinPwn - PowerSharpPack - Kerberoasting Using Rubeus,8c385f88-4d47-4c9a-814d-93d9deec8c71,powershell
@@ -1835,6 +1839,7 @@ discovery,T1614.001,System Location Discovery: System Language Discovery,4,Disco
 discovery,T1614.001,System Location Discovery: System Language Discovery,5,Discover System Language by locale file,5d7057c9-2c8a-4026-91dd-13b5584daa69,sh
 discovery,T1614.001,System Location Discovery: System Language Discovery,6,Discover System Language by Environment Variable Query,cb8f7cdc-36c4-4ed0-befc-7ad7d24dfd7a,sh
 discovery,T1614.001,System Location Discovery: System Language Discovery,7,Discover System Language with dism.exe,69f625ba-938f-4900-bdff-82ada3df5d9c,command_prompt
+discovery,T1614.001,System Location Discovery: System Language Discovery,8,Discover System Language by Windows API Query,e39b99e9-ce7f-4b24-9c88-0fbad069e6c6,command_prompt
 discovery,T1012,Query Registry,1,Query Registry,8f7578c4-9863-4d83-875c-a565573bbdf0,command_prompt
 discovery,T1012,Query Registry,2,Query Registry with Powershell cmdlets,0434d081-bb32-42ce-bcbb-3548e4f2628f,powershell
 discovery,T1012,Query Registry,3,Enumerate COM Objects in Registry with Powershell,0d80d088-a84c-4353-af1a-fc8b439f1564,powershell
