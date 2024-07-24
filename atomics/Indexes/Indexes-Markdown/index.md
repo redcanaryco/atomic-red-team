@@ -824,6 +824,7 @@
   - Atomic Test #10: Reactivate a locked/expired account (FreeBSD) [linux]
   - Atomic Test #11: Login as nobody (Linux) [linux]
   - Atomic Test #12: Login as nobody (freebsd) [linux]
+  - Atomic Test #13: Use PsExec to elevate to NT Authority\SYSTEM account [windows]
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1127 Trusted Developer Utilities Proxy Execution](../../T1127/T1127.md)
   - Atomic Test #1: Lolbin Jsc.exe compile javascript to exe [windows]
@@ -1210,6 +1211,7 @@
   - Atomic Test #10: Reactivate a locked/expired account (FreeBSD) [linux]
   - Atomic Test #11: Login as nobody (Linux) [linux]
   - Atomic Test #12: Login as nobody (freebsd) [linux]
+  - Atomic Test #13: Use PsExec to elevate to NT Authority\SYSTEM account [windows]
 - [T1574.012 Hijack Execution Flow: COR_PROFILER](../../T1574.012/T1574.012.md)
   - Atomic Test #1: User scope COR_PROFILER [windows]
   - Atomic Test #2: System Scope COR_PROFILER [windows]
@@ -1726,6 +1728,7 @@
   - Atomic Test #10: Reactivate a locked/expired account (FreeBSD) [linux]
   - Atomic Test #11: Login as nobody (Linux) [linux]
   - Atomic Test #12: Login as nobody (freebsd) [linux]
+  - Atomic Test #13: Use PsExec to elevate to NT Authority\SYSTEM account [windows]
 - [T1574.012 Hijack Execution Flow: COR_PROFILER](../../T1574.012/T1574.012.md)
   - Atomic Test #1: User scope COR_PROFILER [windows]
   - Atomic Test #2: System Scope COR_PROFILER [windows]
@@ -2824,6 +2827,7 @@
   - Atomic Test #10: Reactivate a locked/expired account (FreeBSD) [linux]
   - Atomic Test #11: Login as nobody (Linux) [linux]
   - Atomic Test #12: Login as nobody (freebsd) [linux]
+  - Atomic Test #13: Use PsExec to elevate to NT Authority\SYSTEM account [windows]
 
 # exfiltration
 - T1567 Exfiltration Over Web Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
