@@ -2451,6 +2451,8 @@
   - Atomic Test #7: List Mozilla Firefox bookmarks on Windows with command prompt [windows]
   - Atomic Test #8: List Internet Explorer Bookmarks using the command prompt [windows]
   - Atomic Test #9: List Safari Bookmarks on MacOS [macos]
+  - Atomic Test #10: Extract Edge Browsing History [windows]
+  - Atomic Test #11: Extract chrome Browsing History [windows]
 - [T1016 System Network Configuration Discovery](../../T1016/T1016.md)
   - Atomic Test #1: System Network Configuration Discovery on Windows [windows]
   - Atomic Test #2: List Windows Firewall Rules [windows]
