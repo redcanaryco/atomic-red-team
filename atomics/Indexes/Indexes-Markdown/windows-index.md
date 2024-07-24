@@ -956,6 +956,7 @@
   - Atomic Test #5: Use RemCom to execute a command on a remote host [windows]
   - Atomic Test #6: Snake Malware Service Create [windows]
   - Atomic Test #7: Modifying ACL of Service Control Manager via SDET [windows]
+  - Atomic Test #8: Pipe Creation - PsExec Tool Execution From Suspicious Locations [windows]
 - [T1053.002 Scheduled Task/Job: At](../../T1053.002/T1053.002.md)
   - Atomic Test #1: At.exe Scheduled task [windows]
 
