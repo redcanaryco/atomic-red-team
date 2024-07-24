@@ -133,3 +133,26 @@ atomic_tests:
     cleanup_command: |
       rm -f #{output_file} 2>/dev/null
     name: sh
+- name: Extract Edge Browsing History
+  description: |
+    This test will extract Microsoft Edge browser's history of current user
+  supported_platforms:
+  - windows
+  input_arguments:
+    history_path:
+      description: Microsoft Edge browser history file path
+      type: String
+      default: $Env:LOCALAPPDATA\Microsoft\Edge\User Data\Default\History
+    dest_path:
+      description: Target file path to where the history to be extracted
+      type: String
+      default: $Env:USERPROFILE\Downloads\edgebrowsinghistory.txt
+  executor:
+    command: |
+      $URL_Regex = '(htt(p|s))://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)*?'
+      $History = Get-Content -Path "#{history_path}" | Select-String -AllMatches $URL_Regex | ForEach-Object { $_.Matches.Value } | Sort -Unique
+      $History | Out-File -FilePath "#{dest_path}"
+    cleanup_command: |
+      Remove-Item -Path "#{dest_path}"
+    name: powershell
+    elevation_required: true 
