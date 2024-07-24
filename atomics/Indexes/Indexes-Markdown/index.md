@@ -900,6 +900,7 @@
   - Atomic Test #2: Service ImagePath Change with reg.exe [windows]
 - [T1547 Boot or Logon Autostart Execution](../../T1547/T1547.md)
   - Atomic Test #1: Add a driver [windows]
+  - Atomic Test #2: Driver Installation Using pnputil.exe [windows]
 - [T1547.014 Active Setup](../../T1547.014/T1547.014.md)
   - Atomic Test #1: HKLM - Add atomic_test key to launch executable as part of user setup [windows]
   - Atomic Test #2: HKLM - Add malicious StubPath value to existing Active Setup Entry [windows]
@@ -1419,6 +1420,7 @@
 - T1542.003 Bootkit [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1547 Boot or Logon Autostart Execution](../../T1547/T1547.md)
   - Atomic Test #1: Add a driver [windows]
+  - Atomic Test #2: Driver Installation Using pnputil.exe [windows]
 - [T1547.014 Active Setup](../../T1547.014/T1547.014.md)
   - Atomic Test #1: HKLM - Add atomic_test key to launch executable as part of user setup [windows]
   - Atomic Test #2: HKLM - Add malicious StubPath value to existing Active Setup Entry [windows]
