@@ -16,3 +16,18 @@ atomic_tests:
     command: |
       pnputil.exe /add-driver "#{driver_inf}"
     name: command_prompt
+
+- name: Driver Installation Using pnputil.exe
+  description: |
+    pnputil.exe is a native command-line utility in Windows to install drivers, this can be abused by to install malicious drivers. Ref: https://lolbas-project.github.io/lolbas/Binaries/Pnputil/
+  supported_platforms:
+  - windows
+  input_arguments:
+    driver_path:
+      description: Enter the driver file path to install (Default is used built-in windows driver - acpipmi.inf)
+      type: path
+      default: C:\Windows\INF\acpipmi.inf
+  executor:
+    command: |
+      pnputil.exe -i -a #{driver_path}
+    name: powershell
