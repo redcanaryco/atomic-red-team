@@ -133,6 +133,7 @@ atomic_tests:
     cleanup_command: |
       rm -f #{output_file} 2>/dev/null
     name: sh
+
 - name: Extract Edge Browsing History
   description: |
     This test will extract Microsoft Edge browser's history of current user
@@ -154,5 +155,21 @@ atomic_tests:
       $History | Out-File -FilePath "#{dest_path}"
     cleanup_command: |
       Remove-Item -Path "#{dest_path}"
+    name: powershell
+    elevation_required: true
+
+- name: Extract chrome Browsing History
+  description: |
+    This test will extract browsing history of the chrome user
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      $Username = (whoami).Split('\')[1]
+      $URL_Regex = '(htt(p|s))://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)*?'
+      $History = Get-Content -Path "$Env:systemdrive\Users\$UserName\AppData\Local\Google\Chrome\User Data\Default\History" | Select-String -AllMatches $URL_Regex | ForEach-Object { $_.Matches.Value } | Sort -Unique
+      $History | Out-File -FilePath "$Env:USERPROFILE\Downloads\chromebrowsinghistory.txt"
+    cleanup_command: |
+      Remove-Item -Path "$Env:USERPROFILE\Downloads\chromebrowsinghistory.txt"
     name: powershell
     elevation_required: true
