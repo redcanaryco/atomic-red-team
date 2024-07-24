@@ -1023,6 +1023,7 @@
   - Atomic Test #2: Replace binary of sticky keys [windows]
   - Atomic Test #3: Create Symbolic Link From osk.exe to cmd.exe [windows]
   - Atomic Test #4: Atbroker.exe (AT) Executes Arbitrary Command via Registry Key [windows]
+  - Atomic Test #5: Auto-start application on user logon [windows]
 - [T1055.004 Process Injection: Asynchronous Procedure Call](../../T1055.004/T1055.004.md)
   - Atomic Test #1: Process Injection via C# [windows]
   - Atomic Test #2: EarlyBird APC Queue Injection in Go [windows]
@@ -1542,6 +1543,7 @@
   - Atomic Test #2: Replace binary of sticky keys [windows]
   - Atomic Test #3: Create Symbolic Link From osk.exe to cmd.exe [windows]
   - Atomic Test #4: Atbroker.exe (AT) Executes Arbitrary Command via Registry Key [windows]
+  - Atomic Test #5: Auto-start application on user logon [windows]
 - [T1136.002 Create Account: Domain Account](../../T1136.002/T1136.002.md)
   - Atomic Test #1: Create a new Windows domain admin user [windows]
   - Atomic Test #2: Create a new account similar to ANONYMOUS LOGON [windows]
