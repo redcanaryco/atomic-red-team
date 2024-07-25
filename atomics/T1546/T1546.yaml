@@ -135,3 +135,17 @@ atomic_tests:
       reg delete "HKLM\Software\Microsoft\Windows\Windows Error Reporting\Hangs" /v Debugger /f
     name: command_prompt
     elevation_required: true
+- name: Persistence using automatic execution of custom DLL during RDP session
+  description: |-
+    When remote desktop session is accepted, the system queries the key it queries the Registry key:HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\AddIns\TestDVCPlugin. 
+    If such key exists, the OS will attempt to read the Path value underneath.Once the Path is read, the DLL that it points to will be loaded via LoadLibrary.
+    Blog : https://www.hexacorn.com/blog/2016/07/28/beyond-good-ol-run-key-part-43/
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\AddIns\TestDVCPlugin" /v Path /t REG_SZ /d "C:\Windows\System32\amsi.dll" /f
+    cleanup_command: |-
+      reg delete "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\AddIns\TestDVCPlugin" /f
+    name: command_prompt
+    elevation_required: true    
