@@ -135,3 +135,20 @@ atomic_tests:
       reg delete "HKLM\Software\Microsoft\Windows\Windows Error Reporting\Hangs" /v Debugger /f
     name: command_prompt
     elevation_required: true
+- name: Load custom DLL on mstsc execution
+  description: |
+    Adding ClxDllPath under Terminal Server Client subkey of HKLM hive with a path to custom DLL allows for DLL loading during execution of mstsc.exe
+  supported_platforms:
+  - windows
+  input_arguments:
+    dll_inf:
+      description: custom DLL to be executed
+      type: Path
+      default: 'C:\Windows\System32\amsi.dll'      
+  executor:
+    command: |
+      reg add "HKLM\SOFTWARE\Microsoft\Terminal Server Client" /v ClxDllPath /t REG_SZ /d "#{dll_inf}" /f
+    cleanup_command: |-
+      reg delete "HKLM\SOFTWARE\Microsoft\Terminal Server Client" /v ClxDllPath /f      
+    name: command_prompt
+    elevation_required: true
