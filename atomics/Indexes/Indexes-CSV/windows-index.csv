@@ -65,6 +65,7 @@ defense-evasion,T1218.004,Signed Binary Proxy Execution: InstallUtil,6,InstallUt
 defense-evasion,T1218.004,Signed Binary Proxy Execution: InstallUtil,7,InstallUtil HelpText method call,5a683850-1145-4326-a0e5-e91ced3c6022,powershell
 defense-evasion,T1218.004,Signed Binary Proxy Execution: InstallUtil,8,InstallUtil evasive invocation,559e6d06-bb42-4307-bff7-3b95a8254bad,powershell
 defense-evasion,T1574.001,Hijack Execution Flow: DLL Search Order Hijacking,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
+defense-evasion,T1574.001,Hijack Execution Flow: DLL Search Order Hijacking,2,Phantom Dll Hijacking - WinAppXRT.dll,46ed938b-c617-429a-88dc-d49b5c9ffedb,command_prompt
 defense-evasion,T1222.001,File and Directory Permissions Modification: Windows File and Directory Permissions Modification,1,Take ownership using takeown utility,98d34bb4-6e75-42ad-9c41-1dae7dc6a001,command_prompt
 defense-evasion,T1222.001,File and Directory Permissions Modification: Windows File and Directory Permissions Modification,2,cacls - Grant permission to specified user or group recursively,a8206bcc-f282-40a9-a389-05d9c0263485,command_prompt
 defense-evasion,T1222.001,File and Directory Permissions Modification: Windows File and Directory Permissions Modification,3,attrib - Remove read-only attribute,bec1e95c-83aa-492e-ab77-60c71bbd21b0,command_prompt
@@ -126,6 +127,7 @@ defense-evasion,T1218,Signed Binary Proxy Execution,12,Lolbas ie4uinit.exe use a
 defense-evasion,T1218,Signed Binary Proxy Execution,13,LOLBAS CustomShellHost to Spawn Process,b1eeb683-90bb-4365-bbc2-2689015782fe,powershell
 defense-evasion,T1218,Signed Binary Proxy Execution,14,Provlaunch.exe Executes Arbitrary Command via Registry Key,ab76e34f-28bf-441f-a39c-8db4835b89cc,command_prompt
 defense-evasion,T1218,Signed Binary Proxy Execution,15,LOLBAS Msedge to Spawn Process,e5eedaed-ad42-4c1e-8783-19529738a349,powershell
+defense-evasion,T1218,Signed Binary Proxy Execution,16,System Binary Proxy Execution - Wlrmdr Lolbin,7816c252-b728-4ea6-a683-bd9441ca0b71,powershell
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,5,Windows - Modify file creation timestamp with PowerShell,b3b2c408-2ff0-4a33-b89b-1cb46a9e6a9c,powershell
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,6,Windows - Modify file last modified timestamp with PowerShell,f8f6634d-93e1-4238-8510-f8a90a20dcf2,powershell
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,7,Windows - Modify file last access timestamp with PowerShell,da627f63-b9bd-4431-b6f8-c5b44d061a62,powershell
@@ -241,6 +243,11 @@ defense-evasion,T1112,Modify Registry,82,Modify EnableNonTPM Registry entry,e672
 defense-evasion,T1112,Modify Registry,83,Modify UsePartialEncryptionKey Registry entry,b5169fd5-85c8-4b2c-a9b6-64cc0b9febef,command_prompt
 defense-evasion,T1112,Modify Registry,84,Modify UsePIN Registry entry,3ac0b30f-532f-43c6-8f01-fb657aaed7e4,command_prompt
 defense-evasion,T1112,Modify Registry,85,Abusing Windows TelemetryController Registry Key for Persistence,4469192c-2d2d-4a3a-9758-1f31d937a92b,command_prompt
+defense-evasion,T1112,Modify Registry,86,Modify RDP-Tcp Initial Program Registry Entry,c691cee2-8d17-4395-b22f-00644c7f1c2d,command_prompt
+defense-evasion,T1112,Modify Registry,87,Abusing MyComputer Disk Cleanup Path for Persistence,f2915249-4485-42e2-96b7-9bf34328d497,command_prompt
+defense-evasion,T1112,Modify Registry,88,Abusing MyComputer Disk Fragmentation Path for Persistence,3235aafe-b49d-451b-a1f1-d979fa65ddaf,command_prompt
+defense-evasion,T1112,Modify Registry,89,Abusing MyComputer Disk Backup Path for Persistence,599f3b5c-0323-44ed-bb63-4551623bf675,command_prompt
+defense-evasion,T1112,Modify Registry,90,Adding custom paths for application execution,573d15da-c34e-4c59-a7d2-18f20d92dfa3,command_prompt
 defense-evasion,T1574.008,Hijack Execution Flow: Path Interception by Search Order Hijacking,1,powerShell Persistence via hijacking default modules - Get-Variable.exe,1561de08-0b4b-498e-8261-e922f3494aae,powershell
 defense-evasion,T1484.001,Domain Policy Modification: Group Policy Modification,1,LockBit Black - Modify Group policy settings -cmd,9ab80952-74ee-43da-a98c-1e740a985f28,command_prompt
 defense-evasion,T1484.001,Domain Policy Modification: Group Policy Modification,2,LockBit Black - Modify Group policy settings -Powershell,b51eae65-5441-4789-b8e8-64783c26c1d1,powershell
@@ -427,6 +434,7 @@ defense-evasion,T1216,Signed Script Proxy Execution,2,manage-bde.wsf Signed Scri
 defense-evasion,T1078.003,Valid Accounts: Local Accounts,1,Create local account with admin privileges,a524ce99-86de-4db6-b4f9-e08f35a47a15,command_prompt
 defense-evasion,T1078.003,Valid Accounts: Local Accounts,6,WinPwn - Loot local Credentials - powerhell kittie,9e9fd066-453d-442f-88c1-ad7911d32912,powershell
 defense-evasion,T1078.003,Valid Accounts: Local Accounts,7,WinPwn - Loot local Credentials - Safetykatz,e9fdb899-a980-4ba4-934b-486ad22e22f4,powershell
+defense-evasion,T1078.003,Valid Accounts: Local Accounts,13,Use PsExec to elevate to NT Authority\SYSTEM account,6904235f-0f55-4039-8aed-41c300ff7733,command_prompt
 defense-evasion,T1127,Trusted Developer Utilities Proxy Execution,1,Lolbin Jsc.exe compile javascript to exe,1ec1c269-d6bd-49e7-b71b-a461f7fa7bc8,command_prompt
 defense-evasion,T1127,Trusted Developer Utilities Proxy Execution,2,Lolbin Jsc.exe compile javascript to dll,3fc9fea2-871d-414d-8ef6-02e85e322b80,command_prompt
 defense-evasion,T1574.012,Hijack Execution Flow: COR_PROFILER,1,User scope COR_PROFILER,9d5f89dc-c3a5-4f8a-a4fc-a6ed02e7cb5a,powershell
@@ -473,6 +481,7 @@ privilege-escalation,T1548.002,Abuse Elevation Control Mechanism: Bypass User Ac
 privilege-escalation,T1574.011,Hijack Execution Flow: Services Registry Permissions Weakness,1,Service Registry Permissions Weakness,f7536d63-7fd4-466f-89da-7e48d550752a,powershell
 privilege-escalation,T1574.011,Hijack Execution Flow: Services Registry Permissions Weakness,2,Service ImagePath Change with reg.exe,f38e9eea-e1d7-4ba6-b716-584791963827,command_prompt
 privilege-escalation,T1547,Boot or Logon Autostart Execution,1,Add a driver,cb01b3da-b0e7-4e24-bf6d-de5223526785,command_prompt
+privilege-escalation,T1547,Boot or Logon Autostart Execution,2,Driver Installation Using pnputil.exe,5cb0b071-8a5a-412f-839d-116beb2ed9f7,powershell
 privilege-escalation,T1547.014,Active Setup,1,HKLM - Add atomic_test key to launch executable as part of user setup,deff4586-0517-49c2-981d-bbea24d48d71,powershell
 privilege-escalation,T1547.014,Active Setup,2,HKLM - Add malicious StubPath value to existing Active Setup Entry,39e417dd-4fed-4d9c-ae3a-ba433b4d0e9a,powershell
 privilege-escalation,T1547.014,Active Setup,3,HKLM - re-execute 'Internet Explorer Core Fonts' StubPath payload by decreasing version number,04d55cef-f283-40ba-ae2a-316bc3b5e78c,powershell
@@ -484,6 +493,7 @@ privilege-escalation,T1543.003,Create or Modify System Process: Windows Service,
 privilege-escalation,T1543.003,Create or Modify System Process: Windows Service,6,Modify Service to Run Arbitrary Binary (Powershell),1f896ce4-8070-4959-8a25-2658856a70c9,powershell
 privilege-escalation,T1547.012,Boot or Logon Autostart Execution: Print Processors,1,Print Processors,f7d38f47-c61b-47cc-a59d-fc0368f47ed0,powershell
 privilege-escalation,T1574.001,Hijack Execution Flow: DLL Search Order Hijacking,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
+privilege-escalation,T1574.001,Hijack Execution Flow: DLL Search Order Hijacking,2,Phantom Dll Hijacking - WinAppXRT.dll,46ed938b-c617-429a-88dc-d49b5c9ffedb,command_prompt
 privilege-escalation,T1055.003,Thread Execution Hijacking,1,Thread Execution Hijacking,578025d5-faa9-4f6d-8390-aae527d503e1,powershell
 privilege-escalation,T1546.011,Event Triggered Execution: Application Shimming,1,Application Shim Installation,9ab27e22-ee62-4211-962b-d36d9a0e6a18,command_prompt
 privilege-escalation,T1546.011,Event Triggered Execution: Application Shimming,2,New shim database files created in the default shim database directory,aefd6866-d753-431f-a7a4-215ca7e3f13d,powershell
@@ -527,6 +537,7 @@ privilege-escalation,T1546.008,Event Triggered Execution: Accessibility Features
 privilege-escalation,T1546.008,Event Triggered Execution: Accessibility Features,2,Replace binary of sticky keys,934e90cf-29ca-48b3-863c-411737ad44e3,command_prompt
 privilege-escalation,T1546.008,Event Triggered Execution: Accessibility Features,3,Create Symbolic Link From osk.exe to cmd.exe,51ef369c-5e87-4f33-88cd-6d61be63edf2,command_prompt
 privilege-escalation,T1546.008,Event Triggered Execution: Accessibility Features,4,Atbroker.exe (AT) Executes Arbitrary Command via Registry Key,444ff124-4c83-4e28-8df6-6efd3ece6bd4,command_prompt
+privilege-escalation,T1546.008,Event Triggered Execution: Accessibility Features,5,Auto-start application on user logon,7125eba8-7b30-426b-9147-781d152be6fb,command_prompt
 privilege-escalation,T1055.004,Process Injection: Asynchronous Procedure Call,1,Process Injection via C#,611b39b7-e243-4c81-87a4-7145a90358b1,command_prompt
 privilege-escalation,T1055.004,Process Injection: Asynchronous Procedure Call,2,EarlyBird APC Queue Injection in Go,73785dd2-323b-4205-ab16-bb6f06677e14,powershell
 privilege-escalation,T1055.004,Process Injection: Asynchronous Procedure Call,3,Remote Process Injection with Go using NtQueueApcThreadEx WinAPI,4cc571b1-f450-414a-850f-879baf36aa06,powershell
@@ -583,6 +594,7 @@ privilege-escalation,T1546,Event Triggered Execution,1,Persistence with Custom A
 privilege-escalation,T1546,Event Triggered Execution,2,HKLM - Persistence using CommandProcessor AutoRun key (With Elevation),a574dafe-a903-4cce-9701-14040f4f3532,powershell
 privilege-escalation,T1546,Event Triggered Execution,3,HKCU - Persistence using CommandProcessor AutoRun key (Without Elevation),36b8dbf9-59b1-4e9b-a3bb-36e80563ef01,powershell
 privilege-escalation,T1546,Event Triggered Execution,4,WMI Invoke-CimMethod Start Process,adae83d3-0df6-45e7-b2c3-575f91584577,powershell
+privilege-escalation,T1546,Event Triggered Execution,5,Adding custom debugger for Windows Error Reporting,17d1a3cc-3373-495a-857a-e5dd005fb302,command_prompt
 privilege-escalation,T1134.005,Access Token Manipulation: SID-History Injection,1,Injection SID-History with mimikatz,6bef32e5-9456-4072-8f14-35566fb85401,command_prompt
 privilege-escalation,T1547.002,Authentication Package,1,Authentication Package,be2590e8-4ac3-47ac-b4b5-945820f2fbe9,powershell
 privilege-escalation,T1546.015,Event Triggered Execution: Component Object Model Hijacking,1,COM Hijacking - InprocServer32,48117158-d7be-441b-bc6a-d9e36e47b52b,powershell
@@ -604,6 +616,7 @@ privilege-escalation,T1546.007,Event Triggered Execution: Netsh Helper DLL,1,Net
 privilege-escalation,T1078.003,Valid Accounts: Local Accounts,1,Create local account with admin privileges,a524ce99-86de-4db6-b4f9-e08f35a47a15,command_prompt
 privilege-escalation,T1078.003,Valid Accounts: Local Accounts,6,WinPwn - Loot local Credentials - powerhell kittie,9e9fd066-453d-442f-88c1-ad7911d32912,powershell
 privilege-escalation,T1078.003,Valid Accounts: Local Accounts,7,WinPwn - Loot local Credentials - Safetykatz,e9fdb899-a980-4ba4-934b-486ad22e22f4,powershell
+privilege-escalation,T1078.003,Valid Accounts: Local Accounts,13,Use PsExec to elevate to NT Authority\SYSTEM account,6904235f-0f55-4039-8aed-41c300ff7733,command_prompt
 privilege-escalation,T1574.012,Hijack Execution Flow: COR_PROFILER,1,User scope COR_PROFILER,9d5f89dc-c3a5-4f8a-a4fc-a6ed02e7cb5a,powershell
 privilege-escalation,T1574.012,Hijack Execution Flow: COR_PROFILER,2,System Scope COR_PROFILER,f373b482-48c8-4ce4-85ed-d40c8b3f7310,powershell
 privilege-escalation,T1574.012,Hijack Execution Flow: COR_PROFILER,3,Registry-free process scope COR_PROFILER,79d57242-bbef-41db-b301-9d01d9f6e817,powershell
@@ -695,6 +708,7 @@ execution,T1569.002,System Services: Service Execution,4,BlackCat pre-encryption
 execution,T1569.002,System Services: Service Execution,5,Use RemCom to execute a command on a remote host,a5d8cdeb-be90-43a9-8b26-cc618deac1e0,command_prompt
 execution,T1569.002,System Services: Service Execution,6,Snake Malware Service Create,b8db787e-dbea-493c-96cb-9272296ddc49,command_prompt
 execution,T1569.002,System Services: Service Execution,7,Modifying ACL of Service Control Manager via SDET,bf07f520-3909-4ef5-aa22-877a50f2f77b,command_prompt
+execution,T1569.002,System Services: Service Execution,8,Pipe Creation - PsExec Tool Execution From Suspicious Locations,004a5d68-627b-452d-af3d-43bd1fc75a3b,powershell
 execution,T1053.002,Scheduled Task/Job: At,1,At.exe Scheduled task,4a6c0dc4-0f2a-4203-9298-a5a9bdc21ed8,command_prompt
 persistence,T1053.005,Scheduled Task/Job: Scheduled Task,1,Scheduled Task Startup Script,fec27f65-db86-4c2d-b66c-61945aee87c2,command_prompt
 persistence,T1053.005,Scheduled Task/Job: Scheduled Task,2,Scheduled task Local,42f53695-ad4a-4546-abb6-7d837f644a71,command_prompt
@@ -712,6 +726,7 @@ persistence,T1542.001,Pre-OS Boot: System Firmware,1,UEFI Persistence via Wpbbin
 persistence,T1574.011,Hijack Execution Flow: Services Registry Permissions Weakness,1,Service Registry Permissions Weakness,f7536d63-7fd4-466f-89da-7e48d550752a,powershell
 persistence,T1574.011,Hijack Execution Flow: Services Registry Permissions Weakness,2,Service ImagePath Change with reg.exe,f38e9eea-e1d7-4ba6-b716-584791963827,command_prompt
 persistence,T1547,Boot or Logon Autostart Execution,1,Add a driver,cb01b3da-b0e7-4e24-bf6d-de5223526785,command_prompt
+persistence,T1547,Boot or Logon Autostart Execution,2,Driver Installation Using pnputil.exe,5cb0b071-8a5a-412f-839d-116beb2ed9f7,powershell
 persistence,T1547.014,Active Setup,1,HKLM - Add atomic_test key to launch executable as part of user setup,deff4586-0517-49c2-981d-bbea24d48d71,powershell
 persistence,T1547.014,Active Setup,2,HKLM - Add malicious StubPath value to existing Active Setup Entry,39e417dd-4fed-4d9c-ae3a-ba433b4d0e9a,powershell
 persistence,T1547.014,Active Setup,3,HKLM - re-execute 'Internet Explorer Core Fonts' StubPath payload by decreasing version number,04d55cef-f283-40ba-ae2a-316bc3b5e78c,powershell
@@ -724,6 +739,7 @@ persistence,T1543.003,Create or Modify System Process: Windows Service,6,Modify 
 persistence,T1137,Office Application Startup,1,Office Application Startup - Outlook as a C2,bfe6ac15-c50b-4c4f-a186-0fc6b8ba936c,command_prompt
 persistence,T1547.012,Boot or Logon Autostart Execution: Print Processors,1,Print Processors,f7d38f47-c61b-47cc-a59d-fc0368f47ed0,powershell
 persistence,T1574.001,Hijack Execution Flow: DLL Search Order Hijacking,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
+persistence,T1574.001,Hijack Execution Flow: DLL Search Order Hijacking,2,Phantom Dll Hijacking - WinAppXRT.dll,46ed938b-c617-429a-88dc-d49b5c9ffedb,command_prompt
 persistence,T1137.006,Office Application Startup: Add-ins,1,Code Executed Via Excel Add-in File (XLL),441b1a0f-a771-428a-8af0-e99e4698cda3,powershell
 persistence,T1137.006,Office Application Startup: Add-ins,2,Persistent Code Execution Via Excel Add-in File (XLL),9c307886-9fef-41d5-b344-073a0f5b2f5f,powershell
 persistence,T1137.006,Office Application Startup: Add-ins,3,Persistent Code Execution Via Word Add-in File (WLL),95408a99-4fa7-4cd6-a7ef-cb65f86351cf,powershell
@@ -769,6 +785,7 @@ persistence,T1546.008,Event Triggered Execution: Accessibility Features,1,Attach
 persistence,T1546.008,Event Triggered Execution: Accessibility Features,2,Replace binary of sticky keys,934e90cf-29ca-48b3-863c-411737ad44e3,command_prompt
 persistence,T1546.008,Event Triggered Execution: Accessibility Features,3,Create Symbolic Link From osk.exe to cmd.exe,51ef369c-5e87-4f33-88cd-6d61be63edf2,command_prompt
 persistence,T1546.008,Event Triggered Execution: Accessibility Features,4,Atbroker.exe (AT) Executes Arbitrary Command via Registry Key,444ff124-4c83-4e28-8df6-6efd3ece6bd4,command_prompt
+persistence,T1546.008,Event Triggered Execution: Accessibility Features,5,Auto-start application on user logon,7125eba8-7b30-426b-9147-781d152be6fb,command_prompt
 persistence,T1136.002,Create Account: Domain Account,1,Create a new Windows domain admin user,fcec2963-9951-4173-9bfa-98d8b7834e62,command_prompt
 persistence,T1136.002,Create Account: Domain Account,2,Create a new account similar to ANONYMOUS LOGON,dc7726d2-8ccb-4cc6-af22-0d5afb53a548,command_prompt
 persistence,T1136.002,Create Account: Domain Account,3,Create a new Domain Account using PowerShell,5a3497a4-1568-4663-b12a-d4a5ed70c7d7,powershell
@@ -813,6 +830,7 @@ persistence,T1546,Event Triggered Execution,1,Persistence with Custom AutodialDL
 persistence,T1546,Event Triggered Execution,2,HKLM - Persistence using CommandProcessor AutoRun key (With Elevation),a574dafe-a903-4cce-9701-14040f4f3532,powershell
 persistence,T1546,Event Triggered Execution,3,HKCU - Persistence using CommandProcessor AutoRun key (Without Elevation),36b8dbf9-59b1-4e9b-a3bb-36e80563ef01,powershell
 persistence,T1546,Event Triggered Execution,4,WMI Invoke-CimMethod Start Process,adae83d3-0df6-45e7-b2c3-575f91584577,powershell
+persistence,T1546,Event Triggered Execution,5,Adding custom debugger for Windows Error Reporting,17d1a3cc-3373-495a-857a-e5dd005fb302,command_prompt
 persistence,T1547.002,Authentication Package,1,Authentication Package,be2590e8-4ac3-47ac-b4b5-945820f2fbe9,powershell
 persistence,T1546.015,Event Triggered Execution: Component Object Model Hijacking,1,COM Hijacking - InprocServer32,48117158-d7be-441b-bc6a-d9e36e47b52b,powershell
 persistence,T1546.015,Event Triggered Execution: Component Object Model Hijacking,2,Powershell Execute COM Object,752191b1-7c71-445c-9dbe-21bb031b18eb,powershell
@@ -836,6 +854,7 @@ persistence,T1546.007,Event Triggered Execution: Netsh Helper DLL,1,Netsh Helper
 persistence,T1078.003,Valid Accounts: Local Accounts,1,Create local account with admin privileges,a524ce99-86de-4db6-b4f9-e08f35a47a15,command_prompt
 persistence,T1078.003,Valid Accounts: Local Accounts,6,WinPwn - Loot local Credentials - powerhell kittie,9e9fd066-453d-442f-88c1-ad7911d32912,powershell
 persistence,T1078.003,Valid Accounts: Local Accounts,7,WinPwn - Loot local Credentials - Safetykatz,e9fdb899-a980-4ba4-934b-486ad22e22f4,powershell
+persistence,T1078.003,Valid Accounts: Local Accounts,13,Use PsExec to elevate to NT Authority\SYSTEM account,6904235f-0f55-4039-8aed-41c300ff7733,command_prompt
 persistence,T1574.012,Hijack Execution Flow: COR_PROFILER,1,User scope COR_PROFILER,9d5f89dc-c3a5-4f8a-a4fc-a6ed02e7cb5a,powershell
 persistence,T1574.012,Hijack Execution Flow: COR_PROFILER,2,System Scope COR_PROFILER,f373b482-48c8-4ce4-85ed-d40c8b3f7310,powershell
 persistence,T1574.012,Hijack Execution Flow: COR_PROFILER,3,Registry-free process scope COR_PROFILER,79d57242-bbef-41db-b301-9d01d9f6e817,powershell
@@ -1182,6 +1201,8 @@ discovery,T1217,Browser Bookmark Discovery,5,List Google Chrome / Opera Bookmark
 discovery,T1217,Browser Bookmark Discovery,6,List Google Chrome / Edge Chromium Bookmarks on Windows with command prompt,76f71e2f-480e-4bed-b61e-398fe17499d5,command_prompt
 discovery,T1217,Browser Bookmark Discovery,7,List Mozilla Firefox bookmarks on Windows with command prompt,4312cdbc-79fc-4a9c-becc-53d49c734bc5,command_prompt
 discovery,T1217,Browser Bookmark Discovery,8,List Internet Explorer Bookmarks using the command prompt,727dbcdb-e495-4ab1-a6c4-80c7f77aef85,command_prompt
+discovery,T1217,Browser Bookmark Discovery,10,Extract Edge Browsing History,74094120-e1f5-47c9-b162-a418a0f624d5,powershell
+discovery,T1217,Browser Bookmark Discovery,11,Extract chrome Browsing History,cfe6315c-4945-40f7-b5a4-48f7af2262af,powershell
 discovery,T1016,System Network Configuration Discovery,1,System Network Configuration Discovery on Windows,970ab6a1-0157-4f3f-9a73-ec4166754b23,command_prompt
 discovery,T1016,System Network Configuration Discovery,2,List Windows Firewall Rules,038263cb-00f4-4b0a-98ae-0696c67e1752,command_prompt
 discovery,T1016,System Network Configuration Discovery,4,System Network Configuration Discovery (TrickBot Style),dafaf052-5508-402d-bf77-51e0700c02e2,command_prompt
@@ -1227,6 +1248,7 @@ discovery,T1201,Password Policy Discovery,11,Use of SecEdit.exe to export the lo
 discovery,T1614.001,System Location Discovery: System Language Discovery,1,Discover System Language by Registry Query,631d4cf1-42c9-4209-8fe9-6bd4de9421be,command_prompt
 discovery,T1614.001,System Location Discovery: System Language Discovery,2,Discover System Language with chcp,d91473ca-944e-477a-b484-0e80217cd789,command_prompt
 discovery,T1614.001,System Location Discovery: System Language Discovery,7,Discover System Language with dism.exe,69f625ba-938f-4900-bdff-82ada3df5d9c,command_prompt
+discovery,T1614.001,System Location Discovery: System Language Discovery,8,Discover System Language by Windows API Query,e39b99e9-ce7f-4b24-9c88-0fbad069e6c6,command_prompt
 discovery,T1012,Query Registry,1,Query Registry,8f7578c4-9863-4d83-875c-a565573bbdf0,command_prompt
 discovery,T1012,Query Registry,2,Query Registry with Powershell cmdlets,0434d081-bb32-42ce-bcbb-3548e4f2628f,powershell
 discovery,T1012,Query Registry,3,Enumerate COM Objects in Registry with Powershell,0d80d088-a84c-4353-af1a-fc8b439f1564,powershell
@@ -1312,6 +1334,7 @@ initial-access,T1078.001,Valid Accounts: Default Accounts,2,Activate Guest Accou
 initial-access,T1078.003,Valid Accounts: Local Accounts,1,Create local account with admin privileges,a524ce99-86de-4db6-b4f9-e08f35a47a15,command_prompt
 initial-access,T1078.003,Valid Accounts: Local Accounts,6,WinPwn - Loot local Credentials - powerhell kittie,9e9fd066-453d-442f-88c1-ad7911d32912,powershell
 initial-access,T1078.003,Valid Accounts: Local Accounts,7,WinPwn - Loot local Credentials - Safetykatz,e9fdb899-a980-4ba4-934b-486ad22e22f4,powershell
+initial-access,T1078.003,Valid Accounts: Local Accounts,13,Use PsExec to elevate to NT Authority\SYSTEM account,6904235f-0f55-4039-8aed-41c300ff7733,command_prompt
 exfiltration,T1020,Automated Exfiltration,1,IcedID Botnet HTTP PUT,9c780d3d-3a14-4278-8ee5-faaeb2ccfbe0,powershell
 exfiltration,T1020,Automated Exfiltration,2,Exfiltration via Encrypted FTP,5b380e96-b0ef-4072-8a8e-f194cb9eb9ac,powershell
 exfiltration,T1048.002,Exfiltration Over Alternative Protocol - Exfiltration Over Asymmetric Encrypted Non-C2 Protocol,1,Exfiltrate data HTTPS using curl windows,1cdf2fb0-51b6-4fd8-96af-77020d5f1bf0,command_prompt

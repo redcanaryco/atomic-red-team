@@ -207,3 +207,24 @@ atomic_tests:
       sc.exe sdset scmanager D:(A;;KA;;;WD)
     name: command_prompt
     elevation_required: true    
+- name: Pipe Creation - PsExec Tool Execution From Suspicious Locations
+  auto_generated_guid: 004a5d68-627b-452d-af3d-43bd1fc75a3b
+  description: Requires PsExec tool installed. BlackCat Ransomeware tried to propagate by creating pipe using PsExec process executing from suspicious locations (In the particular case the legitimate PsExec executable is embedded within the Windows variant and is dropped in the victim’s %TEMP% directory). pon successful execution, PsExec will be executed from suspicious location and create a new pipe to execute CMD.
+  supported_platforms:
+  - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+     PsExec tool from Sysinternals must exist in the '\Users\Public\Temp\' directory
+    prereq_command: |
+     if (Get-ChildItem -Path C:\ -Include *psexec* -File -Recurse -ErrorAction SilentlyContinue) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory "C:\Users\Public\Temp\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "C:\Users\Public\Temp\PSTools.zip"
+      Expand-Archive "C:\Users\Public\Temp\PsTools.zip" "C:\Users\Public\Temp\" -Force
+  executor:
+    command: |-
+      cd C:\Users\Public\Temp\ 
+      .\PsExec.exe -i -s cmd  -accepteula
+    name: powershell
+    elevation_required: true
