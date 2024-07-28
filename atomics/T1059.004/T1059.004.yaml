@@ -263,9 +263,7 @@ atomic_tests:
   - linux
   - macos
   executor:
-    command: |-
-      cpan
-      ! exec '/bin/bash &'
+    command: echo '! exec "/bin/sh &"' | PERL_MM_USE_DEFAULT=1  cpan
     name: sh
     elevation_required: false
 - name: Shell Creation using busybox command
