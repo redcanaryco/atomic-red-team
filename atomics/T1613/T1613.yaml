@@ -26,8 +26,8 @@ atomic_tests:
       docker stats --no-stream
       docker inspect $(docker ps -l -q --filter ancestor=t1613)
     cleanup_command: |-
-      docker stop t1613_container
-      docker rmi -f t1613_container
+      docker stop t1613_container && docker rm t1613_container
+      docker rmi -f t1613
     name: sh
 
 - name: Podman Container and Resource Discovery
