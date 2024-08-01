@@ -29395,6 +29395,18 @@ execution:
       executor:
         command: awk 'BEGIN {system("/bin/sh &")}'
         name: sh
+    - name: Creating shell using cpan command
+      auto_generated_guid: bcd4c2bc-490b-4f91-bd31-3709fe75bbdf
+      description: |-
+        cpan lets you execute perl commands with the ! command. It can be used to break out from restricted environments by spawning an interactive system shell.
+        Reference - https://gtfobins.github.io/gtfobins/cpan/
+      supported_platforms:
+      - linux
+      - macos
+      executor:
+        command: echo '! exec "/bin/sh &"' | PERL_MM_USE_DEFAULT=1  cpan
+        name: sh
+        elevation_required: false
   T1559:
     technique:
       x_mitre_platforms:

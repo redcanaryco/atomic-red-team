@@ -737,6 +737,8 @@
   - Atomic Test #12: Detecting pipe-to-shell [linux]
   - Atomic Test #13: Current kernel information enumeration [linux]
   - Atomic Test #14: Shell Creation using awk command [linux, macos]
+  - Atomic Test #15: Creating shell using cpan command [linux, macos]
+  - Atomic Test #16: Shell Creation using busybox command [linux]
 - T1559 Inter-Process Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1203 Exploitation for Client Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1059.006 Command and Scripting Interpreter: Python](../../T1059.006/T1059.006.md)
