@@ -173,11 +173,6 @@ atomic_tests:
   description: Attackers may try to obtain a list of services that are operating on remote hosts and local network infrastructure devices, in order to identify potential vulnerabilities that can be exploited through remote software attacks. They typically use tools to conduct port and vulnerability scans in order to obtain this information.
   supported_platforms:
   - containers
-  input_arguments:
-    dockerfile_path:
-      description: Path of the dockerfile.
-      type: string
-      default: PathToAtomicsFolder/T1046/src/
   dependency_executor_name: sh
   dependencies:
   - description: Verify docker is installed.
@@ -193,7 +188,7 @@ atomic_tests:
       sudo systemctl start docker
   executor:
     command: |-
-      docker build -t t1046 #{dockerfile_path}
+      docker build -t t1046 $PathToAtomicsFolder/T1046/src/
       docker run --name t1046_container --rm -d -t t1046
       docker exec t1046_container /scan.sh
     cleanup_command: |-
