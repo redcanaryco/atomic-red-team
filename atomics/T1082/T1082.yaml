@@ -527,4 +527,14 @@ atomic_tests:
     command: sysctl -n hw.model
     name: sh
     elevation_required: false
-  
+- name: 'operating system discovery '
+  description: |-
+    operating system discovery using get-ciminstance
+    https://petri.com/getting-operating-system-information-powershell/
+  supported_platforms:
+  - windows
+  executor:
+    command: Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version, ServicePackMajorVersion, OSArchitecture, CSName, WindowsDirectory | Out-null
+    name: powershell
+    elevation_required: false
+    
