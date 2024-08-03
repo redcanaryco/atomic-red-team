@@ -40,3 +40,17 @@ atomic_tests:
     cleanup_command: |
       taskkill /im #{browser} /f
     name: command_prompt
+- name: Hidden Window-Conhost Execution
+  description: |
+    Launch conhost.exe in "headless" mode, it means that no visible window will pop up on the victim's machine. 
+    This could be a sign of "conhost" usage as a LOLBIN or potential process injection activity.
+    conhost.exe can be used as proxy the execution of arbitrary commands
+  supported_platforms:
+    - windows
+  executor:
+    command: |
+      conhost.exe --headless calc.exe
+    cleanup_command: |
+      Stop-Process -Name calc*
+    name: powershell
+    elevation_required: true
