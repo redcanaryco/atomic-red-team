@@ -21,13 +21,13 @@ atomic_tests:
   executor:
     command: |-
       docker build -t t1613 $PathtoAtomicsFolder/T1613/src/
-      docker run --name t1613_container -d -t t1613
+      docker run --name t1613_container --rm -d -t t1613
       docker ps
       docker stats --no-stream
       docker inspect $(docker ps -l -q --filter ancestor=t1613)
     cleanup_command: |-
       docker stop t1613_container
-      docker rmi -f t1613_container
+      docker rmi -f t1613
     name: sh
 
 - name: Podman Container and Resource Discovery
@@ -50,11 +50,11 @@ atomic_tests:
   executor:
     command: |-
       podman build -t t1613 $PathtoAtomicsFolder/T1613/src/
-      podman run --name t1613_container -d -t t1613
+      podman run --name t1613_container --rm -d -t t1613
       podman ps
       podman stats --no-stream
       podman inspect $(podman ps -l -q --filter ancestor=t1613)
     cleanup_command: |-
       podman stop t1613_container
-      podman rmi -f t1613_container
+      podman rmi -f t1613
     name: sh
