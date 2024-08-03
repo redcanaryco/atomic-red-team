@@ -805,7 +805,8 @@
   - Atomic Test #3: HKCU - Persistence using CommandProcessor AutoRun key (Without Elevation) [windows]
   - Atomic Test #4: WMI Invoke-CimMethod Start Process [windows]
   - Atomic Test #5: Adding custom debugger for Windows Error Reporting [windows]
-  - Atomic Test #6: Persistence using automatic execution of custom DLL during RDP session [windows]
+  - Atomic Test #6: Load custom DLL on mstsc execution [windows]
+  - Atomic Test #7: Persistence using automatic execution of custom DLL during RDP session [windows]
 - [T1134.005 Access Token Manipulation: SID-History Injection](../../T1134.005/T1134.005.md)
   - Atomic Test #1: Injection SID-History with mimikatz [windows]
 - [T1547.002 Authentication Package](../../T1547.002/T1547.002.md)
@@ -1153,7 +1154,8 @@
   - Atomic Test #3: HKCU - Persistence using CommandProcessor AutoRun key (Without Elevation) [windows]
   - Atomic Test #4: WMI Invoke-CimMethod Start Process [windows]
   - Atomic Test #5: Adding custom debugger for Windows Error Reporting [windows]
-  - Atomic Test #6: Persistence using automatic execution of custom DLL during RDP session [windows]
+  - Atomic Test #6: Load custom DLL on mstsc execution [windows]
+  - Atomic Test #7: Persistence using automatic execution of custom DLL during RDP session [windows]
 - [T1547.002 Authentication Package](../../T1547.002/T1547.002.md)
   - Atomic Test #1: Authentication Package [windows]
 - [T1546.015 Event Triggered Execution: Component Object Model Hijacking](../../T1546.015/T1546.015.md)
