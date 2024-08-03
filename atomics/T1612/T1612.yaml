@@ -22,7 +22,7 @@ atomic_tests:
   executor:
     command: |-
       docker build -t t1612  $PathtoAtomicsFolder/T1612/src/
-      docker run --name t1612_container  -d -t t1612
+      docker run --name t1612_container --rm -d -t t1612
       docker exec t1612_container ./test.sh
     cleanup_command: |-
       docker stop t1612_container

@@ -715,7 +715,7 @@
   - Atomic Test #2: Azure - Eventhub Deletion [iaas:azure]
   - Atomic Test #3: Office 365 - Exchange Audit Log Disabled [office-365]
   - Atomic Test #4: AWS - Disable CloudTrail Logging Through Event Selectors using Stratus [linux, macos, iaas:aws]
-  - Atomic Test #5: AWS - CloudTrail Logs Impairment Through S3 Lifecycle Rule using Stratus [linux, macos]
+  - Atomic Test #5: AWS - CloudTrail Logs Impairment Through S3 Lifecycle Rule using Stratus [linux, macos, iaas:aws]
   - Atomic Test #6: AWS - Remove VPC Flow Logs using Stratus [linux, macos, iaas:aws]
   - Atomic Test #7: AWS - CloudWatch Log Group Deletes [iaas:aws]
   - Atomic Test #8: AWS CloudWatch Log Stream Deletes [iaas:aws]
@@ -1345,6 +1345,8 @@
   - Atomic Test #12: Detecting pipe-to-shell [linux]
   - Atomic Test #13: Current kernel information enumeration [linux]
   - Atomic Test #14: Shell Creation using awk command [linux, macos]
+  - Atomic Test #15: Creating shell using cpan command [linux, macos]
+  - Atomic Test #16: Shell Creation using busybox command [linux]
 - [T1559 Inter-Process Communication](../../T1559/T1559.md)
   - Atomic Test #1: Cobalt Strike Artifact Kit pipe [windows]
   - Atomic Test #2: Cobalt Strike Lateral Movement (psexec_psh) pipe [windows]
