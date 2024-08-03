@@ -593,6 +593,7 @@ defense-evasion,T1550.002,Use Alternate Authentication Material: Pass the Hash,2
 defense-evasion,T1550.002,Use Alternate Authentication Material: Pass the Hash,3,Invoke-WMIExec Pass the Hash,f8757545-b00a-4e4e-8cfb-8cfb961ee713,powershell
 defense-evasion,T1574.002,Hijack Execution Flow: DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
 defense-evasion,T1574.002,Hijack Execution Flow: DLL Side-Loading,2,DLL Side-Loading using the dotnet startup hook environment variable,d322cdd7-7d60-46e3-9111-648848da7c02,command_prompt
+defense-evasion,T1574.002,Hijack Execution Flow: DLL Side-Loading,3,"DLL Search Order Hijacking,DLL Sideloading Of KeyScramblerIE.DLL Via KeyScrambler.EXE",c095ad8e-4469-4d33-be9d-6f6d1fb21585,powershell
 defense-evasion,T1027.007,Obfuscated Files or Information: Dynamic API Resolution,1,Dynamic API Resolution-Ninja-syscall,578025d5-faa9-4f6d-8390-aae739d507e1,powershell
 defense-evasion,T1055.015,Process Injection: ListPlanting,1,Process injection ListPlanting,4f3c7502-b111-4dfe-8a6e-529307891a59,powershell
 defense-evasion,T1220,XSL Script Processing,1,MSXSL Bypass using local files,ca23bfb2-023f-49c5-8802-e66997de462d,command_prompt
@@ -853,6 +854,7 @@ privilege-escalation,T1546,Event Triggered Execution,2,HKLM - Persistence using 
 privilege-escalation,T1546,Event Triggered Execution,3,HKCU - Persistence using CommandProcessor AutoRun key (Without Elevation),36b8dbf9-59b1-4e9b-a3bb-36e80563ef01,powershell
 privilege-escalation,T1546,Event Triggered Execution,4,WMI Invoke-CimMethod Start Process,adae83d3-0df6-45e7-b2c3-575f91584577,powershell
 privilege-escalation,T1546,Event Triggered Execution,5,Adding custom debugger for Windows Error Reporting,17d1a3cc-3373-495a-857a-e5dd005fb302,command_prompt
+privilege-escalation,T1546,Event Triggered Execution,6,Persistence using automatic execution of custom DLL during RDP session,b7fc4c3f-fe6e-479a-ba27-ef91b88536e3,command_prompt
 privilege-escalation,T1546.004,Event Triggered Execution: .bash_profile .bashrc and .shrc,1,Add command to .bash_profile,94500ae1-7e31-47e3-886b-c328da46872f,sh
 privilege-escalation,T1546.004,Event Triggered Execution: .bash_profile .bashrc and .shrc,2,Add command to .bashrc,0a898315-4cfa-4007-bafe-33a4646d115f,sh
 privilege-escalation,T1546.004,Event Triggered Execution: .bash_profile .bashrc and .shrc,3,Add command to .shrc,41502021-591a-4649-8b6e-83c9192aff53,sh
@@ -886,6 +888,7 @@ privilege-escalation,T1547.007,Boot or Logon Autostart Execution: Re-opened Appl
 privilege-escalation,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,3,Append to existing loginwindow for Re-Opened Applications,766b6c3c-9353-4033-8b7e-38b309fa3a93,sh
 privilege-escalation,T1574.002,Hijack Execution Flow: DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
 privilege-escalation,T1574.002,Hijack Execution Flow: DLL Side-Loading,2,DLL Side-Loading using the dotnet startup hook environment variable,d322cdd7-7d60-46e3-9111-648848da7c02,command_prompt
+privilege-escalation,T1574.002,Hijack Execution Flow: DLL Side-Loading,3,"DLL Search Order Hijacking,DLL Sideloading Of KeyScramblerIE.DLL Via KeyScrambler.EXE",c095ad8e-4469-4d33-be9d-6f6d1fb21585,powershell
 privilege-escalation,T1098.002,Account Manipulation: Additional Email Delegate Permissions,1,EXO - Full access mailbox permission granted to a user,17d046be-fdd0-4cbb-b5c7-55c85d9d0714,powershell
 privilege-escalation,T1037.001,Boot or Logon Initialization Scripts: Logon Script (Windows),1,Logon Scripts,d6042746-07d4-4c92-9ad8-e644c114a231,command_prompt
 privilege-escalation,T1055.015,Process Injection: ListPlanting,1,Process injection ListPlanting,4f3c7502-b111-4dfe-8a6e-529307891a59,powershell
@@ -1010,6 +1013,8 @@ execution,T1059.004,Command and Scripting Interpreter: Bash,11,Environment varia
 execution,T1059.004,Command and Scripting Interpreter: Bash,12,Detecting pipe-to-shell,fca246a8-a585-4f28-a2df-6495973976a1,sh
 execution,T1059.004,Command and Scripting Interpreter: Bash,13,Current kernel information enumeration,3a53734a-9e26-4f4b-ad15-059e767f5f14,sh
 execution,T1059.004,Command and Scripting Interpreter: Bash,14,Shell Creation using awk command,ee72b37d-b8f5-46a5-a9e7-0ff50035ffd5,sh
+execution,T1059.004,Command and Scripting Interpreter: Bash,15,Creating shell using cpan command,bcd4c2bc-490b-4f91-bd31-3709fe75bbdf,sh
+execution,T1059.004,Command and Scripting Interpreter: Bash,16,Shell Creation using busybox command,ab4d04af-68dc-4fee-9c16-6545265b3276,sh
 execution,T1559,Inter-Process Communication,1,Cobalt Strike Artifact Kit pipe,bd13b9fc-b758-496a-b81a-397462f82c72,command_prompt
 execution,T1559,Inter-Process Communication,2,Cobalt Strike Lateral Movement (psexec_psh) pipe,830c8b6c-7a70-4f40-b975-8bbe74558acd,command_prompt
 execution,T1559,Inter-Process Communication,3,Cobalt Strike SSH (postex_ssh) pipe,d1f72fa0-5bc2-4b4b-bd1e-43b6e8cfb2e6,command_prompt
@@ -1213,6 +1218,7 @@ persistence,T1546,Event Triggered Execution,2,HKLM - Persistence using CommandPr
 persistence,T1546,Event Triggered Execution,3,HKCU - Persistence using CommandProcessor AutoRun key (Without Elevation),36b8dbf9-59b1-4e9b-a3bb-36e80563ef01,powershell
 persistence,T1546,Event Triggered Execution,4,WMI Invoke-CimMethod Start Process,adae83d3-0df6-45e7-b2c3-575f91584577,powershell
 persistence,T1546,Event Triggered Execution,5,Adding custom debugger for Windows Error Reporting,17d1a3cc-3373-495a-857a-e5dd005fb302,command_prompt
+persistence,T1546,Event Triggered Execution,6,Persistence using automatic execution of custom DLL during RDP session,b7fc4c3f-fe6e-479a-ba27-ef91b88536e3,command_prompt
 persistence,T1546.004,Event Triggered Execution: .bash_profile .bashrc and .shrc,1,Add command to .bash_profile,94500ae1-7e31-47e3-886b-c328da46872f,sh
 persistence,T1546.004,Event Triggered Execution: .bash_profile .bashrc and .shrc,2,Add command to .bashrc,0a898315-4cfa-4007-bafe-33a4646d115f,sh
 persistence,T1546.004,Event Triggered Execution: .bash_profile .bashrc and .shrc,3,Add command to .shrc,41502021-591a-4649-8b6e-83c9192aff53,sh
@@ -1250,6 +1256,7 @@ persistence,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,
 persistence,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,3,Append to existing loginwindow for Re-Opened Applications,766b6c3c-9353-4033-8b7e-38b309fa3a93,sh
 persistence,T1574.002,Hijack Execution Flow: DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
 persistence,T1574.002,Hijack Execution Flow: DLL Side-Loading,2,DLL Side-Loading using the dotnet startup hook environment variable,d322cdd7-7d60-46e3-9111-648848da7c02,command_prompt
+persistence,T1574.002,Hijack Execution Flow: DLL Side-Loading,3,"DLL Search Order Hijacking,DLL Sideloading Of KeyScramblerIE.DLL Via KeyScrambler.EXE",c095ad8e-4469-4d33-be9d-6f6d1fb21585,powershell
 persistence,T1098.002,Account Manipulation: Additional Email Delegate Permissions,1,EXO - Full access mailbox permission granted to a user,17d046be-fdd0-4cbb-b5c7-55c85d9d0714,powershell
 persistence,T1037.001,Boot or Logon Initialization Scripts: Logon Script (Windows),1,Logon Scripts,d6042746-07d4-4c92-9ad8-e644c114a231,command_prompt
 persistence,T1137.002,Office Application Startup: Office Test,1,Office Application Startup Test Persistence (HKCU),c3e35b58-fe1c-480b-b540-7600fb612563,powershell

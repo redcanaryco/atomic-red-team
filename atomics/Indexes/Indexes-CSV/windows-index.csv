@@ -411,6 +411,7 @@ defense-evasion,T1550.002,Use Alternate Authentication Material: Pass the Hash,2
 defense-evasion,T1550.002,Use Alternate Authentication Material: Pass the Hash,3,Invoke-WMIExec Pass the Hash,f8757545-b00a-4e4e-8cfb-8cfb961ee713,powershell
 defense-evasion,T1574.002,Hijack Execution Flow: DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
 defense-evasion,T1574.002,Hijack Execution Flow: DLL Side-Loading,2,DLL Side-Loading using the dotnet startup hook environment variable,d322cdd7-7d60-46e3-9111-648848da7c02,command_prompt
+defense-evasion,T1574.002,Hijack Execution Flow: DLL Side-Loading,3,"DLL Search Order Hijacking,DLL Sideloading Of KeyScramblerIE.DLL Via KeyScrambler.EXE",c095ad8e-4469-4d33-be9d-6f6d1fb21585,powershell
 defense-evasion,T1027.007,Obfuscated Files or Information: Dynamic API Resolution,1,Dynamic API Resolution-Ninja-syscall,578025d5-faa9-4f6d-8390-aae739d507e1,powershell
 defense-evasion,T1055.015,Process Injection: ListPlanting,1,Process injection ListPlanting,4f3c7502-b111-4dfe-8a6e-529307891a59,powershell
 defense-evasion,T1220,XSL Script Processing,1,MSXSL Bypass using local files,ca23bfb2-023f-49c5-8802-e66997de462d,command_prompt
@@ -595,6 +596,7 @@ privilege-escalation,T1546,Event Triggered Execution,2,HKLM - Persistence using 
 privilege-escalation,T1546,Event Triggered Execution,3,HKCU - Persistence using CommandProcessor AutoRun key (Without Elevation),36b8dbf9-59b1-4e9b-a3bb-36e80563ef01,powershell
 privilege-escalation,T1546,Event Triggered Execution,4,WMI Invoke-CimMethod Start Process,adae83d3-0df6-45e7-b2c3-575f91584577,powershell
 privilege-escalation,T1546,Event Triggered Execution,5,Adding custom debugger for Windows Error Reporting,17d1a3cc-3373-495a-857a-e5dd005fb302,command_prompt
+privilege-escalation,T1546,Event Triggered Execution,6,Persistence using automatic execution of custom DLL during RDP session,b7fc4c3f-fe6e-479a-ba27-ef91b88536e3,command_prompt
 privilege-escalation,T1134.005,Access Token Manipulation: SID-History Injection,1,Injection SID-History with mimikatz,6bef32e5-9456-4072-8f14-35566fb85401,command_prompt
 privilege-escalation,T1547.002,Authentication Package,1,Authentication Package,be2590e8-4ac3-47ac-b4b5-945820f2fbe9,powershell
 privilege-escalation,T1546.015,Event Triggered Execution: Component Object Model Hijacking,1,COM Hijacking - InprocServer32,48117158-d7be-441b-bc6a-d9e36e47b52b,powershell
@@ -606,6 +608,7 @@ privilege-escalation,T1546.010,Event Triggered Execution: AppInit DLLs,1,Install
 privilege-escalation,T1546.002,Event Triggered Execution: Screensaver,1,Set Arbitrary Binary as Screensaver,281201e7-de41-4dc9-b73d-f288938cbb64,command_prompt
 privilege-escalation,T1574.002,Hijack Execution Flow: DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
 privilege-escalation,T1574.002,Hijack Execution Flow: DLL Side-Loading,2,DLL Side-Loading using the dotnet startup hook environment variable,d322cdd7-7d60-46e3-9111-648848da7c02,command_prompt
+privilege-escalation,T1574.002,Hijack Execution Flow: DLL Side-Loading,3,"DLL Search Order Hijacking,DLL Sideloading Of KeyScramblerIE.DLL Via KeyScrambler.EXE",c095ad8e-4469-4d33-be9d-6f6d1fb21585,powershell
 privilege-escalation,T1037.001,Boot or Logon Initialization Scripts: Logon Script (Windows),1,Logon Scripts,d6042746-07d4-4c92-9ad8-e644c114a231,command_prompt
 privilege-escalation,T1055.015,Process Injection: ListPlanting,1,Process injection ListPlanting,4f3c7502-b111-4dfe-8a6e-529307891a59,powershell
 privilege-escalation,T1547.008,Boot or Logon Autostart Execution: LSASS Driver,1,Modify Registry to load Arbitrary DLL into LSASS - LsaDbExtPt,8ecef16d-d289-46b4-917b-0dba6dc81cf1,powershell
@@ -831,6 +834,7 @@ persistence,T1546,Event Triggered Execution,2,HKLM - Persistence using CommandPr
 persistence,T1546,Event Triggered Execution,3,HKCU - Persistence using CommandProcessor AutoRun key (Without Elevation),36b8dbf9-59b1-4e9b-a3bb-36e80563ef01,powershell
 persistence,T1546,Event Triggered Execution,4,WMI Invoke-CimMethod Start Process,adae83d3-0df6-45e7-b2c3-575f91584577,powershell
 persistence,T1546,Event Triggered Execution,5,Adding custom debugger for Windows Error Reporting,17d1a3cc-3373-495a-857a-e5dd005fb302,command_prompt
+persistence,T1546,Event Triggered Execution,6,Persistence using automatic execution of custom DLL during RDP session,b7fc4c3f-fe6e-479a-ba27-ef91b88536e3,command_prompt
 persistence,T1547.002,Authentication Package,1,Authentication Package,be2590e8-4ac3-47ac-b4b5-945820f2fbe9,powershell
 persistence,T1546.015,Event Triggered Execution: Component Object Model Hijacking,1,COM Hijacking - InprocServer32,48117158-d7be-441b-bc6a-d9e36e47b52b,powershell
 persistence,T1546.015,Event Triggered Execution: Component Object Model Hijacking,2,Powershell Execute COM Object,752191b1-7c71-445c-9dbe-21bb031b18eb,powershell
@@ -846,6 +850,7 @@ persistence,T1546.010,Event Triggered Execution: AppInit DLLs,1,Install AppInit 
 persistence,T1546.002,Event Triggered Execution: Screensaver,1,Set Arbitrary Binary as Screensaver,281201e7-de41-4dc9-b73d-f288938cbb64,command_prompt
 persistence,T1574.002,Hijack Execution Flow: DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
 persistence,T1574.002,Hijack Execution Flow: DLL Side-Loading,2,DLL Side-Loading using the dotnet startup hook environment variable,d322cdd7-7d60-46e3-9111-648848da7c02,command_prompt
+persistence,T1574.002,Hijack Execution Flow: DLL Side-Loading,3,"DLL Search Order Hijacking,DLL Sideloading Of KeyScramblerIE.DLL Via KeyScrambler.EXE",c095ad8e-4469-4d33-be9d-6f6d1fb21585,powershell
 persistence,T1037.001,Boot or Logon Initialization Scripts: Logon Script (Windows),1,Logon Scripts,d6042746-07d4-4c92-9ad8-e644c114a231,command_prompt
 persistence,T1137.002,Office Application Startup: Office Test,1,Office Application Startup Test Persistence (HKCU),c3e35b58-fe1c-480b-b540-7600fb612563,powershell
 persistence,T1547.008,Boot or Logon Autostart Execution: LSASS Driver,1,Modify Registry to load Arbitrary DLL into LSASS - LsaDbExtPt,8ecef16d-d289-46b4-917b-0dba6dc81cf1,powershell
