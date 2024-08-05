@@ -569,6 +569,7 @@ defense-evasion,T1562.008,Impair Defenses: Disable Cloud Logs,9,Office 365 - Set
 defense-evasion,T1562.008,Impair Defenses: Disable Cloud Logs,10,GCP - Delete Activity Event Log,d56152ec-01d9-42a2-877c-aac1f6ebe8e6,sh
 defense-evasion,T1564.003,Hide Artifacts: Hidden Window,1,Hidden Window,f151ee37-9e2b-47e6-80e4-550b9f999b7a,powershell
 defense-evasion,T1564.003,Hide Artifacts: Hidden Window,2,Headless Browser Accessing Mockbin,0ad9ab92-c48c-4f08-9b20-9633277c4646,command_prompt
+defense-evasion,T1564.003,Hide Artifacts: Hidden Window,3,Hidden Window-Conhost Execution,5510d22f-2595-4911-8456-4d630c978616,powershell
 defense-evasion,T1027.006,HTML Smuggling,1,HTML Smuggling Remote Payload,30cbeda4-08d9-42f1-8685-197fad677734,powershell
 defense-evasion,T1070.004,Indicator Removal on Host: File Deletion,1,Delete a single file - FreeBSD/Linux/macOS,562d737f-2fc6-4b09-8c2a-7f8ff0828480,sh
 defense-evasion,T1070.004,Indicator Removal on Host: File Deletion,2,Delete an entire folder - FreeBSD/Linux/macOS,a415f17e-ce8d-4ce2-a8b4-83b674e7017e,sh
@@ -593,6 +594,7 @@ defense-evasion,T1550.002,Use Alternate Authentication Material: Pass the Hash,2
 defense-evasion,T1550.002,Use Alternate Authentication Material: Pass the Hash,3,Invoke-WMIExec Pass the Hash,f8757545-b00a-4e4e-8cfb-8cfb961ee713,powershell
 defense-evasion,T1574.002,Hijack Execution Flow: DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
 defense-evasion,T1574.002,Hijack Execution Flow: DLL Side-Loading,2,DLL Side-Loading using the dotnet startup hook environment variable,d322cdd7-7d60-46e3-9111-648848da7c02,command_prompt
+defense-evasion,T1574.002,Hijack Execution Flow: DLL Side-Loading,3,"DLL Search Order Hijacking,DLL Sideloading Of KeyScramblerIE.DLL Via KeyScrambler.EXE",c095ad8e-4469-4d33-be9d-6f6d1fb21585,powershell
 defense-evasion,T1027.007,Obfuscated Files or Information: Dynamic API Resolution,1,Dynamic API Resolution-Ninja-syscall,578025d5-faa9-4f6d-8390-aae739d507e1,powershell
 defense-evasion,T1055.015,Process Injection: ListPlanting,1,Process injection ListPlanting,4f3c7502-b111-4dfe-8a6e-529307891a59,powershell
 defense-evasion,T1220,XSL Script Processing,1,MSXSL Bypass using local files,ca23bfb2-023f-49c5-8802-e66997de462d,command_prompt
@@ -689,6 +691,7 @@ privilege-escalation,T1574.011,Hijack Execution Flow: Services Registry Permissi
 privilege-escalation,T1574.011,Hijack Execution Flow: Services Registry Permissions Weakness,2,Service ImagePath Change with reg.exe,f38e9eea-e1d7-4ba6-b716-584791963827,command_prompt
 privilege-escalation,T1547,Boot or Logon Autostart Execution,1,Add a driver,cb01b3da-b0e7-4e24-bf6d-de5223526785,command_prompt
 privilege-escalation,T1547,Boot or Logon Autostart Execution,2,Driver Installation Using pnputil.exe,5cb0b071-8a5a-412f-839d-116beb2ed9f7,powershell
+privilege-escalation,T1547,Boot or Logon Autostart Execution,3,Leverage Virtual Channels to execute custom DLL during successful RDP session,fdd45306-74f6-4ade-9a97-0a4895961228,command_prompt
 privilege-escalation,T1547.014,Active Setup,1,HKLM - Add atomic_test key to launch executable as part of user setup,deff4586-0517-49c2-981d-bbea24d48d71,powershell
 privilege-escalation,T1547.014,Active Setup,2,HKLM - Add malicious StubPath value to existing Active Setup Entry,39e417dd-4fed-4d9c-ae3a-ba433b4d0e9a,powershell
 privilege-escalation,T1547.014,Active Setup,3,HKLM - re-execute 'Internet Explorer Core Fonts' StubPath payload by decreasing version number,04d55cef-f283-40ba-ae2a-316bc3b5e78c,powershell
@@ -853,6 +856,8 @@ privilege-escalation,T1546,Event Triggered Execution,2,HKLM - Persistence using 
 privilege-escalation,T1546,Event Triggered Execution,3,HKCU - Persistence using CommandProcessor AutoRun key (Without Elevation),36b8dbf9-59b1-4e9b-a3bb-36e80563ef01,powershell
 privilege-escalation,T1546,Event Triggered Execution,4,WMI Invoke-CimMethod Start Process,adae83d3-0df6-45e7-b2c3-575f91584577,powershell
 privilege-escalation,T1546,Event Triggered Execution,5,Adding custom debugger for Windows Error Reporting,17d1a3cc-3373-495a-857a-e5dd005fb302,command_prompt
+privilege-escalation,T1546,Event Triggered Execution,6,Load custom DLL on mstsc execution,2db7852e-5a32-4ec7-937f-f4e027881700,command_prompt
+privilege-escalation,T1546,Event Triggered Execution,7,Persistence using automatic execution of custom DLL during RDP session,b7fc4c3f-fe6e-479a-ba27-ef91b88536e3,command_prompt
 privilege-escalation,T1546.004,Event Triggered Execution: .bash_profile .bashrc and .shrc,1,Add command to .bash_profile,94500ae1-7e31-47e3-886b-c328da46872f,sh
 privilege-escalation,T1546.004,Event Triggered Execution: .bash_profile .bashrc and .shrc,2,Add command to .bashrc,0a898315-4cfa-4007-bafe-33a4646d115f,sh
 privilege-escalation,T1546.004,Event Triggered Execution: .bash_profile .bashrc and .shrc,3,Add command to .shrc,41502021-591a-4649-8b6e-83c9192aff53,sh
@@ -886,6 +891,7 @@ privilege-escalation,T1547.007,Boot or Logon Autostart Execution: Re-opened Appl
 privilege-escalation,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,3,Append to existing loginwindow for Re-Opened Applications,766b6c3c-9353-4033-8b7e-38b309fa3a93,sh
 privilege-escalation,T1574.002,Hijack Execution Flow: DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
 privilege-escalation,T1574.002,Hijack Execution Flow: DLL Side-Loading,2,DLL Side-Loading using the dotnet startup hook environment variable,d322cdd7-7d60-46e3-9111-648848da7c02,command_prompt
+privilege-escalation,T1574.002,Hijack Execution Flow: DLL Side-Loading,3,"DLL Search Order Hijacking,DLL Sideloading Of KeyScramblerIE.DLL Via KeyScrambler.EXE",c095ad8e-4469-4d33-be9d-6f6d1fb21585,powershell
 privilege-escalation,T1098.002,Account Manipulation: Additional Email Delegate Permissions,1,EXO - Full access mailbox permission granted to a user,17d046be-fdd0-4cbb-b5c7-55c85d9d0714,powershell
 privilege-escalation,T1037.001,Boot or Logon Initialization Scripts: Logon Script (Windows),1,Logon Scripts,d6042746-07d4-4c92-9ad8-e644c114a231,command_prompt
 privilege-escalation,T1055.015,Process Injection: ListPlanting,1,Process injection ListPlanting,4f3c7502-b111-4dfe-8a6e-529307891a59,powershell
@@ -1063,6 +1069,7 @@ persistence,T1574.011,Hijack Execution Flow: Services Registry Permissions Weakn
 persistence,T1574.011,Hijack Execution Flow: Services Registry Permissions Weakness,2,Service ImagePath Change with reg.exe,f38e9eea-e1d7-4ba6-b716-584791963827,command_prompt
 persistence,T1547,Boot or Logon Autostart Execution,1,Add a driver,cb01b3da-b0e7-4e24-bf6d-de5223526785,command_prompt
 persistence,T1547,Boot or Logon Autostart Execution,2,Driver Installation Using pnputil.exe,5cb0b071-8a5a-412f-839d-116beb2ed9f7,powershell
+persistence,T1547,Boot or Logon Autostart Execution,3,Leverage Virtual Channels to execute custom DLL during successful RDP session,fdd45306-74f6-4ade-9a97-0a4895961228,command_prompt
 persistence,T1547.014,Active Setup,1,HKLM - Add atomic_test key to launch executable as part of user setup,deff4586-0517-49c2-981d-bbea24d48d71,powershell
 persistence,T1547.014,Active Setup,2,HKLM - Add malicious StubPath value to existing Active Setup Entry,39e417dd-4fed-4d9c-ae3a-ba433b4d0e9a,powershell
 persistence,T1547.014,Active Setup,3,HKLM - re-execute 'Internet Explorer Core Fonts' StubPath payload by decreasing version number,04d55cef-f283-40ba-ae2a-316bc3b5e78c,powershell
@@ -1215,6 +1222,8 @@ persistence,T1546,Event Triggered Execution,2,HKLM - Persistence using CommandPr
 persistence,T1546,Event Triggered Execution,3,HKCU - Persistence using CommandProcessor AutoRun key (Without Elevation),36b8dbf9-59b1-4e9b-a3bb-36e80563ef01,powershell
 persistence,T1546,Event Triggered Execution,4,WMI Invoke-CimMethod Start Process,adae83d3-0df6-45e7-b2c3-575f91584577,powershell
 persistence,T1546,Event Triggered Execution,5,Adding custom debugger for Windows Error Reporting,17d1a3cc-3373-495a-857a-e5dd005fb302,command_prompt
+persistence,T1546,Event Triggered Execution,6,Load custom DLL on mstsc execution,2db7852e-5a32-4ec7-937f-f4e027881700,command_prompt
+persistence,T1546,Event Triggered Execution,7,Persistence using automatic execution of custom DLL during RDP session,b7fc4c3f-fe6e-479a-ba27-ef91b88536e3,command_prompt
 persistence,T1546.004,Event Triggered Execution: .bash_profile .bashrc and .shrc,1,Add command to .bash_profile,94500ae1-7e31-47e3-886b-c328da46872f,sh
 persistence,T1546.004,Event Triggered Execution: .bash_profile .bashrc and .shrc,2,Add command to .bashrc,0a898315-4cfa-4007-bafe-33a4646d115f,sh
 persistence,T1546.004,Event Triggered Execution: .bash_profile .bashrc and .shrc,3,Add command to .shrc,41502021-591a-4649-8b6e-83c9192aff53,sh
@@ -1252,6 +1261,7 @@ persistence,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,
 persistence,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,3,Append to existing loginwindow for Re-Opened Applications,766b6c3c-9353-4033-8b7e-38b309fa3a93,sh
 persistence,T1574.002,Hijack Execution Flow: DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
 persistence,T1574.002,Hijack Execution Flow: DLL Side-Loading,2,DLL Side-Loading using the dotnet startup hook environment variable,d322cdd7-7d60-46e3-9111-648848da7c02,command_prompt
+persistence,T1574.002,Hijack Execution Flow: DLL Side-Loading,3,"DLL Search Order Hijacking,DLL Sideloading Of KeyScramblerIE.DLL Via KeyScrambler.EXE",c095ad8e-4469-4d33-be9d-6f6d1fb21585,powershell
 persistence,T1098.002,Account Manipulation: Additional Email Delegate Permissions,1,EXO - Full access mailbox permission granted to a user,17d046be-fdd0-4cbb-b5c7-55c85d9d0714,powershell
 persistence,T1037.001,Boot or Logon Initialization Scripts: Logon Script (Windows),1,Logon Scripts,d6042746-07d4-4c92-9ad8-e644c114a231,command_prompt
 persistence,T1137.002,Office Application Startup: Office Test,1,Office Application Startup Test Persistence (HKCU),c3e35b58-fe1c-480b-b540-7600fb612563,powershell
@@ -1782,6 +1792,7 @@ discovery,T1082,System Information Discovery,30,BIOS Information Discovery throu
 discovery,T1082,System Information Discovery,31,ESXi - VM Discovery using ESXCLI,2040405c-eea6-4c1c-aef3-c2acc430fac9,command_prompt
 discovery,T1082,System Information Discovery,32,ESXi - Darkside system information discovery,f89812e5-67d1-4f49-86fa-cbc6609ea86a,command_prompt
 discovery,T1082,System Information Discovery,33,sysctl to gather macOS hardware info,c8d40da9-31bd-47da-a497-11ea55d1ef6c,sh
+discovery,T1082,System Information Discovery,34,operating system discovery ,70e13ef4-5a74-47e4-9d16-760b41b0e2db,powershell
 discovery,T1016.002,System Network Configuration Discovery: Wi-Fi Discovery,1,Enumerate Stored Wi-Fi Profiles And Passwords via netsh,53cf1903-0fa7-4177-ab14-f358ae809eec,command_prompt
 discovery,T1010,Application Window Discovery,1,List Process Main Windows - C# .NET,fe94a1c3-3e22-4dc9-9fdf-3a8bdbc10dc4,command_prompt
 discovery,T1580,Cloud Infrastructure Discovery,1,AWS - EC2 Enumeration from Cloud Instance,99ee161b-dcb1-4276-8ecb-7cfdcb207820,sh
