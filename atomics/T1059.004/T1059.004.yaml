@@ -291,7 +291,7 @@ atomic_tests:
     prereq_command: |
       if [ -x "$(command -v emacs)" ]; then echo "emacs is installed"; else echo "emacs is NOT installed"; exit 1; fi
     get_prereq_command: |
-      which apt && apt update && apt install -y emacs || which pkg && pkg update && pkg install -y emacs
+      which apt && apt update && apt install -y emacs || which pkg && pkg update && pkg install -y emacs || which brew && brew update && brew install --quiet emacs
   executor:
     command: sudo emacs -Q -nw --eval '(term "/bin/sh &")'
     name: sh
