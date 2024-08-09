@@ -1,0 +1,80 @@
+attack_technique: T1614
+display_name: System Network Configuration Discovery - Internet Connection Discovery 
+atomic_tests:
+- name: Get the IP of the victim machine using curl Windows
+  description: |
+    Get the IP of the victim machine using curl Windows. The default URL of the IP-Lookup service is https://ipinfo.io/.
+  supported_platforms:
+  - windows
+  input_arguments:
+    ip_lookup_url:
+      description: URL of the IP-Lookup service
+      type: url
+      default: https://ipinfo.io/
+    curl_path:
+      description: path to curl.exe
+      type: path
+      default: C:\Windows\System32\Curl.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Curl must be installed on system.
+    prereq_command: |
+      if (Test-Path #{curl_path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://curl.se/windows/dl-8.4.0_6/curl-8.4.0_6-win64-mingw.zip" -Outfile "PathToAtomicsFolder\..\ExternalPayloads\curl.zip"
+      Expand-Archive -Path "PathToAtomicsFolder\..\ExternalPayloads\curl.zip" -DestinationPath "PathToAtomicsFolder\..\ExternalPayloads\curl"
+      Copy-Item "PathToAtomicsFolder\..\ExternalPayloads\curl\curl-8.4.0_6-win64-mingw\bin\curl.exe" C:\Windows\System32\Curl.exe
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      #{curl_path} -k #{ip_lookup_url}
+- name: Get the IP of the victim machine using curl freebsd, linux or macos
+  description: |
+    Get the IP of the victim machine using curl Windows. The default URL of the IP-Lookup service is https://ipinfo.io/.
+  supported_platforms:
+  - macos
+  - linux
+  input_arguments:
+    ip_lookup_url:
+      description: URL of the IP-Lookup service
+      type: url
+      default: https://ipinfo.io/
+  executor:
+    name: bash
+    elevation_required: false
+    command: |
+      curl -k #{ip_lookup_url}
+- name: Check internet connection using ping Windows
+  description: |
+    Check internet connection using ping on Windows. The default target of the ping is 8.8.8.8 (Google Public DNS).
+  supported_platforms:
+  - windows
+  input_arguments:
+    ping_target:
+      description: target of the ping
+      type: url
+      default: 8.8.8.8
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      ping -n 4 #{ping_target}
+- name: Check internet connection using ping freebsd, linux or macos
+  description: |
+    Check internet connection using ping on Linux, MACOS. The default target of the ping is 8.8.8.8 (Google Public DNS).
+  supported_platforms:
+  - macos
+  - linux
+  input_arguments:
+    ping_target:
+      description: target of the ping
+      type: url
+      default: 8.8.8.8
+  executor:
+    name: bash
+    elevation_required: false
+    command: |
+      ping -n 4 #{ping_target}
