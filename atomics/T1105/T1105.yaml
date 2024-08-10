@@ -946,7 +946,7 @@ atomic_tests:
     scp_port:
       description: port for the remote server
       type: string
-      default: 22
+      default: '22'
     exfil_package:
       description: path to exfil package
       type: path
@@ -975,3 +975,4 @@ atomic_tests:
     cleanup_command: |
       del /f /q #{exfil_package}
     name: command_prompt
+    elevation_required: false
