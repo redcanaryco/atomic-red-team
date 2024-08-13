@@ -1353,6 +1353,7 @@
   - Atomic Test #14: Shell Creation using awk command [linux, macos]
   - Atomic Test #15: Creating shell using cpan command [linux, macos]
   - Atomic Test #16: Shell Creation using busybox command [linux]
+  - Atomic Test #17: emacs spawning an interactive system shell [linux, macos]
 - [T1559 Inter-Process Communication](../../T1559/T1559.md)
   - Atomic Test #1: Cobalt Strike Artifact Kit pipe [windows]
   - Atomic Test #2: Cobalt Strike Lateral Movement (psexec_psh) pipe [windows]
