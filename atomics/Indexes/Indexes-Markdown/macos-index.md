@@ -561,7 +561,8 @@
 - [T1201 Password Policy Discovery](../../T1201/T1201.md)
   - Atomic Test #8: Examine password policy - macOS [macos]
 - T1614.001 System Location Discovery: System Language Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1614 System Location Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1614 System Location Discovery](../../T1614/T1614.md)
+  - Atomic Test #2: Get geolocation info through IP-Lookup services using curl freebsd, linux or macos [macos, linux]
 - [T1518.001 Software Discovery: Security Software Discovery](../../T1518.001/T1518.001.md)
   - Atomic Test #3: Security Software Discovery - ps (macOS) [macos]
 - [T1018 Remote System Discovery](../../T1018/T1018.md)

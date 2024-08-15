@@ -57086,7 +57086,30 @@ discovery:
       x_mitre_is_subtechnique: false
       spec_version: '2.1'
       x_mitre_attack_spec_version: 2.1.0
-    atomic_tests: []
+      identifier: T1614
+    atomic_tests:
+    - name: Get geolocation info through IP-Lookup services using curl freebsd, linux
+        or macos
+      auto_generated_guid: 552b4db3-8850-412c-abce-ab5cc8a86604
+      description: 'Get geolocation info through IP-Lookup services using curl Windows.
+        The default URL of the IP-Lookup service is https://ipinfo.io/. References:
+        https://securelist.com/transparent-tribe-part-1/98127/ and https://news.sophos.com/en-us/2016/05/03/location-based-ransomware-threat-research/
+
+        '
+      supported_platforms:
+      - macos
+      - linux
+      input_arguments:
+        ip_lookup_url:
+          description: URL of the IP-Lookup service
+          type: url
+          default: https://ipinfo.io/
+      executor:
+        name: bash
+        elevation_required: false
+        command: 'curl -k #{ip_lookup_url}
+
+          '
   T1518.001:
     technique:
       modified: '2024-04-16T00:15:53.303Z'
