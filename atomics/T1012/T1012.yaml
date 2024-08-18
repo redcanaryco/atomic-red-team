@@ -113,3 +113,16 @@ atomic_tests:
       reg query HKLM\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated      
     name: command_prompt
     elevation_required: true
+- name: Check Software Inventory Logging (SIL) status via Registry
+  auto_generated_guid: 5c784969-1d43-4ac7-8c3d-ed6d025ed10d
+  description: |
+    Microsoft's Software Inventory Logging (SIL) collects information about software installed per host basis. Adversary can use such logs to passively 
+    check for existence of software of interest to them. Status of SIL can be checked via registry.
+    [Reference](https://blog.talosintelligence.com/chinese-hacking-group-apt41-compromised-taiwanese-government-affiliated-research-institute-with-shadowpad-and-cobaltstrike-2/)
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg.exe query hklm\software\microsoft\windows\softwareinventorylogging /v collectionstate /reg:64
+    name: command_prompt
+    elevation_required: true
