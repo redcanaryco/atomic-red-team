@@ -2316,7 +2316,9 @@
 - [T1613 Container and Resource Discovery](../../T1613/T1613.md)
   - Atomic Test #1: Docker Container and Resource Discovery [containers]
   - Atomic Test #2: Podman Container and Resource Discovery [containers]
-- T1016.001 Internet Connection Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1016.001 System Network Configuration Discovery: Internet Connection Discovery](../../T1016.001/T1016.001.md)
+  - Atomic Test #1: Check internet connection using ping Windows [windows]
+  - Atomic Test #2: Check internet connection using ping freebsd, linux or macos [macos, linux]
 - T1069 Permission Groups Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1069.003 Cloud Groups [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1615 Group Policy Discovery](../../T1615/T1615.md)
