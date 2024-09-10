@@ -7692,7 +7692,7 @@ defense-evasion:
       executor:
         command: |-
           docker build -t t1612  $PathtoAtomicsFolder/T1612/src/
-          docker run --name t1612_container  -d -t t1612
+          docker run --name t1612_container --rm -d -t t1612
           docker exec t1612_container ./test.sh
         cleanup_command: |-
           docker stop t1612_container
@@ -48855,13 +48855,13 @@ discovery:
       executor:
         command: |-
           docker build -t t1613 $PathtoAtomicsFolder/T1613/src/
-          docker run --name t1613_container -d -t t1613
+          docker run --name t1613_container --rm -d -t t1613
           docker ps
           docker stats --no-stream
           docker inspect $(docker ps -l -q --filter ancestor=t1613)
         cleanup_command: |-
           docker stop t1613_container
-          docker rmi -f t1613_container
+          docker rmi -f t1613
         name: sh
     - name: Podman Container and Resource Discovery
       auto_generated_guid: fc631702-3f03-4f2b-8d8a-6b3d055580a1
@@ -48889,13 +48889,13 @@ discovery:
       executor:
         command: |-
           podman build -t t1613 $PathtoAtomicsFolder/T1613/src/
-          podman run --name t1613_container -d -t t1613
+          podman run --name t1613_container --rm -d -t t1613
           podman ps
           podman stats --no-stream
           podman inspect $(podman ps -l -q --filter ancestor=t1613)
         cleanup_command: |-
           podman stop t1613_container
-          podman rmi -f t1613_container
+          podman rmi -f t1613
         name: sh
   T1016.001:
     technique:
@@ -48916,7 +48916,7 @@ discovery:
         external_id: T1016.001
         url: https://attack.mitre.org/techniques/T1016/001
       modified: '2022-04-25T14:00:00.188Z'
-      name: Internet Connection Discovery
+      name: 'System Network Configuration Discovery: Internet Connection Discovery'
       description: |-
         Adversaries may check for Internet connectivity on compromised systems. This may be performed during automated discovery and can be accomplished in numerous ways such as using [Ping](https://attack.mitre.org/software/S0097), <code>tracert</code>, and GET requests to websites.
 
@@ -48938,6 +48938,7 @@ discovery:
       - User
       spec_version: '2.1'
       x_mitre_attack_spec_version: 2.1.0
+      identifier: T1016.001
     atomic_tests: []
   T1069:
     technique:
@@ -51390,6 +51391,7 @@ discovery:
       x_mitre_is_subtechnique: false
       spec_version: '2.1'
       x_mitre_attack_spec_version: 2.1.0
+      identifier: T1614
     atomic_tests: []
   T1518.001:
     technique:
@@ -51689,9 +51691,9 @@ discovery:
           '
       executor:
         command: |-
-          docker build -t t1046 /root/AtomicRedTeam/atomics/T1046/src/
-          docker run --name t1046_container  -d -t t1046
-          docker exec t1046_container ./test.sh
+          docker build -t t1046 $PathToAtomicsFolder/T1046/src/
+          docker run --name t1046_container --rm -d -t t1046
+          docker exec t1046_container /scan.sh
         cleanup_command: |-
           docker stop t1046_container
           docker rmi -f t1046
