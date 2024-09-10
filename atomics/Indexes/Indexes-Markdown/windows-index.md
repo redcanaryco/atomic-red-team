@@ -94,6 +94,7 @@
 - [T1574.001 Hijack Execution Flow: DLL Search Order Hijacking](../../T1574.001/T1574.001.md)
   - Atomic Test #1: DLL Search Order Hijacking - amsi.dll [windows]
   - Atomic Test #2: Phantom Dll Hijacking - WinAppXRT.dll [windows]
+  - Atomic Test #3: Phantom Dll Hijacking - ualapi.dll [windows]
 - T1553.002 Code Signing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1222.001 File and Directory Permissions Modification: Windows File and Directory Permissions Modification](../../T1222.001/T1222.001.md)
   - Atomic Test #1: Take ownership using takeown utility [windows]
@@ -520,6 +521,7 @@
 - [T1564.003 Hide Artifacts: Hidden Window](../../T1564.003/T1564.003.md)
   - Atomic Test #1: Hidden Window [windows]
   - Atomic Test #2: Headless Browser Accessing Mockbin [windows]
+  - Atomic Test #3: Hidden Window-Conhost Execution [windows]
 - T1070.009 Clear Persistence [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1556.001 Domain Controller Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1027.006 HTML Smuggling](../../T1027.006/T1027.006.md)
@@ -548,6 +550,7 @@
 - [T1574.002 Hijack Execution Flow: DLL Side-Loading](../../T1574.002/T1574.002.md)
   - Atomic Test #1: DLL Side-Loading using the Notepad++ GUP.exe binary [windows]
   - Atomic Test #2: DLL Side-Loading using the dotnet startup hook environment variable [windows]
+  - Atomic Test #3: DLL Search Order Hijacking,DLL Sideloading Of KeyScramblerIE.DLL Via KeyScrambler.EXE [windows]
 - T1216.002 SyncAppvPublishingServer [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1027.007 Obfuscated Files or Information: Dynamic API Resolution](../../T1027.007/T1027.007.md)
   - Atomic Test #1: Dynamic API Resolution-Ninja-syscall [windows]
@@ -647,6 +650,7 @@
 - [T1547 Boot or Logon Autostart Execution](../../T1547/T1547.md)
   - Atomic Test #1: Add a driver [windows]
   - Atomic Test #2: Driver Installation Using pnputil.exe [windows]
+  - Atomic Test #3: Leverage Virtual Channels to execute custom DLL during successful RDP session [windows]
 - [T1547.014 Active Setup](../../T1547.014/T1547.014.md)
   - Atomic Test #1: HKLM - Add atomic_test key to launch executable as part of user setup [windows]
   - Atomic Test #2: HKLM - Add malicious StubPath value to existing Active Setup Entry [windows]
@@ -664,6 +668,7 @@
 - [T1574.001 Hijack Execution Flow: DLL Search Order Hijacking](../../T1574.001/T1574.001.md)
   - Atomic Test #1: DLL Search Order Hijacking - amsi.dll [windows]
   - Atomic Test #2: Phantom Dll Hijacking - WinAppXRT.dll [windows]
+  - Atomic Test #3: Phantom Dll Hijacking - ualapi.dll [windows]
 - T1574.014 AppDomainManager [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1055.003 Thread Execution Hijacking](../../T1055.003/T1055.003.md)
@@ -803,6 +808,9 @@
   - Atomic Test #3: HKCU - Persistence using CommandProcessor AutoRun key (Without Elevation) [windows]
   - Atomic Test #4: WMI Invoke-CimMethod Start Process [windows]
   - Atomic Test #5: Adding custom debugger for Windows Error Reporting [windows]
+  - Atomic Test #6: Load custom DLL on mstsc execution [windows]
+  - Atomic Test #7: Persistence using automatic execution of custom DLL during RDP session [windows]
+  - Atomic Test #8: Persistence using STARTUP-PATH in MS-WORD [windows]
 - [T1134.005 Access Token Manipulation: SID-History Injection](../../T1134.005/T1134.005.md)
   - Atomic Test #1: Injection SID-History with mimikatz [windows]
 - [T1547.002 Authentication Package](../../T1547.002/T1547.002.md)
@@ -826,6 +834,7 @@
 - [T1574.002 Hijack Execution Flow: DLL Side-Loading](../../T1574.002/T1574.002.md)
   - Atomic Test #1: DLL Side-Loading using the Notepad++ GUP.exe binary [windows]
   - Atomic Test #2: DLL Side-Loading using the dotnet startup hook environment variable [windows]
+  - Atomic Test #3: DLL Search Order Hijacking,DLL Sideloading Of KeyScramblerIE.DLL Via KeyScrambler.EXE [windows]
 - T1098.002 Account Manipulation: Additional Email Delegate Permissions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1037.001 Boot or Logon Initialization Scripts: Logon Script (Windows)](../../T1037.001/T1037.001.md)
   - Atomic Test #1: Logon Scripts [windows]
@@ -995,6 +1004,7 @@
 - [T1547 Boot or Logon Autostart Execution](../../T1547/T1547.md)
   - Atomic Test #1: Add a driver [windows]
   - Atomic Test #2: Driver Installation Using pnputil.exe [windows]
+  - Atomic Test #3: Leverage Virtual Channels to execute custom DLL during successful RDP session [windows]
 - [T1547.014 Active Setup](../../T1547.014/T1547.014.md)
   - Atomic Test #1: HKLM - Add atomic_test key to launch executable as part of user setup [windows]
   - Atomic Test #2: HKLM - Add malicious StubPath value to existing Active Setup Entry [windows]
@@ -1013,6 +1023,7 @@
 - [T1574.001 Hijack Execution Flow: DLL Search Order Hijacking](../../T1574.001/T1574.001.md)
   - Atomic Test #1: DLL Search Order Hijacking - amsi.dll [windows]
   - Atomic Test #2: Phantom Dll Hijacking - WinAppXRT.dll [windows]
+  - Atomic Test #3: Phantom Dll Hijacking - ualapi.dll [windows]
 - [T1137.006 Office Application Startup: Add-ins](../../T1137.006/T1137.006.md)
   - Atomic Test #1: Code Executed Via Excel Add-in File (XLL) [windows]
   - Atomic Test #2: Persistent Code Execution Via Excel Add-in File (XLL) [windows]
@@ -1148,6 +1159,9 @@
   - Atomic Test #3: HKCU - Persistence using CommandProcessor AutoRun key (Without Elevation) [windows]
   - Atomic Test #4: WMI Invoke-CimMethod Start Process [windows]
   - Atomic Test #5: Adding custom debugger for Windows Error Reporting [windows]
+  - Atomic Test #6: Load custom DLL on mstsc execution [windows]
+  - Atomic Test #7: Persistence using automatic execution of custom DLL during RDP session [windows]
+  - Atomic Test #8: Persistence using STARTUP-PATH in MS-WORD [windows]
 - [T1547.002 Authentication Package](../../T1547.002/T1547.002.md)
   - Atomic Test #1: Authentication Package [windows]
 - [T1546.015 Event Triggered Execution: Component Object Model Hijacking](../../T1546.015/T1546.015.md)
@@ -1178,6 +1192,7 @@
 - [T1574.002 Hijack Execution Flow: DLL Side-Loading](../../T1574.002/T1574.002.md)
   - Atomic Test #1: DLL Side-Loading using the Notepad++ GUP.exe binary [windows]
   - Atomic Test #2: DLL Side-Loading using the dotnet startup hook environment variable [windows]
+  - Atomic Test #3: DLL Search Order Hijacking,DLL Sideloading Of KeyScramblerIE.DLL Via KeyScrambler.EXE [windows]
 - T1098.002 Account Manipulation: Additional Email Delegate Permissions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1653 Power Settings [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1037.001 Boot or Logon Initialization Scripts: Logon Script (Windows)](../../T1037.001/T1037.001.md)
@@ -1603,7 +1618,8 @@
   - Atomic Test #5: GetCurrent User with PowerShell Script [windows]
   - Atomic Test #6: System Discovery - SocGholish whoami [windows]
   - Atomic Test #7: System Owner/User Discovery Using Command Prompt [windows]
-- T1016.001 Internet Connection Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1016.001 System Network Configuration Discovery: Internet Connection Discovery](../../T1016.001/T1016.001.md)
+  - Atomic Test #1: Check internet connection using ping Windows [windows]
 - T1069 Permission Groups Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1615 Group Policy Discovery](../../T1615/T1615.md)
   - Atomic Test #1: Display group policy information via gpresult [windows]
@@ -1703,6 +1719,7 @@
   - Atomic Test #30: BIOS Information Discovery through Registry [windows]
   - Atomic Test #31: ESXi - VM Discovery using ESXCLI [windows]
   - Atomic Test #32: ESXi - Darkside system information discovery [windows]
+  - Atomic Test #34: operating system discovery  [windows]
 - [T1016.002 System Network Configuration Discovery: Wi-Fi Discovery](../../T1016.002/T1016.002.md)
   - Atomic Test #1: Enumerate Stored Wi-Fi Profiles And Passwords via netsh [windows]
 - [T1010 Application Window Discovery](../../T1010/T1010.md)
@@ -1779,7 +1796,8 @@
   - Atomic Test #2: Query Registry with Powershell cmdlets [windows]
   - Atomic Test #3: Enumerate COM Objects in Registry with Powershell [windows]
   - Atomic Test #4: Reg query for AlwaysInstallElevated status [windows]
-- T1614 System Location Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1614 System Location Discovery](../../T1614/T1614.md)
+  - Atomic Test #1: Get geolocation info through IP-Lookup services using curl Windows [windows]
 - [T1518.001 Software Discovery: Security Software Discovery](../../T1518.001/T1518.001.md)
   - Atomic Test #1: Security Software Discovery [windows]
   - Atomic Test #2: Security Software Discovery - powershell [windows]
