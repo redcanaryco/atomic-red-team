@@ -165,36 +165,32 @@ atomic_tests:
 - name: Login as nobody (Linux)
   auto_generated_guid: 3d2cd093-ee05-41bd-a802-59ee5c301b85
   description: |
-    An adversary may try to re-purpose a system account to appear legitimate. In this test change the login shell of the nobody account, change its password to nobody, su to nobody, exit, then reset nobody's shell to /usr/sbin/nologin.
+    An adversary may try to re-purpose a system account to appear legitimate. In this test change the login shell of the nobody account, change its password to nobody, su to nobody, exit, then reset nobody's shell to /usr/sbin/nologin. Here is how the nobody entry should look like in `/etc/passwd` before the test is executed and right after the cleanup: `# -> nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin`
   supported_platforms:
   - linux
   executor:
     name: bash
     elevation_required: true
     command: |
-      cat /etc/passwd |grep nobody 
-      # -> nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+      cat /etc/passwd |grep nobody
       chsh --shell /bin/bash nobody
       usermod --password $(openssl passwd -1 nobody) nobody
-      su nobody
-      whoami
-      exit
+      su -c "whoami" nobody
     cleanup_command: |
       chsh --shell /usr/sbin/nologin nobody
-      cat /etc/passwd |grep nobody 
+      cat /etc/passwd |grep nobody
       # -> nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
 - name: Login as nobody (freebsd)
   auto_generated_guid: 16f6374f-7600-459a-9b16-6a88fd96d310
   description: |
-    An adversary may try to re-purpose a system account to appear legitimate. In this test change the login shell of the nobody account, change its password to nobody, su to nobody, exit, then reset nobody's shell to /usr/sbin/nologin.
+    An adversary may try to re-purpose a system account to appear legitimate. In this test change the login shell of the nobody account, change its password to nobody, su to nobody, exit, then reset nobody's shell to /usr/sbin/nologin. Here is how the nobody entry should look like in `/etc/passwd` before the test is executed and right after the cleanup: `# -> nobody:x:65534:65534:Unprivileged user:/nonexistent:/usr/sbin/nologin`
   supported_platforms:
   - linux
   executor:
     name: sh
     elevation_required: true
     command: |
-      cat /etc/passwd |grep nobody 
-      # -> nobody:x:65534:65534:Unprivileged user:/nonexistent:/usr/sbin/nologin
+      cat /etc/passwd |grep nobody
       pw usermod nobody -s /bin/sh
       echo $(openssl passwd -1 art) | pw mod user nobody -h 0
       su nobody
