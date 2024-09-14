@@ -190,4 +190,19 @@ atomic_tests:
     cleanup_command: |-
       Remove-Item C:\Windows\Setup\Scripts\ErrorHandler.cmd      
     name: powershell
-    elevation_required: true    
+    elevation_required: true
+- name: Persistence using STARTUP-PATH in MS-WORD
+  auto_generated_guid: f0027655-25ef-47b0-acaf-3d83d106156c
+  description: |-
+    When Word starts, it searches for the registry key HKCU\Software\Microsoft\Office\<version>\Word\Options\STARTUP-PATH and if it exists,
+    it will treat it as a user specific start-up folder and load the contents of the folder with file extensions of .wll,.lnk,.dotm,.dot,.dotx
+    The registry key can be abused to load malware from the mentioned path. Reboot might be required.
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      reg add "HKCU\Software\Microsoft\Office\16.0\Word\Options" /v STARTUP-PATH /t REG_SZ /d "C:\Users\%USERNAME%\AppData\Roaming\Microsoft\Windows\Recent" /f
+    cleanup_command: |-
+      reg delete HKCU\Software\Microsoft\Office\16.0\Word\Options /v STARTUP-PATH /f
+    name: command_prompt
+    elevation_required: true

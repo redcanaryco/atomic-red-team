@@ -611,7 +611,8 @@
 # discovery
 - [T1033 System Owner/User Discovery](../../T1033/T1033.md)
   - Atomic Test #2: System Owner/User Discovery [linux, macos]
-- T1016.001 Internet Connection Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1016.001 System Network Configuration Discovery: Internet Connection Discovery](../../T1016.001/T1016.001.md)
+  - Atomic Test #2: Check internet connection using ping freebsd, linux or macos [macos, linux]
 - T1069 Permission Groups Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1652 Device Driver Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1087.002 Account Discovery: Domain Account](../../T1087.002/T1087.002.md)
@@ -685,7 +686,8 @@
   - Atomic Test #4: Discover System Language with localectl [linux]
   - Atomic Test #5: Discover System Language by locale file [linux]
   - Atomic Test #6: Discover System Language by Environment Variable Query [linux]
-- T1614 System Location Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1614 System Location Discovery](../../T1614/T1614.md)
+  - Atomic Test #2: Get geolocation info through IP-Lookup services using curl freebsd, linux or macos [macos, linux]
 - [T1518.001 Software Discovery: Security Software Discovery](../../T1518.001/T1518.001.md)
   - Atomic Test #4: Security Software Discovery - ps (Linux) [linux]
   - Atomic Test #5: Security Software Discovery - pgrep (FreeBSD) [linux]
