@@ -1133,7 +1133,8 @@
   - Atomic Test #5: Adding custom debugger for Windows Error Reporting [windows]
   - Atomic Test #6: Load custom DLL on mstsc execution [windows]
   - Atomic Test #7: Persistence using automatic execution of custom DLL during RDP session [windows]
-  - Atomic Test #8: Persistence using STARTUP-PATH in MS-WORD [windows]
+  - Atomic Test #8: Persistence via ErrorHandler.cmd script execution [windows]
+  - Atomic Test #9: Persistence using STARTUP-PATH in MS-WORD [windows]
 - [T1546.004 Event Triggered Execution: .bash_profile .bashrc and .shrc](../../T1546.004/T1546.004.md)
   - Atomic Test #1: Add command to .bash_profile [macos, linux]
   - Atomic Test #2: Add command to .bashrc [macos, linux]
@@ -1659,7 +1660,8 @@
   - Atomic Test #5: Adding custom debugger for Windows Error Reporting [windows]
   - Atomic Test #6: Load custom DLL on mstsc execution [windows]
   - Atomic Test #7: Persistence using automatic execution of custom DLL during RDP session [windows]
-  - Atomic Test #8: Persistence using STARTUP-PATH in MS-WORD [windows]
+  - Atomic Test #8: Persistence via ErrorHandler.cmd script execution [windows]
+  - Atomic Test #9: Persistence using STARTUP-PATH in MS-WORD [windows]
 - [T1546.004 Event Triggered Execution: .bash_profile .bashrc and .shrc](../../T1546.004/T1546.004.md)
   - Atomic Test #1: Add command to .bash_profile [macos, linux]
   - Atomic Test #2: Add command to .bashrc [macos, linux]
@@ -2319,6 +2321,9 @@
 - [T1016.001 System Network Configuration Discovery: Internet Connection Discovery](../../T1016.001/T1016.001.md)
   - Atomic Test #1: Check internet connection using ping Windows [windows]
   - Atomic Test #2: Check internet connection using ping freebsd, linux or macos [macos, linux]
+  - Atomic Test #3: Check internet connection using Test-NetConnection in PowerShell (ICMP-Ping) [windows]
+  - Atomic Test #4: Check internet connection using Test-NetConnection in PowerShell (TCP-HTTP) [windows]
+  - Atomic Test #5: Check internet connection using Test-NetConnection in PowerShell (TCP-SMB) [windows]
 - T1069 Permission Groups Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1069.003 Cloud Groups [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1615 Group Policy Discovery](../../T1615/T1615.md)
