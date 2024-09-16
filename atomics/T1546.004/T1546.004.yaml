@@ -124,6 +124,6 @@ atomic_tests:
     elevation_required: true
     command: |
       useradd --create-home --shell /bin/bash art
-      su -c "echo 'echo \"Atomic Red Team was here... T1546.004\" >> /home/art/art.txt' >> /home/art/.bash_logout" art
+      su -l art -c "echo 'echo \"Atomic Red Team was here... T1546.004\" >> /home/art/art.txt' >> /home/art/.bash_logout; exit"
     cleanup_command: |
       userdel -fr art
