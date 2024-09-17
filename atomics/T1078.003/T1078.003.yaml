@@ -134,9 +134,7 @@ atomic_tests:
       usermod --expiredate "1" art
       usermod --unlock art
       usermod --expiredate "99999" art
-      su art
-      whoami
-      exit
+      su -c whoami art
     cleanup_command: |
       userdel -r art 
 - name: Reactivate a locked/expired account (FreeBSD)
