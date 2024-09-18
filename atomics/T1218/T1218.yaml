@@ -401,3 +401,18 @@ atomic_tests:
       taskkill -f -im calc.exe
       taskkill -f -im win32calc.exe
     name: powershell
+- name: System Binary Proxy Execution - Wlrmdr Lolbin
+  auto_generated_guid: 7816c252-b728-4ea6-a683-bd9441ca0b71
+  description: Use wlrmdr(Windows Logon Reminder executable) as a proxy binary to evade defensive countermeasures
+  supported_platforms:
+  - windows
+  input_arguments:
+    payload_path:
+      description: Path to the executable
+      type: String
+      default: C:\Windows\System32\calc.exe
+  executor:
+    command: wlrmdr.exe -s 3600 -f 0 -t _ -m _ -a 11 -u "#{payload_path}"
+    name: powershell
+    elevation_required: false
+  

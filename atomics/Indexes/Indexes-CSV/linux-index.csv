@@ -44,7 +44,7 @@ defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,3,Cle
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,4,Clear Bash history (ln dev/null),23d348f3-cc5c-4ba9-bd0a-ae09069f0914,sh
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,5,Clear Bash history (truncate),47966a1d-df4f-4078-af65-db6d9aa20739,sh
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,6,Clear history of a bunch of shells,7e6721df-5f08-4370-9255-f06d8a77af4c,sh
-defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,7,Clear and Disable Bash History Logging,784e4011-bd1a-4ecd-a63a-8feb278512e6,sh
+defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,7,Clear and Disable Bash History Logging,784e4011-bd1a-4ecd-a63a-8feb278512e6,bash
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,8,Use Space Before Command to Avoid Logging to History,53b03a54-4529-4992-852d-a00b4b7215a6,sh
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,9,Disable Bash History Logging with SSH -T,5f8abd62-f615-43c5-b6be-f780f25790a1,sh
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,10,Clear Docker Container Logs,553b39f9-1e8c-47b1-abf5-8daf7b0391e9,bash
@@ -99,7 +99,6 @@ defense-evasion,T1562.006,Impair Defenses: Indicator Blocking,3,Logging Configur
 defense-evasion,T1562.006,Impair Defenses: Indicator Blocking,4,Logging Configuration Changes on FreeBSD Host,6b8ca3ab-5980-4321-80c3-bcd77c8daed8,sh
 defense-evasion,T1036.004,Masquerading: Masquerade Task or Service,3,linux rename /proc/pid/comm using prctl,f0e3aaea-5cd9-4db6-a077-631dd19b27a8,sh
 defense-evasion,T1562.010,Impair Defenses: Downgrade Attack,1,ESXi - Change VIB acceptance level to CommunitySupported via PowerCLI,062f92c9-28b1-4391-a5f8-9d8ca6852091,powershell
-defense-evasion,T1562.010,Impair Defenses: Downgrade Attack,2,ESXi - Change VIB acceptance level to CommunitySupported via ESXCLI,14d55b96-b2f5-428d-8fed-49dc4d9dd616,command_prompt
 defense-evasion,T1562.003,Impair Defenses: Impair Command History Logging,1,Disable history collection,4eafdb45-0f79-4d66-aa86-a3e2c08791f5,sh
 defense-evasion,T1562.003,Impair Defenses: Impair Command History Logging,2,Disable history collection (freebsd),cada55b4-8251-4c60-819e-8ec1b33c9306,sh
 defense-evasion,T1562.003,Impair Defenses: Impair Command History Logging,3,Mac HISTCONTROL,468566d5-83e5-40c1-b338-511e1659628d,manual
@@ -197,13 +196,13 @@ command-and-control,T1105,Ingress Tool Transfer,1,rsync remote file copy (push),
 command-and-control,T1105,Ingress Tool Transfer,2,rsync remote file copy (pull),3180f7d5-52c0-4493-9ea0-e3431a84773f,sh
 command-and-control,T1105,Ingress Tool Transfer,3,scp remote file copy (push),83a49600-222b-4866-80a0-37736ad29344,sh
 command-and-control,T1105,Ingress Tool Transfer,4,scp remote file copy (pull),b9d22b9a-9778-4426-abf0-568ea64e9c33,sh
-command-and-control,T1105,Ingress Tool Transfer,5,sftp remote file copy (push),f564c297-7978-4aa9-b37a-d90477feea4e,sh
+command-and-control,T1105,Ingress Tool Transfer,5,sftp remote file copy (push),f564c297-7978-4aa9-b37a-d90477feea4e,bash
 command-and-control,T1105,Ingress Tool Transfer,6,sftp remote file copy (pull),0139dba1-f391-405e-a4f5-f3989f2c88ef,sh
 command-and-control,T1105,Ingress Tool Transfer,14,whois file download,c99a829f-0bb8-4187-b2c6-d47d1df74cab,sh
 command-and-control,T1105,Ingress Tool Transfer,27,Linux Download File and Run,bdc373c5-e9cf-4563-8a7b-a9ba720a90f3,sh
 command-and-control,T1001.002,Data Obfuscation via Steganography,3,Execute Embedded Script in Image via Steganography,4ff61684-ad91-405c-9fbc-048354ff1d07,sh
 command-and-control,T1090.001,Proxy: Internal Proxy,1,Connection Proxy,0ac21132-4485-4212-a681-349e8a6637cd,sh
-collection,T1560.001,Archive Collected Data: Archive via Utility,5,Data Compressed - nix - zip,c51cec55-28dd-4ad2-9461-1eacbc82c3a0,sh
+collection,T1560.001,Archive Collected Data: Archive via Utility,5,Data Compressed - nix - zip,c51cec55-28dd-4ad2-9461-1eacbc82c3a0,bash
 collection,T1560.001,Archive Collected Data: Archive via Utility,6,Data Compressed - nix - gzip Single File,cde3c2af-3485-49eb-9c1f-0ed60e9cc0af,sh
 collection,T1560.001,Archive Collected Data: Archive via Utility,7,Data Compressed - nix - tar Folder or File,7af2b51e-ad1c-498c-aca8-d3290c19535a,sh
 collection,T1560.001,Archive Collected Data: Archive via Utility,8,Data Encrypted with zip and gpg symmetric,0286eb44-e7ce-41a0-b109-3da516e05a5f,sh
@@ -321,6 +320,7 @@ credential-access,T1003.008,"OS Credential Dumping: /etc/passwd, /etc/master.pas
 credential-access,T1003.008,"OS Credential Dumping: /etc/passwd, /etc/master.passwd and /etc/shadow",4,"Access /etc/{shadow,passwd,master.passwd} with a standard bin that's not cat",df1a55ae-019d-4120-bc35-94f4bc5c4b0a,sh
 credential-access,T1003.008,"OS Credential Dumping: /etc/passwd, /etc/master.passwd and /etc/shadow",5,"Access /etc/{shadow,passwd,master.passwd} with shell builtins",f5aa6543-6cb2-4fae-b9c2-b96e14721713,sh
 discovery,T1033,System Owner/User Discovery,2,System Owner/User Discovery,2a9b677d-a230-44f4-ad86-782df1ef108c,sh
+discovery,T1016.001,System Network Configuration Discovery: Internet Connection Discovery,2,"Check internet connection using ping freebsd, linux or macos",be8f4019-d8b6-434c-a814-53123cdcc11e,bash
 discovery,T1087.002,Account Discovery: Domain Account,23,Active Directory Domain Search,096b6d2a-b63f-4100-8fa0-525da4cd25ca,sh
 discovery,T1087.002,Account Discovery: Domain Account,24,Account Enumeration with LDAPDomainDump,a54d497e-8dbe-4558-9895-44944baa395f,sh
 discovery,T1087.001,Account Discovery: Local Account,1,Enumerate all accounts (Local),f8aab3dd-5990-4bf8-b8ab-2226c951696f,sh
@@ -351,14 +351,11 @@ discovery,T1082,System Information Discovery,8,Hostname Discovery,486e88ea-4f56-
 discovery,T1082,System Information Discovery,12,"Environment variables discovery on freebsd, macos and linux",fcbdd43f-f4ad-42d5-98f3-0218097e2720,sh
 discovery,T1082,System Information Discovery,25,Linux List Kernel Modules,034fe21c-3186-49dd-8d5d-128b35f181c7,sh
 discovery,T1082,System Information Discovery,26,FreeBSD List Kernel Modules,4947897f-643a-4b75-b3f5-bed6885749f6,sh
-discovery,T1082,System Information Discovery,31,ESXi - VM Discovery using ESXCLI,2040405c-eea6-4c1c-aef3-c2acc430fac9,command_prompt
-discovery,T1082,System Information Discovery,32,ESXi - Darkside system information discovery,f89812e5-67d1-4f49-86fa-cbc6609ea86a,command_prompt
 discovery,T1217,Browser Bookmark Discovery,1,List Mozilla Firefox Bookmark Database Files on FreeBSD/Linux,3a41f169-a5ab-407f-9269-abafdb5da6c2,sh
 discovery,T1217,Browser Bookmark Discovery,4,List Google Chromium Bookmark JSON Files on FreeBSD,88ca025b-3040-44eb-9168-bd8af22b82fa,sh
 discovery,T1016,System Network Configuration Discovery,3,System Network Configuration Discovery,c141bbdb-7fca-4254-9fd6-f47e79447e17,sh
 discovery,T1083,File and Directory Discovery,3,Nix File and Directory Discovery,ffc8b249-372a-4b74-adcd-e4c0430842de,sh
 discovery,T1083,File and Directory Discovery,4,Nix File and Directory Discovery 2,13c5e1ae-605b-46c4-a79f-db28c77ff24e,sh
-discovery,T1083,File and Directory Discovery,7,ESXi - Enumerate VMDKs available on an ESXi Host,4a233a40-caf7-4cf1-890a-c6331bbc72cf,command_prompt
 discovery,T1049,System Network Connections Discovery,3,"System Network Connections Discovery FreeBSD, Linux & MacOS",9ae28d3f-190f-4fa0-b023-c7bd3e0eabf2,sh
 discovery,T1057,Process Discovery,1,Process Discovery - ps,4ff64f0b-aaf2-4866-b39d-38d9791407cc,sh
 discovery,T1069.001,Permission Groups Discovery: Local Groups,1,Permission Groups Discovery (Local),952931a4-af0b-4335-bbbe-73c8c5b327ae,sh
@@ -371,6 +368,7 @@ discovery,T1614.001,System Location Discovery: System Language Discovery,3,Disco
 discovery,T1614.001,System Location Discovery: System Language Discovery,4,Discover System Language with localectl,07ce871a-b3c3-44a3-97fa-a20118fdc7c9,sh
 discovery,T1614.001,System Location Discovery: System Language Discovery,5,Discover System Language by locale file,5d7057c9-2c8a-4026-91dd-13b5584daa69,sh
 discovery,T1614.001,System Location Discovery: System Language Discovery,6,Discover System Language by Environment Variable Query,cb8f7cdc-36c4-4ed0-befc-7ad7d24dfd7a,sh
+discovery,T1614,System Location Discovery,2,"Get geolocation info through IP-Lookup services using curl freebsd, linux or macos",552b4db3-8850-412c-abce-ab5cc8a86604,bash
 discovery,T1518.001,Software Discovery: Security Software Discovery,4,Security Software Discovery - ps (Linux),23b91cd2-c99c-4002-9e41-317c63e024a2,sh
 discovery,T1518.001,Software Discovery: Security Software Discovery,5,Security Software Discovery - pgrep (FreeBSD),fa96c21c-5fd6-4428-aa28-51a2fbecdbdc,sh
 discovery,T1018,Remote System Discovery,6,Remote System Discovery - arp nix,acb6b1ff-e2ad-4d64-806c-6c35fe73b951,sh
@@ -402,6 +400,10 @@ execution,T1059.004,Command and Scripting Interpreter: Bash,10,Change login shel
 execution,T1059.004,Command and Scripting Interpreter: Bash,11,Environment variable scripts,bdaebd56-368b-4970-a523-f905ff4a8a51,sh
 execution,T1059.004,Command and Scripting Interpreter: Bash,12,Detecting pipe-to-shell,fca246a8-a585-4f28-a2df-6495973976a1,sh
 execution,T1059.004,Command and Scripting Interpreter: Bash,13,Current kernel information enumeration,3a53734a-9e26-4f4b-ad15-059e767f5f14,sh
+execution,T1059.004,Command and Scripting Interpreter: Bash,14,Shell Creation using awk command,ee72b37d-b8f5-46a5-a9e7-0ff50035ffd5,sh
+execution,T1059.004,Command and Scripting Interpreter: Bash,15,Creating shell using cpan command,bcd4c2bc-490b-4f91-bd31-3709fe75bbdf,sh
+execution,T1059.004,Command and Scripting Interpreter: Bash,16,Shell Creation using busybox command,ab4d04af-68dc-4fee-9c16-6545265b3276,sh
+execution,T1059.004,Command and Scripting Interpreter: Bash,17,emacs spawning an interactive system shell,e0742e38-6efe-4dd4-ba5c-2078095b6156,sh
 execution,T1059.006,Command and Scripting Interpreter: Python,1,Execute shell script via python's command mode arguement,3a95cdb2-c6ea-4761-b24e-02b71889b8bb,sh
 execution,T1059.006,Command and Scripting Interpreter: Python,2,Execute Python via scripts,6c4d1dcb-33c7-4c36-a8df-c6cfd0408be8,sh
 execution,T1059.006,Command and Scripting Interpreter: Python,3,Execute Python via Python executables,0b44d79b-570a-4b27-a31f-3bf2156e5eaa,sh
@@ -427,8 +429,6 @@ impact,T1529,System Shutdown/Reboot,8,Reboot System via `halt` - Linux,78f92e14-
 impact,T1529,System Shutdown/Reboot,9,Shutdown System via `poweroff` - FreeBSD/Linux,73a90cd2-48a2-4ac5-8594-2af35fa909fa,sh
 impact,T1529,System Shutdown/Reboot,10,Reboot System via `poweroff` - FreeBSD,5a282e50-86ff-438d-8cef-8ae01c9e62e1,sh
 impact,T1529,System Shutdown/Reboot,11,Reboot System via `poweroff` - Linux,61303105-ff60-427b-999e-efb90b314e41,bash
-impact,T1529,System Shutdown/Reboot,13,ESXi - Terminates VMs using pkill,987c9b4d-a637-42db-b1cb-e9e242c3991b,command_prompt
-impact,T1529,System Shutdown/Reboot,14,ESXi - Avoslocker enumerates VMs and forcefully kills VMs,189f7d6e-9442-4160-9bc3-5e4104d93ece,command_prompt
 initial-access,T1078.003,Valid Accounts: Local Accounts,8,Create local account (Linux),02a91c34-8a5b-4bed-87af-501103eb5357,bash
 initial-access,T1078.003,Valid Accounts: Local Accounts,9,Reactivate a locked/expired account (Linux),d2b95631-62d7-45a3-aaef-0972cea97931,bash
 initial-access,T1078.003,Valid Accounts: Local Accounts,10,Reactivate a locked/expired account (FreeBSD),09e3380a-fae5-4255-8b19-9950be0252cf,sh

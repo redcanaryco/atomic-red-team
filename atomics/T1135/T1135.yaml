@@ -40,10 +40,10 @@ atomic_tests:
     prereq_command: |
       if #{package_checker} > /dev/null; then exit 0; else exit 1; fi
     get_prereq_command: |
-      sudo #{package_installer} 
+      #{package_installer}
   executor:
     command: |
-      sudo smbstatus --shares
+      smbstatus --shares
     name: bash
     elevation_required: true
 - name: Network Share Discovery - FreeBSD

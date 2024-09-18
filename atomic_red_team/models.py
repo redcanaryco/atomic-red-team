@@ -10,12 +10,12 @@ from pydantic import (
     Field,
     IPvAnyAddress,
     StrictFloat,
-    StrictInt,
     StringConstraints,
     conlist,
     constr,
     field_serializer,
     field_validator,
+    model_validator,
 )
 from pydantic_core import PydanticCustomError
 from pydantic_core.core_schema import ValidationInfo
@@ -105,7 +105,7 @@ class StringArg(BaseArgument):
 
 
 class IntArg(BaseArgument):
-    default: Optional[StrictInt]
+    default: Optional[int]
     type: Literal["integer", "Integer"]
 
 
@@ -152,10 +152,8 @@ class Atomic(BaseModel):
     supported_platforms: conlist(Platform, min_length=1)
     executor: Union[ManualExecutor, CommandExecutor] = Field(..., discriminator="name")
     dependencies: Optional[List[Dependency]] = []
-    input_arguments: Optional[
-        Dict[constr(min_length=2, pattern=r"^[\w_-]+$"), Argument]
-    ] = {}
-    dependency_executor_name: Optional[ExecutorType] = None
+    input_arguments: Dict[constr(min_length=2, pattern=r"^[\w_-]+$"), Argument] = {}
+    dependency_executor_name: ExecutorType = "manual"
     auto_generated_guid: Optional[UUID] = None
 
     @classmethod
@@ -170,11 +168,50 @@ class Atomic(BaseModel):
             commands.extend([d.get_prereq_command, d.prereq_command])
         return extract_mustached_keys(commands)
 
+    @field_validator("dependency_executor_name", mode="before")  # noqa
+    @classmethod
+    def validate_dep_executor(cls, v, info: ValidationInfo):
+        if v is None:
+            raise PydanticCustomError(
+                "empty_dependency_executor_name",
+                "'dependency_executor_name' shouldn't be empty. Provide a valid value ['manual','powershell', 'sh', "
+                "'bash', 'command_prompt'] or remove the key from YAML",
+                {"loc": ["dependency_executor_name"], "input": None},
+            )
+        return v
+
+    @model_validator(mode="after")
+    def validate_elevation_required(self):
+        if (
+            ("linux" in self.supported_platforms or "macos" in self.supported_platforms)
+            and not self.executor.elevation_required
+            and isinstance(self.executor, CommandExecutor)
+        ):
+            commands = [self.executor.command]
+            if self.executor.cleanup_command:
+                commands.append(self.executor.cleanup_command)
+
+            if any(["sudo" in cmd for cmd in commands]):
+                raise PydanticCustomError(
+                    "elevation_required_but_not_provided",
+                    "'elevation_required' shouldn't be empty/false. Since `sudo` is used, set `elevation_required` to true`",
+                    {
+                        "loc": ["executor", "elevation_required"],
+                        "input": self.executor.elevation_required,
+                    },
+                )
+        return self
+
     @field_validator("input_arguments", mode="before")  # noqa
     @classmethod
     def validate(cls, v, info: ValidationInfo):
         if v is None:
-            return v
+            raise PydanticCustomError(
+                "empty_input_arguments",
+                "'input_arguments' shouldn't be empty. Provide a valid value or remove the key from YAML",
+                {"loc": ["input_arguments"], "input": None},
+            )
+
         atomic = info.data
         keys = cls.extract_mustached_keys(atomic)
         for key, _value in v.items():

@@ -147,7 +147,6 @@
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1562.010 Impair Defenses: Downgrade Attack](../../T1562.010/T1562.010.md)
   - Atomic Test #1: ESXi - Change VIB acceptance level to CommunitySupported via PowerCLI [linux]
-  - Atomic Test #2: ESXi - Change VIB acceptance level to CommunitySupported via ESXCLI [linux]
 - T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1480 Execution Guardrails [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1205.001 Port Knocking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -612,7 +611,8 @@
 # discovery
 - [T1033 System Owner/User Discovery](../../T1033/T1033.md)
   - Atomic Test #2: System Owner/User Discovery [linux, macos]
-- T1016.001 Internet Connection Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1016.001 System Network Configuration Discovery: Internet Connection Discovery](../../T1016.001/T1016.001.md)
+  - Atomic Test #2: Check internet connection using ping freebsd, linux or macos [macos, linux]
 - T1069 Permission Groups Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1652 Device Driver Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1087.002 Account Discovery: Domain Account](../../T1087.002/T1087.002.md)
@@ -654,8 +654,6 @@
   - Atomic Test #12: Environment variables discovery on freebsd, macos and linux [linux, macos]
   - Atomic Test #25: Linux List Kernel Modules [linux]
   - Atomic Test #26: FreeBSD List Kernel Modules [linux]
-  - Atomic Test #31: ESXi - VM Discovery using ESXCLI [linux]
-  - Atomic Test #32: ESXi - Darkside system information discovery [linux]
 - T1016.002 System Network Configuration Discovery: Wi-Fi Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1010 Application Window Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1497.003 Time Based Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -668,7 +666,6 @@
 - [T1083 File and Directory Discovery](../../T1083/T1083.md)
   - Atomic Test #3: Nix File and Directory Discovery [linux, macos]
   - Atomic Test #4: Nix File and Directory Discovery 2 [linux, macos]
-  - Atomic Test #7: ESXi - Enumerate VMDKs available on an ESXi Host [linux]
 - [T1049 System Network Connections Discovery](../../T1049/T1049.md)
   - Atomic Test #3: System Network Connections Discovery FreeBSD, Linux & MacOS [linux, macos]
 - T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -689,7 +686,8 @@
   - Atomic Test #4: Discover System Language with localectl [linux]
   - Atomic Test #5: Discover System Language by locale file [linux]
   - Atomic Test #6: Discover System Language by Environment Variable Query [linux]
-- T1614 System Location Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1614 System Location Discovery](../../T1614/T1614.md)
+  - Atomic Test #2: Get geolocation info through IP-Lookup services using curl freebsd, linux or macos [macos, linux]
 - [T1518.001 Software Discovery: Security Software Discovery](../../T1518.001/T1518.001.md)
   - Atomic Test #4: Security Software Discovery - ps (Linux) [linux]
   - Atomic Test #5: Security Software Discovery - pgrep (FreeBSD) [linux]
@@ -740,6 +738,10 @@
   - Atomic Test #11: Environment variable scripts [linux]
   - Atomic Test #12: Detecting pipe-to-shell [linux]
   - Atomic Test #13: Current kernel information enumeration [linux]
+  - Atomic Test #14: Shell Creation using awk command [linux, macos]
+  - Atomic Test #15: Creating shell using cpan command [linux, macos]
+  - Atomic Test #16: Shell Creation using busybox command [linux]
+  - Atomic Test #17: emacs spawning an interactive system shell [linux, macos]
 - T1559 Inter-Process Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1203 Exploitation for Client Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1059.006 Command and Scripting Interpreter: Python](../../T1059.006/T1059.006.md)
@@ -801,8 +803,6 @@
   - Atomic Test #9: Shutdown System via `poweroff` - FreeBSD/Linux [linux]
   - Atomic Test #10: Reboot System via `poweroff` - FreeBSD [linux]
   - Atomic Test #11: Reboot System via `poweroff` - Linux [linux]
-  - Atomic Test #13: ESXi - Terminates VMs using pkill [linux]
-  - Atomic Test #14: ESXi - Avoslocker enumerates VMs and forcefully kills VMs [linux]
 
 # initial-access
 - T1133 External Remote Services [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

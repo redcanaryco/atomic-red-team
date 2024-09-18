@@ -95,10 +95,29 @@ atomic_tests:
   - windows
   executor:
     command: |
-       reg add "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Accessibility\ATs\malware_test"
-       reg add "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Accessibility\ATs\malware_test" /v TerminateOnDesktopSwitch /t REG_DWORD /d 0
-       reg add "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Accessibility\ATs\malware_test" /v StartEXE /t REG_SZ /d C:\WINDOWS\system32\cmd.exe
+       reg add "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Accessibility\ATs\malware_test" /f
+       reg add "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Accessibility\ATs\malware_test" /v TerminateOnDesktopSwitch /t REG_DWORD /d 0 /f
+       reg add "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Accessibility\ATs\malware_test" /v StartEXE /t REG_SZ /d C:\WINDOWS\system32\cmd.exe /f
        atbroker /start malware_test
     cleanup_command: |
-       reg delete "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Accessibility\ATs\malware_test"
+       reg delete "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Accessibility\ATs\malware_test" /f
     name: command_prompt
+    elevation_required: true
+- name: Auto-start application on user logon
+  auto_generated_guid: 7125eba8-7b30-426b-9147-781d152be6fb
+  description: |
+    Executes code specified in the registry on new user logon session automatically by registration of new AT and modification of configuration value.
+    This test will register new AT named malware_test with code for cmd.exe and add a configuration value for the code to be run during user logon session.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+       reg add "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Accessibility\ATs\malware_test" /f
+       reg add "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Accessibility\ATs\malware_test" /v TerminateOnDesktopSwitch /t REG_DWORD /d 0 /f
+       reg add "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Accessibility\ATs\malware_test" /v StartEXE /t REG_SZ /d C:\WINDOWS\system32\cmd.exe /f
+       reg add "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Accessibility\ATs" /v Configuration /t REG_SZ /d malware_test /f
+    cleanup_command: |
+       reg delete "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Accessibility\ATs\malware_test" /f
+       reg delete "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Accessibility\ATs" /v Configuration /f
+    name: command_prompt
+    elevation_required: true

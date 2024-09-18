@@ -134,9 +134,7 @@ atomic_tests:
       usermod --expiredate "1" art
       usermod --unlock art
       usermod --expiredate "99999" art
-      su art
-      whoami
-      exit
+      su -c whoami art
     cleanup_command: |
       userdel -r art 
 - name: Reactivate a locked/expired account (FreeBSD)
@@ -165,36 +163,32 @@ atomic_tests:
 - name: Login as nobody (Linux)
   auto_generated_guid: 3d2cd093-ee05-41bd-a802-59ee5c301b85
   description: |
-    An adversary may try to re-purpose a system account to appear legitimate. In this test change the login shell of the nobody account, change its password to nobody, su to nobody, exit, then reset nobody's shell to /usr/sbin/nologin.
+    An adversary may try to re-purpose a system account to appear legitimate. In this test change the login shell of the nobody account, change its password to nobody, su to nobody, exit, then reset nobody's shell to /usr/sbin/nologin. Here is how the nobody entry should look like in `/etc/passwd` before the test is executed and right after the cleanup: `# -> nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin`
   supported_platforms:
   - linux
   executor:
     name: bash
     elevation_required: true
     command: |
-      cat /etc/passwd |grep nobody 
-      # -> nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+      cat /etc/passwd |grep nobody
       chsh --shell /bin/bash nobody
       usermod --password $(openssl passwd -1 nobody) nobody
-      su nobody
-      whoami
-      exit
+      su -c "whoami" nobody
     cleanup_command: |
       chsh --shell /usr/sbin/nologin nobody
-      cat /etc/passwd |grep nobody 
+      cat /etc/passwd |grep nobody
       # -> nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
 - name: Login as nobody (freebsd)
   auto_generated_guid: 16f6374f-7600-459a-9b16-6a88fd96d310
   description: |
-    An adversary may try to re-purpose a system account to appear legitimate. In this test change the login shell of the nobody account, change its password to nobody, su to nobody, exit, then reset nobody's shell to /usr/sbin/nologin.
+    An adversary may try to re-purpose a system account to appear legitimate. In this test change the login shell of the nobody account, change its password to nobody, su to nobody, exit, then reset nobody's shell to /usr/sbin/nologin. Here is how the nobody entry should look like in `/etc/passwd` before the test is executed and right after the cleanup: `# -> nobody:x:65534:65534:Unprivileged user:/nonexistent:/usr/sbin/nologin`
   supported_platforms:
   - linux
   executor:
     name: sh
     elevation_required: true
     command: |
-      cat /etc/passwd |grep nobody 
-      # -> nobody:x:65534:65534:Unprivileged user:/nonexistent:/usr/sbin/nologin
+      cat /etc/passwd |grep nobody
       pw usermod nobody -s /bin/sh
       echo $(openssl passwd -1 art) | pw mod user nobody -h 0
       su nobody
@@ -204,4 +198,29 @@ atomic_tests:
       pw usermod nobody -s /usr/sbin/nologin
       cat /etc/passwd |grep nobody
       # -> nobody:*:65534:65534:Unprivileged user:/nonexistent:/usr/sbin/nologin
+- name: Use PsExec to elevate to NT Authority\SYSTEM account
+  auto_generated_guid: 6904235f-0f55-4039-8aed-41c300ff7733
+  description: |    
+    PsExec is a powerful tool most known for its remote management capability. However, it can also be used to run processes as the local system account.
 
+    The local system account is a default windows account which has unrestricted access to all system resources.
+    
+    Upon successful execution, PsExec.exe will spawn a command prompt which will run 'whoami' as the local system account and then exit.    
+  supported_platforms:
+  - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      PsExec tool from Sysinternals must exist in the ExternalPayloads directory
+    prereq_command: |
+      if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe") { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\PsTools.zip"
+      Expand-Archive "PathToAtomicsFolder\..\ExternalPayloads\PsTools.zip" "PathToAtomicsFolder\..\ExternalPayloads\PsTools" -Force
+      Copy-Item "PathToAtomicsFolder\..\ExternalPayloads\PsTools\PsExec.exe" "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe" -Force
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe" -accepteula -s %COMSPEC% /c whoami

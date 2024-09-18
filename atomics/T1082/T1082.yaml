@@ -79,6 +79,7 @@ atomic_tests:
       sudo lsmod | grep -i "virtio_pci\|virtio_net"
       sudo lsmod | grep -i "hv_vmbus\|hv_blkvsc\|hv_netvsc\|hv_utils\|hv_storvsc"
     name: bash
+    elevation_required: true
 - name: FreeBSD VM Check via Kernel Modules
   auto_generated_guid: eefe6a49-d88b-41d8-8fc2-b46822da90d3
   description: |
@@ -439,7 +440,7 @@ atomic_tests:
     An adversary will using ESXCLI to enumerate the Virtual Machines on the host prior to executing power off routine.
     [Reference](https://www.crowdstrike.com/blog/hypervisor-jackpotting-ecrime-actors-increase-targeting-of-esxi-servers/)
   supported_platforms:
-  - linux
+  - windows
   input_arguments:
     vm_host:
       description: Specify the host name or IP of the ESXi Server
@@ -481,7 +482,7 @@ atomic_tests:
     Darkside ransomware utilises various ESXCLI commands to obtain information about the ESXi Host.
     [Reference](https://www.trendmicro.com/en_ph/research/21/e/darkside-linux-vms-targeted.html)
   supported_platforms:
-  - linux
+  - windows
   input_arguments:
     vm_host:
       description: Specify the host name or IP of the ESXi Server
@@ -526,4 +527,15 @@ atomic_tests:
     command: sysctl -n hw.model
     name: sh
     elevation_required: false
-  
+- name: 'operating system discovery '
+  auto_generated_guid: 70e13ef4-5a74-47e4-9d16-760b41b0e2db
+  description: |-
+    operating system discovery using get-ciminstance
+    https://petri.com/getting-operating-system-information-powershell/
+  supported_platforms:
+  - windows
+  executor:
+    command: Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version, ServicePackMajorVersion, OSArchitecture, CSName, WindowsDirectory | Out-null
+    name: powershell
+    elevation_required: false
+    
