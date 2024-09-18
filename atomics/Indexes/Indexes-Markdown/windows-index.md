@@ -810,7 +810,8 @@
   - Atomic Test #5: Adding custom debugger for Windows Error Reporting [windows]
   - Atomic Test #6: Load custom DLL on mstsc execution [windows]
   - Atomic Test #7: Persistence using automatic execution of custom DLL during RDP session [windows]
-  - Atomic Test #8: Persistence using STARTUP-PATH in MS-WORD [windows]
+  - Atomic Test #8: Persistence via ErrorHandler.cmd script execution [windows]
+  - Atomic Test #9: Persistence using STARTUP-PATH in MS-WORD [windows]
 - [T1134.005 Access Token Manipulation: SID-History Injection](../../T1134.005/T1134.005.md)
   - Atomic Test #1: Injection SID-History with mimikatz [windows]
 - [T1547.002 Authentication Package](../../T1547.002/T1547.002.md)
@@ -1161,7 +1162,8 @@
   - Atomic Test #5: Adding custom debugger for Windows Error Reporting [windows]
   - Atomic Test #6: Load custom DLL on mstsc execution [windows]
   - Atomic Test #7: Persistence using automatic execution of custom DLL during RDP session [windows]
-  - Atomic Test #8: Persistence using STARTUP-PATH in MS-WORD [windows]
+  - Atomic Test #8: Persistence via ErrorHandler.cmd script execution [windows]
+  - Atomic Test #9: Persistence using STARTUP-PATH in MS-WORD [windows]
 - [T1547.002 Authentication Package](../../T1547.002/T1547.002.md)
   - Atomic Test #1: Authentication Package [windows]
 - [T1546.015 Event Triggered Execution: Component Object Model Hijacking](../../T1546.015/T1546.015.md)
@@ -1620,6 +1622,9 @@
   - Atomic Test #7: System Owner/User Discovery Using Command Prompt [windows]
 - [T1016.001 System Network Configuration Discovery: Internet Connection Discovery](../../T1016.001/T1016.001.md)
   - Atomic Test #1: Check internet connection using ping Windows [windows]
+  - Atomic Test #3: Check internet connection using Test-NetConnection in PowerShell (ICMP-Ping) [windows]
+  - Atomic Test #4: Check internet connection using Test-NetConnection in PowerShell (TCP-HTTP) [windows]
+  - Atomic Test #5: Check internet connection using Test-NetConnection in PowerShell (TCP-SMB) [windows]
 - T1069 Permission Groups Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1615 Group Policy Discovery](../../T1615/T1615.md)
   - Atomic Test #1: Display group policy information via gpresult [windows]

@@ -144,7 +144,7 @@ defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,3,Cle
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,4,Clear Bash history (ln dev/null),23d348f3-cc5c-4ba9-bd0a-ae09069f0914,sh
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,5,Clear Bash history (truncate),47966a1d-df4f-4078-af65-db6d9aa20739,sh
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,6,Clear history of a bunch of shells,7e6721df-5f08-4370-9255-f06d8a77af4c,sh
-defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,7,Clear and Disable Bash History Logging,784e4011-bd1a-4ecd-a63a-8feb278512e6,sh
+defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,7,Clear and Disable Bash History Logging,784e4011-bd1a-4ecd-a63a-8feb278512e6,bash
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,8,Use Space Before Command to Avoid Logging to History,53b03a54-4529-4992-852d-a00b4b7215a6,sh
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,9,Disable Bash History Logging with SSH -T,5f8abd62-f615-43c5-b6be-f780f25790a1,sh
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,10,Clear Docker Container Logs,553b39f9-1e8c-47b1-abf5-8daf7b0391e9,bash
@@ -860,7 +860,8 @@ privilege-escalation,T1546,Event Triggered Execution,4,WMI Invoke-CimMethod Star
 privilege-escalation,T1546,Event Triggered Execution,5,Adding custom debugger for Windows Error Reporting,17d1a3cc-3373-495a-857a-e5dd005fb302,command_prompt
 privilege-escalation,T1546,Event Triggered Execution,6,Load custom DLL on mstsc execution,2db7852e-5a32-4ec7-937f-f4e027881700,command_prompt
 privilege-escalation,T1546,Event Triggered Execution,7,Persistence using automatic execution of custom DLL during RDP session,b7fc4c3f-fe6e-479a-ba27-ef91b88536e3,command_prompt
-privilege-escalation,T1546,Event Triggered Execution,8,Persistence using STARTUP-PATH in MS-WORD,f0027655-25ef-47b0-acaf-3d83d106156c,command_prompt
+privilege-escalation,T1546,Event Triggered Execution,8,Persistence via ErrorHandler.cmd script execution,547a4736-dd1c-4b48-b4fe-e916190bb2e7,powershell
+privilege-escalation,T1546,Event Triggered Execution,9,Persistence using STARTUP-PATH in MS-WORD,f0027655-25ef-47b0-acaf-3d83d106156c,command_prompt
 privilege-escalation,T1546.004,Event Triggered Execution: .bash_profile .bashrc and .shrc,1,Add command to .bash_profile,94500ae1-7e31-47e3-886b-c328da46872f,sh
 privilege-escalation,T1546.004,Event Triggered Execution: .bash_profile .bashrc and .shrc,2,Add command to .bashrc,0a898315-4cfa-4007-bafe-33a4646d115f,sh
 privilege-escalation,T1546.004,Event Triggered Execution: .bash_profile .bashrc and .shrc,3,Add command to .shrc,41502021-591a-4649-8b6e-83c9192aff53,sh
@@ -1229,7 +1230,8 @@ persistence,T1546,Event Triggered Execution,4,WMI Invoke-CimMethod Start Process
 persistence,T1546,Event Triggered Execution,5,Adding custom debugger for Windows Error Reporting,17d1a3cc-3373-495a-857a-e5dd005fb302,command_prompt
 persistence,T1546,Event Triggered Execution,6,Load custom DLL on mstsc execution,2db7852e-5a32-4ec7-937f-f4e027881700,command_prompt
 persistence,T1546,Event Triggered Execution,7,Persistence using automatic execution of custom DLL during RDP session,b7fc4c3f-fe6e-479a-ba27-ef91b88536e3,command_prompt
-persistence,T1546,Event Triggered Execution,8,Persistence using STARTUP-PATH in MS-WORD,f0027655-25ef-47b0-acaf-3d83d106156c,command_prompt
+persistence,T1546,Event Triggered Execution,8,Persistence via ErrorHandler.cmd script execution,547a4736-dd1c-4b48-b4fe-e916190bb2e7,powershell
+persistence,T1546,Event Triggered Execution,9,Persistence using STARTUP-PATH in MS-WORD,f0027655-25ef-47b0-acaf-3d83d106156c,command_prompt
 persistence,T1546.004,Event Triggered Execution: .bash_profile .bashrc and .shrc,1,Add command to .bash_profile,94500ae1-7e31-47e3-886b-c328da46872f,sh
 persistence,T1546.004,Event Triggered Execution: .bash_profile .bashrc and .shrc,2,Add command to .bashrc,0a898315-4cfa-4007-bafe-33a4646d115f,sh
 persistence,T1546.004,Event Triggered Execution: .bash_profile .bashrc and .shrc,3,Add command to .shrc,41502021-591a-4649-8b6e-83c9192aff53,sh
@@ -1337,7 +1339,7 @@ command-and-control,T1105,Ingress Tool Transfer,1,rsync remote file copy (push),
 command-and-control,T1105,Ingress Tool Transfer,2,rsync remote file copy (pull),3180f7d5-52c0-4493-9ea0-e3431a84773f,sh
 command-and-control,T1105,Ingress Tool Transfer,3,scp remote file copy (push),83a49600-222b-4866-80a0-37736ad29344,sh
 command-and-control,T1105,Ingress Tool Transfer,4,scp remote file copy (pull),b9d22b9a-9778-4426-abf0-568ea64e9c33,sh
-command-and-control,T1105,Ingress Tool Transfer,5,sftp remote file copy (push),f564c297-7978-4aa9-b37a-d90477feea4e,sh
+command-and-control,T1105,Ingress Tool Transfer,5,sftp remote file copy (push),f564c297-7978-4aa9-b37a-d90477feea4e,bash
 command-and-control,T1105,Ingress Tool Transfer,6,sftp remote file copy (pull),0139dba1-f391-405e-a4f5-f3989f2c88ef,sh
 command-and-control,T1105,Ingress Tool Transfer,7,certutil download (urlcache),dd3b61dd-7bbc-48cd-ab51-49ad1a776df0,command_prompt
 command-and-control,T1105,Ingress Tool Transfer,8,certutil download (verifyctl),ffd492e3-0455-4518-9fb1-46527c9f241b,powershell
@@ -1375,7 +1377,7 @@ collection,T1560.001,Archive Collected Data: Archive via Utility,1,Compress Data
 collection,T1560.001,Archive Collected Data: Archive via Utility,2,Compress Data and lock with password for Exfiltration with winrar,8dd61a55-44c6-43cc-af0c-8bdda276860c,command_prompt
 collection,T1560.001,Archive Collected Data: Archive via Utility,3,Compress Data and lock with password for Exfiltration with winzip,01df0353-d531-408d-a0c5-3161bf822134,command_prompt
 collection,T1560.001,Archive Collected Data: Archive via Utility,4,Compress Data and lock with password for Exfiltration with 7zip,d1334303-59cb-4a03-8313-b3e24d02c198,command_prompt
-collection,T1560.001,Archive Collected Data: Archive via Utility,5,Data Compressed - nix - zip,c51cec55-28dd-4ad2-9461-1eacbc82c3a0,sh
+collection,T1560.001,Archive Collected Data: Archive via Utility,5,Data Compressed - nix - zip,c51cec55-28dd-4ad2-9461-1eacbc82c3a0,bash
 collection,T1560.001,Archive Collected Data: Archive via Utility,6,Data Compressed - nix - gzip Single File,cde3c2af-3485-49eb-9c1f-0ed60e9cc0af,sh
 collection,T1560.001,Archive Collected Data: Archive via Utility,7,Data Compressed - nix - tar Folder or File,7af2b51e-ad1c-498c-aca8-d3290c19535a,sh
 collection,T1560.001,Archive Collected Data: Archive via Utility,8,Data Encrypted with zip and gpg symmetric,0286eb44-e7ce-41a0-b109-3da516e05a5f,sh
@@ -1673,6 +1675,9 @@ discovery,T1613,Container and Resource Discovery,1,Docker Container and Resource
 discovery,T1613,Container and Resource Discovery,2,Podman Container and Resource Discovery,fc631702-3f03-4f2b-8d8a-6b3d055580a1,sh
 discovery,T1016.001,System Network Configuration Discovery: Internet Connection Discovery,1,Check internet connection using ping Windows,e184b6bd-fb28-48aa-9a59-13012e33d7dc,command_prompt
 discovery,T1016.001,System Network Configuration Discovery: Internet Connection Discovery,2,"Check internet connection using ping freebsd, linux or macos",be8f4019-d8b6-434c-a814-53123cdcc11e,bash
+discovery,T1016.001,System Network Configuration Discovery: Internet Connection Discovery,3,Check internet connection using Test-NetConnection in PowerShell (ICMP-Ping),f8160cde-4e16-4c8b-8450-6042d5363eb0,powershell
+discovery,T1016.001,System Network Configuration Discovery: Internet Connection Discovery,4,Check internet connection using Test-NetConnection in PowerShell (TCP-HTTP),7c35779d-42ec-42ab-a283-6255b28e9d68,powershell
+discovery,T1016.001,System Network Configuration Discovery: Internet Connection Discovery,5,Check internet connection using Test-NetConnection in PowerShell (TCP-SMB),d9c32b3b-7916-45ad-aca5-6c902da80319,powershell
 discovery,T1615,Group Policy Discovery,1,Display group policy information via gpresult,0976990f-53b1-4d3f-a185-6df5be429d3b,command_prompt
 discovery,T1615,Group Policy Discovery,2,Get-DomainGPO to display group policy information via PowerView,4e524c4e-0e02-49aa-8df5-93f3f7959b9f,powershell
 discovery,T1615,Group Policy Discovery,3,WinPwn - GPOAudit,bc25c04b-841e-4965-855f-d1f645d7ab73,powershell
