@@ -602,7 +602,8 @@ privilege-escalation,T1546,Event Triggered Execution,4,WMI Invoke-CimMethod Star
 privilege-escalation,T1546,Event Triggered Execution,5,Adding custom debugger for Windows Error Reporting,17d1a3cc-3373-495a-857a-e5dd005fb302,command_prompt
 privilege-escalation,T1546,Event Triggered Execution,6,Load custom DLL on mstsc execution,2db7852e-5a32-4ec7-937f-f4e027881700,command_prompt
 privilege-escalation,T1546,Event Triggered Execution,7,Persistence using automatic execution of custom DLL during RDP session,b7fc4c3f-fe6e-479a-ba27-ef91b88536e3,command_prompt
-privilege-escalation,T1546,Event Triggered Execution,8,Persistence using STARTUP-PATH in MS-WORD,f0027655-25ef-47b0-acaf-3d83d106156c,command_prompt
+privilege-escalation,T1546,Event Triggered Execution,8,Persistence via ErrorHandler.cmd script execution,547a4736-dd1c-4b48-b4fe-e916190bb2e7,powershell
+privilege-escalation,T1546,Event Triggered Execution,9,Persistence using STARTUP-PATH in MS-WORD,f0027655-25ef-47b0-acaf-3d83d106156c,command_prompt
 privilege-escalation,T1134.005,Access Token Manipulation: SID-History Injection,1,Injection SID-History with mimikatz,6bef32e5-9456-4072-8f14-35566fb85401,command_prompt
 privilege-escalation,T1547.002,Authentication Package,1,Authentication Package,be2590e8-4ac3-47ac-b4b5-945820f2fbe9,powershell
 privilege-escalation,T1546.015,Event Triggered Execution: Component Object Model Hijacking,1,COM Hijacking - InprocServer32,48117158-d7be-441b-bc6a-d9e36e47b52b,powershell
@@ -844,7 +845,8 @@ persistence,T1546,Event Triggered Execution,4,WMI Invoke-CimMethod Start Process
 persistence,T1546,Event Triggered Execution,5,Adding custom debugger for Windows Error Reporting,17d1a3cc-3373-495a-857a-e5dd005fb302,command_prompt
 persistence,T1546,Event Triggered Execution,6,Load custom DLL on mstsc execution,2db7852e-5a32-4ec7-937f-f4e027881700,command_prompt
 persistence,T1546,Event Triggered Execution,7,Persistence using automatic execution of custom DLL during RDP session,b7fc4c3f-fe6e-479a-ba27-ef91b88536e3,command_prompt
-persistence,T1546,Event Triggered Execution,8,Persistence using STARTUP-PATH in MS-WORD,f0027655-25ef-47b0-acaf-3d83d106156c,command_prompt
+persistence,T1546,Event Triggered Execution,8,Persistence via ErrorHandler.cmd script execution,547a4736-dd1c-4b48-b4fe-e916190bb2e7,powershell
+persistence,T1546,Event Triggered Execution,9,Persistence using STARTUP-PATH in MS-WORD,f0027655-25ef-47b0-acaf-3d83d106156c,command_prompt
 persistence,T1547.002,Authentication Package,1,Authentication Package,be2590e8-4ac3-47ac-b4b5-945820f2fbe9,powershell
 persistence,T1546.015,Event Triggered Execution: Component Object Model Hijacking,1,COM Hijacking - InprocServer32,48117158-d7be-441b-bc6a-d9e36e47b52b,powershell
 persistence,T1546.015,Event Triggered Execution: Component Object Model Hijacking,2,Powershell Execute COM Object,752191b1-7c71-445c-9dbe-21bb031b18eb,powershell
@@ -1124,6 +1126,9 @@ discovery,T1033,System Owner/User Discovery,5,GetCurrent User with PowerShell Sc
 discovery,T1033,System Owner/User Discovery,6,System Discovery - SocGholish whoami,3d257a03-eb80-41c5-b744-bb37ac7f65c7,powershell
 discovery,T1033,System Owner/User Discovery,7,System Owner/User Discovery Using Command Prompt,ba38e193-37a6-4c41-b214-61b33277fe36,command_prompt
 discovery,T1016.001,System Network Configuration Discovery: Internet Connection Discovery,1,Check internet connection using ping Windows,e184b6bd-fb28-48aa-9a59-13012e33d7dc,command_prompt
+discovery,T1016.001,System Network Configuration Discovery: Internet Connection Discovery,3,Check internet connection using Test-NetConnection in PowerShell (ICMP-Ping),f8160cde-4e16-4c8b-8450-6042d5363eb0,powershell
+discovery,T1016.001,System Network Configuration Discovery: Internet Connection Discovery,4,Check internet connection using Test-NetConnection in PowerShell (TCP-HTTP),7c35779d-42ec-42ab-a283-6255b28e9d68,powershell
+discovery,T1016.001,System Network Configuration Discovery: Internet Connection Discovery,5,Check internet connection using Test-NetConnection in PowerShell (TCP-SMB),d9c32b3b-7916-45ad-aca5-6c902da80319,powershell
 discovery,T1615,Group Policy Discovery,1,Display group policy information via gpresult,0976990f-53b1-4d3f-a185-6df5be429d3b,command_prompt
 discovery,T1615,Group Policy Discovery,2,Get-DomainGPO to display group policy information via PowerView,4e524c4e-0e02-49aa-8df5-93f3f7959b9f,powershell
 discovery,T1615,Group Policy Discovery,3,WinPwn - GPOAudit,bc25c04b-841e-4965-855f-d1f645d7ab73,powershell
