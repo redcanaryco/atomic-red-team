@@ -12,12 +12,12 @@ atomic_tests:
       description: Command to run after the delay
       type: string
       default: whoami
-	ping_count:
+    ping_count:
       description: Number of ping requests to send (higher counts increase the delay)
       type: integer
       default: 250
   executor:
     command: |
-      ping -c #{ping_count} 8.8.8.8 > /dev/null
-      #{evil_command}
+        ping -c #{ping_count} 8.8.8.8 > /dev/null
+        #{evil_command}
     name: sh
