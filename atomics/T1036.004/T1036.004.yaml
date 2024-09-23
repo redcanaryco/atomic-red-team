@@ -61,6 +61,7 @@ atomic_tests:
   supported_platforms:
   - linux
   executor:
+    elevation_required: true
     command: |
       eval '(while true; do :; done) &'
       random_kernel_pid=$(ps -ef | grep "\[.*\]" | awk '{print $2}' | shuf -n 1)
