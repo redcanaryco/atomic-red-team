@@ -55,3 +55,18 @@ atomic_tests:
       exit 0
     cleanup_command: |
       rm -f #{exe_path}
+- name: Hiding a malicious process with bind mounts
+  description: |
+    Creates a malicious process and hides it by bind mounting to the /proc filesystem of a benign process
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      eval '(while true; do :; done) &'
+      random_kernel_pid=$(ps -ef | grep "\[.*\]" | awk '{print $2}' | shuf -n 1)
+      sudo mount -B /proc/$random_kernel_pid /proc/$(cat /tmp/evil_pid.txt)
+    cleanup_command: |
+      kill $(cat /tmp/evil_pid.txt) || echo "Failed to kill PID $evil_pid"
+      rm /tmp/evil_pid.txt
+    name: sh
+
