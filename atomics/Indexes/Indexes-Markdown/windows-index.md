@@ -322,7 +322,8 @@
   - Atomic Test #1: Clear Logs [windows]
   - Atomic Test #2: Delete System Logs Using Clear-EventLog [windows]
   - Atomic Test #3: Clear Event Logs via VBA [windows]
-- T1222 File and Directory Permissions Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1222 File and Directory Permissions Modification](../../T1222/T1222.md)
+  - Atomic Test #1: Enable Local and Remote Symbolic Links via fsutil [windows]
 - T1548 Abuse Elevation Control Mechanism [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1134.002 Create Process with Token](../../T1134.002/T1134.002.md)
   - Atomic Test #1: Access Token Manipulation [windows]
@@ -536,6 +537,7 @@
   - Atomic Test #7: Delete an entire folder - Windows PowerShell [windows]
   - Atomic Test #9: Delete Prefetch File [windows]
   - Atomic Test #10: Delete TeamViewer Log Files [windows]
+  - Atomic Test #11: Clears Recycle bin via rd [windows]
 - [T1221 Template Injection](../../T1221/T1221.md)
   - Atomic Test #1: WINWORD Remote Template Injection [windows]
 - T1134 Access Token Manipulation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1783,6 +1785,7 @@
   - Atomic Test #6: Discover Specific Process - tasklist [windows]
   - Atomic Test #7: Process Discovery - Process Hacker [windows]
   - Atomic Test #8: Process Discovery - PC Hunter [windows]
+  - Atomic Test #9: Launch Taskmgr from cmd to View running processes [windows]
 - T1497.002 User Activity Based Checks [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1069.001 Permission Groups Discovery: Local Groups](../../T1069.001/T1069.001.md)
   - Atomic Test #2: Basic Permission Groups Discovery Windows (Local) [windows]
@@ -1806,6 +1809,7 @@
   - Atomic Test #2: Query Registry with Powershell cmdlets [windows]
   - Atomic Test #3: Enumerate COM Objects in Registry with Powershell [windows]
   - Atomic Test #4: Reg query for AlwaysInstallElevated status [windows]
+  - Atomic Test #5: Check Software Inventory Logging (SIL) status via Registry [windows]
 - [T1614 System Location Discovery](../../T1614/T1614.md)
   - Atomic Test #1: Get geolocation info through IP-Lookup services using curl Windows [windows]
 - [T1518.001 Software Discovery: Security Software Discovery](../../T1518.001/T1518.001.md)
