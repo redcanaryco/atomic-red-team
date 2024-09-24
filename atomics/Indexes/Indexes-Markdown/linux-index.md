@@ -95,7 +95,8 @@
   - Atomic Test #4: Modify file timestamps using reference file [linux, macos]
 - T1620 Reflective Code Loading [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1564.011 Ignore Process Interrupts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1497.003 Time Based Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1497.003 Time Based Evasion](../../T1497.003/T1497.003.md)
+  - Atomic Test #1: Delay execution with ping [linux, macos]
 - [T1562.004 Impair Defenses: Disable or Modify System Firewall](../../T1562.004/T1562.004.md)
   - Atomic Test #7: Stop/Start UFW firewall [linux]
   - Atomic Test #8: Stop/Start Packet Filter [linux]
@@ -144,6 +145,7 @@
 - T1070 Indicator Removal on Host [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1036.004 Masquerading: Masquerade Task or Service](../../T1036.004/T1036.004.md)
   - Atomic Test #3: linux rename /proc/pid/comm using prctl [linux]
+  - Atomic Test #4: Hiding a malicious process with bind mounts [linux]
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1562.010 Impair Defenses: Downgrade Attack](../../T1562.010/T1562.010.md)
   - Atomic Test #1: ESXi - Change VIB acceptance level to CommunitySupported via PowerCLI [linux]
@@ -656,7 +658,8 @@
   - Atomic Test #26: FreeBSD List Kernel Modules [linux]
 - T1016.002 System Network Configuration Discovery: Wi-Fi Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1010 Application Window Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1497.003 Time Based Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1497.003 Time Based Evasion](../../T1497.003/T1497.003.md)
+  - Atomic Test #1: Delay execution with ping [linux, macos]
 - [T1217 Browser Bookmark Discovery](../../T1217/T1217.md)
   - Atomic Test #1: List Mozilla Firefox Bookmark Database Files on FreeBSD/Linux [linux]
   - Atomic Test #4: List Google Chromium Bookmark JSON Files on FreeBSD [linux]
