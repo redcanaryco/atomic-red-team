@@ -488,6 +488,7 @@
   - Atomic Test #1: Creating W32Time similar named service using schtasks [windows]
   - Atomic Test #2: Creating W32Time similar named service using sc [windows]
   - Atomic Test #3: linux rename /proc/pid/comm using prctl [linux]
+  - Atomic Test #4: Hiding a malicious process with bind mounts [linux]
 - [T1055.004 Process Injection: Asynchronous Procedure Call](../../T1055.004/T1055.004.md)
   - Atomic Test #1: Process Injection via C# [windows]
   - Atomic Test #2: EarlyBird APC Queue Injection in Go [windows]

@@ -145,6 +145,7 @@
 - T1070 Indicator Removal on Host [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1036.004 Masquerading: Masquerade Task or Service](../../T1036.004/T1036.004.md)
   - Atomic Test #3: linux rename /proc/pid/comm using prctl [linux]
+  - Atomic Test #4: Hiding a malicious process with bind mounts [linux]
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1562.010 Impair Defenses: Downgrade Attack](../../T1562.010/T1562.010.md)
   - Atomic Test #1: ESXi - Change VIB acceptance level to CommunitySupported via PowerCLI [linux]
