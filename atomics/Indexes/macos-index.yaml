@@ -5516,7 +5516,32 @@ defense-evasion:
       - Anti-virus
       spec_version: '2.1'
       x_mitre_attack_spec_version: 2.1.0
-    atomic_tests: []
+      identifier: T1497.003
+    atomic_tests:
+    - name: Delay execution with ping
+      auto_generated_guid: 8b87dd03-8204-478c-bac3-3959f6528de3
+      description: 'Uses the ping command to introduce a delay before executing a
+        malicious payload.
+
+        '
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        evil_command:
+          description: Command to run after the delay
+          type: string
+          default: whoami
+        ping_count:
+          description: Number of ping requests to send (higher counts increase the
+            delay)
+          type: integer
+          default: 250
+      executor:
+        command: |
+          ping -c #{ping_count} 8.8.8.8 > /dev/null
+          #{evil_command}
+        name: sh
   T1218.003:
     technique:
       modified: '2023-05-09T14:00:00.188Z'
@@ -55537,7 +55562,32 @@ discovery:
       - Anti-virus
       spec_version: '2.1'
       x_mitre_attack_spec_version: 2.1.0
-    atomic_tests: []
+      identifier: T1497.003
+    atomic_tests:
+    - name: Delay execution with ping
+      auto_generated_guid: 8b87dd03-8204-478c-bac3-3959f6528de3
+      description: 'Uses the ping command to introduce a delay before executing a
+        malicious payload.
+
+        '
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        evil_command:
+          description: Command to run after the delay
+          type: string
+          default: whoami
+        ping_count:
+          description: Number of ping requests to send (higher counts increase the
+            delay)
+          type: integer
+          default: 250
+      executor:
+        command: |
+          ping -c #{ping_count} 8.8.8.8 > /dev/null
+          #{evil_command}
+        name: sh
   T1580:
     technique:
       x_mitre_platforms:
