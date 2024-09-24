@@ -64,6 +64,7 @@ atomic_tests:
     elevation_required: true
     command: |
       eval '(while true; do :; done) &'
+      echo $! > /tmp/evil_pid.txt
       random_kernel_pid=$(ps -ef | grep "\[.*\]" | awk '{print $2}' | shuf -n 1)
       sudo mount -B /proc/$random_kernel_pid /proc/$(cat /tmp/evil_pid.txt)
     cleanup_command: |
