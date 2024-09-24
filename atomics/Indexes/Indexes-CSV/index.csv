@@ -217,6 +217,7 @@ defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,8,Windows - Times
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,9,MacOS - Timestomp Date Modified,87fffff4-d371-4057-a539-e3b24c37e564,sh
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,10,Event Log Manipulations- Time slipping via Powershell,7bcf83bf-f5ef-425c-9d9a-71618ad9ed12,powershell
 defense-evasion,T1620,Reflective Code Loading,1,WinPwn - Reflectively load Mimik@tz into memory,56b9589c-9170-4682-8c3d-33b86ecb5119,powershell
+defense-evasion,T1497.003,Time Based Evasion,1,Delay execution with ping,8b87dd03-8204-478c-bac3-3959f6528de3,sh
 defense-evasion,T1218.003,Signed Binary Proxy Execution: CMSTP,1,CMSTP Executing Remote Scriptlet,34e63321-9683-496b-bbc1-7566bc55e624,command_prompt
 defense-evasion,T1218.003,Signed Binary Proxy Execution: CMSTP,2,CMSTP Executing UAC Bypass,748cb4f6-2fb3-4e97-b7ad-b22635a09ab0,command_prompt
 defense-evasion,T1562.002,Impair Defenses: Disable Windows Event Logging,1,Disable Windows IIS HTTP Logging,69435dcf-c66f-4ec0-a8b1-82beb76b34db,powershell
@@ -391,6 +392,7 @@ defense-evasion,T1550.003,Use Alternate Authentication Material: Pass the Ticket
 defense-evasion,T1036.004,Masquerading: Masquerade Task or Service,1,Creating W32Time similar named service using schtasks,f9f2fe59-96f7-4a7d-ba9f-a9783200d4c9,command_prompt
 defense-evasion,T1036.004,Masquerading: Masquerade Task or Service,2,Creating W32Time similar named service using sc,b721c6ef-472c-4263-a0d9-37f1f4ecff66,command_prompt
 defense-evasion,T1036.004,Masquerading: Masquerade Task or Service,3,linux rename /proc/pid/comm using prctl,f0e3aaea-5cd9-4db6-a077-631dd19b27a8,sh
+defense-evasion,T1036.004,Masquerading: Masquerade Task or Service,4,Hiding a malicious process with bind mounts,ad4b73c2-d6e2-4d8b-9868-4c6f55906e01,sh
 defense-evasion,T1055.004,Process Injection: Asynchronous Procedure Call,1,Process Injection via C#,611b39b7-e243-4c81-87a4-7145a90358b1,command_prompt
 defense-evasion,T1055.004,Process Injection: Asynchronous Procedure Call,2,EarlyBird APC Queue Injection in Go,73785dd2-323b-4205-ab16-bb6f06677e14,powershell
 defense-evasion,T1055.004,Process Injection: Asynchronous Procedure Call,3,Remote Process Injection with Go using NtQueueApcThreadEx WinAPI,4cc571b1-f450-414a-850f-879baf36aa06,powershell
@@ -653,6 +655,7 @@ privilege-escalation,T1053.005,Scheduled Task/Job: Scheduled Task,7,Scheduled Ta
 privilege-escalation,T1053.005,Scheduled Task/Job: Scheduled Task,8,Import XML Schedule Task with Hidden Attribute,cd925593-fbb4-486d-8def-16cbdf944bf4,powershell
 privilege-escalation,T1053.005,Scheduled Task/Job: Scheduled Task,9,PowerShell Modify A Scheduled Task,dda6fc7b-c9a6-4c18-b98d-95ec6542af6d,powershell
 privilege-escalation,T1053.005,Scheduled Task/Job: Scheduled Task,10,"Scheduled Task (""Ghost Task"") via Registry Key Manipulation",704333ca-cc12-4bcf-9916-101844881f54,command_prompt
+privilege-escalation,T1053.005,Scheduled Task/Job: Scheduled Task,11,Scheduled Task Persistence via CompMgmt.msc,8fcfa3d5-ea7d-4e1c-bd3e-3c4ed315b7d2,command_prompt
 privilege-escalation,T1546.013,Event Triggered Execution: PowerShell Profile,1,Append malicious start-process cmdlet,090e5aa5-32b6-473b-a49b-21e843a56896,powershell
 privilege-escalation,T1053.007,Kubernetes Cronjob,1,ListCronjobs,ddfb0bc1-3c3f-47e9-a298-550ecfefacbd,bash
 privilege-escalation,T1053.007,Kubernetes Cronjob,2,CreateCronjob,f2fa019e-fb2a-4d28-9dc6-fd1a9b7f68c3,bash
@@ -934,6 +937,7 @@ execution,T1053.005,Scheduled Task/Job: Scheduled Task,7,Scheduled Task Executin
 execution,T1053.005,Scheduled Task/Job: Scheduled Task,8,Import XML Schedule Task with Hidden Attribute,cd925593-fbb4-486d-8def-16cbdf944bf4,powershell
 execution,T1053.005,Scheduled Task/Job: Scheduled Task,9,PowerShell Modify A Scheduled Task,dda6fc7b-c9a6-4c18-b98d-95ec6542af6d,powershell
 execution,T1053.005,Scheduled Task/Job: Scheduled Task,10,"Scheduled Task (""Ghost Task"") via Registry Key Manipulation",704333ca-cc12-4bcf-9916-101844881f54,command_prompt
+execution,T1053.005,Scheduled Task/Job: Scheduled Task,11,Scheduled Task Persistence via CompMgmt.msc,8fcfa3d5-ea7d-4e1c-bd3e-3c4ed315b7d2,command_prompt
 execution,T1047,Windows Management Instrumentation,1,WMI Reconnaissance Users,c107778c-dcf5-47c5-af2e-1d058a3df3ea,command_prompt
 execution,T1047,Windows Management Instrumentation,2,WMI Reconnaissance Processes,5750aa16-0e59-4410-8b9a-8a47ca2788e2,command_prompt
 execution,T1047,Windows Management Instrumentation,3,WMI Reconnaissance Software,718aebaa-d0e0-471a-8241-c5afa69c7414,command_prompt
@@ -1062,6 +1066,7 @@ persistence,T1053.005,Scheduled Task/Job: Scheduled Task,7,Scheduled Task Execut
 persistence,T1053.005,Scheduled Task/Job: Scheduled Task,8,Import XML Schedule Task with Hidden Attribute,cd925593-fbb4-486d-8def-16cbdf944bf4,powershell
 persistence,T1053.005,Scheduled Task/Job: Scheduled Task,9,PowerShell Modify A Scheduled Task,dda6fc7b-c9a6-4c18-b98d-95ec6542af6d,powershell
 persistence,T1053.005,Scheduled Task/Job: Scheduled Task,10,"Scheduled Task (""Ghost Task"") via Registry Key Manipulation",704333ca-cc12-4bcf-9916-101844881f54,command_prompt
+persistence,T1053.005,Scheduled Task/Job: Scheduled Task,11,Scheduled Task Persistence via CompMgmt.msc,8fcfa3d5-ea7d-4e1c-bd3e-3c4ed315b7d2,command_prompt
 persistence,T1556.003,Modify Authentication Process: Pluggable Authentication Modules,1,Malicious PAM rule,4b9dde80-ae22-44b1-a82a-644bf009eb9c,sh
 persistence,T1556.003,Modify Authentication Process: Pluggable Authentication Modules,2,Malicious PAM rule (freebsd),b17eacac-282d-4ca8-a240-46602cf863e3,sh
 persistence,T1556.003,Modify Authentication Process: Pluggable Authentication Modules,3,Malicious PAM module,65208808-3125-4a2e-8389-a0a00e9ab326,sh
@@ -1808,6 +1813,7 @@ discovery,T1082,System Information Discovery,33,sysctl to gather macOS hardware 
 discovery,T1082,System Information Discovery,34,operating system discovery ,70e13ef4-5a74-47e4-9d16-760b41b0e2db,powershell
 discovery,T1016.002,System Network Configuration Discovery: Wi-Fi Discovery,1,Enumerate Stored Wi-Fi Profiles And Passwords via netsh,53cf1903-0fa7-4177-ab14-f358ae809eec,command_prompt
 discovery,T1010,Application Window Discovery,1,List Process Main Windows - C# .NET,fe94a1c3-3e22-4dc9-9fdf-3a8bdbc10dc4,command_prompt
+discovery,T1497.003,Time Based Evasion,1,Delay execution with ping,8b87dd03-8204-478c-bac3-3959f6528de3,sh
 discovery,T1580,Cloud Infrastructure Discovery,1,AWS - EC2 Enumeration from Cloud Instance,99ee161b-dcb1-4276-8ecb-7cfdcb207820,sh
 discovery,T1580,Cloud Infrastructure Discovery,2,AWS - EC2 Security Group Enumeration,99b38f24-5acc-4aa3-85e5-b7f97a5d37ac,command_prompt
 discovery,T1217,Browser Bookmark Discovery,1,List Mozilla Firefox Bookmark Database Files on FreeBSD/Linux,3a41f169-a5ab-407f-9269-abafdb5da6c2,sh
