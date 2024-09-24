@@ -66,6 +66,13 @@ atomic_tests:
       description: Path of file to shred
       type: path
       default: /tmp/victim-shred.txt
+  dependencies:
+  - description: |
+      Check if file already exists
+    prereq_command: |
+      if [ -f "#{file_to_shred}" ]; then echo "File already exists"; else echo "File does NOT exist yet"; exit 1; fi
+    get_prereq_command: |
+      touch #{file_to_shred}
   executor:
     command: |
       shred -u #{file_to_shred}

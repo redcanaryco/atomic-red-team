@@ -59,6 +59,7 @@
   - Atomic Test #24: Disable UAC - Switch to the secure desktop when prompting for elevation via registry key [windows]
   - Atomic Test #25: Disable UAC notification via registry keys [windows]
   - Atomic Test #26: Disable ConsentPromptBehaviorAdmin via registry keys [windows]
+  - Atomic Test #27: UAC bypassed by Utilizing ProgIDs registry. [windows]
 - [T1542.001 Pre-OS Boot: System Firmware](../../T1542.001/T1542.001.md)
   - Atomic Test #1: UEFI Persistence via Wpbbin.exe File Creation [windows]
 - [T1574.011 Hijack Execution Flow: Services Registry Permissions Weakness](../../T1574.011/T1574.011.md)
@@ -612,6 +613,7 @@
   - Atomic Test #8: Import XML Schedule Task with Hidden Attribute [windows]
   - Atomic Test #9: PowerShell Modify A Scheduled Task [windows]
   - Atomic Test #10: Scheduled Task ("Ghost Task") via Registry Key Manipulation [windows]
+  - Atomic Test #11: Scheduled Task Persistence via CompMgmt.msc [windows]
 - T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574.007 Path Interception by PATH Environment Variable [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.013 Event Triggered Execution: PowerShell Profile](../../T1546.013/T1546.013.md)
@@ -644,6 +646,7 @@
   - Atomic Test #24: Disable UAC - Switch to the secure desktop when prompting for elevation via registry key [windows]
   - Atomic Test #25: Disable UAC notification via registry keys [windows]
   - Atomic Test #26: Disable ConsentPromptBehaviorAdmin via registry keys [windows]
+  - Atomic Test #27: UAC bypassed by Utilizing ProgIDs registry. [windows]
 - [T1574.011 Hijack Execution Flow: Services Registry Permissions Weakness](../../T1574.011/T1574.011.md)
   - Atomic Test #1: Service Registry Permissions Weakness [windows]
   - Atomic Test #2: Service ImagePath Change with reg.exe [windows]
@@ -810,7 +813,8 @@
   - Atomic Test #5: Adding custom debugger for Windows Error Reporting [windows]
   - Atomic Test #6: Load custom DLL on mstsc execution [windows]
   - Atomic Test #7: Persistence using automatic execution of custom DLL during RDP session [windows]
-  - Atomic Test #8: Persistence using STARTUP-PATH in MS-WORD [windows]
+  - Atomic Test #8: Persistence via ErrorHandler.cmd script execution [windows]
+  - Atomic Test #9: Persistence using STARTUP-PATH in MS-WORD [windows]
 - [T1134.005 Access Token Manipulation: SID-History Injection](../../T1134.005/T1134.005.md)
   - Atomic Test #1: Injection SID-History with mimikatz [windows]
 - [T1547.002 Authentication Package](../../T1547.002/T1547.002.md)
@@ -872,6 +876,7 @@
   - Atomic Test #8: Import XML Schedule Task with Hidden Attribute [windows]
   - Atomic Test #9: PowerShell Modify A Scheduled Task [windows]
   - Atomic Test #10: Scheduled Task ("Ghost Task") via Registry Key Manipulation [windows]
+  - Atomic Test #11: Scheduled Task Persistence via CompMgmt.msc [windows]
 - [T1047 Windows Management Instrumentation](../../T1047/T1047.md)
   - Atomic Test #1: WMI Reconnaissance Users [windows]
   - Atomic Test #2: WMI Reconnaissance Processes [windows]
@@ -987,6 +992,7 @@
   - Atomic Test #8: Import XML Schedule Task with Hidden Attribute [windows]
   - Atomic Test #9: PowerShell Modify A Scheduled Task [windows]
   - Atomic Test #10: Scheduled Task ("Ghost Task") via Registry Key Manipulation [windows]
+  - Atomic Test #11: Scheduled Task Persistence via CompMgmt.msc [windows]
 - T1205.002 Socket Filters [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574.007 Path Interception by PATH Environment Variable [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1161,7 +1167,8 @@
   - Atomic Test #5: Adding custom debugger for Windows Error Reporting [windows]
   - Atomic Test #6: Load custom DLL on mstsc execution [windows]
   - Atomic Test #7: Persistence using automatic execution of custom DLL during RDP session [windows]
-  - Atomic Test #8: Persistence using STARTUP-PATH in MS-WORD [windows]
+  - Atomic Test #8: Persistence via ErrorHandler.cmd script execution [windows]
+  - Atomic Test #9: Persistence using STARTUP-PATH in MS-WORD [windows]
 - [T1547.002 Authentication Package](../../T1547.002/T1547.002.md)
   - Atomic Test #1: Authentication Package [windows]
 - [T1546.015 Event Triggered Execution: Component Object Model Hijacking](../../T1546.015/T1546.015.md)
@@ -1618,7 +1625,11 @@
   - Atomic Test #5: GetCurrent User with PowerShell Script [windows]
   - Atomic Test #6: System Discovery - SocGholish whoami [windows]
   - Atomic Test #7: System Owner/User Discovery Using Command Prompt [windows]
-- T1016.001 Internet Connection Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1016.001 System Network Configuration Discovery: Internet Connection Discovery](../../T1016.001/T1016.001.md)
+  - Atomic Test #1: Check internet connection using ping Windows [windows]
+  - Atomic Test #3: Check internet connection using Test-NetConnection in PowerShell (ICMP-Ping) [windows]
+  - Atomic Test #4: Check internet connection using Test-NetConnection in PowerShell (TCP-HTTP) [windows]
+  - Atomic Test #5: Check internet connection using Test-NetConnection in PowerShell (TCP-SMB) [windows]
 - T1069 Permission Groups Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1615 Group Policy Discovery](../../T1615/T1615.md)
   - Atomic Test #1: Display group policy information via gpresult [windows]

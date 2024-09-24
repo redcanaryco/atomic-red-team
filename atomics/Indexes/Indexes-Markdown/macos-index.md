@@ -79,7 +79,8 @@
   - Atomic Test #9: MacOS - Timestomp Date Modified [macos]
 - T1620 Reflective Code Loading [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1564.011 Ignore Process Interrupts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1497.003 Time Based Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1497.003 Time Based Evasion](../../T1497.003/T1497.003.md)
+  - Atomic Test #1: Delay execution with ping [linux, macos]
 - T1562.004 Impair Defenses: Disable or Modify System Firewall [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1218.015 Electron Applications [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1553.006 Subvert Trust Controls: Code Signing Policy Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -507,7 +508,8 @@
 # discovery
 - [T1033 System Owner/User Discovery](../../T1033/T1033.md)
   - Atomic Test #2: System Owner/User Discovery [linux, macos]
-- T1016.001 Internet Connection Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1016.001 System Network Configuration Discovery: Internet Connection Discovery](../../T1016.001/T1016.001.md)
+  - Atomic Test #2: Check internet connection using ping freebsd, linux or macos [macos, linux]
 - T1069 Permission Groups Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1652 Device Driver Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1087.002 Account Discovery: Domain Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -537,7 +539,8 @@
   - Atomic Test #33: sysctl to gather macOS hardware info [macos]
 - T1016.002 System Network Configuration Discovery: Wi-Fi Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1010 Application Window Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1497.003 Time Based Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1497.003 Time Based Evasion](../../T1497.003/T1497.003.md)
+  - Atomic Test #1: Delay execution with ping [linux, macos]
 - [T1217 Browser Bookmark Discovery](../../T1217/T1217.md)
   - Atomic Test #2: List Mozilla Firefox Bookmark Database Files on macOS [macos]
   - Atomic Test #3: List Google Chrome Bookmark JSON Files on macOS [macos]

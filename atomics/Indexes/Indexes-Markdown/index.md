@@ -83,6 +83,7 @@
   - Atomic Test #24: Disable UAC - Switch to the secure desktop when prompting for elevation via registry key [windows]
   - Atomic Test #25: Disable UAC notification via registry keys [windows]
   - Atomic Test #26: Disable ConsentPromptBehaviorAdmin via registry keys [windows]
+  - Atomic Test #27: UAC bypassed by Utilizing ProgIDs registry. [windows]
 - [T1548.003 Abuse Elevation Control Mechanism: Sudo and Sudo Caching](../../T1548.003/T1548.003.md)
   - Atomic Test #1: Sudo usage [macos, linux]
   - Atomic Test #2: Sudo usage (freebsd) [linux]
@@ -275,7 +276,8 @@
 - [T1620 Reflective Code Loading](../../T1620/T1620.md)
   - Atomic Test #1: WinPwn - Reflectively load Mimik@tz into memory [windows]
 - T1564.011 Ignore Process Interrupts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1497.003 Time Based Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1497.003 Time Based Evasion](../../T1497.003/T1497.003.md)
+  - Atomic Test #1: Delay execution with ping [linux, macos]
 - [T1218.003 Signed Binary Proxy Execution: CMSTP](../../T1218.003/T1218.003.md)
   - Atomic Test #1: CMSTP Executing Remote Scriptlet [windows]
   - Atomic Test #2: CMSTP Executing UAC Bypass [windows]
@@ -487,6 +489,7 @@
   - Atomic Test #1: Creating W32Time similar named service using schtasks [windows]
   - Atomic Test #2: Creating W32Time similar named service using sc [windows]
   - Atomic Test #3: linux rename /proc/pid/comm using prctl [linux]
+  - Atomic Test #4: Hiding a malicious process with bind mounts [linux]
 - [T1055.004 Process Injection: Asynchronous Procedure Call](../../T1055.004/T1055.004.md)
   - Atomic Test #1: Process Injection via C# [windows]
   - Atomic Test #2: EarlyBird APC Queue Injection in Go [windows]
@@ -856,6 +859,7 @@
   - Atomic Test #8: Import XML Schedule Task with Hidden Attribute [windows]
   - Atomic Test #9: PowerShell Modify A Scheduled Task [windows]
   - Atomic Test #10: Scheduled Task ("Ghost Task") via Registry Key Manipulation [windows]
+  - Atomic Test #11: Scheduled Task Persistence via CompMgmt.msc [windows]
 - T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574.007 Path Interception by PATH Environment Variable [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.013 Event Triggered Execution: PowerShell Profile](../../T1546.013/T1546.013.md)
@@ -892,6 +896,7 @@
   - Atomic Test #24: Disable UAC - Switch to the secure desktop when prompting for elevation via registry key [windows]
   - Atomic Test #25: Disable UAC notification via registry keys [windows]
   - Atomic Test #26: Disable ConsentPromptBehaviorAdmin via registry keys [windows]
+  - Atomic Test #27: UAC bypassed by Utilizing ProgIDs registry. [windows]
 - [T1548.003 Abuse Elevation Control Mechanism: Sudo and Sudo Caching](../../T1548.003/T1548.003.md)
   - Atomic Test #1: Sudo usage [macos, linux]
   - Atomic Test #2: Sudo usage (freebsd) [linux]
@@ -1133,7 +1138,8 @@
   - Atomic Test #5: Adding custom debugger for Windows Error Reporting [windows]
   - Atomic Test #6: Load custom DLL on mstsc execution [windows]
   - Atomic Test #7: Persistence using automatic execution of custom DLL during RDP session [windows]
-  - Atomic Test #8: Persistence using STARTUP-PATH in MS-WORD [windows]
+  - Atomic Test #8: Persistence via ErrorHandler.cmd script execution [windows]
+  - Atomic Test #9: Persistence using STARTUP-PATH in MS-WORD [windows]
 - [T1546.004 Event Triggered Execution: .bash_profile .bashrc and .shrc](../../T1546.004/T1546.004.md)
   - Atomic Test #1: Add command to .bash_profile [macos, linux]
   - Atomic Test #2: Add command to .bashrc [macos, linux]
@@ -1244,6 +1250,7 @@
   - Atomic Test #8: Import XML Schedule Task with Hidden Attribute [windows]
   - Atomic Test #9: PowerShell Modify A Scheduled Task [windows]
   - Atomic Test #10: Scheduled Task ("Ghost Task") via Registry Key Manipulation [windows]
+  - Atomic Test #11: Scheduled Task Persistence via CompMgmt.msc [windows]
 - [T1047 Windows Management Instrumentation](../../T1047/T1047.md)
   - Atomic Test #1: WMI Reconnaissance Users [windows]
   - Atomic Test #2: WMI Reconnaissance Processes [windows]
@@ -1411,6 +1418,7 @@
   - Atomic Test #8: Import XML Schedule Task with Hidden Attribute [windows]
   - Atomic Test #9: PowerShell Modify A Scheduled Task [windows]
   - Atomic Test #10: Scheduled Task ("Ghost Task") via Registry Key Manipulation [windows]
+  - Atomic Test #11: Scheduled Task Persistence via CompMgmt.msc [windows]
 - T1205.002 Socket Filters [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1556.003 Modify Authentication Process: Pluggable Authentication Modules](../../T1556.003/T1556.003.md)
@@ -1659,7 +1667,8 @@
   - Atomic Test #5: Adding custom debugger for Windows Error Reporting [windows]
   - Atomic Test #6: Load custom DLL on mstsc execution [windows]
   - Atomic Test #7: Persistence using automatic execution of custom DLL during RDP session [windows]
-  - Atomic Test #8: Persistence using STARTUP-PATH in MS-WORD [windows]
+  - Atomic Test #8: Persistence via ErrorHandler.cmd script execution [windows]
+  - Atomic Test #9: Persistence using STARTUP-PATH in MS-WORD [windows]
 - [T1546.004 Event Triggered Execution: .bash_profile .bashrc and .shrc](../../T1546.004/T1546.004.md)
   - Atomic Test #1: Add command to .bash_profile [macos, linux]
   - Atomic Test #2: Add command to .bashrc [macos, linux]
@@ -2316,7 +2325,12 @@
 - [T1613 Container and Resource Discovery](../../T1613/T1613.md)
   - Atomic Test #1: Docker Container and Resource Discovery [containers]
   - Atomic Test #2: Podman Container and Resource Discovery [containers]
-- T1016.001 Internet Connection Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1016.001 System Network Configuration Discovery: Internet Connection Discovery](../../T1016.001/T1016.001.md)
+  - Atomic Test #1: Check internet connection using ping Windows [windows]
+  - Atomic Test #2: Check internet connection using ping freebsd, linux or macos [macos, linux]
+  - Atomic Test #3: Check internet connection using Test-NetConnection in PowerShell (ICMP-Ping) [windows]
+  - Atomic Test #4: Check internet connection using Test-NetConnection in PowerShell (TCP-HTTP) [windows]
+  - Atomic Test #5: Check internet connection using Test-NetConnection in PowerShell (TCP-SMB) [windows]
 - T1069 Permission Groups Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1069.003 Cloud Groups [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1615 Group Policy Discovery](../../T1615/T1615.md)
@@ -2463,7 +2477,8 @@
 - [T1010 Application Window Discovery](../../T1010/T1010.md)
   - Atomic Test #1: List Process Main Windows - C# .NET [windows]
 - T1087.003 Email Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1497.003 Time Based Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1497.003 Time Based Evasion](../../T1497.003/T1497.003.md)
+  - Atomic Test #1: Delay execution with ping [linux, macos]
 - [T1580 Cloud Infrastructure Discovery](../../T1580/T1580.md)
   - Atomic Test #1: AWS - EC2 Enumeration from Cloud Instance [linux, macos, iaas:aws]
   - Atomic Test #2: AWS - EC2 Security Group Enumeration [iaas:aws]
