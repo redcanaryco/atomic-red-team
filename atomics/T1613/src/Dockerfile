@@ -1,4 +1,4 @@
 FROM ubuntu:24.04
-LABEL = "canonical"
+LABEL key="canonical"
 RUN echo "canonical"
 ENTRYPOINT ["tail", "-f", "/dev/null"]

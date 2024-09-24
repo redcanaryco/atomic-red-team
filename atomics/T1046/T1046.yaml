@@ -188,9 +188,9 @@ atomic_tests:
       sudo systemctl start docker
   executor:
     command: |-
-      docker build -t t1046 /root/AtomicRedTeam/atomics/T1046/src/
-      docker run --name t1046_container  -d -t t1046
-      docker exec t1046_container ./test.sh
+      docker build -t t1046 $PathToAtomicsFolder/T1046/src/
+      docker run --name t1046_container --rm -d -t t1046
+      docker exec t1046_container /scan.sh
     cleanup_command: |-
       docker stop t1046_container
       docker rmi -f t1046

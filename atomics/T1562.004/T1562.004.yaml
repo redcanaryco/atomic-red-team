@@ -387,12 +387,12 @@ atomic_tests:
       if [ ! -x "$(command -v iptables)" ]; then echo -e "\n***** iptables NOT installed *****\n"; exit 1; fi
       if ! echo "$(iptables -L)" | grep -q "DROP .*dpt:ftp"; then echo -e "\n***** this firewall rule is NOT activated *****\n***** activate it by executing \"iptables -A OUTPUT -p tcp --dport 21 -j DROP\" *****\n"; exit 1; fi
     get_prereq_command: |
-      echo ""
+      iptables-save > /tmp/iptables.rules
+      if echo "$(iptables -L)" | grep -q "DROP .*dpt:ftp"; then echo "Rule found"; else echo "Rule not found. Setting it..."; iptables -A OUTPUT -p tcp --dport 21 -j DROP; fi
   executor:
     name: sh
     elevation_required: true
     command: |
-      iptables-save > /tmp/iptables.rules
       iptables -D OUTPUT -p tcp --dport 21 -j DROP
     cleanup_command: | 
       iptables-restore < /tmp/iptables.rules

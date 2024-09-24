@@ -1,0 +1,84 @@
+attack_technique: T1016.001
+display_name: 'System Network Configuration Discovery: Internet Connection Discovery'
+atomic_tests:
+- name: Check internet connection using ping Windows
+  auto_generated_guid: e184b6bd-fb28-48aa-9a59-13012e33d7dc
+  description: |
+    Check internet connection using ping on Windows. The default target of the ping is 8.8.8.8 (Google Public DNS).
+  supported_platforms:
+  - windows
+  input_arguments:
+    ping_target:
+      description: target of the ping
+      type: url
+      default: 8.8.8.8
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      ping -n 4 #{ping_target}
+- name: Check internet connection using ping freebsd, linux or macos
+  auto_generated_guid: be8f4019-d8b6-434c-a814-53123cdcc11e
+  description: |
+    Check internet connection using ping on Linux, MACOS. The default target of the ping is 8.8.8.8 (Google Public DNS).
+  supported_platforms:
+  - macos
+  - linux
+  input_arguments:
+    ping_target:
+      description: target of the ping
+      type: url
+      default: 8.8.8.8
+  executor:
+    name: bash
+    elevation_required: false
+    command: |
+      ping -n 4 #{ping_target}
+- name: Check internet connection using Test-NetConnection in PowerShell (ICMP-Ping)
+  auto_generated_guid: f8160cde-4e16-4c8b-8450-6042d5363eb0
+  description: |
+    Check internet connection using PowerShell's Test-NetConnection cmdlet and the ICMP/Ping protocol. The default target is 8.8.8.8 (Google Public DNS).
+  supported_platforms:
+  - windows
+  input_arguments:
+    target:
+      description: target of the request
+      type: string
+      default: 8.8.8.8
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      Test-NetConnection -ComputerName #{target}
+- name: Check internet connection using Test-NetConnection in PowerShell (TCP-HTTP)
+  auto_generated_guid: 7c35779d-42ec-42ab-a283-6255b28e9d68
+  description: |
+    Check internet connection using PowerShell's Test-NetConnection cmdlet and the TCP protocol to check for outbound HTTP (Port 80) access. The default target is www.google.com.
+  supported_platforms:
+  - windows
+  input_arguments:
+    target:
+      description: target of the request
+      type: string
+      default: www.google.com
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      Test-NetConnection -CommonTCPPort HTTP -ComputerName #{target}
+- name: Check internet connection using Test-NetConnection in PowerShell (TCP-SMB)
+  auto_generated_guid: d9c32b3b-7916-45ad-aca5-6c902da80319
+  description: |
+    Check internet connection using PowerShell's Test-NetConnection cmdlet and the TCP protocol to check for outbound SMB (Port 445) access. The default target is 8.8.8.8.
+  supported_platforms:
+  - windows
+  input_arguments:
+    target:
+      description: target of the request
+      type: string
+      default: 8.8.8.8
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      Test-NetConnection -CommonTCPPort SMB -ComputerName #{target}
