@@ -48,7 +48,8 @@
 - T1574.007 Path Interception by PATH Environment Variable [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1006 Direct Volume Access](../../T1006/T1006.md)
   - Atomic Test #1: Read volume boot sector via DOS device path (PowerShell) [windows]
-- T1564.008 Email Hiding Rules [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1564.008 Hide Artifacts: Email Hiding Rules](../../T1564.008/T1564.008.md)
+  - Atomic Test #1: New-Inbox Rule to Hide E-mail in M365 [azure-ad]
 - T1027.013 Encrypted/Encoded File [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1014 Rootkit](../../T1014/T1014.md)
   - Atomic Test #1: Loadable Kernel Module based Rootkit [linux]
@@ -1880,6 +1881,7 @@
   - Atomic Test #30: Arbitrary file download using the Notepad++ GUP.exe binary [windows]
   - Atomic Test #31: File download via nscurl [macos]
   - Atomic Test #32: File Download with Sqlcmd.exe [windows]
+  - Atomic Test #33: Remote File Copy using PSCP [windows]
 - T1665 Hide Infrastructure [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1001.002 Data Obfuscation via Steganography](../../T1001.002/T1001.002.md)
   - Atomic Test #1: Steganographic Tarball Embedding [windows]
@@ -1905,6 +1907,7 @@
   - Atomic Test #8: Data Encrypted with zip and gpg symmetric [linux, macos]
   - Atomic Test #9: Encrypts collected data with AES-256 and Base64 [linux, macos]
   - Atomic Test #10: ESXi - Remove Syslog remote IP [windows]
+  - Atomic Test #11: Compress a File for Exfiltration using Makecab [windows]
 - [T1113 Screen Capture](../../T1113/T1113.md)
   - Atomic Test #1: Screencapture [macos]
   - Atomic Test #2: Screencapture (silent) [macos]
