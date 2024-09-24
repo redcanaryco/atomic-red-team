@@ -144,7 +144,7 @@ defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,3,Cle
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,4,Clear Bash history (ln dev/null),23d348f3-cc5c-4ba9-bd0a-ae09069f0914,sh
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,5,Clear Bash history (truncate),47966a1d-df4f-4078-af65-db6d9aa20739,sh
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,6,Clear history of a bunch of shells,7e6721df-5f08-4370-9255-f06d8a77af4c,sh
-defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,7,Clear and Disable Bash History Logging,784e4011-bd1a-4ecd-a63a-8feb278512e6,sh
+defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,7,Clear and Disable Bash History Logging,784e4011-bd1a-4ecd-a63a-8feb278512e6,bash
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,8,Use Space Before Command to Avoid Logging to History,53b03a54-4529-4992-852d-a00b4b7215a6,sh
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,9,Disable Bash History Logging with SSH -T,5f8abd62-f615-43c5-b6be-f780f25790a1,sh
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,10,Clear Docker Container Logs,553b39f9-1e8c-47b1-abf5-8daf7b0391e9,bash
@@ -217,6 +217,7 @@ defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,8,Windows - Times
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,9,MacOS - Timestomp Date Modified,87fffff4-d371-4057-a539-e3b24c37e564,sh
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,10,Event Log Manipulations- Time slipping via Powershell,7bcf83bf-f5ef-425c-9d9a-71618ad9ed12,powershell
 defense-evasion,T1620,Reflective Code Loading,1,WinPwn - Reflectively load Mimik@tz into memory,56b9589c-9170-4682-8c3d-33b86ecb5119,powershell
+defense-evasion,T1497.003,Time Based Evasion,1,Delay execution with ping,8b87dd03-8204-478c-bac3-3959f6528de3,sh
 defense-evasion,T1218.003,Signed Binary Proxy Execution: CMSTP,1,CMSTP Executing Remote Scriptlet,34e63321-9683-496b-bbc1-7566bc55e624,command_prompt
 defense-evasion,T1218.003,Signed Binary Proxy Execution: CMSTP,2,CMSTP Executing UAC Bypass,748cb4f6-2fb3-4e97-b7ad-b22635a09ab0,command_prompt
 defense-evasion,T1562.002,Impair Defenses: Disable Windows Event Logging,1,Disable Windows IIS HTTP Logging,69435dcf-c66f-4ec0-a8b1-82beb76b34db,powershell
@@ -391,6 +392,7 @@ defense-evasion,T1550.003,Use Alternate Authentication Material: Pass the Ticket
 defense-evasion,T1036.004,Masquerading: Masquerade Task or Service,1,Creating W32Time similar named service using schtasks,f9f2fe59-96f7-4a7d-ba9f-a9783200d4c9,command_prompt
 defense-evasion,T1036.004,Masquerading: Masquerade Task or Service,2,Creating W32Time similar named service using sc,b721c6ef-472c-4263-a0d9-37f1f4ecff66,command_prompt
 defense-evasion,T1036.004,Masquerading: Masquerade Task or Service,3,linux rename /proc/pid/comm using prctl,f0e3aaea-5cd9-4db6-a077-631dd19b27a8,sh
+defense-evasion,T1036.004,Masquerading: Masquerade Task or Service,4,Hiding a malicious process with bind mounts,ad4b73c2-d6e2-4d8b-9868-4c6f55906e01,sh
 defense-evasion,T1055.004,Process Injection: Asynchronous Procedure Call,1,Process Injection via C#,611b39b7-e243-4c81-87a4-7145a90358b1,command_prompt
 defense-evasion,T1055.004,Process Injection: Asynchronous Procedure Call,2,EarlyBird APC Queue Injection in Go,73785dd2-323b-4205-ab16-bb6f06677e14,powershell
 defense-evasion,T1055.004,Process Injection: Asynchronous Procedure Call,3,Remote Process Injection with Go using NtQueueApcThreadEx WinAPI,4cc571b1-f450-414a-850f-879baf36aa06,powershell
@@ -1339,7 +1341,7 @@ command-and-control,T1105,Ingress Tool Transfer,1,rsync remote file copy (push),
 command-and-control,T1105,Ingress Tool Transfer,2,rsync remote file copy (pull),3180f7d5-52c0-4493-9ea0-e3431a84773f,sh
 command-and-control,T1105,Ingress Tool Transfer,3,scp remote file copy (push),83a49600-222b-4866-80a0-37736ad29344,sh
 command-and-control,T1105,Ingress Tool Transfer,4,scp remote file copy (pull),b9d22b9a-9778-4426-abf0-568ea64e9c33,sh
-command-and-control,T1105,Ingress Tool Transfer,5,sftp remote file copy (push),f564c297-7978-4aa9-b37a-d90477feea4e,sh
+command-and-control,T1105,Ingress Tool Transfer,5,sftp remote file copy (push),f564c297-7978-4aa9-b37a-d90477feea4e,bash
 command-and-control,T1105,Ingress Tool Transfer,6,sftp remote file copy (pull),0139dba1-f391-405e-a4f5-f3989f2c88ef,sh
 command-and-control,T1105,Ingress Tool Transfer,7,certutil download (urlcache),dd3b61dd-7bbc-48cd-ab51-49ad1a776df0,command_prompt
 command-and-control,T1105,Ingress Tool Transfer,8,certutil download (verifyctl),ffd492e3-0455-4518-9fb1-46527c9f241b,powershell
@@ -1808,6 +1810,7 @@ discovery,T1082,System Information Discovery,33,sysctl to gather macOS hardware 
 discovery,T1082,System Information Discovery,34,operating system discovery ,70e13ef4-5a74-47e4-9d16-760b41b0e2db,powershell
 discovery,T1016.002,System Network Configuration Discovery: Wi-Fi Discovery,1,Enumerate Stored Wi-Fi Profiles And Passwords via netsh,53cf1903-0fa7-4177-ab14-f358ae809eec,command_prompt
 discovery,T1010,Application Window Discovery,1,List Process Main Windows - C# .NET,fe94a1c3-3e22-4dc9-9fdf-3a8bdbc10dc4,command_prompt
+discovery,T1497.003,Time Based Evasion,1,Delay execution with ping,8b87dd03-8204-478c-bac3-3959f6528de3,sh
 discovery,T1580,Cloud Infrastructure Discovery,1,AWS - EC2 Enumeration from Cloud Instance,99ee161b-dcb1-4276-8ecb-7cfdcb207820,sh
 discovery,T1580,Cloud Infrastructure Discovery,2,AWS - EC2 Security Group Enumeration,99b38f24-5acc-4aa3-85e5-b7f97a5d37ac,command_prompt
 discovery,T1217,Browser Bookmark Discovery,1,List Mozilla Firefox Bookmark Database Files on FreeBSD/Linux,3a41f169-a5ab-407f-9269-abafdb5da6c2,sh

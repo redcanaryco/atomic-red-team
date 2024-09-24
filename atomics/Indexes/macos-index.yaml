@@ -4085,7 +4085,7 @@ defense-evasion:
           sed -i 's/set +o history//g' ~/.bashrc
           . ~/.bashrc
           set -o history
-        name: sh
+        name: bash
     - name: Use Space Before Command to Avoid Logging to History
       auto_generated_guid: 53b03a54-4529-4992-852d-a00b4b7215a6
       description: 'Using a space before a command causes the command to not be logged
@@ -5516,7 +5516,32 @@ defense-evasion:
       - Anti-virus
       spec_version: '2.1'
       x_mitre_attack_spec_version: 2.1.0
-    atomic_tests: []
+      identifier: T1497.003
+    atomic_tests:
+    - name: Delay execution with ping
+      auto_generated_guid: 8b87dd03-8204-478c-bac3-3959f6528de3
+      description: 'Uses the ping command to introduce a delay before executing a
+        malicious payload.
+
+        '
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        evil_command:
+          description: Command to run after the delay
+          type: string
+          default: whoami
+        ping_count:
+          description: Number of ping requests to send (higher counts increase the
+            delay)
+          type: integer
+          default: 250
+      executor:
+        command: |
+          ping -c #{ping_count} 8.8.8.8 > /dev/null
+          #{evil_command}
+        name: sh
   T1218.003:
     technique:
       modified: '2023-05-09T14:00:00.188Z'
@@ -43071,7 +43096,7 @@ command-and-control:
         command: 'sftp #{username}@#{remote_host}:#{remote_path} <<< $''put #{local_file}''
 
           '
-        name: sh
+        name: bash
     - name: sftp remote file copy (pull)
       auto_generated_guid: '0139dba1-f391-405e-a4f5-f3989f2c88ef'
       description: 'Utilize sftp to perform a remote file copy (pull)
@@ -55537,7 +55562,32 @@ discovery:
       - Anti-virus
       spec_version: '2.1'
       x_mitre_attack_spec_version: 2.1.0
-    atomic_tests: []
+      identifier: T1497.003
+    atomic_tests:
+    - name: Delay execution with ping
+      auto_generated_guid: 8b87dd03-8204-478c-bac3-3959f6528de3
+      description: 'Uses the ping command to introduce a delay before executing a
+        malicious payload.
+
+        '
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        evil_command:
+          description: Command to run after the delay
+          type: string
+          default: whoami
+        ping_count:
+          description: Number of ping requests to send (higher counts increase the
+            delay)
+          type: integer
+          default: 250
+      executor:
+        command: |
+          ping -c #{ping_count} 8.8.8.8 > /dev/null
+          #{evil_command}
+        name: sh
   T1580:
     technique:
       x_mitre_platforms:
