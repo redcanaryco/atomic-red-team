@@ -152,6 +152,7 @@ atomic_tests:
     name: sh
     elevation_required: false
     command: |
+      which_openssl=`which openssl`
       $which_openssl genrsa -out #{private_key_path} #{encryption_bit_size}
       $which_openssl rsa -in #{private_key_path} -pubout -out #{public_key_path}
       $which_openssl rsautl -encrypt -inkey #{public_key_path} -pubin -in #{input_file_path} -out #{encrypted_file_path}
