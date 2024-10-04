@@ -28,7 +28,7 @@
 - T1574.007 Path Interception by PATH Environment Variable [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1006 Direct Volume Access](../../T1006/T1006.md)
   - Atomic Test #1: Read volume boot sector via DOS device path (PowerShell) [windows]
-- T1564.008 Email Hiding Rules [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1564.008 Hide Artifacts: Email Hiding Rules [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.013 Encrypted/Encoded File [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1014 Rootkit [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1036.007 Double File Extension [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -59,6 +59,7 @@
   - Atomic Test #24: Disable UAC - Switch to the secure desktop when prompting for elevation via registry key [windows]
   - Atomic Test #25: Disable UAC notification via registry keys [windows]
   - Atomic Test #26: Disable ConsentPromptBehaviorAdmin via registry keys [windows]
+  - Atomic Test #27: UAC bypassed by Utilizing ProgIDs registry. [windows]
 - [T1542.001 Pre-OS Boot: System Firmware](../../T1542.001/T1542.001.md)
   - Atomic Test #1: UEFI Persistence via Wpbbin.exe File Creation [windows]
 - [T1574.011 Hijack Execution Flow: Services Registry Permissions Weakness](../../T1574.011/T1574.011.md)
@@ -321,7 +322,8 @@
   - Atomic Test #1: Clear Logs [windows]
   - Atomic Test #2: Delete System Logs Using Clear-EventLog [windows]
   - Atomic Test #3: Clear Event Logs via VBA [windows]
-- T1222 File and Directory Permissions Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1222 File and Directory Permissions Modification](../../T1222/T1222.md)
+  - Atomic Test #1: Enable Local and Remote Symbolic Links via fsutil [windows]
 - T1548 Abuse Elevation Control Mechanism [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1134.002 Create Process with Token](../../T1134.002/T1134.002.md)
   - Atomic Test #1: Access Token Manipulation [windows]
@@ -535,6 +537,7 @@
   - Atomic Test #7: Delete an entire folder - Windows PowerShell [windows]
   - Atomic Test #9: Delete Prefetch File [windows]
   - Atomic Test #10: Delete TeamViewer Log Files [windows]
+  - Atomic Test #11: Clears Recycle bin via rd [windows]
 - [T1221 Template Injection](../../T1221/T1221.md)
   - Atomic Test #1: WINWORD Remote Template Injection [windows]
 - T1134 Access Token Manipulation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -645,6 +648,7 @@
   - Atomic Test #24: Disable UAC - Switch to the secure desktop when prompting for elevation via registry key [windows]
   - Atomic Test #25: Disable UAC notification via registry keys [windows]
   - Atomic Test #26: Disable ConsentPromptBehaviorAdmin via registry keys [windows]
+  - Atomic Test #27: UAC bypassed by Utilizing ProgIDs registry. [windows]
 - [T1574.011 Hijack Execution Flow: Services Registry Permissions Weakness](../../T1574.011/T1574.011.md)
   - Atomic Test #1: Service Registry Permissions Weakness [windows]
   - Atomic Test #2: Service ImagePath Change with reg.exe [windows]
@@ -1314,6 +1318,7 @@
   - Atomic Test #29: iwr or Invoke Web-Request download [windows]
   - Atomic Test #30: Arbitrary file download using the Notepad++ GUP.exe binary [windows]
   - Atomic Test #32: File Download with Sqlcmd.exe [windows]
+  - Atomic Test #33: Remote File Copy using PSCP [windows]
 - T1665 Hide Infrastructure [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1001.002 Data Obfuscation via Steganography](../../T1001.002/T1001.002.md)
   - Atomic Test #1: Steganographic Tarball Embedding [windows]
@@ -1331,6 +1336,7 @@
   - Atomic Test #3: Compress Data and lock with password for Exfiltration with winzip [windows]
   - Atomic Test #4: Compress Data and lock with password for Exfiltration with 7zip [windows]
   - Atomic Test #10: ESXi - Remove Syslog remote IP [windows]
+  - Atomic Test #11: Compress a File for Exfiltration using Makecab [windows]
 - [T1113 Screen Capture](../../T1113/T1113.md)
   - Atomic Test #7: Windows Screencapture [windows]
   - Atomic Test #8: Windows Screen Capture (CopyFromScreen) [windows]
@@ -1781,6 +1787,7 @@
   - Atomic Test #6: Discover Specific Process - tasklist [windows]
   - Atomic Test #7: Process Discovery - Process Hacker [windows]
   - Atomic Test #8: Process Discovery - PC Hunter [windows]
+  - Atomic Test #9: Launch Taskmgr from cmd to View running processes [windows]
 - T1497.002 User Activity Based Checks [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1069.001 Permission Groups Discovery: Local Groups](../../T1069.001/T1069.001.md)
   - Atomic Test #2: Basic Permission Groups Discovery Windows (Local) [windows]
@@ -1804,6 +1811,7 @@
   - Atomic Test #2: Query Registry with Powershell cmdlets [windows]
   - Atomic Test #3: Enumerate COM Objects in Registry with Powershell [windows]
   - Atomic Test #4: Reg query for AlwaysInstallElevated status [windows]
+  - Atomic Test #5: Check Software Inventory Logging (SIL) status via Registry [windows]
 - [T1614 System Location Discovery](../../T1614/T1614.md)
   - Atomic Test #1: Get geolocation info through IP-Lookup services using curl Windows [windows]
 - [T1518.001 Software Discovery: Security Software Discovery](../../T1518.001/T1518.001.md)

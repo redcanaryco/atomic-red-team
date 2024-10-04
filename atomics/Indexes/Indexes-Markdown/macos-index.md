@@ -17,7 +17,7 @@
   - Atomic Test #11: Chmod through c script [macos, linux]
   - Atomic Test #13: Chown through c script [macos, linux]
 - T1574.007 Path Interception by PATH Environment Variable [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1564.008 Email Hiding Rules [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1564.008 Hide Artifacts: Email Hiding Rules [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.013 Encrypted/Encoded File [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1014 Rootkit [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1548.003 Abuse Elevation Control Mechanism: Sudo and Sudo Caching](../../T1548.003/T1548.003.md)

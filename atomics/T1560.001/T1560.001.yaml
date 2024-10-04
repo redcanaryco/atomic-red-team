@@ -383,5 +383,33 @@ atomic_tests:
       rm c:\temp\loghost.txt
     name: powershell
     elevation_required: true
-
-  
+- name: Compress a File for Exfiltration using Makecab
+  auto_generated_guid: 2a7bc405-9555-4f49-ace2-b2ae2941d629
+  description: |
+    An adversary may compress data using Makecab (in-built Windows binary) that is collected prior to exfiltration.
+    [reference](https://unit42.paloaltonetworks.com/exchange-server-credential-harvesting/)
+  supported_platforms:
+  - windows
+  input_arguments:
+    input_file:
+      description: Path to source file for compression
+      type: path
+      default: 'C:\Temp\sam.hiv'
+    output_file:
+      description: Path of the CAB file
+      type: path
+      default: 'C:\Temp\art.zip'
+  dependencies:
+  - description: |
+      A sample file for compression must be located at specified location (#{input_file})
+    prereq_command: |
+      if not exist "#{input_file}" (exit /b 1)
+    get_prereq_command: |
+      fsutil file createnew c:\Temp\sam.hiv 10485760
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      makecab.exe #{input_file} #{output_file}
+    cleanup_command: |
+      del #{output_file}

