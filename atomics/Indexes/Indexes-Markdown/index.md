@@ -2480,6 +2480,7 @@
   - Atomic Test #32: ESXi - Darkside system information discovery [windows]
   - Atomic Test #33: sysctl to gather macOS hardware info [macos]
   - Atomic Test #34: operating system discovery  [windows]
+  - Atomic Test #35: Check OS version via "ver" command [windows]
 - [T1016.002 System Network Configuration Discovery: Wi-Fi Discovery](../../T1016.002/T1016.002.md)
   - Atomic Test #1: Enumerate Stored Wi-Fi Profiles And Passwords via netsh [windows]
 - [T1010 Application Window Discovery](../../T1010/T1010.md)
