@@ -187,21 +187,17 @@ atomic_tests:
     elevation_required: false
     command: |
       if ((${#HISTIGNORE[@]})); then echo "\$HISTIGNORE = $HISTIGNORE"; else export HISTIGNORE='ls*:rm*:ssh*'; echo "\$HISTIGNORE = $HISTIGNORE"; fi
-      # -> $HISTIGNORE = ls*:rm*:ssh*
       history -c 
       ls -la $HISTFILE
       ls -la ~/.bash_logout
       if [ $(history |wc -l) -eq 1 ]; then echo "ls commands are not in history"; fi
-      # -> ls commands are not in history
       unset HISTIGNORE
 
       if ((${#HISTIGNORE[@]})); then echo "\$HISTIGNORE = $HISTIGNORE"; else export HISTIGNORE='*'; echo "\$HISTIGNORE = $HISTIGNORE"; fi
-      # -> $HISTIGNORE = *
       history -c 
       whoami
       groups
       if [ $(history |wc -l) -eq 0 ]; then echo "History cache is empty"; fi
-      # -> History cache is empty
     cleanup_command: |
       unset HISTIGNORE
 
