@@ -538,4 +538,11 @@ atomic_tests:
     command: Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version, ServicePackMajorVersion, OSArchitecture, CSName, WindowsDirectory | Out-null
     name: powershell
     elevation_required: false
+- name: Check OS version via "ver" command
+  description: Ver command shows information about os version.
+  supported_platforms:
+  - windows
+  executor:
+    name: command_prompt
+    command: ver
     
