@@ -1694,6 +1694,7 @@
 - [T1007 System Service Discovery](../../T1007/T1007.md)
   - Atomic Test #1: System Service Discovery [windows]
   - Atomic Test #2: System Service Discovery - net.exe [windows]
+  - Atomic Test #4: Get-Service Execution [windows]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #4: Packet Capture Windows Command Prompt [windows]
   - Atomic Test #5: Windows Internal Packet Capture [windows]

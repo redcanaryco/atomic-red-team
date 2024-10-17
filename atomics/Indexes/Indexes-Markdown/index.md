@@ -2411,6 +2411,7 @@
   - Atomic Test #1: System Service Discovery [windows]
   - Atomic Test #2: System Service Discovery - net.exe [windows]
   - Atomic Test #3: System Service Discovery - systemctl/service [linux]
+  - Atomic Test #4: Get-Service Execution [windows]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #1: Packet Capture Linux using tshark or tcpdump [linux]
   - Atomic Test #2: Packet Capture FreeBSD using tshark or tcpdump [linux]
