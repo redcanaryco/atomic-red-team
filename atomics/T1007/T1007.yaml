@@ -45,3 +45,10 @@ atomic_tests:
     command: |
       if [ "$(uname)" = 'FreeBSD' ]; then service -e; else systemctl --type=service; fi;
     name: bash
+- name: Get-Service Execution
+  description: Executes the Get-Service cmdlet to gather objects representing all services on the local system.
+  supported_platforms:
+  - windows
+  executor:
+    name: command_prompt
+    command: powershell.exe Get-Service
