@@ -546,4 +546,12 @@ atomic_tests:
   executor:
     name: command_prompt
     command: ver
+- name: Display volume shadow copies with "vssadmin"
+  description: The command shows all available volume shadow copies, along with their creation time and location.
+  supported_platforms:
+  - windows
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: vssadmin.exe list shadows
     
