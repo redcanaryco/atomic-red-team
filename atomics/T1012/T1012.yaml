@@ -126,3 +126,11 @@ atomic_tests:
       reg.exe query hklm\software\microsoft\windows\softwareinventorylogging /v collectionstate /reg:64
     name: command_prompt
     elevation_required: true
+- name: Inspect SystemStartOptions Value in Registry
+  description: The objective of this test is to query the SystemStartOptions key under HKLM\SYSTEM\CurrentControlSet\Control in the Windows registry. This action could be used to uncover specific details about how the system is configured to start, potentially aiding in understanding boot parameters or identifying security-related settings.
+    key is.
+  supported_platforms:
+  - windows
+  executor:
+    name: command_prompt
+    command: reg.exe query HKLM\SYSTEM\CurrentControlSet\Control /v SystemStartOptions
