@@ -18,17 +18,29 @@ atomic_tests:
     proxy_port:
       description: Proxy server port
       type: integer
-      default: 8080
+      default: 3128
     proxy_scheme:
       description: Protocol to proxy (http or https)
       type: string
       default: http
+  dependencies:
+  - description: Squid must be installed and running
+    prereq_command: if [ -x "$(command -v squid --version)" ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |-
+      sudo DEBIAN_FRONTEND=noninteractive apt-get -y install squid curl
+      sed -i 's/http_access deny all/#http_access deny all/' /etc/squid/squid.conf
+      echo "running squid"
+      squid -N -d 1 &
   executor:
     command: |
       export #{proxy_scheme}_proxy=#{proxy_server}:#{proxy_port}
+      curl http://google.com
+    elevation_required: true
     cleanup_command: |
       unset http_proxy
       unset https_proxy
+      kill -9 $(ps -aux | grep "squid -N" | grep -v "color=auto" | awk '{print $2}')
+      apt-get -y remove squid
     name: sh
 - name: Connection Proxy for macOS UI
   auto_generated_guid: 648d68c1-8bcd-4486-9abe-71c6655b6a2c
