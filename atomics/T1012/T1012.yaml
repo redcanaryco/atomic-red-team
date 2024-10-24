@@ -1,4 +1,4 @@
-attack_technique: T1012
+  attack_technique: T1012
 display_name: Query Registry
 atomic_tests:
 - name: Query Registry
@@ -133,4 +133,5 @@ atomic_tests:
   - windows
   executor:
     name: command_prompt
-    command: reg.exe query HKLM\SYSTEM\CurrentControlSet\Control /v SystemStartOptions
+    command: |
+      reg.exe query HKLM\SYSTEM\CurrentControlSet\Control /v SystemStartOptions
