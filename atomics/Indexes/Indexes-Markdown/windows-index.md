@@ -1694,6 +1694,7 @@
 - [T1007 System Service Discovery](../../T1007/T1007.md)
   - Atomic Test #1: System Service Discovery [windows]
   - Atomic Test #2: System Service Discovery - net.exe [windows]
+  - Atomic Test #4: Get-Service Execution [windows]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #4: Packet Capture Windows Command Prompt [windows]
   - Atomic Test #5: Windows Internal Packet Capture [windows]
@@ -1737,6 +1738,8 @@
   - Atomic Test #31: ESXi - VM Discovery using ESXCLI [windows]
   - Atomic Test #32: ESXi - Darkside system information discovery [windows]
   - Atomic Test #34: operating system discovery  [windows]
+  - Atomic Test #35: Check OS version via "ver" command [windows]
+  - Atomic Test #36: Display volume shadow copies with "vssadmin" [windows]
 - [T1016.002 System Network Configuration Discovery: Wi-Fi Discovery](../../T1016.002/T1016.002.md)
   - Atomic Test #1: Enumerate Stored Wi-Fi Profiles And Passwords via netsh [windows]
 - [T1010 Application Window Discovery](../../T1010/T1010.md)
