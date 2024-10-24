@@ -2411,6 +2411,7 @@
   - Atomic Test #1: System Service Discovery [windows]
   - Atomic Test #2: System Service Discovery - net.exe [windows]
   - Atomic Test #3: System Service Discovery - systemctl/service [linux]
+  - Atomic Test #4: Get-Service Execution [windows]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #1: Packet Capture Linux using tshark or tcpdump [linux]
   - Atomic Test #2: Packet Capture FreeBSD using tshark or tcpdump [linux]
@@ -2480,6 +2481,8 @@
   - Atomic Test #32: ESXi - Darkside system information discovery [windows]
   - Atomic Test #33: sysctl to gather macOS hardware info [macos]
   - Atomic Test #34: operating system discovery  [windows]
+  - Atomic Test #35: Check OS version via "ver" command [windows]
+  - Atomic Test #36: Display volume shadow copies with "vssadmin" [windows]
 - [T1016.002 System Network Configuration Discovery: Wi-Fi Discovery](../../T1016.002/T1016.002.md)
   - Atomic Test #1: Enumerate Stored Wi-Fi Profiles And Passwords via netsh [windows]
 - [T1010 Application Window Discovery](../../T1010/T1010.md)
