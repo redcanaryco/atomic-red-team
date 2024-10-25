@@ -2592,6 +2592,7 @@
   - Atomic Test #3: Enumerate COM Objects in Registry with Powershell [windows]
   - Atomic Test #4: Reg query for AlwaysInstallElevated status [windows]
   - Atomic Test #5: Check Software Inventory Logging (SIL) status via Registry [windows]
+  - Atomic Test #6: Inspect SystemStartOptions Value in Registry [windows]
 - [T1614 System Location Discovery](../../T1614/T1614.md)
   - Atomic Test #1: Get geolocation info through IP-Lookup services using curl Windows [windows]
   - Atomic Test #2: Get geolocation info through IP-Lookup services using curl freebsd, linux or macos [macos, linux]
