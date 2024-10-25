@@ -1353,7 +1353,8 @@
   - Atomic Test #2: Registry artefact when application use microphone [windows]
 - T1560.003 Archive via Custom Method [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1114 Email Collection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1025 Data from Removable Media [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1025 Data from Removable Media](../../T1025/T1025.md)
+  - Atomic Test #1: Identify Documents on USB and Removable Media via PowerShell [windows]
 - [T1074.001 Data Staged: Local Data Staging](../../T1074.001/T1074.001.md)
   - Atomic Test #1: Stage data from Discovery.bat [windows]
   - Atomic Test #3: Zip a Folder with PowerShell for Staging in Temp [windows]
@@ -1818,6 +1819,7 @@
   - Atomic Test #3: Enumerate COM Objects in Registry with Powershell [windows]
   - Atomic Test #4: Reg query for AlwaysInstallElevated status [windows]
   - Atomic Test #5: Check Software Inventory Logging (SIL) status via Registry [windows]
+  - Atomic Test #6: Inspect SystemStartOptions Value in Registry [windows]
 - [T1614 System Location Discovery](../../T1614/T1614.md)
   - Atomic Test #1: Get geolocation info through IP-Lookup services using curl Windows [windows]
 - [T1518.001 Software Discovery: Security Software Discovery](../../T1518.001/T1518.001.md)
