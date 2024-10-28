@@ -1939,7 +1939,8 @@
   - Atomic Test #3: using Quicktime Player [macos]
 - T1560.003 Archive via Custom Method [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1114 Email Collection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1025 Data from Removable Media [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1025 Data from Removable Media](../../T1025/T1025.md)
+  - Atomic Test #1: Identify Documents on USB and Removable Media via PowerShell [windows]
 - [T1074.001 Data Staged: Local Data Staging](../../T1074.001/T1074.001.md)
   - Atomic Test #1: Stage data from Discovery.bat [windows]
   - Atomic Test #2: Stage data from Discovery.sh [linux, macos]
@@ -2411,6 +2412,7 @@
   - Atomic Test #1: System Service Discovery [windows]
   - Atomic Test #2: System Service Discovery - net.exe [windows]
   - Atomic Test #3: System Service Discovery - systemctl/service [linux]
+  - Atomic Test #4: Get-Service Execution [windows]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #1: Packet Capture Linux using tshark or tcpdump [linux]
   - Atomic Test #2: Packet Capture FreeBSD using tshark or tcpdump [linux]
@@ -2480,6 +2482,8 @@
   - Atomic Test #32: ESXi - Darkside system information discovery [windows]
   - Atomic Test #33: sysctl to gather macOS hardware info [macos]
   - Atomic Test #34: operating system discovery  [windows]
+  - Atomic Test #35: Check OS version via "ver" command [windows]
+  - Atomic Test #36: Display volume shadow copies with "vssadmin" [windows]
 - [T1016.002 System Network Configuration Discovery: Wi-Fi Discovery](../../T1016.002/T1016.002.md)
   - Atomic Test #1: Enumerate Stored Wi-Fi Profiles And Passwords via netsh [windows]
 - [T1010 Application Window Discovery](../../T1010/T1010.md)
@@ -2589,6 +2593,7 @@
   - Atomic Test #3: Enumerate COM Objects in Registry with Powershell [windows]
   - Atomic Test #4: Reg query for AlwaysInstallElevated status [windows]
   - Atomic Test #5: Check Software Inventory Logging (SIL) status via Registry [windows]
+  - Atomic Test #6: Inspect SystemStartOptions Value in Registry [windows]
 - [T1614 System Location Discovery](../../T1614/T1614.md)
   - Atomic Test #1: Get geolocation info through IP-Lookup services using curl Windows [windows]
   - Atomic Test #2: Get geolocation info through IP-Lookup services using curl freebsd, linux or macos [macos, linux]
