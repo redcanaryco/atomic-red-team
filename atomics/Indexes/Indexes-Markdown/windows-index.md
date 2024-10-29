@@ -1830,6 +1830,7 @@
   - Atomic Test #8: Security Software Discovery - AV Discovery via Get-CimInstance and Get-WmiObject cmdlets [windows]
   - Atomic Test #9: Security Software Discovery - Windows Defender Enumeration [windows]
   - Atomic Test #10: Security Software Discovery - Windows Firewall Enumeration [windows]
+  - Atomic Test #11: Get Windows Defender exclusion settings using WMIC [windows]
 - [T1018 Remote System Discovery](../../T1018/T1018.md)
   - Atomic Test #1: Remote System Discovery - net [windows]
   - Atomic Test #2: Remote System Discovery - net group Domain Computers [windows]
