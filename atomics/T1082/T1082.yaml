@@ -556,9 +556,11 @@ atomic_tests:
     elevation_required: true
     command: vssadmin.exe list shadows
 - name: Enumerate Available Drives via gdr
-  description: This test simulates an attacker attempting to list the available drives on the system to gather data about file storage locations.
+  description: |
+    This test simulates an attacker attempting to list the available drives on the system to gather data about file storage locations.
   supported_platforms:
   - windows
   executor:
     name: command_prompt
-    command: powershell.exe -c "gdr -PSProvider 'FileSystem'"
+    command: |
+      powershell.exe -c "gdr -PSProvider 'FileSystem'"
