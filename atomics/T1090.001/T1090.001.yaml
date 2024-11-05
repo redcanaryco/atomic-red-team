@@ -18,17 +18,34 @@ atomic_tests:
     proxy_port:
       description: Proxy server port
       type: integer
-      default: 8080
+      default: 3128
     proxy_scheme:
       description: Protocol to proxy (http or https)
       type: string
       default: http
+    test_url:
+      description: URL to test proxy connection
+      type: string
+      default: http://google.com
+    run_squid:
+      description: |
+        If set to true, the test will install and configure a proxy server on the endpoint.
+        Note that this test may conflict with pre-existing system configuration.
+      type: string
+      default: "false"
+  dependencies:
+  - description: Squid must be installed and running
+    prereq_command: if ([ "#{run_squid}" = "false" ] || ([ -x "$(command -v squid --version)" ] && (ps aux | grep "squid -N" | grep -v "grep"))); then exit 0; else exit 1; fi;
+    get_prereq_command: |-
+      [ "#{run_squid}" = "true" ] && ([ -x "$(command -v squid --version)" ] || sudo DEBIAN_FRONTEND=noninteractive apt-get -y install squid curl || sudo yum install -y squid curl || sudo dnf install -y squid curl || brew install curl squid) && (squid -N -d 1 &) && exit 0
+      echo "Value #{run_squid} for variable "run_squid" is not valid" && exit 1
   executor:
     command: |
       export #{proxy_scheme}_proxy=#{proxy_server}:#{proxy_port}
+      curl #{test_url}
     cleanup_command: |
-      unset http_proxy
-      unset https_proxy
+      unset #{proxy_scheme}_proxy
+      [ "#{run_squid}" == "true" ] && (kill -9 $(ps aux | grep "squid -N" | grep -v "grep" | awk '{print $2}'))
     name: sh
 - name: Connection Proxy for macOS UI
   auto_generated_guid: 648d68c1-8bcd-4486-9abe-71c6655b6a2c
