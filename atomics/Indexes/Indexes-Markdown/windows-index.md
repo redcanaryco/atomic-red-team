@@ -1741,6 +1741,7 @@
   - Atomic Test #34: operating system discovery  [windows]
   - Atomic Test #35: Check OS version via "ver" command [windows]
   - Atomic Test #36: Display volume shadow copies with "vssadmin" [windows]
+  - Atomic Test #37: Identify System Locale and Regional Settings with PowerShell [windows]
 - [T1016.002 System Network Configuration Discovery: Wi-Fi Discovery](../../T1016.002/T1016.002.md)
   - Atomic Test #1: Enumerate Stored Wi-Fi Profiles And Passwords via netsh [windows]
 - [T1010 Application Window Discovery](../../T1010/T1010.md)
@@ -1934,7 +1935,8 @@
 - [T1133 External Remote Services](../../T1133/T1133.md)
   - Atomic Test #1: Running Chrome VPN Extensions via the Registry 2 vpn extension [windows]
 - T1195.001 Compromise Software Dependencies and Development Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1566.002 Spearphishing Link [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1566.002 Phishing: Spearphishing Link](../../T1566.002/T1566.002.md)
+  - Atomic Test #1: Paste and run technique [windows]
 - [T1566.001 Phishing: Spearphishing Attachment](../../T1566.001/T1566.001.md)
   - Atomic Test #1: Download Macro-Enabled Phishing Attachment [windows]
   - Atomic Test #2: Word spawned a command shell and used an IP address in the command line [windows]
