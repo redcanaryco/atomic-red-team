@@ -555,4 +555,16 @@ atomic_tests:
     name: command_prompt
     elevation_required: true
     command: vssadmin.exe list shadows
+- name: Identify System Locale and Regional Settings with PowerShell
+  description: |
+    This action demonstrates how an attacker might gather a system's region and language settings using PowerShell, which could aid in profiling 
+    the machine's location and user language preferences. The command outputs system locale details to a temporary file for further analysis.
+  supported_platforms:
+  - windows
+  executor:
+    name: command_prompt
+    command: |
+      powershell.exe -c "Get-Culture | Format-List | Out-File -FilePath %TMP%\a.txt"
+    cleanup_command: |
+      cmd.exe /c del "%TMP%\a.txt"
     
