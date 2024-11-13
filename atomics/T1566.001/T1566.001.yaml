@@ -56,12 +56,8 @@ atomic_tests:
     cleanup_command: |
       Remove-Item #{jse_path} -ErrorAction Ignore
     name: powershell
----
-attack_technique: T1566.001
-display_name: "Phishing: Spearphishing Attachment"
-atomic_tests:
-  - name: RDP Phishing via Outlook Temporary Folders
-    auto_generated_guid: 652d0d34-6565-434f-b069-15dbd824e82c
+
+- name: RDP Phishing via Outlook Temporary Folders
     description: |
       Creates .rdp files in Outlook temporary folders to simulate phishing campaign behavior.
       This test simulates the Midnight Blizzard (APT29) campaign targeting organizations with malicious RDP files.
