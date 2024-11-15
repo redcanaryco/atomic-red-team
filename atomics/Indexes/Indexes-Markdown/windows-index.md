@@ -31,7 +31,8 @@
 - T1564.008 Hide Artifacts: Email Hiding Rules [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.013 Encrypted/Encoded File [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1014 Rootkit [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1036.007 Double File Extension [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1036.007 Masquerading: Double File Extension](../../T1036.007/T1036.007.md)
+  - Atomic Test #1: File Extension Masquerading [windows]
 - [T1548.002 Abuse Elevation Control Mechanism: Bypass User Account Control](../../T1548.002/T1548.002.md)
   - Atomic Test #1: Bypass UAC using Event Viewer (cmd) [windows]
   - Atomic Test #2: Bypass UAC using Event Viewer (PowerShell) [windows]
@@ -494,7 +495,6 @@
   - Atomic Test #6: Masquerading - non-windows exe running as windows exe [windows]
   - Atomic Test #7: Masquerading - windows exe running as different windows exe [windows]
   - Atomic Test #8: Malicious process Masquerading as LSM.exe [windows]
-  - Atomic Test #9: File Extension Masquerading [windows]
 - T1562.011 Spoof Security Alerting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1574.009 Hijack Execution Flow: Path Interception by Unquoted Path](../../T1574.009/T1574.009.md)
   - Atomic Test #1: Execution of program.exe as service with unquoted service path [windows]
