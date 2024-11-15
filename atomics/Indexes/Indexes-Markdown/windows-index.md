@@ -1716,6 +1716,7 @@
   - Atomic Test #1: Win32_PnPEntity Hardware Inventory [windows]
   - Atomic Test #2: WinPwn - printercheck [windows]
   - Atomic Test #3: Peripheral Device Discovery via fsutil [windows]
+  - Atomic Test #4: Get Printer Device List via PowerShell Command [windows]
 - [T1082 System Information Discovery](../../T1082/T1082.md)
   - Atomic Test #1: System Information Discovery [windows]
   - Atomic Test #7: Hostname Discovery (Windows) [windows]
