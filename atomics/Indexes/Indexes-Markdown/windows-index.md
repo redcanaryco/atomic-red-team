@@ -31,7 +31,8 @@
 - T1564.008 Hide Artifacts: Email Hiding Rules [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.013 Encrypted/Encoded File [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1014 Rootkit [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1036.007 Double File Extension [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1036.007 Masquerading: Double File Extension](../../T1036.007/T1036.007.md)
+  - Atomic Test #1: File Extension Masquerading [windows]
 - [T1548.002 Abuse Elevation Control Mechanism: Bypass User Account Control](../../T1548.002/T1548.002.md)
   - Atomic Test #1: Bypass UAC using Event Viewer (cmd) [windows]
   - Atomic Test #2: Bypass UAC using Event Viewer (PowerShell) [windows]
@@ -129,6 +130,7 @@
   - Atomic Test #2: Indirect Command Execution - forfiles.exe [windows]
   - Atomic Test #3: Indirect Command Execution - conhost.exe [windows]
   - Atomic Test #4: Indirect Command Execution - Scriptrunner.exe [windows]
+  - Atomic Test #5: Indirect Command Execution - RunMRU Dialog [windows]
 - [T1140 Deobfuscate/Decode Files or Information](../../T1140/T1140.md)
   - Atomic Test #1: Deobfuscate/Decode Files Or Information [windows]
   - Atomic Test #2: Certutil Rename and Decode [windows]
@@ -494,7 +496,6 @@
   - Atomic Test #6: Masquerading - non-windows exe running as windows exe [windows]
   - Atomic Test #7: Masquerading - windows exe running as different windows exe [windows]
   - Atomic Test #8: Malicious process Masquerading as LSM.exe [windows]
-  - Atomic Test #9: File Extension Masquerading [windows]
 - T1562.011 Spoof Security Alerting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1574.009 Hijack Execution Flow: Path Interception by Unquoted Path](../../T1574.009/T1574.009.md)
   - Atomic Test #1: Execution of program.exe as service with unquoted service path [windows]
@@ -1322,6 +1323,7 @@
   - Atomic Test #30: Arbitrary file download using the Notepad++ GUP.exe binary [windows]
   - Atomic Test #32: File Download with Sqlcmd.exe [windows]
   - Atomic Test #33: Remote File Copy using PSCP [windows]
+  - Atomic Test #34: Windows push file using scp.exe [windows]
 - T1665 Hide Infrastructure [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1001.002 Data Obfuscation via Steganography](../../T1001.002/T1001.002.md)
   - Atomic Test #1: Steganographic Tarball Embedding [windows]
