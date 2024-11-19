@@ -1887,6 +1887,7 @@
   - Atomic Test #32: File Download with Sqlcmd.exe [windows]
   - Atomic Test #33: Remote File Copy using PSCP [windows]
   - Atomic Test #34: Windows push file using scp.exe [windows]
+  - Atomic Test #35: Windows pull file using scp.exe [windows]
 - T1665 Hide Infrastructure [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1001.002 Data Obfuscation via Steganography](../../T1001.002/T1001.002.md)
   - Atomic Test #1: Steganographic Tarball Embedding [windows]
