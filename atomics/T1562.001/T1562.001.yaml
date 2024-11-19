@@ -217,7 +217,7 @@ atomic_tests:
   - description: |
       sysmon filter must be loaded
     prereq_command: |
-      if(fltmc.exe filters | findstr #{sysmon_driver}) { exit 0 } else { exit 1 }
+      fltmc.exe filters | findstr #{sysmon_driver}
     get_prereq_command: |
       if(Test-Path "PathToAtomicsFolder\..\ExternalPayloads\Sysmon\Sysmon.exe"){
         & "PathToAtomicsFolder\..\ExternalPayloads\Sysmon\Sysmon.exe" -u
@@ -254,7 +254,7 @@ atomic_tests:
   - description: |
       Sysmon executable must be available
     prereq_command: |
-      if(cmd /c where sysmon) {exit 0} else {exit 1}
+      where.exe sysmon*.exe
     get_prereq_command: |
       $parentpath = Split-Path "#{sysmon_exe}"; $zippath = "$parentpath\Sysmon.zip"
       New-Item -ItemType Directory $parentpath -Force | Out-Null
@@ -264,7 +264,7 @@ atomic_tests:
   - description: |
       Sysmon must be installed
     prereq_command: |
-      if(cmd /c sc query sysmon) { exit 0} else { exit 1}
+      Get-Service -Name Sysmon*
     get_prereq_command: |
       cmd /c sysmon -i -accepteula
   executor:
