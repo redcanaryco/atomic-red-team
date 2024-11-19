@@ -25,11 +25,11 @@ atomic_tests:
   - windows
   executor:
     command: |
-      reg.exe add "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" /v SymlinkRemoteToLocalEvaluation /t REG_DWORD /d "1" /f
-      reg.exe add "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" /v SymlinkRemoteToRemoteEvaluation /t REG_DWORD /d "1" /f
+      reg add "HKLM\SYSTEM\CurrentControlSet\Control\FileSystem" /v SymlinkRemoteToLocalEvaluation /t REG_DWORD /d "1" /f
+      reg add "HKLM\SYSTEM\CurrentControlSet\Control\FileSystem" /v SymlinkRemoteToRemoteEvaluation /t REG_DWORD /d "1" /f
     cleanup_command: |
-      reg.exe add "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" /v SymlinkRemoteToLocalEvaluation /t REG_DWORD /d "0" /f
-      reg.exe add "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" /v SymlinkRemoteToRemoteEvaluation /t REG_DWORD /d "0" /f
+      reg add "HKLM\SYSTEM\CurrentControlSet\Control\FileSystem" /v SymlinkRemoteToLocalEvaluation /t REG_DWORD /d "0" /f
+      reg add "HKLM\SYSTEM\CurrentControlSet\Control\FileSystem" /v SymlinkRemoteToRemoteEvaluation /t REG_DWORD /d "0" /f
     name: command_prompt
     elevation_required: true
 - name: Enable Local and Remote Symbolic Links via Powershell
@@ -45,5 +45,5 @@ atomic_tests:
     cleanup_command: |
       New-ItemProperty -Path HKLM:\Software\Policies\Microsoft\Windows\Filesystems\NTFS -Name SymlinkRemoteToLocalEvaluation -PropertyType DWORD -Value 0 -Force -ErrorAction Ignore
       New-ItemProperty -Path HKLM:\Software\Policies\Microsoft\Windows\Filesystems\NTFS -Name SymlinkRemoteToRemoteEvaluation -PropertyType DWORD -Value 0 -Force -ErrorAction Ignore
-    name: command_prompt
+    name: powershell
     elevation_required: true
