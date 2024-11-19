@@ -210,7 +210,7 @@ atomic_tests:
   - description: |
       sysmon must be Installed
     prereq_command: |
-      if(sc.exe query sysmon | findstr sysmon) { exit 0 } else { exit 1 }
+      Get-Service -Name sysmon*
     get_prereq_command: |
       if(cmd.exe /c "where.exe Sysmon.exe 2> nul | findstr Sysmon 2> nul") { C:\Windows\Sysmon.exe -accepteula -i } else
       { & "PathToAtomicsFolder\..\ExternalPayloads\Sysmon\Sysmon.exe" -accepteula -i}
@@ -223,8 +223,10 @@ atomic_tests:
         & "PathToAtomicsFolder\..\ExternalPayloads\Sysmon\Sysmon.exe" -u
         & "PathToAtomicsFolder\..\ExternalPayloads\Sysmon\Sysmon.exe" -accepteula -i
       }else{
-        sysmon -u
-        sysmon -accepteula -i
+        Get-Service -Name Sysmon* | where-Object {$_.Status -eq "Running"} | ForEach-Object {
+          & "$($_.Name)" -u
+          & "$($_.Name)" -accepteula -i
+        }
       }
   executor:
     command: |
@@ -267,7 +269,9 @@ atomic_tests:
       cmd /c sysmon -i -accepteula
   executor:
     command: |
-      sysmon -u
+      Get-Service -Name Sysmon* | where-Object {$_.Status -eq "Running"} | ForEach-Object {
+        & "$($_.Name)" -u
+      }
     cleanup_command: |
       sysmon -i -accepteula >nul 2>&1
     name: command_prompt
