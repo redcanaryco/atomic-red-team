@@ -39,24 +39,24 @@ class AtomicRedTeamDocs
     generate_attack_matrix! 'Linux', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Matrices/linux-matrix.md", only_platform: /linux/
 
     generate_index! 'All', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/index.md"
-    generate_index! 'Windows', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/windows-index.md", only_platform: /windows/
-    generate_index! 'macOS', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/macos-index.md", only_platform: /macos/
-    generate_index! 'Linux', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/linux-index.md", only_platform: /linux/
-    generate_index! 'IaaS', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/iaas-index.md", only_platform: /iaas/
-    generate_index! 'Containers', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/containers-index.md", only_platform: /containers/
-    generate_index! 'Office 365', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/office-365-index.md", only_platform: /office-365/
-    generate_index! 'Google Workspace', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/google-workspace-index.md", only_platform: /google-workspace/
-    generate_index! 'Azure AD', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/azure-ad-index.md", only_platform: /azure-ad/
+    generate_index! 'Windows', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/windows-index.md", only_platform: /windows/, attack_platform: /windows/
+    generate_index! 'macOS', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/macos-index.md", only_platform: /macos/, attack_platform: /windows/
+    generate_index! 'Linux', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/linux-index.md", only_platform: /linux/, attack_platform: /windows/
+    generate_index! 'IaaS', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/iaas-index.md", only_platform: /iaas/, attack_platform: /windows/
+    generate_index! 'Containers', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/containers-index.md", only_platform: /containers/, attack_platform: /windows/
+    generate_index! 'Office 365', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/office-365-index.md", only_platform: /office-365/, attack_platform: /office/
+    generate_index! 'Google Workspace', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/google-workspace-index.md", only_platform: /google-workspace/, attack_platform: /office/
+    generate_index! 'Azure AD', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/azure-ad-index.md", only_platform: /azure-ad/, attack_platform: /identity/
 
     generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/index.csv"
-    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/windows-index.csv", only_platform: /windows/
-    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/macos-index.csv", only_platform: /macos/
-    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/linux-index.csv", only_platform: /linux/
-    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/iaas-index.csv", only_platform: /iaas/
-    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/containers-index.csv", only_platform: /containers/
-    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/office-365-index.csv", only_platform: /office-365/
-    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/google-workspace-index.csv", only_platform: /google-workspace/
-    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/azure-ad-index.csv", only_platform: /azure-ad/
+    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/windows-index.csv", only_platform: /windows/, attack_platform: /windows/
+    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/macos-index.csv", only_platform: /macos/, attack_platform: /macos/
+    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/linux-index.csv", only_platform: /linux/, attack_platform: /linux/
+    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/iaas-index.csv", only_platform: /iaas/, attack_platform: /iaas/
+    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/containers-index.csv", only_platform: /containers/, attack_platform: /containers/
+    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/office-365-index.csv", only_platform: /office-365/, attack_platform: /office/
+    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/google-workspace-index.csv", only_platform: /google-workspace/, attack_platform: /identity/
+    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/azure-ad-index.csv", only_platform: /azure-ad/, attack_platform: /identity/
 
     generate_yaml_index! "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/index.yaml"
     ["windows", "macos", "linux", "office-365", "azure-ad", "google-workspace", "saas", "iaas", "containers", "iaas:gcp", "iaas:azure", "iaas:aws"].each do | platform|
@@ -135,11 +135,11 @@ class AtomicRedTeamDocs
   #
   # Generates a master Markdown index of ATT&CK Tactic -> Technique -> Atomic Tests
   #
-  def generate_index!(title_prefix, output_doc_path, only_platform: /.*/)
+  def generate_index!(title_prefix, output_doc_path, only_platform: /.*/, attack_platform: /.*/)
     result = ''
     result += "# #{title_prefix} Atomic Tests by ATT&CK Tactic & Technique\n"
 
-    ATTACK_API.techniques_by_tactic(only_platform: only_platform).each do |tactic, techniques|
+    ATTACK_API.techniques_by_tactic(only_platform: attack_platform).each do |tactic, techniques|
       result += "# #{tactic}\n"
       techniques.each do |technique|
         result += "- #{ATOMIC_RED_TEAM.github_link_to_technique(technique, include_identifier: true, only_platform: only_platform)}\n"
@@ -161,11 +161,11 @@ class AtomicRedTeamDocs
   #
   # Generates a master Markdown index of ATT&CK Tactic -> Technique -> Atomic Tests
   #
-  def generate_index_csv!(output_doc_path_by_tactic, only_platform: /.*/)
+  def generate_index_csv!(output_doc_path_by_tactic, only_platform: /.*/, attack_platform: /.*/)
     rows = Array.new
     rows << ["Tactic", "Technique #", "Technique Name", "Test #", "Test Name", "Test GUID", "Executor Name"]
 
-    ATTACK_API.techniques_by_tactic(only_platform: only_platform).each do |tactic, techniques|
+    ATTACK_API.techniques_by_tactic(only_platform: attack_platform).each do |tactic, techniques|
       techniques.each do |technique|
         ATOMIC_RED_TEAM.atomic_tests_for_technique(technique).each_with_index do |atomic_test, i|
           next unless atomic_test['supported_platforms'].any? {|platform| platform.downcase =~ only_platform}
