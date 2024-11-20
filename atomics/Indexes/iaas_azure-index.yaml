@@ -14304,26 +14304,18 @@ defense-evasion:
       supported_platforms:
       - iaas:azure
       input_arguments:
-        username:
-          description: Azure username
-          type: string
-          default: 
-        password:
-          description: Azure password
-          type: string
-          default: 
         resource_group:
           description: Name of the resource group
           type: string
-          default: 
+          default: ART-ResourceGroupName-T1078-004
         runbook_name:
           description: Name of the runbook name
           type: string
-          default: 
+          default: ART-RunbookName-T1078-004
         automation_account_name:
           description: Name of the automation account name
           type: string
-          default: 
+          default: ART-AutomationAccountName-T1078-004
       dependency_executor_name: powershell
       dependencies:
       - description: 'Check if terraform is installed.
@@ -14332,47 +14324,61 @@ defense-evasion:
         prereq_command: 'terraform version
 
           '
-        get_prereq_command: 'echo Please install terraform.
+        get_prereq_command: 'echo "Please install terraform via https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
+          (URL accurate as of Nov. 15, 2024)."
 
           '
-      - description: 'Install-Module -Name Az
+      - description: |
+          Check if Azure CLI and Azure Powershell are installed.
 
-          '
+          * Login to Azure CLI with "az login", and login to Azure Powershell with "Connect-AzAccount". Sessions are not shared.
+          * Azure Powershell used in this test as they have better automation performance and error logging than Azure CLI.
         prereq_command: 'try {if (Get-InstalledModule -Name Az -ErrorAction SilentlyContinue)
           {exit 0} else {exit 1}} catch {exit 1}
 
           '
-        get_prereq_command: 'Install-Module -Name Az -Scope CurrentUser -Force
-
-          '
+        get_prereq_command: "$ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest
+          -Uri https://aka.ms/installazurecliwindowsx64 -OutFile .\\AzureCLI.msi;
+          Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet';
+          Remove-Item .\\AzureCLI.msi\n"
       - description: 'Check if the user is logged into Azure.
 
           '
-        prereq_command: 'az account show
+        prereq_command: 'try {if (-not (Get-AzContext)) { exit 1 } else { exit 0 }}
+          catch {exit 1}
 
           '
-        get_prereq_command: "echo Configure your Azure account using: az login. \n"
-      - description: 'Create dependency resources using terraform
+        get_prereq_command: 'echo "* Configure your Azure account using: Connect-AzAccount"
 
           '
+      - description: |
+          Create dependency resources using terraform
+
+          * If fail to meet prereq, navigate to T1078.004-2 using "cd $PathToAtomicsFolder/T1078.004/src/T1078.004-2/"
+          * Open the "terraform.tfvars" file and fill in the variables with your desired values.
+          * Re-run -GetPrereqs
         prereq_command: 'try {if (Test-Path "$PathToAtomicsFolder/T1078.004/src/T1078.004-2/terraform.tfstate"
           ){ exit 0 } else {exit 1}} catch {exit 1}
 
           '
         get_prereq_command: |
+          echo "Navigating to: $PathToAtomicsFolder/T1078.004/src/T1078.004-2/"
           cd "$PathToAtomicsFolder/T1078.004/src/T1078.004-2/"
           terraform init
           terraform apply -auto-approve
       executor:
-        command: |
-          $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
-          $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
-          Connect-AzAccount -Credential $creds
-          New-AzAutomationRunbook -Name #{runbook_name} -Type PowerShell -ResourceGroupName #{resource_group} -Description 'my-test-runbook' -AutomationAccountName #{automation_account_name}
+        command: 'New-AzAutomationRunbook -Name #{runbook_name} -Type PowerShell -ResourceGroupName
+          #{resource_group} -Description ''my-test-runbook'' -AutomationAccountName
+          #{automation_account_name}
+
+          '
         name: powershell
         elevation_required: false
         cleanup_command: |
           Remove-AzAutomationRunbook -AutomationAccountName #{automation_account_name} -Name #{runbook_name} -ResourceGroupName #{resource_group} -Force
+          Remove-AzAutomationAccount -ResourceGroupName "MarkResourceGroup" -Name "MarkAutomationAccountName" -Force
+          Remove-AzResourceGroup -Name "MarkResourceGroup" -Force
+          echo "Cleanup should be completed. Run 'terraform destroy` to ensure remaining resources are also deleted."
           cd "$PathToAtomicsFolder/T1078.004/src/T1078.004-2/"
           terraform destroy -auto-approve
   T1480.001:
@@ -24146,26 +24152,18 @@ privilege-escalation:
       supported_platforms:
       - iaas:azure
       input_arguments:
-        username:
-          description: Azure username
-          type: string
-          default: 
-        password:
-          description: Azure password
-          type: string
-          default: 
         resource_group:
           description: Name of the resource group
           type: string
-          default: 
+          default: ART-ResourceGroupName-T1078-004
         runbook_name:
           description: Name of the runbook name
           type: string
-          default: 
+          default: ART-RunbookName-T1078-004
         automation_account_name:
           description: Name of the automation account name
           type: string
-          default: 
+          default: ART-AutomationAccountName-T1078-004
       dependency_executor_name: powershell
       dependencies:
       - description: 'Check if terraform is installed.
@@ -24174,47 +24172,61 @@ privilege-escalation:
         prereq_command: 'terraform version
 
           '
-        get_prereq_command: 'echo Please install terraform.
+        get_prereq_command: 'echo "Please install terraform via https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
+          (URL accurate as of Nov. 15, 2024)."
 
           '
-      - description: 'Install-Module -Name Az
+      - description: |
+          Check if Azure CLI and Azure Powershell are installed.
 
-          '
+          * Login to Azure CLI with "az login", and login to Azure Powershell with "Connect-AzAccount". Sessions are not shared.
+          * Azure Powershell used in this test as they have better automation performance and error logging than Azure CLI.
         prereq_command: 'try {if (Get-InstalledModule -Name Az -ErrorAction SilentlyContinue)
           {exit 0} else {exit 1}} catch {exit 1}
 
           '
-        get_prereq_command: 'Install-Module -Name Az -Scope CurrentUser -Force
-
-          '
+        get_prereq_command: "$ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest
+          -Uri https://aka.ms/installazurecliwindowsx64 -OutFile .\\AzureCLI.msi;
+          Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet';
+          Remove-Item .\\AzureCLI.msi\n"
       - description: 'Check if the user is logged into Azure.
 
           '
-        prereq_command: 'az account show
+        prereq_command: 'try {if (-not (Get-AzContext)) { exit 1 } else { exit 0 }}
+          catch {exit 1}
 
           '
-        get_prereq_command: "echo Configure your Azure account using: az login. \n"
-      - description: 'Create dependency resources using terraform
+        get_prereq_command: 'echo "* Configure your Azure account using: Connect-AzAccount"
 
           '
+      - description: |
+          Create dependency resources using terraform
+
+          * If fail to meet prereq, navigate to T1078.004-2 using "cd $PathToAtomicsFolder/T1078.004/src/T1078.004-2/"
+          * Open the "terraform.tfvars" file and fill in the variables with your desired values.
+          * Re-run -GetPrereqs
         prereq_command: 'try {if (Test-Path "$PathToAtomicsFolder/T1078.004/src/T1078.004-2/terraform.tfstate"
           ){ exit 0 } else {exit 1}} catch {exit 1}
 
           '
         get_prereq_command: |
+          echo "Navigating to: $PathToAtomicsFolder/T1078.004/src/T1078.004-2/"
           cd "$PathToAtomicsFolder/T1078.004/src/T1078.004-2/"
           terraform init
           terraform apply -auto-approve
       executor:
-        command: |
-          $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
-          $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
-          Connect-AzAccount -Credential $creds
-          New-AzAutomationRunbook -Name #{runbook_name} -Type PowerShell -ResourceGroupName #{resource_group} -Description 'my-test-runbook' -AutomationAccountName #{automation_account_name}
+        command: 'New-AzAutomationRunbook -Name #{runbook_name} -Type PowerShell -ResourceGroupName
+          #{resource_group} -Description ''my-test-runbook'' -AutomationAccountName
+          #{automation_account_name}
+
+          '
         name: powershell
         elevation_required: false
         cleanup_command: |
           Remove-AzAutomationRunbook -AutomationAccountName #{automation_account_name} -Name #{runbook_name} -ResourceGroupName #{resource_group} -Force
+          Remove-AzAutomationAccount -ResourceGroupName "MarkResourceGroup" -Name "MarkAutomationAccountName" -Force
+          Remove-AzResourceGroup -Name "MarkResourceGroup" -Force
+          echo "Cleanup should be completed. Run 'terraform destroy` to ensure remaining resources are also deleted."
           cd "$PathToAtomicsFolder/T1078.004/src/T1078.004-2/"
           terraform destroy -auto-approve
   T1053.002:
@@ -36542,26 +36554,18 @@ persistence:
       supported_platforms:
       - iaas:azure
       input_arguments:
-        username:
-          description: Azure username
-          type: string
-          default: 
-        password:
-          description: Azure password
-          type: string
-          default: 
         resource_group:
           description: Name of the resource group
           type: string
-          default: 
+          default: ART-ResourceGroupName-T1078-004
         runbook_name:
           description: Name of the runbook name
           type: string
-          default: 
+          default: ART-RunbookName-T1078-004
         automation_account_name:
           description: Name of the automation account name
           type: string
-          default: 
+          default: ART-AutomationAccountName-T1078-004
       dependency_executor_name: powershell
       dependencies:
       - description: 'Check if terraform is installed.
@@ -36570,47 +36574,61 @@ persistence:
         prereq_command: 'terraform version
 
           '
-        get_prereq_command: 'echo Please install terraform.
+        get_prereq_command: 'echo "Please install terraform via https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
+          (URL accurate as of Nov. 15, 2024)."
 
           '
-      - description: 'Install-Module -Name Az
+      - description: |
+          Check if Azure CLI and Azure Powershell are installed.
 
-          '
+          * Login to Azure CLI with "az login", and login to Azure Powershell with "Connect-AzAccount". Sessions are not shared.
+          * Azure Powershell used in this test as they have better automation performance and error logging than Azure CLI.
         prereq_command: 'try {if (Get-InstalledModule -Name Az -ErrorAction SilentlyContinue)
           {exit 0} else {exit 1}} catch {exit 1}
 
           '
-        get_prereq_command: 'Install-Module -Name Az -Scope CurrentUser -Force
-
-          '
+        get_prereq_command: "$ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest
+          -Uri https://aka.ms/installazurecliwindowsx64 -OutFile .\\AzureCLI.msi;
+          Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet';
+          Remove-Item .\\AzureCLI.msi\n"
       - description: 'Check if the user is logged into Azure.
 
           '
-        prereq_command: 'az account show
+        prereq_command: 'try {if (-not (Get-AzContext)) { exit 1 } else { exit 0 }}
+          catch {exit 1}
 
           '
-        get_prereq_command: "echo Configure your Azure account using: az login. \n"
-      - description: 'Create dependency resources using terraform
+        get_prereq_command: 'echo "* Configure your Azure account using: Connect-AzAccount"
 
           '
+      - description: |
+          Create dependency resources using terraform
+
+          * If fail to meet prereq, navigate to T1078.004-2 using "cd $PathToAtomicsFolder/T1078.004/src/T1078.004-2/"
+          * Open the "terraform.tfvars" file and fill in the variables with your desired values.
+          * Re-run -GetPrereqs
         prereq_command: 'try {if (Test-Path "$PathToAtomicsFolder/T1078.004/src/T1078.004-2/terraform.tfstate"
           ){ exit 0 } else {exit 1}} catch {exit 1}
 
           '
         get_prereq_command: |
+          echo "Navigating to: $PathToAtomicsFolder/T1078.004/src/T1078.004-2/"
           cd "$PathToAtomicsFolder/T1078.004/src/T1078.004-2/"
           terraform init
           terraform apply -auto-approve
       executor:
-        command: |
-          $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
-          $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
-          Connect-AzAccount -Credential $creds
-          New-AzAutomationRunbook -Name #{runbook_name} -Type PowerShell -ResourceGroupName #{resource_group} -Description 'my-test-runbook' -AutomationAccountName #{automation_account_name}
+        command: 'New-AzAutomationRunbook -Name #{runbook_name} -Type PowerShell -ResourceGroupName
+          #{resource_group} -Description ''my-test-runbook'' -AutomationAccountName
+          #{automation_account_name}
+
+          '
         name: powershell
         elevation_required: false
         cleanup_command: |
           Remove-AzAutomationRunbook -AutomationAccountName #{automation_account_name} -Name #{runbook_name} -ResourceGroupName #{resource_group} -Force
+          Remove-AzAutomationAccount -ResourceGroupName "MarkResourceGroup" -Name "MarkAutomationAccountName" -Force
+          Remove-AzResourceGroup -Name "MarkResourceGroup" -Force
+          echo "Cleanup should be completed. Run 'terraform destroy` to ensure remaining resources are also deleted."
           cd "$PathToAtomicsFolder/T1078.004/src/T1078.004-2/"
           terraform destroy -auto-approve
   T1053.002:
@@ -61722,26 +61740,18 @@ initial-access:
       supported_platforms:
       - iaas:azure
       input_arguments:
-        username:
-          description: Azure username
-          type: string
-          default: 
-        password:
-          description: Azure password
-          type: string
-          default: 
         resource_group:
           description: Name of the resource group
           type: string
-          default: 
+          default: ART-ResourceGroupName-T1078-004
         runbook_name:
           description: Name of the runbook name
           type: string
-          default: 
+          default: ART-RunbookName-T1078-004
         automation_account_name:
           description: Name of the automation account name
           type: string
-          default: 
+          default: ART-AutomationAccountName-T1078-004
       dependency_executor_name: powershell
       dependencies:
       - description: 'Check if terraform is installed.
@@ -61750,47 +61760,61 @@ initial-access:
         prereq_command: 'terraform version
 
           '
-        get_prereq_command: 'echo Please install terraform.
+        get_prereq_command: 'echo "Please install terraform via https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
+          (URL accurate as of Nov. 15, 2024)."
 
           '
-      - description: 'Install-Module -Name Az
+      - description: |
+          Check if Azure CLI and Azure Powershell are installed.
 
-          '
+          * Login to Azure CLI with "az login", and login to Azure Powershell with "Connect-AzAccount". Sessions are not shared.
+          * Azure Powershell used in this test as they have better automation performance and error logging than Azure CLI.
         prereq_command: 'try {if (Get-InstalledModule -Name Az -ErrorAction SilentlyContinue)
           {exit 0} else {exit 1}} catch {exit 1}
 
           '
-        get_prereq_command: 'Install-Module -Name Az -Scope CurrentUser -Force
-
-          '
+        get_prereq_command: "$ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest
+          -Uri https://aka.ms/installazurecliwindowsx64 -OutFile .\\AzureCLI.msi;
+          Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet';
+          Remove-Item .\\AzureCLI.msi\n"
       - description: 'Check if the user is logged into Azure.
 
           '
-        prereq_command: 'az account show
+        prereq_command: 'try {if (-not (Get-AzContext)) { exit 1 } else { exit 0 }}
+          catch {exit 1}
 
           '
-        get_prereq_command: "echo Configure your Azure account using: az login. \n"
-      - description: 'Create dependency resources using terraform
+        get_prereq_command: 'echo "* Configure your Azure account using: Connect-AzAccount"
 
           '
+      - description: |
+          Create dependency resources using terraform
+
+          * If fail to meet prereq, navigate to T1078.004-2 using "cd $PathToAtomicsFolder/T1078.004/src/T1078.004-2/"
+          * Open the "terraform.tfvars" file and fill in the variables with your desired values.
+          * Re-run -GetPrereqs
         prereq_command: 'try {if (Test-Path "$PathToAtomicsFolder/T1078.004/src/T1078.004-2/terraform.tfstate"
           ){ exit 0 } else {exit 1}} catch {exit 1}
 
           '
         get_prereq_command: |
+          echo "Navigating to: $PathToAtomicsFolder/T1078.004/src/T1078.004-2/"
           cd "$PathToAtomicsFolder/T1078.004/src/T1078.004-2/"
           terraform init
           terraform apply -auto-approve
       executor:
-        command: |
-          $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
-          $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
-          Connect-AzAccount -Credential $creds
-          New-AzAutomationRunbook -Name #{runbook_name} -Type PowerShell -ResourceGroupName #{resource_group} -Description 'my-test-runbook' -AutomationAccountName #{automation_account_name}
+        command: 'New-AzAutomationRunbook -Name #{runbook_name} -Type PowerShell -ResourceGroupName
+          #{resource_group} -Description ''my-test-runbook'' -AutomationAccountName
+          #{automation_account_name}
+
+          '
         name: powershell
         elevation_required: false
         cleanup_command: |
           Remove-AzAutomationRunbook -AutomationAccountName #{automation_account_name} -Name #{runbook_name} -ResourceGroupName #{resource_group} -Force
+          Remove-AzAutomationAccount -ResourceGroupName "MarkResourceGroup" -Name "MarkAutomationAccountName" -Force
+          Remove-AzResourceGroup -Name "MarkResourceGroup" -Force
+          echo "Cleanup should be completed. Run 'terraform destroy` to ensure remaining resources are also deleted."
           cd "$PathToAtomicsFolder/T1078.004/src/T1078.004-2/"
           terraform destroy -auto-approve
   T1566.003:
