@@ -117,8 +117,8 @@ atomic_tests:
     elevation_required: false
     cleanup_command: |
       Remove-AzAutomationRunbook -AutomationAccountName #{automation_account_name} -Name #{runbook_name} -ResourceGroupName #{resource_group} -Force
-      Remove-AzAutomationAccount -ResourceGroupName "MarkResourceGroup" -Name "MarkAutomationAccountName" -Force
-      Remove-AzResourceGroup -Name "MarkResourceGroup" -Force
+      Remove-AzAutomationAccount -ResourceGroupName #{resource_group} -Name #{automation_account_name} -Force
+      Remove-AzResourceGroup -Name #{resource_group} -Force
       echo "Cleanup should be completed. Run 'terraform destroy` to ensure remaining resources are also deleted."
       cd "$PathToAtomicsFolder/T1078.004/src/T1078.004-2/"
       terraform destroy -auto-approve
