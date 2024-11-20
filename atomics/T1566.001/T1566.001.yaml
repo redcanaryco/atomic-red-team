@@ -58,80 +58,80 @@ atomic_tests:
     name: powershell
 
 - name: RDP Phishing via Outlook Temporary Folders
-    description: |
-      Creates .rdp files in Outlook temporary folders to simulate phishing campaign behavior.
-      This test simulates the Midnight Blizzard (APT29) campaign targeting organizations with malicious RDP files.
-    supported_platforms:
-      - windows
-    input_arguments:
-      rdp_filename:
-        description: Name of the RDP file
-        type: string
-        default: meeting_invite.rdp
-    executor:
-      name: powershell
-      elevation_required: false
-      command: |
-        $rdpContent = @"
-        screen mode id:i:2
-        use multimon:i:0
-        desktopwidth:i:1920
-        desktopheight:i:1080
-        session bpp:i:32
-        winposstr:s:0,1,0,0,800,600
-        compression:i:1
-        keyboardhook:i:2
-        audiocapturemode:i:0
-        videoplaybackmode:i:1
-        connection type:i:7
-        networkautodetect:i:1
-        bandwidthautodetect:i:1
-        displayconnectionbar:i:1
-        username:s:admin
-        domain:s:WORKGROUP
-        alternate shell:s:
-        shell working directory:s:
-        disable wallpaper:i:1
-        disable full window drag:i:1
-        disable menu anims:i:1
-        disable themes:i:0
-        disable cursor setting:i:0
-        bitmapcachepersistenable:i:1
-        full address:s:192.168.1.100
-        audiomode:i:0
-        redirectprinters:i:1
-        redirectcomports:i:0
-        redirectsmartcards:i:1
-        redirectclipboard:i:1
-        redirectposdevices:i:0
-        autoreconnection enabled:i:1
-        authentication level:i:2
-        prompt for credentials:i:0
-        negotiate security layer:i:1
-        remoteapplicationmode:i:0
-        "@
-        $outlookPath = "$env:LOCALAPPDATA\Microsoft\Windows\Temporary Internet Files\Content.Outlook"
-        $olkPath = "$env:LOCALAPPDATA\Microsoft\Olk"
-        
-        if(-not (Test-Path $outlookPath)) {
-            New-Item -ItemType Directory -Force -Path $outlookPath | Out-Null
-        }
-        if(-not (Test-Path $olkPath)) {
-            New-Item -ItemType Directory -Force -Path $olkPath | Out-Null
-        }
-        
-        $rdpFile1 = Join-Path $outlookPath "#{rdp_filename}"
-        Set-Content -Path $rdpFile1 -Value $rdpContent -Force
-        $rdpFile2 = Join-Path $olkPath "#{rdp_filename}"
-        Set-Content -Path $rdpFile2 -Value $rdpContent -Force
-      cleanup_command: |
-        $outlookPaths = @(
-            "$env:LOCALAPPDATA\Microsoft\Windows\INetCache\Content.Outlook",
-            "$env:LOCALAPPPAD\Microsoft\Windows\Temporary Internet Files\Content.Outlook",
-            "$env:LOCALAPPDATA\Microsoft\Office\16.0\Olk"
-        )
-        foreach ($path in $outlookPaths) {
-            if (Test-Path $path) {
-                Get-ChildItem -Path $path -Filter "#{rdp_filename}" | Remove-Item -Force
-            }
-        }
+  description: |
+    Creates .rdp files in Outlook temporary folders to simulate phishing campaign behavior.
+    This test simulates the Midnight Blizzard (APT29) campaign targeting organizations with malicious RDP files.
+  supported_platforms:
+    - windows
+  input_arguments:
+    rdp_filename:
+      description: Name of the RDP file
+      type: string
+      default: meeting_invite.rdp
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $rdpContent = @"
+      screen mode id:i:2
+      use multimon:i:0
+      desktopwidth:i:1920
+      desktopheight:i:1080
+      session bpp:i:32
+      winposstr:s:0,1,0,0,800,600
+      compression:i:1
+      keyboardhook:i:2
+      audiocapturemode:i:0
+      videoplaybackmode:i:1
+      connection type:i:7
+      networkautodetect:i:1
+      bandwidthautodetect:i:1
+      displayconnectionbar:i:1
+      username:s:admin
+      domain:s:WORKGROUP
+      alternate shell:s:
+      shell working directory:s:
+      disable wallpaper:i:1
+      disable full window drag:i:1
+      disable menu anims:i:1
+      disable themes:i:0
+      disable cursor setting:i:0
+      bitmapcachepersistenable:i:1
+      full address:s:192.168.1.100
+      audiomode:i:0
+      redirectprinters:i:1
+      redirectcomports:i:0
+      redirectsmartcards:i:1
+      redirectclipboard:i:1
+      redirectposdevices:i:0
+      autoreconnection enabled:i:1
+      authentication level:i:2
+      prompt for credentials:i:0
+      negotiate security layer:i:1
+      remoteapplicationmode:i:0
+      "@
+      $outlookPath = "$env:LOCALAPPDATA\Microsoft\Windows\Temporary Internet Files\Content.Outlook"
+      $olkPath = "$env:LOCALAPPDATA\Microsoft\Olk"
+      
+      if(-not (Test-Path $outlookPath)) {
+          New-Item -ItemType Directory -Force -Path $outlookPath | Out-Null
+      }
+      if(-not (Test-Path $olkPath)) {
+          New-Item -ItemType Directory -Force -Path $olkPath | Out-Null
+      }
+      
+      $rdpFile1 = Join-Path $outlookPath "#{rdp_filename}"
+      Set-Content -Path $rdpFile1 -Value $rdpContent -Force
+      $rdpFile2 = Join-Path $olkPath "#{rdp_filename}"
+      Set-Content -Path $rdpFile2 -Value $rdpContent -Force
+    cleanup_command: |
+      $outlookPaths = @(
+          "$env:LOCALAPPDATA\Microsoft\Windows\INetCache\Content.Outlook",
+          "$env:LOCALAPPPAD\Microsoft\Windows\Temporary Internet Files\Content.Outlook",
+          "$env:LOCALAPPDATA\Microsoft\Office\16.0\Olk"
+      )
+      foreach ($path in $outlookPaths) {
+          if (Test-Path $path) {
+              Get-ChildItem -Path $path -Filter "#{rdp_filename}" | Remove-Item -Force
+          }
+      }
