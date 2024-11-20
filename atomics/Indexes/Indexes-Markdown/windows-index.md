@@ -326,6 +326,8 @@
   - Atomic Test #3: Clear Event Logs via VBA [windows]
 - [T1222 File and Directory Permissions Modification](../../T1222/T1222.md)
   - Atomic Test #1: Enable Local and Remote Symbolic Links via fsutil [windows]
+  - Atomic Test #2: Enable Local and Remote Symbolic Links via reg.exe [windows]
+  - Atomic Test #3: Enable Local and Remote Symbolic Links via Powershell [windows]
 - T1548 Abuse Elevation Control Mechanism [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1134.002 Create Process with Token](../../T1134.002/T1134.002.md)
   - Atomic Test #1: Access Token Manipulation [windows]
