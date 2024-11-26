@@ -982,6 +982,7 @@
 - [T1611 Escape to Host](../../T1611/T1611.md)
   - Atomic Test #1: Deploy container using nsenter container escape [containers]
   - Atomic Test #2: Mount host filesystem to escape privileged Docker container [containers]
+  - Atomic Test #3: Privilege Escalation via Docker Volume Mapping [containers]
 - [T1547.009 Boot or Logon Autostart Execution: Shortcut Modification](../../T1547.009/T1547.009.md)
   - Atomic Test #1: Shortcut Modification [windows]
   - Atomic Test #2: Create shortcut to cmd in startup folders [windows]
