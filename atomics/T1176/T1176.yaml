@@ -1,112 +1,112 @@
 attack_technique: T1176
 display_name: Browser Extensions
 atomic_tests:
-- name: Chrome/Chromium (Developer Mode)
-  auto_generated_guid: 3ecd790d-2617-4abf-9a8c-4e8d47da9ee1
-  description: Turn on Chrome/Chromium developer mode and Load Extension found in the src directory
-  supported_platforms:
-  - linux
-  - windows
-  - macos
-  executor:
-    steps: |
-      1. Navigate to [chrome://extensions](chrome://extensions) and
-      tick 'Developer Mode'.
+  - name: Chrome/Chromium (Developer Mode)
+    auto_generated_guid: 3ecd790d-2617-4abf-9a8c-4e8d47da9ee1
+    description: Turn on Chrome/Chromium developer mode and Load Extension found in the src directory
+    supported_platforms:
+      - linux
+      - windows
+      - macos
+    executor:
+      steps: |
+        1. Navigate to [chrome://extensions](chrome://extensions) and
+        tick 'Developer Mode'.
 
-      2. Click 'Load unpacked extension...' and navigate to
-      [Browser_Extension](../t1176/src/)
+        2. Click 'Load unpacked extension...' and navigate to
+        [Browser_Extension](../t1176/src/)
 
-      3. Click 'Select'
-    name: manual
-- name: Chrome/Chromium (Chrome Web Store)
-  auto_generated_guid: 4c83940d-8ca5-4bb2-8100-f46dc914bc3f
-  description: Install the "Minimum Viable Malicious Extension" Chrome extension
-  supported_platforms:
-  - linux
-  - windows
-  - macos
-  executor:
-    steps: |
-      1. Navigate to https://chrome.google.com/webstore/detail/minimum-viable-malicious/odlpfdolehmhciiebahbpnaopneicend
-      in Chrome
+        3. Click 'Select'
+      name: manual
+  - name: Chrome/Chromium (Chrome Web Store)
+    auto_generated_guid: 4c83940d-8ca5-4bb2-8100-f46dc914bc3f
+    description: Install the "Minimum Viable Malicious Extension" Chrome extension
+    supported_platforms:
+      - linux
+      - windows
+      - macos
+    executor:
+      steps: |
+        1. Navigate to https://chrome.google.com/webstore/detail/minimum-viable-malicious/odlpfdolehmhciiebahbpnaopneicend
+        in Chrome
 
-      2. Click 'Add to Chrome'
-    name: manual
-- name: Firefox
-  auto_generated_guid: cb790029-17e6-4c43-b96f-002ce5f10938
-  description: |
-    Create a file called test.wma, with the duration of 30 seconds
-  supported_platforms:
-  - linux
-  - windows
-  - macos
-  executor:
-    steps: |
-      1. Navigate to [about:debugging](about:debugging) and
-      click "Load Temporary Add-on"
+        2. Click 'Add to Chrome'
+      name: manual
+  - name: Firefox
+    auto_generated_guid: cb790029-17e6-4c43-b96f-002ce5f10938
+    description: |
+      Create a file called test.wma, with the duration of 30 seconds
+    supported_platforms:
+      - linux
+      - windows
+      - macos
+    executor:
+      steps: |
+        1. Navigate to [about:debugging](about:debugging) and
+        click "Load Temporary Add-on"
 
-      2. Navigate to [manifest.json](./src/manifest.json)
+        2. Navigate to [manifest.json](./src/manifest.json)
 
-      3. Then click 'Open'
-    name: manual
-- name: Edge Chromium Addon - VPN
-  auto_generated_guid: 3d456e2b-a7db-4af8-b5b3-720e7c4d9da5
-  description: |
-    Adversaries may use VPN extensions in an attempt to hide traffic sent from a compromised host. This will install one (of many) available VPNS in the Edge add-on store.
-  supported_platforms:
-  - windows
-  - macos
-  executor:
-    steps: |
-      1. Navigate to https://microsoftedge.microsoft.com/addons/detail/fjnehcbecaggobjholekjijaaekbnlgj
-      in Edge Chromium
+        3. Then click 'Open'
+      name: manual
+  - name: Edge Chromium Addon - VPN
+    auto_generated_guid: 3d456e2b-a7db-4af8-b5b3-720e7c4d9da5
+    description: |
+      Adversaries may use VPN extensions in an attempt to hide traffic sent from a compromised host. This will install one (of many) available VPNS in the Edge add-on store.
+    supported_platforms:
+      - windows
+      - macos
+    executor:
+      steps: |
+        1. Navigate to https://microsoftedge.microsoft.com/addons/detail/fjnehcbecaggobjholekjijaaekbnlgj
+        in Edge Chromium
 
-      2. Click 'Get'
-    name: manual
+        2. Click 'Get'
+      name: manual
 
-- name: Google Chrome Load Unpacked Extension With Command Line
-  auto_generated_guid: 7a714703-9f6b-461c-b06d-e6aeac650f27
+  - name: Google Chrome Load Unpacked Extension With Command Line
+    auto_generated_guid: 7a714703-9f6b-461c-b06d-e6aeac650f27
 
-  description: |-
-    This test loads an unpacked extension in Google Chrome with the `--load-extension` parameter. This technique was previously used by the Grandoreiro malware to load a malicious extension that would capture the browsing history, steal cookies and other user information. Other malwares also leverage this technique to hijack searches, steal passwords, inject ads, and more.
-    
-    References:
-    https://attack.mitre.org/techniques/T1176/
-    https://securityintelligence.com/posts/grandoreiro-malware-now-targeting-banks-in-spain/
+    description: |-
+      This test loads an unpacked extension in Google Chrome with the `--load-extension` parameter. This technique was previously used by the Grandoreiro malware to load a malicious extension that would capture the browsing history, steal cookies and other user information. Other malwares also leverage this technique to hijack searches, steal passwords, inject ads, and more.
 
-  supported_platforms:
-  - windows
-  input_arguments:
-    working_dir:
-      description: Working directory where the files will be downloaded and extracted
-      type: string
-      default: $env:TEMP
-  executor:
-    command: |-
+      References:
+      https://attack.mitre.org/techniques/T1176/
+      https://securityintelligence.com/posts/grandoreiro-malware-now-targeting-banks-in-spain/
 
-      # Chromium
-      $chromium =  "https://commondatastorage.googleapis.com/chromium-browser-snapshots/Win_x64/1153778/chrome-win.zip"
+    supported_platforms:
+      - windows
+    input_arguments:
+      working_dir:
+        description: Working directory where the files will be downloaded and extracted
+        type: string
+        default: $env:TEMP
+    executor:
+      command: |-
 
-      # uBlock Origin Lite to test side-loading
-      $extension = "https://github.com/gorhill/uBlock/releases/download/uBOLite_0.1.23.6055/uBOLite_0.1.23.6055.chromium.mv3.zip"
+        # Chromium
+        $chromium =  "https://commondatastorage.googleapis.com/chromium-browser-snapshots/Win_x64/1153778/chrome-win.zip"
 
-      Set-Location "#{working_dir}"
+        # uBlock Origin Lite to test side-loading
+        $extension = "https://github.com/uBlockOrigin/uBOL-home/releases/download/uBOLite_2024.11.25.1376/uBOLite_2024.11.25.1376.chromium.mv3.zip"
 
-      Set-Variable ProgressPreference SilentlyContinue
-      Invoke-WebRequest -URI $chromium -OutFile "#{working_dir}\chrome.zip"
-      Invoke-WebRequest -URI $extension -OutFile "#{working_dir}\extension.zip"
+        Set-Location "#{working_dir}"
+
+        Set-Variable ProgressPreference SilentlyContinue
+        Invoke-WebRequest -URI $chromium -OutFile "#{working_dir}\chrome.zip"
+        Invoke-WebRequest -URI $extension -OutFile "#{working_dir}\extension.zip"
 
 
-      Expand-Archive chrome.zip -DestinationPath "#{working_dir}" -Force
-      Expand-Archive extension.zip -Force
+        Expand-Archive chrome.zip -DestinationPath "#{working_dir}" -Force
+        Expand-Archive extension.zip -Force
 
-      Start-Process .\chrome-win\chrome.exe --load-extension="#{working_dir}\extension\" -PassThru
+        Start-Process .\chrome-win\chrome.exe --load-extension="#{working_dir}\extension\" -PassThru
 
-    cleanup_command: |-
-      Set-Location "#{working_dir}"
-      Stop-Process -Name chrome -Force
-      Remove-Item .\chrome.zip, .\chrome-win, .\extension, .\extension.zip -Recurse -Force
-      Set-Variable ProgressPreference Continue
+      cleanup_command: |-
+        Set-Location "#{working_dir}"
+        Stop-Process -Name chrome -Force
+        Remove-Item .\chrome.zip, .\chrome-win, .\extension, .\extension.zip -Recurse -Force
+        Set-Variable ProgressPreference Continue
 
-    name: powershell
-    elevation_required: true
+      name: powershell
+      elevation_required: true
