@@ -259,10 +259,11 @@ atomic_tests:
       default: '$env:temp\test.txt'
   dependencies:
   - description: |
-      GPG must exist at (#{GPG_Exe_Location})
+      GPG must exist at (#{GPG_Exe_Location}). If -GetPrereqs fails, try to install GPG4WIN manually at 'https://www.gpg4win.org/download.html'. Once done, run -CheckPrereqs to confirm that it works.
     prereq_command: |
       if (test-path '#{GPG_Exe_Location}'){exit 0} else {exit 1}
     get_prereq_command: |
+      Set-Content -Path "#{File_to_Encrypt_Location}" -Value "populating this file with some text"  # Create the test.txt file
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       invoke-webrequest "https://files.gpg4win.org/gpg4win-4.1.0.exe" -outfile "PathToAtomicsFolder\..\ExternalPayloads\gpginstall.exe"
       cmd /c "PathToAtomicsFolder\..\ExternalPayloads\gpginstall.exe" /S
@@ -270,9 +271,11 @@ atomic_tests:
     name: powershell
     elevation_required: false
     command: |
-      cmd /c '#{GPG_Exe_Location}' -c '#{File_to_Encrypt_Location}'
+      Set-Content -Path "#{File_to_Encrypt_Location}" -Value "populating this file with some text"  # Create the test.txt file again in case prereqs failed
+      cmd /c "`"C:\Program Files (x86)\GnuPG\bin\gpg.exe`" --passphrase 'SomeParaphraseBlah' --batch --yes -c `"$env:temp\test.txt`""
     cleanup_command: |
-      remove-item '#{File_to_Encrypt_Location}.gpg' -force -erroraction silentlycontinue | out-null
+      Remove-Item -Path "#{File_to_Encrypt_Location}" -Force -ErrorAction SilentlyContinue
+      Remove-Item -Path "#{File_to_Encrypt_Location}.gpg" -Force -ErrorAction SilentlyContinue
 
 - name: Data Encrypt Using DiskCryptor
   auto_generated_guid: 44b68e11-9da2-4d45-a0d9-893dabd60f30
