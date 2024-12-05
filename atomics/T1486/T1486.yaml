@@ -272,7 +272,7 @@ atomic_tests:
     elevation_required: false
     command: |
       Set-Content -Path "#{File_to_Encrypt_Location}" -Value "populating this file with some text"  # Create the test.txt file again in case prereqs failed
-      cmd /c "`"C:\Program Files (x86)\GnuPG\bin\gpg.exe`" --passphrase 'SomeParaphraseBlah' --batch --yes -c `"$env:temp\test.txt`""
+      cmd /c "`"C:\Program Files (x86)\GnuPG\bin\gpg.exe`" --passphrase 'SomeParaphraseBlah' --batch --yes -c `"#{File_to_Encrypt_Location}`""
     cleanup_command: |
       Remove-Item -Path "#{File_to_Encrypt_Location}" -Force -ErrorAction SilentlyContinue
       Remove-Item -Path "#{File_to_Encrypt_Location}.gpg" -Force -ErrorAction SilentlyContinue
