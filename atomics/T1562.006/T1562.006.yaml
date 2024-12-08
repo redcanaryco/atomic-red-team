@@ -201,3 +201,37 @@ atomic_tests:
       Remove-ItemProperty "HKLM:\Software\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Windows Defender/Operational" -Name Enabled -Force -ErrorAction Ignore
     name: powershell
     elevation_required: true
+- name: Disable .NET Event Tracing for Windows Via Environment Variable HKCU Registry - Cmd
+  description: Disables ETW for the .NET Framework using the reg.exe utility to update the Windows registry
+  supported_platforms:
+  - windows
+  executor:
+    command: REG ADD HKCU\Environment /v COMPlus_ETWEnabled /t REG_SZ /d 0 /f
+    cleanup_command: REG DELETE HKCU\Environment /v COMPlus_ETWEnabled /f > nul 2>&1
+    name: command_prompt
+- name: Disable .NET Event Tracing for Windows Via Environment Variable HKCU Registry - PowerShell
+  description: Disables ETW for the .NET Framework using PowerShell to update the Windows registry
+  supported_platforms:
+  - windows
+  executor:
+    command: New-ItemProperty -Path HKCU:\Environment -Name COMPlus_ETWEnabled -Value 0 -PropertyType "String" -Force
+    cleanup_command: Remove-ItemProperty -Path HKCU:\Environment -Name COMPlus_ETWEnabled
+    name: powershell
+- name: Disable .NET Event Tracing for Windows Via Environment Variable HKLM Registry - Cmd
+  description: Disables ETW for the .NET Framework using the reg.exe utility to update the Windows registry
+  supported_platforms:
+  - windows
+  executor:
+    command: REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v COMPlus_ETWEnabled /t REG_SZ /d 0 /f
+    cleanup_command: REG DELETE "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v COMPlus_ETWEnabled /f > nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: Disable .NET Event Tracing for Windows Via Environment Variable HKLM Registry - PowerShell
+  description: Disables ETW for the .NET Framework using PowerShell to update the Windows registry
+  supported_platforms:
+  - windows
+  executor:
+    command: New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" -Name COMPlus_ETWEnabled -Value 0 -PropertyType "String" -Force
+    cleanup_command: Remove-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" -Name COMPlus_ETWEnabled
+    name: powershell
+    elevation_required: true
