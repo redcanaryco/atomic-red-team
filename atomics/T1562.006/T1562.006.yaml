@@ -202,7 +202,7 @@ atomic_tests:
     name: powershell
     elevation_required: true
 - name: Disable .NET Event Tracing for Windows Via Environment Variable HKCU Registry - Cmd
-  description: Disables ETW for the .NET Framework using the reg.exe utility to update the Windows registry
+  description: Disables ETW for the .NET Framework by setting the COMPlus_ETWEnabled environment variable to 0 in the HKCU registry using the reg.exe utility. In order for changes to take effect a logout might be required.
   supported_platforms:
   - windows
   executor:
@@ -210,7 +210,7 @@ atomic_tests:
     cleanup_command: REG DELETE HKCU\Environment /v COMPlus_ETWEnabled /f > nul 2>&1
     name: command_prompt
 - name: Disable .NET Event Tracing for Windows Via Environment Variable HKCU Registry - PowerShell
-  description: Disables ETW for the .NET Framework using PowerShell to update the Windows registry
+  description: Disables ETW for the .NET Framework by setting the COMPlus_ETWEnabled environment variable to 0 in the HKCU registry using PowerShell. In order for changes to take effect a logout might be required.
   supported_platforms:
   - windows
   executor:
@@ -218,7 +218,7 @@ atomic_tests:
     cleanup_command: Remove-ItemProperty -Path HKCU:\Environment -Name COMPlus_ETWEnabled
     name: powershell
 - name: Disable .NET Event Tracing for Windows Via Environment Variable HKLM Registry - Cmd
-  description: Disables ETW for the .NET Framework using the reg.exe utility to update the Windows registry
+  description: Disables ETW for the .NET Framework by setting the COMPlus_ETWEnabled environment variable to 0 in the HKLM registry using the reg.exe utility. In order for changes to take effect a reboot might be required.
   supported_platforms:
   - windows
   executor:
@@ -227,7 +227,7 @@ atomic_tests:
     name: command_prompt
     elevation_required: true
 - name: Disable .NET Event Tracing for Windows Via Environment Variable HKLM Registry - PowerShell
-  description: Disables ETW for the .NET Framework using PowerShell to update the Windows registry
+  description: Disables ETW for the .NET Framework by setting the COMPlus_ETWEnabled environment variable to 0 in the HKLM registry using PowerShell. In order for changes to take effect a reboot might be required.
   supported_platforms:
   - windows
   executor:
