@@ -193,3 +193,15 @@ atomic_tests:
     cleanup_command: |
       Set-PSReadLineOption -AddToHistoryHandler $null
     name: powershell
+- name: Clear PowerShell Session History
+  description: |
+    This technique involves using the Clear-History cmdlet in PowerShell to remove all records of previously executed commands.
+    This action is often performed by attackers to eliminate traces of their activities, making incident detection and forensic 
+    investigation more challenging. By clearing the session history, adversaries aim to obfuscate their operational footprint.
+  supported_platforms:
+    - windows
+  executor:
+    command: |
+      Clear-History
+    name: powershell
+    elevation_required: false
