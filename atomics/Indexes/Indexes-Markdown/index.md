@@ -324,6 +324,7 @@
   - Atomic Test #22: Blackbit - Disable Windows Firewall using netsh firewall [windows]
   - Atomic Test #23: ESXi - Disable Firewall via Esxcli [windows]
   - Atomic Test #24: Set a firewall rule using New-NetFirewallRule [windows]
+  - Atomic Test #25: ESXi - Set Firewall to PASS Traffic [windows]
 - [T1553.003 Subvert Trust Controls: SIP and Trust Provider Hijacking](../../T1553.003/T1553.003.md)
   - Atomic Test #1: SIP (Subject Interface Package) Hijacking via Custom DLL [windows]
 - T1556.007 Hybrid Identity [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -2031,7 +2032,8 @@
   - Atomic Test #1: Enable Apple Remote Desktop Agent [macos]
 - T1080 Taint Shared Content [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1021.004 Remote Services: SSH](../../T1021.004/T1021.004.md)
-  - Atomic Test #1: ESXi - Enable SSH via PowerCLI [linux]
+  - Atomic Test #1: ESXi - Enable SSH via PowerCLI [windows]
+  - Atomic Test #2: ESXi - Enable SSH via VIM-CMD [windows]
 - [T1091 Replication Through Removable Media](../../T1091/T1091.md)
   - Atomic Test #1: USB Malware Spread Simulation [windows]
 - T1021.008 Direct Cloud VM Connections [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -2412,6 +2414,7 @@
   - Atomic Test #8: Enumerate all accounts on Windows (Local) [windows]
   - Atomic Test #9: Enumerate all accounts via PowerShell (Local) [windows]
   - Atomic Test #10: Enumerate logged on users via CMD (Local) [windows]
+  - Atomic Test #11: ESXi - Local Account Discovery via ESXCLI [windows]
 - [T1497.001 Virtualization/Sandbox Evasion: System Checks](../../T1497.001/T1497.001.md)
   - Atomic Test #1: Detect Virtualization Environment (Linux) [linux]
   - Atomic Test #2: Detect Virtualization Environment (FreeBSD) [linux]
@@ -2816,6 +2819,7 @@
 - [T1491.001 Defacement: Internal Defacement](../../T1491.001/T1491.001.md)
   - Atomic Test #1: Replace Desktop Wallpaper [windows]
   - Atomic Test #2: Configure LegalNoticeCaption and LegalNoticeText registry keys to display ransom message [windows]
+  - Atomic Test #3: ESXi - Change Welcome Message on Direct Console User Interface (DCUI) [windows]
 - T1496.004 Cloud Service Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1496.001 Compute Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1565 Data Manipulation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -2848,6 +2852,7 @@
   - Atomic Test #2: FreeBSD/macOS/Linux - Overwrite file with DD [linux, macos]
   - Atomic Test #3: Overwrite deleted data on C drive [windows]
   - Atomic Test #4: GCP - Delete Bucket [iaas:gcp]
+  - Atomic Test #5: ESXi - Delete VM Snapshots [windows]
 - T1498 Network Denial of Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1495 Firmware Corruption [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1490 Inhibit System Recovery](../../T1490/T1490.md)
@@ -2879,6 +2884,7 @@
   - Atomic Test #12: Logoff System - Windows [windows]
   - Atomic Test #13: ESXi - Terminates VMs using pkill [windows]
   - Atomic Test #14: ESXi - Avoslocker enumerates VMs and forcefully kills VMs [windows]
+  - Atomic Test #15: ESXi - vim-cmd Used to Power Off VMs [windows]
 
 # initial-access
 - [T1133 External Remote Services](../../T1133/T1133.md)

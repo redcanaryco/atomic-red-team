@@ -257,6 +257,7 @@ defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,21,
 defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,22,Blackbit - Disable Windows Firewall using netsh firewall,91f348e6-3760-4997-a93b-2ceee7f254ee,command_prompt
 defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,23,ESXi - Disable Firewall via Esxcli,bac8a340-be64-4491-a0cc-0985cb227f5a,command_prompt
 defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,24,Set a firewall rule using New-NetFirewallRule,94be7646-25f6-467e-af23-585fb13000c8,powershell
+defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,25,ESXi - Set Firewall to PASS Traffic,a67e8aea-ea7c-4c3b-9b1b-8c2957c3091d,command_prompt
 defense-evasion,T1553.003,Subvert Trust Controls: SIP and Trust Provider Hijacking,1,SIP (Subject Interface Package) Hijacking via Custom DLL,e12f5d8d-574a-4e9d-8a84-c0e8b4a8a675,command_prompt
 defense-evasion,T1562.012,Impair Defenses: Disable or Modify Linux Audit System,1,Delete all auditd rules using auditctl,33a29ab1-cabb-407f-9448-269041bf2856,sh
 defense-evasion,T1562.012,Impair Defenses: Disable or Modify Linux Audit System,2,Disable auditd using auditctl,7906f0a6-b527-46ee-9026-6e81a9184e08,sh
@@ -1463,6 +1464,7 @@ collection,T1114.002,Email Collection: Remote Email Collection,1,Office365 - Rem
 collection,T1056.004,Input Capture: Credential API Hooking,1,Hook PowerShell TLS Encrypt/Decrypt Messages,de1934ea-1fbf-425b-8795-65fb27dd7e33,powershell
 lateral-movement,T1021.005,Remote Services:VNC,1,Enable Apple Remote Desktop Agent,8a930abe-841c-4d4f-a877-72e9fe90b9ea,sh
 lateral-movement,T1021.004,Remote Services: SSH,1,ESXi - Enable SSH via PowerCLI,8f6c14d1-f13d-4616-b7fc-98cc69fe56ec,powershell
+lateral-movement,T1021.004,Remote Services: SSH,2,ESXi - Enable SSH via VIM-CMD,280812c8-4dae-43e9-a74e-1d08ab997c0e,command_prompt
 lateral-movement,T1091,Replication Through Removable Media,1,USB Malware Spread Simulation,d44b7297-622c-4be8-ad88-ec40d7563c75,powershell
 lateral-movement,T1021.002,Remote Services: SMB/Windows Admin Shares,1,Map admin share,3386975b-367a-4fbb-9d77-4dcf3639ffd3,command_prompt
 lateral-movement,T1021.002,Remote Services: SMB/Windows Admin Shares,2,Map Admin Share PowerShell,514e9cd7-9207-4882-98b1-c8f791bae3c5,powershell
@@ -1743,6 +1745,7 @@ discovery,T1087.001,Account Discovery: Local Account,7,Enumerate users and group
 discovery,T1087.001,Account Discovery: Local Account,8,Enumerate all accounts on Windows (Local),80887bec-5a9b-4efc-a81d-f83eb2eb32ab,command_prompt
 discovery,T1087.001,Account Discovery: Local Account,9,Enumerate all accounts via PowerShell (Local),ae4b6361-b5f8-46cb-a3f9-9cf108ccfe7b,powershell
 discovery,T1087.001,Account Discovery: Local Account,10,Enumerate logged on users via CMD (Local),a138085e-bfe5-46ba-a242-74a6fb884af3,command_prompt
+discovery,T1087.001,Account Discovery: Local Account,11,ESXi - Local Account Discovery via ESXCLI,9762ac6e-aa60-4449-a2f0-cbbd0e1fd22c,command_prompt
 discovery,T1497.001,Virtualization/Sandbox Evasion: System Checks,1,Detect Virtualization Environment (Linux),dfbd1a21-540d-4574-9731-e852bd6fe840,sh
 discovery,T1497.001,Virtualization/Sandbox Evasion: System Checks,2,Detect Virtualization Environment (FreeBSD),e129d73b-3e03-4ae9-bf1e-67fc8921e0fd,sh
 discovery,T1497.001,Virtualization/Sandbox Evasion: System Checks,3,Detect Virtualization Environment (Windows),502a7dc4-9d6f-4d28-abf2-f0e84692562d,powershell
@@ -1995,6 +1998,7 @@ impact,T1489,Service Stop,6,Linux - Stop service by killing process using kill,3
 impact,T1489,Service Stop,7,Linux - Stop service by killing process using pkill,08b4718f-a8bf-4bb5-a552-294fc5178fea,sh
 impact,T1491.001,Defacement: Internal Defacement,1,Replace Desktop Wallpaper,30558d53-9d76-41c4-9267-a7bd5184bed3,powershell
 impact,T1491.001,Defacement: Internal Defacement,2,Configure LegalNoticeCaption and LegalNoticeText registry keys to display ransom message,ffcbfaab-c9ff-470b-928c-f086b326089b,powershell
+impact,T1491.001,Defacement: Internal Defacement,3,ESXi - Change Welcome Message on Direct Console User Interface (DCUI),30905f21-34f3-4504-8b4c-f7a5e314b810,command_prompt
 impact,T1531,Account Access Removal,1,Change User Password - Windows,1b99ef28-f83c-4ec5-8a08-1a56263a5bb2,command_prompt
 impact,T1531,Account Access Removal,2,Delete User - Windows,f21a1d7d-a62f-442a-8c3a-2440d43b19e5,command_prompt
 impact,T1531,Account Access Removal,3,Remove Account From Domain Admin Group,43f71395-6c37-498e-ab17-897d814a0947,powershell
@@ -2018,6 +2022,7 @@ impact,T1485,Data Destruction,1,Windows - Overwrite file with SysInternals SDele
 impact,T1485,Data Destruction,2,FreeBSD/macOS/Linux - Overwrite file with DD,38deee99-fd65-4031-bec8-bfa4f9f26146,sh
 impact,T1485,Data Destruction,3,Overwrite deleted data on C drive,321fd25e-0007-417f-adec-33232252be19,command_prompt
 impact,T1485,Data Destruction,4,GCP - Delete Bucket,4ac71389-40f4-448a-b73f-754346b3f928,sh
+impact,T1485,Data Destruction,5,ESXi - Delete VM Snapshots,1207ddff-f25b-41b3-aa0e-7c26d2b546d1,command_prompt
 impact,T1490,Inhibit System Recovery,1,Windows - Delete Volume Shadow Copies,43819286-91a9-4369-90ed-d31fb4da2c01,command_prompt
 impact,T1490,Inhibit System Recovery,2,Windows - Delete Volume Shadow Copies via WMI,6a3ff8dd-f49c-4272-a658-11c2fe58bd88,command_prompt
 impact,T1490,Inhibit System Recovery,3,Windows - wbadmin Delete Windows Backup Catalog,263ba6cb-ea2b-41c9-9d4e-b652dadd002c,command_prompt
@@ -2044,6 +2049,7 @@ impact,T1529,System Shutdown/Reboot,11,Reboot System via `poweroff` - Linux,6130
 impact,T1529,System Shutdown/Reboot,12,Logoff System - Windows,3d8c25b5-7ff5-4c9d-b21f-85ebd06654a4,command_prompt
 impact,T1529,System Shutdown/Reboot,13,ESXi - Terminates VMs using pkill,987c9b4d-a637-42db-b1cb-e9e242c3991b,command_prompt
 impact,T1529,System Shutdown/Reboot,14,ESXi - Avoslocker enumerates VMs and forcefully kills VMs,189f7d6e-9442-4160-9bc3-5e4104d93ece,command_prompt
+impact,T1529,System Shutdown/Reboot,15,ESXi - vim-cmd Used to Power Off VMs,622cc1a0-45e7-428c-aed7-c96dd605fbe6,command_prompt
 initial-access,T1133,External Remote Services,1,Running Chrome VPN Extensions via the Registry 2 vpn extension,4c8db261-a58b-42a6-a866-0a294deedde4,powershell
 initial-access,T1566.002,Phishing: Spearphishing Link,1,Paste and run technique,bc177ef9-6a12-4ebc-a2ec-d41e19c2791d,powershell
 initial-access,T1566.001,Phishing: Spearphishing Attachment,1,Download Macro-Enabled Phishing Attachment,114ccff9-ae6d-4547-9ead-4cd69f687306,powershell
