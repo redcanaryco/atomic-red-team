@@ -125,6 +125,7 @@
   - Atomic Test #11: Prevent Powershell History Logging [windows]
   - Atomic Test #12: Clear Powershell History by Deleting History File [windows]
   - Atomic Test #13: Set Custom AddToHistoryHandler to Avoid History File Logging [windows]
+  - Atomic Test #14: Clear PowerShell Session History [windows]
 - [T1202 Indirect Command Execution](../../T1202/T1202.md)
   - Atomic Test #1: Indirect Command Execution - pcalua.exe [windows]
   - Atomic Test #2: Indirect Command Execution - forfiles.exe [windows]
