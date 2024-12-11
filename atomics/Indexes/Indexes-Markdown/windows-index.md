@@ -468,6 +468,10 @@
   - Atomic Test #51: Delete Microsoft Defender ASR Rules - InTune [windows]
   - Atomic Test #52: Delete Microsoft Defender ASR Rules - GPO [windows]
   - Atomic Test #53: AMSI Bypass - Create AMSIEnable Reg Key [windows]
+  - Atomic Test #54: Disable EventLog-Application Auto Logger Session Via Registry - Cmd [windows]
+  - Atomic Test #55: Disable EventLog-Application Auto Logger Session Via Registry - PowerShell [windows]
+  - Atomic Test #56: Disable EventLog-Application ETW Provider Via Registry - Cmd [windows]
+  - Atomic Test #57: Disable EventLog-Application ETW Provider Via Registry - PowerShell [windows]
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
