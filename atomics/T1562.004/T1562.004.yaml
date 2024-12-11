@@ -505,3 +505,42 @@ atomic_tests:
     cleanup_command: Remove-NetFirewallRule -DisplayName "New rule"
     name: powershell
     elevation_required: true
+- name: ESXi - Set Firewall to PASS Traffic
+  auto_generated_guid: a67e8aea-ea7c-4c3b-9b1b-8c2957c3091d
+  description: |
+    This test sets the default ESXi firewall action to PASS instead of DROP. This allows all incoming and outgoing traffic.
+  supported_platforms:
+  - windows
+  input_arguments:
+    vm_host:
+      description: Specify the host name or IP of the ESXi server.
+      type: string
+      default: atomic.local
+    vm_user:
+      description: Specify the privilege user account on the ESXi server.
+      type: string
+      default: root
+    vm_pass:
+      description: Specify the privileged user's password.
+      type: string
+      default: password
+    plink_file:
+      description: Path to Plink
+      type: path
+      default: 'PathToAtomicsFolder\..\ExternalPayloads\plink.exe'
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      The plink executable must be found in the ExternalPayloads folder.
+    prereq_command: |
+      if (Test-Path "#{plink_file}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe" -OutFile "#{plink_file}"
+  executor:
+    command: |
+      echo "" | "#{plink_file}" -batch "#{vm_host}" -ssh -l #{vm_user} -pw "#{vm_pass}" "esxcli network firewall set --default-action true"
+    cleanup_command: |
+      echo "" | "#{plink_file}" -batch "#{vm_host}" -ssh -l #{vm_user} -pw "#{vm_pass}" "esxcli network firewall set --default-action false"
+    name: command_prompt
+    elevation_required: false

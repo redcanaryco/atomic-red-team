@@ -1151,3 +1151,53 @@ atomic_tests:
       Remove-Item -Path "HKCU:\Software\Microsoft\Windows Script\Settings" -Recurse -Force 2> $null
     name: powershell
     elevation_required: true
+- name: Disable EventLog-Application Auto Logger Session Via Registry - Cmd
+  auto_generated_guid: 653c6e17-14a2-4849-851d-f1c0cc8ea9ab
+  description: This atomic simulates an activity where an attacker disables the EventLog-Application ETW Auto Logger session using the reg.exe utility to update the Windows registry value "Start". This would effectivly disable the Event log application channel. The changes would only take effect after a restart.
+  supported_platforms:
+  - windows
+  executor:
+    command: reg add "HKLM\System\CurrentControlSet\Control\WMI\Autologger\EventLog-Application" /v "Start" /t REG_DWORD /d "0" /f
+    cleanup_command: reg add "HKLM\System\CurrentControlSet\Control\WMI\Autologger\EventLog-Application" /v "Start" /t REG_DWORD /d "1" /f
+    name: command_prompt
+    elevation_required: true
+- name: Disable EventLog-Application Auto Logger Session Via Registry - PowerShell
+  auto_generated_guid: da86f239-9bd3-4e85-92ed-4a94ef111a1c
+  description: This atomic simulates an activity where an attacker disables the EventLog-Application ETW Auto Logger session using the powershell.exe "New-ItemProperty" cmdlet to update the Windows registry value "Start". This would effectivly disable the Event log application channel. The changes would only take effect after a restart.
+  supported_platforms:
+  - windows
+  executor:
+    command: New-ItemProperty -Path HKLM:\System\CurrentControlSet\Control\WMI\Autologger\EventLog-Application -Name Start -Value 0 -PropertyType "DWord" -Force
+    cleanup_command: New-ItemProperty -Path HKLM:\System\CurrentControlSet\Control\WMI\Autologger\EventLog-Application -Name Start -Value 1 -PropertyType "DWord" -Force
+    name: powershell
+    elevation_required: true
+- name: Disable EventLog-Application ETW Provider Via Registry - Cmd
+  auto_generated_guid: 1cac9b54-810e-495c-8aac-989e0076583b
+  description: This atomic simulates an activity where an attacker disables a specific ETW provider from the EventLog-Application ETW Auto Logger session using the reg.exe utility to update the Windows registry value "Enabled". This would effectivly remove that provider from the session and cause to not emit any logs of that type. The changes would only take effect after a restart.
+  supported_platforms:
+  - windows
+  input_arguments:
+    ETWProviderGUID:
+      type: string
+      default: "{B6D775EF-1436-4FE6-BAD3-9E436319E218}"
+      description: Microsoft-Windows-SenseIR ETW Provider GUID
+  executor:
+    command: reg add "HKLM\System\CurrentControlSet\Control\WMI\Autologger\EventLog-Application\#{ETWProviderGUID}" /v "Enabled" /t REG_DWORD /d "0" /f
+    cleanup_command: reg add "HKLM\System\CurrentControlSet\Control\WMI\Autologger\EventLog-Application\#{ETWProviderGUID}" /v "Enabled" /t REG_DWORD /d "1" /f
+    name: command_prompt
+    elevation_required: true
+- name: Disable EventLog-Application ETW Provider Via Registry - PowerShell
+  auto_generated_guid: 8f907648-1ebf-4276-b0f0-e2678ca474f0
+  description: This atomic simulates an activity where an attacker disables a specific ETW provider from the EventLog-Application ETW Auto Logger session using the powershell.exe "New-ItemProperty" cmdlet to update the Windows registry value "Enabled". This would effectivly remove that provider from the session and cause to not emit any logs of that type. The changes would only take effect after a restart.
+  supported_platforms:
+  - windows
+  input_arguments:
+    ETWProviderGUID:
+      type: string
+      default: "{B6D775EF-1436-4FE6-BAD3-9E436319E218}"
+      description: Microsoft-Windows-SenseIR ETW Provider GUID
+  executor:
+    command: New-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\WMI\Autologger\EventLog-Application\#{ETWProviderGUID}" -Name Enabled -Value 0 -PropertyType "DWord" -Force
+    cleanup_command: New-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\WMI\Autologger\EventLog-Application\#{ETWProviderGUID}" -Name Enabled -Value 1 -PropertyType "DWord" -Force
+    name: powershell
+    elevation_required: true
