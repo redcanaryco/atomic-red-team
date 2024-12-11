@@ -90,6 +90,7 @@ defense-evasion,T1556.002,Modify Authentication Process: Password Filter DLL,2,I
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,11,Prevent Powershell History Logging,2f898b81-3e97-4abb-bc3f-a95138988370,powershell
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,12,Clear Powershell History by Deleting History File,da75ae8d-26d6-4483-b0fe-700e4df4f037,powershell
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,13,Set Custom AddToHistoryHandler to Avoid History File Logging,1d0d9aa6-6111-4f89-927b-53e8afae7f94,powershell
+defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,14,Clear PowerShell Session History,22c779cd-9445-4d3e-a136-f75adbf0315f,powershell
 defense-evasion,T1202,Indirect Command Execution,1,Indirect Command Execution - pcalua.exe,cecfea7a-5f03-4cdd-8bc8-6f7c22862440,command_prompt
 defense-evasion,T1202,Indirect Command Execution,2,Indirect Command Execution - forfiles.exe,8b34a448-40d9-4fc3-a8c8-4bb286faf7dc,command_prompt
 defense-evasion,T1202,Indirect Command Execution,3,Indirect Command Execution - conhost.exe,cf3391e0-b482-4b02-87fc-ca8362269b29,command_prompt
@@ -159,6 +160,7 @@ defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,21,
 defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,22,Blackbit - Disable Windows Firewall using netsh firewall,91f348e6-3760-4997-a93b-2ceee7f254ee,command_prompt
 defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,23,ESXi - Disable Firewall via Esxcli,bac8a340-be64-4491-a0cc-0985cb227f5a,command_prompt
 defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,24,Set a firewall rule using New-NetFirewallRule,94be7646-25f6-467e-af23-585fb13000c8,powershell
+defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,25,ESXi - Set Firewall to PASS Traffic,a67e8aea-ea7c-4c3b-9b1b-8c2957c3091d,command_prompt
 defense-evasion,T1553.003,Subvert Trust Controls: SIP and Trust Provider Hijacking,1,SIP (Subject Interface Package) Hijacking via Custom DLL,e12f5d8d-574a-4e9d-8a84-c0e8b4a8a675,command_prompt
 defense-evasion,T1207,Rogue Domain Controller,1,DCShadow (Active Directory),0f4c5eb0-98a0-4496-9c3d-656b4f2bc8f6,powershell
 defense-evasion,T1553.006,Subvert Trust Controls: Code Signing Policy Modification,1,Code Signing Policy Modification,bb6b51e1-ab92-45b5-aeea-e410d06405f8,command_prompt
@@ -1180,6 +1182,7 @@ discovery,T1087.002,Account Discovery: Domain Account,22,Suspicious LAPS Attribu
 discovery,T1087.001,Account Discovery: Local Account,8,Enumerate all accounts on Windows (Local),80887bec-5a9b-4efc-a81d-f83eb2eb32ab,command_prompt
 discovery,T1087.001,Account Discovery: Local Account,9,Enumerate all accounts via PowerShell (Local),ae4b6361-b5f8-46cb-a3f9-9cf108ccfe7b,powershell
 discovery,T1087.001,Account Discovery: Local Account,10,Enumerate logged on users via CMD (Local),a138085e-bfe5-46ba-a242-74a6fb884af3,command_prompt
+discovery,T1087.001,Account Discovery: Local Account,11,ESXi - Local Account Discovery via ESXCLI,9762ac6e-aa60-4449-a2f0-cbbd0e1fd22c,command_prompt
 discovery,T1497.001,Virtualization/Sandbox Evasion: System Checks,3,Detect Virtualization Environment (Windows),502a7dc4-9d6f-4d28-abf2-f0e84692562d,powershell
 discovery,T1497.001,Virtualization/Sandbox Evasion: System Checks,5,Detect Virtualization Environment via WMI Manufacturer/Model Listing (Windows),4a41089a-48e0-47aa-82cb-5b81a463bc78,powershell
 discovery,T1069.002,Permission Groups Discovery: Domain Groups,1,Basic Permission Groups Discovery Windows (Domain),dd66d77d-8998-48c0-8024-df263dc2ce5d,command_prompt
@@ -1352,6 +1355,7 @@ impact,T1489,Service Stop,2,Windows - Stop service using net.exe,41274289-ec9c-4
 impact,T1489,Service Stop,3,Windows - Stop service by killing process,f3191b84-c38b-400b-867e-3a217a27795f,command_prompt
 impact,T1491.001,Defacement: Internal Defacement,1,Replace Desktop Wallpaper,30558d53-9d76-41c4-9267-a7bd5184bed3,powershell
 impact,T1491.001,Defacement: Internal Defacement,2,Configure LegalNoticeCaption and LegalNoticeText registry keys to display ransom message,ffcbfaab-c9ff-470b-928c-f086b326089b,powershell
+impact,T1491.001,Defacement: Internal Defacement,3,ESXi - Change Welcome Message on Direct Console User Interface (DCUI),30905f21-34f3-4504-8b4c-f7a5e314b810,command_prompt
 impact,T1531,Account Access Removal,1,Change User Password - Windows,1b99ef28-f83c-4ec5-8a08-1a56263a5bb2,command_prompt
 impact,T1531,Account Access Removal,2,Delete User - Windows,f21a1d7d-a62f-442a-8c3a-2440d43b19e5,command_prompt
 impact,T1531,Account Access Removal,3,Remove Account From Domain Admin Group,43f71395-6c37-498e-ab17-897d814a0947,powershell
@@ -1361,6 +1365,7 @@ impact,T1486,Data Encrypted for Impact,9,Data Encrypt Using DiskCryptor,44b68e11
 impact,T1486,Data Encrypted for Impact,10,Akira Ransomware drop Files with .akira Extension and Ransomnote,ab3f793f-2dcc-4da5-9c71-34988307263f,powershell
 impact,T1485,Data Destruction,1,Windows - Overwrite file with SysInternals SDelete,476419b5-aebf-4366-a131-ae3e8dae5fc2,powershell
 impact,T1485,Data Destruction,3,Overwrite deleted data on C drive,321fd25e-0007-417f-adec-33232252be19,command_prompt
+impact,T1485,Data Destruction,5,ESXi - Delete VM Snapshots,1207ddff-f25b-41b3-aa0e-7c26d2b546d1,command_prompt
 impact,T1490,Inhibit System Recovery,1,Windows - Delete Volume Shadow Copies,43819286-91a9-4369-90ed-d31fb4da2c01,command_prompt
 impact,T1490,Inhibit System Recovery,2,Windows - Delete Volume Shadow Copies via WMI,6a3ff8dd-f49c-4272-a658-11c2fe58bd88,command_prompt
 impact,T1490,Inhibit System Recovery,3,Windows - wbadmin Delete Windows Backup Catalog,263ba6cb-ea2b-41c9-9d4e-b652dadd002c,command_prompt
@@ -1377,6 +1382,7 @@ impact,T1529,System Shutdown/Reboot,2,Restart System - Windows,f4648f0d-bf78-483
 impact,T1529,System Shutdown/Reboot,12,Logoff System - Windows,3d8c25b5-7ff5-4c9d-b21f-85ebd06654a4,command_prompt
 impact,T1529,System Shutdown/Reboot,13,ESXi - Terminates VMs using pkill,987c9b4d-a637-42db-b1cb-e9e242c3991b,command_prompt
 impact,T1529,System Shutdown/Reboot,14,ESXi - Avoslocker enumerates VMs and forcefully kills VMs,189f7d6e-9442-4160-9bc3-5e4104d93ece,command_prompt
+impact,T1529,System Shutdown/Reboot,15,ESXi - vim-cmd Used to Power Off VMs,622cc1a0-45e7-428c-aed7-c96dd605fbe6,command_prompt
 initial-access,T1133,External Remote Services,1,Running Chrome VPN Extensions via the Registry 2 vpn extension,4c8db261-a58b-42a6-a866-0a294deedde4,powershell
 initial-access,T1566.002,Phishing: Spearphishing Link,1,Paste and run technique,bc177ef9-6a12-4ebc-a2ec-d41e19c2791d,powershell
 initial-access,T1566.001,Phishing: Spearphishing Attachment,1,Download Macro-Enabled Phishing Attachment,114ccff9-ae6d-4547-9ead-4cd69f687306,powershell

