@@ -490,6 +490,10 @@
   - Atomic Test #7: Disable .NET Event Tracing for Windows Via Registry (powershell) [windows]
   - Atomic Test #8: LockBit Black - Disable the ETW Provider of Windows Defender -cmd [windows]
   - Atomic Test #9: LockBit Black - Disable the ETW Provider of Windows Defender -Powershell [windows]
+  - Atomic Test #10: Disable .NET Event Tracing for Windows Via Environment Variable HKCU Registry - Cmd [windows]
+  - Atomic Test #11: Disable .NET Event Tracing for Windows Via Environment Variable HKCU Registry - PowerShell [windows]
+  - Atomic Test #12: Disable .NET Event Tracing for Windows Via Environment Variable HKLM Registry - Cmd [windows]
+  - Atomic Test #13: Disable .NET Event Tracing for Windows Via Environment Variable HKLM Registry - PowerShell [windows]
 - T1562.007 Disable or Modify Cloud Firewall [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1036.002 Right-to-Left Override [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1542.002 Component Firmware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
