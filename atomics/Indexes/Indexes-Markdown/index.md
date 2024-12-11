@@ -169,6 +169,7 @@
   - Atomic Test #3: attrib - Remove read-only attribute [windows]
   - Atomic Test #4: attrib - hide file [windows]
   - Atomic Test #5: Grant Full Access to folder for Everyone - Ryuk Ransomware Style [windows]
+  - Atomic Test #6: SubInAcl Execution [windows]
 - T1574.014 AppDomainManager [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1218.007 Signed Binary Proxy Execution: Msiexec](../../T1218.007/T1218.007.md)
   - Atomic Test #1: Msiexec.exe - Execute Local MSI file with embedded JScript [windows]
@@ -295,6 +296,9 @@
   - Atomic Test #5: Clear Windows Audit Policy Config [windows]
   - Atomic Test #6: Disable Event Logging with wevtutil [windows]
   - Atomic Test #7: Makes Eventlog blind with Phant0m [windows]
+  - Atomic Test #8: Modify Event Log Channel Access Permissions via Registry - PowerShell [windows]
+  - Atomic Test #9: Modify Event Log Channel Access Permissions via Registry 2 - PowerShell [windows]
+  - Atomic Test #10: Modify Event Log Access Permissions via Registry - PowerShell [windows]
 - [T1218.002 Signed Binary Proxy Execution: Control Panel](../../T1218.002/T1218.002.md)
   - Atomic Test #1: Control Panel Items [windows]
 - T1599.001 Network Address Translation Traversal [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
