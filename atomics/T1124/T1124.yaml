@@ -63,3 +63,14 @@ atomic_tests:
     command: |
       time
     name: command_prompt
+- name: Discover System Time Zone via Registry
+  description: |
+    Identify the Operating System Time Zone via registry with the reg.exe command.
+    Upon execution, the system Time Zone will be shown.
+  supported_platforms:
+    - windows
+  executor:
+    command: |
+      reg query "HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation" /v TimeZoneKeyName
+    name: command_prompt
+    elevation_required: false
