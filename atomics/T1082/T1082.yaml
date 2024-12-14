@@ -579,3 +579,25 @@ atomic_tests:
     name: command_prompt
     command: |
       powershell.exe -c "gdr -PSProvider 'FileSystem'"
+- name: Discover OS Product Name via Registry
+  description: |
+    Identify the Operating System Product Name via registry with the reg.exe command.
+    Upon execution, the OS Product Name will be displayed.
+  supported_platforms:
+    - windows
+  executor:
+    command: |
+      reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v ProductName
+    name: command_prompt
+    elevation_required: false
+- name: Discover OS Build Number via Registry
+  description: |
+    Identify the Operating System Build Number via registry with the reg.exe command.
+    Upon execution, the OS Build Number will be displayed.
+  supported_platforms:
+    - windows
+  executor:
+    command: |
+      reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v CurrentBuildNumber
+    name: command_prompt
+    elevation_required: false
