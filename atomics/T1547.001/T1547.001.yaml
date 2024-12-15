@@ -412,6 +412,6 @@ atomic_tests:
   executor:
     command: |
       reg add HKLM\System\CurrentControlSet\Control\BootVerificationProgram /v ImagePath /t REG_SZ /d "#{malicious_file}"
-    cleanup_command: reg delete HKLM\System\CurrentControlSet\Control\BootVerificationProgram
+    cleanup_command: reg delete HKLM\System\CurrentControlSet\Control\BootVerificationProgram /f
     name: command_prompt    
     elevation_required: true
