@@ -392,8 +392,8 @@ atomic_tests:
       default: calc
   executor:
     command: |
-      reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\Wds\rdpwd" /v StartupPrograms /t REG_SZ /d "#{malicious_app}"
-    cleanup_command: reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\Wds\rdpwd" /v StartupPrograms /t REG_SZ /d "rdpclip"
+      reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\Wds\rdpwd" /f /v StartupPrograms /t REG_SZ /d "#{malicious_app}"
+    cleanup_command: reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\Wds\rdpwd" /f /v StartupPrograms /t REG_SZ /d "rdpclip"
     name: command_prompt    
     elevation_required: true
     
