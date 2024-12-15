@@ -140,3 +140,28 @@ atomic_tests:
       icacls '#{path}' /restore #{file_path} /q >nul 2>&1
     name: command_prompt
     elevation_required: true
+- name: SubInAcl Execution
+  auto_generated_guid: a8568b10-9ab9-4140-a523-1c72e0176924
+  description: |-
+    This test simulates an adversary executing the Windows Resource kit utility SubInAcl. This utility was abused by adversaries in the past in order to modify access permissions. Upon execution, a process creation log should be generated indicating successful execution.
+  supported_platforms:
+    - windows
+  input_arguments:
+    SubInAclDownloadPath:
+      type: string
+      default: https://web.archive.org/web/20120528222424if_/http://download.microsoft.com/download/1/7/d/17d82b72-bc6a-4dc8-bfaa-98b37b22b367/subinacl.msi
+      description: Download URL for SubInAcl
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        Download subinacl
+      prereq_command: |
+        if (Test-Path "Test-Path C:\Program Files (x86)\Windows Resource Kits\Tools\subinacl.exe") {exit 0} else {exit 1}
+      get_prereq_command: |-
+        New-Item -Path C:\Users\Public\SubInAcl -ItemType Directory | Out-Null
+        Invoke-WebRequest #{SubInAclDownloadPath} -OutFile C:\Users\Public\SubInAcl\SubInAcl.msi
+        msiexec.exe /i "C:\Users\Public\SubInAcl\SubInAcl.msi" /qn
+  executor:
+    command: '"C:\Program Files (x86)\Windows Resource Kits\Tools\subinacl.exe"'
+    name: command_prompt
+    elevation_required: true

@@ -33,3 +33,15 @@ atomic_tests:
     command: |-
       fsutil fsinfo drives
     name: command_prompt
+- name: Get Printer Device List via PowerShell Command
+  auto_generated_guid: 5c876daf-db1e-41cf-988d-139a7443ccd4
+  description: |
+    This test uses PowerShell to list printers on a Windows system, demonstrating a discovery technique attackers might use to 
+    gather details on connected devices. Using Get-Printer, they can view information on all available printers, identifying 
+    potential devices for further targeting.
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    command: |
+      Get-Printer

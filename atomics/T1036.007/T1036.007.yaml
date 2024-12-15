@@ -1,0 +1,71 @@
+attack_technique: T1036.007
+display_name: "Masquerading: Double File Extension"
+atomic_tests:
+  - name: File Extension Masquerading
+    auto_generated_guid: c7fa0c3b-b57f-4cba-9118-863bf4e653fc
+    description: |
+      download and execute a file masquerading as images or Office files. Upon execution 3 calc instances and 3 vbs windows will be launched.
+
+      e.g SOME_LEGIT_NAME.[doc,docx,xls,xlsx,pdf,rtf,png,jpg,etc.].[exe,vbs,js,ps1,etc] (Quartelyreport.docx.exe)
+    supported_platforms:
+      - windows
+    input_arguments:
+      exe_path:
+        description: path to exe to use when creating masquerading files
+        type: path
+        default: C:\Windows\System32\calc.exe
+      vbs_path:
+        description: path of vbs to use when creating masquerading files
+        type: path
+        default: PathToAtomicsFolder\T1036.007\src\T1036.007_masquerading.vbs
+      ps1_path:
+        description: path of powershell script to use when creating masquerading files
+        type: path
+        default: PathToAtomicsFolder\T1036.007\src\T1036.007_masquerading.ps1
+    dependency_executor_name: powershell
+    dependencies:
+      - description: |
+          File to copy must exist on disk at specified location (#{vbs_path})
+        prereq_command: |
+          if (Test-Path "#{vbs_path}") {exit 0} else {exit 1}
+        get_prereq_command: |
+          New-Item -Type Directory (split-path "#{vbs_path}") -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1036.007/src/T1036.007_masquerading.vbs" -OutFile "#{vbs_path}"
+      - description: |
+          File to copy must exist on disk at specified location (#{ps1_path})
+        prereq_command: |
+          if (Test-Path "#{ps1_path}") {exit 0} else {exit 1}
+        get_prereq_command: |
+          New-Item -Type Directory (split-path "#{ps1_path}") -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1036.007/src/T1036.007_masquerading.ps1" -OutFile "#{ps1_path}"
+    executor:
+      command: |
+        copy "#{exe_path}" %temp%\T1036.007_masquerading.docx.exe /Y
+        copy "#{exe_path}" %temp%\T1036.007_masquerading.pdf.exe /Y
+        copy "#{exe_path}" %temp%\T1036.007_masquerading.ps1.exe /Y
+        copy "#{vbs_path}" %temp%\T1036.007_masquerading.xls.vbs /Y
+        copy "#{vbs_path}" %temp%\T1036.007_masquerading.xlsx.vbs /Y
+        copy "#{vbs_path}" %temp%\T1036.007_masquerading.png.vbs /Y
+        copy "#{ps1_path}" %temp%\T1036.007_masquerading.doc.ps1 /Y
+        copy "#{ps1_path}" %temp%\T1036.007_masquerading.pdf.ps1 /Y
+        copy "#{ps1_path}" %temp%\T1036.007_masquerading.rtf.ps1 /Y
+        %temp%\T1036.007_masquerading.docx.exe
+        %temp%\T1036.007_masquerading.pdf.exe
+        %temp%\T1036.007_masquerading.ps1.exe
+        %temp%\T1036.007_masquerading.xls.vbs
+        %temp%\T1036.007_masquerading.xlsx.vbs
+        %temp%\T1036.007_masquerading.png.vbs
+        C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File %temp%\T1036.007_masquerading.doc.ps1
+        C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File %temp%\T1036.007_masquerading.pdf.ps1
+        C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File %temp%\T1036.007_masquerading.rtf.ps1
+      cleanup_command: |
+        del /f %temp%\T1036.007_masquerading.docx.exe > nul 2>&1
+        del /f %temp%\T1036.007_masquerading.pdf.exe > nul 2>&1
+        del /f %temp%\T1036.007_masquerading.ps1.exe > nul 2>&1
+        del /f %temp%\T1036.007_masquerading.xls.vbs > nul 2>&1
+        del /f %temp%\T1036.007_masquerading.xlsx.vbs > nul 2>&1
+        del /f %temp%\T1036.007_masquerading.png.vbs > nul 2>&1
+        del /f %temp%\T1036.007_masquerading.doc.ps1 > nul 2>&1
+        del /f %temp%\T1036.007_masquerading.pdf.ps1 > nul 2>&1
+        del /f %temp%\T1036.007_masquerading.rtf.ps1 > nul 2>&1
+      name: command_prompt
