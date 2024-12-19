@@ -2531,6 +2531,8 @@
   - Atomic Test #36: Display volume shadow copies with "vssadmin" [windows]
   - Atomic Test #37: Identify System Locale and Regional Settings with PowerShell [windows]
   - Atomic Test #38: Enumerate Available Drives via gdr [windows]
+  - Atomic Test #39: Discover OS Product Name via Registry [windows]
+  - Atomic Test #40: Discover OS Build Number via Registry [windows]
 - [T1016.002 System Network Configuration Discovery: Wi-Fi Discovery](../../T1016.002/T1016.002.md)
   - Atomic Test #1: Enumerate Stored Wi-Fi Profiles And Passwords via netsh [windows]
 - [T1010 Application Window Discovery](../../T1010/T1010.md)
