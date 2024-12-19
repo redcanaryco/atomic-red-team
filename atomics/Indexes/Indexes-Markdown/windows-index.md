@@ -1906,6 +1906,7 @@
   - Atomic Test #2: System Time Discovery - PowerShell [windows]
   - Atomic Test #4: System Time Discovery W32tm as a Delay [windows]
   - Atomic Test #5: System Time with Windows time Command [windows]
+  - Atomic Test #6: Discover System Time Zone via Registry [windows]
 
 # impact
 - T1561.002 Disk Structure Wipe [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
