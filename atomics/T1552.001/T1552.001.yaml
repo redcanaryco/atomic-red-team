@@ -2,7 +2,7 @@ attack_technique: T1552.001
 display_name: 'Unsecured Credentials: Credentials In Files'
 atomic_tests:
 - name: Find AWS credentials
-  auto_generated_guid: 2b93758e-a8d7-4e3b-bc7b-d3aa8d7ecb17
+  auto_generated_guid: 37807632-d3da-442e-8c2e-00f44928ff8f
   description: |
     Find local AWS credentials from file, defaults to using / as the look path.
   supported_platforms:
@@ -15,7 +15,7 @@ atomic_tests:
       default: /
   executor:
     command: |
-      find #{file_path} -name "credentials" -type f -path "*/.aws/*" 2>/dev/null
+      find #{file_path}/.aws -name "credentials" -type f 2>/dev/null
     name: sh
 - name: Extract Browser and System credentials with LaZagne
   auto_generated_guid: 9e507bb8-1d30-4e3b-a49b-cb5727d7ea79
@@ -189,3 +189,51 @@ atomic_tests:
       
     name: command_prompt
     elevation_required: true
+- name: Find Azure credentials
+  auto_generated_guid: a8f6148d-478a-4f43-bc62-5efee9f931a4
+  description: |
+    Find local Azure credentials from file, defaults to using / as the look path.
+  supported_platforms:
+  - macos
+  - linux
+  input_arguments:
+    file_path:
+      description: Path to search
+      type: string
+      default: /
+  executor:
+    command: |
+      find #{file_path}/.azure -name "msal_token_cache.json" -o -name "accessTokens.json" -type f 2>/dev/null
+    name: sh
+- name: Find GCP credentials
+  auto_generated_guid: aa12eb29-2dbb-414e-8b20-33d34af93543
+  description: |
+    Find local Google Cloud Platform credentials from file, defaults to using / as the look path.
+  supported_platforms:
+  - macos
+  - linux
+  input_arguments:
+    file_path:
+      description: Path to search
+      type: string
+      default: /
+  executor:
+    command: |
+      find #{file_path}/.config/gcloud -name "credentials.db" -o -name "access_tokens.db" -type f 2>/dev/null
+    name: sh
+- name: Find OCI credentials
+  auto_generated_guid: 9d9c22c9-fa97-4008-a204-478cf68c40af
+  description: |
+    Find local Oracle cloud credentials from file, defaults to using / as the look path.
+  supported_platforms:
+  - macos
+  - linux
+  input_arguments:
+    file_path:
+      description: Path to search
+      type: string
+      default: /
+  executor:
+    command: |
+      find #{file_path}/.oci/sessions -name "token" -type f 2>/dev/null
+    name: sh

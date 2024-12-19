@@ -588,6 +588,9 @@
   - Atomic Test #2: Extract Browser and System credentials with LaZagne [macos]
   - Atomic Test #3: Extract passwords with grep [linux, macos]
   - Atomic Test #6: Find and Access Github Credentials [linux, macos]
+  - Atomic Test #15: Find Azure credentials [macos, linux]
+  - Atomic Test #16: Find GCP credentials [macos, linux]
+  - Atomic Test #17: Find OCI credentials [macos, linux]
 - T1606.001 Web Cookies [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1552.006 Unsecured Credentials: Group Policy Preferences [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1556.008 Network Provider DLL [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

@@ -2288,6 +2288,9 @@
   - Atomic Test #12: WinPwn - Loot local Credentials - AWS, Microsoft Azure, and Google Compute credentials [windows]
   - Atomic Test #13: List Credential Files via PowerShell [windows]
   - Atomic Test #14: List Credential Files via Command Prompt [windows]
+  - Atomic Test #15: Find Azure credentials [macos, linux]
+  - Atomic Test #16: Find GCP credentials [macos, linux]
+  - Atomic Test #17: Find OCI credentials [macos, linux]
 - T1606.001 Web Cookies [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1528 Steal Application Access Token](../../T1528/T1528.md)
   - Atomic Test #1: Azure - Dump All Azure Key Vaults with Microburst [iaas:azure]
