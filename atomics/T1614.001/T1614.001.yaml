@@ -175,12 +175,12 @@ atomic_tests:
     name: powershell
     elevation_required: false
     command: |
-    $info = @{
-      UILanguage     = Get-WinUILanguageOverride
-      UserLanguages  = (Get-WinUserLanguageList).LanguageTag -join ', '
-      SystemLocale   = Get-WinSystemLocale
-      CurrentCulture = [System.Globalization.CultureInfo]::CurrentCulture.Name
-      CurrentUICulture = [System.Globalization.CultureInfo]::CurrentUICulture.Name
-      TimeZone       = (Get-TimeZone).Id
-    }
-    $info.GetEnumerator() | ForEach-Object { "$($_.Name): $($_.Value)" }
+      $info = @{
+        UILanguage     = Get-WinUILanguageOverride
+        UserLanguages  = (Get-WinUserLanguageList).LanguageTag -join ', '
+        SystemLocale   = Get-WinSystemLocale
+        CurrentCulture = [System.Globalization.CultureInfo]::CurrentCulture.Name
+        CurrentUICulture = [System.Globalization.CultureInfo]::CurrentUICulture.Name
+        TimeZone       = (Get-TimeZone).Id
+      }
+      $info.GetEnumerator() | ForEach-Object { "$($_.Name): $($_.Value)" }
