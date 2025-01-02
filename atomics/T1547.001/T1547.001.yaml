@@ -415,3 +415,14 @@ atomic_tests:
     cleanup_command: reg delete HKLM\System\CurrentControlSet\Control\BootVerificationProgram /f
     name: command_prompt    
     elevation_required: true
+    
+- name: Add persistence via Windows Context Menu
+  description: |
+    This atomic test add persistence taking advantage of the  Windows Context Menu [Hexacorn](https://www.hexacorn.com/blog/2018/07/29/beyond-good-ol-run-key-part-82/)
+    User have to right click on the main screen or in the white space of the opened folder (e.g. Size Modify).
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKEY_CLASSES_ROOT\Directory\Background\shell\Size Modify\command" /ve /t REG_SZ /d "C:\Windows\System32\calc.exe" /f
+    cleanup_command: reg delete "HKEY_CLASSES_ROOT\Directory\Background\shell\Size Modify" /f
