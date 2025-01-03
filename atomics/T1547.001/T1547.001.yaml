@@ -423,6 +423,7 @@ atomic_tests:
   supported_platforms:
   - windows
   executor:
-    command: |
-      reg add "HKEY_CLASSES_ROOT\Directory\Background\shell\Size Modify\command" /ve /t REG_SZ /d "C:\Windows\System32\calc.exe" /f
+    command: reg add "HKEY_CLASSES_ROOT\Directory\Background\shell\Size Modify\command" /ve /t REG_SZ /d "C:\Windows\System32\calc.exe" /f
     cleanup_command: reg delete "HKEY_CLASSES_ROOT\Directory\Background\shell\Size Modify" /f
+    name: command_prompt
+    elevation_required: true
