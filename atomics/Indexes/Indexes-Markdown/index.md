@@ -2660,6 +2660,8 @@
   - Atomic Test #11: Get Windows Defender exclusion settings using WMIC [windows]
 - [T1526 Cloud Service Discovery](../../T1526/T1526.md)
   - Atomic Test #1: Azure - Dump Subscription Data with MicroBurst [iaas:azure]
+  - Atomic Test #2: AWS - Enumerate common cloud services [iaas:aws]
+  - Atomic Test #3: Azure - Enumerate common cloud services [iaas:azure]
 - [T1018 Remote System Discovery](../../T1018/T1018.md)
   - Atomic Test #1: Remote System Discovery - net [windows]
   - Atomic Test #2: Remote System Discovery - net group Domain Computers [windows]
