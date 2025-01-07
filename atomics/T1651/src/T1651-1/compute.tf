@@ -15,12 +15,12 @@ data "aws_ami" "ami" {
 }
 
 resource "aws_instance" "instance" {
-  ami           = data.aws_ami.ami.id
-  instance_type = var.instance_type
-  subnet_id     = aws_subnet.subnet.id
-  iam_instance_profile = aws_iam_instance_profile.profile.name
-  vpc_security_group_ids = [ aws_security_group.sg.id ]
-  user_data = <<EOF
+  ami                    = data.aws_ami.ami.id
+  instance_type          = var.instance_type
+  subnet_id              = aws_subnet.subnet.id
+  iam_instance_profile   = aws_iam_instance_profile.profile.name
+  vpc_security_group_ids = [aws_security_group.sg.id]
+  user_data              = <<EOF
 systemctl enable amazon-ssm-agent
 systemctl start amazon-ssm-agent
 EOF
