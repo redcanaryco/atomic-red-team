@@ -1122,6 +1122,7 @@
   - Atomic Test #17: Modify BootExecute Value [windows]
   - Atomic Test #18: Allowing custom application to execute during new RDP logon session [windows]
   - Atomic Test #19: Creating Boot Verification Program Key for application execution during successful boot [windows]
+  - Atomic Test #20: Add persistence via Windows Context Menu [windows]
 - [T1098 Account Manipulation](../../T1098/T1098.md)
   - Atomic Test #1: Admin Account Manipulate [windows]
   - Atomic Test #2: Domain Account and Group Manipulate [windows]
@@ -1652,6 +1653,7 @@
   - Atomic Test #17: Modify BootExecute Value [windows]
   - Atomic Test #18: Allowing custom application to execute during new RDP logon session [windows]
   - Atomic Test #19: Creating Boot Verification Program Key for application execution during successful boot [windows]
+  - Atomic Test #20: Add persistence via Windows Context Menu [windows]
 - [T1136.003 Create Account: Cloud Account](../../T1136.003/T1136.003.md)
   - Atomic Test #1: AWS - Create a new IAM user [iaas:aws]
   - Atomic Test #2: Azure AD - Create a new user [azure-ad]
@@ -2636,6 +2638,8 @@
   - Atomic Test #6: Discover System Language by Environment Variable Query [linux]
   - Atomic Test #7: Discover System Language with dism.exe [windows]
   - Atomic Test #8: Discover System Language by Windows API Query [windows]
+  - Atomic Test #9: Discover System Language with WMIC [windows]
+  - Atomic Test #10: Discover System Language with Powershell [windows]
 - [T1012 Query Registry](../../T1012/T1012.md)
   - Atomic Test #1: Query Registry [windows]
   - Atomic Test #2: Query Registry with Powershell cmdlets [windows]
