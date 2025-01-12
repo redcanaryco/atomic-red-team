@@ -52318,7 +52318,64 @@ discovery:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       identifier: T1526
-    atomic_tests: []
+    atomic_tests:
+    - name: AWS - Enumerate common cloud services
+      auto_generated_guid: aa8b9bcc-46fa-4a59-9237-73c7b93a980c
+      description: 'Upon successful execution, this test will enumerate common resources
+        that are contained within a valid AWS account.
+
+        '
+      supported_platforms:
+      - iaas:aws
+      input_arguments:
+        access_key:
+          description: AWS Access Key
+          type: string
+          default: ''
+        secret_key:
+          description: AWS Secret Key
+          type: string
+          default: ''
+        session_token:
+          description: AWS Session Token
+          type: string
+          default: ''
+        profile:
+          description: AWS profile
+          type: string
+          default: ''
+        regions:
+          description: AWS regions
+          type: string
+          default: us-east-1,us-east-2,us-west-1,us-west-2
+        output_directory:
+          description: Directory to output results to
+          type: string
+          default: "$env:TMPDIR/aws_discovery"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'The AWS PowerShell module must be installed.
+
+          '
+        prereq_command: 'try {if (Get-InstalledModule -Name AWSPowerShell -ErrorAction
+          SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
+
+          '
+        get_prereq_command: 'Install-Module -Name AWSPowerShell -Force
+
+          '
+      executor:
+        command: |
+          Import-Module "PathToAtomicsFolder\T1526\src\AWSDiscovery.ps1"
+          $access_key = "#{access_key}"
+          $secret_key = "#{secret_key}"
+          $session_token = "#{session_token}"
+          $aws_profile = "#{profile}"
+          $regions = "#{regions}"
+          Set-AWSAuthentication -AccessKey $access_key -SecretKey $secret_key -SessionToken $session_token -AWSProfile $aws_profile
+          Get-AWSDiscoveryData -Regions $regions -OutputDirectory "#{output_directory}"
+          Remove-BlankFiles -OutputDirectory "#{output_directory}"
+        name: powershell
   T1018:
     technique:
       modified: '2023-08-14T19:08:59.741Z'
