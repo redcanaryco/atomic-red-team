@@ -2638,6 +2638,8 @@
   - Atomic Test #6: Discover System Language by Environment Variable Query [linux]
   - Atomic Test #7: Discover System Language with dism.exe [windows]
   - Atomic Test #8: Discover System Language by Windows API Query [windows]
+  - Atomic Test #9: Discover System Language with WMIC [windows]
+  - Atomic Test #10: Discover System Language with Powershell [windows]
 - [T1012 Query Registry](../../T1012/T1012.md)
   - Atomic Test #1: Query Registry [windows]
   - Atomic Test #2: Query Registry with Powershell cmdlets [windows]
