@@ -11655,11 +11655,11 @@ defense-evasion:
         username:
           description: Azure username
           type: string
-          default: 
+          default:
         password:
           description: Azure password
           type: string
-          default: 
+          default:
         event_hub_name:
           description: Name of the eventhub
           type: string
@@ -11667,11 +11667,11 @@ defense-evasion:
         resource_group:
           description: Name of the resource group
           type: string
-          default: 
+          default:
         name_space_name:
           description: Name of the NameSpace
           type: string
-          default: 
+          default:
       dependency_executor_name: powershell
       dependencies:
       - description: 'Install-Module -Name Az
@@ -40955,11 +40955,11 @@ collection:
         container_name:
           description: Container name to search for (optional)
           type: string
-          default: 
+          default:
         blob_name:
           description: Blob name to search for (optional)
           type: string
-          default: 
+          default:
       executor:
         command: |
           try{$response = invoke-webrequest "https://#{base_name}.blob.core.windows.net/#{container_name}/#{blob_name}" -method "GET"}
@@ -47519,7 +47519,7 @@ credential-access:
         username:
           description: Azure AD username
           type: string
-          default: 
+          default:
         password:
           description: Azure AD password
           type: string
@@ -47531,7 +47531,7 @@ credential-access:
         subscription_id:
           description: Azure subscription id to search
           type: string
-          default: 
+          default:
       dependency_executor_name: powershell
       dependencies:
       - description: 'The Get-AzurePasswords script must exist in PathToAtomicsFolder\..\ExternalPayloads.
@@ -52336,7 +52336,7 @@ discovery:
         username:
           description: Azure AD username
           type: string
-          default: 
+          default:
         password:
           description: Azure AD password
           type: string
@@ -52348,7 +52348,7 @@ discovery:
         subscription_name:
           description: Azure subscription name to scan
           type: string
-          default: 
+          default:
       dependency_executor_name: powershell
       dependencies:
       - description: 'The Get-AzDomainInfo script must exist in PathToAtomicsFolder\..\ExternalPayloads.
@@ -52395,15 +52395,15 @@ discovery:
         client_id:
           description: Azure AD client ID
           type: string
-          default: 
+          default:
         client_secret:
           description: Azure AD client secret
           type: string
-          default: 
+          default:
         tenant_id:
           description: Azure AD tenant ID
           type: string
-          default: 
+          default:
         cloud:
           description: Azure cloud environment
           type: string
