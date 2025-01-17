@@ -2130,6 +2130,7 @@
   - Atomic Test #1: Steal Firefox Cookies (Windows) [windows]
   - Atomic Test #2: Steal Chrome Cookies (Windows) [windows]
   - Atomic Test #3: Steal Chrome Cookies via Remote Debugging (Mac) [macos]
+  - Atomic Test #4: Steal Chrome v127+ cookies via Remote Debugging (Windows) [windows]
 - [T1003.002 OS Credential Dumping: Security Account Manager](../../T1003.002/T1003.002.md)
   - Atomic Test #1: Registry dump of SAM, creds, and secrets [windows]
   - Atomic Test #2: Registry parse with pypykatz [windows]
