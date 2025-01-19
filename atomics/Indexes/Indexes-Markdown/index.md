@@ -1419,7 +1419,8 @@
   - Atomic Test #4: Simulate BlackByte Ransomware Print Bombing [windows]
   - Atomic Test #5: Command Prompt read contents from CMD file and execute [windows]
   - Atomic Test #6: Command prompt writing script to file then executes it [windows]
-- T1651 Cloud Administration Command [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1651 Cloud Administration Command](../../T1651/T1651.md)
+  - Atomic Test #1: AWS Run Command (and Control) [iaas:aws]
 - [T1059.005 Command and Scripting Interpreter: Visual Basic](../../T1059.005/T1059.005.md)
   - Atomic Test #1: Visual Basic script execution to gather local computer information [windows]
   - Atomic Test #2: Encoded VBS code execution [windows]
@@ -2130,6 +2131,7 @@
   - Atomic Test #1: Steal Firefox Cookies (Windows) [windows]
   - Atomic Test #2: Steal Chrome Cookies (Windows) [windows]
   - Atomic Test #3: Steal Chrome Cookies via Remote Debugging (Mac) [macos]
+  - Atomic Test #4: Steal Chrome v127+ cookies via Remote Debugging (Windows) [windows]
 - [T1003.002 OS Credential Dumping: Security Account Manager](../../T1003.002/T1003.002.md)
   - Atomic Test #1: Registry dump of SAM, creds, and secrets [windows]
   - Atomic Test #2: Registry parse with pypykatz [windows]
@@ -2806,7 +2808,8 @@
 - T1592.002 Software [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1593.001 Social Media [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1589.001 Credentials [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1595.003 Wordlist Scanning [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1595.003 Active Scanning: Wordlist Scanning](../../T1595.003/T1595.003.md)
+  - Atomic Test #1: Web Server Wordlist Scan [windows, linux, macos]
 - T1591.004 Identify Roles [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1598 Phishing for Information [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1595.001 Scanning IP Blocks [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

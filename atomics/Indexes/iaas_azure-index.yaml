@@ -11655,11 +11655,11 @@ defense-evasion:
         username:
           description: Azure username
           type: string
-          default: 
+          default:
         password:
           description: Azure password
           type: string
-          default: 
+          default:
         event_hub_name:
           description: Name of the eventhub
           type: string
@@ -11667,11 +11667,11 @@ defense-evasion:
         resource_group:
           description: Name of the resource group
           type: string
-          default: 
+          default:
         name_space_name:
           description: Name of the NameSpace
           type: string
-          default: 
+          default:
       dependency_executor_name: powershell
       dependencies:
       - description: 'Install-Module -Name Az
@@ -27192,6 +27192,7 @@ execution:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       x_mitre_attack_spec_version: 3.2.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      identifier: T1651
     atomic_tests: []
   T1059.005:
     technique:
@@ -40955,11 +40956,11 @@ collection:
         container_name:
           description: Container name to search for (optional)
           type: string
-          default: 
+          default:
         blob_name:
           description: Blob name to search for (optional)
           type: string
-          default: 
+          default:
       executor:
         command: |
           try{$response = invoke-webrequest "https://#{base_name}.blob.core.windows.net/#{container_name}/#{blob_name}" -method "GET"}
@@ -47519,7 +47520,7 @@ credential-access:
         username:
           description: Azure AD username
           type: string
-          default: 
+          default:
         password:
           description: Azure AD password
           type: string
@@ -47531,7 +47532,7 @@ credential-access:
         subscription_id:
           description: Azure subscription id to search
           type: string
-          default: 
+          default:
       dependency_executor_name: powershell
       dependencies:
       - description: 'The Get-AzurePasswords script must exist in PathToAtomicsFolder\..\ExternalPayloads.
@@ -52336,7 +52337,7 @@ discovery:
         username:
           description: Azure AD username
           type: string
-          default: 
+          default:
         password:
           description: Azure AD password
           type: string
@@ -52348,7 +52349,7 @@ discovery:
         subscription_name:
           description: Azure subscription name to scan
           type: string
-          default: 
+          default:
       dependency_executor_name: powershell
       dependencies:
       - description: 'The Get-AzDomainInfo script must exist in PathToAtomicsFolder\..\ExternalPayloads.
@@ -52395,15 +52396,15 @@ discovery:
         client_id:
           description: Azure AD client ID
           type: string
-          default: 
+          default:
         client_secret:
           description: Azure AD client secret
           type: string
-          default: 
+          default:
         tenant_id:
           description: Azure AD tenant ID
           type: string
-          default: 
+          default:
         cloud:
           description: Azure cloud environment
           type: string
@@ -57645,7 +57646,7 @@ reconnaissance:
         privileges and move laterally. "
       modified: '2022-04-15T19:10:23.838Z'
       created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
-      name: Wordlist Scanning
+      name: 'Active Scanning: Wordlist Scanning'
       x_mitre_detection: "Monitor for suspicious network traffic that could be indicative
         of scanning, such as large quantities originating from a single source (especially
         if the source is known to be associated with an adversary/botnet). Monitor
@@ -57663,6 +57664,7 @@ reconnaissance:
       - 'Network Traffic: Network Traffic Content'
       x_mitre_attack_spec_version: 2.1.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      identifier: T1595.003
     atomic_tests: []
   T1591.004:
     technique:
