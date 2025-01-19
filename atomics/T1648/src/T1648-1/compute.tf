@@ -1,11 +1,11 @@
 data "archive_file" "lambda_code" {
-  type           = "zip"
-  source_content = <<EOF
+  type                    = "zip"
+  source_content          = <<EOF
 def lambda_handler(event, context):
     return "This is a benign lambda function"
 EOF
   source_content_filename = "lambda.py"
-  output_path    = "${path.module}/lambda_code.zip"
+  output_path             = "${path.module}/lambda_code.zip"
 }
 
 resource "aws_lambda_function" "lambda" {
