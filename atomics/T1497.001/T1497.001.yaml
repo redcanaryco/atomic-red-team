@@ -42,7 +42,7 @@ atomic_tests:
       if($error) {echo "Virtualization Environment detected"}
     cleanup_command: |
       $error.clear()
-- name: Detect Virtualization Environment (MacOS)
+- name: Detect Virtualization Environment via ioreg
   auto_generated_guid: a960185f-aef6-4547-8350-d1ce16680d09
   description: |
     ioreg contains registry entries for all the device drivers in the system. If it's a virtual machine, one of the device manufacturer will be a Virtualization Software.
@@ -66,3 +66,39 @@ atomic_tests:
       $Manufacturer = Get-WmiObject -Class Win32_ComputerSystem | select-object -expandproperty "Manufacturer"
       $Model = Get-WmiObject -Class Win32_ComputerSystem | select-object -expandproperty "Model"
       if((($Manufacturer.ToLower() -eq "microsoft corporation") -and ($Model.ToLower().contains("virtual"))) -or ($Manufacturer.ToLower().contains("vmware")) -or ($Model.ToLower() -eq "virtualbox")) {write-host "Virtualization environment detected!"} else {write-host "No virtualization environment detected!"}
+- name: Detect Virtualization Environment using sysctl (hw.model)
+  auto_generated_guid: 
+  description: |
+    sysctl hw.model will return the model name of the hardware(Macmini8,1, MacBookAir10,1, etc.) in case of native Apple hardware
+    but will return the hypervisor name (VMware7,0).
+    Reference: https://evasions.checkpoint.com/src/MacOS/macos.html#hardware-model
+  supported_platforms:
+    - macos
+  executor:
+    name: sh
+    command: | 
+      if [ "$(sysctl -n hw.model | grep -v 'Mac')" != "" ]; then echo 'Virtualization Environment detected'; fi;
+- name: Check if System Integrity Protection is enabled
+  auto_generated_guid: 
+  description: |
+    The latest versions of macOS have the System Integrity Protection feature (SIP). If a sandbox uses a non-signed 
+    kernel extension for monitoring purposes the, SIP feature must be disabled to load this kind of kernel extension.
+    Malware may check if the SIP is enabled.
+    Reference: https://evasions.checkpoint.com/src/MacOS/macos.html#sip
+  supported_platforms:
+    - macos
+  executor:
+    name: sh
+    command: | 
+      if [ "$(csrutil status | grep -v 'enabled')" != "" ]; then echo 'Possible Virtualization Environment detected'; fi;
+- name: Check if System Integrity Protection is enabled
+  auto_generated_guid: 
+  description: |
+    system_profiler provides system hardware and software configuration and the Model Identifier should provide the value similar to (sysctl -n hw.model). 
+    We should be able to find whether virtualization is enabled by checking whether the Model Identifier does not contain "Mac".
+  supported_platforms:
+    - macos
+  executor:
+    name: sh
+    command: | 
+      if [ "$(system_profiler SPHardwareDataType | grep "Model Identifier" | grep -v 'Mac')" != "" ]; then echo 'Virtualization Environment detected'; fi;
