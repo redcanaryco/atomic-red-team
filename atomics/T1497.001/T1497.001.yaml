@@ -91,7 +91,7 @@ atomic_tests:
     name: sh
     command: | 
       if [ "$(csrutil status | grep -v 'enabled')" != "" ]; then echo 'Possible Virtualization Environment detected'; fi;
-- name: Check if System Integrity Protection is enabled
+- name: Detect Virtualization Environment using system_profiler
   auto_generated_guid: 
   description: |
     system_profiler provides system hardware and software configuration and the Model Identifier should provide the value similar to (sysctl -n hw.model). 
