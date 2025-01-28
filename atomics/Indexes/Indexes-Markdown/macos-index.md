@@ -25,7 +25,10 @@
 - T1484.002 Domain Trust Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1562.009 Impair Defenses: Safe Boot Mode [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1497.001 Virtualization/Sandbox Evasion: System Checks](../../T1497.001/T1497.001.md)
-  - Atomic Test #4: Detect Virtualization Environment (MacOS) [macos]
+  - Atomic Test #4: Detect Virtualization Environment via ioreg [macos]
+  - Atomic Test #6: Detect Virtualization Environment using sysctl (hw.model) [macos]
+  - Atomic Test #7: Check if System Integrity Protection is enabled [macos]
+  - Atomic Test #8: Detect Virtualization Environment using system_profiler [macos]
 - T1218.004 Signed Binary Proxy Execution: InstallUtil [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.008 Stripped Payloads [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574.001 Hijack Execution Flow: DLL Search Order Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -634,7 +637,10 @@
   - Atomic Test #6: Enumerate users and groups [linux, macos]
   - Atomic Test #7: Enumerate users and groups [macos]
 - [T1497.001 Virtualization/Sandbox Evasion: System Checks](../../T1497.001/T1497.001.md)
-  - Atomic Test #4: Detect Virtualization Environment (MacOS) [macos]
+  - Atomic Test #4: Detect Virtualization Environment via ioreg [macos]
+  - Atomic Test #6: Detect Virtualization Environment using sysctl (hw.model) [macos]
+  - Atomic Test #7: Check if System Integrity Protection is enabled [macos]
+  - Atomic Test #8: Detect Virtualization Environment using system_profiler [macos]
 - T1069.002 Permission Groups Discovery: Domain Groups [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1007 System Service Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1040 Network Sniffing](../../T1040/T1040.md)
