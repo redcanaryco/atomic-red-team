@@ -214,32 +214,55 @@ atomic_tests:
   executor:
     command: |
       $ipAddr = "#{ip_address}"
-      if ($ipAddr -eq "") {
-          # Assumes the "primary" interface is shown at the top
-          $interface = Get-NetIPInterface -AddressFamily IPv4 -ConnectionState Connected | Select-Object -ExpandProperty InterfaceAlias -First 1
-          Write-Host "[i] Using Interface $interface"
-          $ipAddr = Get-NetIPAddress -AddressFamily IPv4 -InterfaceAlias $interface | Select-Object -ExpandProperty IPAddress
-      }
-      Write-Host "[i] Base IP-Address for Subnet: $ipAddr"
-      $subnetSubstring = $ipAddr.Substring(0, $ipAddr.LastIndexOf('.') + 1)
-      # Always assumes /24 subnet
-      Write-Host "[i] Assuming /24 subnet. scanning $subnetSubstring'1' to $subnetSubstring'254'"
+	  if(ipAddr -eq "" -or ipAddr -Match ","){
+		  if ($ipAddr -eq "") {
+			  # Assumes the "primary" interface is shown at the top
+			  $interface = Get-NetIPInterface -AddressFamily IPv4 -ConnectionState Connected | Select-Object -ExpandProperty InterfaceAlias -First 1
+			  Write-Host "[i] Using Interface $interface"
+			  $ipAddr = Get-NetIPAddress -AddressFamily IPv4 -InterfaceAlias $interface | Select-Object -ExpandProperty IPAddress
+		  }
+		  Write-Host "[i] Base IP-Address for Subnet: $ipAddr"
+		  $subnetSubstring = $ipAddr.Substring(0, $ipAddr.LastIndexOf('.') + 1)
+		  # Always assumes /24 subnet
+		  Write-Host "[i] Assuming /24 subnet. scanning $subnetSubstring'1' to $subnetSubstring'254'"
 
-      $ports = #{port_list}
-      $subnetIPs = 1..254 | ForEach-Object { "$subnetSubstring$_" }
+		  $ports = #{port_list}
+		  $subnetIPs = 1..254 | ForEach-Object { "$subnetSubstring$_" }
 
-      foreach ($ip in $subnetIPs) {
-          foreach ($port in $ports) {
-            try {
-                $tcp = New-Object Net.Sockets.TcpClient
-                $tcp.ConnectAsync($ip, $port).Wait(#{timeout_ms}) | Out-Null
-            } catch {}
-            if ($tcp.Connected) {
-                $tcp.Close()
-                Write-Host "Port $port is open on $ip"
-            }
-          }
-      }
+		  foreach ($ip in $subnetIPs) {
+			  foreach ($port in $ports) {
+				try {
+					$tcp = New-Object Net.Sockets.TcpClient
+					$tcp.ConnectAsync($ip, $port).Wait(#{timeout_ms}) | Out-Null
+				} catch {}
+				if ($tcp.Connected) {
+					$tcp.Close()
+					Write-Host "Port $port is open on $ip"
+				}
+			  }
+		  }
+	}elseif(ipAddr -Match ","){
+		Write-Host "[i] IP Address List: $ipAddr"
+
+		$ports = #{port_list}
+		$targetList = 1..254 | ForEach-Object { "$ipAddr$_" }
+
+		foreach ($ip in $targetList) {
+			foreach ($port in $ports) {
+			try {
+				$tcp = New-Object Net.Sockets.TcpClient
+				$tcp.ConnectAsync($ip, $port).Wait(#{timeout_ms}) | Out-Null
+			} catch {}
+			if ($tcp.Connected) {
+				$tcp.Close()
+				Write-Host "Port $port is open on $ip"
+			}
+			}
+		  }
+	}else{
+		Write-Host "[Error] Invalid Inputs"
+		exit 1
+		}
     name: powershell
 - name: Remote Desktop Services Discovery via PowerShell 
   auto_generated_guid: 9e55750e-4cbf-4013-9627-e9a045b541bf
