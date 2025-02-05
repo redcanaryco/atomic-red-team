@@ -171,8 +171,8 @@ atomic_tests:
       type: path
       default: /private/tmp
   executor:
-    command: |
+    command: |-
       osascript -e 'tell application "Finder"' -e 'set destinationFolderPath to POSIX file "#{destination_path}"' -e 'set safariFolder to ((path to library folder from user domain as text) & "Containers:com.apple.Safari:Data:Library:Cookies:")' -e 'duplicate file "Cookies.binarycookies" of folder safariFolder to folder destinationFolderPath with replacing' -e 'end tell'
     cleanup_command: 'rm "#{destination_path}/Cookies.binarycookies"'
-      name: sh
+    name: sh
     elevation_required: false
