@@ -2155,6 +2155,7 @@
   - Atomic Test #1: Keychain Dump [macos]
   - Atomic Test #2: Export Certificate Item(s) [macos]
   - Atomic Test #3: Import Certificate Item(s) into Keychain [macos]
+  - Atomic Test #4: Copy Keychain using cat utility [macos]
 - [T1003.004 OS Credential Dumping: LSA Secrets](../../T1003.004/T1003.004.md)
   - Atomic Test #1: Dumping LSA Secrets [windows]
   - Atomic Test #2: Dump Kerberos Tickets from LSA using dumper.ps1 [windows]
