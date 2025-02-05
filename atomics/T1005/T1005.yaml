@@ -100,8 +100,8 @@ atomic_tests:
       type: path
       default: /private/tmp
   executor:
-    command: |
+    command: |-
       osascript -e 'tell application "Finder"' -e 'set destinationFolderPath to POSIX file "#{destination_path}"' -e 'set notesFolderPath to (path to home folder as text) & "Library:Group Containers:group.com.apple.notes:"' -e 'set notesFolder to folder notesFolderPath' -e 'set notesFiles to {file "NoteStore.sqlite", file "NoteStore.sqlite-shm", file "NoteStore.sqlite-wal"} of notesFolder' -e 'repeat with aFile in notesFiles' -e 'duplicate aFile to folder destinationFolderPath with replacing' -e 'end' -e 'end tell'
     cleanup_command: 'rm "#{destination_path}/NoteStore.sqlite*"'
-      name: sh
+    name: sh
     elevation_required: false
