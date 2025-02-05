@@ -56,23 +56,6 @@ atomic_tests:
     name: sh
     elevation_required: false
 
-- name: Import Certificate Item(s) into Keychain
-  auto_generated_guid: e544bbcb-c4e0-4bd0-b614-b92131635f59
-  description: |
-    This command will import a certificate pem file into a keychain.
-  supported_platforms:
-  - macos
-  input_arguments:
-    cert_export:
-      description: Specify the path of the pem certificate file to import.
-      type: path
-      default: /tmp/certs.pem
-  executor:
-    command: |
-      security import #{cert_export} -k
-    name: sh
-    elevation_required: false
-
 - name: Copy Keychain using cat utility
   description: |
     This command will copy the keychain using the cat utility in a manner similar to Atomic Stealer.
