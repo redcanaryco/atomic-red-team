@@ -159,3 +159,20 @@ atomic_tests:
       Stop-Process $chromeProcess -Force
     name: powershell
     elevation_required: false
+
+- name: Copy Safari BinaryCookies files using AppleScript
+  description: |
+    This command will copy Safari BinaryCookies files using AppleScript as seen in Atomic Stealer.
+  supported_platforms:
+  - macos
+  input_arguments:
+    destination_path:
+      description: Specify the path to copy the BinaryCookies file into.
+      type: path
+      default: /private/tmp
+  executor:
+    command: |
+      osascript -e 'tell application "Finder"' -e 'set destinationFolderPath to POSIX file "#{destination_path}"' -e 'set safariFolder to ((path to library folder from user domain as text) & "Containers:com.apple.Safari:Data:Library:Cookies:")' -e 'duplicate file "Cookies.binarycookies" of folder safariFolder to folder destinationFolderPath with replacing' -e 'end tell'
+    cleanup_command: 'rm "#{destination_path}/Cookies.binarycookies"'
+      name: sh
+    elevation_required: false
