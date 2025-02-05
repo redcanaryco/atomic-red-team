@@ -55,3 +55,20 @@ atomic_tests:
       security import #{cert_export} -k
     name: sh
     elevation_required: false
+
+- name: Copy Keychain using cat utility
+  description: |
+    This command will copy the keychain using the cat utility in a manner similar to Atomic Stealer.
+  supported_platforms:
+  - macos
+  input_arguments:
+    keychain_export:
+      description: Specify the path to copy they keychain into.
+      type: path
+      default: /tmp/keychain
+  executor:
+    command: |
+      cat ~/Library/Keychains/login.keychain-db > #{keychain_export}
+    cleanup_command: 'rm #{keychain_export}'
+    name: sh
+    elevation_required: false
