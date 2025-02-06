@@ -554,6 +554,7 @@
 - T1003 OS Credential Dumping [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1539 Steal Web Session Cookie](../../T1539/T1539.md)
   - Atomic Test #3: Steal Chrome Cookies via Remote Debugging (Mac) [macos]
+  - Atomic Test #5: Copy Safari BinaryCookies files using AppleScript [macos]
 - T1003.002 OS Credential Dumping: Security Account Manager [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1110.002 Brute Force: Password Cracking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1003.004 OS Credential Dumping: LSA Secrets [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
