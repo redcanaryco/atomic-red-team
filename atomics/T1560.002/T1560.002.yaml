@@ -123,6 +123,6 @@ atomic_tests:
     elevation_required: false
     command: |
       which_python=`which python || which python3`
-      $which_python -c "from zipfile import ZipFile; ZipFile('#{path_to_output_file}', mode='w').write('#{path_to_input_file}')" 
+      $which_python -c "import tarfile; output_file = tarfile.open('#{path_to_output_file}','w'); output_file.add('#{path_to_input_file}'); output_file.close()" 
     cleanup_command: |
       rm #{path_to_output_file}
