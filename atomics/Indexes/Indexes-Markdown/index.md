@@ -3001,6 +3001,7 @@
   - Atomic Test #1: Exfiltrate data with HTTP POST to text storage sites - pastebin.com (Windows) [windows]
 - [T1567.002 Exfiltration Over Web Service: Exfiltration to Cloud Storage](../../T1567.002/T1567.002.md)
   - Atomic Test #1: Exfiltrate data with rclone to cloud Storage - Mega (Windows) [windows]
+  - Atomic Test #2: Exfiltrate data with rclone to cloud Storage - AWS S3 [linux, macos]
 - [T1030 Data Transfer Size Limits](../../T1030/T1030.md)
   - Atomic Test #1: Data Transfer Size Limits [macos, linux]
   - Atomic Test #2: Network-Based Data Transfer in Small Chunks [windows]
