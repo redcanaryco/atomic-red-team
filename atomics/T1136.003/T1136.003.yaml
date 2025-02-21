@@ -100,5 +100,5 @@ atomic_tests:
       $password = "#{password}"
       az ad user create --display-name $username --password $password --user-principal-name $userprincipalname
       az ad user list --filter "displayname eq 'atomicredteam'"     
-    cleanup_command: az ad user delete --id #{userprincipalname}
+    cleanup_command: az ad user delete --id "#{userprincipalname}"
     name: powershell
