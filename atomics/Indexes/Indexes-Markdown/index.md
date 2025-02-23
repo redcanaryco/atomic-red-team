@@ -2007,6 +2007,7 @@
 - [T1005 Data from Local System](../../T1005/T1005.md)
   - Atomic Test #1: Search files of interest and save them to a single zip file (Windows) [windows]
   - Atomic Test #2: Find and dump sqlite databases (Linux) [linux]
+  - Atomic Test #3: Copy Apple Notes database files using AppleScript [macos]
 - [T1560.002 Archive Collected Data: Archive via Library](../../T1560.002/T1560.002.md)
   - Atomic Test #1: Compressing data using GZip in Python (FreeBSD/Linux) [linux]
   - Atomic Test #2: Compressing data using bz2 in Python (FreeBSD/Linux) [linux]
@@ -2136,6 +2137,7 @@
   - Atomic Test #2: Steal Chrome Cookies (Windows) [windows]
   - Atomic Test #3: Steal Chrome Cookies via Remote Debugging (Mac) [macos]
   - Atomic Test #4: Steal Chrome v127+ cookies via Remote Debugging (Windows) [windows]
+  - Atomic Test #5: Copy Safari BinaryCookies files using AppleScript [macos]
 - [T1003.002 OS Credential Dumping: Security Account Manager](../../T1003.002/T1003.002.md)
   - Atomic Test #1: Registry dump of SAM, creds, and secrets [windows]
   - Atomic Test #2: Registry parse with pypykatz [windows]
@@ -2155,6 +2157,7 @@
   - Atomic Test #1: Keychain Dump [macos]
   - Atomic Test #2: Export Certificate Item(s) [macos]
   - Atomic Test #3: Import Certificate Item(s) into Keychain [macos]
+  - Atomic Test #4: Copy Keychain using cat utility [macos]
 - [T1003.004 OS Credential Dumping: LSA Secrets](../../T1003.004/T1003.004.md)
   - Atomic Test #1: Dumping LSA Secrets [windows]
   - Atomic Test #2: Dump Kerberos Tickets from LSA using dumper.ps1 [windows]
@@ -2998,6 +3001,7 @@
   - Atomic Test #1: Exfiltrate data with HTTP POST to text storage sites - pastebin.com (Windows) [windows]
 - [T1567.002 Exfiltration Over Web Service: Exfiltration to Cloud Storage](../../T1567.002/T1567.002.md)
   - Atomic Test #1: Exfiltrate data with rclone to cloud Storage - Mega (Windows) [windows]
+  - Atomic Test #2: Exfiltrate data with rclone to cloud Storage - AWS S3 [linux, macos]
 - [T1030 Data Transfer Size Limits](../../T1030/T1030.md)
   - Atomic Test #1: Data Transfer Size Limits [macos, linux]
   - Atomic Test #2: Network-Based Data Transfer in Small Chunks [windows]
