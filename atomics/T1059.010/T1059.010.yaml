@@ -1,0 +1,38 @@
+attack_technique: T1059.010
+display_name: 'Command and Scripting Interpreter: AutoHotKey & AutoIT'
+atomic_tests:
+- name: AutoHotKey script execution
+  auto_generated_guid: 7b5d350e-f758-43cc-a761-8e3f6b052a03
+  description: |
+    An adversary may attempt to execute malicious script using AutoHotKey software instead of regular terminal like powershell or cmd. A messagebox will be displayed and calculator will popup when the script is executed successfully
+  supported_platforms:
+    - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      AutoHotKey executable file must exist on disk at the specified location (#{autohotkey_path})
+    prereq_command: |
+      if(Test-Path "#{autohotkey_path}") {
+          exit 0
+      } else {
+          exit 1
+      }
+    get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      $AutoHotKeyURL = "https://www.autohotkey.com/download/ahk.zip"
+      $InstallerPath = "$PathToAtomicsFolder\..\ExternalPayloads"
+      Invoke-WebRequest -Uri $AutoHotKeyURL -OutFile $InstallerPath\ahk.zip
+      Expand-Archive -Path $InstallerPath -Force;
+  input_arguments:
+    script_path:
+      description: AutoHotKey Script Path
+      type: path
+      default: PathToAtomicsFolder\T1059.010\src\calc.ahk
+    autohotkey_path:
+      description: AutoHotKey Executable File Path
+      type: path
+      default: $PathToAtomicsFolder\..\ExternalPayloads\ahk\AutoHotKeyU64.exe
+  executor:
+    command: |
+      Start-Process -FilePath "#{autohotkey_path}" -ArgumentList "#{script_path}"
+    name: powershell
