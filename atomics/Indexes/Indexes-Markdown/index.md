@@ -1881,6 +1881,7 @@
   - Atomic Test #1: ICMP C2 [windows]
   - Atomic Test #2: Netcat C2 [windows]
   - Atomic Test #3: Powercat C2 [windows]
+  - Atomic Test #4: Linux ICMP Reverse Shell using icmp-cnc [linux]
 - T1001.003 Protocol or Service Impersonation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1090.004 Domain Fronting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1132 Data Encoding [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
