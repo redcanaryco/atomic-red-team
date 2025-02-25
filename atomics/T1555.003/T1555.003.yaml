@@ -30,8 +30,7 @@ atomic_tests:
       Remove-Item "#{file_path}\Modified-SysInternalsSuite.zip" -Force
   executor:
     command: |
-      Set-Location -path "#{file_path}\Sysinternals";
-      ./accesschk.exe -accepteula .;
+      Start-Process "#{file_path}\Sysinternals\accesschk.exe" -ArgumentList "-accepteula ."
     cleanup_command: |
       Remove-Item "#{file_path}\Sysinternals" -Force -Recurse -ErrorAction Ignore
     name: powershell
