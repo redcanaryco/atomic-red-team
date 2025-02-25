@@ -1336,7 +1336,8 @@
   - Atomic Test #3: WinPwn - Get SYSTEM shell - Bind System Shell using CreateProcess technique [windows]
   - Atomic Test #4: WinPwn - Get SYSTEM shell - Pop System Shell using NamedPipe Impersonation technique [windows]
   - Atomic Test #5: Run Shellcode via Syscall in Go [windows]
-- T1059.010 AutoHotKey & AutoIT [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1059.010 Command and Scripting Interpreter: AutoHotKey & AutoIT](../../T1059.010/T1059.010.md)
+  - Atomic Test #1: AutoHotKey script execution [windows]
 - T1059.009 Cloud API [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1610 Deploy a container](../../T1610/T1610.md)
   - Atomic Test #1: Deploy Docker container [containers]
