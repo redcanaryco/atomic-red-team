@@ -342,4 +342,16 @@ atomic_tests:
       Start-Process -FilePath "C:Program Files (x86)\Splashtop\Splashtop Remote\Server\#{srserver_exe}"
     name: powershell
     elevation_required: true
+- name: Microsoft App Quick Assist Execution
+  description: |
+    An adversary may attempt to trick a user into executing Microsoft Quick Assist Microsoft Store app and connect to the user's machine. 
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      Start-Process "shell:AppsFolder\MicrosoftCorporationII.QuickAssist_8wekyb3d8bbwe!App"
+    cleanup_command: |-
+      Stop-Process -Name quickassist
+    name: powershell
+    elevation_required: true
 
