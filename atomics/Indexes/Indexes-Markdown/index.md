@@ -1846,6 +1846,7 @@
   - Atomic Test #12: RustDesk Files Detected Test on Windows [windows]
   - Atomic Test #13: Splashtop Execution [windows]
   - Atomic Test #14: Splashtop Streamer Execution [windows]
+  - Atomic Test #15: Microsoft App Quick Assist Execution [windows]
 - T1659 Content Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1572 Protocol Tunneling](../../T1572/T1572.md)
