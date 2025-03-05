@@ -277,3 +277,31 @@ atomic_tests:
        Get-Service -Name "Remote Desktop Services", "Remote Desktop Configuration"
     name: powershell
     elevation_required: true
+- name: Port Scan using nmap (Port range)
+  description: |
+    Scan multiple ports to check for listening ports with nmap
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
+    host:
+      description: Host(s) to scan.
+      type: string
+      default: "127.0.0.1"
+    port_range:
+      description: Port range(s) to scan.
+      type: string
+      default: "0-65535"
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Check if nmap command exists on the machine
+    prereq_command: |
+      if [ -x "$(command -v nmap)" ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      (which yum && yum -y install epel-release nmap)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y nmap)||(which pkg && pkg install -y nmap)||(which brew && brew install nmap)
+  executor:
+    command: |
+      nmap -Pn -sV -p #{port_range} #{host}
+    elevation_required: true
+    name: powershell
