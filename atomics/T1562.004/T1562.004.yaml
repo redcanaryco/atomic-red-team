@@ -363,7 +363,7 @@ atomic_tests:
     prereq_command: |
       if [ ! -x "$(command -v iptables)" ]; then echo -e "\n***** iptables NOT installed *****\n"; exit 1; fi
     get_prereq_command: |
-      echo ""
+      sudo apt-get install iptables
   executor:
     name: sh
     elevation_required: true
