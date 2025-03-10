@@ -2716,6 +2716,7 @@
   - Atomic Test #9: Network Service Discovery for Containers [containers]
   - Atomic Test #10: Port-Scanning /24 Subnet with PowerShell [windows]
   - Atomic Test #11: Remote Desktop Services Discovery via PowerShell [windows]
+  - Atomic Test #12: Port Scan using nmap (Port range) [linux, macos]
 - [T1518 Software Discovery](../../T1518/T1518.md)
   - Atomic Test #1: Find and Display Internet Explorer Browser Version [windows]
   - Atomic Test #2: Applications Installed [windows]

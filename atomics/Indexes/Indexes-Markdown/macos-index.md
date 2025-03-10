@@ -699,6 +699,7 @@
 - [T1046 Network Service Discovery](../../T1046/T1046.md)
   - Atomic Test #1: Port Scan [linux, macos]
   - Atomic Test #2: Port Scan Nmap [linux, macos]
+  - Atomic Test #12: Port Scan using nmap (Port range) [linux, macos]
 - [T1518 Software Discovery](../../T1518/T1518.md)
   - Atomic Test #3: Find and Display Safari Browser Version [macos]
 - T1622 Debugger Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
