@@ -150,7 +150,12 @@ atomic_tests:
 - name: Microsoft Dev tunnels (Linux/macOS)
   auto_generated_guid: 
   description: |
-    Download and run devtunnel. Create tunnel to chosen port.
+    Dev Tunnels enables insiders as well as threat actors to expose local ports over the internet via Microsoft dev tunnels.
+
+    This atomic will generate a dev tunnel binding it to the local service running on the provided port. Can be used to expose local services, web applications and local files etc.
+    Reference:
+    - [Microsoft Docs](https://learn.microsoft.com/en-us/tunnels/dev-tunnels-overview)
+    - [LOT Tunnels](https://lottunnels.github.io/lottunnels/Binaries/devtunnels/)
   supported_platforms:
   - linux
   - macos
@@ -184,10 +189,9 @@ atomic_tests:
       echo "Login to devtunnel using the following command: #{binary_path} user login"
   executor:
     command: |
-      #{binary_path} host -p #{port}
+      #{binary_path} host -p #{port} &
     cleanup_command: |
       kill $(pidof #{binary_path})
       #{binary_path} user logout
       rm #{binary_path}
     name: bash
-
