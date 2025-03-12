@@ -1853,6 +1853,7 @@
   - Atomic Test #3: DNS over HTTPS Long Domain Query [windows]
   - Atomic Test #4: run ngrok [windows]
   - Atomic Test #5: Microsoft Dev tunnels (Linux/macOS) [linux, macos]
+  - Atomic Test #6: VSCode tunnels (Linux/macOS) [linux, macos]
 - T1071.003 Mail Protocols [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1092 Communication Through Removable Media [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1090.002 External Proxy [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
