@@ -171,7 +171,11 @@ atomic_tests:
     url_to_tunnel:
       description: IP and port to expose
       type: string
-      default: localhost:8080  
+      default: localhost:8080
+    additional_args:
+      description: Additional arguments to pass to cloudflared
+      type: string
+      default: ""
   dependencies:
   - description: |
       Download cloudflared
@@ -192,7 +196,7 @@ atomic_tests:
       fi
   executor:
     command: |
-      nohup #{binary_path} tunnel --url #{url_to_tunnel} >/dev/null 2>&1 &
+      nohup #{binary_path} tunnel --url #{url_to_tunnel} #{additional_args} >/dev/null 2>&1 &
     cleanup_command: |
       pkill -9 $(basename "#{binary_path}")
       rm -f "#{binary_path}"
