@@ -191,7 +191,7 @@ atomic_tests:
     command: |
       #{binary_path} host -p #{port} &
     cleanup_command: |
-      kill $(pidof #{binary_path})
+      pkill -9 $(basename "#{binary_path}")
       #{binary_path} user logout
       rm #{binary_path}
     name: bash
