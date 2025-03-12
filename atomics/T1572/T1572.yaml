@@ -255,3 +255,57 @@ atomic_tests:
       code tunnel unregister
       code tunnel user logout
     name: sh
+
+- name: Cloudflare tunnels (Linux/macOS)
+  auto_generated_guid: 
+  description: |
+    Cloudflared can be used for exposing local development environment/services/files over the internet.
+    This atomic will generate a dev tunnel binding it to the local service running on the provided port.
+    Reference:
+    - [Cloudflared Docs](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/)
+    - [LOT Tunnels](https://lottunnels.github.io/lottunnels/Binaries/cloudflared/)
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
+    cloudflared_artifact_base_url:
+      description: Base URL to download cloudflared
+      type: string
+      default: https://github.com/cloudflare/cloudflared/releases/latest/download
+    binary_path:
+      description: path to download cloudflared
+      type: string
+      default: PathToAtomicsFolder/../ExternalPayloads/cloudflared
+    url_to_tunnel:
+      description: IP and port to expose
+      type: string
+      default: localhost:8080
+    additional_args:
+      description: Additional arguments to pass to cloudflared
+      type: string
+      default: ""
+  dependencies:
+  - description: |
+      Download cloudflared
+    prereq_command: |
+      test -f "#{binary_path}" && exit 0 || exit 1
+    get_prereq_command: |
+      ARCH_SUFFIX=$(uname -m | grep -q "arm64\|aarch64" && echo "arm64" || echo "amd64")
+      if [ "$(uname)" = "Darwin" ]
+      then curl -L "#{cloudflared_artifact_base_url}/cloudflared-darwin-${ARCH_SUFFIX}.tgz" -o "$(dirname #{binary_path})/cloudflared-darwin-${ARCH_SUFFIX}.tgz" 
+        cd "$(dirname #{binary_path})"
+        tar -xzf "cloudflared-darwin-${ARCH_SUFFIX}.tgz"
+        rm -f "cloudflared-darwin-${ARCH_SUFFIX}.tgz"
+        chmod +x "#{binary_path}"
+      elif [ "$(expr substr $(uname) 1 5)" = "Linux" ]
+      then mkdir -p $(dirname #{binary_path})
+        curl -L "#{cloudflared_artifact_base_url}/cloudflared-linux-${ARCH_SUFFIX}" -o "#{binary_path}"
+        chmod +x "#{binary_path}"
+      fi
+  executor:
+    command: |
+      nohup #{binary_path} tunnel --url #{url_to_tunnel} #{additional_args} >/dev/null 2>&1 &
+    cleanup_command: |
+      pkill -9 $(basename "#{binary_path}")
+      rm -f "#{binary_path}"
+    name: sh
