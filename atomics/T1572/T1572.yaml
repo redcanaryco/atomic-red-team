@@ -191,7 +191,7 @@ atomic_tests:
     command: |
       code tunnel --random-name --accept-server-license-terms &
     cleanup_command: |
-      kill $(pidof code-tunnel)
+      pkill -15 tunnel
       code tunnel unregister
       code tunnel user logout
     name: bash
