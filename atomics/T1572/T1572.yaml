@@ -160,27 +160,38 @@ atomic_tests:
   - linux
   - macos
   input_arguments:
-    download_url:
-      description: link to download code-cli
+    artifact_base_url:
+      description: Base URL to download code-cli
       type: string
-      default: https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64
-    package_path:
+      default: https://code.visualstudio.com/sha/download
+    artifact_build:
+      description: build to download - Allowed values (stable/insiders)
+      type: string
+      default: stable
+    payload_path:
       description: path to download code-cli
       type: string
-      default: PathToAtomicsFolder/../ExternalPayloads/code-cli.deb
+      default: PathToAtomicsFolder/../ExternalPayloads
+    additional_args:
+      description: additional arguments to pass to code tunnel
+      type: string
+      default: ""
   dependencies:
   - description: |
       Install code-cli
     prereq_command: |
       which code
     get_prereq_command: |
+      ARCH_SUFFIX=$(uname -m | grep -q "arm64\|aarch64" && echo "arm64" || echo "x64")
       if [ "$(uname)" = "Darwin" ]
       then brew install code-cli
       elif [ "$(expr substr $(uname) 1 5)" = "Linux" ]
-      then mkdir -p $(dirname #{package_path})
-        curl -L "#{download_url}" -o "#{package_path}"
-        (which apt && apt install -y "#{package_path}") || (which yum && yum install -y "#{package_path}")
-      fi 
+      then mkdir -p $(dirname #{payload_path})        
+        PKG_TYPE=$(command -v apt >/dev/null && echo "deb" || echo "rpm")
+        curl -L "#{artifact_base_url}?build=#{artifact_build}&os=linux-${PKG_TYPE}-${ARCH_SUFFIX}" -o "#{payload_path}/code.${PKG_TYPE}"
+        (which apt && apt install -y "#{payload_path}/code.${PKG_TYPE}") || (which yum && yum install -y "#{payload_path}/code.${PKG_TYPE}")
+        rm "#{payload_path}/code.${PKG_TYPE}"
+      fi
   - description: |
       Login to VSCode Dev tunnels
     prereq_command: |
@@ -189,9 +200,9 @@ atomic_tests:
       echo "Login to code tunnel using the following command: code tunnel user login"
   executor:
     command: |
-      code tunnel --random-name --accept-server-license-terms &
+      nohup code tunnel --accept-server-license-terms #{additional_args} >/dev/null 2>&1 &
     cleanup_command: |
       pkill -9 tunnel
       code tunnel unregister
       code tunnel user logout
-    name: bash
+    name: sh
