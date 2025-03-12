@@ -147,6 +147,7 @@ atomic_tests:
       Remove-Item C:\%userprofile%\AppData\Local\ngrok -ErrorAction Ignore
     name: powershell
     elevation_required: true
+
 - name: Microsoft Dev tunnels (Linux/macOS)
   auto_generated_guid: 9f94a112-1ce2-464d-a63b-83c1f465f801
   description: |
@@ -195,3 +196,62 @@ atomic_tests:
       #{binary_path} user logout
       rm #{binary_path}
     name: bash
+
+- name: VSCode tunnels (Linux/macOS)
+  auto_generated_guid: 
+  description: |
+    Visual Studio Code Remote Tunnels can be used for exposing local development environment/services/files over the internet.
+    This atomic will generate a dev tunnel binding it to the local service running on the provided port.
+    Reference:
+    - [Microsoft Docs](https://code.visualstudio.com/docs/remote/tunnels)
+    - [LOT Tunnels](https://lottunnels.github.io/lottunnels/Binaries/vscode-server/)
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
+    artifact_base_url:
+      description: Base URL to download code-cli
+      type: string
+      default: https://code.visualstudio.com/sha/download
+    artifact_build:
+      description: build to download - Allowed values (stable/insiders)
+      type: string
+      default: stable
+    payload_path:
+      description: path to download code-cli
+      type: string
+      default: PathToAtomicsFolder/../ExternalPayloads
+    additional_args:
+      description: additional arguments to pass to code tunnel
+      type: string
+      default: ""
+  dependencies:
+  - description: |
+      Install code-cli
+    prereq_command: |
+      which code
+    get_prereq_command: |
+      ARCH_SUFFIX=$(uname -m | grep -q "arm64\|aarch64" && echo "arm64" || echo "x64")
+      if [ "$(uname)" = "Darwin" ]
+      then brew install code-cli
+      elif [ "$(expr substr $(uname) 1 5)" = "Linux" ]
+      then mkdir -p $(dirname #{payload_path})        
+        PKG_TYPE=$(command -v apt >/dev/null && echo "deb" || echo "rpm")
+        curl -L "#{artifact_base_url}?build=#{artifact_build}&os=linux-${PKG_TYPE}-${ARCH_SUFFIX}" -o "#{payload_path}/code.${PKG_TYPE}"
+        (which apt && apt install -y "#{payload_path}/code.${PKG_TYPE}") || (which yum && yum install -y "#{payload_path}/code.${PKG_TYPE}")
+        rm "#{payload_path}/code.${PKG_TYPE}"
+      fi
+  - description: |
+      Login to VSCode Dev tunnels
+    prereq_command: |
+      code tunnel user show | grep -q "not logged in" && exit 1 || exit 0
+    get_prereq_command: |
+      echo "Login to code tunnel using the following command: code tunnel user login"
+  executor:
+    command: |
+      nohup code tunnel --accept-server-license-terms #{additional_args} >/dev/null 2>&1 &
+    cleanup_command: |
+      pkill -9 tunnel
+      code tunnel unregister
+      code tunnel user logout
+    name: sh
