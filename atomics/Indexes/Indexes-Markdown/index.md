@@ -1065,6 +1065,7 @@
   - Atomic Test #3: Create Symbolic Link From osk.exe to cmd.exe [windows]
   - Atomic Test #4: Atbroker.exe (AT) Executes Arbitrary Command via Registry Key [windows]
   - Atomic Test #5: Auto-start application on user logon [windows]
+  - Atomic Test #6: Replace utilman.exe (Ease of Access Binary) with cmd.exe [windows]
 - [T1055.004 Process Injection: Asynchronous Procedure Call](../../T1055.004/T1055.004.md)
   - Atomic Test #1: Process Injection via C# [windows]
   - Atomic Test #2: EarlyBird APC Queue Injection in Go [windows]
@@ -1605,6 +1606,7 @@
   - Atomic Test #3: Create Symbolic Link From osk.exe to cmd.exe [windows]
   - Atomic Test #4: Atbroker.exe (AT) Executes Arbitrary Command via Registry Key [windows]
   - Atomic Test #5: Auto-start application on user logon [windows]
+  - Atomic Test #6: Replace utilman.exe (Ease of Access Binary) with cmd.exe [windows]
 - [T1136.002 Create Account: Domain Account](../../T1136.002/T1136.002.md)
   - Atomic Test #1: Create a new Windows domain admin user [windows]
   - Atomic Test #2: Create a new account similar to ANONYMOUS LOGON [windows]
@@ -1930,6 +1932,7 @@
   - Atomic Test #35: Windows pull file using scp.exe [windows]
   - Atomic Test #36: Windows push file using sftp.exe [windows]
   - Atomic Test #37: Windows pull file using sftp.exe [windows]
+  - Atomic Test #38: Download a file with OneDrive Standalone Updater [windows]
 - T1665 Hide Infrastructure [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1001.002 Data Obfuscation via Steganography](../../T1001.002/T1001.002.md)
   - Atomic Test #1: Steganographic Tarball Embedding [windows]
