@@ -246,3 +246,13 @@ atomic_tests:
     cleanup_command: |
       taskkill /f /im calculator.exe >nul 2>nul
     name: command_prompt
+- name: Obfuscated Command in Windows Command Prompt
+  auto_generated_guid: 
+  description: |
+    This is an obfuscated Windows Command Prompt command which when executed prints "Hello, from the Windows Command Prompt!". Example is generated using the Invoke-DOSfuscation framework by Daniel Bohannon. More info: https://github.com/danielbohannon/Invoke-DOSfuscation.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      cmd.exe /V:ON/C"set W9m=llo&&set Sje0=e Windows Comm&&set Fq9=echo ""He&&set Gg=""&&set BonT=and Prompt!""&&set 6dQ= f&&set pHW=rom&&set cP= th&&call set dM=%Fq9%%W9m%%6dQ%%pHW%%cP%%Sje0%%BonT%&&call %dM:""=!Gg:~-1,52!%"
+    name: command_prompt
