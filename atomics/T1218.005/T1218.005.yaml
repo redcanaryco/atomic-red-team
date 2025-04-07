@@ -49,7 +49,8 @@ atomic_tests:
       $var.content|out-file "#{temp_file}"
       mshta "#{temp_file}"
       start-sleep -s 15
-      stop-process -name "CalculatorApp" -Force
+      stop-process -name "calculator" -Force -ErrorAction Ignore
+      stop-process -name "CalculatorApp" -Force -ErrorAction Ignore
     cleanup_command: |
       remove-item "#{temp_file}" -ErrorAction Ignore
     name: powershell
