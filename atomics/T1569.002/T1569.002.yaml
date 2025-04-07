@@ -65,7 +65,7 @@ atomic_tests:
       Copy-Item "PathToAtomicsFolder\..\ExternalPayloads\PsTools\PsExec.exe" "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe" -Force
   executor:
     command: |
-      """"PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe" \\#{remote_host} -i -u #{user_name} -p #{password} -accepteula "C:\Windows\System32\calc.exe""""
+      "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe" \\#{remote_host} -i -u #{user_name} -p #{password} -accepteula "C:\Windows\System32\calc.exe"
     name: command_prompt
     elevation_required: true
 - name: psexec.py (Impacket)
