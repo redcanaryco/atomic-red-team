@@ -149,7 +149,7 @@ atomic_tests:
       foreach ($row in $storage_account_objects) {
           
           if ($row.FileShareName -ne ""){
-              $allowSharedKeyAccess = az storage account show --name $account.name --resource-group $account.resourceGroup --query "allowSharedKeyAccess"
+              $allowSharedKeyAccess = az storage account show --name $row.StorageAccountName --resource-group $row.ResourceGroup --query "allowSharedKeyAccess"
 
               if ($allowSharedKeyAccess -eq "false") {    # $allowSharedKeyAccess could be true or null
                   Write-Output "Shared key access is disabled for this storage account."
@@ -171,7 +171,7 @@ atomic_tests:
                   az storage file download-batch --connection-string $connectionString --source $row.FileShareName --destination $fileSharePath
               }
           } elseif ($row.ContainerName -ne "" -and $row.BlobName -eq "") {
-              $allowSharedKeyAccess = az storage account show --name $account.name --resource-group $account.resourceGroup --query "allowSharedKeyAccess"
+              $allowSharedKeyAccess = az storage account show --name $row.StorageAccountName --resource-group $row.ResourceGroup --query "allowSharedKeyAccess"
 
               if ($allowSharedKeyAccess -eq "false") {    # $allowSharedKeyAccess could be true or null
                   Write-Output "Shared key access is disabled for this storage account."

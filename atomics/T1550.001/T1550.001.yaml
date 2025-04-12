@@ -45,7 +45,7 @@ atomic_tests:
     command: |
       az login    # Log in to Azure CLI
 
-      $allowSharedKeyAccess = az storage account show --name "#{storage_account_name}" --resource-group $account.resourceGroup --query "allowSharedKeyAccess"
+      $allowSharedKeyAccess = az storage account show --name "#{storage_account_name}" --query "allowSharedKeyAccess"
 
       if ($allowSharedKeyAccess -eq "false") {    # $allowSharedKeyAccess could be true or null
           Write-Output "Shared key access is disabled for this storage account."
@@ -136,7 +136,7 @@ atomic_tests:
     command: |-
       az login    # Log in to Azure CLI
 
-      $allowSharedKeyAccess = az storage account show --name "#{storage_account_name}" --resource-group $account.resourceGroup --query "allowSharedKeyAccess"
+      $allowSharedKeyAccess = az storage account show --name "#{storage_account_name}" --query "allowSharedKeyAccess"
 
       if ($allowSharedKeyAccess -eq "false") {    # $allowSharedKeyAccess could be true or null
           Write-Output "Shared key access is disabled for this storage account."
