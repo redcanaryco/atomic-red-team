@@ -827,7 +827,9 @@
   - Atomic Test #9: Create Windows Hidden File with powershell [windows]
   - Atomic Test #10: Create Windows System File with powershell [windows]
 - T1578.001 Create Snapshot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1550.001 Application Access Token [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1550.001 Use Alternate Authentication Material: Application Access Token](../../T1550.001/T1550.001.md)
+  - Atomic Test #1: Azure - Functions code upload - Functions code injection via Blob upload [iaas:azure]
+  - Atomic Test #2: Azure - Functions code upload - Functions code injection via File Share modification to retrieve the Functions identity access token [iaas:azure]
 - [T1078.004 Valid Accounts: Cloud Accounts](../../T1078.004/T1078.004.md)
   - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, iaas:gcp]
   - Atomic Test #2: Azure Persistence Automation Runbook Created or Modified [iaas:azure]
@@ -2014,6 +2016,7 @@
   - Atomic Test #1: Azure - Enumerate Azure Blobs with MicroBurst [iaas:azure]
   - Atomic Test #2: Azure - Scan for Anonymous Access to Azure Storage (Powershell) [iaas:azure]
   - Atomic Test #3: AWS - Scan for Anonymous Access to S3 [iaas:aws]
+  - Atomic Test #4: Azure - Dump Azure Storage Account Objects via Azure CLI [iaas:azure]
 - T1074.002 Remote Data Staging [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1005 Data from Local System](../../T1005/T1005.md)
   - Atomic Test #1: Search files of interest and save them to a single zip file (Windows) [windows]
@@ -2109,7 +2112,9 @@
   - Atomic Test #2: Changing RDP Port to Non Standard Port via Powershell [windows]
   - Atomic Test #3: Changing RDP Port to Non Standard Port via Command_Prompt [windows]
   - Atomic Test #4: Disable NLA for RDP via Command Prompt [windows]
-- T1550.001 Application Access Token [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1550.001 Use Alternate Authentication Material: Application Access Token](../../T1550.001/T1550.001.md)
+  - Atomic Test #1: Azure - Functions code upload - Functions code injection via Blob upload [iaas:azure]
+  - Atomic Test #2: Azure - Functions code upload - Functions code injection via File Share modification to retrieve the Functions identity access token [iaas:azure]
 
 # credential-access
 - T1557 Adversary-in-the-Middle [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -2616,6 +2621,7 @@
 - T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1619 Cloud Storage Object Discovery](../../T1619/T1619.md)
   - Atomic Test #1: AWS S3 Enumeration [iaas:aws]
+  - Atomic Test #2: Azure - Enumerate Storage Account Objects via Shared Key authorization using Azure CLI [iaas:azure]
 - [T1654 Log Enumeration](../../T1654/T1654.md)
   - Atomic Test #1: Get-EventLog To Enumerate Windows Security Log [windows]
   - Atomic Test #2: Enumerate Windows Security Log via WevtUtil [windows]
