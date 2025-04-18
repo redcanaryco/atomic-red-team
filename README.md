@@ -25,6 +25,8 @@ The Atomic Red Team documentation is available as a [wiki](https://github.com/re
 For information about the philosophy and development of Atomic Red Team, visit
 our website at <https://atomicredteam.io>.
 
+To stay up to date on all things Atomic Red Team, sign up for the Atomic Newsletter: https://redcanary.com/atomic-newsletter/
+
 ## Contribute to Atomic Red Team
 
 Atomic Red Team is open source and community developed. If you're interested in
