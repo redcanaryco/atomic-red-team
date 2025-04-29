@@ -13969,7 +13969,7 @@ defense-evasion:
   T1578.001:
     technique:
       modified: '2024-10-15T15:53:44.870Z'
-      name: Create Snapshot
+      name: 'Modify Cloud Compute Infrastructure: Create Snapshot'
       description: |-
         An adversary may create a snapshot or data backup within a cloud account to evade defenses. A snapshot is a point-in-time copy of an existing cloud compute component such as a virtual machine (VM), virtual hard drive, or volume. An adversary may leverage permissions to create a snapshot in order to bypass restrictions that prevent access to existing compute service infrastructure, unlike in [Revert Cloud Instance](https://attack.mitre.org/techniques/T1578/004) where an adversary may revert to a snapshot to evade detection and remove evidence of their presence.
 
@@ -14029,7 +14029,63 @@ defense-evasion:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       x_mitre_attack_spec_version: 3.2.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
-    atomic_tests: []
+      identifier: T1578.001
+    atomic_tests:
+    - name: GCP - Create Snapshot from Persistent Disk
+      auto_generated_guid: e6fbc036-91e7-4ad3-b9cb-f7210f40dd5d
+      description: |
+        Creates a snapshot of a persistent disk in GCP using the gcloud CLI.
+        Emulates adversary behavior to gain access to volume data or replicate environment state.
+      supported_platforms:
+      - iaas:gcp
+      input_arguments:
+        gcp_disk_name:
+          description: The Google Cloud disk name.
+          type: string
+          default: myDiskName
+        gcp_zone:
+          description: The Google Cloud zone where the disk is located.
+          type: string
+          default: us-central1-a
+        gcp_snapshot_name:
+          description: The Google Cloud snapshot name.
+          type: string
+          default: mySnapshotName
+      dependencies:
+      - description: gcloud CLI must be installed.
+        prereq_command: 'if command -v gcloud > /dev/null 2>&1; then exit 0; else
+          exit 1; fi
+
+          '
+        get_prereq_command: 'echo "Install gcloud CLI: https://cloud.google.com/sdk/docs/install"
+
+          '
+      - description: gcloud CLI must be authenticated.
+        prereq_command: 'if gcloud auth list --filter=status:ACTIVE --format="value(account)"
+          | grep . > /dev/null; then exit 0; else exit 1; fi
+
+          '
+        get_prereq_command: 'echo "Authenticate with: gcloud auth login"
+
+          '
+      - description: GCP disk must exist.
+        prereq_command: 'if gcloud compute disks describe #{gcp_disk_name} --zone=#{gcp_zone}
+          > /dev/null 2>&1; then exit 0; else exit 1; fi
+
+          '
+        get_prereq_command: 'echo "Ensure the disk exists in the specified zone."
+
+          '
+      executor:
+        name: sh
+        elevation_required: false
+        command: 'gcloud compute snapshots create #{gcp_snapshot_name} --source-disk=#{gcp_disk_name}
+          --zone=#{gcp_zone}
+
+          '
+        cleanup_command: 'gcloud compute snapshots delete #{gcp_snapshot_name} --quiet
+
+          '
   T1550.001:
     technique:
       modified: '2024-10-15T15:38:11.583Z'

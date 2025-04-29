@@ -2,7 +2,7 @@ attack_technique: T1578.001
 display_name: "Modify Cloud Compute Infrastructure: Create Snapshot"
 atomic_tests:
 - name: AWS - Create Snapshot from EBS Volume
-  auto_generated_guid:
+  auto_generated_guid: a3c09662-85bb-4ea8-b15b-6dc8a844e236
   description: |
     Creates an EBS snapshot in AWS using the AWS CLI.
     This simulates an adversary duplicating volume data via snapshots for persistence or exfiltration.
@@ -45,7 +45,7 @@ atomic_tests:
       fi
 
 - name: Azure - Create Snapshot from Managed Disk
-  auto_generated_guid:
+  auto_generated_guid: 89e69b4b-3458-4ec6-b819-b3008debc1bc
   description: |
     Creates a snapshot of a managed disk in Azure using the Azure CLI.
     Simulates adversary snapshotting behavior for persistence or data duplication.
@@ -89,7 +89,7 @@ atomic_tests:
       az snapshot delete --resource-group #{azure_resource_group} --name #{azure_snapshot_name}
 
 - name: GCP - Create Snapshot from Persistent Disk
-  auto_generated_guid:
+  auto_generated_guid: e6fbc036-91e7-4ad3-b9cb-f7210f40dd5d
   description: |
     Creates a snapshot of a persistent disk in GCP using the gcloud CLI.
     Emulates adversary behavior to gain access to volume data or replicate environment state.

@@ -826,7 +826,10 @@
   - Atomic Test #8: Hide Files Through Registry [windows]
   - Atomic Test #9: Create Windows Hidden File with powershell [windows]
   - Atomic Test #10: Create Windows System File with powershell [windows]
-- T1578.001 Create Snapshot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1578.001 Modify Cloud Compute Infrastructure: Create Snapshot](../../T1578.001/T1578.001.md)
+  - Atomic Test #1: AWS - Create Snapshot from EBS Volume [iaas:aws]
+  - Atomic Test #2: Azure - Create Snapshot from Managed Disk [iaas:azure]
+  - Atomic Test #3: GCP - Create Snapshot from Persistent Disk [iaas:gcp]
 - [T1550.001 Use Alternate Authentication Material: Application Access Token](../../T1550.001/T1550.001.md)
   - Atomic Test #1: Azure - Functions code upload - Functions code injection via Blob upload [iaas:azure]
   - Atomic Test #2: Azure - Functions code upload - Functions code injection via File Share modification to retrieve the Functions identity access token [iaas:azure]
