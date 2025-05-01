@@ -37,6 +37,7 @@ class AtomicRedTeamDocs
     generate_attack_matrix! 'Windows', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Matrices/windows-matrix.md", only_platform: /windows/
     generate_attack_matrix! 'macOS', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Matrices/macos-matrix.md", only_platform: /macos/
     generate_attack_matrix! 'Linux', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Matrices/linux-matrix.md", only_platform: /linux/
+    generate_attack_matrix! 'ESXi', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Matrices/esxi-matrix.md", only_platform: /esxi/
 
     generate_index! 'All', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/index.md"
     generate_index! 'Windows', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/windows-index.md", only_platform: /windows/, attack_platform: /windows/
@@ -47,6 +48,7 @@ class AtomicRedTeamDocs
     generate_index! 'Office 365', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/office-365-index.md", only_platform: /office-365/, attack_platform: /office/
     generate_index! 'Google Workspace', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/google-workspace-index.md", only_platform: /google-workspace/, attack_platform: /office/
     generate_index! 'Azure AD', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/azure-ad-index.md", only_platform: /azure-ad/, attack_platform: /identity/
+    generate_index! 'ESXi', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/esxi-index.md", only_platform: /esxi/, attack_platform: /esxi/
 
     generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/index.csv"
     generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/windows-index.csv", only_platform: /windows/, attack_platform: /windows/
@@ -57,9 +59,10 @@ class AtomicRedTeamDocs
     generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/office-365-index.csv", only_platform: /office-365/, attack_platform: /office/
     generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/google-workspace-index.csv", only_platform: /google-workspace/, attack_platform: /identity/
     generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/azure-ad-index.csv", only_platform: /azure-ad/, attack_platform: /identity/
+    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/azure-ad-index.csv", only_platform: /esxi/, attack_platform: /esxi/
 
     generate_yaml_index! "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/index.yaml"
-    ["windows", "macos", "linux", "office-365", "azure-ad", "google-workspace", "saas", "iaas", "containers", "iaas:gcp", "iaas:azure", "iaas:aws"].each do | platform|
+    ["windows", "macos", "linux", "office-365", "azure-ad", "google-workspace", "saas", "iaas", "containers", "iaas:gcp", "iaas:azure", "iaas:aws", "esxi"].each do | platform|
       generate_yaml_index_by_platform! "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/#{platform.gsub(':','_')}-index.yaml", platform: "#{platform}"
     end
     generate_navigator_layer! "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer.json", \
@@ -74,7 +77,8 @@ class AtomicRedTeamDocs
       "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-saas.json", \
       "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-google-workspace.json", \
       "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-azure-ad.json", \
-      "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-office-365.json"
+      "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-office-365.json", \
+      "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-esxi.json"
 
     return oks, fails
   end
@@ -300,7 +304,7 @@ class AtomicRedTeamDocs
   #
   def generate_navigator_layer!(output_layer_path, output_layer_path_win, output_layer_path_mac, output_layer_path_lin, output_layer_path_iaas, \
     output_layer_path_iaas_aws, output_layer_path_iaas_azure, output_layer_path_iaas_gcp, output_layer_path_containers, output_layer_path_saas, \
-    output_layer_path_google_workspace, output_layer_path_azure_ad, output_layer_path_office_365)
+    output_layer_path_google_workspace, output_layer_path_azure_ad, output_layer_path_office_365, output_layer_path_esxi)
 
     techniques = []
     techniques_win = []
@@ -315,6 +319,7 @@ class AtomicRedTeamDocs
     techniques_google_workspace = []
     techniques_azure_ad = []
     techniques_office_365 = []
+    techniques_esxi = []
 
     ATOMIC_RED_TEAM.atomic_tests.each do |atomic_yaml|
       begin
@@ -369,6 +374,9 @@ class AtomicRedTeamDocs
         has_office_365_tests = false
         office_365_technique = technique.clone
         office_365_techniqueParent = techniqueParent.clone
+        has_esxi_tests = false
+        esxi_technique = technique.clone
+        esxi_techniqueParent = techniqueParent.clone
 
         atomic_yaml['atomic_tests'].each do |atomic|
           technique['score'] += 1
@@ -427,6 +435,11 @@ class AtomicRedTeamDocs
             office_365_technique['score'] += 1
             office_365_technique['comment'] += "- " + atomic['name'] + "\n"
           end
+          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /^esxi/} then
+            has_esxi_tests = true
+            esxi_technique['score'] += 1
+            esxi_technique['comment'] += "- " + atomic['name'] + "\n"
+          end
         end
         
         # Update full Atomic Layer
@@ -465,6 +478,9 @@ class AtomicRedTeamDocs
         if has_office_365_tests then
           update_techniquesList(office_365_technique, office_365_techniqueParent, techniques_office_365, atomic_yaml, true)
         end
+        if has_esxi_tests then
+          update_techniquesList(esxi_technique, esxi_techniqueParent, techniques_esxi, atomic_yaml, true)
+        end
       end
     end
     
@@ -482,7 +498,7 @@ class AtomicRedTeamDocs
     layer_google_workspace = get_layer techniques_google_workspace, "Atomic Red Team (Google-Workspace)"
     layer_azure_ad = get_layer techniques_azure_ad, "Atomic Red Team (Azure-AD)"
     layer_office_365 = get_layer techniques_office_365, "Atomic Red Team (Office-365)"
-
+    layer_esxi = get_layer techniques_esxi, "Atomic Red Team (ESXi)"
 
     File.write output_layer_path,layer.to_json
     File.write output_layer_path_win,layer_win.to_json
@@ -496,7 +512,7 @@ class AtomicRedTeamDocs
     File.write output_layer_path_google_workspace,layer_google_workspace.to_json
     File.write output_layer_path_azure_ad,layer_azure_ad.to_json
     File.write output_layer_path_office_365,layer_office_365.to_json
-
+    File.write output_layer_path_esxi,layer_esxi.to_json
     puts "Generated Atomic Red Team ATT&CK Navigator Layers at #{output_layer_path}"
     puts "Generated Atomic Red Team ATT&CK Navigator Layers at #{output_layer_path_win}"
     puts "Generated Atomic Red Team ATT&CK Navigator Layers at #{output_layer_path_mac}"
@@ -509,6 +525,7 @@ class AtomicRedTeamDocs
     puts "Generated Atomic Red Team ATT&CK Navigator Layers at #{output_layer_path_google_workspace}"
     puts "Generated Atomic Red Team ATT&CK Navigator Layers at #{output_layer_path_azure_ad}"
     puts "Generated Atomic Red Team ATT&CK Navigator Layers at #{output_layer_path_office_365}"
+    puts "Generated Atomic Red Team ATT&CK Navigator Layers at #{output_layer_path_esxi}"
   end
 end
 

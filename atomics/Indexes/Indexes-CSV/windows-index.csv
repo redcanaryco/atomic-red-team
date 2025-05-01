@@ -66,9 +66,12 @@ defense-evasion,T1218.004,Signed Binary Proxy Execution: InstallUtil,5,InstallUt
 defense-evasion,T1218.004,Signed Binary Proxy Execution: InstallUtil,6,InstallUtil Uninstall method call - '/installtype=notransaction /action=uninstall' variant,06d9deba-f732-48a8-af8e-bdd6e4d98c1d,powershell
 defense-evasion,T1218.004,Signed Binary Proxy Execution: InstallUtil,7,InstallUtil HelpText method call,5a683850-1145-4326-a0e5-e91ced3c6022,powershell
 defense-evasion,T1218.004,Signed Binary Proxy Execution: InstallUtil,8,InstallUtil evasive invocation,559e6d06-bb42-4307-bff7-3b95a8254bad,powershell
-defense-evasion,T1574.001,Hijack Execution Flow: DLL Search Order Hijacking,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
-defense-evasion,T1574.001,Hijack Execution Flow: DLL Search Order Hijacking,2,Phantom Dll Hijacking - WinAppXRT.dll,46ed938b-c617-429a-88dc-d49b5c9ffedb,command_prompt
-defense-evasion,T1574.001,Hijack Execution Flow: DLL Search Order Hijacking,3,Phantom Dll Hijacking - ualapi.dll,5898902d-c5ad-479a-8545-6f5ab3cfc87f,command_prompt
+defense-evasion,T1574.001,Hijack Execution Flow: DLL,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
+defense-evasion,T1574.001,Hijack Execution Flow: DLL,2,Phantom Dll Hijacking - WinAppXRT.dll,46ed938b-c617-429a-88dc-d49b5c9ffedb,command_prompt
+defense-evasion,T1574.001,Hijack Execution Flow: DLL,3,Phantom Dll Hijacking - ualapi.dll,5898902d-c5ad-479a-8545-6f5ab3cfc87f,command_prompt
+defense-evasion,T1574.001,Hijack Execution Flow: DLL,4,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
+defense-evasion,T1574.001,Hijack Execution Flow: DLL,5,DLL Side-Loading using the dotnet startup hook environment variable,d322cdd7-7d60-46e3-9111-648848da7c02,command_prompt
+defense-evasion,T1574.001,Hijack Execution Flow: DLL,6,"DLL Search Order Hijacking,DLL Sideloading Of KeyScramblerIE.DLL Via KeyScrambler.EXE",c095ad8e-4469-4d33-be9d-6f6d1fb21585,powershell
 defense-evasion,T1222.001,File and Directory Permissions Modification: Windows File and Directory Permissions Modification,1,Take ownership using takeown utility,98d34bb4-6e75-42ad-9c41-1dae7dc6a001,command_prompt
 defense-evasion,T1222.001,File and Directory Permissions Modification: Windows File and Directory Permissions Modification,2,cacls - Grant permission to specified user or group recursively,a8206bcc-f282-40a9-a389-05d9c0263485,command_prompt
 defense-evasion,T1222.001,File and Directory Permissions Modification: Windows File and Directory Permissions Modification,3,attrib - Remove read-only attribute,bec1e95c-83aa-492e-ab77-60c71bbd21b0,command_prompt
@@ -431,9 +434,6 @@ defense-evasion,T1622,Debugger Evasion,1,Detect a Debugger Presence in the Machi
 defense-evasion,T1550.002,Use Alternate Authentication Material: Pass the Hash,1,Mimikatz Pass the Hash,ec23cef9-27d9-46e4-a68d-6f75f7b86908,command_prompt
 defense-evasion,T1550.002,Use Alternate Authentication Material: Pass the Hash,2,crackmapexec Pass the Hash,eb05b028-16c8-4ad8-adea-6f5b219da9a9,command_prompt
 defense-evasion,T1550.002,Use Alternate Authentication Material: Pass the Hash,3,Invoke-WMIExec Pass the Hash,f8757545-b00a-4e4e-8cfb-8cfb961ee713,powershell
-defense-evasion,T1574.002,Hijack Execution Flow: DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
-defense-evasion,T1574.002,Hijack Execution Flow: DLL Side-Loading,2,DLL Side-Loading using the dotnet startup hook environment variable,d322cdd7-7d60-46e3-9111-648848da7c02,command_prompt
-defense-evasion,T1574.002,Hijack Execution Flow: DLL Side-Loading,3,"DLL Search Order Hijacking,DLL Sideloading Of KeyScramblerIE.DLL Via KeyScrambler.EXE",c095ad8e-4469-4d33-be9d-6f6d1fb21585,powershell
 defense-evasion,T1027.007,Obfuscated Files or Information: Dynamic API Resolution,1,Dynamic API Resolution-Ninja-syscall,578025d5-faa9-4f6d-8390-aae739d507e1,powershell
 defense-evasion,T1055.015,Process Injection: ListPlanting,1,Process injection ListPlanting,4f3c7502-b111-4dfe-8a6e-529307891a59,powershell
 defense-evasion,T1220,XSL Script Processing,1,MSXSL Bypass using local files,ca23bfb2-023f-49c5-8802-e66997de462d,command_prompt
@@ -519,9 +519,12 @@ privilege-escalation,T1543.003,Create or Modify System Process: Windows Service,
 privilege-escalation,T1543.003,Create or Modify System Process: Windows Service,5,Remote Service Installation CMD,fb4151a2-db33-4f8c-b7f8-78ea8790f961,command_prompt
 privilege-escalation,T1543.003,Create or Modify System Process: Windows Service,6,Modify Service to Run Arbitrary Binary (Powershell),1f896ce4-8070-4959-8a25-2658856a70c9,powershell
 privilege-escalation,T1547.012,Boot or Logon Autostart Execution: Print Processors,1,Print Processors,f7d38f47-c61b-47cc-a59d-fc0368f47ed0,powershell
-privilege-escalation,T1574.001,Hijack Execution Flow: DLL Search Order Hijacking,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
-privilege-escalation,T1574.001,Hijack Execution Flow: DLL Search Order Hijacking,2,Phantom Dll Hijacking - WinAppXRT.dll,46ed938b-c617-429a-88dc-d49b5c9ffedb,command_prompt
-privilege-escalation,T1574.001,Hijack Execution Flow: DLL Search Order Hijacking,3,Phantom Dll Hijacking - ualapi.dll,5898902d-c5ad-479a-8545-6f5ab3cfc87f,command_prompt
+privilege-escalation,T1574.001,Hijack Execution Flow: DLL,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
+privilege-escalation,T1574.001,Hijack Execution Flow: DLL,2,Phantom Dll Hijacking - WinAppXRT.dll,46ed938b-c617-429a-88dc-d49b5c9ffedb,command_prompt
+privilege-escalation,T1574.001,Hijack Execution Flow: DLL,3,Phantom Dll Hijacking - ualapi.dll,5898902d-c5ad-479a-8545-6f5ab3cfc87f,command_prompt
+privilege-escalation,T1574.001,Hijack Execution Flow: DLL,4,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
+privilege-escalation,T1574.001,Hijack Execution Flow: DLL,5,DLL Side-Loading using the dotnet startup hook environment variable,d322cdd7-7d60-46e3-9111-648848da7c02,command_prompt
+privilege-escalation,T1574.001,Hijack Execution Flow: DLL,6,"DLL Search Order Hijacking,DLL Sideloading Of KeyScramblerIE.DLL Via KeyScrambler.EXE",c095ad8e-4469-4d33-be9d-6f6d1fb21585,powershell
 privilege-escalation,T1055.003,Thread Execution Hijacking,1,Thread Execution Hijacking,578025d5-faa9-4f6d-8390-aae527d503e1,powershell
 privilege-escalation,T1546.011,Event Triggered Execution: Application Shimming,1,Application Shim Installation,9ab27e22-ee62-4211-962b-d36d9a0e6a18,command_prompt
 privilege-escalation,T1546.011,Event Triggered Execution: Application Shimming,2,New shim database files created in the default shim database directory,aefd6866-d753-431f-a7a4-215ca7e3f13d,powershell
@@ -640,9 +643,6 @@ privilege-escalation,T1546.015,Event Triggered Execution: Component Object Model
 privilege-escalation,T1574.009,Hijack Execution Flow: Path Interception by Unquoted Path,1,Execution of program.exe as service with unquoted service path,2770dea7-c50f-457b-84c4-c40a47460d9f,command_prompt
 privilege-escalation,T1546.010,Event Triggered Execution: AppInit DLLs,1,Install AppInit Shim,a58d9386-3080-4242-ab5f-454c16503d18,command_prompt
 privilege-escalation,T1546.002,Event Triggered Execution: Screensaver,1,Set Arbitrary Binary as Screensaver,281201e7-de41-4dc9-b73d-f288938cbb64,command_prompt
-privilege-escalation,T1574.002,Hijack Execution Flow: DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
-privilege-escalation,T1574.002,Hijack Execution Flow: DLL Side-Loading,2,DLL Side-Loading using the dotnet startup hook environment variable,d322cdd7-7d60-46e3-9111-648848da7c02,command_prompt
-privilege-escalation,T1574.002,Hijack Execution Flow: DLL Side-Loading,3,"DLL Search Order Hijacking,DLL Sideloading Of KeyScramblerIE.DLL Via KeyScrambler.EXE",c095ad8e-4469-4d33-be9d-6f6d1fb21585,powershell
 privilege-escalation,T1037.001,Boot or Logon Initialization Scripts: Logon Script (Windows),1,Logon Scripts,d6042746-07d4-4c92-9ad8-e644c114a231,command_prompt
 privilege-escalation,T1055.015,Process Injection: ListPlanting,1,Process injection ListPlanting,4f3c7502-b111-4dfe-8a6e-529307891a59,powershell
 privilege-escalation,T1547.008,Boot or Logon Autostart Execution: LSASS Driver,1,Modify Registry to load Arbitrary DLL into LSASS - LsaDbExtPt,8ecef16d-d289-46b4-917b-0dba6dc81cf1,powershell
@@ -781,9 +781,12 @@ persistence,T1543.003,Create or Modify System Process: Windows Service,5,Remote 
 persistence,T1543.003,Create or Modify System Process: Windows Service,6,Modify Service to Run Arbitrary Binary (Powershell),1f896ce4-8070-4959-8a25-2658856a70c9,powershell
 persistence,T1137,Office Application Startup,1,Office Application Startup - Outlook as a C2,bfe6ac15-c50b-4c4f-a186-0fc6b8ba936c,command_prompt
 persistence,T1547.012,Boot or Logon Autostart Execution: Print Processors,1,Print Processors,f7d38f47-c61b-47cc-a59d-fc0368f47ed0,powershell
-persistence,T1574.001,Hijack Execution Flow: DLL Search Order Hijacking,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
-persistence,T1574.001,Hijack Execution Flow: DLL Search Order Hijacking,2,Phantom Dll Hijacking - WinAppXRT.dll,46ed938b-c617-429a-88dc-d49b5c9ffedb,command_prompt
-persistence,T1574.001,Hijack Execution Flow: DLL Search Order Hijacking,3,Phantom Dll Hijacking - ualapi.dll,5898902d-c5ad-479a-8545-6f5ab3cfc87f,command_prompt
+persistence,T1574.001,Hijack Execution Flow: DLL,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
+persistence,T1574.001,Hijack Execution Flow: DLL,2,Phantom Dll Hijacking - WinAppXRT.dll,46ed938b-c617-429a-88dc-d49b5c9ffedb,command_prompt
+persistence,T1574.001,Hijack Execution Flow: DLL,3,Phantom Dll Hijacking - ualapi.dll,5898902d-c5ad-479a-8545-6f5ab3cfc87f,command_prompt
+persistence,T1574.001,Hijack Execution Flow: DLL,4,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
+persistence,T1574.001,Hijack Execution Flow: DLL,5,DLL Side-Loading using the dotnet startup hook environment variable,d322cdd7-7d60-46e3-9111-648848da7c02,command_prompt
+persistence,T1574.001,Hijack Execution Flow: DLL,6,"DLL Search Order Hijacking,DLL Sideloading Of KeyScramblerIE.DLL Via KeyScrambler.EXE",c095ad8e-4469-4d33-be9d-6f6d1fb21585,powershell
 persistence,T1137.006,Office Application Startup: Add-ins,1,Code Executed Via Excel Add-in File (XLL),441b1a0f-a771-428a-8af0-e99e4698cda3,powershell
 persistence,T1137.006,Office Application Startup: Add-ins,2,Persistent Code Execution Via Excel Add-in File (XLL),9c307886-9fef-41d5-b344-073a0f5b2f5f,powershell
 persistence,T1137.006,Office Application Startup: Add-ins,3,Persistent Code Execution Via Word Add-in File (WLL),95408a99-4fa7-4cd6-a7ef-cb65f86351cf,powershell
@@ -807,6 +810,96 @@ persistence,T1547.009,Boot or Logon Autostart Execution: Shortcut Modification,1
 persistence,T1547.009,Boot or Logon Autostart Execution: Shortcut Modification,2,Create shortcut to cmd in startup folders,cfdc954d-4bb0-4027-875b-a1893ce406f2,powershell
 persistence,T1547.005,Boot or Logon Autostart Execution: Security Support Provider,1,Modify HKLM:\System\CurrentControlSet\Control\Lsa Security Support Provider configuration in registry,afdfd7e3-8a0b-409f-85f7-886fdf249c9e,powershell
 persistence,T1547.005,Boot or Logon Autostart Execution: Security Support Provider,2,Modify HKLM:\System\CurrentControlSet\Control\Lsa\OSConfig Security Support Provider configuration in registry,de3f8e74-3351-4fdb-a442-265dbf231738,powershell
+persistence,T1112,Modify Registry,1,Modify Registry of Current User Profile - cmd,1324796b-d0f6-455a-b4ae-21ffee6aa6b9,command_prompt
+persistence,T1112,Modify Registry,2,Modify Registry of Local Machine - cmd,282f929a-6bc5-42b8-bd93-960c3ba35afe,command_prompt
+persistence,T1112,Modify Registry,3,Modify registry to store logon credentials,c0413fb5-33e2-40b7-9b6f-60b29f4a7a18,command_prompt
+persistence,T1112,Modify Registry,4,Use Powershell to Modify registry to store logon credentials,68254a85-aa42-4312-a695-38b7276307f8,powershell
+persistence,T1112,Modify Registry,5,Add domain to Trusted sites Zone,cf447677-5a4e-4937-a82c-e47d254afd57,powershell
+persistence,T1112,Modify Registry,6,Javascript in registry,15f44ea9-4571-4837-be9e-802431a7bfae,powershell
+persistence,T1112,Modify Registry,7,Change Powershell Execution Policy to Bypass,f3a6cceb-06c9-48e5-8df8-8867a6814245,powershell
+persistence,T1112,Modify Registry,8,BlackByte Ransomware Registry Changes - CMD,4f4e2f9f-6209-4fcf-9b15-3b7455706f5b,command_prompt
+persistence,T1112,Modify Registry,9,BlackByte Ransomware Registry Changes - Powershell,0b79c06f-c788-44a2-8630-d69051f1123d,powershell
+persistence,T1112,Modify Registry,10,Disable Windows Registry Tool,ac34b0f7-0f85-4ac0-b93e-3ced2bc69bb8,command_prompt
+persistence,T1112,Modify Registry,11,Disable Windows CMD application,d2561a6d-72bd-408c-b150-13efe1801c2a,powershell
+persistence,T1112,Modify Registry,12,Disable Windows Task Manager application,af254e70-dd0e-4de6-9afe-a994d9ea8b62,command_prompt
+persistence,T1112,Modify Registry,13,Disable Windows Notification Center,c0d6d67f-1f63-42cc-95c0-5fd6b20082ad,command_prompt
+persistence,T1112,Modify Registry,14,Disable Windows Shutdown Button,6e0d1131-2d7e-4905-8ca5-d6172f05d03d,command_prompt
+persistence,T1112,Modify Registry,15,Disable Windows LogOff Button,e246578a-c24d-46a7-9237-0213ff86fb0c,command_prompt
+persistence,T1112,Modify Registry,16,Disable Windows Change Password Feature,d4a6da40-618f-454d-9a9e-26af552aaeb0,command_prompt
+persistence,T1112,Modify Registry,17,Disable Windows Lock Workstation Feature,3dacb0d2-46ee-4c27-ac1b-f9886bf91a56,command_prompt
+persistence,T1112,Modify Registry,18,Activate Windows NoDesktop Group Policy Feature,93386d41-525c-4a1b-8235-134a628dee17,command_prompt
+persistence,T1112,Modify Registry,19,Activate Windows NoRun Group Policy Feature,d49ff3cc-8168-4123-b5b3-f057d9abbd55,command_prompt
+persistence,T1112,Modify Registry,20,Activate Windows NoFind Group Policy Feature,ffbb407e-7f1d-4c95-b22e-548169db1fbd,command_prompt
+persistence,T1112,Modify Registry,21,Activate Windows NoControlPanel Group Policy Feature,a450e469-ba54-4de1-9deb-9023a6111690,command_prompt
+persistence,T1112,Modify Registry,22,Activate Windows NoFileMenu Group Policy Feature,5e27bdb4-7fd9-455d-a2b5-4b4b22c9dea4,command_prompt
+persistence,T1112,Modify Registry,23,Activate Windows NoClose Group Policy Feature,12f50e15-dbc6-478b-a801-a746e8ba1723,command_prompt
+persistence,T1112,Modify Registry,24,Activate Windows NoSetTaskbar Group Policy Feature,d29b7faf-7355-4036-9ed3-719bd17951ed,command_prompt
+persistence,T1112,Modify Registry,25,Activate Windows NoTrayContextMenu Group Policy Feature,4d72d4b1-fa7b-4374-b423-0fe326da49d2,command_prompt
+persistence,T1112,Modify Registry,26,Activate Windows NoPropertiesMyDocuments Group Policy Feature,20fc9daa-bd48-4325-9aff-81b967a84b1d,command_prompt
+persistence,T1112,Modify Registry,27,Hide Windows Clock Group Policy Feature,8023db1e-ad06-4966-934b-b6a0ae52689e,command_prompt
+persistence,T1112,Modify Registry,28,Windows HideSCAHealth Group Policy Feature,a4637291-40b1-4a96-8c82-b28f1d73e54e,command_prompt
+persistence,T1112,Modify Registry,29,Windows HideSCANetwork Group Policy Feature,3e757ce7-eca0-411a-9583-1c33b8508d52,command_prompt
+persistence,T1112,Modify Registry,30,Windows HideSCAPower Group Policy Feature,8d85a5d8-702f-436f-bc78-fcd9119496fc,command_prompt
+persistence,T1112,Modify Registry,31,Windows HideSCAVolume Group Policy Feature,7f037590-b4c6-4f13-b3cc-e424c5ab8ade,command_prompt
+persistence,T1112,Modify Registry,32,Windows Modify Show Compress Color And Info Tip Registry,795d3248-0394-4d4d-8e86-4e8df2a2693f,command_prompt
+persistence,T1112,Modify Registry,33,Windows Powershell Logging Disabled,95b25212-91a7-42ff-9613-124aca6845a8,command_prompt
+persistence,T1112,Modify Registry,34,Windows Add Registry Value to Load Service in Safe Mode without Network,1dd59fb3-1cb3-4828-805d-cf80b4c3bbb5,command_prompt
+persistence,T1112,Modify Registry,35,Windows Add Registry Value to Load Service in Safe Mode with Network,c173c948-65e5-499c-afbe-433722ed5bd4,command_prompt
+persistence,T1112,Modify Registry,36,Disable Windows Toast Notifications,003f466a-6010-4b15-803a-cbb478a314d7,command_prompt
+persistence,T1112,Modify Registry,37,Disable Windows Security Center Notifications,45914594-8df6-4ea9-b3cc-7eb9321a807e,command_prompt
+persistence,T1112,Modify Registry,38,Suppress Win Defender Notifications,c30dada3-7777-4590-b970-dc890b8cf113,command_prompt
+persistence,T1112,Modify Registry,39,Allow RDP Remote Assistance Feature,86677d0e-0b5e-4a2b-b302-454175f9aa9e,command_prompt
+persistence,T1112,Modify Registry,40,NetWire RAT Registry Key Creation,65704cd4-6e36-4b90-b6c1-dc29a82c8e56,command_prompt
+persistence,T1112,Modify Registry,41,Ursnif Malware Registry Key Creation,c375558d-7c25-45e9-bd64-7b23a97c1db0,command_prompt
+persistence,T1112,Modify Registry,42,Terminal Server Client Connection History Cleared,3448824b-3c35-4a9e-a8f5-f887f68bea21,command_prompt
+persistence,T1112,Modify Registry,43,Disable Windows Error Reporting Settings,d2c9e41e-cd86-473d-980d-b6403562e3e1,command_prompt
+persistence,T1112,Modify Registry,44,DisallowRun Execution Of Certain Applications,71db768a-5a9c-4047-b5e7-59e01f188e84,command_prompt
+persistence,T1112,Modify Registry,45,Enabling Restricted Admin Mode via Command_Prompt,fe7974e5-5813-477b-a7bd-311d4f535e83,command_prompt
+persistence,T1112,Modify Registry,46,Mimic Ransomware - Enable Multiple User Sessions,39f1f378-ba8a-42b3-96dc-2a6540cfc1e3,command_prompt
+persistence,T1112,Modify Registry,47,Mimic Ransomware - Allow Multiple RDP Sessions per User,35727d9e-7a7f-4d0c-a259-dc3906d6e8b9,command_prompt
+persistence,T1112,Modify Registry,48,Event Viewer Registry Modification - Redirection URL,6174be7f-5153-4afd-92c5-e0c3b7cdb5ae,command_prompt
+persistence,T1112,Modify Registry,49,Event Viewer Registry Modification - Redirection Program,81483501-b8a5-4225-8b32-52128e2f69db,command_prompt
+persistence,T1112,Modify Registry,50,Enabling Remote Desktop Protocol via Remote Registry,e3ad8e83-3089-49ff-817f-e52f8c948090,command_prompt
+persistence,T1112,Modify Registry,51,Disable Win Defender Notification,12e03af7-79f9-4f95-af48-d3f12f28a260,command_prompt
+persistence,T1112,Modify Registry,52,Disable Windows OS Auto Update,01b20ca8-c7a3-4d86-af59-059f15ed5474,command_prompt
+persistence,T1112,Modify Registry,53,Disable Windows Auto Reboot for current logon user,396f997b-c5f8-4a96-bb2c-3c8795cf459d,command_prompt
+persistence,T1112,Modify Registry,54,Windows Auto Update Option to Notify before download,335a6b15-b8d2-4a3f-a973-ad69aa2620d7,command_prompt
+persistence,T1112,Modify Registry,55,Do Not Connect To Win Update,d1de3767-99c2-4c6c-8c5a-4ba4586474c8,command_prompt
+persistence,T1112,Modify Registry,56,Tamper Win Defender Protection,3b625eaa-c10d-4635-af96-3eae7d2a2f3c,command_prompt
+persistence,T1112,Modify Registry,57,Snake Malware Registry Blob,8318ad20-0488-4a64-98f4-72525a012f6b,powershell
+persistence,T1112,Modify Registry,58,Allow Simultaneous Download Registry,37950714-e923-4f92-8c7c-51e4b6fffbf6,command_prompt
+persistence,T1112,Modify Registry,59,Modify Internet Zone Protocol Defaults in Current User Registry - cmd,c88ef166-50fa-40d5-a80c-e2b87d4180f7,command_prompt
+persistence,T1112,Modify Registry,60,Modify Internet Zone Protocol Defaults in Current User Registry - PowerShell,b1a4d687-ba52-4057-81ab-757c3dc0d3b5,powershell
+persistence,T1112,Modify Registry,61,Activities To Disable Secondary Authentication Detected By Modified Registry Value.,c26fb85a-fa50-4fab-a64a-c51f5dc538d5,command_prompt
+persistence,T1112,Modify Registry,62,Activities To Disable Microsoft [FIDO Aka Fast IDentity Online] Authentication Detected By Modified Registry Value.,ffeddced-bb9f-49c6-97f0-3d07a509bf94,command_prompt
+persistence,T1112,Modify Registry,63,Scarab Ransomware Defense Evasion Activities,ca8ba39c-3c5a-459f-8e15-280aec65a910,command_prompt
+persistence,T1112,Modify Registry,64,Disable Remote Desktop Anti-Alias Setting Through Registry,61d35188-f113-4334-8245-8c6556d43909,command_prompt
+persistence,T1112,Modify Registry,65,Disable Remote Desktop Security Settings Through Registry,4b81bcfa-fb0a-45e9-90c2-e3efe5160140,command_prompt
+persistence,T1112,Modify Registry,66,Disabling ShowUI Settings of Windows Error Reporting (WER),09147b61-40f6-4b2a-b6fb-9e73a3437c96,command_prompt
+persistence,T1112,Modify Registry,67,Enable Proxy Settings,eb0ba433-63e5-4a8c-a9f0-27c4192e1336,command_prompt
+persistence,T1112,Modify Registry,68,Set-Up Proxy Server,d88a3d3b-d016-4939-a745-03638aafd21b,command_prompt
+persistence,T1112,Modify Registry,69,RDP Authentication Level Override,7e7b62e9-5f83-477d-8935-48600f38a3c6,command_prompt
+persistence,T1112,Modify Registry,70,Enable RDP via Registry (fDenyTSConnections),16bdbe52-371c-4ccf-b708-79fba61f1db4,command_prompt
+persistence,T1112,Modify Registry,71,Disable Windows Prefetch Through Registry,7979dd41-2045-48b2-a54e-b1bc2415c9da,command_prompt
+persistence,T1112,Modify Registry,72,Setting Shadow key in Registry for RDP Shadowing,ac494fe5-81a4-4897-af42-e774cf005ecb,powershell
+persistence,T1112,Modify Registry,73,Flush Shimcache,ecbd533e-b45d-4239-aeff-b857c6f6d68b,command_prompt
+persistence,T1112,Modify Registry,74,Disable Windows Remote Desktop Protocol,5f8e36de-37ca-455e-b054-a2584f043c06,command_prompt
+persistence,T1112,Modify Registry,75,Enforce Smart Card Authentication Through Registry,4c4bf587-fe7f-448f-ba8d-1ecec9db88be,command_prompt
+persistence,T1112,Modify Registry,76,Requires the BitLocker PIN for Pre-boot authentication,26fc7375-a551-4336-90d7-3f2817564304,command_prompt
+persistence,T1112,Modify Registry,77,Modify EnableBDEWithNoTPM Registry entry,bacb3e73-8161-43a9-8204-a69fe0e4b482,command_prompt
+persistence,T1112,Modify Registry,78,Modify UseTPM Registry entry,7c8c7bd8-0a5c-4514-a6a3-0814c5a98cf0,command_prompt
+persistence,T1112,Modify Registry,79,Modify UseTPMPIN Registry entry,10b33fb0-c58b-44cd-8599-b6da5ad6384c,command_prompt
+persistence,T1112,Modify Registry,80,Modify UseTPMKey Registry entry,c8480c83-a932-446e-a919-06a1fd1e512a,command_prompt
+persistence,T1112,Modify Registry,81,Modify UseTPMKeyPIN Registry entry,02d8b9f7-1a51-4011-8901-2d55cca667f9,command_prompt
+persistence,T1112,Modify Registry,82,Modify EnableNonTPM Registry entry,e672a340-a933-447c-954c-d68db38a09b1,command_prompt
+persistence,T1112,Modify Registry,83,Modify UsePartialEncryptionKey Registry entry,b5169fd5-85c8-4b2c-a9b6-64cc0b9febef,command_prompt
+persistence,T1112,Modify Registry,84,Modify UsePIN Registry entry,3ac0b30f-532f-43c6-8f01-fb657aaed7e4,command_prompt
+persistence,T1112,Modify Registry,85,Abusing Windows TelemetryController Registry Key for Persistence,4469192c-2d2d-4a3a-9758-1f31d937a92b,command_prompt
+persistence,T1112,Modify Registry,86,Modify RDP-Tcp Initial Program Registry Entry,c691cee2-8d17-4395-b22f-00644c7f1c2d,command_prompt
+persistence,T1112,Modify Registry,87,Abusing MyComputer Disk Cleanup Path for Persistence,f2915249-4485-42e2-96b7-9bf34328d497,command_prompt
+persistence,T1112,Modify Registry,88,Abusing MyComputer Disk Fragmentation Path for Persistence,3235aafe-b49d-451b-a1f1-d979fa65ddaf,command_prompt
+persistence,T1112,Modify Registry,89,Abusing MyComputer Disk Backup Path for Persistence,599f3b5c-0323-44ed-bb63-4551623bf675,command_prompt
+persistence,T1112,Modify Registry,90,Adding custom paths for application execution,573d15da-c34e-4c59-a7d2-18f20d92dfa3,command_prompt
 persistence,T1574.008,Hijack Execution Flow: Path Interception by Search Order Hijacking,1,powerShell Persistence via hijacking default modules - Get-Variable.exe,1561de08-0b4b-498e-8261-e922f3494aae,powershell
 persistence,T1505.003,Server Software Component: Web Shell,1,Web Shell Written to Disk,0a2ce662-1efa-496f-a472-2fe7b080db16,command_prompt
 persistence,T1078.001,Valid Accounts: Default Accounts,1,Enable Guest account with RDP capability and admin privileges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
@@ -896,9 +989,6 @@ persistence,T1197,BITS Jobs,3,"Persist, Download, & Execute",62a06ec5-5754-47d2-
 persistence,T1197,BITS Jobs,4,Bits download using desktopimgdownldr.exe (cmd),afb5e09e-e385-4dee-9a94-6ee60979d114,command_prompt
 persistence,T1546.010,Event Triggered Execution: AppInit DLLs,1,Install AppInit Shim,a58d9386-3080-4242-ab5f-454c16503d18,command_prompt
 persistence,T1546.002,Event Triggered Execution: Screensaver,1,Set Arbitrary Binary as Screensaver,281201e7-de41-4dc9-b73d-f288938cbb64,command_prompt
-persistence,T1574.002,Hijack Execution Flow: DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
-persistence,T1574.002,Hijack Execution Flow: DLL Side-Loading,2,DLL Side-Loading using the dotnet startup hook environment variable,d322cdd7-7d60-46e3-9111-648848da7c02,command_prompt
-persistence,T1574.002,Hijack Execution Flow: DLL Side-Loading,3,"DLL Search Order Hijacking,DLL Sideloading Of KeyScramblerIE.DLL Via KeyScrambler.EXE",c095ad8e-4469-4d33-be9d-6f6d1fb21585,powershell
 persistence,T1037.001,Boot or Logon Initialization Scripts: Logon Script (Windows),1,Logon Scripts,d6042746-07d4-4c92-9ad8-e644c114a231,command_prompt
 persistence,T1137.002,Office Application Startup: Office Test,1,Office Application Startup Test Persistence (HKCU),c3e35b58-fe1c-480b-b540-7600fb612563,powershell
 persistence,T1547.008,Boot or Logon Autostart Execution: LSASS Driver,1,Modify Registry to load Arbitrary DLL into LSASS - LsaDbExtPt,8ecef16d-d289-46b4-917b-0dba6dc81cf1,powershell
