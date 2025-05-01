@@ -14008,7 +14008,7 @@ defense-evasion:
   T1578.001:
     technique:
       modified: '2024-10-15T15:53:44.870Z'
-      name: Create Snapshot
+      name: 'Modify Cloud Compute Infrastructure: Create Snapshot'
       description: |-
         An adversary may create a snapshot or data backup within a cloud account to evade defenses. A snapshot is a point-in-time copy of an existing cloud compute component such as a virtual machine (VM), virtual hard drive, or volume. An adversary may leverage permissions to create a snapshot in order to bypass restrictions that prevent access to existing compute service infrastructure, unlike in [Revert Cloud Instance](https://attack.mitre.org/techniques/T1578/004) where an adversary may revert to a snapshot to evade detection and remove evidence of their presence.
 
@@ -14068,7 +14068,64 @@ defense-evasion:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       x_mitre_attack_spec_version: 3.2.0
       x_mitre_modified_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
-    atomic_tests: []
+      identifier: T1578.001
+    atomic_tests:
+    - name: Azure - Create Snapshot from Managed Disk
+      auto_generated_guid: 89e69b4b-3458-4ec6-b819-b3008debc1bc
+      description: |
+        Creates a snapshot of a managed disk in Azure using the Azure CLI.
+        Simulates adversary snapshotting behavior for persistence or data duplication.
+      supported_platforms:
+      - iaas:azure
+      input_arguments:
+        azure_resource_group:
+          description: The Azure resource group where the disk is located.
+          type: string
+          default: myResourceGroup
+        azure_disk_name:
+          description: The Azure disk name.
+          type: string
+          default: myDiskName
+        azure_snapshot_name:
+          description: The Azure snapshot name.
+          type: string
+          default: mySnapshotName
+      dependencies:
+      - description: Azure CLI must be installed.
+        prereq_command: 'if command -v az > /dev/null 2>&1; then exit 0; else exit
+          1; fi
+
+          '
+        get_prereq_command: 'echo "Install Azure CLI: https://learn.microsoft.com/en-us/cli/azure/install-azure-cli"
+
+          '
+      - description: Azure CLI must be authenticated.
+        prereq_command: 'if az account show > /dev/null 2>&1; then exit 0; else exit
+          1; fi
+
+          '
+        get_prereq_command: 'echo "Login with: az login"
+
+          '
+      - description: Azure disk must exist.
+        prereq_command: 'if az disk show --resource-group #{azure_resource_group}
+          --name #{azure_disk_name} > /dev/null 2>&1; then exit 0; else exit 1; fi
+
+          '
+        get_prereq_command: 'echo "Ensure the disk exists in the given resource group."
+
+          '
+      executor:
+        name: sh
+        elevation_required: false
+        command: 'az snapshot create --resource-group #{azure_resource_group} --name
+          #{azure_snapshot_name} --source #{azure_disk_name} --location eastus
+
+          '
+        cleanup_command: 'az snapshot delete --resource-group #{azure_resource_group}
+          --name #{azure_snapshot_name}
+
+          '
   T1550.001:
     technique:
       modified: '2024-10-15T15:38:11.583Z'

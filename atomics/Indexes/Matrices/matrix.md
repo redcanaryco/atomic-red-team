@@ -188,7 +188,7 @@
 |  |  |  |  | Domain or Tenant Policy Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
 |  |  |  |  | [XSL Script Processing](../../T1220/T1220.md) |  |  |  |  |  |  |  |
 |  |  |  |  | [Hide Artifacts: Hidden Files and Directories](../../T1564.001/T1564.001.md) |  |  |  |  |  |  |  |
-|  |  |  |  | Create Snapshot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
+|  |  |  |  | [Modify Cloud Compute Infrastructure: Create Snapshot](../../T1578.001/T1578.001.md) |  |  |  |  |  |  |  |
 |  |  |  |  | [Use Alternate Authentication Material: Application Access Token](../../T1550.001/T1550.001.md) |  |  |  |  |  |  |  |
 |  |  |  |  | [Valid Accounts: Cloud Accounts](../../T1078.004/T1078.004.md) |  |  |  |  |  |  |  |
 |  |  |  |  | Environmental Keying [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |
