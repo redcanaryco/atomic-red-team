@@ -35,6 +35,7 @@ Platform = Literal[
     "iaas:gcp",
     "iaas:azure",
     "iaas:aws",
+    "esxi",
 ]
 ExecutorType = Literal["manual", "powershell", "sh", "bash", "command_prompt"]
 DomainName = Annotated[
@@ -74,6 +75,7 @@ def get_supported_platform(platform: Platform):
         "iaas:gcp": "GCP",
         "google-workspace": "Google Workspace",
         "containers": "Containers",
+        "esxi": "ESXi",
     }
     return platforms[platform]
 
