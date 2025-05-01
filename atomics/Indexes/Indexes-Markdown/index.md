@@ -503,6 +503,7 @@
   - Atomic Test #11: Disable .NET Event Tracing for Windows Via Environment Variable HKCU Registry - PowerShell [windows]
   - Atomic Test #12: Disable .NET Event Tracing for Windows Via Environment Variable HKLM Registry - Cmd [windows]
   - Atomic Test #13: Disable .NET Event Tracing for Windows Via Environment Variable HKLM Registry - PowerShell [windows]
+  - Atomic Test #14: Block Cybersecurity communication by leveraging Windows Name Resolution Policy Table [windows]
 - T1564.014 Extended Attributes [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1562.007 Disable or Modify Cloud Firewall [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1036.002 Right-to-Left Override [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
