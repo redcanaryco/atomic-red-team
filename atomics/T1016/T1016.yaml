@@ -191,10 +191,9 @@ atomic_tests:
   - macos
   executor:
     command: |
-      sudo defaults read /Library/Preferences/com.apple.alf
-      sudo /usr/libexec/ApplicationFirewall/socketfilterfw --getglobalstate
-    name: bash
-    elevation_required: true
+      defaults read /Library/Preferences/com.apple.alf || defaults read /usr/libexec/ApplicationFirewall/com.apple.alf
+      /usr/libexec/ApplicationFirewall/socketfilterfw --getglobalstate
+    name: sh
 - name: DNS Server Discovery Using nslookup
   auto_generated_guid: 34557863-344a-468f-808b-a1bfb89b4fa9
   description: |
