@@ -191,7 +191,7 @@ atomic_tests:
   - macos
   executor:
     command: |
-      defaults read /Library/Preferences/com.apple.alf || defaults read /usr/libexec/ApplicationFirewall/com.apple.alf
+      defaults read /usr/libexec/ApplicationFirewall/com.apple.alf || defaults read /Library/Preferences/com.apple.alf
       /usr/libexec/ApplicationFirewall/socketfilterfw --getglobalstate
     name: sh
 - name: DNS Server Discovery Using nslookup
