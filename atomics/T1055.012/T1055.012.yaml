@@ -2,18 +2,18 @@ attack_technique: T1055.012
 display_name: 'Process Injection: Process Hollowing'
 atomic_tests:
 - name: Process Hollowing using PowerShell
-  auto_generated_guid: 2ffa06ad-d406-43b9-9bfc-7a62918ebcd0
+  auto_generated_guid: 562427b4-39ef-4e8c-af88-463a78e70b9c
   description: |
     This test uses PowerShell to create a Hollow from a PE on disk with explorer as the parent.
     Credit to FuzzySecurity (https://github.com/FuzzySecurity/PowerShell-Suite/blob/master/Start-Hollow.ps1)
   supported_platforms:
   - windows
   input_arguments:
-    hollow_script_download_url:
+    script_download_url:
       description: Download url for Start-Hollow.ps1
       type: string
       default: https://raw.githubusercontent.com/FuzzySecurity/PowerShell-Suite/refs/heads/master/Start-Hollow.ps1
-    hollow_script:
+    script_path:
       description: Path to Start-Hollow.ps1
       type: path
       default: PathToAtomicsFolder\T1055.012\src\Start-Hollow.ps1
@@ -35,7 +35,7 @@ atomic_tests:
       default: notepad
   executor:
     command: |
-      . "#{hollow_script}"
+      . "#{script_path}"
       $ppid=Get-Process #{parent_process_name} | select -expand id
       Start-Hollow -Sponsor "#{sponsor_binary_path}" -Hollow "#{hollow_binary_path}" -ParentPID $ppid -Verbose
     cleanup_command: |
@@ -46,10 +46,10 @@ atomic_tests:
   - description: |
       Start-Hollow.ps1 must be installed
     prereq_command: |
-      if (Test-Path "#{hollow_script}") {exit 0} else {exit 1}
+      if (Test-Path "#{script_path}") {exit 0} else {exit 1}
     get_prereq_command: |
       try {
-        iwr "#{hollow_script_download_url}" -OutFile (New-Item -Path #{hollow_script} -Force)
+        iwr "#{script_download_url}" -OutFile (New-Item -Path #{script_path} -Force)
       } catch {
         Write-Error $_
         Exit 1
