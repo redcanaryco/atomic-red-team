@@ -457,7 +457,3 @@ atomic_tests:
 
       Add-Type -AssemblyName System.IO.Compression.FileSystem
       [System.IO.Compression.ZipFile]::CreateFromDirectory($Copy, $Zip, [System.IO.Compression.CompressionLevel]::Optimal, $false)
-  cleanup_commands:
-    - command: |
-        Remove-Item "#{destination_folder}" -Recurse -Force -ErrorAction SilentlyContinue
-        Remove-Item "#{zip_file_path}" -Force -ErrorAction SilentlyContinue
