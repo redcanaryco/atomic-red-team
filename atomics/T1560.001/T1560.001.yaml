@@ -419,7 +419,6 @@ display_name: Copy and Compress AppData Folder for Exfiltration
 
 atomic_tests:
   - name: Copy and Compress AppData Folder
-    # auto_generated_guid omitted so CI can inject it
     description: |
       An adversary with administrative access copies the entire AppData folder to a temporary location,
       compresses it into a ZIP archive, and deletes the copied folder to minimize traces. This method
@@ -486,3 +485,4 @@ atomic_tests:
       command: |
         Remove-Item "#{destination_folder}" -Recurse -Force -ErrorAction SilentlyContinue
         Remove-Item "#{zip_file_path}" -Force -ErrorAction SilentlyContinue
+
