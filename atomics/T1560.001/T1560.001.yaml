@@ -415,12 +415,23 @@ atomic_tests:
       del #{output_file}
 
 
+id: 8f9d7e34-3c3b-4a7f-bc7a-2a9f5e1a1234
 name: Copy and Compress AppData Folder for Exfiltration
+description: >
+  Copies the AppData folder to a temporary location, compresses it into a ZIP archive,
+  then cleans up the copy. Uses PowerShell and .NET compression with admin privileges.
+atomic_name: Copy and Compress AppData Folder
+atomic_description: |
+  An adversary with administrative access copies the entire AppData folder to a temporary location,
+  compresses it into a ZIP archive, and deletes the copied folder to minimize traces. This method
+  silently gathers large amounts of user data before exfiltration using native PowerShell and .NET.
+attack_technique:
+  - T1560
+
 atomic_tests:
   - name: Copy and Compress AppData Folder
     description: |
-      Copies the AppData folder to a temporary location, compresses it into a ZIP archive,
-      then cleans up the copy. Uses PowerShell and .NET compression with admin privileges.
+      Copies the AppData folder, compresses it, and cleans up temporary files.
     supported_platforms:
       - windows
     input_arguments:
@@ -439,6 +450,8 @@ atomic_tests:
               [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole(`
               [Security.Principal.WindowsBuiltInRole]::Administrator)) { exit 1 }
           if (-not (Test-Path "$env:USERPROFILE\AppData")) { exit 1 }
+        get_prereq_command: |
+          Run PowerShell as Administrator and ensure .NET compression assemblies are available.
     executor:
       name: powershell
       elevation_required: true
@@ -458,6 +471,9 @@ atomic_tests:
         }
 
         Add-Type -AssemblyName System.IO.Compression.FileSystem
-        [Sy]()
-
-
+        [System.IO.Compression.ZipFile]::CreateFromDirectory($Copy, $Zip, [System.IO.Compression.CompressionLevel]::Optimal, $false)
+    cleanup_commands:
+      - name: powershell
+        command: |
+          Remove-Item "#{destination_folder}" -Recurse -Force -ErrorAction SilentlyContinue
+          Remove-Item "#{zip_file_path}" -Force -ErrorAction SilentlyContinue
