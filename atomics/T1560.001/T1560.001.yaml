@@ -414,71 +414,73 @@ atomic_tests:
     cleanup_command: |
       del #{output_file}
 
-      name: Copy and Compress AppData Folder for Exfiltration
-auto_generated_guid: 8c9f6d0b-9d8e-4c7f-b1e5-d9f23a6e7b34
-description: |
-This script copies everything from the user's AppData folder to their Desktop, then compresses that copy into a ZIP file. After compression, 
-it deletes the copied folder to clean up. It needs to be run with Administrator rights. 
-This method is often used to gather user data for exfiltration purposes.
+attack_technique: T1560.001
+display_name: Copy and Compress AppData for Exfiltration via PowerShell
 
-supported_platforms:
-  - windows
+atomic_tests:
+  - name: Copy and Compress AppData Folder
+    description: |
+      An adversary with administrative access copies the entire AppData folder to a temporary location,
+      compresses it into a ZIP archive, and deletes the copied folder to minimize traces. This technique
+      silently gathers large amounts of user data before exfiltration using native PowerShell and .NET.
+    supported_platforms:
+      - windows
 
-input_arguments:
-  destination_folder:
-    description: Folder path where AppData copy will be stored temporarily
-    type: string
-    default: '$env:USERPROFILE\Desktop\AppDataCopy'
-  zip_file_path:
-    description: Path to the resulting ZIP archive file
-    type: string
-    default: '$env:USERPROFILE\Desktop\AppDataBackup.zip'
+    input_arguments:
+      destination_folder:
+        description: Temporary destination path for AppData copy
+        type: Path
+        default: '$env:USERPROFILE\Desktop\AppDataCopy'
+      zip_file_path:
+        description: Path for the resulting ZIP archive
+        type: Path
+        default: '$env:USERPROFILE\Desktop\AppDataBackup.zip'
 
-dependencies:
-  - description: |
-      Script requires PowerShell with .NET System.IO.Compression.FileSystem available
-      and must be run with Administrator privileges.
-    prereq_command: |
-      if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) { exit 1 }
-    get_prereq_command: |
-      echo Please run PowerShell as Administrator and ensure .NET compression assembly is available.
+    dependencies:
+      - description: Requires .NET compression assembly and administrative privileges
+        prerequisites:
+          - PowerShell must be launched as Administrator
+        check_prereq_command: |
+          if (-not ([Security.Principal.WindowsPrincipal] `
+              [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole(`
+              [Security.Principal.WindowsBuiltInRole]::Administrator)) { exit 1 }
+          if (-not (Test-Path "$env:USERPROFILE\AppData")) { exit 1 }
+        get_prereq_command: |
+          Write-Host "Run PowerShell as Administrator and ensure .NET compression assemblies are available."
 
-executor:
-  name: powershell
-  elevation_required: true
-  command: |
-    $AppDataPath = "$env:USERPROFILE\AppData"
-    $CopyFolderPath = "#{destination_folder}"
-    $ZipFilePath = "#{zip_file_path}"
+    executor:
+      name: powershell
+      elevation_required: true
+      command: |
+        $AppDataPath = "$env:USERPROFILE\AppData"
+        $CopyFolder = "#{destination_folder}"
+        $ZipPath = "#{zip_file_path}"
 
-    if (-not (Test-Path $AppDataPath)) {
-        Write-Error "AppData folder not found at $AppDataPath."
-        exit 1
-    }
-
-    if (Test-Path $CopyFolderPath) {
-        Remove-Item -Path $CopyFolderPath -Recurse -Force
-    }
-
-    New-Item -ItemType Directory -Path $CopyFolderPath | Out-Null
-
-    $files = Get-ChildItem -Path $AppDataPath -Recurse -Force -ErrorAction SilentlyContinue
-    foreach ($file in $files) {
-        $relativePath = $file.FullName.Substring($AppDataPath.Length + 1)
-        $destinationPath = Join-Path -Path $CopyFolderPath -ChildPath $relativePath
-
-        try {
-            if ($file.PSIsContainer) {
-                New-Item -ItemType Directory -Path $destinationPath -Force | Out-Null
-            } else {
-                Copy-Item -Path $file.FullName -Destination $destinationPath -Force -ErrorAction Stop
-            }
-        } catch {
-
+        if (Test-Path $CopyFolder) {
+          Remove-Item $CopyFolder -Recurse -Force
         }
-    }
+        New-Item -ItemType Directory -Path $CopyFolder | Out-Null
 
-    Add-Type -AssemblyName System.IO.Compression.FileSystem
-    [System.IO.Compression.ZipFile]::CreateFromDirectory($CopyFolderPath, $ZipFilePath, [System.IO.Compression.CompressionLevel]::Optimal, $false)
+        $items = Get-ChildItem $AppDataPath -Recurse -Force -ErrorAction SilentlyContinue
+        foreach ($item in $items) {
+          $rel = $item.FullName.Substring($AppDataPath.Length + 1)
+          $dest = Join-Path $CopyFolder $rel
+          try {
+            if ($item.PSIsContainer) {
+              New-Item -ItemType Directory -Path $dest -Force | Out-Null
+            } else {
+              Copy-Item $item.FullName -Destination $dest -Force -ErrorAction Stop
+            }
+          } catch {}
+        }
 
-    Remove-Item -Path $CopyFolderPath -Recurse -Force
+        Add-Type -AssemblyName System.IO.Compression.FileSystem
+        [System.IO.Compression.ZipFile]::CreateFromDirectory($CopyFolder, $ZipPath,
+          [System.IO.Compression.CompressionLevel]::Optimal, $false)
+
+    cleanup_commands:
+      name: powershell
+      command: |
+        Remove-Item "#{destination_folder}" -Recurse -Force -ErrorAction SilentlyContinue
+        Remove-Item "#{zip_file_path}" -Force -ErrorAction SilentlyContinue
+
