@@ -420,13 +420,8 @@ name: Copy and Compress AppData Folder for Exfiltration
 description: >
   Copies the AppData folder to a temporary location, compresses it into a ZIP archive,
   then cleans up the copy. Uses PowerShell and .NET compression with admin privileges.
-atomic_name: Copy and Compress AppData Folder
-atomic_description: |
-  An adversary with administrative access copies the entire AppData folder to a temporary location,
-  compresses it into a ZIP archive, and deletes the copied folder to minimize traces. This method
-  silently gathers large amounts of user data before exfiltration using native PowerShell and .NET.
-attack_technique:
-  - T1560
+attack_techniques:
+  - "T1560"
 
 atomic_tests:
   - name: Copy and Compress AppData Folder
@@ -472,6 +467,7 @@ atomic_tests:
 
         Add-Type -AssemblyName System.IO.Compression.FileSystem
         [System.IO.Compression.ZipFile]::CreateFromDirectory($Copy, $Zip, [System.IO.Compression.CompressionLevel]::Optimal, $false)
+
     cleanup_commands:
       - name: powershell
         command: |
