@@ -415,13 +415,14 @@ atomic_tests:
       del #{output_file}
 
 attack_technique: T1560.001
-display_name: Copy and Compress AppData for Exfiltration via PowerShell
+display_name: Copy and Compress AppData Folder for Exfiltration
 
 atomic_tests:
   - name: Copy and Compress AppData Folder
+    # auto_generated_guid omitted so CI can inject it
     description: |
       An adversary with administrative access copies the entire AppData folder to a temporary location,
-      compresses it into a ZIP archive, and deletes the copied folder to minimize traces. This technique
+      compresses it into a ZIP archive, and deletes the copied folder to minimize traces. This method
       silently gathers large amounts of user data before exfiltration using native PowerShell and .NET.
     supported_platforms:
       - windows
@@ -437,10 +438,8 @@ atomic_tests:
         default: '$env:USERPROFILE\Desktop\AppDataBackup.zip'
 
     dependencies:
-      - description: Requires .NET compression assembly and administrative privileges
-        prerequisites:
-          - PowerShell must be launched as Administrator
-        check_prereq_command: |
+      - description: Requires administrative privileges and .NET compression libraries
+        prereq_command: |
           if (-not ([Security.Principal.WindowsPrincipal] `
               [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole(`
               [Security.Principal.WindowsBuiltInRole]::Administrator)) { exit 1 }
@@ -461,7 +460,7 @@ atomic_tests:
         }
         New-Item -ItemType Directory -Path $CopyFolder | Out-Null
 
-        $items = Get-ChildItem $AppDataPath -Recurse -Force -ErrorAction SilentlyContinue
+        $items = Get-ChildItem -Path $AppDataPath -Recurse -Force -ErrorAction SilentlyContinue
         foreach ($item in $items) {
           $rel = $item.FullName.Substring($AppDataPath.Length + 1)
           $dest = Join-Path $CopyFolder $rel
@@ -475,12 +474,15 @@ atomic_tests:
         }
 
         Add-Type -AssemblyName System.IO.Compression.FileSystem
-        [System.IO.Compression.ZipFile]::CreateFromDirectory($CopyFolder, $ZipPath,
-          [System.IO.Compression.CompressionLevel]::Optimal, $false)
+        [System.IO.Compression.ZipFile]::CreateFromDirectory(
+          $CopyFolder,
+          $ZipPath,
+          [System.IO.Compression.CompressionLevel]::Optimal,
+          $false
+        )
 
     cleanup_commands:
       name: powershell
       command: |
         Remove-Item "#{destination_folder}" -Recurse -Force -ErrorAction SilentlyContinue
         Remove-Item "#{zip_file_path}" -Force -ErrorAction SilentlyContinue
-
