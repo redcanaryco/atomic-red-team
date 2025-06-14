@@ -414,7 +414,6 @@ atomic_tests:
     cleanup_command: |
       del #{output_file}
 
-
 - name: Copy and Compress AppData Folder
   description: |
     Copies the AppData folder, compresses it, and cleans up temporary files.
@@ -459,7 +458,6 @@ atomic_tests:
       Add-Type -AssemblyName System.IO.Compression.FileSystem
       [System.IO.Compression.ZipFile]::CreateFromDirectory($Copy, $Zip, [System.IO.Compression.CompressionLevel]::Optimal, $false)
   cleanup_commands:
-    - name: powershell
-      command: |
+    - command: |
         Remove-Item "#{destination_folder}" -Recurse -Force -ErrorAction SilentlyContinue
         Remove-Item "#{zip_file_path}" -Force -ErrorAction SilentlyContinue
