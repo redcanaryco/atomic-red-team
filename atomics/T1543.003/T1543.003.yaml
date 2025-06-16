@@ -10,15 +10,24 @@ atomic_tests:
     Upon successful execution, cmd will modify the binpath for `Fax` to spawn powershell. Powershell will then spawn.
   supported_platforms:
   - windows
-
+  input_arguments:
+    service_name:
+      description: The name of the service that will be modified
+      type: string
+      default: Fax
+    service_binpath:
+      description: The default value for the binary path of the service
+      type: string
+      default: C:\WINDOWS\system32\fxssvc.exe
   executor:
     name: command_prompt
     elevation_required: true
     command: |
-      sc config Fax binPath= "C:\windows\system32\WindowsPowerShell\v1.0\powershell.exe -noexit -c \"write-host 'T1543.003 Test'\""
-      sc start Fax
-    cleanup_command:
-      sc config Fax binPath= "C:\WINDOWS\system32\fxssvc.exe" >nul 2>&1
+      sc config #{service_name} binPath= "C:\windows\system32\WindowsPowerShell\v1.0\powershell.exe -noexit -c \"write-host 'T1543.003 Test'\""
+      sc start #{service_name}
+    cleanup_command: |
+      sc config #{service_name} binPath= "#{service_binpath}" >nul 2>&1
+
 - name: Service Installation CMD
   auto_generated_guid: 981e2942-e433-44e9-afc1-8c957a1496b6
   description: |
