@@ -1,0 +1,13 @@
+attack_technique: T1546.015
+display_name: COM Hijack via Registry
+atomic_tests:
+  - name: COM Hijack Simulation (Safe)
+    description: Creates a fake CLSID entry pointing to calc.exe for testing.
+    supported_platforms:
+      - windows
+    executor:
+      name: command_prompt
+      command: |
+        reg add "HKCU\Software\Classes\CLSID\{12345678-1234-1234-1234-123456789abc}\InprocServer32" /ve /d "C:\Windows\System32\calc.exe" /f
+    cleanup_command: |
+      reg delete "HKCU\Software\Classes\CLSID\{12345678-1234-1234-1234-123456789abc}" /f
