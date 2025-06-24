@@ -196,7 +196,8 @@ atomic_tests:
       "Response received for #{base_name}.blob.core.windows.net/#{container_name}/#{blob_name}: $responsebody" | out-file -filepath #{output_file} -append
     cleanup_command: |
       remove-item #{output_file} -erroraction silentlycontinue
-- name: powershell- name: Azure - Enumerate Azure Blobs with MicroBurst
+    name: powershell
+- name: Azure - Enumerate Azure Blobs with MicroBurst
   auto_generated_guid: 3dab4bcc-667f-4459-aea7-4162dd2d6590
   description: |
     Upon successful execution, this test will utilize a wordlist to enumerate the public facing containers and blobs of a specified Azure storage account. 
