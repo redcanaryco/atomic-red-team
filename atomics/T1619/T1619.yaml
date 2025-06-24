@@ -170,11 +170,11 @@ atomic_tests:
     base_name:
       description: Azure storage account name to test
       type: string
-      default: T1530Test2
+      default: T1619Test2
     output_file:
       description: File to output results to
       type: string
-      default: $env:temp\T1530Test2.txt
+      default: $env:temp\T1619Test2.txt
     container_name:
       description: Container name to search for (optional)
       type: string
@@ -196,7 +196,7 @@ atomic_tests:
       "Response received for #{base_name}.blob.core.windows.net/#{container_name}/#{blob_name}: $responsebody" | out-file -filepath #{output_file} -append
     cleanup_command: |
       remove-item #{output_file} -erroraction silentlycontinue
-    name: powershell- name: Azure - Enumerate Azure Blobs with MicroBurst
+- name: powershell- name: Azure - Enumerate Azure Blobs with MicroBurst
   auto_generated_guid: 3dab4bcc-667f-4459-aea7-4162dd2d6590
   description: |
     Upon successful execution, this test will utilize a wordlist to enumerate the public facing containers and blobs of a specified Azure storage account. 
@@ -211,7 +211,7 @@ atomic_tests:
     output_file:
       description: File to output results to
       type: string
-      default: $env:temp\T1530Test1.txt
+      default: $env:temp\T1619Test1.txt
     wordlist:
       description: File path to keywords for search permutations
       type: string
