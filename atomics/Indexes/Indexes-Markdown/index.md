@@ -2126,9 +2126,8 @@
   - Atomic Test #4: Collect Clipboard Data via VBA [windows]
   - Atomic Test #5: Add or copy content to clipboard with xClip [linux]
 - [T1530 Data from Cloud Storage Object](../../T1530/T1530.md)
-  - Atomic Test #1: Azure - Scan for Anonymous Access to Azure Storage (Powershell) [iaas:azure]
-  - Atomic Test #2: AWS - Scan for Anonymous Access to S3 [iaas:aws]
-  - Atomic Test #3: Azure - Dump Azure Storage Account Objects via Azure CLI [iaas:azure]
+  - Atomic Test #1: AWS - Scan for Anonymous Access to S3 [iaas:aws]
+  - Atomic Test #2: Azure - Dump Azure Storage Account Objects via Azure CLI [iaas:azure]
 - T1074.002 Remote Data Staging [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1005 Data from Local System](../../T1005/T1005.md)
   - Atomic Test #1: Search files of interest and save them to a single zip file (Windows) [windows]
@@ -2735,7 +2734,8 @@
 - [T1619 Cloud Storage Object Discovery](../../T1619/T1619.md)
   - Atomic Test #1: AWS S3 Enumeration [iaas:aws]
   - Atomic Test #2: Azure - Enumerate Storage Account Objects via Shared Key authorization using Azure CLI [iaas:azure]
-  - Atomic Test #3: Azure - Enumerate Azure Blobs with MicroBurst [iaas:azure]
+  - Atomic Test #3: Azure - Scan for Anonymous Access to Azure Storage (Powershell) [iaas:azure]
+  - Atomic Test #4: Azure - Enumerate Azure Blobs with MicroBurst [iaas:azure]
 - [T1654 Log Enumeration](../../T1654/T1654.md)
   - Atomic Test #1: Get-EventLog To Enumerate Windows Security Log [windows]
   - Atomic Test #2: Enumerate Windows Security Log via WevtUtil [windows]
