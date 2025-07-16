@@ -86,3 +86,65 @@ atomic_tests:
     command: |
       tasklist | findstr #{process_to_enumerate}
     name: command_prompt
+- name: Process Discovery - Process Hacker
+  auto_generated_guid: 966f4c16-1925-4d9b-8ce0-01334ee0867d
+  description: Process Hacker can be exploited to infiltrate system processes, identify weak points, or achieve unauthorized control over systems. However, its malicious use can often be flagged by security defenses, rendering it a perilous tool for illegitimate purposes.
+  supported_platforms:
+  - windows
+  input_arguments:
+    processhacker_exe:
+      description: Process hacker installation executables.
+      type: string
+      default: ProcessHacker.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: Process Hacker must be installed in the location
+    prereq_command: |
+      if (Test-Path "c:\Program Files\Process Hacker 2\#{processhacker_exe}") {exit 0} else {exit 1}
+    get_prereq_command: |-
+      Write-Host Downloading Process Hacker
+      New-Item -Type Directory "C:\Temp\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://versaweb.dl.sourceforge.net/project/processhacker/processhacker2/processhacker-2.39-setup.exe" -OutFile "C:\Temp\ExternalPayloads\processhacker-2.39-setup.exe"
+      Write-Host Installing Process Hacker
+      Start-Process "c:\Temp\ExternalPayloads\processhacker-2.39-setup.exe" -Wait -ArgumentList "/s"
+  executor:
+    command: Start-Process -FilePath "$Env:ProgramFiles\Process Hacker 2\#{processhacker_exe}"
+    name: powershell
+    elevation_required: true
+- name: Process Discovery - PC Hunter
+  auto_generated_guid: b4ca838d-d013-4461-bf2c-f7132617b409
+  description: PC Hunter is a toolkit with access to hundreds of settings including kernels, kernel modules, processes, network, startup, and more. When abused, this tool can allow threat actors to effectively access sensitive processes, collect system information, and terminate security software.
+  supported_platforms:
+  - windows
+  input_arguments:
+    pchunter64_exe:
+      description: Process hacker installation executables.
+      type: string
+      default: PChunter64.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: PCHunter must be present in device
+    prereq_command: |
+      if (Get-ChildItem -Path C:\ -Include *PCHunter64* -File -Recurse -ErrorAction SilentlyContinue) {exit 0} else {exit 1}
+    get_prereq_command: |-
+      Write-Host Downloading PC Hunter
+      New-Item -Type Directory "C:\Temp\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://www.snapfiles.com/directdl/PCHunter_free.zip" -OutFile "C:\Temp\ExternalPayloads\PCHunter_free.zip"
+      Expand-Archive -LiteralPath 'C:\Temp\ExternalPayloads\PCHunter_free.zip' -DestinationPath C:\Temp\ExternalPayloads
+      Write-Host Unzipping Installing Process Hunter
+  executor:
+    command: Start-Process -FilePath "C:\Temp\ExternalPayloads\PCHunter_free\#{pchunter64_exe}"
+    name: powershell
+    elevation_required: true
+- name: Launch Taskmgr from cmd to View running processes  
+  auto_generated_guid: 4fd35378-39aa-481e-b7c4-e3bf49375c67
+  description: |
+    An adverary may launch taskmgr.exe with the /7 switch via command prompt to view processes running on the system.
+    [Reference](https://github.com/trellix-enterprise/ac3-threat-sightings/blob/main/sightings/Sightings_Conti_Ransomware.yml)
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      taskmgr.exe /7
+    name: command_prompt
+    elevation_required: false

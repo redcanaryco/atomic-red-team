@@ -1,22 +1,9 @@
-<p><img src="https://redcanary.com/wp-content/uploads/Atomic-Red-Team-Logo.png" width="150px" />
-<a
-    href="https://opensourcesecurityindex.io/"
-    target="_blank"
-    rel="noopener"
->
-<img
-        style="width: 282px; height: 56px"
-        src="https://opensourcesecurityindex.io/badge.svg"
-        alt="Open Source Security Index - Fastest Growing Open Source Security Projects"
-        width="282"
-        height="56"
-/>
-</a>
-</p>
+<p><img src="https://redcanary.com/wp-content/uploads/Atomic-Red-Team-Logo.png" width="150px" /></p>
 
 # Atomic Red Team
 
-![GitHub Action Status](https://github.com/redcanaryco/atomic-red-team/actions/workflows/validate-atomics.yml/badge.svg?branch=master) ![Atomics](https://img.shields.io/badge/Atomics-1464-flat.svg) ![GitHub Action Status](https://github.com/redcanaryco/atomic-red-team/actions/workflows/generate-docs.yml/badge.svg?branch=master)
+![GitHub Action Status](https://github.com/redcanaryco/atomic-red-team/actions/workflows/validate-atomics.yml/badge.svg?branch=master) ![Atomics](https://img.shields.io/badge/Atomics-1730-flat.svg) ![GitHub Action Status](https://github.com/redcanaryco/atomic-red-team/actions/workflows/generate-docs.yml/badge.svg?branch=master)
+
 
 Atomic Red Team™ is a library of tests mapped to the
 [MITRE ATT&CK®](https://attack.mitre.org/) framework. Security teams can use
@@ -38,6 +25,8 @@ The Atomic Red Team documentation is available as a [wiki](https://github.com/re
 For information about the philosophy and development of Atomic Red Team, visit
 our website at <https://atomicredteam.io>.
 
+To stay up to date on all things Atomic Red Team, sign up for the Atomic Newsletter: https://redcanary.com/atomic-newsletter/
+
 ## Contribute to Atomic Red Team
 
 Atomic Red Team is open source and community developed. If you're interested in
@@ -51,3 +40,6 @@ becoming a contributor, check out these resources:
   for more information about contributing directly to this repository.
 - Check the [license](LICENSE.txt) for information regarding the distribution
   and modification of Atomic Red Team.
+- Contribute to linux atomics quickly from GitHub Codespaces. For more details, click [here](https://github.com/redcanaryco/atomic-red-team/wiki/Github-Codespaces)
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/redcanaryco/atomic-red-team)

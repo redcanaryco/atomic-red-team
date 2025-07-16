@@ -132,7 +132,6 @@ atomic_tests:
       echo ""
   input_arguments:
     output_file:
-      name: output_file
       description: File to store captured commands
       type: string
       default: /tmp/.keyboard.log
@@ -201,7 +200,7 @@ atomic_tests:
     command: |
       auditctl -a always,exit -F arch=b64 -S execve -k CMDS 
       auditctl -a always,exit -F arch=b32 -S execve -k CMDS
-      whoami; ausearch -i --start $(date +"%d/%m/%y %H:%M:%S") 
+      whoami; ausearch -i --start now
     cleanup_command: |
       systemctl restart auditd
 - name: MacOS Swift Keylogger

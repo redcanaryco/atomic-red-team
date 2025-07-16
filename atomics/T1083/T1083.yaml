@@ -149,3 +149,45 @@ atomic_tests:
       Start-Sleep -Second 4
       Stop-Process -Name "DirLister"
     name: powershell
+- name: ESXi - Enumerate VMDKs available on an ESXi Host
+  auto_generated_guid: 4a233a40-caf7-4cf1-890a-c6331bbc72cf
+  description: |
+   An adversary uses the find command to enumerate vmdks on an ESXi host.
+   [Reference](https://www.crowdstrike.com/blog/hypervisor-jackpotting-ecrime-actors-increase-targeting-of-esxi-servers/)
+  supported_platforms:
+  - windows
+  input_arguments:
+    vm_host:
+      description: Specify the host name of the ESXi Server
+      type: string
+      default: atomic.local
+    vm_user:
+      description: Specify the privilege user account on ESXi Server
+      type: string
+      default: root
+    vm_pass:
+      description: Specify the privilege user password on ESXi Server
+      type: string
+      default: pass
+    plink_file:
+      description: Path to Plink
+      type: path
+      default: 'PathToAtomicsFolder\..\ExternalPayloads\plink.exe'
+    cli_script:
+      description: Path to script with file discovery commands
+      type: path
+      default: PathToAtomicsFolder\T1083\src\esxi_file_discovery.txt  
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Check if plink is available.
+    prereq_command: |
+      if (Test-Path "#{plink_file}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe" -OutFile "#{plink_file}"
+  executor:
+    command: |
+       echo "" | "#{plink_file}" "#{vm_host}" -ssh  -l "#{vm_user}" -pw "#{vm_pass}" -m "#{cli_script}"
+    name: command_prompt
+    elevation_required: false

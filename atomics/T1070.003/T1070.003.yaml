@@ -109,7 +109,7 @@ atomic_tests:
       sed -i 's/set +o history//g' ~/.bashrc
       . ~/.bashrc
       set -o history
-    name: sh
+    name: bash
 - name:  Use Space Before Command to Avoid Logging to History
   auto_generated_guid: 53b03a54-4529-4992-852d-a00b4b7215a6
   description: |
@@ -144,6 +144,18 @@ atomic_tests:
     cleanup_command: |
       [ "$(uname)" = 'FreeBSD' ] && rmuser -y testuser1 || userdel -f testuser1
     name: sh
+    
+- name: Clear Docker Container Logs
+  auto_generated_guid: 553b39f9-1e8c-47b1-abf5-8daf7b0391e9
+  description: |
+    Clears Docker container logs using the Docker CLI and the truncate command, removing all log entries.
+  supported_platforms:
+  - linux
+  executor:
+    name: bash
+    command: |
+      docker container prune -f && sudo truncate -s 0 /var/lib/docker/containers/*/*-json.log
+    elevation_required: true
 - name:  Prevent Powershell History Logging
   auto_generated_guid: 2f898b81-3e97-4abb-bc3f-a95138988370
   description: |
@@ -181,3 +193,16 @@ atomic_tests:
     cleanup_command: |
       Set-PSReadLineOption -AddToHistoryHandler $null
     name: powershell
+- name: Clear PowerShell Session History
+  auto_generated_guid: 22c779cd-9445-4d3e-a136-f75adbf0315f
+  description: |
+    This technique involves using the Clear-History cmdlet in PowerShell to remove all records of previously executed commands.
+    This action is often performed by attackers to eliminate traces of their activities, making incident detection and forensic 
+    investigation more challenging. By clearing the session history, adversaries aim to obfuscate their operational footprint.
+  supported_platforms:
+    - windows
+  executor:
+    command: |
+      Clear-History
+    name: powershell
+    elevation_required: false

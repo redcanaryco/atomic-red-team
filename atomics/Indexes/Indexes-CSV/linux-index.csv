@@ -44,9 +44,10 @@ defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,3,Cle
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,4,Clear Bash history (ln dev/null),23d348f3-cc5c-4ba9-bd0a-ae09069f0914,sh
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,5,Clear Bash history (truncate),47966a1d-df4f-4078-af65-db6d9aa20739,sh
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,6,Clear history of a bunch of shells,7e6721df-5f08-4370-9255-f06d8a77af4c,sh
-defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,7,Clear and Disable Bash History Logging,784e4011-bd1a-4ecd-a63a-8feb278512e6,sh
+defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,7,Clear and Disable Bash History Logging,784e4011-bd1a-4ecd-a63a-8feb278512e6,bash
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,8,Use Space Before Command to Avoid Logging to History,53b03a54-4529-4992-852d-a00b4b7215a6,sh
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,9,Disable Bash History Logging with SSH -T,5f8abd62-f615-43c5-b6be-f780f25790a1,sh
+defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,10,Clear Docker Container Logs,553b39f9-1e8c-47b1-abf5-8daf7b0391e9,bash
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,3,Base64 decoding with Python,356dc0e8-684f-4428-bb94-9313998ad608,sh
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,4,Base64 decoding with Perl,6604d964-b9f6-4d4b-8ce8-499829a14d0a,sh
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,5,Base64 decoding with shell utilities,b4f6a567-a27a-41e5-b8ef-ac4b4008bb7e,sh
@@ -63,6 +64,7 @@ defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,1,Set a file's ac
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,2,Set a file's modification timestamp,20ef1523-8758-4898-b5a2-d026cc3d2c52,sh
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,3,Set a file's creation timestamp,8164a4a6-f99c-4661-ac4f-80f5e4e78d2b,sh
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,4,Modify file timestamps using reference file,631ea661-d661-44b0-abdb-7a7f3fc08e50,sh
+defense-evasion,T1497.003,Time Based Evasion,1,Delay execution with ping,8b87dd03-8204-478c-bac3-3959f6528de3,sh
 defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,7,Stop/Start UFW firewall,fe135572-edcd-49a2-afe6-1d39521c5a9a,sh
 defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,8,Stop/Start Packet Filter,0ca82ed1-0a94-4774-9a9a-a2c83a8022b7,sh
 defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,9,Stop/Start UFW firewall systemctl,9fd99609-1854-4f3c-b47b-97d9a5972bd1,sh
@@ -76,6 +78,8 @@ defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,16,
 defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,17,Tail the UFW firewall log file,419cca0c-fa52-4572-b0d7-bc7c6f388a27,sh
 defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,18,Disable iptables,7784c64e-ed0b-4b65-bf63-c86db229fd56,sh
 defense-evasion,T1562.004,Impair Defenses: Disable or Modify System Firewall,19,Modify/delete iptables firewall rules,899a7fb5-d197-4951-8614-f19ac4a73ad4,sh
+defense-evasion,T1562.012,Impair Defenses: Disable or Modify Linux Audit System,1,Delete all auditd rules using auditctl,33a29ab1-cabb-407f-9448-269041bf2856,sh
+defense-evasion,T1562.012,Impair Defenses: Disable or Modify Linux Audit System,2,Disable auditd using auditctl,7906f0a6-b527-46ee-9026-6e81a9184e08,sh
 defense-evasion,T1027.001,Obfuscated Files or Information: Binary Padding,1,Pad Binary to Change Hash - Linux/macOS dd,ffe2346c-abd5-4b45-a713-bf5f1ebd573a,sh
 defense-evasion,T1027.001,Obfuscated Files or Information: Binary Padding,2,Pad Binary to Change Hash using truncate command - Linux/macOS,e22a9e89-69c7-410f-a473-e6c212cd2292,sh
 defense-evasion,T1574.006,Hijack Execution Flow: LD_PRELOAD,1,Shared Library Injection via /etc/ld.so.preload,39cb0e67-dd0d-4b74-a74b-c072db7ae991,bash
@@ -95,16 +99,18 @@ defense-evasion,T1562.006,Impair Defenses: Indicator Blocking,2,Auditing Configu
 defense-evasion,T1562.006,Impair Defenses: Indicator Blocking,3,Logging Configuration Changes on Linux Host,7d40bc58-94c7-4fbb-88d9-ebce9fcdb60c,bash
 defense-evasion,T1562.006,Impair Defenses: Indicator Blocking,4,Logging Configuration Changes on FreeBSD Host,6b8ca3ab-5980-4321-80c3-bcd77c8daed8,sh
 defense-evasion,T1036.004,Masquerading: Masquerade Task or Service,3,linux rename /proc/pid/comm using prctl,f0e3aaea-5cd9-4db6-a077-631dd19b27a8,sh
-defense-evasion,T1562.003,Impair Defenses: HISTCONTROL,1,Disable history collection,4eafdb45-0f79-4d66-aa86-a3e2c08791f5,sh
-defense-evasion,T1562.003,Impair Defenses: HISTCONTROL,2,Disable history collection (freebsd),cada55b4-8251-4c60-819e-8ec1b33c9306,sh
-defense-evasion,T1562.003,Impair Defenses: HISTCONTROL,3,Mac HISTCONTROL,468566d5-83e5-40c1-b338-511e1659628d,manual
-defense-evasion,T1562.003,Impair Defenses: HISTCONTROL,4,Clear bash history,878794f7-c511-4199-a950-8c28b3ed8e5b,bash
-defense-evasion,T1562.003,Impair Defenses: HISTCONTROL,5,Setting the HISTCONTROL environment variable,10ab786a-028e-4465-96f6-9e83ca6c5f24,bash
-defense-evasion,T1562.003,Impair Defenses: HISTCONTROL,6,Setting the HISTFILESIZE environment variable,5cafd6c1-2f43-46eb-ac47-a5301ba0a618,bash
-defense-evasion,T1562.003,Impair Defenses: HISTCONTROL,7,Setting the HISTSIZE environment variable,386d3850-2ce7-4508-b56b-c0558922c814,sh
-defense-evasion,T1562.003,Impair Defenses: HISTCONTROL,8,Setting the HISTFILE environment variable,b3dacb6c-a9e3-44ec-bf87-38db60c5cad1,bash
-defense-evasion,T1562.003,Impair Defenses: HISTCONTROL,9,Setting the HISTFILE environment variable (freebsd),f7308845-6da8-468e-99f2-4271f2f5bb67,sh
-defense-evasion,T1562.003,Impair Defenses: HISTCONTROL,10,Setting the HISTIGNORE environment variable,f12acddb-7502-4ce6-a146-5b62c59592f1,bash
+defense-evasion,T1036.004,Masquerading: Masquerade Task or Service,4,Hiding a malicious process with bind mounts,ad4b73c2-d6e2-4d8b-9868-4c6f55906e01,sh
+defense-evasion,T1562.010,Impair Defenses: Downgrade Attack,1,ESXi - Change VIB acceptance level to CommunitySupported via PowerCLI,062f92c9-28b1-4391-a5f8-9d8ca6852091,powershell
+defense-evasion,T1562.003,Impair Defenses: Impair Command History Logging,1,Disable history collection,4eafdb45-0f79-4d66-aa86-a3e2c08791f5,sh
+defense-evasion,T1562.003,Impair Defenses: Impair Command History Logging,2,Disable history collection (freebsd),cada55b4-8251-4c60-819e-8ec1b33c9306,sh
+defense-evasion,T1562.003,Impair Defenses: Impair Command History Logging,3,Mac HISTCONTROL,468566d5-83e5-40c1-b338-511e1659628d,manual
+defense-evasion,T1562.003,Impair Defenses: Impair Command History Logging,4,Clear bash history,878794f7-c511-4199-a950-8c28b3ed8e5b,bash
+defense-evasion,T1562.003,Impair Defenses: Impair Command History Logging,5,Setting the HISTCONTROL environment variable,10ab786a-028e-4465-96f6-9e83ca6c5f24,bash
+defense-evasion,T1562.003,Impair Defenses: Impair Command History Logging,6,Setting the HISTFILESIZE environment variable,5cafd6c1-2f43-46eb-ac47-a5301ba0a618,bash
+defense-evasion,T1562.003,Impair Defenses: Impair Command History Logging,7,Setting the HISTSIZE environment variable,386d3850-2ce7-4508-b56b-c0558922c814,sh
+defense-evasion,T1562.003,Impair Defenses: Impair Command History Logging,8,Setting the HISTFILE environment variable,b3dacb6c-a9e3-44ec-bf87-38db60c5cad1,bash
+defense-evasion,T1562.003,Impair Defenses: Impair Command History Logging,9,Setting the HISTFILE environment variable (freebsd),f7308845-6da8-468e-99f2-4271f2f5bb67,sh
+defense-evasion,T1562.003,Impair Defenses: Impair Command History Logging,10,Setting the HISTIGNORE environment variable,f12acddb-7502-4ce6-a146-5b62c59592f1,bash
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,1,Disable syslog,4ce786f8-e601-44b5-bfae-9ebb15a7d1c8,sh
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,2,Disable syslog (freebsd),db9de996-441e-4ae0-947b-61b6871e2fdf,sh
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,3,Disable Cb Response,ae8943f7-0f8d-44de-962d-fbc2e2f03eb8,sh
@@ -116,6 +122,7 @@ defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,41,Reboot Lin
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,42,Clear Pagging Cache,f790927b-ea85-4a16-b7b2-7eb44176a510,sh
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,43,Disable Memory Swap,e74e4c63-6fde-4ad2-9ee8-21c3a1733114,sh
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,47,Tamper with Defender ATP on Linux/MacOS,40074085-dbc8-492b-90a3-11bcfc52fda8,sh
+defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,50,ESXi - Disable Account Lockout Policy via PowerCLI,091a6290-cd29-41cb-81ea-b12f133c66cb,powershell
 defense-evasion,T1027,Obfuscated Files or Information,1,Decode base64 Data into Script,f45df6be-2e1e-4136-a384-8f18ab3826fb,sh
 defense-evasion,T1036.003,Masquerading: Rename System Utilities,2,Masquerading as FreeBSD or Linux crond process.,a315bfff-7a98-403b-b442-2ea1b255e556,sh
 defense-evasion,T1553.004,Subvert Trust Controls: Install Root Certificate,1,Install root CA on CentOS/RHEL,9c096ec4-fd42-419d-a762-d64cc950627e,sh
@@ -184,19 +191,24 @@ persistence,T1078.003,Valid Accounts: Local Accounts,11,Login as nobody (Linux),
 persistence,T1078.003,Valid Accounts: Local Accounts,12,Login as nobody (freebsd),16f6374f-7600-459a-9b16-6a88fd96d310,sh
 command-and-control,T1132.001,Data Encoding: Standard Encoding,1,Base64 Encoded data.,1164f70f-9a88-4dff-b9ff-dc70e7bf0c25,sh
 command-and-control,T1132.001,Data Encoding: Standard Encoding,2,Base64 Encoded data (freebsd),2d97c626-7652-449e-a986-b02d9051c298,sh
+command-and-control,T1572,Protocol Tunneling,5,Microsoft Dev tunnels (Linux/macOS),9f94a112-1ce2-464d-a63b-83c1f465f801,bash
+command-and-control,T1572,Protocol Tunneling,6,VSCode tunnels (Linux/macOS),b877943f-0377-44f4-8477-f79db7f07c4d,sh
+command-and-control,T1572,Protocol Tunneling,7,Cloudflare tunnels (Linux/macOS),228c336a-2f79-4043-8aef-bfa453a611d5,sh
 command-and-control,T1090.003,Proxy: Multi-hop Proxy,3,Tor Proxy Usage - Debian/Ubuntu/FreeBSD,5ff9d047-6e9c-4357-b39b-5cf89d9b59c7,sh
 command-and-control,T1571,Non-Standard Port,2,Testing usage of uncommonly used port,5db21e1d-dd9c-4a50-b885-b1e748912767,sh
+command-and-control,T1095,Non-Application Layer Protocol,4,Linux ICMP Reverse Shell using icmp-cnc,8e139e1f-1f3a-4be7-901d-afae9738c064,manual
 command-and-control,T1071.001,Application Layer Protocol: Web Protocols,3,Malicious User Agents - Nix,2d7c471a-e887-4b78-b0dc-b0df1f2e0658,sh
 command-and-control,T1105,Ingress Tool Transfer,1,rsync remote file copy (push),0fc6e977-cb12-44f6-b263-2824ba917409,sh
 command-and-control,T1105,Ingress Tool Transfer,2,rsync remote file copy (pull),3180f7d5-52c0-4493-9ea0-e3431a84773f,sh
 command-and-control,T1105,Ingress Tool Transfer,3,scp remote file copy (push),83a49600-222b-4866-80a0-37736ad29344,sh
 command-and-control,T1105,Ingress Tool Transfer,4,scp remote file copy (pull),b9d22b9a-9778-4426-abf0-568ea64e9c33,sh
-command-and-control,T1105,Ingress Tool Transfer,5,sftp remote file copy (push),f564c297-7978-4aa9-b37a-d90477feea4e,sh
+command-and-control,T1105,Ingress Tool Transfer,5,sftp remote file copy (push),f564c297-7978-4aa9-b37a-d90477feea4e,bash
 command-and-control,T1105,Ingress Tool Transfer,6,sftp remote file copy (pull),0139dba1-f391-405e-a4f5-f3989f2c88ef,sh
 command-and-control,T1105,Ingress Tool Transfer,14,whois file download,c99a829f-0bb8-4187-b2c6-d47d1df74cab,sh
 command-and-control,T1105,Ingress Tool Transfer,27,Linux Download File and Run,bdc373c5-e9cf-4563-8a7b-a9ba720a90f3,sh
+command-and-control,T1001.002,Data Obfuscation via Steganography,3,Execute Embedded Script in Image via Steganography,4ff61684-ad91-405c-9fbc-048354ff1d07,sh
 command-and-control,T1090.001,Proxy: Internal Proxy,1,Connection Proxy,0ac21132-4485-4212-a681-349e8a6637cd,sh
-collection,T1560.001,Archive Collected Data: Archive via Utility,5,Data Compressed - nix - zip,c51cec55-28dd-4ad2-9461-1eacbc82c3a0,sh
+collection,T1560.001,Archive Collected Data: Archive via Utility,5,Data Compressed - nix - zip,c51cec55-28dd-4ad2-9461-1eacbc82c3a0,bash
 collection,T1560.001,Archive Collected Data: Archive via Utility,6,Data Compressed - nix - gzip Single File,cde3c2af-3485-49eb-9c1f-0ed60e9cc0af,sh
 collection,T1560.001,Archive Collected Data: Archive via Utility,7,Data Compressed - nix - tar Folder or File,7af2b51e-ad1c-498c-aca8-d3290c19535a,sh
 collection,T1560.001,Archive Collected Data: Archive via Utility,8,Data Encrypted with zip and gpg symmetric,0286eb44-e7ce-41a0-b109-3da516e05a5f,sh
@@ -302,9 +314,12 @@ credential-access,T1552.004,Unsecured Credentials: Private Keys,7,Copy the users
 credential-access,T1552.004,Unsecured Credentials: Private Keys,8,Copy the users GnuPG directory with rsync (freebsd),b05ac39b-515f-48e9-88e9-2f141b5bcad0,sh
 credential-access,T1552.003,Unsecured Credentials: Bash History,1,Search Through Bash History,3cfde62b-7c33-4b26-a61e-755d6131c8ce,sh
 credential-access,T1552.003,Unsecured Credentials: Bash History,2,Search Through sh History,d87d3b94-05b4-40f2-a80f-99864ffa6803,sh
-credential-access,T1552.001,Unsecured Credentials: Credentials In Files,1,Find AWS credentials,2b93758e-a8d7-4e3b-bc7b-d3aa8d7ecb17,sh
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,1,Find AWS credentials,37807632-d3da-442e-8c2e-00f44928ff8f,sh
 credential-access,T1552.001,Unsecured Credentials: Credentials In Files,3,Extract passwords with grep,bd4cf0d1-7646-474e-8610-78ccf5a097c4,sh
 credential-access,T1552.001,Unsecured Credentials: Credentials In Files,6,Find and Access Github Credentials,da4f751a-020b-40d7-b9ff-d433b7799803,bash
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,15,Find Azure credentials,a8f6148d-478a-4f43-bc62-5efee9f931a4,sh
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,16,Find GCP credentials,aa12eb29-2dbb-414e-8b20-33d34af93543,sh
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,17,Find OCI credentials,9d9c22c9-fa97-4008-a204-478cf68c40af,sh
 credential-access,T1110.004,Brute Force: Credential Stuffing,1,SSH Credential Stuffing From Linux,4f08197a-2a8a-472d-9589-cd2895ef22ad,bash
 credential-access,T1110.004,Brute Force: Credential Stuffing,3,SSH Credential Stuffing From FreeBSD,a790d50e-7ebf-48de-8daa-d9367e0911d4,sh
 credential-access,T1003.008,"OS Credential Dumping: /etc/passwd, /etc/master.passwd and /etc/shadow",1,Access /etc/shadow (Local),3723ab77-c546-403c-8fb4-bb577033b235,bash
@@ -313,7 +328,9 @@ credential-access,T1003.008,"OS Credential Dumping: /etc/passwd, /etc/master.pas
 credential-access,T1003.008,"OS Credential Dumping: /etc/passwd, /etc/master.passwd and /etc/shadow",4,"Access /etc/{shadow,passwd,master.passwd} with a standard bin that's not cat",df1a55ae-019d-4120-bc35-94f4bc5c4b0a,sh
 credential-access,T1003.008,"OS Credential Dumping: /etc/passwd, /etc/master.passwd and /etc/shadow",5,"Access /etc/{shadow,passwd,master.passwd} with shell builtins",f5aa6543-6cb2-4fae-b9c2-b96e14721713,sh
 discovery,T1033,System Owner/User Discovery,2,System Owner/User Discovery,2a9b677d-a230-44f4-ad86-782df1ef108c,sh
+discovery,T1016.001,System Network Configuration Discovery: Internet Connection Discovery,2,"Check internet connection using ping freebsd, linux or macos",be8f4019-d8b6-434c-a814-53123cdcc11e,bash
 discovery,T1087.002,Account Discovery: Domain Account,23,Active Directory Domain Search,096b6d2a-b63f-4100-8fa0-525da4cd25ca,sh
+discovery,T1087.002,Account Discovery: Domain Account,24,Account Enumeration with LDAPDomainDump,a54d497e-8dbe-4558-9895-44944baa395f,sh
 discovery,T1087.001,Account Discovery: Local Account,1,Enumerate all accounts (Local),f8aab3dd-5990-4bf8-b8ab-2226c951696f,sh
 discovery,T1087.001,Account Discovery: Local Account,2,View sudoers access,fed9be70-0186-4bde-9f8a-20945f9370c2,sh
 discovery,T1087.001,Account Discovery: Local Account,3,View accounts with UID 0,c955a599-3653-4fe5-b631-f11c00eb0397,sh
@@ -342,6 +359,7 @@ discovery,T1082,System Information Discovery,8,Hostname Discovery,486e88ea-4f56-
 discovery,T1082,System Information Discovery,12,"Environment variables discovery on freebsd, macos and linux",fcbdd43f-f4ad-42d5-98f3-0218097e2720,sh
 discovery,T1082,System Information Discovery,25,Linux List Kernel Modules,034fe21c-3186-49dd-8d5d-128b35f181c7,sh
 discovery,T1082,System Information Discovery,26,FreeBSD List Kernel Modules,4947897f-643a-4b75-b3f5-bed6885749f6,sh
+discovery,T1497.003,Time Based Evasion,1,Delay execution with ping,8b87dd03-8204-478c-bac3-3959f6528de3,sh
 discovery,T1217,Browser Bookmark Discovery,1,List Mozilla Firefox Bookmark Database Files on FreeBSD/Linux,3a41f169-a5ab-407f-9269-abafdb5da6c2,sh
 discovery,T1217,Browser Bookmark Discovery,4,List Google Chromium Bookmark JSON Files on FreeBSD,88ca025b-3040-44eb-9168-bd8af22b82fa,sh
 discovery,T1016,System Network Configuration Discovery,3,System Network Configuration Discovery,c141bbdb-7fca-4254-9fd6-f47e79447e17,sh
@@ -359,6 +377,7 @@ discovery,T1614.001,System Location Discovery: System Language Discovery,3,Disco
 discovery,T1614.001,System Location Discovery: System Language Discovery,4,Discover System Language with localectl,07ce871a-b3c3-44a3-97fa-a20118fdc7c9,sh
 discovery,T1614.001,System Location Discovery: System Language Discovery,5,Discover System Language by locale file,5d7057c9-2c8a-4026-91dd-13b5584daa69,sh
 discovery,T1614.001,System Location Discovery: System Language Discovery,6,Discover System Language by Environment Variable Query,cb8f7cdc-36c4-4ed0-befc-7ad7d24dfd7a,sh
+discovery,T1614,System Location Discovery,2,"Get geolocation info through IP-Lookup services using curl freebsd, linux or macos",552b4db3-8850-412c-abce-ab5cc8a86604,bash
 discovery,T1518.001,Software Discovery: Security Software Discovery,4,Security Software Discovery - ps (Linux),23b91cd2-c99c-4002-9e41-317c63e024a2,sh
 discovery,T1518.001,Software Discovery: Security Software Discovery,5,Security Software Discovery - pgrep (FreeBSD),fa96c21c-5fd6-4428-aa28-51a2fbecdbdc,sh
 discovery,T1018,Remote System Discovery,6,Remote System Discovery - arp nix,acb6b1ff-e2ad-4d64-806c-6c35fe73b951,sh
@@ -369,6 +388,8 @@ discovery,T1018,Remote System Discovery,14,Remote System Discovery - netstat,d27
 discovery,T1018,Remote System Discovery,15,Remote System Discovery - ip tcp_metrics,6c2da894-0b57-43cb-87af-46ea3b501388,sh
 discovery,T1046,Network Service Discovery,1,Port Scan,68e907da-2539-48f6-9fc9-257a78c05540,bash
 discovery,T1046,Network Service Discovery,2,Port Scan Nmap,515942b0-a09f-4163-a7bb-22fefb6f185f,sh
+discovery,T1046,Network Service Discovery,12,Port Scan using nmap (Port range),0d5a2b03-3a26-45e4-96ae-89485b4d1f97,sh
+discovery,T1124,System Time Discovery,3,System Time Discovery in FreeBSD/macOS,f449c933-0891-407f-821e-7916a21a1a6f,sh
 execution,T1053.003,Scheduled Task/Job: Cron,1,Cron - Replace crontab with referenced file,435057fb-74b1-410e-9403-d81baf194f75,sh
 execution,T1053.003,Scheduled Task/Job: Cron,2,Cron - Add script to all cron subfolders,b7d42afa-9086-4c8a-b7b0-8ea3faa6ebb0,bash
 execution,T1053.003,Scheduled Task/Job: Cron,3,Cron - Add script to /etc/cron.d folder,078e69eb-d9fb-450e-b9d0-2e118217c846,sh
@@ -389,11 +410,19 @@ execution,T1059.004,Command and Scripting Interpreter: Bash,10,Change login shel
 execution,T1059.004,Command and Scripting Interpreter: Bash,11,Environment variable scripts,bdaebd56-368b-4970-a523-f905ff4a8a51,sh
 execution,T1059.004,Command and Scripting Interpreter: Bash,12,Detecting pipe-to-shell,fca246a8-a585-4f28-a2df-6495973976a1,sh
 execution,T1059.004,Command and Scripting Interpreter: Bash,13,Current kernel information enumeration,3a53734a-9e26-4f4b-ad15-059e767f5f14,sh
+execution,T1059.004,Command and Scripting Interpreter: Bash,14,Shell Creation using awk command,ee72b37d-b8f5-46a5-a9e7-0ff50035ffd5,sh
+execution,T1059.004,Command and Scripting Interpreter: Bash,15,Creating shell using cpan command,bcd4c2bc-490b-4f91-bd31-3709fe75bbdf,sh
+execution,T1059.004,Command and Scripting Interpreter: Bash,16,Shell Creation using busybox command,ab4d04af-68dc-4fee-9c16-6545265b3276,sh
+execution,T1059.004,Command and Scripting Interpreter: Bash,17,emacs spawning an interactive system shell,e0742e38-6efe-4dd4-ba5c-2078095b6156,sh
 execution,T1059.006,Command and Scripting Interpreter: Python,1,Execute shell script via python's command mode arguement,3a95cdb2-c6ea-4761-b24e-02b71889b8bb,sh
 execution,T1059.006,Command and Scripting Interpreter: Python,2,Execute Python via scripts,6c4d1dcb-33c7-4c36-a8df-c6cfd0408be8,sh
 execution,T1059.006,Command and Scripting Interpreter: Python,3,Execute Python via Python executables,0b44d79b-570a-4b27-a31f-3bf2156e5eaa,sh
 execution,T1059.006,Command and Scripting Interpreter: Python,4,Python pty module and spawn function used to spawn sh or bash,161d694c-b543-4434-85c3-c3a433e33792,sh
 execution,T1053.002,Scheduled Task/Job: At,2,At - Schedule a job,7266d898-ac82-4ec0-97c7-436075d0d08e,sh
+impact,T1489,Service Stop,4,Linux - Stop service using systemctl,42e3a5bd-1e45-427f-aa08-2a65fa29a820,sh
+impact,T1489,Service Stop,5,Linux - Stop service by killing process using killall,e5d95be6-02ee-4ff1-aebe-cf86013b6189,sh
+impact,T1489,Service Stop,6,Linux - Stop service by killing process using kill,332f4c76-7e96-41a6-8cc2-7361c49db8be,sh
+impact,T1489,Service Stop,7,Linux - Stop service by killing process using pkill,08b4718f-a8bf-4bb5-a552-294fc5178fea,sh
 impact,T1531,Account Access Removal,4,Change User Password via passwd,3c717bf3-2ecc-4d79-8ac8-0bfbf08fbce6,sh
 impact,T1486,Data Encrypted for Impact,1,Encrypt files using gpg (FreeBSD/Linux),7b8ce084-3922-4618-8d22-95f996173765,sh
 impact,T1486,Data Encrypted for Impact,2,Encrypt files using 7z (FreeBSD/Linux),53e6735a-4727-44cc-b35b-237682a151ad,sh
@@ -416,8 +445,12 @@ initial-access,T1078.003,Valid Accounts: Local Accounts,10,Reactivate a locked/e
 initial-access,T1078.003,Valid Accounts: Local Accounts,11,Login as nobody (Linux),3d2cd093-ee05-41bd-a802-59ee5c301b85,bash
 initial-access,T1078.003,Valid Accounts: Local Accounts,12,Login as nobody (freebsd),16f6374f-7600-459a-9b16-6a88fd96d310,sh
 exfiltration,T1048.002,Exfiltration Over Alternative Protocol - Exfiltration Over Asymmetric Encrypted Non-C2 Protocol,2,"Exfiltrate data HTTPS using curl freebsd,linux or macos",4a4f31e2-46ea-4c26-ad89-f09ad1d5fe01,bash
+exfiltration,T1048.002,Exfiltration Over Alternative Protocol - Exfiltration Over Asymmetric Encrypted Non-C2 Protocol,3,Exfiltrate data in a file over HTTPS using wget,7ccdfcfa-6707-46bc-b812-007ab6ff951c,sh
+exfiltration,T1048.002,Exfiltration Over Alternative Protocol - Exfiltration Over Asymmetric Encrypted Non-C2 Protocol,4,Exfiltrate data as text over HTTPS using wget,8bec51da-7a6d-4346-b941-51eca448c4b0,sh
 exfiltration,T1048,Exfiltration Over Alternative Protocol,1,Exfiltration Over Alternative Protocol - SSH,f6786cc8-beda-4915-a4d6-ac2f193bb988,sh
 exfiltration,T1048,Exfiltration Over Alternative Protocol,2,Exfiltration Over Alternative Protocol - SSH,7c3cb337-35ae-4d06-bf03-3032ed2ec268,sh
+exfiltration,T1048,Exfiltration Over Alternative Protocol,4,Exfiltrate Data using DNS Queries via dig,a27916da-05f2-4316-a3ee-feec67a437be,bash
+exfiltration,T1567.002,Exfiltration Over Web Service: Exfiltration to Cloud Storage,2,Exfiltrate data with rclone to cloud Storage - AWS S3,a4b74723-5cee-4300-91c3-5e34166909b4,powershell
 exfiltration,T1030,Data Transfer Size Limits,1,Data Transfer Size Limits,ab936c51-10f4-46ce-9144-e02137b2016a,sh
 exfiltration,T1048.003,Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,1,Exfiltration Over Alternative Protocol - HTTP,1d1abbd6-a3d3-4b2e-bef5-c59293f46eff,manual
 exfiltration,T1048.003,Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,3,Exfiltration Over Alternative Protocol - DNS,c403b5a4-b5fc-49f2-b181-d1c80d27db45,manual

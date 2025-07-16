@@ -13,7 +13,21 @@ atomic_tests:
   supported_platforms:
   - windows
   executor:
-    command: powershell -c "get-eventlog 'Security' | where {$_.Message -like '*SYSTEM*'} | export-csv $env:temp\T1654_events.txt"
+    command: powershell -c {get-eventlog 'Security' | where {$_.Message -like '*SYSTEM*'} | export-csv $env:temp\T1654_events.txt}
     cleanup_command: powershell -c "remove-item $env:temp\T1654_events.txt -ErrorAction Ignore"
     name: powershell
     elevation_required: true
+- name: Enumerate Windows Security Log via WevtUtil
+  auto_generated_guid: fef0ace1-3550-4bf1-a075-9fea55a778dd
+  description: |- 
+    WevtUtil is a command line tool that can be utilised by adversaries to gather intelligence on a targeted Windows system's logging infrastructure. 
+  
+    By executing this command, malicious actors can enumerate all available event logs, including both default logs such as Application, Security, and System
+    as well as any custom logs created by administrators. 
+  
+    This information provides valuable insight into the system's logging mechanisms, potentially allowing attackers to identify gaps or weaknesses in the logging configuration
+  supported_platforms:
+  - windows
+  executor:
+    command: wevtutil enum-logs
+    name: command_prompt

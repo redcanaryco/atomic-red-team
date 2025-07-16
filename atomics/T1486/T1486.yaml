@@ -79,44 +79,40 @@ atomic_tests:
 - name: Encrypt files using ccrypt (FreeBSD/Linux)
   auto_generated_guid: 08cbf59f-85da-4369-a5f4-049cffd7709f
   description: |
-    Attempts to encrypt data on target systems as root to simulate an inturruption authentication to target system. If root permissions are not available then attempts to encrypt data within user's home directory.
+    Attempts to encrypt data on target systems as root to simulate an interruption authentication to target system. If root permissions are not available then attempts to encrypt data within user's home directory.
   supported_platforms:
   - linux
   input_arguments:
     cped_file_path:
-      description: path where you want your copied file to be
+      description: Path where you want your copied file to be
       type: path
       default: /tmp/passwd
     root_input_file_path:
-      description: path to the file that you want to be encrypted if you are root
-        user
+      description: Path the target file to be encrypted. File will be copied to /tmp/ before encrypting
       type: path
       default: /etc/passwd
-    user_input_file_path:
-      description: path to file that you want to be encrypted if you are normal user
-      type: path
-      default: ~/.bash_history
-    impact_command:
-      description: command to show impact of encryption
+    pwd_for_encrypted_file:
+      description: Password to use for encryption
       type: string
-      default: sudo su
+      default: passwd
   dependency_executor_name: sh
   dependencies:
   - description: |
-      Finds where ccencrypt and ccdecrypt is located and copies input file
+      Finds where ccencrypt and ccdecrypt are located
     prereq_command: |
       which_ccencrypt=`which ccencrypt`
       which_ccdecrypt=`which ccdecrypt`
-      if [ $USER == "root" ]; then cp #{root_input_file_path} #{cped_file_path}; else cp #{user_input_file_path} #{cped_file_path}; fi
     get_prereq_command: |
       (which pkg && pkg install -y ccript)||(which yum && yum -y install epel-release ccrypt)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y ccrypt)
   executor:
     name: sh
     elevation_required: false
     command: |
-      if [ $USER == "root" ]; then $which_ccencrypt #{root_input_file_path}; file #{root_input_file_path}.cpt; #{impact_command}; else $which_ccencrypt #{user_input_file_path}; file #{user_input_file_path}.cpt; #{impact_command}; fi
+      which_ccencrypt=`which ccencrypt`
+      cp #{root_input_file_path} #{cped_file_path};
+      $which_ccencrypt -T -K #{pwd_for_encrypted_file} #{cped_file_path}
     cleanup_command: |
-      if [ $USER == "root" ]; then mv #{cped_file_path} #{root_input_file_path}; else cp #{cped_file_path} #{user_input_file_path}; fi 
+      rm #{cped_file_path}.cpt
 
 - name: Encrypt files using openssl (FreeBSD/Linux)
   auto_generated_guid: 142752dc-ca71-443b-9359-cf6f497315f1
@@ -156,6 +152,7 @@ atomic_tests:
     name: sh
     elevation_required: false
     command: |
+      which_openssl=`which openssl`
       $which_openssl genrsa -out #{private_key_path} #{encryption_bit_size}
       $which_openssl rsa -in #{private_key_path} -pubout -out #{public_key_path}
       $which_openssl rsautl -encrypt -inkey #{public_key_path} -pubin -in #{input_file_path} -out #{encrypted_file_path}
@@ -261,18 +258,85 @@ atomic_tests:
       type: path
       default: '$env:temp\test.txt'
   dependencies:
-    - description: |
-        GPG must exist at (#{GPG_Exe_Location})
-      prereq_command: |
-        if (test-path '#{GPG_Exe_Location}'){exit 0} else {exit 1}
-      get_prereq_command: |
-        New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-        invoke-webrequest "https://files.gpg4win.org/gpg4win-4.1.0.exe" -outfile "PathToAtomicsFolder\..\ExternalPayloads\gpginstall.exe"
-        cmd /c "PathToAtomicsFolder\..\ExternalPayloads\gpginstall.exe" /S
+  - description: |
+      GPG must exist at (#{GPG_Exe_Location}). If -GetPrereqs fails, try to install GPG4WIN manually at 'https://www.gpg4win.org/download.html'. Once done, run -CheckPrereqs to confirm that it works.
+    prereq_command: |
+      if (test-path '#{GPG_Exe_Location}'){exit 0} else {exit 1}
+    get_prereq_command: |
+      Set-Content -Path "#{File_to_Encrypt_Location}" -Value "populating this file with some text"  # Create the test.txt file
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      invoke-webrequest "https://files.gpg4win.org/gpg4win-4.1.0.exe" -outfile "PathToAtomicsFolder\..\ExternalPayloads\gpginstall.exe"
+      cmd /c "PathToAtomicsFolder\..\ExternalPayloads\gpginstall.exe" /S
   executor:
     name: powershell
     elevation_required: false
     command: |
-      cmd /c '#{GPG_Exe_Location}' -c '#{File_to_Encrypt_Location}'
+      Set-Content -Path "#{File_to_Encrypt_Location}" -Value "populating this file with some text"  # Create the test.txt file again in case prereqs failed
+      cmd /c "`"C:\Program Files (x86)\GnuPG\bin\gpg.exe`" --passphrase 'SomeParaphraseBlah' --batch --yes -c `"#{File_to_Encrypt_Location}`""
     cleanup_command: |
-      remove-item '#{File_to_Encrypt_Location}.gpg' -force -erroraction silentlycontinue | out-null
+      Remove-Item -Path "#{File_to_Encrypt_Location}" -Force -ErrorAction SilentlyContinue
+      Remove-Item -Path "#{File_to_Encrypt_Location}.gpg" -Force -ErrorAction SilentlyContinue
+
+- name: Data Encrypt Using DiskCryptor
+  auto_generated_guid: 44b68e11-9da2-4d45-a0d9-893dabd60f30
+  description: |
+      DiskCryptor, an open source encryption utility, can be exploited by adversaries for encrypting all disk partitions, including system partitions. This tool was identified in a ransomware campaign, as reported on https://thedfirreport.com/2021/11/15/exchange-exploit-leads-to-domain-wide-ransomware/. The documentation for DiskCryptor can be found at https://github.com/DavidXanatos/DiskCryptor. During the installation process, running dcrypt.exe starts the encryption console. It's important to note that a system reboot is necessary as part of the installation.
+  supported_platforms:
+    - windows
+  input_arguments:
+      dcrypt_exe:
+        description: The dcrypt.exe executable from dcrypt_setup.exe
+        type: path
+        default: 'dcrypt.exe'
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      dcrypt_setup will be installed at specified location (#{dcrypt_exe})
+    prereq_command: |
+      if (Test-Path "${env:ProgramFiles}/dcrypt/#{dcrypt_exe}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Write-Host Downloading DiskCryptor installer
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://github.com/DavidXanatos/DiskCryptor/releases/download/1.1.846.118/dcrypt_setup_1.1.846.118.exe" -OutFile      "PathToAtomicsFolder\..\ExternalPayloads\dcrypt_setup_1.1.846.118.exe"
+      Write-Host Install DiskCryptor
+      Start-Process "PathToAtomicsFolder\..\ExternalPayloads\dcrypt_setup_1.1.846.118.exe" -Wait -ArgumentList "/s"
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      ""%PROGRAMFILES%\dcrypt"\#{dcrypt_exe}"
+
+- name: Akira Ransomware drop Files with .akira Extension and Ransomnote
+  auto_generated_guid: ab3f793f-2dcc-4da5-9c71-34988307263f
+  description: |
+    Dropping 100 files with random content and .akira File Extension and the Akira Ransomnote to c:\
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      1..100 | ForEach-Object { $out = new-object byte[] 1073741; (new-object Random).NextBytes($out); [IO.File]::WriteAllBytes("c:\test.$_.akira", $out) }
+      echo "Hi friends" >> $env:Userprofile\Desktop\akira_readme.txt
+      echo "" >> $env:Userprofile\Desktop\akira_readme.txt
+      echo "Whatever who you are and what your title is if you' re reading this it means the internal infrastructure of your company is fully or partially dead, all your backups - virtual, physical - everything that we managed to reach - are completely removed. Moreover, we have taken a great amount of your corporate data prior to encryption  Well, for now let's keep all the tears and resentment to ourselves and try to build a constructive dialogue. We're fully aware of what damage we caused by locking your internal sources. At the moment. you have to know: " >> $env:Userprofile\Desktop\akira_readme.txt
+      echo "1. Dealing with us you will save A LOT due to we are not interested in ruining your financially. We will study in depth your finance, bank income statements, your savings, investments etc. and present our reasonable demand to you. If you have an active cyber insurance, let us know and we will guide you how to properly use it. Also, dragging out the negotiation process will lead to failing of a deal" >> $env:Userprofile\Desktop\akira_readme.txt
+      echo "2. Paying us you save your TIME, MONEY, EFFORTS and be back on track within 24 hours approximately. Our decryptor works properly on any files or systems, so you will be able to check it by requesting a test decryption service from the beginning of our conversation. [f you decide to recover on your own, keep in mind that you can permanently lose access to some files or accidently corrupt them — in this case we won't be able to help.  " >> $env:Userprofile\Desktop\akira_readme.txt
+      echo "3. The security report or the exclusive first-hand information that you will receive upon reaching an agreement is of a great value, since NO full audit of your network will show you the vulnerabilities that we' ve managed to detect and used in order to get into. identify backup solutions and upload your data." >> $env:Userprofile\Desktop\akira_readme.txt
+      echo "4. As for your data, if we fail to agree, we will try to sell personal information/trade secrets/databases/source codes — generally speaking, everything that has a value on the darkmarket - to multiple threat actors at ones." >> $env:Userprofile\Desktop\akira_readme.txt
+      echo "Then all of this will be published in our blog -" >> $env:Userprofile\Desktop\akira_readme.txt
+      echo "" >> $env:Userprofile\Desktop\akira_readme.txt
+      echo "https://akira.onion" >> $env:Userprofile\Desktop\akira_readme.txt
+      echo "" >> $env:Userprofile\Desktop\akira_readme.txt
+      echo "5. We're more than negotiable and will definitely find the way to settle this quickly and reach an agreement which will satisfy both of us" >> $env:Userprofile\Desktop\akira_readme.txt
+      echo "" >> $env:Userprofile\Desktop\akira_readme.txt
+      echo "If you' re indeed interested in our assistance and the services we provide you can reach out to us following simple instructions:" >> $env:Userprofile\Desktop\akira_readme.txt
+      echo "" >> $env:Userprofile\Desktop\akira_readme.txt
+      echo "1. Install TOR Browser to get access to our chat room - https://www.torproject.org/download/." >> $env:Userprofile\Desktop\akira_readme.txt
+      echo "2. Paste this link - https://akira.onion" >> $env:Userprofile\Desktop\akira_readme.txt
+      echo "3. Use this code - - to log into our chat." >> $env:Userprofile\Desktop\akira_readme.txt
+      echo "" >> $env:Userprofile\Desktop\akira_readme.txt
+      echo "Keep in mind that the faster you will get in touch, the less damage we cause" >> $env:Userprofile\Desktop\akira_readme.txt
+    cleanup_command: |
+      del $env:Userprofile\Desktop\akira_readme.txt 
+      del c:\test.*.akira

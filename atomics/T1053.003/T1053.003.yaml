@@ -49,10 +49,10 @@ atomic_tests:
       echo "#{command}" > /etc/cron.monthly/#{cron_script_name}
       echo "#{command}" > /etc/cron.weekly/#{cron_script_name}
     cleanup_command: |
-      rm /etc/cron.daily/#{cron_script_name}
-      rm /etc/cron.hourly/#{cron_script_name}
-      rm /etc/cron.monthly/#{cron_script_name}
-      rm /etc/cron.weekly/#{cron_script_name}
+      rm /etc/cron.daily/#{cron_script_name} -f
+      rm /etc/cron.hourly/#{cron_script_name} -f
+      rm /etc/cron.monthly/#{cron_script_name} -f
+      rm /etc/cron.weekly/#{cron_script_name} -f
 - name: Cron - Add script to /etc/cron.d folder
   auto_generated_guid: 078e69eb-d9fb-450e-b9d0-2e118217c846
   description: |
@@ -74,7 +74,7 @@ atomic_tests:
     command: |
       echo "#{command}" > /etc/cron.d/#{cron_script_name}
     cleanup_command: |
-      rm /etc/cron.d/#{cron_script_name}
+      rm /etc/cron.d/#{cron_script_name} -f
 - name: Cron - Add script to /var/spool/cron/crontabs/ folder
   auto_generated_guid: 2d943c18-e74a-44bf-936f-25ade6cccab4
   description: |
@@ -96,4 +96,4 @@ atomic_tests:
     command: |
       echo "#{command}" >> /var/spool/cron/crontabs/#{cron_script_name}
     cleanup_command: |
-      rm /var/spool/cron/crontabs/#{cron_script_name}
+      rm /var/spool/cron/crontabs/#{cron_script_name} -f

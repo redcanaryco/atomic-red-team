@@ -1,3 +1,4 @@
+
 attack_technique: T1112
 display_name: Modify Registry
 atomic_tests:
@@ -48,6 +49,20 @@ atomic_tests:
     cleanup_command: |
       reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 0 /f >nul 2>&1
     name: command_prompt
+    elevation_required: true
+- name: Use Powershell to Modify registry to store logon credentials
+  auto_generated_guid: 68254a85-aa42-4312-a695-38b7276307f8
+  description: |
+    Sets registry key using Powershell that will tell windows to store plaintext passwords (making the system vulnerable to clear text / cleartext password dumping).
+    Open Registry Editor to view the modified entry in HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      Set-ItemProperty -Force -Path  'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest' -Name  'UseLogonCredential' -Value '1' -ErrorAction Ignore
+    cleanup_command: |
+      Set-ItemProperty -Force -Path  'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest' -Name  'UseLogonCredential' -Value '0' -ErrorAction Ignore
+    name: powershell
     elevation_required: true
 - name: Add domain to Trusted sites Zone
   auto_generated_guid: cf447677-5a4e-4937-a82c-e47d254afd57
@@ -507,7 +522,6 @@ atomic_tests:
       reg  add HKCU\Software\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging /v EnableScriptBlockLogging /t REG_DWORD /d 0 /f
       reg  add HKCU\Software\Policies\Microsoft\Windows\PowerShell\Transcription /v EnableTranscripting /t REG_DWORD /d 0 /f
       reg  add HKCU\Software\Policies\Microsoft\Windows\PowerShell /v EnableScripts /t REG_DWORD /d 0 /f
-      REM do a little cleanup immediately to avoid execution issues with later tests
       reg delete HKCU\Software\Policies\Microsoft\Windows\PowerShell /v EnableScripts /f >nul 2>&1
     cleanup_command: |
       reg delete HKCU\Software\Policies\Microsoft\Windows\PowerShell\ModuleLogging /v EnableModuleLogging /f >nul 2>&1
@@ -934,3 +948,438 @@ atomic_tests:
       Set-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\ProtocolDefaults' -Name 'https' -Value 3
     name: powershell
 
+- name: Activities To Disable Secondary Authentication Detected By Modified Registry Value.
+  auto_generated_guid: c26fb85a-fa50-4fab-a64a-c51f5dc538d5
+  description: |
+    Detect the disable secondary authentication activities that adversary attempt to bypass MFA and to get the unauthorized access to the system or sensitive data.
+    See the related article (https://admx.help/?Category=Windows_10_2016&Policy=Microsoft.Policies.SecondaryAuthenticationFactor::MSSecondaryAuthFactor_AllowSecondaryAuthenticationDevice).
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\SecondaryAuthenticationFactor" /v "AllowSecondaryAuthenticationDevice" /t REG_DWORD /d 0 /f
+    cleanup_command: |
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\SecondaryAuthenticationFactor" /v "AllowSecondaryAuthenticationDevice" /t REG_DWORD /d 1 /f
+    name: command_prompt
+    
+- name: Activities To Disable Microsoft [FIDO Aka Fast IDentity Online] Authentication Detected By Modified Registry Value.
+  auto_generated_guid: ffeddced-bb9f-49c6-97f0-3d07a509bf94
+  description: |
+    Detect the Microsoft FIDO authentication disable activities that adversary attempt to gains access to login credentials (e.g., passwords), they may be able to impersonate the user and access sensitive accounts or data and also increases the risk of falling victim to phishing attacks.
+    See the related article (https://admx.help/?Category=Windows_10_2016&Policy=Microsoft.Policies.FidoAuthentication::AllowFidoDeviceSignon).
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\FIDO" /v "AllowExternalDeviceSignon" /t REG_DWORD /d 0 /f
+    cleanup_command: |
+      reg add "HKLM\SOFTWARE\Policies\Microsoft\FIDO" /v "AllowExternalDeviceSignon" /t REG_DWORD /d 1 /f
+    name: command_prompt  
+
+- name: Scarab Ransomware Defense Evasion Activities
+  auto_generated_guid: ca8ba39c-3c5a-459f-8e15-280aec65a910
+  description: |
+    Scarab Ransomware defense evasion activities that can abuse the registry values to modify the settings of the Credential Security Support Provider to overcome potential RDP connection issues.
+    [Scarab Ransomware Article](https://www.welivesecurity.com/en/eset-research/scarabs-colon-izing-vulnerable-servers/)
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System\CredSSP\Parameters" /v AllowEncryptionOracle /t REG_DWORD /d 2 /f
+    cleanup_command: |
+       reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System\CredSSP\Parameters" /v AllowEncryptionOracle /t REG_DWORD /d 0 /f
+    name: command_prompt
+
+- name: Disable Remote Desktop Anti-Alias Setting Through Registry
+  auto_generated_guid: 61d35188-f113-4334-8245-8c6556d43909
+  description: |
+    A modification registry to disable RDP anti-alias settings. This technique was seen in DarkGate malware as part of its installation
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows NT\Terminal Services" /v "DisableRemoteDesktopAntiAlias" /t REG_DWORD /d 1 /f
+    cleanup_command: |
+       reg add "HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows NT\Terminal Services" /v "DisableRemoteDesktopAntiAlias" /t REG_DWORD /d 0 /f
+    name: command_prompt
+  
+- name: Disable Remote Desktop Security Settings Through Registry
+  auto_generated_guid: 4b81bcfa-fb0a-45e9-90c2-e3efe5160140
+  description: |
+    A modification registry to disable RDP security settings. This technique was seen in DarkGate malware as part of its installation
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows NT\Terminal Services" /v "DisableSecuritySettings" /t REG_DWORD /d 1 /f
+    cleanup_command: |
+       reg add "HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows NT\Terminal Services" /v "DisableSecuritySettings" /t REG_DWORD /d 0 /f
+    name: command_prompt
+
+- name: Disabling ShowUI Settings of Windows Error Reporting (WER)
+  auto_generated_guid: 09147b61-40f6-4b2a-b6fb-9e73a3437c96
+  description: |
+    A modification registry to disable ShowUI settings of Windows Error Report. This registry setting can influence the behavior of error reporting dialogs or prompt box. 
+    This technique was seen in DarkGate malware as part of its installation.
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKCU\Software\Microsoft\Windows\Windows Error Reporting" /v DontShowUI /t REG_DWORD /d 1 /f
+    cleanup_command: |
+       reg add "HKCU\Software\Microsoft\Windows\Windows Error Reporting" /v DontShowUI /t REG_DWORD /d 0 /f
+    name: command_prompt
+
+- name: Enable Proxy Settings
+  auto_generated_guid: eb0ba433-63e5-4a8c-a9f0-27c4192e1336
+  description: |
+    A modification registry to enable proxy settings. This technique was seen in DarkGate malware as part of its installation.
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyEnable /t REG_DWORD /d 1 /f
+    cleanup_command: |
+       reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyEnable /t REG_DWORD /d 0 /f
+    name: command_prompt
+
+- name: Set-Up Proxy Server
+  auto_generated_guid: d88a3d3b-d016-4939-a745-03638aafd21b
+  description: |
+    A modification registry to setup proxy server. This technique was seen in DarkGate malware as part of its installation.
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyServer /t REG_SZ /d "proxy.atomic-test.com:8080" /f
+    cleanup_command: |
+       reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyServer /f
+    name: command_prompt
+
+
+- name: RDP Authentication Level Override
+  auto_generated_guid: 7e7b62e9-5f83-477d-8935-48600f38a3c6
+  description: |
+    A modification registry to override RDP Authentication Level. This technique was seen in DarkGate malware as part of its installation.
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKCU\Software\Microsoft\Terminal Server Client" /v AuthenticationLevelOverride /t REG_DWORD /d 0 /f
+    cleanup_command: |
+       reg delete "HKCU\Software\Microsoft\Terminal Server Client" /v AuthenticationLevelOverride
+    name: command_prompt
+- name: Enable RDP via Registry (fDenyTSConnections)
+  auto_generated_guid: 16bdbe52-371c-4ccf-b708-79fba61f1db4
+  description: |
+    Modify the registry value of fDenyTSConnections to allow incoming RDP connections. 
+    This activity has been observed by multiple ransomware groups, including Hive ransomware. 
+    [Reference](https://www.rapid7.com/blog/post/2023/01/11/increasing-the-sting-of-hive-ransomware/)
+  supported_platforms:
+  - windows
+  input_arguments:
+    remove_rdp_access_during_cleanup:
+      description: Set to 1 if you want the cleanup to remove RDP access to machine
+      type: integer
+      default: "0"
+  executor:
+    command: reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
+    cleanup_command: 'if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1)'
+    name: command_prompt
+    elevation_required: true   
+- name: Disable Windows Prefetch Through Registry 
+  auto_generated_guid: 7979dd41-2045-48b2-a54e-b1bc2415c9da
+  description: |
+    Modify the registry of the machine to disable prefetch. Disabling prefetch will remove one artifact for evidence of application execution. Restart is required post modification
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v "EnablePrefetcher" /t REG_DWORD /d 0 /f
+    cleanup_command: |
+       reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v "EnablePrefetcher" /t REG_DWORD /d 3 /f
+    name: command_prompt
+    elevation_required: true
+- name: Setting Shadow key in Registry for RDP Shadowing
+  auto_generated_guid: ac494fe5-81a4-4897-af42-e774cf005ecb
+  description: |-
+    Microsoft Remote Desktop Protocol (RDP) supports a “shadowing” feature and RDP is available in all Windows Server Operating Systems and the business editions of end-user Windows versions.
+    In order to use the RDP shadowing feature, the Remote Desktop Services (TermService) service needs to be running (which it does by default), a rule needs to be enabled in the Windows Firewall and in case of stealth reasons, a setting needs to be configured to not prompt the user for permission when they are being shadowed.
+    In order to configure RDP shadowing session in a quiet mode.  The registry of a remote system can be updated using several protocols, depending on the accessible ports and configuration of the services listening on those ports. Our aim is to set the Shadow value in HKLM\Software\Policies\Microsoft\Windows NT\Terminal Services on the remote machine to 2, which allows us to both view and control the session without the user being informed.
+    [Reference](https://blog.bitsadmin.com/spying-on-users-using-rdp-shadowing)
+  supported_platforms:
+  - windows
+  input_arguments:
+    server_name:
+      description: The remote server that we need to shadow and have to do the registry modification.
+      type: string
+      default: localhost
+  executor:
+    command: |-
+       $s= New-CimSession -Computername #{server_name} -SessionOption (New-CimSessionOption -Protocol Dcom)
+       Get-CimInstance -Namespace ROOT\StandardCimv2 -ClassName MSFT_NetFirewallRule -Filter 'DisplayName="Remote Desktop - Shadow (TCP-In)"' -CimSession $s | Invoke-CimMethod -MethodName Enable
+       Invoke-CimMethod -ClassName StdRegProv -MethodName SetDWORDValue -Arguments @{hDefKey=[uint32]2147483650; sSubKeyName="Software\Policies\Microsoft\Windows NT\Terminal Services"; sValueName="shadow"; uValue=[uint32]2} -CimSession $s
+    cleanup_command: |
+       Invoke-CimMethod -ClassName StdRegProv -MethodName DeleteValue -Arguments @{hDefKey=[uint32]2147483650; sSubKeyName="Software\Policies\Microsoft\Windows NT\Terminal Services"; sValueName="Shadow"} -CimSession $s
+    name: powershell
+    elevation_required: true
+- name: Flush Shimcache 
+  auto_generated_guid: ecbd533e-b45d-4239-aeff-b857c6f6d68b
+  description: |-
+    The ShimCache is a component in Windows operating systems that stores information about recently executed applications. It is used by the operating system to speed up the launching process of applications. The ShimCache is also used by IR teams and Forensic teams. Forensic investigators can use the ShimCache to determine which programs have been executed on a system, even if they have been deleted or their logs have been cleared.Reference : https://blueteamops.medium.com/shimcache-flush-89daff28d15e
+  supported_platforms:
+  - windows 
+  executor:
+    command: |-
+       Rundll32.exe apphelp.dll,ShimFlushCache
+    name: command_prompt
+    elevation_required: true
+- name: Disable Windows Remote Desktop Protocol
+  auto_generated_guid: 5f8e36de-37ca-455e-b054-a2584f043c06
+  description: |
+    Modify the registry of the machine to disable remote desktop protocol.
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKLM\System\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 1 /f
+    cleanup_command: |
+       reg delete "HKLM\System\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f
+    name: command_prompt
+    elevation_required: true
+- name: Enforce Smart Card Authentication Through Registry
+  auto_generated_guid: 4c4bf587-fe7f-448f-ba8d-1ecec9db88be
+  description: |
+    Enforce Smart Card Authentication Through Registry
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v scforceoption /t REG_DWORD /d 1 /f
+    cleanup_command: |
+       reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v scforceoption /f
+    name: command_prompt
+    elevation_required: true
+- name: Requires the BitLocker PIN for Pre-boot authentication
+  auto_generated_guid: 26fc7375-a551-4336-90d7-3f2817564304
+  description: |
+    Requires the BitLocker PIN for Pre-boot authentication
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v UseAdvancedStartup /t REG_DWORD /d 1 /f
+    cleanup_command: |
+       reg delete "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v UseAdvancedStartup /f
+    name: command_prompt
+    elevation_required: true
+- name: Modify EnableBDEWithNoTPM Registry entry 
+  auto_generated_guid: bacb3e73-8161-43a9-8204-a69fe0e4b482
+  description: |
+    Allow BitLocker without a compatible TPM (requires a password)
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v EnableBDEWithNoTPM /t REG_DWORD /d 1 /f
+    cleanup_command: |
+       reg delete ""HKLM\SOFTWARE\Policies\Microsoft\FVE"" /v EnableBDEWithNoTPM /f
+    name: command_prompt
+    elevation_required: true
+- name: Modify UseTPM Registry entry 
+  auto_generated_guid: 7c8c7bd8-0a5c-4514-a6a3-0814c5a98cf0
+  description: |
+    Use Trusted Platform Module (TPM) for Bitlocker tool
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v UseTPM /t REG_DWORD /d 2 /f
+    cleanup_command: |
+       reg delete ""HKLM\SOFTWARE\Policies\Microsoft\FVE"" /v UseTPM /f
+    name: command_prompt
+    elevation_required: true
+- name: Modify UseTPMPIN Registry entry 
+  auto_generated_guid: 10b33fb0-c58b-44cd-8599-b6da5ad6384c
+  description: |
+    Allow startup PIN with TPM for Bitlocker tool
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v UseTPMPIN /t REG_DWORD /d 2 /f
+    cleanup_command: |
+       reg delete "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v UseTPMPIN /f
+    name: command_prompt
+    elevation_required: true
+- name: Modify UseTPMKey Registry entry 
+  auto_generated_guid: c8480c83-a932-446e-a919-06a1fd1e512a
+  description: |
+    Allow startup key with TPM for Bitlocker tool
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v UseTPMKey /t REG_DWORD /d 2 /f
+    cleanup_command: |
+       reg delete "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v UseTPMKey /f
+    name: command_prompt
+    elevation_required: true
+- name: Modify UseTPMKeyPIN Registry entry 
+  auto_generated_guid: 02d8b9f7-1a51-4011-8901-2d55cca667f9
+  description: |
+    Allow startup key and PIN with TPM for Bitlocker tool
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v UseTPMKeyPIN /t REG_DWORD /d 2 /f
+    cleanup_command: |
+       reg delete "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v UseTPMKeyPIN /f
+    name: command_prompt
+    elevation_required: true
+- name: Modify EnableNonTPM Registry entry 
+  auto_generated_guid: e672a340-a933-447c-954c-d68db38a09b1
+  description: |
+    Allow Bitlocker without TPM for Bitlocker tool
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v EnableNonTPM /t REG_DWORD /d 1 /f
+    cleanup_command: |
+       reg delete "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v EnableNonTPM /f
+    name: command_prompt
+    elevation_required: true
+- name: Modify UsePartialEncryptionKey Registry entry 
+  auto_generated_guid: b5169fd5-85c8-4b2c-a9b6-64cc0b9febef
+  description: |
+    Allow startup key with TPM for Bitlocker tool
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v UsePartialEncryptionKey /t REG_DWORD /d 2 /f
+    cleanup_command: |
+       reg delete "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v UsePartialEncryptionKey /f
+    name: command_prompt
+    elevation_required: true
+- name: Modify UsePIN Registry entry 
+  auto_generated_guid: 3ac0b30f-532f-43c6-8f01-fb657aaed7e4
+  description: |
+    Allow startup PIN with TPM for Bitlocker tool
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+       reg add "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v UsePIN /t REG_DWORD /d 2 /f
+    cleanup_command: |
+       reg delete "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v UsePIN /f
+    name: command_prompt
+    elevation_required: true
+
+- name: Abusing Windows TelemetryController Registry Key for Persistence
+  auto_generated_guid: 4469192c-2d2d-4a3a-9758-1f31d937a92b
+  description: |
+    The Windows Compatibility Telemetry system makes use of the CompatTelRunner.exe binary to run a variety of telemetry tasks. It relies on the registry for instructions on which commands to run. 
+    It will run any arbitrary command without restriction of location or type. Blog :https://www.trustedsec.com/blog/abusing-windows-telemetry-for-persistence
+  supported_platforms:
+  - windows
+  input_arguments:
+    new_key:
+      description: New Registry Key Added
+      type: string
+      default: NewKey  
+    new_executable:
+      description: Custom Executable to run
+      type: string
+      default: C:\Windows\System32\notepad.exe  
+  executor:
+    command: |
+      reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\TelemetryController\#{new_key}" /t REG_SZ /v Command /d #{new_executable} /f
+    cleanup_command: |
+      reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\TelemetryController\#{new_key}" /f
+    name: command_prompt
+    elevation_required: true
+
+- name: Modify RDP-Tcp Initial Program Registry Entry
+  auto_generated_guid: c691cee2-8d17-4395-b22f-00644c7f1c2d
+  description: |
+    If the fInheritInitialProgram value is set to 1, the exe indicated in the InitialProgram value is automatically started on RDP connection.
+    Once the test commands are run, notepad will execute automatically on new RDP connection
+  supported_platforms:
+  - windows
+  executor:
+    command: | 
+      reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v fInheritInitialProgram /t REG_DWORD /d 1 /f
+      reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v InitialProgram /t REG_SZ /d "C:\Windows\System32\notepad.exe" /f
+    cleanup_command: |
+      reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v InitialProgram /t REG_SZ /d "" /f
+    name: command_prompt
+    elevation_required: true
+
+- name: Abusing MyComputer Disk Cleanup Path for Persistence
+  auto_generated_guid: f2915249-4485-42e2-96b7-9bf34328d497
+  description: |
+    Replacing the registry settings with custom executable will end up with the replacement programs being executed at the time OS will decide to kick off the respective activity
+  supported_platforms:
+  - windows  
+  executor:
+    command: |
+      reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\cleanuppath" /t REG_EXPAND_SZ /d "%systemroot%\system32\notepad.exe" /f
+    cleanup_command: |
+      reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\cleanuppath" /t REG_EXPAND_SZ /d "%SystemRoot%\System32\cleanmgr.exe /D %c" /f
+    name: command_prompt
+    elevation_required: true
+- name: Abusing MyComputer Disk Fragmentation Path for Persistence
+  auto_generated_guid: 3235aafe-b49d-451b-a1f1-d979fa65ddaf
+  description: |
+    Replacing the registry settings with custom executable will end up with the replacement programs being executed at the time OS will decide to kick off the respective activity
+  supported_platforms:
+  - windows  
+  executor:
+    command: |
+      reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\DefragPath" /t REG_EXPAND_SZ /d "%systemroot%\system32\notepad.exe" /f
+    cleanup_command: |
+      reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\DefragPath" /t REG_EXPAND_SZ /d "%systemroot%\system32\dfrgui.exe" /f
+    name: command_prompt
+    elevation_required: true
+- name: Abusing MyComputer Disk Backup Path for Persistence
+  auto_generated_guid: 599f3b5c-0323-44ed-bb63-4551623bf675
+  description: |
+    Replacing the registry settings with custom executable will end up with the replacement programs being executed at the time OS will decide to kick off the respective activity
+  supported_platforms:
+  - windows  
+  executor:
+    command: |
+      reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\BackupPath" /t REG_EXPAND_SZ /d "%systemroot%\system32\notepad.exe" /f
+    cleanup_command: |
+      reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\BackupPath" /t REG_EXPAND_SZ /d "%SystemRoot%\system32\sdclt.exe" /f
+    name: command_prompt
+    elevation_required: true
+
+- name: Adding custom paths for application execution
+  auto_generated_guid: 573d15da-c34e-4c59-a7d2-18f20d92dfa3
+  description: |
+    As per Microsoft,the entries found under App Paths are used primarily to map an application’s executable file name to that file’s fully qualified path and to pre-pend information to the PATH environment variable on a per-application, per-process basis. 
+    The path can be modified to load a custom application of choice. 
+    Post the registry changes of this test, when someone tries to manually run msedge.exe via StartMenu/Run window , notepad will be launched.
+  supported_platforms:
+  - windows 
+  input_arguments:
+    app_name:
+      description: path of application to be modified
+      type: string
+      default: msedge.exe 
+    new_path:
+      description: New App Path Added
+      type: string
+      default: C:\Windows\System32\notepad.exe 
+  executor:
+    command: |
+      reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\#{app_name}" /t REG_SZ /d #{new_path} /f
+    cleanup_command: |
+      reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\#{app_name}" /v (Default) /f
+      reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\#{app_name}" /t REG_SZ /d "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" /f
+    name: command_prompt
+    elevation_required: true

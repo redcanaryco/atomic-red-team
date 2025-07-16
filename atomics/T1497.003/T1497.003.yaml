@@ -1,0 +1,24 @@
+attack_technique: T1497.003
+display_name: 'Time Based Evasion'
+atomic_tests:
+- name: Delay execution with ping
+  auto_generated_guid: 8b87dd03-8204-478c-bac3-3959f6528de3
+  description: |
+    Uses the ping command to introduce a delay before executing a malicious payload.
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
+    evil_command:
+      description: Command to run after the delay
+      type: string
+      default: whoami
+    ping_count:
+      description: Number of ping requests to send (higher counts increase the delay)
+      type: integer
+      default: 250
+  executor:
+    command: |
+        ping -c #{ping_count} 8.8.8.8 > /dev/null
+        #{evil_command}
+    name: sh
