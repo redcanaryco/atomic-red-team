@@ -837,9 +837,7 @@
   - Atomic Test #1: AWS - Create Snapshot from EBS Volume [iaas:aws]
   - Atomic Test #2: Azure - Create Snapshot from Managed Disk [iaas:azure]
   - Atomic Test #3: GCP - Create Snapshot from Persistent Disk [iaas:gcp]
-- [T1550.001 Use Alternate Authentication Material: Application Access Token](../../T1550.001/T1550.001.md)
-  - Atomic Test #1: Azure - Functions code upload - Functions code injection via Blob upload [iaas:azure]
-  - Atomic Test #2: Azure - Functions code upload - Functions code injection via File Share modification to retrieve the Functions identity access token [iaas:azure]
+- T1550.001 Application Access Token [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1078.004 Valid Accounts: Cloud Accounts](../../T1078.004/T1078.004.md)
   - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, iaas:gcp]
   - Atomic Test #2: Azure Persistence Automation Runbook Created or Modified [iaas:azure]
@@ -2223,9 +2221,7 @@
   - Atomic Test #2: Changing RDP Port to Non Standard Port via Powershell [windows]
   - Atomic Test #3: Changing RDP Port to Non Standard Port via Command_Prompt [windows]
   - Atomic Test #4: Disable NLA for RDP via Command Prompt [windows]
-- [T1550.001 Use Alternate Authentication Material: Application Access Token](../../T1550.001/T1550.001.md)
-  - Atomic Test #1: Azure - Functions code upload - Functions code injection via Blob upload [iaas:azure]
-  - Atomic Test #2: Azure - Functions code upload - Functions code injection via File Share modification to retrieve the Functions identity access token [iaas:azure]
+- T1550.001 Application Access Token [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 
 # credential-access
 - T1557 Adversary-in-the-Middle [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -2430,7 +2426,9 @@
   - Atomic Test #16: Find GCP credentials [macos, linux]
   - Atomic Test #17: Find OCI credentials [macos, linux]
 - T1606.001 Web Cookies [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1528 Steal Application Access Token [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1528 Steal Application Access Token](../../T1528/T1528.md)
+  - Atomic Test #1: Azure - Functions code upload - Functions code injection via Blob upload [iaas:azure]
+  - Atomic Test #2: Azure - Functions code upload - Functions code injection via File Share modification to retrieve the Functions identity access token [iaas:azure]
 - [T1552.006 Unsecured Credentials: Group Policy Preferences](../../T1552.006/T1552.006.md)
   - Atomic Test #1: GPP Passwords (findstr) [windows]
   - Atomic Test #2: GPP Passwords (Get-GPPPassword) [windows]
