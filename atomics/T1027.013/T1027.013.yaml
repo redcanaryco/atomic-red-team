@@ -1,0 +1,20 @@
+attack_technique: T1027.013
+display_name: 'Obfuscated Files or Information: Encrypted/Encoded File'
+atomic_tests:
+- name: T1027.013 Encrypted/Encoded File
+  description: Decode the eicar value, and write it to file, for AV/EDR to try to catch.
+  supported_platforms:
+    - windows
+    - macos
+    - linux
+  executor:
+    command: |-
+      $encodedString = "WDVPIVAlQEFQWzRcUFpYNTQoUF4pN0NDKTd9JEVJQ0FSLVNUQU5EQVJELUFOVElWSVJVUy1URVNULUZJTEUhJEgrSCo="
+      $bytes = [System.Convert]::FromBase64String($encodedString)
+      $decodedString = [System.Text.Encoding]::UTF8.GetString($bytes)
+
+      #write the decoded eicar string to file
+      $decodedString | Out-File T1027.013_decodedEicar.txt
+    cleanup_command: Just delete the resulting T1027.013_decodedEicar.txt file.
+    name: powershell
+    elevation_required: false
