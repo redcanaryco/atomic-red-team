@@ -642,8 +642,6 @@ defense-evasion,T1564.001,Hide Artifacts: Hidden Files and Directories,10,Create
 defense-evasion,T1578.001,Modify Cloud Compute Infrastructure: Create Snapshot,1,AWS - Create Snapshot from EBS Volume,a3c09662-85bb-4ea8-b15b-6dc8a844e236,sh
 defense-evasion,T1578.001,Modify Cloud Compute Infrastructure: Create Snapshot,2,Azure - Create Snapshot from Managed Disk,89e69b4b-3458-4ec6-b819-b3008debc1bc,sh
 defense-evasion,T1578.001,Modify Cloud Compute Infrastructure: Create Snapshot,3,GCP - Create Snapshot from Persistent Disk,e6fbc036-91e7-4ad3-b9cb-f7210f40dd5d,sh
-defense-evasion,T1550.001,Use Alternate Authentication Material: Application Access Token,1,Azure - Functions code upload - Functions code injection via Blob upload,9a5352e4-56e5-45c2-9b3f-41a46d3b3a43,powershell
-defense-evasion,T1550.001,Use Alternate Authentication Material: Application Access Token,2,Azure - Functions code upload - Functions code injection via File Share modification to retrieve the Functions identity access token,67aaf4cb-54ce-42e2-ab56-e0a9bcc089b1,powershell
 defense-evasion,T1078.004,Valid Accounts: Cloud Accounts,1,Creating GCP Service Account and Service Account Key,9fdd83fd-bd53-46e5-a716-9dec89c8ae8e,sh
 defense-evasion,T1078.004,Valid Accounts: Cloud Accounts,2,Azure Persistence Automation Runbook Created or Modified,348f4d14-4bd3-4f6b-bd8a-61237f78b3ac,powershell
 defense-evasion,T1078.004,Valid Accounts: Cloud Accounts,3,GCP - Create Custom IAM Role,3a159042-69e6-4398-9a69-3308a4841c85,sh
@@ -1568,9 +1566,8 @@ collection,T1115,Clipboard Data,2,Execute Commands from Clipboard using PowerShe
 collection,T1115,Clipboard Data,3,Execute commands from clipboard,1ac2247f-65f8-4051-b51f-b0ccdfaaa5ff,bash
 collection,T1115,Clipboard Data,4,Collect Clipboard Data via VBA,9c8d5a72-9c98-48d3-b9bf-da2cc43bdf52,powershell
 collection,T1115,Clipboard Data,5,Add or copy content to clipboard with xClip,ee363e53-b083-4230-aff3-f8d955f2d5bb,sh
-collection,T1530,Data from Cloud Storage Object,1,Azure - Scan for Anonymous Access to Azure Storage (Powershell),146af1f1-b74e-4aa7-9895-505eb559b4b0,powershell
-collection,T1530,Data from Cloud Storage Object,2,AWS - Scan for Anonymous Access to S3,979356b9-b588-4e49-bba4-c35517c484f5,sh
-collection,T1530,Data from Cloud Storage Object,3,Azure - Dump Azure Storage Account Objects via Azure CLI,67374845-b4c8-4204-adcc-9b217b65d4f1,powershell
+collection,T1530,Data from Cloud Storage Object,1,AWS - Scan for Anonymous Access to S3,979356b9-b588-4e49-bba4-c35517c484f5,sh
+collection,T1530,Data from Cloud Storage Object,2,Azure - Dump Azure Storage Account Objects via Azure CLI,67374845-b4c8-4204-adcc-9b217b65d4f1,powershell
 collection,T1005,Data from Local System,1,Search files of interest and save them to a single zip file (Windows),d3d9af44-b8ad-4375-8b0a-4bff4b7e419c,powershell
 collection,T1005,Data from Local System,2,Find and dump sqlite databases (Linux),00cbb875-7ae4-4cf1-b638-e543fd825300,bash
 collection,T1005,Data from Local System,3,Copy Apple Notes database files using AppleScript,cfb6d400-a269-4c06-a347-6d88d584d5f7,sh
@@ -1617,8 +1614,6 @@ lateral-movement,T1021.001,Remote Services: Remote Desktop Protocol,1,RDP to Dom
 lateral-movement,T1021.001,Remote Services: Remote Desktop Protocol,2,Changing RDP Port to Non Standard Port via Powershell,2f840dd4-8a2e-4f44-beb3-6b2399ea3771,powershell
 lateral-movement,T1021.001,Remote Services: Remote Desktop Protocol,3,Changing RDP Port to Non Standard Port via Command_Prompt,74ace21e-a31c-4f7d-b540-53e4eb6d1f73,command_prompt
 lateral-movement,T1021.001,Remote Services: Remote Desktop Protocol,4,Disable NLA for RDP via Command Prompt,01d1c6c0-faf0-408e-b368-752a02285cb2,command_prompt
-lateral-movement,T1550.001,Use Alternate Authentication Material: Application Access Token,1,Azure - Functions code upload - Functions code injection via Blob upload,9a5352e4-56e5-45c2-9b3f-41a46d3b3a43,powershell
-lateral-movement,T1550.001,Use Alternate Authentication Material: Application Access Token,2,Azure - Functions code upload - Functions code injection via File Share modification to retrieve the Functions identity access token,67aaf4cb-54ce-42e2-ab56-e0a9bcc089b1,powershell
 credential-access,T1556.003,Modify Authentication Process: Pluggable Authentication Modules,1,Malicious PAM rule,4b9dde80-ae22-44b1-a82a-644bf009eb9c,sh
 credential-access,T1556.003,Modify Authentication Process: Pluggable Authentication Modules,2,Malicious PAM rule (freebsd),b17eacac-282d-4ca8-a240-46602cf863e3,sh
 credential-access,T1556.003,Modify Authentication Process: Pluggable Authentication Modules,3,Malicious PAM module,65208808-3125-4a2e-8389-a0a00e9ab326,sh
@@ -1783,6 +1778,8 @@ credential-access,T1552.001,Unsecured Credentials: Credentials In Files,14,List 
 credential-access,T1552.001,Unsecured Credentials: Credentials In Files,15,Find Azure credentials,a8f6148d-478a-4f43-bc62-5efee9f931a4,sh
 credential-access,T1552.001,Unsecured Credentials: Credentials In Files,16,Find GCP credentials,aa12eb29-2dbb-414e-8b20-33d34af93543,sh
 credential-access,T1552.001,Unsecured Credentials: Credentials In Files,17,Find OCI credentials,9d9c22c9-fa97-4008-a204-478cf68c40af,sh
+credential-access,T1528,Steal Application Access Token,1,Azure - Functions code upload - Functions code injection via Blob upload,9a5352e4-56e5-45c2-9b3f-41a46d3b3a43,powershell
+credential-access,T1528,Steal Application Access Token,2,Azure - Functions code upload - Functions code injection via File Share modification to retrieve the Functions identity access token,67aaf4cb-54ce-42e2-ab56-e0a9bcc089b1,powershell
 credential-access,T1552.006,Unsecured Credentials: Group Policy Preferences,1,GPP Passwords (findstr),870fe8fb-5e23-4f5f-b89d-dd7fe26f3b5f,command_prompt
 credential-access,T1552.006,Unsecured Credentials: Group Policy Preferences,2,GPP Passwords (Get-GPPPassword),e9584f82-322c-474a-b831-940fd8b4455c,powershell
 credential-access,T1056.002,Input Capture: GUI Input Capture,1,AppleScript - Prompt User for Password,76628574-0bc1-4646-8fe2-8f4427b47d15,bash
@@ -2026,7 +2023,8 @@ discovery,T1049,System Network Connections Discovery,3,"System Network Connectio
 discovery,T1049,System Network Connections Discovery,4,System Discovery using SharpView,96f974bb-a0da-4d87-a744-ff33e73367e9,powershell
 discovery,T1619,Cloud Storage Object Discovery,1,AWS S3 Enumeration,3c7094f8-71ec-4917-aeb8-a633d7ec4ef5,sh
 discovery,T1619,Cloud Storage Object Discovery,2,Azure - Enumerate Storage Account Objects via Shared Key authorization using Azure CLI,070322a4-2c60-4c50-8ffb-c450a34fe7bf,powershell
-discovery,T1619,Cloud Storage Object Discovery,3,Azure - Enumerate Azure Blobs with MicroBurst,3dab4bcc-667f-4459-aea7-4162dd2d6590,powershell
+discovery,T1619,Cloud Storage Object Discovery,3,Azure - Scan for Anonymous Access to Azure Storage (Powershell),146af1f1-b74e-4aa7-9895-505eb559b4b0,powershell
+discovery,T1619,Cloud Storage Object Discovery,4,Azure - Enumerate Azure Blobs with MicroBurst,3dab4bcc-667f-4459-aea7-4162dd2d6590,powershell
 discovery,T1654,Log Enumeration,1,Get-EventLog To Enumerate Windows Security Log,a9030b20-dd4b-4405-875e-3462c6078fdc,powershell
 discovery,T1654,Log Enumeration,2,Enumerate Windows Security Log via WevtUtil,fef0ace1-3550-4bf1-a075-9fea55a778dd,command_prompt
 discovery,T1057,Process Discovery,1,Process Discovery - ps,4ff64f0b-aaf2-4866-b39d-38d9791407cc,sh
