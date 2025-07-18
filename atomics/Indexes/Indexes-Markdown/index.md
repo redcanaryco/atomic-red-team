@@ -51,7 +51,8 @@
 - T1666 Modify Cloud Resource Hierarchy [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1564.008 Hide Artifacts: Email Hiding Rules](../../T1564.008/T1564.008.md)
   - Atomic Test #1: New-Inbox Rule to Hide E-mail in M365 [office-365]
-- T1027.013 Encrypted/Encoded File [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1027.013 Obfuscated Files or Information: Encrypted/Encoded File](../../T1027.013/T1027.013.md)
+  - Atomic Test #1: T1027.013 Encrypted/Encoded File [windows, macos, linux]
 - [T1014 Rootkit](../../T1014/T1014.md)
   - Atomic Test #1: Loadable Kernel Module based Rootkit [linux]
   - Atomic Test #2: Loadable Kernel Module based Rootkit [linux]

