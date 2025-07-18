@@ -434,7 +434,7 @@ atomic_tests:
     - windows
   executor:
     command: |-
-      Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU" -Name "a" -Value '"C:\Windows\System32\mshta.exe" http://localhost/hello6.hta'
+      Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU" -Name "atomictest" -Value '"C:\Windows\System32\mshta.exe" http://localhost/hello6.hta'
     cleanup_command: |-
-      Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU" -Name "a" -ErrorAction SilentlyContinue
+      Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU" -Name "atomictest" -ErrorAction SilentlyContinue
     name: powershell
