@@ -1,7 +1,7 @@
 attack_technique: T1027.013
 display_name: 'Obfuscated Files or Information: Encrypted/Encoded File'
 atomic_tests:
-- name: T1027.013 Encoded File
+- name: Decode Eicar File and Write to File
   auto_generated_guid: 7693ccaa-8d64-4043-92a5-a2eb70359535
   description: Decode the eicar value, and write it to file, for AV/EDR to try to catch.
   supported_platforms:
@@ -19,7 +19,7 @@ atomic_tests:
     cleanup_command: Just delete the resulting T1027.013_decodedEicar.txt file.
     name: powershell
     elevation_required: false
-- name: T1027.013 Encrypted File
+- name: Decrypt Eicar File and Write to File
   description: Decrypt the eicar value, and write it to file, for AV/EDR to try to catch.
   supported_platforms:
     - windows
