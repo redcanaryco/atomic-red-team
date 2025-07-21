@@ -30,7 +30,8 @@
   - Atomic Test #1: Read volume boot sector via DOS device path (PowerShell) [windows]
 - T1564.008 Hide Artifacts: Email Hiding Rules [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1027.013 Obfuscated Files or Information: Encrypted/Encoded File](../../T1027.013/T1027.013.md)
-  - Atomic Test #1: T1027.013 Encrypted/Encoded File [windows, macos, linux]
+  - Atomic Test #1: Decode Eicar File and Write to File [windows, macos, linux]
+  - Atomic Test #2: Decrypt Eicar File and Write to File [windows, macos, linux]
 - T1014 Rootkit [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1036.007 Masquerading: Double File Extension](../../T1036.007/T1036.007.md)
   - Atomic Test #1: File Extension Masquerading [windows]
