@@ -133,8 +133,21 @@ atomic_tests:
 
       rundll32.exe -sta "AtomicTest" 
 
-    cleanup_command: |-
-      reg delete "HKEY_CURRENT_USER\SOFTWARE\Classes\AtomicTest" /f
+  cleanup_command: |-
+    reg delete "HKEY_CURRENT_USER\SOFTWARE\Classes\AtomicTest" /f
       reg delete "HKEY_CURRENT_USER\SOFTWARE\Classes\CLSID\{00000001-0000-0000-0000-0000FEEDACDC}" /f
       reg delete "HKEY_CURRENT_USER\SOFTWARE\Classes\CLSID\{97D47D56-3777-49FB-8E8F-90D7E30E1A1E}" /f
     name: powershell
+
+- name: COM Hijack via Registry (Safe)
+  auto_generated_guid: 159cb923-d092-4396-a99b-fbd2fec1b4f4
+  description: |
+    Creates a fake CLSID entry in HKCU pointing to calc.exe for testing COM hijacking in a safe manner.
+  supported_platforms:
+    - windows
+    executor:
+      name: command_prompt
+      command: |
+        reg add "HKCU\\Software\\Classes\\CLSID\\{12345678-1234-1234-1234-123456789abc}\\InprocServer32" /ve /d "C:\\Windows\\System32\\calc.exe" /f
+      cleanup_command: |
+        reg delete "HKCU\\Software\\Classes\\CLSID\\{12345678-1234-1234-1234-123456789abc}" /f
