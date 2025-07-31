@@ -29,7 +29,9 @@
 - [T1006 Direct Volume Access](../../T1006/T1006.md)
   - Atomic Test #1: Read volume boot sector via DOS device path (PowerShell) [windows]
 - T1564.008 Hide Artifacts: Email Hiding Rules [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1027.013 Encrypted/Encoded File [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1027.013 Obfuscated Files or Information: Encrypted/Encoded File](../../T1027.013/T1027.013.md)
+  - Atomic Test #1: Decode Eicar File and Write to File [windows, macos, linux]
+  - Atomic Test #2: Decrypt Eicar File and Write to File [windows, macos, linux]
 - T1014 Rootkit [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1036.007 Masquerading: Double File Extension](../../T1036.007/T1036.007.md)
   - Atomic Test #1: File Extension Masquerading [windows]
@@ -944,6 +946,7 @@
   - Atomic Test #9: Office Generic Payload Download [windows]
   - Atomic Test #10: LNK Payload Download [windows]
   - Atomic Test #11: Mirror Blast Emulation [windows]
+  - Atomic Test #12: ClickFix Campaign - Abuse RunMRU to Launch mshta via PowerShell [windows]
 - T1559.001 Component Object Model [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1106 Native API](../../T1106/T1106.md)
