@@ -1,50 +1,70 @@
+---
 attack_technique: T1036.005
-display_name: 'Masquerading: Match Legitimate Name or Location'
-atomic_tests:
-- name: Execute a process from a directory masquerading as the current parent directory.
-  auto_generated_guid: 812c3ab8-94b0-4698-a9bf-9420af23ce24
-  description: |
-    Create and execute a process from a directory masquerading as the current parent directory (`...` instead of normal `..`)
-  supported_platforms:
-  - macos
-  - linux
-  input_arguments:
-    test_message:
-      description: Test message to echo out to the screen
-      type: string
-      default: Hello from the Atomic Red Team test T1036.005#1
-  executor:
-    name: sh
-    elevation_required: false
-    command: |
-      mkdir $HOME/...
-      cp $(which sh) $HOME/...
-      $HOME/.../sh -c "echo #{test_message}"
-    cleanup_command: |
-      rm -f $HOME/.../sh
-      rmdir $HOME/.../
-- name: Masquerade as a built-in system executable
-  auto_generated_guid: 35eb8d16-9820-4423-a2a1-90c4f5edd9ca
-  description: |
-    Launch an executable that attempts to masquerade as a legitimate executable.
-  supported_platforms:
-  - windows
-  input_arguments:
-    executable_filepath:
-      description: File path where the generated executable will be dropped and executed from. The filename should be the name of a built-in system utility.
-      type: string
-      default: $Env:windir\Temp\svchost.exe
-  executor:
-    command: |
-      Add-Type -TypeDefinition @'
-      public class Test {
-          public static void Main(string[] args) {
-              System.Console.WriteLine("tweet, tweet");
-          }
-      }
-      '@ -OutputAssembly "#{executable_filepath}"
+display_name: Masquerading: Match Legitimate Name or Location
+author: Furkan Celik
 
-      Start-Process -FilePath "#{executable_filepath}"
-    cleanup_command: |
-      Remove-Item -Path "#{executable_filepath}" -ErrorAction Ignore
+atomic_tests:
+- name: Masquerading cmd.exe as VSDetector.exe
+  auto_generated_guid: # CI tarafından otomatik doldurulacak
+  description: |
+    This test simulates an adversary renaming cmd.exe to VSDetector.exe to masquerade as a legitimate application.
+    The test copies cmd.exe, renames it to VSDetector.exe, adds a registry run key for persistence, and executes the renamed binary.
+    This technique may be used to evade detection by mimicking legitimate software names or locations.
+
+    **Expected Output:**
+    - A new process named VSDetector.exe appears in the process list, but its behavior matches cmd.exe.
+    - SIEM/EDR systems may detect this as suspicious process activity (e.g., Sysmon Event ID 1 for process creation, or Event ID 13 for registry modifications).
+    - Registry modification in HKLM:\Software\Microsoft\Windows\CurrentVersion\Run may trigger persistence alerts in XDR platforms.
+
+    **References:**
+    - [MITRE ATT&CK T1036.005](https://attack.mitre.org/techniques/T1036/005/)
+    - [Sysmon Process Creation](https://docs.microsoft.com/en-us/sysinternals/downloads/sysmon)
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    vsd_path:
+      description: Directory path where VSDetector.exe will be created
+      type: Path
+      default: $env:TEMP
+    source_file:
+      description: Path to the source cmd.exe file
+      type: Path
+      default: $env:SystemRoot\System32\cmd.exe
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        The source cmd.exe file must exist on the system.
+      prereq_command: |
+        if (Test-Path "#{source_file}") { exit 0 } else { exit 1 }
+      get_prereq_command: |
+        Write-Host "[-] Source file not found: #{source_file}. Ensure cmd.exe exists in the specified path."
+        exit 1
+
+  executor:
     name: powershell
+    elevation_required: true
+    command: |
+      # Copy and rename cmd.exe to VSDetector.exe
+      Copy-Item -Path "#{source_file}" -Destination "#{vsd_path}\VSDetector.exe" -Force
+      
+      # Create registry run key for persistence
+      New-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "VSDetector" -Value "#{vsd_path}\VSDetector.exe" -PropertyType String -Force
+      
+      # Start the renamed process
+      Start-Process -FilePath "#{vsd_path}\VSDetector.exe"
+      
+      Start-Sleep -Seconds 5
+    cleanup_command: |
+      # Remove registry key
+      Remove-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "VSDetector" -ErrorAction SilentlyContinue
+      
+      # Stop the process
+      Stop-Process -Name "VSDetector" -Force -ErrorAction SilentlyContinue
+      
+      # Remove the file
+      Remove-Item -Path "#{vsd_path}\VSDetector.exe" -Force -ErrorAction SilentlyContinue
+      
+      Write-Host "[+] Cleaned up VSDetector artifacts"
