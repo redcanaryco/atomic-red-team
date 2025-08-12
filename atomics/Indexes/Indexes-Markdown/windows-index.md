@@ -1486,6 +1486,7 @@
   - Atomic Test #4: Compress Data and lock with password for Exfiltration with 7zip [windows]
   - Atomic Test #10: ESXi - Remove Syslog remote IP [windows]
   - Atomic Test #11: Compress a File for Exfiltration using Makecab [windows]
+  - Atomic Test #12: Copy and Compress AppData Folder [windows]
 - [T1113 Screen Capture](../../T1113/T1113.md)
   - Atomic Test #7: Windows Screencapture [windows]
   - Atomic Test #8: Windows Screen Capture (CopyFromScreen) [windows]
