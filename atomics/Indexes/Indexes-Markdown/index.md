@@ -2079,6 +2079,7 @@
   - Atomic Test #9: Encrypts collected data with AES-256 and Base64 [linux, macos]
   - Atomic Test #10: ESXi - Remove Syslog remote IP [windows]
   - Atomic Test #11: Compress a File for Exfiltration using Makecab [windows]
+  - Atomic Test #12: Copy and Compress AppData Folder [windows]
 - [T1113 Screen Capture](../../T1113/T1113.md)
   - Atomic Test #1: Screencapture [macos]
   - Atomic Test #2: Screencapture (silent) [macos]
