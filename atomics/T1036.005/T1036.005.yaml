@@ -4,15 +4,15 @@ display_name: Masquerading: Match Legitimate Name or Location
 author: Furkan Celik, Pure7
 
 atomic_tests:
-- name: Masquerading cmd.exe as VSDetector.exe
+- name: Masquerading cmd.exe as VEDetector.exe
   auto_generated_guid: # CI tarafından otomatik doldurulacak
   description: |
-    This test simulates an adversary renaming cmd.exe to VSDetector.exe to masquerade as a legitimate application.
-    The test copies cmd.exe, renames it to VSDetector.exe, adds a registry run key for persistence, and executes the renamed binary.
+    This test simulates an adversary renaming cmd.exe to VEDetector.exe to masquerade as a legitimate application.
+    The test copies cmd.exe, renames it to VEDetector.exe, adds a registry run key for persistence, and executes the renamed binary.
     This technique may be used to evade detection by mimicking legitimate software names or locations.
 
     **Expected Output:**
-    - A new process named VSDetector.exe appears in the process list, but its behavior matches cmd.exe.
+    - A new process named VEDetector.exe appears in the process list, but its behavior matches cmd.exe.
     - SIEM/EDR systems may detect this as suspicious process activity (e.g., Sysmon Event ID 1 for process creation, or Event ID 13 for registry modifications).
     - Registry modification in HKLM:\Software\Microsoft\Windows\CurrentVersion\Run may trigger persistence alerts in XDR platforms.
 
@@ -25,7 +25,7 @@ atomic_tests:
 
   input_arguments:
     vsd_path:
-      description: Directory path where VSDetector.exe will be created
+      description: Directory path where VEDetector.exe will be created
       type: Path
       default: $env:TEMP
     source_file:
@@ -47,14 +47,14 @@ atomic_tests:
     name: powershell
     elevation_required: true
     command: |
-      # Copy and rename cmd.exe to VSDetector.exe
-      Copy-Item -Path "#{source_file}" -Destination "#{vsd_path}\VSDetector.exe" -Force
+      # Copy and rename cmd.exe to VEDetector.exe
+      Copy-Item -Path "#{source_file}" -Destination "#{vsd_path}\VEDetector.exe" -Force
       
       # Create registry run key for persistence
-      New-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "VSDetector" -Value "#{vsd_path}\VSDetector.exe" -PropertyType String -Force
+      New-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "VSDetector" -Value "#{vsd_path}\VEDetector.exe" -PropertyType String -Force
       
       # Start the renamed process
-      Start-Process -FilePath "#{vsd_path}\VSDetector.exe"
+      Start-Process -FilePath "#{vsd_path}\VEDetector.exe"
       
       Start-Sleep -Seconds 5
     cleanup_command: |
@@ -65,7 +65,7 @@ atomic_tests:
       Stop-Process -Name "VSDetector" -Force -ErrorAction SilentlyContinue
       
       # Remove the file
-      Remove-Item -Path "#{vsd_path}\VSDetector.exe" -Force -ErrorAction SilentlyContinue
+      Remove-Item -Path "#{vsd_path}\VEDetector.exe" -Force -ErrorAction SilentlyContinue
       
       Write-Host "[+] Cleaned up VSDetector artifacts"
 
