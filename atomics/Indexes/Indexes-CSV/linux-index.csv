@@ -16,6 +16,8 @@ defense-evasion,T1222.002,"File and Directory Permissions Modification: FreeBSD,
 defense-evasion,T1222.002,"File and Directory Permissions Modification: FreeBSD, Linux and Mac File and Directory Permissions Modification",12,Chmod through c script (freebsd),da40b5fe-3098-4b3b-a410-ff177e49ee2e,sh
 defense-evasion,T1222.002,"File and Directory Permissions Modification: FreeBSD, Linux and Mac File and Directory Permissions Modification",13,Chown through c script,18592ba1-5f88-4e3c-abc8-ab1c6042e389,sh
 defense-evasion,T1222.002,"File and Directory Permissions Modification: FreeBSD, Linux and Mac File and Directory Permissions Modification",14,Chown through c script (freebsd),eb577a19-b730-4918-9b03-c5edcf51dc4e,sh
+defense-evasion,T1027.013,Obfuscated Files or Information: Encrypted/Encoded File,1,Decode Eicar File and Write to File,7693ccaa-8d64-4043-92a5-a2eb70359535,powershell
+defense-evasion,T1027.013,Obfuscated Files or Information: Encrypted/Encoded File,2,Decrypt Eicar File and Write to File,b404caaa-12ce-43c7-9214-62a531c044f7,powershell
 defense-evasion,T1014,Rootkit,1,Loadable Kernel Module based Rootkit,dfb50072-e45a-4c75-a17e-a484809c8553,sh
 defense-evasion,T1014,Rootkit,2,Loadable Kernel Module based Rootkit,75483ef8-f10f-444a-bf02-62eb0e48db6f,sh
 defense-evasion,T1014,Rootkit,3,dynamic-linker based rootkit (libprocesshider),1338bf0c-fd0c-48c0-9e65-329f18e2c0d3,sh
@@ -191,8 +193,12 @@ persistence,T1078.003,Valid Accounts: Local Accounts,11,Login as nobody (Linux),
 persistence,T1078.003,Valid Accounts: Local Accounts,12,Login as nobody (freebsd),16f6374f-7600-459a-9b16-6a88fd96d310,sh
 command-and-control,T1132.001,Data Encoding: Standard Encoding,1,Base64 Encoded data.,1164f70f-9a88-4dff-b9ff-dc70e7bf0c25,sh
 command-and-control,T1132.001,Data Encoding: Standard Encoding,2,Base64 Encoded data (freebsd),2d97c626-7652-449e-a986-b02d9051c298,sh
+command-and-control,T1572,Protocol Tunneling,5,Microsoft Dev tunnels (Linux/macOS),9f94a112-1ce2-464d-a63b-83c1f465f801,bash
+command-and-control,T1572,Protocol Tunneling,6,VSCode tunnels (Linux/macOS),b877943f-0377-44f4-8477-f79db7f07c4d,sh
+command-and-control,T1572,Protocol Tunneling,7,Cloudflare tunnels (Linux/macOS),228c336a-2f79-4043-8aef-bfa453a611d5,sh
 command-and-control,T1090.003,Proxy: Multi-hop Proxy,3,Tor Proxy Usage - Debian/Ubuntu/FreeBSD,5ff9d047-6e9c-4357-b39b-5cf89d9b59c7,sh
 command-and-control,T1571,Non-Standard Port,2,Testing usage of uncommonly used port,5db21e1d-dd9c-4a50-b885-b1e748912767,sh
+command-and-control,T1095,Non-Application Layer Protocol,4,Linux ICMP Reverse Shell using icmp-cnc,8e139e1f-1f3a-4be7-901d-afae9738c064,manual
 command-and-control,T1071.001,Application Layer Protocol: Web Protocols,3,Malicious User Agents - Nix,2d7c471a-e887-4b78-b0dc-b0df1f2e0658,sh
 command-and-control,T1105,Ingress Tool Transfer,1,rsync remote file copy (push),0fc6e977-cb12-44f6-b263-2824ba917409,sh
 command-and-control,T1105,Ingress Tool Transfer,2,rsync remote file copy (pull),3180f7d5-52c0-4493-9ea0-e3431a84773f,sh
@@ -226,7 +232,6 @@ collection,T1560.002,Archive Collected Data: Archive via Library,1,Compressing d
 collection,T1560.002,Archive Collected Data: Archive via Library,2,Compressing data using bz2 in Python (FreeBSD/Linux),c75612b2-9de0-4d7c-879c-10d7b077072d,sh
 collection,T1560.002,Archive Collected Data: Archive via Library,3,Compressing data using zipfile in Python (FreeBSD/Linux),001a042b-859f-44d9-bf81-fd1c4e2200b0,sh
 collection,T1560.002,Archive Collected Data: Archive via Library,4,Compressing data using tarfile in Python (FreeBSD/Linux),e86f1b4b-fcc1-4a2a-ae10-b49da01458db,sh
-lateral-movement,T1021.004,Remote Services: SSH,1,ESXi - Enable SSH via PowerCLI,8f6c14d1-f13d-4616-b7fc-98cc69fe56ec,powershell
 privilege-escalation,T1548.003,Abuse Elevation Control Mechanism: Sudo and Sudo Caching,1,Sudo usage,150c3a08-ee6e-48a6-aeaf-3659d24ceb4e,sh
 privilege-escalation,T1548.003,Abuse Elevation Control Mechanism: Sudo and Sudo Caching,2,Sudo usage (freebsd),2bf9a018-4664-438a-b435-cc6f8c6f71b1,sh
 privilege-escalation,T1548.003,Abuse Elevation Control Mechanism: Sudo and Sudo Caching,3,Unlimited sudo cache timeout,a7b17659-dd5e-46f7-b7d1-e6792c91d0bc,sh
@@ -311,9 +316,12 @@ credential-access,T1552.004,Unsecured Credentials: Private Keys,7,Copy the users
 credential-access,T1552.004,Unsecured Credentials: Private Keys,8,Copy the users GnuPG directory with rsync (freebsd),b05ac39b-515f-48e9-88e9-2f141b5bcad0,sh
 credential-access,T1552.003,Unsecured Credentials: Bash History,1,Search Through Bash History,3cfde62b-7c33-4b26-a61e-755d6131c8ce,sh
 credential-access,T1552.003,Unsecured Credentials: Bash History,2,Search Through sh History,d87d3b94-05b4-40f2-a80f-99864ffa6803,sh
-credential-access,T1552.001,Unsecured Credentials: Credentials In Files,1,Find AWS credentials,2b93758e-a8d7-4e3b-bc7b-d3aa8d7ecb17,sh
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,1,Find AWS credentials,37807632-d3da-442e-8c2e-00f44928ff8f,sh
 credential-access,T1552.001,Unsecured Credentials: Credentials In Files,3,Extract passwords with grep,bd4cf0d1-7646-474e-8610-78ccf5a097c4,sh
 credential-access,T1552.001,Unsecured Credentials: Credentials In Files,6,Find and Access Github Credentials,da4f751a-020b-40d7-b9ff-d433b7799803,bash
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,15,Find Azure credentials,a8f6148d-478a-4f43-bc62-5efee9f931a4,sh
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,16,Find GCP credentials,aa12eb29-2dbb-414e-8b20-33d34af93543,sh
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,17,Find OCI credentials,9d9c22c9-fa97-4008-a204-478cf68c40af,sh
 credential-access,T1110.004,Brute Force: Credential Stuffing,1,SSH Credential Stuffing From Linux,4f08197a-2a8a-472d-9589-cd2895ef22ad,bash
 credential-access,T1110.004,Brute Force: Credential Stuffing,3,SSH Credential Stuffing From FreeBSD,a790d50e-7ebf-48de-8daa-d9367e0911d4,sh
 credential-access,T1003.008,"OS Credential Dumping: /etc/passwd, /etc/master.passwd and /etc/shadow",1,Access /etc/shadow (Local),3723ab77-c546-403c-8fb4-bb577033b235,bash
@@ -382,6 +390,7 @@ discovery,T1018,Remote System Discovery,14,Remote System Discovery - netstat,d27
 discovery,T1018,Remote System Discovery,15,Remote System Discovery - ip tcp_metrics,6c2da894-0b57-43cb-87af-46ea3b501388,sh
 discovery,T1046,Network Service Discovery,1,Port Scan,68e907da-2539-48f6-9fc9-257a78c05540,bash
 discovery,T1046,Network Service Discovery,2,Port Scan Nmap,515942b0-a09f-4163-a7bb-22fefb6f185f,sh
+discovery,T1046,Network Service Discovery,12,Port Scan using nmap (Port range),0d5a2b03-3a26-45e4-96ae-89485b4d1f97,sh
 discovery,T1124,System Time Discovery,3,System Time Discovery in FreeBSD/macOS,f449c933-0891-407f-821e-7916a21a1a6f,sh
 execution,T1053.003,Scheduled Task/Job: Cron,1,Cron - Replace crontab with referenced file,435057fb-74b1-410e-9403-d81baf194f75,sh
 execution,T1053.003,Scheduled Task/Job: Cron,2,Cron - Add script to all cron subfolders,b7d42afa-9086-4c8a-b7b0-8ea3faa6ebb0,bash
@@ -442,6 +451,8 @@ exfiltration,T1048.002,Exfiltration Over Alternative Protocol - Exfiltration Ove
 exfiltration,T1048.002,Exfiltration Over Alternative Protocol - Exfiltration Over Asymmetric Encrypted Non-C2 Protocol,4,Exfiltrate data as text over HTTPS using wget,8bec51da-7a6d-4346-b941-51eca448c4b0,sh
 exfiltration,T1048,Exfiltration Over Alternative Protocol,1,Exfiltration Over Alternative Protocol - SSH,f6786cc8-beda-4915-a4d6-ac2f193bb988,sh
 exfiltration,T1048,Exfiltration Over Alternative Protocol,2,Exfiltration Over Alternative Protocol - SSH,7c3cb337-35ae-4d06-bf03-3032ed2ec268,sh
+exfiltration,T1048,Exfiltration Over Alternative Protocol,4,Exfiltrate Data using DNS Queries via dig,a27916da-05f2-4316-a3ee-feec67a437be,bash
+exfiltration,T1567.002,Exfiltration Over Web Service: Exfiltration to Cloud Storage,2,Exfiltrate data with rclone to cloud Storage - AWS S3,a4b74723-5cee-4300-91c3-5e34166909b4,powershell
 exfiltration,T1030,Data Transfer Size Limits,1,Data Transfer Size Limits,ab936c51-10f4-46ce-9144-e02137b2016a,sh
 exfiltration,T1048.003,Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,1,Exfiltration Over Alternative Protocol - HTTP,1d1abbd6-a3d3-4b2e-bef5-c59293f46eff,manual
 exfiltration,T1048.003,Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,3,Exfiltration Over Alternative Protocol - DNS,c403b5a4-b5fc-49f2-b181-d1c80d27db45,manual

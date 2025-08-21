@@ -2,7 +2,8 @@
 
 # Atomic Red Team
 
-![GitHub Action Status](https://github.com/redcanaryco/atomic-red-team/actions/workflows/validate-atomics.yml/badge.svg?branch=master) ![Atomics](https://img.shields.io/badge/Atomics-1661-flat.svg) ![GitHub Action Status](https://github.com/redcanaryco/atomic-red-team/actions/workflows/generate-docs.yml/badge.svg?branch=master)
+![GitHub Action Status](https://github.com/redcanaryco/atomic-red-team/actions/workflows/validate-atomics.yml/badge.svg?branch=master) ![Atomics](https://img.shields.io/badge/Atomics-1735-flat.svg) ![GitHub Action Status](https://github.com/redcanaryco/atomic-red-team/actions/workflows/generate-docs.yml/badge.svg?branch=master)
+
 
 Atomic Red Team™ is a library of tests mapped to the
 [MITRE ATT&CK®](https://attack.mitre.org/) framework. Security teams can use
@@ -23,6 +24,8 @@ The Atomic Red Team documentation is available as a [wiki](https://github.com/re
 
 For information about the philosophy and development of Atomic Red Team, visit
 our website at <https://atomicredteam.io>.
+
+To stay up to date on all things Atomic Red Team, sign up for the Atomic Newsletter: https://redcanary.com/atomic-newsletter/
 
 ## Contribute to Atomic Red Team
 

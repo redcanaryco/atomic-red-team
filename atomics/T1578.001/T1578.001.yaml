@@ -1,0 +1,133 @@
+attack_technique: T1578.001
+display_name: "Modify Cloud Compute Infrastructure: Create Snapshot"
+atomic_tests:
+- name: AWS - Create Snapshot from EBS Volume
+  auto_generated_guid: a3c09662-85bb-4ea8-b15b-6dc8a844e236
+  description: |
+    Creates an EBS snapshot in AWS using the AWS CLI.
+    This simulates an adversary duplicating volume data via snapshots for persistence or exfiltration.
+  supported_platforms:
+  - iaas:aws
+  input_arguments:
+    aws_region:
+      description: AWS region where the volume is located.
+      type: string
+      default: us-east-1
+    aws_volume_id:
+      description: The AWS EBS Volume ID to create a snapshot from.
+      type: string
+      default: vol-0123456789abcdef0
+  dependencies:
+    - description: AWS CLI must be installed.
+      prereq_command: |
+        if command -v aws > /dev/null 2>&1; then exit 0; else exit 1; fi
+      get_prereq_command: |
+        echo "Install AWS CLI: https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
+    - description: AWS CLI must be authenticated.
+      prereq_command: |
+        if aws sts get-caller-identity --region #{aws_region} > /dev/null 2>&1; then exit 0; else exit 1; fi
+      get_prereq_command: |
+        echo "Configure AWS credentials with: aws configure"
+    - description: EBS volume must exist.
+      prereq_command: |
+        if aws ec2 describe-volumes --volume-ids #{aws_volume_id} --region #{aws_region} > /dev/null 2>&1; then exit 0; else exit 1; fi
+      get_prereq_command: |
+        echo "Ensure the volume ID exists in the target AWS account and region."
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      aws ec2 create-snapshot --region #{aws_region} --volume-id #{aws_volume_id} --description "Atomic Red Team Test Snapshot" --query "SnapshotId" --output text
+    cleanup_command: |
+      SNAPSHOT_ID=$(aws ec2 describe-snapshots --region #{aws_region} --filters "Name=volume-id,Values=#{aws_volume_id}" --query "Snapshots[0].SnapshotId" --output text)
+      if [ "$SNAPSHOT_ID" != "None" ]; then
+        aws ec2 delete-snapshot --region #{aws_region} --snapshot-id "$SNAPSHOT_ID"
+      fi
+
+- name: Azure - Create Snapshot from Managed Disk
+  auto_generated_guid: 89e69b4b-3458-4ec6-b819-b3008debc1bc
+  description: |
+    Creates a snapshot of a managed disk in Azure using the Azure CLI.
+    Simulates adversary snapshotting behavior for persistence or data duplication.
+  supported_platforms:
+  - iaas:azure
+  input_arguments:
+    azure_resource_group:
+      description: The Azure resource group where the disk is located.
+      type: string
+      default: myResourceGroup
+    azure_disk_name:
+      description: The Azure disk name.
+      type: string
+      default: myDiskName
+    azure_snapshot_name:
+      description: The Azure snapshot name.
+      type: string
+      default: mySnapshotName
+  dependencies:
+    - description: Azure CLI must be installed.
+      prereq_command: |
+        if command -v az > /dev/null 2>&1; then exit 0; else exit 1; fi
+      get_prereq_command: |
+        echo "Install Azure CLI: https://learn.microsoft.com/en-us/cli/azure/install-azure-cli"
+    - description: Azure CLI must be authenticated.
+      prereq_command: |
+        if az account show > /dev/null 2>&1; then exit 0; else exit 1; fi
+      get_prereq_command: |
+        echo "Login with: az login"
+    - description: Azure disk must exist.
+      prereq_command: |
+        if az disk show --resource-group #{azure_resource_group} --name #{azure_disk_name} > /dev/null 2>&1; then exit 0; else exit 1; fi
+      get_prereq_command: |
+        echo "Ensure the disk exists in the given resource group."
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      az snapshot create --resource-group #{azure_resource_group} --name #{azure_snapshot_name} --source #{azure_disk_name} --location eastus
+    cleanup_command: |
+      az snapshot delete --resource-group #{azure_resource_group} --name #{azure_snapshot_name}
+
+- name: GCP - Create Snapshot from Persistent Disk
+  auto_generated_guid: e6fbc036-91e7-4ad3-b9cb-f7210f40dd5d
+  description: |
+    Creates a snapshot of a persistent disk in GCP using the gcloud CLI.
+    Emulates adversary behavior to gain access to volume data or replicate environment state.
+  supported_platforms:
+  - iaas:gcp
+  input_arguments:
+    gcp_disk_name:
+      description: The Google Cloud disk name.
+      type: string
+      default: myDiskName
+    gcp_zone:
+      description: The Google Cloud zone where the disk is located.
+      type: string
+      default: us-central1-a
+    gcp_snapshot_name:
+      description: The Google Cloud snapshot name.
+      type: string
+      default: mySnapshotName
+  dependencies:
+    - description: gcloud CLI must be installed.
+      prereq_command: |
+        if command -v gcloud > /dev/null 2>&1; then exit 0; else exit 1; fi
+      get_prereq_command: |
+        echo "Install gcloud CLI: https://cloud.google.com/sdk/docs/install"
+    - description: gcloud CLI must be authenticated.
+      prereq_command: |
+        if gcloud auth list --filter=status:ACTIVE --format="value(account)" | grep . > /dev/null; then exit 0; else exit 1; fi
+      get_prereq_command: |
+        echo "Authenticate with: gcloud auth login"
+    - description: GCP disk must exist.
+      prereq_command: |
+        if gcloud compute disks describe #{gcp_disk_name} --zone=#{gcp_zone} > /dev/null 2>&1; then exit 0; else exit 1; fi
+      get_prereq_command: |
+        echo "Ensure the disk exists in the specified zone."
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      gcloud compute snapshots create #{gcp_snapshot_name} --source-disk=#{gcp_disk_name} --zone=#{gcp_zone}
+    cleanup_command: |
+      gcloud compute snapshots delete #{gcp_snapshot_name} --quiet

