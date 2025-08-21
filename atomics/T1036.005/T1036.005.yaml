@@ -71,7 +71,7 @@ atomic_tests:
     - windows
 
   input_arguments:
-    vsd_path:
+    ved_path:
       description: Directory path where VEDetector.exe will be created
       type: Path
       default: $env:TEMP
@@ -95,23 +95,23 @@ atomic_tests:
     elevation_required: true
     command: |
       # Copy and rename cmd.exe to VEDetector.exe
-      Copy-Item -Path "#{source_file}" -Destination "#{vsd_path}\VEDetector.exe" -Force
+      Copy-Item -Path "#{source_file}" -Destination "#{ved_path}\VEDetector.exe" -Force
       
       # Create registry run key for persistence
-      New-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "VSDetector" -Value "#{vsd_path}\VEDetector.exe" -PropertyType String -Force
+      New-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "VEDetector" -Value "#{ved_path}\VEDetector.exe" -PropertyType String -Force
       
       # Start the renamed process
-      Start-Process -FilePath "#{vsd_path}\VEDetector.exe"
+      Start-Process -FilePath "#{ved_path}\VEDetector.exe"
       
       Start-Sleep -Seconds 5
     cleanup_command: |
       # Remove registry key
-      Remove-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "VSDetector" -ErrorAction SilentlyContinue
+      Remove-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "VEDetector" -ErrorAction SilentlyContinue
       
       # Stop the process
-      Stop-Process -Name "VSDetector" -Force -ErrorAction SilentlyContinue
+      Stop-Process -Name "VEDetector" -Force -ErrorAction SilentlyContinue
       
       # Remove the file
-      Remove-Item -Path "#{vsd_path}\VEDetector.exe" -Force -ErrorAction SilentlyContinue
+      Remove-Item -Path "#{ved_path}\VEDetector.exe" -Force -ErrorAction SilentlyContinue
       
-      Write-Host "[+] Cleaned up VSDetector artifacts"
+      Write-Host "[+] Cleaned up VEDetector artifacts"
