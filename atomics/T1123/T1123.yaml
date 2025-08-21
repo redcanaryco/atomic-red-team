@@ -11,9 +11,9 @@ atomic_tests:
   dependencies:
     - description: AudioDeviceCmdlets module must be installed
       prereq_command: |
-        if (-not (Get-Module -ListAvailable -Name AudioDeviceCmdlets)) { 
-          Write-Host "Install with: Install-Module -Name AudioDeviceCmdlets -Force"; Exit 1 
-        }
+        if (Get-Module -ListAvailable -Name AudioDeviceCmdlets) { exit 0 } else { exit 1 } 
+      get_prereq_command: |
+        Install with: Install-Module -Name AudioDeviceCmdlets -Force" 
   executor:
     command: |
       $mic = Get-AudioDevice -Recording
