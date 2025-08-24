@@ -278,3 +278,15 @@ atomic_tests:
       echo "" | "#{plink_file}" -batch "#{vm_host}" -ssh -l #{vm_user} -pw "#{vm_pass}" "for i in `vim-cmd vmsvc/getallvms | awk 'NR>1 {print $1}'`; do vim-cmd vmsvc/power.off $i & done"
     name: command_prompt
     elevation_required: false
+- name: abuse of linux magic system request key for reboot
+  auto_generated_guid: d2a1f4bc-a064-4223-8281-a086dce5423c
+  description: |
+    adversaries with root or sufficient privileges to silently manipulate or destabilize a system. By writing to /proc/sysrq-trigger, they can forced to reboot.
+  supported_platforms:
+  - linux
+  dependency_executor_name: bash
+  executor:
+    command: |
+      echo "b" > /proc/sysrq-trigger
+    name: bash
+    elevation_required: true
