@@ -92,6 +92,7 @@ def atomic_command_executor_builder():
             executor=CommandExecutor(
                 name=executor_name,
                 command=f"{formatted_args} Custom steps here...",
+                elevation_required="sudo" in formatted_args,
             ),
             input_arguments=input_arguments,
             **kwargs,
