@@ -1269,3 +1269,26 @@ atomic_tests:
 
     name: powershell
     elevation_required: false
+
+- name: Download Python and Unzip 
+  description: |
+    Downloading Python ZIP archive to execute malware on Windows systems without Python pre-installed.
+  supported_platforms:
+    - windows
+  input_arguments:
+    python_url:
+      description: Python download URL
+      type: string
+      default: https://www.python.org/ftp/python/3.13.6/python-3.13.6-embed-amd64.zip
+    dir_path:
+      description: Base directory to store the ZIP file and export archive
+      type: string
+      default: $env:Temp/atomic_python
+  executor:
+    command: |
+      Invoke-WebRequest "#{python_url}" -Outfile #{dir_path}.zip
+      Expand-Archive #{dir_path}.zip #{dir_path} -PassThru -ErrorAction SilentlyContinue
+    cleanup_command: |
+      Remove-Item -Recurs "#{dir_path}.zip", "#{dir_path}" -ErrorAction Ignore
+    name: powershell
+    elevation_required: false
