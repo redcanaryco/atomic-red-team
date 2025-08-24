@@ -413,3 +413,48 @@ atomic_tests:
       makecab.exe #{input_file} #{output_file}
     cleanup_command: |
       del #{output_file}
+
+- name: Copy and Compress AppData Folder
+  auto_generated_guid: 05e8942e-f04f-460a-b560-f7781257feec
+  description: |
+    Copies the AppData folder, compresses it, and cleans up temporary files.
+  supported_platforms:
+    - windows
+  input_arguments:
+    destination_folder:
+      type: Path
+      default: $env:USERPROFILE\Desktop\AppDataCopy
+      description: Temporary copy location
+    zip_file_path:
+      type: Path
+      default: $env:USERPROFILE\Desktop\AppDataBackup.zip
+      description: ZIP archive path
+  dependencies:
+    - description: Requires admin and .NET compression libraries
+      prereq_command: |
+        if (-not ([Security.Principal.WindowsPrincipal] `
+            [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole(`
+            [Security.Principal.WindowsBuiltInRole]::Administrator)) { exit 1 }
+        if (-not (Test-Path "$env:USERPROFILE\AppData")) { exit 1 }
+      get_prereq_command: |
+        Run PowerShell as Administrator and ensure .NET compression assemblies are available.
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      $AppData="$env:USERPROFILE\AppData"
+      $Copy="#{destination_folder}"
+      $Zip="#{zip_file_path}"
+
+      if (Test-Path $Copy) { Remove-Item $Copy -Recurse -Force }
+      New-Item -ItemType Directory -Path $Copy | Out-Null
+
+      Get-ChildItem $AppData -Recurse -Force | ForEach-Object {
+        $rel = $_.FullName.Substring($AppData.Length + 1)
+        $dest = Join-Path $Copy $rel
+        if ($_.PSIsContainer) { New-Item -ItemType Directory -Path $dest -Force | Out-Null }
+        else { Copy-Item $_.FullName -Destination $dest -Force -ErrorAction SilentlyContinue }
+      }
+
+      Add-Type -AssemblyName System.IO.Compression.FileSystem
+      [System.IO.Compression.ZipFile]::CreateFromDirectory($Copy, $Zip, [System.IO.Compression.CompressionLevel]::Optimal, $false)

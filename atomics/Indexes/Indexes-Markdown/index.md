@@ -105,8 +105,9 @@
 - T1542.003 Bootkit [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1218.013 Mavinject [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1036.005 Masquerading: Match Legitimate Name or Location](../../T1036.005/T1036.005.md)
-  - Atomic Test #1: Execute a process from a directory masquerading as the current parent directory. [macos, linux]
+  - Atomic Test #1: Execute a process from a directory masquerading as the current parent directory [macos, linux]
   - Atomic Test #2: Masquerade as a built-in system executable [windows]
+  - Atomic Test #3: Masquerading cmd.exe as VEDetector.exe [windows]
 - T1600 Weaken Encryption [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1036.008 Masquerade File Type [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1564 Hide Artifacts](../../T1564/T1564.md)
@@ -1084,6 +1085,7 @@
   - Atomic Test #6: Replace utilman.exe (Ease of Access Binary) with cmd.exe [windows]
   - Atomic Test #7: Replace Magnify.exe (Magnifier binary) with cmd.exe [windows]
   - Atomic Test #8: Replace Narrator.exe (Narrator binary) with cmd.exe [windows]
+  - Atomic Test #9: Replace DisplaySwitch.exe (Display Switcher binary) with cmd.exe [windows]
 - [T1055.004 Process Injection: Asynchronous Procedure Call](../../T1055.004/T1055.004.md)
   - Atomic Test #1: Process Injection via C# [windows]
   - Atomic Test #2: EarlyBird APC Queue Injection in Go [windows]
@@ -1725,6 +1727,7 @@
   - Atomic Test #6: Replace utilman.exe (Ease of Access Binary) with cmd.exe [windows]
   - Atomic Test #7: Replace Magnify.exe (Magnifier binary) with cmd.exe [windows]
   - Atomic Test #8: Replace Narrator.exe (Narrator binary) with cmd.exe [windows]
+  - Atomic Test #9: Replace DisplaySwitch.exe (Display Switcher binary) with cmd.exe [windows]
 - [T1136.002 Create Account: Domain Account](../../T1136.002/T1136.002.md)
   - Atomic Test #1: Create a new Windows domain admin user [windows]
   - Atomic Test #2: Create a new account similar to ANONYMOUS LOGON [windows]
@@ -2079,6 +2082,7 @@
   - Atomic Test #9: Encrypts collected data with AES-256 and Base64 [linux, macos]
   - Atomic Test #10: ESXi - Remove Syslog remote IP [windows]
   - Atomic Test #11: Compress a File for Exfiltration using Makecab [windows]
+  - Atomic Test #12: Copy and Compress AppData Folder [windows]
 - [T1113 Screen Capture](../../T1113/T1113.md)
   - Atomic Test #1: Screencapture [macos]
   - Atomic Test #2: Screencapture (silent) [macos]
