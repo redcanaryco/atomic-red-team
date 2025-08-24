@@ -155,7 +155,7 @@ class Atomic(BaseModel):
     executor: Union[ManualExecutor, CommandExecutor] = Field(..., discriminator="name")
     dependencies: Optional[List[Dependency]] = []
     input_arguments: Dict[constr(min_length=2, pattern=r"^[\w_-]+$"), Argument] = {}
-    dependency_executor_name: ExecutorType = "manual"
+    dependency_executor_name: Optional[ExecutorType] = None
     auto_generated_guid: Optional[UUID] = None
 
     @classmethod
@@ -173,11 +173,10 @@ class Atomic(BaseModel):
     @field_validator("dependency_executor_name", mode="before")  # noqa
     @classmethod
     def validate_dep_executor(cls, v, info: ValidationInfo):
-        if v is None:
+        if v is not None and info.data.get("dependencies") == []:
             raise PydanticCustomError(
-                "empty_dependency_executor_name",
-                "'dependency_executor_name' shouldn't be empty. Provide a valid value ['manual','powershell', 'sh', "
-                "'bash', 'command_prompt'] or remove the key from YAML",
+                "invalid_dependency_executor_name",
+                "'dependency_executor_name' is not needed if there are no dependencies. Remove the key from YAML",
                 {"loc": ["dependency_executor_name"], "input": None},
             )
         return v
