@@ -47,7 +47,7 @@ class GithubAPI:
     }
 
     maintainers = {
-        "windows": ["clr2of8", "MHaggis"],
+        "windows": ["clr2of8", "MHaggis", "cyberbuff"],
         "linux": ["josehelps", "cyberbuff"],
         "macos": ["josehelps", "cyberbuff"],
         "containers": ["patel-bhavin"],
