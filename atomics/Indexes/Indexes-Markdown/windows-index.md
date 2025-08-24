@@ -72,6 +72,7 @@
 - T1218.013 Mavinject [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1036.005 Masquerading: Match Legitimate Name or Location](../../T1036.005/T1036.005.md)
   - Atomic Test #2: Masquerade as a built-in system executable [windows]
+  - Atomic Test #3: Masquerading cmd.exe as VEDetector.exe [windows]
 - T1036.008 Masquerade File Type [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1564 Hide Artifacts](../../T1564/T1564.md)
   - Atomic Test #1: Extract binary files via VBA [windows]
