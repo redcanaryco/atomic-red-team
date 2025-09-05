@@ -870,7 +870,7 @@
   - Atomic Test #9: Shutdown System via `poweroff` - FreeBSD/Linux [linux]
   - Atomic Test #10: Reboot System via `poweroff` - FreeBSD [linux]
   - Atomic Test #11: Reboot System via `poweroff` - Linux [linux]
-  - Atomic Test #16: abuse of linux magic system request key for reboot [linux]
+  - Atomic Test #16: Abuse of Linux Magic System Request Key for Reboot [linux]
 
 # initial-access
 - T1133 External Remote Services [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
