@@ -3060,7 +3060,7 @@
   - Atomic Test #13: ESXi - Terminates VMs using pkill [windows]
   - Atomic Test #14: ESXi - Avoslocker enumerates VMs and forcefully kills VMs [windows]
   - Atomic Test #15: ESXi - vim-cmd Used to Power Off VMs [windows]
-  - Atomic Test #16: abuse of linux magic system request key for reboot [linux]
+  - Atomic Test #16: Abuse of Linux Magic System Request Key for Reboot [linux]
 
 # initial-access
 - [T1133 External Remote Services](../../T1133/T1133.md)
