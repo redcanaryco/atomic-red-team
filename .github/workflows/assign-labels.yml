@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: download-artifact
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             let allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
@@ -35,7 +35,7 @@ jobs:
         run: unzip labels.zip
 
       - name: assign-labels-and-reviewers
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             let fs = require('fs');
