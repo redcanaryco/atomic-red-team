@@ -153,3 +153,67 @@ atomic_tests:
     name: command_prompt
     elevation_required: false
 
+- name: Windows - Display a simulated ransom note via Notepad (non-destructive)
+  authors: bak3n3k0
+  description: |
+    Creates a temporary ransom-note text file and opens it in Notepad to simulate
+    ransomware "note display" behavior without making destructive changes.
+    SAFE and non-destructive. Uses only %TEMP% paths (no user-specific paths).
+  supported_platforms:
+    - windows
+  input_arguments:
+    note_path:
+      description: Full path for the simulated ransom note
+      type: path
+      default: '%TEMP%\ART-T1491-ransom-note.txt'
+    note_title:
+      description: Title at the top of the ransom note
+      type: string
+      default: '!!! READ_ME_NOW !!!'
+    note_body:
+      description: The body of the ransom note (plain text)
+      type: string
+      default: |
+        Your files are SAFE. This is a TEST note for detection validation by bak3n3k0.
+        No data has been encrypted. This simulation exercises detections for:
+          - notepad.exe launched with a ransom-themed text file
+          - creation of a ransom-themed text file in %TEMP%
+        If seen in production, investigate process lineage and recent file writes.
+        NON-DESTRUCTIVE Atomic Red Team test.
+    note_pid_path:
+      description: Path to store Notepad PID for cleanup
+      type: path
+      default: '%TEMP%\ART-T1491-notepad.pid'
+  dependencies:
+    - description: Notepad must be present on the system
+      prereq_command: 'where notepad'
+      get_prereq_command: ''
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $Path  = "#{note_path}"
+      $Title = "#{note_title}"
+      $Body  = @"
+#{note_body}
+"@
+
+      $header  = $Title + "`r`n" + ('=' * $Title.Length) + "`r`n`r`n"
+      $content = $header + $Body
+
+      $dir = Split-Path $Path
+      if ($dir -and -not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
+
+      [System.IO.File]::WriteAllText($Path, $content, [System.Text.Encoding]::ASCII)
+      $proc = Start-Process notepad.exe -ArgumentList "`"$Path`"" -PassThru
+      $proc.Id | Out-File -FilePath "#{note_pid_path}" -Encoding ascii -Force
+    cleanup_command: |
+      if (Test-Path "#{note_pid_path}") {
+        try {
+          $pid = Get-Content "#{note_pid_path}" | Select-Object -First 1
+          if ($pid) { Stop-Process -Id $pid -ErrorAction SilentlyContinue }
+        } catch {}
+        Remove-Item "#{note_pid_path}" -Force -ErrorAction SilentlyContinue
+      }
+      Remove-Item -Path "#{note_path}" -Force -ErrorAction SilentlyContinue
+
