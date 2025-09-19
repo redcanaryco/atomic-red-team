@@ -2055,6 +2055,7 @@
   - Atomic Test #1: Replace Desktop Wallpaper [windows]
   - Atomic Test #2: Configure LegalNoticeCaption and LegalNoticeText registry keys to display ransom message [windows]
   - Atomic Test #3: ESXi - Change Welcome Message on Direct Console User Interface (DCUI) [windows]
+  - Atomic Test #4: Windows - Display a simulated ransom note via Notepad (non-destructive) [windows]
 - T1496.001 Compute Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1565 Data Manipulation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1531 Account Access Removal](../../T1531/T1531.md)
