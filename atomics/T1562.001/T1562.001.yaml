@@ -1267,12 +1267,13 @@ atomic_tests:
       }
 
       # Get basic process info
-      $process = Get-Process -Name $processName -ErrorAction Stop
-      Write-Host "Process Name: $($process.ProcessName)"
+      $process = Get-Process -Name $#{processName} -ErrorAction Stop
+      $processName = $process.ProcessName
+      Write-Host "Process Name: $processName)"
       Write-Host "PID: $($process.Id)"
               
       # Get executable path and user info
-      $query = "SELECT * FROM Win32_Process WHERE Name = '$($processName).exe'"
+      $query = "SELECT * FROM Win32_Process WHERE Name = '$processName.exe'"
       $wmiProcess = Get-WmiObject -Query $query
 
       $owner = $wmiProcess.GetOwner()
