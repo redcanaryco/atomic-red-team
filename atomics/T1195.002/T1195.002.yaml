@@ -3,9 +3,7 @@ display_name: Compromise Software Supply Chain
 atomic_tests:
 - name: Simulate npm package installation on a Linux system
   description: |
-    Launches a Node.js pod, builds a local npm package whose "install" script writes a marker file (/tmp/malicious),
-    packs that package, then installs it to simulate a compromised npm package that executes during install.
-    The pod is automatically deleted after execution and the command prints the marker's contents so detections can be validated.
+    Launches a short‑lived Kubernetes pod using the Node 18 image, initializes a minimal npm project in /tmp/test, and installs the specified npm package without audit/fund/package‑lock options, simulating potentially suspicious package retrieval (e.g., typosquatting/dependency confusion) from within a container. The pod is deleted after execution.
   supported_platforms:
     - containers
     - linux
@@ -27,8 +25,3 @@ atomic_tests:
       elevation_required: false
       command: |
         kubectl run #{pod_name} --image=node:18 --restart=Never --attach --rm -i -- bash -lc "mkdir /tmp/test && cd /tmp/test && npm init -y >/dev/null 2>&1 && npm install #{package_name} --no-audit --no-fund --no-package-lock"
-
-
-
-
-
