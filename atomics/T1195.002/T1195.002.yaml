@@ -1,0 +1,34 @@
+attack_technique: T1195.002
+display_name: Compromise Software Supply Chain
+atomic_tests:
+- name: Simulate npm package installation on a Linux system
+  description: |
+    Launches a Node.js pod, builds a local npm package whose "install" script writes a marker file (/tmp/malicious),
+    packs that package, then installs it to simulate a compromised npm package that executes during install.
+    The pod is automatically deleted after execution and the command prints the marker's contents so detections can be validated.
+  supported_platforms:
+    - containers
+    - linux
+  input_arguments:
+    pod_name:
+      description: Name of the pod
+      type: string
+      default: atomic-npm-install
+    package_name:
+      description: NPM package to install
+      type: string
+      default: lodash
+  dependencies:
+    - description: kubectl must be installed and configured
+      get_prereq_command: echo "kubectl must be installed"
+      prereq_command: which kubectl
+  executor:
+      name: bash
+      elevation_required: false
+      command: |
+        kubectl run #{pod_name} --image=node:18 --restart=Never --attach --rm -i -- bash -lc "mkdir /tmp/test && cd /tmp/test && npm init -y >/dev/null 2>&1 && npm install #{package_name} --no-audit --no-fund --no-package-lock"
+
+
+
+
+
