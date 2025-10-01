@@ -229,6 +229,7 @@
   - Atomic Test #8: Hex decoding with shell utilities [linux, macos]
   - Atomic Test #9: Linux Base64 Encoded Shebang in CLI [linux, macos]
   - Atomic Test #10: XOR decoding and command execution using Python [linux, macos]
+  - Atomic Test #11: Expand CAB with expand.exe [windows]
 - [T1562 Impair Defenses](../../T1562/T1562.md)
   - Atomic Test #1: Windows Disable LSA Protection [windows]
   - Atomic Test #2: Disable journal logging via systemctl utility [linux]
@@ -2730,6 +2731,7 @@
   - Atomic Test #5: Simulating MAZE Directory Enumeration [windows]
   - Atomic Test #6: Launch DirLister Executable [windows]
   - Atomic Test #7: ESXi - Enumerate VMDKs available on an ESXi Host [windows]
+  - Atomic Test #8: Identifying Network Shares - Linux [linux]
 - [T1049 System Network Connections Discovery](../../T1049/T1049.md)
   - Atomic Test #1: System Network Connections Discovery [windows]
   - Atomic Test #2: System Network Connections Discovery with PowerShell [windows]
