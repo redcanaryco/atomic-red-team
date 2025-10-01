@@ -84,3 +84,5 @@ atomic_tests:
     elevation_required: false
     command: |
       kubectl run #{pod_name} --image=ubuntu --restart=Never --attach --rm -i -- bash -lc "apt-get update -y >/dev/null 2>&1 && apt-get install -y at >/dev/null 2>&1 && (atd || /usr/sbin/atd) && echo '#{at_command}' | at #{time_spec} && at -l"
+    cleanup_command: |
+      echo "the pod is automatically deleted upon successful execution of the atomic test!"
