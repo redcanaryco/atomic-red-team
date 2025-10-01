@@ -1,0 +1,27 @@
+attack_technique: T1195.002
+display_name: Compromise Software Supply Chain
+atomic_tests:
+- name: Simulate npm package installation on a Linux system
+  description: |
+    Launches a short‑lived Kubernetes pod using the Node 18 image, initializes a minimal npm project in /tmp/test, and installs the specified npm package without audit/fund/package‑lock options, simulating potentially suspicious package retrieval (e.g., typosquatting/dependency confusion) from within a container. The pod is deleted after execution.
+  supported_platforms:
+    - containers
+    - linux
+  input_arguments:
+    pod_name:
+      description: Name of the pod
+      type: string
+      default: atomic-npm-install
+    package_name:
+      description: NPM package to install
+      type: string
+      default: lodash
+  dependencies:
+    - description: kubectl must be installed and configured
+      get_prereq_command: echo "kubectl must be installed"
+      prereq_command: which kubectl
+  executor:
+      name: bash
+      elevation_required: false
+      command: |
+        kubectl run #{pod_name} --image=node:18 --restart=Never --attach --rm -i -- bash -lc "mkdir /tmp/test && cd /tmp/test && npm init -y >/dev/null 2>&1 && npm install #{package_name} --no-audit --no-fund --no-package-lock"
