@@ -142,6 +142,7 @@
 - [T1140 Deobfuscate/Decode Files or Information](../../T1140/T1140.md)
   - Atomic Test #1: Deobfuscate/Decode Files Or Information [windows]
   - Atomic Test #2: Certutil Rename and Decode [windows]
+  - Atomic Test #11: Expand CAB with expand.exe [windows]
 - [T1562 Impair Defenses](../../T1562/T1562.md)
   - Atomic Test #1: Windows Disable LSA Protection [windows]
 - [T1055.003 Thread Execution Hijacking](../../T1055.003/T1055.003.md)
@@ -2055,6 +2056,7 @@
   - Atomic Test #1: Replace Desktop Wallpaper [windows]
   - Atomic Test #2: Configure LegalNoticeCaption and LegalNoticeText registry keys to display ransom message [windows]
   - Atomic Test #3: ESXi - Change Welcome Message on Direct Console User Interface (DCUI) [windows]
+  - Atomic Test #4: Windows - Display a simulated ransom note via Notepad (non-destructive) [windows]
 - T1496.001 Compute Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1565 Data Manipulation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1531 Account Access Removal](../../T1531/T1531.md)
