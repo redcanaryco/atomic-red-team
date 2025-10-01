@@ -191,3 +191,14 @@ atomic_tests:
        echo "" | "#{plink_file}" "#{vm_host}" -ssh  -l "#{vm_user}" -pw "#{vm_pass}" -m "#{cli_script}"
     name: command_prompt
     elevation_required: false
+- name: Identifying Network Shares - Linux
+  auto_generated_guid:
+  description: |
+    If the system uses network file systems (e.g., NFS, CIFS), findmnt can help locate paths to remote shares.
+    Attackers may then attempt to access these shares for lateral movement or data exfiltration.
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      findmnt -t nfs
+    name: sh
