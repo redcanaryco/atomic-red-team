@@ -15,7 +15,7 @@ atomic_tests:
     package_name:
       description: NPM package to install
       type: string
-      default: lodash
+      default: tinycolor
   dependencies:
     - description: kubectl must be installed and configured
       get_prereq_command: echo "kubectl must be installed"
@@ -24,4 +24,6 @@ atomic_tests:
       name: bash
       elevation_required: false
       command: |
-        kubectl run #{pod_name} --image=node:18 --restart=Never --attach --rm -i -- bash -lc "mkdir /tmp/test && cd /tmp/test && npm init -y >/dev/null 2>&1 && npm install #{package_name} --no-audit --no-fund --no-package-lock"
+        kubectl run #{pod_name} --image=node:18 --restart=Never --attach --rm -i -- bash -lc "mkdir -p /tmp/test && cd /tmp/test && npm init -y >/dev/null 2>&1 && echo '--- package.json before install ---' && cat package.json && npm install #{package_name} --no-audit --no-fund --no-package-lock && echo '--- package.json after install ---' && cat package.json"
+  cleanup_command: |
+      echo "the pod is automatically deleted upon successful execution of the atomic test!"
