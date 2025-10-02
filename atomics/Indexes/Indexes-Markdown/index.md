@@ -1087,6 +1087,7 @@
   - Atomic Test #7: Replace Magnify.exe (Magnifier binary) with cmd.exe [windows]
   - Atomic Test #8: Replace Narrator.exe (Narrator binary) with cmd.exe [windows]
   - Atomic Test #9: Replace DisplaySwitch.exe (Display Switcher binary) with cmd.exe [windows]
+  - Atomic Test #10: Replace AtBroker.exe (App Switcher binary) with cmd.exe [windows]
 - [T1055.004 Process Injection: Asynchronous Procedure Call](../../T1055.004/T1055.004.md)
   - Atomic Test #1: Process Injection via C# [windows]
   - Atomic Test #2: EarlyBird APC Queue Injection in Go [windows]
@@ -1729,6 +1730,7 @@
   - Atomic Test #7: Replace Magnify.exe (Magnifier binary) with cmd.exe [windows]
   - Atomic Test #8: Replace Narrator.exe (Narrator binary) with cmd.exe [windows]
   - Atomic Test #9: Replace DisplaySwitch.exe (Display Switcher binary) with cmd.exe [windows]
+  - Atomic Test #10: Replace AtBroker.exe (App Switcher binary) with cmd.exe [windows]
 - [T1136.002 Create Account: Domain Account](../../T1136.002/T1136.002.md)
   - Atomic Test #1: Create a new Windows domain admin user [windows]
   - Atomic Test #2: Create a new account similar to ANONYMOUS LOGON [windows]
