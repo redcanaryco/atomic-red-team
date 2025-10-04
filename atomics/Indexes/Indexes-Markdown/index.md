@@ -672,6 +672,7 @@
   - Atomic Test #56: Disable EventLog-Application ETW Provider Via Registry - Cmd [windows]
   - Atomic Test #57: Disable EventLog-Application ETW Provider Via Registry - PowerShell [windows]
   - Atomic Test #58: Freeze PPL-protected process with EDR-Freeze [windows]
+  - Atomic Test #59: Disable ASLR Via sysctl parameters - Linux [linux]
 - T1601 Modify System Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
