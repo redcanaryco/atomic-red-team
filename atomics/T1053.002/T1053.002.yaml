@@ -61,6 +61,10 @@ atomic_tests:
   supported_platforms:
   - containers
   input_arguments:
+    image_name:
+      description: Name of the image
+      type: string
+      default: ubuntu
     pod_name:
       description: K8s pod name to execute the command in
       type: string
@@ -83,6 +87,4 @@ atomic_tests:
     name: bash
     elevation_required: false
     command: |
-      kubectl run #{pod_name} --image=ubuntu --restart=Never --attach --rm -i -- bash -lc "apt-get update -y >/dev/null 2>&1 && apt-get install -y at >/dev/null 2>&1 && (atd || /usr/sbin/atd) && echo '#{at_command}' | at #{time_spec} && at -l"
-    cleanup_command: |
-      echo "the pod is automatically deleted upon successful execution of the atomic test!"
+      kubectl run #{pod_name} --image=#{image_name} --restart=Never --attach --rm -i -- bash -lc "apt-get update -y >/dev/null 2>&1 && apt-get install -y at >/dev/null 2>&1 && (atd || /usr/sbin/atd) && echo '#{at_command}' | at #{time_spec} && at -l"

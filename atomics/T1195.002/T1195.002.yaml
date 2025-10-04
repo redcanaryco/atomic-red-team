@@ -8,6 +8,10 @@ atomic_tests:
     - containers
     - linux
   input_arguments:
+    image_name:
+      description: Name of the image
+      type: string
+      default: node:18
     pod_name:
       description: Name of the pod
       type: string
@@ -24,6 +28,4 @@ atomic_tests:
       name: bash
       elevation_required: false
       command: |
-        kubectl run #{pod_name} --image=node:18 --restart=Never --attach --rm -i -- bash -lc "mkdir -p /tmp/test && cd /tmp/test && npm init -y >/dev/null 2>&1 && echo '--- package.json before install ---' && cat package.json && npm install #{package_name} --no-audit --no-fund --no-package-lock && echo '--- package.json after install ---' && cat package.json"
-      cleanup_command: |
-        echo "the pod is automatically deleted upon successful execution of the atomic test!"
+        kubectl run #{pod_name} --image=#{image_name} --restart=Never --attach --rm -i -- bash -lc "mkdir -p /tmp/test && cd /tmp/test && npm init -y >/dev/null 2>&1 && echo '--- package.json before install ---' && cat package.json && npm install #{package_name} --no-audit --no-fund --no-package-lock && echo '--- package.json after install ---' && cat package.json"
