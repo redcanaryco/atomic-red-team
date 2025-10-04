@@ -182,6 +182,7 @@
   - Atomic Test #43: Disable Memory Swap [linux]
   - Atomic Test #47: Tamper with Defender ATP on Linux/MacOS [linux, macos]
   - Atomic Test #50: ESXi - Disable Account Lockout Policy via PowerCLI [linux]
+  - Atomic Test #59: Disable ASLR Via sysctl parameters - Linux [linux]
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -777,6 +778,7 @@
 - [T1083 File and Directory Discovery](../../T1083/T1083.md)
   - Atomic Test #3: Nix File and Directory Discovery [linux, macos]
   - Atomic Test #4: Nix File and Directory Discovery 2 [linux, macos]
+  - Atomic Test #8: Identifying Network Shares - Linux [linux]
 - [T1049 System Network Connections Discovery](../../T1049/T1049.md)
   - Atomic Test #3: System Network Connections Discovery FreeBSD, Linux & MacOS [linux, macos]
 - T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

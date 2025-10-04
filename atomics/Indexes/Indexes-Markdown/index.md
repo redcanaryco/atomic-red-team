@@ -229,6 +229,7 @@
   - Atomic Test #8: Hex decoding with shell utilities [linux, macos]
   - Atomic Test #9: Linux Base64 Encoded Shebang in CLI [linux, macos]
   - Atomic Test #10: XOR decoding and command execution using Python [linux, macos]
+  - Atomic Test #11: Expand CAB with expand.exe [windows]
 - [T1562 Impair Defenses](../../T1562/T1562.md)
   - Atomic Test #1: Windows Disable LSA Protection [windows]
   - Atomic Test #2: Disable journal logging via systemctl utility [linux]
@@ -670,6 +671,8 @@
   - Atomic Test #55: Disable EventLog-Application Auto Logger Session Via Registry - PowerShell [windows]
   - Atomic Test #56: Disable EventLog-Application ETW Provider Via Registry - Cmd [windows]
   - Atomic Test #57: Disable EventLog-Application ETW Provider Via Registry - PowerShell [windows]
+  - Atomic Test #58: Freeze PPL-protected process with EDR-Freeze [windows]
+  - Atomic Test #59: Disable ASLR Via sysctl parameters - Linux [linux]
 - T1601 Modify System Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1086,6 +1089,7 @@
   - Atomic Test #7: Replace Magnify.exe (Magnifier binary) with cmd.exe [windows]
   - Atomic Test #8: Replace Narrator.exe (Narrator binary) with cmd.exe [windows]
   - Atomic Test #9: Replace DisplaySwitch.exe (Display Switcher binary) with cmd.exe [windows]
+  - Atomic Test #10: Replace AtBroker.exe (App Switcher binary) with cmd.exe [windows]
 - [T1055.004 Process Injection: Asynchronous Procedure Call](../../T1055.004/T1055.004.md)
   - Atomic Test #1: Process Injection via C# [windows]
   - Atomic Test #2: EarlyBird APC Queue Injection in Go [windows]
@@ -1728,6 +1732,7 @@
   - Atomic Test #7: Replace Magnify.exe (Magnifier binary) with cmd.exe [windows]
   - Atomic Test #8: Replace Narrator.exe (Narrator binary) with cmd.exe [windows]
   - Atomic Test #9: Replace DisplaySwitch.exe (Display Switcher binary) with cmd.exe [windows]
+  - Atomic Test #10: Replace AtBroker.exe (App Switcher binary) with cmd.exe [windows]
 - [T1136.002 Create Account: Domain Account](../../T1136.002/T1136.002.md)
   - Atomic Test #1: Create a new Windows domain admin user [windows]
   - Atomic Test #2: Create a new account similar to ANONYMOUS LOGON [windows]
@@ -2730,6 +2735,7 @@
   - Atomic Test #5: Simulating MAZE Directory Enumeration [windows]
   - Atomic Test #6: Launch DirLister Executable [windows]
   - Atomic Test #7: ESXi - Enumerate VMDKs available on an ESXi Host [windows]
+  - Atomic Test #8: Identifying Network Shares - Linux [linux]
 - [T1049 System Network Connections Discovery](../../T1049/T1049.md)
   - Atomic Test #1: System Network Connections Discovery [windows]
   - Atomic Test #2: System Network Connections Discovery with PowerShell [windows]
@@ -2994,6 +3000,7 @@
   - Atomic Test #1: Replace Desktop Wallpaper [windows]
   - Atomic Test #2: Configure LegalNoticeCaption and LegalNoticeText registry keys to display ransom message [windows]
   - Atomic Test #3: ESXi - Change Welcome Message on Direct Console User Interface (DCUI) [windows]
+  - Atomic Test #4: Windows - Display a simulated ransom note via Notepad (non-destructive) [windows]
 - T1496.004 Cloud Service Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1496.001 Compute Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1565 Data Manipulation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
