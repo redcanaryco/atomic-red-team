@@ -483,6 +483,7 @@
   - Atomic Test #55: Disable EventLog-Application Auto Logger Session Via Registry - PowerShell [windows]
   - Atomic Test #56: Disable EventLog-Application ETW Provider Via Registry - Cmd [windows]
   - Atomic Test #57: Disable EventLog-Application ETW Provider Via Registry - PowerShell [windows]
+  - Atomic Test #58: Freeze PPL-protected process with EDR-Freeze [windows]
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -778,6 +779,7 @@
   - Atomic Test #7: Replace Magnify.exe (Magnifier binary) with cmd.exe [windows]
   - Atomic Test #8: Replace Narrator.exe (Narrator binary) with cmd.exe [windows]
   - Atomic Test #9: Replace DisplaySwitch.exe (Display Switcher binary) with cmd.exe [windows]
+  - Atomic Test #10: Replace AtBroker.exe (App Switcher binary) with cmd.exe [windows]
 - [T1055.004 Process Injection: Asynchronous Procedure Call](../../T1055.004/T1055.004.md)
   - Atomic Test #1: Process Injection via C# [windows]
   - Atomic Test #2: EarlyBird APC Queue Injection in Go [windows]
@@ -1246,6 +1248,7 @@
   - Atomic Test #7: Replace Magnify.exe (Magnifier binary) with cmd.exe [windows]
   - Atomic Test #8: Replace Narrator.exe (Narrator binary) with cmd.exe [windows]
   - Atomic Test #9: Replace DisplaySwitch.exe (Display Switcher binary) with cmd.exe [windows]
+  - Atomic Test #10: Replace AtBroker.exe (App Switcher binary) with cmd.exe [windows]
 - [T1136.002 Create Account: Domain Account](../../T1136.002/T1136.002.md)
   - Atomic Test #1: Create a new Windows domain admin user [windows]
   - Atomic Test #2: Create a new account similar to ANONYMOUS LOGON [windows]
