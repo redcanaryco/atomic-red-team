@@ -153,3 +153,14 @@ atomic_tests:
       sudo systemctl start #{service_name} 2> /dev/null
     name: sh
     elevation_required: true
+- name: Abuse of linux magic system request key for Send a SIGTERM to all processes
+  auto_generated_guid:
+  description: |
+    Adversaries with root or sufficient privileges Send a SIGTERM to all processes, except for init. By writing 'e' to /proc/sysrq-trigger, they can forced kill all processes, except for init.
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      echo "e" > /proc/sysrq-trigger
+    name: bash
+    elevation_required: true
