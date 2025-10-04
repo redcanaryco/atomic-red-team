@@ -200,7 +200,7 @@ atomic_tests:
       description: Username of the user to create inside the pod
       type: string
       default: evil_user
-    alpine:
+    image_name:
       description: Name of the docker image
       type: string
       default: alpine
@@ -214,4 +214,4 @@ atomic_tests:
     name: bash
     elevation_required: false
     command: |
-      kubectl run #{pod_name} --image=#{alpine} --restart=Never --rm -it -- sh -lc 'adduser -D #{username} && id #{username}'
+      kubectl run #{pod_name} --image=#{image_name} --restart=Never --rm -it -- sh -lc 'adduser -D #{username} && id #{username}'
