@@ -1269,3 +1269,33 @@ atomic_tests:
 
     name: powershell
     elevation_required: false
+- name: Curl Insecure Connection from a Pod
+  description: |
+    Launches an Ubuntu pod, installs curl, and executes curl with insecure flags (-k/--insecure)
+    against a target URL. The pod is automatically deleted after execution.
+  supported_platforms:
+  - containers
+  input_arguments:
+    pod_name:
+      description: K8s pod_name to execute the command in
+      type: string
+      default: atomic-insecure-curl
+    remote_url:
+      description: Remote URL to curl
+      type: string
+      default: https://malicious-apt.com
+    image_name:
+      description: Name of the docker image
+      type: string
+      default: curlimages/curl
+  dependencies:
+  - description: kubectl must be installed and configured
+    get_prereq_command: |
+      echo "kubectl must be installed manually"
+    prereq_command: |
+      which kubectl
+  executor:
+    name: bash
+    elevation_required: false
+    command: |
+      kubectl run #{pod_name} --image=#{image_name} --restart=Never --rm -it -- curl -ksL #{remote_url}
