@@ -308,7 +308,8 @@
 - T1505.003 Server Software Component: Web Shell [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078.001 Valid Accounts: Default Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1547.003 Time Providers [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1136.001 Create Account: Local Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1136.001 Create Account: Local Account](../../T1136.001/T1136.001.md)
+  - Atomic Test #10: Create a Linux user via kubectl in a Pod [containers]
 - T1176.002 IDE Extensions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1547.004 Boot or Logon Autostart Execution: Winlogon Helper DLL [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1546.012 Event Triggered Execution: Image File Execution Options Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -401,7 +402,8 @@
 - T1219.002 Remote Desktop Software [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1132.002 Non-Standard Encoding [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1071.001 Application Layer Protocol: Web Protocols [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1105 Ingress Tool Transfer [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1105 Ingress Tool Transfer](../../T1105/T1105.md)
+  - Atomic Test #39: Curl Insecure Connection from a Pod [containers]
 - T1665 Hide Infrastructure [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1001.002 Data Obfuscation via Steganography [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1008 Fallback Channels [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

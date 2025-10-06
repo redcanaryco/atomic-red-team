@@ -1708,6 +1708,7 @@
   - Atomic Test #7: Create a new user in FreeBSD with `root` GID. [linux]
   - Atomic Test #8: Create a new Windows admin user [windows]
   - Atomic Test #9: Create a new Windows admin user via .NET [windows]
+  - Atomic Test #10: Create a Linux user via kubectl in a Pod [containers]
 - T1176.002 IDE Extensions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1547.004 Boot or Logon Autostart Execution: Winlogon Helper DLL](../../T1547.004/T1547.004.md)
   - Atomic Test #1: Winlogon Shell Key Persistence - PowerShell [windows]
@@ -2061,6 +2062,7 @@
   - Atomic Test #36: Windows push file using sftp.exe [windows]
   - Atomic Test #37: Windows pull file using sftp.exe [windows]
   - Atomic Test #38: Download a file with OneDrive Standalone Updater [windows]
+  - Atomic Test #39: Curl Insecure Connection from a Pod [containers]
 - T1665 Hide Infrastructure [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1001.002 Data Obfuscation via Steganography](../../T1001.002/T1001.002.md)
   - Atomic Test #1: Steganographic Tarball Embedding [windows]
