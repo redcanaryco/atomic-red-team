@@ -1266,6 +1266,7 @@
 - [T1053.002 Scheduled Task/Job: At](../../T1053.002/T1053.002.md)
   - Atomic Test #1: At.exe Scheduled task [windows]
   - Atomic Test #2: At - Schedule a job [linux]
+  - Atomic Test #3: At - Schedule a job via kubectl in a Pod [containers]
 - [T1055.001 Process Injection: Dynamic-link Library Injection](../../T1055.001/T1055.001.md)
   - Atomic Test #1: Process Injection via mavinject.exe [windows]
   - Atomic Test #2: WinPwn - Get SYSTEM shell - Bind System Shell using UsoClient DLL load technique [windows]
@@ -1470,6 +1471,7 @@
 - [T1053.002 Scheduled Task/Job: At](../../T1053.002/T1053.002.md)
   - Atomic Test #1: At.exe Scheduled task [windows]
   - Atomic Test #2: At - Schedule a job [linux]
+  - Atomic Test #3: At - Schedule a job via kubectl in a Pod [containers]
 
 # persistence
 - [T1053.005 Scheduled Task/Job: Scheduled Task](../../T1053.005/T1053.005.md)
@@ -1913,6 +1915,7 @@
 - [T1053.002 Scheduled Task/Job: At](../../T1053.002/T1053.002.md)
   - Atomic Test #1: At.exe Scheduled task [windows]
   - Atomic Test #2: At - Schedule a job [linux]
+  - Atomic Test #3: At - Schedule a job via kubectl in a Pod [containers]
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1546.017 Udev Rules [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.007 Event Triggered Execution: Netsh Helper DLL](../../T1546.007/T1546.007.md)
@@ -3096,7 +3099,8 @@
 - T1566 Phishing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1566.004 Spearphishing Voice [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1195.002 Compromise Software Supply Chain [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1195.002 Compromise Software Supply Chain](../../T1195.002/T1195.002.md)
+  - Atomic Test #1: Simulate npm package installation on a Linux system [containers, linux]
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1200 Hardware Additions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1189 Drive-by Compromise [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
