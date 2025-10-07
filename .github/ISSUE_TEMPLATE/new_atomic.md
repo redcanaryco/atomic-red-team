@@ -8,12 +8,12 @@ assignees: ''
 ---
 
 <!--
-For reference, check out this article that explains how to properly submit a new atomic test: https://atomicredteam.io/contributing#how-to-contribute.
+For reference, check out this article that explains how to properly submit a new atomic test: https://www.atomicredteam.io/atomic-red-team/docs/designing-atomic-tests.
 -->
 
 ### Technique ID: TXXXX
 
 ### Additional Details
 <!--
-Anything you'd like to share or explain that isn't represented in the contents of the YAML-based test definition. 
+Anything you'd like to share or explain that isn't represented in the contents of the YAML-based test definition.
 -->
