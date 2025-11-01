@@ -412,7 +412,7 @@ atomic_tests:
 - name: Mirror Blast Emulation
   auto_generated_guid: 24fd9719-7419-42dd-bce6-ab3463110b3c
   description: |
-    Emulates the JS -> MSI chain of the MirrorBlast T505 campaign by executing an xlsm file designed. 
+    Emulates the JS -> MSI chain of the MirrorBlast T505 campaign by executing an xlsm file designed.
     Requires the 32 bit version of Office to run. [MirrorBlast Campaign Analysis](https://blog.morphisec.com/explosive-new-mirrorblast-campaign-targets-financial-companies)
   supported_platforms:
   - windows
@@ -442,12 +442,21 @@ atomic_tests:
   description: Simulates user execution of a BAT file downloaded from the Atomic Red Team GitHub repository.This test represents T1204.002 - User Execution via Malicious File.The BAT file performs harmless terminal output to simulate a "fix" operation.
   supported_platforms:
     - windows
+  input_arguments:
+    url:
+      description: URL to download the BAT file from
+      type: url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/click-fix.bat
+    outfile:
+      description: Path where the BAT file will be saved
+      type: path
+      default: $env:TEMP\click-fix.bat
   executor:
     command: |-
-      $url = "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/click-fix.bat"
-      $outfile = "$env:TEMP\click-fix.bat"
+      $url = "#{url}"
+      $outfile = "#{outfile}"
       Invoke-WebRequest -Uri $url -OutFile $outfile -UseBasicParsing
       Start-Process $outfile
-    cleanup_command: Remove-Item "$env:TEMP\click-fix.bat" -ErrorAction SilentlyContinue
+    cleanup_command: Remove-Item "#{outfile}" -ErrorAction SilentlyContinue
     name: powershell
     elevation_required: false
