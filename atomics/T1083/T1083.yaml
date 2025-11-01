@@ -91,8 +91,8 @@ atomic_tests:
 - name: Simulating MAZE Directory Enumeration
   auto_generated_guid: c6c34f61-1c3e-40fb-8a58-d017d88286d8
   description: |
-    This test emulates MAZE ransomware's ability to enumerate directories using Powershell. 
-    Upon successful execution, this test will output the directory enumeration results to a specified file, as well as display them in the active window. 
+    This test emulates MAZE ransomware's ability to enumerate directories using Powershell.
+    Upon successful execution, this test will output the directory enumeration results to a specified file, as well as display them in the active window.
     See https://www.mandiant.com/resources/tactics-techniques-procedures-associated-with-maze-ransomware-incidents
   supported_platforms:
   - windows
@@ -108,7 +108,7 @@ atomic_tests:
       Get-ChildItem -Path $env:programfiles -erroraction silentlycontinue | Out-File -append #{File_to_output}
       Get-ChildItem -Path "${env:ProgramFiles(x86)}" -erroraction silentlycontinue | Out-File -append #{File_to_output}
       $UsersFolder = "$env:homedrive\Users\"
-      foreach ($directory in Get-ChildItem -Path $UsersFolder -ErrorAction SilentlyContinue) 
+      foreach ($directory in Get-ChildItem -Path $UsersFolder -ErrorAction SilentlyContinue)
       {
       foreach ($secondarydirectory in $folderarray)
        {Get-ChildItem -Path "$UsersFolder/$directory/$secondarydirectory" -ErrorAction SilentlyContinue | Out-File -append #{File_to_output}}
@@ -176,7 +176,7 @@ atomic_tests:
     cli_script:
       description: Path to script with file discovery commands
       type: path
-      default: PathToAtomicsFolder\T1083\src\esxi_file_discovery.txt  
+      default: PathToAtomicsFolder\T1083\src\esxi_file_discovery.txt
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -203,13 +203,12 @@ atomic_tests:
       findmnt -t nfs
     name: sh
 - name: Recursive Enumerate Files And Directories By Powershell
-  auto_generated_guid: 8f9fcc89-0283-45b4-84a4-bc54ac7f564d
   description: |
-    adversary attempting to discover and collect sensitive documents and archives 
-    from a user’s system. The test recursively enumerates common user folders 
-    (Documents, Downloads, Desktop, OneDrive) for file types of interest such as .pdf, .doc, 
+    Adversary attempting to discover and collect sensitive documents and archives
+    from a user’s system. The test recursively enumerates common user folders
+    (Documents, Downloads, Desktop, OneDrive) for file types of interest such as .pdf, .doc,
     .docx, .xls, .xlsx, .txt, .zip, .rar, and .7z.
-    This behavior is similar to malware like LOSTKEYS used by COLDRIVER in January 2025, 
+    This behavior is similar to malware like LOSTKEYS used by COLDRIVER in January 2025,
     where attackers perform targeted file discovery to support strategic intelligence collection https://www.zscaler.com/blogs/security-research/coldriver-updates-arsenal-baitswitch-and-simplefix.
   supported_platforms:
   - windows
@@ -217,7 +216,7 @@ atomic_tests:
     output_file:
       description: File to output results.
       type: string
-      default: '%temp%\T1083-Enumerate-net.txt'
+      default: '$env:TEMP\T1083-Enumerate-net.txt'
   executor:
     name: powershell
     command: |
