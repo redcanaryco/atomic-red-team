@@ -456,7 +456,14 @@ atomic_tests:
       $url = "#{url}"
       $outfile = "#{outfile}"
       Invoke-WebRequest -Uri $url -OutFile $outfile -UseBasicParsing
-      Start-Process $outfile
-    cleanup_command: Remove-Item "#{outfile}" -ErrorAction SilentlyContinue
+      $process = Start-Process -FilePath $outfile -PassThru -WindowStyle Normal
+      $process.Id | Out-File "$env:TEMP\click-fix-pid.txt"
+    cleanup_command: |-
+      if (Test-Path "$env:TEMP\click-fix-pid.txt") {
+        $pid = Get-Content "$env:TEMP\click-fix-pid.txt"
+        Stop-Process -Id $pid -Force -ErrorAction SilentlyContinue
+        Remove-Item "$env:TEMP\click-fix-pid.txt" -ErrorAction SilentlyContinue
+      }
+      Remove-Item "#{outfile}" -ErrorAction SilentlyContinue
     name: powershell
     elevation_required: false
