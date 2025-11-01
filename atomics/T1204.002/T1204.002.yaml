@@ -452,13 +452,13 @@ atomic_tests:
       type: path
       default: $env:TEMP\click-fix.bat
   executor:
-    command: |-
+    command: |
       $url = "#{url}"
       $outfile = "#{outfile}"
       Invoke-WebRequest -Uri $url -OutFile $outfile -UseBasicParsing
       $process = Start-Process -FilePath $outfile -PassThru -WindowStyle Normal
       $process.Id | Out-File "$env:TEMP\click-fix-pid.txt"
-    cleanup_command: |-
+    cleanup_command: |
       if (Test-Path "$env:TEMP\click-fix-pid.txt") {
         $pid = Get-Content "$env:TEMP\click-fix-pid.txt"
         Stop-Process -Id $pid -Force -ErrorAction SilentlyContinue
