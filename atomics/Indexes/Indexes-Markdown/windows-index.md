@@ -1941,6 +1941,7 @@
   - Atomic Test #5: Simulating MAZE Directory Enumeration [windows]
   - Atomic Test #6: Launch DirLister Executable [windows]
   - Atomic Test #7: ESXi - Enumerate VMDKs available on an ESXi Host [windows]
+  - Atomic Test #9: Recursive Enumerate Files And Directories By Powershell [windows]
 - [T1049 System Network Connections Discovery](../../T1049/T1049.md)
   - Atomic Test #1: System Network Connections Discovery [windows]
   - Atomic Test #2: System Network Connections Discovery with PowerShell [windows]
