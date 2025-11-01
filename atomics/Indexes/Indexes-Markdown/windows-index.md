@@ -952,6 +952,7 @@
   - Atomic Test #10: LNK Payload Download [windows]
   - Atomic Test #11: Mirror Blast Emulation [windows]
   - Atomic Test #12: ClickFix Campaign - Abuse RunMRU to Launch mshta via PowerShell [windows]
+  - Atomic Test #13: Simulate Click-Fix via Downloaded BAT File [windows]
 - T1559.001 Component Object Model [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1106 Native API](../../T1106/T1106.md)
