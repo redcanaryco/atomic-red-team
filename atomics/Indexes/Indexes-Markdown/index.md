@@ -595,7 +595,10 @@
   - Atomic Test #4: Parent PID Spoofing - Spawn from svchost.exe [windows]
   - Atomic Test #5: Parent PID Spoofing - Spawn from New Process [windows]
 - T1055.014 VDSO Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1679 Selective Exclusion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574.010 Services File Permissions Weakness [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1562.013 Disable or Modify Network Device Firewall [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1678 Delay Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574.013 KernelCallbackTable [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1542.004 ROMMONkit [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1218.001 Signed Binary Proxy Execution: Compiled HTML File](../../T1218.001/T1218.001.md)
@@ -675,6 +678,7 @@
   - Atomic Test #59: Disable ASLR Via sysctl parameters - Linux [linux]
 - T1601 Modify System Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1036.012 Browser Fingerprint [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1055.012 Process Injection: Process Hollowing](../../T1055.012/T1055.012.md)
@@ -1222,6 +1226,7 @@
   - Atomic Test #2: Add launch script to launch daemon [macos]
   - Atomic Test #3: Add launch script to launch agent [macos]
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1546.018 Python Startup Hooks [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1037.003 Network Logon Script [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.010 Event Triggered Execution: AppInit DLLs](../../T1546.010/T1546.010.md)
   - Atomic Test #1: Install AppInit Shim [windows]
@@ -1369,6 +1374,8 @@
 - T1674 Input Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1059 Command and Scripting Interpreter](../../T1059/T1059.md)
   - Atomic Test #1: AutoIt Script Execution [windows]
+- T1204.005 Malicious Library [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1677 Poisoned Pipeline Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1609 Kubernetes Exec Into Container](../../T1609/T1609.md)
   - Atomic Test #1: ExecIntoContainer [containers]
   - Atomic Test #2: Docker Exec Into Container [containers]
@@ -1436,6 +1443,7 @@
 - [T1204.003 User Execution: Malicious Image](../../T1204.003/T1204.003.md)
   - Atomic Test #1: Malicious Execution from Mounted ISO Image [windows]
 - T1203 Exploitation for Client Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1059.013 Container CLI/API [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1059.006 Command and Scripting Interpreter: Python](../../T1059.006/T1059.006.md)
   - Atomic Test #1: Execute shell script via python's command mode arguement [linux]
   - Atomic Test #2: Execute Python via scripts [linux]
@@ -1866,6 +1874,7 @@
   - Atomic Test #3: Add launch script to launch agent [macos]
 - T1671 Cloud Application Integration [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1546.018 Python Startup Hooks [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1037.003 Network Logon Script [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1197 BITS Jobs](../../T1197/T1197.md)
   - Atomic Test #1: Bitsadmin Download (cmd) [windows]
@@ -2130,6 +2139,7 @@
   - Atomic Test #3: Zip a Folder with PowerShell for Staging in Temp [windows]
 - [T1114.001 Email Collection: Local Email Collection](../../T1114.001/T1114.001.md)
   - Atomic Test #1: Email Collection with PowerShell Get-Inbox [windows]
+- T1213.006 Databases [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1119 Automated Collection](../../T1119/T1119.md)
   - Atomic Test #1: Automated Collection Command Prompt [windows]
   - Atomic Test #2: Automated Collection PowerShell [windows]
@@ -2692,6 +2702,7 @@
   - Atomic Test #40: Discover OS Build Number via Registry [windows]
 - [T1016.002 System Network Configuration Discovery: Wi-Fi Discovery](../../T1016.002/T1016.002.md)
   - Atomic Test #1: Enumerate Stored Wi-Fi Profiles And Passwords via netsh [windows]
+- T1518.002 Backup Software Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1010 Application Window Discovery](../../T1010/T1010.md)
   - Atomic Test #1: List Process Main Windows - C# .NET [windows]
 - T1087.003 Email Account [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -2873,6 +2884,7 @@
 - T1538 Cloud Service Dashboard [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1622 Debugger Evasion](../../T1622/T1622.md)
   - Atomic Test #1: Detect a Debugger Presence in the Machine [windows]
+- T1680 Local Storage Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1124 System Time Discovery](../../T1124/T1124.md)
   - Atomic Test #1: System Time Discovery [windows]
   - Atomic Test #2: System Time Discovery - PowerShell [windows]
@@ -2949,6 +2961,7 @@
 - T1589 Gather Victim Identity Information [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1595.002 Vulnerability Scanning [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1596 Search Open Technical Databases [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1681 Search Threat Vendor Data [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1595 Active Scanning [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1589.002 Email Addresses [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1598.004 Spearphishing Voice [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
