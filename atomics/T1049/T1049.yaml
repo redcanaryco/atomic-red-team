@@ -11,7 +11,7 @@ atomic_tests:
   - windows
   executor:
     command: |
-      netstat
+      netstat -ano
       net use
       net sessions
     name: command_prompt
@@ -27,6 +27,43 @@ atomic_tests:
     command: |
       Get-NetTCPConnection
     name: powershell
+
+- name: System Network Connections Discovery via PowerShell (Process Mapping)
+  auto_generated_guid: 9c4e8a71-5c53-4e9f-8a3e-0b5a1f2d3c4e
+  description: |
+    Enumerate TCP connections and map to owning process names via PowerShell.
+  supported_platforms: [windows]
+  executor:
+    name: powershell
+    command: |
+      Get-NetTCPConnection | ForEach-Object {
+        $p = Get-Process -Id $_.OwningProcess -ErrorAction SilentlyContinue
+        [pscustomobject]@{
+          Local   = "$($_.LocalAddress):$($_.LocalPort)"
+          Remote  = "$($_.RemoteAddress):$($_.RemotePort)"
+          State   = $_.State
+          PID     = $_.OwningProcess
+          Process = if ($p) { $p.ProcessName } else { $null }
+        }
+      } | Sort-Object State,Process | Format-Table -AutoSize
+      
+- name: System Network Connections Discovery via ss or lsof (Linux/MacOS)
+  auto_generated_guid: 5f3a9c3e-66a0-45a7-8a4e-4e6e8d7a9c11
+  description: |
+    List active TCP/UDP connections using ss with lsof fallback.
+  supported_platforms: 
+  - linux
+  - macos
+  executor:
+    name: sh
+    command: |
+      if command -v ss >/dev/null 2>&1; then
+        ss -antp 2>/dev/null || ss -ant
+        ss -aunp 2>/dev/null || true
+      else
+        lsof -i -nP 2>/dev/null || true
+      fi
+      
 - name: System Network Connections Discovery FreeBSD, Linux & MacOS
   auto_generated_guid: 9ae28d3f-190f-4fa0-b023-c7bd3e0eabf2
   description: |
@@ -49,6 +86,18 @@ atomic_tests:
       netstat
       who -a
     name: sh
+    
+- name: System Network Connections Discovery via sockstat (FreeBSD)
+  auto_generated_guid: 2b8c7a5c-2d1a-4f5d-9b02-2e7e3e9c8b44
+  description: |
+    Enumerate IPv4/IPv6 network endpoints on FreeBSD using sockstat.
+  supported_platforms: [freebsd]
+  executor:
+    name: sh
+    command: |
+      sockstat -4
+      sockstat -6 2>/dev/null || true
+      sockstat -l 2>/dev/null || true
 
 - name: System Discovery using SharpView
   auto_generated_guid: 96f974bb-a0da-4d87-a744-ff33e73367e9
