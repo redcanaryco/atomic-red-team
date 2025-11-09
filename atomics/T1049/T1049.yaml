@@ -57,14 +57,9 @@ atomic_tests:
   - linux
   - macos
   executor:
-    name: sh
+    name: bash
     command: |
-      if command -v ss >/dev/null 2>&1; then
-        ss -antp 2>/dev/null || ss -ant
-        ss -aunp 2>/dev/null || true
-      else
-        lsof -i -nP 2>/dev/null || true
-      fi
+      if command -v ss >/dev/null 2>&1; then ss -antp 2>/dev/null || ss -ant; ss -aunp 2>/dev/null || true; else lsof -i -nP 2>/dev/null || true; fi
       
 - name: System Network Connections Discovery FreeBSD, Linux & MacOS
   auto_generated_guid: 9ae28d3f-190f-4fa0-b023-c7bd3e0eabf2
