@@ -21,42 +21,33 @@ jobs:
           Install-Module -Name Invoke-AtomicRedTeam -Scope CurrentUser -Force
           Import-Module Invoke-AtomicRedTeam -Force
 
-      - name: List and run Atomic T1007 (macOS launchctl)
+      - name: Run Atomic T1007 (macOS launchctl)
         shell: pwsh
         run: |
           $atomics = Join-Path $env:GITHUB_WORKSPACE "atomics"
-          $out = Join-Path $env:GITHUB_WORKSPACE "out"
-          New-Item -Type Directory -Force -Path $out | Out-Null
+          $out     = Join-Path $env:GITHUB_WORKSPACE "out"
+          New-Item -ItemType Directory -Force -Path $out | Out-Null
 
           if (-not (Test-Path $atomics)) {
-            Write-Error "Expected atomics folder at: $atomics. Make sure your T1007 YAML is at atomics/T1007/T1007.yaml"
+            throw "Expected atomics folder at: $atomics. Make sure your T1007 YAML is at atomics/T1007/T1007.yaml"
           }
 
-          Write-Host "Available T1007 tests:"
+          Write-Host "=== Available T1007 tests ==="
           Invoke-AtomicTest T1007 -PathToAtomicsFolder $atomics -ShowDetailsBrief
 
           # Must match the name in atomics/T1007/T1007.yaml exactly
           $testName = "System Service Discovery - macOS launchctl"
-
           $logFile  = Join-Path $out "atomic_t1007_launchctl.log"
           $execLog  = Join-Path $out "AtomicExecutionLog.csv"
-          $lcOut    = Join-Path $out "launchctl_outputs.txt"
 
-          # Run the atomic and capture all output to a log
+          Write-Host "=== Running T1007 atomic: $testName ==="
           Invoke-AtomicTest T1007 `
             -PathToAtomicsFolder $atomics `
             -TestNames $testName `
             -PromptForInputArgs:$false `
             -Interactive:$false `
+            -ExecutionLogPath $execLog `
             *>&1 | Tee-Object -FilePath $logFile
-
-          # Copy default execution log (if any) into our out/ folder
-          $defaultLog = "/tmp/Invoke-AtomicTest-ExecutionLog.csv"
-          if (Test-Path $defaultLog) {
-            Copy-Item $defaultLog $execLog -Force
-          } else {
-            "No execution log produced at $defaultLog" | Set-Content $execLog
-          }
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
