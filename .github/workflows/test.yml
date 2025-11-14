@@ -58,9 +58,6 @@ jobs:
             "No execution log produced at $defaultLog" | Set-Content $execLog
           }
 
-          # Also capture a direct launchctl run for reference
-          & /bin/sh -c "launchctl list" *>&1 | Out-File -FilePath $lcOut -Encoding utf8
-
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
