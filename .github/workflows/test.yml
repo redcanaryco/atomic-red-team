@@ -41,14 +41,6 @@ jobs:
             -Interactive:$false `
             -ExecutionLogPath (Join-Path $out "AtomicExecutionLog.csv") `
             2>&1 | Tee-Object -FilePath (Join-Path $out "atomic_t1007_launchctl.log")
-          # 3) (Optional) Capture raw outputs for convenience
-          $uid = (& id -u)
-          "/bin/launchctl list" | Out-File -Append -FilePath (Join-Path $out "launchctl_outputs.txt") -Encoding utf8
-          /bin/launchctl list | Out-File -Append -FilePath (Join-Path $out "launchctl_outputs.txt") -Encoding utf8
-          "`n--- print system (head) ---`n" | Out-File -Append (Join-Path $out "launchctl_outputs.txt") -Encoding utf8
-          /bin/launchctl print system | head -n 200 | Out-File -Append (Join-Path $out "launchctl_outputs.txt") -Encoding utf8
-          "`n--- print gui/$uid (head) ---`n" | Out-File -Append (Join-Path $out "launchctl_outputs.txt") -Encoding utf8
-          /bin/launchctl print gui/$uid | head -n 200 | Out-File -Append (Join-Path $out "launchctl_outputs.txt") -Encoding utf8
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
