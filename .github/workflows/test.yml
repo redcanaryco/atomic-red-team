@@ -20,32 +20,49 @@ jobs:
           Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
           Install-Module -Name Invoke-AtomicRedTeam -Scope CurrentUser -Force
           Import-Module Invoke-AtomicRedTeam -Force
+
       - name: List and run Atomic T1007 (macOS launchctl)
         shell: pwsh
         run: |
           $atomics = Join-Path $env:GITHUB_WORKSPACE "atomics"
           $out = Join-Path $env:GITHUB_WORKSPACE "out"
           New-Item -Type Directory -Force -Path $out | Out-Null
+
           if (-not (Test-Path $atomics)) {
             Write-Error "Expected atomics folder at: $atomics. Make sure your T1007 YAML is at atomics/T1007/T1007.yaml"
           }
-          # 1) List tests for T1007 from YOUR atomics folder
-          Write-Host ("Available T1007 tests")
+
+          Write-Host "Available T1007 tests:"
           Invoke-AtomicTest T1007 -PathToAtomicsFolder $atomics -ShowDetailsBrief
-          # 2) Run your specific test by its exact name (adjust if your name differs)
-          $testName = "macOS - Enumerate services with launchctl"
+
+          # Must match the name in atomics/T1007/T1007.yaml exactly
+          $testName = "System Service Discovery - macOS launchctl"
+
+          $logFile  = Join-Path $out "atomic_t1007_launchctl.log"
+          $execLog  = Join-Path $out "AtomicExecutionLog.csv"
+          $lcOut    = Join-Path $out "launchctl_outputs.txt"
+
+          # Run the atomic and capture all output to a log
           Invoke-AtomicTest T1007 `
             -PathToAtomicsFolder $atomics `
             -TestNames $testName `
             -PromptForInputArgs:$false `
             -Interactive:$false `
-            -ExecutionLogPath (Join-Path $out "AtomicExecutionLog.csv") `
-            2>&1 | Tee-Object -FilePath (Join-Path $out "atomic_t1007_launchctl.log")
+            *>&1 | Tee-Object -FilePath $logFile
+
+          # Copy default execution log (if any) into our out/ folder
+          $defaultLog = "/tmp/Invoke-AtomicTest-ExecutionLog.csv"
+          if (Test-Path $defaultLog) {
+            Copy-Item $defaultLog $execLog -Force
+          } else {
+            "No execution log produced at $defaultLog" | Set-Content $execLog
+          }
+
+          # Also capture a direct launchctl run for reference
+          & /bin/sh -c "launchctl list" *>&1 | Out-File -FilePath $lcOut -Encoding utf8
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: atomic-t1007-launchctl-macos
-          path: |
-            out/AtomicExecutionLog.csv
-            out/atomic_t1007_launchctl.log
-            out/launchctl_outputs.txt
+          path: out
