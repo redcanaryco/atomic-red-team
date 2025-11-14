@@ -104,15 +104,10 @@ atomic_tests:
   supported_platforms:
   - linux
   executor:
-    name: bash
+    name: sh
     command: |
       echo "[*] Listing SysV init scripts (/etc/init.d):"
-      if [ -d /etc/init.d ]; then
-        ls -l /etc/init.d
-      else
-        echo "/etc/init.d not present on this system"
-      fi
-
+      if [ -d /etc/init.d ]; then ls -l /etc/init.d; else echo "/etc/init.d not present on this system"; fi
       echo
       echo "[*] Listing runlevel directories (/etc/rc*.d):"
       ls -ld /etc/rc*.d 2>/dev/null || echo "No /etc/rc*.d directories found"
