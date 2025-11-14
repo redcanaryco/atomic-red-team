@@ -1,0 +1,114 @@
+name: Atomic (Windows & Linux) — T1007
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  windows-t1007:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository (contains atomics/)
+        uses: actions/checkout@v4
+
+      - name: Install Invoke-AtomicRedTeam
+        shell: pwsh
+        run: |
+          Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
+          Install-Module -Name Invoke-AtomicRedTeam -Scope CurrentUser -Force
+          Import-Module Invoke-AtomicRedTeam -Force
+
+      - name: Run Windows T1007 atomics with logs
+        shell: pwsh
+        run: |
+          $atomics = Join-Path $env:GITHUB_WORKSPACE "atomics"
+          $out     = Join-Path $env:GITHUB_WORKSPACE "out"
+          New-Item -ItemType Directory -Force -Path $out | Out-Null
+
+          if (-not (Test-Path $atomics)) {
+            throw "Expected atomics folder at: $atomics. Make sure T1007.yaml is at atomics/T1007/T1007.yaml"
+          }
+
+          Write-Host "=== Available T1007 tests (Windows) ==="
+          Invoke-AtomicTest T1007 -PathToAtomicsFolder $atomics -ShowDetailsBrief
+
+          $tests = @(
+            'System Service Discovery',
+            'System Service Discovery - net.exe',
+            'Get-Service Execution',
+            'System Service Discovery - Windows Scheduled Tasks (schtasks)',
+            'System Service Discovery - Services Registry Enumeration'
+          )
+
+          foreach ($t in $tests) {
+            Write-Host "=== Running Windows T1007 atomic: $t ==="
+            $safeName = ($t -replace '[^A-Za-z0-9_-]', '_')
+            $logFile  = Join-Path $out "win_${safeName}.log"
+            $execLog  = Join-Path $out "win_${safeName}_exec.csv"
+
+            Invoke-AtomicTest T1007 `
+              -PathToAtomicsFolder $atomics `
+              -TestNames $t `
+              -PromptForInputArgs:$false `
+              -Interactive:$false `
+              -ExecutionLogPath $execLog `
+              *>&1 | Tee-Object -FilePath $logFile
+          }
+
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: atomic-t1007-windows
+          path: out
+
+  linux-t1007:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository (contains atomics/)
+        uses: actions/checkout@v4
+
+      - name: Install Invoke-AtomicRedTeam (PowerShell)
+        shell: pwsh
+        run: |
+          Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
+          Install-Module -Name Invoke-AtomicRedTeam -Scope CurrentUser -Force
+          Import-Module Invoke-AtomicRedTeam -Force
+
+      - name: Run Linux T1007 atomics with logs
+        shell: pwsh
+        run: |
+          $atomics = Join-Path $env:GITHUB_WORKSPACE "atomics"
+          $out     = Join-Path $env:GITHUB_WORKSPACE "out-linux"
+          New-Item -ItemType Directory -Force -Path $out | Out-Null
+
+          if (-not (Test-Path $atomics)) {
+            throw "Expected atomics folder at: $atomics. Make sure T1007.yaml is at atomics/T1007/T1007.yaml"
+          }
+
+          Write-Host "=== Available T1007 tests (Linux) ==="
+          Invoke-AtomicTest T1007 -PathToAtomicsFolder $atomics -ShowDetailsBrief
+
+          $tests = @(
+            'System Service Discovery - systemctl/service',
+            'System Service Discovery - Linux init scripts'
+          )
+
+          foreach ($t in $tests) {
+            Write-Host "=== Running Linux T1007 atomic: $t ==="
+            $safeName = ($t -replace '[^A-Za-z0-9_-]', '_')
+            $logFile  = Join-Path $out "linux_${safeName}.log"
+            $execLog  = Join-Path $out "linux_${safeName}_exec.csv"
+
+            Invoke-AtomicTest T1007 `
+              -PathToAtomicsFolder $atomics `
+              -TestNames $t `
+              -PromptForInputArgs:$false `
+              -Interactive:$false `
+              -ExecutionLogPath $execLog `
+              *>&1 | Tee-Object -FilePath $logFile
+          }
+
+      - name: Upload Linux artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: atomic-t1007-linux
+          path: out-linux

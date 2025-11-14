@@ -1861,6 +1861,8 @@
   - Atomic Test #1: System Service Discovery [windows]
   - Atomic Test #2: System Service Discovery - net.exe [windows]
   - Atomic Test #4: Get-Service Execution [windows]
+  - Atomic Test #6: System Service Discovery - Windows Scheduled Tasks (schtasks) [windows]
+  - Atomic Test #7: System Service Discovery - Services Registry Enumeration [windows]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #4: Packet Capture Windows Command Prompt [windows]
   - Atomic Test #5: Windows Internal Packet Capture [windows]
@@ -1954,7 +1956,8 @@
 - [T1049 System Network Connections Discovery](../../T1049/T1049.md)
   - Atomic Test #1: System Network Connections Discovery [windows]
   - Atomic Test #2: System Network Connections Discovery with PowerShell [windows]
-  - Atomic Test #4: System Discovery using SharpView [windows]
+  - Atomic Test #3: System Network Connections Discovery via PowerShell (Process Mapping) [windows]
+  - Atomic Test #7: System Discovery using SharpView [windows]
 - T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1654 Log Enumeration](../../T1654/T1654.md)
   - Atomic Test #1: Get-EventLog To Enumerate Windows Security Log [windows]

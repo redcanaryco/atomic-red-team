@@ -2624,6 +2624,10 @@
   - Atomic Test #2: System Service Discovery - net.exe [windows]
   - Atomic Test #3: System Service Discovery - systemctl/service [linux]
   - Atomic Test #4: Get-Service Execution [windows]
+  - Atomic Test #5: System Service Discovery - macOS launchctl [macos]
+  - Atomic Test #6: System Service Discovery - Windows Scheduled Tasks (schtasks) [windows]
+  - Atomic Test #7: System Service Discovery - Services Registry Enumeration [windows]
+  - Atomic Test #8: System Service Discovery - Linux init scripts [linux]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #1: Packet Capture Linux using tshark or tcpdump [linux]
   - Atomic Test #2: Packet Capture FreeBSD using tshark or tcpdump [linux]
@@ -2757,8 +2761,11 @@
 - [T1049 System Network Connections Discovery](../../T1049/T1049.md)
   - Atomic Test #1: System Network Connections Discovery [windows]
   - Atomic Test #2: System Network Connections Discovery with PowerShell [windows]
-  - Atomic Test #3: System Network Connections Discovery FreeBSD, Linux & MacOS [linux, macos]
-  - Atomic Test #4: System Discovery using SharpView [windows]
+  - Atomic Test #3: System Network Connections Discovery via PowerShell (Process Mapping) [windows]
+  - Atomic Test #4: System Network Connections Discovery via ss or lsof (Linux/MacOS) [linux, macos]
+  - Atomic Test #5: System Network Connections Discovery FreeBSD, Linux & MacOS [linux, macos]
+  - Atomic Test #6: System Network Connections Discovery via sockstat (FreeBSD) [freebsd]
+  - Atomic Test #7: System Discovery using SharpView [windows]
 - T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1619 Cloud Storage Object Discovery](../../T1619/T1619.md)
   - Atomic Test #1: AWS S3 Enumeration [iaas:aws]
