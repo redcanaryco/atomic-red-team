@@ -669,7 +669,8 @@
   - Atomic Test #7: Check if System Integrity Protection is enabled [macos]
   - Atomic Test #8: Detect Virtualization Environment using system_profiler [macos]
 - T1069.002 Permission Groups Discovery: Domain Groups [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1007 System Service Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1007 System Service Discovery](../../T1007/T1007.md)
+  - Atomic Test #5: System Service Discovery - macOS launchctl [macos]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #3: Packet Capture macOS using tcpdump or tshark [macos]
   - Atomic Test #8: Packet Capture macOS using /dev/bpfN with sudo [macos]
@@ -704,7 +705,8 @@
   - Atomic Test #3: Nix File and Directory Discovery [linux, macos]
   - Atomic Test #4: Nix File and Directory Discovery 2 [linux, macos]
 - [T1049 System Network Connections Discovery](../../T1049/T1049.md)
-  - Atomic Test #3: System Network Connections Discovery FreeBSD, Linux & MacOS [linux, macos]
+  - Atomic Test #4: System Network Connections Discovery via ss or lsof (Linux/MacOS) [linux, macos]
+  - Atomic Test #5: System Network Connections Discovery FreeBSD, Linux & MacOS [linux, macos]
 - T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1654 Log Enumeration [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1057 Process Discovery](../../T1057/T1057.md)
