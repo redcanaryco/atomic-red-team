@@ -10,7 +10,7 @@ jobs:
       - name: checkout repo
         uses: actions/checkout@v5
         with:
-          token: ${{ secrets.PROTECTED_BRANCH_PUSH_TOKEN }}
+          fetch-depth: 1
 
       - name: Install poetry
         run: pipx install poetry
