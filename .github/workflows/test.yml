@@ -1,0 +1,59 @@
+name: Atomic (macOS) — T1007 launchctl
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  atomic-t1007:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository (contains atomics/)
+        uses: actions/checkout@v4
+
+      - name: Show PowerShell version (sanity check)
+        run: pwsh -NoLogo -NoProfile -Command '$PSVersionTable'
+
+      - name: Install Invoke-AtomicRedTeam module
+        shell: pwsh
+        run: |
+          Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
+          Install-Module -Name Invoke-AtomicRedTeam -Scope CurrentUser -Force
+          Import-Module Invoke-AtomicRedTeam -Force
+      - name: List and run Atomic T1007 (macOS launchctl)
+        shell: pwsh
+        run: |
+          $atomics = Join-Path $env:GITHUB_WORKSPACE "atomics"
+          $out = Join-Path $env:GITHUB_WORKSPACE "out"
+          New-Item -Type Directory -Force -Path $out | Out-Null
+          if (-not (Test-Path $atomics)) {
+            Write-Error "Expected atomics folder at: $atomics. Make sure your T1007 YAML is at atomics/T1007/T1007.yaml"
+          }
+          # 1) List tests for T1007 from YOUR atomics folder
+          Write-Host ("Available T1007 tests")
+          Invoke-AtomicTest T1007 -PathToAtomicsFolder $atomics -ShowDetailsBrief
+          # 2) Run your specific test by its exact name (adjust if your name differs)
+          $testName = "macOS - Enumerate services with launchctl"
+          Invoke-AtomicTest T1007 `
+            -PathToAtomicsFolder $atomics `
+            -TestNames $testName `
+            -PromptForInputArgs:$false `
+            -Interactive:$false `
+            -ExecutionLogPath (Join-Path $out "AtomicExecutionLog.csv") `
+            2>&1 | Tee-Object -FilePath (Join-Path $out "atomic_t1007_launchctl.log")
+          # 3) (Optional) Capture raw outputs for convenience
+          $uid = (& id -u)
+          "/bin/launchctl list" | Out-File -Append -FilePath (Join-Path $out "launchctl_outputs.txt") -Encoding utf8
+          /bin/launchctl list | Out-File -Append -FilePath (Join-Path $out "launchctl_outputs.txt") -Encoding utf8
+          "`n--- print system (head) ---`n" | Out-File -Append (Join-Path $out "launchctl_outputs.txt") -Encoding utf8
+          /bin/launchctl print system | head -n 200 | Out-File -Append (Join-Path $out "launchctl_outputs.txt") -Encoding utf8
+          "`n--- print gui/$uid (head) ---`n" | Out-File -Append (Join-Path $out "launchctl_outputs.txt") -Encoding utf8
+          /bin/launchctl print gui/$uid | head -n 200 | Out-File -Append (Join-Path $out "launchctl_outputs.txt") -Encoding utf8
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: atomic-t1007-launchctl-macos
+          path: |
+            out/AtomicExecutionLog.csv
+            out/atomic_t1007_launchctl.log
+            out/launchctl_outputs.txt
