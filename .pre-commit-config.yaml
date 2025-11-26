@@ -1,0 +1,21 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: check-yaml
+      - id: check-added-large-files
+        args:
+          - "--maxkb=10000"
+      - id: check-merge-conflict
+      - id: check-json
+      - id: mixed-line-ending
+      - id: fix-byte-order-marker
+      - id: debug-statements
+
+  - repo: https://github.com/google/yamlfmt
+    rev: v0.20.0
+    hooks:
+      - id: yamlfmt
+        args:
+          - "--verbose"
