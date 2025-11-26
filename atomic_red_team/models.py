@@ -134,7 +134,19 @@ class ManualExecutor(Executor):
 class CommandExecutor(Executor):
     name: Literal["powershell", "sh", "bash", "command_prompt"]
     command: constr(min_length=1)
-    cleanup_command: Optional[str] = None
+    cleanup_command: Optional[constr(min_length=1)] = None
+
+    @field_validator("cleanup_command", mode="before")
+    @classmethod
+    def validate_cleanup_command(cls, v):
+        """Reject empty cleanup_command strings - treat them as None or error."""
+        if v is not None and isinstance(v, str) and v.strip() == "":
+            raise PydanticCustomError(
+                "empty_cleanup_command",
+                "'cleanup_command' shouldn't be empty. Provide a valid command or remove the key from YAML",
+                {"loc": ["executor", "cleanup_command"], "input": v},
+            )
+        return v
 
 
 class Dependency(BaseModel):
@@ -255,7 +267,10 @@ class Technique(BaseModel):
                             "empty_dependency_executor_name",
                             "'dependency_executor_name' shouldn't be empty. Provide a valid value ['manual','powershell', 'sh', "
                             "'bash', 'command_prompt'] or remove the key from YAML",
-                            {"loc": ["atomic_tests", i, "dependency_executor_name"], "input": value},
+                            {
+                                "loc": ["atomic_tests", i, "dependency_executor_name"],
+                                "input": value,
+                            },
                         )
         return data
 
