@@ -53334,6 +53334,21 @@ discovery:
       x_mitre_version: '2.5'
       identifier: T1049
     atomic_tests:
+    - name: System Network Connections Discovery via ss or lsof (Linux/MacOS)
+      auto_generated_guid: bcf05343-ef1d-4052-8a27-b00c9be42b9f
+      description: |
+        List active TCP/UDP network connections using ss, with lsof as a fallback
+        when ss is unavailable. Serves as an alternative to the netstat-based test.
+      supported_platforms:
+      - linux
+      - macos
+      executor:
+        name: bash
+        command: 'if command -v ss >/dev/null 2>&1; then ss -antp 2>/dev/null || ss
+          -ant; ss -aunp 2>/dev/null || true; else lsof -i -nP 2>/dev/null || true;
+          fi
+
+          '
     - name: System Network Connections Discovery FreeBSD, Linux & MacOS
       auto_generated_guid: 9ae28d3f-190f-4fa0-b023-c7bd3e0eabf2
       description: |

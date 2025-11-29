@@ -3,7 +3,7 @@
 ## [Description from ATT&CK](https://attack.mitre.org/techniques/<%= technique['identifier'].gsub(/\./, '/') %>)
 <blockquote>
 
-<%= technique['description'].gsub("%\\<", "%<") %>
+<%= technique['description'].gsub("%\\<", "%<").gsub(/<code>.*?<\/code>/) { |match| match.gsub('~', '\~') } %>
 
 </blockquote>
 
