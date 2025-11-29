@@ -1,6 +1,6 @@
 ---
 name: Idea
-about: An idea for a feature or improvement to Atomic Red Team. 
+about: An idea for a feature or improvement to Atomic Red Team.
 title: 'Idea: '
 labels: 'idea'
 assignees: ''

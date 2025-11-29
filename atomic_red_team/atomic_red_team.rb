@@ -10,7 +10,7 @@ class AtomicRedTeam
 
   # TODO- should these all be relative URLs?
   ROOT_GITHUB_URL = "https://github.com/redcanaryco/atomic-red-team"
-  
+
   #
   # Returns a list of paths that contain Atomic Tests
   #
@@ -19,10 +19,10 @@ class AtomicRedTeam
   end
 
   #
-  # Returns a list of Atomic Tests in Atomic Red Team (as Hashes from source YAML) 
+  # Returns a list of Atomic Tests in Atomic Red Team (as Hashes from source YAML)
   #
   def atomic_tests
-    @atomic_tests ||= atomic_test_paths.collect do |path| 
+    @atomic_tests ||= atomic_test_paths.collect do |path|
       atomic_yaml = YAML.load(File.read path)
       atomic_yaml['atomic_yaml_path'] = path
       atomic_yaml
@@ -40,7 +40,7 @@ class AtomicRedTeam
     end
 
     test_list = Array.new
-    atomic_tests.find do |atomic_yaml| 
+    atomic_tests.find do |atomic_yaml|
       if atomic_yaml.fetch('attack_technique').upcase == technique_identifier.upcase
         atomic_yaml['atomic_tests'].each do |a_test|
           if a_test["supported_platforms"].include?(platform[:platform])
@@ -62,13 +62,13 @@ class AtomicRedTeam
       technique_or_technique_identifier
     end
 
-    atomic_tests.find do |atomic_yaml| 
+    atomic_tests.find do |atomic_yaml|
       atomic_yaml.fetch('attack_technique').upcase == technique_identifier.upcase
     end.to_h.fetch('atomic_tests', [])
   end
 
   #
-  # Returns a Markdown formatted Github link to a technique. This will be to the edit page for 
+  # Returns a Markdown formatted Github link to a technique. This will be to the edit page for
   # techniques that already have one or more Atomic Red Team tests, or the create page for
   # techniques that have no existing tests for the given OS.
   #
@@ -103,17 +103,17 @@ class AtomicRedTeam
 
   def validate_atomic_yaml!(yaml, used_guids_file, unique_guid_array)
     raise("YAML file has no elements") if yaml.nil?
-  
+
     raise('`attack_technique` element is required') unless yaml.has_key?('attack_technique')
     raise('`attack_technique` element must be a string') unless yaml['attack_technique'].is_a?(String)
-  
+
     raise('`display_name` element is required') unless yaml.has_key?('display_name')
     raise('`display_name` element must be an array') unless yaml['display_name'].is_a?(String)
-  
+
     raise('`atomic_tests` element is required') unless yaml.has_key?('atomic_tests')
     raise('`atomic_tests` element must be an array') unless yaml['atomic_tests'].is_a?(Array)
     raise('`atomic_tests` element is empty - you have no tests') unless yaml['atomic_tests'].count > 0
-  
+
     yaml['atomic_tests'].each_with_index do |atomic, i|
       raise("`atomic_tests[#{i}].name` element is required") unless atomic.has_key?('name')
       raise("`atomic_tests[#{i}].name` element must be a string") unless atomic['name'].is_a?(String)
@@ -127,10 +127,10 @@ class AtomicRedTeam
 
       raise("`atomic_tests[#{i}].description` element is required") unless atomic.has_key?('description')
       raise("`atomic_tests[#{i}].description` element must be a string") unless atomic['description'].is_a?(String)
-  
+
       raise("`atomic_tests[#{i}].supported_platforms` element is required") unless atomic.has_key?('supported_platforms')
       raise("`atomic_tests[#{i}].supported_platforms` element must be an Array (was a #{atomic['supported_platforms'].class.name})") unless atomic['supported_platforms'].is_a?(Array)
-  
+
       valid_supported_platforms = ['windows', 'macos', 'linux', 'office-365', 'azure-ad', 'google-workspace', 'saas', 'iaas', 'containers', 'iaas:aws', 'iaas:azure', 'iaas:gcp']
       atomic['supported_platforms'].each do |platform|
         if !valid_supported_platforms.include?(platform)
@@ -149,22 +149,22 @@ class AtomicRedTeam
         arg_name, arg = arg_kvp
         raise("`atomic_tests[#{i}].input_arguments[#{iai}].description` element is required") unless arg.has_key?('description')
         raise("`atomic_tests[#{i}].input_arguments[#{iai}].description` element must be a string") unless arg['description'].is_a?(String)
-  
+
         raise("`atomic_tests[#{i}].input_arguments[#{iai}].type` element is required") unless arg.has_key?('type')
         raise("`atomic_tests[#{i}].input_arguments[#{iai}].type` element must be a string") unless arg['type'].is_a?(String)
         raise("`atomic_tests[#{i}].input_arguments[#{iai}].type` element must be lowercased and underscored (was #{arg['type']})") unless arg['type'] =~ /[a-z_]+/
-  
+
         # TODO: determine if we think default values are required for EVERY input argument
         # raise("`atomic_tests[#{i}].input_arguments[#{iai}].default` element is required") unless arg.has_key?('default')
         # raise("`atomic_tests[#{i}].input_arguments[#{iai}].default` element must be a string (was a #{arg['default'].class.name})") unless arg['default'].is_a?(String)
       end
-  
+
       raise("`atomic_tests[#{i}].executor` element is required") unless atomic.has_key?('executor')
       executor = atomic['executor']
       raise("`atomic_tests[#{i}].executor.name` element is required") unless executor.has_key?('name')
       raise("`atomic_tests[#{i}].executor.name` element must be a string") unless executor['name'].is_a?(String)
       raise("`atomic_tests[#{i}].executor.name` element must be lowercased and underscored (was #{executor['name']})") unless executor['name'] =~ /[a-z_]+/
-  
+
       valid_executor_types = ['command_prompt', 'sh', 'bash', 'powershell', 'manual', 'aws', 'az', 'gcloud', 'kubectl']
       case executor['name']
         when 'manual'
@@ -192,7 +192,7 @@ class AtomicRedTeam
 
   def record_used_guids!(yaml, used_guids_file)
     return unless !yaml.nil?
- 
+
     yaml['atomic_tests'].each_with_index do |atomic, i|
       next unless atomic.has_key?('auto_generated_guid')
       guid = atomic["auto_generated_guid"].to_s
@@ -201,7 +201,7 @@ class AtomicRedTeam
   end
 
   def generate_guids_for_yaml!(path, used_guids_file)
-    text = File.read(path) 
+    text = File.read(path)
     # add the "auto_generated_guid:" element after the "- name:" element if it isn't already there
     text.gsub!(/(?i)(^([ \t]*-[ \t]*)name:.*$(?!\s*auto_generated_guid))/) { |m| "#{$1}\n#{$2.gsub(/-/," ")}auto_generated_guid:"}
     # fill the "auto_generated_guid:" element in if it doesn't contain a guid
@@ -218,7 +218,7 @@ class AtomicRedTeam
       break unless !is_unique_guid(new_guid, used_guids_file)
     end
     # add this new unique guid to the used guids file
-    add_guid_to_used_guid_file(new_guid, used_guids_file) 
+    add_guid_to_used_guid_file(new_guid, used_guids_file)
     return new_guid
   end
 

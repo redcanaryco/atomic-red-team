@@ -2,14 +2,14 @@ require 'open-uri'
 require 'json'
 
 #
-# Attack is an API class that loads information about ATT&CK techniques from MITRE'S ATT&CK 
+# Attack is an API class that loads information about ATT&CK techniques from MITRE'S ATT&CK
 # STIX representation. It makes it very simple to do common things with ATT&CK.
 #
 class Attack
-  # 
+  #
   # Tactics as presented in the order that the ATT&CK matrics uses
   #
-  def ordered_tactics 
+  def ordered_tactics
     [
       'initial-access',
       'execution',
@@ -26,27 +26,27 @@ class Attack
     ]
   end
 
-  # 
+  #
   # Returns the technique identifier (T1234) for a Technique object
   #
   def technique_identifier_for_technique(technique)
-    technique.fetch('external_references', []).find do |refs| 
+    technique.fetch('external_references', []).find do |refs|
       refs['source_name'] == 'mitre-attack'
     end['external_id'].upcase
   end
 
-  # 
+  #
   # Returns a Technique object given a technique identifier (T1234)
   #
   def technique_info(technique_id)
-    techniques.find do |item| 
+    techniques.find do |item|
       item.fetch('external_references', []).find do |references|
         references['external_id'] == technique_id.upcase
       end
     end
   end
-  
-  # 
+
+  #
   # Returns the ATT&CK Matrix as a 2D array, in order by `ordered_tactics`
   #
   def ordered_tactic_to_technique_matrix(only_platform: /.*/)
@@ -68,7 +68,7 @@ class Attack
     all_techniques_in_tactic_order.transpose
   end
 
-  # 
+  #
   # Returns a map of all [ ATT&CK Tactic name ] => [ List of ATT&CK techniques associated with that tactic]
   #
   def techniques_by_tactic(only_platform: /.*/)
@@ -84,7 +84,7 @@ class Attack
       end
     end
     techniques_by_tactic
-  end 
+  end
 
   #
   # Returns a list of all ATT&CK techniques

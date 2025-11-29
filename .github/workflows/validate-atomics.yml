@@ -3,73 +3,73 @@ name: validate-atomics
 on:
   pull_request:
     branches:
-      - master
+    - master
 
 jobs:
   validate-atomics:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout repo
-        uses: actions/checkout@v6
-      - name: Install poetry
-        run: pipx install poetry
-      - name: setup python3.11
-        uses: actions/setup-python@v6
-        id: setup-python
-        with:
-          python-version: "3.11.2"
-          cache: "poetry"
+    - name: checkout repo
+      uses: actions/checkout@v6
+    - name: Install poetry
+      run: pipx install poetry
+    - name: setup python3.11
+      uses: actions/setup-python@v6
+      id: setup-python
+      with:
+        python-version: "3.11.2"
+        cache: "poetry"
 
-      - name: Install dependencies
-        run: poetry install --no-interaction
+    - name: Install dependencies
+      run: poetry install --no-interaction
 
-      - name: validate the format of atomics tests against the spec
-        run: poetry run python runner.py validate
-        working-directory: atomic_red_team
-        env:
-          PYTHONPATH: ${{ github.workspace }}
+    - name: validate the format of atomics tests against the spec
+      run: poetry run python runner.py validate
+      working-directory: atomic_red_team
+      env:
+        PYTHONPATH: ${{ github.workspace }}
 
   upload:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout repo
-        uses: actions/checkout@v6
-      - name: Install poetry
-        run: pipx install poetry
-      - name: setup python3.11
-        uses: actions/setup-python@v6
-        id: setup-python
-        with:
-          python-version: "3.11.2"
-          cache: "poetry"
-      - uses: actions/github-script@v8
-        id: get_pr_number
-        with:
-          script: |
-            if (context.issue.number) {
-              // Return issue number if present
-              return context.issue.number;
-            } else {
-              // Otherwise return issue number from commit
-              return (
-                await github.rest.repos.listPullRequestsAssociatedWithCommit({
-                  commit_sha: context.sha,
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                })
-              ).data[0].number;
-            }
-          result-encoding: string
-      - name: Install dependencies
-        run: poetry install --no-interaction --no-root
-      - name: save labels and reviewers into a file.
-        run: |
-          poetry run python runner.py generate-labels --pr '${{steps.get_pr_number.outputs.result}}' --token ${{ secrets.GITHUB_TOKEN }}
-        working-directory: atomic_red_team
-        env:
-          PYTHONPATH: ${{ github.workspace }}
+    - name: checkout repo
+      uses: actions/checkout@v6
+    - name: Install poetry
+      run: pipx install poetry
+    - name: setup python3.11
+      uses: actions/setup-python@v6
+      id: setup-python
+      with:
+        python-version: "3.11.2"
+        cache: "poetry"
+    - uses: actions/github-script@v8
+      id: get_pr_number
+      with:
+        script: |
+          if (context.issue.number) {
+            // Return issue number if present
+            return context.issue.number;
+          } else {
+            // Otherwise return issue number from commit
+            return (
+              await github.rest.repos.listPullRequestsAssociatedWithCommit({
+                commit_sha: context.sha,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+              })
+            ).data[0].number;
+          }
+        result-encoding: string
+    - name: Install dependencies
+      run: poetry install --no-interaction --no-root
+    - name: save labels and reviewers into a file.
+      run: |
+        poetry run python runner.py generate-labels --pr '${{steps.get_pr_number.outputs.result}}' --token ${{ secrets.GITHUB_TOKEN }}
+      working-directory: atomic_red_team
+      env:
+        PYTHONPATH: ${{ github.workspace }}
 
-      - uses: actions/upload-artifact@v5
-        with:
-          name: labels.json
-          path: atomic_red_team/pr/
+    - uses: actions/upload-artifact@v5
+      with:
+        name: labels.json
+        path: atomic_red_team/pr/

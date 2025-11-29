@@ -1,6 +1,6 @@
 # Contributor Code of Conduct
 
-Welcome to the [Atomic Red Team online community](https://atomicredteam.io/). Our goal is to foster an open, safe, and welcoming environment. As a collective, we—as contributors, maintainers, and the Open Source Projects team of Red Canary—pledge to encourage our project and community to be a harassment-free space. We invite you to collaborate, exchange thoughts or information, and engage with one another. Atomic Red Team is meant for everyone, regardless of age, personal appearance, body size, disability, nationality, race, ethnicity, gender identity and expression, level of experience or academics, religion, or sexual identity and orientation. 
+Welcome to the [Atomic Red Team online community](https://atomicredteam.io/). Our goal is to foster an open, safe, and welcoming environment. As a collective, we—as contributors, maintainers, and the Open Source Projects team of Red Canary—pledge to encourage our project and community to be a harassment-free space. We invite you to collaborate, exchange thoughts or information, and engage with one another. Atomic Red Team is meant for everyone, regardless of age, personal appearance, body size, disability, nationality, race, ethnicity, gender identity and expression, level of experience or academics, religion, or sexual identity and orientation.
 
 ## Our Guidelines
 
@@ -27,7 +27,7 @@ If you see anything that you believe breaks our community guidelines, no matter 
 
 ## Enforcement & Consequences
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting the Community Manager. Unacceptable behavior will not be tolerated by community members, maintainers, and Red Canary team members.  The Atomic Red Team Community Manager and maintainers will review and investigate all complaints. 
+Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting the Community Manager. Unacceptable behavior will not be tolerated by community members, maintainers, and Red Canary team members.  The Atomic Red Team Community Manager and maintainers will review and investigate all complaints.
 
 Anyone asked to stop unacceptable behavior is expected to comply immediately. If an Atomic Red Team community member (anyone contributing to our [GitHub Repo](https://github.com/redcanaryco/atomic-red-team) or [Community Slack](https://slack.atomicredteam.io/)) engages in unacceptable behavior, the Community Manager may take any temporary or permanent action they deem appropriate, up to and including immediate expulsion from the Atomic Red Team community without warning.
 
@@ -49,10 +49,10 @@ This Code of Conduct applies to all of the Atomic Red Team, and “Atomic Family
 
 * [Atomic Red Team GitHub](https://github.com/redcanaryco/atomic-red-team)
 
-* **Atomic Family**  
-  * [Invoke-AtomicRedTeam](https://github.com/redcanaryco/invoke-atomicredteam) 
-  * [AtomicTestHarnesses](https://github.com/redcanaryco/atomictestharnesses) 
-  * [Chain Reactor](https://github.com/redcanaryco/chain-reactor) 
+* **Atomic Family**
+  * [Invoke-AtomicRedTeam](https://github.com/redcanaryco/invoke-atomicredteam)
+  * [AtomicTestHarnesses](https://github.com/redcanaryco/atomictestharnesses)
+  * [Chain Reactor](https://github.com/redcanaryco/chain-reactor)
 
 ## Attribution
 

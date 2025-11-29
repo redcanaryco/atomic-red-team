@@ -3,18 +3,18 @@ name: validate-terraform
 on:
   pull_request:
     branches:
-      - master
+    - master
     paths:
-      - "**/*.tf"
+    - "**/*.tf"
 
 jobs:
   validate-terraform:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - uses: hashicorp/setup-terraform@v3
+    - uses: actions/checkout@v6
+    - uses: hashicorp/setup-terraform@v3
 
-      - name: Terraform fmt
-        id: fmt
-        run: terraform fmt -recursive -check
-        continue-on-error: false
+    - name: Terraform fmt
+      id: fmt
+      run: terraform fmt -recursive -check
+      continue-on-error: false

@@ -244,7 +244,7 @@ class AtomicRedTeamDocs
       "versions" => {	"attack": "16",	"navigator": "5.1.0",	"layer": "4.5"	},
       "description" => layer_name + " MITRE ATT&CK Navigator Layer",
       "domain" => "enterprise-attack",
-      "filters"=> filters,    
+      "filters"=> filters,
       "gradient" => {
                   "colors" => ["#ffffff",
                                "#ce232e"
@@ -265,11 +265,11 @@ class AtomicRedTeamDocs
       "techniques" => techniques
     }
   end
-  
+
 
   #
   # Process the current technique and update the list
-  # 
+  #
   def update_techniquesList(current_technique, current_techniqueParent, techniques_list, atomic_yaml, comments)
     if not atomic_yaml['attack_technique'].include?(".") then
       tech_parent = techniques_list.find { |h| h["techniqueID"] == atomic_yaml['attack_technique'].split('.')[0] }
@@ -298,7 +298,7 @@ class AtomicRedTeamDocs
       techniques_list.push(current_technique)
     end
   end
-  
+
   #
   # Generates a MITRE ATT&CK Navigator Layer based on contributed techniques
   #
@@ -385,7 +385,7 @@ class AtomicRedTeamDocs
             win_technique['score'] += 1
             win_technique['comment'] += "- " + atomic['name'] + "\n"
           end
-          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /macos/} then 
+          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /macos/} then
             has_macos_tests = true
             macos_technique['score'] += 1
             macos_technique['comment'] += "- " + atomic['name'] + "\n"
@@ -441,7 +441,7 @@ class AtomicRedTeamDocs
             esxi_technique['comment'] += "- " + atomic['name'] + "\n"
           end
         end
-        
+
         # Update full Atomic Layer
         update_techniquesList(technique, techniqueParent, techniques, atomic_yaml, false)
         # Update all other Atomic Layers
@@ -483,9 +483,9 @@ class AtomicRedTeamDocs
         end
       end
     end
-    
+
     puts techniques_iaas_gcp
-    
+
     layer = get_layer techniques, "Atomic Red Team"
     layer_win = get_layer techniques_win, "Atomic Red Team (Windows)"
     layer_mac = get_layer techniques_mac, "Atomic Red Team (macOS)"
