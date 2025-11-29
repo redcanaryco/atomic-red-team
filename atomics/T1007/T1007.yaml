@@ -11,7 +11,7 @@ atomic_tests:
   - windows
   executor:
     command: |
-      tasklist.exe
+      tasklist.exe /svc
       sc query
       sc query state= all
     name: command_prompt
@@ -53,3 +53,56 @@ atomic_tests:
   executor:
     name: command_prompt
     command: powershell.exe Get-Service
+- name: System Service Discovery - macOS launchctl
+  description: |
+    Enumerates services on macOS using launchctl. Used by adversaries for
+    identifying daemons, background services, and persistence mechanisms.
+  supported_platforms:
+    - macos
+  executor:
+    name: sh
+    command: launchctl list
+- name: System Service Discovery - Windows Scheduled Tasks (schtasks)
+  description: |
+    Enumerates scheduled tasks on Windows using schtasks.exe.
+  supported_platforms:
+  - windows
+  executor:
+    name: command_prompt
+    command: schtasks /query /fo LIST /v
+
+- name: System Service Discovery - Services Registry Enumeration
+  description: |
+    Enumerates Windows services by reading the Services registry key
+    (HKLM\SYSTEM\CurrentControlSet\Services) instead of using Service Control
+    Manager APIs or CLI tools such as sc.exe or Get-Service.
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    command: |
+      Get-ChildItem -Path 'HKLM:\SYSTEM\CurrentControlSet\Services' |
+        ForEach-Object {
+          $p = Get-ItemProperty -Path $_.PSPath -ErrorAction SilentlyContinue
+          [PSCustomObject]@{
+            Name        = $_.PSChildName
+            DisplayName = $p.DisplayName
+            ImagePath   = $p.ImagePath
+            StartType   = $p.Start
+          }
+        }
+
+- name: System Service Discovery - Linux init scripts
+  description: |
+    Enumerates system services by listing SysV init scripts and runlevel
+    symlinks under /etc/init.d and /etc/rc*.d.
+  supported_platforms:
+  - linux
+  executor:
+    name: sh
+    command: |
+      echo "[*] Listing SysV init scripts (/etc/init.d):"
+      if [ -d /etc/init.d ]; then ls -l /etc/init.d; else echo "/etc/init.d not present on this system"; fi
+      echo
+      echo "[*] Listing runlevel directories (/etc/rc*.d):"
+      ls -ld /etc/rc*.d 2>/dev/null || echo "No /etc/rc*.d directories found"
