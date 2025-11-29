@@ -1861,6 +1861,8 @@
   - Atomic Test #1: System Service Discovery [windows]
   - Atomic Test #2: System Service Discovery - net.exe [windows]
   - Atomic Test #4: Get-Service Execution [windows]
+  - Atomic Test #6: System Service Discovery - Windows Scheduled Tasks (schtasks) [windows]
+  - Atomic Test #7: System Service Discovery - Services Registry Enumeration [windows]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #4: Packet Capture Windows Command Prompt [windows]
   - Atomic Test #5: Windows Internal Packet Capture [windows]

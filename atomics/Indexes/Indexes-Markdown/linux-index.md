@@ -750,6 +750,7 @@
   - Atomic Test #15: Active Directory Domain Search Using LDAP - Linux (Ubuntu)/macOS [linux]
 - [T1007 System Service Discovery](../../T1007/T1007.md)
   - Atomic Test #3: System Service Discovery - systemctl/service [linux]
+  - Atomic Test #8: System Service Discovery - Linux init scripts [linux]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #1: Packet Capture Linux using tshark or tcpdump [linux]
   - Atomic Test #2: Packet Capture FreeBSD using tshark or tcpdump [linux]

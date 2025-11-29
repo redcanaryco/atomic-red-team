@@ -56385,6 +56385,21 @@ discovery:
 
           '
         name: bash
+    - name: System Service Discovery - Linux init scripts
+      auto_generated_guid: 8f2a5d2b-4018-46d4-8f3f-0fea53754690
+      description: |
+        Enumerates system services by listing SysV init scripts and runlevel
+        symlinks under /etc/init.d and /etc/rc*.d.
+      supported_platforms:
+      - linux
+      executor:
+        name: sh
+        command: |
+          echo "[*] Listing SysV init scripts (/etc/init.d):"
+          if [ -d /etc/init.d ]; then ls -l /etc/init.d; else echo "/etc/init.d not present on this system"; fi
+          echo
+          echo "[*] Listing runlevel directories (/etc/rc*.d):"
+          ls -ld /etc/rc*.d 2>/dev/null || echo "No /etc/rc*.d directories found"
   T1040:
     technique:
       type: attack-pattern

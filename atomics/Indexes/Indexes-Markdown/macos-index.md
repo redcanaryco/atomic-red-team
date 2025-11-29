@@ -669,7 +669,8 @@
   - Atomic Test #7: Check if System Integrity Protection is enabled [macos]
   - Atomic Test #8: Detect Virtualization Environment using system_profiler [macos]
 - T1069.002 Permission Groups Discovery: Domain Groups [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1007 System Service Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1007 System Service Discovery](../../T1007/T1007.md)
+  - Atomic Test #5: System Service Discovery - macOS launchctl [macos]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #3: Packet Capture macOS using tcpdump or tshark [macos]
   - Atomic Test #8: Packet Capture macOS using /dev/bpfN with sudo [macos]
