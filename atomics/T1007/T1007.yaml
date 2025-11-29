@@ -54,7 +54,6 @@ atomic_tests:
     name: command_prompt
     command: powershell.exe Get-Service
 - name: System Service Discovery - macOS launchctl
-  auto_generated_guid: 91311179-9d2f-40ae-a80a-d3c30c5dc638
   description: |
     Enumerates services on macOS using launchctl. Used by adversaries for
     identifying daemons, background services, and persistence mechanisms.
@@ -64,7 +63,6 @@ atomic_tests:
     name: sh
     command: launchctl list
 - name: System Service Discovery - Windows Scheduled Tasks (schtasks)
-  auto_generated_guid: 3df87928-cb07-4f1b-b711-c655b5ae8abd
   description: |
     Enumerates scheduled tasks on Windows using schtasks.exe.
   supported_platforms:
@@ -74,7 +72,6 @@ atomic_tests:
     command: schtasks /query /fo LIST /v
 
 - name: System Service Discovery - Services Registry Enumeration
-  auto_generated_guid: 4cde1f2b-d3d1-4850-9c81-9a91007c1bba
   description: |
     Enumerates Windows services by reading the Services registry key
     (HKLM\SYSTEM\CurrentControlSet\Services) instead of using Service Control
@@ -96,7 +93,6 @@ atomic_tests:
         }
 
 - name: System Service Discovery - Linux init scripts
-  auto_generated_guid: 37a8ef14-c86a-44e8-aa70-38ccdec0f0b6
   description: |
     Enumerates system services by listing SysV init scripts and runlevel
     symlinks under /etc/init.d and /etc/rc*.d.
