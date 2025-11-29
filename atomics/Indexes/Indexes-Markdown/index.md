@@ -2757,8 +2757,11 @@
 - [T1049 System Network Connections Discovery](../../T1049/T1049.md)
   - Atomic Test #1: System Network Connections Discovery [windows]
   - Atomic Test #2: System Network Connections Discovery with PowerShell [windows]
-  - Atomic Test #3: System Network Connections Discovery FreeBSD, Linux & MacOS [linux, macos]
-  - Atomic Test #4: System Discovery using SharpView [windows]
+  - Atomic Test #3: System Network Connections Discovery via PowerShell (Process Mapping) [windows]
+  - Atomic Test #4: System Network Connections Discovery via ss or lsof (Linux/MacOS) [linux, macos]
+  - Atomic Test #5: System Network Connections Discovery FreeBSD, Linux & MacOS [linux, macos]
+  - Atomic Test #6: System Network Connections Discovery via sockstat (Linux, FreeBSD) [linux]
+  - Atomic Test #7: System Discovery using SharpView [windows]
 - T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1619 Cloud Storage Object Discovery](../../T1619/T1619.md)
   - Atomic Test #1: AWS S3 Enumeration [iaas:aws]
