@@ -732,7 +732,9 @@
   - Atomic Test #2: Check internet connection using ping freebsd, linux or macos [macos, linux]
 - T1069 Permission Groups Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1615 Group Policy Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1652 Device Driver Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1652 Device Driver Discovery](../../T1652/T1652.md)
+  - Atomic Test #2: Device Driver Discovery (Linux) [linux]
+  - Atomic Test #3: Enumerate Kernel Driver Files (Linux) [linux]
 - [T1087.002 Account Discovery: Domain Account](../../T1087.002/T1087.002.md)
   - Atomic Test #23: Active Directory Domain Search [linux]
   - Atomic Test #24: Account Enumeration with LDAPDomainDump [linux]
