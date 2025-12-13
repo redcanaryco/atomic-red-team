@@ -26,7 +26,6 @@ atomic_tests:
   executor:
     command: |
       lsmod
-    cleanup_command:
     name: bash
     elevation_required: false
 - name: Enumerate Kernel Driver Files (Linux)
@@ -37,10 +36,9 @@ atomic_tests:
   executor:
     command: |
       find /lib/modules/$(uname -r)/kernel/drivers -name "*.ko*"
-    cleanup_command:
     name: bash
     elevation_required: false
-- name: Device Driver Discovery (macOS)
+- name: List loaded kernel extensions (macOS)
   description: |
     Displays a list of loaded kernel extensions (kexts) on a macOS system.
   supported_platforms:
@@ -48,7 +46,6 @@ atomic_tests:
   executor:
     command: |
       kextstat
-    cleanup_command:
     name: bash
     elevation_required: false
 - name: Find Kernel Extensions (macOS)
@@ -59,6 +56,5 @@ atomic_tests:
   executor:
     command: |
       kextfind
-    cleanup_command:
     name: bash
     elevation_required: false
