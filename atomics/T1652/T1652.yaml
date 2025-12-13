@@ -18,3 +18,43 @@ atomic_tests:
     cleanup_command: 
     name: powershell
     elevation_required: false
+- name: Device Driver Discovery (Linux)
+  description: |
+    Displays a list of loaded kernel modules on a Linux system, which is used to enumerate drivers.
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      lsmod
+    name: bash
+    elevation_required: false
+- name: Enumerate Kernel Driver Files (Linux)
+  description: |
+    Finds and lists all kernel driver files on a Linux system in order to provide a broader view of available drivers, not just loaded ones.
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      find /lib/modules/$(uname -r)/kernel/drivers -name "*.ko*"
+    name: bash
+    elevation_required: false
+- name: List loaded kernel extensions (macOS)
+  description: |
+    Displays a list of loaded kernel extensions (kexts) on a macOS system.
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+      kextstat
+    name: bash
+    elevation_required: false
+- name: Find Kernel Extensions (macOS)
+  description: |
+    Searches for kernel extension (kext) files on a macOS system.
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+      kextfind
+    name: bash
+    elevation_required: false
