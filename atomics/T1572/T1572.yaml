@@ -134,7 +134,7 @@ atomic_tests:
       if (Test-Path C:\Users\Public\ngrok) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Path C:\Users\Public\ngrok -ItemType Directory | Out-Null
-      Invoke-WebRequest #{download} -OutFile C:\Users\Public\ngrok\ngrok-v3-stable-windows-amd64.zip
+      Invoke-WebRequest #{download} -OutFile C:\Users\Public\ngrok\ngrok-v3-stable-windows-amd64.zip -UseBasicParsing
       Expand-Archive C:\Users\Public\ngrok\ngrok-v3-stable-windows-amd64.zip -DestinationPath C:\Users\Public\ngrok
   executor:
     command: |

@@ -60,7 +60,7 @@ atomic_tests:
       if (Test-Path "#{adrecon_path}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest -Uri "https://raw.githubusercontent.com/sense-of-security/ADRecon/38e4abae3e26d0fa87281c1d0c65cabd4d3c6ebd/ADRecon.ps1" -OutFile "#{adrecon_path}"
+      Invoke-WebRequest -Uri "https://raw.githubusercontent.com/sense-of-security/ADRecon/38e4abae3e26d0fa87281c1d0c65cabd4d3c6ebd/ADRecon.ps1" -OutFile "#{adrecon_path}" -UseBasicParsing
   executor:
     command: |
       Invoke-Expression "#{adrecon_path}"
@@ -87,7 +87,7 @@ atomic_tests:
       if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/bin/AdFind.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe"
+      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/bin/AdFind.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" -UseBasicParsing
   executor:
     command: |
       "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" #{optional_args} -default -s base lockoutduration lockoutthreshold lockoutobservationwindow maxpwdage minpwdage minpwdlength pwdhistorylength pwdproperties
@@ -112,7 +112,7 @@ atomic_tests:
       if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/bin/AdFind.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe"
+      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/bin/AdFind.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" -UseBasicParsing
   executor:
     command: |
       "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" -sc admincountdmp #{optional_args}
@@ -137,7 +137,7 @@ atomic_tests:
       if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/bin/AdFind.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe"
+      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/bin/AdFind.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" -UseBasicParsing
   executor:
     command: |
       "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" -f (objectcategory=person) #{optional_args}
@@ -162,7 +162,7 @@ atomic_tests:
       if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/bin/AdFind.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe"
+      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/bin/AdFind.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" -UseBasicParsing
   executor:
     command: |
       "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" -sc exchaddresses #{optional_args}

