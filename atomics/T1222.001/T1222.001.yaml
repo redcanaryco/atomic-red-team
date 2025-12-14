@@ -158,9 +158,9 @@ atomic_tests:
       prereq_command: |
         if (Test-Path "Test-Path C:\Program Files (x86)\Windows Resource Kits\Tools\subinacl.exe") {exit 0} else {exit 1}
       get_prereq_command: |-
-        New-Item -Path C:\Users\Public\SubInAcl -ItemType Directory | Out-Null
-        Invoke-WebRequest #{SubInAclDownloadPath} -OutFile C:\Users\Public\SubInAcl\SubInAcl.msi
-        msiexec.exe /i "C:\Users\Public\SubInAcl\SubInAcl.msi" /qn
+        New-Item -Path PathToAtomicsFolder\..\ExternalPayloads -ItemType Directory -Force | Out-Null
+        Invoke-WebRequest #{SubInAclDownloadPath} -OutFile PathToAtomicsFolder\..\ExternalPayloads\SubInAcl.msi
+        msiexec.exe /i "PathToAtomicsFolder\..\ExternalPayloads\SubInAcl.msi" /qn
   executor:
     command: '"C:\Program Files (x86)\Windows Resource Kits\Tools\subinacl.exe"'
     name: command_prompt

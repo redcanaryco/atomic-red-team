@@ -12,10 +12,11 @@ atomic_tests:
     command: |
       $url = 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1566.001/bin/PhishingAttachment.xlsm'
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      Invoke-WebRequest -Uri $url -OutFile $env:TEMP\PhishingAttachment.xlsm
+      New-Item -Path PathToAtomicsFolder\..\ExternalPayloads -ItemType Directory -Force | Out-Null
+      Invoke-WebRequest -Uri $url -OutFile PathToAtomicsFolder\..\ExternalPayloads\PhishingAttachment.xlsm
     name: powershell
     cleanup_command: |
-      Remove-Item $env:TEMP\PhishingAttachment.xlsm -ErrorAction Ignore
+      Remove-Item PathToAtomicsFolder\..\ExternalPayloads\PhishingAttachment.xlsm -ErrorAction Ignore
 
 - name: Word spawned a command shell and used an IP address in the command line
   auto_generated_guid: cbb6799a-425c-4f83-9194-5447a909d67f

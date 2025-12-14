@@ -13,7 +13,7 @@ atomic_tests:
     stratus_path:
       description: Path of stratus binary
       type: path
-      default: $PathToAtomicsFolder/T1580/src
+      default: $PathToAtomicsFolder/../ExternalPayloads
     aws_region:
       description: AWS region to detonate
       type: string
@@ -25,6 +25,7 @@ atomic_tests:
     prereq_command: |
       if test -f "#{stratus_path}/stratus"; then exit 0; else exit 1; fi
     get_prereq_command: |
+      mkdir -p #{stratus_path}
       if [ "$(uname)" = "Darwin" ]
       then DOWNLOAD_URL=$(curl -s https://api.github.com/repos/DataDog/stratus-red-team/releases/latest | grep browser_download_url | grep -i Darwin_x86_64 | cut -d '"' -f 4); wget -q -O #{stratus_path}/stratus-red-team-latest.tar.gz $DOWNLOAD_URL
         tar -xzvf #{stratus_path}/stratus-red-team-latest.tar.gz --directory #{stratus_path}/

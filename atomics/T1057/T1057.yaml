@@ -103,10 +103,10 @@ atomic_tests:
       if (Test-Path "c:\Program Files\Process Hacker 2\#{processhacker_exe}") {exit 0} else {exit 1}
     get_prereq_command: |-
       Write-Host Downloading Process Hacker
-      New-Item -Type Directory "C:\Temp\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "https://versaweb.dl.sourceforge.net/project/processhacker/processhacker2/processhacker-2.39-setup.exe" -OutFile "C:\Temp\ExternalPayloads\processhacker-2.39-setup.exe"
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://versaweb.dl.sourceforge.net/project/processhacker/processhacker2/processhacker-2.39-setup.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\processhacker-2.39-setup.exe"
       Write-Host Installing Process Hacker
-      Start-Process "c:\Temp\ExternalPayloads\processhacker-2.39-setup.exe" -Wait -ArgumentList "/s"
+      Start-Process "PathToAtomicsFolder\..\ExternalPayloads\processhacker-2.39-setup.exe" -Wait -ArgumentList "/s"
   executor:
     command: Start-Process -FilePath "$Env:ProgramFiles\Process Hacker 2\#{processhacker_exe}"
     name: powershell
@@ -125,15 +125,15 @@ atomic_tests:
   dependencies:
   - description: PCHunter must be present in device
     prereq_command: |
-      if (Get-ChildItem -Path C:\ -Include *PCHunter64* -File -Recurse -ErrorAction SilentlyContinue) {exit 0} else {exit 1}
+      if (Test-Path PathToAtomicsFolder\..\ExternalPayloads\PCHunter_free\#{pchunter64_exe}) {exit 0} else {exit 1}
     get_prereq_command: |-
       Write-Host Downloading PC Hunter
-      New-Item -Type Directory "C:\Temp\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "https://www.snapfiles.com/directdl/PCHunter_free.zip" -OutFile "C:\Temp\ExternalPayloads\PCHunter_free.zip"
-      Expand-Archive -LiteralPath 'C:\Temp\ExternalPayloads\PCHunter_free.zip' -DestinationPath C:\Temp\ExternalPayloads
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://www.snapfiles.com/directdl/PCHunter_free.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\PCHunter_free.zip"
+      Expand-Archive -LiteralPath 'PathToAtomicsFolder\..\ExternalPayloads\PCHunter_free.zip' -DestinationPath PathToAtomicsFolder\..\ExternalPayloads
       Write-Host Unzipping Installing Process Hunter
   executor:
-    command: Start-Process -FilePath "C:\Temp\ExternalPayloads\PCHunter_free\#{pchunter64_exe}"
+    command: Start-Process -FilePath "PathToAtomicsFolder\..\ExternalPayloads\PCHunter_free\#{pchunter64_exe}"
     name: powershell
     elevation_required: true
 - name: Launch Taskmgr from cmd to View running processes  
