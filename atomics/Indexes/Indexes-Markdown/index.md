@@ -2557,6 +2557,10 @@
   - Atomic Test #5: MSFT Get-GPO Cmdlet [windows]
 - [T1652 Device Driver Discovery](../../T1652/T1652.md)
   - Atomic Test #1: Device Driver Discovery [windows]
+  - Atomic Test #2: Device Driver Discovery (Linux) [linux]
+  - Atomic Test #3: Enumerate Kernel Driver Files (Linux) [linux]
+  - Atomic Test #4: List loaded kernel extensions (macOS) [macos]
+  - Atomic Test #5: Find Kernel Extensions (macOS) [macos]
 - [T1087.002 Account Discovery: Domain Account](../../T1087.002/T1087.002.md)
   - Atomic Test #1: Enumerate all accounts (Domain) [windows]
   - Atomic Test #2: Enumerate all accounts via PowerShell (Domain) [windows]
@@ -2624,6 +2628,10 @@
   - Atomic Test #2: System Service Discovery - net.exe [windows]
   - Atomic Test #3: System Service Discovery - systemctl/service [linux]
   - Atomic Test #4: Get-Service Execution [windows]
+  - Atomic Test #5: System Service Discovery - macOS launchctl [macos]
+  - Atomic Test #6: System Service Discovery - Windows Scheduled Tasks (schtasks) [windows]
+  - Atomic Test #7: System Service Discovery - Services Registry Enumeration [windows]
+  - Atomic Test #8: System Service Discovery - Linux init scripts [linux]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #1: Packet Capture Linux using tshark or tcpdump [linux]
   - Atomic Test #2: Packet Capture FreeBSD using tshark or tcpdump [linux]
@@ -2757,8 +2765,11 @@
 - [T1049 System Network Connections Discovery](../../T1049/T1049.md)
   - Atomic Test #1: System Network Connections Discovery [windows]
   - Atomic Test #2: System Network Connections Discovery with PowerShell [windows]
-  - Atomic Test #3: System Network Connections Discovery FreeBSD, Linux & MacOS [linux, macos]
-  - Atomic Test #4: System Discovery using SharpView [windows]
+  - Atomic Test #3: System Network Connections Discovery via PowerShell (Process Mapping) [windows]
+  - Atomic Test #4: System Network Connections Discovery via ss or lsof (Linux/MacOS) [linux, macos]
+  - Atomic Test #5: System Network Connections Discovery FreeBSD, Linux & MacOS [linux, macos]
+  - Atomic Test #6: System Network Connections Discovery via sockstat (Linux, FreeBSD) [linux]
+  - Atomic Test #7: System Discovery using SharpView [windows]
 - T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1619 Cloud Storage Object Discovery](../../T1619/T1619.md)
   - Atomic Test #1: AWS S3 Enumeration [iaas:aws]

