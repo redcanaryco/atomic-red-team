@@ -1,0 +1,109 @@
+attack_technique: T1546.018
+display_name: "Event Triggered Execution: Python Startup Hooks"
+atomic_tests:
+  - name: "Python Startup Hook Execution via .pth (Windows)"
+    auto_generated_guid: 7d8a6f3c-2b1d-4b59-9e3a-8c4a9c9b1f12
+    description: |
+      Creates a Python startup hook using a .pth file inside a virtual environment on Windows.
+    supported_platforms:
+      - windows
+    input_arguments:
+      exe_name:
+        description: Executable to launch
+        type: string
+        default: calc.exe
+      python_path:
+        description: Path to Python interpreter
+        type: path
+        default: python.exe
+    dependency_executor_name: powershell
+    dependencies:
+      - description: Ensure Python is installed
+        prereq_command: |
+          if (Get-Command #{python_path} -ErrorAction SilentlyContinue) { exit 0 } else { exit 1 }
+        get_prereq_command: |
+          Write-Host "Python not found. Please install it from https://www.python.org/downloads/windows/ or via 'winget install Python.Python.3'"
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $TempDir = Join-Path $env:TEMP ("atomic_python_hook_" + [guid]::NewGuid())
+        New-Item -ItemType Directory -Path $TempDir | Out-Null
+        Set-Location $TempDir
+        Set-Content -Path "$env:TEMP\atomic_python_hook_path.txt" -Value $TempDir
+        & "#{python_path}" -m venv env
+        $SitePackages = & "$TempDir\env\Scripts\python.exe" -c "import site; print(site.getsitepackages()[1])"
+        "import os, subprocess; os.environ.get('CALC_SPAWNED') or (os.environ.update({'CALC_SPAWNED':'1'}) or subprocess.Popen(['#{exe_name}']))" | Out-File -Encoding ASCII "$SitePackages\atomic_hook.pth"
+        & "$TempDir\env\Scripts\python.exe" -c "print('Interpreter started')"
+      cleanup_command: |
+        Get-Process CalculatorApp -ErrorAction SilentlyContinue | Stop-Process -Force
+        if (Test-Path "$env:TEMP\atomic_python_hook_path.txt") {
+          $TempDir = Get-Content "$env:TEMP\atomic_python_hook_path.txt"
+          Remove-Item -Recurse -Force $TempDir -ErrorAction SilentlyContinue
+          Remove-Item "$env:TEMP\atomic_python_hook_path.txt" -Force }
+
+  - name: "Python Startup Hook Execution via .pth (Linux)"
+    auto_generated_guid: 3f0d6e5a-6a4f-4a0f-b9a7-1c1f7e3f8d21
+    description: |
+      Creates a Python startup hook using a .pth file inside a virtual environment on Linux.
+    supported_platforms:
+      - linux
+    input_arguments:
+      python_path:
+        description: Path to Python interpreter
+        type: path
+        default: python3
+    dependency_executor_name: bash
+    dependencies:
+      - description: Ensure Python is installed
+        prereq_command: command -v #{python_path} >/dev/null 2>&1
+        get_prereq_command: |
+          echo "Python3 not found. Please install it using your package manager (e.g., 'sudo apt install python3' or 'sudo yum install python3')."
+    executor:
+      name: bash
+      elevation_required: false
+      command: |
+        PYTHON_EXE=$(command -v #{python_path})
+        TEMPDIR=$(mktemp -d /tmp/atomic_python_hook_XXXXXX)
+        echo "$TEMPDIR" > /tmp/atomic_python_hook_path.txt
+        $PYTHON_EXE -m venv "$TEMPDIR/env"
+        SITE_PACKAGES=$("$TEMPDIR/env/bin/python" -c "import site; print(site.getsitepackages()[0])")
+        echo "import sys, os; (not hasattr(sys, 'hook_run')) and (setattr(sys, 'hook_run', True) or os.system('cat /etc/passwd'))" > "$SITE_PACKAGES/atomic_hook.pth"
+      cleanup_command: |
+        rm -rf $(cat /tmp/atomic_python_hook_path.txt) && rm -f /tmp/atomic_python_hook_path.txt
+
+  - name: "Python Startup Hook Execution via .pth (macOS)"
+    auto_generated_guid: 9c2b8e14-4a9f-4b1a-b7e2-6c9f0e5c4b33
+    description: |
+      Creates a Python startup hook using a .pth file inside a virtual environment on macOS.
+    supported_platforms:
+      - macos
+    input_arguments:
+      exe_name:
+        description: App to launch
+        type: string
+        default: Calculator
+      python_path:
+        description: Path to Python interpreter
+        type: path
+        default: python3
+    dependency_executor_name: bash
+    dependencies:
+      - description: Ensure Python is installed
+        prereq_command: command -v #{python_path} >/dev/null 2>&1
+        get_prereq_command: |
+          echo "Python3 not found. Please install it using Homebrew ('brew install python') or the macOS developer tools ('xcode-select --install')."
+    executor:
+      name: bash
+      elevation_required: false
+      command: |
+        PYTHON_EXE=$(command -v #{python_path})
+        TEMPDIR=$(mktemp -d /tmp/atomic_python_hook_XXXXXX)
+        echo "$TEMPDIR" > /tmp/atomic_python_hook_path.txt
+        $PYTHON_EXE -m venv "$TEMPDIR/env"
+        SITE_PACKAGES=$("$TEMPDIR/env/bin/python" -c "import site; print(site.getsitepackages()[0])")
+        echo "import subprocess; subprocess.Popen(['open', '-a', '#{exe_name}'])" > "$SITE_PACKAGES/atomic_hook.pth"
+        "$TEMPDIR/env/bin/python" -c "print('Interpreter started')"
+      cleanup_command: |
+        pkill "#{exe_name}" || true
+        [ -f /tmp/atomic_python_hook_path.txt ] && rm -rf $(cat /tmp/atomic_python_hook_path.txt) && rm -f /tmp/atomic_python_hook_path.txt
