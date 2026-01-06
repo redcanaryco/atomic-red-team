@@ -2557,6 +2557,10 @@
   - Atomic Test #5: MSFT Get-GPO Cmdlet [windows]
 - [T1652 Device Driver Discovery](../../T1652/T1652.md)
   - Atomic Test #1: Device Driver Discovery [windows]
+  - Atomic Test #2: Device Driver Discovery (Linux) [linux]
+  - Atomic Test #3: Enumerate Kernel Driver Files (Linux) [linux]
+  - Atomic Test #4: List loaded kernel extensions (macOS) [macos]
+  - Atomic Test #5: Find Kernel Extensions (macOS) [macos]
 - [T1087.002 Account Discovery: Domain Account](../../T1087.002/T1087.002.md)
   - Atomic Test #1: Enumerate all accounts (Domain) [windows]
   - Atomic Test #2: Enumerate all accounts via PowerShell (Domain) [windows]

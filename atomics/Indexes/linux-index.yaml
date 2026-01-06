@@ -55788,7 +55788,35 @@ discovery:
       - Windows
       x_mitre_version: '1.0'
       identifier: T1652
-    atomic_tests: []
+    atomic_tests:
+    - name: Device Driver Discovery (Linux)
+      auto_generated_guid: d57dfc9e-ed9a-418e-88f8-b59c85f8cfd1
+      description: 'Displays a list of loaded kernel modules on a Linux system, which
+        is used to enumerate drivers.
+
+        '
+      supported_platforms:
+      - linux
+      executor:
+        command: 'lsmod
+
+          '
+        name: bash
+        elevation_required: false
+    - name: Enumerate Kernel Driver Files (Linux)
+      auto_generated_guid: 13c0fef5-9be9-4d7f-9c6b-901624e53770
+      description: 'Finds and lists all kernel driver files on a Linux system in order
+        to provide a broader view of available drivers, not just loaded ones.
+
+        '
+      supported_platforms:
+      - linux
+      executor:
+        command: 'find /lib/modules/$(uname -r)/kernel/drivers -name "*.ko*"
+
+          '
+        name: bash
+        elevation_required: false
   T1087.002:
     technique:
       type: attack-pattern
