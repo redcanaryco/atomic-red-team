@@ -2113,6 +2113,7 @@
   - Atomic Test #7: Windows Screencapture [windows]
   - Atomic Test #8: Windows Screen Capture (CopyFromScreen) [windows]
   - Atomic Test #9: Windows Recall Feature Enabled - DisableAIDataAnalysis Value Deleted [windows]
+  - Atomic Test #10: RDP Bitmap Cache Extraction via bmc-tools [windows]
 - T1557 Adversary-in-the-Middle [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1056.001 Input Capture: Keylogging](../../T1056.001/T1056.001.md)
   - Atomic Test #1: Input Capture [windows]
@@ -2557,6 +2558,10 @@
   - Atomic Test #5: MSFT Get-GPO Cmdlet [windows]
 - [T1652 Device Driver Discovery](../../T1652/T1652.md)
   - Atomic Test #1: Device Driver Discovery [windows]
+  - Atomic Test #2: Device Driver Discovery (Linux) [linux]
+  - Atomic Test #3: Enumerate Kernel Driver Files (Linux) [linux]
+  - Atomic Test #4: List loaded kernel extensions (macOS) [macos]
+  - Atomic Test #5: Find Kernel Extensions (macOS) [macos]
 - [T1087.002 Account Discovery: Domain Account](../../T1087.002/T1087.002.md)
   - Atomic Test #1: Enumerate all accounts (Domain) [windows]
   - Atomic Test #2: Enumerate all accounts via PowerShell (Domain) [windows]
