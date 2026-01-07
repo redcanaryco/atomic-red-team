@@ -2109,6 +2109,7 @@
   - Atomic Test #9: Disable System Restore Through Registry [windows]
   - Atomic Test #10: Windows - vssadmin Resize Shadowstorage Volume [windows]
   - Atomic Test #11: Modify VSS Service Permissions [windows]
+  - Atomic Test #13: Windows - Delete Volume Shadow Copies via Diskshadow [windows]
 - T1561.001 Disk Content Wipe [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1529 System Shutdown/Reboot](../../T1529/T1529.md)
   - Atomic Test #1: Shutdown System - Windows [windows]
