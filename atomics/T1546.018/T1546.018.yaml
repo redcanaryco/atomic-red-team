@@ -2,7 +2,6 @@ attack_technique: T1546.018
 display_name: "Event Triggered Execution: Python Startup Hooks"
 atomic_tests:
   - name: "Python Startup Hook Execution via .pth (Windows)"
-    auto_generated_guid: 7d8a6f3c-2b1d-4b59-9e3a-8c4a9c9b1f12
     description: |
       Creates a Python startup hook using a .pth file inside a virtual environment on Windows.
     supported_platforms:
@@ -43,7 +42,6 @@ atomic_tests:
           Remove-Item "$env:TEMP\atomic_python_hook_path.txt" -Force }
 
   - name: "Python Startup Hook Execution via .pth (Linux)"
-    auto_generated_guid: 3f0d6e5a-6a4f-4a0f-b9a7-1c1f7e3f8d21
     description: |
       Creates a Python startup hook using a .pth file inside a virtual environment on Linux.
     supported_platforms:
@@ -73,7 +71,6 @@ atomic_tests:
         rm -rf $(cat /tmp/atomic_python_hook_path.txt) && rm -f /tmp/atomic_python_hook_path.txt
 
   - name: "Python Startup Hook Execution via .pth (macOS)"
-    auto_generated_guid: 9c2b8e14-4a9f-4b1a-b7e2-6c9f0e5c4b33
     description: |
       Creates a Python startup hook using a .pth file inside a virtual environment on macOS.
     supported_platforms:
