@@ -332,6 +332,8 @@ credential-access,T1003.008,"OS Credential Dumping: /etc/passwd, /etc/master.pas
 credential-access,T1003.008,"OS Credential Dumping: /etc/passwd, /etc/master.passwd and /etc/shadow",5,"Access /etc/{shadow,passwd,master.passwd} with shell builtins",f5aa6543-6cb2-4fae-b9c2-b96e14721713,sh
 discovery,T1033,System Owner/User Discovery,2,System Owner/User Discovery,2a9b677d-a230-44f4-ad86-782df1ef108c,sh
 discovery,T1016.001,System Network Configuration Discovery: Internet Connection Discovery,2,"Check internet connection using ping freebsd, linux or macos",be8f4019-d8b6-434c-a814-53123cdcc11e,bash
+discovery,T1652,Device Driver Discovery,2,Device Driver Discovery (Linux),d57dfc9e-ed9a-418e-88f8-b59c85f8cfd1,bash
+discovery,T1652,Device Driver Discovery,3,Enumerate Kernel Driver Files (Linux),13c0fef5-9be9-4d7f-9c6b-901624e53770,bash
 discovery,T1087.002,Account Discovery: Domain Account,23,Active Directory Domain Search,096b6d2a-b63f-4100-8fa0-525da4cd25ca,sh
 discovery,T1087.002,Account Discovery: Domain Account,24,Account Enumeration with LDAPDomainDump,a54d497e-8dbe-4558-9895-44944baa395f,sh
 discovery,T1087.001,Account Discovery: Local Account,1,Enumerate all accounts (Local),f8aab3dd-5990-4bf8-b8ab-2226c951696f,sh
@@ -344,6 +346,7 @@ discovery,T1497.001,Virtualization/Sandbox Evasion: System Checks,1,Detect Virtu
 discovery,T1497.001,Virtualization/Sandbox Evasion: System Checks,2,Detect Virtualization Environment (FreeBSD),e129d73b-3e03-4ae9-bf1e-67fc8921e0fd,sh
 discovery,T1069.002,Permission Groups Discovery: Domain Groups,15,Active Directory Domain Search Using LDAP - Linux (Ubuntu)/macOS,d58d749c-4450-4975-a9e9-8b1d562755c2,sh
 discovery,T1007,System Service Discovery,3,System Service Discovery - systemctl/service,f4b26bce-4c2c-46c0-bcc5-fce062d38bef,bash
+discovery,T1007,System Service Discovery,8,System Service Discovery - Linux init scripts,8f2a5d2b-4018-46d4-8f3f-0fea53754690,sh
 discovery,T1040,Network Sniffing,1,Packet Capture Linux using tshark or tcpdump,7fe741f7-b265-4951-a7c7-320889083b3e,bash
 discovery,T1040,Network Sniffing,2,Packet Capture FreeBSD using tshark or tcpdump,c93f2492-9ebe-44b5-8b45-36574cccfe67,sh
 discovery,T1040,Network Sniffing,10,Packet Capture FreeBSD using /dev/bpfN with sudo,e2028771-1bfb-48f5-b5e6-e50ee0942a14,sh
@@ -369,7 +372,9 @@ discovery,T1016,System Network Configuration Discovery,3,System Network Configur
 discovery,T1083,File and Directory Discovery,3,Nix File and Directory Discovery,ffc8b249-372a-4b74-adcd-e4c0430842de,sh
 discovery,T1083,File and Directory Discovery,4,Nix File and Directory Discovery 2,13c5e1ae-605b-46c4-a79f-db28c77ff24e,sh
 discovery,T1083,File and Directory Discovery,8,Identifying Network Shares - Linux,361fe49d-0c19-46ec-a483-ccb92d38e88e,sh
-discovery,T1049,System Network Connections Discovery,3,"System Network Connections Discovery FreeBSD, Linux & MacOS",9ae28d3f-190f-4fa0-b023-c7bd3e0eabf2,sh
+discovery,T1049,System Network Connections Discovery,4,System Network Connections Discovery via ss or lsof (Linux/MacOS),bcf05343-ef1d-4052-8a27-b00c9be42b9f,bash
+discovery,T1049,System Network Connections Discovery,5,"System Network Connections Discovery FreeBSD, Linux & MacOS",9ae28d3f-190f-4fa0-b023-c7bd3e0eabf2,sh
+discovery,T1049,System Network Connections Discovery,6,"System Network Connections Discovery via sockstat (Linux, FreeBSD)",997bb0a6-421e-40c7-b5d2-0f493904ef9b,sh
 discovery,T1057,Process Discovery,1,Process Discovery - ps,4ff64f0b-aaf2-4866-b39d-38d9791407cc,sh
 discovery,T1069.001,Permission Groups Discovery: Local Groups,1,Permission Groups Discovery (Local),952931a4-af0b-4335-bbbe-73c8c5b327ae,sh
 discovery,T1201,Password Policy Discovery,1,Examine password complexity policy - Ubuntu,085fe567-ac84-47c7-ac4c-2688ce28265b,bash

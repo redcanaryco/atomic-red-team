@@ -55788,7 +55788,35 @@ discovery:
       - Windows
       x_mitre_version: '1.0'
       identifier: T1652
-    atomic_tests: []
+    atomic_tests:
+    - name: Device Driver Discovery (Linux)
+      auto_generated_guid: d57dfc9e-ed9a-418e-88f8-b59c85f8cfd1
+      description: 'Displays a list of loaded kernel modules on a Linux system, which
+        is used to enumerate drivers.
+
+        '
+      supported_platforms:
+      - linux
+      executor:
+        command: 'lsmod
+
+          '
+        name: bash
+        elevation_required: false
+    - name: Enumerate Kernel Driver Files (Linux)
+      auto_generated_guid: 13c0fef5-9be9-4d7f-9c6b-901624e53770
+      description: 'Finds and lists all kernel driver files on a Linux system in order
+        to provide a broader view of available drivers, not just loaded ones.
+
+        '
+      supported_platforms:
+      - linux
+      executor:
+        command: 'find /lib/modules/$(uname -r)/kernel/drivers -name "*.ko*"
+
+          '
+        name: bash
+        elevation_required: false
   T1087.002:
     technique:
       type: attack-pattern
@@ -56385,6 +56413,21 @@ discovery:
 
           '
         name: bash
+    - name: System Service Discovery - Linux init scripts
+      auto_generated_guid: 8f2a5d2b-4018-46d4-8f3f-0fea53754690
+      description: |
+        Enumerates system services by listing SysV init scripts and runlevel
+        symlinks under /etc/init.d and /etc/rc*.d.
+      supported_platforms:
+      - linux
+      executor:
+        name: sh
+        command: |
+          echo "[*] Listing SysV init scripts (/etc/init.d):"
+          if [ -d /etc/init.d ]; then ls -l /etc/init.d; else echo "/etc/init.d not present on this system"; fi
+          echo
+          echo "[*] Listing runlevel directories (/etc/rc*.d):"
+          ls -ld /etc/rc*.d 2>/dev/null || echo "No /etc/rc*.d directories found"
   T1040:
     technique:
       type: attack-pattern
@@ -58168,6 +58211,21 @@ discovery:
       x_mitre_version: '2.5'
       identifier: T1049
     atomic_tests:
+    - name: System Network Connections Discovery via ss or lsof (Linux/MacOS)
+      auto_generated_guid: bcf05343-ef1d-4052-8a27-b00c9be42b9f
+      description: |
+        List active TCP/UDP network connections using ss, with lsof as a fallback
+        when ss is unavailable. Serves as an alternative to the netstat-based test.
+      supported_platforms:
+      - linux
+      - macos
+      executor:
+        name: bash
+        command: 'if command -v ss >/dev/null 2>&1; then ss -antp 2>/dev/null || ss
+          -ant; ss -aunp 2>/dev/null || true; else lsof -i -nP 2>/dev/null || true;
+          fi
+
+          '
     - name: System Network Connections Discovery FreeBSD, Linux & MacOS
       auto_generated_guid: 9ae28d3f-190f-4fa0-b023-c7bd3e0eabf2
       description: |
@@ -58194,6 +58252,19 @@ discovery:
           netstat
           who -a
         name: sh
+    - name: System Network Connections Discovery via sockstat (Linux, FreeBSD)
+      auto_generated_guid: 997bb0a6-421e-40c7-b5d2-0f493904ef9b
+      description: 'Enumerate IPv4/IPv6 network endpoints on FreeBSD using sockstat.
+
+        '
+      supported_platforms:
+      - linux
+      executor:
+        name: sh
+        command: |
+          sockstat -4
+          sockstat -6 2>/dev/null || true
+          sockstat -l 2>/dev/null || true
   T1497:
     technique:
       type: attack-pattern

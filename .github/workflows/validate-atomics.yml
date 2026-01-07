@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout repo
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Install poetry
         run: pipx install poetry
       - name: setup python3.11
@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout repo
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Install poetry
         run: pipx install poetry
       - name: setup python3.11
@@ -69,7 +69,7 @@ jobs:
         env:
           PYTHONPATH: ${{ github.workspace }}
 
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v6
         with:
           name: labels.json
           path: atomic_red_team/pr/

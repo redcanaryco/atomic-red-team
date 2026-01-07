@@ -51341,7 +51341,34 @@ discovery:
       - Windows
       x_mitre_version: '1.0'
       identifier: T1652
-    atomic_tests: []
+    atomic_tests:
+    - name: List loaded kernel extensions (macOS)
+      auto_generated_guid: 71eab73d-5d7d-4681-9a72-7873489a5b85
+      description: 'Displays a list of loaded kernel extensions (kexts) on a macOS
+        system.
+
+        '
+      supported_platforms:
+      - macos
+      executor:
+        command: 'kextstat
+
+          '
+        name: bash
+        elevation_required: false
+    - name: Find Kernel Extensions (macOS)
+      auto_generated_guid: c63bbe52-6f17-4832-b221-f07ba8b1736f
+      description: 'Searches for kernel extension (kext) files on a macOS system.
+
+        '
+      supported_platforms:
+      - macos
+      executor:
+        command: 'kextfind
+
+          '
+        name: bash
+        elevation_required: false
   T1087.002:
     technique:
       type: attack-pattern
@@ -51788,7 +51815,17 @@ discovery:
       - Windows
       x_mitre_version: '1.6'
       identifier: T1007
-    atomic_tests: []
+    atomic_tests:
+    - name: System Service Discovery - macOS launchctl
+      auto_generated_guid: 9b378962-a75e-4856-b117-2503d6dcebba
+      description: |
+        Enumerates services on macOS using launchctl. Used by adversaries for
+        identifying daemons, background services, and persistence mechanisms.
+      supported_platforms:
+      - macos
+      executor:
+        name: sh
+        command: launchctl list
   T1040:
     technique:
       type: attack-pattern
@@ -53334,6 +53371,21 @@ discovery:
       x_mitre_version: '2.5'
       identifier: T1049
     atomic_tests:
+    - name: System Network Connections Discovery via ss or lsof (Linux/MacOS)
+      auto_generated_guid: bcf05343-ef1d-4052-8a27-b00c9be42b9f
+      description: |
+        List active TCP/UDP network connections using ss, with lsof as a fallback
+        when ss is unavailable. Serves as an alternative to the netstat-based test.
+      supported_platforms:
+      - linux
+      - macos
+      executor:
+        name: bash
+        command: 'if command -v ss >/dev/null 2>&1; then ss -antp 2>/dev/null || ss
+          -ant; ss -aunp 2>/dev/null || true; else lsof -i -nP 2>/dev/null || true;
+          fi
+
+          '
     - name: System Network Connections Discovery FreeBSD, Linux & MacOS
       auto_generated_guid: 9ae28d3f-190f-4fa0-b023-c7bd3e0eabf2
       description: |
