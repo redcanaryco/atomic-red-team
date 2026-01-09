@@ -196,6 +196,6 @@ atomic_tests:
         PYTHON_CMD=$(command -v python || command -v python3)
         USER_PACKAGES=$($PYTHON_CMD -c "import site; print(site.getusersitepackages())")
         if [ ! -f /tmp/poc.txt ] || [ ! -f $USER_PACKAGES/usercustomize.py ]; then echo "[!] Artifact missing: /tmp/poc.txt and $USER_PACKAGES/usercustomize.py — [-] Please Run : Invoke-AtomicTest T1546.018"; exit 0; fi
-        if [ -e "$USER_PACKAGES"/usercustomize* ]; then echo "[+] Successful remove $USER_PACKAGES/usercustomize.py\n" $(rm -rf "$USER_PACKAGES"/usercustomize*"); else echo "usercustomize.py not found under $USER_PACKAGES"; fi
+        if [ -e "$USER_PACKAGES"/usercustomize* ]; then echo "[+] Successful remove $USER_PACKAGES/usercustomize.py\n" $(rm -rf "$USER_PACKAGES"/usercustomize*); else echo "usercustomize.py not found under $USER_PACKAGES"; fi
         rm -rf /tmp/poc.txt
-        echo "[+]Successful remove poc.txt under /tmp"
+        echo "[+] Successful remove poc.txt under /tmp"
