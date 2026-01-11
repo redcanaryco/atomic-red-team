@@ -32,10 +32,9 @@ atomic_tests:
         Get-ChildItem -Path "$SitePackages" | Where-Object { $_.Name -like "*.pth" }
         & "$TempDir\env\Scripts\python.exe" -c "print('Triggering Hook via atomic_hook...')"
       cleanup_command: |
-        if (-not (Get-ChildItem -Path $env:Temp -ErrorAction SilentlyContinue | Where-Object Name -like 'atomic_pth_win')) { Write-Host "[!] Artifact missing: $env:Temp\atomic_pth_win Folder - [-] Please Run : Invoke-AtomicTest T1546.018"; exit 1 };
-        Remove-Item -Path "$env:Temp\atomic_pth_win" -Recurse -Force
-        Write-Host "[+] Successfully Removed atomic_pth_win folder from Temp Directory"
-        if (-not (Test-Path "$SitePackages\atomic_hook.pth")) { Write-Host "[+] Successfully Removed atomic_hook.pth" } else { Write-Host "File still exists" } 
+        if (-not (Get-ChildItem -Path $env:TEMP -ErrorAction SilentlyContinue | Where-Object Name -like 'atomic_pth_win')) { Write-Host "[!] Artifact missing: $env:Temp\atomic_pth_win Folder - [-] Please Run : Invoke-AtomicTest T1546.018"; exit 1 };
+        Remove-Item -Path "$env:TEMP\atomic_pth_win" -Recurse -Force
+        Write-Host "[+] Successfully Removed atomic_pth_win folder and atomic_hook.pth from Temp Directory"
         Get-Process -Name "Calc*" -ErrorAction SilentlyContinue | Stop-Process -Force
         Get-Process -Name "calc*" -ErrorAction SilentlyContinue | Stop-Process -Force
         Write-Host "[+] Successfully Terminated Calculator"
@@ -194,7 +193,7 @@ atomic_tests:
         if [ -f /tmp/poc.txt ]; then echo "Success: poc.txt created under /tmp\n" $(ls -la /tmp/ | grep -w poc.txt); else echo "Failed: /tmp/poc.txt not found"; fi
       cleanup_command: |
         PYTHON_CMD=$(command -v #{python_exe} || command -v python)
-        USER_PACKAGES=$($PYTHON_CMD -c "import site; print(site.getusersitepackages())")
+        USER_PACKAGES=$($PYTHON_CMD -S -c "import site; print(site.getusersitepackages())")
         if [ ! -f /tmp/poc.txt ] || [ ! -f $USER_PACKAGES/usercustomize.py ]; then echo "[!] Artifact missing: /tmp/poc.txt and $USER_PACKAGES/usercustomize.py — [-] Please Run : Invoke-AtomicTest T1546.018"; exit 0; fi
         if [ -e "$USER_PACKAGES"/usercustomize* ]; then echo "[+] Successful remove $USER_PACKAGES/usercustomize.py\n" $(rm -rf "$USER_PACKAGES"/usercustomize*); else echo "usercustomize.py not found under $USER_PACKAGES"; fi
         rm -rf /tmp/poc.txt
