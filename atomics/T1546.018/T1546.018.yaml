@@ -137,7 +137,7 @@ atomic_tests:
     dependencies:
       - description: Python must be installed and the specified binary (#{python_exe}) must be in the PATH.
         prereq_command: |
-          PYTHON_CMD=$(command -v #{python_exe} || command -v #{python_exe})
+          PYTHON_CMD=$(command -v python || command -v python3)
           if [ -z "$PYTHON_CMD" ]; then exit 1; fi
           $PYTHON_CMD -m venv --help >/dev/null 2>&1
         get_prereq_command: |
