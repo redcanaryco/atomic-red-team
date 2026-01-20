@@ -327,7 +327,8 @@
 - T1574.009 Hijack Execution Flow: Path Interception by Unquoted Path [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.018 Event Triggered Execution: Python Startup Hooks](../../T1546.018/T1546.018.md)
-  - Atomic Test #2: Python Startup Hook Execution via .pth (Linux) [linux]
+  - Atomic Test #3: Python Startup Hook - atomic_hook.pth (Linux) [linux]
+  - Atomic Test #5: Python Startup Hook - usercustomize.py (Linux / MacOS) [linux, macos]
 - T1037.003 Network Logon Script [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1546.010 Event Triggered Execution: AppInit DLLs [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1546.002 Event Triggered Execution: Screensaver [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -466,7 +467,8 @@
 - T1574.009 Hijack Execution Flow: Path Interception by Unquoted Path [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.018 Event Triggered Execution: Python Startup Hooks](../../T1546.018/T1546.018.md)
-  - Atomic Test #2: Python Startup Hook Execution via .pth (Linux) [linux]
+  - Atomic Test #3: Python Startup Hook - atomic_hook.pth (Linux) [linux]
+  - Atomic Test #5: Python Startup Hook - usercustomize.py (Linux / MacOS) [linux, macos]
 - T1037.003 Network Logon Script [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1197 BITS Jobs [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1546.010 Event Triggered Execution: AppInit DLLs [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
