@@ -876,7 +876,8 @@
   - Atomic Test #1: Execution of program.exe as service with unquoted service path [windows]
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.018 Event Triggered Execution: Python Startup Hooks](../../T1546.018/T1546.018.md)
-  - Atomic Test #1: Python Startup Hook Execution via .pth (Windows) [windows]
+  - Atomic Test #1: Python Startup Hook - atomic_hook.pth (Windows) [windows]
+  - Atomic Test #2: Python Startup Hook - usercustomize.py (Windows) [windows]
 - T1037.003 Network Logon Script [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.010 Event Triggered Execution: AppInit DLLs](../../T1546.010/T1546.010.md)
   - Atomic Test #1: Install AppInit Shim [windows]
@@ -1340,7 +1341,8 @@
   - Atomic Test #1: Execution of program.exe as service with unquoted service path [windows]
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.018 Event Triggered Execution: Python Startup Hooks](../../T1546.018/T1546.018.md)
-  - Atomic Test #1: Python Startup Hook Execution via .pth (Windows) [windows]
+  - Atomic Test #1: Python Startup Hook - atomic_hook.pth (Windows) [windows]
+  - Atomic Test #2: Python Startup Hook - usercustomize.py (Windows) [windows]
 - T1037.003 Network Logon Script [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1197 BITS Jobs](../../T1197/T1197.md)
   - Atomic Test #1: Bitsadmin Download (cmd) [windows]
@@ -2091,7 +2093,8 @@
   - Atomic Test #10: Akira Ransomware drop Files with .akira Extension and Ransomnote [windows]
 - T1667 Email Bombing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1499 Endpoint Denial of Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1496 Resource Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1496 Resource Hijacking](../../T1496/T1496.md)
+  - Atomic Test #2: Windows - Simulate CPU Load with PowerShell [windows]
 - T1565.002 Transmitted Data Manipulation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1485 Data Destruction](../../T1485/T1485.md)
   - Atomic Test #1: Windows - Overwrite file with SysInternals SDelete [windows]
