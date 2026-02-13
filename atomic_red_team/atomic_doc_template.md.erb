@@ -10,6 +10,7 @@
 [Source](https://attack.mitre.org/techniques/<%= technique['identifier'].gsub(/\./, '/') %>)
 
 ## Atomic Tests
+
 <% atomic_yaml['atomic_tests'].each_with_index do |test, test_number| -%>
 <% title = "Atomic Test ##{test_number+1} - #{test['name']}" %>
 - [<%= title %>](#<%= title.downcase.gsub(/ /, '-').gsub(/[`~!@#$%^&*()+=<>?,.\/:;"'|{}\[\]\\–—]/, '') %>)
@@ -17,10 +18,9 @@
 
 <% atomic_yaml['atomic_tests'].each_with_index do |test, test_number| -%>
 
-
 ### Atomic Test #<%= test_number+1 %> - <%= test['name'] %>
-<%= test['description'].strip -%>
 
+<%= test['description'].strip -%>
 
 **Supported Platforms:** <%= test['supported_platforms'].collect do |p|
   case p
@@ -31,9 +31,7 @@
   end
 end.join(', ') %>
 
-
 **auto_generated_guid:** `<%= test['auto_generated_guid'] %>`
-
 
 <%def cleanup(input)
     input.to_s.strip.gsub(/\\/,"&#92;")
@@ -41,6 +39,7 @@ end%>
 
 <% if test['input_arguments'].to_a.count > 0 %>
 #### Inputs:
+
 | Name | Description | Type | Default Value |
 |------|-------------|------|---------------|
 <% test['input_arguments'].each do |arg_name, arg_options| -%>
@@ -54,7 +53,7 @@ end%>
 <%= test['executor']['steps'] %>
 <%- else -%>
 
-#### Attack Commands: Run with `<%= test['executor']['name'] %>`! <%- if test['executor']['elevation_required'] -%> Elevation Required (e.g. root or admin) <%- end -%>
+##### Attack Commands: Run with `<%= test['executor']['name'] %>`! <%- if test['executor']['elevation_required'] -%> Elevation Required (e.g. root or admin) <%- end -%>
 
 <%def get_language(executor)
   language = executor
@@ -72,7 +71,8 @@ end%>
 <%- end -%>
 
 <%- if test['executor']['cleanup_command'] != nil -%>
-#### Cleanup Commands:
+##### Cleanup Commands:
+
 ```<%= get_language(test['executor']['name']) %>
 <%= test['executor']['cleanup_command'].to_s.strip %>
 ```
@@ -81,20 +81,20 @@ end%>
 <% if test['dependencies'].to_a.count > 0 %>
 <% dependency_executor = test['executor']['name'] %>
 #### Dependencies:  Run with `<%- if test['dependency_executor_name'] != nil%><% dependency_executor = test['dependency_executor_name'] %><%= test['dependency_executor_name'] %><%- else -%><%= test['executor']['name'] %><%- end -%>`!
+
 <% test['dependencies'].each do | dep | -%>
 ##### Description: <%= dep['description'].strip  %>
+
 ###### Check Prereq Commands:
+
 ```<%= get_language(dependency_executor) %>
 <%= dep['prereq_command'].strip %>
 ```
 ###### Get Prereq Commands:
+
 ```<%= get_language(dependency_executor) %>
 <%= dep['get_prereq_command'].strip  %>
 ```
 <% end -%>
 <% end -%>
-
-
-
-
 <%- end -%>
