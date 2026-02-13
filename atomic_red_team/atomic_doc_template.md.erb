@@ -3,8 +3,7 @@
 ## Description from ATT&CK
 
 <% attack_description_lines = technique['description'].gsub("%\\<", "%<").gsub(/<code>.*?<\/code>/) { |match| match.gsub('~', '\~') } %>
-<% attack_description_lines.each do |desc_line| %>
-> <%= desc['line'].strip %>
+<% attack_description_lines.each do |desc_line| %>> <%= desc['line'].strip %>
 <% end %>
 
 [Source](https://attack.mitre.org/techniques/<%= technique['identifier'].gsub(/\./, '/') %>)
