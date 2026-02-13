@@ -1226,7 +1226,12 @@
   - Atomic Test #2: Add launch script to launch daemon [macos]
   - Atomic Test #3: Add launch script to launch agent [macos]
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1546.018 Python Startup Hooks [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1546.018 Event Triggered Execution: Python Startup Hooks](../../T1546.018/T1546.018.md)
+  - Atomic Test #1: Python Startup Hook - atomic_hook.pth (Windows) [windows]
+  - Atomic Test #2: Python Startup Hook - usercustomize.py (Windows) [windows]
+  - Atomic Test #3: Python Startup Hook - atomic_hook.pth (Linux) [linux]
+  - Atomic Test #4: Python Startup Hook - atomic_hook.pth (macOS) [macos]
+  - Atomic Test #5: Python Startup Hook - usercustomize.py (Linux / MacOS) [linux, macos]
 - T1037.003 Network Logon Script [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.010 Event Triggered Execution: AppInit DLLs](../../T1546.010/T1546.010.md)
   - Atomic Test #1: Install AppInit Shim [windows]
@@ -1573,10 +1578,9 @@
   - Atomic Test #2: Modify Terminal Services DLL Path [windows]
 - [T1176 Browser Extensions](../../T1176/T1176.md)
   - Atomic Test #1: Chrome/Chromium (Developer Mode) [linux, windows, macos]
-  - Atomic Test #2: Chrome/Chromium (Chrome Web Store) [linux, windows, macos]
-  - Atomic Test #3: Firefox [linux, windows, macos]
-  - Atomic Test #4: Edge Chromium Addon - VPN [windows, macos]
-  - Atomic Test #5: Google Chrome Load Unpacked Extension With Command Line [windows]
+  - Atomic Test #2: Firefox [linux, windows, macos]
+  - Atomic Test #3: Edge Chromium Addon - VPN [windows, macos]
+  - Atomic Test #4: Google Chrome Load Unpacked Extension With Command Line [windows]
 - T1137.005 Outlook Rules [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1098.007 Additional Local or Domain Groups [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.011 Event Triggered Execution: Application Shimming](../../T1546.011/T1546.011.md)
@@ -1874,7 +1878,12 @@
   - Atomic Test #3: Add launch script to launch agent [macos]
 - T1671 Cloud Application Integration [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1546.018 Python Startup Hooks [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1546.018 Event Triggered Execution: Python Startup Hooks](../../T1546.018/T1546.018.md)
+  - Atomic Test #1: Python Startup Hook - atomic_hook.pth (Windows) [windows]
+  - Atomic Test #2: Python Startup Hook - usercustomize.py (Windows) [windows]
+  - Atomic Test #3: Python Startup Hook - atomic_hook.pth (Linux) [linux]
+  - Atomic Test #4: Python Startup Hook - atomic_hook.pth (macOS) [macos]
+  - Atomic Test #5: Python Startup Hook - usercustomize.py (Linux / MacOS) [linux, macos]
 - T1037.003 Network Logon Script [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1197 BITS Jobs](../../T1197/T1197.md)
   - Atomic Test #1: Bitsadmin Download (cmd) [windows]
@@ -3061,6 +3070,7 @@
 - T1499 Endpoint Denial of Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1496 Resource Hijacking](../../T1496/T1496.md)
   - Atomic Test #1: FreeBSD/macOS/Linux - Simulate CPU Load with Yes [linux, macos]
+  - Atomic Test #2: Windows - Simulate CPU Load with PowerShell [windows]
 - T1565.002 Transmitted Data Manipulation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1485 Data Destruction](../../T1485/T1485.md)
   - Atomic Test #1: Windows - Overwrite file with SysInternals SDelete [windows]
@@ -3083,6 +3093,7 @@
   - Atomic Test #10: Windows - vssadmin Resize Shadowstorage Volume [windows]
   - Atomic Test #11: Modify VSS Service Permissions [windows]
   - Atomic Test #12: Disable Time Machine [macos]
+  - Atomic Test #13: Windows - Delete Volume Shadow Copies via Diskshadow [windows]
 - T1561.001 Disk Content Wipe [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1529 System Shutdown/Reboot](../../T1529/T1529.md)
   - Atomic Test #1: Shutdown System - Windows [windows]
