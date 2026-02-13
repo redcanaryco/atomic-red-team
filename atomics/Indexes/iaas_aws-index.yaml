@@ -8848,7 +8848,7 @@ defense-evasion:
       description: 'Enables GuardDuty in AWS, upon successful creation this test will
         suspend and then delete the GuardDuty configuration.
 
-        '
+'
       supported_platforms:
       - iaas:aws
       input_arguments:
@@ -8860,14 +8860,14 @@ defense-evasion:
       dependencies:
       - description: 'Check if ~/.aws/credentials file has a default stanza is configured
 
-          '
+'
         prereq_command: 'cat ~/.aws/credentials | grep "default"
 
-          '
+'
         get_prereq_command: 'echo "Please install the aws-cli and configure your AWS
           default profile using: aws configure"
 
-          '
+'
       executor:
         command: |
           detectorId=$(aws guardduty create-detector --enable --region "#{region}" | grep -oP '(?<="DetectorId": ")[^"]*')
@@ -8875,7 +8875,7 @@ defense-evasion:
           aws guardduty delete-detector --detector-id $detectorId
         cleanup_command: 'echo "If test successfully ran, no cleanup required."
 
-          '
+'
         name: bash
         elevation_required: false
   T1601:
@@ -10843,7 +10843,7 @@ defense-evasion:
       description: 'Creates a new cloudTrail in AWS, Upon successful creation it will
         Update,Stop and Delete the cloudTrail
 
-        '
+'
       supported_platforms:
       - iaas:aws
       input_arguments:
@@ -10862,29 +10862,29 @@ defense-evasion:
       dependencies:
       - description: 'Check if ~/.aws/credentials file has a default stanza is configured
 
-          '
+'
         prereq_command: 'cat ~/.aws/credentials | grep "default"
 
-          '
+'
         get_prereq_command: 'echo Please install the aws-cli and configure your AWS
           default profile using: aws configure
 
-          '
+'
       - description: 'Check if terraform is installed.
 
-          '
+'
         prereq_command: 'terraform version
 
-          '
+'
         get_prereq_command: "echo Please install the terraform and configure your
           aws default profile \n"
       - description: 'Check if the dependency resources are already present.
 
-          '
+'
         prereq_command: 'if [ -f "$PathToAtomicsFolder/T1562.008/src/T1562.008-1/terraform.tfstate"
           ]; then exit 0; else exit 1; fi;
 
-          '
+'
         get_prereq_command: |
           cd "$PathToAtomicsFolder/T1562.008/src/T1562.008-1/"
           terraform init
@@ -10907,7 +10907,7 @@ defense-evasion:
         Stratus Red Team is a self-contained binary. You can use it to easily detonate
         offensive attack techniques against a live cloud environment. Ref: https://stratus-red-team.cloud/attack-techniques/AWS/aws.defense-evasion.cloudtrail-event-selectors/
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -10925,11 +10925,11 @@ defense-evasion:
       dependencies:
       - description: 'Stratus binary must be present at the (#{stratus_path}/stratus)
 
-          '
+'
         prereq_command: 'if [ -f #{stratus_path}/stratus ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: "if [ \"$(uname)\" == \"Darwin\" ]\nthen DOWNLOAD_URL=$(curl
           -s https://api.github.com/repos/DataDog/stratus-red-team/releases/latest
           | grep browser_download_url | grep Darwin_x86_64 | cut -d '\"' -f 4); wget
@@ -10942,14 +10942,14 @@ defense-evasion:
           -xzvf #{stratus_path}/stratus-red-team-latest.tar.gz --directory #{stratus_path}/\nfi\n"
       - description: 'Check if ~/.aws/credentials file has a default stanza is configured
 
-          '
+'
         prereq_command: 'cat ~/.aws/credentials | grep "default"
 
-          '
+'
         get_prereq_command: 'echo Please install the aws-cli and configure your AWS
           defult profile using: aws configure
 
-          '
+'
       executor:
         command: "export AWS_REGION=#{aws_region} \ncd #{stratus_path}\necho \"starting
           warmup\"\n./stratus warmup aws.defense-evasion.cloudtrail-event-selectors\necho
@@ -10973,7 +10973,7 @@ defense-evasion:
         You can use it to easily detonate offensive attack techniques against a live
         cloud environment. ref: https://stratus-red-team.cloud/attack-techniques/AWS/aws.defense-evasion.cloudtrail-lifecycle-rule/
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -10991,11 +10991,11 @@ defense-evasion:
       dependencies:
       - description: 'Stratus binary must be present at the (#{stratus_path}/stratus)
 
-          '
+'
         prereq_command: 'if [ -f #{stratus_path}/stratus ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: "if [ \"$(uname)\" == \"Darwin\" ]\nthen DOWNLOAD_URL=$(curl
           -s https://api.github.com/repos/DataDog/stratus-red-team/releases/latest
           | grep browser_download_url | grep Darwin_x86_64 | cut -d '\"' -f 4); wget
@@ -11008,14 +11008,14 @@ defense-evasion:
           -xzvf #{stratus_path}/stratus-red-team-latest.tar.gz --directory #{stratus_path}/\nfi\n"
       - description: 'Check if ~/.aws/credentials file has a default stanza is configured
 
-          '
+'
         prereq_command: 'cat ~/.aws/credentials | grep "default"
 
-          '
+'
         get_prereq_command: 'echo Please install the aws-cli and configure your AWS
           defult profile using: aws configure
 
-          '
+'
       executor:
         command: "export AWS_REGION=#{aws_region} \ncd #{stratus_path}\necho \"starting
           warmup\"\n./stratus warmup aws.defense-evasion.cloudtrail-lifecycle-rule\necho
@@ -11035,7 +11035,7 @@ defense-evasion:
         Stratus Red Team is a self-contained binary. You can use it to easily detonate
         offensive attack techniques against a live cloud environment. Ref: https://stratus-red-team.cloud/attack-techniques/AWS/aws.defense-evasion.vpc-remove-flow-logs/
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -11053,11 +11053,11 @@ defense-evasion:
       dependencies:
       - description: 'Stratus binary must be present at the (#{stratus_path}/stratus)
 
-          '
+'
         prereq_command: 'if [ -f #{stratus_path}/stratus ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: "if [ \"$(uname)\" == \"Darwin\" ]\nthen DOWNLOAD_URL=$(curl
           -s https://api.github.com/repos/DataDog/stratus-red-team/releases/latest
           | grep browser_download_url | grep Darwin_x86_64 | cut -d '\"' -f 4); wget
@@ -11070,14 +11070,14 @@ defense-evasion:
           -xzvf #{stratus_path}/stratus-red-team-latest.tar.gz --directory #{stratus_path}/\nfi\n"
       - description: 'Check if ~/.aws/credentials file has a default stanza is configured
 
-          '
+'
         prereq_command: 'cat ~/.aws/credentials | grep "default"
 
-          '
+'
         get_prereq_command: 'echo Please install the aws-cli and configure your AWS
           defult profile using: aws configure
 
-          '
+'
       executor:
         command: "export AWS_REGION=#{aws_region} \ncd #{stratus_path}\necho \"starting
           warmup\"\n./stratus warmup aws.defense-evasion.vpc-remove-flow-logs\necho
@@ -11111,21 +11111,21 @@ defense-evasion:
       dependencies:
       - description: 'Check if ~/.aws/credentials file has a default stanza is configured
 
-          '
+'
         prereq_command: 'cat ~/.aws/credentials | grep "default"
 
-          '
+'
         get_prereq_command: 'echo Please install the aws-cli and configure your AWS
           defult profile using: aws configure
 
-          '
+'
       executor:
         command: |
           aws logs create-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
           echo "*** Log Group Created ***"
           aws logs delete-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
           echo "*** Log Group Deleted ***"
-        cleanup_command:
+        cleanup_command: 
         name: sh
         elevation_required: false
     - name: AWS CloudWatch Log Stream Deletes
@@ -11152,14 +11152,14 @@ defense-evasion:
       dependencies:
       - description: 'Check if ~/.aws/credentials file has a default stanza is configured
 
-          '
+'
         prereq_command: 'cat ~/.aws/credentials | grep "default"
 
-          '
+'
         get_prereq_command: 'echo Please install the aws-cli and configure your AWS
           defult profile using: aws configure
 
-          '
+'
       executor:
         command: |
           aws logs create-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
@@ -11170,7 +11170,7 @@ defense-evasion:
           echo "*** Log Stream Deleted ***"
           aws logs delete-log-group --log-group-name #{cloudwatch_log_group_name} --region #{region} --output json
           echo "*** Log Group Deleted ***"
-        cleanup_command:
+        cleanup_command: 
         name: sh
         elevation_required: false
   T1564.003:
@@ -13344,27 +13344,27 @@ defense-evasion:
         prereq_command: 'if command -v aws > /dev/null 2>&1; then exit 0; else exit
           1; fi
 
-          '
+'
         get_prereq_command: 'echo "Install AWS CLI: https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
 
-          '
+'
       - description: AWS CLI must be authenticated.
         prereq_command: 'if aws sts get-caller-identity --region #{aws_region} > /dev/null
           2>&1; then exit 0; else exit 1; fi
 
-          '
+'
         get_prereq_command: 'echo "Configure AWS credentials with: aws configure"
 
-          '
+'
       - description: EBS volume must exist.
         prereq_command: 'if aws ec2 describe-volumes --volume-ids #{aws_volume_id}
           --region #{aws_region} > /dev/null 2>&1; then exit 0; else exit 1; fi
 
-          '
+'
         get_prereq_command: 'echo "Ensure the volume ID exists in the target AWS account
           and region."
 
-          '
+'
       executor:
         name: sh
         elevation_required: false
@@ -13372,7 +13372,7 @@ defense-evasion:
           --description "Atomic Red Team Test Snapshot" --query "SnapshotId" --output
           text
 
-          '
+'
         cleanup_command: |
           SNAPSHOT_ID=$(aws ec2 describe-snapshots --region #{aws_region} --filters "Name=volume-id,Values=#{aws_volume_id}" --query "Snapshots[0].SnapshotId" --output text)
           if [ "$SNAPSHOT_ID" != "None" ]; then
@@ -18634,7 +18634,7 @@ privilege-escalation:
       description: 'Adversaries create their own new access and secret keys to programatically
         interact with AWS environment, which is already compromised
 
-        '
+'
       supported_platforms:
       - iaas:aws
       input_arguments:
@@ -18645,14 +18645,14 @@ privilege-escalation:
       dependencies:
       - description: 'Check if the user exists.
 
-          '
+'
         prereq_command: 'aws iam list-users | grep #{username}
 
-          '
+'
         get_prereq_command: 'echo Please run atomic test T1136.003, before running
           this atomic
 
-          '
+'
       executor:
         command: |
           aws iam create-access-key --user-name #{username} > "$PathToAtomicsFolder/T1098.001/bin/aws_secret.creds"
@@ -19283,7 +19283,7 @@ privilege-escalation:
       description: 'Adversaries create AWS group, add users to specific to that group
         to elevate their privileges to gain more accesss
 
-        '
+'
       supported_platforms:
       - iaas:aws
       input_arguments:
@@ -19295,14 +19295,14 @@ privilege-escalation:
       - description: 'Check if the user exists, we can only add a user to a group
           if the user exists.
 
-          '
+'
         prereq_command: 'aws iam list-users | grep #{username}
 
-          '
+'
         get_prereq_command: 'echo Please run atomic test T1136.003, before running
           this atomic test
 
-          '
+'
       executor:
         command: |
           aws iam create-group --group-name #{username}
@@ -24932,7 +24932,7 @@ execution:
       description: 'This test simulates an adversary using the AWS Run Command service
         to execute commands on EC2 instances.
 
-        '
+'
       supported_platforms:
       - iaas:aws
       input_arguments:
@@ -24960,23 +24960,23 @@ execution:
       dependencies:
       - description: 'The AWS PowerShell module must be installed.
 
-          '
+'
         prereq_command: 'try {if (Get-InstalledModule -Name AWSPowerShell -ErrorAction
           SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
 
-          '
+'
         get_prereq_command: 'Install-Module -Name AWSPowerShell -Force
 
-          '
+'
       - description: 'Terraform must be installed.
 
-          '
+'
         prereq_command: 'terraform --version
 
-          '
+'
         get_prereq_command: 'Write-Host "Terraform is required. Download it from https://www.terraform.io/downloads.html"
 
-          '
+'
       executor:
         command: |
           Import-Module "PathToAtomicsFolder/T1651/src/T1651-1/AWSSSMAttack.ps1" -Force
@@ -25250,7 +25250,7 @@ execution:
       auto_generated_guid: 87a4a141-c2bb-49d1-a604-8679082d8b91
       description: 'Modify an existing Lambda function to execute arbitrary code.
 
-        '
+'
       supported_platforms:
       - iaas:aws
       input_arguments:
@@ -25278,23 +25278,23 @@ execution:
       dependencies:
       - description: 'The AWS PowerShell module must be installed.
 
-          '
+'
         prereq_command: 'try {if (Get-InstalledModule -Name AWSPowerShell -ErrorAction
           SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
 
-          '
+'
         get_prereq_command: 'Install-Module -Name AWSPowerShell -Force
 
-          '
+'
       - description: 'Terraform must be installed.
 
-          '
+'
         prereq_command: 'terraform --version
 
-          '
+'
         get_prereq_command: 'Write-Host "Terraform is required. Download it from https://www.terraform.io/downloads.html"
 
-          '
+'
       executor:
         command: |
           Import-Module "PathToAtomicsFolder/T1648/src/T1648-1/LambdaAttack.ps1" -Force
@@ -30124,7 +30124,7 @@ persistence:
       description: 'Adversaries create their own new access and secret keys to programatically
         interact with AWS environment, which is already compromised
 
-        '
+'
       supported_platforms:
       - iaas:aws
       input_arguments:
@@ -30135,14 +30135,14 @@ persistence:
       dependencies:
       - description: 'Check if the user exists.
 
-          '
+'
         prereq_command: 'aws iam list-users | grep #{username}
 
-          '
+'
         get_prereq_command: 'echo Please run atomic test T1136.003, before running
           this atomic
 
-          '
+'
       executor:
         command: |
           aws iam create-access-key --user-name #{username} > "$PathToAtomicsFolder/T1098.001/bin/aws_secret.creds"
@@ -30711,7 +30711,7 @@ persistence:
         activity do not interupt the normal functions of the compromised users and
         can remain undetected for a long time
 
-        '
+'
       supported_platforms:
       - iaas:aws
       input_arguments:
@@ -30722,21 +30722,21 @@ persistence:
       dependencies:
       - description: 'Check if ~/.aws/credentials file has a default stanza is configured
 
-          '
+'
         prereq_command: 'cat ~/.aws/credentials | grep "default"
 
-          '
+'
         get_prereq_command: 'echo Please install the aws-cli and configure your AWS
           defult profile using: aws configure
 
-          '
+'
       executor:
         command: 'aws iam create-user --user-name #{username}
 
-          '
+'
         cleanup_command: 'aws iam delete-user --user-name #{username}
 
-          '
+'
         name: sh
         elevation_required: false
   T1098:
@@ -30823,7 +30823,7 @@ persistence:
       description: 'Adversaries create AWS group, add users to specific to that group
         to elevate their privileges to gain more accesss
 
-        '
+'
       supported_platforms:
       - iaas:aws
       input_arguments:
@@ -30835,14 +30835,14 @@ persistence:
       - description: 'Check if the user exists, we can only add a user to a group
           if the user exists.
 
-          '
+'
         prereq_command: 'aws iam list-users | grep #{username}
 
-          '
+'
         get_prereq_command: 'echo Please run atomic test T1136.003, before running
           this atomic test
 
-          '
+'
       executor:
         command: |
           aws iam create-group --group-name #{username}
@@ -37015,7 +37015,7 @@ collection:
         or <code>screencapture</code>.(Citation: CopyFromScreen .NET)(Citation: Antiquated
         Mac Malware)
 
-        '
+'
       kill_chain_phases:
       - kill_chain_name: mitre-attack
         phase_name: collection
@@ -37830,7 +37830,7 @@ collection:
       dependencies:
       - description: 'Check if ~/.aws/credentials file has a default stanza is configured
 
-          '
+'
         prereq_command: |
           cat ~/.aws/credentials | grep "default"
           aws s3api create-bucket --bucket #{s3_bucket_name}
@@ -37840,11 +37840,11 @@ collection:
         get_prereq_command: 'echo Please install the aws-cli and configure your AWS
           default profile using: aws configure
 
-          '
+'
       executor:
         command: 'aws --no-sign-request s3 cp --recursive s3://#{s3_bucket_name} /tmp/#{s3_bucket_name}
 
-          '
+'
         cleanup_command: "aws s3 rb s3://#{s3_bucket_name} --force \nrm -rf /tmp/#{s3_bucket_name}\n"
         name: sh
         elevation_required: false
@@ -42395,7 +42395,7 @@ credential-access:
         Stratus Red Team is a self-contained binary. You can use it to easily detonate
         offensive attack techniques against a live cloud environment. Ref: https://stratus-red-team.cloud/attack-techniques/AWS/aws.credential-access.ec2-get-password-data/
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -42413,11 +42413,11 @@ credential-access:
       dependencies:
       - description: 'Stratus binary must be present at the (#{stratus_path}/stratus)
 
-          '
+'
         prereq_command: 'if [ -f #{stratus_path}/stratus ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: "if [ \"$(uname)\" == \"Darwin\" ]\nthen DOWNLOAD_URL=$(curl
           -s https://api.github.com/repos/DataDog/stratus-red-team/releases/latest
           | grep browser_download_url | grep Darwin_x86_64 | cut -d '\"' -f 4); wget
@@ -42430,14 +42430,14 @@ credential-access:
           -xzvf #{stratus_path}/stratus-red-team-latest.tar.gz --directory #{stratus_path}/\nfi\n"
       - description: 'Check if ~/.aws/credentials file has a default stanza is configured
 
-          '
+'
         prereq_command: 'cat ~/.aws/credentials | grep "default"
 
-          '
+'
         get_prereq_command: 'echo Please install the aws-cli and configure your AWS
           defult profile using: aws configure
 
-          '
+'
       executor:
         command: "export AWS_REGION=#{aws_region} \ncd #{stratus_path}\necho \"starting
           warmup\"\n./stratus warmup aws.credential-access.ec2-get-password-data\necho
@@ -43169,7 +43169,7 @@ credential-access:
         Console Credentials in order to identify a valid login for a user account
         built by WhiteOakSecurity. For more details reagrding the tool, check - https://www.whiteoaksecurity.com/blog/goawsconsolespray-password-spraying-tool/
 
-        '
+'
       supported_platforms:
       - iaas:aws
       input_arguments:
@@ -43180,13 +43180,13 @@ credential-access:
       dependencies:
       - description: 'Check if go is installed
 
-          '
+'
         prereq_command: 'go version
 
-          '
+'
         get_prereq_command: 'echo Install GO
 
-          '
+'
       executor:
         command: |
           cd /tmp
@@ -43195,7 +43195,7 @@ credential-access:
           go run main.go GoAWSConsoleSpray -a #{aws_account_id} -u PathToAtomicsFolder/T1110.003/src/aws_users.txt -p PathToAtomicsFolder/T1110.003/src/aws_passwords.txt
         cleanup_command: 'rm -rf /tmp/GoAWSConsoleSpray
 
-          '
+'
         name: sh
         elevation_required: false
   T1056.003:
@@ -47004,7 +47004,7 @@ discovery:
         Stratus Red Team is a self-contained binary. You can use it to easily detonate
         offensive attack techniques against a live cloud environment. Ref: https://stratus-red-team.cloud/attack-techniques/AWS/aws.discovery.ec2-enumerate-from-instance/
 
-        '
+'
       supported_platforms:
       - linux
       - macos
@@ -47022,11 +47022,11 @@ discovery:
       dependencies:
       - description: 'Stratus binary must be present at the (#{stratus_path}/stratus)
 
-          '
+'
         prereq_command: 'if test -f "#{stratus_path}/stratus"; then exit 0; else exit
           1; fi
 
-          '
+'
         get_prereq_command: "if [ \"$(uname)\" = \"Darwin\" ]\nthen DOWNLOAD_URL=$(curl
           -s https://api.github.com/repos/DataDog/stratus-red-team/releases/latest
           | grep browser_download_url | grep -i Darwin_x86_64 | cut -d '\"' -f 4);
@@ -47040,14 +47040,14 @@ discovery:
           \n"
       - description: 'Check if ~/.aws/credentials file has a default stanza is configured
 
-          '
+'
         prereq_command: 'cat ~/.aws/credentials | grep "default"
 
-          '
+'
         get_prereq_command: 'echo "Please install the aws-cli and configure your AWS
           default profile using: aws configure"
 
-          '
+'
       executor:
         command: |
           export AWS_REGION=#{aws_region}
@@ -47084,7 +47084,7 @@ discovery:
         command: 'aws ec2 describe-security-groups --profile #{aws_profile} --output
           #{output_format}
 
-          '
+'
       dependencies:
       - description: AWS CLI installed and configured with the necessary access rights.
         prereq_command: type aws || aws --version
@@ -47097,7 +47097,7 @@ discovery:
       - description: Check if AWS CLI is installed and configured.
         prereq_command: 'aws sts get-caller-identity --profile #{aws_profile}
 
-          '
+'
         get_prereq_command: |
           if ! aws sts get-caller-identity --profile #{aws_profile}; then
             echo "AWS CLI not properly configured. Please configure AWS CLI."
@@ -47649,19 +47649,19 @@ discovery:
       dependencies:
       - description: 'Check if ~/.aws/credentials file has a default stanza is configured
 
-          '
+'
         prereq_command: 'cat ~/.aws/credentials | grep "default"
 
-          '
+'
         get_prereq_command: 'echo Please install the aws-cli and configure your AWS
           default profile using: aws configure
 
-          '
+'
       executor:
         command: 'for bucket in "$(aws s3 ls | cut -d " " -f3)"; do aws s3api list-objects-v2
           --bucket $bucket --output text; done
 
-          '
+'
         name: sh
         elevation_required: false
   T1654:
@@ -48047,24 +48047,24 @@ discovery:
       description: 'This atomic test will display details about the password policy
         for the current AWS account.
 
-        '
+'
       supported_platforms:
       - iaas:aws
       dependencies:
       - description: 'Check if ~/.aws/credentials file has a default stanza is configured
 
-          '
+'
         prereq_command: 'cat ~/.aws/credentials | grep "default"
 
-          '
+'
         get_prereq_command: 'echo Please install the aws-cli and configure your AWS
           defult profile using: aws configure
 
-          '
+'
       executor:
         command: 'aws iam get-account-password-policy
 
-          '
+'
         name: sh
         elevation_required: false
   T1614.001:
@@ -48361,7 +48361,7 @@ discovery:
       description: 'Upon successful execution, this test will enumerate common resources
         that are contained within a valid AWS account.
 
-        '
+'
       supported_platforms:
       - iaas:aws
       input_arguments:
@@ -48393,14 +48393,14 @@ discovery:
       dependencies:
       - description: 'The AWS PowerShell module must be installed.
 
-          '
+'
         prereq_command: 'try {if (Get-InstalledModule -Name AWSPowerShell -ErrorAction
           SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
 
-          '
+'
         get_prereq_command: 'Install-Module -Name AWSPowerShell -Force
 
-          '
+'
       executor:
         command: |
           Import-Module "PathToAtomicsFolder\T1526\src\AWSDiscovery.ps1"

@@ -10828,22 +10828,22 @@ defense-evasion:
       dependencies:
       - description: 'Requires gcloud
 
-          '
+'
         prereq_command: 'if [ -x "$(command -v gcloud)" ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: 'echo "Please Install Google Cloud SDK before running
           this atomic test : https://cloud.google.com/sdk/docs/install"
 
-          '
+'
       - description: "Check if user is logged in \n"
         prereq_command: 'gcloud config get-value account
 
-          '
+'
         get_prereq_command: 'gcloud auth login --no-launch-browser
 
-          '
+'
   T1564.003:
     technique:
       type: attack-pattern
@@ -13019,36 +13019,36 @@ defense-evasion:
         prereq_command: 'if command -v gcloud > /dev/null 2>&1; then exit 0; else
           exit 1; fi
 
-          '
+'
         get_prereq_command: 'echo "Install gcloud CLI: https://cloud.google.com/sdk/docs/install"
 
-          '
+'
       - description: gcloud CLI must be authenticated.
         prereq_command: 'if gcloud auth list --filter=status:ACTIVE --format="value(account)"
           | grep . > /dev/null; then exit 0; else exit 1; fi
 
-          '
+'
         get_prereq_command: 'echo "Authenticate with: gcloud auth login"
 
-          '
+'
       - description: GCP disk must exist.
         prereq_command: 'if gcloud compute disks describe #{gcp_disk_name} --zone=#{gcp_zone}
           > /dev/null 2>&1; then exit 0; else exit 1; fi
 
-          '
+'
         get_prereq_command: 'echo "Ensure the disk exists in the specified zone."
 
-          '
+'
       executor:
         name: sh
         elevation_required: false
         command: 'gcloud compute snapshots create #{gcp_snapshot_name} --source-disk=#{gcp_disk_name}
           --zone=#{gcp_zone}
 
-          '
+'
         cleanup_command: 'gcloud compute snapshots delete #{gcp_snapshot_name} --quiet
 
-          '
+'
   T1550.001:
     technique:
       type: attack-pattern
@@ -13277,7 +13277,7 @@ defense-evasion:
       description: 'GCP Service Accounts can be used to gain intial access as well
         as maintain persistence inside Google Cloud.
 
-        '
+'
       supported_platforms:
       - google-workspace
       - iaas:gcp
@@ -13309,27 +13309,27 @@ defense-evasion:
         cleanup_command: 'gcloud iam service-accounts delete #{service-account-email}
           --quiet
 
-          '
+'
       dependency_executor_name: sh
       dependencies:
       - description: 'Requires gcloud
 
-          '
+'
         prereq_command: 'if [ -x "$(command -v gcloud)" ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: 'echo "Please Install Google Cloud SDK before running
           this atomic test : https://cloud.google.com/sdk/docs/install"
 
-          '
+'
       - description: "Check if user is logged in \n"
         prereq_command: 'gcloud config get-value account
 
-          '
+'
         get_prereq_command: 'gcloud auth login --no-launch-browser
 
-          '
+'
     - name: GCP - Create Custom IAM Role
       auto_generated_guid: 3a159042-69e6-4398-9a69-3308a4841c85
       description: "This atomic will create a new IAM role. The default role permissions
@@ -13368,27 +13368,27 @@ defense-evasion:
           gcloud iam roles create #{role-name} --description="#{role-description}" --permissions=#{roles} --project=#{project-id}
         cleanup_command: 'gcloud iam roles delete #{role-name} --project=#{project-id}
 
-          '
+'
       dependency_executor_name: sh
       dependencies:
       - description: 'Requires gcloud
 
-          '
+'
         prereq_command: 'if [ -x "$(command -v gcloud)" ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: 'echo "Please Install Google Cloud SDK before running
           this atomic test : https://cloud.google.com/sdk/docs/install"
 
-          '
+'
       - description: "Check if user is logged in \n"
         prereq_command: 'gcloud config get-value account
 
-          '
+'
         get_prereq_command: 'gcloud auth login --no-launch-browser
 
-          '
+'
   T1480.001:
     technique:
       type: attack-pattern
@@ -19071,37 +19071,37 @@ privilege-escalation:
       dependencies:
       - description: 'Requires gcloud
 
-          '
+'
         prereq_command: 'if [ -x "$(command -v gcloud)" ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: 'echo "Please Install Google Cloud SDK before running
           this atomic test : https://cloud.google.com/sdk/docs/install"
 
-          '
+'
       - description: "Check if user is logged in \n"
         prereq_command: 'gcloud config get-value account
 
-          '
+'
         get_prereq_command: 'gcloud auth login --no-launch-browser
 
-          '
+'
       - description: 'Check if terraform is installed.
 
-          '
+'
         prereq_command: 'terraform version
 
-          '
+'
         get_prereq_command: 'echo Please install the terraform.
 
-          '
+'
       - description: 'Create dependency resources using terraform
 
-          '
+'
         prereq_command: 'stat "$PathToAtomicsFolder/T1098/src/T1098-17/terraform.tfstate"
 
-          '
+'
         get_prereq_command: |
           cd "$PathToAtomicsFolder/T1098/src/T1098-17/"
           terraform init
@@ -21794,7 +21794,7 @@ privilege-escalation:
       description: 'GCP Service Accounts can be used to gain intial access as well
         as maintain persistence inside Google Cloud.
 
-        '
+'
       supported_platforms:
       - google-workspace
       - iaas:gcp
@@ -21826,27 +21826,27 @@ privilege-escalation:
         cleanup_command: 'gcloud iam service-accounts delete #{service-account-email}
           --quiet
 
-          '
+'
       dependency_executor_name: sh
       dependencies:
       - description: 'Requires gcloud
 
-          '
+'
         prereq_command: 'if [ -x "$(command -v gcloud)" ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: 'echo "Please Install Google Cloud SDK before running
           this atomic test : https://cloud.google.com/sdk/docs/install"
 
-          '
+'
       - description: "Check if user is logged in \n"
         prereq_command: 'gcloud config get-value account
 
-          '
+'
         get_prereq_command: 'gcloud auth login --no-launch-browser
 
-          '
+'
     - name: GCP - Create Custom IAM Role
       auto_generated_guid: 3a159042-69e6-4398-9a69-3308a4841c85
       description: "This atomic will create a new IAM role. The default role permissions
@@ -21885,27 +21885,27 @@ privilege-escalation:
           gcloud iam roles create #{role-name} --description="#{role-description}" --permissions=#{roles} --project=#{project-id}
         cleanup_command: 'gcloud iam roles delete #{role-name} --project=#{project-id}
 
-          '
+'
       dependency_executor_name: sh
       dependencies:
       - description: 'Requires gcloud
 
-          '
+'
         prereq_command: 'if [ -x "$(command -v gcloud)" ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: 'echo "Please Install Google Cloud SDK before running
           this atomic test : https://cloud.google.com/sdk/docs/install"
 
-          '
+'
       - description: "Check if user is logged in \n"
         prereq_command: 'gcloud config get-value account
 
-          '
+'
         get_prereq_command: 'gcloud auth login --no-launch-browser
 
-          '
+'
   T1053.002:
     technique:
       type: attack-pattern
@@ -30563,37 +30563,37 @@ persistence:
       dependencies:
       - description: 'Requires gcloud
 
-          '
+'
         prereq_command: 'if [ -x "$(command -v gcloud)" ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: 'echo "Please Install Google Cloud SDK before running
           this atomic test : https://cloud.google.com/sdk/docs/install"
 
-          '
+'
       - description: "Check if user is logged in \n"
         prereq_command: 'gcloud config get-value account
 
-          '
+'
         get_prereq_command: 'gcloud auth login --no-launch-browser
 
-          '
+'
       - description: 'Check if terraform is installed.
 
-          '
+'
         prereq_command: 'terraform version
 
-          '
+'
         get_prereq_command: 'echo Please install the terraform.
 
-          '
+'
       - description: 'Create dependency resources using terraform
 
-          '
+'
         prereq_command: 'stat "$PathToAtomicsFolder/T1098/src/T1098-17/terraform.tfstate"
 
-          '
+'
         get_prereq_command: |
           cd "$PathToAtomicsFolder/T1098/src/T1098-17/"
           terraform init
@@ -33493,7 +33493,7 @@ persistence:
       description: 'GCP Service Accounts can be used to gain intial access as well
         as maintain persistence inside Google Cloud.
 
-        '
+'
       supported_platforms:
       - google-workspace
       - iaas:gcp
@@ -33525,27 +33525,27 @@ persistence:
         cleanup_command: 'gcloud iam service-accounts delete #{service-account-email}
           --quiet
 
-          '
+'
       dependency_executor_name: sh
       dependencies:
       - description: 'Requires gcloud
 
-          '
+'
         prereq_command: 'if [ -x "$(command -v gcloud)" ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: 'echo "Please Install Google Cloud SDK before running
           this atomic test : https://cloud.google.com/sdk/docs/install"
 
-          '
+'
       - description: "Check if user is logged in \n"
         prereq_command: 'gcloud config get-value account
 
-          '
+'
         get_prereq_command: 'gcloud auth login --no-launch-browser
 
-          '
+'
     - name: GCP - Create Custom IAM Role
       auto_generated_guid: 3a159042-69e6-4398-9a69-3308a4841c85
       description: "This atomic will create a new IAM role. The default role permissions
@@ -33584,27 +33584,27 @@ persistence:
           gcloud iam roles create #{role-name} --description="#{role-description}" --permissions=#{roles} --project=#{project-id}
         cleanup_command: 'gcloud iam roles delete #{role-name} --project=#{project-id}
 
-          '
+'
       dependency_executor_name: sh
       dependencies:
       - description: 'Requires gcloud
 
-          '
+'
         prereq_command: 'if [ -x "$(command -v gcloud)" ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: 'echo "Please Install Google Cloud SDK before running
           this atomic test : https://cloud.google.com/sdk/docs/install"
 
-          '
+'
       - description: "Check if user is logged in \n"
         prereq_command: 'gcloud config get-value account
 
-          '
+'
         get_prereq_command: 'gcloud auth login --no-launch-browser
 
-          '
+'
   T1053.002:
     technique:
       type: attack-pattern
@@ -36879,7 +36879,7 @@ collection:
         or <code>screencapture</code>.(Citation: CopyFromScreen .NET)(Citation: Antiquated
         Mac Malware)
 
-        '
+'
       kill_chain_phases:
       - kill_chain_name: mitre-attack
         phase_name: collection
@@ -55427,37 +55427,37 @@ impact:
       dependencies:
       - description: 'Requires gcloud
 
-          '
+'
         prereq_command: 'if [ -x "$(command -v gcloud)" ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: 'echo "Please Install Google Cloud SDK before running
           this atomic test : https://cloud.google.com/sdk/docs/install"
 
-          '
+'
       - description: "Check if user is logged in \n"
         prereq_command: 'gcloud config get-value account
 
-          '
+'
         get_prereq_command: 'gcloud auth login --no-launch-browser
 
-          '
+'
       - description: 'Check if terraform is installed.
 
-          '
+'
         prereq_command: 'terraform version
 
-          '
+'
         get_prereq_command: 'echo Please install the terraform.
 
-          '
+'
       - description: 'Create dependency resources using terraform
 
-          '
+'
         prereq_command: 'stat "$PathToAtomicsFolder/T1485/src/T1485-4/terraform.tfstate"
 
-          '
+'
         get_prereq_command: |
           cd "$PathToAtomicsFolder/T1485/src/T1485-4/"
           terraform init
@@ -57247,7 +57247,7 @@ initial-access:
       description: 'GCP Service Accounts can be used to gain intial access as well
         as maintain persistence inside Google Cloud.
 
-        '
+'
       supported_platforms:
       - google-workspace
       - iaas:gcp
@@ -57279,27 +57279,27 @@ initial-access:
         cleanup_command: 'gcloud iam service-accounts delete #{service-account-email}
           --quiet
 
-          '
+'
       dependency_executor_name: sh
       dependencies:
       - description: 'Requires gcloud
 
-          '
+'
         prereq_command: 'if [ -x "$(command -v gcloud)" ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: 'echo "Please Install Google Cloud SDK before running
           this atomic test : https://cloud.google.com/sdk/docs/install"
 
-          '
+'
       - description: "Check if user is logged in \n"
         prereq_command: 'gcloud config get-value account
 
-          '
+'
         get_prereq_command: 'gcloud auth login --no-launch-browser
 
-          '
+'
     - name: GCP - Create Custom IAM Role
       auto_generated_guid: 3a159042-69e6-4398-9a69-3308a4841c85
       description: "This atomic will create a new IAM role. The default role permissions
@@ -57338,27 +57338,27 @@ initial-access:
           gcloud iam roles create #{role-name} --description="#{role-description}" --permissions=#{roles} --project=#{project-id}
         cleanup_command: 'gcloud iam roles delete #{role-name} --project=#{project-id}
 
-          '
+'
       dependency_executor_name: sh
       dependencies:
       - description: 'Requires gcloud
 
-          '
+'
         prereq_command: 'if [ -x "$(command -v gcloud)" ]; then exit 0; else exit
           1; fi;
 
-          '
+'
         get_prereq_command: 'echo "Please Install Google Cloud SDK before running
           this atomic test : https://cloud.google.com/sdk/docs/install"
 
-          '
+'
       - description: "Check if user is logged in \n"
         prereq_command: 'gcloud config get-value account
 
-          '
+'
         get_prereq_command: 'gcloud auth login --no-launch-browser
 
-          '
+'
   T1566.003:
     technique:
       type: attack-pattern
