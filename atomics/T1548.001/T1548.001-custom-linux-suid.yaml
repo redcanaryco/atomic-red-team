@@ -1,0 +1,24 @@
+name: Set SUID Bit on Binary via chmod
+description: |
+  Simulates an adversary setting the SUID bit on a binary to enable privilege escalation.
+  When a binary has the SUID bit set and is owned by root, any user executing it will run
+  it with root privileges. This technique is documented in MITRE ATT&CK T1548.001.
+  Attackers commonly abuse this on GTFOBins-listed binaries (e.g., find, vim, python).
+  Reference: https://attack.mitre.org/techniques/T1548/001/
+supported_platforms:
+  - linux
+input_arguments:
+  target_binary:
+    description: Path to the binary that will have the SUID bit set
+    type: path
+    default: /tmp/art_suid_test_binary
+executor:
+  name: bash
+  elevation_required: true
+  command: |
+    cp /bin/bash #{target_binary}
+    chmod u+s #{target_binary}
+    ls -la #{target_binary}
+  cleanup_command: |
+    chmod u-s #{target_binary}
+    rm -f #{target_binary}

