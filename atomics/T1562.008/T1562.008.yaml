@@ -517,8 +517,8 @@ atomic_tests:
       echo "*** Delivery channel deleted ***"
       aws configservice delete-configuration-recorder --configuration-recorder-name #{configuration_recorder_name} --region #{region}
       echo "*** Configuration recorder deleted ***"
-    cleanup_command: aws configservice list-configuration-recorders --region us-west-2  
-    - description: |
-      List recorders, to confirm there are none. Confirming previous configuration recorder was stopped and deleted.
+    cleanup_command: aws configservice list-configuration-recorders --region us-west-2
+    description: |
+        List recorders, to confirm there are none. Confirming previous configuration recorder was stopped and deleted.
     name: sh
     elevation_required: false
