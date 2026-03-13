@@ -29,7 +29,7 @@ If you see anything that you believe breaks our community guidelines, no matter 
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting the Community Manager. Unacceptable behavior will not be tolerated by community members, maintainers, and Red Canary team members.  The Atomic Red Team Community Manager and maintainers will review and investigate all complaints. 
 
-Anyone asked to stop unacceptable behavior is expected to comply immediately. If an Atomic Red Team community member (anyone contributing to our [GitHub Repo](https://github.com/redcanaryco/atomic-red-team) or [Community Slack](https://slack.atomicredteam.io/)) engages in unacceptable behavior, the Community Manager may take any temporary or permanent action they deem appropriate, up to and including immediate expulsion from the Atomic Red Team community without warning.
+Anyone asked to stop unacceptable behavior is expected to comply immediately. If an Atomic Red Team community member (anyone contributing to our [GitHub Repo](https://github.com/redcanaryco/atomic-red-team) or [Community Slack](https://atomicredteam.io/slack)) engages in unacceptable behavior, the Community Manager may take any temporary or permanent action they deem appropriate, up to and including immediate expulsion from the Atomic Red Team community without warning.
 
 Atomic Red Team maintainers who do not follow or enforce the Code of Conduct in good faith may face temporary or permanent repercussions as determined by other members of the project's leadership.
 
@@ -45,7 +45,7 @@ This Code of Conduct applies to all of the Atomic Red Team, and “Atomic Family
 
 * [Atomic Red Team Website](https://atomicredteam.io/)
 
-* [Atomic Red Team Slack](https://slack.atomicredteam.io/)
+* [Atomic Red Team Slack](https://atomicredteam.io/slack)
 
 * [Atomic Red Team GitHub](https://github.com/redcanaryco/atomic-red-team)
 
