@@ -13,6 +13,7 @@
 - [T1027.013 Obfuscated Files or Information: Encrypted/Encoded File](../../T1027.013/T1027.013.md)
   - Atomic Test #1: Decode Eicar File and Write to File [windows, macos, linux]
   - Atomic Test #2: Decrypt Eicar File and Write to File [windows, macos, linux]
+  - Atomic Test #3: Password-Protected ZIP Payload Extraction and Execution [linux, macos]
 - [T1014 Rootkit](../../T1014/T1014.md)
   - Atomic Test #1: Loadable Kernel Module based Rootkit [linux]
   - Atomic Test #2: Loadable Kernel Module based Rootkit [linux]

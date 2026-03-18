@@ -54,6 +54,7 @@
 - [T1027.013 Obfuscated Files or Information: Encrypted/Encoded File](../../T1027.013/T1027.013.md)
   - Atomic Test #1: Decode Eicar File and Write to File [windows, macos, linux]
   - Atomic Test #2: Decrypt Eicar File and Write to File [windows, macos, linux]
+  - Atomic Test #3: Password-Protected ZIP Payload Extraction and Execution [linux, macos]
 - [T1014 Rootkit](../../T1014/T1014.md)
   - Atomic Test #1: Loadable Kernel Module based Rootkit [linux]
   - Atomic Test #2: Loadable Kernel Module based Rootkit [linux]
@@ -698,6 +699,7 @@
   - Atomic Test #8: Obfuscated Command Line using special Unicode characters [windows]
   - Atomic Test #9: Snake Malware Encrypted crmlog file [windows]
   - Atomic Test #10: Execution from Compressed JScript File [windows]
+  - Atomic Test #11: Obfuscated PowerShell Command via Character Array [windows]
 - T1556.006 Multi-Factor Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1036.001 Invalid Code Signature [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1564.006 Run Virtual Instance](../../T1564.006/T1564.006.md)
