@@ -505,6 +505,7 @@
   - Atomic Test #8: Obfuscated Command Line using special Unicode characters [windows]
   - Atomic Test #9: Snake Malware Encrypted crmlog file [windows]
   - Atomic Test #10: Execution from Compressed JScript File [windows]
+  - Atomic Test #11: Obfuscated PowerShell Command via Character Array [windows]
 - T1556.006 Multi-Factor Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1036.001 Invalid Code Signature [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1564.006 Run Virtual Instance](../../T1564.006/T1564.006.md)
