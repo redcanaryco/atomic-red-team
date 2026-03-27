@@ -1,0 +1,20 @@
+- name: Masquerading - Right-to-Left Override (RTLO) File Creation
+  description: |
+    Adversaries abuse the right-to-left override (RTLO / U+202E) Unicode character to reverse the display order of characters in a filename. 
+    This makes a malicious file (e.g. ending in .scr or .exe) appear as a benign document (e.g. .docx or .txt) in Windows Explorer.
+    Example: The real filename "March_25_[RTLO]xcod.scr" displays as "March_25_rcs.docx".
+    Reference: https://attack.mitre.org/techniques/T1036/002/
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    command: |
+      $rtlo = [char]0x202E
+      $filename = "March_25_$($rtlo)xcod.scr"
+      New-Item -Path $filename -ItemType File -Force | Out-Null
+      Write-Output "Created masqueraded file: $filename"
+      Write-Output "→ In Windows Explorer this displays as: March_25_rcs.docx"
+    cleanup_command: |
+      $rtlo = [char]0x202E
+      $filename = "March_25_$($rtlo)xcod.scr"
+      Remove-Item -Path $filename -Force -ErrorAction SilentlyContinue
