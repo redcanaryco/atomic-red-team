@@ -1,0 +1,840 @@
+attack_technique: T1675
+display_name: "ESXi Administration Command"
+atomic_tests:
+
+  - name: ESXi Enumerate Running Virtual Machines via esxcli (Linux)
+    auto_generated_guid:
+    description: |
+      Enumerates running virtual machines on an ESXi host using esxcli over SSH from a Linux machine.
+      Adversaries may use this command to identify active virtual machines prior to impact.
+      This test executes from a Linux machine with SSH access to the ESXi host using sshpass
+      for non-interactive authentication, simulating an attacker who has obtained ESXi credentials.
+
+      Detection Focus:
+      - Execution of esxcli commands on the ESXi shell
+      - Enumeration of VM processes via SSH
+      - Unusual ESXi SSH session activity
+    supported_platforms:
+      - linux
+    input_arguments:
+      esxi_host:
+        description: IP address of the ESXi host
+        type: string
+        default: 192.168.1.100
+      esxi_user:
+        description: ESXi username
+        type: string
+        default: root
+      esxi_password:
+        description: ESXi root password
+        type: string
+        default: password
+    dependency_executor_name: sh
+    dependencies:
+      - description: |
+          sshpass must be installed for non-interactive SSH authentication
+        prereq_command: |
+          if [ -x "$(command -v sshpass)" ]; then exit 0; else exit 1; fi
+        get_prereq_command: |
+          apt-get install -y sshpass
+      - description: |
+          The ESXi host must be reachable over SSH
+        prereq_command: |
+          sshpass -p "#{esxi_password}" ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 #{esxi_user}@#{esxi_host} "echo connected" 2>/dev/null && exit 0 || exit 1
+        get_prereq_command: |
+          echo "Cannot reach ESXi host at #{esxi_host}. Verify the host is running and SSH is enabled."
+    executor:
+      name: sh
+      elevation_required: false
+      command: |
+        sshpass -p "#{esxi_password}" ssh -o StrictHostKeyChecking=no #{esxi_user}@#{esxi_host} "esxcli vm process list"
+      cleanup_command: |
+        echo "No cleanup required"
+
+
+  - name: ESXi Enumerate Running Virtual Machines via esxcli (Windows)
+    auto_generated_guid:
+    description: |
+      Enumerates running virtual machines on an ESXi host using esxcli over SSH from a Windows machine.
+      Adversaries may use this command to identify active virtual machines prior to impact.
+      This test executes from a Windows machine using plink.exe to SSH into the ESXi host,
+      simulating an attacker operating from a compromised Windows guest VM on the same ESXi host.
+      This is consistent with UNC3886 tradecraft where a compromised Windows guest was used to
+      interact with the ESXi hypervisor.
+
+      Detection Focus:
+      - Execution of esxcli commands on the ESXi shell
+      - Enumeration of VM processes via SSH from a Windows guest
+      - plink.exe used to establish SSH sessions to ESXi
+    supported_platforms:
+      - windows
+    input_arguments:
+      esxi_host:
+        description: IP address of the ESXi host
+        type: string
+        default: 192.168.1.100
+      esxi_user:
+        description: ESXi username
+        type: string
+        default: root
+      esxi_password:
+        description: ESXi root password
+        type: string
+        default: password
+      plink_path:
+        description: Path to plink.exe
+        type: path
+        default: C:\Windows\System32\plink.exe
+    dependency_executor_name: powershell
+    dependencies:
+      - description: |
+          plink.exe must exist at the specified path
+        prereq_command: |
+          if (Test-Path "#{plink_path}") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Write-Output "Downloading plink.exe..."
+          Invoke-WebRequest -Uri "https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe" -OutFile "#{plink_path}"
+      - description: |
+          The ESXi host must be reachable over SSH
+        prereq_command: |
+          $result = echo y | & "#{plink_path}" -ssh #{esxi_user}@#{esxi_host} -pw #{esxi_password} "echo connected" 2>&1
+          if ($result -match "connected") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Write-Output "Cannot reach ESXi host at #{esxi_host}. Verify the host is running and SSH is enabled."
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        echo y | & "#{plink_path}" -ssh #{esxi_user}@#{esxi_host} -pw #{esxi_password} "esxcli vm process list"
+      cleanup_command: |
+        Write-Output "No cleanup required"
+
+
+  - name: ESXi List All Virtual Machines via vim-cmd (Linux)
+    auto_generated_guid:
+    description: |
+      Lists all registered virtual machines on an ESXi host using vim-cmd over SSH from a Linux machine.
+      Adversaries may enumerate VMs to identify targets for shutdown or encryption.
+
+      Detection Focus:
+      - vim-cmd execution on the ESXi shell
+      - VM inventory enumeration via SSH
+      - Administrative SSH session activity
+    supported_platforms:
+      - linux
+    input_arguments:
+      esxi_host:
+        description: IP address of the ESXi host
+        type: string
+        default: 192.168.1.100
+      esxi_user:
+        description: ESXi username
+        type: string
+        default: root
+      esxi_password:
+        description: ESXi root password
+        type: string
+        default: password
+    dependency_executor_name: sh
+    dependencies:
+      - description: |
+          sshpass must be installed for non-interactive SSH authentication
+        prereq_command: |
+          if [ -x "$(command -v sshpass)" ]; then exit 0; else exit 1; fi
+        get_prereq_command: |
+          apt-get install -y sshpass
+      - description: |
+          The ESXi host must be reachable over SSH
+        prereq_command: |
+          sshpass -p "#{esxi_password}" ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 #{esxi_user}@#{esxi_host} "echo connected" 2>/dev/null && exit 0 || exit 1
+        get_prereq_command: |
+          echo "Cannot reach ESXi host at #{esxi_host}. Verify the host is running and SSH is enabled."
+    executor:
+      name: sh
+      elevation_required: false
+      command: |
+        sshpass -p "#{esxi_password}" ssh -o StrictHostKeyChecking=no #{esxi_user}@#{esxi_host} "vim-cmd vmsvc/getallvms"
+      cleanup_command: |
+        echo "No cleanup required"
+
+
+  - name: ESXi List All Virtual Machines via vim-cmd (Windows)
+    auto_generated_guid:
+    description: |
+      Lists all registered virtual machines on an ESXi host using vim-cmd over SSH from a Windows machine.
+      Adversaries may enumerate VMs to identify targets for shutdown or encryption.
+      This test executes from a Windows machine using plink.exe consistent with UNC3886 tradecraft.
+
+      Detection Focus:
+      - vim-cmd execution on the ESXi shell
+      - VM inventory enumeration via SSH from a Windows guest
+      - plink.exe used to establish SSH sessions to ESXi
+    supported_platforms:
+      - windows
+    input_arguments:
+      esxi_host:
+        description: IP address of the ESXi host
+        type: string
+        default: 192.168.1.100
+      esxi_user:
+        description: ESXi username
+        type: string
+        default: root
+      esxi_password:
+        description: ESXi root password
+        type: string
+        default: password
+      plink_path:
+        description: Path to plink.exe
+        type: path
+        default: C:\Windows\System32\plink.exe
+    dependency_executor_name: powershell
+    dependencies:
+      - description: |
+          plink.exe must exist at the specified path
+        prereq_command: |
+          if (Test-Path "#{plink_path}") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Write-Output "Downloading plink.exe..."
+          Invoke-WebRequest -Uri "https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe" -OutFile "#{plink_path}"
+      - description: |
+          The ESXi host must be reachable over SSH
+        prereq_command: |
+          $result = echo y | & "#{plink_path}" -ssh #{esxi_user}@#{esxi_host} -pw #{esxi_password} "echo connected" 2>&1
+          if ($result -match "connected") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Write-Output "Cannot reach ESXi host at #{esxi_host}. Verify the host is running and SSH is enabled."
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        echo y | & "#{plink_path}" -ssh #{esxi_user}@#{esxi_host} -pw #{esxi_password} "vim-cmd vmsvc/getallvms"
+      cleanup_command: |
+        Write-Output "No cleanup required"
+
+
+  - name: ESXi List Datastores via esxcli (Linux)
+    auto_generated_guid:
+    description: |
+      Lists datastores available on an ESXi host using esxcli over SSH from a Linux machine.
+      Adversaries may use this to identify storage locations of virtual disks prior to
+      encryption or exfiltration.
+
+      Detection Focus:
+      - esxcli storage commands on the ESXi shell
+      - Datastore enumeration via SSH
+      - Storage reconnaissance activity
+    supported_platforms:
+      - linux
+    input_arguments:
+      esxi_host:
+        description: IP address of the ESXi host
+        type: string
+        default: 192.168.1.100
+      esxi_user:
+        description: ESXi username
+        type: string
+        default: root
+      esxi_password:
+        description: ESXi root password
+        type: string
+        default: password
+    dependency_executor_name: sh
+    dependencies:
+      - description: |
+          sshpass must be installed for non-interactive SSH authentication
+        prereq_command: |
+          if [ -x "$(command -v sshpass)" ]; then exit 0; else exit 1; fi
+        get_prereq_command: |
+          apt-get install -y sshpass
+      - description: |
+          The ESXi host must be reachable over SSH
+        prereq_command: |
+          sshpass -p "#{esxi_password}" ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 #{esxi_user}@#{esxi_host} "echo connected" 2>/dev/null && exit 0 || exit 1
+        get_prereq_command: |
+          echo "Cannot reach ESXi host at #{esxi_host}. Verify the host is running and SSH is enabled."
+    executor:
+      name: sh
+      elevation_required: false
+      command: |
+        sshpass -p "#{esxi_password}" ssh -o StrictHostKeyChecking=no #{esxi_user}@#{esxi_host} "esxcli storage filesystem list"
+      cleanup_command: |
+        echo "No cleanup required"
+
+
+  - name: ESXi List Datastores via esxcli (Windows)
+    auto_generated_guid:
+    description: |
+      Lists datastores available on an ESXi host using esxcli over SSH from a Windows machine.
+      Adversaries may use this to identify storage locations of virtual disks prior to
+      encryption or exfiltration. Consistent with UNC3886 tradecraft using a compromised
+      Windows guest VM to interact with the ESXi hypervisor.
+
+      Detection Focus:
+      - esxcli storage commands on the ESXi shell
+      - Datastore enumeration via SSH from a Windows guest
+      - plink.exe used to establish SSH sessions to ESXi
+    supported_platforms:
+      - windows
+    input_arguments:
+      esxi_host:
+        description: IP address of the ESXi host
+        type: string
+        default: 192.168.1.100
+      esxi_user:
+        description: ESXi username
+        type: string
+        default: root
+      esxi_password:
+        description: ESXi root password
+        type: string
+        default: password
+      plink_path:
+        description: Path to plink.exe
+        type: path
+        default: C:\Windows\System32\plink.exe
+    dependency_executor_name: powershell
+    dependencies:
+      - description: |
+          plink.exe must exist at the specified path
+        prereq_command: |
+          if (Test-Path "#{plink_path}") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Write-Output "Downloading plink.exe..."
+          Invoke-WebRequest -Uri "https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe" -OutFile "#{plink_path}"
+      - description: |
+          The ESXi host must be reachable over SSH
+        prereq_command: |
+          $result = echo y | & "#{plink_path}" -ssh #{esxi_user}@#{esxi_host} -pw #{esxi_password} "echo connected" 2>&1
+          if ($result -match "connected") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Write-Output "Cannot reach ESXi host at #{esxi_host}. Verify the host is running and SSH is enabled."
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        echo y | & "#{plink_path}" -ssh #{esxi_user}@#{esxi_host} -pw #{esxi_password} "esxcli storage filesystem list"
+      cleanup_command: |
+        Write-Output "No cleanup required"
+
+
+  - name: ESXi List Storage Devices via esxcli (Linux)
+    auto_generated_guid:
+    description: |
+      Lists storage devices attached to the ESXi host using esxcli over SSH from a Linux machine.
+      Adversaries may enumerate storage devices to understand disk layout and identify
+      additional targets for encryption or destruction.
+
+      Detection Focus:
+      - esxcli storage core commands on the ESXi shell
+      - Physical and logical device enumeration via SSH
+      - Host storage reconnaissance activity
+    supported_platforms:
+      - linux
+    input_arguments:
+      esxi_host:
+        description: IP address of the ESXi host
+        type: string
+        default: 192.168.1.100
+      esxi_user:
+        description: ESXi username
+        type: string
+        default: root
+      esxi_password:
+        description: ESXi root password
+        type: string
+        default: password
+    dependency_executor_name: sh
+    dependencies:
+      - description: |
+          sshpass must be installed for non-interactive SSH authentication
+        prereq_command: |
+          if [ -x "$(command -v sshpass)" ]; then exit 0; else exit 1; fi
+        get_prereq_command: |
+          apt-get install -y sshpass
+      - description: |
+          The ESXi host must be reachable over SSH
+        prereq_command: |
+          sshpass -p "#{esxi_password}" ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 #{esxi_user}@#{esxi_host} "echo connected" 2>/dev/null && exit 0 || exit 1
+        get_prereq_command: |
+          echo "Cannot reach ESXi host at #{esxi_host}. Verify the host is running and SSH is enabled."
+    executor:
+      name: sh
+      elevation_required: false
+      command: |
+        sshpass -p "#{esxi_password}" ssh -o StrictHostKeyChecking=no #{esxi_user}@#{esxi_host} "esxcli storage core device list"
+      cleanup_command: |
+        echo "No cleanup required"
+
+
+  - name: ESXi List Storage Devices via esxcli (Windows)
+    auto_generated_guid:
+    description: |
+      Lists storage devices attached to the ESXi host using esxcli over SSH from a Windows machine.
+      Adversaries may enumerate storage devices to understand disk layout and identify
+      additional targets. Consistent with UNC3886 tradecraft using a compromised Windows
+      guest VM to interact with the ESXi hypervisor.
+
+      Detection Focus:
+      - esxcli storage core commands on the ESXi shell
+      - Physical and logical device enumeration via SSH from a Windows guest
+      - plink.exe used to establish SSH sessions to ESXi
+    supported_platforms:
+      - windows
+    input_arguments:
+      esxi_host:
+        description: IP address of the ESXi host
+        type: string
+        default: 192.168.1.100
+      esxi_user:
+        description: ESXi username
+        type: string
+        default: root
+      esxi_password:
+        description: ESXi root password
+        type: string
+        default: password
+      plink_path:
+        description: Path to plink.exe
+        type: path
+        default: C:\Windows\System32\plink.exe
+    dependency_executor_name: powershell
+    dependencies:
+      - description: |
+          plink.exe must exist at the specified path
+        prereq_command: |
+          if (Test-Path "#{plink_path}") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Write-Output "Downloading plink.exe..."
+          Invoke-WebRequest -Uri "https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe" -OutFile "#{plink_path}"
+      - description: |
+          The ESXi host must be reachable over SSH
+        prereq_command: |
+          $result = echo y | & "#{plink_path}" -ssh #{esxi_user}@#{esxi_host} -pw #{esxi_password} "echo connected" 2>&1
+          if ($result -match "connected") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Write-Output "Cannot reach ESXi host at #{esxi_host}. Verify the host is running and SSH is enabled."
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        echo y | & "#{plink_path}" -ssh #{esxi_user}@#{esxi_host} -pw #{esxi_password} "esxcli storage core device list"
+      cleanup_command: |
+        Write-Output "No cleanup required"
+
+
+  - name: ESXi Enumerate Network Interfaces (Linux)
+    auto_generated_guid:
+    description: |
+      Lists network interfaces on the ESXi host using esxcli over SSH from a Linux machine.
+      Adversaries may use this to understand network configuration and identify pivot opportunities.
+
+      Detection Focus:
+      - esxcli network commands on the ESXi shell
+      - Network interface enumeration via SSH
+      - Infrastructure discovery activity
+    supported_platforms:
+      - linux
+    input_arguments:
+      esxi_host:
+        description: IP address of the ESXi host
+        type: string
+        default: 192.168.1.100
+      esxi_user:
+        description: ESXi username
+        type: string
+        default: root
+      esxi_password:
+        description: ESXi root password
+        type: string
+        default: password
+    dependency_executor_name: sh
+    dependencies:
+      - description: |
+          sshpass must be installed for non-interactive SSH authentication
+        prereq_command: |
+          if [ -x "$(command -v sshpass)" ]; then exit 0; else exit 1; fi
+        get_prereq_command: |
+          apt-get install -y sshpass
+      - description: |
+          The ESXi host must be reachable over SSH
+        prereq_command: |
+          sshpass -p "#{esxi_password}" ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 #{esxi_user}@#{esxi_host} "echo connected" 2>/dev/null && exit 0 || exit 1
+        get_prereq_command: |
+          echo "Cannot reach ESXi host at #{esxi_host}. Verify the host is running and SSH is enabled."
+    executor:
+      name: sh
+      elevation_required: false
+      command: |
+        sshpass -p "#{esxi_password}" ssh -o StrictHostKeyChecking=no #{esxi_user}@#{esxi_host} "esxcli network ip interface list"
+      cleanup_command: |
+        echo "No cleanup required"
+
+
+  - name: ESXi Enumerate Network Interfaces (Windows)
+    auto_generated_guid:
+    description: |
+      Lists network interfaces on the ESXi host using esxcli over SSH from a Windows machine.
+      Adversaries may use this to understand network configuration and identify pivot opportunities.
+      Consistent with UNC3886 tradecraft using a compromised Windows guest VM to interact
+      with the ESXi hypervisor.
+
+      Detection Focus:
+      - esxcli network commands on the ESXi shell
+      - Network interface enumeration via SSH from a Windows guest
+      - plink.exe used to establish SSH sessions to ESXi
+    supported_platforms:
+      - windows
+    input_arguments:
+      esxi_host:
+        description: IP address of the ESXi host
+        type: string
+        default: 192.168.1.100
+      esxi_user:
+        description: ESXi username
+        type: string
+        default: root
+      esxi_password:
+        description: ESXi root password
+        type: string
+        default: password
+      plink_path:
+        description: Path to plink.exe
+        type: path
+        default: C:\Windows\System32\plink.exe
+    dependency_executor_name: powershell
+    dependencies:
+      - description: |
+          plink.exe must exist at the specified path
+        prereq_command: |
+          if (Test-Path "#{plink_path}") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Write-Output "Downloading plink.exe..."
+          Invoke-WebRequest -Uri "https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe" -OutFile "#{plink_path}"
+      - description: |
+          The ESXi host must be reachable over SSH
+        prereq_command: |
+          $result = echo y | & "#{plink_path}" -ssh #{esxi_user}@#{esxi_host} -pw #{esxi_password} "echo connected" 2>&1
+          if ($result -match "connected") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Write-Output "Cannot reach ESXi host at #{esxi_host}. Verify the host is running and SSH is enabled."
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        echo y | & "#{plink_path}" -ssh #{esxi_user}@#{esxi_host} -pw #{esxi_password} "esxcli network ip interface list"
+      cleanup_command: |
+        Write-Output "No cleanup required"
+
+
+  - name: ESXi List Local User Accounts (Linux)
+    auto_generated_guid:
+    description: |
+      Lists local user accounts configured on the ESXi host using esxcli over SSH from a Linux machine.
+      Adversaries may enumerate users for persistence or lateral movement.
+
+      Detection Focus:
+      - esxcli system account usage on the ESXi shell
+      - Account enumeration via SSH
+      - Privileged access discovery activity
+    supported_platforms:
+      - linux
+    input_arguments:
+      esxi_host:
+        description: IP address of the ESXi host
+        type: string
+        default: 192.168.1.100
+      esxi_user:
+        description: ESXi username
+        type: string
+        default: root
+      esxi_password:
+        description: ESXi root password
+        type: string
+        default: password
+    dependency_executor_name: sh
+    dependencies:
+      - description: |
+          sshpass must be installed for non-interactive SSH authentication
+        prereq_command: |
+          if [ -x "$(command -v sshpass)" ]; then exit 0; else exit 1; fi
+        get_prereq_command: |
+          apt-get install -y sshpass
+      - description: |
+          The ESXi host must be reachable over SSH
+        prereq_command: |
+          sshpass -p "#{esxi_password}" ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 #{esxi_user}@#{esxi_host} "echo connected" 2>/dev/null && exit 0 || exit 1
+        get_prereq_command: |
+          echo "Cannot reach ESXi host at #{esxi_host}. Verify the host is running and SSH is enabled."
+    executor:
+      name: sh
+      elevation_required: false
+      command: |
+        sshpass -p "#{esxi_password}" ssh -o StrictHostKeyChecking=no #{esxi_user}@#{esxi_host} "esxcli system account list"
+      cleanup_command: |
+        echo "No cleanup required"
+
+
+  - name: ESXi List Local User Accounts (Windows)
+    auto_generated_guid:
+    description: |
+      Lists local user accounts configured on the ESXi host using esxcli over SSH from a Windows machine.
+      Adversaries may enumerate users for persistence or lateral movement. Consistent with
+      UNC3886 tradecraft using a compromised Windows guest VM to interact with the ESXi hypervisor.
+
+      Detection Focus:
+      - esxcli system account usage on the ESXi shell
+      - Account enumeration via SSH from a Windows guest
+      - plink.exe used to establish SSH sessions to ESXi
+    supported_platforms:
+      - windows
+    input_arguments:
+      esxi_host:
+        description: IP address of the ESXi host
+        type: string
+        default: 192.168.1.100
+      esxi_user:
+        description: ESXi username
+        type: string
+        default: root
+      esxi_password:
+        description: ESXi root password
+        type: string
+        default: password
+      plink_path:
+        description: Path to plink.exe
+        type: path
+        default: C:\Windows\System32\plink.exe
+    dependency_executor_name: powershell
+    dependencies:
+      - description: |
+          plink.exe must exist at the specified path
+        prereq_command: |
+          if (Test-Path "#{plink_path}") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Write-Output "Downloading plink.exe..."
+          Invoke-WebRequest -Uri "https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe" -OutFile "#{plink_path}"
+      - description: |
+          The ESXi host must be reachable over SSH
+        prereq_command: |
+          $result = echo y | & "#{plink_path}" -ssh #{esxi_user}@#{esxi_host} -pw #{esxi_password} "echo connected" 2>&1
+          if ($result -match "connected") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Write-Output "Cannot reach ESXi host at #{esxi_host}. Verify the host is running and SSH is enabled."
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        echo y | & "#{plink_path}" -ssh #{esxi_user}@#{esxi_host} -pw #{esxi_password} "esxcli system account list"
+      cleanup_command: |
+        Write-Output "No cleanup required"
+
+
+  - name: ESXi Get System Version Information (Linux)
+    auto_generated_guid:
+    description: |
+      Retrieves ESXi version and build information using esxcli over SSH from a Linux machine.
+      Adversaries may use this to fingerprint the host, identify unpatched vulnerabilities,
+      and tailor exploits specific to the ESXi version in use.
+
+      Detection Focus:
+      - esxcli system version usage on the ESXi shell
+      - Host fingerprinting activity via SSH
+      - Reconnaissance commands run in close succession with other enumeration activity
+    supported_platforms:
+      - linux
+    input_arguments:
+      esxi_host:
+        description: IP address of the ESXi host
+        type: string
+        default: 192.168.1.100
+      esxi_user:
+        description: ESXi username
+        type: string
+        default: root
+      esxi_password:
+        description: ESXi root password
+        type: string
+        default: password
+    dependency_executor_name: sh
+    dependencies:
+      - description: |
+          sshpass must be installed for non-interactive SSH authentication
+        prereq_command: |
+          if [ -x "$(command -v sshpass)" ]; then exit 0; else exit 1; fi
+        get_prereq_command: |
+          apt-get install -y sshpass
+      - description: |
+          The ESXi host must be reachable over SSH
+        prereq_command: |
+          sshpass -p "#{esxi_password}" ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 #{esxi_user}@#{esxi_host} "echo connected" 2>/dev/null && exit 0 || exit 1
+        get_prereq_command: |
+          echo "Cannot reach ESXi host at #{esxi_host}. Verify the host is running and SSH is enabled."
+    executor:
+      name: sh
+      elevation_required: false
+      command: |
+        sshpass -p "#{esxi_password}" ssh -o StrictHostKeyChecking=no #{esxi_user}@#{esxi_host} "esxcli system version get"
+      cleanup_command: |
+        echo "No cleanup required"
+
+
+  - name: ESXi Get System Version Information (Windows)
+    auto_generated_guid:
+    description: |
+      Retrieves ESXi version and build information using esxcli over SSH from a Windows machine.
+      Adversaries may use this to fingerprint the host and tailor exploits specific to the ESXi
+      version in use. Consistent with UNC3886 tradecraft using a compromised Windows guest VM
+      to interact with the ESXi hypervisor.
+
+      Detection Focus:
+      - esxcli system version usage on the ESXi shell
+      - Host fingerprinting via SSH from a Windows guest
+      - plink.exe used to establish SSH sessions to ESXi
+    supported_platforms:
+      - windows
+    input_arguments:
+      esxi_host:
+        description: IP address of the ESXi host
+        type: string
+        default: 192.168.1.100
+      esxi_user:
+        description: ESXi username
+        type: string
+        default: root
+      esxi_password:
+        description: ESXi root password
+        type: string
+        default: password
+      plink_path:
+        description: Path to plink.exe
+        type: path
+        default: C:\Windows\System32\plink.exe
+    dependency_executor_name: powershell
+    dependencies:
+      - description: |
+          plink.exe must exist at the specified path
+        prereq_command: |
+          if (Test-Path "#{plink_path}") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Write-Output "Downloading plink.exe..."
+          Invoke-WebRequest -Uri "https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe" -OutFile "#{plink_path}"
+      - description: |
+          The ESXi host must be reachable over SSH
+        prereq_command: |
+          $result = echo y | & "#{plink_path}" -ssh #{esxi_user}@#{esxi_host} -pw #{esxi_password} "echo connected" 2>&1
+          if ($result -match "connected") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Write-Output "Cannot reach ESXi host at #{esxi_host}. Verify the host is running and SSH is enabled."
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        echo y | & "#{plink_path}" -ssh #{esxi_user}@#{esxi_host} -pw #{esxi_password} "esxcli system version get"
+      cleanup_command: |
+        Write-Output "No cleanup required"
+
+
+  - name: ESXi Read Authentication Logs (Linux)
+    auto_generated_guid:
+    description: |
+      Reads authentication logs from the ESXi host over SSH from a Linux machine.
+      Adversaries may review logs to understand login activity, detect monitoring,
+      or cover their tracks by identifying what events have been recorded.
+
+      Detection Focus:
+      - Remote access to /var/log/auth.log on the ESXi host via SSH
+      - Log inspection activity
+      - Potential defence evasion preparation prior to further malicious activity
+    supported_platforms:
+      - linux
+    input_arguments:
+      esxi_host:
+        description: IP address of the ESXi host
+        type: string
+        default: 192.168.1.100
+      esxi_user:
+        description: ESXi username
+        type: string
+        default: root
+      esxi_password:
+        description: ESXi root password
+        type: string
+        default: password
+    dependency_executor_name: sh
+    dependencies:
+      - description: |
+          sshpass must be installed for non-interactive SSH authentication
+        prereq_command: |
+          if [ -x "$(command -v sshpass)" ]; then exit 0; else exit 1; fi
+        get_prereq_command: |
+          apt-get install -y sshpass
+      - description: |
+          The ESXi host must be reachable over SSH
+        prereq_command: |
+          sshpass -p "#{esxi_password}" ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 #{esxi_user}@#{esxi_host} "echo connected" 2>/dev/null && exit 0 || exit 1
+        get_prereq_command: |
+          echo "Cannot reach ESXi host at #{esxi_host}. Verify the host is running and SSH is enabled."
+    executor:
+      name: sh
+      elevation_required: false
+      command: |
+        sshpass -p "#{esxi_password}" ssh -o StrictHostKeyChecking=no #{esxi_user}@#{esxi_host} "cat /var/log/auth.log"
+      cleanup_command: |
+        echo "No cleanup required"
+
+
+  - name: ESXi Read Authentication Logs (Windows)
+    auto_generated_guid:
+    description: |
+      Reads authentication logs from the ESXi host over SSH from a Windows machine.
+      Adversaries may review logs to understand login activity or cover their tracks.
+      Consistent with UNC3886 tradecraft using a compromised Windows guest VM to
+      interact with the ESXi hypervisor.
+
+      Detection Focus:
+      - Remote access to /var/log/auth.log on the ESXi host via SSH from a Windows guest
+      - Log inspection activity
+      - plink.exe used to establish SSH sessions to ESXi
+    supported_platforms:
+      - windows
+    input_arguments:
+      esxi_host:
+        description: IP address of the ESXi host
+        type: string
+        default: 192.168.1.100
+      esxi_user:
+        description: ESXi username
+        type: string
+        default: root
+      esxi_password:
+        description: ESXi root password
+        type: string
+        default: password
+      plink_path:
+        description: Path to plink.exe
+        type: path
+        default: C:\Windows\System32\plink.exe
+    dependency_executor_name: powershell
+    dependencies:
+      - description: |
+          plink.exe must exist at the specified path
+        prereq_command: |
+          if (Test-Path "#{plink_path}") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Write-Output "Downloading plink.exe..."
+          Invoke-WebRequest -Uri "https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe" -OutFile "#{plink_path}"
+      - description: |
+          The ESXi host must be reachable over SSH
+        prereq_command: |
+          $result = echo y | & "#{plink_path}" -ssh #{esxi_user}@#{esxi_host} -pw #{esxi_password} "echo connected" 2>&1
+          if ($result -match "connected") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Write-Output "Cannot reach ESXi host at #{esxi_host}. Verify the host is running and SSH is enabled."
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        echo y | & "#{plink_path}" -ssh #{esxi_user}@#{esxi_host} -pw #{esxi_password} "cat /var/log/auth.log"
+      cleanup_command: |
+        Write-Output "No cleanup required"
