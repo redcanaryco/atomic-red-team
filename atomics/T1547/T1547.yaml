@@ -16,3 +16,43 @@ atomic_tests:
     command: |
       pnputil.exe /add-driver "#{driver_inf}"
     name: command_prompt
+- name: Driver Installation Using pnputil.exe
+  auto_generated_guid: 5cb0b071-8a5a-412f-839d-116beb2ed9f7
+  description: |
+    pnputil.exe is a native command-line utility in Windows to install drivers, this can be abused by to install malicious drivers. Ref: https://lolbas-project.github.io/lolbas/Binaries/Pnputil/
+  supported_platforms:
+  - windows
+  input_arguments:
+    driver_path:
+      description: Enter the driver file path to install (Default is used built-in windows driver - acpipmi.inf)
+      type: path
+      default: C:\Windows\INF\acpipmi.inf
+  executor:
+    command: |
+      pnputil.exe -i -a #{driver_path}
+    name: powershell
+- name: Leverage Virtual Channels to execute custom DLL during successful RDP session
+  auto_generated_guid: fdd45306-74f6-4ade-9a97-0a4895961228
+  description: |
+    Virtual Channels can be leveraged to alter RDP behavior using dedicated Addins.The mechanism is implemented using DLLs which can be executed during RDP session automatically. 
+    The DLLs are loaded in the host system only after successful connection is established with the remote system.
+    Once the test is run, amsi.dll will be loaded on the host system during successful RDP session.
+    Blog :https://learn.microsoft.com/en-us/windows/win32/termserv/terminal-services-virtual-channels?redirectedfrom=MSDN
+  supported_platforms:
+  - windows
+  input_arguments:
+    Subkey_Added:
+      description: New Sub key added in the registry path
+      type: String
+      default: 'Malware'
+    dll_inf:
+      description: custom DLL to be executed
+      type: Path
+      default: 'C:\Windows\System32\amsi.dll'      
+  executor:
+    command: |
+      reg add "HKEY_CURRENT_USER\Software\Microsoft\Terminal Server Client\Default\Addins\#{Subkey_Added}" /v Name /t REG_SZ /d "#{dll_inf}" /f
+    cleanup_command: |-
+      reg delete "HKEY_CURRENT_USER\Software\Microsoft\Terminal Server Client\Default\Addins\#{Subkey_Added}" /f      
+    name: command_prompt
+    elevation_required: true

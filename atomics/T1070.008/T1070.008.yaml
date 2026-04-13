@@ -23,18 +23,19 @@ atomic_tests:
     Copies and deletes mail data on Linux
   supported_platforms:
   - linux
+  dependencies:
+  - description: |
+      Create dummy file in /var/spool/mail/ if no files exist
+    prereq_command: |
+      if [ -z "$(ls -A /var/spool/mail/)" ]; then exit 1; else exit 0; fi
+    get_prereq_command: |
+      if [ -z "$(ls -A /var/spool/mail/)" ]; then touch /var/spool/mail/temp; fi
   executor:
     command: |
-      mkdir -p /var/spool/mail/copy
-      for file in /var/spool/mail/*; do
-        if [ "$(basename "$file")" != "copy" ]
-        then
-          cp -R "$file" /var/spool/mail/copy/
-        fi
-      done
-      rm -rf /var/spool/mail/copy/*
+      mkdir -p /var/spool/mail/copy && for file in /var/spool/mail/*; do if [ "$(basename "$file")" != "copy" ]; then cp -R "$file" /var/spool/mail/copy/; fi; done && rm -rf /var/spool/mail/copy/*
     cleanup_command: |
       rm -rf /var/spool/mail/copy
+      if [ -f "$(ls -A /var/spool/mail/temp)" ]; then rm /var/spool/mail/temp; fi
     name: bash
     elevation_required: true
 
@@ -76,20 +77,19 @@ atomic_tests:
     Copies and modifies mail data on Linux
   supported_platforms:
   - linux
+  dependencies:
+  - description: |
+      Create dummy file in /var/spool/mail/ if no files exist
+    prereq_command: |
+      if [ -z "$(ls -A /var/spool/mail/)" ]; then exit 1; else exit 0; fi
+    get_prereq_command: |
+      if [ -z "$(ls -A /var/spool/mail/)" ]; then touch /var/spool/mail/temp; fi
   executor:
     command: |
-      mkdir -p /var/spool/mail/copy
-      for file in /var/spool/mail/*; do
-        if [ "$(basename "$file")" != "copy" ]
-        then
-          cp -R "$file" /var/spool/mail/copy/
-          if [ -f "/var/spool/mail/copy/$(basename "$file")" ]; then
-            echo "Modification for Atomic Red Test" >> "/var/spool/mail/copy/$(basename "$file")"
-          fi
-        fi
-      done
+      mkdir -p /var/spool/mail/copy; for file in /var/spool/mail/*; do if [ "$(basename "$file")" != "copy" ]; then cp -R "$file" /var/spool/mail/copy/; if [ -f "/var/spool/mail/copy/$(basename "$file")" ]; then echo "Modification for Atomic Red Test" >> "/var/spool/mail/copy/$(basename "$file")"; fi; fi; done
     cleanup_command: |
       rm -rf /var/spool/mail/copy
+      if [ -f "$(ls -A /var/spool/mail/temp)" ]; then rm /var/spool/mail/temp; fi
     name: bash
     elevation_required: true
 

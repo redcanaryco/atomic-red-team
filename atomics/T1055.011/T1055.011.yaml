@@ -21,12 +21,12 @@ atomic_tests:
         default: PathToAtomicsFolder\T1055.011\bin\payload.exe_#{arch}.bin
     dependency_executor_name: powershell
     dependencies:
-      - description: "T1055.011x64.exe and payload must exist on disk at specified location (#{exe_binary} and #{payload_file})"
-        prereq_command: "if (Test-Path #{exe_binary}) {exit 0} else {exit 1}"
-        get_prereq_command: |-
-          New-Item -Type Directory (split-path #{exe_binary}) -ErrorAction ignore | Out-Null
-          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1055.011/bin/T1055.011_#{arch}.exe" -OutFile "#{exe_binary}" -UseBasicParsing
-          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1055.011/bin/payload.exe_#{arch}.bin" -OutFile "#{payload_file}" -UseBasicParsing
+    - description: "T1055.011x64.exe and payload must exist on disk at specified location (#{exe_binary} and #{payload_file})"
+      prereq_command: "if (Test-Path #{exe_binary}) {exit 0} else {exit 1}"
+      get_prereq_command: |-
+        New-Item -Type Directory (split-path #{exe_binary}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1055.011/bin/T1055.011_#{arch}.exe" -OutFile "#{exe_binary}" -UseBasicParsing
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1055.011/bin/payload.exe_#{arch}.bin" -OutFile "#{payload_file}" -UseBasicParsing
     executor:
       command: |-
         #{exe_binary}

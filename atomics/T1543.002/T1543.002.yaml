@@ -65,6 +65,7 @@ atomic_tests:
       rm -rf #{systemd_service_path}/#{systemd_service_file}
       systemctl daemon-reload
     name: bash
+    elevation_required: true
 - name: Create SysV Service
   auto_generated_guid: 760fe8d2-79d9-494f-905e-a239a3df86f6
   description: |
@@ -110,6 +111,7 @@ atomic_tests:
       sysrc -x art_test_enable
       rm -f #{rc_service_path}/#{rc_service_file}
     name: sh
+    elevation_required: true
 
 - name: Create Systemd Service file,  Enable the service , Modify and Reload the service.
   auto_generated_guid: c35ac4a8-19de-43af-b9f8-755da7e89c89
@@ -129,24 +131,20 @@ atomic_tests:
     name: bash
     elevation_required: true
     command: |
-      cat > /etc/init.d/T1543.002 << EOF
-      #!/bin/bash
-      ### BEGIN INIT INFO
-      # Provides : Atomic Test T1543.002
-      # Required-Start: $all
-      # Required-Stop : 
-      # Default-Start: 2 3 4 5
-      # Default-Stop: 
-      # Short Description: Atomic Test for Systemd Service Creation
-      ### END INIT INFO
-      python3 -c "import os, base64;exec(base64.b64decode('aW1wb3J0IG9zCm9zLnBvcGVuKCdlY2hvIGF0b21pYyB0ZXN0IGZvciBDcmVhdGluZyBTeXN0ZW1kIFNlcnZpY2UgVDE1NDMuMDAyID4gL3RtcC9UMTU0My4wMDIuc3lzdGVtZC5zZXJ2aWNlLmNyZWF0aW9uJykK'))"
-      EOF
-
+      echo "#!/bin/bash" > /etc/init.d/T1543.002
+      echo "### BEGIN INIT INFO" >> /etc/init.d/T1543.002
+      echo "# Provides : Atomic Test T1543.002" >> /etc/init.d/T1543.002
+      echo "# Required-Start: \$all" >> /etc/init.d/T1543.002
+      echo "# Required-Stop : " >> /etc/init.d/T1543.002
+      echo "# Default-Start: 2 3 4 5" >> /etc/init.d/T1543.002
+      echo "# Default-Stop: " >> /etc/init.d/T1543.002
+      echo "# Short Description: Atomic Test for Systemd Service Creation" >> /etc/init.d/T1543.002
+      echo "### END INIT INFO" >> /etc/init.d/T1543.002
+      echo "python3 -c \"import os, base64;exec(base64.b64decode('aW1wb3J0IG9zCm9zLnBvcGVuKCdlY2hvIGF0b21pYyB0ZXN0IGZvciBDcmVhdGluZyBTeXN0ZW1kIFNlcnZpY2UgVDE1NDMuMDAyID4gL3RtcC9UMTU0My4wMDIuc3lzdGVtZC5zZXJ2aWNlLmNyZWF0aW9uJykK')) \" " >> /etc/init.d/T1543.002
       chmod +x /etc/init.d/T1543.002
-      if [ $(cat /etc/os-release | grep -i ID=ubuntu) ] || [ $(cat /etc/os-release | grep -i ID=kali) ]; then update-rc.d T1543.002 defaults; elif [ $(cat /etc/os-release | grep -i 'ID="centos"') ]; then chkconfig T1543.002 on ; else echo "Please run this test on Ubnutu , kali OR centos" ; fi ;
+      if [ $(cat /etc/os-release | grep -i ID=ubuntu) ] || [ $(cat /etc/os-release | grep -i ID=kali) ]; then update-rc.d T1543.002 defaults; elif [ $(cat /etc/os-release | grep -i 'ID="centos"') ]; then chkconfig T1543.002 on ; else echo "Please run this test on Ubnutu , kali OR centos" ; fi
       systemctl enable T1543.002
       systemctl start T1543.002
-
       echo "python3 -c \"import os, base64;exec(base64.b64decode('aW1wb3J0IG9zCm9zLnBvcGVuKCdlY2hvIGF0b21pYyB0ZXN0IGZvciBtb2RpZnlpbmcgYSBTeXN0ZW1kIFNlcnZpY2UgVDE1NDMuMDAyID4gL3RtcC9UMTU0My4wMDIuc3lzdGVtZC5zZXJ2aWNlLm1vZGlmaWNhdGlvbicpCg=='))\"" | sudo tee -a /etc/init.d/T1543.002
       systemctl daemon-reload
       systemctl restart T1543.002

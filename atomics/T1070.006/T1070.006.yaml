@@ -96,15 +96,9 @@ atomic_tests:
       description: Path of reference file to read timestamps from
       type: path
       default: /bin/sh
-  dependencies:
-  - description: |
-      The file must exist in order to be timestomped
-    prereq_command: |
-      test -e #{target_file_path} && exit 0 || exit 1
-    get_prereq_command: |
-      echo 'T1070.006 reference file timestomp test' > #{target_file_path}
   executor:
     command: |
+      touch #{target_file_path}
       touch -acmr #{reference_file_path} #{target_file_path}
     cleanup_command: |
       rm -f #{target_file_path}
@@ -259,3 +253,33 @@ atomic_tests:
       SetFile -m #{target_date} #{target_filename}
     cleanup_command: |
       rm -f #{target_filename}
+- name: Event Log Manipulations- Time slipping via Powershell
+  auto_generated_guid: 7bcf83bf-f5ef-425c-9d9a-71618ad9ed12
+  description: |-
+    Changes the system time on the computer to a time that you specify. It involves altering the system’s clock or adjusting the dates of files, affecting timestamp integrity within Event Logs. This technique can disrupt the sequence of logged events, complicating incident analysis and forensics. 
+    Reference - 
+    https://detect.fyi/event-log-manipulations-1-time-slipping-55bf95631c40
+    https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/set-date?view=powershell-7.4
+  supported_platforms:
+  - windows
+  input_arguments:
+    days_to_modify:
+      description: Value to which system time will update
+      type: string
+      default: "3"
+  executor:
+    command: |
+      try{ 
+        Set-Date -Date (Get-Date).AddDays(#{days_to_modify})
+        Add-Content "$env:APPDATA\slipDays.bak" #{days_to_modify}
+      }
+      catch {exit 1}
+    cleanup_command: |
+      if(Test-Path "$env:APPDATA\slipDays.bak" ){
+        foreach($line in (get-content $env:APPDATA\slipDays.bak)){
+          Set-Date -Date (Get-Date).AddDays(-$line)
+        }
+        rm "$env:APPDATA\slipDays.bak"
+      }
+    name: powershell
+    elevation_required: true

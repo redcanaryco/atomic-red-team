@@ -1,0 +1,16 @@
+attack_technique: T1025
+display_name: Data from Removable Media
+atomic_tests:
+- name: Identify Documents on USB and Removable Media via PowerShell
+  auto_generated_guid: 0b29f7e3-a050-44b7-bf05-9fb86af1ec2e
+  description: |
+    This test simulates an attack where PowerShell is used to detect connected USB or other removable storage devices and gather a list of specific document files 
+    (e.g., .docx, .xls, .txt, .pdf). The command works by first identifying removable drives on the system and then recursively searching through each one for files 
+    matching the targeted extensions. If no removable drives are present, the script will return a message stating that no media is detected. This behavior mimics 
+    how adversaries might scan for sensitive documents on removable devices for exfiltration or analysis.
+  supported_platforms:
+  - windows
+  executor:
+    name: command_prompt
+    command: |
+      powershell.exe -c "Get-Volume | Where-Object {$_.DriveType -eq 'Removable'} | ForEach-Object { Get-ChildItem -Path ($_.DriveLetter + ':\*') -Recurse -Include '*.doc*','*.xls*','*.txt','*.pdf' -ErrorAction SilentlyContinue | ForEach-Object {Write-Output $_.FullName} } ; if (-not (Get-Volume | Where-Object {$_.DriveType -eq 'Removable'})) { Write-Output 'No removable media.' }"

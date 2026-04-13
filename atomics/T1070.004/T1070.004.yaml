@@ -66,6 +66,13 @@ atomic_tests:
       description: Path of file to shred
       type: path
       default: /tmp/victim-shred.txt
+  dependencies:
+  - description: |
+      Check if file already exists
+    prereq_command: |
+      if [ -f "#{file_to_shred}" ]; then echo "File already exists"; else echo "File does NOT exist yet"; exit 1; fi
+    get_prereq_command: |
+      touch #{file_to_shred}
   executor:
     command: |
       shred -u #{file_to_shred}
@@ -178,7 +185,7 @@ atomic_tests:
 - name: Delete Prefetch File
   auto_generated_guid: 36f96049-0ad7-4a5f-8418-460acaeb92fb
   description: |
-    Delete a single prefetch file.  Deletion of prefetch files is a known anti-forensic technique. To verify execution, Run "(Get-ChildItem -Path "$Env:SystemRoot\prefetch\*.pf" | Measure-Object).Count"
+    Delete a single prefetch file.  Deletion of prefetch files is a known anti-forensic technique. To verify execution, Run `(Get-ChildItem -Path "$Env:SystemRoot\prefetch\*.pf" | Measure-Object).Count`
     before and after the test to verify that the number of prefetch files decreases by 1.
   supported_platforms:
   - windows
@@ -207,3 +214,15 @@ atomic_tests:
       New-Item -Path #{teamviewer_log_file} -Force | Out-Null
       Remove-Item #{teamviewer_log_file} -Force -ErrorAction Ignore
     name: powershell
+- name: Clears Recycle bin via rd
+  auto_generated_guid: f723d13d-48dc-4317-9990-cf43a9ac0bf2
+  description: |
+    An adversary clears the recycle bin in the system partition using rd to remove traces of deleted files.
+    [Reference](https://thedfirreport.com/2024/08/12/threat-actors-toolkit-leveraging-sliver-poshc2-batch-scripts/)
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      rd /s /q %systemdrive%\$RECYCLE.BIN
+    name: command_prompt
+    elevation_required: true

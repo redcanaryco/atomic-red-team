@@ -300,5 +300,35 @@ atomic_tests:
     cleanup_command: 
     name: bash
     elevation_required: false
+- name: Expand CAB with expand.exe
+  auto_generated_guid: 9f8b1c54-cb76-4d5e-bb1f-2f5c0e8f5a11
+  description: |
+    Uses expand.exe to extract a file from a CAB created locally. This simulates adversarial use of expand on cabinet archives.
+    Upon success, art-expand-source.txt is extracted next to the CAB.
+  supported_platforms:
+  - windows
+  input_arguments:
+    cab_path:
+      description: Path to the CAB to expand (created if missing)
+      type: path
+      default: '%TEMP%\art-expand-test.cab'
+    output_dir:
+      description: Destination directory
+      type: path
+      default: '%TEMP%\art-expand-out'
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      mkdir "#{output_dir}" >nul 2>&1
+      echo hello from atomic red team > "PathToAtomicsFolder\T1140\src\art-expand-source.txt"
+      makecab "PathToAtomicsFolder\T1140\src\art-expand-source.txt" "#{cab_path}"
+      pushd "#{output_dir}"
+      expand "#{cab_path}" -F:* .
+      popd
+    cleanup_command: |
+      del "PathToAtomicsFolder\T1140\src\art-expand-source.txt" >nul 2>&1
+      del "#{cab_path}" >nul 2>&1
+      rmdir "#{output_dir}" /s /q >nul 2>&1
       
 

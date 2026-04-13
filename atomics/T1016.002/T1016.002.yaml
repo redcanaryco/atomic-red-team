@@ -1,0 +1,12 @@
+attack_technique: T1016.002
+display_name: "System Network Configuration Discovery: Wi-Fi Discovery"
+atomic_tests:
+- name: Enumerate Stored Wi-Fi Profiles And Passwords via netsh
+  auto_generated_guid: 53cf1903-0fa7-4177-ab14-f358ae809eec
+  description: Upon successful execution, information about previously connected Wi-Fi networks will be displayed with their corresponding key (if present).
+  supported_platforms:
+  - windows
+  executor:
+    command: netsh wlan show profile * key=clear
+    name: command_prompt
+    elevation_required: false

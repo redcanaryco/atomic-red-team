@@ -101,3 +101,38 @@ atomic_tests:
       remove-item #{output_file} -force -erroraction silentlycontinue
       remove-item $env:temp\clsids.txt -force -erroraction silentlycontinue      
     name: powershell
+- name: Reg query for AlwaysInstallElevated status
+  auto_generated_guid: 6fb4c4c5-f949-4fd2-8af5-ddbc61595223
+  description: |-
+    The reg query commands allows to check the status of the AlwaysInstallElevated registry key for both the user and the machine. If both queries return a value of 0x1, then AlwaysInstallElevated is enabled for both user and machine thus allowing a regular user to install a Microsoft Windows Installer package with system level privileges. This can be abused by an attacker to escalate privileges in the host to SYSTEM level.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg query HKCU\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated
+      reg query HKLM\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated      
+    name: command_prompt
+    elevation_required: true
+- name: Check Software Inventory Logging (SIL) status via Registry
+  auto_generated_guid: 5c784969-1d43-4ac7-8c3d-ed6d025ed10d
+  description: |
+    Microsoft's Software Inventory Logging (SIL) collects information about software installed per host basis. Adversary can use such logs to passively 
+    check for existence of software of interest to them. Status of SIL can be checked via registry.
+    [Reference](https://blog.talosintelligence.com/chinese-hacking-group-apt41-compromised-taiwanese-government-affiliated-research-institute-with-shadowpad-and-cobaltstrike-2/)
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg.exe query hklm\software\microsoft\windows\softwareinventorylogging /v collectionstate /reg:64
+    name: command_prompt
+    elevation_required: true
+- name: Inspect SystemStartOptions Value in Registry
+  auto_generated_guid: 96257079-cdc1-4aba-8705-3146e94b6dce
+  description: The objective of this test is to query the SystemStartOptions key under HKLM\SYSTEM\CurrentControlSet\Control in the Windows registry. This action could be used to uncover specific details about how the system is configured to start, potentially aiding in understanding boot parameters or identifying security-related settings.
+    key is.
+  supported_platforms:
+  - windows
+  executor:
+    name: command_prompt
+    command: |
+      reg.exe query HKLM\SYSTEM\CurrentControlSet\Control /v SystemStartOptions
