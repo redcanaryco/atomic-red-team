@@ -1530,8 +1530,9 @@ defense-evasion:
           $bytes = [System.Convert]::FromBase64String($encodedString)
           $decodedString = [System.Text.Encoding]::UTF8.GetString($bytes)
           #write the decoded eicar string to file
-          $decodedString | Out-File T1027.013_decodedEicar.txt
-        cleanup_command: Just delete the resulting T1027.013_decodedEicar.txt file.
+          $decodedString | Out-File $env:temp\T1027.013_decodedEicar.txt
+        cleanup_command: Remove-Item $env:temp\T1027.013_decodedEicar.txt -Force -ErrorAction
+          Ignore
         name: powershell
         elevation_required: false
     - name: Decrypt Eicar File and Write to File
@@ -1549,8 +1550,9 @@ defense-evasion:
           $decrypt = ConvertTo-SecureString -String $encryptedString -Key $key
           $decryptedString = [Runtime.InteropServices.Marshal]::PtrToStringBSTR([Runtime.InteropServices.Marshal]::SecureStringToBSTR($decrypt))
           #Write the decrypted eicar string to a file
-          $decryptedString | out-file T1027.013_decryptedEicar.txt
-        cleanup_command: Just delete the resulting T1027.013_decryptedEicar.txt file.
+          $decryptedString | Out-File $env:temp\T1027.013_decryptedEicar.txt
+        cleanup_command: Remove-Item $env:temp\T1027.013_decryptedEicar.txt -Force
+          -ErrorAction Ignore
         name: powershell
         elevation_required: false
     - name: Password-Protected ZIP Payload Extraction and Execution
@@ -15152,7 +15154,7 @@ defense-evasion:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:49:27.324Z'
-      name: Domain Controller Authentication
+      name: 'Modify Authentication Process: Domain Controller Authentication'
       description: "Adversaries may patch the authentication process on a domain controller
         to bypass the typical authentication mechanisms and enable access to accounts.
         \n\nMalware may be used to inject false credentials into the authentication
@@ -15182,6 +15184,7 @@ defense-evasion:
       x_mitre_platforms:
       - Windows
       x_mitre_version: '2.1'
+      identifier: T1556.001
     atomic_tests: []
   T1027.006:
     technique:
@@ -39308,7 +39311,7 @@ persistence:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:49:27.324Z'
-      name: Domain Controller Authentication
+      name: 'Modify Authentication Process: Domain Controller Authentication'
       description: "Adversaries may patch the authentication process on a domain controller
         to bypass the typical authentication mechanisms and enable access to accounts.
         \n\nMalware may be used to inject false credentials into the authentication
@@ -39338,6 +39341,7 @@ persistence:
       x_mitre_platforms:
       - Windows
       x_mitre_version: '2.1'
+      identifier: T1556.001
     atomic_tests: []
   T1556.005:
     technique:
@@ -54840,7 +54844,7 @@ credential-access:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:49:27.324Z'
-      name: Domain Controller Authentication
+      name: 'Modify Authentication Process: Domain Controller Authentication'
       description: "Adversaries may patch the authentication process on a domain controller
         to bypass the typical authentication mechanisms and enable access to accounts.
         \n\nMalware may be used to inject false credentials into the authentication
@@ -54870,6 +54874,7 @@ credential-access:
       x_mitre_platforms:
       - Windows
       x_mitre_version: '2.1'
+      identifier: T1556.001
     atomic_tests: []
   T1556.005:
     technique:
