@@ -563,7 +563,8 @@
 - T1070.010 Relocate Malware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1070.009 Clear Persistence [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1036.010 Masquerade Account Name [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1556.001 Domain Controller Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1556.001 Modify Authentication Process: Domain Controller Authentication](../../T1556.001/T1556.001.md)
+  - Atomic Test #1: Skeleton Key via Mimikatz [windows]
 - [T1027.006 HTML Smuggling](../../T1027.006/T1027.006.md)
   - Atomic Test #1: HTML Smuggling Remote Payload [windows]
 - T1556.005 Reversible Encryption [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1354,7 +1355,8 @@
 - [T1546.002 Event Triggered Execution: Screensaver](../../T1546.002/T1546.002.md)
   - Atomic Test #1: Set Arbitrary Binary as Screensaver [windows]
 - T1505 Server Software Component [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1556.001 Domain Controller Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1556.001 Modify Authentication Process: Domain Controller Authentication](../../T1556.001/T1556.001.md)
+  - Atomic Test #1: Skeleton Key via Mimikatz [windows]
 - T1556.005 Reversible Encryption [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1546.016 Installer Packages [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1668 Exclusive Control [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1766,7 +1768,8 @@
 - [T1555.004 Credentials from Password Stores: Windows Credential Manager](../../T1555.004/T1555.004.md)
   - Atomic Test #1: Access Saved Credentials via VaultCmd [windows]
   - Atomic Test #2: WinPwn - Loot local Credentials - Invoke-WCMDump [windows]
-- T1556.001 Domain Controller Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1556.001 Modify Authentication Process: Domain Controller Authentication](../../T1556.001/T1556.001.md)
+  - Atomic Test #1: Skeleton Key via Mimikatz [windows]
 - T1556.005 Reversible Encryption [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1111 Multi-Factor Authentication Interception [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1003.003 OS Credential Dumping: NTDS](../../T1003.003/T1003.003.md)
