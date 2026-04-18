@@ -18,30 +18,20 @@ atomic_tests:
       name: bash
       elevation_required: false
       command: |
-        cat << 'EOF' > /tmp/dga_sim.py
-        import datetime
-        import random
-        import string
-        import subprocess
-        import time
-
-        TLDs = [".com", ".net", ".org", ".ru", ".biz"]
-
-        def generate_domain(seed):
-            random.seed(seed)
-            length = random.randint(10, 15)
-            name = ''.join(random.choice(string.ascii_lowercase) for _ in range(length))
-            return name + random.choice(TLDs)
-
-        today = datetime.date.today().strftime("%Y%m%d")
-        print("[*] DGA cycle seed:", today)
-
-        for i in range(10): # number of domains per cycle
-            domain = generate_domain(today + str(i))
-            print("[+] Querying:", domain)
-            subprocess.run(["dig", "+short", domain], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            time.sleep(2)
-        EOF
+        echo "import datetime; import random; import string; import subprocess; import time" > /tmp/dga_sim.py
+        echo "TLDs = ['.com', '.net', '.org', '.ru', '.biz']" >> /tmp/dga_sim.py
+        echo "def generate_domain(seed):" >> /tmp/dga_sim.py
+        echo "    random.seed(seed)" >> /tmp/dga_sim.py
+        echo "    length = random.randint(10, 15)" >> /tmp/dga_sim.py
+        echo "    name = ''.join(random.choice(string.ascii_lowercase) for _ in range(length))" >> /tmp/dga_sim.py
+        echo "    return name + random.choice(TLDs)" >> /tmp/dga_sim.py
+        echo "today = datetime.date.today().strftime('%Y%m%d')" >> /tmp/dga_sim.py
+        echo "print('[*] DGA cycle seed:', today)" >> /tmp/dga_sim.py
+        echo "for i in range(10):" >> /tmp/dga_sim.py
+        echo "    domain = generate_domain(today + str(i))" >> /tmp/dga_sim.py
+        echo "    print('[+] Querying:', domain)" >> /tmp/dga_sim.py
+        echo "    subprocess.run(['dig', '+short', domain], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)" >> /tmp/dga_sim.py
+        echo "    time.sleep(2)" >> /tmp/dga_sim.py
         python3 /tmp/dga_sim.py
       cleanup_command: |
         rm -f /tmp/dga_sim.py
