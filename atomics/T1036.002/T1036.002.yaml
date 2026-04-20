@@ -12,17 +12,19 @@
       description: Input the file location. Default is the desktop.
   executor:
     command: |-
-      $fileloc = "#{fileloc}"
+      $filepath =  "#{fileloc}"
       $rtlo = [char]0x202E
-      $filename = "evil_batch" + [char]0x202E + "fdp.bat"
-      $fullpath = Join-Path $fileloc $filename
-      $batchcontent =@"
-     @echo off
-     echo Hello World!
-     timeout /t 30 /nobreak
-     exit
+      $fileloc = Join-Path "$filepath" ("evil_batch" + $rtlo + "fdp.bat")
+      $payload = @"
+      @echo off
+      echo Hello World!
+      timeout /t 30 /nobreak
+      exit
       "@
-      Out-File -FilePath $fullPath -InputObject $batchContent -Encoding ascii
+      Set-Content -Path $fileloc -Value $payload -Encoding Ascii -Force
+      Write-Host "Real filename on disk: $fileloc"
+      Write-Host "Displays in explorer as: evil_batchtab.pdf"
+      Start-Process -FilePath $fileloc -Wait
     cleanup_command: |-
       $rtlo = [char]0x202E
       $fileloc = Join-Path "#{fileloc}" ("evil_batch" + $rtlo + "fdp.bat")
