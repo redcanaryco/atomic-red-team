@@ -414,36 +414,36 @@ atomic_tests:
             powershell.exe -NoProfile -ExecutionPolicy Bypass -File $tmpScript
             Remove-Item $tmpScript -ErrorAction SilentlyContinue
   cleanup_command: |
-            $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]"Administrator")
-            if ($isAdmin) {
-                Write-Host "[-] Cleanup must be run from a non-elevated PowerShell session. Skipping."
-                exit 1
-            }
+    $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]"Administrator")
+    if ($isAdmin) {
+        Write-Host "[-] Cleanup must be run from a non-elevated PowerShell session. Skipping."
+        exit 1
+    }
 
-            $tmpScript = "$env:TEMP\T1137005_hidden_rule_cleanup.ps1"
+    $tmpScript = "$env:TEMP\T1137005_hidden_rule_cleanup.ps1"
 
-            $scriptContent = @'
-            $hiddenName = [System.Text.Encoding]::Unicode.GetString([byte[]](0x0B, 0x20))
-            $outlook    = New-Object -ComObject Outlook.Application
-            $namespace  = $outlook.GetNamespace("MAPI")
-            $rules      = $namespace.DefaultStore.GetRules()
-            $removed    = $false
+    $scriptContent = @'
+    $hiddenName = [System.Text.Encoding]::Unicode.GetString([byte[]](0x0B, 0x20))
+    $outlook    = New-Object -ComObject Outlook.Application
+    $namespace  = $outlook.GetNamespace("MAPI")
+    $rules      = $namespace.DefaultStore.GetRules()
+    $removed    = $false
 
-            for ($i = $rules.Count; $i -ge 1; $i--) {
-                if ($rules.Item($i).Name -eq $hiddenName) {
-                    $rules.Remove($rules.Item($i).Name)
-                    $removed = $true
-                }
-            }
+    for ($i = $rules.Count; $i -ge 1; $i--) {
+        if ($rules.Item($i).Name -eq $hiddenName) {
+            $rules.Remove($rules.Item($i).Name)
+            $removed = $true
+        }
+    }
 
-            if ($removed) {
-                $rules.Save()
-                Write-Host "[+] Hidden rule(s) removed."
-            } else {
-                Write-Host "[-] Hidden rule not found - may have already been removed."
-            }
-            '@
+    if ($removed) {
+        $rules.Save()
+        Write-Host "[+] Hidden rule(s) removed."
+    } else {
+        Write-Host "[-] Hidden rule not found - may have already been removed."
+    }
+    '@
 
-                  $scriptContent | Set-Content -Path $tmpScript -Encoding UTF8
-                  powershell.exe -NoProfile -ExecutionPolicy Bypass -File $tmpScript
-                  Remove-Item $tmpScript -ErrorAction SilentlyContinue
+        $scriptContent | Set-Content -Path $tmpScript -Encoding UTF8
+        powershell.exe -NoProfile -ExecutionPolicy Bypass -File $tmpScript
+        Remove-Item $tmpScript -ErrorAction SilentlyContinue
