@@ -1113,7 +1113,12 @@
   - Atomic Test #2: Firefox [linux, windows, macos]
   - Atomic Test #3: Edge Chromium Addon - VPN [windows, macos]
   - Atomic Test #4: Google Chrome Load Unpacked Extension With Command Line [windows]
-- T1137.005 Outlook Rules [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1137.005 Office Application Startup: Outlook Rules](../../T1137.005/T1137.005.md)
+  - Atomic Test #1: Outlook Rule - Subject Trigger with DeletePermanently Action via COM Object [windows]
+  - Atomic Test #2: Outlook Rule - Sender Address Trigger with DeletePermanently Action via COM Object [windows]
+  - Atomic Test #3: Outlook Rule - Auto-Forward Emails to External Address via COM Object [windows]
+  - Atomic Test #4: Outlook Rules - Enumerate Existing Rules via PowerShell COM Object [windows]
+  - Atomic Test #5: Outlook Rule - Create Rule with Obfuscated Blank Name (MAPI Evasion) [windows]
 - T1098.007 Additional Local or Domain Groups [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.011 Event Triggered Execution: Application Shimming](../../T1546.011/T1546.011.md)
   - Atomic Test #1: Application Shim Installation [windows]
