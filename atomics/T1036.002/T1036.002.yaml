@@ -23,7 +23,7 @@
      exit
       "@
       Out-File -FilePath $fullPath -InputObject $batchContent -Encoding ascii
-      cleanup_command: |-
+    cleanup_command: |-
       $rtlo = [char]0x202E
       $fileloc = Join-Path "#{fileloc}" ("evil_batch" + $rtlo + "fdp.bat")
       Remove-Item -Path $fileloc -Force -ErrorAction SilentlyContinue
