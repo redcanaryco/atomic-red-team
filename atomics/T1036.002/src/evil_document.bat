@@ -1,4 +1,4 @@
 @echo off
 echo Hello World
-pause
+Timeout /t 2 /nobreak > nul
 
