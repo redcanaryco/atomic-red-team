@@ -23,6 +23,10 @@
      exit
       "@
       Out-File -FilePath $fullPath -InputObject $batchContent -Encoding ascii
+      cleanup_command: |-
+      $rtlo = [char]0x202E
+      $fileloc = Join-Path "#{fileloc}" ("evil_batch" + $rtlo + "fdp.bat")
+      Remove-Item -Path $fileloc -Force -ErrorAction SilentlyContinue
     elevation_required: false
 
 
@@ -43,8 +47,8 @@
       Start-Process -FilePath $fileloc
     cleanup_command: |-
       $rtlo = [char]0x202E
-      $fileloc = $fileloc = Join-Path "#{fileloc}" ("evil_file" + $rtlo + "fdp.bat")
-      Remove-Item = $fileloc
+      $fileloc = Join-Path "#{fileloc}" ("evil_batch" + $rtlo + "fdp.bat")
+      Remove-Item -Path $fileloc -Force -ErrorAction SilentlyContinue
     name: powershell
     elevation_required: false
 
