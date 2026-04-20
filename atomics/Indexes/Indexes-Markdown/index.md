@@ -1376,7 +1376,15 @@
   - Atomic Test #5: Run Shellcode via Syscall in Go [windows]
 - [T1059.010 Command and Scripting Interpreter: AutoHotKey & AutoIT](../../T1059.010/T1059.010.md)
   - Atomic Test #1: AutoHotKey script execution [windows]
-- T1569.003 Systemctl [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1569.003 System Services: Systemctl](../../T1569.003/T1569.003.md)
+  - Atomic Test #1: Create and Enable a Malicious systemd Service Unit [linux]
+  - Atomic Test #2: Create systemd Service Unit from /tmp (Unusual Location) [linux]
+  - Atomic Test #3: Create systemd Service Unit from /dev/shm (Unusual Location) [linux]
+  - Atomic Test #4: Modify Existing systemd Service to Execute Malicious Command [linux]
+  - Atomic Test #5: Execute Command via Transient systemd Service (systemd-run) [linux]
+  - Atomic Test #6: Enumerate All systemd Services Using systemctl [linux]
+  - Atomic Test #7: Enable systemd Service for Persistence with Auto-Restart [linux]
+  - Atomic Test #8: Masquerade Malicious Service as Legitimate System Service [linux]
 - T1059.009 Cloud API [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1610 Deploy a container](../../T1610/T1610.md)
   - Atomic Test #1: Deploy Docker container [containers]
