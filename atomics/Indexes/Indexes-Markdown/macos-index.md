@@ -366,7 +366,7 @@
   - Atomic Test #1: Chrome/Chromium (Developer Mode) [linux, windows, macos]
   - Atomic Test #2: Firefox [linux, windows, macos]
   - Atomic Test #3: Edge Chromium Addon - VPN [windows, macos]
-- T1137.005 Outlook Rules [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1137.005 Office Application Startup: Outlook Rules [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1098.007 Additional Local or Domain Groups [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1546.011 Event Triggered Execution: Application Shimming [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1547.010 Boot or Logon Autostart Execution: Port Monitors [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -453,7 +453,8 @@
 - T1568.001 Fast Flux DNS [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1071 Application Layer Protocol [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1219 Remote Access Software [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1659 Content Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1659 Content Injection](../../T1659/T1659.md)
+  - Atomic Test #1: MITM Proxy Injection [macos, linux]
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1572 Protocol Tunneling](../../T1572/T1572.md)
   - Atomic Test #5: Microsoft Dev tunnels (Linux/macOS) [linux, macos]
@@ -794,7 +795,8 @@
 - T1091 Replication Through Removable Media [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1195 Supply Chain Compromise [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1190 Exploit Public-Facing Application [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1659 Content Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1659 Content Injection](../../T1659/T1659.md)
+  - Atomic Test #1: MITM Proxy Injection [macos, linux]
 - [T1078.001 Valid Accounts: Default Accounts](../../T1078.001/T1078.001.md)
   - Atomic Test #3: Enable Guest Account on macOS [macos]
 - T1199 Trusted Relationship [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

