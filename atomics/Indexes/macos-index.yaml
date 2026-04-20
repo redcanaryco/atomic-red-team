@@ -26454,7 +26454,7 @@ execution:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-04-15T19:58:28.694Z'
-      name: Systemctl
+      name: 'System Services: Systemctl'
       description: "Adversaries may abuse systemctl to execute commands or programs.
         Systemctl is the primary interface for systemd, the Linux init system and
         service manager. Typically invoked from a shell, Systemctl can also be integrated
@@ -26477,6 +26477,7 @@ execution:
       - Linux
       x_mitre_version: '1.0'
       x_mitre_remote_support: false
+      identifier: T1569.003
     atomic_tests: []
   T1059.009:
     technique:
@@ -38886,7 +38887,68 @@ command-and-control:
       - macOS
       - Windows
       x_mitre_version: '1.0'
-    atomic_tests: []
+      identifier: T1659
+    atomic_tests:
+    - name: MITM Proxy Injection
+      auto_generated_guid: 9b360eaf-c778-4f07-a6e7-895c4f01ac1c
+      description: Start mitmdump and verify injected header and HTML content.
+      supported_platforms:
+      - macos
+      - linux
+      dependencies:
+      - description: python3 must be installed
+        prereq_command: 'command -v python3
+
+          '
+        get_prereq_command: 'brew install python3 || (sudo apt-get update && sudo
+          apt-get install -y python3) || sudo yum install -y python3
+
+          '
+      - description: curl must be installed
+        prereq_command: 'command -v curl
+
+          '
+        get_prereq_command: 'brew install curl || (sudo apt-get update && sudo apt-get
+          install -y curl) || sudo yum install -y curl
+
+          '
+      - description: pipx must be installed
+        prereq_command: 'pipx --version
+
+          '
+        get_prereq_command: 'brew install pipx || (sudo apt-get update && sudo apt-get
+          install -y pipx) || sudo yum install -y pipx
+
+          '
+      - description: mitmproxy must be installed
+        prereq_command: 'pipx list | grep mitmproxy
+
+          '
+        get_prereq_command: 'pipx install mitmproxy || brew install mitmproxy
+
+          '
+      - description: mitmdump must be running on port 8080
+        prereq_command: 'lsof -i tcp:8080 | grep mitmdump
+
+          '
+        get_prereq_command: |
+          printf "from mitmproxy import http\ndef response(flow: http.HTTPFlow):\n    if 'text/html' in flow.response.headers.get('content-type',''):\n        flow.response.headers['X-Atomic']='T1659'\n        flow.response.text = flow.response.text.replace('</body>', '<script>alert(\"Atomic T1659 Injection\")</script></body>')" > /tmp/atomic_t1659_inject.py
+          ($HOME/.local/bin/mitmdump -s /tmp/atomic_t1659_inject.py -p 8080 > /tmp/atomic_t1659.log 2>&1 &)
+          sleep 5
+          lsof -i tcp:8080 | grep mitmdump || (cat /tmp/atomic_t1659.log; exit 1)
+      executor:
+        name: bash
+        command: |
+          curl -skI --proxy http://127.0.0.1:8080 http://example.com > /tmp/curl_out.txt
+          grep "X-Atomic" /tmp/curl_out.txt || (cat /tmp/curl_out.txt && exit 1)
+          curl -sk --proxy http://127.0.0.1:8080 http://example.com > /tmp/atomic_t1659_page.html
+          grep -q "Atomic T1659 Injection" /tmp/atomic_t1659_page.html || (head -20 /tmp/atomic_t1659_page.html; exit 1)
+        cleanup_command: |
+          rm -rf /tmp/atomic_t1659_inject.py
+          rm -rf /tmp/atomic_t1659.log
+          rm -rf /tmp/curl_out.txt
+          rm -rf /tmp/atomic_t1659_page.html
+          pkill -f mitmdump || true
   T1205:
     technique:
       type: attack-pattern
@@ -63511,7 +63573,68 @@ initial-access:
       - macOS
       - Windows
       x_mitre_version: '1.0'
-    atomic_tests: []
+      identifier: T1659
+    atomic_tests:
+    - name: MITM Proxy Injection
+      auto_generated_guid: 9b360eaf-c778-4f07-a6e7-895c4f01ac1c
+      description: Start mitmdump and verify injected header and HTML content.
+      supported_platforms:
+      - macos
+      - linux
+      dependencies:
+      - description: python3 must be installed
+        prereq_command: 'command -v python3
+
+          '
+        get_prereq_command: 'brew install python3 || (sudo apt-get update && sudo
+          apt-get install -y python3) || sudo yum install -y python3
+
+          '
+      - description: curl must be installed
+        prereq_command: 'command -v curl
+
+          '
+        get_prereq_command: 'brew install curl || (sudo apt-get update && sudo apt-get
+          install -y curl) || sudo yum install -y curl
+
+          '
+      - description: pipx must be installed
+        prereq_command: 'pipx --version
+
+          '
+        get_prereq_command: 'brew install pipx || (sudo apt-get update && sudo apt-get
+          install -y pipx) || sudo yum install -y pipx
+
+          '
+      - description: mitmproxy must be installed
+        prereq_command: 'pipx list | grep mitmproxy
+
+          '
+        get_prereq_command: 'pipx install mitmproxy || brew install mitmproxy
+
+          '
+      - description: mitmdump must be running on port 8080
+        prereq_command: 'lsof -i tcp:8080 | grep mitmdump
+
+          '
+        get_prereq_command: |
+          printf "from mitmproxy import http\ndef response(flow: http.HTTPFlow):\n    if 'text/html' in flow.response.headers.get('content-type',''):\n        flow.response.headers['X-Atomic']='T1659'\n        flow.response.text = flow.response.text.replace('</body>', '<script>alert(\"Atomic T1659 Injection\")</script></body>')" > /tmp/atomic_t1659_inject.py
+          ($HOME/.local/bin/mitmdump -s /tmp/atomic_t1659_inject.py -p 8080 > /tmp/atomic_t1659.log 2>&1 &)
+          sleep 5
+          lsof -i tcp:8080 | grep mitmdump || (cat /tmp/atomic_t1659.log; exit 1)
+      executor:
+        name: bash
+        command: |
+          curl -skI --proxy http://127.0.0.1:8080 http://example.com > /tmp/curl_out.txt
+          grep "X-Atomic" /tmp/curl_out.txt || (cat /tmp/curl_out.txt && exit 1)
+          curl -sk --proxy http://127.0.0.1:8080 http://example.com > /tmp/atomic_t1659_page.html
+          grep -q "Atomic T1659 Injection" /tmp/atomic_t1659_page.html || (head -20 /tmp/atomic_t1659_page.html; exit 1)
+        cleanup_command: |
+          rm -rf /tmp/atomic_t1659_inject.py
+          rm -rf /tmp/atomic_t1659.log
+          rm -rf /tmp/curl_out.txt
+          rm -rf /tmp/atomic_t1659_page.html
+          pkill -f mitmdump || true
   T1078.001:
     technique:
       type: attack-pattern

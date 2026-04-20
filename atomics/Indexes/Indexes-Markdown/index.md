@@ -1376,7 +1376,15 @@
   - Atomic Test #5: Run Shellcode via Syscall in Go [windows]
 - [T1059.010 Command and Scripting Interpreter: AutoHotKey & AutoIT](../../T1059.010/T1059.010.md)
   - Atomic Test #1: AutoHotKey script execution [windows]
-- T1569.003 Systemctl [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1569.003 System Services: Systemctl](../../T1569.003/T1569.003.md)
+  - Atomic Test #1: Create and Enable a Malicious systemd Service Unit [linux]
+  - Atomic Test #2: Create systemd Service Unit from /tmp (Unusual Location) [linux]
+  - Atomic Test #3: Create systemd Service Unit from /dev/shm (Unusual Location) [linux]
+  - Atomic Test #4: Modify Existing systemd Service to Execute Malicious Command [linux]
+  - Atomic Test #5: Execute Command via Transient systemd Service (systemd-run) [linux]
+  - Atomic Test #6: Enumerate All systemd Services Using systemctl [linux]
+  - Atomic Test #7: Enable systemd Service for Persistence with Auto-Restart [linux]
+  - Atomic Test #8: Masquerade Malicious Service as Legitimate System Service [linux]
 - T1059.009 Cloud API [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1610 Deploy a container](../../T1610/T1610.md)
   - Atomic Test #1: Deploy Docker container [containers]
@@ -2000,7 +2008,9 @@
   - Atomic Test #13: Splashtop Execution [windows]
   - Atomic Test #14: Splashtop Streamer Execution [windows]
   - Atomic Test #15: Microsoft App Quick Assist Execution [windows]
-- T1659 Content Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1659 Content Injection](../../T1659/T1659.md)
+  - Atomic Test #1: MITM Proxy Injection [macos, linux]
+  - Atomic Test #2: MITM Proxy Injection (Windows) [windows]
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1572 Protocol Tunneling](../../T1572/T1572.md)
   - Atomic Test #1: DNS over HTTPS Large Query Volume [windows]
@@ -3136,7 +3146,9 @@
 - [T1195 Supply Chain Compromise](../../T1195/T1195.md)
   - Atomic Test #1: Octopus Scanner Malware Open Source Supply Chain [windows]
 - T1190 Exploit Public-Facing Application [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1659 Content Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1659 Content Injection](../../T1659/T1659.md)
+  - Atomic Test #1: MITM Proxy Injection [macos, linux]
+  - Atomic Test #2: MITM Proxy Injection (Windows) [windows]
 - [T1078.001 Valid Accounts: Default Accounts](../../T1078.001/T1078.001.md)
   - Atomic Test #1: Enable Guest account with RDP capability and admin privileges [windows]
   - Atomic Test #2: Activate Guest Account [windows]
