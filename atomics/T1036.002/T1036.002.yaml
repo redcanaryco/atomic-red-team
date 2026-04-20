@@ -5,9 +5,14 @@
     Adversaries may abuse the RTLO character as a means of tricking a user into executing what they think is a benign file type. A common use of this technique is with Spearphishing Attachment/Malicious File since it can trick both end users and defenders if they are not aware of how their tools display and render the RTLO character. Use of the RTLO character has been seen in many targeted intrusion attempts and criminal activity.[2][3] RTLO can be used in the Windows Registry as well, where regedit.exe displays the reversed characters but the command line tool reg.exe does not by default.
   supported_platforms:
     - windows
+  input_arguments:
+    fileloc:
+      type: path
+      default: '[System.IO.Path]::Combine($env:USERPROFILE, "Desktop")'
+      description: Input the file location. Default is the desktop.
   executor:
     command: |-
-      $fileloc = [System.IO.Path]::Combine($env:USERPROFILE, "Desktop")
+      $fileloc = "#{fileloc}"
       $rtlo = [char]0x202E
       $filename = "evil_document" + [char]0x202E + "fdp.bat"
       $fullpath = Join-Path $fileloc $filename
@@ -17,8 +22,6 @@
       pause
       "@
       Out-File -FilePath $fullPath -InputObject $batchContent -Encoding ascii
-    cleanup_command: Remove-Item -Path $fullpath
-    name: powershell
     elevation_required: false
 
     
