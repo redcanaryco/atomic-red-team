@@ -1,0 +1,498 @@
+attack_technique: T1569.003
+display_name: "System Services: Systemctl"
+atomic_tests:
+
+  - name: Create and Enable a Malicious systemd Service Unit
+    auto_generated_guid:
+    description: |
+      Creates a new systemd service unit file in /etc/systemd/system/ and enables it using
+      systemctl enable followed by systemctl start. Adversaries commonly abuse this workflow
+      to establish persistence or execute arbitrary commands under the context of systemd.
+
+      This simulates the full attacker workflow: writing the unit file, reloading the systemd
+      daemon, enabling the service to survive reboots, and starting it immediately. This is
+      consistent with techniques observed in ransomware precursor activity and post-exploitation
+      frameworks targeting Linux infrastructure.
+    supported_platforms:
+      - linux
+    input_arguments:
+      service_name:
+        description: Name of the malicious service to create
+        type: string
+        default: atomic-test
+      command_to_run:
+        description: Command the service will execute
+        type: string
+        default: /bin/bash -c "echo atomictest > /tmp/atomic_service_output.txt"
+    dependency_executor_name: sh
+    dependencies:
+      - description: |
+          systemctl must be available on the system
+        prereq_command: |
+          if [ -x "$(command -v systemctl)" ]; then exit 0; else exit 1; fi
+        get_prereq_command: |
+          echo "systemctl is not available. Ensure systemd is running on this system."
+      - description: |
+          The test must be run as root or with sudo privileges
+        prereq_command: |
+          if [ "$(id -u)" -eq 0 ]; then exit 0; else exit 1; fi
+        get_prereq_command: |
+          echo "This test requires root privileges. Run as root or use sudo."
+      - description: |
+          /etc/systemd/system/ directory must exist and be writable
+        prereq_command: |
+          if [ -d "/etc/systemd/system" ] && [ -w "/etc/systemd/system" ]; then exit 0; else exit 1; fi
+        get_prereq_command: |
+          echo "/etc/systemd/system/ does not exist or is not writable. Ensure systemd is installed."
+    executor:
+      name: sh
+      elevation_required: true
+      command: |
+        echo "[Unit]" > /etc/systemd/system/#{service_name}.service
+        echo "Description=Atomic Test Service" >> /etc/systemd/system/#{service_name}.service
+        echo "After=network.target" >> /etc/systemd/system/#{service_name}.service
+        echo "" >> /etc/systemd/system/#{service_name}.service
+        echo "[Service]" >> /etc/systemd/system/#{service_name}.service
+        echo "ExecStart=#{command_to_run}" >> /etc/systemd/system/#{service_name}.service
+        echo "Restart=on-failure" >> /etc/systemd/system/#{service_name}.service
+        echo "" >> /etc/systemd/system/#{service_name}.service
+        echo "[Install]" >> /etc/systemd/system/#{service_name}.service
+        echo "WantedBy=multi-user.target" >> /etc/systemd/system/#{service_name}.service
+        systemctl daemon-reload
+        systemctl enable #{service_name}.service
+        systemctl start #{service_name}.service
+        systemctl status #{service_name}.service
+      cleanup_command: |
+        systemctl stop #{service_name}.service 2>/dev/null || true
+        systemctl disable #{service_name}.service 2>/dev/null || true
+        rm -f /etc/systemd/system/#{service_name}.service
+        systemctl daemon-reload
+        rm -f /tmp/atomic_service_output.txt
+
+
+  - name: Create systemd Service Unit from /tmp (Unusual Location)
+    auto_generated_guid:
+    description: |
+      Creates a systemd service unit file in /tmp and loads it using systemctl start with
+      an absolute path. Adversaries may write service unit files to world-writable directories
+      such as /tmp to avoid triggering alerts on new file creation in standard service
+      directories, or to execute payloads transiently without permanently installing a service.
+
+      Loading a service unit from an arbitrary path rather than a standard systemd directory
+      is unusual behaviour that should be detectable by monitoring systemctl command arguments.
+    supported_platforms:
+      - linux
+    input_arguments:
+      service_path:
+        description: Full path to the service file to be written in /tmp
+        type: path
+        default: /tmp/atomic_tmp.service
+      command_to_run:
+        description: Command the service will execute
+        type: string
+        default: /bin/bash -c "id > /tmp/atomic_tmp_output.txt"
+    dependency_executor_name: sh
+    dependencies:
+      - description: |
+          systemctl must be available on the system
+        prereq_command: |
+          if [ -x "$(command -v systemctl)" ]; then exit 0; else exit 1; fi
+        get_prereq_command: |
+          echo "systemctl is not available. Ensure systemd is running on this system."
+      - description: |
+          /tmp must exist and be writable
+        prereq_command: |
+          if [ -d "/tmp" ] && [ -w "/tmp" ]; then exit 0; else exit 1; fi
+        get_prereq_command: |
+          echo "/tmp does not exist or is not writable on this system."
+      - description: |
+          The test must be run as root or with sudo privileges
+        prereq_command: |
+          if [ "$(id -u)" -eq 0 ]; then exit 0; else exit 1; fi
+        get_prereq_command: |
+          echo "This test requires root privileges. Run as root or use sudo."
+    executor:
+      name: sh
+      elevation_required: true
+      command: |
+        echo "[Unit]" > #{service_path}
+        echo "Description=Atomic Tmp Service" >> #{service_path}
+        echo "" >> #{service_path}
+        echo "[Service]" >> #{service_path}
+        echo "ExecStart=#{command_to_run}" >> #{service_path}
+        echo "" >> #{service_path}
+        echo "[Install]" >> #{service_path}
+        echo "WantedBy=multi-user.target" >> #{service_path}
+        systemctl link #{service_path}
+        systemctl start $(basename #{service_path})
+        systemctl status $(basename #{service_path})
+      cleanup_command: |
+        systemctl stop $(basename #{service_path}) 2>/dev/null || true
+        rm -f #{service_path}
+        rm -f /tmp/atomic_tmp_output.txt
+
+
+  - name: Create systemd Service Unit from /dev/shm (Unusual Location)
+    auto_generated_guid:
+    description: |
+      Creates a systemd service unit file in /dev/shm and loads it using systemctl.
+      /dev/shm is a memory-backed filesystem that is world-writable on most Linux systems
+      and does not persist across reboots, making it particularly attractive to adversaries
+      seeking to execute transient payloads while evading file-based forensic detection.
+
+      This technique has been observed in post-exploitation scenarios where attackers
+      deliberately avoid writing to disk-backed locations to limit forensic artefacts.
+    supported_platforms:
+      - linux
+    input_arguments:
+      service_path:
+        description: Full path to the service file to be written in /dev/shm
+        type: path
+        default: /dev/shm/atomic_shm.service
+      command_to_run:
+        description: Command the service will execute
+        type: string
+        default: /bin/bash -c "whoami > /tmp/atomic_shm_output.txt"
+    dependency_executor_name: sh
+    dependencies:
+      - description: |
+          systemctl must be available on the system
+        prereq_command: |
+          if [ -x "$(command -v systemctl)" ]; then exit 0; else exit 1; fi
+        get_prereq_command: |
+          echo "systemctl is not available. Ensure systemd is running on this system."
+      - description: |
+          /dev/shm must exist and be writable
+        prereq_command: |
+          if [ -d "/dev/shm" ] && [ -w "/dev/shm" ]; then exit 0; else exit 1; fi
+        get_prereq_command: |
+          echo "/dev/shm does not exist or is not writable on this system."
+      - description: |
+          The test must be run as root or with sudo privileges
+        prereq_command: |
+          if [ "$(id -u)" -eq 0 ]; then exit 0; else exit 1; fi
+        get_prereq_command: |
+          echo "This test requires root privileges. Run as root or use sudo."
+    executor:
+      name: sh
+      elevation_required: true
+      command: |
+        echo "[Unit]" > #{service_path}
+        echo "Description=Atomic SHM Service" >> #{service_path}
+        echo "" >> #{service_path}
+        echo "[Service]" >> #{service_path}
+        echo "ExecStart=#{command_to_run}" >> #{service_path}
+        echo "" >> #{service_path}
+        echo "[Install]" >> #{service_path}
+        echo "WantedBy=multi-user.target" >> #{service_path}
+        systemctl link #{service_path}
+        systemctl start $(basename #{service_path})
+        systemctl status $(basename #{service_path})
+      cleanup_command: |
+        systemctl stop $(basename #{service_path}) 2>/dev/null || true
+        rm -f #{service_path}
+        rm -f /tmp/atomic_shm_output.txt
+
+
+  - name: Modify Existing systemd Service to Execute Malicious Command
+    auto_generated_guid:
+    description: |
+      Creates a service unit file that initially runs a benign command, then modifies the
+      ExecStart directive using sed to substitute a malicious command before reloading and
+      restarting the service. Adversaries may hijack existing services to blend in with normal
+      service activity and avoid triggering detections focused solely on new service creation.
+
+      This technique reflects the tradecraft observed in more sophisticated intrusions where
+      blending into existing process trees is a priority over creating net-new services.
+    supported_platforms:
+      - linux
+    input_arguments:
+      service_name:
+        description: Name of the service to create and then modify for the test
+        type: string
+        default: atomic-modify-test
+      malicious_command:
+        description: Malicious command to substitute into ExecStart
+        type: string
+        default: /bin/bash -c "echo hijacked > /tmp/atomic_hijack_output.txt"
+    dependency_executor_name: sh
+    dependencies:
+      - description: |
+          systemctl must be available on the system
+        prereq_command: |
+          if [ -x "$(command -v systemctl)" ]; then exit 0; else exit 1; fi
+        get_prereq_command: |
+          echo "systemctl is not available. Ensure systemd is running on this system."
+      - description: |
+          sed must be available on the system
+        prereq_command: |
+          if [ -x "$(command -v sed)" ]; then exit 0; else exit 1; fi
+        get_prereq_command: |
+          apt-get install -y sed 2>/dev/null || yum install -y sed 2>/dev/null || echo "Could not install sed automatically."
+      - description: |
+          The test must be run as root or with sudo privileges
+        prereq_command: |
+          if [ "$(id -u)" -eq 0 ]; then exit 0; else exit 1; fi
+        get_prereq_command: |
+          echo "This test requires root privileges. Run as root or use sudo."
+      - description: |
+          /etc/systemd/system/ directory must exist and be writable
+        prereq_command: |
+          if [ -d "/etc/systemd/system" ] && [ -w "/etc/systemd/system" ]; then exit 0; else exit 1; fi
+        get_prereq_command: |
+          echo "/etc/systemd/system/ does not exist or is not writable."
+    executor:
+      name: sh
+      elevation_required: true
+      command: |
+        echo "[Unit]" > /etc/systemd/system/#{service_name}.service
+        echo "Description=Legitimate Looking Service" >> /etc/systemd/system/#{service_name}.service
+        echo "" >> /etc/systemd/system/#{service_name}.service
+        echo "[Service]" >> /etc/systemd/system/#{service_name}.service
+        echo "ExecStart=/bin/true" >> /etc/systemd/system/#{service_name}.service
+        echo "" >> /etc/systemd/system/#{service_name}.service
+        echo "[Install]" >> /etc/systemd/system/#{service_name}.service
+        echo "WantedBy=multi-user.target" >> /etc/systemd/system/#{service_name}.service
+        systemctl daemon-reload
+        sed -i 's|ExecStart=.*|ExecStart=#{malicious_command}|' /etc/systemd/system/#{service_name}.service
+        systemctl daemon-reload
+        systemctl start #{service_name}.service
+        systemctl status #{service_name}.service
+      cleanup_command: |
+        systemctl stop #{service_name}.service 2>/dev/null || true
+        systemctl disable #{service_name}.service 2>/dev/null || true
+        rm -f /etc/systemd/system/#{service_name}.service
+        systemctl daemon-reload
+        rm -f /tmp/atomic_hijack_output.txt
+
+
+  - name: Execute Command via Transient systemd Service (systemd-run)
+    auto_generated_guid:
+    description: |
+      Uses systemd-run to execute a command as a transient systemd service without creating
+      a persistent unit file on disk. Adversaries may use systemd-run to execute arbitrary
+      commands under the context of systemd while bypassing controls that monitor for new
+      unit file creation, since transient services exist only in memory for their lifetime.
+
+      This is a particularly stealthy technique as it leaves minimal on-disk artefacts and
+      the service disappears from systemctl list-units once execution completes.
+    supported_platforms:
+      - linux
+    input_arguments:
+      unit_name:
+        description: Name of the transient systemd unit to create
+        type: string
+        default: atomic-transient
+      command_to_run:
+        description: Command to execute as a transient service
+        type: string
+        default: /bin/bash -c "id > /tmp/atomic_transient_output.txt"
+    dependency_executor_name: sh
+    dependencies:
+      - description: |
+          systemd-run must be available on the system
+        prereq_command: |
+          if [ -x "$(command -v systemd-run)" ]; then exit 0; else exit 1; fi
+        get_prereq_command: |
+          echo "systemd-run is not available. Ensure systemd is installed and up to date."
+      - description: |
+          The test must be run as root or with sudo privileges
+        prereq_command: |
+          if [ "$(id -u)" -eq 0 ]; then exit 0; else exit 1; fi
+        get_prereq_command: |
+          echo "This test requires root privileges. Run as root or use sudo."
+    executor:
+      name: sh
+      elevation_required: true
+      command: |
+        systemd-run --unit=#{unit_name} --wait #{command_to_run}
+        systemctl status #{unit_name}.service 2>/dev/null || echo "Transient service has already completed and exited."
+      cleanup_command: |
+        systemctl stop #{unit_name}.service 2>/dev/null || true
+        rm -f /tmp/atomic_transient_output.txt
+
+
+  - name: Enumerate All systemd Services Using systemctl
+    auto_generated_guid:
+    description: |
+      Enumerates all systemd services and their current states using systemctl list-units
+      and systemctl list-unit-files. Adversaries may enumerate running and enabled services
+      to identify targets for hijacking, understand the host environment, map installed
+      security tooling, or identify gaps in monitoring coverage.
+
+      Service enumeration is a common reconnaissance step during post-exploitation and may
+      precede service hijacking or masquerading activity. This test does not require
+      elevation as service listing is available to unprivileged users on most Linux systems.
+    supported_platforms:
+      - linux
+    dependency_executor_name: sh
+    dependencies:
+      - description: |
+          systemctl must be available on the system
+        prereq_command: |
+          if [ -x "$(command -v systemctl)" ]; then exit 0; else exit 1; fi
+        get_prereq_command: |
+          echo "systemctl is not available. Ensure systemd is running on this system."
+    executor:
+      name: sh
+      elevation_required: false
+      command: |
+        systemctl list-units --type=service --all
+        systemctl list-unit-files --type=service
+      cleanup_command: |
+        echo "No cleanup required"
+
+
+  - name: Enable systemd Service for Persistence with Auto-Restart
+    auto_generated_guid:
+    description: |
+      Creates a payload script and a systemd service unit that executes it, then enables
+      the service to survive reboots using systemctl enable. The service is configured with
+      Restart=always to automatically restart on failure, mimicking the persistence mechanism
+      used by adversaries deploying backdoors or beacons on Linux hosts.
+
+      This technique is consistent with observed post-exploitation tradecraft where adversaries
+      establish a foothold that survives reboots and self-heals after interruption, complicating
+      incident response and remediation efforts.
+    supported_platforms:
+      - linux
+    input_arguments:
+      service_name:
+        description: Name of the persistence service to create
+        type: string
+        default: atomic-persist
+      payload_path:
+        description: Path to the payload script that the service will execute
+        type: path
+        default: /tmp/atomic_payload.sh
+    dependency_executor_name: sh
+    dependencies:
+      - description: |
+          systemctl must be available on the system
+        prereq_command: |
+          if [ -x "$(command -v systemctl)" ]; then exit 0; else exit 1; fi
+        get_prereq_command: |
+          echo "systemctl is not available. Ensure systemd is running on this system."
+      - description: |
+          The test must be run as root or with sudo privileges
+        prereq_command: |
+          if [ "$(id -u)" -eq 0 ]; then exit 0; else exit 1; fi
+        get_prereq_command: |
+          echo "This test requires root privileges. Run as root or use sudo."
+      - description: |
+          /etc/systemd/system/ directory must exist and be writable
+        prereq_command: |
+          if [ -d "/etc/systemd/system" ] && [ -w "/etc/systemd/system" ]; then exit 0; else exit 1; fi
+        get_prereq_command: |
+          echo "/etc/systemd/system/ does not exist or is not writable."
+      - description: |
+          Payload script must exist at the specified path
+        prereq_command: |
+          if [ -f "#{payload_path}" ]; then exit 0; else exit 1; fi
+        get_prereq_command: |
+          echo '#!/bin/bash' > #{payload_path}
+          echo 'echo persistent >> /tmp/atomic_persist_output.txt' >> #{payload_path}
+          chmod +x #{payload_path}
+    executor:
+      name: sh
+      elevation_required: true
+      command: |
+        echo "[Unit]" > /etc/systemd/system/#{service_name}.service
+        echo "Description=Atomic Persistence Service" >> /etc/systemd/system/#{service_name}.service
+        echo "After=network.target" >> /etc/systemd/system/#{service_name}.service
+        echo "" >> /etc/systemd/system/#{service_name}.service
+        echo "[Service]" >> /etc/systemd/system/#{service_name}.service
+        echo "ExecStart=#{payload_path}" >> /etc/systemd/system/#{service_name}.service
+        echo "Restart=always" >> /etc/systemd/system/#{service_name}.service
+        echo "RestartSec=10" >> /etc/systemd/system/#{service_name}.service
+        echo "" >> /etc/systemd/system/#{service_name}.service
+        echo "[Install]" >> /etc/systemd/system/#{service_name}.service
+        echo "WantedBy=multi-user.target" >> /etc/systemd/system/#{service_name}.service
+        systemctl daemon-reload
+        systemctl enable #{service_name}.service
+        systemctl start #{service_name}.service
+        systemctl status #{service_name}.service
+      cleanup_command: |
+        systemctl stop #{service_name}.service 2>/dev/null || true
+        systemctl disable #{service_name}.service 2>/dev/null || true
+        rm -f /etc/systemd/system/#{service_name}.service
+        rm -f /etc/systemd/system/multi-user.target.wants/#{service_name}.service
+        systemctl daemon-reload
+        rm -f #{payload_path}
+        rm -f /tmp/atomic_persist_output.txt
+
+
+  - name: Masquerade Malicious Service as Legitimate System Service
+    auto_generated_guid:
+    description: |
+      Creates a systemd service with a name and description closely resembling a legitimate
+      system service to blend in with normal service activity. Adversaries may deliberately
+      choose service names similar to well-known system services such as systemd-networkd,
+      cron, or ssh to evade detection from analysts reviewing service lists or automated
+      alerting on service names.
+
+      This masquerading technique is particularly effective in environments where detection
+      relies on service name allowlists or manual review of systemctl list-units output
+      rather than behavioural analysis of service unit file contents and ExecStart paths.
+    supported_platforms:
+      - linux
+    input_arguments:
+      masquerade_name:
+        description: Service name designed to closely mimic a legitimate system service
+        type: string
+        default: systemd-network-helper
+      command_to_run:
+        description: Command the masquerading service will execute
+        type: string
+        default: /bin/bash -c "echo masquerade > /tmp/atomic_masquerade_output.txt"
+    dependency_executor_name: sh
+    dependencies:
+      - description: |
+          systemctl must be available on the system
+        prereq_command: |
+          if [ -x "$(command -v systemctl)" ]; then exit 0; else exit 1; fi
+        get_prereq_command: |
+          echo "systemctl is not available. Ensure systemd is running on this system."
+      - description: |
+          The test must be run as root or with sudo privileges
+        prereq_command: |
+          if [ "$(id -u)" -eq 0 ]; then exit 0; else exit 1; fi
+        get_prereq_command: |
+          echo "This test requires root privileges. Run as root or use sudo."
+      - description: |
+          /etc/systemd/system/ directory must exist and be writable
+        prereq_command: |
+          if [ -d "/etc/systemd/system" ] && [ -w "/etc/systemd/system" ]; then exit 0; else exit 1; fi
+        get_prereq_command: |
+          echo "/etc/systemd/system/ does not exist or is not writable."
+      - description: |
+          Chosen masquerade service name must not already exist as a real service
+        prereq_command: |
+          if ! systemctl list-unit-files --type=service | grep -q "^#{masquerade_name}.service"; then exit 0; else exit 1; fi
+        get_prereq_command: |
+          echo "A service named #{masquerade_name} already exists. Change the masquerade_name input argument to avoid conflicts."
+    executor:
+      name: sh
+      elevation_required: true
+      command: |
+        echo "[Unit]" > /etc/systemd/system/#{masquerade_name}.service
+        echo "Description=Network connectivity helper service" >> /etc/systemd/system/#{masquerade_name}.service
+        echo "After=network.target" >> /etc/systemd/system/#{masquerade_name}.service
+        echo "Before=network-online.target" >> /etc/systemd/system/#{masquerade_name}.service
+        echo "" >> /etc/systemd/system/#{masquerade_name}.service
+        echo "[Service]" >> /etc/systemd/system/#{masquerade_name}.service
+        echo "ExecStart=#{command_to_run}" >> /etc/systemd/system/#{masquerade_name}.service
+        echo "Restart=on-failure" >> /etc/systemd/system/#{masquerade_name}.service
+        echo "RestartSec=5" >> /etc/systemd/system/#{masquerade_name}.service
+        echo "" >> /etc/systemd/system/#{masquerade_name}.service
+        echo "[Install]" >> /etc/systemd/system/#{masquerade_name}.service
+        echo "WantedBy=multi-user.target" >> /etc/systemd/system/#{masquerade_name}.service
+        systemctl daemon-reload
+        systemctl start #{masquerade_name}.service
+        systemctl status #{masquerade_name}.service
+      cleanup_command: |
+        systemctl stop #{masquerade_name}.service 2>/dev/null || true
+        systemctl disable #{masquerade_name}.service 2>/dev/null || true
+        rm -f /etc/systemd/system/#{masquerade_name}.service
+        systemctl daemon-reload
+        rm -f /tmp/atomic_masquerade_output.txt
