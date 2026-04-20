@@ -71,7 +71,7 @@ atomic_tests:
 
 
   - name: Create systemd Service Unit from /tmp (Unusual Location)
-    auto_generated_guid: 
+    auto_generated_guid:
     description: |
       Creates a systemd service unit file in /tmp and loads it using systemctl start with
       an absolute path. Adversaries may write service unit files to world-writable directories
@@ -123,20 +123,17 @@ atomic_tests:
         echo "" >> #{service_path}
         echo "[Install]" >> #{service_path}
         echo "WantedBy=multi-user.target" >> #{service_path}
-        cp #{service_path} /etc/systemd/system/atomic_tmp.service
-        systemctl daemon-reload
-        systemctl start atomic_tmp.service
-        systemctl status atomic_tmp.service
+        systemctl link #{service_path}
+        systemctl start $(basename #{service_path})
+        systemctl status $(basename #{service_path})
       cleanup_command: |
-        systemctl stop atomic_tmp.service 2>/dev/null || true
-        rm -f /etc/systemd/system/atomic_tmp.service
-        systemctl daemon-reload
+        systemctl stop $(basename #{service_path}) 2>/dev/null || true
         rm -f #{service_path}
         rm -f /tmp/atomic_tmp_output.txt
 
 
   - name: Create systemd Service Unit from /dev/shm (Unusual Location)
-    auto_generated_guid: 
+    auto_generated_guid:
     description: |
       Creates a systemd service unit file in /dev/shm and loads it using systemctl.
       /dev/shm is a memory-backed filesystem that is world-writable on most Linux systems
@@ -188,20 +185,17 @@ atomic_tests:
         echo "" >> #{service_path}
         echo "[Install]" >> #{service_path}
         echo "WantedBy=multi-user.target" >> #{service_path}
-        cp #{service_path} /etc/systemd/system/atomic_shm.service
-        systemctl daemon-reload
-        systemctl start atomic_shm.service
-        systemctl status atomic_shm.service
+        systemctl link #{service_path}
+        systemctl start $(basename #{service_path})
+        systemctl status $(basename #{service_path})
       cleanup_command: |
-        systemctl stop atomic_shm.service 2>/dev/null || true
-        rm -f /etc/systemd/system/atomic_shm.service
-        systemctl daemon-reload
+        systemctl stop $(basename #{service_path}) 2>/dev/null || true
         rm -f #{service_path}
         rm -f /tmp/atomic_shm_output.txt
 
 
   - name: Modify Existing systemd Service to Execute Malicious Command
-    auto_generated_guid: 
+    auto_generated_guid:
     description: |
       Creates a service unit file that initially runs a benign command, then modifies the
       ExecStart directive using sed to substitute a malicious command before reloading and
@@ -260,7 +254,7 @@ atomic_tests:
         echo "[Install]" >> /etc/systemd/system/#{service_name}.service
         echo "WantedBy=multi-user.target" >> /etc/systemd/system/#{service_name}.service
         systemctl daemon-reload
-        sed -i "s|ExecStart=.*|ExecStart=#{malicious_command}|" /etc/systemd/system/#{service_name}.service
+        sed -i 's|ExecStart=.*|ExecStart=#{malicious_command}|' /etc/systemd/system/#{service_name}.service
         systemctl daemon-reload
         systemctl start #{service_name}.service
         systemctl status #{service_name}.service
@@ -285,6 +279,10 @@ atomic_tests:
     supported_platforms:
       - linux
     input_arguments:
+      unit_name:
+        description: Name of the transient systemd unit to create
+        type: string
+        default: atomic-transient
       command_to_run:
         description: Command to execute as a transient service
         type: string
@@ -307,15 +305,15 @@ atomic_tests:
       name: sh
       elevation_required: true
       command: |
-        systemd-run --unit=atomic-transient --wait #{command_to_run}
-        systemctl status atomic-transient.service 2>/dev/null || echo "Transient service has already completed and exited."
+        systemd-run --unit=#{unit_name} --wait #{command_to_run}
+        systemctl status #{unit_name}.service 2>/dev/null || echo "Transient service has already completed and exited."
       cleanup_command: |
-        systemctl stop atomic-transient.service 2>/dev/null || true
+        systemctl stop #{unit_name}.service 2>/dev/null || true
         rm -f /tmp/atomic_transient_output.txt
 
 
   - name: Enumerate All systemd Services Using systemctl
-    auto_generated_guid: 
+    auto_generated_guid:
     description: |
       Enumerates all systemd services and their current states using systemctl list-units
       and systemctl list-unit-files. Adversaries may enumerate running and enabled services
@@ -346,7 +344,7 @@ atomic_tests:
 
 
   - name: Enable systemd Service for Persistence with Auto-Restart
-    auto_generated_guid: 
+    auto_generated_guid:
     description: |
       Creates a payload script and a systemd service unit that executes it, then enables
       the service to survive reboots using systemctl enable. The service is configured with
@@ -425,7 +423,7 @@ atomic_tests:
 
 
   - name: Masquerade Malicious Service as Legitimate System Service
-    auto_generated_guid: 
+    auto_generated_guid:
     description: |
       Creates a systemd service with a name and description closely resembling a legitimate
       system service to blend in with normal service activity. Adversaries may deliberately
