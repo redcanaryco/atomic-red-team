@@ -1416,7 +1416,8 @@
   - Atomic Test #13: Splashtop Execution [windows]
   - Atomic Test #14: Splashtop Streamer Execution [windows]
   - Atomic Test #15: Microsoft App Quick Assist Execution [windows]
-- T1659 Content Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1659 Content Injection](../../T1659/T1659.md)
+  - Atomic Test #2: MITM Proxy Injection (Windows) [windows]
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1572 Protocol Tunneling](../../T1572/T1572.md)
   - Atomic Test #1: DNS over HTTPS Large Query Volume [windows]
@@ -2144,7 +2145,8 @@
 - [T1195 Supply Chain Compromise](../../T1195/T1195.md)
   - Atomic Test #1: Octopus Scanner Malware Open Source Supply Chain [windows]
 - T1190 Exploit Public-Facing Application [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1659 Content Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1659 Content Injection](../../T1659/T1659.md)
+  - Atomic Test #2: MITM Proxy Injection (Windows) [windows]
 - [T1078.001 Valid Accounts: Default Accounts](../../T1078.001/T1078.001.md)
   - Atomic Test #1: Enable Guest account with RDP capability and admin privileges [windows]
   - Atomic Test #2: Activate Guest Account [windows]
