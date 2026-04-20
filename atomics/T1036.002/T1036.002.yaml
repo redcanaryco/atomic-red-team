@@ -1,4 +1,6 @@
-
+attack_technique: T1036.002
+display_name: "Masquerading:Right-to-Left Override"
+atomic_tests:
 
 - name: 'Masquerading: Right-to-Left Override Batch File Creation and Execution'
   description: |-
@@ -12,7 +14,7 @@
       description: Input the file location. Default is the desktop.
   executor:
     command: |-
-      $filepath = "#{fileloc}"
+      $filepath = #{fileloc}
       $rtlo = [char]0x202E
       $fileloc = Join-Path "$filepath" ("evil_batch" + $rtlo + "fdp.bat")
       $payload = @"
@@ -29,8 +31,8 @@
       $rtlo = [char]0x202E
       $fileloc = Join-Path "#{fileloc}" ("evil_batch" + $rtlo + "fdp.bat")
       Remove-Item -Path $fileloc -Force -ErrorAction SilentlyContinue
+    name: powershell
     elevation_required: false
-
 
 - name: 'Masquerading: RTLO Masqueraded File Download and Execution'
   description: Downloads a batch file that has an obfuscated name utilizing the RTLO operator. The batch file then runs automatically, opening a cmd window and then closing 30 seconds later
