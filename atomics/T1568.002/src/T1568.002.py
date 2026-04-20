@@ -12,10 +12,9 @@ def generate_domain(seed):
   name = ''.join(random.choice(string.ascii_lowercase) for _ in range(length))
   return name + random.choice(TLDs)
 
-
+if __name__ == "__main__":
   today = datetime.date.today().strftime('%Y%m%d')
   print('[*] DGA cycle seed:', today)
-  
   for i in range(10):
     domain = generate_domain(today + str(i))
     print('[+] Querying:', domain)
