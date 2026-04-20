@@ -3,7 +3,7 @@ display_name: "System Services: Systemctl"
 atomic_tests:
 
   - name: Create and Enable a Malicious systemd Service Unit
-    auto_generated_guid:
+    auto_generated_guid: e58c8723-5503-4533-b642-535cd20ec648
     description: |
       Creates a new systemd service unit file in /etc/systemd/system/ and enables it using
       systemctl enable followed by systemctl start. Adversaries commonly abuse this workflow
@@ -71,7 +71,7 @@ atomic_tests:
 
 
   - name: Create systemd Service Unit from /tmp (Unusual Location)
-    auto_generated_guid:
+    auto_generated_guid: a1fa406e-2354-4a24-b6d6-94157e7564d4
     description: |
       Creates a systemd service unit file in /tmp and loads it using systemctl start with
       an absolute path. Adversaries may write service unit files to world-writable directories
@@ -133,7 +133,7 @@ atomic_tests:
 
 
   - name: Create systemd Service Unit from /dev/shm (Unusual Location)
-    auto_generated_guid:
+    auto_generated_guid: dce49381-a26b-4d95-bdfa-c607ffe8bee5
     description: |
       Creates a systemd service unit file in /dev/shm and loads it using systemctl.
       /dev/shm is a memory-backed filesystem that is world-writable on most Linux systems
@@ -195,7 +195,7 @@ atomic_tests:
 
 
   - name: Modify Existing systemd Service to Execute Malicious Command
-    auto_generated_guid:
+    auto_generated_guid: 6123928f-6389-4914-8d25-a5d69bd657fa
     description: |
       Creates a service unit file that initially runs a benign command, then modifies the
       ExecStart directive using sed to substitute a malicious command before reloading and
@@ -267,7 +267,7 @@ atomic_tests:
 
 
   - name: Execute Command via Transient systemd Service (systemd-run)
-    auto_generated_guid:
+    auto_generated_guid: a73a886f-23c5-4e8f-b1ab-b1bbc1f5e236
     description: |
       Uses systemd-run to execute a command as a transient systemd service without creating
       a persistent unit file on disk. Adversaries may use systemd-run to execute arbitrary
@@ -313,7 +313,7 @@ atomic_tests:
 
 
   - name: Enumerate All systemd Services Using systemctl
-    auto_generated_guid:
+    auto_generated_guid: 1e5be8d4-605a-4acb-8709-2f80b2d8ea95
     description: |
       Enumerates all systemd services and their current states using systemctl list-units
       and systemctl list-unit-files. Adversaries may enumerate running and enabled services
@@ -344,7 +344,7 @@ atomic_tests:
 
 
   - name: Enable systemd Service for Persistence with Auto-Restart
-    auto_generated_guid:
+    auto_generated_guid: 2fc6c0ab-4f88-4eb8-ab1b-f739fc22bba7
     description: |
       Creates a payload script and a systemd service unit that executes it, then enables
       the service to survive reboots using systemctl enable. The service is configured with
@@ -423,7 +423,7 @@ atomic_tests:
 
 
   - name: Masquerade Malicious Service as Legitimate System Service
-    auto_generated_guid:
+    auto_generated_guid: 6fec8560-ff64-4bbf-bc79-734fea48f7ca
     description: |
       Creates a systemd service with a name and description closely resembling a legitimate
       system service to blend in with normal service activity. Adversaries may deliberately
