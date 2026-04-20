@@ -609,6 +609,7 @@ defense-evasion,T1562.008,Impair Defenses: Disable Cloud Logs,11,AWS - Config Lo
 defense-evasion,T1564.003,Hide Artifacts: Hidden Window,1,Hidden Window,f151ee37-9e2b-47e6-80e4-550b9f999b7a,powershell
 defense-evasion,T1564.003,Hide Artifacts: Hidden Window,2,Headless Browser Accessing Mockbin,0ad9ab92-c48c-4f08-9b20-9633277c4646,command_prompt
 defense-evasion,T1564.003,Hide Artifacts: Hidden Window,3,Hidden Window-Conhost Execution,5510d22f-2595-4911-8456-4d630c978616,powershell
+defense-evasion,T1556.001,Modify Authentication Process: Domain Controller Authentication,1,Skeleton Key via Mimikatz,0ee8081f-e9a7-4a2e-a23f-68473023184f,powershell
 defense-evasion,T1027.006,HTML Smuggling,1,HTML Smuggling Remote Payload,30cbeda4-08d9-42f1-8685-197fad677734,powershell
 defense-evasion,T1070.004,Indicator Removal on Host: File Deletion,1,Delete a single file - FreeBSD/Linux/macOS,562d737f-2fc6-4b09-8c2a-7f8ff0828480,sh
 defense-evasion,T1070.004,Indicator Removal on Host: File Deletion,2,Delete an entire folder - FreeBSD/Linux/macOS,a415f17e-ce8d-4ce2-a8b4-83b674e7017e,sh
@@ -1032,6 +1033,14 @@ execution,T1106,Native API,3,WinPwn - Get SYSTEM shell - Bind System Shell using
 execution,T1106,Native API,4,WinPwn - Get SYSTEM shell - Pop System Shell using NamedPipe Impersonation technique,e1f93a06-1649-4f07-89a8-f57279a7d60e,powershell
 execution,T1106,Native API,5,Run Shellcode via Syscall in Go,ae56083f-28d0-417d-84da-df4242da1f7c,powershell
 execution,T1059.010,Command and Scripting Interpreter: AutoHotKey & AutoIT,1,AutoHotKey script execution,7b5d350e-f758-43cc-a761-8e3f6b052a03,powershell
+execution,T1569.003,System Services: Systemctl,1,Create and Enable a Malicious systemd Service Unit,e58c8723-5503-4533-b642-535cd20ec648,sh
+execution,T1569.003,System Services: Systemctl,2,Create systemd Service Unit from /tmp (Unusual Location),a1fa406e-2354-4a24-b6d6-94157e7564d4,sh
+execution,T1569.003,System Services: Systemctl,3,Create systemd Service Unit from /dev/shm (Unusual Location),dce49381-a26b-4d95-bdfa-c607ffe8bee5,sh
+execution,T1569.003,System Services: Systemctl,4,Modify Existing systemd Service to Execute Malicious Command,6123928f-6389-4914-8d25-a5d69bd657fa,sh
+execution,T1569.003,System Services: Systemctl,5,Execute Command via Transient systemd Service (systemd-run),a73a886f-23c5-4e8f-b1ab-b1bbc1f5e236,sh
+execution,T1569.003,System Services: Systemctl,6,Enumerate All systemd Services Using systemctl,1e5be8d4-605a-4acb-8709-2f80b2d8ea95,sh
+execution,T1569.003,System Services: Systemctl,7,Enable systemd Service for Persistence with Auto-Restart,2fc6c0ab-4f88-4eb8-ab1b-f739fc22bba7,sh
+execution,T1569.003,System Services: Systemctl,8,Masquerade Malicious Service as Legitimate System Service,6fec8560-ff64-4bbf-bc79-734fea48f7ca,sh
 execution,T1610,Deploy a container,1,Deploy Docker container,59aa6f26-7620-417e-9318-589e0fb7a372,bash
 execution,T1059,Command and Scripting Interpreter,1,AutoIt Script Execution,a9b93f17-31cb-435d-a462-5e838a2a6026,powershell
 execution,T1609,Kubernetes Exec Into Container,1,ExecIntoContainer,d03bfcd3-ed87-49c8-8880-44bb772dea4b,bash
@@ -1425,6 +1434,7 @@ persistence,T1546.002,Event Triggered Execution: Screensaver,1,Set Arbitrary Bin
 persistence,T1543.001,Create or Modify System Process: Launch Agent,1,Launch Agent,a5983dee-bf6c-4eaf-951c-dbc1a7b90900,bash
 persistence,T1543.001,Create or Modify System Process: Launch Agent,2,Event Monitor Daemon Persistence,11979f23-9b9d-482a-9935-6fc9cd022c3e,bash
 persistence,T1543.001,Create or Modify System Process: Launch Agent,3,Launch Agent - Root Directory,66774fa8-c562-4bae-a58d-5264a0dd9dd7,bash
+persistence,T1556.001,Modify Authentication Process: Domain Controller Authentication,1,Skeleton Key via Mimikatz,0ee8081f-e9a7-4a2e-a23f-68473023184f,powershell
 persistence,T1037.004,Boot or Logon Initialization Scripts: Rc.common,1,rc.common,97a48daa-8bca-4bc0-b1a9-c1d163e762de,bash
 persistence,T1037.004,Boot or Logon Initialization Scripts: Rc.common,2,rc.common,c33f3d80-5f04-419b-a13a-854d1cbdbf3a,bash
 persistence,T1037.004,Boot or Logon Initialization Scripts: Rc.common,3,rc.local,126f71af-e1c9-405c-94ef-26a47b16c102,sh
@@ -1832,6 +1842,7 @@ credential-access,T1003.008,"OS Credential Dumping: /etc/passwd, /etc/master.pas
 credential-access,T1558.002,Steal or Forge Kerberos Tickets: Silver Ticket,1,Crafting Active Directory silver tickets with mimikatz,385e59aa-113e-4711-84d9-f637aef01f2c,powershell
 credential-access,T1555.004,Credentials from Password Stores: Windows Credential Manager,1,Access Saved Credentials via VaultCmd,9c2dd36d-5c8b-4b29-8d72-a11b0d5d7439,command_prompt
 credential-access,T1555.004,Credentials from Password Stores: Windows Credential Manager,2,WinPwn - Loot local Credentials - Invoke-WCMDump,fa714db1-63dd-479e-a58e-7b2b52ca5997,powershell
+credential-access,T1556.001,Modify Authentication Process: Domain Controller Authentication,1,Skeleton Key via Mimikatz,0ee8081f-e9a7-4a2e-a23f-68473023184f,powershell
 credential-access,T1003.003,OS Credential Dumping: NTDS,1,Create Volume Shadow Copy with vssadmin,dcebead7-6c28-4b4b-bf3c-79deb1b1fc7f,command_prompt
 credential-access,T1003.003,OS Credential Dumping: NTDS,2,Copy NTDS.dit from Volume Shadow Copy,c6237146-9ea6-4711-85c9-c56d263a6b03,command_prompt
 credential-access,T1003.003,OS Credential Dumping: NTDS,3,Dump Active Directory Database with NTDSUtil,2364e33d-ceab-4641-8468-bfb1d7cc2723,command_prompt
