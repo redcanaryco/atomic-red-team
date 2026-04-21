@@ -785,7 +785,8 @@
 - T1601.001 Patch System Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1070.009 Clear Persistence [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1036.010 Masquerade Account Name [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1556.001 Domain Controller Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1556.001 Modify Authentication Process: Domain Controller Authentication](../../T1556.001/T1556.001.md)
+  - Atomic Test #1: Skeleton Key via Mimikatz [windows]
 - [T1027.006 HTML Smuggling](../../T1027.006/T1027.006.md)
   - Atomic Test #1: HTML Smuggling Remote Payload [windows]
 - T1556.005 Reversible Encryption [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1375,7 +1376,15 @@
   - Atomic Test #5: Run Shellcode via Syscall in Go [windows]
 - [T1059.010 Command and Scripting Interpreter: AutoHotKey & AutoIT](../../T1059.010/T1059.010.md)
   - Atomic Test #1: AutoHotKey script execution [windows]
-- T1569.003 Systemctl [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1569.003 System Services: Systemctl](../../T1569.003/T1569.003.md)
+  - Atomic Test #1: Create and Enable a Malicious systemd Service Unit [linux]
+  - Atomic Test #2: Create systemd Service Unit from /tmp (Unusual Location) [linux]
+  - Atomic Test #3: Create systemd Service Unit from /dev/shm (Unusual Location) [linux]
+  - Atomic Test #4: Modify Existing systemd Service to Execute Malicious Command [linux]
+  - Atomic Test #5: Execute Command via Transient systemd Service (systemd-run) [linux]
+  - Atomic Test #6: Enumerate All systemd Services Using systemctl [linux]
+  - Atomic Test #7: Enable systemd Service for Persistence with Auto-Restart [linux]
+  - Atomic Test #8: Masquerade Malicious Service as Legitimate System Service [linux]
 - T1059.009 Cloud API [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1610 Deploy a container](../../T1610/T1610.md)
   - Atomic Test #1: Deploy Docker container [containers]
@@ -1584,7 +1593,12 @@
   - Atomic Test #2: Firefox [linux, windows, macos]
   - Atomic Test #3: Edge Chromium Addon - VPN [windows, macos]
   - Atomic Test #4: Google Chrome Load Unpacked Extension With Command Line [windows]
-- T1137.005 Outlook Rules [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1137.005 Office Application Startup: Outlook Rules](../../T1137.005/T1137.005.md)
+  - Atomic Test #1: Outlook Rule - Subject Trigger with DeletePermanently Action via COM Object [windows]
+  - Atomic Test #2: Outlook Rule - Sender Address Trigger with DeletePermanently Action via COM Object [windows]
+  - Atomic Test #3: Outlook Rule - Auto-Forward Emails to External Address via COM Object [windows]
+  - Atomic Test #4: Outlook Rules - Enumerate Existing Rules via PowerShell COM Object [windows]
+  - Atomic Test #5: Outlook Rule - Create Rule with Obfuscated Blank Name (MAPI Evasion) [windows]
 - T1098.007 Additional Local or Domain Groups [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.011 Event Triggered Execution: Application Shimming](../../T1546.011/T1546.011.md)
   - Atomic Test #1: Application Shim Installation [windows]
@@ -1903,7 +1917,8 @@
   - Atomic Test #2: Event Monitor Daemon Persistence [macos]
   - Atomic Test #3: Launch Agent - Root Directory [macos]
 - T1505 Server Software Component [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1556.001 Domain Controller Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1556.001 Modify Authentication Process: Domain Controller Authentication](../../T1556.001/T1556.001.md)
+  - Atomic Test #1: Skeleton Key via Mimikatz [windows]
 - T1556.005 Reversible Encryption [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1546.016 Installer Packages [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1037.004 Boot or Logon Initialization Scripts: Rc.common](../../T1037.004/T1037.004.md)
@@ -1998,7 +2013,9 @@
   - Atomic Test #13: Splashtop Execution [windows]
   - Atomic Test #14: Splashtop Streamer Execution [windows]
   - Atomic Test #15: Microsoft App Quick Assist Execution [windows]
-- T1659 Content Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1659 Content Injection](../../T1659/T1659.md)
+  - Atomic Test #1: MITM Proxy Injection [macos, linux]
+  - Atomic Test #2: MITM Proxy Injection (Windows) [windows]
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1572 Protocol Tunneling](../../T1572/T1572.md)
   - Atomic Test #1: DNS over HTTPS Large Query Volume [windows]
@@ -2509,7 +2526,8 @@
 - [T1555.004 Credentials from Password Stores: Windows Credential Manager](../../T1555.004/T1555.004.md)
   - Atomic Test #1: Access Saved Credentials via VaultCmd [windows]
   - Atomic Test #2: WinPwn - Loot local Credentials - Invoke-WCMDump [windows]
-- T1556.001 Domain Controller Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1556.001 Modify Authentication Process: Domain Controller Authentication](../../T1556.001/T1556.001.md)
+  - Atomic Test #1: Skeleton Key via Mimikatz [windows]
 - T1556.005 Reversible Encryption [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1111 Multi-Factor Authentication Interception [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1003.003 OS Credential Dumping: NTDS](../../T1003.003/T1003.003.md)
@@ -3133,7 +3151,9 @@
 - [T1195 Supply Chain Compromise](../../T1195/T1195.md)
   - Atomic Test #1: Octopus Scanner Malware Open Source Supply Chain [windows]
 - T1190 Exploit Public-Facing Application [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1659 Content Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1659 Content Injection](../../T1659/T1659.md)
+  - Atomic Test #1: MITM Proxy Injection [macos, linux]
+  - Atomic Test #2: MITM Proxy Injection (Windows) [windows]
 - [T1078.001 Valid Accounts: Default Accounts](../../T1078.001/T1078.001.md)
   - Atomic Test #1: Enable Guest account with RDP capability and admin privileges [windows]
   - Atomic Test #2: Activate Guest Account [windows]

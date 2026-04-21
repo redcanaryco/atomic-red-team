@@ -196,6 +196,7 @@ persistence,T1078.003,Valid Accounts: Local Accounts,11,Login as nobody (Linux),
 persistence,T1078.003,Valid Accounts: Local Accounts,12,Login as nobody (freebsd),16f6374f-7600-459a-9b16-6a88fd96d310,sh
 command-and-control,T1132.001,Data Encoding: Standard Encoding,1,Base64 Encoded data.,1164f70f-9a88-4dff-b9ff-dc70e7bf0c25,sh
 command-and-control,T1132.001,Data Encoding: Standard Encoding,2,Base64 Encoded data (freebsd),2d97c626-7652-449e-a986-b02d9051c298,sh
+command-and-control,T1659,Content Injection,1,MITM Proxy Injection,9b360eaf-c778-4f07-a6e7-895c4f01ac1c,bash
 command-and-control,T1572,Protocol Tunneling,5,Microsoft Dev tunnels (Linux/macOS),9f94a112-1ce2-464d-a63b-83c1f465f801,bash
 command-and-control,T1572,Protocol Tunneling,6,VSCode tunnels (Linux/macOS),b877943f-0377-44f4-8477-f79db7f07c4d,sh
 command-and-control,T1572,Protocol Tunneling,7,Cloudflare tunnels (Linux/macOS),228c336a-2f79-4043-8aef-bfa453a611d5,sh
@@ -407,6 +408,14 @@ execution,T1053.003,Scheduled Task/Job: Cron,1,Cron - Replace crontab with refer
 execution,T1053.003,Scheduled Task/Job: Cron,2,Cron - Add script to all cron subfolders,b7d42afa-9086-4c8a-b7b0-8ea3faa6ebb0,bash
 execution,T1053.003,Scheduled Task/Job: Cron,3,Cron - Add script to /etc/cron.d folder,078e69eb-d9fb-450e-b9d0-2e118217c846,sh
 execution,T1053.003,Scheduled Task/Job: Cron,4,Cron - Add script to /var/spool/cron/crontabs/ folder,2d943c18-e74a-44bf-936f-25ade6cccab4,bash
+execution,T1569.003,System Services: Systemctl,1,Create and Enable a Malicious systemd Service Unit,e58c8723-5503-4533-b642-535cd20ec648,sh
+execution,T1569.003,System Services: Systemctl,2,Create systemd Service Unit from /tmp (Unusual Location),a1fa406e-2354-4a24-b6d6-94157e7564d4,sh
+execution,T1569.003,System Services: Systemctl,3,Create systemd Service Unit from /dev/shm (Unusual Location),dce49381-a26b-4d95-bdfa-c607ffe8bee5,sh
+execution,T1569.003,System Services: Systemctl,4,Modify Existing systemd Service to Execute Malicious Command,6123928f-6389-4914-8d25-a5d69bd657fa,sh
+execution,T1569.003,System Services: Systemctl,5,Execute Command via Transient systemd Service (systemd-run),a73a886f-23c5-4e8f-b1ab-b1bbc1f5e236,sh
+execution,T1569.003,System Services: Systemctl,6,Enumerate All systemd Services Using systemctl,1e5be8d4-605a-4acb-8709-2f80b2d8ea95,sh
+execution,T1569.003,System Services: Systemctl,7,Enable systemd Service for Persistence with Auto-Restart,2fc6c0ab-4f88-4eb8-ab1b-f739fc22bba7,sh
+execution,T1569.003,System Services: Systemctl,8,Masquerade Malicious Service as Legitimate System Service,6fec8560-ff64-4bbf-bc79-734fea48f7ca,sh
 execution,T1053.006,Scheduled Task/Job: Systemd Timers,1,Create Systemd Service and Timer,f4983098-bb13-44fb-9b2c-46149961807b,bash
 execution,T1053.006,Scheduled Task/Job: Systemd Timers,2,Create a user level transient systemd service and timer,3de33f5b-62e5-4e63-a2a0-6fd8808c80ec,sh
 execution,T1053.006,Scheduled Task/Job: Systemd Timers,3,Create a system level transient systemd service and timer,d3eda496-1fc0-49e9-aff5-3bec5da9fa22,sh
@@ -454,6 +463,7 @@ impact,T1529,System Shutdown/Reboot,9,Shutdown System via `poweroff` - FreeBSD/L
 impact,T1529,System Shutdown/Reboot,10,Reboot System via `poweroff` - FreeBSD,5a282e50-86ff-438d-8cef-8ae01c9e62e1,sh
 impact,T1529,System Shutdown/Reboot,11,Reboot System via `poweroff` - Linux,61303105-ff60-427b-999e-efb90b314e41,bash
 impact,T1529,System Shutdown/Reboot,16,Abuse of Linux Magic System Request Key for Reboot,d2a1f4bc-a064-4223-8281-a086dce5423c,bash
+initial-access,T1659,Content Injection,1,MITM Proxy Injection,9b360eaf-c778-4f07-a6e7-895c4f01ac1c,bash
 initial-access,T1195.002,Compromise Software Supply Chain,1,Simulate npm package installation on a Linux system,a9604672-cd46-493b-b58f-fd4124c22dd3,bash
 initial-access,T1078.003,Valid Accounts: Local Accounts,8,Create local account (Linux),02a91c34-8a5b-4bed-87af-501103eb5357,bash
 initial-access,T1078.003,Valid Accounts: Local Accounts,9,Reactivate a locked/expired account (Linux),d2b95631-62d7-45a3-aaef-0972cea97931,bash
