@@ -33,7 +33,7 @@ atomic_tests:
           pipx install mitmproxy || brew install mitmproxy
       - description: mitmdump must be running on port 8080
         prereq_command: |
-          lsof -i tcp:8080 | grep mitmdump || lsof -i tcp:8080 | grep -i PYTHON
+          lsof -i tcp:8080 | grep mitmdump || lsof -i tcp:8080 | grep -i PYTHON 
         get_prereq_command: |
           printf "from mitmproxy import http\ndef response(flow: http.HTTPFlow):\n    if 'text/html' in flow.response.headers.get('content-type',''):\n        flow.response.headers['X-Atomic']='T1659'\n        flow.response.text = flow.response.text.replace('</body>', '<script>alert(\"Atomic T1659 Injection\")</script></body>')" > /tmp/atomic_t1659_inject.py
           ($HOME/.local/bin/mitmdump -s /tmp/atomic_t1659_inject.py -p 8080 > /tmp/atomic_t1659.log 2>&1 &)
@@ -84,11 +84,10 @@ atomic_tests:
             $cmd = (Get-CimInstance Win32_Process -Filter "ProcessId=$procId").CommandLine
           if ($cmd -match "mitmdump") { exit 0 } else { exit 1 }
           } else { exit 1 }
-
         get_prereq_command: |
           $code = 'ZnJvbSBtaXRtcHJveHkgaW1wb3J0IGh0dHANCmRlZiByZXNwb25zZShmbG93OiBodHRwLkhUVFBGbG93KToNCiAgICBpZiAidGV4dC9odG1sIiBpbiBmbG93LnJlc3BvbnNlLmhlYWRlcnMuZ2V0KCJjb250ZW50LXR5cGUiLCIiKToNCiAgICAgICAgZmxvdy5yZXNwb25zZS5oZWFkZXJzWyJYLUF0b21pYyJdPSJUMTY1OSINCiAgICAgICAgZmxvdy5yZXNwb25zZS50ZXh0ID0gZmxvdy5yZXNwb25zZS50ZXh0LnJlcGxhY2UoIjwvYm9keT4iLCAiPHNjcmlwdD5hbGVydCgnQXRvbWljIFQxNjU5IEluamVjdGlvbicpPC9zY3JpcHQ+PC9ib2R5PiIp'
           [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($code)) | Out-File -FilePath "$env:TEMP\atomic_t1659_inject.py" -Encoding ascii
-          Start-Process -FilePath "mitmdump" -ArgumentList @("-s", "$env:TEMP\atomic_t1659_inject.py", "-p", "8080") -RedirectStandardOutput "$env:TEMP\atomic_t1659.log" -RedirectStandardError "$env:TEMP\atomic_t1659.log" -WindowStyle Hidden
+          Start-Process -FilePath "mitmdump" -ArgumentList @("-s", "$env:TEMP\atomic_t1659_inject.py", "-p", "8080") -RedirectStandardOutput "$env:TEMP\atomic_t1659.log" -RedirectStandardError "$env:TEMP\atomic_t1659_error.log" -WindowStyle Hidden
           Start-Sleep -Seconds 5
           if (Get-NetTCPConnection -LocalPort 8080 -ErrorAction SilentlyContinue | Where-Object { (Get-Process -Id $_.OwningProcess -ErrorAction SilentlyContinue).Name -like "*mitmdump*" }) { exit 0 } else { Get-Content "$env:TEMP\atomic_t1659.log"; exit 1 }
     executor:
