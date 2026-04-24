@@ -1986,7 +1986,8 @@
   - Atomic Test #1: Base64 Encoded data. [macos, linux]
   - Atomic Test #2: Base64 Encoded data (freebsd) [linux]
   - Atomic Test #3: XOR Encoded data. [windows]
-- T1568.002 Domain Generation Algorithms [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1568.002 Dynamic Resolution: Domain Generation Algorithms](../../T1568.002/T1568.002.md)
+  - Atomic Test #1: DGA Simulation (Python) [linux]
 - [T1071.004 Application Layer Protocol: DNS](../../T1071.004/T1071.004.md)
   - Atomic Test #1: DNS Large Query Volume [windows]
   - Atomic Test #2: DNS Regular Beaconing [windows]

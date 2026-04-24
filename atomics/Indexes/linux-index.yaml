@@ -42100,7 +42100,7 @@ command-and-control:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:25.458Z'
-      name: Domain Generation Algorithms
+      name: 'Dynamic Resolution: Domain Generation Algorithms'
       description: |-
         Adversaries may make use of Domain Generation Algorithms (DGAs) to dynamically identify a destination domain for command and control traffic rather than relying on a list of static IP addresses or domains. This has the advantage of making it much harder for defenders to block, track, or take over the command and control channel, as there potentially could be thousands of domains that malware can check for instructions.(Citation: Cybereason Dissecting DGAs)(Citation: Cisco Umbrella DGA)(Citation: Unit 42 DGA Feb 2019)
 
@@ -42127,7 +42127,45 @@ command-and-control:
       - Windows
       - ESXi
       x_mitre_version: '1.2'
-    atomic_tests: []
+      identifier: T1568.002
+    atomic_tests:
+    - name: DGA Simulation (Python)
+      auto_generated_guid: cc367493-3a00-4c4a-a685-16b73339167c
+      description: "Simulates Domain Generation Algorithm (DGA) traffic by generating
+        pseudo-random domains based on the current date and querying them using dig.
+        \nThis is designed to trigger DNS analytics and NGIDS.\n"
+      supported_platforms:
+      - linux
+      input_arguments:
+        python_script_path:
+          description: Full path to the DGA python script
+          type: string
+          default: PathToAtomicsFolder/T1568.002/src/T1568.002.py
+      dependency_executor_name: bash
+      dependencies:
+      - description: "#{python_script_path} must exist on system.\n"
+        prereq_command: 'if [ -f "#{python_script_path}" ]; then exit 0; else exit
+          1; fi
+
+          '
+        get_prereq_command: |
+          mkdir -p "$(dirname "#{python_script_path}")"
+          curl -sL "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1568.002/src/T1568.002.py" -o "#{python_script_path}"
+      - description: 'Python 3 must be installed to run the script.
+
+          '
+        prereq_command: 'which python3
+
+          '
+        get_prereq_command: 'sudo apt-get update && sudo apt-get install -y python3
+
+          '
+      executor:
+        command: 'python3 "#{python_script_path}"
+
+          '
+        name: bash
+        elevation_required: false
   T1071.004:
     technique:
       type: attack-pattern
