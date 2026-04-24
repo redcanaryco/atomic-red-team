@@ -31,7 +31,7 @@
 
 # command-and-control
 - T1132.001 Data Encoding: Standard Encoding [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1568.002 Domain Generation Algorithms [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1568.002 Dynamic Resolution: Domain Generation Algorithms [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1071.004 Application Layer Protocol: DNS [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1573.001 Symmetric Cryptography [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1568.001 Fast Flux DNS [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
