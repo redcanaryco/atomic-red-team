@@ -1,5 +1,5 @@
 # All Atomic Tests by ATT&CK Tactic & Technique
-# defense-evasion
+# stealth
 - [T1055.011 Process Injection: Extra Window Memory Injection](../../T1055.011/T1055.011.md)
   - Atomic Test #1: Process Injection via Extra Window Memory (EWM) x64 executable [windows]
 - T1205.002 Socket Filters [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -22,33 +22,12 @@
   - Atomic Test #15: Rundll32 execute command via FileProtocolHandler [windows]
   - Atomic Test #16: Rundll32 execute payload by calling RouteTheCall [windows]
 - T1027.009 Embedded Payloads [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1556.003 Modify Authentication Process: Pluggable Authentication Modules](../../T1556.003/T1556.003.md)
-  - Atomic Test #1: Malicious PAM rule [linux]
-  - Atomic Test #2: Malicious PAM rule (freebsd) [linux]
-  - Atomic Test #3: Malicious PAM module [linux]
-- T1578.004 Revert Cloud Instance [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1564.012 File/Path Exclusions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1222.002 File and Directory Permissions Modification: FreeBSD, Linux and Mac File and Directory Permissions Modification](../../T1222.002/T1222.002.md)
-  - Atomic Test #1: chmod - Change file or folder mode (numeric mode) [linux, macos]
-  - Atomic Test #2: chmod - Change file or folder mode (symbolic mode) [linux, macos]
-  - Atomic Test #3: chmod - Change file or folder mode (numeric mode) recursively [linux, macos]
-  - Atomic Test #4: chmod - Change file or folder mode (symbolic mode) recursively [linux, macos]
-  - Atomic Test #5: chown - Change file or folder ownership and group [macos, linux]
-  - Atomic Test #6: chown - Change file or folder ownership and group recursively [macos, linux]
-  - Atomic Test #7: chown - Change file or folder mode ownership only [linux, macos]
-  - Atomic Test #8: chown - Change file or folder ownership recursively [macos, linux]
-  - Atomic Test #9: chattr - Remove immutable file attribute [macos, linux]
-  - Atomic Test #10: chflags - Remove immutable file attribute [linux]
-  - Atomic Test #11: Chmod through c script [macos, linux]
-  - Atomic Test #12: Chmod through c script (freebsd) [linux]
-  - Atomic Test #13: Chown through c script [macos, linux]
-  - Atomic Test #14: Chown through c script (freebsd) [linux]
 - [T1216.001 Signed Script Proxy Execution: Pubprn](../../T1216.001/T1216.001.md)
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
 - T1574.007 Path Interception by PATH Environment Variable [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1006 Direct Volume Access](../../T1006/T1006.md)
   - Atomic Test #1: Read volume boot sector via DOS device path (PowerShell) [windows]
-- T1666 Modify Cloud Resource Hierarchy [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1564.008 Hide Artifacts: Email Hiding Rules](../../T1564.008/T1564.008.md)
   - Atomic Test #1: New-Inbox Rule to Hide E-mail in M365 [office-365]
 - [T1027.013 Obfuscated Files or Information: Encrypted/Encoded File](../../T1027.013/T1027.013.md)
@@ -62,42 +41,6 @@
   - Atomic Test #4: Loadable Kernel Module based Rootkit (Diamorphine) [linux]
 - [T1036.007 Masquerading: Double File Extension](../../T1036.007/T1036.007.md)
   - Atomic Test #1: File Extension Masquerading [windows]
-- [T1548.002 Abuse Elevation Control Mechanism: Bypass User Account Control](../../T1548.002/T1548.002.md)
-  - Atomic Test #1: Bypass UAC using Event Viewer (cmd) [windows]
-  - Atomic Test #2: Bypass UAC using Event Viewer (PowerShell) [windows]
-  - Atomic Test #3: Bypass UAC using Fodhelper [windows]
-  - Atomic Test #4: Bypass UAC using Fodhelper - PowerShell [windows]
-  - Atomic Test #5: Bypass UAC using ComputerDefaults (PowerShell) [windows]
-  - Atomic Test #6: Bypass UAC by Mocking Trusted Directories [windows]
-  - Atomic Test #7: Bypass UAC using sdclt DelegateExecute [windows]
-  - Atomic Test #8: Disable UAC using reg.exe [windows]
-  - Atomic Test #9: Bypass UAC using SilentCleanup task [windows]
-  - Atomic Test #10: UACME Bypass Method 23 [windows]
-  - Atomic Test #11: UACME Bypass Method 31 [windows]
-  - Atomic Test #12: UACME Bypass Method 33 [windows]
-  - Atomic Test #13: UACME Bypass Method 34 [windows]
-  - Atomic Test #14: UACME Bypass Method 39 [windows]
-  - Atomic Test #15: UACME Bypass Method 56 [windows]
-  - Atomic Test #16: UACME Bypass Method 59 [windows]
-  - Atomic Test #17: UACME Bypass Method 61 [windows]
-  - Atomic Test #18: WinPwn - UAC Magic [windows]
-  - Atomic Test #19: WinPwn - UAC Bypass ccmstp technique [windows]
-  - Atomic Test #20: WinPwn - UAC Bypass DiskCleanup technique [windows]
-  - Atomic Test #21: WinPwn - UAC Bypass DccwBypassUAC technique [windows]
-  - Atomic Test #22: Disable UAC admin consent prompt via ConsentPromptBehaviorAdmin registry key [windows]
-  - Atomic Test #23: UAC Bypass with WSReset Registry Modification [windows]
-  - Atomic Test #24: Disable UAC - Switch to the secure desktop when prompting for elevation via registry key [windows]
-  - Atomic Test #25: Disable UAC notification via registry keys [windows]
-  - Atomic Test #26: Disable ConsentPromptBehaviorAdmin via registry keys [windows]
-  - Atomic Test #27: UAC bypassed by Utilizing ProgIDs registry. [windows]
-- [T1548.003 Abuse Elevation Control Mechanism: Sudo and Sudo Caching](../../T1548.003/T1548.003.md)
-  - Atomic Test #1: Sudo usage [macos, linux]
-  - Atomic Test #2: Sudo usage (freebsd) [linux]
-  - Atomic Test #3: Unlimited sudo cache timeout [macos, linux]
-  - Atomic Test #4: Unlimited sudo cache timeout (freebsd) [linux]
-  - Atomic Test #5: Disable tty_tickets for sudo caching [macos, linux]
-  - Atomic Test #6: Disable tty_tickets for sudo caching (freebsd) [linux]
-- T1578 Modify Cloud Compute Infrastructure [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1542.001 Pre-OS Boot: System Firmware](../../T1542.001/T1542.001.md)
   - Atomic Test #1: UEFI Persistence via Wpbbin.exe File Creation [windows]
 - [T1574.011 Hijack Execution Flow: Services Registry Permissions Weakness](../../T1574.011/T1574.011.md)
@@ -109,7 +52,6 @@
   - Atomic Test #1: Execute a process from a directory masquerading as the current parent directory [macos, linux]
   - Atomic Test #2: Masquerade as a built-in system executable [windows]
   - Atomic Test #3: Masquerading cmd.exe as VEDetector.exe [windows]
-- T1600 Weaken Encryption [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1036.008 Masquerade File Type [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1564 Hide Artifacts](../../T1564/T1564.md)
   - Atomic Test #1: Extract binary files via VBA [windows]
@@ -117,10 +59,6 @@
   - Atomic Test #3: Create an "Administrator " user (with a space on the end) [windows]
   - Atomic Test #4: Create and Hide a Service with sc.exe [windows]
   - Atomic Test #5: Command Execution with NirCmd [windows]
-- [T1484.002 Domain Trust Modification](../../T1484.002/T1484.002.md)
-  - Atomic Test #1: Add Federation to Azure AD [azure-ad]
-- [T1562.009 Impair Defenses: Safe Boot Mode](../../T1562.009/T1562.009.md)
-  - Atomic Test #1: Safe Mode Boot [windows]
 - T1542.005 TFTP Boot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1497.001 Virtualization/Sandbox Evasion: System Checks](../../T1497.001/T1497.001.md)
   - Atomic Test #1: Detect Virtualization Environment (Linux) [linux]
@@ -131,27 +69,6 @@
   - Atomic Test #6: Detect Virtualization Environment using sysctl (hw.model) [macos]
   - Atomic Test #7: Check if System Integrity Protection is enabled [macos]
   - Atomic Test #8: Detect Virtualization Environment using system_profiler [macos]
-- [T1070.002 Indicator Removal on Host: Clear FreeBSD, Linux or Mac System Logs](../../T1070.002/T1070.002.md)
-  - Atomic Test #1: rm -rf [macos, linux]
-  - Atomic Test #2: rm -rf [linux]
-  - Atomic Test #3: Delete log files using built-in log utility [macos]
-  - Atomic Test #4: Truncate system log files via truncate utility [macos]
-  - Atomic Test #5: Truncate system log files via truncate utility (freebsd) [linux]
-  - Atomic Test #6: Delete log files via cat utility by appending /dev/null or /dev/zero [macos]
-  - Atomic Test #7: Delete log files via cat utility by appending /dev/null or /dev/zero (freebsd) [linux]
-  - Atomic Test #8: System log file deletion via find utility [macos]
-  - Atomic Test #9: Overwrite macOS system log via echo utility [macos]
-  - Atomic Test #10: Overwrite FreeBSD system log via echo utility [linux]
-  - Atomic Test #11: Real-time system log clearance/deletion [macos]
-  - Atomic Test #12: Delete system log files via unlink utility [macos]
-  - Atomic Test #13: Delete system log files via unlink utility (freebsd) [linux]
-  - Atomic Test #14: Delete system log files using shred utility [macos]
-  - Atomic Test #15: Delete system log files using srm utility [macos]
-  - Atomic Test #16: Delete system log files using OSAScript [macos]
-  - Atomic Test #17: Delete system log files using Applescript [macos]
-  - Atomic Test #18: Delete system journal logs via rm and journalctl utilities [linux]
-  - Atomic Test #19: Overwrite Linux Mail Spool [linux]
-  - Atomic Test #20: Overwrite Linux Log [linux]
 - [T1218.004 Signed Binary Proxy Execution: InstallUtil](../../T1218.004/T1218.004.md)
   - Atomic Test #1: CheckIfInstallable method call [windows]
   - Atomic Test #2: InstallHelper method call [windows]
@@ -169,17 +86,7 @@
   - Atomic Test #4: DLL Side-Loading using the Notepad++ GUP.exe binary [windows]
   - Atomic Test #5: DLL Side-Loading using the dotnet startup hook environment variable [windows]
   - Atomic Test #6: DLL Search Order Hijacking,DLL Sideloading Of KeyScramblerIE.DLL Via KeyScrambler.EXE [windows]
-- [T1553.001 Subvert Trust Controls: Gatekeeper Bypass](../../T1553.001/T1553.001.md)
-  - Atomic Test #1: Gatekeeper Bypass [macos]
-- T1553.002 Code Signing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1036.009 Break Process Trees [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1222.001 File and Directory Permissions Modification: Windows File and Directory Permissions Modification](../../T1222.001/T1222.001.md)
-  - Atomic Test #1: Take ownership using takeown utility [windows]
-  - Atomic Test #2: cacls - Grant permission to specified user or group recursively [windows]
-  - Atomic Test #3: attrib - Remove read-only attribute [windows]
-  - Atomic Test #4: attrib - hide file [windows]
-  - Atomic Test #5: Grant Full Access to folder for Everyone - Ryuk Ransomware Style [windows]
-  - Atomic Test #6: SubInAcl Execution [windows]
 - T1574.014 AppDomainManager [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1218.007 Signed Binary Proxy Execution: Msiexec](../../T1218.007/T1218.007.md)
   - Atomic Test #1: Msiexec.exe - Execute Local MSI file with embedded JScript [windows]
@@ -193,11 +100,7 @@
   - Atomic Test #9: Msiexec.exe - Execute the DllRegisterServer function of a DLL [windows]
   - Atomic Test #10: Msiexec.exe - Execute the DllUnregisterServer function of a DLL [windows]
   - Atomic Test #11: Msiexec.exe - Execute Remote MSI file [windows]
-- [T1556.002 Modify Authentication Process: Password Filter DLL](../../T1556.002/T1556.002.md)
-  - Atomic Test #1: Install and Register Password Filter DLL [windows]
-  - Atomic Test #2: Install Additional Authentication Packages [windows]
 - T1070.007 Clear Network Connection History and Configurations [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1600.001 Reduce Key Space [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1070.003 Indicator Removal on Host: Clear Command History](../../T1070.003/T1070.003.md)
   - Atomic Test #1: Clear Bash history (rm) [linux, macos]
   - Atomic Test #2: Clear Bash history (echo) [linux]
@@ -231,12 +134,9 @@
   - Atomic Test #9: Linux Base64 Encoded Shebang in CLI [linux, macos]
   - Atomic Test #10: XOR decoding and command execution using Python [linux, macos]
   - Atomic Test #11: Expand CAB with expand.exe [windows]
-- [T1562 Impair Defenses](../../T1562/T1562.md)
-  - Atomic Test #1: Windows Disable LSA Protection [windows]
-  - Atomic Test #2: Disable journal logging via systemctl utility [linux]
-  - Atomic Test #3: Disable journal logging via sed utility [linux]
 - [T1055.003 Thread Execution Hijacking](../../T1055.003/T1055.003.md)
   - Atomic Test #1: Thread Execution Hijacking [windows]
+- T1684 Social Engineering [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1036 Masquerading](../../T1036/T1036.md)
   - Atomic Test #1: System File Copied to Unusual Location [windows]
   - Atomic Test #2: Malware Masquerading and Execution from Zip File [windows]
@@ -299,152 +199,10 @@
 - [T1218.003 Signed Binary Proxy Execution: CMSTP](../../T1218.003/T1218.003.md)
   - Atomic Test #1: CMSTP Executing Remote Scriptlet [windows]
   - Atomic Test #2: CMSTP Executing UAC Bypass [windows]
-- [T1562.002 Impair Defenses: Disable Windows Event Logging](../../T1562.002/T1562.002.md)
-  - Atomic Test #1: Disable Windows IIS HTTP Logging [windows]
-  - Atomic Test #2: Disable Windows IIS HTTP Logging via PowerShell [windows]
-  - Atomic Test #3: Kill Event Log Service Threads [windows]
-  - Atomic Test #4: Impair Windows Audit Log Policy [windows]
-  - Atomic Test #5: Clear Windows Audit Policy Config [windows]
-  - Atomic Test #6: Disable Event Logging with wevtutil [windows]
-  - Atomic Test #7: Makes Eventlog blind with Phant0m [windows]
-  - Atomic Test #8: Modify Event Log Channel Access Permissions via Registry - PowerShell [windows]
-  - Atomic Test #9: Modify Event Log Channel Access Permissions via Registry 2 - PowerShell [windows]
-  - Atomic Test #10: Modify Event Log Access Permissions via Registry - PowerShell [windows]
 - [T1218.002 Signed Binary Proxy Execution: Control Panel](../../T1218.002/T1218.002.md)
   - Atomic Test #1: Control Panel Items [windows]
-- T1599.001 Network Address Translation Traversal [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1036.011 Overwrite Process Arguments [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1550 Use Alternate Authentication Material [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1562.004 Impair Defenses: Disable or Modify System Firewall](../../T1562.004/T1562.004.md)
-  - Atomic Test #1: Disable Microsoft Defender Firewall [windows]
-  - Atomic Test #2: Disable Microsoft Defender Firewall via Registry [windows]
-  - Atomic Test #3: Allow SMB and RDP on Microsoft Defender Firewall [windows]
-  - Atomic Test #4: Opening ports for proxy - HARDRAIN [windows]
-  - Atomic Test #5: Open a local port through Windows Firewall to any profile [windows]
-  - Atomic Test #6: Allow Executable Through Firewall Located in Non-Standard Location [windows]
-  - Atomic Test #7: Stop/Start UFW firewall [linux]
-  - Atomic Test #8: Stop/Start Packet Filter [linux]
-  - Atomic Test #9: Stop/Start UFW firewall systemctl [linux]
-  - Atomic Test #10: Turn off UFW logging [linux]
-  - Atomic Test #11: Add and delete UFW firewall rules [linux]
-  - Atomic Test #12: Add and delete Packet Filter rules [linux]
-  - Atomic Test #13: Edit UFW firewall user.rules file [linux]
-  - Atomic Test #14: Edit UFW firewall ufw.conf file [linux]
-  - Atomic Test #15: Edit UFW firewall sysctl.conf file [linux]
-  - Atomic Test #16: Edit UFW firewall main configuration file [linux]
-  - Atomic Test #17: Tail the UFW firewall log file [linux]
-  - Atomic Test #18: Disable iptables [linux]
-  - Atomic Test #19: Modify/delete iptables firewall rules [linux]
-  - Atomic Test #20: LockBit Black - Unusual Windows firewall registry modification -cmd [windows]
-  - Atomic Test #21: LockBit Black - Unusual Windows firewall registry modification -Powershell [windows]
-  - Atomic Test #22: Blackbit - Disable Windows Firewall using netsh firewall [windows]
-  - Atomic Test #23: ESXi - Disable Firewall via Esxcli [windows]
-  - Atomic Test #24: Set a firewall rule using New-NetFirewallRule [windows]
-  - Atomic Test #25: ESXi - Set Firewall to PASS Traffic [windows]
-- [T1553.003 Subvert Trust Controls: SIP and Trust Provider Hijacking](../../T1553.003/T1553.003.md)
-  - Atomic Test #1: SIP (Subject Interface Package) Hijacking via Custom DLL [windows]
-- T1556.007 Hybrid Identity [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1218.015 Electron Applications [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1562.012 Impair Defenses: Disable or Modify Linux Audit System](../../T1562.012/T1562.012.md)
-  - Atomic Test #1: Delete all auditd rules using auditctl [linux]
-  - Atomic Test #2: Disable auditd using auditctl [linux]
-- [T1207 Rogue Domain Controller](../../T1207/T1207.md)
-  - Atomic Test #1: DCShadow (Active Directory) [windows]
-- [T1553.006 Subvert Trust Controls: Code Signing Policy Modification](../../T1553.006/T1553.006.md)
-  - Atomic Test #1: Code Signing Policy Modification [windows]
-- [T1610 Deploy a container](../../T1610/T1610.md)
-  - Atomic Test #1: Deploy Docker container [containers]
-- [T1112 Modify Registry](../../T1112/T1112.md)
-  - Atomic Test #1: Modify Registry of Current User Profile - cmd [windows]
-  - Atomic Test #2: Modify Registry of Local Machine - cmd [windows]
-  - Atomic Test #3: Modify registry to store logon credentials [windows]
-  - Atomic Test #4: Use Powershell to Modify registry to store logon credentials [windows]
-  - Atomic Test #5: Add domain to Trusted sites Zone [windows]
-  - Atomic Test #6: Javascript in registry [windows]
-  - Atomic Test #7: Change Powershell Execution Policy to Bypass [windows]
-  - Atomic Test #8: BlackByte Ransomware Registry Changes - CMD [windows]
-  - Atomic Test #9: BlackByte Ransomware Registry Changes - Powershell [windows]
-  - Atomic Test #10: Disable Windows Registry Tool [windows]
-  - Atomic Test #11: Disable Windows CMD application [windows]
-  - Atomic Test #12: Disable Windows Task Manager application [windows]
-  - Atomic Test #13: Disable Windows Notification Center [windows]
-  - Atomic Test #14: Disable Windows Shutdown Button [windows]
-  - Atomic Test #15: Disable Windows LogOff Button [windows]
-  - Atomic Test #16: Disable Windows Change Password Feature [windows]
-  - Atomic Test #17: Disable Windows Lock Workstation Feature [windows]
-  - Atomic Test #18: Activate Windows NoDesktop Group Policy Feature [windows]
-  - Atomic Test #19: Activate Windows NoRun Group Policy Feature [windows]
-  - Atomic Test #20: Activate Windows NoFind Group Policy Feature [windows]
-  - Atomic Test #21: Activate Windows NoControlPanel Group Policy Feature [windows]
-  - Atomic Test #22: Activate Windows NoFileMenu Group Policy Feature [windows]
-  - Atomic Test #23: Activate Windows NoClose Group Policy Feature [windows]
-  - Atomic Test #24: Activate Windows NoSetTaskbar Group Policy Feature [windows]
-  - Atomic Test #25: Activate Windows NoTrayContextMenu Group Policy Feature [windows]
-  - Atomic Test #26: Activate Windows NoPropertiesMyDocuments Group Policy Feature [windows]
-  - Atomic Test #27: Hide Windows Clock Group Policy Feature [windows]
-  - Atomic Test #28: Windows HideSCAHealth Group Policy Feature [windows]
-  - Atomic Test #29: Windows HideSCANetwork Group Policy Feature [windows]
-  - Atomic Test #30: Windows HideSCAPower Group Policy Feature [windows]
-  - Atomic Test #31: Windows HideSCAVolume Group Policy Feature [windows]
-  - Atomic Test #32: Windows Modify Show Compress Color And Info Tip Registry [windows]
-  - Atomic Test #33: Windows Powershell Logging Disabled [windows]
-  - Atomic Test #34: Windows Add Registry Value to Load Service in Safe Mode without Network [windows]
-  - Atomic Test #35: Windows Add Registry Value to Load Service in Safe Mode with Network [windows]
-  - Atomic Test #36: Disable Windows Toast Notifications [windows]
-  - Atomic Test #37: Disable Windows Security Center Notifications [windows]
-  - Atomic Test #38: Suppress Win Defender Notifications [windows]
-  - Atomic Test #39: Allow RDP Remote Assistance Feature [windows]
-  - Atomic Test #40: NetWire RAT Registry Key Creation [windows]
-  - Atomic Test #41: Ursnif Malware Registry Key Creation [windows]
-  - Atomic Test #42: Terminal Server Client Connection History Cleared [windows]
-  - Atomic Test #43: Disable Windows Error Reporting Settings [windows]
-  - Atomic Test #44: DisallowRun Execution Of Certain Applications [windows]
-  - Atomic Test #45: Enabling Restricted Admin Mode via Command_Prompt [windows]
-  - Atomic Test #46: Mimic Ransomware - Enable Multiple User Sessions [windows]
-  - Atomic Test #47: Mimic Ransomware - Allow Multiple RDP Sessions per User [windows]
-  - Atomic Test #48: Event Viewer Registry Modification - Redirection URL [windows]
-  - Atomic Test #49: Event Viewer Registry Modification - Redirection Program [windows]
-  - Atomic Test #50: Enabling Remote Desktop Protocol via Remote Registry [windows]
-  - Atomic Test #51: Disable Win Defender Notification [windows]
-  - Atomic Test #52: Disable Windows OS Auto Update [windows]
-  - Atomic Test #53: Disable Windows Auto Reboot for current logon user [windows]
-  - Atomic Test #54: Windows Auto Update Option to Notify before download [windows]
-  - Atomic Test #55: Do Not Connect To Win Update [windows]
-  - Atomic Test #56: Tamper Win Defender Protection [windows]
-  - Atomic Test #57: Snake Malware Registry Blob [windows]
-  - Atomic Test #58: Allow Simultaneous Download Registry [windows]
-  - Atomic Test #59: Modify Internet Zone Protocol Defaults in Current User Registry - cmd [windows]
-  - Atomic Test #60: Modify Internet Zone Protocol Defaults in Current User Registry - PowerShell [windows]
-  - Atomic Test #61: Activities To Disable Secondary Authentication Detected By Modified Registry Value. [windows]
-  - Atomic Test #62: Activities To Disable Microsoft [FIDO Aka Fast IDentity Online] Authentication Detected By Modified Registry Value. [windows]
-  - Atomic Test #63: Scarab Ransomware Defense Evasion Activities [windows]
-  - Atomic Test #64: Disable Remote Desktop Anti-Alias Setting Through Registry [windows]
-  - Atomic Test #65: Disable Remote Desktop Security Settings Through Registry [windows]
-  - Atomic Test #66: Disabling ShowUI Settings of Windows Error Reporting (WER) [windows]
-  - Atomic Test #67: Enable Proxy Settings [windows]
-  - Atomic Test #68: Set-Up Proxy Server [windows]
-  - Atomic Test #69: RDP Authentication Level Override [windows]
-  - Atomic Test #70: Enable RDP via Registry (fDenyTSConnections) [windows]
-  - Atomic Test #71: Disable Windows Prefetch Through Registry [windows]
-  - Atomic Test #72: Setting Shadow key in Registry for RDP Shadowing [windows]
-  - Atomic Test #73: Flush Shimcache [windows]
-  - Atomic Test #74: Disable Windows Remote Desktop Protocol [windows]
-  - Atomic Test #75: Enforce Smart Card Authentication Through Registry [windows]
-  - Atomic Test #76: Requires the BitLocker PIN for Pre-boot authentication [windows]
-  - Atomic Test #77: Modify EnableBDEWithNoTPM Registry entry [windows]
-  - Atomic Test #78: Modify UseTPM Registry entry [windows]
-  - Atomic Test #79: Modify UseTPMPIN Registry entry [windows]
-  - Atomic Test #80: Modify UseTPMKey Registry entry [windows]
-  - Atomic Test #81: Modify UseTPMKeyPIN Registry entry [windows]
-  - Atomic Test #82: Modify EnableNonTPM Registry entry [windows]
-  - Atomic Test #83: Modify UsePartialEncryptionKey Registry entry [windows]
-  - Atomic Test #84: Modify UsePIN Registry entry [windows]
-  - Atomic Test #85: Abusing Windows TelemetryController Registry Key for Persistence [windows]
-  - Atomic Test #86: Modify RDP-Tcp Initial Program Registry Entry [windows]
-  - Atomic Test #87: Abusing MyComputer Disk Cleanup Path for Persistence [windows]
-  - Atomic Test #88: Abusing MyComputer Disk Fragmentation Path for Persistence [windows]
-  - Atomic Test #89: Abusing MyComputer Disk Backup Path for Persistence [windows]
-  - Atomic Test #90: Adding custom paths for application execution [windows]
 - [T1574.008 Hijack Execution Flow: Path Interception by Search Order Hijacking](../../T1574.008/T1574.008.md)
   - Atomic Test #1: powerShell Persistence via hijacking default modules - Get-Variable.exe [windows]
 - T1535 Unused/Unsupported Cloud Regions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -452,9 +210,6 @@
 - [T1027.001 Obfuscated Files or Information: Binary Padding](../../T1027.001/T1027.001.md)
   - Atomic Test #1: Pad Binary to Change Hash - Linux/macOS dd [linux, macos]
   - Atomic Test #2: Pad Binary to Change Hash using truncate command - Linux/macOS [linux, macos]
-- [T1484.001 Domain Policy Modification: Group Policy Modification](../../T1484.001/T1484.001.md)
-  - Atomic Test #1: LockBit Black - Modify Group policy settings -cmd [windows]
-  - Atomic Test #2: LockBit Black - Modify Group policy settings -Powershell [windows]
 - [T1078.001 Valid Accounts: Default Accounts](../../T1078.001/T1078.001.md)
   - Atomic Test #1: Enable Guest account with RDP capability and admin privileges [windows]
   - Atomic Test #2: Activate Guest Account [windows]
@@ -463,63 +218,22 @@
   - Atomic Test #1: Shared Library Injection via /etc/ld.so.preload [linux]
   - Atomic Test #2: Shared Library Injection via LD_PRELOAD [linux]
   - Atomic Test #3: Dylib Injection via DYLD_INSERT_LIBRARIES [macos]
-- [T1070.001 Indicator Removal on Host: Clear Windows Event Logs](../../T1070.001/T1070.001.md)
-  - Atomic Test #1: Clear Logs [windows]
-  - Atomic Test #2: Delete System Logs Using Clear-EventLog [windows]
-  - Atomic Test #3: Clear Event Logs via VBA [windows]
-- [T1222 File and Directory Permissions Modification](../../T1222/T1222.md)
-  - Atomic Test #1: Enable Local and Remote Symbolic Links via fsutil [windows]
-  - Atomic Test #2: Enable Local and Remote Symbolic Links via reg.exe [windows]
-  - Atomic Test #3: Enable Local and Remote Symbolic Links via Powershell [windows]
 - T1027.016 Junk Code Insertion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1548 Abuse Elevation Control Mechanism [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1134.002 Create Process with Token](../../T1134.002/T1134.002.md)
   - Atomic Test #1: Access Token Manipulation [windows]
   - Atomic Test #2: WinPwn - Get SYSTEM shell - Pop System Shell using Token Manipulation technique [windows]
-- [T1548.001 Abuse Elevation Control Mechanism: Setuid and Setgid](../../T1548.001/T1548.001.md)
-  - Atomic Test #1: Make and modify binary from C source [macos, linux]
-  - Atomic Test #2: Make and modify binary from C source (freebsd) [linux]
-  - Atomic Test #3: Set a SetUID flag on file [macos, linux]
-  - Atomic Test #4: Set a SetUID flag on file (freebsd) [linux]
-  - Atomic Test #5: Set a SetGID flag on file [macos, linux]
-  - Atomic Test #6: Set a SetGID flag on file (freebsd) [linux]
-  - Atomic Test #7: Make and modify capabilities of a binary [linux]
-  - Atomic Test #8: Provide the SetUID capability to a file [linux]
-  - Atomic Test #9: Do reconnaissance for files that have the setuid bit set [linux]
-  - Atomic Test #10: Do reconnaissance for files that have the setgid bit set [linux]
 - [T1218.008 Signed Binary Proxy Execution: Odbcconf](../../T1218.008/T1218.008.md)
   - Atomic Test #1: Odbcconf.exe - Execute Arbitrary DLL [windows]
   - Atomic Test #2: Odbcconf.exe - Load Response File [windows]
-- T1548.005 Temporary Elevated Cloud Access [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1055.013 Process Doppelgänging [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1578.003 Delete Cloud Instance [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574.005 Executable Installer File Permissions Weakness [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1562.006 Impair Defenses: Indicator Blocking](../../T1562.006/T1562.006.md)
-  - Atomic Test #1: Auditing Configuration Changes on Linux Host [linux]
-  - Atomic Test #2: Auditing Configuration Changes on FreeBSD Host [linux]
-  - Atomic Test #3: Logging Configuration Changes on Linux Host [linux]
-  - Atomic Test #4: Logging Configuration Changes on FreeBSD Host [linux]
-  - Atomic Test #5: Disable Powershell ETW Provider - Windows [windows]
-  - Atomic Test #6: Disable .NET Event Tracing for Windows Via Registry (cmd) [windows]
-  - Atomic Test #7: Disable .NET Event Tracing for Windows Via Registry (powershell) [windows]
-  - Atomic Test #8: LockBit Black - Disable the ETW Provider of Windows Defender -cmd [windows]
-  - Atomic Test #9: LockBit Black - Disable the ETW Provider of Windows Defender -Powershell [windows]
-  - Atomic Test #10: Disable .NET Event Tracing for Windows Via Environment Variable HKCU Registry - Cmd [windows]
-  - Atomic Test #11: Disable .NET Event Tracing for Windows Via Environment Variable HKCU Registry - PowerShell [windows]
-  - Atomic Test #12: Disable .NET Event Tracing for Windows Via Environment Variable HKLM Registry - Cmd [windows]
-  - Atomic Test #13: Disable .NET Event Tracing for Windows Via Environment Variable HKLM Registry - PowerShell [windows]
-  - Atomic Test #14: Block Cybersecurity communication by leveraging Windows Name Resolution Policy Table [windows]
 - T1564.014 Extended Attributes [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1562.007 Disable or Modify Cloud Firewall [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1036.002 Right-to-Left Override [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.017 SVG Smuggling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1542.002 Component Firmware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1070 Indicator Removal on Host](../../T1070/T1070.md)
   - Atomic Test #1: Indicator Removal using FSUtil [windows]
   - Atomic Test #2: Indicator Manipulation using FSUtil [windows]
-- [T1550.003 Use Alternate Authentication Material: Pass the Ticket](../../T1550.003/T1550.003.md)
-  - Atomic Test #1: Mimikatz Kerberos Ticket Attack [windows]
-  - Atomic Test #2: Rubeus Kerberos Pass The Ticket [windows]
 - [T1036.004 Masquerading: Masquerade Task or Service](../../T1036.004/T1036.004.md)
   - Atomic Test #1: Creating W32Time similar named service using schtasks [windows]
   - Atomic Test #2: Creating W32Time similar named service using sc [windows]
@@ -529,25 +243,13 @@
   - Atomic Test #1: Process Injection via C# [windows]
   - Atomic Test #2: EarlyBird APC Queue Injection in Go [windows]
   - Atomic Test #3: Remote Process Injection with Go using NtQueueApcThreadEx WinAPI [windows]
-- [T1647 Plist File Modification](../../T1647/T1647.md)
-  - Atomic Test #1: Plist Modification [macos]
 - T1127.003 JamPlus [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1553.005 Subvert Trust Controls: Mark-of-the-Web Bypass](../../T1553.005/T1553.005.md)
-  - Atomic Test #1: Mount ISO image [windows]
-  - Atomic Test #2: Mount an ISO image and run executable from the ISO [windows]
-  - Atomic Test #3: Remove the Zone.Identifier alternate data stream [windows]
-  - Atomic Test #4: Execute LNK file from ISO [windows]
-- T1600.002 Disable Crypto Hardware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1612 Build Image on Host](../../T1612/T1612.md)
   - Atomic Test #1: Build Image On Host [containers]
 - [T1055.002 Process Injection: Portable Executable Injection](../../T1055.002/T1055.002.md)
   - Atomic Test #1: Portable Executable Injection [windows]
 - T1218.012 Verclsid [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1562.010 Impair Defenses: Downgrade Attack](../../T1562.010/T1562.010.md)
-  - Atomic Test #1: ESXi - Change VIB acceptance level to CommunitySupported via PowerCLI [linux]
-  - Atomic Test #2: ESXi - Change VIB acceptance level to CommunitySupported via ESXCLI [windows]
-  - Atomic Test #3: PowerShell Version 2 Downgrade [windows]
 - T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1218.005 Signed Binary Proxy Execution: Mshta](../../T1218.005/T1218.005.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
@@ -574,20 +276,6 @@
   - Atomic Test #2: Create Hidden User using IsHidden option [macos]
   - Atomic Test #3: Create Hidden User in Registry [windows]
 - T1134.003 Make and Impersonate Token [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1562.003 Impair Defenses: Impair Command History Logging](../../T1562.003/T1562.003.md)
-  - Atomic Test #1: Disable history collection [linux, macos]
-  - Atomic Test #2: Disable history collection (freebsd) [linux]
-  - Atomic Test #3: Mac HISTCONTROL [macos, linux]
-  - Atomic Test #4: Clear bash history [linux]
-  - Atomic Test #5: Setting the HISTCONTROL environment variable [linux]
-  - Atomic Test #6: Setting the HISTFILESIZE environment variable [linux]
-  - Atomic Test #7: Setting the HISTSIZE environment variable [linux]
-  - Atomic Test #8: Setting the HISTFILE environment variable [linux]
-  - Atomic Test #9: Setting the HISTFILE environment variable (freebsd) [linux]
-  - Atomic Test #10: Setting the HISTIGNORE environment variable [linux]
-  - Atomic Test #11: Disable Windows Command Line Auditing using reg.exe [windows]
-  - Atomic Test #12: Disable Windows Command Line Auditing using Powershell Cmdlet [windows]
-- T1556.008 Network Provider DLL [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1497.002 User Activity Based Checks [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1134.004 Access Token Manipulation: Parent PID Spoofing](../../T1134.004/T1134.004.md)
   - Atomic Test #1: Parent PID Spoofing using PowerShell [windows]
@@ -598,7 +286,6 @@
 - T1055.014 VDSO Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1679 Selective Exclusion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574.010 Services File Permissions Weakness [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1562.013 Disable or Modify Network Device Firewall [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1678 Delay Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574.013 KernelCallbackTable [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1542.004 ROMMONkit [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -617,67 +304,6 @@
   - Atomic Test #3: Remove Network Share PowerShell [windows]
   - Atomic Test #4: Disable Administrative Share Creation at Startup [windows]
   - Atomic Test #5: Remove Administrative Shares [windows]
-- [T1562.001 Impair Defenses: Disable or Modify Tools](../../T1562.001/T1562.001.md)
-  - Atomic Test #1: Disable syslog [linux]
-  - Atomic Test #2: Disable syslog (freebsd) [linux]
-  - Atomic Test #3: Disable Cb Response [linux]
-  - Atomic Test #4: Disable SELinux [linux]
-  - Atomic Test #5: Stop Crowdstrike Falcon on Linux [linux]
-  - Atomic Test #6: Disable Carbon Black Response [macos]
-  - Atomic Test #7: Disable LittleSnitch [macos]
-  - Atomic Test #8: Disable OpenDNS Umbrella [macos]
-  - Atomic Test #9: Disable macOS Gatekeeper [macos]
-  - Atomic Test #10: Stop and unload Crowdstrike Falcon on macOS [macos]
-  - Atomic Test #11: Unload Sysmon Filter Driver [windows]
-  - Atomic Test #12: Uninstall Sysmon [windows]
-  - Atomic Test #13: AMSI Bypass - AMSI InitFailed [windows]
-  - Atomic Test #14: AMSI Bypass - Remove AMSI Provider Reg Key [windows]
-  - Atomic Test #15: Disable Arbitrary Security Windows Service [windows]
-  - Atomic Test #16: Tamper with Windows Defender ATP PowerShell [windows]
-  - Atomic Test #17: Tamper with Windows Defender Command Prompt [windows]
-  - Atomic Test #18: Tamper with Windows Defender Registry [windows]
-  - Atomic Test #19: Disable Microsoft Office Security Features [windows]
-  - Atomic Test #20: Remove Windows Defender Definition Files [windows]
-  - Atomic Test #21: Stop and Remove Arbitrary Security Windows Service [windows]
-  - Atomic Test #22: Uninstall Crowdstrike Falcon on Windows [windows]
-  - Atomic Test #23: Tamper with Windows Defender Evade Scanning -Folder [windows]
-  - Atomic Test #24: Tamper with Windows Defender Evade Scanning -Extension [windows]
-  - Atomic Test #25: Tamper with Windows Defender Evade Scanning -Process [windows]
-  - Atomic Test #26: office-365-Disable-AntiPhishRule [office-365]
-  - Atomic Test #27: Disable Windows Defender with DISM [windows]
-  - Atomic Test #28: Disable Defender Using NirSoft AdvancedRun [windows]
-  - Atomic Test #29: Kill antimalware protected processes using Backstab [windows]
-  - Atomic Test #30: WinPwn - Kill the event log services for stealth [windows]
-  - Atomic Test #31: Tamper with Windows Defender ATP using Aliases - PowerShell [windows]
-  - Atomic Test #32: LockBit Black - Disable Privacy Settings Experience Using Registry -cmd [windows]
-  - Atomic Test #33: LockBit Black - Use Registry Editor to turn on automatic logon -cmd [windows]
-  - Atomic Test #34: LockBit Black - Disable Privacy Settings Experience Using Registry -Powershell [windows]
-  - Atomic Test #35: Lockbit Black - Use Registry Editor to turn on automatic logon -Powershell [windows]
-  - Atomic Test #36: Disable Windows Defender with PwSh Disable-WindowsOptionalFeature [windows]
-  - Atomic Test #37: WMIC Tamper with Windows Defender Evade Scanning Folder [windows]
-  - Atomic Test #38: Delete Windows Defender Scheduled Tasks [windows]
-  - Atomic Test #39: Clear History [linux]
-  - Atomic Test #40: Suspend History [linux]
-  - Atomic Test #41: Reboot Linux Host via Kernel System Request [linux]
-  - Atomic Test #42: Clear Pagging Cache [linux]
-  - Atomic Test #43: Disable Memory Swap [linux]
-  - Atomic Test #44: Disable Hypervisor-Enforced Code Integrity (HVCI) [windows]
-  - Atomic Test #45: AMSI Bypass - Override AMSI via COM [windows]
-  - Atomic Test #46: AWS - GuardDuty Suspension or Deletion [iaas:aws]
-  - Atomic Test #47: Tamper with Defender ATP on Linux/MacOS [linux, macos]
-  - Atomic Test #48: Tamper with Windows Defender Registry - Reg.exe [windows]
-  - Atomic Test #49: Tamper with Windows Defender Registry - Powershell [windows]
-  - Atomic Test #50: ESXi - Disable Account Lockout Policy via PowerCLI [linux]
-  - Atomic Test #51: Delete Microsoft Defender ASR Rules - InTune [windows]
-  - Atomic Test #52: Delete Microsoft Defender ASR Rules - GPO [windows]
-  - Atomic Test #53: AMSI Bypass - Create AMSIEnable Reg Key [windows]
-  - Atomic Test #54: Disable EventLog-Application Auto Logger Session Via Registry - Cmd [windows]
-  - Atomic Test #55: Disable EventLog-Application Auto Logger Session Via Registry - PowerShell [windows]
-  - Atomic Test #56: Disable EventLog-Application ETW Provider Via Registry - Cmd [windows]
-  - Atomic Test #57: Disable EventLog-Application ETW Provider Via Registry - PowerShell [windows]
-  - Atomic Test #58: Freeze PPL-protected process with EDR-Freeze [windows]
-  - Atomic Test #59: Disable ASLR Via sysctl parameters - Linux [linux]
-- T1601 Modify System Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1036.012 Browser Fingerprint [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -700,7 +326,6 @@
   - Atomic Test #9: Snake Malware Encrypted crmlog file [windows]
   - Atomic Test #10: Execution from Compressed JScript File [windows]
   - Atomic Test #11: Obfuscated PowerShell Command via Character Array [windows]
-- T1556.006 Multi-Factor Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1036.001 Invalid Code Signature [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1564.006 Run Virtual Instance](../../T1564.006/T1564.006.md)
   - Atomic Test #1: Register Portable Virtualbox [windows]
@@ -709,9 +334,6 @@
 - T1027.014 Polymorphic Code [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1134.005 Access Token Manipulation: SID-History Injection](../../T1134.005/T1134.005.md)
   - Atomic Test #1: Injection SID-History with mimikatz [windows]
-- T1599 Network Boundary Bridging [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1553 Subvert Trust Controls [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1548.004 Elevated Execution with Prompt [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1218.010 Signed Binary Proxy Execution: Regsvr32](../../T1218.010/T1218.010.md)
   - Atomic Test #1: Regsvr32 local COM scriptlet execution [windows]
   - Atomic Test #2: Regsvr32 remote COM scriptlet execution [windows]
@@ -727,23 +349,13 @@
   - Atomic Test #6: Masquerading - non-windows exe running as windows exe [windows]
   - Atomic Test #7: Masquerading - windows exe running as different windows exe [windows]
   - Atomic Test #8: Malicious process Masquerading as LSM.exe [windows]
-- T1562.011 Spoof Security Alerting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1574.009 Hijack Execution Flow: Path Interception by Unquoted Path](../../T1574.009/T1574.009.md)
   - Atomic Test #1: Execution of program.exe as service with unquoted service path [windows]
 - T1027.003 Steganography [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1550.004 Web Session Cookie [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1218.009 Signed Binary Proxy Execution: Regsvcs/Regasm](../../T1218.009/T1218.009.md)
   - Atomic Test #1: Regasm Uninstall Method Call Test [windows]
   - Atomic Test #2: Regsvcs Uninstall Method Call Test [windows]
-- [T1553.004 Subvert Trust Controls: Install Root Certificate](../../T1553.004/T1553.004.md)
-  - Atomic Test #1: Install root CA on CentOS/RHEL [linux]
-  - Atomic Test #2: Install root CA on FreeBSD [linux]
-  - Atomic Test #3: Install root CA on Debian/Ubuntu [linux]
-  - Atomic Test #4: Install root CA on macOS [macos]
-  - Atomic Test #5: Install root CA on Windows [windows]
-  - Atomic Test #6: Install root CA on Windows with certutil [windows]
-  - Atomic Test #7: Add Root Certificate to CurrentUser Certificate Store [windows]
 - [T1027.004 Obfuscated Files or Information: Compile After Delivery](../../T1027.004/T1027.004.md)
   - Atomic Test #1: Compile After Delivery using csc.exe [windows]
   - Atomic Test #2: Dynamic C# Compile [windows]
@@ -759,37 +371,18 @@
 - [T1127.001 Trusted Developer Utilities Proxy Execution: MSBuild](../../T1127.001/T1127.001.md)
   - Atomic Test #1: MSBuild Bypass Using Inline Tasks (C#) [windows]
   - Atomic Test #2: MSBuild Bypass Using Inline Tasks (VB) [windows]
-- T1656 Impersonation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1578.005 Modify Cloud Compute Configurations [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1562.008 Impair Defenses: Disable Cloud Logs](../../T1562.008/T1562.008.md)
-  - Atomic Test #1: AWS - CloudTrail Changes [iaas:aws]
-  - Atomic Test #2: Azure - Eventhub Deletion [iaas:azure]
-  - Atomic Test #3: Office 365 - Exchange Audit Log Disabled [office-365]
-  - Atomic Test #4: AWS - Disable CloudTrail Logging Through Event Selectors using Stratus [linux, macos, iaas:aws]
-  - Atomic Test #5: AWS - CloudTrail Logs Impairment Through S3 Lifecycle Rule using Stratus [linux, macos, iaas:aws]
-  - Atomic Test #6: AWS - Remove VPC Flow Logs using Stratus [linux, macos, iaas:aws]
-  - Atomic Test #7: AWS - CloudWatch Log Group Deletes [iaas:aws]
-  - Atomic Test #8: AWS CloudWatch Log Stream Deletes [iaas:aws]
-  - Atomic Test #9: Office 365 - Set Audit Bypass For a Mailbox [office-365]
-  - Atomic Test #10: GCP - Delete Activity Event Log [iaas:gcp]
-  - Atomic Test #11: AWS - Config Logs Disabled [iaas:aws]
 - [T1564.003 Hide Artifacts: Hidden Window](../../T1564.003/T1564.003.md)
   - Atomic Test #1: Hidden Window [windows]
   - Atomic Test #2: Headless Browser Accessing Mockbin [windows]
   - Atomic Test #3: Hidden Window-Conhost Execution [windows]
 - T1127.002 ClickOnce [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1070.010 Relocate Malware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1556.009 Conditional Access Policies [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1578.002 Create Cloud Instance [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1684.001 Impersonation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1055.009 Proc Memory [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1601.001 Patch System Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1070.009 Clear Persistence [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1036.010 Masquerade Account Name [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1556.001 Modify Authentication Process: Domain Controller Authentication](../../T1556.001/T1556.001.md)
-  - Atomic Test #1: Skeleton Key via Mimikatz [windows]
 - [T1027.006 HTML Smuggling](../../T1027.006/T1027.006.md)
   - Atomic Test #1: HTML Smuggling Remote Payload [windows]
-- T1556.005 Reversible Encryption [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.010 Command Obfuscation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1070.004 Indicator Removal on Host: File Deletion](../../T1070.004/T1070.004.md)
   - Atomic Test #1: Delete a single file - FreeBSD/Linux/macOS [linux, macos]
@@ -812,25 +405,19 @@
   - Atomic Test #3: Binary simply packed by UPX [macos]
   - Atomic Test #4: Binary packed by UPX, with modified headers [macos]
 - T1564.005 Hidden File System [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1672 Email Spoofing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1055.005 Thread Local Storage [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1622 Debugger Evasion](../../T1622/T1622.md)
   - Atomic Test #1: Detect a Debugger Presence in the Machine [windows]
 - [T1036.006 Masquerading: Space after Filename](../../T1036.006/T1036.006.md)
   - Atomic Test #1: Space After Filename (Manual) [macos]
   - Atomic Test #2: Space After Filename [macos, linux]
-- [T1550.002 Use Alternate Authentication Material: Pass the Hash](../../T1550.002/T1550.002.md)
-  - Atomic Test #1: Mimikatz Pass the Hash [windows]
-  - Atomic Test #2: crackmapexec Pass the Hash [windows]
-  - Atomic Test #3: Invoke-WMIExec Pass the Hash [windows]
 - T1216.002 SyncAppvPublishingServer [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1548.006 TCC Manipulation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1027.018 Invisible Unicode [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1055.008 Ptrace System Calls [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1027.007 Obfuscated Files or Information: Dynamic API Resolution](../../T1027.007/T1027.007.md)
   - Atomic Test #1: Dynamic API Resolution-Ninja-syscall [windows]
 - [T1055.015 Process Injection: ListPlanting](../../T1055.015/T1055.015.md)
   - Atomic Test #1: Process injection ListPlanting [windows]
-- T1484 Domain or Tenant Policy Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1220 XSL Script Processing](../../T1220/T1220.md)
   - Atomic Test #1: MSXSL Bypass using local files [windows]
   - Atomic Test #2: MSXSL Bypass using remote files [windows]
@@ -847,11 +434,6 @@
   - Atomic Test #8: Hide Files Through Registry [windows]
   - Atomic Test #9: Create Windows Hidden File with powershell [windows]
   - Atomic Test #10: Create Windows System File with powershell [windows]
-- [T1578.001 Modify Cloud Compute Infrastructure: Create Snapshot](../../T1578.001/T1578.001.md)
-  - Atomic Test #1: AWS - Create Snapshot from EBS Volume [iaas:aws]
-  - Atomic Test #2: Azure - Create Snapshot from Managed Disk [iaas:azure]
-  - Atomic Test #3: GCP - Create Snapshot from Persistent Disk [iaas:gcp]
-- T1550.001 Application Access Token [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1078.004 Valid Accounts: Cloud Accounts](../../T1078.004/T1078.004.md)
   - Atomic Test #1: Creating GCP Service Account and Service Account Key [google-workspace, iaas:gcp]
   - Atomic Test #2: Azure Persistence Automation Runbook Created or Modified [iaas:azure]
@@ -866,14 +448,12 @@
 - [T1055.001 Process Injection: Dynamic-link Library Injection](../../T1055.001/T1055.001.md)
   - Atomic Test #1: Process Injection via mavinject.exe [windows]
   - Atomic Test #2: WinPwn - Get SYSTEM shell - Bind System Shell using UsoClient DLL load technique [windows]
-- T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1216 Signed Script Proxy Execution](../../T1216/T1216.md)
   - Atomic Test #1: SyncAppvPublishingServer Signed Script PowerShell Command Execution [windows]
   - Atomic Test #2: manage-bde.wsf Signed Script Command Execution [windows]
-- T1556.004 Network Device Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.015 Compression [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574.004 Dylib Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1601.002 Downgrade System Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1684.002 Email Spoofing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #1: Create local account with admin privileges [windows]
   - Atomic Test #2: Create local account with admin privileges - MacOS [macos]
@@ -888,7 +468,7 @@
   - Atomic Test #11: Login as nobody (Linux) [linux]
   - Atomic Test #12: Login as nobody (freebsd) [linux]
   - Atomic Test #13: Use PsExec to elevate to NT Authority\SYSTEM account [windows]
-- T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1211 Exploitation for Stealth [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1127 Trusted Developer Utilities Proxy Execution](../../T1127/T1127.md)
   - Atomic Test #1: Lolbin Jsc.exe compile javascript to exe [windows]
   - Atomic Test #2: Lolbin Jsc.exe compile javascript to dll [windows]
@@ -916,7 +496,6 @@
   - Atomic Test #11: Scheduled Task Persistence via CompMgmt.msc [windows]
   - Atomic Test #12: Scheduled Task Persistence via Eventviewer.msc [windows]
 - T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1574.007 Path Interception by PATH Environment Variable [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.013 Event Triggered Execution: PowerShell Profile](../../T1546.013/T1546.013.md)
   - Atomic Test #1: Append malicious start-process cmdlet [windows]
 - T1543 Create or Modify System Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -959,9 +538,6 @@
   - Atomic Test #4: Unlimited sudo cache timeout (freebsd) [linux]
   - Atomic Test #5: Disable tty_tickets for sudo caching [macos, linux]
   - Atomic Test #6: Disable tty_tickets for sudo caching (freebsd) [linux]
-- [T1574.011 Hijack Execution Flow: Services Registry Permissions Weakness](../../T1574.011/T1574.011.md)
-  - Atomic Test #1: Service Registry Permissions Weakness [windows]
-  - Atomic Test #2: Service ImagePath Change with reg.exe [windows]
 - [T1547 Boot or Logon Autostart Execution](../../T1547/T1547.md)
   - Atomic Test #1: Add a driver [windows]
   - Atomic Test #2: Driver Installation Using pnputil.exe [windows]
@@ -989,14 +565,6 @@
   - Atomic Test #2: Simulate - Post BEC persistence via user password reset followed by user added to company administrator role [azure-ad]
 - [T1547.012 Boot or Logon Autostart Execution: Print Processors](../../T1547.012/T1547.012.md)
   - Atomic Test #1: Print Processors [windows]
-- [T1574.001 Hijack Execution Flow: DLL](../../T1574.001/T1574.001.md)
-  - Atomic Test #1: DLL Search Order Hijacking - amsi.dll [windows]
-  - Atomic Test #2: Phantom Dll Hijacking - WinAppXRT.dll [windows]
-  - Atomic Test #3: Phantom Dll Hijacking - ualapi.dll [windows]
-  - Atomic Test #4: DLL Side-Loading using the Notepad++ GUP.exe binary [windows]
-  - Atomic Test #5: DLL Side-Loading using the dotnet startup hook environment variable [windows]
-  - Atomic Test #6: DLL Search Order Hijacking,DLL Sideloading Of KeyScramblerIE.DLL Via KeyScrambler.EXE [windows]
-- T1574.014 AppDomainManager [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1098.006 Additional Container Cluster Roles [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1098.007 Additional Local or Domain Groups [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1036,8 +604,6 @@
   - Atomic Test #2: Modify HKLM:\System\CurrentControlSet\Control\Lsa\OSConfig Security Support Provider configuration in registry [windows]
 - [T1543.004 Create or Modify System Process: Launch Daemon](../../T1543.004/T1543.004.md)
   - Atomic Test #1: Launch Daemon [macos]
-- [T1574.008 Hijack Execution Flow: Path Interception by Search Order Hijacking](../../T1574.008/T1574.008.md)
-  - Atomic Test #1: powerShell Persistence via hijacking default modules - Get-Variable.exe [windows]
 - [T1484.001 Domain Policy Modification: Group Policy Modification](../../T1484.001/T1484.001.md)
   - Atomic Test #1: LockBit Black - Modify Group policy settings -cmd [windows]
   - Atomic Test #2: LockBit Black - Modify Group policy settings -Powershell [windows]
@@ -1053,10 +619,6 @@
   - Atomic Test #2: Trap EXIT (freebsd) [linux]
   - Atomic Test #3: Trap SIGINT [macos, linux]
   - Atomic Test #4: Trap SIGINT (freebsd) [linux]
-- [T1574.006 Hijack Execution Flow: LD_PRELOAD](../../T1574.006/T1574.006.md)
-  - Atomic Test #1: Shared Library Injection via /etc/ld.so.preload [linux]
-  - Atomic Test #2: Shared Library Injection via LD_PRELOAD [linux]
-  - Atomic Test #3: Dylib Injection via DYLD_INSERT_LIBRARIES [macos]
 - T1548 Abuse Elevation Control Mechanism [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1134.002 Create Process with Token](../../T1134.002/T1134.002.md)
   - Atomic Test #1: Access Token Manipulation [windows]
@@ -1086,7 +648,6 @@
   - Atomic Test #3: GlobalFlags in Image File Execution Options [windows]
 - T1548.005 Temporary Elevated Cloud Access [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1055.013 Process Doppelgänging [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1574.005 Executable Installer File Permissions Weakness [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.008 Event Triggered Execution: Accessibility Features](../../T1546.008/T1546.008.md)
   - Atomic Test #1: Attaches Command Prompt as a Debugger to a List of Target Processes [windows]
   - Atomic Test #2: Replace binary of sticky keys [windows]
@@ -1136,7 +697,6 @@
 - T1055.014 VDSO Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.014 Event Triggered Execution: Emond](../../T1546.014/T1546.014.md)
   - Atomic Test #1: Persistance with Event Monitor - emond [macos]
-- T1574.010 Services File Permissions Weakness [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1547.001 Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder](../../T1547.001/T1547.001.md)
   - Atomic Test #1: Reg Key Run [windows]
   - Atomic Test #2: Reg Key RunOnce [windows]
@@ -1181,12 +741,10 @@
   - Atomic Test #2: MacOS - Load Kernel Module via kextload and kmutil [macos]
   - Atomic Test #3: MacOS - Load Kernel Module via KextManagerLoadKextWithURL() [macos]
   - Atomic Test #4: Snake Malware Kernel Driver Comadmin [windows]
-- T1574.013 KernelCallbackTable [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1053.006 Scheduled Task/Job: Systemd Timers](../../T1053.006/T1053.006.md)
   - Atomic Test #1: Create Systemd Service and Timer [linux]
   - Atomic Test #2: Create a user level transient systemd service and timer [linux]
   - Atomic Test #3: Create a system level transient systemd service and timer [linux]
-- T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1543.005 Container Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1055.012 Process Injection: Process Hollowing](../../T1055.012/T1055.012.md)
@@ -1223,8 +781,6 @@
   - Atomic Test #2: Powershell Execute COM Object [windows]
   - Atomic Test #3: COM Hijacking with RunDLL32 (Local Server Switch) [windows]
   - Atomic Test #4: COM hijacking via TreatAs [windows]
-- [T1574.009 Hijack Execution Flow: Path Interception by Unquoted Path](../../T1574.009/T1574.009.md)
-  - Atomic Test #1: Execution of program.exe as service with unquoted service path [windows]
 - [T1037.005 Boot or Logon Initialization Scripts: Startup Items](../../T1037.005/T1037.005.md)
   - Atomic Test #1: Add file to Local Library StartupItems [macos]
   - Atomic Test #2: Add launch script to launch daemon [macos]
@@ -1287,7 +843,6 @@
 - T1546.017 Udev Rules [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.007 Event Triggered Execution: Netsh Helper DLL](../../T1546.007/T1546.007.md)
   - Atomic Test #1: Netsh Helper DLL Registration [windows]
-- T1574.004 Dylib Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #1: Create local account with admin privileges [windows]
   - Atomic Test #2: Create local account with admin privileges - MacOS [macos]
@@ -1302,10 +857,6 @@
   - Atomic Test #11: Login as nobody (Linux) [linux]
   - Atomic Test #12: Login as nobody (freebsd) [linux]
   - Atomic Test #13: Use PsExec to elevate to NT Authority\SYSTEM account [windows]
-- [T1574.012 Hijack Execution Flow: COR_PROFILER](../../T1574.012/T1574.012.md)
-  - Atomic Test #1: User scope COR_PROFILER [windows]
-  - Atomic Test #2: System Scope COR_PROFILER [windows]
-  - Atomic Test #3: Registry-free process scope COR_PROFILER [windows]
 
 # execution
 - [T1053.005 Scheduled Task/Job: Scheduled Task](../../T1053.005/T1053.005.md)
@@ -1334,12 +885,16 @@
   - Atomic Test #10: Application uninstall using WMIC [windows]
 - [T1129 Server Software Component](../../T1129/T1129.md)
   - Atomic Test #1: ESXi - Install a custom VIB on an ESXi host [windows]
+- T1574.007 Path Interception by PATH Environment Variable [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1059.007 Command and Scripting Interpreter: JavaScript](../../T1059.007/T1059.007.md)
   - Atomic Test #1: JScript execution to gather local computer information via cscript [windows]
   - Atomic Test #2: JScript execution to gather local computer information via wscript [windows]
 - [T1053.007 Kubernetes Cronjob](../../T1053.007/T1053.007.md)
   - Atomic Test #1: ListCronjobs [containers]
   - Atomic Test #2: CreateCronjob [containers]
+- [T1574.011 Hijack Execution Flow: Services Registry Permissions Weakness](../../T1574.011/T1574.011.md)
+  - Atomic Test #1: Service Registry Permissions Weakness [windows]
+  - Atomic Test #2: Service ImagePath Change with reg.exe [windows]
 - [T1559.002 Inter-Process Communication: Dynamic Data Exchange](../../T1559.002/T1559.002.md)
   - Atomic Test #1: Execute Commands [windows]
   - Atomic Test #2: Execute PowerShell script via Word DDE [windows]
@@ -1364,7 +919,15 @@
   - Atomic Test #3: Cron - Add script to /etc/cron.d folder [linux]
   - Atomic Test #4: Cron - Add script to /var/spool/cron/crontabs/ folder [linux]
 - T1559.001 Component Object Model [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1574.001 Hijack Execution Flow: DLL](../../T1574.001/T1574.001.md)
+  - Atomic Test #1: DLL Search Order Hijacking - amsi.dll [windows]
+  - Atomic Test #2: Phantom Dll Hijacking - WinAppXRT.dll [windows]
+  - Atomic Test #3: Phantom Dll Hijacking - ualapi.dll [windows]
+  - Atomic Test #4: DLL Side-Loading using the Notepad++ GUP.exe binary [windows]
+  - Atomic Test #5: DLL Side-Loading using the dotnet startup hook environment variable [windows]
+  - Atomic Test #6: DLL Search Order Hijacking,DLL Sideloading Of KeyScramblerIE.DLL Via KeyScrambler.EXE [windows]
 - T1675 ESXi Administration Command [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1574.014 AppDomainManager [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1059.002 Command and Scripting Interpreter: AppleScript](../../T1059.002/T1059.002.md)
   - Atomic Test #1: AppleScript [macos]
@@ -1388,7 +951,14 @@
 - T1059.009 Cloud API [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1610 Deploy a container](../../T1610/T1610.md)
   - Atomic Test #1: Deploy Docker container [containers]
+- [T1574.008 Hijack Execution Flow: Path Interception by Search Order Hijacking](../../T1574.008/T1574.008.md)
+  - Atomic Test #1: powerShell Persistence via hijacking default modules - Get-Variable.exe [windows]
+- [T1574.006 Hijack Execution Flow: LD_PRELOAD](../../T1574.006/T1574.006.md)
+  - Atomic Test #1: Shared Library Injection via /etc/ld.so.preload [linux]
+  - Atomic Test #2: Shared Library Injection via LD_PRELOAD [linux]
+  - Atomic Test #3: Dylib Injection via DYLD_INSERT_LIBRARIES [macos]
 - T1674 Input Injection [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1574.005 Executable Installer File Permissions Weakness [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1059 Command and Scripting Interpreter](../../T1059/T1059.md)
   - Atomic Test #1: AutoIt Script Execution [windows]
 - T1204.005 Malicious Library [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1396,6 +966,7 @@
 - [T1609 Kubernetes Exec Into Container](../../T1609/T1609.md)
   - Atomic Test #1: ExecIntoContainer [containers]
   - Atomic Test #2: Docker Exec Into Container [containers]
+- T1127.003 JamPlus [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1569.001 System Services: Launchctl](../../T1569.001/T1569.001.md)
   - Atomic Test #1: Launchctl [macos]
 - T1059.008 Network Device CLI [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1428,6 +999,8 @@
   - Atomic Test #20: Abuse Nslookup with DNS Records [windows]
   - Atomic Test #21: SOAPHound - Dump BloodHound Data [windows]
   - Atomic Test #22: SOAPHound - Build Cache [windows]
+- T1574.010 Services File Permissions Weakness [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1574.013 KernelCallbackTable [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1053.006 Scheduled Task/Job: Systemd Timers](../../T1053.006/T1053.006.md)
   - Atomic Test #1: Create Systemd Service and Timer [linux]
   - Atomic Test #2: Create a user level transient systemd service and timer [linux]
@@ -1456,11 +1029,23 @@
   - Atomic Test #3: Cobalt Strike SSH (postex_ssh) pipe [windows]
   - Atomic Test #4: Cobalt Strike post-exploitation pipe (4.2 and later) [windows]
   - Atomic Test #5: Cobalt Strike post-exploitation pipe (before 4.2) [windows]
+- T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1059.011 Lua [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1204.003 User Execution: Malicious Image](../../T1204.003/T1204.003.md)
   - Atomic Test #1: Malicious Execution from Mounted ISO Image [windows]
 - T1203 Exploitation for Client Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1574.009 Hijack Execution Flow: Path Interception by Unquoted Path](../../T1574.009/T1574.009.md)
+  - Atomic Test #1: Execution of program.exe as service with unquoted service path [windows]
 - T1059.013 Container CLI/API [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1197 BITS Jobs](../../T1197/T1197.md)
+  - Atomic Test #1: Bitsadmin Download (cmd) [windows]
+  - Atomic Test #2: Bitsadmin Download (PowerShell) [windows]
+  - Atomic Test #3: Persist, Download, & Execute [windows]
+  - Atomic Test #4: Bits download using desktopimgdownldr.exe (cmd) [windows]
+- [T1127.001 Trusted Developer Utilities Proxy Execution: MSBuild](../../T1127.001/T1127.001.md)
+  - Atomic Test #1: MSBuild Bypass Using Inline Tasks (C#) [windows]
+  - Atomic Test #2: MSBuild Bypass Using Inline Tasks (VB) [windows]
+- T1127.002 ClickOnce [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1059.006 Command and Scripting Interpreter: Python](../../T1059.006/T1059.006.md)
   - Atomic Test #1: Execute shell script via python's command mode arguement [linux]
   - Atomic Test #2: Execute Python via scripts [linux]
@@ -1498,6 +1083,14 @@
   - Atomic Test #1: At.exe Scheduled task [windows]
   - Atomic Test #2: At - Schedule a job [linux]
   - Atomic Test #3: At - Schedule a job via kubectl in a Pod [containers]
+- T1574.004 Dylib Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1127 Trusted Developer Utilities Proxy Execution](../../T1127/T1127.md)
+  - Atomic Test #1: Lolbin Jsc.exe compile javascript to exe [windows]
+  - Atomic Test #2: Lolbin Jsc.exe compile javascript to dll [windows]
+- [T1574.012 Hijack Execution Flow: COR_PROFILER](../../T1574.012/T1574.012.md)
+  - Atomic Test #1: User scope COR_PROFILER [windows]
+  - Atomic Test #2: System Scope COR_PROFILER [windows]
+  - Atomic Test #3: Registry-free process scope COR_PROFILER [windows]
 
 # persistence
 - [T1053.005 Scheduled Task/Job: Scheduled Task](../../T1053.005/T1053.005.md)
@@ -1519,7 +1112,6 @@
   - Atomic Test #1: Malicious PAM rule [linux]
   - Atomic Test #2: Malicious PAM rule (freebsd) [linux]
   - Atomic Test #3: Malicious PAM module [linux]
-- T1574.007 Path Interception by PATH Environment Variable [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.013 Event Triggered Execution: PowerShell Profile](../../T1546.013/T1546.013.md)
   - Atomic Test #1: Append malicious start-process cmdlet [windows]
 - T1543 Create or Modify System Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1531,9 +1123,6 @@
   - Atomic Test #2: CreateCronjob [containers]
 - [T1542.001 Pre-OS Boot: System Firmware](../../T1542.001/T1542.001.md)
   - Atomic Test #1: UEFI Persistence via Wpbbin.exe File Creation [windows]
-- [T1574.011 Hijack Execution Flow: Services Registry Permissions Weakness](../../T1574.011/T1574.011.md)
-  - Atomic Test #1: Service Registry Permissions Weakness [windows]
-  - Atomic Test #2: Service ImagePath Change with reg.exe [windows]
 - T1542.003 Bootkit [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1547 Boot or Logon Autostart Execution](../../T1547/T1547.md)
   - Atomic Test #1: Add a driver [windows]
@@ -1564,13 +1153,6 @@
   - Atomic Test #2: Simulate - Post BEC persistence via user password reset followed by user added to company administrator role [azure-ad]
 - [T1547.012 Boot or Logon Autostart Execution: Print Processors](../../T1547.012/T1547.012.md)
   - Atomic Test #1: Print Processors [windows]
-- [T1574.001 Hijack Execution Flow: DLL](../../T1574.001/T1574.001.md)
-  - Atomic Test #1: DLL Search Order Hijacking - amsi.dll [windows]
-  - Atomic Test #2: Phantom Dll Hijacking - WinAppXRT.dll [windows]
-  - Atomic Test #3: Phantom Dll Hijacking - ualapi.dll [windows]
-  - Atomic Test #4: DLL Side-Loading using the Notepad++ GUP.exe binary [windows]
-  - Atomic Test #5: DLL Side-Loading using the dotnet startup hook environment variable [windows]
-  - Atomic Test #6: DLL Search Order Hijacking,DLL Sideloading Of KeyScramblerIE.DLL Via KeyScrambler.EXE [windows]
 - [T1137.006 Office Application Startup: Add-ins](../../T1137.006/T1137.006.md)
   - Atomic Test #1: Code Executed Via Excel Add-in File (XLL) [windows]
   - Atomic Test #2: Persistent Code Execution Via Excel Add-in File (XLL) [windows]
@@ -1579,7 +1161,6 @@
   - Atomic Test #5: Persistent Code Execution Via PowerPoint VBA Add-in File (PPAM) [windows]
 - [T1505.002 Server Software Component: Transport Agent](../../T1505.002/T1505.002.md)
   - Atomic Test #1: Install MS Exchange Transport Agent Persistence [windows]
-- T1574.014 AppDomainManager [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1098.006 Additional Container Cluster Roles [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1556.002 Modify Authentication Process: Password Filter DLL](../../T1556.002/T1556.002.md)
@@ -1710,8 +1291,6 @@
   - Atomic Test #90: Adding custom paths for application execution [windows]
 - [T1543.004 Create or Modify System Process: Launch Daemon](../../T1543.004/T1543.004.md)
   - Atomic Test #1: Launch Daemon [macos]
-- [T1574.008 Hijack Execution Flow: Path Interception by Search Order Hijacking](../../T1574.008/T1574.008.md)
-  - Atomic Test #1: powerShell Persistence via hijacking default modules - Get-Variable.exe [windows]
 - [T1505.003 Server Software Component: Web Shell](../../T1505.003/T1505.003.md)
   - Atomic Test #1: Web Shell Written to Disk [windows]
 - [T1078.001 Valid Accounts: Default Accounts](../../T1078.001/T1078.001.md)
@@ -1726,10 +1305,6 @@
   - Atomic Test #2: Trap EXIT (freebsd) [linux]
   - Atomic Test #3: Trap SIGINT [macos, linux]
   - Atomic Test #4: Trap SIGINT (freebsd) [linux]
-- [T1574.006 Hijack Execution Flow: LD_PRELOAD](../../T1574.006/T1574.006.md)
-  - Atomic Test #1: Shared Library Injection via /etc/ld.so.preload [linux]
-  - Atomic Test #2: Shared Library Injection via LD_PRELOAD [linux]
-  - Atomic Test #3: Dylib Injection via DYLD_INSERT_LIBRARIES [macos]
 - [T1136.001 Create Account: Local Account](../../T1136.001/T1136.001.md)
   - Atomic Test #1: Create a user account on a Linux system [linux]
   - Atomic Test #2: Create a user account on a FreeBSD system [linux]
@@ -1754,7 +1329,6 @@
   - Atomic Test #1: IFEO Add Debugger [windows]
   - Atomic Test #2: IFEO Global Flags [windows]
   - Atomic Test #3: GlobalFlags in Image File Execution Options [windows]
-- T1574.005 Executable Installer File Permissions Weakness [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.008 Event Triggered Execution: Accessibility Features](../../T1546.008/T1546.008.md)
   - Atomic Test #1: Attaches Command Prompt as a Debugger to a List of Target Processes [windows]
   - Atomic Test #2: Replace binary of sticky keys [windows]
@@ -1797,7 +1371,6 @@
   - Atomic Test #1: Change Default File Association [windows]
 - [T1546.014 Event Triggered Execution: Emond](../../T1546.014/T1546.014.md)
   - Atomic Test #1: Persistance with Event Monitor - emond [macos]
-- T1574.010 Services File Permissions Weakness [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1547.001 Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder](../../T1547.001/T1547.001.md)
   - Atomic Test #1: Reg Key Run [windows]
   - Atomic Test #2: Reg Key RunOnce [windows]
@@ -1846,14 +1419,12 @@
   - Atomic Test #2: MacOS - Load Kernel Module via kextload and kmutil [macos]
   - Atomic Test #3: MacOS - Load Kernel Module via KextManagerLoadKextWithURL() [macos]
   - Atomic Test #4: Snake Malware Kernel Driver Comadmin [windows]
-- T1574.013 KernelCallbackTable [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1053.006 Scheduled Task/Job: Systemd Timers](../../T1053.006/T1053.006.md)
   - Atomic Test #1: Create Systemd Service and Timer [linux]
   - Atomic Test #2: Create a user level transient systemd service and timer [linux]
   - Atomic Test #3: Create a system level transient systemd service and timer [linux]
 - T1542.004 ROMMONkit [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1137.003 Outlook Forms [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1543.005 Container Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1556.006 Multi-Factor Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1887,8 +1458,6 @@
   - Atomic Test #4: COM hijacking via TreatAs [windows]
 - [T1137.004 Office Application Startup: Outlook Home Page](../../T1137.004/T1137.004.md)
   - Atomic Test #1: Install Outlook Home Page Persistence [windows]
-- [T1574.009 Hijack Execution Flow: Path Interception by Unquoted Path](../../T1574.009/T1574.009.md)
-  - Atomic Test #1: Execution of program.exe as service with unquoted service path [windows]
 - [T1037.005 Boot or Logon Initialization Scripts: Startup Items](../../T1037.005/T1037.005.md)
   - Atomic Test #1: Add file to Local Library StartupItems [macos]
   - Atomic Test #2: Add launch script to launch daemon [macos]
@@ -1960,7 +1529,6 @@
 - T1505.006 vSphere Installation Bundles [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1505.001 SQL Stored Procedures [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1556.004 Network Device Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1574.004 Dylib Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #1: Create local account with admin privileges [windows]
   - Atomic Test #2: Create local account with admin privileges - MacOS [macos]
@@ -1975,10 +1543,6 @@
   - Atomic Test #11: Login as nobody (Linux) [linux]
   - Atomic Test #12: Login as nobody (freebsd) [linux]
   - Atomic Test #13: Use PsExec to elevate to NT Authority\SYSTEM account [windows]
-- [T1574.012 Hijack Execution Flow: COR_PROFILER](../../T1574.012/T1574.012.md)
-  - Atomic Test #1: User scope COR_PROFILER [windows]
-  - Atomic Test #2: System Scope COR_PROFILER [windows]
-  - Atomic Test #3: Registry-free process scope COR_PROFILER [windows]
 
 # command-and-control
 - T1205.002 Socket Filters [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -2281,6 +1845,368 @@
   - Atomic Test #3: Changing RDP Port to Non Standard Port via Command_Prompt [windows]
   - Atomic Test #4: Disable NLA for RDP via Command Prompt [windows]
 - T1550.001 Application Access Token [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+
+# defense-impairment
+- T1687 Exploitation for Defense Impairment [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1556.003 Modify Authentication Process: Pluggable Authentication Modules](../../T1556.003/T1556.003.md)
+  - Atomic Test #1: Malicious PAM rule [linux]
+  - Atomic Test #2: Malicious PAM rule (freebsd) [linux]
+  - Atomic Test #3: Malicious PAM module [linux]
+- T1578.004 Revert Cloud Instance [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1222.002 File and Directory Permissions Modification: FreeBSD, Linux and Mac File and Directory Permissions Modification](../../T1222.002/T1222.002.md)
+  - Atomic Test #1: chmod - Change file or folder mode (numeric mode) [linux, macos]
+  - Atomic Test #2: chmod - Change file or folder mode (symbolic mode) [linux, macos]
+  - Atomic Test #3: chmod - Change file or folder mode (numeric mode) recursively [linux, macos]
+  - Atomic Test #4: chmod - Change file or folder mode (symbolic mode) recursively [linux, macos]
+  - Atomic Test #5: chown - Change file or folder ownership and group [macos, linux]
+  - Atomic Test #6: chown - Change file or folder ownership and group recursively [macos, linux]
+  - Atomic Test #7: chown - Change file or folder mode ownership only [linux, macos]
+  - Atomic Test #8: chown - Change file or folder ownership recursively [macos, linux]
+  - Atomic Test #9: chattr - Remove immutable file attribute [macos, linux]
+  - Atomic Test #10: chflags - Remove immutable file attribute [linux]
+  - Atomic Test #11: Chmod through c script [macos, linux]
+  - Atomic Test #12: Chmod through c script (freebsd) [linux]
+  - Atomic Test #13: Chown through c script [macos, linux]
+  - Atomic Test #14: Chown through c script (freebsd) [linux]
+- T1666 Modify Cloud Resource Hierarchy [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1685.003 Modify or Spoof Tool UI [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1685.001 Disable or Modify Tools: Disable or Modify Windows Event Log](../../T1685.001/T1685.001.md)
+  - Atomic Test #1: Disable Windows IIS HTTP Logging [windows]
+  - Atomic Test #2: Disable Windows IIS HTTP Logging via PowerShell [windows]
+  - Atomic Test #3: Kill Event Log Service Threads [windows]
+  - Atomic Test #4: Impair Windows Audit Log Policy [windows]
+  - Atomic Test #5: Clear Windows Audit Policy Config [windows]
+  - Atomic Test #6: Disable Event Logging with wevtutil [windows]
+  - Atomic Test #7: Makes Eventlog blind with Phant0m [windows]
+  - Atomic Test #8: Modify Event Log Channel Access Permissions via Registry - PowerShell [windows]
+  - Atomic Test #9: Modify Event Log Channel Access Permissions via Registry 2 - PowerShell [windows]
+  - Atomic Test #10: Modify Event Log Access Permissions via Registry - PowerShell [windows]
+- T1578 Modify Cloud Compute Infrastructure [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1600 Weaken Encryption [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1685.004 Disable or Modify Tools: Disable or Modify Linux Audit System Log](../../T1685.004/T1685.004.md)
+  - Atomic Test #1: Delete all auditd rules using auditctl [linux]
+  - Atomic Test #2: Disable auditd using auditctl [linux]
+- [T1484.002 Domain Trust Modification](../../T1484.002/T1484.002.md)
+  - Atomic Test #1: Add Federation to Azure AD [azure-ad]
+- T1686.003 Windows Host Firewall [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1689 Downgrade Attack](../../T1689/T1689.md)
+  - Atomic Test #1: ESXi - Change VIB acceptance level to CommunitySupported via PowerCLI [linux]
+  - Atomic Test #2: ESXi - Change VIB acceptance level to CommunitySupported via ESXCLI [windows]
+  - Atomic Test #3: PowerShell Version 2 Downgrade [windows]
+- [T1553.001 Subvert Trust Controls: Gatekeeper Bypass](../../T1553.001/T1553.001.md)
+  - Atomic Test #1: Gatekeeper Bypass [macos]
+- T1553.002 Code Signing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1222.001 File and Directory Permissions Modification: Windows File and Directory Permissions Modification](../../T1222.001/T1222.001.md)
+  - Atomic Test #1: Take ownership using takeown utility [windows]
+  - Atomic Test #2: cacls - Grant permission to specified user or group recursively [windows]
+  - Atomic Test #3: attrib - Remove read-only attribute [windows]
+  - Atomic Test #4: attrib - hide file [windows]
+  - Atomic Test #5: Grant Full Access to folder for Everyone - Ryuk Ransomware Style [windows]
+  - Atomic Test #6: SubInAcl Execution [windows]
+- [T1685.002 Disable or Modify Tools: Disable or Modify Cloud Log](../../T1685.002/T1685.002.md)
+  - Atomic Test #1: AWS - CloudTrail Changes [iaas:aws]
+  - Atomic Test #2: Azure - Eventhub Deletion [iaas:azure]
+  - Atomic Test #3: Office 365 - Exchange Audit Log Disabled [office-365]
+  - Atomic Test #4: AWS - Disable CloudTrail Logging Through Event Selectors using Stratus [linux, macos, iaas:aws]
+  - Atomic Test #5: AWS - CloudTrail Logs Impairment Through S3 Lifecycle Rule using Stratus [linux, macos, iaas:aws]
+  - Atomic Test #6: AWS - Remove VPC Flow Logs using Stratus [linux, macos, iaas:aws]
+  - Atomic Test #7: AWS - CloudWatch Log Group Deletes [iaas:aws]
+  - Atomic Test #8: AWS CloudWatch Log Stream Deletes [iaas:aws]
+  - Atomic Test #9: Office 365 - Set Audit Bypass For a Mailbox [office-365]
+  - Atomic Test #10: GCP - Delete Activity Event Log [iaas:gcp]
+  - Atomic Test #11: AWS - Config Logs Disabled [iaas:aws]
+- [T1556.002 Modify Authentication Process: Password Filter DLL](../../T1556.002/T1556.002.md)
+  - Atomic Test #1: Install and Register Password Filter DLL [windows]
+  - Atomic Test #2: Install Additional Authentication Packages [windows]
+- T1600.001 Reduce Key Space [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1599.001 Network Address Translation Traversal [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1553.003 Subvert Trust Controls: SIP and Trust Provider Hijacking](../../T1553.003/T1553.003.md)
+  - Atomic Test #1: SIP (Subject Interface Package) Hijacking via Custom DLL [windows]
+- T1556.007 Hybrid Identity [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1207 Rogue Domain Controller](../../T1207/T1207.md)
+  - Atomic Test #1: DCShadow (Active Directory) [windows]
+- [T1553.006 Subvert Trust Controls: Code Signing Policy Modification](../../T1553.006/T1553.006.md)
+  - Atomic Test #1: Code Signing Policy Modification [windows]
+- [T1112 Modify Registry](../../T1112/T1112.md)
+  - Atomic Test #1: Modify Registry of Current User Profile - cmd [windows]
+  - Atomic Test #2: Modify Registry of Local Machine - cmd [windows]
+  - Atomic Test #3: Modify registry to store logon credentials [windows]
+  - Atomic Test #4: Use Powershell to Modify registry to store logon credentials [windows]
+  - Atomic Test #5: Add domain to Trusted sites Zone [windows]
+  - Atomic Test #6: Javascript in registry [windows]
+  - Atomic Test #7: Change Powershell Execution Policy to Bypass [windows]
+  - Atomic Test #8: BlackByte Ransomware Registry Changes - CMD [windows]
+  - Atomic Test #9: BlackByte Ransomware Registry Changes - Powershell [windows]
+  - Atomic Test #10: Disable Windows Registry Tool [windows]
+  - Atomic Test #11: Disable Windows CMD application [windows]
+  - Atomic Test #12: Disable Windows Task Manager application [windows]
+  - Atomic Test #13: Disable Windows Notification Center [windows]
+  - Atomic Test #14: Disable Windows Shutdown Button [windows]
+  - Atomic Test #15: Disable Windows LogOff Button [windows]
+  - Atomic Test #16: Disable Windows Change Password Feature [windows]
+  - Atomic Test #17: Disable Windows Lock Workstation Feature [windows]
+  - Atomic Test #18: Activate Windows NoDesktop Group Policy Feature [windows]
+  - Atomic Test #19: Activate Windows NoRun Group Policy Feature [windows]
+  - Atomic Test #20: Activate Windows NoFind Group Policy Feature [windows]
+  - Atomic Test #21: Activate Windows NoControlPanel Group Policy Feature [windows]
+  - Atomic Test #22: Activate Windows NoFileMenu Group Policy Feature [windows]
+  - Atomic Test #23: Activate Windows NoClose Group Policy Feature [windows]
+  - Atomic Test #24: Activate Windows NoSetTaskbar Group Policy Feature [windows]
+  - Atomic Test #25: Activate Windows NoTrayContextMenu Group Policy Feature [windows]
+  - Atomic Test #26: Activate Windows NoPropertiesMyDocuments Group Policy Feature [windows]
+  - Atomic Test #27: Hide Windows Clock Group Policy Feature [windows]
+  - Atomic Test #28: Windows HideSCAHealth Group Policy Feature [windows]
+  - Atomic Test #29: Windows HideSCANetwork Group Policy Feature [windows]
+  - Atomic Test #30: Windows HideSCAPower Group Policy Feature [windows]
+  - Atomic Test #31: Windows HideSCAVolume Group Policy Feature [windows]
+  - Atomic Test #32: Windows Modify Show Compress Color And Info Tip Registry [windows]
+  - Atomic Test #33: Windows Powershell Logging Disabled [windows]
+  - Atomic Test #34: Windows Add Registry Value to Load Service in Safe Mode without Network [windows]
+  - Atomic Test #35: Windows Add Registry Value to Load Service in Safe Mode with Network [windows]
+  - Atomic Test #36: Disable Windows Toast Notifications [windows]
+  - Atomic Test #37: Disable Windows Security Center Notifications [windows]
+  - Atomic Test #38: Suppress Win Defender Notifications [windows]
+  - Atomic Test #39: Allow RDP Remote Assistance Feature [windows]
+  - Atomic Test #40: NetWire RAT Registry Key Creation [windows]
+  - Atomic Test #41: Ursnif Malware Registry Key Creation [windows]
+  - Atomic Test #42: Terminal Server Client Connection History Cleared [windows]
+  - Atomic Test #43: Disable Windows Error Reporting Settings [windows]
+  - Atomic Test #44: DisallowRun Execution Of Certain Applications [windows]
+  - Atomic Test #45: Enabling Restricted Admin Mode via Command_Prompt [windows]
+  - Atomic Test #46: Mimic Ransomware - Enable Multiple User Sessions [windows]
+  - Atomic Test #47: Mimic Ransomware - Allow Multiple RDP Sessions per User [windows]
+  - Atomic Test #48: Event Viewer Registry Modification - Redirection URL [windows]
+  - Atomic Test #49: Event Viewer Registry Modification - Redirection Program [windows]
+  - Atomic Test #50: Enabling Remote Desktop Protocol via Remote Registry [windows]
+  - Atomic Test #51: Disable Win Defender Notification [windows]
+  - Atomic Test #52: Disable Windows OS Auto Update [windows]
+  - Atomic Test #53: Disable Windows Auto Reboot for current logon user [windows]
+  - Atomic Test #54: Windows Auto Update Option to Notify before download [windows]
+  - Atomic Test #55: Do Not Connect To Win Update [windows]
+  - Atomic Test #56: Tamper Win Defender Protection [windows]
+  - Atomic Test #57: Snake Malware Registry Blob [windows]
+  - Atomic Test #58: Allow Simultaneous Download Registry [windows]
+  - Atomic Test #59: Modify Internet Zone Protocol Defaults in Current User Registry - cmd [windows]
+  - Atomic Test #60: Modify Internet Zone Protocol Defaults in Current User Registry - PowerShell [windows]
+  - Atomic Test #61: Activities To Disable Secondary Authentication Detected By Modified Registry Value. [windows]
+  - Atomic Test #62: Activities To Disable Microsoft [FIDO Aka Fast IDentity Online] Authentication Detected By Modified Registry Value. [windows]
+  - Atomic Test #63: Scarab Ransomware Defense Evasion Activities [windows]
+  - Atomic Test #64: Disable Remote Desktop Anti-Alias Setting Through Registry [windows]
+  - Atomic Test #65: Disable Remote Desktop Security Settings Through Registry [windows]
+  - Atomic Test #66: Disabling ShowUI Settings of Windows Error Reporting (WER) [windows]
+  - Atomic Test #67: Enable Proxy Settings [windows]
+  - Atomic Test #68: Set-Up Proxy Server [windows]
+  - Atomic Test #69: RDP Authentication Level Override [windows]
+  - Atomic Test #70: Enable RDP via Registry (fDenyTSConnections) [windows]
+  - Atomic Test #71: Disable Windows Prefetch Through Registry [windows]
+  - Atomic Test #72: Setting Shadow key in Registry for RDP Shadowing [windows]
+  - Atomic Test #73: Flush Shimcache [windows]
+  - Atomic Test #74: Disable Windows Remote Desktop Protocol [windows]
+  - Atomic Test #75: Enforce Smart Card Authentication Through Registry [windows]
+  - Atomic Test #76: Requires the BitLocker PIN for Pre-boot authentication [windows]
+  - Atomic Test #77: Modify EnableBDEWithNoTPM Registry entry [windows]
+  - Atomic Test #78: Modify UseTPM Registry entry [windows]
+  - Atomic Test #79: Modify UseTPMPIN Registry entry [windows]
+  - Atomic Test #80: Modify UseTPMKey Registry entry [windows]
+  - Atomic Test #81: Modify UseTPMKeyPIN Registry entry [windows]
+  - Atomic Test #82: Modify EnableNonTPM Registry entry [windows]
+  - Atomic Test #83: Modify UsePartialEncryptionKey Registry entry [windows]
+  - Atomic Test #84: Modify UsePIN Registry entry [windows]
+  - Atomic Test #85: Abusing Windows TelemetryController Registry Key for Persistence [windows]
+  - Atomic Test #86: Modify RDP-Tcp Initial Program Registry Entry [windows]
+  - Atomic Test #87: Abusing MyComputer Disk Cleanup Path for Persistence [windows]
+  - Atomic Test #88: Abusing MyComputer Disk Fragmentation Path for Persistence [windows]
+  - Atomic Test #89: Abusing MyComputer Disk Backup Path for Persistence [windows]
+  - Atomic Test #90: Adding custom paths for application execution [windows]
+- [T1484.001 Domain Policy Modification: Group Policy Modification](../../T1484.001/T1484.001.md)
+  - Atomic Test #1: LockBit Black - Modify Group policy settings -cmd [windows]
+  - Atomic Test #2: LockBit Black - Modify Group policy settings -Powershell [windows]
+- [T1685.006 Disable or Modify Tools: Clear Linux or Mac System Logs](../../T1685.006/T1685.006.md)
+  - Atomic Test #1: rm -rf [macos, linux]
+  - Atomic Test #2: rm -rf [linux]
+  - Atomic Test #3: Delete log files using built-in log utility [macos]
+  - Atomic Test #4: Truncate system log files via truncate utility [macos]
+  - Atomic Test #5: Truncate system log files via truncate utility (freebsd) [linux]
+  - Atomic Test #6: Delete log files via cat utility by appending /dev/null or /dev/zero [macos]
+  - Atomic Test #7: Delete log files via cat utility by appending /dev/null or /dev/zero (freebsd) [linux]
+  - Atomic Test #8: System log file deletion via find utility [macos]
+  - Atomic Test #9: Overwrite macOS system log via echo utility [macos]
+  - Atomic Test #10: Overwrite FreeBSD system log via echo utility [linux]
+  - Atomic Test #11: Real-time system log clearance/deletion [macos]
+  - Atomic Test #12: Delete system log files via unlink utility [macos]
+  - Atomic Test #13: Delete system log files via unlink utility (freebsd) [linux]
+  - Atomic Test #14: Delete system log files using shred utility [macos]
+  - Atomic Test #15: Delete system log files using srm utility [macos]
+  - Atomic Test #16: Delete system log files using OSAScript [macos]
+  - Atomic Test #17: Delete system log files using Applescript [macos]
+  - Atomic Test #18: Delete system journal logs via rm and journalctl utilities [linux]
+  - Atomic Test #19: Overwrite Linux Mail Spool [linux]
+  - Atomic Test #20: Overwrite Linux Log [linux]
+- [T1222 File and Directory Permissions Modification](../../T1222/T1222.md)
+  - Atomic Test #1: Enable Local and Remote Symbolic Links via fsutil [windows]
+  - Atomic Test #2: Enable Local and Remote Symbolic Links via reg.exe [windows]
+  - Atomic Test #3: Enable Local and Remote Symbolic Links via Powershell [windows]
+- T1578.003 Delete Cloud Instance [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1685.005 Disable or Modify Tools: Clear Windows Event Logs](../../T1685.005/T1685.005.md)
+  - Atomic Test #1: Clear Logs [windows]
+  - Atomic Test #2: Delete System Logs Using Clear-EventLog [windows]
+  - Atomic Test #3: Clear Event Logs via VBA [windows]
+- [T1647 Plist File Modification](../../T1647/T1647.md)
+  - Atomic Test #1: Plist Modification [macos]
+- [T1553.005 Subvert Trust Controls: Mark-of-the-Web Bypass](../../T1553.005/T1553.005.md)
+  - Atomic Test #1: Mount ISO image [windows]
+  - Atomic Test #2: Mount an ISO image and run executable from the ISO [windows]
+  - Atomic Test #3: Remove the Zone.Identifier alternate data stream [windows]
+  - Atomic Test #4: Execute LNK file from ISO [windows]
+- T1600.002 Disable Crypto Hardware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1556.008 Network Provider DLL [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1686.002 Network Device Firewall [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1601 Modify System Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1556.006 Multi-Factor Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1599 Network Boundary Bridging [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1690 Prevent Command History Logging](../../T1690/T1690.md)
+  - Atomic Test #1: Disable history collection [linux, macos]
+  - Atomic Test #2: Disable history collection (freebsd) [linux]
+  - Atomic Test #3: Mac HISTCONTROL [macos, linux]
+  - Atomic Test #4: Clear bash history [linux]
+  - Atomic Test #5: Setting the HISTCONTROL environment variable [linux]
+  - Atomic Test #6: Setting the HISTFILESIZE environment variable [linux]
+  - Atomic Test #7: Setting the HISTSIZE environment variable [linux]
+  - Atomic Test #8: Setting the HISTFILE environment variable [linux]
+  - Atomic Test #9: Setting the HISTFILE environment variable (freebsd) [linux]
+  - Atomic Test #10: Setting the HISTIGNORE environment variable [linux]
+  - Atomic Test #11: Disable Windows Command Line Auditing using reg.exe [windows]
+  - Atomic Test #12: Disable Windows Command Line Auditing using Powershell Cmdlet [windows]
+- T1553 Subvert Trust Controls [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1685 Disable or Modify Tools](../../T1685/T1685.md)
+  - Atomic Test #1: Windows Disable LSA Protection [windows]
+  - Atomic Test #2: Disable journal logging via systemctl utility [linux]
+  - Atomic Test #3: Disable journal logging via sed utility [linux]
+  - Atomic Test #4: Disable syslog [linux]
+  - Atomic Test #5: Disable syslog (freebsd) [linux]
+  - Atomic Test #6: Disable Cb Response [linux]
+  - Atomic Test #7: Disable SELinux [linux]
+  - Atomic Test #8: Stop Crowdstrike Falcon on Linux [linux]
+  - Atomic Test #9: Disable Carbon Black Response [macos]
+  - Atomic Test #10: Disable LittleSnitch [macos]
+  - Atomic Test #11: Disable OpenDNS Umbrella [macos]
+  - Atomic Test #12: Disable macOS Gatekeeper [macos]
+  - Atomic Test #13: Stop and unload Crowdstrike Falcon on macOS [macos]
+  - Atomic Test #14: Unload Sysmon Filter Driver [windows]
+  - Atomic Test #15: Uninstall Sysmon [windows]
+  - Atomic Test #16: AMSI Bypass - AMSI InitFailed [windows]
+  - Atomic Test #17: AMSI Bypass - Remove AMSI Provider Reg Key [windows]
+  - Atomic Test #18: Disable Arbitrary Security Windows Service [windows]
+  - Atomic Test #19: Tamper with Windows Defender ATP PowerShell [windows]
+  - Atomic Test #20: Tamper with Windows Defender Command Prompt [windows]
+  - Atomic Test #21: Tamper with Windows Defender Registry [windows]
+  - Atomic Test #22: Disable Microsoft Office Security Features [windows]
+  - Atomic Test #23: Remove Windows Defender Definition Files [windows]
+  - Atomic Test #24: Stop and Remove Arbitrary Security Windows Service [windows]
+  - Atomic Test #25: Uninstall Crowdstrike Falcon on Windows [windows]
+  - Atomic Test #26: Tamper with Windows Defender Evade Scanning -Folder [windows]
+  - Atomic Test #27: Tamper with Windows Defender Evade Scanning -Extension [windows]
+  - Atomic Test #28: Tamper with Windows Defender Evade Scanning -Process [windows]
+  - Atomic Test #29: office-365-Disable-AntiPhishRule [office-365]
+  - Atomic Test #30: Disable Windows Defender with DISM [windows]
+  - Atomic Test #31: Disable Defender Using NirSoft AdvancedRun [windows]
+  - Atomic Test #32: Kill antimalware protected processes using Backstab [windows]
+  - Atomic Test #33: WinPwn - Kill the event log services for stealth [windows]
+  - Atomic Test #34: Tamper with Windows Defender ATP using Aliases - PowerShell [windows]
+  - Atomic Test #35: LockBit Black - Disable Privacy Settings Experience Using Registry -cmd [windows]
+  - Atomic Test #36: LockBit Black - Use Registry Editor to turn on automatic logon -cmd [windows]
+  - Atomic Test #37: LockBit Black - Disable Privacy Settings Experience Using Registry -Powershell [windows]
+  - Atomic Test #38: Lockbit Black - Use Registry Editor to turn on automatic logon -Powershell [windows]
+  - Atomic Test #39: Disable Windows Defender with PwSh Disable-WindowsOptionalFeature [windows]
+  - Atomic Test #40: WMIC Tamper with Windows Defender Evade Scanning Folder [windows]
+  - Atomic Test #41: Delete Windows Defender Scheduled Tasks [windows]
+  - Atomic Test #42: Clear History [linux]
+  - Atomic Test #43: Suspend History [linux]
+  - Atomic Test #44: Reboot Linux Host via Kernel System Request [linux]
+  - Atomic Test #45: Clear Pagging Cache [linux]
+  - Atomic Test #46: Disable Memory Swap [linux]
+  - Atomic Test #47: Disable Hypervisor-Enforced Code Integrity (HVCI) [windows]
+  - Atomic Test #48: AMSI Bypass - Override AMSI via COM [windows]
+  - Atomic Test #49: AWS - GuardDuty Suspension or Deletion [iaas:aws]
+  - Atomic Test #50: Tamper with Defender ATP on Linux/MacOS [linux, macos]
+  - Atomic Test #51: Tamper with Windows Defender Registry - Reg.exe [windows]
+  - Atomic Test #52: Tamper with Windows Defender Registry - Powershell [windows]
+  - Atomic Test #53: ESXi - Disable Account Lockout Policy via PowerCLI [linux]
+  - Atomic Test #54: Delete Microsoft Defender ASR Rules - InTune [windows]
+  - Atomic Test #55: Delete Microsoft Defender ASR Rules - GPO [windows]
+  - Atomic Test #56: AMSI Bypass - Create AMSIEnable Reg Key [windows]
+  - Atomic Test #57: Disable EventLog-Application Auto Logger Session Via Registry - Cmd [windows]
+  - Atomic Test #58: Disable EventLog-Application Auto Logger Session Via Registry - PowerShell [windows]
+  - Atomic Test #59: Disable EventLog-Application ETW Provider Via Registry - Cmd [windows]
+  - Atomic Test #60: Disable EventLog-Application ETW Provider Via Registry - PowerShell [windows]
+  - Atomic Test #61: Freeze PPL-protected process with EDR-Freeze [windows]
+  - Atomic Test #62: Disable ASLR Via sysctl parameters - Linux [linux]
+  - Atomic Test #63: Auditing Configuration Changes on Linux Host [linux]
+  - Atomic Test #64: Auditing Configuration Changes on FreeBSD Host [linux]
+  - Atomic Test #65: Logging Configuration Changes on Linux Host [linux]
+  - Atomic Test #66: Logging Configuration Changes on FreeBSD Host [linux]
+  - Atomic Test #67: Disable Powershell ETW Provider - Windows [windows]
+  - Atomic Test #68: Disable .NET Event Tracing for Windows Via Registry (cmd) [windows]
+  - Atomic Test #69: Disable .NET Event Tracing for Windows Via Registry (powershell) [windows]
+  - Atomic Test #70: LockBit Black - Disable the ETW Provider of Windows Defender -cmd [windows]
+  - Atomic Test #71: LockBit Black - Disable the ETW Provider of Windows Defender -Powershell [windows]
+  - Atomic Test #72: Disable .NET Event Tracing for Windows Via Environment Variable HKCU Registry - Cmd [windows]
+  - Atomic Test #73: Disable .NET Event Tracing for Windows Via Environment Variable HKCU Registry - PowerShell [windows]
+  - Atomic Test #74: Disable .NET Event Tracing for Windows Via Environment Variable HKLM Registry - Cmd [windows]
+  - Atomic Test #75: Disable .NET Event Tracing for Windows Via Environment Variable HKLM Registry - PowerShell [windows]
+  - Atomic Test #76: Block Cybersecurity communication by leveraging Windows Name Resolution Policy Table [windows]
+- [T1553.004 Subvert Trust Controls: Install Root Certificate](../../T1553.004/T1553.004.md)
+  - Atomic Test #1: Install root CA on CentOS/RHEL [linux]
+  - Atomic Test #2: Install root CA on FreeBSD [linux]
+  - Atomic Test #3: Install root CA on Debian/Ubuntu [linux]
+  - Atomic Test #4: Install root CA on macOS [macos]
+  - Atomic Test #5: Install root CA on Windows [windows]
+  - Atomic Test #6: Install root CA on Windows with certutil [windows]
+  - Atomic Test #7: Add Root Certificate to CurrentUser Certificate Store [windows]
+- [T1688 Safe Mode Boot](../../T1688/T1688.md)
+  - Atomic Test #1: Safe Mode Boot [windows]
+- T1578.005 Modify Cloud Compute Configurations [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1556.009 Conditional Access Policies [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1578.002 Create Cloud Instance [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1601.001 Patch System Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1556.001 Modify Authentication Process: Domain Controller Authentication](../../T1556.001/T1556.001.md)
+  - Atomic Test #1: Skeleton Key via Mimikatz [windows]
+- T1556.005 Reversible Encryption [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1484 Domain or Tenant Policy Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1578.001 Modify Cloud Compute Infrastructure: Create Snapshot](../../T1578.001/T1578.001.md)
+  - Atomic Test #1: AWS - Create Snapshot from EBS Volume [iaas:aws]
+  - Atomic Test #2: Azure - Create Snapshot from Managed Disk [iaas:azure]
+  - Atomic Test #3: GCP - Create Snapshot from Persistent Disk [iaas:gcp]
+- T1686.001 Cloud Firewall [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1686 Disable or Modify System Firewall](../../T1686/T1686.md)
+  - Atomic Test #1: Disable Microsoft Defender Firewall [windows]
+  - Atomic Test #2: Disable Microsoft Defender Firewall via Registry [windows]
+  - Atomic Test #3: Allow SMB and RDP on Microsoft Defender Firewall [windows]
+  - Atomic Test #4: Opening ports for proxy - HARDRAIN [windows]
+  - Atomic Test #5: Open a local port through Windows Firewall to any profile [windows]
+  - Atomic Test #6: Allow Executable Through Firewall Located in Non-Standard Location [windows]
+  - Atomic Test #7: Stop/Start UFW firewall [linux]
+  - Atomic Test #8: Stop/Start Packet Filter [linux]
+  - Atomic Test #9: Stop/Start UFW firewall systemctl [linux]
+  - Atomic Test #10: Turn off UFW logging [linux]
+  - Atomic Test #11: Add and delete UFW firewall rules [linux]
+  - Atomic Test #12: Add and delete Packet Filter rules [linux]
+  - Atomic Test #13: Edit UFW firewall user.rules file [linux]
+  - Atomic Test #14: Edit UFW firewall ufw.conf file [linux]
+  - Atomic Test #15: Edit UFW firewall sysctl.conf file [linux]
+  - Atomic Test #16: Edit UFW firewall main configuration file [linux]
+  - Atomic Test #17: Tail the UFW firewall log file [linux]
+  - Atomic Test #18: Disable iptables [linux]
+  - Atomic Test #19: Modify/delete iptables firewall rules [linux]
+  - Atomic Test #20: LockBit Black - Unusual Windows firewall registry modification -cmd [windows]
+  - Atomic Test #21: LockBit Black - Unusual Windows firewall registry modification -Powershell [windows]
+  - Atomic Test #22: Blackbit - Disable Windows Firewall using netsh firewall [windows]
+  - Atomic Test #23: ESXi - Disable Firewall via Esxcli [windows]
+  - Atomic Test #24: Set a firewall rule using New-NetFirewallRule [windows]
+  - Atomic Test #25: ESXi - Set Firewall to PASS Traffic [windows]
+- T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1556.004 Network Device Authentication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1601.002 Downgrade System Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 
 # credential-access
 - T1557 Adversary-in-the-Middle [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -2961,6 +2887,7 @@
 - T1608.002 Upload Tool [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1583.004 Server [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1585.002 Email Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1683.001 Written Content [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1588.001 Malware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1583.003 Virtual Private Server [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1584 Compromise Infrastructure [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -2969,10 +2896,12 @@
 - T1608 Stage Capabilities [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1608.005 Link Target [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1583.006 Web Services [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1683.002 Audio-Visual Content [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1585.003 Cloud Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1588.002 Tool [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1584.006 Web Services [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1585.001 Social Media Accounts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1683 Generate Content [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1587.004 Exploits [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1608.003 Install Digital Certificate [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1584.002 DNS Server [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -2993,6 +2922,7 @@
 - T1597.002 Purchase Technical Data [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1590.005 IP Addresses [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1590.002 DNS [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1682 Query Public AI Services [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1596.002 WHOIS [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1594 Search Victim-Owned Websites [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1596.001 DNS/Passive DNS [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
