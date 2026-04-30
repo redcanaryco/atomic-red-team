@@ -38,6 +38,7 @@ defense-evasion,T1006,Direct Volume Access,1,Read volume boot sector via DOS dev
 defense-evasion,T1564.008,Hide Artifacts: Email Hiding Rules,1,New-Inbox Rule to Hide E-mail in M365,30f7d3d1-78e2-4bf0-9efa-a175b5fce2a9,powershell
 defense-evasion,T1027.013,Obfuscated Files or Information: Encrypted/Encoded File,1,Decode Eicar File and Write to File,7693ccaa-8d64-4043-92a5-a2eb70359535,powershell
 defense-evasion,T1027.013,Obfuscated Files or Information: Encrypted/Encoded File,2,Decrypt Eicar File and Write to File,b404caaa-12ce-43c7-9214-62a531c044f7,powershell
+defense-evasion,T1027.013,Obfuscated Files or Information: Encrypted/Encoded File,3,Password-Protected ZIP Payload Extraction and Execution,c2ca068a-eb1e-498f-9f93-3d554c455916,bash
 defense-evasion,T1014,Rootkit,1,Loadable Kernel Module based Rootkit,dfb50072-e45a-4c75-a17e-a484809c8553,sh
 defense-evasion,T1014,Rootkit,2,Loadable Kernel Module based Rootkit,75483ef8-f10f-444a-bf02-62eb0e48db6f,sh
 defense-evasion,T1014,Rootkit,3,dynamic-linker based rootkit (libprocesshider),1338bf0c-fd0c-48c0-9e65-329f18e2c0d3,sh
@@ -555,6 +556,7 @@ defense-evasion,T1027,Obfuscated Files or Information,7,Obfuscated Command in Po
 defense-evasion,T1027,Obfuscated Files or Information,8,Obfuscated Command Line using special Unicode characters,e68b945c-52d0-4dd9-a5e8-d173d70c448f,manual
 defense-evasion,T1027,Obfuscated Files or Information,9,Snake Malware Encrypted crmlog file,7e47ee60-9dd1-4269-9c4f-97953b183268,powershell
 defense-evasion,T1027,Obfuscated Files or Information,10,Execution from Compressed JScript File,fad04df1-5229-4185-b016-fb6010cd87ac,command_prompt
+defense-evasion,T1027,Obfuscated Files or Information,11,Obfuscated PowerShell Command via Character Array,6683baf0-6e77-4f58-b114-814184ea8150,powershell
 defense-evasion,T1564.006,Run Virtual Instance,1,Register Portable Virtualbox,c59f246a-34f8-4e4d-9276-c295ef9ba0dd,command_prompt
 defense-evasion,T1564.006,Run Virtual Instance,2,Create and start VirtualBox virtual machine,88b81702-a1c0-49a9-95b2-2dd53d755767,command_prompt
 defense-evasion,T1564.006,Run Virtual Instance,3,Create and start Hyper-V virtual machine,fb8d4d7e-f5a4-481c-8867-febf13f8b6d3,powershell
@@ -603,9 +605,11 @@ defense-evasion,T1562.008,Impair Defenses: Disable Cloud Logs,7,AWS - CloudWatch
 defense-evasion,T1562.008,Impair Defenses: Disable Cloud Logs,8,AWS CloudWatch Log Stream Deletes,33ca84bc-4259-4943-bd36-4655dc420932,sh
 defense-evasion,T1562.008,Impair Defenses: Disable Cloud Logs,9,Office 365 - Set Audit Bypass For a Mailbox,c9a2f6fe-7197-488c-af6d-10c782121ca6,powershell
 defense-evasion,T1562.008,Impair Defenses: Disable Cloud Logs,10,GCP - Delete Activity Event Log,d56152ec-01d9-42a2-877c-aac1f6ebe8e6,sh
+defense-evasion,T1562.008,Impair Defenses: Disable Cloud Logs,11,AWS - Config Logs Disabled,4608bc1b-e682-466b-a7d7-dbd76760db31,sh
 defense-evasion,T1564.003,Hide Artifacts: Hidden Window,1,Hidden Window,f151ee37-9e2b-47e6-80e4-550b9f999b7a,powershell
 defense-evasion,T1564.003,Hide Artifacts: Hidden Window,2,Headless Browser Accessing Mockbin,0ad9ab92-c48c-4f08-9b20-9633277c4646,command_prompt
 defense-evasion,T1564.003,Hide Artifacts: Hidden Window,3,Hidden Window-Conhost Execution,5510d22f-2595-4911-8456-4d630c978616,powershell
+defense-evasion,T1556.001,Modify Authentication Process: Domain Controller Authentication,1,Skeleton Key via Mimikatz,0ee8081f-e9a7-4a2e-a23f-68473023184f,powershell
 defense-evasion,T1027.006,HTML Smuggling,1,HTML Smuggling Remote Payload,30cbeda4-08d9-42f1-8685-197fad677734,powershell
 defense-evasion,T1070.004,Indicator Removal on Host: File Deletion,1,Delete a single file - FreeBSD/Linux/macOS,562d737f-2fc6-4b09-8c2a-7f8ff0828480,sh
 defense-evasion,T1070.004,Indicator Removal on Host: File Deletion,2,Delete an entire folder - FreeBSD/Linux/macOS,a415f17e-ce8d-4ce2-a8b4-83b674e7017e,sh
@@ -1029,6 +1033,14 @@ execution,T1106,Native API,3,WinPwn - Get SYSTEM shell - Bind System Shell using
 execution,T1106,Native API,4,WinPwn - Get SYSTEM shell - Pop System Shell using NamedPipe Impersonation technique,e1f93a06-1649-4f07-89a8-f57279a7d60e,powershell
 execution,T1106,Native API,5,Run Shellcode via Syscall in Go,ae56083f-28d0-417d-84da-df4242da1f7c,powershell
 execution,T1059.010,Command and Scripting Interpreter: AutoHotKey & AutoIT,1,AutoHotKey script execution,7b5d350e-f758-43cc-a761-8e3f6b052a03,powershell
+execution,T1569.003,System Services: Systemctl,1,Create and Enable a Malicious systemd Service Unit,e58c8723-5503-4533-b642-535cd20ec648,sh
+execution,T1569.003,System Services: Systemctl,2,Create systemd Service Unit from /tmp (Unusual Location),a1fa406e-2354-4a24-b6d6-94157e7564d4,sh
+execution,T1569.003,System Services: Systemctl,3,Create systemd Service Unit from /dev/shm (Unusual Location),dce49381-a26b-4d95-bdfa-c607ffe8bee5,sh
+execution,T1569.003,System Services: Systemctl,4,Modify Existing systemd Service to Execute Malicious Command,6123928f-6389-4914-8d25-a5d69bd657fa,sh
+execution,T1569.003,System Services: Systemctl,5,Execute Command via Transient systemd Service (systemd-run),a73a886f-23c5-4e8f-b1ab-b1bbc1f5e236,sh
+execution,T1569.003,System Services: Systemctl,6,Enumerate All systemd Services Using systemctl,1e5be8d4-605a-4acb-8709-2f80b2d8ea95,sh
+execution,T1569.003,System Services: Systemctl,7,Enable systemd Service for Persistence with Auto-Restart,2fc6c0ab-4f88-4eb8-ab1b-f739fc22bba7,sh
+execution,T1569.003,System Services: Systemctl,8,Masquerade Malicious Service as Legitimate System Service,6fec8560-ff64-4bbf-bc79-734fea48f7ca,sh
 execution,T1610,Deploy a container,1,Deploy Docker container,59aa6f26-7620-417e-9318-589e0fb7a372,bash
 execution,T1059,Command and Scripting Interpreter,1,AutoIt Script Execution,a9b93f17-31cb-435d-a462-5e838a2a6026,powershell
 execution,T1609,Kubernetes Exec Into Container,1,ExecIntoContainer,d03bfcd3-ed87-49c8-8880-44bb772dea4b,bash
@@ -1173,6 +1185,11 @@ persistence,T1176,Browser Extensions,1,Chrome/Chromium (Developer Mode),3ecd790d
 persistence,T1176,Browser Extensions,2,Firefox,cb790029-17e6-4c43-b96f-002ce5f10938,manual
 persistence,T1176,Browser Extensions,3,Edge Chromium Addon - VPN,3d456e2b-a7db-4af8-b5b3-720e7c4d9da5,manual
 persistence,T1176,Browser Extensions,4,Google Chrome Load Unpacked Extension With Command Line,7a714703-9f6b-461c-b06d-e6aeac650f27,powershell
+persistence,T1137.005,Office Application Startup: Outlook Rules,1,Outlook Rule - Subject Trigger with DeletePermanently Action via COM Object,ffadc988-b682-4a68-bd7e-4803666be637,powershell
+persistence,T1137.005,Office Application Startup: Outlook Rules,2,Outlook Rule - Sender Address Trigger with DeletePermanently Action via COM Object,bddfd8d4-7687-4971-b611-50a537ab3ab4,powershell
+persistence,T1137.005,Office Application Startup: Outlook Rules,3,Outlook Rule - Auto-Forward Emails to External Address via COM Object,b0bd3d76-a57c-4699-83f4-8cd798dd09bd,powershell
+persistence,T1137.005,Office Application Startup: Outlook Rules,4,Outlook Rules - Enumerate Existing Rules via PowerShell COM Object,5ff5249a-5807-480e-ab52-c430497a8a25,powershell
+persistence,T1137.005,Office Application Startup: Outlook Rules,5,Outlook Rule - Create Rule with Obfuscated Blank Name (MAPI Evasion),cb814cf8-24f2-41dc-a1cd-1c2073276d4a,powershell
 persistence,T1546.011,Event Triggered Execution: Application Shimming,1,Application Shim Installation,9ab27e22-ee62-4211-962b-d36d9a0e6a18,command_prompt
 persistence,T1546.011,Event Triggered Execution: Application Shimming,2,New shim database files created in the default shim database directory,aefd6866-d753-431f-a7a4-215ca7e3f13d,powershell
 persistence,T1546.011,Event Triggered Execution: Application Shimming,3,Registry key creation and/or modification events for SDB,9b6a06f9-ab5e-4e8d-8289-1df4289db02f,powershell
@@ -1422,6 +1439,7 @@ persistence,T1546.002,Event Triggered Execution: Screensaver,1,Set Arbitrary Bin
 persistence,T1543.001,Create or Modify System Process: Launch Agent,1,Launch Agent,a5983dee-bf6c-4eaf-951c-dbc1a7b90900,bash
 persistence,T1543.001,Create or Modify System Process: Launch Agent,2,Event Monitor Daemon Persistence,11979f23-9b9d-482a-9935-6fc9cd022c3e,bash
 persistence,T1543.001,Create or Modify System Process: Launch Agent,3,Launch Agent - Root Directory,66774fa8-c562-4bae-a58d-5264a0dd9dd7,bash
+persistence,T1556.001,Modify Authentication Process: Domain Controller Authentication,1,Skeleton Key via Mimikatz,0ee8081f-e9a7-4a2e-a23f-68473023184f,powershell
 persistence,T1037.004,Boot or Logon Initialization Scripts: Rc.common,1,rc.common,97a48daa-8bca-4bc0-b1a9-c1d163e762de,bash
 persistence,T1037.004,Boot or Logon Initialization Scripts: Rc.common,2,rc.common,c33f3d80-5f04-419b-a13a-854d1cbdbf3a,bash
 persistence,T1037.004,Boot or Logon Initialization Scripts: Rc.common,3,rc.local,126f71af-e1c9-405c-94ef-26a47b16c102,sh
@@ -1461,6 +1479,7 @@ persistence,T1574.012,Hijack Execution Flow: COR_PROFILER,3,Registry-free proces
 command-and-control,T1132.001,Data Encoding: Standard Encoding,1,Base64 Encoded data.,1164f70f-9a88-4dff-b9ff-dc70e7bf0c25,sh
 command-and-control,T1132.001,Data Encoding: Standard Encoding,2,Base64 Encoded data (freebsd),2d97c626-7652-449e-a986-b02d9051c298,sh
 command-and-control,T1132.001,Data Encoding: Standard Encoding,3,XOR Encoded data.,c3ed6d2a-e3ad-400d-ad78-bbfdbfeacc08,powershell
+command-and-control,T1568.002,Dynamic Resolution: Domain Generation Algorithms,1,DGA Simulation (Python),cc367493-3a00-4c4a-a685-16b73339167c,bash
 command-and-control,T1071.004,Application Layer Protocol: DNS,1,DNS Large Query Volume,1700f5d6-5a44-487b-84de-bc66f507b0a6,powershell
 command-and-control,T1071.004,Application Layer Protocol: DNS,2,DNS Regular Beaconing,3efc144e-1af8-46bb-8ca2-1376bb6db8b6,powershell
 command-and-control,T1071.004,Application Layer Protocol: DNS,3,DNS Long Domain Query,fef31710-223a-40ee-8462-a396d6b66978,powershell
@@ -1481,6 +1500,8 @@ command-and-control,T1219,Remote Access Software,12,RustDesk Files Detected Test
 command-and-control,T1219,Remote Access Software,13,Splashtop Execution,b025c580-029e-4023-888d-a42710d76934,powershell
 command-and-control,T1219,Remote Access Software,14,Splashtop Streamer Execution,3e1858ee-3550-401c-86ec-5e70ed79295b,powershell
 command-and-control,T1219,Remote Access Software,15,Microsoft App Quick Assist Execution,1aea6d15-70f1-4b4e-8b02-397b5d5ffe75,powershell
+command-and-control,T1659,Content Injection,1,MITM Proxy Injection,9b360eaf-c778-4f07-a6e7-895c4f01ac1c,bash
+command-and-control,T1659,Content Injection,2,MITM Proxy Injection (Windows),dcc2ca85-a21c-43a4-acc7-7314d4e5891c,powershell
 command-and-control,T1572,Protocol Tunneling,1,DNS over HTTPS Large Query Volume,ae9ef4b0-d8c1-49d4-8758-06206f19af0a,powershell
 command-and-control,T1572,Protocol Tunneling,2,DNS over HTTPS Regular Beaconing,0c5f9705-c575-42a6-9609-cbbff4b2fc9b,powershell
 command-and-control,T1572,Protocol Tunneling,3,DNS over HTTPS Long Domain Query,748a73d5-cea4-4f34-84d8-839da5baa99c,powershell
@@ -1829,6 +1850,7 @@ credential-access,T1003.008,"OS Credential Dumping: /etc/passwd, /etc/master.pas
 credential-access,T1558.002,Steal or Forge Kerberos Tickets: Silver Ticket,1,Crafting Active Directory silver tickets with mimikatz,385e59aa-113e-4711-84d9-f637aef01f2c,powershell
 credential-access,T1555.004,Credentials from Password Stores: Windows Credential Manager,1,Access Saved Credentials via VaultCmd,9c2dd36d-5c8b-4b29-8d72-a11b0d5d7439,command_prompt
 credential-access,T1555.004,Credentials from Password Stores: Windows Credential Manager,2,WinPwn - Loot local Credentials - Invoke-WCMDump,fa714db1-63dd-479e-a58e-7b2b52ca5997,powershell
+credential-access,T1556.001,Modify Authentication Process: Domain Controller Authentication,1,Skeleton Key via Mimikatz,0ee8081f-e9a7-4a2e-a23f-68473023184f,powershell
 credential-access,T1003.003,OS Credential Dumping: NTDS,1,Create Volume Shadow Copy with vssadmin,dcebead7-6c28-4b4b-bf3c-79deb1b1fc7f,command_prompt
 credential-access,T1003.003,OS Credential Dumping: NTDS,2,Copy NTDS.dit from Volume Shadow Copy,c6237146-9ea6-4711-85c9-c56d263a6b03,command_prompt
 credential-access,T1003.003,OS Credential Dumping: NTDS,3,Dump Active Directory Database with NTDSUtil,2364e33d-ceab-4641-8468-bfb1d7cc2723,command_prompt
@@ -2251,6 +2273,8 @@ initial-access,T1566.001,Phishing: Spearphishing Attachment,1,Download Macro-Ena
 initial-access,T1566.001,Phishing: Spearphishing Attachment,2,Word spawned a command shell and used an IP address in the command line,cbb6799a-425c-4f83-9194-5447a909d67f,powershell
 initial-access,T1091,Replication Through Removable Media,1,USB Malware Spread Simulation,d44b7297-622c-4be8-ad88-ec40d7563c75,powershell
 initial-access,T1195,Supply Chain Compromise,1,Octopus Scanner Malware Open Source Supply Chain,82a9f001-94c5-495e-9ed5-f530dbded5e2,command_prompt
+initial-access,T1659,Content Injection,1,MITM Proxy Injection,9b360eaf-c778-4f07-a6e7-895c4f01ac1c,bash
+initial-access,T1659,Content Injection,2,MITM Proxy Injection (Windows),dcc2ca85-a21c-43a4-acc7-7314d4e5891c,powershell
 initial-access,T1078.001,Valid Accounts: Default Accounts,1,Enable Guest account with RDP capability and admin privileges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
 initial-access,T1078.001,Valid Accounts: Default Accounts,2,Activate Guest Account,aa6cb8c4-b582-4f8e-b677-37733914abda,command_prompt
 initial-access,T1078.001,Valid Accounts: Default Accounts,3,Enable Guest Account on macOS,0315bdff-4178-47e9-81e4-f31a6d23f7e4,sh

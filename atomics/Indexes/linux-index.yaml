@@ -1529,10 +1529,10 @@ defense-evasion:
           $encodedString = "WDVPIVAlQEFQWzRcUFpYNTQoUF4pN0NDKTd9JEVJQ0FSLVNUQU5EQVJELUFOVElWSVJVUy1URVNULUZJTEUhJEgrSCo="
           $bytes = [System.Convert]::FromBase64String($encodedString)
           $decodedString = [System.Text.Encoding]::UTF8.GetString($bytes)
-
           #write the decoded eicar string to file
-          $decodedString | Out-File T1027.013_decodedEicar.txt
-        cleanup_command: Just delete the resulting T1027.013_decodedEicar.txt file.
+          $decodedString | Out-File $env:temp\T1027.013_decodedEicar.txt
+        cleanup_command: Remove-Item $env:temp\T1027.013_decodedEicar.txt -Force -ErrorAction
+          Ignore
         name: powershell
         elevation_required: false
     - name: Decrypt Eicar File and Write to File
@@ -1547,15 +1547,59 @@ defense-evasion:
         command: |-
           $encryptedString = "76492d1116743f0423413b16050a5345MgB8AGkASwA0AHMAbwBXAFoAagBkAFoATABXAGIAdAA5AFcAWAB1AFMANABVAEEAPQA9AHwAZQBjAGMANgAwADQAZAA0AGQAMQAwADUAYgA4ADAAMgBmADkAZgBjADEANQBjAGMANQBiAGMANwA2AGYANQBmADUANABhAGIAYgAyAGMANQA1AGQAMgA5ADEANABkADUAMgBiAGMANgA2AGMAMAAxADUAZABjADAAOABjAGIANAA1ADUANwBjADcAZQBlAGQAYgAxADEAOQA4AGIAMwAwADMANwAwADAANQA2ADQAOAA4ADkAZgA4ADMAZQA4ADgAOQBiAGEAMAA2ADMAMQAyADYAMwBiAGUAMAAxADgANAA0ADYAOAAxADQANQAwAGUANwBkADkANABjADcANQAxADgAYQA2ADMANQA4AGIAYgA1ADkANQAzAGIAMwAxADYAOAAwADQAMgBmADcAZQBjADYANQA5AGIANwBkADUAOAAyAGEAMgBiADEAMQAzAGQANABkADkAZgA3ADMAMABiADgAOQAxADAANAA4ADcAOQA5ADEAYQA1ADYAZAAzADQANwA3AGYANgAyADcAMAAwADEAMQA4ADEAZgA5ADUAYgBmAGYANQA3ADQAZQA4AGUAMAAxADUANwAwAGQANABiADMAMwA2ADgANwA0AGIANwAyADMAMQBhADkAZABhADEANQAzADQAMgAzADEANwAxADAAZgAxADkAYQA1ADEAMQA="
           $key = [byte]1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32
-
           $decrypt = ConvertTo-SecureString -String $encryptedString -Key $key
           $decryptedString = [Runtime.InteropServices.Marshal]::PtrToStringBSTR([Runtime.InteropServices.Marshal]::SecureStringToBSTR($decrypt))
-
           #Write the decrypted eicar string to a file
-          $decryptedString | out-file T1027.013_decryptedEicar.txt
-        cleanup_command: Just delete the resulting T1027.013_decryptedEicar.txt file.
+          $decryptedString | Out-File $env:temp\T1027.013_decryptedEicar.txt
+        cleanup_command: Remove-Item $env:temp\T1027.013_decryptedEicar.txt -Force
+          -ErrorAction Ignore
         name: powershell
         elevation_required: false
+    - name: Password-Protected ZIP Payload Extraction and Execution
+      auto_generated_guid: c2ca068a-eb1e-498f-9f93-3d554c455916
+      description: |
+        Extracts and executes a script from a password-protected ZIP archive.
+        This technique is commonly used by malware families like Emotet and QBot to deliver payloads
+        via email attachments where the password is provided in the message body.
+        The encrypted ZIP evades static file analysis until extracted at runtime.
+        Upon successful execution, displays confirmation and system information.
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        zip_password:
+          description: Password used to protect the ZIP archive
+          type: String
+          default: infected
+      dependency_executor_name: bash
+      dependencies:
+      - description: 'zip and unzip must be installed
+
+          '
+        prereq_command: 'which zip && which unzip
+
+          '
+        get_prereq_command: 'echo "Install zip and unzip using your package manager
+          (apt-get, yum, or brew)"
+
+          '
+      executor:
+        command: |
+          echo '#!/bin/bash' > /tmp/art_payload.sh
+          echo 'echo "T1027.013: Payload extracted from encrypted ZIP"' >> /tmp/art_payload.sh
+          echo 'echo "Hostname: $(hostname)"' >> /tmp/art_payload.sh
+          echo 'echo "User: $(whoami)"' >> /tmp/art_payload.sh
+          echo 'uname -a' >> /tmp/art_payload.sh
+          cd /tmp && zip -P "#{zip_password}" art_encrypted.zip art_payload.sh
+          rm /tmp/art_payload.sh
+          echo "Encrypted ZIP created. Extracting with password..."
+          unzip -P "#{zip_password}" -o /tmp/art_encrypted.zip -d /tmp/
+          echo "Executing extracted payload:"
+          bash /tmp/art_payload.sh
+        cleanup_command: |
+          rm -f /tmp/art_payload.sh
+          rm -f /tmp/art_encrypted.zip
+        name: bash
   T1014:
     technique:
       type: attack-pattern
@@ -15110,7 +15154,7 @@ defense-evasion:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:49:27.324Z'
-      name: Domain Controller Authentication
+      name: 'Modify Authentication Process: Domain Controller Authentication'
       description: "Adversaries may patch the authentication process on a domain controller
         to bypass the typical authentication mechanisms and enable access to accounts.
         \n\nMalware may be used to inject false credentials into the authentication
@@ -15140,6 +15184,7 @@ defense-evasion:
       x_mitre_platforms:
       - Windows
       x_mitre_version: '2.1'
+      identifier: T1556.001
     atomic_tests: []
   T1027.006:
     technique:
@@ -28377,7 +28422,7 @@ execution:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-04-15T19:58:28.694Z'
-      name: Systemctl
+      name: 'System Services: Systemctl'
       description: "Adversaries may abuse systemctl to execute commands or programs.
         Systemctl is the primary interface for systemd, the Linux init system and
         service manager. Typically invoked from a shell, Systemctl can also be integrated
@@ -28400,7 +28445,586 @@ execution:
       - Linux
       x_mitre_version: '1.0'
       x_mitre_remote_support: false
-    atomic_tests: []
+      identifier: T1569.003
+    atomic_tests:
+    - name: Create and Enable a Malicious systemd Service Unit
+      auto_generated_guid: e58c8723-5503-4533-b642-535cd20ec648
+      description: |
+        Creates a new systemd service unit file in /etc/systemd/system/ and enables it using
+        systemctl enable followed by systemctl start. Adversaries commonly abuse this workflow
+        to establish persistence or execute arbitrary commands under the context of systemd.
+
+        This simulates the full attacker workflow: writing the unit file, reloading the systemd
+        daemon, enabling the service to survive reboots, and starting it immediately. This is
+        consistent with techniques observed in ransomware precursor activity and post-exploitation
+        frameworks targeting Linux infrastructure.
+      supported_platforms:
+      - linux
+      input_arguments:
+        service_name:
+          description: Name of the malicious service to create
+          type: string
+          default: atomic-test
+        command_to_run:
+          description: Command the service will execute
+          type: string
+          default: /bin/bash -c "echo atomictest > /tmp/atomic_service_output.txt"
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'systemctl must be available on the system
+
+          '
+        prereq_command: 'if [ -x "$(command -v systemctl)" ]; then exit 0; else exit
+          1; fi
+
+          '
+        get_prereq_command: 'echo "systemctl is not available. Ensure systemd is running
+          on this system."
+
+          '
+      - description: 'The test must be run as root or with sudo privileges
+
+          '
+        prereq_command: 'if [ "$(id -u)" -eq 0 ]; then exit 0; else exit 1; fi
+
+          '
+        get_prereq_command: 'echo "This test requires root privileges. Run as root
+          or use sudo."
+
+          '
+      - description: "/etc/systemd/system/ directory must exist and be writable\n"
+        prereq_command: 'if [ -d "/etc/systemd/system" ] && [ -w "/etc/systemd/system"
+          ]; then exit 0; else exit 1; fi
+
+          '
+        get_prereq_command: 'echo "/etc/systemd/system/ does not exist or is not writable.
+          Ensure systemd is installed."
+
+          '
+      executor:
+        name: sh
+        elevation_required: true
+        command: |
+          echo "[Unit]" > /etc/systemd/system/#{service_name}.service
+          echo "Description=Atomic Test Service" >> /etc/systemd/system/#{service_name}.service
+          echo "After=network.target" >> /etc/systemd/system/#{service_name}.service
+          echo "" >> /etc/systemd/system/#{service_name}.service
+          echo "[Service]" >> /etc/systemd/system/#{service_name}.service
+          echo "ExecStart=#{command_to_run}" >> /etc/systemd/system/#{service_name}.service
+          echo "Restart=on-failure" >> /etc/systemd/system/#{service_name}.service
+          echo "" >> /etc/systemd/system/#{service_name}.service
+          echo "[Install]" >> /etc/systemd/system/#{service_name}.service
+          echo "WantedBy=multi-user.target" >> /etc/systemd/system/#{service_name}.service
+          systemctl daemon-reload
+          systemctl enable #{service_name}.service
+          systemctl start #{service_name}.service
+          systemctl status #{service_name}.service
+        cleanup_command: |
+          systemctl stop #{service_name}.service 2>/dev/null || true
+          systemctl disable #{service_name}.service 2>/dev/null || true
+          rm -f /etc/systemd/system/#{service_name}.service
+          systemctl daemon-reload
+          rm -f /tmp/atomic_service_output.txt
+    - name: Create systemd Service Unit from /tmp (Unusual Location)
+      auto_generated_guid: a1fa406e-2354-4a24-b6d6-94157e7564d4
+      description: |
+        Creates a systemd service unit file in /tmp and loads it using systemctl start with
+        an absolute path. Adversaries may write service unit files to world-writable directories
+        such as /tmp to avoid triggering alerts on new file creation in standard service
+        directories, or to execute payloads transiently without permanently installing a service.
+
+        Loading a service unit from an arbitrary path rather than a standard systemd directory
+        is unusual behaviour that should be detectable by monitoring systemctl command arguments.
+      supported_platforms:
+      - linux
+      input_arguments:
+        service_path:
+          description: Full path to the service file to be written in /tmp
+          type: path
+          default: "/tmp/atomic_tmp.service"
+        command_to_run:
+          description: Command the service will execute
+          type: string
+          default: /bin/bash -c "id > /tmp/atomic_tmp_output.txt"
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'systemctl must be available on the system
+
+          '
+        prereq_command: 'if [ -x "$(command -v systemctl)" ]; then exit 0; else exit
+          1; fi
+
+          '
+        get_prereq_command: 'echo "systemctl is not available. Ensure systemd is running
+          on this system."
+
+          '
+      - description: "/tmp must exist and be writable\n"
+        prereq_command: 'if [ -d "/tmp" ] && [ -w "/tmp" ]; then exit 0; else exit
+          1; fi
+
+          '
+        get_prereq_command: 'echo "/tmp does not exist or is not writable on this
+          system."
+
+          '
+      - description: 'The test must be run as root or with sudo privileges
+
+          '
+        prereq_command: 'if [ "$(id -u)" -eq 0 ]; then exit 0; else exit 1; fi
+
+          '
+        get_prereq_command: 'echo "This test requires root privileges. Run as root
+          or use sudo."
+
+          '
+      executor:
+        name: sh
+        elevation_required: true
+        command: |
+          echo "[Unit]" > #{service_path}
+          echo "Description=Atomic Tmp Service" >> #{service_path}
+          echo "" >> #{service_path}
+          echo "[Service]" >> #{service_path}
+          echo "ExecStart=#{command_to_run}" >> #{service_path}
+          echo "" >> #{service_path}
+          echo "[Install]" >> #{service_path}
+          echo "WantedBy=multi-user.target" >> #{service_path}
+          systemctl link #{service_path}
+          systemctl start $(basename #{service_path})
+          systemctl status $(basename #{service_path})
+        cleanup_command: |
+          systemctl stop $(basename #{service_path}) 2>/dev/null || true
+          rm -f #{service_path}
+          rm -f /tmp/atomic_tmp_output.txt
+    - name: Create systemd Service Unit from /dev/shm (Unusual Location)
+      auto_generated_guid: dce49381-a26b-4d95-bdfa-c607ffe8bee5
+      description: |
+        Creates a systemd service unit file in /dev/shm and loads it using systemctl.
+        /dev/shm is a memory-backed filesystem that is world-writable on most Linux systems
+        and does not persist across reboots, making it particularly attractive to adversaries
+        seeking to execute transient payloads while evading file-based forensic detection.
+
+        This technique has been observed in post-exploitation scenarios where attackers
+        deliberately avoid writing to disk-backed locations to limit forensic artefacts.
+      supported_platforms:
+      - linux
+      input_arguments:
+        service_path:
+          description: Full path to the service file to be written in /dev/shm
+          type: path
+          default: "/dev/shm/atomic_shm.service"
+        command_to_run:
+          description: Command the service will execute
+          type: string
+          default: /bin/bash -c "whoami > /tmp/atomic_shm_output.txt"
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'systemctl must be available on the system
+
+          '
+        prereq_command: 'if [ -x "$(command -v systemctl)" ]; then exit 0; else exit
+          1; fi
+
+          '
+        get_prereq_command: 'echo "systemctl is not available. Ensure systemd is running
+          on this system."
+
+          '
+      - description: "/dev/shm must exist and be writable\n"
+        prereq_command: 'if [ -d "/dev/shm" ] && [ -w "/dev/shm" ]; then exit 0; else
+          exit 1; fi
+
+          '
+        get_prereq_command: 'echo "/dev/shm does not exist or is not writable on this
+          system."
+
+          '
+      - description: 'The test must be run as root or with sudo privileges
+
+          '
+        prereq_command: 'if [ "$(id -u)" -eq 0 ]; then exit 0; else exit 1; fi
+
+          '
+        get_prereq_command: 'echo "This test requires root privileges. Run as root
+          or use sudo."
+
+          '
+      executor:
+        name: sh
+        elevation_required: true
+        command: |
+          echo "[Unit]" > #{service_path}
+          echo "Description=Atomic SHM Service" >> #{service_path}
+          echo "" >> #{service_path}
+          echo "[Service]" >> #{service_path}
+          echo "ExecStart=#{command_to_run}" >> #{service_path}
+          echo "" >> #{service_path}
+          echo "[Install]" >> #{service_path}
+          echo "WantedBy=multi-user.target" >> #{service_path}
+          systemctl link #{service_path}
+          systemctl start $(basename #{service_path})
+          systemctl status $(basename #{service_path})
+        cleanup_command: |
+          systemctl stop $(basename #{service_path}) 2>/dev/null || true
+          rm -f #{service_path}
+          rm -f /tmp/atomic_shm_output.txt
+    - name: Modify Existing systemd Service to Execute Malicious Command
+      auto_generated_guid: 6123928f-6389-4914-8d25-a5d69bd657fa
+      description: |
+        Creates a service unit file that initially runs a benign command, then modifies the
+        ExecStart directive using sed to substitute a malicious command before reloading and
+        restarting the service. Adversaries may hijack existing services to blend in with normal
+        service activity and avoid triggering detections focused solely on new service creation.
+
+        This technique reflects the tradecraft observed in more sophisticated intrusions where
+        blending into existing process trees is a priority over creating net-new services.
+      supported_platforms:
+      - linux
+      input_arguments:
+        service_name:
+          description: Name of the service to create and then modify for the test
+          type: string
+          default: atomic-modify-test
+        malicious_command:
+          description: Malicious command to substitute into ExecStart
+          type: string
+          default: /bin/bash -c "echo hijacked > /tmp/atomic_hijack_output.txt"
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'systemctl must be available on the system
+
+          '
+        prereq_command: 'if [ -x "$(command -v systemctl)" ]; then exit 0; else exit
+          1; fi
+
+          '
+        get_prereq_command: 'echo "systemctl is not available. Ensure systemd is running
+          on this system."
+
+          '
+      - description: 'sed must be available on the system
+
+          '
+        prereq_command: 'if [ -x "$(command -v sed)" ]; then exit 0; else exit 1;
+          fi
+
+          '
+        get_prereq_command: 'apt-get install -y sed 2>/dev/null || yum install -y
+          sed 2>/dev/null || echo "Could not install sed automatically."
+
+          '
+      - description: 'The test must be run as root or with sudo privileges
+
+          '
+        prereq_command: 'if [ "$(id -u)" -eq 0 ]; then exit 0; else exit 1; fi
+
+          '
+        get_prereq_command: 'echo "This test requires root privileges. Run as root
+          or use sudo."
+
+          '
+      - description: "/etc/systemd/system/ directory must exist and be writable\n"
+        prereq_command: 'if [ -d "/etc/systemd/system" ] && [ -w "/etc/systemd/system"
+          ]; then exit 0; else exit 1; fi
+
+          '
+        get_prereq_command: 'echo "/etc/systemd/system/ does not exist or is not writable."
+
+          '
+      executor:
+        name: sh
+        elevation_required: true
+        command: |
+          echo "[Unit]" > /etc/systemd/system/#{service_name}.service
+          echo "Description=Legitimate Looking Service" >> /etc/systemd/system/#{service_name}.service
+          echo "" >> /etc/systemd/system/#{service_name}.service
+          echo "[Service]" >> /etc/systemd/system/#{service_name}.service
+          echo "ExecStart=/bin/true" >> /etc/systemd/system/#{service_name}.service
+          echo "" >> /etc/systemd/system/#{service_name}.service
+          echo "[Install]" >> /etc/systemd/system/#{service_name}.service
+          echo "WantedBy=multi-user.target" >> /etc/systemd/system/#{service_name}.service
+          systemctl daemon-reload
+          sed -i 's|ExecStart=.*|ExecStart=#{malicious_command}|' /etc/systemd/system/#{service_name}.service
+          systemctl daemon-reload
+          systemctl start #{service_name}.service
+          systemctl status #{service_name}.service
+        cleanup_command: |
+          systemctl stop #{service_name}.service 2>/dev/null || true
+          systemctl disable #{service_name}.service 2>/dev/null || true
+          rm -f /etc/systemd/system/#{service_name}.service
+          systemctl daemon-reload
+          rm -f /tmp/atomic_hijack_output.txt
+    - name: Execute Command via Transient systemd Service (systemd-run)
+      auto_generated_guid: a73a886f-23c5-4e8f-b1ab-b1bbc1f5e236
+      description: |
+        Uses systemd-run to execute a command as a transient systemd service without creating
+        a persistent unit file on disk. Adversaries may use systemd-run to execute arbitrary
+        commands under the context of systemd while bypassing controls that monitor for new
+        unit file creation, since transient services exist only in memory for their lifetime.
+
+        This is a particularly stealthy technique as it leaves minimal on-disk artefacts and
+        the service disappears from systemctl list-units once execution completes.
+      supported_platforms:
+      - linux
+      input_arguments:
+        unit_name:
+          description: Name of the transient systemd unit to create
+          type: string
+          default: atomic-transient
+        command_to_run:
+          description: Command to execute as a transient service
+          type: string
+          default: /bin/bash -c "id > /tmp/atomic_transient_output.txt"
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'systemd-run must be available on the system
+
+          '
+        prereq_command: 'if [ -x "$(command -v systemd-run)" ]; then exit 0; else
+          exit 1; fi
+
+          '
+        get_prereq_command: 'echo "systemd-run is not available. Ensure systemd is
+          installed and up to date."
+
+          '
+      - description: 'The test must be run as root or with sudo privileges
+
+          '
+        prereq_command: 'if [ "$(id -u)" -eq 0 ]; then exit 0; else exit 1; fi
+
+          '
+        get_prereq_command: 'echo "This test requires root privileges. Run as root
+          or use sudo."
+
+          '
+      executor:
+        name: sh
+        elevation_required: true
+        command: |
+          systemd-run --unit=#{unit_name} --wait #{command_to_run}
+          systemctl status #{unit_name}.service 2>/dev/null || echo "Transient service has already completed and exited."
+        cleanup_command: |
+          systemctl stop #{unit_name}.service 2>/dev/null || true
+          rm -f /tmp/atomic_transient_output.txt
+    - name: Enumerate All systemd Services Using systemctl
+      auto_generated_guid: 1e5be8d4-605a-4acb-8709-2f80b2d8ea95
+      description: |
+        Enumerates all systemd services and their current states using systemctl list-units
+        and systemctl list-unit-files. Adversaries may enumerate running and enabled services
+        to identify targets for hijacking, understand the host environment, map installed
+        security tooling, or identify gaps in monitoring coverage.
+
+        Service enumeration is a common reconnaissance step during post-exploitation and may
+        precede service hijacking or masquerading activity. This test does not require
+        elevation as service listing is available to unprivileged users on most Linux systems.
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'systemctl must be available on the system
+
+          '
+        prereq_command: 'if [ -x "$(command -v systemctl)" ]; then exit 0; else exit
+          1; fi
+
+          '
+        get_prereq_command: 'echo "systemctl is not available. Ensure systemd is running
+          on this system."
+
+          '
+      executor:
+        name: sh
+        elevation_required: false
+        command: |
+          systemctl list-units --type=service --all
+          systemctl list-unit-files --type=service
+        cleanup_command: 'echo "No cleanup required"
+
+          '
+    - name: Enable systemd Service for Persistence with Auto-Restart
+      auto_generated_guid: 2fc6c0ab-4f88-4eb8-ab1b-f739fc22bba7
+      description: |
+        Creates a payload script and a systemd service unit that executes it, then enables
+        the service to survive reboots using systemctl enable. The service is configured with
+        Restart=always to automatically restart on failure, mimicking the persistence mechanism
+        used by adversaries deploying backdoors or beacons on Linux hosts.
+
+        This technique is consistent with observed post-exploitation tradecraft where adversaries
+        establish a foothold that survives reboots and self-heals after interruption, complicating
+        incident response and remediation efforts.
+      supported_platforms:
+      - linux
+      input_arguments:
+        service_name:
+          description: Name of the persistence service to create
+          type: string
+          default: atomic-persist
+        payload_path:
+          description: Path to the payload script that the service will execute
+          type: path
+          default: "/tmp/atomic_payload.sh"
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'systemctl must be available on the system
+
+          '
+        prereq_command: 'if [ -x "$(command -v systemctl)" ]; then exit 0; else exit
+          1; fi
+
+          '
+        get_prereq_command: 'echo "systemctl is not available. Ensure systemd is running
+          on this system."
+
+          '
+      - description: 'The test must be run as root or with sudo privileges
+
+          '
+        prereq_command: 'if [ "$(id -u)" -eq 0 ]; then exit 0; else exit 1; fi
+
+          '
+        get_prereq_command: 'echo "This test requires root privileges. Run as root
+          or use sudo."
+
+          '
+      - description: "/etc/systemd/system/ directory must exist and be writable\n"
+        prereq_command: 'if [ -d "/etc/systemd/system" ] && [ -w "/etc/systemd/system"
+          ]; then exit 0; else exit 1; fi
+
+          '
+        get_prereq_command: 'echo "/etc/systemd/system/ does not exist or is not writable."
+
+          '
+      - description: 'Payload script must exist at the specified path
+
+          '
+        prereq_command: 'if [ -f "#{payload_path}" ]; then exit 0; else exit 1; fi
+
+          '
+        get_prereq_command: |
+          echo '#!/bin/bash' > #{payload_path}
+          echo 'echo persistent >> /tmp/atomic_persist_output.txt' >> #{payload_path}
+          chmod +x #{payload_path}
+      executor:
+        name: sh
+        elevation_required: true
+        command: |
+          echo "[Unit]" > /etc/systemd/system/#{service_name}.service
+          echo "Description=Atomic Persistence Service" >> /etc/systemd/system/#{service_name}.service
+          echo "After=network.target" >> /etc/systemd/system/#{service_name}.service
+          echo "" >> /etc/systemd/system/#{service_name}.service
+          echo "[Service]" >> /etc/systemd/system/#{service_name}.service
+          echo "ExecStart=#{payload_path}" >> /etc/systemd/system/#{service_name}.service
+          echo "Restart=always" >> /etc/systemd/system/#{service_name}.service
+          echo "RestartSec=10" >> /etc/systemd/system/#{service_name}.service
+          echo "" >> /etc/systemd/system/#{service_name}.service
+          echo "[Install]" >> /etc/systemd/system/#{service_name}.service
+          echo "WantedBy=multi-user.target" >> /etc/systemd/system/#{service_name}.service
+          systemctl daemon-reload
+          systemctl enable #{service_name}.service
+          systemctl start #{service_name}.service
+          systemctl status #{service_name}.service
+        cleanup_command: |
+          systemctl stop #{service_name}.service 2>/dev/null || true
+          systemctl disable #{service_name}.service 2>/dev/null || true
+          rm -f /etc/systemd/system/#{service_name}.service
+          rm -f /etc/systemd/system/multi-user.target.wants/#{service_name}.service
+          systemctl daemon-reload
+          rm -f #{payload_path}
+          rm -f /tmp/atomic_persist_output.txt
+    - name: Masquerade Malicious Service as Legitimate System Service
+      auto_generated_guid: 6fec8560-ff64-4bbf-bc79-734fea48f7ca
+      description: |
+        Creates a systemd service with a name and description closely resembling a legitimate
+        system service to blend in with normal service activity. Adversaries may deliberately
+        choose service names similar to well-known system services such as systemd-networkd,
+        cron, or ssh to evade detection from analysts reviewing service lists or automated
+        alerting on service names.
+
+        This masquerading technique is particularly effective in environments where detection
+        relies on service name allowlists or manual review of systemctl list-units output
+        rather than behavioural analysis of service unit file contents and ExecStart paths.
+      supported_platforms:
+      - linux
+      input_arguments:
+        masquerade_name:
+          description: Service name designed to closely mimic a legitimate system
+            service
+          type: string
+          default: systemd-network-helper
+        command_to_run:
+          description: Command the masquerading service will execute
+          type: string
+          default: /bin/bash -c "echo masquerade > /tmp/atomic_masquerade_output.txt"
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'systemctl must be available on the system
+
+          '
+        prereq_command: 'if [ -x "$(command -v systemctl)" ]; then exit 0; else exit
+          1; fi
+
+          '
+        get_prereq_command: 'echo "systemctl is not available. Ensure systemd is running
+          on this system."
+
+          '
+      - description: 'The test must be run as root or with sudo privileges
+
+          '
+        prereq_command: 'if [ "$(id -u)" -eq 0 ]; then exit 0; else exit 1; fi
+
+          '
+        get_prereq_command: 'echo "This test requires root privileges. Run as root
+          or use sudo."
+
+          '
+      - description: "/etc/systemd/system/ directory must exist and be writable\n"
+        prereq_command: 'if [ -d "/etc/systemd/system" ] && [ -w "/etc/systemd/system"
+          ]; then exit 0; else exit 1; fi
+
+          '
+        get_prereq_command: 'echo "/etc/systemd/system/ does not exist or is not writable."
+
+          '
+      - description: 'Chosen masquerade service name must not already exist as a real
+          service
+
+          '
+        prereq_command: 'if ! systemctl list-unit-files --type=service | grep -q "^#{masquerade_name}.service";
+          then exit 0; else exit 1; fi
+
+          '
+        get_prereq_command: 'echo "A service named #{masquerade_name} already exists.
+          Change the masquerade_name input argument to avoid conflicts."
+
+          '
+      executor:
+        name: sh
+        elevation_required: true
+        command: |
+          echo "[Unit]" > /etc/systemd/system/#{masquerade_name}.service
+          echo "Description=Network connectivity helper service" >> /etc/systemd/system/#{masquerade_name}.service
+          echo "After=network.target" >> /etc/systemd/system/#{masquerade_name}.service
+          echo "Before=network-online.target" >> /etc/systemd/system/#{masquerade_name}.service
+          echo "" >> /etc/systemd/system/#{masquerade_name}.service
+          echo "[Service]" >> /etc/systemd/system/#{masquerade_name}.service
+          echo "ExecStart=#{command_to_run}" >> /etc/systemd/system/#{masquerade_name}.service
+          echo "Restart=on-failure" >> /etc/systemd/system/#{masquerade_name}.service
+          echo "RestartSec=5" >> /etc/systemd/system/#{masquerade_name}.service
+          echo "" >> /etc/systemd/system/#{masquerade_name}.service
+          echo "[Install]" >> /etc/systemd/system/#{masquerade_name}.service
+          echo "WantedBy=multi-user.target" >> /etc/systemd/system/#{masquerade_name}.service
+          systemctl daemon-reload
+          systemctl start #{masquerade_name}.service
+          systemctl status #{masquerade_name}.service
+        cleanup_command: |
+          systemctl stop #{masquerade_name}.service 2>/dev/null || true
+          systemctl disable #{masquerade_name}.service 2>/dev/null || true
+          rm -f /etc/systemd/system/#{masquerade_name}.service
+          systemctl daemon-reload
+          rm -f /tmp/atomic_masquerade_output.txt
   T1059.009:
     technique:
       type: attack-pattern
@@ -33617,7 +34241,7 @@ persistence:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:41.026Z'
-      name: Outlook Rules
+      name: 'Office Application Startup: Outlook Rules'
       description: |-
         Adversaries may abuse Microsoft Outlook rules to obtain persistence on a compromised system. Outlook rules allow a user to define automated behavior to manage email messages. A benign rule might, for example, automatically move an email to a particular folder in Outlook if it contains specific words from a specific sender. Malicious Outlook rules can be created that can trigger code execution when an adversary sends a specifically crafted email to that user.(Citation: SilentBreak Outlook Rules)
 
@@ -33638,6 +34262,7 @@ persistence:
       - Windows
       - Office Suite
       x_mitre_version: '1.2'
+      identifier: T1137.005
     atomic_tests: []
   T1098.007:
     technique:
@@ -39266,7 +39891,7 @@ persistence:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:49:27.324Z'
-      name: Domain Controller Authentication
+      name: 'Modify Authentication Process: Domain Controller Authentication'
       description: "Adversaries may patch the authentication process on a domain controller
         to bypass the typical authentication mechanisms and enable access to accounts.
         \n\nMalware may be used to inject false credentials into the authentication
@@ -39296,6 +39921,7 @@ persistence:
       x_mitre_platforms:
       - Windows
       x_mitre_version: '2.1'
+      identifier: T1556.001
     atomic_tests: []
   T1556.005:
     technique:
@@ -41474,7 +42100,7 @@ command-and-control:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:25.458Z'
-      name: Domain Generation Algorithms
+      name: 'Dynamic Resolution: Domain Generation Algorithms'
       description: |-
         Adversaries may make use of Domain Generation Algorithms (DGAs) to dynamically identify a destination domain for command and control traffic rather than relying on a list of static IP addresses or domains. This has the advantage of making it much harder for defenders to block, track, or take over the command and control channel, as there potentially could be thousands of domains that malware can check for instructions.(Citation: Cybereason Dissecting DGAs)(Citation: Cisco Umbrella DGA)(Citation: Unit 42 DGA Feb 2019)
 
@@ -41501,7 +42127,45 @@ command-and-control:
       - Windows
       - ESXi
       x_mitre_version: '1.2'
-    atomic_tests: []
+      identifier: T1568.002
+    atomic_tests:
+    - name: DGA Simulation (Python)
+      auto_generated_guid: cc367493-3a00-4c4a-a685-16b73339167c
+      description: "Simulates Domain Generation Algorithm (DGA) traffic by generating
+        pseudo-random domains based on the current date and querying them using dig.
+        \nThis is designed to trigger DNS analytics and NGIDS.\n"
+      supported_platforms:
+      - linux
+      input_arguments:
+        python_script_path:
+          description: Full path to the DGA python script
+          type: string
+          default: PathToAtomicsFolder/T1568.002/src/T1568.002.py
+      dependency_executor_name: bash
+      dependencies:
+      - description: "#{python_script_path} must exist on system.\n"
+        prereq_command: 'if [ -f "#{python_script_path}" ]; then exit 0; else exit
+          1; fi
+
+          '
+        get_prereq_command: |
+          mkdir -p "$(dirname "#{python_script_path}")"
+          curl -sL "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1568.002/src/T1568.002.py" -o "#{python_script_path}"
+      - description: 'Python 3 must be installed to run the script.
+
+          '
+        prereq_command: 'which python3
+
+          '
+        get_prereq_command: 'sudo apt-get update && sudo apt-get install -y python3
+
+          '
+      executor:
+        command: 'python3 "#{python_script_path}"
+
+          '
+        name: bash
+        elevation_required: false
   T1071.004:
     technique:
       type: attack-pattern
@@ -41902,7 +42566,67 @@ command-and-control:
       - macOS
       - Windows
       x_mitre_version: '1.0'
-    atomic_tests: []
+      identifier: T1659
+    atomic_tests:
+    - name: MITM Proxy Injection
+      auto_generated_guid: 9b360eaf-c778-4f07-a6e7-895c4f01ac1c
+      description: Start mitmdump and verify injected header and HTML content.
+      supported_platforms:
+      - macos
+      - linux
+      dependencies:
+      - description: python3 must be installed
+        prereq_command: 'command -v python3
+
+          '
+        get_prereq_command: 'brew install python3 || (sudo apt-get update && sudo
+          apt-get install -y python3) || sudo yum install -y python3
+
+          '
+      - description: curl must be installed
+        prereq_command: 'command -v curl
+
+          '
+        get_prereq_command: 'brew install curl || (sudo apt-get update && sudo apt-get
+          install -y curl) || sudo yum install -y curl
+
+          '
+      - description: pipx must be installed
+        prereq_command: 'pipx --version
+
+          '
+        get_prereq_command: 'brew install pipx || (sudo apt-get update && sudo apt-get
+          install -y pipx) || sudo yum install -y pipx
+
+          '
+      - description: mitmproxy must be installed
+        prereq_command: 'pipx list | grep mitmproxy || command -v mitmdump
+
+          '
+        get_prereq_command: 'pipx install mitmproxy || brew install mitmproxy
+
+          '
+      - description: mitmdump must be running on port 8080
+        prereq_command: "lsof -i tcp:8080 | grep mitmdump || lsof -i tcp:8080 | grep
+          -i PYTHON \n"
+        get_prereq_command: |
+          printf "from mitmproxy import http\ndef response(flow: http.HTTPFlow):\n    if 'text/html' in flow.response.headers.get('content-type',''):\n        flow.response.headers['X-Atomic']='T1659'\n        flow.response.text = flow.response.text.replace('</body>', '<script>alert(\"Atomic T1659 Injection\")</script></body>')" > /tmp/atomic_t1659_inject.py
+          ($HOME/.local/bin/mitmdump -s /tmp/atomic_t1659_inject.py -p 8080 > /tmp/atomic_t1659.log 2>&1 &)
+          sleep 5
+          lsof -i tcp:8080 | grep mitmdump || (cat /tmp/atomic_t1659.log; exit 1)
+      executor:
+        name: bash
+        command: |
+          curl -skI --proxy http://127.0.0.1:8080 http://example.com > /tmp/curl_out.txt
+          grep "X-Atomic" /tmp/curl_out.txt || (cat /tmp/curl_out.txt && exit 1)
+          curl -sk --proxy http://127.0.0.1:8080 http://example.com > /tmp/atomic_t1659_page.html
+          grep -q "Atomic T1659 Injection" /tmp/atomic_t1659_page.html || (head -20 /tmp/atomic_t1659_page.html; exit 1)
+        cleanup_command: |
+          rm -rf /tmp/atomic_t1659_inject.py
+          rm -rf /tmp/atomic_t1659.log
+          rm -rf /tmp/curl_out.txt
+          rm -rf /tmp/atomic_t1659_page.html
+          pkill -f mitmdump || true
   T1205:
     technique:
       type: attack-pattern
@@ -54798,7 +55522,7 @@ credential-access:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:49:27.324Z'
-      name: Domain Controller Authentication
+      name: 'Modify Authentication Process: Domain Controller Authentication'
       description: "Adversaries may patch the authentication process on a domain controller
         to bypass the typical authentication mechanisms and enable access to accounts.
         \n\nMalware may be used to inject false credentials into the authentication
@@ -54828,6 +55552,7 @@ credential-access:
       x_mitre_platforms:
       - Windows
       x_mitre_version: '2.1'
+      identifier: T1556.001
     atomic_tests: []
   T1556.005:
     technique:
@@ -68790,7 +69515,67 @@ initial-access:
       - macOS
       - Windows
       x_mitre_version: '1.0'
-    atomic_tests: []
+      identifier: T1659
+    atomic_tests:
+    - name: MITM Proxy Injection
+      auto_generated_guid: 9b360eaf-c778-4f07-a6e7-895c4f01ac1c
+      description: Start mitmdump and verify injected header and HTML content.
+      supported_platforms:
+      - macos
+      - linux
+      dependencies:
+      - description: python3 must be installed
+        prereq_command: 'command -v python3
+
+          '
+        get_prereq_command: 'brew install python3 || (sudo apt-get update && sudo
+          apt-get install -y python3) || sudo yum install -y python3
+
+          '
+      - description: curl must be installed
+        prereq_command: 'command -v curl
+
+          '
+        get_prereq_command: 'brew install curl || (sudo apt-get update && sudo apt-get
+          install -y curl) || sudo yum install -y curl
+
+          '
+      - description: pipx must be installed
+        prereq_command: 'pipx --version
+
+          '
+        get_prereq_command: 'brew install pipx || (sudo apt-get update && sudo apt-get
+          install -y pipx) || sudo yum install -y pipx
+
+          '
+      - description: mitmproxy must be installed
+        prereq_command: 'pipx list | grep mitmproxy || command -v mitmdump
+
+          '
+        get_prereq_command: 'pipx install mitmproxy || brew install mitmproxy
+
+          '
+      - description: mitmdump must be running on port 8080
+        prereq_command: "lsof -i tcp:8080 | grep mitmdump || lsof -i tcp:8080 | grep
+          -i PYTHON \n"
+        get_prereq_command: |
+          printf "from mitmproxy import http\ndef response(flow: http.HTTPFlow):\n    if 'text/html' in flow.response.headers.get('content-type',''):\n        flow.response.headers['X-Atomic']='T1659'\n        flow.response.text = flow.response.text.replace('</body>', '<script>alert(\"Atomic T1659 Injection\")</script></body>')" > /tmp/atomic_t1659_inject.py
+          ($HOME/.local/bin/mitmdump -s /tmp/atomic_t1659_inject.py -p 8080 > /tmp/atomic_t1659.log 2>&1 &)
+          sleep 5
+          lsof -i tcp:8080 | grep mitmdump || (cat /tmp/atomic_t1659.log; exit 1)
+      executor:
+        name: bash
+        command: |
+          curl -skI --proxy http://127.0.0.1:8080 http://example.com > /tmp/curl_out.txt
+          grep "X-Atomic" /tmp/curl_out.txt || (cat /tmp/curl_out.txt && exit 1)
+          curl -sk --proxy http://127.0.0.1:8080 http://example.com > /tmp/atomic_t1659_page.html
+          grep -q "Atomic T1659 Injection" /tmp/atomic_t1659_page.html || (head -20 /tmp/atomic_t1659_page.html; exit 1)
+        cleanup_command: |
+          rm -rf /tmp/atomic_t1659_inject.py
+          rm -rf /tmp/atomic_t1659.log
+          rm -rf /tmp/curl_out.txt
+          rm -rf /tmp/atomic_t1659_page.html
+          pkill -f mitmdump || true
   T1078.001:
     technique:
       type: attack-pattern

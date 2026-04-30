@@ -12,6 +12,7 @@ defense-evasion,T1222.002,"File and Directory Permissions Modification: FreeBSD,
 defense-evasion,T1222.002,"File and Directory Permissions Modification: FreeBSD, Linux and Mac File and Directory Permissions Modification",13,Chown through c script,18592ba1-5f88-4e3c-abc8-ab1c6042e389,sh
 defense-evasion,T1027.013,Obfuscated Files or Information: Encrypted/Encoded File,1,Decode Eicar File and Write to File,7693ccaa-8d64-4043-92a5-a2eb70359535,powershell
 defense-evasion,T1027.013,Obfuscated Files or Information: Encrypted/Encoded File,2,Decrypt Eicar File and Write to File,b404caaa-12ce-43c7-9214-62a531c044f7,powershell
+defense-evasion,T1027.013,Obfuscated Files or Information: Encrypted/Encoded File,3,Password-Protected ZIP Payload Extraction and Execution,c2ca068a-eb1e-498f-9f93-3d554c455916,bash
 defense-evasion,T1548.003,Abuse Elevation Control Mechanism: Sudo and Sudo Caching,1,Sudo usage,150c3a08-ee6e-48a6-aeaf-3659d24ceb4e,sh
 defense-evasion,T1548.003,Abuse Elevation Control Mechanism: Sudo and Sudo Caching,3,Unlimited sudo cache timeout,a7b17659-dd5e-46f7-b7d1-e6792c91d0bc,sh
 defense-evasion,T1548.003,Abuse Elevation Control Mechanism: Sudo and Sudo Caching,5,Disable tty_tickets for sudo caching,91a60b03-fb75-4d24-a42e-2eb8956e8de1,sh
@@ -127,6 +128,7 @@ persistence,T1078.003,Valid Accounts: Local Accounts,3,Create local account with
 persistence,T1078.003,Valid Accounts: Local Accounts,4,Enable root account using dsenableroot utility - MacOS,20b40ea9-0e17-4155-b8e6-244911a678ac,bash
 persistence,T1078.003,Valid Accounts: Local Accounts,5,Add a new/existing user to the admin group using dseditgroup utility - macOS,433842ba-e796-4fd5-a14f-95d3a1970875,bash
 command-and-control,T1132.001,Data Encoding: Standard Encoding,1,Base64 Encoded data.,1164f70f-9a88-4dff-b9ff-dc70e7bf0c25,sh
+command-and-control,T1659,Content Injection,1,MITM Proxy Injection,9b360eaf-c778-4f07-a6e7-895c4f01ac1c,bash
 command-and-control,T1572,Protocol Tunneling,5,Microsoft Dev tunnels (Linux/macOS),9f94a112-1ce2-464d-a63b-83c1f465f801,bash
 command-and-control,T1572,Protocol Tunneling,6,VSCode tunnels (Linux/macOS),b877943f-0377-44f4-8477-f79db7f07c4d,sh
 command-and-control,T1572,Protocol Tunneling,7,Cloudflare tunnels (Linux/macOS),228c336a-2f79-4043-8aef-bfa453a611d5,sh
@@ -288,6 +290,7 @@ impact,T1490,Inhibit System Recovery,12,Disable Time Machine,ed952f70-91d4-445a-
 impact,T1529,System Shutdown/Reboot,3,Restart System via `shutdown` - FreeBSD/macOS/Linux,6326dbc4-444b-4c04-88f4-27e94d0327cb,sh
 impact,T1529,System Shutdown/Reboot,4,Shutdown System via `shutdown` - FreeBSD/macOS/Linux,4963a81e-a3ad-4f02-adda-812343b351de,sh
 impact,T1529,System Shutdown/Reboot,5,Restart System via `reboot` - FreeBSD/macOS/Linux,47d0b042-a918-40ab-8cf9-150ffe919027,sh
+initial-access,T1659,Content Injection,1,MITM Proxy Injection,9b360eaf-c778-4f07-a6e7-895c4f01ac1c,bash
 initial-access,T1078.001,Valid Accounts: Default Accounts,3,Enable Guest Account on macOS,0315bdff-4178-47e9-81e4-f31a6d23f7e4,sh
 initial-access,T1078.003,Valid Accounts: Local Accounts,2,Create local account with admin privileges - MacOS,f1275566-1c26-4b66-83e3-7f9f7f964daa,bash
 initial-access,T1078.003,Valid Accounts: Local Accounts,3,Create local account with admin privileges using sysadminctl utility - MacOS,191db57d-091a-47d5-99f3-97fde53de505,bash

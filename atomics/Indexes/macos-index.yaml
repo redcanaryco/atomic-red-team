@@ -1328,10 +1328,10 @@ defense-evasion:
           $encodedString = "WDVPIVAlQEFQWzRcUFpYNTQoUF4pN0NDKTd9JEVJQ0FSLVNUQU5EQVJELUFOVElWSVJVUy1URVNULUZJTEUhJEgrSCo="
           $bytes = [System.Convert]::FromBase64String($encodedString)
           $decodedString = [System.Text.Encoding]::UTF8.GetString($bytes)
-
           #write the decoded eicar string to file
-          $decodedString | Out-File T1027.013_decodedEicar.txt
-        cleanup_command: Just delete the resulting T1027.013_decodedEicar.txt file.
+          $decodedString | Out-File $env:temp\T1027.013_decodedEicar.txt
+        cleanup_command: Remove-Item $env:temp\T1027.013_decodedEicar.txt -Force -ErrorAction
+          Ignore
         name: powershell
         elevation_required: false
     - name: Decrypt Eicar File and Write to File
@@ -1346,15 +1346,59 @@ defense-evasion:
         command: |-
           $encryptedString = "76492d1116743f0423413b16050a5345MgB8AGkASwA0AHMAbwBXAFoAagBkAFoATABXAGIAdAA5AFcAWAB1AFMANABVAEEAPQA9AHwAZQBjAGMANgAwADQAZAA0AGQAMQAwADUAYgA4ADAAMgBmADkAZgBjADEANQBjAGMANQBiAGMANwA2AGYANQBmADUANABhAGIAYgAyAGMANQA1AGQAMgA5ADEANABkADUAMgBiAGMANgA2AGMAMAAxADUAZABjADAAOABjAGIANAA1ADUANwBjADcAZQBlAGQAYgAxADEAOQA4AGIAMwAwADMANwAwADAANQA2ADQAOAA4ADkAZgA4ADMAZQA4ADgAOQBiAGEAMAA2ADMAMQAyADYAMwBiAGUAMAAxADgANAA0ADYAOAAxADQANQAwAGUANwBkADkANABjADcANQAxADgAYQA2ADMANQA4AGIAYgA1ADkANQAzAGIAMwAxADYAOAAwADQAMgBmADcAZQBjADYANQA5AGIANwBkADUAOAAyAGEAMgBiADEAMQAzAGQANABkADkAZgA3ADMAMABiADgAOQAxADAANAA4ADcAOQA5ADEAYQA1ADYAZAAzADQANwA3AGYANgAyADcAMAAwADEAMQA4ADEAZgA5ADUAYgBmAGYANQA3ADQAZQA4AGUAMAAxADUANwAwAGQANABiADMAMwA2ADgANwA0AGIANwAyADMAMQBhADkAZABhADEANQAzADQAMgAzADEANwAxADAAZgAxADkAYQA1ADEAMQA="
           $key = [byte]1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32
-
           $decrypt = ConvertTo-SecureString -String $encryptedString -Key $key
           $decryptedString = [Runtime.InteropServices.Marshal]::PtrToStringBSTR([Runtime.InteropServices.Marshal]::SecureStringToBSTR($decrypt))
-
           #Write the decrypted eicar string to a file
-          $decryptedString | out-file T1027.013_decryptedEicar.txt
-        cleanup_command: Just delete the resulting T1027.013_decryptedEicar.txt file.
+          $decryptedString | Out-File $env:temp\T1027.013_decryptedEicar.txt
+        cleanup_command: Remove-Item $env:temp\T1027.013_decryptedEicar.txt -Force
+          -ErrorAction Ignore
         name: powershell
         elevation_required: false
+    - name: Password-Protected ZIP Payload Extraction and Execution
+      auto_generated_guid: c2ca068a-eb1e-498f-9f93-3d554c455916
+      description: |
+        Extracts and executes a script from a password-protected ZIP archive.
+        This technique is commonly used by malware families like Emotet and QBot to deliver payloads
+        via email attachments where the password is provided in the message body.
+        The encrypted ZIP evades static file analysis until extracted at runtime.
+        Upon successful execution, displays confirmation and system information.
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        zip_password:
+          description: Password used to protect the ZIP archive
+          type: String
+          default: infected
+      dependency_executor_name: bash
+      dependencies:
+      - description: 'zip and unzip must be installed
+
+          '
+        prereq_command: 'which zip && which unzip
+
+          '
+        get_prereq_command: 'echo "Install zip and unzip using your package manager
+          (apt-get, yum, or brew)"
+
+          '
+      executor:
+        command: |
+          echo '#!/bin/bash' > /tmp/art_payload.sh
+          echo 'echo "T1027.013: Payload extracted from encrypted ZIP"' >> /tmp/art_payload.sh
+          echo 'echo "Hostname: $(hostname)"' >> /tmp/art_payload.sh
+          echo 'echo "User: $(whoami)"' >> /tmp/art_payload.sh
+          echo 'uname -a' >> /tmp/art_payload.sh
+          cd /tmp && zip -P "#{zip_password}" art_encrypted.zip art_payload.sh
+          rm /tmp/art_payload.sh
+          echo "Encrypted ZIP created. Extracting with password..."
+          unzip -P "#{zip_password}" -o /tmp/art_encrypted.zip -d /tmp/
+          echo "Executing extracted payload:"
+          bash /tmp/art_payload.sh
+        cleanup_command: |
+          rm -f /tmp/art_payload.sh
+          rm -f /tmp/art_encrypted.zip
+        name: bash
   T1014:
     technique:
       type: attack-pattern
@@ -13560,7 +13604,7 @@ defense-evasion:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:49:27.324Z'
-      name: Domain Controller Authentication
+      name: 'Modify Authentication Process: Domain Controller Authentication'
       description: "Adversaries may patch the authentication process on a domain controller
         to bypass the typical authentication mechanisms and enable access to accounts.
         \n\nMalware may be used to inject false credentials into the authentication
@@ -13590,6 +13634,7 @@ defense-evasion:
       x_mitre_platforms:
       - Windows
       x_mitre_version: '2.1'
+      identifier: T1556.001
     atomic_tests: []
   T1027.006:
     technique:
@@ -26409,7 +26454,7 @@ execution:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-04-15T19:58:28.694Z'
-      name: Systemctl
+      name: 'System Services: Systemctl'
       description: "Adversaries may abuse systemctl to execute commands or programs.
         Systemctl is the primary interface for systemd, the Linux init system and
         service manager. Typically invoked from a shell, Systemctl can also be integrated
@@ -26432,6 +26477,7 @@ execution:
       - Linux
       x_mitre_version: '1.0'
       x_mitre_remote_support: false
+      identifier: T1569.003
     atomic_tests: []
   T1059.009:
     technique:
@@ -30846,7 +30892,7 @@ persistence:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:41.026Z'
-      name: Outlook Rules
+      name: 'Office Application Startup: Outlook Rules'
       description: |-
         Adversaries may abuse Microsoft Outlook rules to obtain persistence on a compromised system. Outlook rules allow a user to define automated behavior to manage email messages. A benign rule might, for example, automatically move an email to a particular folder in Outlook if it contains specific words from a specific sender. Malicious Outlook rules can be created that can trigger code execution when an adversary sends a specifically crafted email to that user.(Citation: SilentBreak Outlook Rules)
 
@@ -30867,6 +30913,7 @@ persistence:
       - Windows
       - Office Suite
       x_mitre_version: '1.2'
+      identifier: T1137.005
     atomic_tests: []
   T1098.007:
     technique:
@@ -36428,7 +36475,7 @@ persistence:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:49:27.324Z'
-      name: Domain Controller Authentication
+      name: 'Modify Authentication Process: Domain Controller Authentication'
       description: "Adversaries may patch the authentication process on a domain controller
         to bypass the typical authentication mechanisms and enable access to accounts.
         \n\nMalware may be used to inject false credentials into the authentication
@@ -36458,6 +36505,7 @@ persistence:
       x_mitre_platforms:
       - Windows
       x_mitre_version: '2.1'
+      identifier: T1556.001
     atomic_tests: []
   T1556.005:
     technique:
@@ -38412,7 +38460,7 @@ command-and-control:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:25.458Z'
-      name: Domain Generation Algorithms
+      name: 'Dynamic Resolution: Domain Generation Algorithms'
       description: |-
         Adversaries may make use of Domain Generation Algorithms (DGAs) to dynamically identify a destination domain for command and control traffic rather than relying on a list of static IP addresses or domains. This has the advantage of making it much harder for defenders to block, track, or take over the command and control channel, as there potentially could be thousands of domains that malware can check for instructions.(Citation: Cybereason Dissecting DGAs)(Citation: Cisco Umbrella DGA)(Citation: Unit 42 DGA Feb 2019)
 
@@ -38439,6 +38487,7 @@ command-and-control:
       - Windows
       - ESXi
       x_mitre_version: '1.2'
+      identifier: T1568.002
     atomic_tests: []
   T1071.004:
     technique:
@@ -38840,7 +38889,67 @@ command-and-control:
       - macOS
       - Windows
       x_mitre_version: '1.0'
-    atomic_tests: []
+      identifier: T1659
+    atomic_tests:
+    - name: MITM Proxy Injection
+      auto_generated_guid: 9b360eaf-c778-4f07-a6e7-895c4f01ac1c
+      description: Start mitmdump and verify injected header and HTML content.
+      supported_platforms:
+      - macos
+      - linux
+      dependencies:
+      - description: python3 must be installed
+        prereq_command: 'command -v python3
+
+          '
+        get_prereq_command: 'brew install python3 || (sudo apt-get update && sudo
+          apt-get install -y python3) || sudo yum install -y python3
+
+          '
+      - description: curl must be installed
+        prereq_command: 'command -v curl
+
+          '
+        get_prereq_command: 'brew install curl || (sudo apt-get update && sudo apt-get
+          install -y curl) || sudo yum install -y curl
+
+          '
+      - description: pipx must be installed
+        prereq_command: 'pipx --version
+
+          '
+        get_prereq_command: 'brew install pipx || (sudo apt-get update && sudo apt-get
+          install -y pipx) || sudo yum install -y pipx
+
+          '
+      - description: mitmproxy must be installed
+        prereq_command: 'pipx list | grep mitmproxy || command -v mitmdump
+
+          '
+        get_prereq_command: 'pipx install mitmproxy || brew install mitmproxy
+
+          '
+      - description: mitmdump must be running on port 8080
+        prereq_command: "lsof -i tcp:8080 | grep mitmdump || lsof -i tcp:8080 | grep
+          -i PYTHON \n"
+        get_prereq_command: |
+          printf "from mitmproxy import http\ndef response(flow: http.HTTPFlow):\n    if 'text/html' in flow.response.headers.get('content-type',''):\n        flow.response.headers['X-Atomic']='T1659'\n        flow.response.text = flow.response.text.replace('</body>', '<script>alert(\"Atomic T1659 Injection\")</script></body>')" > /tmp/atomic_t1659_inject.py
+          ($HOME/.local/bin/mitmdump -s /tmp/atomic_t1659_inject.py -p 8080 > /tmp/atomic_t1659.log 2>&1 &)
+          sleep 5
+          lsof -i tcp:8080 | grep mitmdump || (cat /tmp/atomic_t1659.log; exit 1)
+      executor:
+        name: bash
+        command: |
+          curl -skI --proxy http://127.0.0.1:8080 http://example.com > /tmp/curl_out.txt
+          grep "X-Atomic" /tmp/curl_out.txt || (cat /tmp/curl_out.txt && exit 1)
+          curl -sk --proxy http://127.0.0.1:8080 http://example.com > /tmp/atomic_t1659_page.html
+          grep -q "Atomic T1659 Injection" /tmp/atomic_t1659_page.html || (head -20 /tmp/atomic_t1659_page.html; exit 1)
+        cleanup_command: |
+          rm -rf /tmp/atomic_t1659_inject.py
+          rm -rf /tmp/atomic_t1659.log
+          rm -rf /tmp/curl_out.txt
+          rm -rf /tmp/atomic_t1659_page.html
+          pkill -f mitmdump || true
   T1205:
     technique:
       type: attack-pattern
@@ -50417,7 +50526,7 @@ credential-access:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:49:27.324Z'
-      name: Domain Controller Authentication
+      name: 'Modify Authentication Process: Domain Controller Authentication'
       description: "Adversaries may patch the authentication process on a domain controller
         to bypass the typical authentication mechanisms and enable access to accounts.
         \n\nMalware may be used to inject false credentials into the authentication
@@ -50447,6 +50556,7 @@ credential-access:
       x_mitre_platforms:
       - Windows
       x_mitre_version: '2.1'
+      identifier: T1556.001
     atomic_tests: []
   T1556.005:
     technique:
@@ -63464,7 +63574,67 @@ initial-access:
       - macOS
       - Windows
       x_mitre_version: '1.0'
-    atomic_tests: []
+      identifier: T1659
+    atomic_tests:
+    - name: MITM Proxy Injection
+      auto_generated_guid: 9b360eaf-c778-4f07-a6e7-895c4f01ac1c
+      description: Start mitmdump and verify injected header and HTML content.
+      supported_platforms:
+      - macos
+      - linux
+      dependencies:
+      - description: python3 must be installed
+        prereq_command: 'command -v python3
+
+          '
+        get_prereq_command: 'brew install python3 || (sudo apt-get update && sudo
+          apt-get install -y python3) || sudo yum install -y python3
+
+          '
+      - description: curl must be installed
+        prereq_command: 'command -v curl
+
+          '
+        get_prereq_command: 'brew install curl || (sudo apt-get update && sudo apt-get
+          install -y curl) || sudo yum install -y curl
+
+          '
+      - description: pipx must be installed
+        prereq_command: 'pipx --version
+
+          '
+        get_prereq_command: 'brew install pipx || (sudo apt-get update && sudo apt-get
+          install -y pipx) || sudo yum install -y pipx
+
+          '
+      - description: mitmproxy must be installed
+        prereq_command: 'pipx list | grep mitmproxy || command -v mitmdump
+
+          '
+        get_prereq_command: 'pipx install mitmproxy || brew install mitmproxy
+
+          '
+      - description: mitmdump must be running on port 8080
+        prereq_command: "lsof -i tcp:8080 | grep mitmdump || lsof -i tcp:8080 | grep
+          -i PYTHON \n"
+        get_prereq_command: |
+          printf "from mitmproxy import http\ndef response(flow: http.HTTPFlow):\n    if 'text/html' in flow.response.headers.get('content-type',''):\n        flow.response.headers['X-Atomic']='T1659'\n        flow.response.text = flow.response.text.replace('</body>', '<script>alert(\"Atomic T1659 Injection\")</script></body>')" > /tmp/atomic_t1659_inject.py
+          ($HOME/.local/bin/mitmdump -s /tmp/atomic_t1659_inject.py -p 8080 > /tmp/atomic_t1659.log 2>&1 &)
+          sleep 5
+          lsof -i tcp:8080 | grep mitmdump || (cat /tmp/atomic_t1659.log; exit 1)
+      executor:
+        name: bash
+        command: |
+          curl -skI --proxy http://127.0.0.1:8080 http://example.com > /tmp/curl_out.txt
+          grep "X-Atomic" /tmp/curl_out.txt || (cat /tmp/curl_out.txt && exit 1)
+          curl -sk --proxy http://127.0.0.1:8080 http://example.com > /tmp/atomic_t1659_page.html
+          grep -q "Atomic T1659 Injection" /tmp/atomic_t1659_page.html || (head -20 /tmp/atomic_t1659_page.html; exit 1)
+        cleanup_command: |
+          rm -rf /tmp/atomic_t1659_inject.py
+          rm -rf /tmp/atomic_t1659.log
+          rm -rf /tmp/curl_out.txt
+          rm -rf /tmp/atomic_t1659_page.html
+          pkill -f mitmdump || true
   T1078.001:
     technique:
       type: attack-pattern
