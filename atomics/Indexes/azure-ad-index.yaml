@@ -9790,11 +9790,11 @@ privilege-escalation:
       dependencies:
       - description: 'AzureAD and AADInternals Powershell modules must be installed.
 
-'
+          '
         prereq_command: 'if ((Get-Module -ListAvailable -Name AzureAD) -And (Get-Module
           -ListAvailable -Name AADInternals)) {exit 0} else {exit 1}
 
-'
+          '
         get_prereq_command: |
           Install-Module -Name AzureAD -Force
           Install-Module -Name AADInternals -Force
@@ -10119,7 +10119,7 @@ privilege-escalation:
       auto_generated_guid: 4d77f913-56f5-4a14-b4b1-bf7bb24298ad
       description: 'Add an existing Azure user account the Company Administrator Role.
 
-'
+        '
       supported_platforms:
       - azure-ad
       input_arguments:
@@ -10139,14 +10139,14 @@ privilege-escalation:
       dependencies:
       - description: 'MSOnline module must be installed.
 
-'
+          '
         prereq_command: 'try {if (Get-InstalledModule -Name MSOnline -ErrorAction
           SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: 'Install-Module -Name MSOnline -Force
 
-'
+          '
       executor:
         command: |
           Import-Module MSOnline
@@ -10157,7 +10157,7 @@ privilege-escalation:
         cleanup_command: 'Remove-MsolRoleMember -RoleName "Company Administrator"
           -RoleMemberType User -RoleMemberEmailAddress "#{target_user}"
 
-'
+          '
         name: powershell
         elevation_required: false
     - name: Simulate - Post BEC persistence via user password reset followed by user
@@ -10190,7 +10190,7 @@ privilege-escalation:
       dependencies:
       - description: 'MSOnline and AzureAD modules must be installed.
 
-'
+          '
         prereq_command: |
           $required_mods = 'AzureAD', 'MSOnline'
           $installed_mods = @((Get-Module $required_mods -ListAvailable -ErrorAction SilentlyContinue).Name  | Select-Object -Unique)
@@ -12539,14 +12539,14 @@ privilege-escalation:
       dependencies:
       - description: 'AzureAD module must be installed.
 
-'
+          '
         prereq_command: 'try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue)
           {exit 0} else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: 'Install-Module -Name AzureAD -Force
 
-'
+          '
       executor:
         command: |
           Import-Module -Name AzureAD
@@ -12610,14 +12610,14 @@ privilege-escalation:
       dependencies:
       - description: 'AzureAD module must be installed.
 
-'
+          '
         prereq_command: 'try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue)
           {exit 0} else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: 'Install-Module -Name AzureAD -Force
 
-'
+          '
       executor:
         command: |
           Import-Module -Name AzureAD
@@ -13221,14 +13221,14 @@ privilege-escalation:
       dependencies:
       - description: 'AzureAD module must be installed.
 
-'
+          '
         prereq_command: 'try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue)
           {exit 0} else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: 'Install-Module -Name AzureAD -Force
 
-'
+          '
       executor:
         command: |
           Import-Module -Name AzureAD
@@ -13290,14 +13290,14 @@ privilege-escalation:
       dependencies:
       - description: 'AzureAD module must be installed.
 
-'
+          '
         prereq_command: 'try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue)
           {exit 0} else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: 'Install-Module -Name AzureAD -Force
 
-'
+          '
       executor:
         command: |
           Import-Module -Name AzureAD
@@ -13364,14 +13364,14 @@ privilege-escalation:
       dependencies:
       - description: 'AzureAD module must be installed.
 
-'
+          '
         prereq_command: 'try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue)
           {exit 0} else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: 'Install-Module -Name AzureAD -Force
 
-'
+          '
       executor:
         command: "Import-Module -Name AzureAD\n$PWord = ConvertTo-SecureString -String
           \"#{password}\" -AsPlainText -Force\n$Credential = New-Object -TypeName
@@ -21376,7 +21376,7 @@ persistence:
       auto_generated_guid: 4d77f913-56f5-4a14-b4b1-bf7bb24298ad
       description: 'Add an existing Azure user account the Company Administrator Role.
 
-'
+        '
       supported_platforms:
       - azure-ad
       input_arguments:
@@ -21396,14 +21396,14 @@ persistence:
       dependencies:
       - description: 'MSOnline module must be installed.
 
-'
+          '
         prereq_command: 'try {if (Get-InstalledModule -Name MSOnline -ErrorAction
           SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: 'Install-Module -Name MSOnline -Force
 
-'
+          '
       executor:
         command: |
           Import-Module MSOnline
@@ -21414,7 +21414,7 @@ persistence:
         cleanup_command: 'Remove-MsolRoleMember -RoleName "Company Administrator"
           -RoleMemberType User -RoleMemberEmailAddress "#{target_user}"
 
-'
+          '
         name: powershell
         elevation_required: false
     - name: Simulate - Post BEC persistence via user password reset followed by user
@@ -21447,7 +21447,7 @@ persistence:
       dependencies:
       - description: 'MSOnline and AzureAD modules must be installed.
 
-'
+          '
         prereq_command: |
           $required_mods = 'AzureAD', 'MSOnline'
           $installed_mods = @((Get-Module $required_mods -ListAvailable -ErrorAction SilentlyContinue).Name  | Select-Object -Unique)
@@ -24086,14 +24086,14 @@ persistence:
       dependencies:
       - description: 'AzureAD module must be installed.
 
-'
+          '
         prereq_command: 'try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue)
           {exit 0} else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: 'Install-Module -Name AzureAD -Force
 
-'
+          '
       executor:
         command: |
           Import-Module -Name AzureAD
@@ -24157,14 +24157,14 @@ persistence:
       dependencies:
       - description: 'AzureAD module must be installed.
 
-'
+          '
         prereq_command: 'try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue)
           {exit 0} else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: 'Install-Module -Name AzureAD -Force
 
-'
+          '
       executor:
         command: |
           Import-Module -Name AzureAD
@@ -24900,14 +24900,14 @@ persistence:
       dependencies:
       - description: 'AzureAD module must be installed.
 
-'
+          '
         prereq_command: 'try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue)
           {exit 0} else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: 'Install-Module -Name AzureAD -Force
 
-'
+          '
       executor:
         command: |
           Import-Module -Name AzureAD
@@ -24969,14 +24969,14 @@ persistence:
       dependencies:
       - description: 'AzureAD module must be installed.
 
-'
+          '
         prereq_command: 'try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue)
           {exit 0} else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: 'Install-Module -Name AzureAD -Force
 
-'
+          '
       executor:
         command: |
           Import-Module -Name AzureAD
@@ -25043,14 +25043,14 @@ persistence:
       dependencies:
       - description: 'AzureAD module must be installed.
 
-'
+          '
         prereq_command: 'try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue)
           {exit 0} else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: 'Install-Module -Name AzureAD -Force
 
-'
+          '
       executor:
         command: "Import-Module -Name AzureAD\n$PWord = ConvertTo-SecureString -String
           \"#{password}\" -AsPlainText -Force\n$Credential = New-Object -TypeName
@@ -30721,7 +30721,7 @@ collection:
         or <code>screencapture</code>.(Citation: CopyFromScreen .NET)(Citation: Antiquated
         Mac Malware)
 
-'
+        '
       kill_chain_phases:
       - kill_chain_name: mitre-attack
         phase_name: collection
@@ -35088,11 +35088,11 @@ defense-impairment:
       dependencies:
       - description: 'AzureAD and AADInternals Powershell modules must be installed.
 
-'
+          '
         prereq_command: 'if ((Get-Module -ListAvailable -Name AzureAD) -And (Get-Module
           -ListAvailable -Name AADInternals)) {exit 0} else {exit 1}
 
-'
+          '
         get_prereq_command: |
           Install-Module -Name AzureAD -Force
           Install-Module -Name AADInternals -Force
@@ -38139,7 +38139,7 @@ credential-access:
       auto_generated_guid: 5a51ef57-299e-4d62-8e11-2d440df55e69
       description: 'Attempt to brute force Azure AD user via AzureAD powershell module.
 
-'
+        '
       supported_platforms:
       - azure-ad
       input_arguments:
@@ -38156,14 +38156,14 @@ credential-access:
       dependencies:
       - description: 'AzureAD module must be installed.
 
-'
+          '
         prereq_command: 'try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue)
           {exit 0} else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: 'Install-Module -Name AzureAD -Force
 
-'
+          '
       executor:
         name: powershell
         elevation_required: false
@@ -38453,7 +38453,7 @@ credential-access:
         username:
           description: Azure AD username
           type: string
-          default: 
+          default:
         password:
           description: Azure AD password
           type: string
@@ -38462,14 +38462,14 @@ credential-access:
       dependencies:
       - description: 'The MSOnline module must be installed.
 
-'
+          '
         prereq_command: 'if (get-command Get-MsolUser -erroraction silentlycontinue){exit
           0} else {exit 1}
 
-'
+          '
         get_prereq_command: 'install-module MSOnline
 
-'
+          '
       executor:
         command: "import-module msonline\n$Password = ConvertTo-SecureString -String
           \"#{password}\" -AsPlainText -Force\n$Credential = New-Object -TypeName
@@ -38483,7 +38483,7 @@ credential-access:
         cleanup_command: 'remove-item $env:temp\T1552.005Test1.txt -force -erroraction
           silentlycontinue
 
-'
+          '
         name: powershell
         elevation_required: true
   T1555.002:
@@ -38806,13 +38806,13 @@ credential-access:
       dependencies:
       - description: 'AADInternals module must be installed.
 
-'
+          '
         prereq_command: 'if (Get-Module AADInternals) {exit 0} else {exit 1}
 
-'
+          '
         get_prereq_command: 'Install-Module -Name AADInternals -Force
 
-'
+          '
       executor:
         command: |
           Import-Module AADInternals -Force
@@ -40180,14 +40180,14 @@ credential-access:
       dependencies:
       - description: 'AzureAD module must be installed.
 
-'
+          '
         prereq_command: 'try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue)
           {exit 0} else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: 'Install-Module -Name AzureAD -Force
 
-'
+          '
       executor:
         name: powershell
         elevation_required: false
@@ -40220,7 +40220,7 @@ credential-access:
       description: 'This test attempts to brute force a list of Microsoft Online (Azure/O365)
         users with a single password via the MSOLSpray Powershell module.
 
-'
+        '
       supported_platforms:
       - azure-ad
       input_arguments:
@@ -40236,11 +40236,11 @@ credential-access:
       dependencies:
       - description: 'MSOLSpray module must exist in PathToAtomicsFolder\..\ExternalPayloads.
 
-'
+          '
         prereq_command: 'if (test-path "PathToAtomicsFolder\..\ExternalPayloads\MSOLSpray.ps1"){exit
           0} else {exit 1}
 
-'
+          '
         get_prereq_command: |
           New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
           invoke-webrequest "https://raw.githubusercontent.com/dafthack/MSOLSpray/922f159104fb3ec77c9fc6507a6388a05c227b5f/MSOLSpray.ps1" -outfile "PathToAtomicsFolder\..\ExternalPayloads\MSOLSpray.ps1"
@@ -43580,7 +43580,7 @@ discovery:
         username:
           description: Azure AD username
           type: string
-          default: 
+          default:
         password:
           description: Azure AD password
           type: string
@@ -43589,34 +43589,34 @@ discovery:
       dependencies:
       - description: 'The SkyArk AzureStealth module must exist in PathToAtomicsFolder\..\ExternalPayloads.
 
-'
+          '
         prereq_command: 'if (test-path "PathToAtomicsFolder\..\ExternalPayloads\AzureStealth.ps1"){exit
           0} else {exit 1}
 
-'
+          '
         get_prereq_command: |
           New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
           invoke-webrequest "https://raw.githubusercontent.com/cyberark/SkyArk/3293ee145e95061a8980dd7b5da0030edc4da5c0/AzureStealth/AzureStealth.ps1" -outfile "PathToAtomicsFolder\..\ExternalPayloads\AzureStealth.ps1"
       - description: 'The AzureAD module must be installed.
 
-'
+          '
         prereq_command: 'try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue)
           {exit 0} else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: 'Install-Module -Name AzureAD -Force
 
-'
+          '
       - description: 'The Az module must be installed.
 
-'
+          '
         prereq_command: 'try {if (Get-InstalledModule -Name Az -ErrorAction SilentlyContinue)
           {exit 0} else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: 'Install-Module -Name Az -Force
 
-'
+          '
       executor:
         command: "Import-Module \"PathToAtomicsFolder\\..\\ExternalPayloads\\AzureStealth.ps1\"
           -force      \n$Password = ConvertTo-SecureString -String \"#{password}\"

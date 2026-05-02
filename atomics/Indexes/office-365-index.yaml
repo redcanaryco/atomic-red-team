@@ -714,14 +714,14 @@ stealth:
       dependencies:
       - description: 'ExchangeOnlineManagement module must be installed.
 
-'
+          '
         prereq_command: 'try {if (Get-InstalledModule -Name ExchangeOnlineManagement
           -ErrorAction SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: 'Install-Module -Name ExchangeOnlineManagement -Force
 
-'
+          '
       executor:
         command: |
           Import-Module ExchangeOnlineManagement
@@ -14802,7 +14802,7 @@ privilege-escalation:
       dependencies:
       - description: 'ExchangeOnlineManagement PowerShell module must be installed
 
-'
+          '
         prereq_command: |
           $RequiredModule = Get-Module -Name ExchangeOnlineManagement -ListAvailable
           if (-not $RequiredModule) {exit 1}
@@ -26367,7 +26367,7 @@ persistence:
       dependencies:
       - description: 'ExchangeOnlineManagement PowerShell module must be installed
 
-'
+          '
         prereq_command: |
           $RequiredModule = Get-Module -Name ExchangeOnlineManagement -ListAvailable
           if (-not $RequiredModule) {exit 1}
@@ -29691,7 +29691,7 @@ collection:
         or <code>screencapture</code>.(Citation: CopyFromScreen .NET)(Citation: Antiquated
         Mac Malware)
 
-'
+        '
       kill_chain_phases:
       - kill_chain_name: mitre-attack
         phase_name: collection
@@ -31251,18 +31251,18 @@ collection:
       description: 'Creates a new Inbox Rule to forward emails to an external user
         via the "ForwardTo" property of the New-InboxRule Powershell cmdlet.
 
-'
+        '
       supported_platforms:
       - office-365
       input_arguments:
         username:
           description: office-365 username
           type: string
-          default: 
+          default:
         password:
           description: office-365 password
           type: string
-          default: 
+          default:
         rule_name:
           description: email rule name
           type: string
@@ -31496,43 +31496,43 @@ collection:
             and Application.ReadWrite.All Scope (eg, Global Administrator Role) and
             sign-in method is password
           type: string
-          default: 
+          default:
         password:
           description: Entra user password
           type: string
-          default: 
+          default:
         1st_target_mailbox:
           description: office-365 target_email_address
           type: string
-          default: 
+          default:
         2nd_target_mailbox:
           description: office-365 target_email_address
           type: string
-          default: 
+          default:
         3rd_target_mailbox:
           description: office-365 target_email_address
           type: string
-          default: 
+          default:
       dependency_executor_name: powershell
       dependencies:
       - description: 'Microsoft Graph PowerShell SDK must be installed.
 
-'
+          '
         prereq_command: |
           $RequiredModule = Get-InstalledModule Microsoft.Graph
           if (-not $RequiredModule) {exit 1} else {exit 0}
         get_prereq_command: 'Install-Module Microsoft.Graph -Scope CurrentUser
 
-'
+          '
       - description: 'Az.Accounts module must be installed.
 
-'
+          '
         prereq_command: |
           $RequiredModule2 = Get-InstalledModule Az.Accounts
           if (-not $RequiredModule2) {exit 1} else {exit 0}
         get_prereq_command: 'Install-Module Az.Accounts -Scope CurrentUser
 
-'
+          '
       executor:
         command: "$ss = ConvertTo-SecureString \"#{password}\" -AsPlainText -Force\n$cred
           = New-Object PSCredential -ArgumentList '#{username}', $ss\n$param = @{\n
@@ -34546,16 +34546,16 @@ defense-impairment:
         username:
           description: office-365 username
           type: string
-          default: 
+          default:
         password:
           description: office-365 password
           type: string
-          default: 
+          default:
       dependency_executor_name: powershell
       dependencies:
       - description: 'ExchangeOnlineManagement PowerShell module must be installed
 
-'
+          '
         prereq_command: |
           $RequiredModule = Get-Module -Name ExchangeOnlineManagement -ListAvailable
           if (-not $RequiredModule) {exit 1}
@@ -34599,7 +34599,7 @@ defense-impairment:
       dependencies:
       - description: 'ExchangeOnlineManagement PowerShell module must be installed
 
-'
+          '
         prereq_command: |
           $RequiredModule = Get-Module -Name ExchangeOnlineManagement -ListAvailable
           if (-not $RequiredModule) {exit 1}
@@ -36093,23 +36093,23 @@ defense-impairment:
       description: 'Using the Disable-AntiPhishRule cmdlet to disable antiphish rules
         in your office-365 organization.
 
-'
+        '
       supported_platforms:
       - office-365
       input_arguments:
         username:
           description: office-365 username
           type: string
-          default: 
+          default:
         password:
           description: office-365 password
           type: string
-          default: 
+          default:
       dependency_executor_name: powershell
       dependencies:
       - description: 'ExchangeOnlineManagement PowerShell module must be installed
 
-'
+          '
         prereq_command: |
           $RequiredModule = Get-Module -Name ExchangeOnlineManagement -ListAvailable
           if (-not $RequiredModule) {exit 1}

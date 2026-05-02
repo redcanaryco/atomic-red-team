@@ -4229,20 +4229,20 @@ stealth:
       - description: Verify docker is installed.
         prereq_command: 'which docker
 
-'
+          '
         get_prereq_command: 'if [ "" == "`which docker`" ]; then echo "Docker Not
           Found"; if [ -n "`which apt-get`" ]; then sudo apt-get -y install docker
           ; elif [ -n "`which yum`" ]; then sudo yum -y install docker ; fi ; else
           echo "Docker installed"; fi
 
-'
+          '
       - description: Verify docker service is running.
         prereq_command: 'sudo systemctl status docker  --no-pager
 
-'
+          '
         get_prereq_command: 'sudo systemctl start docker
 
-'
+          '
       executor:
         command: |-
           docker build -t t1612  $PathtoAtomicsFolder/T1612/src/
@@ -9478,7 +9478,7 @@ privilege-escalation:
         CronJob for scheduling execution of malicious code that would run as a container
         in the cluster.
 
-'
+        '
       supported_platforms:
       - containers
       input_arguments:
@@ -9489,17 +9489,17 @@ privilege-escalation:
       dependencies:
       - description: 'kubectl must be installed
 
-'
+          '
         get_prereq_command: 'echo "kubectl must be installed manually"
 
-'
+          '
         prereq_command: 'which kubectl
 
-'
+          '
       executor:
         command: 'kubectl get cronjobs -n #{namespace}
 
-'
+          '
         name: bash
         elevation_required: false
     - name: CreateCronjob
@@ -9511,7 +9511,7 @@ privilege-escalation:
         CronJob for scheduling execution of malicious code that would run as a container
         in the cluster.
 
-'
+        '
       supported_platforms:
       - containers
       input_arguments:
@@ -9522,20 +9522,20 @@ privilege-escalation:
       dependencies:
       - description: 'kubectl must be installed
 
-'
+          '
         get_prereq_command: 'echo "kubectl must be installed manually"
 
-'
+          '
         prereq_command: 'which kubectl
 
-'
+          '
       executor:
         command: 'kubectl create -f src/cronjob.yaml -n #{namespace}
 
-'
+          '
         cleanup_command: 'kubectl delete cronjob art -n #{namespace}
 
-'
+          '
         name: bash
         elevation_required: false
   T1548.002:
@@ -10784,24 +10784,24 @@ privilege-escalation:
       - description: Verify docker is installed.
         prereq_command: 'which docker
 
-'
+          '
         get_prereq_command: 'if [ "" == "`which docker`" ]; then echo "Docker Not
           Found"; if [ -n "`which apt-get`" ]; then sudo apt-get -y install docker
           ; elif [ -n "`which yum`" ]; then sudo yum -y install docker ; fi ; else
           echo "Docker installed"; fi
 
-'
+          '
       - description: Verify docker service is running.
         prereq_command: 'sudo systemctl status docker
 
-'
+          '
         get_prereq_command: 'sudo systemctl start docker
 
-'
+          '
       - description: Verify kind is in the path.
         prereq_command: 'which kind
 
-'
+          '
         get_prereq_command: |
           curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.10.0/kind-linux-amd64
           chmod +x ./kind
@@ -10809,14 +10809,14 @@ privilege-escalation:
       - description: Verify kind-atomic-cluster is created
         prereq_command: 'sudo kind get clusters
 
-'
+          '
         get_prereq_command: 'sudo kind create cluster --name atomic-cluster
 
-'
+          '
       - description: Verify kubectl is in path
         prereq_command: 'which kubectl
 
-'
+          '
         get_prereq_command: |
           curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
           chmod +x ./kubectl
@@ -10827,11 +10827,11 @@ privilege-escalation:
           true, "containers":[{"name":"1","image":"alpine","command":["nsenter","--mount=/proc/1/ns/mnt","--","/bin/bash"],"stdin":
           true,"tty":true,"securityContext":{"privileged":true}}]}}''
 
-'
+          '
         name: sh
         cleanup_command: 'kubectl --context kind-atomic-cluster delete pod atomic-escape-pod
 
-'
+          '
     - name: Mount host filesystem to escape privileged Docker container
       auto_generated_guid: 6c499943-b098-4bc6-8d38-0956fc182984
       description: "This technique abuses privileged Docker containers to mount the
@@ -10872,52 +10872,52 @@ privilege-escalation:
       - description: Verify mount is installed.
         prereq_command: 'which mount
 
-'
+          '
         get_prereq_command: 'if [ "" == "`which mount`" ]; then echo "mount Not Found";
           if [ -n "`which apt-get`" ]; then sudo apt-get -y install mount ; elif [
           -n "`which yum`" ]; then sudo yum -y install mount ; fi ; else echo "mount
           installed"; fi
 
-'
+          '
       - description: Verify container is privileged.
         prereq_command: 'capsh --print | grep cap_sys_admin
 
-'
+          '
         get_prereq_command: 'if [ "`capsh --print | grep cap_sys_admin`" == "" ];
           then echo "Container not privileged.  Re-start container in insecure state.  Docker:
           run with --privileged flag.  Kubectl, add securityContext: privileged: true";
           fi
 
-'
+          '
       - description: Verify mount device (/dev/dm-0) exists.
         prereq_command: 'ls #{mount_device}
 
-'
+          '
         get_prereq_command: 'if [ ! -f #{mount_device} ]; then echo "Container not
           privileged or wrong device path.  Re-start container in insecure state.  Docker:
           run with --privileged flag.  Kubectl, add securityContext: privileged: true";
           fi
 
-'
+          '
       - description: Netcat is installed.
         prereq_command: 'which netcat
 
-'
+          '
         get_prereq_command: 'if [ "" == "`which netcat`" ]; then echo "netcat Not
           Found"; if [ -n "`which apt-get`" ]; then sudo apt-get -y install netcat
           ; elif [ -n "`which yum`" ]; then sudo yum -y install netcat ; fi
 
-'
+          '
       - description: IP Address is known.
         prereq_command: 'if [ "#{listen_address}" != "" ]; then echo "Listen address
           set as #{listen_address}" ; fi
 
-'
+          '
         get_prereq_command: 'if [ "" == "`which ifconfig`" ]; then echo "ifconfig
           Not Found"; if [ -n "`which apt-get`" ]; then sudo apt-get -y install net=tools
           ; elif [ -n "`which yum`" ]; then sudo yum -y install net-tools ; fi
 
-'
+          '
       executor:
         name: sh
         elevation_required: true
@@ -10952,14 +10952,14 @@ privilege-escalation:
         prereq_command: 'command -v docker &> /dev/null && echo "Docker is installed"
           || { echo "Docker is not installed."; exit 1; }
 
-'
+          '
         get_prereq_command: 'echo "You should install docker manually."
 
-'
+          '
       - description: Docker Privileged User
         prereq_command: 'sudo -l -U #{username} | grep "(ALL) NOPASSWD: /usr/bin/docker"
 
-'
+          '
         get_prereq_command: |
           USERNAME="#{username}"
           PASSWORD="password123"
@@ -10977,7 +10977,7 @@ privilege-escalation:
           is deleted."; [[ -f "$SUDOERS_FILE" ]] && rm -f "$SUDOERS_FILE"; echo "Cleanup
           complete."
 
-'
+          '
   T1547.009:
     technique:
       type: attack-pattern
@@ -15607,10 +15607,10 @@ privilege-escalation:
       - description: kubectl must be installed and configured
         get_prereq_command: 'echo "kubectl must be installed manually"
 
-'
+          '
         prereq_command: 'which kubectl
 
-'
+          '
       executor:
         name: bash
         elevation_required: false
@@ -15619,7 +15619,7 @@ privilege-escalation:
           -y at >/dev/null 2>&1 && (atd || /usr/sbin/atd) && echo ''#{at_command}''
           | at #{time_spec} && at -l"
 
-'
+          '
   T1055.001:
     technique:
       type: attack-pattern
@@ -16299,7 +16299,7 @@ execution:
         CronJob for scheduling execution of malicious code that would run as a container
         in the cluster.
 
-'
+        '
       supported_platforms:
       - containers
       input_arguments:
@@ -16310,17 +16310,17 @@ execution:
       dependencies:
       - description: 'kubectl must be installed
 
-'
+          '
         get_prereq_command: 'echo "kubectl must be installed manually"
 
-'
+          '
         prereq_command: 'which kubectl
 
-'
+          '
       executor:
         command: 'kubectl get cronjobs -n #{namespace}
 
-'
+          '
         name: bash
         elevation_required: false
     - name: CreateCronjob
@@ -16332,7 +16332,7 @@ execution:
         CronJob for scheduling execution of malicious code that would run as a container
         in the cluster.
 
-'
+        '
       supported_platforms:
       - containers
       input_arguments:
@@ -16343,20 +16343,20 @@ execution:
       dependencies:
       - description: 'kubectl must be installed
 
-'
+          '
         get_prereq_command: 'echo "kubectl must be installed manually"
 
-'
+          '
         prereq_command: 'which kubectl
 
-'
+          '
       executor:
         command: 'kubectl create -f src/cronjob.yaml -n #{namespace}
 
-'
+          '
         cleanup_command: 'kubectl delete cronjob art -n #{namespace}
 
-'
+          '
         name: bash
         elevation_required: false
   T1574.011:
@@ -17391,20 +17391,20 @@ execution:
       - description: Verify docker is installed.
         prereq_command: 'which docker
 
-'
+          '
         get_prereq_command: 'if [ "" == "`which docker`" ]; then echo "Docker Not
           Found"; if [ -n "`which apt-get`" ]; then sudo apt-get -y install docker
           ; elif [ -n "`which yum`" ]; then sudo yum -y install docker ; fi ; else
           echo "Docker installed"; fi
 
-'
+          '
       - description: Verify docker service is running.
         prereq_command: 'sudo systemctl status docker  --no-pager
 
-'
+          '
         get_prereq_command: 'sudo systemctl start docker
 
-'
+          '
       executor:
         command: |
           docker build -t t1610 $PathtoAtomicsFolder/T1610/src/
@@ -17913,7 +17913,7 @@ execution:
         a backdoor container, and run their malicious code remotely by using “kubectl
         exec”.
 
-'
+        '
       supported_platforms:
       - containers
       input_arguments:
@@ -17932,13 +17932,13 @@ execution:
       dependencies:
       - description: 'kubectl must be installed
 
-'
+          '
         get_prereq_command: 'echo "kubectl must be installed manually"
 
-'
+          '
         prereq_command: 'which kubectl
 
-'
+          '
       executor:
         command: |
           kubectl create -f #{path} -n #{namespace}
@@ -17947,7 +17947,7 @@ execution:
           kubectl exec -n #{namespace} busybox -- #{command}
         cleanup_command: 'kubectl delete pod busybox -n #{namespace}
 
-'
+          '
         name: bash
         elevation_required: false
     - name: Docker Exec Into Container
@@ -17959,22 +17959,22 @@ execution:
         exec”. Kinsing (Golang-based malware) was executed with an Ubuntu container
         entry point that runs shell scripts.
 
-'
+        '
       supported_platforms:
       - containers
       dependencies:
       - description: 'docker must be installed
 
-'
+          '
         get_prereq_command: 'if [ "" == "`which docker`" ]; then echo "Docker Not
           Found"; if [ -n "`which apt-get`" ]; then sudo apt-get -y install docker
           ; elif [ -n "`which yum`" ]; then sudo yum -y install docker ; fi ; else
           echo "Docker installed"; fi
 
-'
+          '
         prereq_command: 'which docker
 
-'
+          '
       executor:
         command: "docker build -t t1609  $PathtoAtomicsFolder/T1609/src/ \ndocker
           run --name t1609_container --rm -itd t1609 bash /tmp/script.sh\ndocker exec
@@ -19831,10 +19831,10 @@ execution:
       - description: kubectl must be installed and configured
         get_prereq_command: 'echo "kubectl must be installed manually"
 
-'
+          '
         prereq_command: 'which kubectl
 
-'
+          '
       executor:
         name: bash
         elevation_required: false
@@ -19843,7 +19843,7 @@ execution:
           -y at >/dev/null 2>&1 && (atd || /usr/sbin/atd) && echo ''#{at_command}''
           | at #{time_spec} && at -l"
 
-'
+          '
   T1574.004:
     technique:
       type: attack-pattern
@@ -20641,7 +20641,7 @@ persistence:
         CronJob for scheduling execution of malicious code that would run as a container
         in the cluster.
 
-'
+        '
       supported_platforms:
       - containers
       input_arguments:
@@ -20652,17 +20652,17 @@ persistence:
       dependencies:
       - description: 'kubectl must be installed
 
-'
+          '
         get_prereq_command: 'echo "kubectl must be installed manually"
 
-'
+          '
         prereq_command: 'which kubectl
 
-'
+          '
       executor:
         command: 'kubectl get cronjobs -n #{namespace}
 
-'
+          '
         name: bash
         elevation_required: false
     - name: CreateCronjob
@@ -20674,7 +20674,7 @@ persistence:
         CronJob for scheduling execution of malicious code that would run as a container
         in the cluster.
 
-'
+        '
       supported_platforms:
       - containers
       input_arguments:
@@ -20685,20 +20685,20 @@ persistence:
       dependencies:
       - description: 'kubectl must be installed
 
-'
+          '
         get_prereq_command: 'echo "kubectl must be installed manually"
 
-'
+          '
         prereq_command: 'which kubectl
 
-'
+          '
       executor:
         command: 'kubectl create -f src/cronjob.yaml -n #{namespace}
 
-'
+          '
         cleanup_command: 'kubectl delete cronjob art -n #{namespace}
 
-'
+          '
         name: bash
         elevation_required: false
   T1542.001:
@@ -22999,17 +22999,17 @@ persistence:
       - description: kubectl must be installed and configured
         get_prereq_command: 'echo "kubectl must be installed manually"
 
-'
+          '
         prereq_command: 'which kubectl
 
-'
+          '
       executor:
         name: bash
         elevation_required: false
         command: 'kubectl run #{pod_name} --image=#{image_name} --restart=Never --rm
           -it -- sh -lc ''adduser -D #{username} && id #{username}''
 
-'
+          '
   T1176.002:
     technique:
       type: attack-pattern
@@ -27336,10 +27336,10 @@ persistence:
       - description: kubectl must be installed and configured
         get_prereq_command: 'echo "kubectl must be installed manually"
 
-'
+          '
         prereq_command: 'which kubectl
 
-'
+          '
       executor:
         name: bash
         elevation_required: false
@@ -27348,7 +27348,7 @@ persistence:
           -y at >/dev/null 2>&1 && (atd || /usr/sbin/atd) && echo ''#{at_command}''
           | at #{time_spec} && at -l"
 
-'
+          '
   T1556:
     technique:
       type: attack-pattern
@@ -29888,10 +29888,10 @@ command-and-control:
       - description: kubectl must be installed and configured
         get_prereq_command: 'echo "kubectl must be installed manually"
 
-'
+          '
         prereq_command: 'which kubectl
 
-'
+          '
       executor:
         name: bash
         elevation_required: false
@@ -30294,7 +30294,7 @@ collection:
         or <code>screencapture</code>.(Citation: CopyFromScreen .NET)(Citation: Antiquated
         Mac Malware)
 
-'
+        '
       kill_chain_phases:
       - kill_chain_name: mitre-attack
         phase_name: collection
@@ -41854,17 +41854,17 @@ credential-access:
       dependencies:
       - description: 'kubectl must be installed
 
-'
+          '
         prereq_command: 'which kubectl
 
-'
+          '
         get_prereq_command: 'echo "kubectl not installed, please install kubectl (https://kubernetes.io/docs/tasks/tools/)"
 
-'
+          '
       executor:
         command: 'kubectl get secrets --all-namespaces
 
-'
+          '
         name: bash
         elevation_required: false
     - name: ListSecrets
@@ -41876,7 +41876,7 @@ credential-access:
         pod service account, for example) can access sensitive information that might
         include credentials to various services.
 
-'
+        '
       supported_platforms:
       - containers
       input_arguments:
@@ -41887,17 +41887,17 @@ credential-access:
       dependencies:
       - description: 'kubectl must be installed
 
-'
+          '
         get_prereq_command: 'echo "kubectl must be installed manually"
 
-'
+          '
         prereq_command: 'which kubectl
 
-'
+          '
       executor:
         command: 'kubectl get secrets -n #{namespace}
 
-'
+          '
         name: bash
         elevation_required: false
   T1556.004:
@@ -42052,17 +42052,17 @@ discovery:
       - description: Verify Docker is installed.
         prereq_command: 'which docker
 
-'
+          '
         get_prereq_command: 'if [ "" == "`which docker`" ]; then echo "Docker Not
           Found"; if [ -n "`which apt-get`" ]; then sudo apt-get -y install docker
           ; elif [ -n "`which yum`" ]; then sudo yum -y install docker ; fi ; else
           echo "Docker installed"; fi
 
-'
+          '
       - description: Verify Docker service is running.
         prereq_command: 'sudo systemctl status docker --no-pager
 
-'
+          '
         get_prereq_command: "sudo systemctl start docker \n"
       executor:
         command: |-
@@ -42086,7 +42086,7 @@ discovery:
       - description: Verify Podman is installed.
         prereq_command: 'which podman
 
-'
+          '
         get_prereq_command: "if [ \"\" == \"`which podman`\" ]; then echo \"Podman
           Not Found\"; if [ -n \"`which apt-get`\" ]; then sudo apt-get -y install
           podman ; elif [ -n \"`which yum`\" ]; then sudo yum -y install podman ;
@@ -42096,7 +42096,7 @@ discovery:
       - description: Verify Podman service is running.
         prereq_command: 'sudo systemctl status podman --no-pager
 
-'
+          '
         get_prereq_command: "sudo systemctl start podman \n"
       executor:
         command: |-
@@ -44103,20 +44103,20 @@ discovery:
       - description: Verify docker is installed.
         prereq_command: 'which docker
 
-'
+          '
         get_prereq_command: 'if [ "" == "`which docker`" ]; then echo "Docker Not
           Found"; if [ -n "`which apt-get`" ]; then sudo apt-get -y install docker
           ; elif [ -n "`which yum`" ]; then sudo yum -y install docker ; fi ; else
           echo "Docker installed"; fi
 
-'
+          '
       - description: Verify docker service is running.
         prereq_command: 'sudo systemctl status docker  --no-pager
 
-'
+          '
         get_prereq_command: 'sudo systemctl start docker
 
-'
+          '
       executor:
         command: |-
           docker build -t t1069 $PathtoAtomicsFolder/T1069.001/src/
@@ -44612,20 +44612,20 @@ discovery:
       - description: Verify docker is installed.
         prereq_command: 'which docker
 
-'
+          '
         get_prereq_command: 'if [ "" == "`which docker`" ]; then echo "Docker Not
           Found"; if [ -n "`which apt-get`" ]; then sudo apt-get -y install docker
           ; elif [ -n "`which yum`" ]; then sudo yum -y install docker ; fi ; else
           echo "Docker installed"; fi
 
-'
+          '
       - description: Verify docker service is running.
         prereq_command: 'sudo systemctl status docker  --no-pager
 
-'
+          '
         get_prereq_command: 'sudo systemctl start docker
 
-'
+          '
       executor:
         command: |-
           docker build -t t1046 $PathToAtomicsFolder/T1046/src/
@@ -53362,7 +53362,7 @@ initial-access:
         suspicious package retrieval (e.g., typosquatting/dependency confusion) from
         within a container. The pod is deleted after execution.
 
-'
+        '
       supported_platforms:
       - containers
       - linux
@@ -53392,7 +53392,7 @@ initial-access:
           && npm install #{package_name} --no-audit --no-fund --no-package-lock &&
           echo ''--- package.json after install ---'' && cat package.json"
 
-'
+          '
   T1078.002:
     technique:
       type: attack-pattern

