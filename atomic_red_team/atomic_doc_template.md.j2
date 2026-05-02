@@ -1,0 +1,75 @@
+# {{ technique['identifier'] }} - {{ technique['name'] }}
+
+## Description from ATT&CK
+
+{% for desc_line in attack_description_lines -%}
+> {{ desc_line.strip() }}
+{% endfor %}
+[Source](https://attack.mitre.org/techniques/{{ technique['identifier'] | attack_url_identifier }})
+
+## Atomic Tests
+
+{% for test in atomic_yaml['atomic_tests'] -%}
+{% set title = "Atomic Test #" ~ loop.index ~ ": " ~ test['name'] -%}
+- [{{ title }}](#{{ title | anchor }})
+{% endfor %}
+{% for test in atomic_yaml['atomic_tests'] -%}
+### Atomic Test #{{ loop.index }}: {{ test['name'] }}
+
+{{ test['description'].strip() }}
+
+**Supported Platforms:** {{ test['supported_platforms'] | platform_list }}
+
+**auto_generated_guid:** `{{ test['auto_generated_guid'] }}`
+
+{% if test.get('input_arguments') -%}
+
+#### Inputs
+
+| Name | Description | Type | Default Value |
+|------|-------------|------|---------------|
+{% for arg_name, arg_options in test['input_arguments'].items() -%}
+| {{ arg_name | cleanup }} | {{ arg_options.get('description') | cleanup }} | {{ arg_options.get('type') | cleanup }} | {{ arg_options.get('default') | cleanup }}|
+{% endfor -%}
+{% endif -%}
+
+
+{% if test['executor']['name'] == 'manual' -%}
+#### Attack Commands: Run it with these steps! {% if test['executor'].get('elevation_required') %} Elevation Required (e.g. root or admin) {% endif %}
+{{ test['executor']['steps'] }}
+{% else -%}
+#### Attack Commands: Run with `{{ test['executor']['name'] }}`!{% if test['executor'].get('elevation_required') %} Elevation Required (e.g. root or admin){% endif %}
+
+```{{ test['executor']['name'] | language }}
+{{ test['executor'].get('command', '').strip() }}
+```
+{% endif %}
+{% if test['executor'].get('cleanup_command') is not none -%}
+#### Cleanup Commands
+
+```{{ test['executor']['name'] | language }}
+{{ test['executor']['cleanup_command'].strip() }}
+```
+{% endif -%}
+
+{% if test.get('dependencies') -%}
+{% set dependency_executor = test.get('dependency_executor_name') or test['executor']['name'] -%}
+
+#### Dependencies: Run with `{{ dependency_executor }}`!
+{% for dep in test['dependencies'] %}
+##### Description: {{ dep['description'].strip() }}
+
+###### Check Prereq Commands
+
+```{{ dependency_executor | language }}
+{{ dep['prereq_command'].strip() }}
+```
+
+###### Get Prereq Commands
+
+```{{ dependency_executor | language }}
+{{ dep['get_prereq_command'].strip() }}
+```
+{% endfor %}
+{% endif -%}
+{% endfor -%}

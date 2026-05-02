@@ -6,7 +6,7 @@ from pydantic import ValidationError
 from pydantic_core import InitErrorDetails, PydanticCustomError
 from ruamel.yaml import YAML
 
-from atomic_red_team.common import atomics_path
+from atomic_red_team.common import atomics_path, used_guids_file
 from atomic_red_team.models import Technique
 
 yaml = YAML(typ="safe")
@@ -39,8 +39,7 @@ def format_validation_error(error: ValidationError):
 
 class Validator:
     def __init__(self):
-        used_guids_path = f"{atomics_path}/used_guids.txt"
-        with open(used_guids_path, "r") as f:
+        with open(used_guids_file, "r") as f:
             self.used_guids = [x.strip() for x in f.readlines()]
         self.guids = []
 

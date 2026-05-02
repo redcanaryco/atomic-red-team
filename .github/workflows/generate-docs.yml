@@ -40,15 +40,14 @@ jobs:
         env:
           PYTHONPATH: ${{ github.workspace }}
 
-      - name: setup ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 3.0
-          bundler-cache: true
+      - name: Generate markdown docs for atomics
+        run: poetry run python runner.py generate-docs
+        working-directory: atomic_red_team
+        env:
+          PYTHONPATH: ${{ github.workspace }}
 
-      - name: generate markdown docs for atomics
+      - name: commit generated changes
         run: |
-          bin/generate-atomic-docs.rb
           echo ""
           echo ""
           git status

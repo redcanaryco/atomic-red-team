@@ -1,6 +1,7 @@
 import glob
 import json
 import os
+import shlex
 import sys
 import urllib.parse
 from collections import defaultdict
@@ -11,15 +12,41 @@ import typer
 from pydantic import ValidationError
 
 from atomic_red_team.common import used_guids_file, atomics_path
+from atomic_red_team.docs import AtomicRedTeamDocs
 from atomic_red_team.guid import (
     generate_guids_for_yaml,
     get_unique_guid,
 )
 from atomic_red_team.labels import GithubAPI
 from atomic_red_team.models import Technique
+from atomic_red_team.new_atomic import create_or_append_atomic, open_in_editor
 from atomic_red_team.validator import Validator, format_validation_error, yaml
 
 app = typer.Typer(help="Atomic Red Team Maintenance tool CLI helper")
+
+
+@app.command()
+def generate_docs():
+    """Generates markdown docs, indexes, and ATT&CK Navigator layers."""
+    _oks, fails = AtomicRedTeamDocs().generate_all_the_docs()
+    if fails:
+        sys.exit(len(fails))
+
+
+@app.command()
+def new_atomic(
+    technique_identifier: Annotated[
+        str, typer.Argument(help="Technique identifier, such as T1234")
+    ],
+    edit: Annotated[bool, typer.Option("--edit/--no-edit")] = True,
+):
+    """Creates a new atomic YAML file or appends a blank test to an existing file."""
+    output_path = create_or_append_atomic(technique_identifier)
+    if edit:
+        editor = os.environ.get("EDITOR", "vi")
+        if len(shlex.split(editor)) == 0:
+            raise typer.BadParameter("EDITOR must not be empty")
+        sys.exit(open_in_editor(output_path, editor))
 
 
 @app.command()

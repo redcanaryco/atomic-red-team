@@ -257,7 +257,10 @@ class Technique(StrictModel):
                             "empty_dependency_executor_name",
                             "'dependency_executor_name' shouldn't be empty. Provide a valid value ['manual','powershell', 'sh', "
                             "'bash', 'command_prompt'] or remove the key from YAML",
-                            {"loc": ["atomic_tests", i, "dependency_executor_name"], "input": value},
+                            {
+                                "loc": ["atomic_tests", i, "dependency_executor_name"],
+                                "input": value,
+                            },
                         )
         return data
 
