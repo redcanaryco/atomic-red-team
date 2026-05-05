@@ -43,7 +43,7 @@ pid_t create_victim_child_process() {
         sleep(2);
         exit(0);
     }
-    sleep(0.1);
+    sleep(0.2);
     return pid;
 }
 
@@ -87,11 +87,17 @@ int read_mem(void *buf, pid_t pid, uintptr_t address, size_t len) {
 }
 
 void print_mem(unsigned char* buffer, long size) {
-    for(int i=0;i<size;i++) {
-        printf("%02x ", buffer[i]);
-        if (i % 8 == 7) printf("\n");
+    for (size_t i = 0; i < size; i += 16) {
+        printf("%06zx  ", i);
+        for (size_t j = 0; j < 16; j++) {
+            if (i + j < size)
+                printf("%02x ", buffer[i + j]);
+            else
+                printf("   ");
+            if (j == 7) printf(" ");
+        }
+        printf("\n");
     }
-    printf("\n");
 }
 
 long get_reg(pid_t pid, const char* reg) {

