@@ -261,39 +261,3 @@ atomic_tests:
     cleanup_command: rm -f /tmp/pwned
     name: sh
     elevation_required: false
-- name: Stack Overwrite Self Injection
-  description: |
-    This technique performs a User-Space ELF Loading (Self-Injection),
-    bypassing execve and Yama ptrace_scope restrictions.
-    It avoids the need for mprotect by writing PT_LOAD segments directly into executable memory through the /proc/self/mem interface.
-    By manually constructing the stack frame (argc, argv) and Auxiliary Vector (auxv),
-    it achieves a full execution context switch via a direct jump to the entry point,
-    running the payload entirely within the existing process's address space.
-
-    [!]: the only syscalls used are a bunch of mmap (2 + 1 for every section in the elf)
-  supported_platforms:
-    - linux
-  dependencies:
-    - description: 'elf file needed'
-      prereq_command: test -f PathToAtomicsFolder/T1055.009/src/elf-payload.h
-      get_prereq_command: echo "elf-payload.h is missing. Re-clone the repository."
-    - description: 'gcc must be installed'
-      prereq_command: which gcc
-      get_prereq_command: apt-get install -y gcc
-    - description: 'stack_overwrite_self_inj must be compiled'
-      prereq_command: test -f PathToAtomicsFolder/T1055.009/bin/stack_overwrite_self_inj
-      get_prereq_command: make -C PathToAtomicsFolder/T1055.009/src
-    - description: '/tmp/pwned must not exist before the test'
-      prereq_command: test ! -f /tmp/pwned
-      get_prereq_command: rm -f /tmp/pwned
-  input_arguments:
-    bin_path:
-      type: path
-      default: PathToAtomicsFolder/T1055.009/bin/stack_overwrite_self_inj
-      description: path to stack_overwrite_self_inj
-  executor:
-    command: '#{bin_path}'
-    cleanup_command: rm -f /tmp/pwned
-    name: sh
-    elevation_required: false
-
