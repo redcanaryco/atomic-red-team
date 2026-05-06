@@ -310,8 +310,8 @@ int main(int argc, char *argv[]) {
     printf("[+] Code Cave content after the overwrite: \n");
     print_mem(CodeCave, shellcode_len);
     
-    // Parse the ELF headers via /proc/[pid]/exe to locate .got.plt
-    // (and /proc/[pid]/maps to get the load base for PIE binaries)
+    // Parse the ELF headers via /proc/<pid>/exe to locate .got.plt
+    // (and /proc/<pid>/maps to get the load base for PIE binaries)
     long got_size = 0;
     long got_address = get_got(pid, &got_size);
     if (got_address == -1) {
@@ -374,9 +374,9 @@ int main(int argc, char *argv[]) {
 }
 
 /**
- * This technique identifies a code cave by scanning /proc/[pid]/maps
- * and writes the shellcode into it through /proc/[pid]/mem.
- * To redirect the execution flow, it parses the target's ELF structure through /proc/[pid]/exe
+ * This technique identifies a code cave by scanning /proc/<pid>/maps
+ * and writes the shellcode into it through /proc/<pid>/mem.
+ * To redirect the execution flow, it parses the target's ELF structure through /proc/<pid>/exe
  * to locate the Global Offset Table (.got.plt) and calculates the absolute addresses for PIE-enabled binaries.
  * By overwriting these GOT entries with the shellcode’s address,
  * the injector ensures that the next time the victim calls a dynamic library function,
@@ -395,7 +395,7 @@ int main(int argc, char *argv[]) {
  * This allows the test to run on systems where ptrace_scope=1 (default on most Linux distributions),
  * where a process can only modify the memory of its own descendants.
  * This may differ from a real-world scenario where the attacker targets an arbitrary process,
- * but for the purpose of this test it preserves the detection-relevant behavior: the same syscalls and /proc/[pid]/mem
+ * but for the purpose of this test it preserves the detection-relevant behavior: the same syscalls and /proc/<pid>/mem
  * access patterns are generated regardless of the relationship between injector and target.
  * 
  * Injection inspired by Ori David in "The Definitive Guide to Linux Process Injection"
