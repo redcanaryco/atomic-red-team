@@ -71,3 +71,20 @@ atomic_tests:
     cleanup_command: |
       rm -f /tmp/art-fish.txt
     name: sh
+- name: Trap DEBUG - Log All Shell Commands
+  description: |
+    Launch bash shell with command arg to create TRAP on DEBUG.
+    The trap logs executed commands to /tmp/art-fish.txt, simulating persistent command interception.
+  supported_platforms:
+  - linux
+  - macos
+  executor:
+    command: |
+      trap 'echo "$BASH_COMMAND" >> /tmp/art-fish.txt' DEBUG
+      whoami
+      id
+      hostname
+      cat /tmp/art-fish.txt
+    cleanup_command: |
+      rm -f /tmp/art-fish.txt
+    name: bash
