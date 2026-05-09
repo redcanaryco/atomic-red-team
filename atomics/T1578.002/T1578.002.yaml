@@ -19,22 +19,26 @@ atomic_tests:
           if command -v aws > /dev/null 2>&1; then exit 0; else exit 1; fi
         get_prereq_command: |
           echo "Install AWS CLI: https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
+    input_arguments:
+      template_path:
+        description: Full path to the template.json file
+        type: string
+        default: PathToAtomicsFolder/T1578.002/src/template.json
     executor:
+      name: sh
+      elevation_required: false
       command: |
-        "aws ec2 create-launch-template \
+        aws ec2 create-launch-template \
           --launch-template-name #{template_name} \
           --version-description #{version} \
           --tag-specifications 'ResourceType=launch-template,Tags=[{Key=purpose,Value=production}]' \
-          --launch-template-data file://template.json"
+          --launch-template-data file://template.json
 
-        "aws ec2 run-instances --image-id #{ami_id} --instance-type #{instance_type} \
-          --region #{aws_region} --profile #{profile_name}"
+        aws ec2 run-instances --image-id #{ami_id} --instance-type #{instance_type} \
+          --region #{aws_region} --profile #{profile_name}
       cleanup_command: |
         aws ec2 terminate-instances  --instance-ids #{instance_id} \
           --region  #{aws_region} --profile #{profile_name}
-
-      name: sh
-      elevation_required: false
 
   - name: Create EC2 Instance with user data
     description: |
@@ -51,7 +55,26 @@ atomic_tests:
           if command -v aws > /dev/null 2>&1; then exit 0; else exit 1; fi
         get_prereq_command: |
           echo "Install AWS CLI: https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
+    input_arguments:
+      ami_id:
+        description: AMI ID to use
+        type: string
+        default: ami-12345678
+      instance_type:
+        description: EC2 instance type
+        type: string
+        default: t2.micro
+      aws_region:
+        description: AWS region
+        type: string
+        default: us-west-2
+      profile_name:
+        description: AWS profile name
+        type: string
+        default: default
     executor:
+      name: sh
+      elevation_required: false
       command: |-
         printf '%s\n' '#!/bin/bash' 'date -u > /var/tmp/userdata-ran.txt' > my_script.txt
         aws ec2 run-instances \
@@ -64,5 +87,3 @@ atomic_tests:
       cleanup_command: |
         aws ec2 terminate-instances --instance-ids #{instance_id} \
         --region  #{aws_region} --profile #{profile_name}
-      name: sh
-      elevation_required: false
