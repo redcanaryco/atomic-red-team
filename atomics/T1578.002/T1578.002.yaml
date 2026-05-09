@@ -22,8 +22,8 @@ atomic_tests:
     executor:
       command: |
         "aws ec2 create-launch-template \
-          --launch-template-name TemplateForAtomicTest \
-          --version-description AtomicTestVersion1 \
+          --launch-template-name #{template_name} \
+          --version-description #{version} \
           --tag-specifications 'ResourceType=launch-template,Tags=[{Key=purpose,Value=production}]' \
           --launch-template-data file://template.json"
 
