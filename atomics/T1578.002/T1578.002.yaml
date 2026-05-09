@@ -20,10 +20,34 @@ atomic_tests:
         get_prereq_command: |
           echo "Install AWS CLI: https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     input_arguments:
-      template_path:
+      template_name:
         description: Full path to the template.json file
         type: string
         default: PathToAtomicsFolder/T1578.002/src/template.json
+      version:
+        description: Launch template version description
+        type: string
+        default: "1"
+      ami_id:
+        description: AMI ID to use
+        type: string
+        default: ami-12345678
+      instance_type:
+        description: EC2 instance type
+        type: string
+        default: tg4.nano
+      instance_id:
+        description: EC2 instance ID to terminate
+        type: string
+        default: i-1234567890abcdef0
+      aws_region:
+        description: AWS region
+        type: string
+        default: us-east-1
+      profile_name:
+        description: AWS profile name
+        type: string
+        default: default
     executor:
       name: sh
       elevation_required: false
@@ -63,7 +87,11 @@ atomic_tests:
       instance_type:
         description: EC2 instance type
         type: string
-        default: t2.micro
+        default: tg4.nano
+      instance_id:
+        description: EC2 instance ID to terminate
+        type: string
+        default: i-1234567890abcdef0
       aws_region:
         description: AWS region
         type: string
@@ -86,4 +114,4 @@ atomic_tests:
           --user-data file://my_script.txt
       cleanup_command: |
         aws ec2 terminate-instances --instance-ids #{instance_id} \
-        --region  #{aws_region} --profile #{profile_name}
+          --region  #{aws_region} --profile #{profile_name}
