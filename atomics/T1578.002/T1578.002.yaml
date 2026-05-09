@@ -20,8 +20,15 @@ atomic_tests:
         get_prereq_command: |
           echo "Install AWS CLI: https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     executor:
-      command: "aws ec2 run-instances --image-id #{ami_id} --instance-type #{instance_type} \
-        --region #{aws_region} --profile #{profile_name}"
+      command: |
+        "aws ec2 create-launch-template \
+          --launch-template-name TemplateForAtomicTest \
+          --version-description AtomicTestVersion1 \
+          --tag-specifications 'ResourceType=launch-template,Tags=[{Key=purpose,Value=production}]' \
+          --launch-template-data file://template.json"
+
+        "aws ec2 run-instances --image-id #{ami_id} --instance-type #{instance_type} \
+          --region #{aws_region} --profile #{profile_name}"
       cleanup_command: |
         aws ec2 terminate-instances  --instance-ids #{instance_id} \
           --region  #{aws_region} --profile #{profile_name}
