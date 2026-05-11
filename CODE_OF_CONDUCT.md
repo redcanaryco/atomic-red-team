@@ -56,7 +56,7 @@ This Code of Conduct applies to all of the Atomic Red Team, and “Atomic Family
 
 ## Attribution
 
-This Code of Conduct is adapted from the [Contributor Covenant][homepage], version 1.4, available at [http://contributor-covenant.org/version/1/4][version]
+This Code of Conduct is adapted from the [Contributor Covenant][homepage], version 1.4, available at [https://contributor-covenant.org/version/1/4/code-of-conduct][version]
 
-[homepage]: http://contributor-covenant.org
-[version]: http://contributor-covenant.org/version/1/4/
+[homepage]: https://contributor-covenant.org
+[version]: https://www.contributor-covenant.org/version/1/4/code-of-conduct/
