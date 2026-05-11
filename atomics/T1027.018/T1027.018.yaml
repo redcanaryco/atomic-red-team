@@ -6,6 +6,7 @@ atomic_tests:
 # 1. File Masquerading (Zero-Width Space)
 # ------------------------------------------------------------
   - name: File Masquerading with Zero-Width Space
+    auto_generated_guid: 5917f0fd-c6d4-4af8-b89d-f3db06349c49
     description: |
       Creates a file named 'secret.txt' but inserts a Zero-Width Space (U+200B) before the extension. 
       This emulates how adversaries hide malicious files in plain sight, as they appear identical to legitimate files in File Explorer.
@@ -25,6 +26,7 @@ atomic_tests:
 # 2. Invisible Unicode in Environment Variables
 # ------------------------------------------------------------
   - name: Invisible Unicode in Environment Variables
+    auto_generated_guid: 125b1b41-bcef-42c3-acaa-a44303e3ffc1
     description: |
       Sets an environment variable that includes a Zero-Width Non-Joiner (U+200C). 
       This emulates techniques used to hide configuration data or persistence paths from administrators performing manual audits.
@@ -44,6 +46,7 @@ atomic_tests:
 # 3. Binary Name Obfuscation (Copy & Execute)
 # ------------------------------------------------------------
   - name: Binary Masquerading via Invisible Unicode
+    auto_generated_guid: 28e30460-ce18-4974-8e6a-5a2bb74e5c07
     description: |
       Copies a system binary (calc.exe) to a new name containing an invisible character (U+200D) and executes it.
       This tests the ability of EDRs to handle non-normalized file paths in process execution events.

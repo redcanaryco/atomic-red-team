@@ -412,7 +412,10 @@
   - Atomic Test #1: Space After Filename (Manual) [macos]
   - Atomic Test #2: Space After Filename [macos, linux]
 - T1216.002 SyncAppvPublishingServer [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1027.018 Invisible Unicode [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1027.018 Obfuscated Files or Information: Invisible Unicode](../../T1027.018/T1027.018.md)
+  - Atomic Test #1: File Masquerading with Zero-Width Space [windows]
+  - Atomic Test #2: Invisible Unicode in Environment Variables [windows]
+  - Atomic Test #3: Binary Masquerading via Invisible Unicode [windows]
 - T1055.008 Ptrace System Calls [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1027.007 Obfuscated Files or Information: Dynamic API Resolution](../../T1027.007/T1027.007.md)
   - Atomic Test #1: Dynamic API Resolution-Ninja-syscall [windows]
