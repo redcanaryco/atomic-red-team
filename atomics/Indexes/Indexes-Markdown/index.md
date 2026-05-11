@@ -2167,7 +2167,9 @@
   - Atomic Test #1: Safe Mode Boot [windows]
 - T1578.005 Modify Cloud Compute Configurations [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1556.009 Conditional Access Policies [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1578.002 Create Cloud Instance [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1578.002 Create Cloud Instance](../../T1578.002/T1578.002.md)
+  - Atomic Test #1: Create EC2 Instance from Launch Template [iaas:aws, linux]
+  - Atomic Test #2: Create EC2 Instance with user data [iaas:aws, linux]
 - T1601.001 Patch System Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1556.001 Modify Authentication Process: Domain Controller Authentication](../../T1556.001/T1556.001.md)
   - Atomic Test #1: Skeleton Key via Mimikatz [windows]
