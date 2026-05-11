@@ -72,7 +72,7 @@
 |  |  |  |  |  |  | Hidden File System [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |  |
 |  |  |  |  |  |  | Debugger Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |  |
 |  |  |  |  |  |  | [Masquerading: Space after Filename](../../T1036.006/T1036.006.md) |  |  |  |  |  |  |  |  |
-|  |  |  |  |  |  | Invisible Unicode [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |  |
+|  |  |  |  |  |  | Obfuscated Files or Information: Invisible Unicode [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |  |
 |  |  |  |  |  |  | [Hide Artifacts: Hidden Files and Directories](../../T1564.001/T1564.001.md) |  |  |  |  |  |  |  |  |
 |  |  |  |  |  |  | Environmental Keying [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |  |
 |  |  |  |  |  |  | Compression [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |  |
