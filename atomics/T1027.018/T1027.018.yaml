@@ -1,0 +1,61 @@
+attack_technique: T1027.018
+display_name: 'Obfuscated Files or Information: Invisible Unicode'
+
+atomic_tests:
+# ------------------------------------------------------------
+# 1. File Masquerading (Zero-Width Space)
+# ------------------------------------------------------------
+  - name: File Masquerading with Zero-Width Space
+    description: |
+      Creates a file named 'secret.txt' but inserts a Zero-Width Space (U+200B) before the extension. 
+      This emulates how adversaries hide malicious files in plain sight, as they appear identical to legitimate files in File Explorer.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      command: |
+        $fileName = "secret" + [char]0x200B + ".txt"
+        New-Item -Path "$env:TEMP\$fileName" -ItemType "file" -Value "Hidden Unicode Content" -Force
+        Write-Host "Created file: $env:TEMP\$fileName"
+      cleanup_command: |
+        $fileName = "secret" + [char]0x200B + ".txt"
+        Remove-Item -Path "$env:TEMP\$fileName" -ErrorAction Ignore
+
+# ------------------------------------------------------------
+# 2. Invisible Unicode in Environment Variables
+# ------------------------------------------------------------
+  - name: Invisible Unicode in Environment Variables
+    description: |
+      Sets an environment variable that includes a Zero-Width Non-Joiner (U+200C). 
+      This emulates techniques used to hide configuration data or persistence paths from administrators performing manual audits.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      command: |
+        $varName = "PATH" + [char]0x200C
+        [Environment]::SetEnvironmentVariable($varName, "C:\Users\Public\Malicious", "User")
+        Write-Host "Hidden environment variable '$varName' set."
+      cleanup_command: |
+        $varName = "PATH" + [char]0x200C
+        [Environment]::SetEnvironmentVariable($varName, $null, "User")
+
+# ------------------------------------------------------------
+# 3. Binary Name Obfuscation (Copy & Execute)
+# ------------------------------------------------------------
+  - name: Binary Masquerading via Invisible Unicode
+    description: |
+      Copies a system binary (calc.exe) to a new name containing an invisible character (U+200D) and executes it.
+      This tests the ability of EDRs to handle non-normalized file paths in process execution events.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      command: |
+        $hiddentarget = "$env:TEMP\calc" + [char]0x200D + ".exe"
+        Copy-Item "C:\Windows\System32\calc.exe" -Destination $hiddentarget
+        Start-Process $hiddentarget
+      cleanup_command: |
+        $hiddentarget = "$env:TEMP\calc" + [char]0x200D + ".exe"
+        Stop-Process -Name "calc*" -ErrorAction Ignore
+        Remove-Item $hiddentarget -ErrorAction Ignore
