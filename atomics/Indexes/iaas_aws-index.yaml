@@ -3785,7 +3785,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-04-15T20:41:03.753Z'
-      name: Right-to-Left Override
+      name: Masquerading:Right-to-Left Override
       description: |-
         Adversaries may abuse the right-to-left override (RTLO or RLO) character (U+202E) to disguise a string and/or file name to make it appear benign. RTLO is a non-printing Unicode character that causes the text that follows it to be displayed in reverse. For example, a Windows screensaver executable named <code>March 25 \u202Excod.scr</code> will display as <code>March 25 rcs.docx</code>. A JavaScript file named <code>photo_high_re\u202Egnp.js</code> will be displayed as <code>photo_high_resj.png</code>.(Citation: Infosecinstitute RTLO Technique)
 
@@ -3804,6 +3804,7 @@ stealth:
       - macOS
       - Windows
       x_mitre_version: '2.0'
+      identifier: T1036.002
     atomic_tests: []
   T1027.017:
     technique:
@@ -7659,7 +7660,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-04-23T18:41:48.689Z'
-      name: Invisible Unicode
+      name: 'Obfuscated Files or Information: Invisible Unicode'
       description: "Adversaries may abuse invisible or non-printing Unicode characters
         to conceal malicious content within files, scripts, or text. By inserting
         characters that do not visibly render, adversaries may hide data, alter how
@@ -7708,6 +7709,7 @@ stealth:
       - macOS
       - Windows
       x_mitre_version: '1.0'
+      identifier: T1027.018
     atomic_tests: []
   T1055.008:
     technique:
@@ -36774,7 +36776,127 @@ defense-impairment:
       x_mitre_platforms:
       - IaaS
       x_mitre_version: '2.0'
-    atomic_tests: []
+      identifier: T1578.002
+    atomic_tests:
+    - name: Create EC2 Instance from Launch Template
+      auto_generated_guid: '09186a16-e7f1-4d26-9524-6999a95a2ea5'
+      description: |
+        Creating and launching an instance using RunInstances, with a launch template.
+        This launch template will contain all the necessary parameters for the instance.
+
+        Reference for the launch templates
+        https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/create-launch-template.html
+        https://docs.aws.amazon.com/cli/latest/reference/ec2/run-instances.html#examples
+      supported_platforms:
+      - iaas:aws
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: AWS CLI must be installed
+        prereq_command: 'if command -v aws > /dev/null 2>&1; then exit 0; else exit
+          1; fi
+
+          '
+        get_prereq_command: 'echo "Install AWS CLI: https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
+
+          '
+      input_arguments:
+        template_name:
+          description: Full path to the template.json file
+          type: string
+          default: PathToAtomicsFolder/T1578.002/src/template.json
+        version:
+          description: Launch template version description
+          type: string
+          default: '1'
+        ami_id:
+          description: AMI ID to use
+          type: string
+          default: ami-12345678
+        instance_type:
+          description: EC2 instance type
+          type: string
+          default: tg4.nano
+        instance_id:
+          description: EC2 instance ID to terminate
+          type: string
+          default: i-1234567890abcdef0
+        aws_region:
+          description: AWS region
+          type: string
+          default: us-east-1
+        profile_name:
+          description: AWS profile name
+          type: string
+          default: default
+      executor:
+        name: sh
+        elevation_required: false
+        command: |
+          aws ec2 create-launch-template \
+            --launch-template-name #{template_name} \
+            --version-description #{version} \
+            --tag-specifications 'ResourceType=launch-template,Tags=[{Key=purpose,Value=production}]' \
+            --launch-template-data file://template.json
+
+          aws ec2 run-instances --image-id #{ami_id} --instance-type #{instance_type} \
+            --region #{aws_region} --profile #{profile_name}
+        cleanup_command: |
+          aws ec2 terminate-instances  --instance-ids #{instance_id} \
+            --region  #{aws_region} --profile #{profile_name}
+    - name: Create EC2 Instance with user data
+      auto_generated_guid: e0c5c285-8903-4927-a9f8-a7c37eac37e2
+      description: |
+        Creates an EC2 instance with a keypair while passing user data in a script.
+        The script runs at launch.
+      supported_platforms:
+      - iaas:aws
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: AWS CLI must be installed
+        prereq_command: |-
+          # Description: AWS CLI must be installed.
+          if command -v aws > /dev/null 2>&1; then exit 0; else exit 1; fi
+        get_prereq_command: 'echo "Install AWS CLI: https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
+
+          '
+      input_arguments:
+        ami_id:
+          description: AMI ID to use
+          type: string
+          default: ami-12345678
+        instance_type:
+          description: EC2 instance type
+          type: string
+          default: tg4.nano
+        instance_id:
+          description: EC2 instance ID to terminate
+          type: string
+          default: i-1234567890abcdef0
+        aws_region:
+          description: AWS region
+          type: string
+          default: us-west-2
+        profile_name:
+          description: AWS profile name
+          type: string
+          default: default
+      executor:
+        name: sh
+        elevation_required: false
+        command: |-
+          printf '%s\n' '#!/bin/bash' 'date -u > /var/tmp/userdata-ran.txt' > my_script.txt
+          aws ec2 run-instances \
+            --image-id #{ami_id} \
+            --instance-type #{instance_type} \
+            --count 1 \
+            --subnet-id subnet-XXXXXXXXXXXXXXX \
+            --key-name MyKeyPair \
+            --user-data file://my_script.txt
+        cleanup_command: |
+          aws ec2 terminate-instances --instance-ids #{instance_id} \
+            --region  #{aws_region} --profile #{profile_name}
   T1601.001:
     technique:
       type: attack-pattern

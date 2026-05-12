@@ -228,7 +228,9 @@
 - T1055.013 Process Doppelgänging [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574.005 Executable Installer File Permissions Weakness [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1564.014 Extended Attributes [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1036.002 Right-to-Left Override [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1036.002 Masquerading:Right-to-Left Override](../../T1036.002/T1036.002.md)
+  - Atomic Test #1: Masquerading: Right-to-Left Override Batch File Creation and Execution [windows]
+  - Atomic Test #2: Masquerading: RTLO Masqueraded File Download and Execution [windows]
 - T1027.017 SVG Smuggling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1542.002 Component Firmware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1070 Indicator Removal on Host](../../T1070/T1070.md)
@@ -412,7 +414,10 @@
   - Atomic Test #1: Space After Filename (Manual) [macos]
   - Atomic Test #2: Space After Filename [macos, linux]
 - T1216.002 SyncAppvPublishingServer [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1027.018 Invisible Unicode [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1027.018 Obfuscated Files or Information: Invisible Unicode](../../T1027.018/T1027.018.md)
+  - Atomic Test #1: File Masquerading with Zero-Width Space [windows]
+  - Atomic Test #2: Invisible Unicode in Environment Variables [windows]
+  - Atomic Test #3: Binary Masquerading via Invisible Unicode [windows]
 - T1055.008 Ptrace System Calls [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1027.007 Obfuscated Files or Information: Dynamic API Resolution](../../T1027.007/T1027.007.md)
   - Atomic Test #1: Dynamic API Resolution-Ninja-syscall [windows]
@@ -2167,7 +2172,9 @@
   - Atomic Test #1: Safe Mode Boot [windows]
 - T1578.005 Modify Cloud Compute Configurations [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1556.009 Conditional Access Policies [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1578.002 Create Cloud Instance [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1578.002 Create Cloud Instance](../../T1578.002/T1578.002.md)
+  - Atomic Test #1: Create EC2 Instance from Launch Template [iaas:aws, linux]
+  - Atomic Test #2: Create EC2 Instance with user data [iaas:aws, linux]
 - T1601.001 Patch System Image [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1556.001 Modify Authentication Process: Domain Controller Authentication](../../T1556.001/T1556.001.md)
   - Atomic Test #1: Skeleton Key via Mimikatz [windows]
