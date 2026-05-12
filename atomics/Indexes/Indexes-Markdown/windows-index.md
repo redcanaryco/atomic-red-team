@@ -174,7 +174,9 @@
   - Atomic Test #2: Odbcconf.exe - Load Response File [windows]
 - T1055.013 Process Doppelgänging [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574.005 Executable Installer File Permissions Weakness [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1036.002 Right-to-Left Override [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1036.002 Masquerading:Right-to-Left Override](../../T1036.002/T1036.002.md)
+  - Atomic Test #1: Masquerading: Right-to-Left Override Batch File Creation and Execution [windows]
+  - Atomic Test #2: Masquerading: RTLO Masqueraded File Download and Execution [windows]
 - T1027.017 SVG Smuggling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1542.002 Component Firmware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1070 Indicator Removal on Host](../../T1070/T1070.md)
