@@ -1,7 +1,7 @@
 import argparse
 import socket
 
-def main(host, port):
+def main(host, port, secret):
     # Create a socket object
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -26,17 +26,13 @@ def main(host, port):
             # Send a blank string immediately after the client connects
             client_socket.sendall(b"")
 
-            command = ""
-            client_socket.sendall(command.encode())
-
-            # Receive output from the client
-            output = client_socket.recv(65536)
-                
-            # Print output (decode if it's command data)
-            try:
-                print("Output from client:", output.decode())
-            except UnicodeDecodeError:
-                print("Output from client:", output)
+            # Authenticate client with shared secret
+            client_socket.sendall(b"AUTH\n")
+            token = client_socket.recv(65536).strip()
+            if token != secret.encode():
+                print("Authentication failed from {}:{}".format(client_address[0], client_address[1]))
+                client_socket.close()
+                continue
 
             command = ""
             client_socket.sendall(command.encode())
@@ -87,6 +83,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Telnet server")
     parser.add_argument("host", help="Host IP address")
     parser.add_argument("--port", type=int, default=23, help="Port number (default: 23)")
+    parser.add_argument("--secret", required=True, help="Shared secret for client authentication")
     args = parser.parse_args()
 
-    main(args.host, args.port)
+    main(args.host, args.port, args.secret)
