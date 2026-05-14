@@ -255,6 +255,10 @@ long get_got(pid_t pid, long *got_size){
         }
 
         char *section_name = shstrtab + shdr.sh_name;
+        if (strcmp(section_name, ".got") == 0) {
+            *got_size = shdr.sh_size;
+            got_addr = shdr.sh_addr;
+        }
         if (strcmp(section_name, ".got.plt") == 0) {
             *got_size = shdr.sh_size; //we'll need the size later
             got_addr = shdr.sh_addr;
