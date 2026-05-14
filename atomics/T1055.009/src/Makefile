@@ -10,10 +10,10 @@ all: \
 	$(BINDIR)/return_address_overwrite \
 	$(BINDIR)/return_address_overwrite_fullROPchain
 
-$(BINDIR)/inplace_instruction_overwrite: inplace_instruction_overwrite.c elf-payload.h
+$(BINDIR)/inplace_instruction_overwrite: inplace_instruction_overwrite.c
 	$(CC) $(CFLAGS) $< -o $@
 
-$(BINDIR)/instruction_overwrite_jump: instruction_overwrite_jump.c elf-payload.h
+$(BINDIR)/instruction_overwrite_jump: instruction_overwrite_jump.c
 	$(CC) $(CFLAGS) $< -o $@
 
 $(BINDIR)/got_injection: got_injection.c
