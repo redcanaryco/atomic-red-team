@@ -108,7 +108,7 @@ atomic_tests:
     it will inadvertently execute the injected payload instead.
 
     get_got:
-    Locates the Global Offset Table (.got.plt), which is an array of pointers 
+    Locates the Global Offset Table (.got.plt or .got), which is an array of pointers 
     the program uses to dynamically find external library functions.
     - Finds the string table (shstrtab) containing the names of all sections.
     - Searches for the section named ".got.plt", extracting its address and size.
@@ -149,8 +149,8 @@ atomic_tests:
     This technique performs control-flow hijacking via Return Address Overwriting.
     It first identifies a code cave by scanning /proc/<pid>/maps
     and writes the shellcode into it through /proc/<pid>/mem.
-    It then inspects the process stack (from the RSP register) to locate the saved return address.
-    By overwriting this stack location with the address of the code cave,
+    It then inspects the process stack (from the RSP register) and overwrite
+    every possibile candidate for return address with the location with the address of the code cave,
     the execution is redirected to the payload the moment the CPU executes the next RET instruction.
     
     Note: this test forks a child process to use as the injection target.
@@ -183,22 +183,29 @@ atomic_tests:
     elevation_required: false
 - name: ROP chain Mprotect Return Address Overwrite
   description: |
-    This technique performs control-flow hijacking via Return Address Overwriting.
-    It first identifies a (rw-) memory region by scanning /proc/<pid>/maps
-    and writes the shellcode into it through /proc/<pid>/mem.
-    It then builds the ROP chain to call mprotect to make the payload executable
-    After that it inspects the process stack (from the RSP register) to locate the saved return address.
-    By overwriting this stack location with the address of the code cave,
-    the moment the CPU executes the next RET instruction,
-    execution is redirected into the ROP chain, and from there to the payload.
+    This technique performs control-flow hijacking via Targeted Stack Pivoting
+    and Return Address Overwriting.
+    It first identifies a safe, zero-filled writable (rw-) memory region (a "Zero Cave")
+    by scanning /proc/<pid>/maps and /proc/<pid>/mem to avoid corrupting vital process data.
+    It writes the shellcode into this cave and immediately follows it with a dynamically 
+    constructed ROP chain, effectively creating a "Fake Stack".
+    This ROP chain is built to invoke mprotect (granting execution permissions) and dynamically
+    adapts to modern glibc constraints by padding multi-pop 'rdx' gadgets with dummy values.
 
-    Compared to the simpler "code cave + return address overwrite" variant,
-    this technique does not require finding an executable code cave:
-    it can write the payload into any writable region (heap, .data)
-    and use a ROP chain to invoke mprotect and grant execution permissions before jumping into it.
-    This is useful when no suitable executable cave is available in the victim's mapping,
-    or in scenarios such as remote exploitation via buffer overflow,
-    where the attacker has control over the stack but not over arbitrary memory writes.
+    After setting up the Fake Stack, it inspects the process stack (from the RSP register)
+    to locate potential saved return addresses. Instead of writing the full ROP chain directly
+    onto the target's stack, it overwrites these candidates with a minimal 16-byte "Trampoline"
+    consisting of a stack pivot gadget (pop rsp; ret) and the address of the Fake Stack.
+    The moment the CPU executes the next RET instruction, the stack pointer is pivoted,
+    execution is safely redirected into the ROP chain, and from there to the payload.
+
+    Compared to a standard "ROP chain + return address overwrite" variant,
+    this pivoting technique prevents catastrophic stack corruption caused by overlapping 
+    payloads when multiple return addresses are clustered together. 
+    Furthermore, by writing into a verified Zero Cave instead of arbitrary writable memory, 
+    it guarantees that no active program variables are destroyed before the payload triggers.
+    This makes the injection highly reliable, stealthy, and capable of bypassing NX/DEP 
+    protections without risking immediate segmentation faults.
     
     Note: this test forks a child process to use as the injection target.
     This allows the test to run on systems where ptrace_scope=1 (default on most Linux distributions),
@@ -230,14 +237,22 @@ atomic_tests:
     elevation_required: false
 - name: Return Address Overwrite for full ROP chain execution
   description: |
-    The injector reads the victim's RSP register from /proc/<pid>/syscall
-    to map the current stack frame. It then scans the stack memory
-    to locate the exact return address of the currently executing function.
-    It then generates a ROP chain to execute commands with arguments via exec().
-    (it doesn't support shell metacharacters e.g. '|', '>' or '>>' )
-    To do so it needs to locate a writable memory region, to hold all arguments.
-    Here it builds the 'argv' of the command to invoke the exec syscall.
-    Finally, it overwrites the return address on the victim's stack with the ROP chain.
+    The injector reads the victim's RSP register from /proc/<pid>/syscall and
+    builds a ROP chain that serializes an argv vector for execve into a
+    writable memory region, then issues execve to spawn an arbitrary command
+    with arguments (it doesn't support shell metacharacters e.g. '|', '>' or '>>').   
+    Instead of overwriting a single return address with the full ROP chain
+    (which risks catastrophic stack corruption when multiple return addresses
+    are clustered), the chain is placed into a separate zero-filled writable
+    region - the "Fake Stack". The injector then scans the victim's stack and
+    overwrites every executable-looking pointer (potential saved return
+    address) with a minimal 16-byte trampoline: { pivot_gadget, fake_stack_addr }
+    where pivot_gadget is a `pop rsp; ret` sequence.    
+    The moment the CPU executes any of the overwritten 'ret' instructions, the
+    stack pointer is pivoted to the fake stack and the execve ROP chain runs.   
+    The chain dynamically adapts to modern glibc constraints by selecting the
+    best available `pop rdx` variant (single or multi-pop) and padding it with
+    dummy values where required.
     
     Note: this test forks a child process to use as the injection target.
     This allows the test to run on systems where ptrace_scope=1 (default on most Linux distributions),
