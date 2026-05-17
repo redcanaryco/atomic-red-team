@@ -90,12 +90,21 @@ atomic_tests:
 - name: Dump svchost.exe to gather RDP credentials
   auto_generated_guid: d400090a-d8ca-4be0-982e-c70598a23de9
   description: |
-    The svchost.exe contains the RDP plain-text credentials.
-    Source: https://www.n00py.io/2021/05/dumping-plaintext-rdp-credentials-from-svchost-exe/
+  The svchost.exe contains the RDP plain-text credentials.
+  Source: https://www.n00py.io/2021/05/dumping-plaintext-rdp-credentials-from-svchost-exe/
 
-    Upon successful execution, you should see the following file created $env:TEMP\svchost-exe.dmp.
-  supported_platforms:
-  - windows
+  Upon successful execution, you should see the following file created $env:TEMP\svchost-exe.dmp.
+
+detection_notes: |-
+  Monitor for suspicious usage of:
+  - rundll32.exe executing comsvcs.dll
+  - Creation of .dmp files in temporary directories
+  - Access to LSASS or svchost memory regions
+  - Sysmon Event ID 1 (Process Creation)
+  - Sysmon Event ID 11 (File Creation)
+
+supported_platforms:
+- windows
   executor:
     command: |
       $ps = (Get-NetTCPConnection -LocalPort 3389 -State Established -ErrorAction Ignore)
