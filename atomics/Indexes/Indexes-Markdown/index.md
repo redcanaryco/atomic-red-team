@@ -624,6 +624,7 @@
   - Atomic Test #2: Trap EXIT (freebsd) [linux]
   - Atomic Test #3: Trap SIGINT [macos, linux]
   - Atomic Test #4: Trap SIGINT (freebsd) [linux]
+  - Atomic Test #5: Trap DEBUG - Log All Shell Commands [linux, macos]
 - T1548 Abuse Elevation Control Mechanism [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1134.002 Create Process with Token](../../T1134.002/T1134.002.md)
   - Atomic Test #1: Access Token Manipulation [windows]
@@ -1310,6 +1311,7 @@
   - Atomic Test #2: Trap EXIT (freebsd) [linux]
   - Atomic Test #3: Trap SIGINT [macos, linux]
   - Atomic Test #4: Trap SIGINT (freebsd) [linux]
+  - Atomic Test #5: Trap DEBUG - Log All Shell Commands [linux, macos]
 - [T1136.001 Create Account: Local Account](../../T1136.001/T1136.001.md)
   - Atomic Test #1: Create a user account on a Linux system [linux]
   - Atomic Test #2: Create a user account on a FreeBSD system [linux]
