@@ -8125,7 +8125,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-04-15T22:28:52.682Z'
-      name: Proc Memory
+      name: 'Process Injection: Proc Memory'
       description: "Adversaries may inject malicious code into processes via the /proc
         filesystem in order to evade process-based defenses as well as possibly elevate
         privileges. Proc memory injection is a method of executing arbitrary code
@@ -8163,7 +8163,288 @@ stealth:
       x_mitre_platforms:
       - Linux
       x_mitre_version: '2.0'
-    atomic_tests: []
+      identifier: T1055.009
+    atomic_tests:
+    - name: Inplace Instruction Overwrite
+      auto_generated_guid: 50859b3b-b088-4c7b-973d-03a0365a9bf9
+      description: |
+        This technique implements a Direct Instruction Overwrite.
+        Bypassing the need to look for a separate Code Cave,
+        It locates the exact memory address the CPU is about to execute
+        (via the RIP register, gathered in the /proc/PID/syscall file)
+        and overwrites that location with the entire shellcode in /proc/PID/mem.
+
+        The injection targets RIP - 2 to account for Linux kernel syscall restarting:
+        when a process interrupted during a system call is resumed,
+        the kernel typically rewinds the instruction pointer by 2 bytes to re-execute the syscall instruction.
+        To prevent crashes in cases where the process was not in a syscall,
+        a NOP sled (padding with 0x90) is prepended to the payload,
+        ensuring the execution flow safely slides into the shellcode regardless of the exact byte offset.
+        [!]: Strictly speaking, this technique does not require handling syscall restarts,
+        since we are not interrupting the victim during a syscall. The NOP sled is included for generality
+        (the same shellcode could be reused in scenarios where syscall restarting does occur)
+        and as a defensive measure against off-by-a-few-bytes inaccuracies in the RIP read from /proc/<pid>/syscall.
+
+        Note: this test forks a child process to use as the injection target.
+        This allows the test to run on systems where ptrace_scope=1 (default on most Linux distributions),
+        where a process can only modify the memory of its own descendants.
+        This may differ from a real-world scenario where the attacker targets an arbitrary process,
+        but for the purpose of this test it preserves the detection-relevant behavior: the same syscalls and /proc/<pid>/mem
+        access patterns are generated regardless of the relationship between injector and target.
+      supported_platforms:
+      - linux
+      dependencies:
+      - description: gcc must be installed
+        prereq_command: which gcc
+        get_prereq_command: apt-get install -y gcc
+      - description: inplace_instruction_overwrite must be compiled
+        prereq_command: test -f PathToAtomicsFolder/T1055.009/bin/inplace_instruction_overwrite
+        get_prereq_command: make -C PathToAtomicsFolder/T1055.009/src
+      - description: "/tmp/pwned must not exist before the test"
+        prereq_command: test ! -f /tmp/pwned
+        get_prereq_command: rm -f /tmp/pwned
+      input_arguments:
+        bin_path:
+          type: path
+          default: PathToAtomicsFolder/T1055.009/bin/inplace_instruction_overwrite
+          description: path to inplace_instruction_overwrite
+      executor:
+        command: "#{bin_path}"
+        cleanup_command: rm -f /tmp/pwned
+        name: sh
+        elevation_required: false
+    - name: Instruction Overwrite Jump
+      auto_generated_guid: 3f452c87-25b5-47c0-81d8-01908df1b927
+      description: |
+        This technique achieves control-flow hijacking via Code Patching.
+        It first identifies a code cave by scanning /proc/<pid>/maps
+        and writes the shellcode into it through /proc/<pid>/mem.
+        It then reads the current Instruction Pointer (RIP)
+        to understand exactly what instruction the CPU is about to execute,
+        and overwrites the instructions at that memory location
+        with an unconditional jump pointing to the shellcode address.
+
+        The injection targets RIP - 2 to account for Linux kernel syscall restarting:
+        when a process interrupted during a system call is resumed,
+        the kernel typically rewinds the instruction pointer by 2 bytes to re-execute the syscall instruction.
+        To prevent crashes in cases where the process was not in a syscall,
+        a NOP sled (padding with 0x90) is prepended to the payload,
+        ensuring the execution flow safely slides into the shellcode regardless of the exact byte offset.
+        [!]: Strictly speaking, this technique does not require handling syscall restarts,
+        since we are not interrupting the victim during a syscall. The NOP sled is included for generality
+        (the same shellcode could be reused in scenarios where syscall restarting does occur)
+        and as a defensive measure against off-by-a-few-bytes inaccuracies in the RIP read from /proc/<pid>/syscall.
+
+        Note: this test forks a child process to use as the injection target.
+        This allows the test to run on systems where ptrace_scope=1 (default on most Linux distributions),
+        where a process can only modify the memory of its own descendants.
+        This may differ from a real-world scenario where the attacker targets an arbitrary process,
+        but for the purpose of this test it preserves the detection-relevant behavior: the same syscalls and /proc/<pid>/mem
+        access patterns are generated regardless of the relationship between injector and target.
+      supported_platforms:
+      - linux
+      dependencies:
+      - description: gcc must be installed
+        prereq_command: which gcc
+        get_prereq_command: apt-get install -y gcc
+      - description: instruction_overwrite_jump must be compiled
+        prereq_command: test -f PathToAtomicsFolder/T1055.009/bin/instruction_overwrite_jump
+        get_prereq_command: make -C PathToAtomicsFolder/T1055.009/src
+      - description: "/tmp/pwned must not exist before the test"
+        prereq_command: test ! -f /tmp/pwned
+        get_prereq_command: rm -f /tmp/pwned
+      input_arguments:
+        bin_path:
+          type: path
+          default: PathToAtomicsFolder/T1055.009/bin/instruction_overwrite_jump
+          description: path to instruction_overwrite_jump
+      executor:
+        command: "#{bin_path}"
+        cleanup_command: rm -f /tmp/pwned
+        name: sh
+        elevation_required: false
+    - name: GOT Injection
+      auto_generated_guid: 4383bbd3-aa6c-49fd-a1a9-cf112c95982c
+      description: "This technique identifies a code cave by scanning /proc/<pid>/maps\nand
+        writes the shellcode into it through /proc/<pid>/mem.\nTo redirect the execution
+        flow, it parses the target's ELF structure through /proc/<pid>/exe\nto locate
+        the Global Offset Table (.got.plt) and calculates the absolute addresses for
+        PIE-enabled binaries.\nBy overwriting these GOT entries with the shellcode's
+        address,\nthe injector ensures that the next time the victim calls a dynamic
+        library function,\nit will inadvertently execute the injected payload instead.\n\nget_got:\nLocates
+        the Global Offset Table (.got.plt or .got), which is an array of pointers
+        \nthe program uses to dynamically find external library functions.\n- Finds
+        the string table (shstrtab) containing the names of all sections.\n- Searches
+        for the section named \".got.plt\", extracting its address and size.\n- PIE
+        Handling: If the executable is dynamic (ET_DYN / PIE), the found \naddress
+        is just a relative offset. It must be added to the base_address \n(found before)
+        to get the absolute RAM address.\n\nNote: this test forks a child process
+        to use as the injection target.\nThis allows the test to run on systems where
+        ptrace_scope=1 (default on most Linux distributions),\nwhere a process can
+        only modify the memory of its own descendants.\nThis may differ from a real-world
+        scenario where the attacker targets an arbitrary process,\nbut for the purpose
+        of this test it preserves the detection-relevant behavior: the same syscalls
+        and /proc/<pid>/mem\naccess patterns are generated regardless of the relationship
+        between injector and target.\n"
+      supported_platforms:
+      - linux
+      dependencies:
+      - description: gcc must be installed
+        prereq_command: which gcc
+        get_prereq_command: apt-get install -y gcc
+      - description: got_injection must be compiled
+        prereq_command: test -f PathToAtomicsFolder/T1055.009/bin/got_injection
+        get_prereq_command: make -C PathToAtomicsFolder/T1055.009/src
+      - description: "/tmp/pwned must not exist before the test"
+        prereq_command: test ! -f /tmp/pwned
+        get_prereq_command: rm -f /tmp/pwned
+      input_arguments:
+        bin_path:
+          type: path
+          default: PathToAtomicsFolder/T1055.009/bin/got_injection
+          description: path to got_injection
+      executor:
+        command: "#{bin_path}"
+        cleanup_command: rm -f /tmp/pwned
+        name: sh
+        elevation_required: false
+    - name: Return Address Overwrite
+      auto_generated_guid: 5fabf878-7dd4-48d3-9995-408fac68e166
+      description: |
+        This technique performs control-flow hijacking via Return Address Overwriting.
+        It first identifies a code cave by scanning /proc/<pid>/maps
+        and writes the shellcode into it through /proc/<pid>/mem.
+        It then inspects the process stack (from the RSP register) and overwrite
+        every possibile candidate for return address with the location with the address of the code cave,
+        the execution is redirected to the payload the moment the CPU executes the next RET instruction.
+
+        Note: this test forks a child process to use as the injection target.
+        This allows the test to run on systems where ptrace_scope=1 (default on most Linux distributions),
+        where a process can only modify the memory of its own descendants.
+        This may differ from a real-world scenario where the attacker targets an arbitrary process,
+        but for the purpose of this test it preserves the detection-relevant behavior: the same syscalls and /proc/<pid>/mem
+        access patterns are generated regardless of the relationship between injector and target.
+      supported_platforms:
+      - linux
+      dependencies:
+      - description: gcc must be installed
+        prereq_command: which gcc
+        get_prereq_command: apt-get install -y gcc
+      - description: return_address_overwrite must be compiled
+        prereq_command: test -f PathToAtomicsFolder/T1055.009/bin/return_address_overwrite
+        get_prereq_command: make -C PathToAtomicsFolder/T1055.009/src
+      - description: "/tmp/pwned must not exist before the test"
+        prereq_command: test ! -f /tmp/pwned
+        get_prereq_command: rm -f /tmp/pwned
+      input_arguments:
+        bin_path:
+          type: path
+          default: PathToAtomicsFolder/T1055.009/bin/return_address_overwrite
+          description: path to return_address_overwrite
+      executor:
+        command: "#{bin_path}"
+        cleanup_command: rm -f /tmp/pwned
+        name: sh
+        elevation_required: false
+    - name: ROP chain Mprotect Return Address Overwrite
+      auto_generated_guid: 3d9e332e-60c9-407a-af4c-a9ae43c4f1d0
+      description: "This technique performs control-flow hijacking via Targeted Stack
+        Pivoting\nand Return Address Overwriting.\nIt first identifies a safe, zero-filled
+        writable (rw-) memory region (a \"Zero Cave\")\nby scanning /proc/<pid>/maps
+        and /proc/<pid>/mem to avoid corrupting vital process data.\nIt writes the
+        shellcode into this cave and immediately follows it with a dynamically \nconstructed
+        ROP chain, effectively creating a \"Fake Stack\".\nThis ROP chain is built
+        to invoke mprotect (granting execution permissions) and dynamically\nadapts
+        to modern glibc constraints by padding multi-pop 'rdx' gadgets with dummy
+        values.\n\nAfter setting up the Fake Stack, it inspects the process stack
+        (from the RSP register)\nto locate potential saved return addresses. Instead
+        of writing the full ROP chain directly\nonto the target's stack, it overwrites
+        these candidates with a minimal 16-byte \"Trampoline\"\nconsisting of a stack
+        pivot gadget (pop rsp; ret) and the address of the Fake Stack.\nThe moment
+        the CPU executes the next RET instruction, the stack pointer is pivoted,\nexecution
+        is safely redirected into the ROP chain, and from there to the payload.\n\nCompared
+        to a standard \"ROP chain + return address overwrite\" variant,\nthis pivoting
+        technique prevents catastrophic stack corruption caused by overlapping \npayloads
+        when multiple return addresses are clustered together. \nFurthermore, by writing
+        into a verified Zero Cave instead of arbitrary writable memory, \nit guarantees
+        that no active program variables are destroyed before the payload triggers.\nThis
+        makes the injection highly reliable, stealthy, and capable of bypassing NX/DEP
+        \nprotections without risking immediate segmentation faults.\n\nNote: this
+        test forks a child process to use as the injection target.\nThis allows the
+        test to run on systems where ptrace_scope=1 (default on most Linux distributions),\nwhere
+        a process can only modify the memory of its own descendants.\nThis may differ
+        from a real-world scenario where the attacker targets an arbitrary process,\nbut
+        for the purpose of this test it preserves the detection-relevant behavior:
+        the same syscalls and /proc/<pid>/mem\naccess patterns are generated regardless
+        of the relationship between injector and target.\n"
+      supported_platforms:
+      - linux
+      dependencies:
+      - description: gcc must be installed
+        prereq_command: which gcc
+        get_prereq_command: apt-get install -y gcc
+      - description: rop_mprotect_return_address_overwrite must be compiled
+        prereq_command: test -f PathToAtomicsFolder/T1055.009/bin/rop_mprotect_return_address_overwrite
+        get_prereq_command: make -C PathToAtomicsFolder/T1055.009/src
+      - description: "/tmp/pwned must not exist before the test"
+        prereq_command: test ! -f /tmp/pwned
+        get_prereq_command: rm -f /tmp/pwned
+      input_arguments:
+        bin_path:
+          type: path
+          default: PathToAtomicsFolder/T1055.009/bin/rop_mprotect_return_address_overwrite
+          description: path to rop_mprotect_return_address_overwrite
+      executor:
+        command: "#{bin_path}"
+        cleanup_command: rm -f /tmp/pwned
+        name: sh
+        elevation_required: false
+    - name: Return Address Overwrite for full ROP chain execution
+      auto_generated_guid: 5696f417-30e5-4942-988d-0b9dcfe3a929
+      description: "The injector reads the victim's RSP register from /proc/<pid>/syscall
+        and\nbuilds a ROP chain that serializes an argv vector for execve into a\nwritable
+        memory region, then issues execve to spawn an arbitrary command\nwith arguments
+        (it doesn't support shell metacharacters e.g. '|', '>' or '>>').   \nInstead
+        of overwriting a single return address with the full ROP chain\n(which risks
+        catastrophic stack corruption when multiple return addresses\nare clustered),
+        the chain is placed into a separate zero-filled writable\nregion - the \"Fake
+        Stack\". The injector then scans the victim's stack and\noverwrites every
+        executable-looking pointer (potential saved return\naddress) with a minimal
+        16-byte trampoline: { pivot_gadget, fake_stack_addr }\nwhere pivot_gadget
+        is a `pop rsp; ret` sequence.    \nThe moment the CPU executes any of the
+        overwritten 'ret' instructions, the\nstack pointer is pivoted to the fake
+        stack and the execve ROP chain runs.   \nThe chain dynamically adapts to modern
+        glibc constraints by selecting the\nbest available `pop rdx` variant (single
+        or multi-pop) and padding it with\ndummy values where required.\n\nNote: this
+        test forks a child process to use as the injection target.\nThis allows the
+        test to run on systems where ptrace_scope=1 (default on most Linux distributions),\nwhere
+        a process can only modify the memory of its own descendants.\nThis may differ
+        from a real-world scenario where the attacker targets an arbitrary process,\nbut
+        for the purpose of this test it preserves the detection-relevant behavior:
+        the same syscalls and /proc/<pid>/mem\naccess patterns are generated regardless
+        of the relationship between injector and target.\n"
+      supported_platforms:
+      - linux
+      dependencies:
+      - description: gcc must be installed
+        prereq_command: which gcc
+        get_prereq_command: apt-get install -y gcc
+      - description: return_address_overwrite_fullROPchain must be compiled
+        prereq_command: test -f PathToAtomicsFolder/T1055.009/bin/return_address_overwrite_fullROPchain
+        get_prereq_command: make -C PathToAtomicsFolder/T1055.009/src
+      - description: "/tmp/pwned must not exist before the test"
+        prereq_command: test ! -f /tmp/pwned
+        get_prereq_command: rm -f /tmp/pwned
+      input_arguments:
+        bin_path:
+          type: path
+          default: PathToAtomicsFolder/T1055.009/bin/return_address_overwrite_fullROPchain
+          description: path to return_address_overwrite_fullROPchain
+      executor:
+        command: "#{bin_path}"
+        cleanup_command: rm -f /tmp/pwned
+        name: sh
+        elevation_required: false
   T1070.009:
     technique:
       type: attack-pattern
@@ -16747,7 +17028,7 @@ privilege-escalation:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-04-15T22:28:52.682Z'
-      name: Proc Memory
+      name: 'Process Injection: Proc Memory'
       description: "Adversaries may inject malicious code into processes via the /proc
         filesystem in order to evade process-based defenses as well as possibly elevate
         privileges. Proc memory injection is a method of executing arbitrary code
@@ -16785,7 +17066,288 @@ privilege-escalation:
       x_mitre_platforms:
       - Linux
       x_mitre_version: '2.0'
-    atomic_tests: []
+      identifier: T1055.009
+    atomic_tests:
+    - name: Inplace Instruction Overwrite
+      auto_generated_guid: 50859b3b-b088-4c7b-973d-03a0365a9bf9
+      description: |
+        This technique implements a Direct Instruction Overwrite.
+        Bypassing the need to look for a separate Code Cave,
+        It locates the exact memory address the CPU is about to execute
+        (via the RIP register, gathered in the /proc/PID/syscall file)
+        and overwrites that location with the entire shellcode in /proc/PID/mem.
+
+        The injection targets RIP - 2 to account for Linux kernel syscall restarting:
+        when a process interrupted during a system call is resumed,
+        the kernel typically rewinds the instruction pointer by 2 bytes to re-execute the syscall instruction.
+        To prevent crashes in cases where the process was not in a syscall,
+        a NOP sled (padding with 0x90) is prepended to the payload,
+        ensuring the execution flow safely slides into the shellcode regardless of the exact byte offset.
+        [!]: Strictly speaking, this technique does not require handling syscall restarts,
+        since we are not interrupting the victim during a syscall. The NOP sled is included for generality
+        (the same shellcode could be reused in scenarios where syscall restarting does occur)
+        and as a defensive measure against off-by-a-few-bytes inaccuracies in the RIP read from /proc/<pid>/syscall.
+
+        Note: this test forks a child process to use as the injection target.
+        This allows the test to run on systems where ptrace_scope=1 (default on most Linux distributions),
+        where a process can only modify the memory of its own descendants.
+        This may differ from a real-world scenario where the attacker targets an arbitrary process,
+        but for the purpose of this test it preserves the detection-relevant behavior: the same syscalls and /proc/<pid>/mem
+        access patterns are generated regardless of the relationship between injector and target.
+      supported_platforms:
+      - linux
+      dependencies:
+      - description: gcc must be installed
+        prereq_command: which gcc
+        get_prereq_command: apt-get install -y gcc
+      - description: inplace_instruction_overwrite must be compiled
+        prereq_command: test -f PathToAtomicsFolder/T1055.009/bin/inplace_instruction_overwrite
+        get_prereq_command: make -C PathToAtomicsFolder/T1055.009/src
+      - description: "/tmp/pwned must not exist before the test"
+        prereq_command: test ! -f /tmp/pwned
+        get_prereq_command: rm -f /tmp/pwned
+      input_arguments:
+        bin_path:
+          type: path
+          default: PathToAtomicsFolder/T1055.009/bin/inplace_instruction_overwrite
+          description: path to inplace_instruction_overwrite
+      executor:
+        command: "#{bin_path}"
+        cleanup_command: rm -f /tmp/pwned
+        name: sh
+        elevation_required: false
+    - name: Instruction Overwrite Jump
+      auto_generated_guid: 3f452c87-25b5-47c0-81d8-01908df1b927
+      description: |
+        This technique achieves control-flow hijacking via Code Patching.
+        It first identifies a code cave by scanning /proc/<pid>/maps
+        and writes the shellcode into it through /proc/<pid>/mem.
+        It then reads the current Instruction Pointer (RIP)
+        to understand exactly what instruction the CPU is about to execute,
+        and overwrites the instructions at that memory location
+        with an unconditional jump pointing to the shellcode address.
+
+        The injection targets RIP - 2 to account for Linux kernel syscall restarting:
+        when a process interrupted during a system call is resumed,
+        the kernel typically rewinds the instruction pointer by 2 bytes to re-execute the syscall instruction.
+        To prevent crashes in cases where the process was not in a syscall,
+        a NOP sled (padding with 0x90) is prepended to the payload,
+        ensuring the execution flow safely slides into the shellcode regardless of the exact byte offset.
+        [!]: Strictly speaking, this technique does not require handling syscall restarts,
+        since we are not interrupting the victim during a syscall. The NOP sled is included for generality
+        (the same shellcode could be reused in scenarios where syscall restarting does occur)
+        and as a defensive measure against off-by-a-few-bytes inaccuracies in the RIP read from /proc/<pid>/syscall.
+
+        Note: this test forks a child process to use as the injection target.
+        This allows the test to run on systems where ptrace_scope=1 (default on most Linux distributions),
+        where a process can only modify the memory of its own descendants.
+        This may differ from a real-world scenario where the attacker targets an arbitrary process,
+        but for the purpose of this test it preserves the detection-relevant behavior: the same syscalls and /proc/<pid>/mem
+        access patterns are generated regardless of the relationship between injector and target.
+      supported_platforms:
+      - linux
+      dependencies:
+      - description: gcc must be installed
+        prereq_command: which gcc
+        get_prereq_command: apt-get install -y gcc
+      - description: instruction_overwrite_jump must be compiled
+        prereq_command: test -f PathToAtomicsFolder/T1055.009/bin/instruction_overwrite_jump
+        get_prereq_command: make -C PathToAtomicsFolder/T1055.009/src
+      - description: "/tmp/pwned must not exist before the test"
+        prereq_command: test ! -f /tmp/pwned
+        get_prereq_command: rm -f /tmp/pwned
+      input_arguments:
+        bin_path:
+          type: path
+          default: PathToAtomicsFolder/T1055.009/bin/instruction_overwrite_jump
+          description: path to instruction_overwrite_jump
+      executor:
+        command: "#{bin_path}"
+        cleanup_command: rm -f /tmp/pwned
+        name: sh
+        elevation_required: false
+    - name: GOT Injection
+      auto_generated_guid: 4383bbd3-aa6c-49fd-a1a9-cf112c95982c
+      description: "This technique identifies a code cave by scanning /proc/<pid>/maps\nand
+        writes the shellcode into it through /proc/<pid>/mem.\nTo redirect the execution
+        flow, it parses the target's ELF structure through /proc/<pid>/exe\nto locate
+        the Global Offset Table (.got.plt) and calculates the absolute addresses for
+        PIE-enabled binaries.\nBy overwriting these GOT entries with the shellcode's
+        address,\nthe injector ensures that the next time the victim calls a dynamic
+        library function,\nit will inadvertently execute the injected payload instead.\n\nget_got:\nLocates
+        the Global Offset Table (.got.plt or .got), which is an array of pointers
+        \nthe program uses to dynamically find external library functions.\n- Finds
+        the string table (shstrtab) containing the names of all sections.\n- Searches
+        for the section named \".got.plt\", extracting its address and size.\n- PIE
+        Handling: If the executable is dynamic (ET_DYN / PIE), the found \naddress
+        is just a relative offset. It must be added to the base_address \n(found before)
+        to get the absolute RAM address.\n\nNote: this test forks a child process
+        to use as the injection target.\nThis allows the test to run on systems where
+        ptrace_scope=1 (default on most Linux distributions),\nwhere a process can
+        only modify the memory of its own descendants.\nThis may differ from a real-world
+        scenario where the attacker targets an arbitrary process,\nbut for the purpose
+        of this test it preserves the detection-relevant behavior: the same syscalls
+        and /proc/<pid>/mem\naccess patterns are generated regardless of the relationship
+        between injector and target.\n"
+      supported_platforms:
+      - linux
+      dependencies:
+      - description: gcc must be installed
+        prereq_command: which gcc
+        get_prereq_command: apt-get install -y gcc
+      - description: got_injection must be compiled
+        prereq_command: test -f PathToAtomicsFolder/T1055.009/bin/got_injection
+        get_prereq_command: make -C PathToAtomicsFolder/T1055.009/src
+      - description: "/tmp/pwned must not exist before the test"
+        prereq_command: test ! -f /tmp/pwned
+        get_prereq_command: rm -f /tmp/pwned
+      input_arguments:
+        bin_path:
+          type: path
+          default: PathToAtomicsFolder/T1055.009/bin/got_injection
+          description: path to got_injection
+      executor:
+        command: "#{bin_path}"
+        cleanup_command: rm -f /tmp/pwned
+        name: sh
+        elevation_required: false
+    - name: Return Address Overwrite
+      auto_generated_guid: 5fabf878-7dd4-48d3-9995-408fac68e166
+      description: |
+        This technique performs control-flow hijacking via Return Address Overwriting.
+        It first identifies a code cave by scanning /proc/<pid>/maps
+        and writes the shellcode into it through /proc/<pid>/mem.
+        It then inspects the process stack (from the RSP register) and overwrite
+        every possibile candidate for return address with the location with the address of the code cave,
+        the execution is redirected to the payload the moment the CPU executes the next RET instruction.
+
+        Note: this test forks a child process to use as the injection target.
+        This allows the test to run on systems where ptrace_scope=1 (default on most Linux distributions),
+        where a process can only modify the memory of its own descendants.
+        This may differ from a real-world scenario where the attacker targets an arbitrary process,
+        but for the purpose of this test it preserves the detection-relevant behavior: the same syscalls and /proc/<pid>/mem
+        access patterns are generated regardless of the relationship between injector and target.
+      supported_platforms:
+      - linux
+      dependencies:
+      - description: gcc must be installed
+        prereq_command: which gcc
+        get_prereq_command: apt-get install -y gcc
+      - description: return_address_overwrite must be compiled
+        prereq_command: test -f PathToAtomicsFolder/T1055.009/bin/return_address_overwrite
+        get_prereq_command: make -C PathToAtomicsFolder/T1055.009/src
+      - description: "/tmp/pwned must not exist before the test"
+        prereq_command: test ! -f /tmp/pwned
+        get_prereq_command: rm -f /tmp/pwned
+      input_arguments:
+        bin_path:
+          type: path
+          default: PathToAtomicsFolder/T1055.009/bin/return_address_overwrite
+          description: path to return_address_overwrite
+      executor:
+        command: "#{bin_path}"
+        cleanup_command: rm -f /tmp/pwned
+        name: sh
+        elevation_required: false
+    - name: ROP chain Mprotect Return Address Overwrite
+      auto_generated_guid: 3d9e332e-60c9-407a-af4c-a9ae43c4f1d0
+      description: "This technique performs control-flow hijacking via Targeted Stack
+        Pivoting\nand Return Address Overwriting.\nIt first identifies a safe, zero-filled
+        writable (rw-) memory region (a \"Zero Cave\")\nby scanning /proc/<pid>/maps
+        and /proc/<pid>/mem to avoid corrupting vital process data.\nIt writes the
+        shellcode into this cave and immediately follows it with a dynamically \nconstructed
+        ROP chain, effectively creating a \"Fake Stack\".\nThis ROP chain is built
+        to invoke mprotect (granting execution permissions) and dynamically\nadapts
+        to modern glibc constraints by padding multi-pop 'rdx' gadgets with dummy
+        values.\n\nAfter setting up the Fake Stack, it inspects the process stack
+        (from the RSP register)\nto locate potential saved return addresses. Instead
+        of writing the full ROP chain directly\nonto the target's stack, it overwrites
+        these candidates with a minimal 16-byte \"Trampoline\"\nconsisting of a stack
+        pivot gadget (pop rsp; ret) and the address of the Fake Stack.\nThe moment
+        the CPU executes the next RET instruction, the stack pointer is pivoted,\nexecution
+        is safely redirected into the ROP chain, and from there to the payload.\n\nCompared
+        to a standard \"ROP chain + return address overwrite\" variant,\nthis pivoting
+        technique prevents catastrophic stack corruption caused by overlapping \npayloads
+        when multiple return addresses are clustered together. \nFurthermore, by writing
+        into a verified Zero Cave instead of arbitrary writable memory, \nit guarantees
+        that no active program variables are destroyed before the payload triggers.\nThis
+        makes the injection highly reliable, stealthy, and capable of bypassing NX/DEP
+        \nprotections without risking immediate segmentation faults.\n\nNote: this
+        test forks a child process to use as the injection target.\nThis allows the
+        test to run on systems where ptrace_scope=1 (default on most Linux distributions),\nwhere
+        a process can only modify the memory of its own descendants.\nThis may differ
+        from a real-world scenario where the attacker targets an arbitrary process,\nbut
+        for the purpose of this test it preserves the detection-relevant behavior:
+        the same syscalls and /proc/<pid>/mem\naccess patterns are generated regardless
+        of the relationship between injector and target.\n"
+      supported_platforms:
+      - linux
+      dependencies:
+      - description: gcc must be installed
+        prereq_command: which gcc
+        get_prereq_command: apt-get install -y gcc
+      - description: rop_mprotect_return_address_overwrite must be compiled
+        prereq_command: test -f PathToAtomicsFolder/T1055.009/bin/rop_mprotect_return_address_overwrite
+        get_prereq_command: make -C PathToAtomicsFolder/T1055.009/src
+      - description: "/tmp/pwned must not exist before the test"
+        prereq_command: test ! -f /tmp/pwned
+        get_prereq_command: rm -f /tmp/pwned
+      input_arguments:
+        bin_path:
+          type: path
+          default: PathToAtomicsFolder/T1055.009/bin/rop_mprotect_return_address_overwrite
+          description: path to rop_mprotect_return_address_overwrite
+      executor:
+        command: "#{bin_path}"
+        cleanup_command: rm -f /tmp/pwned
+        name: sh
+        elevation_required: false
+    - name: Return Address Overwrite for full ROP chain execution
+      auto_generated_guid: 5696f417-30e5-4942-988d-0b9dcfe3a929
+      description: "The injector reads the victim's RSP register from /proc/<pid>/syscall
+        and\nbuilds a ROP chain that serializes an argv vector for execve into a\nwritable
+        memory region, then issues execve to spawn an arbitrary command\nwith arguments
+        (it doesn't support shell metacharacters e.g. '|', '>' or '>>').   \nInstead
+        of overwriting a single return address with the full ROP chain\n(which risks
+        catastrophic stack corruption when multiple return addresses\nare clustered),
+        the chain is placed into a separate zero-filled writable\nregion - the \"Fake
+        Stack\". The injector then scans the victim's stack and\noverwrites every
+        executable-looking pointer (potential saved return\naddress) with a minimal
+        16-byte trampoline: { pivot_gadget, fake_stack_addr }\nwhere pivot_gadget
+        is a `pop rsp; ret` sequence.    \nThe moment the CPU executes any of the
+        overwritten 'ret' instructions, the\nstack pointer is pivoted to the fake
+        stack and the execve ROP chain runs.   \nThe chain dynamically adapts to modern
+        glibc constraints by selecting the\nbest available `pop rdx` variant (single
+        or multi-pop) and padding it with\ndummy values where required.\n\nNote: this
+        test forks a child process to use as the injection target.\nThis allows the
+        test to run on systems where ptrace_scope=1 (default on most Linux distributions),\nwhere
+        a process can only modify the memory of its own descendants.\nThis may differ
+        from a real-world scenario where the attacker targets an arbitrary process,\nbut
+        for the purpose of this test it preserves the detection-relevant behavior:
+        the same syscalls and /proc/<pid>/mem\naccess patterns are generated regardless
+        of the relationship between injector and target.\n"
+      supported_platforms:
+      - linux
+      dependencies:
+      - description: gcc must be installed
+        prereq_command: which gcc
+        get_prereq_command: apt-get install -y gcc
+      - description: return_address_overwrite_fullROPchain must be compiled
+        prereq_command: test -f PathToAtomicsFolder/T1055.009/bin/return_address_overwrite_fullROPchain
+        get_prereq_command: make -C PathToAtomicsFolder/T1055.009/src
+      - description: "/tmp/pwned must not exist before the test"
+        prereq_command: test ! -f /tmp/pwned
+        get_prereq_command: rm -f /tmp/pwned
+      input_arguments:
+        bin_path:
+          type: path
+          default: PathToAtomicsFolder/T1055.009/bin/return_address_overwrite_fullROPchain
+          description: path to return_address_overwrite_fullROPchain
+      executor:
+        command: "#{bin_path}"
+        cleanup_command: rm -f /tmp/pwned
+        name: sh
+        elevation_required: false
   T1546.016:
     technique:
       type: attack-pattern

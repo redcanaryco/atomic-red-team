@@ -2,6 +2,7 @@ attack_technique: T1055.009
 display_name: 'Process Injection: Proc Memory'
 atomic_tests:
 - name: Inplace Instruction Overwrite
+  auto_generated_guid: 50859b3b-b088-4c7b-973d-03a0365a9bf9
   description: |
     This technique implements a Direct Instruction Overwrite.
     Bypassing the need to look for a separate Code Cave,
@@ -49,6 +50,7 @@ atomic_tests:
     name: sh
     elevation_required: false
 - name: Instruction Overwrite Jump
+  auto_generated_guid: 3f452c87-25b5-47c0-81d8-01908df1b927
   description: |
     This technique achieves control-flow hijacking via Code Patching.
     It first identifies a code cave by scanning /proc/<pid>/maps
@@ -98,6 +100,7 @@ atomic_tests:
     name: sh
     elevation_required: false
 - name: GOT Injection
+  auto_generated_guid: 4383bbd3-aa6c-49fd-a1a9-cf112c95982c
   description: |
     This technique identifies a code cave by scanning /proc/<pid>/maps
     and writes the shellcode into it through /proc/<pid>/mem.
@@ -145,6 +148,7 @@ atomic_tests:
     name: sh
     elevation_required: false
 - name: Return Address Overwrite
+  auto_generated_guid: 5fabf878-7dd4-48d3-9995-408fac68e166
   description: |
     This technique performs control-flow hijacking via Return Address Overwriting.
     It first identifies a code cave by scanning /proc/<pid>/maps
@@ -182,6 +186,7 @@ atomic_tests:
     name: sh
     elevation_required: false
 - name: ROP chain Mprotect Return Address Overwrite
+  auto_generated_guid: 3d9e332e-60c9-407a-af4c-a9ae43c4f1d0
   description: |
     This technique performs control-flow hijacking via Targeted Stack Pivoting
     and Return Address Overwriting.
@@ -236,6 +241,7 @@ atomic_tests:
     name: sh
     elevation_required: false
 - name: Return Address Overwrite for full ROP chain execution
+  auto_generated_guid: 5696f417-30e5-4942-988d-0b9dcfe3a929
   description: |
     The injector reads the victim's RSP register from /proc/<pid>/syscall and
     builds a ROP chain that serializes an argv vector for execve into a

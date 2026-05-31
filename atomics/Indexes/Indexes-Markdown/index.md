@@ -380,7 +380,13 @@
 - T1127.002 ClickOnce [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1070.010 Relocate Malware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1684.001 Impersonation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1055.009 Proc Memory [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1055.009 Process Injection: Proc Memory](../../T1055.009/T1055.009.md)
+  - Atomic Test #1: Inplace Instruction Overwrite [linux]
+  - Atomic Test #2: Instruction Overwrite Jump [linux]
+  - Atomic Test #3: GOT Injection [linux]
+  - Atomic Test #4: Return Address Overwrite [linux]
+  - Atomic Test #5: ROP chain Mprotect Return Address Overwrite [linux]
+  - Atomic Test #6: Return Address Overwrite for full ROP chain execution [linux]
 - T1070.009 Clear Persistence [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1036.010 Masquerade Account Name [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1027.006 HTML Smuggling](../../T1027.006/T1027.006.md)
@@ -807,7 +813,13 @@
   - Atomic Test #1: Launch Agent [macos]
   - Atomic Test #2: Event Monitor Daemon Persistence [macos]
   - Atomic Test #3: Launch Agent - Root Directory [macos]
-- T1055.009 Proc Memory [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1055.009 Process Injection: Proc Memory](../../T1055.009/T1055.009.md)
+  - Atomic Test #1: Inplace Instruction Overwrite [linux]
+  - Atomic Test #2: Instruction Overwrite Jump [linux]
+  - Atomic Test #3: GOT Injection [linux]
+  - Atomic Test #4: Return Address Overwrite [linux]
+  - Atomic Test #5: ROP chain Mprotect Return Address Overwrite [linux]
+  - Atomic Test #6: Return Address Overwrite for full ROP chain execution [linux]
 - T1546.016 Installer Packages [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1037.004 Boot or Logon Initialization Scripts: Rc.common](../../T1037.004/T1037.004.md)
   - Atomic Test #1: rc.common [macos]
