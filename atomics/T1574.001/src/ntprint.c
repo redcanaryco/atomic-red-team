@@ -1,4 +1,3 @@
-#include "pch.h"
 #include <windows.h>
 #pragma comment (lib, "user32.lib")
 
