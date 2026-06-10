@@ -1686,3 +1686,53 @@ atomic_tests:
       Clear-DnsClientCache
     name: powershell
     elevation_required: true
+- name: Throttle Cybersecurity Agent Network Traffic via QoS Policy
+  description: |-
+    This test simulates an adversary impairing security agent capabilities by applying Policy-Based Quality of Service (QoS) throttling rules to security agent processes.
+
+    Unlike traditional evasion techniques (such as firewall-based blocking or process termination), this approach leverages native Windows functionality to degrade, rather than disable, defensive tooling:
+
+    - Uses built-in Windows QoS features to manipulate application bandwidth
+    - Limits network throughput to extremely low levels (e.g., 8 bits per second)
+    - Causes security agents to repeatedly time out when attempting to communicate with their cloud backend
+
+    As a result, telemetry ingestion, alerting, and remote response capabilities may be significantly degraded, while the agent itself continues to run and appear operational.
+
+    This technique is inspired by research from Zero Salarium and the associated EDRChoker tool (https://www.zerosalarium.com/2026/06/edrchoker-choking-telemetry-stream-block-edr.html), which demonstrates how adversaries can exploit the reliance of modern EDR solutions on persistent, low-latency cloud connectivity to create a temporary loss of visibility without triggering traditional tampering detections.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    process_name:
+      type: string
+      default: MsSense.exe
+      description: Name of the process to throttle
+    throttle_rate:
+      type: integer
+      default: "8"
+      description: Bandwidth limit in bits per second
+    net_qos_policy_name:
+      type: string
+      default: CyberSecurityAgentThrottlingTest
+      description: Name of the Network QoS Policy to create then delete
+
+  dependency_executor_name: powershell
+
+  dependencies:
+    - description: Ensure PowerShell QoS cmdlets are available
+      prereq_command: |
+        if (Get-Command New-NetQosPolicy -ErrorAction SilentlyContinue) { exit 0 } else { exit 1 }
+      get_prereq_command: |
+        Write-Host "QoS cmdlets are part of Windows; ensure running on supported version"
+
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |-
+      New-NetQosPolicy -Name "#{net_qos_policy_name}" `
+        -AppPathNameMatchCondition "#{process_name}" `
+        -ThrottleRateActionBitsPerSecond #{throttle_rate} `
+        -PolicyStore ActiveStore
+    cleanup_command: |-
+      Get-NetQosPolicy -Name "#{net_qos_policy_name}" -ErrorAction SilentlyContinue | Remove-NetQosPolicy -Confirm:$false
