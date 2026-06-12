@@ -1,0 +1,187 @@
+attack_technique: T1213.005
+display_name: 'Data from Information Repositories: Messaging Applications'
+atomic_tests:
+- name: Slack - Dump channel message history via conversations.history API (sh)
+  auto_generated_guid: 6998cd96-06d0-45f9-80bc-ced040d714da
+  description: |
+    Uses a Slack API token (user or bot token, e.g. `xoxp-`/`xoxb-`) to call the `conversations.history`
+    Web API method and dump the message history of a target channel to a local file.
+
+    Adversaries who obtain a Slack token from a compromised host, leaked CI/CD secret, or OAuth grant can
+    read sensitive conversations, shared credentials, and links to internal information repositories without
+    ever logging into the Slack web client. Mapped to MITRE ATT&CK T1213.005.
+
+    Upon successful execution the channel history is written to the file defined in `output_file` and printed
+    to the console. The token requires the `channels:history` (or `groups:history`) OAuth scope.
+  supported_platforms:
+  - saas
+  input_arguments:
+    slack_token:
+      description: Slack API token with the channels:history (or groups:history) scope (xoxp-/xoxb-)
+      type: string
+      default:
+    slack_channel_id:
+      description: Target Slack channel ID (e.g. C0123456789), not the channel name
+      type: string
+      default: C0123456789
+    message_limit:
+      description: Maximum number of messages to retrieve
+      type: integer
+      default: 200
+    output_file:
+      description: Path to write the dumped channel history to
+      type: path
+      default: /tmp/T1213.005_slack_messages.json
+  dependencies:
+  - description: |
+      curl must be installed.
+    prereq_command: |
+      which curl
+    get_prereq_command: |
+      echo "Install curl using your package manager, e.g. 'sudo apt-get install -y curl' or 'brew install curl'"
+  dependency_executor_name: sh
+  executor:
+    command: |
+      curl -s -H "Authorization: Bearer #{slack_token}" \
+        "https://slack.com/api/conversations.history?channel=#{slack_channel_id}&limit=#{message_limit}" \
+        -o "#{output_file}"
+      cat "#{output_file}"
+    cleanup_command: |
+      rm -f "#{output_file}"
+    name: sh
+    elevation_required: false
+- name: Slack - Dump channel message history via conversations.history API (PowerShell)
+  auto_generated_guid: 1ddc8f8c-204c-4b47-b3b9-557f08e39921
+  description: |
+    Uses a Slack API token to call the `conversations.history` Web API method from PowerShell and dump the
+    message history of a target channel to a local file.
+
+    This is the cross-platform PowerShell equivalent of the sh-based Slack collection test. An adversary in
+    possession of a leaked Slack token can stage this from any Windows, macOS, or Linux host with PowerShell.
+    Mapped to MITRE ATT&CK T1213.005.
+
+    Upon successful execution the channel history is written to the file defined in `output_file` and printed
+    to the console. The token requires the `channels:history` (or `groups:history`) OAuth scope.
+  supported_platforms:
+  - saas
+  input_arguments:
+    slack_token:
+      description: Slack API token with the channels:history (or groups:history) scope (xoxp-/xoxb-)
+      type: string
+      default:
+    slack_channel_id:
+      description: Target Slack channel ID (e.g. C0123456789), not the channel name
+      type: string
+      default: C0123456789
+    message_limit:
+      description: Maximum number of messages to retrieve
+      type: integer
+      default: 200
+    output_file:
+      description: Path to write the dumped channel history to
+      type: path
+      default: $env:TEMP\T1213.005_slack_messages.json
+  executor:
+    command: |
+      $headers = @{ Authorization = "Bearer #{slack_token}" }
+      $uri = "https://slack.com/api/conversations.history?channel=#{slack_channel_id}&limit=#{message_limit}"
+      $response = Invoke-RestMethod -Uri $uri -Headers $headers -Method Get
+      $response | ConvertTo-Json -Depth 10 | Out-File -FilePath "#{output_file}" -Encoding utf8
+      Get-Content "#{output_file}"
+    cleanup_command: |
+      Remove-Item -Path "#{output_file}" -ErrorAction Ignore
+    name: powershell
+    elevation_required: false
+- name: Microsoft Teams - Dump channel messages via Microsoft Graph API (sh)
+  auto_generated_guid: e16e2398-187d-4b31-814c-2e8c0db0587a
+  description: |
+    Uses a Microsoft Graph OAuth access token to call the
+    `/teams/{team-id}/channels/{channel-id}/messages` endpoint and dump the message history of a target
+    Microsoft Teams channel to a local file.
+
+    An adversary holding a Graph token with the `ChannelMessage.Read.All` scope (for example obtained via an
+    over-permissioned application registration or a phished delegated grant) can read Teams conversations and
+    the sensitive data shared within them. Mapped to MITRE ATT&CK T1213.005.
+
+    Upon successful execution the channel messages are written to the file defined in `output_file` and printed
+    to the console.
+  supported_platforms:
+  - office-365
+  input_arguments:
+    graph_token:
+      description: Microsoft Graph access token with the ChannelMessage.Read.All scope
+      type: string
+      default:
+    team_id:
+      description: Target Microsoft Teams team (group) ID
+      type: string
+      default: 00000000-0000-0000-0000-000000000000
+    channel_id:
+      description: Target Teams channel ID (e.g. 19:abc...@thread.tacv2)
+      type: string
+      default: 19:00000000000000000000000000000000@thread.tacv2
+    output_file:
+      description: Path to write the dumped channel messages to
+      type: path
+      default: /tmp/T1213.005_teams_messages.json
+  dependencies:
+  - description: |
+      curl must be installed.
+    prereq_command: |
+      which curl
+    get_prereq_command: |
+      echo "Install curl using your package manager, e.g. 'sudo apt-get install -y curl' or 'brew install curl'"
+  dependency_executor_name: sh
+  executor:
+    command: |
+      curl -s -H "Authorization: Bearer #{graph_token}" \
+        "https://graph.microsoft.com/v1.0/teams/#{team_id}/channels/#{channel_id}/messages" \
+        -o "#{output_file}"
+      cat "#{output_file}"
+    cleanup_command: |
+      rm -f "#{output_file}"
+    name: sh
+    elevation_required: false
+- name: Microsoft Teams - Dump channel messages via Microsoft Graph API (PowerShell)
+  auto_generated_guid: 00aff48d-3dfd-4c6b-823e-03ffdab7e652
+  description: |
+    Uses a Microsoft Graph OAuth access token to call the
+    `/teams/{team-id}/channels/{channel-id}/messages` endpoint from PowerShell and dump the message history of
+    a target Microsoft Teams channel to a local file.
+
+    This is the cross-platform PowerShell equivalent of the sh-based Teams collection test. An adversary holding
+    a Graph token with the `ChannelMessage.Read.All` scope can stage this from any host with PowerShell.
+    Mapped to MITRE ATT&CK T1213.005.
+
+    Upon successful execution the channel messages are written to the file defined in `output_file` and printed
+    to the console.
+  supported_platforms:
+  - office-365
+  input_arguments:
+    graph_token:
+      description: Microsoft Graph access token with the ChannelMessage.Read.All scope
+      type: string
+      default:
+    team_id:
+      description: Target Microsoft Teams team (group) ID
+      type: string
+      default: 00000000-0000-0000-0000-000000000000
+    channel_id:
+      description: Target Teams channel ID (e.g. 19:abc...@thread.tacv2)
+      type: string
+      default: 19:00000000000000000000000000000000@thread.tacv2
+    output_file:
+      description: Path to write the dumped channel messages to
+      type: path
+      default: $env:TEMP\T1213.005_teams_messages.json
+  executor:
+    command: |
+      $headers = @{ Authorization = "Bearer #{graph_token}" }
+      $uri = "https://graph.microsoft.com/v1.0/teams/#{team_id}/channels/#{channel_id}/messages"
+      $response = Invoke-RestMethod -Uri $uri -Headers $headers -Method Get
+      $response | ConvertTo-Json -Depth 10 | Out-File -FilePath "#{output_file}" -Encoding utf8
+      Get-Content "#{output_file}"
+    cleanup_command: |
+      Remove-Item -Path "#{output_file}" -ErrorAction Ignore
+    name: powershell
+    elevation_required: false
