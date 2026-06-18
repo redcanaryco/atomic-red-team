@@ -1,4 +1,1 @@
-@echo off
-echo Hello World!
-timeout /t 30 /nobreak
-exit
+Write-Host "Hello World" ; Start-Sleep -Seconds 30
