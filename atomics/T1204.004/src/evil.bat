@@ -1,1 +1,4 @@
-Add evil bat file here
+@echo off
+echo Hello World!
+timeout /t 30 /nobreak
+exit
