@@ -5,7 +5,6 @@ atomic_tests:
     description: Will enumerate logical drives and file system details using the "Get-PSDrive" Powershell cmdlet. Get-Volume is then used to get details status, capacity, and file system information for all storage volumes on a system.
     supported_platforms:
       - windows
-    dependency_executor_name: ""
     executor:
       command: |-
         Get-PSDrive -PSProvider FileSystem
@@ -17,7 +16,6 @@ atomic_tests:
     description: Will enumerate logical drives and file system details using the "Get-PSDrive" Powershell cmdlet. Get-Volume is then used to get details status, capacity, and file system information for all storage volumes on a system.
     supported_platforms:
       - windows
-    dependency_executor_name: ""
     executor:
       command: wmic logicaldisk get deviceid, freespace, size, volumeserialnumber
       name: command_prompt
