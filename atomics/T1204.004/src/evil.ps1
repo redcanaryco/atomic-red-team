@@ -1,1 +1,1 @@
-{Write-Host "Hello World" ; Start-Sleep -Seconds 30}
+-EncodedCommand e1dyaXRlLUhvc3QgIkhlbGxvIFdvcmxkIiA7IFN0YXJ0LVNsZWVwIC1TZWNvbmRzIDMwfQ==
