@@ -431,7 +431,7 @@
 - [T1571 Non-Standard Port](../../T1571/T1571.md)
   - Atomic Test #2: Testing usage of uncommonly used port [linux, macos]
 - T1573 Encrypted Channel [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1102.002 Bidirectional Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1102.002 Web Service: Bidirectional Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1573.002 Asymmetric Cryptography [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1095 Non-Application Layer Protocol [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1001.003 Protocol or Service Impersonation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

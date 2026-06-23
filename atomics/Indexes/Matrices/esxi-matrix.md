@@ -20,7 +20,7 @@
 |  |  |  |  |  |  |  |  |  |  |  |  | Data Obfuscation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |
 |  |  |  |  |  |  |  |  |  |  |  |  | Non-Standard Port [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |
 |  |  |  |  |  |  |  |  |  |  |  |  | Encrypted Channel [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |
-|  |  |  |  |  |  |  |  |  |  |  |  | Bidirectional Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |
+|  |  |  |  |  |  |  |  |  |  |  |  | Web Service: Bidirectional Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |
 |  |  |  |  |  |  |  |  |  |  |  |  | Asymmetric Cryptography [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |
 |  |  |  |  |  |  |  |  |  |  |  |  | Non-Application Layer Protocol [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |
 |  |  |  |  |  |  |  |  |  |  |  |  | Protocol or Service Impersonation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |
