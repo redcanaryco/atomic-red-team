@@ -1084,7 +1084,8 @@
   - Atomic Test #1: Visual Basic script execution to gather local computer information [windows]
   - Atomic Test #2: Encoded VBS code execution [windows]
   - Atomic Test #3: Extract Memory via VBA [windows]
-- T1204.004 Malicious Copy and Paste [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1204.004 Malicious Copy and Paste](../../T1204.004/T1204.004.md)
+  - Atomic Test #1: Malicious Copy and Paste through Run.exe [windows]
 - [T1648 Serverless Execution](../../T1648/T1648.md)
   - Atomic Test #1: Lambda Function Hijack [iaas:aws]
 - T1204.001 Malicious Link [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
