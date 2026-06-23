@@ -14,8 +14,8 @@ atomic_tests:
       $bytes = [System.Convert]::FromBase64String($encodedString)
       $decodedString = [System.Text.Encoding]::UTF8.GetString($bytes)
       #write the decoded eicar string to file
-      $decodedString | Out-File T1027.013_decodedEicar.txt
-    cleanup_command: Just delete the resulting T1027.013_decodedEicar.txt file.
+      $decodedString | Out-File $env:temp\T1027.013_decodedEicar.txt
+    cleanup_command: Remove-Item $env:temp\T1027.013_decodedEicar.txt -Force -ErrorAction Ignore
     name: powershell
     elevation_required: false
 - name: Decrypt Eicar File and Write to File
@@ -32,8 +32,8 @@ atomic_tests:
       $decrypt = ConvertTo-SecureString -String $encryptedString -Key $key
       $decryptedString = [Runtime.InteropServices.Marshal]::PtrToStringBSTR([Runtime.InteropServices.Marshal]::SecureStringToBSTR($decrypt))
       #Write the decrypted eicar string to a file
-      $decryptedString | out-file T1027.013_decryptedEicar.txt
-    cleanup_command: Just delete the resulting T1027.013_decryptedEicar.txt file.
+      $decryptedString | Out-File $env:temp\T1027.013_decryptedEicar.txt
+    cleanup_command: Remove-Item $env:temp\T1027.013_decryptedEicar.txt -Force -ErrorAction Ignore
     name: powershell
     elevation_required: false
 - name: Password-Protected ZIP Payload Extraction and Execution
