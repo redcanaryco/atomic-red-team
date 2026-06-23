@@ -1735,4 +1735,4 @@ atomic_tests:
         -ThrottleRateActionBitsPerSecond #{throttle_rate} `
         -PolicyStore ActiveStore
     cleanup_command: |-
-      Get-NetQosPolicy -Name "#{net_qos_policy_name}" -ErrorAction SilentlyContinue | Remove-NetQosPolicy -Confirm:$false
+      Get-NetQosPolicy -PolicyStore ActiveStore | Where-Object { $_.Name -like "*#{net_qos_policy_name}*" } | Remove-NetQosPolicy -Confirm:$false
