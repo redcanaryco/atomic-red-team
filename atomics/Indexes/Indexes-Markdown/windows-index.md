@@ -776,7 +776,8 @@
   - Atomic Test #1: Visual Basic script execution to gather local computer information [windows]
   - Atomic Test #2: Encoded VBS code execution [windows]
   - Atomic Test #3: Extract Memory via VBA [windows]
-- T1204.004 Malicious Copy and Paste [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1204.004 Malicious Copy and Paste](../../T1204.004/T1204.004.md)
+  - Atomic Test #1: Malicious Copy and Paste through Run.exe [windows]
 - T1204.001 Malicious Link [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1569.002 System Services: Service Execution](../../T1569.002/T1569.002.md)
   - Atomic Test #1: Execute a Command as a Service [windows]
@@ -1185,7 +1186,7 @@
   - Atomic Test #1: Testing usage of uncommonly used port with PowerShell [windows]
 - [T1573 Encrypted Channel](../../T1573/T1573.md)
   - Atomic Test #1: OpenSSL C2 [windows]
-- T1102.002 Bidirectional Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1102.002 Web Service: Bidirectional Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1573.002 Asymmetric Cryptography [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1095 Non-Application Layer Protocol](../../T1095/T1095.md)
   - Atomic Test #1: ICMP C2 [windows]

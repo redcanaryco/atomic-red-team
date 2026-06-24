@@ -451,7 +451,8 @@
 - [T1571 Non-Standard Port](../../T1571/T1571.md)
   - Atomic Test #2: Testing usage of uncommonly used port [linux, macos]
 - T1573 Encrypted Channel [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1102.002 Bidirectional Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1102.002 Web Service: Bidirectional Communication](../../T1102.002/T1102.002.md)
+  - Atomic Test #1: Bidirectional C2 Simulation via paste.rs (sh) [linux]
 - T1573.002 Asymmetric Cryptography [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1095 Non-Application Layer Protocol](../../T1095/T1095.md)
   - Atomic Test #4: Linux ICMP Reverse Shell using icmp-cnc [linux]
