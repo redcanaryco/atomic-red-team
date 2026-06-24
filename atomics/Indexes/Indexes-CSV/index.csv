@@ -779,6 +779,7 @@ execution,T1651,Cloud Administration Command,1,AWS Run Command (and Control),a3c
 execution,T1059.005,Command and Scripting Interpreter: Visual Basic,1,Visual Basic script execution to gather local computer information,1620de42-160a-4fe5-bbaf-d3fef0181ce9,powershell
 execution,T1059.005,Command and Scripting Interpreter: Visual Basic,2,Encoded VBS code execution,e8209d5f-e42d-45e6-9c2f-633ac4f1eefa,powershell
 execution,T1059.005,Command and Scripting Interpreter: Visual Basic,3,Extract Memory via VBA,8faff437-a114-4547-9a60-749652a03df6,powershell
+execution,T1204.004,Malicious Copy and Paste,1,Malicious Copy and Paste through Run.exe,cec8ad4e-0320-4984-a1ae-70ee398c9519,manual
 execution,T1648,Serverless Execution,1,Lambda Function Hijack,87a4a141-c2bb-49d1-a604-8679082d8b91,powershell
 execution,T1569.002,System Services: Service Execution,1,Execute a Command as a Service,2382dee2-a75f-49aa-9378-f52df6ed3fb1,command_prompt
 execution,T1569.002,System Services: Service Execution,2,Use PsExec to execute a command on a remote host,873106b7-cfed-454b-8680-fa9f6400431c,command_prompt
@@ -1589,6 +1590,7 @@ defense-impairment,T1685,Disable or Modify Tools,73,Disable .NET Event Tracing f
 defense-impairment,T1685,Disable or Modify Tools,74,Disable .NET Event Tracing for Windows Via Environment Variable HKLM Registry - Cmd,110b4281-43fe-405f-a184-5d8eaf228ebf,command_prompt
 defense-impairment,T1685,Disable or Modify Tools,75,Disable .NET Event Tracing for Windows Via Environment Variable HKLM Registry - PowerShell,4d61779d-be7f-425c-b560-0cafb2522911,powershell
 defense-impairment,T1685,Disable or Modify Tools,76,Block Cybersecurity communication by leveraging Windows Name Resolution Policy Table,1174b5df-2c33-490f-8854-f5eb80c907ca,powershell
+defense-impairment,T1685,Disable or Modify Tools,77,Throttle Cybersecurity Agent Network Traffic via QoS Policy,7dd05b3e-0803-4852-9345-c494eb3e40fe,powershell
 defense-impairment,T1553.004,Subvert Trust Controls: Install Root Certificate,1,Install root CA on CentOS/RHEL,9c096ec4-fd42-419d-a762-d64cc950627e,sh
 defense-impairment,T1553.004,Subvert Trust Controls: Install Root Certificate,2,Install root CA on FreeBSD,f4568003-1438-44ab-a234-b3252ea7e7a3,sh
 defense-impairment,T1553.004,Subvert Trust Controls: Install Root Certificate,3,Install root CA on Debian/Ubuntu,53bcf8a0-1549-4b85-b919-010c56d724ff,sh
@@ -2260,6 +2262,10 @@ initial-access,T1078.003,Valid Accounts: Local Accounts,10,Reactivate a locked/e
 initial-access,T1078.003,Valid Accounts: Local Accounts,11,Login as nobody (Linux),3d2cd093-ee05-41bd-a802-59ee5c301b85,bash
 initial-access,T1078.003,Valid Accounts: Local Accounts,12,Login as nobody (freebsd),16f6374f-7600-459a-9b16-6a88fd96d310,sh
 initial-access,T1078.003,Valid Accounts: Local Accounts,13,Use PsExec to elevate to NT Authority\SYSTEM account,6904235f-0f55-4039-8aed-41c300ff7733,command_prompt
+exfiltration,T1567.004,Exfiltration Over Web Service: Exfiltration Over Webhook,1,Exfiltrate staged data to a Discord webhook (PowerShell),f0057c81-24dc-4a2e-b658-5809c242180b,powershell
+exfiltration,T1567.004,Exfiltration Over Web Service: Exfiltration Over Webhook,2,Exfiltrate staged file to a Discord webhook with curl (bash),40c44d16-bb49-4d14-aafa-f9ba7e6e6c5b,bash
+exfiltration,T1567.004,Exfiltration Over Web Service: Exfiltration Over Webhook,3,Exfiltrate staged data to a Slack webhook with curl (sh),c666acd6-6ff5-4d28-9490-195d89cd4337,sh
+exfiltration,T1567.004,Exfiltration Over Web Service: Exfiltration Over Webhook,4,Exfiltrate staged data to a Microsoft Teams webhook (PowerShell),35ad6590-2207-4b14-bf8f-9899470d7156,powershell
 exfiltration,T1020,Automated Exfiltration,1,IcedID Botnet HTTP PUT,9c780d3d-3a14-4278-8ee5-faaeb2ccfbe0,powershell
 exfiltration,T1020,Automated Exfiltration,2,Exfiltration via Encrypted FTP,5b380e96-b0ef-4072-8a8e-f194cb9eb9ac,powershell
 exfiltration,T1048.002,Exfiltration Over Alternative Protocol - Exfiltration Over Asymmetric Encrypted Non-C2 Protocol,1,Exfiltrate data HTTPS using curl windows,1cdf2fb0-51b6-4fd8-96af-77020d5f1bf0,command_prompt
