@@ -1552,6 +1552,7 @@
   - Atomic Test #74: Disable .NET Event Tracing for Windows Via Environment Variable HKLM Registry - Cmd [windows]
   - Atomic Test #75: Disable .NET Event Tracing for Windows Via Environment Variable HKLM Registry - PowerShell [windows]
   - Atomic Test #76: Block Cybersecurity communication by leveraging Windows Name Resolution Policy Table [windows]
+  - Atomic Test #77: Throttle Cybersecurity Agent Network Traffic via QoS Policy [windows]
 - [T1553.004 Subvert Trust Controls: Install Root Certificate](../../T1553.004/T1553.004.md)
   - Atomic Test #5: Install root CA on Windows [windows]
   - Atomic Test #6: Install root CA on Windows with certutil [windows]
@@ -2135,7 +2136,9 @@
 
 # exfiltration
 - T1567 Exfiltration Over Web Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1567.004 Exfiltration Over Webhook [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1567.004 Exfiltration Over Web Service: Exfiltration Over Webhook](../../T1567.004/T1567.004.md)
+  - Atomic Test #1: Exfiltrate staged data to a Discord webhook (PowerShell) [windows]
+  - Atomic Test #4: Exfiltrate staged data to a Microsoft Teams webhook (PowerShell) [windows]
 - T1029 Scheduled Transfer [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1011 Exfiltration Over Other Network Medium [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1011.001 Exfiltration Over Bluetooth [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
