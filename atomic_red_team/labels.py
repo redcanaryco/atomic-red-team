@@ -72,7 +72,7 @@ class GithubAPI:
 
     def get_atomic_with_lines(self, file_url: str):
         """Get Atomic Technique along with line number for each of the atomics."""
-        r = requests.get(file_url, headers=self.headers)
+        r = requests.get(file_url, headers=self.headers, timeout=15)
         assert r.status_code == 200
         return yaml.load(r.text, Loader=SafeLineLoader)
 
@@ -110,8 +110,8 @@ class GithubAPI:
                 count = 0
                 for line in file["patch"].split("\n"):
                     if line.startswith("@@"):
-                        x, y = re.findall(r"\d{1,3},\d{1,3}", line)
-                        start = int(y.split(",")[0])
+                        match = re.search(r"@@ -\d+(?:,\d+)? \+(\d+)(?:,\d+)? @@", line)
+                        start = int(match.group(1)) if match else 0
                         count = -1
                     elif line.startswith("+"):  # only take count of added lines
                         changed_lines.append(start + count)
@@ -128,7 +128,7 @@ class GithubAPI:
                     changes_in_current_atomic = [
                         i
                         for i in changed_lines
-                        if i > curr_atomic_start and i < curr_atomic_end
+                        if i >= curr_atomic_start and i < curr_atomic_end
                     ]
                     if len(changes_in_current_atomic) > 0:
                         tests.append(

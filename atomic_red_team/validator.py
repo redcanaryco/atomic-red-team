@@ -32,7 +32,7 @@ def format_validation_error(error: ValidationError):
             inputs[e["input"]] = e.get("loc", tuple())
         else:
             inputs[e["input"]] = tuple(
-                [x for x in inputs[e["input"]] if x in e.get("loc", tuple())]
+                x for x in inputs[e["input"]] if x in e.get("loc", ())
             )
     return dict(inputs)
 

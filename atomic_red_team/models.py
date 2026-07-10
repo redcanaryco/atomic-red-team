@@ -194,7 +194,7 @@ class Atomic(StrictModel):
             if self.executor.cleanup_command:
                 commands.append(self.executor.cleanup_command)
 
-            if any(["sudo" in cmd for cmd in commands]):
+            if any("sudo" in cmd for cmd in commands):
                 raise PydanticCustomError(
                     "elevation_required_but_not_provided",
                     "'elevation_required' shouldn't be empty/false. Since `sudo` is used, set `elevation_required` to true`",
