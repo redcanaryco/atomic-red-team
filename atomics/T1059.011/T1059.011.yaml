@@ -18,7 +18,7 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      The Lua interpreter (lua.exe) must be installed at the given path.
+      The Lua interpreter (lua.exe) must exist at the given path.
     prereq_command: |
       if (Test-Path "#{lua_path}") {
           exit 0
@@ -26,12 +26,16 @@ atomic_tests:
           exit 1
       }
     get_prereq_command: |
-      winget install --id DEVCOM.Lua -e --silent --accept-package-agreements --accept-source-agreements
+      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\Lua" -ErrorAction Ignore -Force | Out-Null
+      $LuaZipUrl = "https://github.com/DevelopersCommunity/cmake-lua/releases/download/v5.4.6/Lua-5.4.6-win64.zip"
+      $ZipPath = "PathToAtomicsFolder\..\ExternalPayloads\Lua-5.4.6-win64.zip"
+      Invoke-WebRequest -Uri $LuaZipUrl -OutFile $ZipPath
+      Expand-Archive -Path $ZipPath -DestinationPath "PathToAtomicsFolder\..\ExternalPayloads\Lua" -Force
   input_arguments:
     lua_path:
       description: Path to the Lua interpreter (lua.exe)
       type: path
-      default: $env:LOCALAPPDATA\Programs\Lua\bin\lua.exe
+      default: PathToAtomicsFolder\..\ExternalPayloads\Lua\bin\lua.exe
     script_path:
       description: Path to the Lua script that this test will run
       type: path
