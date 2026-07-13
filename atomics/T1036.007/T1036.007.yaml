@@ -69,3 +69,17 @@ atomic_tests:
         del /f %temp%\T1036.007_masquerading.pdf.ps1 > nul 2>&1
         del /f %temp%\T1036.007_masquerading.rtf.ps1 > nul 2>&1
       name: command_prompt
+  - name: Linux File Extension Masquerading
+    description: |
+      Creates and executes a shell script masquerading as a PDF document using a double extension (.pdf.sh).
+    supported_platforms:
+      - linux
+    executor:
+      name: sh
+      command: |
+        echo '#!/bin/sh' > /tmp/report.pdf.sh
+        echo 'echo "Simulating malicious double extension execution"' >> /tmp/report.pdf.sh
+        chmod +x /tmp/report.pdf.sh
+        /tmp/report.pdf.sh
+      cleanup_command: |
+        rm -f /tmp/report.pdf.sh
