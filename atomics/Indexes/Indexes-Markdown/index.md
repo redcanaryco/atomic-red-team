@@ -41,6 +41,7 @@
   - Atomic Test #4: Loadable Kernel Module based Rootkit (Diamorphine) [linux]
 - [T1036.007 Masquerading: Double File Extension](../../T1036.007/T1036.007.md)
   - Atomic Test #1: File Extension Masquerading [windows]
+  - Atomic Test #2: Linux File Extension Masquerading [linux]
 - [T1542.001 Pre-OS Boot: System Firmware](../../T1542.001/T1542.001.md)
   - Atomic Test #1: UEFI Persistence via Wpbbin.exe File Creation [windows]
 - [T1574.011 Hijack Execution Flow: Services Registry Permissions Weakness](../../T1574.011/T1574.011.md)
@@ -52,7 +53,8 @@
   - Atomic Test #1: Execute a process from a directory masquerading as the current parent directory [macos, linux]
   - Atomic Test #2: Masquerade as a built-in system executable [windows]
   - Atomic Test #3: Masquerading cmd.exe as VEDetector.exe [windows]
-- T1036.008 Masquerade File Type [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1036.008 Masquerading: Masquerade File Type](../../T1036.008/T1036.008.md)
+  - Atomic Test #1: Linux File Type Masquerading via Extension Change [linux]
 - [T1564 Hide Artifacts](../../T1564/T1564.md)
   - Atomic Test #1: Extract binary files via VBA [windows]
   - Atomic Test #2: Create a Hidden User Called "$" [windows]
@@ -2879,7 +2881,9 @@
 - T1538 Cloud Service Dashboard [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1622 Debugger Evasion](../../T1622/T1622.md)
   - Atomic Test #1: Detect a Debugger Presence in the Machine [windows]
-- T1680 Local Storage Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1680 Local Storage Discovery](../../T1680/T1680.md)
+  - Atomic Test #1: Local Storage Discovery via PSDrive [windows]
+  - Atomic Test #2: Local Storage Discovery via wmic  [windows]
 - [T1124 System Time Discovery](../../T1124/T1124.md)
   - Atomic Test #1: System Time Discovery [windows]
   - Atomic Test #2: System Time Discovery - PowerShell [windows]
