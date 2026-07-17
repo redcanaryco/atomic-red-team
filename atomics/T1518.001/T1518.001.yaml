@@ -152,6 +152,24 @@ atomic_tests:
       Get-NetFirewallRule | select DisplayName, Enabled, Description
     name: powershell 
     elevation_required: true
+- name: Security Software Discovery - Acronis Cyber Protect Enumeration
+  auto_generated_guid: 92da0596-bfa0-4088-a70d-09cb3523da5d
+  description: |
+    Enumerates processes and services associated with Acronis Cyber Protect (EDR/XDR + backup agent).
+
+    when sucessfully executed, the test displays whether the Acronis Cyber Protection Service, the
+    Cyber Protect agent (aakore), and the Active Protection anti-ransomware component are installed
+    and/or running.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      tasklist.exe | findstr /i "cyber-protect-service aakore anti_ransomware_service"
+      sc.exe query AcronisCyberProtectionService
+      sc.exe query AcronisActiveProtectionService
+      powershell.exe -c "Get-Service | Where-Object {$_.DisplayName -like '*Acronis*'}"
+    name: command_prompt
+    elevation_required: true
 - name: Get Windows Defender exclusion settings using WMIC
   auto_generated_guid: e31564c8-4c60-40cd-a8f4-9261307e8336
   description: |
