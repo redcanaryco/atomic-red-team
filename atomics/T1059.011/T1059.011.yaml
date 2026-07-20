@@ -2,7 +2,7 @@ attack_technique: T1059.011
 display_name: 'Command and Scripting Interpreter: Lua'
 atomic_tests:
 - name: Run a command using the Lua interpreter
-  auto_generated_guid: 8f2b1c9a-3e7d-4a6f-9b1e-5d8c2f4a6b1e
+  auto_generated_guid: 53c314df-f685-4826-b40d-2498319daad3
   description: |
     This test uses the Lua interpreter (lua.exe) to run a small script.
     Lua is not a common scripting language on Windows, so most security tools do not watch for it.
@@ -18,24 +18,16 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      The Lua interpreter (lua.exe) must exist at the given path.
+      The Lua interpreter (lua.exe) must be installed and available on the PATH.
     prereq_command: |
-      if (Test-Path "#{lua_path}") {
-          exit 0
-      } else {
-          exit 1
-      }
+      if (Get-Command "#{lua_path}" -ErrorAction SilentlyContinue) { exit 0 } else { exit 1 }
     get_prereq_command: |
-      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\Lua" -ErrorAction Ignore -Force | Out-Null
-      $LuaZipUrl = "https://github.com/DevelopersCommunity/cmake-lua/releases/download/v5.4.6/Lua-5.4.6-win64.zip"
-      $ZipPath = "PathToAtomicsFolder\..\ExternalPayloads\Lua-5.4.6-win64.zip"
-      Invoke-WebRequest -Uri $LuaZipUrl -OutFile $ZipPath
-      Expand-Archive -Path $ZipPath -DestinationPath "PathToAtomicsFolder\..\ExternalPayloads\Lua" -Force
+      winget install --id DEVCOM.Lua --exact --accept-source-agreements --accept-package-agreements
   input_arguments:
     lua_path:
       description: Path to the Lua interpreter (lua.exe)
       type: path
-      default: PathToAtomicsFolder\..\ExternalPayloads\Lua\bin\lua.exe
+      default: lua.exe
     script_path:
       description: Path to the Lua script that this test will run
       type: path
