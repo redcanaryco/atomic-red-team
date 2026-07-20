@@ -1,0 +1,51 @@
+attack_technique: T1059.012
+display_name: 'Command and Scripting Interpreter: Hypervisor CLI'
+atomic_tests:
+- name: Run a read only esxcli command over SSH
+  auto_generated_guid: 3d7a9e2b-6c4f-4e1a-8b3d-2a9f7c5e1d4b
+  description: |
+    ESXi servers have their own command line tools, like esxcli and vim-cmd.
+    Attackers can connect to an ESXi server over SSH and run these tools directly.
+    This is how real ransomware groups (like the ones behind the ESXiArgs attacks) find and stop virtual machines before they encrypt them.
+
+    This test only runs a read only command. It does not stop, delete, or change any virtual machine.
+    It just asks the ESXi server for its version number, the same way an attacker would check what they are working with.
+
+    You need a real ESXi server for this test, and SSH must be turned on for it.
+    This test will not work without one.
+
+    After the test runs, you should see the ESXi version printed on the screen.
+  supported_platforms:
+  - windows
+  dependencies:
+  - description: |
+      The SSH client built into Windows must be available.
+    prereq_command: |
+      if (Get-Command ssh.exe -ErrorAction SilentlyContinue) {
+          exit 0
+      } else {
+          exit 1
+      }
+    get_prereq_command: |
+      Write-Host "The Windows OpenSSH Client feature is missing. Turn it on with: Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0"
+  input_arguments:
+    esxi_host:
+      description: IP address or hostname of the ESXi server used for this test
+      type: string
+      default: 192.168.1.10
+    esxi_user:
+      description: Username used to log in to the ESXi server
+      type: string
+      default: root
+    ssh_key_path:
+      description: Path to the SSH private key used to log in to the ESXi server
+      type: path
+      default: $env:USERPROFILE\.ssh\esxi_test_key
+    esxi_command:
+      description: The read only hypervisor CLI command that will be run on the ESXi server
+      type: string
+      default: esxcli system version get
+  executor:
+    command: |
+      ssh -o StrictHostKeyChecking=no -i "#{ssh_key_path}" #{esxi_user}@#{esxi_host} "#{esxi_command}"
+    name: powershell
