@@ -27,12 +27,14 @@ stealth,T1014,Rootkit,2,Loadable Kernel Module based Rootkit,75483ef8-f10f-444a-
 stealth,T1014,Rootkit,3,dynamic-linker based rootkit (libprocesshider),1338bf0c-fd0c-48c0-9e65-329f18e2c0d3,sh
 stealth,T1014,Rootkit,4,Loadable Kernel Module based Rootkit (Diamorphine),0b996469-48c6-46e2-8155-a17f8b6c2247,sh
 stealth,T1036.007,Masquerading: Double File Extension,1,File Extension Masquerading,c7fa0c3b-b57f-4cba-9118-863bf4e653fc,command_prompt
+stealth,T1036.007,Masquerading: Double File Extension,2,Linux File Extension Masquerading,26cde240-0112-4806-8c97-bdde43dab298,sh
 stealth,T1542.001,Pre-OS Boot: System Firmware,1,UEFI Persistence via Wpbbin.exe File Creation,b8a49f03-e3c4-40f2-b7bb-9e8f8fdddbf1,powershell
 stealth,T1574.011,Hijack Execution Flow: Services Registry Permissions Weakness,1,Service Registry Permissions Weakness,f7536d63-7fd4-466f-89da-7e48d550752a,powershell
 stealth,T1574.011,Hijack Execution Flow: Services Registry Permissions Weakness,2,Service ImagePath Change with reg.exe,f38e9eea-e1d7-4ba6-b716-584791963827,command_prompt
 stealth,T1036.005,Masquerading: Match Legitimate Name or Location,1,Execute a process from a directory masquerading as the current parent directory,812c3ab8-94b0-4698-a9bf-9420af23ce24,sh
 stealth,T1036.005,Masquerading: Match Legitimate Name or Location,2,Masquerade as a built-in system executable,35eb8d16-9820-4423-a2a1-90c4f5edd9ca,powershell
 stealth,T1036.005,Masquerading: Match Legitimate Name or Location,3,Masquerading cmd.exe as VEDetector.exe,03ae82a6-9fa0-465b-91df-124d8ca5c4e8,powershell
+stealth,T1036.008,Masquerading: Masquerade File Type,1,Linux File Type Masquerading via Extension Change,1214f818-673b-4494-9fbd-99af0e185866,sh
 stealth,T1564,Hide Artifacts,1,Extract binary files via VBA,6afe288a-8a8b-4d33-a629-8d03ba9dad3a,powershell
 stealth,T1564,Hide Artifacts,2,"Create a Hidden User Called ""$""",2ec63cc2-4975-41a6-bf09-dffdfb610778,command_prompt
 stealth,T1564,Hide Artifacts,3,"Create an ""Administrator "" user (with a space on the end)",5bb20389-39a5-4e99-9264-aeb92a55a85c,powershell
@@ -60,6 +62,7 @@ stealth,T1574.001,Hijack Execution Flow: DLL,3,Phantom Dll Hijacking - ualapi.dl
 stealth,T1574.001,Hijack Execution Flow: DLL,4,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
 stealth,T1574.001,Hijack Execution Flow: DLL,5,DLL Side-Loading using the dotnet startup hook environment variable,d322cdd7-7d60-46e3-9111-648848da7c02,command_prompt
 stealth,T1574.001,Hijack Execution Flow: DLL,6,"DLL Search Order Hijacking,DLL Sideloading Of KeyScramblerIE.DLL Via KeyScrambler.EXE",c095ad8e-4469-4d33-be9d-6f6d1fb21585,powershell
+stealth,T1574.001,Hijack Execution Flow: DLL,7,DLL Search Order Hijacking - ntprint,e96b8105-d7f7-484e-8d81-2d0c7086971b,command_prompt
 stealth,T1218.007,Signed Binary Proxy Execution: Msiexec,1,Msiexec.exe - Execute Local MSI file with embedded JScript,a059b6c4-e7d6-4b2e-bcd7-9b2b33191a04,command_prompt
 stealth,T1218.007,Signed Binary Proxy Execution: Msiexec,2,Msiexec.exe - Execute Local MSI file with embedded VBScript,8d73c7b0-c2b1-4ac1-881a-4aa644f76064,command_prompt
 stealth,T1218.007,Signed Binary Proxy Execution: Msiexec,3,Msiexec.exe - Execute Local MSI file with an embedded DLL,628fa796-76c5-44c3-93aa-b9d8214fd568,command_prompt
@@ -683,6 +686,7 @@ execution,T1574.001,Hijack Execution Flow: DLL,3,Phantom Dll Hijacking - ualapi.
 execution,T1574.001,Hijack Execution Flow: DLL,4,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
 execution,T1574.001,Hijack Execution Flow: DLL,5,DLL Side-Loading using the dotnet startup hook environment variable,d322cdd7-7d60-46e3-9111-648848da7c02,command_prompt
 execution,T1574.001,Hijack Execution Flow: DLL,6,"DLL Search Order Hijacking,DLL Sideloading Of KeyScramblerIE.DLL Via KeyScrambler.EXE",c095ad8e-4469-4d33-be9d-6f6d1fb21585,powershell
+execution,T1574.001,Hijack Execution Flow: DLL,7,DLL Search Order Hijacking - ntprint,e96b8105-d7f7-484e-8d81-2d0c7086971b,command_prompt
 execution,T1059.002,Command and Scripting Interpreter: AppleScript,1,AppleScript,3600d97d-81b9-4171-ab96-e4386506e2c2,sh
 execution,T1106,Native API,1,Execution through API - CreateProcess,99be2089-c52d-4a4a-b5c3-261ee42c8b62,command_prompt
 execution,T1106,Native API,2,WinPwn - Get SYSTEM shell - Pop System Shell using CreateProcess technique,ce4e76e6-de70-4392-9efe-b281fc2b4087,powershell
@@ -779,6 +783,7 @@ execution,T1651,Cloud Administration Command,1,AWS Run Command (and Control),a3c
 execution,T1059.005,Command and Scripting Interpreter: Visual Basic,1,Visual Basic script execution to gather local computer information,1620de42-160a-4fe5-bbaf-d3fef0181ce9,powershell
 execution,T1059.005,Command and Scripting Interpreter: Visual Basic,2,Encoded VBS code execution,e8209d5f-e42d-45e6-9c2f-633ac4f1eefa,powershell
 execution,T1059.005,Command and Scripting Interpreter: Visual Basic,3,Extract Memory via VBA,8faff437-a114-4547-9a60-749652a03df6,powershell
+execution,T1204.004,Malicious Copy and Paste,1,Malicious Copy and Paste through Run.exe,cec8ad4e-0320-4984-a1ae-70ee398c9519,manual
 execution,T1648,Serverless Execution,1,Lambda Function Hijack,87a4a141-c2bb-49d1-a604-8679082d8b91,powershell
 execution,T1569.002,System Services: Service Execution,1,Execute a Command as a Service,2382dee2-a75f-49aa-9378-f52df6ed3fb1,command_prompt
 execution,T1569.002,System Services: Service Execution,2,Use PsExec to execute a command on a remote host,873106b7-cfed-454b-8680-fa9f6400431c,command_prompt
@@ -1174,6 +1179,7 @@ command-and-control,T1090.003,Proxy: Multi-hop Proxy,4,Tor Proxy Usage - MacOS,1
 command-and-control,T1571,Non-Standard Port,1,Testing usage of uncommonly used port with PowerShell,21fe622f-8e53-4b31-ba83-6d333c2583f4,powershell
 command-and-control,T1571,Non-Standard Port,2,Testing usage of uncommonly used port,5db21e1d-dd9c-4a50-b885-b1e748912767,sh
 command-and-control,T1573,Encrypted Channel,1,OpenSSL C2,21caf58e-87ad-440c-a6b8-3ac259964003,powershell
+command-and-control,T1102.002,Web Service: Bidirectional Communication,1,Bidirectional C2 Simulation via paste.rs (sh),ec9ab81c-8053-4957-8c66-0218381ab564,sh
 command-and-control,T1095,Non-Application Layer Protocol,1,ICMP C2,0268e63c-e244-42db-bef7-72a9e59fc1fc,powershell
 command-and-control,T1095,Non-Application Layer Protocol,2,Netcat C2,bcf0d1c1-3f6a-4847-b1c9-7ed4ea321f37,powershell
 command-and-control,T1095,Non-Application Layer Protocol,3,Powercat C2,3e0e0e7f-6aa2-4a61-b61d-526c2cc9330e,powershell
@@ -1588,6 +1594,7 @@ defense-impairment,T1685,Disable or Modify Tools,73,Disable .NET Event Tracing f
 defense-impairment,T1685,Disable or Modify Tools,74,Disable .NET Event Tracing for Windows Via Environment Variable HKLM Registry - Cmd,110b4281-43fe-405f-a184-5d8eaf228ebf,command_prompt
 defense-impairment,T1685,Disable or Modify Tools,75,Disable .NET Event Tracing for Windows Via Environment Variable HKLM Registry - PowerShell,4d61779d-be7f-425c-b560-0cafb2522911,powershell
 defense-impairment,T1685,Disable or Modify Tools,76,Block Cybersecurity communication by leveraging Windows Name Resolution Policy Table,1174b5df-2c33-490f-8854-f5eb80c907ca,powershell
+defense-impairment,T1685,Disable or Modify Tools,77,Throttle Cybersecurity Agent Network Traffic via QoS Policy,7dd05b3e-0803-4852-9345-c494eb3e40fe,powershell
 defense-impairment,T1553.004,Subvert Trust Controls: Install Root Certificate,1,Install root CA on CentOS/RHEL,9c096ec4-fd42-419d-a762-d64cc950627e,sh
 defense-impairment,T1553.004,Subvert Trust Controls: Install Root Certificate,2,Install root CA on FreeBSD,f4568003-1438-44ab-a234-b3252ea7e7a3,sh
 defense-impairment,T1553.004,Subvert Trust Controls: Install Root Certificate,3,Install root CA on Debian/Ubuntu,53bcf8a0-1549-4b85-b919-010c56d724ff,sh
@@ -1668,6 +1675,7 @@ credential-access,T1003.002,OS Credential Dumping: Security Account Manager,7,Wi
 credential-access,T1003.002,OS Credential Dumping: Security Account Manager,8,"Dumping of SAM, creds, and secrets(Reg Export)",21df41be-cdd8-4695-a650-c3981113aa3c,command_prompt
 credential-access,T1552.005,Unsecured Credentials: Cloud Instance Metadata API,1,Azure - Search Azure AD User Attributes for Passwords,ae9b2e3e-efa1-4483-86e2-fae529ab9fb6,powershell
 credential-access,T1552.005,Unsecured Credentials: Cloud Instance Metadata API,2,Azure - Dump Azure Instance Metadata from Virtual Machines,cc99e772-4e18-4f1f-b422-c5cdd1bfd7b7,powershell
+credential-access,T1552.005,Unsecured Credentials: Cloud Instance Metadata API,3,AWS - Retrieve EC2 IAM Role Credentials via IMDSv2,c9aa1ca4-04df-4623-adac-1f199ca5ce42,sh
 credential-access,T1110.002,Brute Force: Password Cracking,1,Password Cracking with Hashcat,6d27df5d-69d4-4c91-bc33-5983ffe91692,command_prompt
 credential-access,T1555.001,Credentials from Password Stores: Keychain,1,Keychain Dump,88e1fa00-bf63-4e5b-a3e1-e2ea51c8cca6,sh
 credential-access,T1555.001,Credentials from Password Stores: Keychain,2,Export Certificate Item(s),1864fdec-ff86-4452-8c30-f12507582a93,sh
@@ -2157,6 +2165,8 @@ discovery,T1518,Software Discovery,4,WinPwn - Dotnetsearch,7e79a1b6-519e-433c-ad
 discovery,T1518,Software Discovery,5,WinPwn - DotNet,10ba02d0-ab76-4f80-940d-451633f24c5b,powershell
 discovery,T1518,Software Discovery,6,WinPwn - powerSQL,0bb64470-582a-4155-bde2-d6003a95ed34,powershell
 discovery,T1622,Debugger Evasion,1,Detect a Debugger Presence in the Machine,58bd8c8d-3a1a-4467-a69c-439c75469b07,powershell
+discovery,T1680,Local Storage Discovery,1,Local Storage Discovery via PSDrive,3a4d51bd-b0f5-4249-821c-ba8997c42c00,powershell
+discovery,T1680,Local Storage Discovery,2,Local Storage Discovery via wmic ,1c11a623-e783-4b2f-ad4a-0a62591e8f85,command_prompt
 discovery,T1124,System Time Discovery,1,System Time Discovery,20aba24b-e61f-4b26-b4ce-4784f763ca20,command_prompt
 discovery,T1124,System Time Discovery,2,System Time Discovery - PowerShell,1d5711d6-655c-4a47-ae9c-6503c74fa877,powershell
 discovery,T1124,System Time Discovery,3,System Time Discovery in FreeBSD/macOS,f449c933-0891-407f-821e-7916a21a1a6f,sh
@@ -2259,6 +2269,10 @@ initial-access,T1078.003,Valid Accounts: Local Accounts,10,Reactivate a locked/e
 initial-access,T1078.003,Valid Accounts: Local Accounts,11,Login as nobody (Linux),3d2cd093-ee05-41bd-a802-59ee5c301b85,bash
 initial-access,T1078.003,Valid Accounts: Local Accounts,12,Login as nobody (freebsd),16f6374f-7600-459a-9b16-6a88fd96d310,sh
 initial-access,T1078.003,Valid Accounts: Local Accounts,13,Use PsExec to elevate to NT Authority\SYSTEM account,6904235f-0f55-4039-8aed-41c300ff7733,command_prompt
+exfiltration,T1567.004,Exfiltration Over Web Service: Exfiltration Over Webhook,1,Exfiltrate staged data to a Discord webhook (PowerShell),f0057c81-24dc-4a2e-b658-5809c242180b,powershell
+exfiltration,T1567.004,Exfiltration Over Web Service: Exfiltration Over Webhook,2,Exfiltrate staged file to a Discord webhook with curl (bash),40c44d16-bb49-4d14-aafa-f9ba7e6e6c5b,bash
+exfiltration,T1567.004,Exfiltration Over Web Service: Exfiltration Over Webhook,3,Exfiltrate staged data to a Slack webhook with curl (sh),c666acd6-6ff5-4d28-9490-195d89cd4337,sh
+exfiltration,T1567.004,Exfiltration Over Web Service: Exfiltration Over Webhook,4,Exfiltrate staged data to a Microsoft Teams webhook (PowerShell),35ad6590-2207-4b14-bf8f-9899470d7156,powershell
 exfiltration,T1020,Automated Exfiltration,1,IcedID Botnet HTTP PUT,9c780d3d-3a14-4278-8ee5-faaeb2ccfbe0,powershell
 exfiltration,T1020,Automated Exfiltration,2,Exfiltration via Encrypted FTP,5b380e96-b0ef-4072-8a8e-f194cb9eb9ac,powershell
 exfiltration,T1048.002,Exfiltration Over Alternative Protocol - Exfiltration Over Asymmetric Encrypted Non-C2 Protocol,1,Exfiltrate data HTTPS using curl windows,1cdf2fb0-51b6-4fd8-96af-77020d5f1bf0,command_prompt

@@ -7,6 +7,7 @@ stealth,T1014,Rootkit,2,Loadable Kernel Module based Rootkit,75483ef8-f10f-444a-
 stealth,T1014,Rootkit,3,dynamic-linker based rootkit (libprocesshider),1338bf0c-fd0c-48c0-9e65-329f18e2c0d3,sh
 stealth,T1014,Rootkit,4,Loadable Kernel Module based Rootkit (Diamorphine),0b996469-48c6-46e2-8155-a17f8b6c2247,sh
 stealth,T1036.005,Masquerading: Match Legitimate Name or Location,1,Execute a process from a directory masquerading as the current parent directory,812c3ab8-94b0-4698-a9bf-9420af23ce24,sh
+stealth,T1036.008,Masquerading: Masquerade File Type,1,Linux File Type Masquerading via Extension Change,1214f818-673b-4494-9fbd-99af0e185866,sh
 stealth,T1497.001,Virtualization/Sandbox Evasion: System Checks,1,Detect Virtualization Environment (Linux),dfbd1a21-540d-4574-9731-e852bd6fe840,sh
 stealth,T1497.001,Virtualization/Sandbox Evasion: System Checks,2,Detect Virtualization Environment (FreeBSD),e129d73b-3e03-4ae9-bf1e-67fc8921e0fd,sh
 stealth,T1070.003,Indicator Removal on Host: Clear Command History,1,Clear Bash history (rm),a934276e-2be5-4a36-93fd-98adbb5bd4fc,sh
@@ -118,6 +119,7 @@ command-and-control,T1572,Protocol Tunneling,6,VSCode tunnels (Linux/macOS),b877
 command-and-control,T1572,Protocol Tunneling,7,Cloudflare tunnels (Linux/macOS),228c336a-2f79-4043-8aef-bfa453a611d5,sh
 command-and-control,T1090.003,Proxy: Multi-hop Proxy,3,Tor Proxy Usage - Debian/Ubuntu/FreeBSD,5ff9d047-6e9c-4357-b39b-5cf89d9b59c7,sh
 command-and-control,T1571,Non-Standard Port,2,Testing usage of uncommonly used port,5db21e1d-dd9c-4a50-b885-b1e748912767,sh
+command-and-control,T1102.002,Web Service: Bidirectional Communication,1,Bidirectional C2 Simulation via paste.rs (sh),ec9ab81c-8053-4957-8c66-0218381ab564,sh
 command-and-control,T1095,Non-Application Layer Protocol,4,Linux ICMP Reverse Shell using icmp-cnc,8e139e1f-1f3a-4be7-901d-afae9738c064,manual
 command-and-control,T1071.001,Application Layer Protocol: Web Protocols,3,Malicious User Agents - Nix,2d7c471a-e887-4b78-b0dc-b0df1f2e0658,sh
 command-and-control,T1105,Ingress Tool Transfer,1,rsync remote file copy (push),0fc6e977-cb12-44f6-b263-2824ba917409,sh
@@ -467,6 +469,8 @@ initial-access,T1078.003,Valid Accounts: Local Accounts,9,Reactivate a locked/ex
 initial-access,T1078.003,Valid Accounts: Local Accounts,10,Reactivate a locked/expired account (FreeBSD),09e3380a-fae5-4255-8b19-9950be0252cf,sh
 initial-access,T1078.003,Valid Accounts: Local Accounts,11,Login as nobody (Linux),3d2cd093-ee05-41bd-a802-59ee5c301b85,bash
 initial-access,T1078.003,Valid Accounts: Local Accounts,12,Login as nobody (freebsd),16f6374f-7600-459a-9b16-6a88fd96d310,sh
+exfiltration,T1567.004,Exfiltration Over Web Service: Exfiltration Over Webhook,2,Exfiltrate staged file to a Discord webhook with curl (bash),40c44d16-bb49-4d14-aafa-f9ba7e6e6c5b,bash
+exfiltration,T1567.004,Exfiltration Over Web Service: Exfiltration Over Webhook,3,Exfiltrate staged data to a Slack webhook with curl (sh),c666acd6-6ff5-4d28-9490-195d89cd4337,sh
 exfiltration,T1048.002,Exfiltration Over Alternative Protocol - Exfiltration Over Asymmetric Encrypted Non-C2 Protocol,2,"Exfiltrate data HTTPS using curl freebsd,linux or macos",4a4f31e2-46ea-4c26-ad89-f09ad1d5fe01,bash
 exfiltration,T1048.002,Exfiltration Over Alternative Protocol - Exfiltration Over Asymmetric Encrypted Non-C2 Protocol,3,Exfiltrate data in a file over HTTPS using wget,7ccdfcfa-6707-46bc-b812-007ab6ff951c,sh
 exfiltration,T1048.002,Exfiltration Over Alternative Protocol - Exfiltration Over Asymmetric Encrypted Non-C2 Protocol,4,Exfiltrate data as text over HTTPS using wget,8bec51da-7a6d-4346-b941-51eca448c4b0,sh
