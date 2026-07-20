@@ -194,7 +194,7 @@ class Atomic(StrictModel):
             if self.executor.cleanup_command:
                 commands.append(self.executor.cleanup_command)
 
-            if any(["sudo" in cmd for cmd in commands]):
+            if any("sudo" in cmd for cmd in commands):
                 raise PydanticCustomError(
                     "elevation_required_but_not_provided",
                     "'elevation_required' shouldn't be empty/false. Since `sudo` is used, set `elevation_required` to true`",
@@ -228,12 +228,11 @@ class Atomic(StrictModel):
                 keys.remove(key)
 
         if len(keys) > 0:
-            for x in keys:
-                raise PydanticCustomError(
-                    "missing_input_argument",
-                    f"{x} is not defined in input_arguments",
-                    {"loc": ["input_arguments"]},
-                )
+            raise PydanticCustomError(
+                "missing_input_argument",
+                f"{', '.join(map(repr, keys))} {'is' if len(keys) == 1 else 'are'} not defined in input_arguments",
+                {"loc": ["input_arguments"]},
+            )
         return v
 
 

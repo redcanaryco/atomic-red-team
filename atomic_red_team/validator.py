@@ -18,7 +18,7 @@ def format_validation_error(error: ValidationError):
         message = ""
         if err["type"] == "elevation_required_but_not_provided":
             return {err["msg"]: list(err.get("loc")) + err.get("ctx").get("loc")}
-        if err["input"] and err["type"] != "unused_input_argument":
+        if err["input"] is not None and err["type"] != "unused_input_argument":
             message += f"{err['input']} - "
         return {message + err["msg"]: err.get("loc")}
     inputs = collections.defaultdict(set)
@@ -32,7 +32,7 @@ def format_validation_error(error: ValidationError):
             inputs[e["input"]] = e.get("loc", tuple())
         else:
             inputs[e["input"]] = tuple(
-                [x for x in inputs[e["input"]] if x in e.get("loc", tuple())]
+                x for x in inputs[e["input"]] if x in e.get("loc", ())
             )
     return dict(inputs)
 
