@@ -116,3 +116,39 @@ atomic_tests:
       Remove-Item -Path "#{ved_path}\VEDetector.exe" -Force -ErrorAction SilentlyContinue
       
       Write-Host "[+] Cleaned up VEDetector artifacts"
+
+- name: WMIC masquerade as ncv.exe in temp directory
+  auto_generated_guid:
+  description: |
+    Copies %SystemRoot%\System32\wbem\wmic.exe to a temporary directory,
+    renames it to ncv.exe, and executes it to retrieve OS version information.
+    This simulates an adversary using a renamed trusted binary from an
+    unexpected location to evade detection.
+  supported_platforms:
+    - windows
+  input_arguments:
+    temp_dir:
+      description: Temporary working directory
+      type: Path
+      default: $env:TEMP\T1036_005_test
+    source_exe:
+      description: Path to the legitimate wmic.exe
+      type: Path
+      default: $env:SystemRoot\System32\wbem\wmic.exe
+    masqueraded_name:
+      description: Name of the masqueraded executable
+      type: string
+      default: ncv.exe
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $dir = "#{temp_dir}"
+      $source = "#{source_exe}"
+      $target = Join-Path $dir "#{masqueraded_name}"
+      New-Item -ItemType Directory -Force -Path $dir | Out-Null
+      Copy-Item -Path $source -Destination $target -Force
+      Write-Host "Running masqueraded binary: $target"
+      & $target os get Caption,Version
+    cleanup_command: |
+      Remove-Item -Recurse -Force "#{temp_dir}" -ErrorAction SilentlyContinue
