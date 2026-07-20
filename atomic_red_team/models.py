@@ -230,7 +230,7 @@ class Atomic(StrictModel):
         if len(keys) > 0:
             raise PydanticCustomError(
                 "missing_input_argument",
-                f"{', '.join(keys)} are not defined in input_arguments",
+                f"{', '.join(map(repr, keys))} {'is' if len(keys) == 1 else 'are'} not defined in input_arguments",
                 {"loc": ["input_arguments"]},
             )
         return v
