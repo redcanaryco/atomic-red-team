@@ -99,10 +99,10 @@ def validate():
         print("Validation successful")
     else:
         print("Validation failed")
-        for i, errors in errors.items():
-            print(f"Error occurred with {i.replace(f'{atomics_path}/', '')}.")
+        for path, path_errors in errors.items():
+            print(f"Error occurred with {path.replace(f'{atomics_path}/', '')}.")
             print("Each of the following are why it failed:")
-            for error in errors:
+            for error in path_errors:
                 if isinstance(error, ValidationError):
                     for k, v in format_validation_error(error).items():
                         print(f"\n\tInvalid {'.'.join(map(str, v))}: {k}\n")

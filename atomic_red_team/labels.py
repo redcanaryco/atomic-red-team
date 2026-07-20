@@ -116,7 +116,7 @@ class GithubAPI:
                 for line in file["patch"].split("\n"):
                     if line.startswith("@@"):
                         x, y = re.findall(r"\d{1,3},\d{1,3}", line)
-                        start = int(x.split(",")[0])
+                        start = int(y.split(",")[0])
                         count = -1
                     elif line.startswith("+"):  # only take count of added lines
                         changed_lines.append(start + count)
@@ -129,7 +129,7 @@ class GithubAPI:
                     if index + 1 < len(atomics):
                         curr_atomic_end = atomics[index + 1]["__line__"]
                     else:
-                        curr_atomic_end = start + 60
+                        curr_atomic_end = float("inf")
                     changes_in_current_atomic = [
                         i
                         for i in changed_lines
@@ -154,9 +154,13 @@ class GithubAPI:
         maintainers = []
         for p in platforms:
             if p in self.labels:
-                labels.append(self.labels[p])
+                label = self.labels[p]
+                if label not in labels:
+                    labels.append(label)
             if p in self.maintainers:
-                maintainers += self.maintainers[p]
+                for m in self.maintainers[p]:
+                    if m not in maintainers:
+                        maintainers.append(m)
         os.mkdir("pr")
 
         with open("pr/changedfiles.json", "w") as f:
