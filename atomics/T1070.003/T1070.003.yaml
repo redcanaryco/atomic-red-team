@@ -206,3 +206,32 @@ atomic_tests:
       Clear-History
     name: powershell
     elevation_required: false
+- name: Clear PowerShell Operational Logs via wevtutil and PowerShell
+  auto_generated_guid:
+  description: |
+    Simulates indicator removal by clearing the PowerShell Operational event log using wevtutil.exe. 
+    Threat groups like menuPass (G0045) and various other actors clear Windows event logs to disrupt forensic investigations and hide script-block execution traces.
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      Write-Host "Attempting to clear PowerShell execution logs with wevtutil..."
+      $LogName = "Microsoft-Windows-PowerShell/Operational"
+      $LogExists = $false
+      try {
+          $null = Get-WinEvent -LogName $LogName -MaxEvents 1 -ErrorAction Stop
+          $LogExists = $true
+      } catch {
+          $LogExists = $false
+      }
+      if ($LogExists) {
+          $null = & "wevtutil.exe" cl $LogName 2>&1
+          Write-Host "  -> Successfully cleared $LogName"
+      } else {
+          Write-Host "Log $LogName not found or already empty. Skipping."
+      }
+      Write-Host "Indicator removal emulation complete. Check event logs for evidence."
+    cleanup_command: |
+      Write-Host "Cleanup note: Cleared event logs cannot be automatically restored."
