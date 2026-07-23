@@ -41,6 +41,7 @@
   - Atomic Test #4: Loadable Kernel Module based Rootkit (Diamorphine) [linux]
 - [T1036.007 Masquerading: Double File Extension](../../T1036.007/T1036.007.md)
   - Atomic Test #1: File Extension Masquerading [windows]
+  - Atomic Test #2: Linux File Extension Masquerading [linux]
 - [T1542.001 Pre-OS Boot: System Firmware](../../T1542.001/T1542.001.md)
   - Atomic Test #1: UEFI Persistence via Wpbbin.exe File Creation [windows]
 - [T1574.011 Hijack Execution Flow: Services Registry Permissions Weakness](../../T1574.011/T1574.011.md)
@@ -52,7 +53,8 @@
   - Atomic Test #1: Execute a process from a directory masquerading as the current parent directory [macos, linux]
   - Atomic Test #2: Masquerade as a built-in system executable [windows]
   - Atomic Test #3: Masquerading cmd.exe as VEDetector.exe [windows]
-- T1036.008 Masquerade File Type [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1036.008 Masquerading: Masquerade File Type](../../T1036.008/T1036.008.md)
+  - Atomic Test #1: Linux File Type Masquerading via Extension Change [linux]
 - [T1564 Hide Artifacts](../../T1564/T1564.md)
   - Atomic Test #1: Extract binary files via VBA [windows]
   - Atomic Test #2: Create a Hidden User Called "$" [windows]
@@ -86,6 +88,7 @@
   - Atomic Test #4: DLL Side-Loading using the Notepad++ GUP.exe binary [windows]
   - Atomic Test #5: DLL Side-Loading using the dotnet startup hook environment variable [windows]
   - Atomic Test #6: DLL Search Order Hijacking,DLL Sideloading Of KeyScramblerIE.DLL Via KeyScrambler.EXE [windows]
+  - Atomic Test #7: DLL Search Order Hijacking - ntprint [windows]
 - T1036.009 Break Process Trees [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574.014 AppDomainManager [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1218.007 Signed Binary Proxy Execution: Msiexec](../../T1218.007/T1218.007.md)
@@ -944,6 +947,7 @@
   - Atomic Test #4: DLL Side-Loading using the Notepad++ GUP.exe binary [windows]
   - Atomic Test #5: DLL Side-Loading using the dotnet startup hook environment variable [windows]
   - Atomic Test #6: DLL Search Order Hijacking,DLL Sideloading Of KeyScramblerIE.DLL Via KeyScrambler.EXE [windows]
+  - Atomic Test #7: DLL Search Order Hijacking - ntprint [windows]
 - T1675 ESXi Administration Command [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574.014 AppDomainManager [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1084,7 +1088,8 @@
   - Atomic Test #1: Visual Basic script execution to gather local computer information [windows]
   - Atomic Test #2: Encoded VBS code execution [windows]
   - Atomic Test #3: Extract Memory via VBA [windows]
-- T1204.004 Malicious Copy and Paste [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1204.004 Malicious Copy and Paste](../../T1204.004/T1204.004.md)
+  - Atomic Test #1: Malicious Copy and Paste through Run.exe [windows]
 - [T1648 Serverless Execution](../../T1648/T1648.md)
   - Atomic Test #1: Lambda Function Hijack [iaas:aws]
 - T1204.001 Malicious Link [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1633,7 +1638,8 @@
   - Atomic Test #2: Testing usage of uncommonly used port [linux, macos]
 - [T1573 Encrypted Channel](../../T1573/T1573.md)
   - Atomic Test #1: OpenSSL C2 [windows]
-- T1102.002 Bidirectional Communication [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1102.002 Web Service: Bidirectional Communication](../../T1102.002/T1102.002.md)
+  - Atomic Test #1: Bidirectional C2 Simulation via paste.rs (sh) [linux]
 - T1573.002 Asymmetric Cryptography [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1095 Non-Application Layer Protocol](../../T1095/T1095.md)
   - Atomic Test #1: ICMP C2 [windows]
@@ -2174,6 +2180,7 @@
   - Atomic Test #74: Disable .NET Event Tracing for Windows Via Environment Variable HKLM Registry - Cmd [windows]
   - Atomic Test #75: Disable .NET Event Tracing for Windows Via Environment Variable HKLM Registry - PowerShell [windows]
   - Atomic Test #76: Block Cybersecurity communication by leveraging Windows Name Resolution Policy Table [windows]
+  - Atomic Test #77: Throttle Cybersecurity Agent Network Traffic via QoS Policy [windows]
 - [T1553.004 Subvert Trust Controls: Install Root Certificate](../../T1553.004/T1553.004.md)
   - Atomic Test #1: Install root CA on CentOS/RHEL [linux]
   - Atomic Test #2: Install root CA on FreeBSD [linux]
@@ -2279,6 +2286,7 @@
 - [T1552.005 Unsecured Credentials: Cloud Instance Metadata API](../../T1552.005/T1552.005.md)
   - Atomic Test #1: Azure - Search Azure AD User Attributes for Passwords [azure-ad]
   - Atomic Test #2: Azure - Dump Azure Instance Metadata from Virtual Machines [iaas:azure]
+  - Atomic Test #3: AWS - Retrieve EC2 IAM Role Credentials via IMDSv2 [linux, iaas:aws]
 - T1555.002 Securityd Memory [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1110.002 Brute Force: Password Cracking](../../T1110.002/T1110.002.md)
   - Atomic Test #1: Password Cracking with Hashcat [windows]
@@ -2876,7 +2884,9 @@
 - T1538 Cloud Service Dashboard [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1622 Debugger Evasion](../../T1622/T1622.md)
   - Atomic Test #1: Detect a Debugger Presence in the Machine [windows]
-- T1680 Local Storage Discovery [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1680 Local Storage Discovery](../../T1680/T1680.md)
+  - Atomic Test #1: Local Storage Discovery via PSDrive [windows]
+  - Atomic Test #2: Local Storage Discovery via wmic  [windows]
 - [T1124 System Time Discovery](../../T1124/T1124.md)
   - Atomic Test #1: System Time Discovery [windows]
   - Atomic Test #2: System Time Discovery - PowerShell [windows]
@@ -3142,7 +3152,11 @@
 
 # exfiltration
 - T1567 Exfiltration Over Web Service [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1567.004 Exfiltration Over Webhook [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1567.004 Exfiltration Over Web Service: Exfiltration Over Webhook](../../T1567.004/T1567.004.md)
+  - Atomic Test #1: Exfiltrate staged data to a Discord webhook (PowerShell) [windows]
+  - Atomic Test #2: Exfiltrate staged file to a Discord webhook with curl (bash) [linux, macos]
+  - Atomic Test #3: Exfiltrate staged data to a Slack webhook with curl (sh) [linux, macos]
+  - Atomic Test #4: Exfiltrate staged data to a Microsoft Teams webhook (PowerShell) [windows]
 - T1029 Scheduled Transfer [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1011 Exfiltration Over Other Network Medium [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1011.001 Exfiltration Over Bluetooth [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
