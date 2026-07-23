@@ -494,3 +494,16 @@ atomic_tests:
       rm -rf /tmp/T1087/ 2>/dev/null 
     name: sh
     elevation_required: false
+- name: Enumerate Active Directory Users with csvde
+  auto_generated_guid:
+  description: |
+    The following test uses csvde.exe to export a list of Active Directory users and their properties to a CSV file.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      csvde -f users.csv -r "(&(objectClass=user)(objectCategory=person))" -l "DN,sAMAccountName,userPrincipalName,mail,displayName,description,memberOf"
+    cleanup_command: |
+      del users.csv >nul 2>&1
+    name: command_prompt
+    elevation_required: false

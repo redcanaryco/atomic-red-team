@@ -40,3 +40,41 @@ atomic_tests:
       taskkill /IM Calculator.exe /f >$null 2>$null
       Remove-Item "$env:userprofile\Downloads\T1036" -recurse -ErrorAction Ignore
     name: powershell
+- name: Masquerading File Extension Restoration via PowerShell and esentutl
+  auto_generated_guid: 
+  description: |
+    Simulates the technique of restoring or altering file extensions using the built-in Windows database utility esentutl.exe via PowerShell. 
+    Threat actors such as menuPass (G0045) have leveraged esentutl to copy and rename files (such as changing payloads masquerading as .txt back to true executable types) to evade defenses and bypass simple name-based monitoring.
+  supported_platforms:
+  - windows
+  input_arguments:
+    workdir:
+      description: Working directory path to stage the files.
+      type: path
+      default: C:\Users\Public\Libraries\staging
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $WorkDir = "#{workdir}"
+      if (-not (Test-Path -Path $WorkDir)) {
+          New-Item -ItemType Directory -Path $WorkDir -Force | Out-Null
+      }
+      $SourceFile = Join-Path $WorkDir "payload.txt"
+      $DestFile   = Join-Path $WorkDir "payload.exe"
+      "This is actually a malicious executable" | Out-File -FilePath $SourceFile -Encoding ascii -Force
+      $EsentutlArgs = @("/y", $SourceFile, "/d", $DestFile, "/o")
+      $null = & "esentutl.exe" @EsentutlArgs 2>&1
+      if (Test-Path -Path $DestFile) {
+          Write-Host "  -> Copied payload.txt to payload.exe (true extension revealed)"
+      } else {
+          Write-Host "  [!] esentutl copy failed"
+      }
+    cleanup_command: |
+      Remove-Item -Path "C:\Users\Public\Libraries\staging\payload.txt" -Force -ErrorAction SilentlyContinue
+      Remove-Item -Path "C:\Users\Public\Libraries\staging\payload.exe" -Force -ErrorAction SilentlyContinue
+      if (Test-Path "C:\Users\Public\Libraries\staging") {
+          if ((Get-ChildItem "C:\Users\Public\Libraries\staging").Count -eq 0) {
+              Remove-Item -Path "C:\Users\Public\Libraries\staging" -Force
+          }
+      }
