@@ -174,7 +174,7 @@ atomic_tests:
     prereq_command: |
       if [ -f "#{MimiPenguin_Location}" ]; then exit 0; else exit 1; fi;
     get_prereq_command: |
-      mkdir #{MimiPenguin_Location}/mimipenguin
+      mkdir -p #{MimiPenguin_Location}/mimipenguin
       wget -O "#{MimiPenguin_Location}/mimipenguin.tar.gz" https://github.com/huntergregal/mimipenguin/releases/download/2.0-release/mimipenguin_2.0-release.tar.gz
       tar -xzvf "#{MimiPenguin_Location}/mimipenguin.tar.gz" -C #{MimiPenguin_Location}/mimipenguin
   - description: |
