@@ -197,7 +197,7 @@ atomic_tests:
           sudo apt-get -y install libc-bin
     executor:
       command: |
-        sudo #{MimiPenguin_Location}/mimipenguin/mimipenguin_2.0-release/mimipenguin.sh > #{output_file}
+        sudo bash #{MimiPenguin_Location}/mimipenguin/mimipenguin_2.0-release/mimipenguin.sh > #{output_file}
         cat #{output_file}
       cleanup_command: |
         rm -f #{output_file} > /dev/null
