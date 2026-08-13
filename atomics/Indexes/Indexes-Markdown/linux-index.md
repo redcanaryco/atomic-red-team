@@ -19,14 +19,16 @@
   - Atomic Test #2: Loadable Kernel Module based Rootkit [linux]
   - Atomic Test #3: dynamic-linker based rootkit (libprocesshider) [linux]
   - Atomic Test #4: Loadable Kernel Module based Rootkit (Diamorphine) [linux]
-- T1036.007 Masquerading: Double File Extension [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1036.007 Masquerading: Double File Extension](../../T1036.007/T1036.007.md)
+  - Atomic Test #2: Linux File Extension Masquerading [linux]
 - T1542.001 Pre-OS Boot: System Firmware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574.011 Hijack Execution Flow: Services Registry Permissions Weakness [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1542.003 Bootkit [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1218.013 Mavinject [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1036.005 Masquerading: Match Legitimate Name or Location](../../T1036.005/T1036.005.md)
   - Atomic Test #1: Execute a process from a directory masquerading as the current parent directory [macos, linux]
-- T1036.008 Masquerade File Type [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1036.008 Masquerading: Masquerade File Type](../../T1036.008/T1036.008.md)
+  - Atomic Test #1: Linux File Type Masquerading via Extension Change [linux]
 - T1564 Hide Artifacts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1497.001 Virtualization/Sandbox Evasion: System Checks](../../T1497.001/T1497.001.md)
   - Atomic Test #1: Detect Virtualization Environment (Linux) [linux]
