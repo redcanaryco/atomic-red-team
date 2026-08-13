@@ -2,7 +2,6 @@ attack_technique: T1556.006
 display_name: 'Modify Authentication Process: Multi-Factor Authentication'
 atomic_tests:
 - name: Disable MFA by Blackholing Provider Domain via Windows hosts File
-  auto_generated_guid: 9f5deb8d-f3cf-47df-899c-0de1958980c6
   description: |
     Emulates an adversary disabling multi-factor authentication by adding a null-route entry for an MFA provider's hostname to the Windows hosts file, so MFA challenge requests fail and authentication proceeds without a second factor. This is a documented ATT&CK example for T1556.006. Cleanup removes the entry. Requires administrative privileges.
   supported_platforms:
