@@ -498,3 +498,53 @@ atomic_tests:
       esentutl.exe /y "%LOCALAPPDATA%\Google\Chrome\User Data\Default\Login Data" /d "#{output_path}"
     cleanup_command: |
       del /f /q #{output_path} > nul 2>&1
+- name: Query Chrome Login Data In Place with sqlite3 - MacOS
+  description: |
+    Reads Google Chrome's `Login Data` SQLite database in place with the Apple-signed `/usr/bin/sqlite3`
+    binary, instead of copying the database somewhere else first. The saved origin URLs and usernames are
+    written to the output file. Passwords stay in the `password_value` BLOB column and remain encrypted with
+    the Chrome Safe Storage key, so this test collects the credential index rather than plaintext secrets.
+
+    The `?immutable=1` URI parameter is the part that matters. Chrome holds a lock on the database while it
+    is running, and a plain `sqlite3 "<path>" "SELECT ..."` fails with `Error: in prepare, database is locked (5)`.
+    Opening the file through a `file:` URI with `immutable=1` reads it without taking a lock, so the test works
+    against a live browser and does not need to kill Chrome first, which is what the published LOOBins one-liner
+    for Firefox does.
+
+    This matters for detection because `sqlite3` ships with macOS and is signed by Apple, so controls that key
+    on code signing trust or on an unknown binary touching the profile directory do not fire on it.
+
+    [LOOBins sqlite3](https://www.loobins.io/binaries/sqlite3/) documents the same binary being used against
+    browser cookie databases. [Red Canary](https://redcanary.com/blog/threat-intelligence/clipping-silver-sparrows-wings/)
+    documented macOS malware invoking the `sqlite3` CLI, and
+    [Jamf](https://www.jamf.com/blog/crashstealer-macos-infostealer-analysis/) documented a macOS infostealer
+    working around the same database lock through the SQLite backup API.
+
+    Upon successful execution, the output file contains one line per saved login in the form
+    `origin_url|username_value`. If Chrome has no saved logins the file is created and left empty.
+  supported_platforms:
+  - macos
+  input_arguments:
+    chrome_profile:
+      description: Name of the Chrome profile directory to read
+      type: string
+      default: Default
+    output_file:
+      description: Path the query results are written to
+      type: path
+      default: /tmp/T1555.003_chrome_logins.txt
+  dependencies:
+  - description: |
+      Chrome's Login Data database must exist for profile #{chrome_profile}
+    prereq_command: |
+      if [ -f "$HOME/Library/Application Support/Google/Chrome/#{chrome_profile}/Login Data" ]; then exit 0; else exit 1; fi
+    get_prereq_command: |
+      echo "Install Google Chrome and save at least one login so that the Login Data database is created."
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      sqlite3 "file:$HOME/Library/Application Support/Google/Chrome/#{chrome_profile}/Login Data?immutable=1" "SELECT origin_url, username_value FROM logins;" > "#{output_file}"
+      cat "#{output_file}"
+    cleanup_command: |
+      rm -f "#{output_file}"
