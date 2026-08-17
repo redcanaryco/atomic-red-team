@@ -8,6 +8,14 @@ atomic_tests:
     When the test completes , there should be local user accounts information displayed on the command line.
   supported_platforms:
   - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      wmic.exe must be present on the system. It is disabled by default on Windows 11, version 24H2 and later, and removed when upgrading to version 25H2.
+    prereq_command: |
+      if (Test-Path "$env:SystemRoot\System32\wbem\wmic.exe") {exit 0} else {exit 1}
+    get_prereq_command: |
+      DISM /Online /Add-Capability /CapabilityName:WMIC~~~~
   executor:
     command: |
       wmic useraccount get /ALL /format:csv
@@ -19,6 +27,14 @@ atomic_tests:
     When the test completes , there should be running processes listed on the command line.
   supported_platforms:
   - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      wmic.exe must be present on the system. It is disabled by default on Windows 11, version 24H2 and later, and removed when upgrading to version 25H2.
+    prereq_command: |
+      if (Test-Path "$env:SystemRoot\System32\wbem\wmic.exe") {exit 0} else {exit 1}
+    get_prereq_command: |
+      DISM /Online /Add-Capability /CapabilityName:WMIC~~~~
   executor:
     command: |
       wmic process get caption,executablepath,commandline /format:csv
@@ -30,6 +46,14 @@ atomic_tests:
     When the test completes, there should be a list of installed patches and when they were installed.
   supported_platforms:
   - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      wmic.exe must be present on the system. It is disabled by default on Windows 11, version 24H2 and later, and removed when upgrading to version 25H2.
+    prereq_command: |
+      if (Test-Path "$env:SystemRoot\System32\wbem\wmic.exe") {exit 0} else {exit 1}
+    get_prereq_command: |
+      DISM /Online /Add-Capability /CapabilityName:WMIC~~~~
   executor:
     command: |
       wmic qfe get description,installedOn /format:csv

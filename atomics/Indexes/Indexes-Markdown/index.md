@@ -1722,6 +1722,7 @@
   - Atomic Test #10: ESXi - Remove Syslog remote IP [windows]
   - Atomic Test #11: Compress a File for Exfiltration using Makecab [windows]
   - Atomic Test #12: Copy and Compress AppData Folder [windows]
+  - Atomic Test #13: Data Compressed - macOS - ditto Archive of a Sensitive Directory [macos]
 - [T1113 Screen Capture](../../T1113/T1113.md)
   - Atomic Test #1: Screencapture [macos]
   - Atomic Test #2: Screencapture (silent) [macos]
@@ -2367,6 +2368,7 @@
   - Atomic Test #15: WebBrowserPassView - Credentials from Browser [windows]
   - Atomic Test #16: BrowserStealer (Chrome / Firefox / Microsoft Edge) [windows]
   - Atomic Test #17: Dump Chrome Login Data with esentutl [windows]
+  - Atomic Test #18: Query Chrome Login Data In Place with sqlite3 - MacOS [macos]
 - T1557.003 DHCP Spoofing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1552.004 Unsecured Credentials: Private Keys](../../T1552.004/T1552.004.md)
   - Atomic Test #1: Private Keys [windows]
