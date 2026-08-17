@@ -539,7 +539,9 @@ atomic_tests:
     prereq_command: |
       if [ -f "$HOME/Library/Application Support/Google/Chrome/#{chrome_profile}/Login Data" ]; then exit 0; else exit 1; fi
     get_prereq_command: |
-      echo "Install Google Chrome and save at least one login so that the Login Data database is created."
+       brew install --cask google-chrome
+       xattr -d com.apple.quarantine "/Applications/Google Chrome.app"
+       open -a "Google Chrome" && sleep 5 && killall -KILL "Google Chrome"
   executor:
     name: sh
     elevation_required: false
