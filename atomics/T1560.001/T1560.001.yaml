@@ -475,9 +475,7 @@ atomic_tests:
     value target of the real technique. Both the source and the destination are input arguments, so the test can
     be pointed at a directory of your choosing instead.
 
-    Upon successful execution, a zip archive is created at the output path and its size is printed. The archive
-    holds real Keychain data, so it is written under the user's home directory rather than the world readable
-    `/tmp`, and the cleanup command removes it.
+    Upon successful execution, a zip archive is created at the output path and its size is printed.
   supported_platforms:
   - macos
   input_arguments:
@@ -488,19 +486,18 @@ atomic_tests:
     output_file:
       description: Path of the archive that is created
       type: path
-      default: $HOME/T1560.001_ditto_archive.zip
+      default: /tmp/T1560.001_ditto_archive.zip
   dependencies:
   - description: |
       The source directory #{source_path} must exist
     prereq_command: |
       if [ -d "#{source_path}" ]; then exit 0; else exit 1; fi
     get_prereq_command: |
-      echo "Set source_path to a directory that exists. The default is the Keychains directory, present on any macOS install."
+      mkdir -p #{source_path}
   executor:
     name: sh
     elevation_required: false
     command: |
       ditto -c -k --sequesterRsrc --keepParent "#{source_path}" "#{output_file}"
-      ls -lh "#{output_file}"
     cleanup_command: |
       rm -f "#{output_file}"
