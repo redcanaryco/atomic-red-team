@@ -1722,6 +1722,7 @@
   - Atomic Test #10: ESXi - Remove Syslog remote IP [windows]
   - Atomic Test #11: Compress a File for Exfiltration using Makecab [windows]
   - Atomic Test #12: Copy and Compress AppData Folder [windows]
+  - Atomic Test #13: Data Compressed - macOS - ditto Archive of a Sensitive Directory [macos]
 - [T1113 Screen Capture](../../T1113/T1113.md)
   - Atomic Test #1: Screencapture [macos]
   - Atomic Test #2: Screencapture (silent) [macos]
