@@ -128,7 +128,7 @@
 |  |  |  |  |  |  | Thread Local Storage [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |  |
 |  |  |  |  |  |  | [Debugger Evasion](../../T1622/T1622.md) |  |  |  |  |  |  |  |  |
 |  |  |  |  |  |  | [Masquerading: Space after Filename](../../T1036.006/T1036.006.md) |  |  |  |  |  |  |  |  |
-|  |  |  |  |  |  | SyncAppvPublishingServer [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |  |
+|  |  |  |  |  |  | [System Script Proxy Execution: SyncAppvPublishingServer](../../T1216.002/T1216.002.md) |  |  |  |  |  |  |  |  |
 |  |  |  |  |  |  | [Obfuscated Files or Information: Invisible Unicode](../../T1027.018/T1027.018.md) |  |  |  |  |  |  |  |  |
 |  |  |  |  |  |  | Ptrace System Calls [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |  |
 |  |  |  |  |  |  | [Obfuscated Files or Information: Dynamic API Resolution](../../T1027.007/T1027.007.md) |  |  |  |  |  |  |  |  |
