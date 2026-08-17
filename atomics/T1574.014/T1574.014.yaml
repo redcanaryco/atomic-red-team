@@ -1,0 +1,106 @@
+# References:
+#   - https://attack.mitre.org/techniques/T1574/014/
+#   - https://learn.microsoft.com/en-us/dotnet/api/system.appdomainmanager
+attack_technique: T1574.014
+display_name: 'Hijack Execution Flow: AppDomainManager'
+atomic_tests:
+- name: AppDomainManager Injection - Compile and Trigger Custom AppDomainManager (PowerShell)
+  auto_generated_guid: 
+  description: |
+    Demonstrates .NET AppDomainManager execution-flow hijacking (T1574.014) in a safe,
+    non-destructive way. This test compiles a benign custom AppDomainManager and a benign
+    trigger console application from source, then launches the trigger application with the
+    `APPDOMAIN_MANAGER_ASM`, `APPDOMAIN_MANAGER_TYPE`, and `COMPLUS_Version` environment
+    variables set so that the .NET runtime loads the custom AppDomainManager instead of the
+    default one. The custom AppDomainManager only overrides `InitializeNewDomain` to write a
+    single marker file containing an ISO 8601 timestamp; it performs no persistence, credential
+    access, or network activity. Successful execution is confirmed by checking for the marker
+    file and printing its contents.
+
+  supported_platforms:
+  - windows
+  input_arguments:
+    working_dir:
+      description: Working directory used to hold copied source files and compiled binaries
+      type: Path
+      default: '%TEMP%\T1574.014_AppDomainManager'
+    source_dir:
+      description: Directory containing the AppDomainManagerAtomic.cs and TriggerApp.cs source files
+      type: Path
+      default: PathToAtomicsFolder\T1574.014\src\T1574.014-1
+    csc_path:
+      description: Path to the .NET Framework C# compiler (csc.exe) used to build the atomic
+      type: Path
+      default: $env:WINDIR\Microsoft.NET\Framework64\v4.0.30319\csc.exe
+    marker_file:
+      description: Marker file written by the custom AppDomainManager to confirm it was loaded
+      type: Path
+      default: '%TEMP%\T1574.014_AppDomainManager_Atomic.txt'
+    appdomain_manager_asm:
+      description: Assembly name set via the APPDOMAIN_MANAGER_ASM environment variable
+      type: String
+      default: AtomicAppDomainManager
+    appdomain_manager_type:
+      description: Fully qualified type name set via the APPDOMAIN_MANAGER_TYPE environment variable
+      type: String
+      default: AtomicRedTeam.AtomicAppDomainManager
+    complus_version:
+      description: CLR version string set via the COMPLUS_Version environment variable
+      type: String
+      default: v4.0.30319
+
+  executor:
+    command: |
+      New-Item -ItemType Directory -Path "#{working_dir}" -Force | Out-Null
+
+      Copy-Item -Path "#{source_dir}\AppDomainManagerAtomic.cs" -Destination "#{working_dir}\AppDomainManagerAtomic.cs" -Force
+      Copy-Item -Path "#{source_dir}\TriggerApp.cs" -Destination "#{working_dir}\TriggerApp.cs" -Force
+
+      & "#{csc_path}" /target:library /out:"#{working_dir}\AtomicAppDomainManager.dll" "#{working_dir}\AppDomainManagerAtomic.cs"
+      & "#{csc_path}" /target:exe /out:"#{working_dir}\TriggerApp.exe" "#{working_dir}\TriggerApp.cs"
+
+      $env:COMPLUS_Version = "#{complus_version}"
+      $env:APPDOMAIN_MANAGER_ASM = "#{appdomain_manager_asm}"
+      $env:APPDOMAIN_MANAGER_TYPE = "#{appdomain_manager_type}"
+
+      Push-Location "#{working_dir}"
+      & "#{working_dir}\TriggerApp.exe"
+      Pop-Location
+
+      if (Test-Path "#{marker_file}") {
+          Write-Host "[+] AppDomainManager marker file found:"
+          Get-Content "#{marker_file}"
+      } else {
+          Write-Host "[-] AppDomainManager marker file was not created."
+      }
+    cleanup_command: |
+      Remove-Item Env:\COMPLUS_Version -ErrorAction Ignore
+      Remove-Item Env:\APPDOMAIN_MANAGER_ASM -ErrorAction Ignore
+      Remove-Item Env:\APPDOMAIN_MANAGER_TYPE -ErrorAction Ignore
+      Remove-Item -Path "#{marker_file}" -Force -ErrorAction Ignore
+      Remove-Item -Path "#{working_dir}" -Recurse -Force -ErrorAction Ignore
+    name: powershell
+    elevation_required: false
+
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      The .NET Framework C# compiler (csc.exe) must exist at the expected path. This ships
+      with the .NET Framework Developer Pack / Visual Studio Build Tools and is not
+      downloaded by this atomic test.
+    prereq_command: |
+      if (Test-Path "#{csc_path}") { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      Write-Host "csc.exe was not found at #{csc_path}."
+      Write-Host "Install the .NET Framework Developer Pack (or Visual Studio Build Tools with .NET Framework targeting support) and re-run this test."
+      exit 1
+  - description: |
+      Source files AppDomainManagerAtomic.cs and TriggerApp.cs must exist in the source directory.
+    prereq_command: |
+      if ((Test-Path "#{source_dir}\AppDomainManagerAtomic.cs") -and (Test-Path "#{source_dir}\TriggerApp.cs")) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      Write-Host "One or both required source files are missing from #{source_dir}:"
+      Write-Host "  AppDomainManagerAtomic.cs"
+      Write-Host "  TriggerApp.cs"
+      Write-Host "These files ship with this atomic test under atomics/T1574.014/src/T1574.014-1/. Restore them from the Atomic Red Team repository."
+      exit 1
