@@ -16272,7 +16272,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.723Z'
-      name: SyncAppvPublishingServer
+      name: 'System Script Proxy Execution: SyncAppvPublishingServer'
       description: "Adversaries may abuse SyncAppvPublishingServer.vbs to proxy execution
         of malicious [PowerShell](https://attack.mitre.org/techniques/T1059/001) commands.
         SyncAppvPublishingServer.vbs is a Visual Basic script associated with how
@@ -16304,7 +16304,25 @@ stealth:
       x_mitre_platforms:
       - Windows
       x_mitre_version: '2.0'
-    atomic_tests: []
+      identifier: T1216.002
+    atomic_tests:
+    - name: SyncAppvPublishingServer Signed Script PowerShell Command Execution
+      auto_generated_guid: 275d963d-3f36-476c-8bef-a2a3960ee6eb
+      description: |
+        Executes the signed SyncAppvPublishingServer script with options to execute an arbitrary PowerShell command.
+        Upon execution, calc.exe will be launched.
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_to_execute:
+          description: A PowerShell command to execute.
+          type: string
+          default: Start-Process calc
+      executor:
+        command: 'C:\windows\system32\SyncAppvPublishingServer.vbs "\n;#{command_to_execute}"
+
+          '
+        name: command_prompt
   T1027.018:
     technique:
       type: attack-pattern
@@ -17978,23 +17996,6 @@ stealth:
       x_mitre_version: '3.0'
       identifier: T1216
     atomic_tests:
-    - name: SyncAppvPublishingServer Signed Script PowerShell Command Execution
-      auto_generated_guid: 275d963d-3f36-476c-8bef-a2a3960ee6eb
-      description: |
-        Executes the signed SyncAppvPublishingServer script with options to execute an arbitrary PowerShell command.
-        Upon execution, calc.exe will be launched.
-      supported_platforms:
-      - windows
-      input_arguments:
-        command_to_execute:
-          description: A PowerShell command to execute.
-          type: string
-          default: Start-Process calc
-      executor:
-        command: 'C:\windows\system32\SyncAppvPublishingServer.vbs "\n;#{command_to_execute}"
-
-          '
-        name: command_prompt
     - name: manage-bde.wsf Signed Script Command Execution
       auto_generated_guid: 2a8f2d3c-3dec-4262-99dd-150cb2a4d63a
       description: 'Executes the signed manage-bde.wsf script with options to execute
