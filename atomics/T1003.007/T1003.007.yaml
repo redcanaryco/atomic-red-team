@@ -177,6 +177,24 @@ atomic_tests:
       mkdir -p "$payload_dir"
       wget -O "$payload_dir/mimipenguin.tar.gz" https://github.com/huntergregal/mimipenguin/releases/download/2.0-release/mimipenguin_2.0-release.tar.gz
       tar -xzf "$payload_dir/mimipenguin.tar.gz" --strip-components=1 -C "$payload_dir"
+  - description: |
+      Strings must be installed
+    prereq_command: |
+      if [ -x "$(command -v strings --version)" ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      sudo apt-get -y install binutils
+  - description: |
+      Python2 must be installed
+    prereq_command: |
+      if [ -x "$(command -v python2 --version)" ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      sudo apt-get -y install python2
+  - description: |
+      Libc-bin must be installed
+    prereq_command: |
+      if [ -x "$(command -v ldd --version)" ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      sudo apt-get -y install libc-bin
   executor:
     command: |
       sudo bash "#{MimiPenguin_Location}" > "#{output_file}"
