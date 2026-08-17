@@ -466,6 +466,7 @@
   - Atomic Test #7: Data Compressed - nix - tar Folder or File [linux, macos]
   - Atomic Test #8: Data Encrypted with zip and gpg symmetric [linux, macos]
   - Atomic Test #9: Encrypts collected data with AES-256 and Base64 [linux, macos]
+  - Atomic Test #13: Data Compressed - macOS - ditto Archive of a Sensitive Directory [macos]
 - [T1113 Screen Capture](../../T1113/T1113.md)
   - Atomic Test #1: Screencapture [macos]
   - Atomic Test #2: Screencapture (silent) [macos]
@@ -597,6 +598,7 @@
 - [T1555.003 Credentials from Password Stores: Credentials from Web Browsers](../../T1555.003/T1555.003.md)
   - Atomic Test #2: Search macOS Safari Cookies [macos]
   - Atomic Test #14: Simulating Access to Chrome Login Data - MacOS [macos]
+  - Atomic Test #18: Query Chrome Login Data In Place with sqlite3 - MacOS [macos]
 - T1557.003 DHCP Spoofing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1552.004 Unsecured Credentials: Private Keys](../../T1552.004/T1552.004.md)
   - Atomic Test #2: Discover Private SSH Keys [linux, macos]
