@@ -22,7 +22,7 @@
 - T1218.013 Mavinject [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1036.005 Masquerading: Match Legitimate Name or Location](../../T1036.005/T1036.005.md)
   - Atomic Test #1: Execute a process from a directory masquerading as the current parent directory [macos, linux]
-- T1036.008 Masquerade File Type [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1036.008 Masquerading: Masquerade File Type [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1564 Hide Artifacts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1497.001 Virtualization/Sandbox Evasion: System Checks](../../T1497.001/T1497.001.md)
   - Atomic Test #4: Detect Virtualization Environment via ioreg [macos]
@@ -155,7 +155,7 @@
 - T1564.005 Hidden File System [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1055.005 Thread Local Storage [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1622 Debugger Evasion [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1216.002 SyncAppvPublishingServer [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1216.002 System Script Proxy Execution: SyncAppvPublishingServer [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.018 Obfuscated Files or Information: Invisible Unicode [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1027.007 Obfuscated Files or Information: Dynamic API Resolution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1055.015 Process Injection: ListPlanting [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -466,6 +466,7 @@
   - Atomic Test #7: Data Compressed - nix - tar Folder or File [linux, macos]
   - Atomic Test #8: Data Encrypted with zip and gpg symmetric [linux, macos]
   - Atomic Test #9: Encrypts collected data with AES-256 and Base64 [linux, macos]
+  - Atomic Test #13: Data Compressed - macOS - ditto Archive of a Sensitive Directory [macos]
 - [T1113 Screen Capture](../../T1113/T1113.md)
   - Atomic Test #1: Screencapture [macos]
   - Atomic Test #2: Screencapture (silent) [macos]
@@ -597,6 +598,7 @@
 - [T1555.003 Credentials from Password Stores: Credentials from Web Browsers](../../T1555.003/T1555.003.md)
   - Atomic Test #2: Search macOS Safari Cookies [macos]
   - Atomic Test #14: Simulating Access to Chrome Login Data - MacOS [macos]
+  - Atomic Test #18: Query Chrome Login Data In Place with sqlite3 - MacOS [macos]
 - T1557.003 DHCP Spoofing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1552.004 Unsecured Credentials: Private Keys](../../T1552.004/T1552.004.md)
   - Atomic Test #2: Discover Private SSH Keys [linux, macos]
