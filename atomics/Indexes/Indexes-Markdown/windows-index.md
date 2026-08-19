@@ -334,7 +334,8 @@
 - T1055.005 Thread Local Storage [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1622 Debugger Evasion](../../T1622/T1622.md)
   - Atomic Test #1: Detect a Debugger Presence in the Machine [windows]
-- T1216.002 SyncAppvPublishingServer [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1216.002 System Script Proxy Execution: SyncAppvPublishingServer](../../T1216.002/T1216.002.md)
+  - Atomic Test #1: SyncAppvPublishingServer Signed Script PowerShell Command Execution [windows]
 - [T1027.018 Obfuscated Files or Information: Invisible Unicode](../../T1027.018/T1027.018.md)
   - Atomic Test #1: File Masquerading with Zero-Width Space [windows]
   - Atomic Test #2: Invisible Unicode in Environment Variables [windows]
@@ -365,8 +366,7 @@
   - Atomic Test #1: Process Injection via mavinject.exe [windows]
   - Atomic Test #2: WinPwn - Get SYSTEM shell - Bind System Shell using UsoClient DLL load technique [windows]
 - [T1216 Signed Script Proxy Execution](../../T1216/T1216.md)
-  - Atomic Test #1: SyncAppvPublishingServer Signed Script PowerShell Command Execution [windows]
-  - Atomic Test #2: manage-bde.wsf Signed Script Command Execution [windows]
+  - Atomic Test #1: manage-bde.wsf Signed Script Command Execution [windows]
 - T1027.015 Compression [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1684.002 Email Spoofing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1078.003 Valid Accounts: Local Accounts](../../T1078.003/T1078.003.md)
