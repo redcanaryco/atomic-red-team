@@ -422,7 +422,8 @@
 - [T1036.006 Masquerading: Space after Filename](../../T1036.006/T1036.006.md)
   - Atomic Test #1: Space After Filename (Manual) [macos]
   - Atomic Test #2: Space After Filename [macos, linux]
-- T1216.002 SyncAppvPublishingServer [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1216.002 System Script Proxy Execution: SyncAppvPublishingServer](../../T1216.002/T1216.002.md)
+  - Atomic Test #1: SyncAppvPublishingServer Signed Script PowerShell Command Execution [windows]
 - [T1027.018 Obfuscated Files or Information: Invisible Unicode](../../T1027.018/T1027.018.md)
   - Atomic Test #1: File Masquerading with Zero-Width Space [windows]
   - Atomic Test #2: Invisible Unicode in Environment Variables [windows]
@@ -463,8 +464,7 @@
   - Atomic Test #1: Process Injection via mavinject.exe [windows]
   - Atomic Test #2: WinPwn - Get SYSTEM shell - Bind System Shell using UsoClient DLL load technique [windows]
 - [T1216 Signed Script Proxy Execution](../../T1216/T1216.md)
-  - Atomic Test #1: SyncAppvPublishingServer Signed Script PowerShell Command Execution [windows]
-  - Atomic Test #2: manage-bde.wsf Signed Script Command Execution [windows]
+  - Atomic Test #1: manage-bde.wsf Signed Script Command Execution [windows]
 - T1027.015 Compression [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574.004 Dylib Hijacking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1684.002 Email Spoofing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1722,6 +1722,7 @@
   - Atomic Test #10: ESXi - Remove Syslog remote IP [windows]
   - Atomic Test #11: Compress a File for Exfiltration using Makecab [windows]
   - Atomic Test #12: Copy and Compress AppData Folder [windows]
+  - Atomic Test #13: Data Compressed - macOS - ditto Archive of a Sensitive Directory [macos]
 - [T1113 Screen Capture](../../T1113/T1113.md)
   - Atomic Test #1: Screencapture [macos]
   - Atomic Test #2: Screencapture (silent) [macos]
@@ -2367,6 +2368,7 @@
   - Atomic Test #15: WebBrowserPassView - Credentials from Browser [windows]
   - Atomic Test #16: BrowserStealer (Chrome / Firefox / Microsoft Edge) [windows]
   - Atomic Test #17: Dump Chrome Login Data with esentutl [windows]
+  - Atomic Test #18: Query Chrome Login Data In Place with sqlite3 - MacOS [macos]
 - T1557.003 DHCP Spoofing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1552.004 Unsecured Credentials: Private Keys](../../T1552.004/T1552.004.md)
   - Atomic Test #1: Private Keys [windows]
