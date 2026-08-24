@@ -108,7 +108,7 @@ atomic_tests:
     Attempt to brute force all Azure AD users with a single password (called "password spraying") via AzureAD Powershell module.
     Valid credentials are only needed to fetch the list of Azure AD users.
   supported_platforms:
-  - azure-ad
+  - idp:entra
   input_arguments:
     password:
       description: Single password we will attempt to auth with (if you need several passwords, then it is a bruteforce so see T1110.001)
@@ -228,7 +228,7 @@ atomic_tests:
   description: |
     This test attempts to brute force a list of Microsoft Online (Azure/O365) users with a single password via the MSOLSpray Powershell module.
   supported_platforms:
-  - azure-ad
+  - idp:entra
   input_arguments:
     password:
       description: Single password to try against the list of user accounts

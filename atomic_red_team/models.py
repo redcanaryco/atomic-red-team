@@ -22,21 +22,24 @@ from pydantic_core.core_schema import ValidationInfo
 from typing_extensions import Annotated, TypedDict
 
 InputArgType = Literal["url", "string", "float", "integer", "path"]
-Platform = Literal[
+SUPPORTED_PLATFORMS = (
     "windows",
     "macos",
     "linux",
-    "office-365",
-    "azure-ad",
-    "google-workspace",
+    "idp:entra",
+    "office:google-workspace",
+    "idp:okta",
     "saas",
+    "office:microsoft-365",
     "iaas",
     "containers",
     "iaas:gcp",
     "iaas:azure",
     "iaas:aws",
     "esxi",
-]
+)
+SAAS_PLATFORM_PATTERN = re.compile(r"^saas:[a-z0-9][a-z0-9-]*$")
+Platform = str
 ExecutorType = Literal["manual", "powershell", "sh", "bash", "command_prompt"]
 DomainName = Annotated[
     str,
@@ -64,19 +67,22 @@ def extract_mustached_keys(commands: List[Optional[str]]) -> List[str]:
 def get_supported_platform(platform: Platform):
     platforms = {
         "macos": "macOS",
-        "office-365": "Office 365",
         "windows": "Windows",
         "linux": "Linux",
-        "azure-ad": "Azure AD",
+        "idp:entra": "Microsoft Entra ID",
+        "office:google-workspace": "Google Workspace",
+        "idp:okta": "Okta",
         "iaas": "IaaS",
         "saas": "SaaS",
+        "office:microsoft-365": "Microsoft 365",
         "iaas:aws": "AWS",
         "iaas:azure": "Azure",
         "iaas:gcp": "GCP",
-        "google-workspace": "Google Workspace",
         "containers": "Containers",
         "esxi": "ESXi",
     }
+    if SAAS_PLATFORM_PATTERN.fullmatch(platform):
+        return f"SaaS: {platform.removeprefix('saas:').replace('-', ' ').title()}"
     return platforms[platform]
 
 
@@ -159,6 +165,22 @@ class Atomic(StrictModel):
     input_arguments: Dict[constr(min_length=2, pattern=r"^[\w_-]+$"), Argument] = {}
     dependency_executor_name: Optional[ExecutorType] = None
     auto_generated_guid: Optional[UUID] = None
+
+    @field_validator("supported_platforms")
+    @classmethod
+    def validate_supported_platforms(cls, v):
+        for platform in v:
+            if platform in SUPPORTED_PLATFORMS:
+                continue
+            if SAAS_PLATFORM_PATTERN.fullmatch(platform):
+                continue
+            allowed = ", ".join(SUPPORTED_PLATFORMS)
+            raise PydanticCustomError(
+                "invalid_platform",
+                f"'{platform}' must be one of {allowed} or match saas:<service>",
+                {"loc": ["supported_platforms"], "input": platform},
+            )
+        return v
 
     @classmethod
     def extract_mustached_keys(cls, value: dict) -> List[str]:

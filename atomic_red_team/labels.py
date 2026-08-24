@@ -37,13 +37,15 @@ class GithubAPI:
         "windows": "windows",
         "macos": "macOS",
         "linux": "linux",
-        "azure-ad": "ADFS",
+        "idp:entra": "ADFS",
         "containers": "containers",
         "iaas:gcp": "cloud",
         "iaas:aws": "cloud",
         "iaas:azure": "cloud",
-        "office-365": "cloud",
-        "google-workspace": "cloud",
+        "office:microsoft-365": "cloud",
+        "office:google-workspace": "cloud",
+        "idp:okta": "cloud",
+        "saas": "cloud",
     }
 
     maintainers = {
@@ -54,9 +56,11 @@ class GithubAPI:
         "iaas:gcp": ["patel-bhavin"],
         "iaas:aws": ["patel-bhavin"],
         "iaas:azure": ["patel-bhavin"],
-        "azure-ad": ["patel-bhavin"],
-        "google-workspace": ["patel-bhavin"],
-        "office-365": ["patel-bhavin"],
+        "idp:entra": ["patel-bhavin"],
+        "office:google-workspace": ["patel-bhavin"],
+        "idp:okta": ["patel-bhavin"],
+        "office:microsoft-365": ["patel-bhavin"],
+        "saas": ["patel-bhavin"],
     }
 
     def __init__(self, token):
@@ -155,8 +159,12 @@ class GithubAPI:
         for p in platforms:
             if p in self.labels:
                 labels.append(self.labels[p])
+            elif p.startswith("saas:"):
+                labels.append("cloud")
             if p in self.maintainers:
                 maintainers += self.maintainers[p]
+            elif p.startswith("saas:"):
+                maintainers += ["patel-bhavin"]
         os.mkdir("pr")
 
         with open("pr/changedfiles.json", "w") as f:

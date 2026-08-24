@@ -131,10 +131,14 @@ class AtomicRedTeam
       raise("`atomic_tests[#{i}].supported_platforms` element is required") unless atomic.has_key?('supported_platforms')
       raise("`atomic_tests[#{i}].supported_platforms` element must be an Array (was a #{atomic['supported_platforms'].class.name})") unless atomic['supported_platforms'].is_a?(Array)
   
-      valid_supported_platforms = ['windows', 'macos', 'linux', 'office-365', 'azure-ad', 'google-workspace', 'saas', 'iaas', 'containers', 'iaas:aws', 'iaas:azure', 'iaas:gcp']
+      valid_supported_platforms = [
+        'windows', 'macos', 'linux', 'idp:entra', 'office:google-workspace',
+        'idp:okta', 'saas', 'office:microsoft-365', 'iaas', 'containers',
+        'iaas:aws', 'iaas:azure', 'iaas:gcp'
+      ]
       atomic['supported_platforms'].each do |platform|
-        if !valid_supported_platforms.include?(platform)
-          raise("`atomic_tests[#{i}].supported_platforms` '#{platform}' must be one of #{valid_supported_platforms.join(', ')}")
+        if !valid_supported_platforms.include?(platform) && platform !~ /^saas:[a-z0-9][a-z0-9-]*$/
+          raise("`atomic_tests[#{i}].supported_platforms` '#{platform}' must be one of #{valid_supported_platforms.join(', ')} or match saas:<service>")
         end
       end
 

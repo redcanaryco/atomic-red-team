@@ -11,7 +11,7 @@ from atomic_red_team.models import (
     FloatArg,
     UrlArg,
     ManualExecutor,
-    Platform,
+    SUPPORTED_PLATFORMS,
     CommandExecutor,
     ExecutorType,
 )
@@ -54,7 +54,10 @@ input_args_types = [
     ),
 ]
 
-platforms_strategy = st.lists(st.sampled_from(list(Platform.__args__)), min_size=1)
+platforms_strategy = st.lists(
+    st.sampled_from(list(SUPPORTED_PLATFORMS) + ["saas:custom-service"]),
+    min_size=1,
+)
 input_arguments_strategy = st.dictionaries(
     keys=alphanumeric_underscore_strategy, values=st.one_of(*input_args_types)
 )
