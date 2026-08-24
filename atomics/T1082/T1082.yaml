@@ -606,3 +606,12 @@ atomic_tests:
       reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v CurrentBuildNumber
     name: command_prompt
     elevation_required: false
+- name: Get System Hardware UUID Via wmic.exe
+  description: |
+    Upon execution, displays the system's hardware UUID. Used in BlackCat ransomware to generate a recovery URL.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      wmic csproduct get UUID
+    name: powershell

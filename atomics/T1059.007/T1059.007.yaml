@@ -46,3 +46,110 @@ atomic_tests:
     command: |
       wscript "#{jscript}"
     name: command_prompt
+- name: Turla Kopiluwak Windows Enumeration
+  description: |
+    Executes a JScript file via wscript.exe that runs a series of reconnaissance commands (net use, ipconfig,
+    systeminfo, whoami, tasklist, netstat, arp, dir, etc.) and appends all output to a single staging file
+    at c:\windows\temp\result2.dat. Output file name, wscript.exe execution, and reconnaisance commands run mirror the behaviors of Turla's Javascript trojan Kopiluwak
+
+    Reference: https://unit42.paloaltonetworks.com/turla-pensive-ursa-threat-assessment/
+  supported_platforms:
+  - windows
+  input_arguments:
+    jscript:
+      description: Path to the reconnaissance JScript file
+      type: path
+      default: PathToAtomicsFolder\T1059.007\src\xpexplore.js
+  dependency_executor_name: powershell
+  dependencies:
+  - description: Reconnaissance JScript must exist on disk
+    prereq_command: |
+      if (Test-Path "#{jscript}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -ItemType Directory (Split-Path "#{jscript}") -Force | Out-Null
+      Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.007/src/xpexplore.js" -OutFile "#{jscript}"
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      wscript.exe /b "#{jscript}"
+    cleanup_command: |
+      del c:\windows\temp\result2.dat >nul 2>&1
+- name: Turla KopiLuwak RC4 Decryption Stager
+  description: |
+    Emulates KopiLuwak's next-stage JavaScript loader named Chkdsk.js. The script accepts an
+    RC4 decryption key via the -scan parameter and decrypts hardcoded ciphertext bytes, which are then run as script.
+    In this atomic, the decrypted bytes generate and display a random number instead of performing malicious behavior.
+    In the real attack chain, a scheduled task (ProactiveScan) invokes this script with the key every 30 minutes.
+
+    Reference: https://securelist.com/turla-renews-its-arsenal-with-topinambour/91687/
+  supported_platforms:
+  - windows
+  input_arguments:
+    chkdsk_path:
+      description: Path to the KopiLuwak Chkdsk.js stager script
+      type: path
+      default: PathToAtomicsFolder\T1059.007\src\Chkdsk.js
+  dependency_executor_name: powershell
+  dependencies:
+  - description: Chkdsk.js must exist on disk
+    prereq_command: |
+      if (Test-Path "#{chkdsk_path}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -ItemType Directory (Split-Path "#{chkdsk_path}") -Force | Out-Null
+      Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.007/src/Chkdsk.js" -OutFile "#{chkdsk_path}"
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      wscript.exe /b "#{chkdsk_path}" -scan Kdw6gG7cpOSZsBeH
+- name: Turla KopiLuwak Registry JavaScript Payload Execution
+  description: |
+    Emulates KopiLuwak's technique of storing a JavaScript payload as REG_BINARY data in the Windows registry
+    and executing it. The script uses WMI StdRegProv to read binary data from
+    HKCU\Software\Microsoft\Windows\CurrentVersion\Maintenance\MOfficeMaintenance, converts the
+    bytes to a string with String.fromCharCode, and runs it with eval(). The registry path, value
+    name, and WMI access pattern mirror the real malware.
+
+    Reference: https://securelist.com/turla-renews-its-arsenal-with-topinambour/91687/
+  supported_platforms:
+  - windows
+  input_arguments:
+    payload:
+      description: JavaScript code to store in the registry as binary and execute via eval
+      type: string
+      default: "var shell = new ActiveXObject('WScript.Shell');shell.Exec('cmd.exe /c whoami');"
+    registry_script:
+      description: Path to the registry payload JScript file
+      type: path
+      default: PathToAtomicsFolder\T1059.007\src\registry_payload.js
+  dependency_executor_name: powershell
+  dependencies:
+  - description: Registry payload JScript must exist on disk
+    prereq_command: |
+      if (Test-Path "#{registry_script}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -ItemType Directory (Split-Path "#{registry_script}") -Force | Out-Null
+      Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.007/src/registry_payload.js" -OutFile "#{registry_script}"
+  - description: Backup existing Maintenance registry key if present
+    prereq_command: |
+      if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Maintenance") -or (Test-Path "$env:TEMP\T1059.007_Maintenance.reg")) {exit 0} else {exit 1}
+    get_prereq_command: |
+      reg export "HKCU\Software\Microsoft\Windows\CurrentVersion\Maintenance" "$env:TEMP\T1059.007_Maintenance.reg" /y 2>$null
+  - description: Payload must be written to registry as REG_BINARY
+    prereq_command: |
+      if ((Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Maintenance" -Name "MOfficeMaintenance" -ErrorAction SilentlyContinue).MOfficeMaintenance) {exit 0} else {exit 1}
+    get_prereq_command: |
+      $bytes = [System.Text.Encoding]::ASCII.GetBytes("#{payload}")
+      $regPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Maintenance"
+      if (!(Test-Path $regPath)) { New-Item -Path $regPath -Force | Out-Null }
+      Set-ItemProperty -Path $regPath -Name "MOfficeMaintenance" -Value $bytes -Type Binary
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      Start-Process wscript.exe -ArgumentList '/b', "#{registry_script}" -Wait
+    cleanup_command: |
+      reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Maintenance" /v MOfficeMaintenance /f 2>$null
+      $bak = "$env:TEMP\T1059.007_Maintenance.reg"
+      if (Test-Path $bak) { reg import $bak 2>$null; Remove-Item $bak -Force -ErrorAction SilentlyContinue }

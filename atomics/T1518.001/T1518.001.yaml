@@ -105,6 +105,14 @@ atomic_tests:
     when sucessfully executed, the test is going to display installed AV software.
   supported_platforms:
   - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      wmic.exe must be available on the system
+    prereq_command: |
+      if (Get-Command wmic.exe -ErrorAction SilentlyContinue) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      DISM /Online /Add-Capability /CapabilityName:WMIC~~~~
   executor:
     command: wmic.exe /Namespace:\\root\SecurityCenter2 Path AntiVirusProduct Get displayName /Format:List
     name: command_prompt

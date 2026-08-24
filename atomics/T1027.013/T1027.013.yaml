@@ -77,3 +77,29 @@ atomic_tests:
       rm -f /tmp/art_payload.sh
       rm -f /tmp/art_encrypted.zip
     name: bash
+- name: Turla Snake Queue File Artifact
+  description: |
+    Creates a fake Snake malware queue file in %windir%\Registration with the naming convention
+    <RANDOM_GUID>.<RANDOM_GUID>.crmlog, filled with random bytes to simulate encrypted data that will be decrypted by Snake's kernel driver.
+    In real samples, the decrypted queue file contans key material, communication channels, modes of operation, logs, and command specifications.
+
+    Reference: https://media.defense.gov/2023/May/09/2003218554/-1/-1/0/JOINT_CSA_HUNTING_RU_INTEL_SNAKE_MALWARE_20230509.PDF
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      $guid1 = [guid]::NewGuid().ToString()
+      $guid2 = [guid]::NewGuid().ToString()
+      $filePath = "$env:windir\Registration\$guid1.$guid2.crmlog"
+      $bytes = New-Object byte[] 4096
+      (New-Object Random).NextBytes($bytes)
+      [IO.File]::WriteAllBytes($filePath, $bytes)
+      $filePath | Out-File "$env:TEMP\T1027.013_snake_queue.txt"
+    cleanup_command: |
+      $pathFile = "$env:TEMP\T1027.013_snake_queue.txt"
+      if (Test-Path $pathFile) {
+        Remove-Item (Get-Content $pathFile) -Force -ErrorAction SilentlyContinue
+        Remove-Item $pathFile -Force
+      }

@@ -340,3 +340,80 @@ atomic_tests:
       reg delete "HKEY_CURRENT_USER\Software\Classes\mscfile\shell\open\command" /f
       schtasks /Delete /TN "#{task_name}" /F
    
+- name: Turla Topinambour Dropper and Scheduled Task Persistence
+  description: |
+    Emulates the dropper behavior of Turla's Topinambour. Uses inline C# compiled via
+    Add-Type to replicate the dropper's unpack_p() and make_some_noise() functions. unpack_p() drops a
+    benign stand-in executable to %LOCALAPPDATA%\VirtualStore\certcheck.exe, and make_some_noise() creates
+    a scheduled task named VerifiedPublisherCertCheck that runs certcheck.exe every 30 minutes.
+
+    Reference: https://securelist.com/turla-renews-its-arsenal-with-topinambour/91687/
+  supported_platforms:
+  - windows
+  input_arguments:
+    benign_exe:
+      description: Benign executable to copy as the stand-in payload (simulates the dropped backdoor)
+      type: path
+      default: C:\Windows\System32\hostname.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: Back up any existing certcheck.exe in VirtualStore before overwriting
+    prereq_command: |
+      $dropPath = "$env:LOCALAPPDATA\VirtualStore\certcheck.exe"
+      if ((Test-Path "$env:TEMP\T1053005_certcheck_backup.exe") -or !(Test-Path $dropPath)) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      Copy-Item "$env:LOCALAPPDATA\VirtualStore\certcheck.exe" "$env:TEMP\T1053005_certcheck_backup.exe" -Force
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      Add-Type @'
+      using System;
+      using System.Diagnostics;
+      using System.IO;
+
+      public class TopinambourDropper {
+          public static void unpack_p(string sourceExe) {
+              string dropPath = Path.Combine(Environment.GetEnvironmentVariable("LOCALAPPDATA"), "VirtualStore", "certcheck.exe");
+              Directory.CreateDirectory(Path.GetDirectoryName(dropPath));
+              File.Copy(sourceExe, dropPath, true);
+          }
+
+          public static void make_some_noise() {
+              ProcessStartInfo startInfo = new ProcessStartInfo("cmd", "/c schtasks /create /SC MINUTE /MO 30 /TR \"%localappdata%\\VirtualStore\\certcheck.exe\" /TN VerifiedPublisherCertCheck /F")
+              {
+                  CreateNoWindow = true,
+                  UseShellExecute = false
+              };
+              Process.Start(startInfo).WaitForExit();
+          }
+      }
+      '@
+      [TopinambourDropper]::unpack_p("#{benign_exe}")
+      [TopinambourDropper]::make_some_noise()
+    cleanup_command: |
+      schtasks /Delete /TN "VerifiedPublisherCertCheck" /F 2>&1 | Out-Null
+      if (Test-Path "$env:TEMP\T1053005_certcheck_backup.exe") {
+        Move-Item "$env:TEMP\T1053005_certcheck_backup.exe" "$env:LOCALAPPDATA\VirtualStore\certcheck.exe" -Force
+      } else {
+        Remove-Item "$env:LOCALAPPDATA\VirtualStore\certcheck.exe" -Force -ErrorAction SilentlyContinue
+      }
+- name: Turla KopiLuwak Scheduled Task for JavaScript Stager
+  description: |
+    Emulates the KopiLuwak dropper's scheduled task creation stage. Creates a logon-triggered
+    scheduled task named ProactiveScan with description "NTFS Volume Health Scan" that runs
+    Chkdsk.js from the current user's AppData\Roaming\Microsoft directory with an RC4 decryption
+    key passed via the -scan parameter. The task is created using schtasks.exe matching the
+    malware's use of CreateScheduledTaskLogon. Chkdsk.js does not need to exist for the
+    scheduled task to be created.
+
+    Reference: https://securelist.com/turla-renews-its-arsenal-with-topinambour/91687/
+  supported_platforms:
+  - windows
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      schtasks /create /TN "ProactiveScan" /TR "wscript.exe \"%APPDATA%\Microsoft\Chkdsk.js\" -scan Kdw6gG7cpOSZsBeH" /SC ONLOGON /F
+    cleanup_command: |
+      schtasks /Delete /TN "ProactiveScan" /F >nul 2>&1

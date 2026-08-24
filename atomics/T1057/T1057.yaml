@@ -148,3 +148,60 @@ atomic_tests:
       taskmgr.exe /7
     name: command_prompt
     elevation_required: false
+- name: Check Process Token Elevation via GetTokenInformation
+  description: |
+    Uses C# P/Invoke to call OpenProcessToken and GetTokenInformation with TokenElevation
+    to discover whether the current process is running with elevated privileges. Adversaries
+    use this API-level check to determine their privilege context before deciding whether
+    to attempt privilege escalation. Turla's ApolloShadow does this to determine its path of execution.
+
+    Reference: https://www.microsoft.com/en-us/security/blog/2025/07/31/frozen-in-transit-secret-blizzards-aitm-campaign-against-diplomats/
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      Add-Type -TypeDefinition @'
+      using System;
+      using System.Runtime.InteropServices;
+
+      public class TokenElevationCheck
+      {
+          [DllImport("advapi32.dll", SetLastError = true)]
+          static extern bool OpenProcessToken(IntPtr ProcessHandle, uint DesiredAccess, out IntPtr TokenHandle);
+
+          [DllImport("advapi32.dll", SetLastError = true)]
+          static extern bool GetTokenInformation(IntPtr TokenHandle, int TokenInformationClass, out int TokenInformation, int TokenInformationLength, out int ReturnLength);
+
+          [DllImport("kernel32.dll")]
+          static extern IntPtr GetCurrentProcess();
+
+          [DllImport("kernel32.dll", SetLastError = true)]
+          static extern bool CloseHandle(IntPtr hObject);
+
+          const uint TOKEN_QUERY = 0x0008;
+          const int TokenElevationType = 18;
+
+          public static void Check()
+          {
+              IntPtr hToken;
+              if (!OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, out hToken))
+              {
+                  Console.WriteLine("OpenProcessToken failed: " + Marshal.GetLastWin32Error());
+                  return;
+              }
+
+              int elevationType, returnLength;
+              if (GetTokenInformation(hToken, TokenElevationType, out elevationType, 4, out returnLength))
+              {
+                  string[] labels = { "", "Default", "Full", "Limited" };
+                  Console.WriteLine("TokenElevationType: " + labels[elevationType]);
+              }
+
+
+              CloseHandle(hToken);
+          }
+      }
+      '@
+      [TokenElevationCheck]::Check()

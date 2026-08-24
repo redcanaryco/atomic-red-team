@@ -434,3 +434,32 @@ atomic_tests:
       remove-item "$env:temp\T1018NetscanOutput.txt" -force -erroraction silentlycontinue
     name: powershell
     elevation_required: false
+- name: Enumerate SSH Configuration
+  description: |
+    SSH metadata files (authorized_keys, known_hosts, config) can be used to
+    discover remote systems and trust relationships. known_hosts
+    reveals previously connected servers, config exposes host aliases and jump
+    proxies, and authorized_keys shows which public keys are trusted for login.
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
+    search_path:
+      description: Directory to search under
+      type: string
+      default: /
+    filename:
+      description: SSH metadata file to search for
+      type: string
+      default: known_hosts
+    output_file:
+      description: File to write results to
+      type: path
+      default: /tmp/ssh_enum.txt
+  executor:
+    name: bash
+    elevation_required: false
+    command: |
+      find #{search_path} -name "#{filename}" -type f 2>/dev/null | while read -r file; do echo "=== $file ===" >> #{output_file}; cat "$file" >> #{output_file}; done
+    cleanup_command: |
+      rm -f #{output_file}

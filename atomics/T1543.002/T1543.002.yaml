@@ -153,3 +153,59 @@ atomic_tests:
       systemctl disable T1543.002
       rm -rf /etc/init.d/T1543.002
       systemctl daemon-reload
+- name: TeamPCP Aqua Trivy Persistence
+  description: |
+    Simulates the persistence mechanism used by TeamPCP malware distributed via a hijacked
+    Aqua Trivy binary. Installs a user-level systemd service (sysmon) that drops a
+    Python script to ~/.config/systemd/user/sysmon.py. The script writes a second-stage
+    payload to #{pglog_path} and executes it in a new session. In the wild, the dropper polls
+    an ICP-hosted C2 canister for a download URL; this test creates the payload unconditionally
+    to avoid external network contact. Filepaths and names match observed IOCs.
+
+    Reference: https://www.aquasec.com/blog/trivy-supply-chain-attack-what-you-need-to-know/
+  supported_platforms:
+  - linux
+  input_arguments:
+    pglog_path:
+      description: Path where the dropper writes and executes the second-stage payload
+      type: path
+      default: /tmp/pglog
+    sysmon_script_path:
+      description: Path to the sysmon Python script copied into the user systemd directory
+      type: path
+      default: $PathToAtomicsFolder/T1543.002/src/sysmon.py
+  dependencies:
+  - description: python3 must be installed
+    prereq_command: |
+      which python3 > /dev/null 2>&1
+    get_prereq_command: |
+      apt-get install -y python3 2>/dev/null || yum install -y python3 2>/dev/null
+  dependency_executor_name: bash
+  executor:
+    name: bash
+    elevation_required: false
+    command: |
+      mkdir -p $HOME/.config/systemd/user
+      cp "#{sysmon_script_path}" "$HOME/.config/systemd/user/sysmon.py"
+      echo "[Unit]" > $HOME/.config/systemd/user/sysmon.service
+      echo "Description=System Monitor Service" >> $HOME/.config/systemd/user/sysmon.service
+      echo "" >> $HOME/.config/systemd/user/sysmon.service
+      echo "[Service]" >> $HOME/.config/systemd/user/sysmon.service
+      echo "Type=simple" >> $HOME/.config/systemd/user/sysmon.service
+      echo "ExecStart=/usr/bin/python3 $HOME/.config/systemd/user/sysmon.py \"#{pglog_path}\"" >> $HOME/.config/systemd/user/sysmon.service
+      echo "Restart=always" >> $HOME/.config/systemd/user/sysmon.service
+      echo "" >> $HOME/.config/systemd/user/sysmon.service
+      echo "[Install]" >> $HOME/.config/systemd/user/sysmon.service
+      echo "WantedBy=default.target" >> $HOME/.config/systemd/user/sysmon.service
+      systemctl --user daemon-reload
+      systemctl --user enable sysmon.service
+      systemctl --user start sysmon.service
+      loginctl enable-linger $USER
+    cleanup_command: |
+      systemctl --user stop sysmon.service
+      systemctl --user disable sysmon.service
+      rm -f $HOME/.config/systemd/user/sysmon.service
+      rm -f $HOME/.config/systemd/user/sysmon.py
+      rm -f #{pglog_path}
+      systemctl --user daemon-reload
+      loginctl disable-linger $USER

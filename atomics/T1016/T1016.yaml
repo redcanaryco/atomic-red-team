@@ -206,3 +206,66 @@ atomic_tests:
     command: |
       nslookup -querytype=ALL -timeout=12 _ldap._tcp.dc._msdcs.%USERDNSDOMAIN%
     name: command_prompt
+- name: IPv4 Enumeration with GetIpAddrTable
+  description: |
+    Uses C# P/Invoke to call GetIpAddrTable from iphlpapi.dll to enumerate all IPv4
+    addresses bound to local interfaces. Adversaries use this API to discover network
+    configuration and identify multi-homed hosts for lateral movement or pivoting. Used by
+    Turla in ApolloShadow malware.
+
+    Reference: https://www.microsoft.com/en-us/security/blog/2025/07/31/frozen-in-transit-secret-blizzards-aitm-campaign-against-diplomats/
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      Add-Type -TypeDefinition @'
+      using System;
+      using System.Runtime.InteropServices;
+
+      [StructLayout(LayoutKind.Sequential)]
+      public struct MIB_IPADDRTABLE
+      {
+          public uint dwNumEntries;
+          public MIB_IPADDRROW table;  // first row only
+      }
+
+      [StructLayout(LayoutKind.Sequential)]
+      public struct MIB_IPADDRROW
+      {
+          public uint dwAddr;
+          public uint dwIndex;
+          public uint dwMask;
+          public uint dwBCastAddr;
+          public uint dwReasmSize;
+          public ushort unused1;
+          public ushort wType;
+      }
+
+
+      public class IpEnumeration{
+      [DllImport("iphlpapi.dll", SetLastError = true)]
+      static extern uint GetIpAddrTable(IntPtr pIpAddrTable, ref int pdwSize, bool bOrder);
+
+      public static void getIPs(){
+        int size = 0;
+        GetIpAddrTable(IntPtr.Zero, ref size, false);
+        IntPtr buffer = Marshal.AllocHGlobal(size);
+        try {
+            GetIpAddrTable(buffer, ref size, false);
+            var table = Marshal.PtrToStructure<MIB_IPADDRTABLE>(buffer);
+            int rowSize = Marshal.SizeOf<MIB_IPADDRROW>();
+
+            for (int i = 0; i < table.dwNumEntries; i++){
+                IntPtr rowPtr = buffer + 4 + (i * rowSize);
+                var row = Marshal.PtrToStructure<MIB_IPADDRROW>(rowPtr);
+                Console.WriteLine(new System.Net.IPAddress(row.dwAddr));
+            }
+        } finally {
+            Marshal.FreeHGlobal(buffer);
+        }
+      }
+      }
+      '@
+      [IpEnumeration]::getIPs()
