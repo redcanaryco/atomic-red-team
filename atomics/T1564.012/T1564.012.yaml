@@ -1,0 +1,66 @@
+attack_technique: T1564.012
+display_name: 'Hide Artifacts: File/Path Exclusions'
+atomic_tests:
+- name: Stage and execute a payload from a Windows Defender excluded path
+  description: |
+    Writes an executable payload into a directory that is excluded from Microsoft Defender scanning
+    and executes it from that location. Rather than modifying tool settings to create a new
+    exclusion, adversaries may place file-based payloads in existing default or otherwise
+    well-known exclusions so that the artifact is never scanned.
+
+    A copy of a benign signed binary (calc.exe) is used as the payload so that no malicious content
+    is written to disk.
+
+    Upon successful execution, the payload is copied into the excluded directory and launched from
+    there.
+  supported_platforms:
+  - windows
+  input_arguments:
+    excluded_path:
+      description: >
+        Directory that is present in the Defender exclusion list, used to stage the payload.
+      type: path
+      default: C:\Temp\ARTExclusionTest
+    payload_source:
+      description: Benign binary copied into the excluded directory to act as the staged payload.
+      type: path
+      default: C:\Windows\System32\calc.exe
+    payload_name:
+      description: File name given to the staged payload inside the excluded directory.
+      type: string
+      default: art-staged-payload.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      An excluded directory (#{excluded_path}) must exist and be present in the Defender
+      exclusion list. Adding a Defender exclusion requires administrative privileges and fails
+      when Tamper Protection is enabled.
+    prereq_command: |
+      if ((Get-MpPreference).ExclusionPath -contains "#{excluded_path}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      $markerPath = Join-Path "#{excluded_path}" ".art-created-defender-exclusion"
+      New-Item -ItemType Directory "#{excluded_path}" -Force | Out-Null
+      Add-MpPreference -ExclusionPath "#{excluded_path}" -ErrorAction Stop
+      New-Item -ItemType File $markerPath -Force | Out-Null
+  - description: |
+      The payload source (#{payload_source}) must exist on disk.
+    prereq_command: |
+      if (Test-Path "#{payload_source}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Write-Host "The payload source must already exist at #{payload_source}."
+  executor:
+    command: |
+      Copy-Item "#{payload_source}" -Destination "#{excluded_path}\#{payload_name}" -Force
+      Start-Process "#{excluded_path}\#{payload_name}"
+    cleanup_command: |
+      $payloadProcess = [System.IO.Path]::GetFileNameWithoutExtension("#{payload_name}")
+      Stop-Process -Name $payloadProcess -Force -ErrorAction SilentlyContinue
+      Remove-Item "#{excluded_path}\#{payload_name}" -Force -ErrorAction SilentlyContinue
+      $markerPath = Join-Path "#{excluded_path}" ".art-created-defender-exclusion"
+      if (Test-Path $markerPath) {
+        Remove-Item $markerPath -Force -ErrorAction SilentlyContinue
+        Remove-MpPreference -ExclusionPath "#{excluded_path}" -ErrorAction SilentlyContinue
+        Remove-Item "#{excluded_path}" -Force -ErrorAction SilentlyContinue
+      }
+    name: powershell
+    elevation_required: false
