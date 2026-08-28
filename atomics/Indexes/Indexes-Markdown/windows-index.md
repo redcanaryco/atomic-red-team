@@ -22,7 +22,8 @@
   - Atomic Test #15: Rundll32 execute command via FileProtocolHandler [windows]
   - Atomic Test #16: Rundll32 execute payload by calling RouteTheCall [windows]
 - T1027.009 Embedded Payloads [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1564.012 File/Path Exclusions [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1564.012 Hide Artifacts: File/Path Exclusions](../../T1564.012/T1564.012.md)
+  - Atomic Test #1: Stage and execute a payload from a Windows Defender excluded path [windows]
 - [T1216.001 Signed Script Proxy Execution: Pubprn](../../T1216.001/T1216.001.md)
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
 - T1574.007 Path Interception by PATH Environment Variable [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1990,6 +1991,7 @@
   - Atomic Test #9: Security Software Discovery - Windows Defender Enumeration [windows]
   - Atomic Test #10: Security Software Discovery - Windows Firewall Enumeration [windows]
   - Atomic Test #11: Get Windows Defender exclusion settings using WMIC [windows]
+  - Atomic Test #12: Enumerate Windows Defender exclusion paths via MpCmdRun.exe [windows]
 - [T1018 Remote System Discovery](../../T1018/T1018.md)
   - Atomic Test #1: Remote System Discovery - net [windows]
   - Atomic Test #2: Remote System Discovery - net group Domain Computers [windows]

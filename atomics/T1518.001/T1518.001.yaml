@@ -166,6 +166,7 @@ atomic_tests:
     command: |
       wmic /Node:localhost /Namespace:\\root\Microsoft\Windows\Defender Path MSFT_MpPreference Get /format:list | findstr /i /C:"DisableRealtimeMonitoring" /C:"ExclusionPath" /C:"ExclusionExtension" /C:"ExclusionProcess"
 - name: Enumerate Windows Defender exclusion paths via MpCmdRun.exe
+  auto_generated_guid: 8eb337ee-fa17-4da7-890a-0204ea470718
   description: |
     Determines whether one or more paths are excluded from Microsoft Defender scanning by invoking
     the signed Microsoft binary MpCmdRun.exe with a custom scan (-ScanType 3) against a
