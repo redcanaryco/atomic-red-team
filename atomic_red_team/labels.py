@@ -72,7 +72,7 @@ class GithubAPI:
 
     def get_atomic_with_lines(self, file_url: str):
         """Get Atomic Technique along with line number for each of the atomics."""
-        r = requests.get(file_url, headers=self.headers)
+        r = requests.get(file_url, headers=self.headers, timeout=15)
         assert r.status_code == 200
         return yaml.load(r.text, Loader=SafeLineLoader)
 
@@ -115,8 +115,8 @@ class GithubAPI:
                 count = 0
                 for line in file["patch"].split("\n"):
                     if line.startswith("@@"):
-                        x, y = re.findall(r"\d{1,3},\d{1,3}", line)
-                        start = int(x.split(",")[0])
+                        match = re.search(r"@@ -\d+(?:,\d+)? \+(\d+)(?:,\d+)? @@", line)
+                        start = int(match.group(1)) if match else 0
                         count = -1
                     elif line.startswith("+"):  # only take count of added lines
                         changed_lines.append(start + count)
@@ -129,11 +129,11 @@ class GithubAPI:
                     if index + 1 < len(atomics):
                         curr_atomic_end = atomics[index + 1]["__line__"]
                     else:
-                        curr_atomic_end = start + 60
+                        curr_atomic_end = float("inf")
                     changes_in_current_atomic = [
                         i
                         for i in changed_lines
-                        if i > curr_atomic_start and i < curr_atomic_end
+                        if i >= curr_atomic_start and i < curr_atomic_end
                     ]
                     if len(changes_in_current_atomic) > 0:
                         tests.append(
@@ -154,9 +154,13 @@ class GithubAPI:
         maintainers = []
         for p in platforms:
             if p in self.labels:
-                labels.append(self.labels[p])
+                label = self.labels[p]
+                if label not in labels:
+                    labels.append(label)
             if p in self.maintainers:
-                maintainers += self.maintainers[p]
+                for m in self.maintainers[p]:
+                    if m not in maintainers:
+                        maintainers.append(m)
         os.mkdir("pr")
 
         with open("pr/changedfiles.json", "w") as f:
