@@ -228,12 +228,11 @@ class Atomic(StrictModel):
                 keys.remove(key)
 
         if len(keys) > 0:
-            for x in keys:
-                raise PydanticCustomError(
-                    "missing_input_argument",
-                    f"{x} is not defined in input_arguments",
-                    {"loc": ["input_arguments"]},
-                )
+            raise PydanticCustomError(
+                "missing_input_argument",
+                f"{', '.join(map(repr, sorted(keys)))} {'is' if len(keys) == 1 else 'are'} not defined in input_arguments",
+                {"loc": ["input_arguments"]},
+            )
         return v
 
 
