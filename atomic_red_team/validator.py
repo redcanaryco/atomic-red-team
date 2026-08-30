@@ -18,8 +18,8 @@ def format_validation_error(error: ValidationError):
         message = ""
         if err["type"] == "elevation_required_but_not_provided":
             return {err["msg"]: list(err.get("loc")) + err.get("ctx").get("loc")}
-        if err["input"] and err["type"] != "unused_input_argument":
-            message += f"{err['input']} - "
+        if err.get("input") is not None and err["type"] != "unused_input_argument":
+            message += f"{err.get('input')} - "
         return {message + err["msg"]: err.get("loc")}
     inputs = collections.defaultdict(set)
     for e in error.errors():
@@ -28,12 +28,14 @@ def format_validation_error(error: ValidationError):
         # If it's a union type, then it generates multiple errors for the same input arguments.
         # Here we collect only the common paths. For example,
         # [( input_arguments, url_parsing),(input_arguments, string_mismatch)] => (input_arguments)
-        if len(inputs[e["input"]]) == 0:
-            inputs[e["input"]] = e.get("loc", tuple())
-        else:
-            inputs[e["input"]] = tuple(
-                [x for x in inputs[e["input"]] if x in e.get("loc", tuple())]
-            )
+        err_input = e.get("input")
+        if err_input is not None:
+            if len(inputs[err_input]) == 0:
+                inputs[err_input] = e.get("loc", tuple())
+            else:
+                inputs[err_input] = tuple(
+                    [x for x in inputs[err_input] if x in e.get("loc", tuple())]
+                )
     return dict(inputs)
 
 
