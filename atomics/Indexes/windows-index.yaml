@@ -853,7 +853,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.620Z'
-      name: File/Path Exclusions
+      name: 'Hide Artifacts: File/Path Exclusions'
       description: |-
         Adversaries may attempt to hide their file-based artifacts by writing them to specific folders or file names excluded from antivirus (AV) scanning and other defensive capabilities. AV and other file-based scanners often include exclusions to optimize performance as well as ease installation and legitimate use of applications. These exclusions may be contextual (e.g., scans are only initiated in response to specific triggering events/alerts), but are also often hardcoded strings referencing specific folders and/or files assumed to be trusted and legitimate.(Citation: Microsoft File Folder Exclusions)
 
@@ -872,7 +872,81 @@ stealth:
       - macOS
       - Windows
       x_mitre_version: '2.0'
-    atomic_tests: []
+      identifier: T1564.012
+    atomic_tests:
+    - name: Stage and execute a payload from a Windows Defender excluded path
+      auto_generated_guid: 0303c07b-545e-4c0b-89f4-aea84a7a8d8e
+      description: |
+        Writes an executable payload into a directory that is excluded from Microsoft Defender scanning
+        and executes it from that location. Rather than modifying tool settings to create a new
+        exclusion, adversaries may place file-based payloads in existing default or otherwise
+        well-known exclusions so that the artifact is never scanned.
+
+        A copy of a benign signed binary (calc.exe) is used as the payload so that no malicious content
+        is written to disk.
+
+        Upon successful execution, the payload is copied into the excluded directory and launched from
+        there.
+      supported_platforms:
+      - windows
+      input_arguments:
+        excluded_path:
+          description: 'Directory that is present in the Defender exclusion list,
+            used to stage the payload.
+
+            '
+          type: path
+          default: C:\Temp\ARTExclusionTest
+        payload_source:
+          description: Benign binary copied into the excluded directory to act as
+            the staged payload.
+          type: path
+          default: C:\Windows\System32\calc.exe
+        payload_name:
+          description: File name given to the staged payload inside the excluded directory.
+          type: string
+          default: art-staged-payload.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: |
+          An excluded directory (#{excluded_path}) must exist and be present in the Defender
+          exclusion list. Adding a Defender exclusion requires administrative privileges and fails
+          when Tamper Protection is enabled.
+        prereq_command: 'if ((Get-MpPreference).ExclusionPath -contains "#{excluded_path}")
+          {exit 0} else {exit 1}
+
+          '
+        get_prereq_command: |
+          $markerPath = Join-Path "#{excluded_path}" ".art-created-defender-exclusion"
+          New-Item -ItemType Directory "#{excluded_path}" -Force | Out-Null
+          Add-MpPreference -ExclusionPath "#{excluded_path}" -ErrorAction Stop
+          New-Item -ItemType File $markerPath -Force | Out-Null
+      - description: 'The payload source (#{payload_source}) must exist on disk.
+
+          '
+        prereq_command: 'if (Test-Path "#{payload_source}") {exit 0} else {exit 1}
+
+          '
+        get_prereq_command: 'Write-Host "The payload source must already exist at
+          #{payload_source}."
+
+          '
+      executor:
+        command: |
+          Copy-Item "#{payload_source}" -Destination "#{excluded_path}\#{payload_name}" -Force
+          Start-Process "#{excluded_path}\#{payload_name}"
+        cleanup_command: |
+          $payloadProcess = [System.IO.Path]::GetFileNameWithoutExtension("#{payload_name}")
+          Stop-Process -Name $payloadProcess -Force -ErrorAction SilentlyContinue
+          Remove-Item "#{excluded_path}\#{payload_name}" -Force -ErrorAction SilentlyContinue
+          $markerPath = Join-Path "#{excluded_path}" ".art-created-defender-exclusion"
+          if (Test-Path $markerPath) {
+            Remove-Item $markerPath -Force -ErrorAction SilentlyContinue
+            Remove-MpPreference -ExclusionPath "#{excluded_path}" -ErrorAction SilentlyContinue
+            Remove-Item "#{excluded_path}" -Force -ErrorAction SilentlyContinue
+          }
+        name: powershell
+        elevation_required: false
   T1216.001:
     technique:
       type: attack-pattern
@@ -83373,6 +83447,58 @@ discovery:
           /C:"ExclusionPath" /C:"ExclusionExtension" /C:"ExclusionProcess"
 
           '
+    - name: Enumerate Windows Defender exclusion paths via MpCmdRun.exe
+      auto_generated_guid: 8eb337ee-fa17-4da7-890a-0204ea470718
+      description: |
+        Determines whether one or more paths are excluded from Microsoft Defender scanning by invoking
+        the signed Microsoft binary MpCmdRun.exe with a custom scan (-ScanType 3) against a
+        deliberately invalid path containing a pipe character. Because Defender evaluates its
+        exclusion list before attempting to scan, an excluded directory reports that scanning
+        "was skipped".
+
+        This does not require administrative privileges, unlike Get-MpPreference, which returns
+        "N/A: Must be an administrator to view exclusions" for unprivileged users. An adversary can
+        therefore map Defender's blind spots as a low-privileged user in order to select a location in
+        which to stage file-based payloads.
+
+        Upon successful execution, excluded paths return "was skipped".
+
+        Reference: https://blog.fndsec.net/2024/10/04/uncovering-exclusion-paths-in-microsoft-defender-a-security-research-insight/
+      supported_platforms:
+      - windows
+      input_arguments:
+        exclusion_paths:
+          description: Comma-separated directories to check against the Defender exclusion
+            list.
+          type: string
+          default: C:\Temp\ARTExclusionTest
+        mpcmdrun_path:
+          description: Path to the Microsoft Defender command line utility.
+          type: path
+          default: C:\Program Files\Windows Defender\MpCmdRun.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'MpCmdRun.exe must be present on the system.
+
+          '
+        prereq_command: 'if (Test-Path "#{mpcmdrun_path}") {exit 0} else {exit 1}
+
+          '
+        get_prereq_command: |
+          Write-Host (
+            "MpCmdRun.exe is a native Microsoft Defender component and cannot be installed. " +
+            "It is not present at #{mpcmdrun_path}."
+          )
+      executor:
+        command: |
+          "#{exclusion_paths}".Split(",") | ForEach-Object {
+            $path = $_.Trim()
+            if ($path) {
+              & "#{mpcmdrun_path}" -Scan -ScanType 3 -File "$path\|*"
+            }
+          }
+        name: powershell
+        elevation_required: false
   T1526:
     technique:
       type: attack-pattern
