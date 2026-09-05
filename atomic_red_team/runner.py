@@ -11,6 +11,11 @@ import typer
 from pydantic import ValidationError
 
 from atomic_red_team.common import used_guids_file, atomics_path
+from atomic_red_team.display_names import (
+    check_display_names,
+    fix_display_names as fix_display_names_in_place,
+    load_current_technique_names,
+)
 from atomic_red_team.guid import (
     generate_guids_for_yaml,
     get_unique_guid,
@@ -67,6 +72,24 @@ def generate_counter():
             print(f"result={url}", file=fh)
     else:
         print(f"Badge URL: {url}")
+
+
+@app.command()
+def fix_display_names():
+    """Fixes atomic display_names to match ATT&CK names, double-quoted."""
+    official_names = load_current_technique_names()
+    paths = glob.glob(f"{atomics_path}/T*/T*.yaml")
+    mismatches = check_display_names(paths, official_names)
+
+    if len(mismatches) == 0:
+        print("All display_names match current ATT&CK technique names")
+        return
+
+    fix_display_names_in_place(mismatches)
+    print(f"Fixed {len(mismatches)} display_name(s):")
+    for path, (current, expected) in mismatches.items():
+        relative_path = path.replace(f"{atomics_path}/", "")
+        print(f"  {relative_path}: {current!r} -> {expected!r}")
 
 
 @app.command()
