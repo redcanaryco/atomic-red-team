@@ -69,7 +69,7 @@ atomic_tests:
       if (Test-Path "#{sharphound_path}") { exit 0 } else { exit 1 }
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "https://github.com/BloodHoundAD/BloodHound/blob/e062fe73d73c015dccb37fae5089342d009b84b8/Collectors/SharpHound.exe?raw=true" -OutFile "#{sharphound_path}"
+      Invoke-WebRequest "https://github.com/BloodHoundAD/BloodHound/blob/e062fe73d73c015dccb37fae5089342d009b84b8/Collectors/SharpHound.exe?raw=true" -OutFile "#{sharphound_path}" -UseBasicParsing
   executor:
     name: powershell
     elevation_required: false

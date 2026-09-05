@@ -127,7 +127,7 @@ atomic_tests:
       if (Test-Path "#{SharpView}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{SharpView}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest #{SharpView_url} -OutFile "#{SharpView}"
+      Invoke-WebRequest #{SharpView_url} -OutFile "#{SharpView}" -UseBasicParsing
   executor:
     name: powershell
     elevation_required: true

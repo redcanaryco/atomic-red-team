@@ -28,7 +28,7 @@ atomic_tests:
       if (Test-Path "#{filename}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{filename}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1127.001/src/T1127.001.csproj" -OutFile "#{filename}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1127.001/src/T1127.001.csproj" -OutFile "#{filename}" -UseBasicParsing
   executor:
     command: |
       #{msbuildpath}\#{msbuildname} "#{filename}"
@@ -61,7 +61,7 @@ atomic_tests:
       if (Test-Path "#{filename}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{filename}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1127.001/src/vb.xml" -OutFile "#{filename}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1127.001/src/vb.xml" -OutFile "#{filename}" -UseBasicParsing
   executor:
     command: |
       #{msbuildpath}\#{msbuildname} "#{filename}"

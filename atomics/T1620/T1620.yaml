@@ -48,14 +48,14 @@ atomic_tests:
       if (Test-Path "#{script_path}") { exit 0 } else { exit 1 }
     get_prereq_command: |
       New-Item -Type Directory (Split-Path "#{script_path}") -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest -Uri "#{script_url}" -OutFile "#{script_path}"
+      Invoke-WebRequest -Uri "#{script_url}" -OutFile "#{script_path}" -UseBasicParsing
   - description: PE file must be on disk
     prereq_command: |
       if (Test-Path "#{pe_path}") { exit 0 } else { exit 1 }
     get_prereq_command: |
       Remove-Item -Path "$env:TEMP\T1620_pe_downloaded" -Force -ErrorAction SilentlyContinue
       New-Item -Type Directory (Split-Path "#{pe_path}") -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest -Uri "#{pe_url}" -OutFile "#{pe_path}"
+      Invoke-WebRequest -Uri "#{pe_url}" -OutFile "#{pe_path}" -UseBasicParsing
       New-Item -Type File "$env:TEMP\T1620_pe_downloaded" -Force | Out-Null
   executor:
     name: powershell
@@ -89,7 +89,7 @@ atomic_tests:
       if (Test-Path "#{dll_path}") { exit 0 } else { exit 1 }
     get_prereq_command: |
       New-Item -Type Directory (Split-Path "#{dll_path}") -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/atomics/T1620/bin/CommanderDLL.dll?raw=true" -OutFile "#{dll_path}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/atomics/T1620/bin/CommanderDLL.dll?raw=true" -OutFile "#{dll_path}" -UseBasicParsing
       New-Item -Type File $env:TEMP\EAT_dll_downloaded -ErrorAction Ignore -Force | Out-Null
   dependency_executor_name: powershell
   executor:

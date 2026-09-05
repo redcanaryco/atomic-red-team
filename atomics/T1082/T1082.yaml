@@ -143,7 +143,7 @@ atomic_tests:
       if (Test-Path "#{vbscript}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{vbscript}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1082/src/griffon_recon.vbs" -OutFile "#{vbscript}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1082/src/griffon_recon.vbs" -OutFile "#{vbscript}" -UseBasicParsing
   executor:
     command: |
       cscript "#{vbscript}"
@@ -326,7 +326,7 @@ atomic_tests:
       if (test-path "PathToAtomicsFolder\..\ExternalPayloads\AzureStealth.ps1"){exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      invoke-webrequest "https://raw.githubusercontent.com/cyberark/SkyArk/3293ee145e95061a8980dd7b5da0030edc4da5c0/AzureStealth/AzureStealth.ps1" -outfile "PathToAtomicsFolder\..\ExternalPayloads\AzureStealth.ps1"
+      invoke-webrequest "https://raw.githubusercontent.com/cyberark/SkyArk/3293ee145e95061a8980dd7b5da0030edc4da5c0/AzureStealth/AzureStealth.ps1" -outfile "PathToAtomicsFolder\..\ExternalPayloads\AzureStealth.ps1" -UseBasicParsing
   - description: |
       The AzureAD module must be installed.
     prereq_command: |
@@ -473,7 +473,7 @@ atomic_tests:
       if (Test-Path "#{plink_file}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe" -OutFile "#{plink_file}"
+      Invoke-WebRequest "https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe" -OutFile "#{plink_file}" -UseBasicParsing
   executor:
     command: |
        echo "" | "#{plink_file}" "#{vm_host}" -ssh  -l "#{vm_user}" -pw "#{vm_pass}" -m "#{cli_script}"
@@ -515,7 +515,7 @@ atomic_tests:
       if (Test-Path "#{plink_file}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe" -OutFile "#{plink_file}"
+      Invoke-WebRequest "https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe" -OutFile "#{plink_file}" -UseBasicParsing
   executor:
     command: |
        echo "" | "#{plink_file}" "#{vm_host}" -ssh  -l "#{vm_user}" -pw "#{vm_pass}" -m "#{cli_script}"

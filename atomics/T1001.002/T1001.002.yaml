@@ -45,7 +45,7 @@ atomic_tests:
         New-Item -Type Directory (split-path "#{image_file}") -ErrorAction ignore | Out-Null
         Write-Output "Downloading image file..."
         $imageUrl = "https://github.com/raghavsingh7/Pictures/raw/a9617d9fce289909441120a1e0366315c2c5e19d/lime.jpg"
-        Invoke-WebRequest -Uri $imageUrl -OutFile "#{image_file}"
+        Invoke-WebRequest -Uri $imageUrl -OutFile "#{image_file}" -UseBasicParsing
     - description: |
         File to hide within tarz file must exist
       prereq_command: |
@@ -111,7 +111,7 @@ atomic_tests:
         New-Item -Type Directory (split-path "#{image_file}") -ErrorAction Ignore | Out-Null
         Write-Output "Downloading image file..."
         $imageUrl = "https://github.com/raghavsingh7/Pictures/raw/f73e7686cdd848ed06e63af07f6f1a5e72de6320/evil_kitten.jpg"
-        Invoke-WebRequest -Uri $imageUrl -OutFile #{image_file}
+        Invoke-WebRequest -Uri $imageUrl -OutFile #{image_file} -UseBasicParsing
     - description: |
         Extract-Invoke-PSImage must exist
       prereq_command: |
@@ -122,7 +122,7 @@ atomic_tests:
         New-Item -Path "PathToAtomicsFolder\ExternalPayloads\" -ItemType Directory -Force | Out-Null
         Write-Output "Downloading Extract-Invoke-PSImage.ps1 script..."
         $scriptUrl = "https://github.com/raghavsingh7/Extract-Invoke-PSImage/raw/7d8c165d2f9bfe9c3965181079b7c82e03168ce1/Extract-Invoke-PSImage.ps1"
-        Invoke-WebRequest -Uri $scriptUrl -OutFile #{psimage_script}
+        Invoke-WebRequest -Uri $scriptUrl -OutFile #{psimage_script} -UseBasicParsing
     executor:
       name: powershell
       elevation_required: true

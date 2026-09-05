@@ -53,7 +53,7 @@ atomic_tests:
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       New-Item -ItemType Directory -Force -Path "#{ncat_path}" | Out-Null
       $parentpath = Split-Path (Split-Path "#{ncat_exe}"); $zippath = "$parentpath\nmap.zip"
-      Invoke-WebRequest  "https://nmap.org/dist/nmap-7.80-win32.zip" -OutFile "$zippath"
+      Invoke-WebRequest  "https://nmap.org/dist/nmap-7.80-win32.zip" -OutFile "$zippath" -UseBasicParsing
         Expand-Archive $zippath $parentpath -Force
         $unzipPath = Join-Path $parentPath "nmap-7.80"
       if( $null -eq (Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | ?{$_.DisplayName -like "Microsoft Visual C++*"}) ) {

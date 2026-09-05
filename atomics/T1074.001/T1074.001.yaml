@@ -15,7 +15,7 @@ atomic_tests:
       default: $env:TEMP\discovery.bat        
   executor:
     command: |
-      Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074.001/src/Discovery.bat" -OutFile #{output_file}
+      Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074.001/src/Discovery.bat" -OutFile #{output_file} -UseBasicParsing
     cleanup_command: |
       Remove-Item -Force #{output_file} -ErrorAction Ignore
     name: powershell

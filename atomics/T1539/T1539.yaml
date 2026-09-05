@@ -26,7 +26,7 @@ atomic_tests:
       if (Test-Path "#{sqlite3_path}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "https://www.sqlite.org/2022/sqlite-tools-win32-x86-3380200.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\sqlite.zip"
+      Invoke-WebRequest "https://www.sqlite.org/2022/sqlite-tools-win32-x86-3380200.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\sqlite.zip" -UseBasicParsing
       Expand-Archive -path "PathToAtomicsFolder\..\ExternalPayloads\sqlite.zip" -destinationpath "PathToAtomicsFolder\..\ExternalPayloads\" -force
   executor:
     command: |
@@ -67,7 +67,7 @@ atomic_tests:
       if (Test-Path "#{sqlite3_path}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "https://www.sqlite.org/2022/sqlite-tools-win32-x86-3380200.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\sqlite.zip"
+      Invoke-WebRequest "https://www.sqlite.org/2022/sqlite-tools-win32-x86-3380200.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\sqlite.zip" -UseBasicParsing
       Expand-Archive -path "PathToAtomicsFolder\..\ExternalPayloads\sqlite.zip" -destinationpath "PathToAtomicsFolder\..\ExternalPayloads\" -force
   executor:
     command: |

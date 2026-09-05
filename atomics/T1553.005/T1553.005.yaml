@@ -20,7 +20,7 @@ atomic_tests:
       if (Test-Path "#{path_of_iso}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{path_of_iso}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1553.005/bin/T1553.005.iso -OutFile "#{path_of_iso}"
+      Invoke-WebRequest https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1553.005/bin/T1553.005.iso -OutFile "#{path_of_iso}" -UseBasicParsing
   executor:
     command: |
       Mount-DiskImage -ImagePath "#{path_of_iso}"
@@ -48,7 +48,7 @@ atomic_tests:
       if (Test-Path "#{path_of_iso}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{path_of_iso}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1553.005/bin/FeelTheBurn.iso -OutFile "#{path_of_iso}"
+      Invoke-WebRequest https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1553.005/bin/FeelTheBurn.iso -OutFile "#{path_of_iso}" -UseBasicParsing
   executor:
     command: |
       Mount-DiskImage -ImagePath "#{path_of_iso}" -StorageType ISO -Access ReadOnly
@@ -82,7 +82,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{file_path}) { EXIT 0 } else { EXIT 1 }
     get_prereq_command: |
-      Invoke-WebRequest #{file_to_download} -OutFile #{file_path}
+      Invoke-WebRequest #{file_to_download} -OutFile #{file_path} -UseBasicParsing
       Set-Content -Path #{file_path} -Stream Zone.Identifier -Value '[ZoneTransfer]','ZoneId=3'
   executor:
     command: |
@@ -109,7 +109,7 @@ atomic_tests:
       if (Test-Path "#{path_of_iso}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{path_of_iso}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1553.005/bin/AllTheThings.iso -OutFile "#{path_of_iso}"
+      Invoke-WebRequest https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1553.005/bin/AllTheThings.iso -OutFile "#{path_of_iso}" -UseBasicParsing
   executor:
     command: |
       Mount-DiskImage -ImagePath "#{path_of_iso}" -StorageType ISO -Access ReadOnly

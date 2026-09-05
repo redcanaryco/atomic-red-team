@@ -26,7 +26,7 @@ atomic_tests:
       if (Test-Path "#{input_source_code}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{input_source_code}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1010/src/T1010.cs -OutFile "#{input_source_code}"
+      Invoke-WebRequest https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1010/src/T1010.cs -OutFile "#{input_source_code}" -UseBasicParsing
   executor:
     command: |
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe -out:#{output_file_name} "#{input_source_code}"

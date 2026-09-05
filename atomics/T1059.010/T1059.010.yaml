@@ -21,7 +21,7 @@ atomic_tests:
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       $AutoHotKeyURL = "https://www.autohotkey.com/download/ahk.zip"
       $InstallerPath = "$PathToAtomicsFolder\..\ExternalPayloads"
-      Invoke-WebRequest -Uri $AutoHotKeyURL -OutFile $InstallerPath\ahk.zip
+      Invoke-WebRequest -Uri $AutoHotKeyURL -OutFile $InstallerPath\ahk.zip -UseBasicParsing
       Expand-Archive -Path $InstallerPath -Force;
   input_arguments:
     script_path:

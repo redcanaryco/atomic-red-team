@@ -77,7 +77,7 @@ atomic_tests:
   executor:
     command: |
       $content = Get-Content #{input_file}
-      Invoke-WebRequest -Uri #{ip_address} -Method POST -Body $content
+      Invoke-WebRequest -Uri #{ip_address} -Method POST -Body $content -UseBasicParsing
     name: powershell
   input_arguments:
     input_file:
@@ -195,7 +195,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path C:\Users\Public\Downloads\rclone-current-windows-amd64.zip) {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest -Uri "https://downloads.rclone.org/rclone-current-windows-amd64.zip" -OutFile "C:\Users\Public\Downloads\rclone-current-windows-amd64.zip"
+      Invoke-WebRequest -Uri "https://downloads.rclone.org/rclone-current-windows-amd64.zip" -OutFile "C:\Users\Public\Downloads\rclone-current-windows-amd64.zip" -UseBasicParsing
       Expand-Archive C:\Users\Public\Downloads\rclone-current-windows-amd64.zip -DestinationPath C:\Users\Public\Downloads\
   executor:
     command: |-

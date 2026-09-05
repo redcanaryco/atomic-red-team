@@ -28,7 +28,7 @@ atomic_tests:
       if (Test-Path "#{dll_path}\#{dll_name}") {exit 0} else {exit 1}
     get_prereq_command: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      Invoke-WebRequest "https://github.com/redcanaryco/atomicredteam/atomics/T1556.002/bin/AtomicRedTeamPWFilter.dll" -OutFile "#{dll_path}\#{dll_name}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomicredteam/atomics/T1556.002/bin/AtomicRedTeamPWFilter.dll" -OutFile "#{dll_path}\#{dll_name}" -UseBasicParsing
   executor:
     command: |
       reg.exe export HKLM\SYSTEM\CurrentControlSet\Control\Lsa\ "PathToAtomicsFolder\T1556.002\lsa_backup.reg"
@@ -70,7 +70,7 @@ atomic_tests:
       if (Test-Path "#{dll_path}\#{dll_name}") {exit 0} else {exit 1}
     get_prereq_command: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      Invoke-WebRequest "https://github.com/redcanaryco/atomicredteam/atomics/T1556.002/bin/AtomicRedTeamPWFilter.dll" -OutFile "#{dll_path}\#{dll_name}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomicredteam/atomics/T1556.002/bin/AtomicRedTeamPWFilter.dll" -OutFile "#{dll_path}\#{dll_name}" -UseBasicParsing
   executor:
     command: |
       reg.exe export HKLM\SYSTEM\CurrentControlSet\Control\Lsa\ "PathToAtomicsFolder\T1556.002\lsa_backup.reg"

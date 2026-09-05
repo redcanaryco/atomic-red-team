@@ -35,7 +35,7 @@ atomic_tests:
         if (Test-Path "#{mimikatz_path}") {exit 0} else {exit 1}
       get_prereq_command: |
         New-Item -Type Directory "#{directory_path}" -ErrorAction Ignore -Force | Out-Null
-        Invoke-WebRequest -Uri "#{mimikatz_url}" -OutFile "#{file_path}"
+        Invoke-WebRequest -Uri "#{mimikatz_url}" -OutFile "#{file_path}" -UseBasicParsing
         Expand-Archive -LiteralPath "#{file_path}" -DestinationPath "#{directory_path}" -Force
   executor:
     command: |

