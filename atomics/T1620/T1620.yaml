@@ -12,6 +12,7 @@ atomic_tests:
       mimiload -consoleoutput -noninteractive
     name: powershell
 - name: Reflective PE Injection via PowerSploit
+  auto_generated_guid: 114c2b95-d992-4c03-8c38-fc58420a3eb5
   description: |
     Uses PowerSploit's Invoke-ReflectivePEInjection to reflectively load a PE file into the
     current PowerShell process.
@@ -69,6 +70,7 @@ atomic_tests:
         Remove-Item "$env:TEMP\T1620_pe_downloaded" -Force
       }
 - name: Turla Mosquito (CommanderDLL.dll) Dynamic Export Address Table (EAT) Patching
+  auto_generated_guid: 7c3e0b89-09e6-4f3c-a1e8-1c1dfa9288ce
   description: |
     Emulates the behavior of Turla's Mosquito main backdoor. Loads a benign DLL that has no export for "StartRoutine" on disk. During
     DllMain, the DLL constructs an IMAGE_EXPORT_DIRECTORY in memory at the tail of its mapped image (past .reloc), then patches its own PE header's

@@ -2,6 +2,7 @@ attack_technique: T1686.003
 display_name: 'Disable or Modify System Firewall: Windows Host Firewall'
 atomic_tests:
 - name: Enable Firewall Rule Group via COM Object (HNetCfg.FwPolicy2)
+  auto_generated_guid: 0ef45922-1cd8-4211-8595-3cb3bd87f5d8
   description: |
     Uses the HNetCfg.FwPolicy2 COM object to enable the File and Printer Sharing and
     Network Discovery firewall rule groups on the Private profile. This mirrors behavior
@@ -43,6 +44,7 @@ atomic_tests:
           Remove-Item $backupFile
       }
 - name: Set All Network Profiles to Private via Registry
+  auto_generated_guid: f4e1a3bf-8b50-4967-a225-b6c383019e07
   description: |
     Modifies the Category value under each network profile GUID in
     HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkList\Profiles to 0 (Private).

@@ -127,6 +127,7 @@ atomic_tests:
       "PathToAtomicsFolder\..\ExternalPayloads\build\namedpipes_executor.exe" --pipe 5
     name: command_prompt
 - name: Create Named Pipe
+  auto_generated_guid: 17521690-2183-460f-a182-5dfd6f9f0a7f
   description: |
     Creates a named pipe using PowerShell. Named pipes are a common inter-process communication mechanism
     that adversaries use to facilitate data exchange between processes or as a command-and-control channel.
@@ -145,6 +146,7 @@ atomic_tests:
       Start-Sleep -Seconds 30
       $pipe.Dispose()
 - name: Named Pipe Integrity Reduction for Turla's RPC backdoor
+  auto_generated_guid: 7a8f8ae9-6b1d-4f7b-88e7-9ea01234eee5
   description: |
     Emulates the server-side behavior of Turla's RPC backdoors. First checks to see if the named pipe atctl is in the
     registry key for NullSessionPipes, and if so, modifies the security descriptor of the pipe to allow untrusted/anonymous

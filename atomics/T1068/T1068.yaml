@@ -2,6 +2,7 @@ attack_technique: T1068
 display_name: 'Exploitation for Privilege Escalation'
 atomic_tests:
 - name: Scattered Spider BYOVD (CVE-2015-2291 for Intel Ethernet Diagnostics Driver)
+  auto_generated_guid: 1c9ef3e6-bde6-402c-83bc-d89ea8bfd372
   description: |
     Observed TTP of threat actor Scattered Spider, where a an older, legitimate, cryptographically signed Intel driver with a known vulnerability is downloaded and run to escalate privileges
   supported_platforms:
@@ -42,6 +43,7 @@ atomic_tests:
       sc.exe delete iqvw64e.sys
       Remove-Item -Recurse "#{driver_path}" -ErrorAction Ignore
 - name: Turla Snake Malware Privilege Escalation Through VM Driver
+  auto_generated_guid: 97f621a5-851c-484f-b784-4a9c475006ec
   description: |
     Observed TTP of threat actor Turla in their malware Snake, where a an older, legitimate, cryptographically signed
     VirtualBox driver with a known vulnerability is downloaded and run to escalate privileges

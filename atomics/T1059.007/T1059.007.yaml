@@ -47,6 +47,7 @@ atomic_tests:
       wscript "#{jscript}"
     name: command_prompt
 - name: Turla Kopiluwak Windows Enumeration
+  auto_generated_guid: e65e6772-bfd3-4f25-934b-861d5caa34db
   description: |
     Executes a JScript file via wscript.exe that runs a series of reconnaissance commands (net use, ipconfig,
     systeminfo, whoami, tasklist, netstat, arp, dir, etc.) and appends all output to a single staging file
@@ -76,6 +77,7 @@ atomic_tests:
     cleanup_command: |
       del c:\windows\temp\result2.dat >nul 2>&1
 - name: Turla KopiLuwak RC4 Decryption Stager
+  auto_generated_guid: 02428cbe-c230-4353-b31d-61c9d328b153
   description: |
     Emulates KopiLuwak's next-stage JavaScript loader named Chkdsk.js. The script accepts an
     RC4 decryption key via the -scan parameter and decrypts hardcoded ciphertext bytes, which are then run as script.
@@ -104,6 +106,7 @@ atomic_tests:
     command: |
       wscript.exe /b "#{chkdsk_path}" -scan Kdw6gG7cpOSZsBeH
 - name: Turla KopiLuwak Registry JavaScript Payload Execution
+  auto_generated_guid: 9be739ec-b1ba-4950-94d0-e62444b23645
   description: |
     Emulates KopiLuwak's technique of storing a JavaScript payload as REG_BINARY data in the Windows registry
     and executing it. The script uses WMI StdRegProv to read binary data from

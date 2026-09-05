@@ -264,6 +264,7 @@ atomic_tests:
       find #{file_path}/.oci/sessions -name "token" -type f 2>/dev/null
     name: sh
 - name: Access Travis CI Config File
+  auto_generated_guid: 5312c7c3-775b-4437-a8b0-914b30cfebd4
   description: |
     Find Travis CI configuration files (.travis.yml), which may contain credentials, secrets, or sensitive environment variables.
   supported_platforms:
@@ -289,6 +290,7 @@ atomic_tests:
       rm -f /tmp/creds.txt
     name: sh
 - name: Access Gitlab CI Config File
+  auto_generated_guid: 98618067-a2c7-4d4b-9c89-403a90f43656
   description: |
     Find GitLab CI configuration files (.gitlab-ci.yml), which may contain credentials, secrets, or sensitive environment variables.
   supported_platforms:
@@ -314,6 +316,7 @@ atomic_tests:
       rm -f /tmp/creds.txt
     name: sh
 - name: Find Terraform credential files
+  auto_generated_guid: c3372ae9-b9bf-427a-b330-cb04fecb9c1d
   description: |
     Find Terraform credential files which may contain sensitive values such as API keys, passwords, and infrastructure secrets. Searches for both terraform.tfvars and terraform.tfstate.
   supported_platforms:
@@ -339,6 +342,7 @@ atomic_tests:
       rm -f /tmp/creds.txt
     name: sh
 - name: Find Docker credentials
+  auto_generated_guid: 5a668739-3a2f-4265-895f-c0e1e0b09eaa
   description: |
     Find local Docker credentials from file, defaults to using / as the look path.
   supported_platforms:
@@ -364,6 +368,7 @@ atomic_tests:
       rm -f /tmp/creds.txt
     name: sh
 - name: Find HashiCorp Vault token files
+  auto_generated_guid: 2951c09f-b4f9-4248-ba75-6373709ebd55
   description: |
     Find HashiCorp Vault token files (~/.vault-token), which contain plaintext Vault tokens that grant access to secrets stored in Vault.
   supported_platforms:
@@ -389,6 +394,7 @@ atomic_tests:
       rm -f /tmp/creds.txt
     name: sh
 - name: Access Drone CI Config File
+  auto_generated_guid: a11f22fb-a037-4cc2-bcfc-a133b287aa1b
   description: |
     Find Drone CI configuration files (.drone.yml), which may contain credentials, secrets, or sensitive environment variables used in Drone CI/CD pipelines.
   supported_platforms:
@@ -414,6 +420,7 @@ atomic_tests:
       rm -f /tmp/creds.txt
     name: sh
 - name: Dump GitHub Actions Runner Environment Variables from procfs
+  auto_generated_guid: 51cde30c-0311-449a-8e15-542b59f95939
   description: |
     Locates GitHub Actions runner processes (Runner.Worker, Runner.Listener, runsvc, run.sh)
     and reads their environment variables from /proc/<pid>/environ, filtering for keys
@@ -429,6 +436,7 @@ atomic_tests:
     command: |
       for pid in $(pgrep -f 'Runner.Worker|Runner.Listener|runsvc|run.sh' 2>/dev/null); do tr '\0' '\n' < /proc/$pid/environ 2>/dev/null | grep -iE 'env|ssh'; done
 - name: Search for Git Credential Files
+  auto_generated_guid: c8367142-cbb0-47a4-96c7-ff9969fd64ea
   description: |
     Searches the specified directory for a git credential file, which
     may contain plaintext credentials, access tokens, or credential helper
@@ -456,6 +464,7 @@ atomic_tests:
       rm -f /tmp/creds.txt
     name: sh
 - name: Find .env Files Containing Application Credentials
+  auto_generated_guid: bcf8e58a-1cb7-4988-9227-3d3c70751811
   description: |
     Searches common web application and service directories for .env files
     (.env, .env.local, .env.production, .env.development, .env.staging) that may
@@ -486,6 +495,7 @@ atomic_tests:
     cleanup_command: |
       rm -f /tmp/creds.txt
 - name: Find database credential files
+  auto_generated_guid: e62bccc4-0200-47e9-b40a-4ea5328495b3
   description: |
     Find user-level database credential files. Examples include ~/.pgpass, ~/.my.cnf, and ~/.mongorc.js.
   supported_platforms:
@@ -513,6 +523,7 @@ atomic_tests:
       rm -f /tmp/creds.txt
     name: sh
 - name: Find system database configuration files
+  auto_generated_guid: d1665562-c389-49fc-9cbe-92236816a105
   description: |
     Find system-level database configuration files (/etc/mysql/my.cnf, /etc/redis/redis.conf) which may contain credentials. Requires root privileges.
   supported_platforms:
@@ -531,6 +542,7 @@ atomic_tests:
     elevation_required: true
     name: sh
 - name: Find npm registry credential files
+  auto_generated_guid: 2a24627b-061b-43e6-bece-a5b0638841dd
   description: |
     Find .npmrc files, which may contain plaintext npm registry authentication tokens.
   supported_platforms:
@@ -556,6 +568,7 @@ atomic_tests:
       rm -f /tmp/creds.txt
     name: sh
 - name: Access Jenkinsfile
+  auto_generated_guid: 18318786-e0c0-4bdf-979f-f022e6f5f2ef
   description: |
     Find Jenkinsfiles, which may contain credentials, secrets, or sensitive environment variables used in Jenkins CI/CD pipelines.
   supported_platforms:
@@ -581,6 +594,7 @@ atomic_tests:
       rm -f /tmp/creds.txt
     name: sh
 - name: Find Kubernetes user configuration files
+  auto_generated_guid: 14575d1f-16b3-4a0b-8986-540e42e6a6cc
   description: |
     Find Kubernetes user configuration files (~/.kube/config), which contain API server addresses, client certificates, and bearer tokens that grant access to the Kubernetes cluster. Defaults to using / as the search path.
   supported_platforms:
@@ -602,6 +616,7 @@ atomic_tests:
       rm -f /tmp/creds.txt
     name: sh
 - name: Find Kubernetes cluster configuration files
+  auto_generated_guid: af664fc0-0772-4866-a661-d49a22a13487
   description: |
     Find Kubernetes configuration files requiring root privileges, including the root user kubeconfig (~/.kube/config) and cluster-level configuration files in /etc/kubernetes/. These files contain API server addresses, client certificates, and bearer tokens that grant access to the Kubernetes cluster.
   supported_platforms:

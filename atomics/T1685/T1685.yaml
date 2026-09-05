@@ -1738,6 +1738,7 @@ atomic_tests:
     cleanup_command: |-
       Get-NetQosPolicy -PolicyStore ActiveStore | Where-Object { $_.Name -like "*#{net_qos_policy_name}*" } | Remove-NetQosPolicy -Confirm:$false
 - name: AMSI Bypass - Patching AmsiScanBuffer
+  auto_generated_guid: ff543dd9-4537-458c-b297-c85ae1939e34
   description: |
     Patches AmsiScanBuffer in memory using P/Invoke to resolve the function address via
     GetModuleHandle/GetProcAddress, then overwrites the prologue with instructions that
