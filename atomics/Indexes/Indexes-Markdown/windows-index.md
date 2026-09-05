@@ -678,7 +678,7 @@
   - Atomic Test #10: Application uninstall using WMIC [windows]
   - Atomic Test #11: Impacket wmiexec.py [windows]
   - Atomic Test #12: AveMaria/Warzone program.bat WMIC Process Creation [windows]
-- [T1129 Server Software Component](../../T1129/T1129.md)
+- [T1129 Shared Modules](../../T1129/T1129.md)
   - Atomic Test #1: ESXi - Install a custom VIB on an ESXi host [windows]
 - T1574.007 Path Interception by PATH Environment Variable [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1059.007 Command and Scripting Interpreter: JavaScript](../../T1059.007/T1059.007.md)
