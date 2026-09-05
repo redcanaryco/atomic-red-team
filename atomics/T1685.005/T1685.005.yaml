@@ -59,3 +59,14 @@ atomic_tests:
       Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1685.005\src\T1685.005-macrocode.txt" -officeProduct "Word" -sub "ClearLogs"
     name: powershell
     elevation_required: true
+- name: BlackCat Ransomware Full Log Clear
+  auto_generated_guid: 83dac837-5685-45ed-b10b-9f047572100b
+  description: |
+    Emulates the iterative Windows event log clearing behavior of BlackCat ransomware using wevtutil.exe
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      for /F "tokens=*" %i in ('wevtutil.exe el') DO wevtutil.exe cl "%i"
+    name: command_prompt
+    elevation_required: true
