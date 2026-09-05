@@ -434,6 +434,8 @@
   - Atomic Test #5: Microsoft Dev tunnels (Linux/macOS) [linux, macos]
   - Atomic Test #6: VSCode tunnels (Linux/macOS) [linux, macos]
   - Atomic Test #7: Cloudflare tunnels (Linux/macOS) [linux, macos]
+  - Atomic Test #8: Install and Run frpc Reverse Proxy Client [linux]
+  - Atomic Test #9: Install and Run gost Tunnel Proxy [linux]
 - T1071.003 Mail Protocols [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1092 Communication Through Removable Media [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1090.002 External Proxy [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -563,7 +565,7 @@
 - T1685.003 Modify or Spoof Tool UI [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1685.001 Disable or Modify Tools: Disable or Modify Windows Event Log [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1484.002 Domain Trust Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1686.003 Windows Host Firewall [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1686.003 Disable or Modify System Firewall: Windows Host Firewall [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1689 Downgrade Attack](../../T1689/T1689.md)
   - Atomic Test #1: ESXi - Change VIB acceptance level to CommunitySupported via PowerCLI [linux]
 - T1553.002 Code Signing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -684,6 +686,9 @@
   - Atomic Test #6: Copy Private SSH Keys with rsync (freebsd) [linux]
   - Atomic Test #7: Copy the users GnuPG directory with rsync [macos, linux]
   - Atomic Test #8: Copy the users GnuPG directory with rsync (freebsd) [linux]
+  - Atomic Test #15: Enumerate WireGuard interface credentials with wg showconf [linux]
+  - Atomic Test #16: Find WireGuard configuration files [linux]
+  - Atomic Test #17: Find TLS private key files [linux, macos]
 - T1557.001 Adversary-in-the-Middle: LLMNR/NBT-NS Poisoning and SMB Relay [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1003.001 OS Credential Dumping: LSASS Memory [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1110.003 Brute Force: Password Spraying [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -694,6 +699,8 @@
 - [T1552.003 Unsecured Credentials: Bash History](../../T1552.003/T1552.003.md)
   - Atomic Test #1: Search Through Bash History [linux, macos]
   - Atomic Test #2: Search Through sh History [linux]
+  - Atomic Test #3: Search Through Zsh History [linux, macos]
+  - Atomic Test #4: Search Through SQL History [linux]
 - [T1552.001 Unsecured Credentials: Credentials In Files](../../T1552.001/T1552.001.md)
   - Atomic Test #1: Find AWS credentials [macos, linux]
   - Atomic Test #3: Extract passwords with grep [linux, macos]
@@ -701,6 +708,21 @@
   - Atomic Test #15: Find Azure credentials [macos, linux]
   - Atomic Test #16: Find GCP credentials [macos, linux]
   - Atomic Test #17: Find OCI credentials [macos, linux]
+  - Atomic Test #18: Access Travis CI Config File [linux, macos]
+  - Atomic Test #19: Access Gitlab CI Config File [linux, macos]
+  - Atomic Test #20: Find Terraform credential files [linux, macos]
+  - Atomic Test #21: Find Docker credentials [macos, linux]
+  - Atomic Test #22: Find HashiCorp Vault token files [linux, macos]
+  - Atomic Test #23: Access Drone CI Config File [linux, macos]
+  - Atomic Test #24: Dump GitHub Actions Runner Environment Variables from procfs [linux]
+  - Atomic Test #25: Search for Git Credential Files [linux, macos]
+  - Atomic Test #26: Find .env Files Containing Application Credentials [linux, macos]
+  - Atomic Test #27: Find database credential files [linux, macos]
+  - Atomic Test #28: Find system database configuration files [linux]
+  - Atomic Test #29: Find npm registry credential files [linux, macos]
+  - Atomic Test #30: Access Jenkinsfile [linux, macos]
+  - Atomic Test #31: Find Kubernetes user configuration files [linux, macos]
+  - Atomic Test #32: Find Kubernetes cluster configuration files [linux]
 - T1606.001 Web Cookies [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1552.006 Unsecured Credentials: Group Policy Preferences [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1556.008 Network Provider DLL [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -830,6 +852,7 @@
   - Atomic Test #13: Remote System Discovery - ip route [linux]
   - Atomic Test #14: Remote System Discovery - netstat [linux]
   - Atomic Test #15: Remote System Discovery - ip tcp_metrics [linux]
+  - Atomic Test #23: Enumerate SSH Configuration [linux, macos]
 - [T1046 Network Service Discovery](../../T1046/T1046.md)
   - Atomic Test #1: Port Scan [linux, macos]
   - Atomic Test #2: Port Scan Nmap [linux, macos]
