@@ -1,0 +1,119 @@
+attack_technique: T1578.002
+display_name: Create Cloud Instance
+atomic_tests:
+  - name: Create EC2 Instance from Launch Template
+    auto_generated_guid: 09186a16-e7f1-4d26-9524-6999a95a2ea5
+    description: |
+      Creating and launching an instance using RunInstances, with a launch template.
+      This launch template will contain all the necessary parameters for the instance.
+
+      Reference for the launch templates
+      https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/create-launch-template.html
+      https://docs.aws.amazon.com/cli/latest/reference/ec2/run-instances.html#examples
+    supported_platforms:
+      - iaas:aws
+      - linux
+    dependency_executor_name: sh
+    dependencies:
+      - description: AWS CLI must be installed
+        prereq_command: |
+          if command -v aws > /dev/null 2>&1; then exit 0; else exit 1; fi
+        get_prereq_command: |
+          echo "Install AWS CLI: https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
+    input_arguments:
+      template_name:
+        description: Full path to the template.json file
+        type: string
+        default: PathToAtomicsFolder/T1578.002/src/template.json
+      version:
+        description: Launch template version description
+        type: string
+        default: "1"
+      ami_id:
+        description: AMI ID to use
+        type: string
+        default: ami-12345678
+      instance_type:
+        description: EC2 instance type
+        type: string
+        default: tg4.nano
+      instance_id:
+        description: EC2 instance ID to terminate
+        type: string
+        default: i-1234567890abcdef0
+      aws_region:
+        description: AWS region
+        type: string
+        default: us-east-1
+      profile_name:
+        description: AWS profile name
+        type: string
+        default: default
+    executor:
+      name: sh
+      elevation_required: false
+      command: |
+        aws ec2 create-launch-template \
+          --launch-template-name #{template_name} \
+          --version-description #{version} \
+          --tag-specifications 'ResourceType=launch-template,Tags=[{Key=purpose,Value=production}]' \
+          --launch-template-data file://template.json
+
+        aws ec2 run-instances --image-id #{ami_id} --instance-type #{instance_type} \
+          --region #{aws_region} --profile #{profile_name}
+      cleanup_command: |
+        aws ec2 terminate-instances  --instance-ids #{instance_id} \
+          --region  #{aws_region} --profile #{profile_name}
+
+  - name: Create EC2 Instance with user data
+    auto_generated_guid: e0c5c285-8903-4927-a9f8-a7c37eac37e2
+    description: |
+      Creates an EC2 instance with a keypair while passing user data in a script.
+      The script runs at launch.
+    supported_platforms:
+      - iaas:aws
+      - linux
+    dependency_executor_name: sh
+    dependencies:
+      - description: AWS CLI must be installed
+        prereq_command: |-
+          # Description: AWS CLI must be installed.
+          if command -v aws > /dev/null 2>&1; then exit 0; else exit 1; fi
+        get_prereq_command: |
+          echo "Install AWS CLI: https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
+    input_arguments:
+      ami_id:
+        description: AMI ID to use
+        type: string
+        default: ami-12345678
+      instance_type:
+        description: EC2 instance type
+        type: string
+        default: tg4.nano
+      instance_id:
+        description: EC2 instance ID to terminate
+        type: string
+        default: i-1234567890abcdef0
+      aws_region:
+        description: AWS region
+        type: string
+        default: us-west-2
+      profile_name:
+        description: AWS profile name
+        type: string
+        default: default
+    executor:
+      name: sh
+      elevation_required: false
+      command: |-
+        printf '%s\n' '#!/bin/bash' 'date -u > /var/tmp/userdata-ran.txt' > my_script.txt
+        aws ec2 run-instances \
+          --image-id #{ami_id} \
+          --instance-type #{instance_type} \
+          --count 1 \
+          --subnet-id subnet-XXXXXXXXXXXXXXX \
+          --key-name MyKeyPair \
+          --user-data file://my_script.txt
+      cleanup_command: |
+        aws ec2 terminate-instances --instance-ids #{instance_id} \
+          --region  #{aws_region} --profile #{profile_name}

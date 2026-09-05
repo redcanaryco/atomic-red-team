@@ -10,11 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout repo
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Install poetry
         run: pipx install poetry
       - name: setup python3.11
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         id: setup-python
         with:
           python-version: "3.11.2"
@@ -33,16 +33,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout repo
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Install poetry
         run: pipx install poetry
       - name: setup python3.11
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         id: setup-python
         with:
           python-version: "3.11.2"
           cache: "poetry"
-      - uses: actions/github-script@v8
+      - uses: actions/github-script@v9
         id: get_pr_number
         with:
           script: |
@@ -69,7 +69,7 @@ jobs:
         env:
           PYTHONPATH: ${{ github.workspace }}
 
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v7
         with:
           name: labels.json
           path: atomic_red_team/pr/

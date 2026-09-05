@@ -246,3 +246,21 @@ atomic_tests:
     cleanup_command: |
       taskkill /f /im calculator.exe >nul 2>nul
     name: command_prompt
+- name: Obfuscated PowerShell Command via Character Array
+  auto_generated_guid: 6683baf0-6e77-4f58-b114-814184ea8150
+  description: |
+    Spawns a child PowerShell process using character array obfuscation. 
+    Both the PowerShell binary name and executed command are constructed 
+    from ASCII values at runtime to evade string-based detection.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      $ps = [char[]](112,111,119,101,114,115,104,101,108,108)
+      $cmd = [char[]](83,116,97,114,116,45,80,114,111,99,101,115,115,32,99,97,108,99,46,101,120,101)
+      & (-join $ps) "-Command" (-join $cmd)
+    cleanup_command: |
+      taskkill /f /im calculator.exe >nul 2>nul
+      taskkill /f /im CalculatorApp.exe >nul 2>nul
+    name: powershell
+

