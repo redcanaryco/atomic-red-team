@@ -74,7 +74,10 @@ def expected_display_name(
 def check_display_names(
     paths: list, official_names: Dict[str, str]
 ) -> Dict[str, Tuple[str, str]]:
-    """Finds atomic files whose display_name doesn't match current ATT&CK naming.
+    """Finds atomic files whose display_name needs a rewrite.
+
+    A file needs a rewrite if its display_name text doesn't match current ATT&CK
+    naming, or if it isn't already wrapped in double quotes.
 
     Args:
         paths: Atomic YAML file paths to check, e.g. from glob("atomics/T*/T*.yaml").
@@ -95,74 +98,33 @@ def check_display_names(
         technique_id = technique_id_match.group(1)
         if technique_id not in official_names:
             continue
+        current_raw = _display_name_pattern.search(text).group(2).strip()
         current = _parse_display_name(text)
         expected = expected_display_name(technique_id, official_names)
-        if current != expected:
+        already_double_quoted = current_raw == f'"{current}"'
+        if current != expected or not already_double_quoted:
             mismatches[path] = (current, expected)
     return mismatches
-
-
-def _write_display_name(path: str, value: str) -> None:
-    """Rewrites a file's display_name field to `value`, double-quoted, in place.
-
-    Preserves the file's original line endings.
-
-    Args:
-        path: Path to the atomic YAML file to rewrite.
-        value: The new (unquoted) display_name text to write.
-    """
-    with open(path, "rb") as f:
-        raw = f.read()
-    uses_crlf = b"\r\n" in raw
-    text = raw.decode("utf-8")
-
-    match = _display_name_pattern.search(text)
-    replacement = match.group(1) + f'"{value}"'
-    text = text[: match.start()] + replacement + text[match.end() :]
-
-    if uses_crlf:
-        text = text.replace("\r\n", "\n").replace("\n", "\r\n")
-    with open(path, "w", encoding="utf-8", newline="") as f:
-        f.write(text)
 
 
 def fix_display_names(mismatches: Dict[str, Tuple[str, str]]) -> None:
     """Rewrites each file's display_name field to its expected value in place.
 
     The new value is always wrapped in double quotes, regardless of the file's
-    original quoting style. Preserves the file's original line endings.
+    original quoting style. Line endings are normalized to LF.
 
     Args:
         mismatches: Mapping of file path to (current_display_name,
             expected_display_name), as returned by `check_display_names`.
     """
     for path, (_current, expected) in mismatches.items():
-        _write_display_name(path, expected)
+        with open(path, "rb") as f:
+            raw = f.read()
+        text = raw.decode("utf-8").replace("\r\n", "\n")
 
-
-def normalize_display_name_quoting(paths: list) -> list:
-    """Rewrites each file's display_name to use double quotes, keeping its text as-is.
-
-    Files whose display_name is already double-quoted are left untouched.
-
-    Args:
-        paths: Atomic YAML file paths to normalize, e.g. from
-            glob("atomics/T*/T*.yaml").
-
-    Returns:
-        The list of paths that were rewritten.
-    """
-    changed = []
-    for path in paths:
-        with open(path, "r", encoding="utf-8") as f:
-            text = f.read()
         match = _display_name_pattern.search(text)
-        if not match:
-            continue
-        raw = match.group(2).strip()
-        if raw.startswith('"') and raw.endswith('"'):
-            continue
-        value = _parse_display_name(text)
-        _write_display_name(path, value)
-        changed.append(path)
-    return changed
+        replacement = match.group(1) + f'"{expected}"'
+        text = text[: match.start()] + replacement + text[match.end() :]
+
+        with open(path, "w", encoding="utf-8", newline="\n") as f:
+            f.write(text)

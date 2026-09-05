@@ -15,7 +15,6 @@ from atomic_red_team.display_names import (
     check_display_names,
     fix_display_names as fix_display_names_in_place,
     load_current_technique_names,
-    normalize_display_name_quoting,
 )
 from atomic_red_team.guid import (
     generate_guids_for_yaml,
@@ -82,22 +81,15 @@ def fix_display_names():
     paths = glob.glob(f"{atomics_path}/T*/T*.yaml")
     mismatches = check_display_names(paths, official_names)
 
-    if mismatches:
-        fix_display_names_in_place(mismatches)
-        print(f"Fixed {len(mismatches)} display_name(s):")
-        for path, (current, expected) in mismatches.items():
-            relative_path = path.replace(f"{atomics_path}/", "")
-            print(f"  {relative_path}: {current!r} -> {expected!r}")
-    else:
+    if len(mismatches) == 0:
         print("All display_names match current ATT&CK technique names")
+        return
 
-    # Re-glob: fix_display_names_in_place already rewrote the mismatched files above,
-    # so this only needs to normalize quoting on the remaining, already-correct files.
-    requoted = normalize_display_name_quoting(paths)
-    if requoted:
-        print(f"Normalized quoting on {len(requoted)} display_name(s):")
-        for path in requoted:
-            print(f"  {path.replace(f'{atomics_path}/', '')}")
+    fix_display_names_in_place(mismatches)
+    print(f"Fixed {len(mismatches)} display_name(s):")
+    for path, (current, expected) in mismatches.items():
+        relative_path = path.replace(f"{atomics_path}/", "")
+        print(f"  {relative_path}: {current!r} -> {expected!r}")
 
 
 @app.command()
