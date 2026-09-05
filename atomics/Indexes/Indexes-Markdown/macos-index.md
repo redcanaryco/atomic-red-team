@@ -259,7 +259,7 @@
 # execution
 - T1053.005 Scheduled Task/Job: Scheduled Task [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1047 Windows Management Instrumentation [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1129 Server Software Component [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1129 Shared Modules [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574.007 Path Interception by PATH Environment Variable [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1059.007 Command and Scripting Interpreter: JavaScript [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1574.011 Hijack Execution Flow: Services Registry Permissions Weakness [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -533,7 +533,7 @@
 - T1685.003 Modify or Spoof Tool UI [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1685.001 Disable or Modify Tools: Disable or Modify Windows Event Log [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1484.002 Domain Trust Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1686.003 Windows Host Firewall [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1686.003 Disable or Modify System Firewall: Windows Host Firewall [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1689 Downgrade Attack [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1553.002 Code Signing [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1222.001 File and Directory Permissions Modification: Windows File and Directory Permissions Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -604,6 +604,7 @@
   - Atomic Test #2: Discover Private SSH Keys [linux, macos]
   - Atomic Test #5: Copy Private SSH Keys with rsync [macos, linux]
   - Atomic Test #7: Copy the users GnuPG directory with rsync [macos, linux]
+  - Atomic Test #17: Find TLS private key files [linux, macos]
 - T1557.001 Adversary-in-the-Middle: LLMNR/NBT-NS Poisoning and SMB Relay [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1003.001 OS Credential Dumping: LSASS Memory [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1110.003 Brute Force: Password Spraying [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -613,6 +614,7 @@
 - T1649 Steal or Forge Authentication Certificates [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1552.003 Unsecured Credentials: Bash History](../../T1552.003/T1552.003.md)
   - Atomic Test #1: Search Through Bash History [linux, macos]
+  - Atomic Test #3: Search Through Zsh History [linux, macos]
 - [T1552.001 Unsecured Credentials: Credentials In Files](../../T1552.001/T1552.001.md)
   - Atomic Test #1: Find AWS credentials [macos, linux]
   - Atomic Test #2: Extract Browser and System credentials with LaZagne [macos]
@@ -621,6 +623,18 @@
   - Atomic Test #15: Find Azure credentials [macos, linux]
   - Atomic Test #16: Find GCP credentials [macos, linux]
   - Atomic Test #17: Find OCI credentials [macos, linux]
+  - Atomic Test #18: Access Travis CI Config File [linux, macos]
+  - Atomic Test #19: Access Gitlab CI Config File [linux, macos]
+  - Atomic Test #20: Find Terraform credential files [linux, macos]
+  - Atomic Test #21: Find Docker credentials [macos, linux]
+  - Atomic Test #22: Find HashiCorp Vault token files [linux, macos]
+  - Atomic Test #23: Access Drone CI Config File [linux, macos]
+  - Atomic Test #25: Search for Git Credential Files [linux, macos]
+  - Atomic Test #26: Find .env Files Containing Application Credentials [linux, macos]
+  - Atomic Test #27: Find database credential files [linux, macos]
+  - Atomic Test #29: Find npm registry credential files [linux, macos]
+  - Atomic Test #30: Access Jenkinsfile [linux, macos]
+  - Atomic Test #31: Find Kubernetes user configuration files [linux, macos]
 - T1606.001 Web Cookies [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1552.006 Unsecured Credentials: Group Policy Preferences [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1556.008 Network Provider DLL [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -727,6 +741,7 @@
 - [T1018 Remote System Discovery](../../T1018/T1018.md)
   - Atomic Test #6: Remote System Discovery - arp nix [linux, macos]
   - Atomic Test #7: Remote System Discovery - sweep [linux, macos]
+  - Atomic Test #23: Enumerate SSH Configuration [linux, macos]
 - [T1046 Network Service Discovery](../../T1046/T1046.md)
   - Atomic Test #1: Port Scan [linux, macos]
   - Atomic Test #2: Port Scan Nmap [linux, macos]

