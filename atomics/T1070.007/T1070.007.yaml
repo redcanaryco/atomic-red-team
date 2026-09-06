@@ -1,0 +1,105 @@
+attack_technique: T1070.007
+display_name: 'Indicator Removal: Clear Network Connection History and Configurations'
+atomic_tests:
+- name: Clear mapped network drive history from the registry
+  auto_generated_guid: c056b5dd-ea97-49c3-a279-2892121db694
+  description: |
+    Removes the registry artifact left behind by a persistent mapped network drive. Windows records
+    each persistent drive mapping under HKCU\Network\<DriveLetter>, including the UNC path of the
+    remote share in the RemotePath value. Adversaries may delete these keys to remove evidence of
+    which remote hosts and shares were accessed from a compromised system.
+
+    The prerequisite creates a marker mapping for a non-routable test share so that the test clears
+    only the artifact it created, and never an operator's real mapped drive history.
+
+    Upon successful execution, the HKCU\Network\#{drive_letter} key no longer exists.
+  supported_platforms:
+  - windows
+  input_arguments:
+    drive_letter:
+      description: Drive letter used for the marker mapped-drive registry artifact.
+      type: string
+      default: Z
+    remote_path:
+      description: UNC path recorded as the remote share for the marker artifact.
+      type: string
+      default: \\atomic-red-team-test\share
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      A marker mapped drive artifact must exist at HKCU:\Network\#{drive_letter}.
+    prereq_command: |
+      if (Test-Path "HKCU:\Network\#{drive_letter}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Path "HKCU:\Network\#{drive_letter}" -Force | Out-Null
+      New-ItemProperty -Path "HKCU:\Network\#{drive_letter}" -Name "RemotePath" -Value "#{remote_path}" -PropertyType String -Force | Out-Null
+  executor:
+    command: |
+      Remove-Item -Path "HKCU:\Network\#{drive_letter}" -Recurse -Force -ErrorAction Ignore
+    cleanup_command: |
+      Remove-Item -Path "HKCU:\Network\#{drive_letter}" -Recurse -Force -ErrorAction Ignore
+    name: powershell
+    elevation_required: false
+- name: Clear saved PuTTY session history from the registry
+  auto_generated_guid: 63d9edc6-59af-4834-8516-ab079a1eee43
+  description: |
+    Removes saved PuTTY session entries stored under
+    HKCU\Software\SimonTatham\PuTTY\Sessions. Each saved session records the remote host in the
+    HostName value, so these keys reveal which remote systems were reached from the host.
+    Adversaries may delete them to remove evidence of remote connections.
+
+    PuTTY does not need to be installed for this test; the registry path is created directly, since
+    the artifact being cleared is the registry entry itself. The prerequisite creates a marker
+    session so that the test clears only the entry it created, and never an operator's real saved
+    sessions.
+
+    Upon successful execution, the marker session key no longer exists.
+  supported_platforms:
+  - windows
+  input_arguments:
+    session_name:
+      description: Name of the marker PuTTY session created and then cleared.
+      type: string
+      default: atomic-red-team-test
+    session_host:
+      description: Host name recorded in the marker PuTTY session. Defaults to a TEST-NET-1 address reserved for documentation.
+      type: string
+      default: 192.0.2.10
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      A marker PuTTY session must exist at HKCU:\Software\SimonTatham\PuTTY\Sessions\#{session_name}.
+    prereq_command: |
+      if (Test-Path "HKCU:\Software\SimonTatham\PuTTY\Sessions\#{session_name}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Path "HKCU:\Software\SimonTatham\PuTTY\Sessions\#{session_name}" -Force | Out-Null
+      New-ItemProperty -Path "HKCU:\Software\SimonTatham\PuTTY\Sessions\#{session_name}" -Name "HostName" -Value "#{session_host}" -PropertyType String -Force | Out-Null
+  executor:
+    command: |
+      Remove-Item -Path "HKCU:\Software\SimonTatham\PuTTY\Sessions\#{session_name}" -Recurse -Force -ErrorAction Ignore
+    cleanup_command: |
+      Remove-Item -Path "HKCU:\Software\SimonTatham\PuTTY\Sessions\#{session_name}" -Recurse -Force -ErrorAction Ignore
+    name: powershell
+    elevation_required: false
+- name: Clear the ARP cache using netsh
+  auto_generated_guid: 852aab0b-8744-4309-a815-54f151136555
+  description: |
+    Flushes the local ARP cache with netsh. The ARP cache records the IP and MAC addresses of hosts
+    the system has recently communicated with on the local network, so it is a useful source of
+    evidence for lateral movement and internal reconnaissance. Adversaries may clear it to remove
+    that evidence.
+
+    The ARP cache is volatile and repopulates automatically through normal network activity, so no
+    persistent configuration is destroyed by this test.
+
+    Upon successful execution, netsh reports "Ok." and the entry count returned by arp -a is
+    reduced.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      arp -a
+      netsh interface ip delete arpcache
+      arp -a
+    name: command_prompt
+    elevation_required: true
