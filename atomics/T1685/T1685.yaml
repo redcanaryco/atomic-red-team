@@ -1775,3 +1775,34 @@ atomic_tests:
       [AMSI.Win32]::VirtualProtect($addr, [UIntPtr]::new($patch.Length), 0x40, [ref]$oldProtect) | Out-Null
       [System.Runtime.InteropServices.Marshal]::Copy($patch, 0, $addr, $patch.Length)
       [AMSI.Win32]::VirtualProtect($addr, [UIntPtr]::new($patch.Length), $oldProtect, [ref]$oldProtect) | Out-Null
+- name: Impair Windows Defender via Disk Space Exhaustion using fsutil
+  auto_generated_guid: 19f71779-bd04-45bb-8f03-76b07663b58b
+  description: |
+    Simulates defense impairment by leveraging the built-in Windows utility fsutil.exe to create an arbitrary oversized temporary file in the user %TEMP% directory.
+    In real-world evasion (e.g., BigDiskBuster technique), adversaries size this file to consume all available free disk space on the system drive. This condition causes Microsoft Defender Antivirus platform updates and dynamic signature downloads to fail due to disk exhaustion (ERROR_DISK_FULL / 0x80070070), freezing definition updates while keeping nominal services running.
+
+    This test creates a non-destructive temporary test file to validate detection telemetry without crashing the system drive.
+
+    References:
+    - https://lolbas-project.github.io/lolbas/Binaries/Fsutil/
+    - https://github.com/LOLBAS-Project/LOLBAS/pull/525
+    - https://www.itsc.cuhk.edu.hk/all-it/information-security/information-security-alerts/microsoft-denial-of-service-vulnerability-bigdiskbuster-cve-unknown/
+    - https://github.com/DevCop95/BDB-Guardian
+  supported_platforms:
+  - windows
+  input_arguments:
+    file_path:
+      description: Path of the temporary file to create
+      type: path
+      default: $env:TEMP\{15755e6b-a54d-4a6e-9773-554c724f8a63}
+    file_size_bytes:
+      description: Size of the dummy file to allocate in bytes (defaults to 10MB for safe testing)
+      type: integer
+      default: 10485760
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      fsutil file createnew "#{file_path}" #{file_size_bytes}
+    cleanup_command: |
+      if (Test-Path "#{file_path}") { Remove-Item -Force "#{file_path}" }
