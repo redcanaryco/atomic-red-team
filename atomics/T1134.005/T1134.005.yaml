@@ -43,3 +43,71 @@ atomic_tests:
       #{mimikatz_path} "privilege::debug" "sid::patch" "sid::add /sid:#{sid_to_inject} /sam:#{sam_account_name}" "exit"
     cleanup_command: |
       #{mimikatz_path} "sid::clear /sam:#{sam_account_name}" "exit"
+# Append this list item to atomic_tests in the upstream T1134.005.yaml.
+# Do not replace the existing test. CI assigns auto_generated_guid.
+- name: SID History Modification via DSInternals RPC
+  description: |
+    Initiates an intra-domain SID history migration from a Windows endpoint using
+    DSInternals Add-ADReplSidHistory (IDL_DRSAddSidHistory). Creates two disposable,
+    disabled users in a unique OU. The operation adds the source SID to the
+    destination sIDHistory and DELETES the source user. Verifies both postconditions.
+    This emulates the SID history modification component of T1134.005; it does not
+    assign an administrative SID or demonstrate subsequent privileged access.
+    Run with a domain identity authorized to create/delete the test objects and
+    perform SID history migration. Requires a writable DC, RPC and ADWS access,
+    and Success/Failure Account Management auditing on the target DC.
+    Audit policy is an operator-managed prerequisite and is never changed by the test.
+    Cleanup removes only marked disposable objects and the local state file.
+    Do not delete the state file before cleanup. Use a private state-file directory.
+    Success prints SourceSIDPresent=True and SourceDeleted=True. Run cleanup with
+    the same server and state path. Repeated cleanup without state is a no-op.
+    CheckPrereqs checks modules and ADWS access, not migration permissions or audit
+    policy. Dependency installation and DC audit configuration are operator-managed.
+    https://github.com/MichaelGrafnetter/DSInternals/blob/v7.2/Documentation/PowerShell/Add-ADReplSidHistory.md
+    https://attack.mitre.org/techniques/T1134/005/
+  supported_platforms:
+    - windows
+  input_arguments:
+    domain_controller:
+      description: Writable laboratory DC reachable by RPC and ADWS. Replace the example.
+      type: string
+      default: dc.example.test
+    state_path:
+      description: Absolute path to a new state file in an existing private directory; reuse for cleanup.
+      type: path
+      default: $env:TEMP\T1134.005-DSInternals-state.json
+  dependency_executor_name: powershell
+  dependencies:
+    - description: DSInternals 7.2 or newer with the intra-domain Add-ADReplSidHistory parameter set.
+      prereq_command: |
+        try {
+          Import-Module DSInternals -MinimumVersion 7.2 -ErrorAction Stop
+          if ((Get-Command 'DSInternals\Add-ADReplSidHistory' -ErrorAction Stop).Parameters.ContainsKey('DeleteSourceObject')) { exit 0 }
+        } catch {}
+        exit 1
+      get_prereq_command: |
+        Write-Host 'On the TEST endpoint, install DSInternals 7.2 or newer from its official PowerShell Gallery package. Do not install it on the documentation workstation.'
+    - description: ActiveDirectory PowerShell module (RSAT) on the execution endpoint.
+      prereq_command: |
+        if (Get-Module -ListAvailable ActiveDirectory) { exit 0 } else { exit 1 }
+      get_prereq_command: |
+        Write-Host 'Install the Active Directory PowerShell module through the RSAT capability on the TEST endpoint before running this test.'
+    - description: The selected DC is reachable through ADWS using the current domain identity.
+      prereq_command: |
+        try {
+          Import-Module ActiveDirectory -ErrorAction Stop
+          Get-ADDomain -Server '#{domain_controller}' -ErrorAction Stop | Out-Null
+          exit 0
+        } catch { Write-Error $_; exit 1 }
+      get_prereq_command: |
+        Write-Host 'Provide a writable lab DC, an authorized domain logon context, RPC/ADWS connectivity, and Account Management Success/Failure auditing on the DC. Audit settings are not modified automatically.'
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $ErrorActionPreference = 'Stop'
+      & "PathToAtomicsFolder\T1134.005\src\Invoke-SidHistoryRpcTest.ps1" -Mode Run -Server '#{domain_controller}' -StatePath "#{state_path}"
+    cleanup_command: |
+      $ErrorActionPreference = 'Stop'
+      & "PathToAtomicsFolder\T1134.005\src\Invoke-SidHistoryRpcTest.ps1" -Mode Cleanup -Server '#{domain_controller}' -StatePath "#{state_path}"
+
