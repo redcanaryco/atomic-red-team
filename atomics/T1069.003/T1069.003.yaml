@@ -1,0 +1,29 @@
+attack_technique: T1069.003
+display_name: 'Permission Groups Discovery: Cloud Groups'
+atomic_tests:
+- name: Kubernetes - List RBAC Permissions via SelfSubjectRulesReview
+  auto_generated_guid: e6ca5f9f-0a27-4f14-8e06-e898e4f66ed2
+  description: |
+    Read-only enumeration of the caller's effective RBAC permissions with
+    'kubectl auth can-i --list' (a SelfSubjectRulesReview). Adversaries use this to understand
+    what a compromised ServiceAccount or user can do before acting. Exercises the Sigma rule
+    kubernetes_audit_rbac_permisions_listing.yml (requires API-server audit logging at Metadata
+    level or above). Also applicable to T1087.004 (Account Discovery: Cloud Account).
+  supported_platforms:
+  - containers
+  input_arguments:
+    namespace:
+      description: Namespace to scope the permission listing to
+      type: string
+      default: default
+  dependencies:
+  - description: kubectl must be installed and configured against a cluster.
+    prereq_command: which kubectl && kubectl version --request-timeout=5s >/dev/null 2>&1
+    get_prereq_command: echo "Install kubectl and configure a kubeconfig context pointing at a cluster."
+  dependency_executor_name: bash
+  executor:
+    name: bash
+    elevation_required: false
+    command: |
+      kubectl auth can-i --list -n #{namespace}
+      kubectl auth can-i --list --all-namespaces 2>/dev/null || true
