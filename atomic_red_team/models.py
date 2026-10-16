@@ -121,7 +121,13 @@ Argument = Annotated[
 ]
 
 
-class Executor(BaseModel):
+class StrictModel(BaseModel):
+    model_config = ConfigDict(
+        validate_default=True, extra="forbid", validate_assignment=True
+    )
+
+
+class Executor(StrictModel):
     name: ExecutorType
     elevation_required: bool = False
 
@@ -137,17 +143,13 @@ class CommandExecutor(Executor):
     cleanup_command: Optional[str] = None
 
 
-class Dependency(BaseModel):
+class Dependency(StrictModel):
     description: constr(min_length=1)
     prereq_command: constr(min_length=1)
     get_prereq_command: Optional[str]
 
 
-class Atomic(BaseModel):
-    model_config = ConfigDict(
-        validate_default=True, extra="forbid", validate_assignment=True
-    )
-
+class Atomic(StrictModel):
     test_number: Optional[str] = None
     name: constr(min_length=1)
     description: constr(min_length=1)
@@ -235,7 +237,7 @@ class Atomic(BaseModel):
         return v
 
 
-class Technique(BaseModel):
+class Technique(StrictModel):
     attack_technique: AttackTechniqueID
     display_name: str = Field(..., min_length=5)
     atomic_tests: List[Atomic] = Field(min_length=1)

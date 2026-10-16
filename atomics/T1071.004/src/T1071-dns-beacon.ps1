@@ -13,6 +13,6 @@ Do {
     $TimeNow = Get-Date
     Resolve-DnsName -type $QueryType $Subdomain".$(Get-Random -Minimum 1 -Maximum 999999)."$Domain -QuickTimeout
     $Jitter = (Get-Random -Minimum -$C2Jitter -Maximum $C2Jitter) / 100 + 1
-    Start-Sleep -Seconds $C2Interval
+    Start-Sleep -Seconds ($C2Interval * $Jitter)
 }
 Until ($TimeNow -ge $RunEnd)

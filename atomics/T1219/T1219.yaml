@@ -7,17 +7,46 @@ atomic_tests:
     An adversary may attempt to trick the user into downloading teamviewer and using this to maintain access to the machine. Download of TeamViewer installer will be at the destination location when sucessfully executed.
   supported_platforms:
   - windows
+
+  dependencies:
+  - description: |
+      TeamViewer installer must exist on disk at the specified location (#{installer_path})
+    prereq_command: |
+      if(Test-Path "#{installer_path}") {
+          exit 0
+      } else {
+          exit 1
+      }
+    get_prereq_command: |
+      $parentpath = Split-Path "#{installer_path}"
+      New-Item -Type Directory "$parentpath" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest -Uri #{download_url} -OutFile "#{installer_path}"
+
+
+  input_arguments:
+    installer_path:
+      description: where the installer will be downloaded to or already is located
+      type: path
+      default: PathToAtomicsFolder\..\ExternalPayloads\TeamViewer_Setup_x64.exe
+
+    download_url:
+      description: url to download teamviewer from
+      type: url
+      default: https://download.teamviewer.com/download/TeamViewer_Setup_x64.exe
+
   executor:
     command: |
-      Invoke-WebRequest -OutFile C:\Users\$env:username\Desktop\TeamViewer_Setup.exe https://download.teamviewer.com/download/TeamViewer_Setup.exe
-      $file1 = "C:\Users\" + $env:username + "\Desktop\TeamViewer_Setup.exe"
-      Start-Process -Wait $file1 /S; 
-      Start-Process 'C:\Program Files (x86)\TeamViewer\TeamViewer.exe'
+      Start-Process -Wait "#{installer_path}" /S;
+      Start-Process 'C:\Program Files\TeamViewer\TeamViewer.exe'
     cleanup_command: |-
-      $file = 'C:\Program Files (x86)\TeamViewer\uninstall.exe'
+      $file = 'C:\Program Files\TeamViewer\uninstall.exe'
       if(Test-Path $file){ Start-Process $file "/S" -ErrorAction Ignore | Out-Null }
-      $file1 = "C:\Users\" + $env:username + "\Desktop\TeamViewer_Setup.exe"
-      Remove-Item $file1 -ErrorAction Ignore | Out-Null
+      Remove-Item "#{installer_path}" -ErrorAction Ignore | Out-Null
+
+      Get-ChildItem "C:\Users\*\AppData\Local" "TeamViewer" -Recurse -Force -ErrorAction SilentlyContinue | ForEach-Object {
+      $Directory = $_.ToString()
+      Remove-Item $Directory -Recurse -Force -ErrorAction SilentlyContinue
+      }
     name: powershell
     elevation_required: true
 - name: AnyDesk Files Detected Test on Windows
@@ -26,14 +55,40 @@ atomic_tests:
     An adversary may attempt to trick the user into downloading AnyDesk and use to establish C2. Download of AnyDesk installer will be at the destination location and ran when sucessfully executed.
   supported_platforms:
   - windows
+
+  dependencies:
+  - description: |
+      AnyDesk must exist on disk at the specified location (#{installer_path})
+    prereq_command: |
+      if(Test-Path "#{installer_path}") {
+          exit 0
+      } else {
+          exit 1
+      }
+    get_prereq_command: |
+      $parentpath = Split-Path "#{installer_path}"
+      New-Item -Type Directory "$parentpath" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest -Uri #{download_url} -OutFile "#{installer_path}"
+
+  input_arguments:
+    installer_path:
+      description: where the AnyDesk will be downloaded to or already is located
+      type: path
+      default: PathToAtomicsFolder\..\ExternalPayloads\AnyDesk.exe
+
+    download_url:
+      description: url to download AnyDesk from
+      type: url
+      default: https://download.anydesk.com/AnyDesk.exe
+
+
   executor:
     command: |
-      Invoke-WebRequest -OutFile C:\Users\$env:username\Desktop\AnyDesk.exe https://download.anydesk.com/AnyDesk.exe
-      $file1 = "C:\Users\" + $env:username + "\Desktop\AnyDesk.exe"
-      Start-Process $file1 /S;
+      Start-Process "#{installer_path}" /S;
     cleanup_command: |-
-      $file1 = "C:\Users\" + $env:username + "\Desktop\AnyDesk.exe"
-      Remove-Item $file1 -ErrorAction Ignore
+      Stop-Process -Name "AnyDesk" -Force
+      Start-Sleep -Seconds 5
+      Remove-Item "#{installer_path}" -ErrorAction Ignore
     name: powershell
     elevation_required: true
 - name: LogMeIn Files Detected Test on Windows
@@ -42,32 +97,108 @@ atomic_tests:
     An adversary may attempt to trick the user into downloading LogMeIn and use to establish C2. Download of LogMeIn installer will be at the destination location and ran when sucessfully executed.
   supported_platforms:
   - windows
+
+  dependencies:
+  - description: |
+      LogMeIn installer must exist on disk at the specified location (#{installer_path})
+    prereq_command: |
+      if(Test-Path "#{installer_path}") {
+          exit 0
+      } else {
+          exit 1
+      }
+    get_prereq_command: |
+      $parentpath = Split-Path "#{installer_path}"
+      New-Item -Type Directory "$parentpath" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest -Uri #{download_url} -OutFile "#{installer_path}"
+
+  input_arguments:
+    installer_path:
+      description: where the installer will be downloaded to or already is located
+      type: path
+      default: PathToAtomicsFolder\..\ExternalPayloads\LogMeInIgnition.msi
+
+
+    download_url:
+      description: url to download LogMeIn from
+      type: url
+      default: https://secure.logmein.com/LogMeInIgnition.msi
+
   executor:
     command: |
-      Invoke-WebRequest -OutFile C:\Users\$env:username\Desktop\LogMeInIgnition.msi https://secure.logmein.com/LogMeInIgnition.msi
-      $file1 = "C:\Users\" + $env:username + "\Desktop\LogMeInIgnition.msi"
-      Start-Process -Wait $file1 /quiet;
+      Start-Process -Wait "#{installer_path}" /quiet;
       Start-Process 'C:\Program Files (x86)\LogMeIn Ignition\LMIIgnition.exe' "/S"
     cleanup_command: |-
       get-package *'LogMeIn Client'* -ErrorAction Ignore | uninstall-package 
-      $file1 = "C:\Users\" + $env:username + "\Desktop\LogMeInIgnition.msi"
-      Remove-Item $file1 -ErrorAction Ignore
+      Remove-Item "#{installer_path}" -ErrorAction Ignore
+      Stop-Process -Name "msedge" -Force -ErrorAction Ignore
+
+      Get-ChildItem "C:\Users\*\AppData\Local" "LogMeIn" -Recurse -Force -ErrorAction SilentlyContinue | ForEach-Object {
+      $Directory = $_.ToString()
+      Remove-Item $Directory -Recurse -Force -ErrorAction SilentlyContinue
+      }
+      Remove-Item "C:\ProgramData\LogMeIn" -Recurse -Force -ErrorAction SilentlyContinue
     name: powershell
     elevation_required: true
-
 - name: GoToAssist Files Detected Test on Windows
   auto_generated_guid: 1b72b3bd-72f8-4b63-a30b-84e91b9c3578
   description: |
     An adversary may attempt to trick the user into downloading GoToAssist and use to establish C2. Download of GoToAssist installer will be at the destination location and ran when sucessfully executed.
   supported_platforms:
   - windows
+
+  dependencies:
+  - description: |
+      GoToAssist must exist on disk at the specified location (#{installer_path})
+    prereq_command: |
+      if(Test-Path "#{installer_path}") {
+          exit 0
+      } else {
+          exit 1
+      }
+    get_prereq_command: |
+      $parentpath = Split-Path "#{installer_path}"
+      New-Item -Type Directory "$parentpath" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest -Uri #{download_url} -OutFile "#{installer_path}"
+
+
+  input_arguments:
+    installer_path:
+      description: where GoToAssist will be downloaded to or already is located
+      type: path
+      default: PathToAtomicsFolder\..\ExternalPayloads\GoToAssist.exe
+
+    download_url:
+      description: url to download GoToAssist from
+      type: url
+      default: https://launch.getgo.com/launcher2/helper?token=e0-FaCddxmtMoX8_cY4czssnTeGvy83ihp8CLREfvwQshiBW0_RcbdoaEp8IA-Qn8wpbKlpGIflS-39gW6RuWRM-XHwtkRVMLBsp5RSKp-a3PBM-Pb1Fliy73EDgoaxr-q83WtXbLKqD7-u3cfDl9gKsymmhdkTGsXcDXir90NqKj92LsN_KpyYwV06lIxsdRekhNZjNwhkWrBa_hG8RQJqWSGk6tkZLVMuMufmn37eC2Cqqiwq5bCGnH5dYiSUUsklSedRLjh4N46qPYT1bAU0qD25ZPr-Kvf4Kzu9bT02q3Yntj02ZA99TxL2-SKzgryizoopBPg4Ilfo5t78UxKTYeEwo4etQECfkCRvenkTRlIHmowdbd88zz7NiccXnbHJZehgs6_-JSVjQIdPTXZbF9T5z44mi4BQYMtZAS3DE86F0C3D4Tcd7fa5F6Ve8rQWt7pvqFCYyiJAailslxOw0LsGyFokoy65tMF980ReP8zhVcTKYP8s8mhGXihUQJQPNk20Sw"&"downloadTrigger=restart"&"renameFile=1
+
+
   executor:
     command: |
-      Invoke-WebRequest -OutFile C:\Users\$env:username\Downloads\GoToAssist.exe "https://launch.getgo.com/launcher2/helper?token=e0-FaCddxmtMoX8_cY4czssnTeGvy83ihp8CLREfvwQshiBW0_RcbdoaEp8IA-Qn8wpbKlpGIflS-39gW6RuWRM-XHwtkRVMLBsp5RSKp-a3PBM-Pb1Fliy73EDgoaxr-q83WtXbLKqD7-u3cfDl9gKsymmhdkTGsXcDXir90NqKj92LsN_KpyYwV06lIxsdRekhNZjNwhkWrBa_hG8RQJqWSGk6tkZLVMuMufmn37eC2Cqqiwq5bCGnH5dYiSUUsklSedRLjh4N46qPYT1bAU0qD25ZPr-Kvf4Kzu9bT02q3Yntj02ZA99TxL2-SKzgryizoopBPg4Ilfo5t78UxKTYeEwo4etQECfkCRvenkTRlIHmowdbd88zz7NiccXnbHJZehgs6_-JSVjQIdPTXZbF9T5z44mi4BQYMtZAS3DE86F0C3D4Tcd7fa5F6Ve8rQWt7pvqFCYyiJAailslxOw0LsGyFokoy65tMF980ReP8zhVcTKYP8s8mhGXihUQJQPNk20Sw&downloadTrigger=restart&renameFile=1"
-      $file1 = "C:\Users\" + $env:username + "\Downloads\GoToAssist.exe"
-      Start-Process $file1 /S;
-    cleanup_command: 
-      try{"$PathToAtomicsFolder/T1219/bin/GoToCleanup.ps1"} catch{}
+      Start-Process "#{installer_path}" /S;
+    cleanup_command: |
+      Stop-Process -Name "g2ax*" -force
+      $InstalledApp = "GoTo Opener"
+      $Keys = Get-ChildItem -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall, HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall -ErrorAction SilentlyContinue
+      $Items = $Keys | Get-ItemProperty | where-object {$_.DisplayName -eq $InstalledApp}
+      If ($Items) {
+          $KeyToDelete = $Items.PSPath
+          Remove-Item $KeyToDelete -Recurse -Force -ErrorAction SilentlyContinue
+      }
+
+      Remove-Item -Path "HKCU:\Software\LogMeInInc\GoTo*" -Recurse -Force -ErrorAction SilentlyContinue
+      Remove-Item -Path "HKCU:\Software\Microsoft\Installer\Products\0DFBD403713E24D4FA13BECFB6B96E3E" -Recurse -Force -ErrorAction SilentlyContinue
+      Get-ChildItem "C:\Users\*\AppData\Local" "GoTo Opener" -Recurse -Force -ErrorAction SilentlyContinue | ForEach-Object {
+      $Directory = $_.ToString()
+      Remove-Item $Directory -Recurse -Force -ErrorAction SilentlyContinue
+      }
+      Get-ChildItem "C:\Users\*\AppData\Local" "GoToAssist Remote Support Expert" -Recurse -Force -ErrorAction SilentlyContinue | ForEach-Object {
+      $Directory = $_.ToString()
+      Remove-Item $Directory -Recurse -Force -ErrorAction SilentlyContinue
+      }
+      Start-Process -FilePath "C:\Program Files (x86)\GoToAssist Remote Support Expert\1702\g2ax_uninstaller_expert.exe" -ArgumentList "/uninstall /silent" -Wait -PassThru | Out-Null
+
     name: powershell
     elevation_required: true
 - name: ScreenConnect Application Download and Install on Windows
@@ -276,14 +407,46 @@ atomic_tests:
     Download of RustDesk installer will be at the destination location when successfully executed.
   supported_platforms:
   - windows
+
+  dependencies:
+  - description: |
+      RustDesk must exist on disk at the specified location (#{installer_path})
+    prereq_command: |
+      if(Test-Path "#{installer_path}") {
+          exit 0
+      } else {
+          exit 1
+      }
+    get_prereq_command: |
+      $parentpath = Split-Path "#{installer_path}"
+      New-Item -Type Directory "$parentpath" -ErrorAction Ignore -Force | Out-Null
+      Invoke-WebRequest -Uri #{download_url} -OutFile "#{installer_path}"
+
+
+  input_arguments:
+    installer_path:
+      description: where the installer will be downloaded to or already is located
+      type: path
+      default: PathToAtomicsFolder\..\ExternalPayloads\rustdesk-1.2.3-1-x86_64.exe
+
+    download_url:
+        description: url to download teamviewer from
+        type: url
+        default: https://github.com/rustdesk/rustdesk/releases/download/1.2.3-1/rustdesk-1.2.3-1-x86_64.exe
+
+
   executor:
     command: |-
-      $file = Join-Path $env:USERPROFILE "Desktop\rustdesk-1.2.3-1-x86_64.exe"
-      Invoke-WebRequest  -OutFile $file https://github.com/rustdesk/rustdesk/releases/download/1.2.3-1/rustdesk-1.2.3-1-x86_64.exe
-      Start-Process -FilePath $file "/S"
+      Start-Process "#{installer_path}" /S;
     cleanup_command: |-
-      $file = Join-Path $env:USERPROFILE "Desktop\rustdesk-1.2.3-1-x86_64.exe"
-      Remove-Item $file1 -ErrorAction Ignore
+      Stop-Process -Name "rustdesk" -Force
+      Remove-Item "#{installer_path}" -ErrorAction Ignore
+      Get-ChildItem "C:\Users\*\AppData\Local" "rustdesk" -Recurse -Force -ErrorAction SilentlyContinue | ForEach-Object {
+      $Directory = $_.ToString()
+      Remove-Item $Directory -Recurse -Force -ErrorAction SilentlyContinue
+      }
+
+      Remove-Item "C:\ProgramData\RustDesk" -Recurse -Force -ErrorAction SilentlyContinue
     name: powershell
 - name: Splashtop Execution
   auto_generated_guid: b025c580-029e-4023-888d-a42710d76934
@@ -355,4 +518,3 @@ atomic_tests:
       Stop-Process -Name quickassist
     name: powershell
     elevation_required: true
-

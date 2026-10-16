@@ -61,8 +61,12 @@ def generate_counter():
     )
 
     # Save shields URL in GitHub Output to be used in the next step.
-    with open(os.environ["GITHUB_OUTPUT"], "a") as fh:
-        print(f"result={url}", file=fh)
+    output_path = os.getenv("GITHUB_OUTPUT")
+    if output_path:
+        with open(output_path, "a") as fh:
+            print(f"result={url}", file=fh)
+    else:
+        print(f"Badge URL: {url}")
 
 
 @app.command()

