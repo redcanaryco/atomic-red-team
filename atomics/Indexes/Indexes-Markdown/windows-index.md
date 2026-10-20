@@ -183,7 +183,17 @@
 - [T1036.002 Masquerading:Right-to-Left Override](../../T1036.002/T1036.002.md)
   - Atomic Test #1: Masquerading: Right-to-Left Override Batch File Creation and Execution [windows]
   - Atomic Test #2: Masquerading: RTLO Masqueraded File Download and Execution [windows]
-- T1027.017 SVG Smuggling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1027.017 SVG Smuggling](../../T1027.017/T1027.017.md)
+  - Atomic Test #1: T1027.017 - Inline JavaScript via Embedded SVG Script Element [windows]
+  - Atomic Test #2: T1027.017 - Base64 Blob Payload Assembly via SVG JavaScript [windows]
+  - Atomic Test #3: T1027.017 - XML CDATA Section Script Obfuscation [windows]
+  - Atomic Test #4: T1027.017 - Root SVG Event Handler Execution (`onload`) [windows]
+  - Atomic Test #5: T1027.017 - Nested HTML via SVG `<foreignObject>` Smuggling [windows]
+  - Atomic Test #6: T1027.017 - SVG Animation Element Script Execution (`<animate>`) [windows]
+  - Atomic Test #7: T1027.017 - XLink / Data URI Script Smuggling in SVG [windows]
+  - Atomic Test #8: T1027.017 - SVG Custom Data Attribute Payload Staging (`data-*`) [windows]
+  - Atomic Test #9: T1027.017 - Dynamic DOM Element Construction via SVG JavaScript [windows]
+  - Atomic Test #10: T1027.017 - Shadow DOM / Web Component SVG Payload Encapsulation [windows]
 - T1542.002 Component Firmware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1070 Indicator Removal on Host](../../T1070/T1070.md)
   - Atomic Test #1: Indicator Removal using FSUtil [windows]
