@@ -1,5 +1,5 @@
 attack_technique: T1531
-display_name: Account Access Removal
+display_name: "Account Access Removal"
 atomic_tests:
 - name: Change User Password - Windows
   auto_generated_guid: 1b99ef28-f83c-4ec5-8a08-1a56263a5bb2
@@ -199,7 +199,7 @@ atomic_tests:
     get_prereq_command: echo "use the following to install the Azure CLI manually https://aka.ms/installazurecliwindows"
   - description: Check if Azure CLI is installed and install via PowerShell
     prereq_command: az account list
-    get_prereq_command: echo "use the following to install the Azure CLI $ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile .\AzureCLI.msi; Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet'; Remove-Item .\AzureCLI.msi"
+    get_prereq_command: echo "use the following to install the Azure CLI $ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile .\AzureCLI.msi -UseBasicParsing; Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet'; Remove-Item .\AzureCLI.msi"
   - description: Update the userprincipalname to meet your requirements
     prereq_command: Update the input arguments so the userprincipalname value is accurate for your environment
     get_prereq_command: echo "Update the input arguments in the .yaml file so that the userprincipalname value is accurate for your environment"

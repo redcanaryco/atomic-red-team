@@ -30,7 +30,7 @@ atomic_tests:
       if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\T1036.zip") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction ignore -Force | Out-Null
-      Invoke-WebRequest #{url} -OutFile "PathToAtomicsFolder\..\ExternalPayloads\T1036.zip" 
+      Invoke-WebRequest #{url} -OutFile "PathToAtomicsFolder\..\ExternalPayloads\T1036.zip" -UseBasicParsing 
   executor:
     command: |-
       Expand-Archive -Path "PathToAtomicsFolder\..\ExternalPayloads\T1036.zip" -DestinationPath "$env:userprofile\Downloads\T1036" -Force

@@ -1,5 +1,5 @@
 attack_technique: T1558.001
-display_name: 'Steal or Forge Kerberos Tickets: Golden Ticket'
+display_name: "Steal or Forge Kerberos Tickets: Golden Ticket"
 atomic_tests:
 - name: Crafting Active Directory golden tickets with mimikatz
   auto_generated_guid: 9726592a-dabc-4d4d-81cd-44070008b3af
@@ -148,7 +148,7 @@ atomic_tests:
     prereq_command: |
       if(Test-Path -Path #{local_folder}\#{local_executable}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-Webrequest -Uri #{rubeus_url} -OutFile #{local_folder}\#{local_executable}
+      Invoke-Webrequest -Uri #{rubeus_url} -OutFile #{local_folder}\#{local_executable} -UseBasicParsing
   executor:
     name: powershell
     elevation_required: false
