@@ -277,7 +277,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.620Z'
-      name: 'Signed Binary Proxy Execution: Rundll32'
+      name: 'System Binary Proxy Execution: Rundll32'
       description: "Adversaries may abuse rundll32.exe to proxy execution of malicious
         code. Using rundll32.exe, vice executing directly (i.e. [Shared Modules](https://attack.mitre.org/techniques/T1129)),
         may avoid triggering security tools that may not monitor execution of the
@@ -475,7 +475,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.620Z'
-      name: 'Signed Script Proxy Execution: Pubprn'
+      name: 'System Script Proxy Execution: PubPrn'
       description: |-
         Adversaries may use PubPrn to proxy execution of malicious remote files. PubPrn.vbs is a [Visual Basic](https://attack.mitre.org/techniques/T1059/005) script that publishes a printer to Active Directory Domain Services. The script may be signed by Microsoft and is commonly executed through the [Windows Command Shell](https://attack.mitre.org/techniques/T1059/003) via <code>Cscript.exe</code>. For example, the following code publishes a printer within the specified domain: <code>cscript pubprn Printer1 LDAP://CN=Container1,DC=Domain1,DC=Com</code>.(Citation: pubprn)
 
@@ -1236,7 +1236,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.622Z'
-      name: 'Masquerading: Match Legitimate Name or Location'
+      name: 'Masquerading: Match Legitimate Resource Name or Location'
       description: "Adversaries may match or approximate the name or location of legitimate
         files, Registry keys, or other resources when naming/placing them. This is
         done for the sake of evading defenses and observation. \n\nThis may be done
@@ -1606,7 +1606,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.623Z'
-      name: 'Signed Binary Proxy Execution: InstallUtil'
+      name: 'System Binary Proxy Execution: InstallUtil'
       description: |-
         Adversaries may use InstallUtil to proxy execution of code through a trusted Windows utility. InstallUtil is a command-line utility that allows for installation and uninstallation of resources by executing specific installer components specified in .NET binaries. (Citation: MSDN InstallUtil) The InstallUtil binary may also be digitally signed by Microsoft and located in the .NET directories on a Windows system: <code>C:\Windows\Microsoft.NET\Framework\v<version>\InstallUtil.exe</code> and <code>C:\Windows\Microsoft.NET\Framework64\v<version>\InstallUtil.exe</code>.
 
@@ -1949,7 +1949,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.626Z'
-      name: 'Signed Binary Proxy Execution: Msiexec'
+      name: 'System Binary Proxy Execution: Msiexec'
       description: |-
         Adversaries may abuse msiexec.exe to proxy execution of malicious payloads. Msiexec.exe is the command-line utility for the Windows Installer and is thus commonly associated with executing installation packages (.msi).(Citation: Microsoft msiexec) The Msiexec.exe binary may also be digitally signed by Microsoft.
 
@@ -2072,7 +2072,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.627Z'
-      name: 'Indicator Removal on Host: Clear Command History'
+      name: 'Indicator Removal: Clear Command History'
       description: "In addition to clearing system logs, an adversary may clear the
         command history of a compromised account to conceal the actions undertaken
         during an intrusion. Various command interpreters keep track of the commands
@@ -2589,7 +2589,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.629Z'
-      name: Thread Execution Hijacking
+      name: 'Process Injection: Thread Execution Hijacking'
       description: "Adversaries may inject malicious code into hijacked processes
         in order to evade process-based defenses as well as possibly elevate privileges.
         Thread Execution Hijacking is a method of executing arbitrary code in the
@@ -2784,7 +2784,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.629Z'
-      name: 'Email Collection: Mailbox Manipulation'
+      name: 'Indicator Removal: Clear Mailbox Data'
       description: "Adversaries may modify mail and mail application data to remove
         evidence of their activity. Email applications allow users and other programs
         to export and delete mailbox data via command line tools or use of APIs. Mail
@@ -3005,7 +3005,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.629Z'
-      name: Signed Binary Proxy Execution
+      name: System Binary Proxy Execution
       description: |-
         Adversaries may bypass process and/or signature-based defenses by proxying execution of malicious content with signed, or otherwise trusted, binaries. Binaries used in this technique are often Microsoft-signed files, indicating that they have been either downloaded from Microsoft or are already native in the operating system.(Citation: LOLBAS Project) Binaries signed with trusted digital certificates can typically execute on Windows systems protected by digital signature validation. Several Microsoft signed binaries that are default on Windows installations can be used to proxy execution of other files or commands.
 
@@ -3069,7 +3069,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.630Z'
-      name: 'Indicator Removal on Host: Timestomp'
+      name: 'Indicator Removal: Timestomp'
       description: |-
         Adversaries may modify file time attributes to hide new files or changes to existing files. Timestomping is a technique that modifies the timestamps of a file (the modify, access, create, and change times), often to mimic files that are in the same folder and blend malicious files with legitimate files.
 
@@ -3474,7 +3474,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.630Z'
-      name: Time Based Evasion
+      name: 'Virtualization/Sandbox Evasion: Time Based Checks'
       description: "Adversaries may employ various time-based methods to detect virtualization
         and analysis environments, particularly those that attempt to manipulate time
         mechanisms to simulate longer elapses of time. This may include enumerating
@@ -3569,7 +3569,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.631Z'
-      name: 'Signed Binary Proxy Execution: CMSTP'
+      name: 'System Binary Proxy Execution: CMSTP'
       description: |-
         Adversaries may abuse CMSTP to proxy execution of malicious code. The Microsoft Connection Manager Profile Installer (CMSTP.exe) is a command-line program used to install Connection Manager service profiles. (Citation: Microsoft Connection Manager Oct 2009) CMSTP.exe accepts an installation information file (INF) as a parameter and installs a service profile leveraged for remote access connections.
 
@@ -3627,7 +3627,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.632Z'
-      name: 'Signed Binary Proxy Execution: Control Panel'
+      name: 'System Binary Proxy Execution: Control Panel'
       description: |-
         Adversaries may abuse control.exe to proxy execution of malicious payloads. The Windows Control Panel process binary (control.exe) handles execution of Control Panel items, which are utilities that allow users to view and adjust computer settings.
 
@@ -4189,7 +4189,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.636Z'
-      name: 'Hijack Execution Flow: LD_PRELOAD'
+      name: 'Hijack Execution Flow: Dynamic Linker Hijacking'
       description: |-
         Adversaries may execute their own malicious payloads by hijacking environment variables the dynamic linker uses to load shared libraries. During the execution preparation phase of a program, the dynamic linker loads specified absolute paths of shared libraries from various environment variables and files, such as <code>LD_PRELOAD</code> on Linux or <code>DYLD_INSERT_LIBRARIES</code> on macOS.(Citation: TheEvilBit DYLD_INSERT_LIBRARIES)(Citation: Timac DYLD_INSERT_LIBRARIES)(Citation: Gabilondo DYLD_INSERT_LIBRARIES Catalina Bypass) Libraries specified in environment variables are loaded first, taking precedence over system libraries with the same function name.(Citation: Man LD.SO)(Citation: TLDP Shared Libraries)(Citation: Apple Doco Archive Dynamic Libraries) Each platform's linker uses an extensive list of environment variables at different points in execution. These variables are often used by developers to debug binaries without needing to recompile, deconflict mapped symbols, and implement custom functions in the original library.(Citation: Baeldung LD_PRELOAD)
 
@@ -4327,7 +4327,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.639Z'
-      name: Create Process with Token
+      name: 'Access Token Manipulation: Create Process with Token'
       description: |-
         Adversaries may create a new process with an existing token to escalate privileges and bypass access controls. Processes can be created with the token and resulting security context of another user using features such as <code>CreateProcessWithTokenW</code> and <code>runas</code>.(Citation: Microsoft RunAs)
 
@@ -4384,7 +4384,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.640Z'
-      name: 'Signed Binary Proxy Execution: Odbcconf'
+      name: 'System Binary Proxy Execution: Odbcconf'
       description: "Adversaries may abuse odbcconf.exe to proxy execution of malicious
         payloads. Odbcconf.exe is a Windows utility that allows you to configure Open
         Database Connectivity (ODBC) drivers and data source names.(Citation: Microsoft
@@ -4610,7 +4610,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.643Z'
-      name: Masquerading:Right-to-Left Override
+      name: 'Masquerading: Right-to-Left Override'
       description: |-
         Adversaries may abuse the right-to-left override (RTLO or RLO) character (U+202E) to disguise a string and/or file name to make it appear benign. RTLO is a non-printing Unicode character that causes the text that follows it to be displayed in reverse. For example, a Windows screensaver executable named <code>March 25 \u202Excod.scr</code> will display as <code>March 25 rcs.docx</code>. A JavaScript file named <code>photo_high_re\u202Egnp.js</code> will be displayed as <code>photo_high_resj.png</code>.(Citation: Infosecinstitute RTLO Technique)
 
@@ -4661,7 +4661,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.643Z'
-      name: SVG Smuggling
+      name: 'Obfuscated Files or Information: SVG Smuggling'
       description: "Adversaries may smuggle data and files past content filters by
         hiding malicious payloads inside of seemingly benign SVG files.(Citation:
         Trustwave SVG Smuggling 2025) SVGs, or Scalable Vector Graphics, are vector-based
@@ -4748,7 +4748,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.643Z'
-      name: Indicator Removal on Host
+      name: Indicator Removal
       description: |-
         Adversaries may selectively delete or modify artifacts generated to reduce indications of their presence and blend in with legitimate activity. Rather than broadly removing evidence, adversaries may target specific artifacts that appear anomalous or are likely to draw scrutiny, while leaving sufficient data intact to maintain the appearance of normal system behavior.
 
@@ -5249,7 +5249,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.676Z'
-      name: 'Signed Binary Proxy Execution: Mshta'
+      name: 'System Binary Proxy Execution: Mshta'
       description: "Adversaries may abuse mshta.exe to proxy execution of malicious
         .hta files and Javascript or VBScript through a trusted Windows utility. There
         are several examples of different types of threats leveraging mshta.exe during
@@ -6121,7 +6121,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.706Z'
-      name: 'Signed Binary Proxy Execution: Compiled HTML File'
+      name: 'System Binary Proxy Execution: Compiled HTML File'
       description: |-
         Adversaries may abuse Compiled HTML files (.chm) to conceal malicious code. CHM files are commonly distributed as part of the Microsoft HTML Help system. CHM files are compressed compilations of various content such as HTML documents, images, and scripting/web related programming languages such VBA, JScript, Java, and ActiveX. (Citation: Microsoft HTML Help May 2018) CHM content is displayed using underlying components of the Internet Explorer browser (Citation: Microsoft HTML Help ActiveX) loaded by the HTML Help executable program (hh.exe). (Citation: Microsoft HTML Help Executable Program)
 
@@ -6159,7 +6159,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.706Z'
-      name: 'Indicator Removal on Host: Network Share Connection Removal'
+      name: 'Indicator Removal: Network Share Connection Removal'
       description: 'Adversaries may remove share connections that are no longer useful
         in order to clean up traces of their operation. Windows shared drive and [SMB/Windows
         Admin Shares](https://attack.mitre.org/techniques/T1021/002) connections can
@@ -6694,7 +6694,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.709Z'
-      name: Run Virtual Instance
+      name: 'Hide Artifacts: Run Virtual Instance'
       description: |-
         Adversaries may carry out malicious operations using a virtual instance to avoid detection. A wide variety of virtualization technologies exist that allow for the emulation of a computer or computing environment. By running malicious code inside of a virtual instance, adversaries can hide artifacts associated with their behavior from security tools that are unable to monitor activity inside the virtual instance.(Citation: CyberCX Akira Ransomware) Additionally, depending on the virtual networking implementation (ex: bridged adapter), network traffic generated by the virtual instance can be difficult to trace back to the compromised host as the IP address and hostname might not match known values.(Citation: SingHealth Breach Jan 2019)
 
@@ -6875,7 +6875,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.709Z'
-      name: 'Signed Binary Proxy Execution: Regsvr32'
+      name: 'System Binary Proxy Execution: Regsvr32'
       description: |-
         Adversaries may abuse Regsvr32.exe to proxy execution of malicious code. Regsvr32.exe is a command-line program used to register and unregister object linking and embedding controls, including dynamic link libraries (DLLs), on Windows systems. The Regsvr32.exe binary may also be signed by Microsoft. (Citation: Microsoft Regsvr32)
 
@@ -6936,7 +6936,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.713Z'
-      name: 'Masquerading: Rename System Utilities'
+      name: 'Masquerading: Rename Legitimate Utilities'
       description: 'Adversaries may rename legitimate / system utilities to try to
         evade security mechanisms concerning the usage of those utilities. Security
         monitoring and control mechanisms may be in place for legitimate utilities
@@ -7152,7 +7152,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.714Z'
-      name: 'Signed Binary Proxy Execution: Regsvcs/Regasm'
+      name: 'System Binary Proxy Execution: Regsvcs/Regasm'
       description: |-
         Adversaries may abuse Regsvcs and Regasm to proxy execution of code through a trusted Windows utility. Regsvcs and Regasm are Windows command-line utilities that are used to register .NET [Component Object Model](https://attack.mitre.org/techniques/T1559/001) (COM) assemblies. Both are binaries that may be digitally signed by Microsoft. (Citation: MSDN Regsvcs) (Citation: MSDN Regasm)
 
@@ -7982,7 +7982,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.717Z'
-      name: HTML Smuggling
+      name: 'Obfuscated Files or Information: HTML Smuggling'
       description: |-
         Adversaries may smuggle data and files past content filters by hiding malicious payloads inside of seemingly benign HTML files. HTML documents can store large binary objects known as JavaScript Blobs (immutable data that represents raw bytes) that can later be constructed into file-like objects. Data may also be stored in Data URLs, which enable embedding media type or MIME files inline of HTML documents. HTML5 also introduced a download attribute that may be used to initiate file downloads.(Citation: HTML Smuggling Menlo Security 2020)(Citation: Outlflank HTML Smuggling 2018)
 
@@ -8107,7 +8107,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.718Z'
-      name: 'Indicator Removal on Host: File Deletion'
+      name: 'Indicator Removal: File Deletion'
       description: |-
         Adversaries may delete files left behind by the actions of their intrusion activity. Malware, tools, or other non-native files dropped or created on a system by an adversary (ex: [Ingress Tool Transfer](https://attack.mitre.org/techniques/T1105)) may leave traces to indicate to what was done within a network and how. Removal of these files can occur during an intrusion, or as part of a post-intrusion process to minimize the adversary's footprint.
 
@@ -9557,7 +9557,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.724Z'
-      name: Signed Script Proxy Execution
+      name: System Script Proxy Execution
       description: 'Adversaries may use trusted scripts, often signed with certificates,
         to proxy the execution of malicious files. Several Microsoft signed scripts
         that have been downloaded from Microsoft or are default on Windows installations
@@ -10675,7 +10675,7 @@ privilege-escalation:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:25.363Z'
-      name: Kubernetes Cronjob
+      name: 'Scheduled Task/Job: Container Orchestration Job'
       description: |-
         Adversaries may abuse task scheduling functionality provided by container orchestration tools such as Kubernetes to schedule deployment of containers configured to execute malicious code. Container orchestration jobs run these automated tasks at a specific date and time, similar to cron jobs on a Linux system. Deployments of this type can also be configured to maintain a quantity of containers over time, automating the process of maintaining persistence within a cluster.
 
@@ -10973,7 +10973,7 @@ privilege-escalation:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:31.226Z'
-      name: Active Setup
+      name: 'Boot or Logon Autostart Execution: Active Setup'
       description: |-
         Adversaries may achieve persistence by adding a Registry key to the Active Setup of the local machine. Active Setup is a Windows mechanism that is used to execute programs when a user logs in. The value stored in the Registry key will be executed after a user logs into the computer.(Citation: Klein Active Setup 2010) These programs will be executed under the context of the user and will have the account's associated permissions level.
 
@@ -11027,7 +11027,7 @@ privilege-escalation:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.623Z'
-      name: Domain Trust Modification
+      name: 'Domain or Tenant Policy Modification: Trust Modification'
       description: "Adversaries may add new domain trusts, modify the properties of
         existing domain trusts, or otherwise change the configuration of trust relationships
         between domains and tenants to evade defenses and/or elevate privileges.Trust
@@ -11672,7 +11672,7 @@ privilege-escalation:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.629Z'
-      name: Thread Execution Hijacking
+      name: 'Process Injection: Thread Execution Hijacking'
       description: "Adversaries may inject malicious code into hijacked processes
         in order to evade process-based defenses as well as possibly elevate privileges.
         Thread Execution Hijacking is a method of executing arbitrary code in the
@@ -11863,7 +11863,7 @@ privilege-escalation:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:42.963Z'
-      name: 'Boot or Logon Initialization Scripts: Logon Script (Mac)'
+      name: 'Boot or Logon Initialization Scripts: Login Hook'
       description: "Adversaries may use a Login Hook to establish persistence executed
         upon user logon. A login hook is a plist file that points to a specific script
         to execute with root privileges upon user logon. The plist file is located
@@ -12292,7 +12292,7 @@ privilege-escalation:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.635Z'
-      name: 'Domain Policy Modification: Group Policy Modification'
+      name: 'Domain or Tenant Policy Modification: Group Policy Modification'
       description: "Adversaries may modify Group Policy Objects (GPOs) to subvert
         the intended discretionary access controls for a domain, usually with the
         intention of escalating privileges on the domain. Group policy allows for
@@ -12461,7 +12461,7 @@ privilege-escalation:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:51.278Z'
-      name: Time Providers
+      name: 'Boot or Logon Autostart Execution: Time Providers'
       description: |-
         Adversaries may abuse time providers to execute DLLs when the system boots. The Windows Time service (W32Time) enables time synchronization across and within domains.(Citation: Microsoft W32Time Feb 2018) W32Time time providers are responsible for retrieving time stamps from hardware/network resources and outputting these values to other network clients.(Citation: Microsoft TimeProvider)
 
@@ -12656,7 +12656,7 @@ privilege-escalation:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.639Z'
-      name: Create Process with Token
+      name: 'Access Token Manipulation: Create Process with Token'
       description: |-
         Adversaries may create a new process with an existing token to escalate privileges and bypass access controls. Processes can be created with the token and resulting security context of another user using features such as <code>CreateProcessWithTokenW</code> and <code>runas</code>.(Citation: Microsoft RunAs)
 
@@ -12911,7 +12911,7 @@ privilege-escalation:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.640Z'
-      name: SSH Authorized Keys
+      name: 'Account Manipulation: SSH Authorized Keys'
       description: "Adversaries may modify the SSH <code>authorized_keys</code> file
         to maintain persistence on a victim host. Linux distributions, macOS, and
         ESXi hypervisors commonly use key-based authentication to secure the authentication
@@ -15120,7 +15120,7 @@ privilege-escalation:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.709Z'
-      name: 'Event Triggered Execution: .bash_profile .bashrc and .shrc'
+      name: 'Event Triggered Execution: Unix Shell Configuration Modification'
       description: "Adversaries may establish persistence through executing malicious
         commands triggered by a user’s shell. User [Unix Shell](https://attack.mitre.org/techniques/T1059/004)s
         execute several configuration scripts at different points throughout the session
@@ -15368,7 +15368,7 @@ privilege-escalation:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:49:17.208Z'
-      name: Authentication Package
+      name: 'Boot or Logon Autostart Execution: Authentication Package'
       description: |-
         Adversaries may abuse authentication packages to execute DLLs when the system boots. Windows authentication package DLLs are loaded by the Local Security Authority (LSA) process at system start. They provide support for multiple logon processes and multiple security protocols to the operating system.(Citation: MSDN Authentication Packages)
 
@@ -16421,7 +16421,7 @@ privilege-escalation:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:49:28.955Z'
-      name: 'Boot or Logon Initialization Scripts: Rc.common'
+      name: 'Boot or Logon Initialization Scripts: RC Scripts'
       description: |-
         Adversaries may establish persistence by modifying RC scripts, which are executed during a Unix-like system’s startup. These files allow system administrators to map and start custom services at startup for different run levels. RC scripts require root privileges to modify.
 
@@ -16559,7 +16559,7 @@ privilege-escalation:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.722Z'
-      name: 'Create or Modify System Process: SysV/Systemd Service'
+      name: 'Create or Modify System Process: Systemd Service'
       description: "Adversaries may create or modify systemd services to repeatedly
         execute malicious payloads as part of persistence. Systemd is a system and
         service manager commonly used for managing background daemon processes (also
@@ -18183,7 +18183,7 @@ execution:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:25.363Z'
-      name: Kubernetes Cronjob
+      name: 'Scheduled Task/Job: Container Orchestration Job'
       description: |-
         Adversaries may abuse task scheduling functionality provided by container orchestration tools such as Kubernetes to schedule deployment of containers configured to execute malicious code. Container orchestration jobs run these automated tasks at a specific date and time, similar to cron jobs on a Linux system. Deployments of this type can also be configured to maintain a quantity of containers over time, automating the process of maintaining persistence within a cluster.
 
@@ -19275,7 +19275,7 @@ execution:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.634Z'
-      name: Deploy a container
+      name: Deploy Container
       description: |-
         Adversaries may deploy a container into an environment to facilitate execution or evade defenses. In some cases, adversaries may deploy a new container to execute processes associated with a particular image or deployment, such as processes that execute or download malware. In others, an adversary may deploy a new container configured without network rules, user limitations, etc. to bypass existing defenses within the environment. In Kubernetes environments, an adversary may attempt to deploy a privileged or vulnerable container into a specific node in order to [Escape to Host](https://attack.mitre.org/techniques/T1611) and access other containers running on the node. (Citation: AppSecco Kubernetes Namespace Breakout 2020)
 
@@ -19418,7 +19418,7 @@ execution:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.636Z'
-      name: 'Hijack Execution Flow: LD_PRELOAD'
+      name: 'Hijack Execution Flow: Dynamic Linker Hijacking'
       description: |-
         Adversaries may execute their own malicious payloads by hijacking environment variables the dynamic linker uses to load shared libraries. During the execution preparation phase of a program, the dynamic linker loads specified absolute paths of shared libraries from various environment variables and files, such as <code>LD_PRELOAD</code> on Linux or <code>DYLD_INSERT_LIBRARIES</code> on macOS.(Citation: TheEvilBit DYLD_INSERT_LIBRARIES)(Citation: Timac DYLD_INSERT_LIBRARIES)(Citation: Gabilondo DYLD_INSERT_LIBRARIES Catalina Bypass) Libraries specified in environment variables are loaded first, taking precedence over system libraries with the same function name.(Citation: Man LD.SO)(Citation: TLDP Shared Libraries)(Citation: Apple Doco Archive Dynamic Libraries) Each platform's linker uses an extensive list of environment variables at different points in execution. These variables are often used by developers to debug binaries without needing to recompile, deconflict mapped symbols, and implement custom functions in the original library.(Citation: Baeldung LD_PRELOAD)
 
@@ -19812,7 +19812,7 @@ execution:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:59.945Z'
-      name: Kubernetes Exec Into Container
+      name: Container Administration Command
       description: |-
         Adversaries may abuse a container administration service to execute commands within a container. A container administration service such as the Docker daemon, the Kubernetes API server, or the kubelet may allow remote management of containers within an environment.(Citation: Docker Daemon CLI)(Citation: Kubernetes API)(Citation: Kubernetes Kubelet)
 
@@ -20471,7 +20471,7 @@ execution:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.707Z'
-      name: 'Command and Scripting Interpreter: Bash'
+      name: 'Command and Scripting Interpreter: Unix Shell'
       description: |-
         Adversaries may abuse Unix shell commands and scripts for execution. Unix shells are the primary command prompt on Linux, macOS, and ESXi systems, though many variations of the Unix shell exist (e.g. sh, ash, bash, zsh, etc.) depending on the specific OS or distribution.(Citation: DieNet Bash)(Citation: Apple ZShell) Unix shells can control every aspect of a system, with certain commands requiring elevated privileges.
 
@@ -21469,7 +21469,7 @@ execution:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.722Z'
-      name: Malicious Copy and Paste
+      name: 'User Execution: Malicious Copy and Paste'
       description: "An adversary may rely upon a user copying and pasting code in
         order to gain execution. Users may be subjected to social engineering to get
         them to copy and paste code directly into a [Command and Scripting Interpreter](https://attack.mitre.org/techniques/T1059).
@@ -22538,7 +22538,7 @@ persistence:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:25.363Z'
-      name: Kubernetes Cronjob
+      name: 'Scheduled Task/Job: Container Orchestration Job'
       description: |-
         Adversaries may abuse task scheduling functionality provided by container orchestration tools such as Kubernetes to schedule deployment of containers configured to execute malicious code. Container orchestration jobs run these automated tasks at a specific date and time, similar to cron jobs on a Linux system. Deployments of this type can also be configured to maintain a quantity of containers over time, automating the process of maintaining persistence within a cluster.
 
@@ -22775,7 +22775,7 @@ persistence:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:31.226Z'
-      name: Active Setup
+      name: 'Boot or Logon Autostart Execution: Active Setup'
       description: |-
         Adversaries may achieve persistence by adding a Registry key to the Active Setup of the local machine. Active Setup is a Windows mechanism that is used to execute programs when a user logs in. The value stored in the Registry key will be executed after a user logs into the computer.(Citation: Klein Active Setup 2010) These programs will be executed under the context of the user and will have the account's associated permissions level.
 
@@ -23785,7 +23785,7 @@ persistence:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:39.525Z'
-      name: Browser Extensions
+      name: Software Extensions
       description: "Adversaries may abuse software extensions to establish persistent
         access to victim systems. Software extensions are modular components that
         enhance or customize the functionality of software applications, including
@@ -24164,7 +24164,7 @@ persistence:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:42.963Z'
-      name: 'Boot or Logon Initialization Scripts: Logon Script (Mac)'
+      name: 'Boot or Logon Initialization Scripts: Login Hook'
       description: "Adversaries may use a Login Hook to establish persistence executed
         upon user logon. A login hook is a plist file that points to a specific script
         to execute with root privileges upon user logon. The plist file is located
@@ -24882,7 +24882,7 @@ persistence:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:51.278Z'
-      name: Time Providers
+      name: 'Boot or Logon Autostart Execution: Time Providers'
       description: |-
         Adversaries may abuse time providers to execute DLLs when the system boots. The Windows Time service (W32Time) enables time synchronization across and within domains.(Citation: Microsoft W32Time Feb 2018) W32Time time providers are responsible for retrieving time stamps from hardware/network resources and outputting these values to other network clients.(Citation: Microsoft TimeProvider)
 
@@ -25276,7 +25276,7 @@ persistence:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.640Z'
-      name: SSH Authorized Keys
+      name: 'Account Manipulation: SSH Authorized Keys'
       description: "Adversaries may modify the SSH <code>authorized_keys</code> file
         to maintain persistence on a victim host. Linux distributions, macOS, and
         ESXi hypervisors commonly use key-based authentication to secure the authentication
@@ -25618,7 +25618,7 @@ persistence:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.643Z'
-      name: 'Office Application Startup: Office Template Macros.'
+      name: 'Office Application Startup: Office Template Macros'
       description: "Adversaries may abuse Microsoft Office templates to obtain persistence
         on a compromised system. Microsoft Office contains templates that are part
         of common Office applications and are used to customize styles. The base templates
@@ -27386,7 +27386,7 @@ persistence:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:49:15.437Z'
-      name: IIS Components
+      name: 'Server Software Component: IIS Components'
       description: |-
         Adversaries may install malicious components that run on Internet Information Services (IIS) web servers to establish persistence. IIS provides several mechanisms to extend the functionality of the web servers. For example, Internet Server Application Programming Interface (ISAPI) extensions and filters can be installed to examine and/or modify incoming and outgoing IIS web requests. Extensions and filters are deployed as DLL files that export three functions: <code>Get{Extension/Filter}Version</code>, <code>Http{Extension/Filter}Proc</code>, and (optionally) <code>Terminate{Extension/Filter}</code>. IIS modules may also be installed to extend IIS web servers.(Citation: Microsoft ISAPI Extension Overview 2017)(Citation: Microsoft ISAPI Filter Overview 2017)(Citation: IIS Backdoor 2011)(Citation: Trustwave IIS Module 2013)
 
@@ -27547,7 +27547,7 @@ persistence:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.709Z'
-      name: 'Event Triggered Execution: .bash_profile .bashrc and .shrc'
+      name: 'Event Triggered Execution: Unix Shell Configuration Modification'
       description: "Adversaries may establish persistence through executing malicious
         commands triggered by a user’s shell. User [Unix Shell](https://attack.mitre.org/techniques/T1059/004)s
         execute several configuration scripts at different points throughout the session
@@ -27677,7 +27677,7 @@ persistence:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:49:17.208Z'
-      name: Authentication Package
+      name: 'Boot or Logon Autostart Execution: Authentication Package'
       description: |-
         Adversaries may abuse authentication packages to execute DLLs when the system boots. Windows authentication package DLLs are loaded by the Local Security Authority (LSA) process at system start. They provide support for multiple logon processes and multiple security protocols to the operating system.(Citation: MSDN Authentication Packages)
 
@@ -29110,7 +29110,7 @@ persistence:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:49:28.955Z'
-      name: 'Boot or Logon Initialization Scripts: Rc.common'
+      name: 'Boot or Logon Initialization Scripts: RC Scripts'
       description: |-
         Adversaries may establish persistence by modifying RC scripts, which are executed during a Unix-like system’s startup. These files allow system administrators to map and start custom services at startup for different run levels. RC scripts require root privileges to modify.
 
@@ -29203,7 +29203,7 @@ persistence:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.722Z'
-      name: 'Create or Modify System Process: SysV/Systemd Service'
+      name: 'Create or Modify System Process: Systemd Service'
       description: "Adversaries may create or modify systemd services to repeatedly
         execute malicious payloads as part of persistence. Systemd is a system and
         service manager commonly used for managing background daemon processes (also
@@ -30994,7 +30994,7 @@ command-and-control:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.628Z'
-      name: Remote Access Software
+      name: Remote Access Tools
       description: |-
         An adversary may use legitimate remote access tools to establish an interactive command and control channel within a network. Remote access tools create a session between two trusted hosts through a graphical interface, a command line interaction, a protocol tunnel via development or management software, or hardware-level access such as KVM (Keyboard, Video, Mouse) over IP solutions. Desktop support software (usually graphical interface) and remote management software (typically command line interface) allow a user to control a computer remotely as if they are a local user inheriting the user or software permissions. This software is commonly used for troubleshooting, software installation, and system management.(Citation: Symantec Living off the Land)(Citation: CrowdStrike 2015 Global Threat Report)(Citation: CrySyS Blog TeamSpy) Adversaries may similarly abuse response features included in EDR and other defensive tools that enable remote access.
 
@@ -33325,7 +33325,7 @@ command-and-control:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:49:35.060Z'
-      name: Data Obfuscation via Steganography
+      name: 'Data Obfuscation: Steganography'
       description: 'Adversaries may use steganographic techniques to hide command
         and control traffic to make detection efforts more difficult. Steganographic
         techniques can be used to hide data in digital messages that are transferred
@@ -34808,7 +34808,7 @@ collection:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.624Z'
-      name: Data from Cloud Storage Object
+      name: Data from Cloud Storage
       description: "Adversaries may access data from cloud storage.\n\nMany IaaS providers
         offer solutions for online data object storage such as Amazon S3, Azure Storage,
         and Google Cloud Storage. Similarly, SaaS enterprise platforms such as Office
@@ -35397,7 +35397,7 @@ collection:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.636Z'
-      name: 'Adversary-in-the-Middle: LLMNR/NBT-NS Poisoning and SMB Relay'
+      name: 'Adversary-in-the-Middle: Name Resolution Poisoning and SMB Relay'
       description: "By responding to LLMNR/NBT-NS/mDNS network traffic, adversaries
         may spoof an authoritative source for name resolution to force communication
         with an adversary controlled system.(Citation: BlackCat ransomware) This activity
@@ -36478,7 +36478,7 @@ lateral-movement:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:19.567Z'
-      name: Remote Services:VNC
+      name: 'Remote Services: VNC'
       description: |-
         Adversaries may use [Valid Accounts](https://attack.mitre.org/techniques/T1078) to remotely control machines using Virtual Network Computing (VNC).  VNC is a platform-independent desktop sharing system that uses the RFB (“remote framebuffer”) protocol to enable users to remotely control another computer’s display by relaying the screen, mouse, and keyboard inputs over the network.(Citation: The Remote Framebuffer Protocol)
 
@@ -38017,8 +38017,7 @@ defense-impairment:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.620Z'
-      name: 'File and Directory Permissions Modification: FreeBSD, Linux and Mac File
-        and Directory Permissions Modification'
+      name: 'File and Directory Permissions Modification: Linux and Mac Permissions'
       description: "Adversaries may modify file or directory permissions/attributes
         to evade access control lists (ACLs) and access protected files.(Citation:
         Hybrid Analysis Icacls1 June 2018)(Citation: Hybrid Analysis Icacls2 May 2018)
@@ -38721,7 +38720,7 @@ defense-impairment:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.623Z'
-      name: Domain Trust Modification
+      name: 'Domain or Tenant Policy Modification: Trust Modification'
       description: "Adversaries may add new domain trusts, modify the properties of
         existing domain trusts, or otherwise change the configuration of trust relationships
         between domains and tenants to evade defenses and/or elevate privileges.Trust
@@ -39063,8 +39062,7 @@ defense-impairment:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.625Z'
-      name: 'File and Directory Permissions Modification: Windows File and Directory
-        Permissions Modification'
+      name: 'File and Directory Permissions Modification: Windows Permissions'
       description: |-
         Adversaries may modify file or directory permissions/attributes to evade access control lists (ACLs) and access protected files.(Citation: Hybrid Analysis Icacls1 June 2018)(Citation: Hybrid Analysis Icacls2 May 2018) File and directory permissions are commonly managed by ACLs configured by the file or directory owner, or users with the appropriate permissions. File and directory ACL implementations vary by platform, but generally explicitly designate which users or groups can perform which actions (read, write, execute, etc.).
 
@@ -39928,7 +39926,7 @@ defense-impairment:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.635Z'
-      name: 'Domain Policy Modification: Group Policy Modification'
+      name: 'Domain or Tenant Policy Modification: Group Policy Modification'
       description: "Adversaries may modify Group Policy Objects (GPOs) to subvert
         the intended discretionary access controls for a domain, usually with the
         intention of escalating privileges on the domain. Group policy allows for
@@ -41639,7 +41637,7 @@ defense-impairment:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.717Z'
-      name: Create Cloud Instance
+      name: 'Modify Cloud Compute Infrastructure: Create Cloud Instance'
       description: |-
         An adversary may create a new instance or virtual machine (VM) within the compute service of a cloud account to evade defenses. Creating a new instance may allow an adversary to bypass firewall rules and permissions that exist on instances currently residing within an account. An adversary may [Create Snapshot](https://attack.mitre.org/techniques/T1578/001) of one or more volumes in an account, create a new instance, mount the snapshots, and then apply a less restrictive security policy to collect [Data from Local System](https://attack.mitre.org/techniques/T1005) or for [Remote Data Staging](https://attack.mitre.org/techniques/T1074/002).(Citation: Mandiant M-Trends 2020)
 
@@ -43186,7 +43184,7 @@ credential-access:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:30.302Z'
-      name: 'Forge Web Credentials: SAML token'
+      name: 'Forge Web Credentials: SAML Tokens'
       description: |-
         An adversary may forge SAML tokens with any permissions claims and lifetimes if they possess a valid SAML token-signing certificate.(Citation: Microsoft SolarWinds Steps) The default lifetime of a SAML token is one hour, but the validity period can be specified in the <code>NotOnOrAfter</code> value of the <code>conditions ...</code> element in a token. This value can be changed using the <code>AccessTokenLifetime</code> in a <code>LifetimeTokenPolicy</code>.(Citation: Microsoft SAML Token Lifetimes) Forged SAML tokens enable adversaries to authenticate across services that use SAML 2.0 as an SSO (single sign-on) mechanism.(Citation: Cyberark Golden SAML)
 
@@ -44704,7 +44702,7 @@ credential-access:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.636Z'
-      name: 'Adversary-in-the-Middle: LLMNR/NBT-NS Poisoning and SMB Relay'
+      name: 'Adversary-in-the-Middle: Name Resolution Poisoning and SMB Relay'
       description: "By responding to LLMNR/NBT-NS/mDNS network traffic, adversaries
         may spoof an authoritative source for name resolution to force communication
         with an adversary controlled system.(Citation: BlackCat ransomware) This activity
@@ -45212,7 +45210,7 @@ credential-access:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:49:02.375Z'
-      name: 'Unsecured Credentials: Bash History'
+      name: 'Unsecured Credentials: Shell History'
       description: |-
         Adversaries may search the command history on compromised systems for insecurely stored credentials.
 
@@ -47204,7 +47202,7 @@ credential-access:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:49:25.253Z'
-      name: 'OS Credential Dumping: /etc/passwd, /etc/master.passwd and /etc/shadow'
+      name: 'OS Credential Dumping: /etc/passwd and /etc/shadow'
       description: |-
         Adversaries may attempt to dump the contents of <code>/etc/passwd</code> and <code>/etc/shadow</code> to enable offline password cracking. Most modern Linux operating systems use a combination of <code>/etc/passwd</code> and <code>/etc/shadow</code> to store user account information, including password hashes in <code>/etc/shadow</code>. By default, <code>/etc/shadow</code> is only readable by the root user.(Citation: Linux Password and Shadow File Formats)
 
@@ -47925,7 +47923,7 @@ credential-access:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:49:38.351Z'
-      name: Kubernetes List Secrets
+      name: 'Unsecured Credentials: Container API'
       description: "Adversaries may gather credentials via APIs within a containers
         environment. APIs in these environments, such as the Docker API and Kubernetes
         APIs, allow a user to remotely manage their container resources and cluster
@@ -49593,7 +49591,7 @@ discovery:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.630Z'
-      name: Time Based Evasion
+      name: 'Virtualization/Sandbox Evasion: Time Based Checks'
       description: "Adversaries may employ various time-based methods to detect virtualization
         and analysis environments, particularly those that attempt to manipulate time
         mechanisms to simulate longer elapses of time. This may include enumerating
@@ -49818,7 +49816,7 @@ discovery:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.635Z'
-      name: Browser Bookmark Discovery
+      name: Browser Information Discovery
       description: |-
         Adversaries may enumerate information about browsers to learn more about compromised environments. Data saved by browsers (such as bookmarks, accounts, and browsing history) may reveal a variety of personal information about users (e.g., banking sites, relationships/interests, social media, etc.) as well as details about internal network resources such as servers, tools/dashboards, or other related infrastructure.(Citation: Kaspersky Autofill)
 
@@ -60653,7 +60651,7 @@ initial-access:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:49:18.341Z'
-      name: Compromise Software Supply Chain
+      name: 'Supply Chain Compromise: Compromise Software Supply Chain'
       description: "Adversaries may manipulate application software prior to receipt
         by a final consumer for the purpose of data or system compromise. Supply chain
         compromise of software can take place in a number of ways, including manipulation
@@ -61676,8 +61674,8 @@ exfiltration:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.705Z'
-      name: Exfiltration Over Alternative Protocol - Exfiltration Over Asymmetric
-        Encrypted Non-C2 Protocol
+      name: 'Exfiltration Over Alternative Protocol: Exfiltration Over Asymmetric
+        Encrypted Non-C2 Protocol'
       description: "Adversaries may steal data by exfiltrating it over an asymmetrically
         encrypted network protocol other than that of the existing command and control
         channel. The data may also be sent to an alternate network location from the
@@ -62389,7 +62387,7 @@ exfiltration:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.726Z'
-      name: 'Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted/Obfuscated
+      name: 'Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted
         Non-C2 Protocol'
       description: "Adversaries may steal data by exfiltrating it over an un-encrypted
         network protocol other than that of the existing command and control channel.
