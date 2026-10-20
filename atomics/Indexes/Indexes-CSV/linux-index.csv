@@ -104,6 +104,7 @@ persistence,T1037.004,Boot or Logon Initialization Scripts: Rc.common,3,rc.local
 persistence,T1543.002,Create or Modify System Process: SysV/Systemd Service,1,Create Systemd Service,d9e4f24f-aa67-4c6e-bcbf-85622b697a7c,bash
 persistence,T1543.002,Create or Modify System Process: SysV/Systemd Service,2,Create SysV Service,760fe8d2-79d9-494f-905e-a239a3df86f6,sh
 persistence,T1543.002,Create or Modify System Process: SysV/Systemd Service,3,"Create Systemd Service file,  Enable the service , Modify and Reload the service.",c35ac4a8-19de-43af-b9f8-755da7e89c89,bash
+persistence,T1543.002,Create or Modify System Process: SysV/Systemd Service,4,TeamPCP Aqua Trivy Persistence,a29738b0-0e14-488c-984f-6a851fcdbcfe,bash
 persistence,T1053.002,Scheduled Task/Job: At,2,At - Schedule a job,7266d898-ac82-4ec0-97c7-436075d0d08e,sh
 persistence,T1078.003,Valid Accounts: Local Accounts,8,Create local account (Linux),02a91c34-8a5b-4bed-87af-501103eb5357,bash
 persistence,T1078.003,Valid Accounts: Local Accounts,9,Reactivate a locked/expired account (Linux),d2b95631-62d7-45a3-aaef-0972cea97931,bash
@@ -117,6 +118,8 @@ command-and-control,T1659,Content Injection,1,MITM Proxy Injection,9b360eaf-c778
 command-and-control,T1572,Protocol Tunneling,5,Microsoft Dev tunnels (Linux/macOS),9f94a112-1ce2-464d-a63b-83c1f465f801,bash
 command-and-control,T1572,Protocol Tunneling,6,VSCode tunnels (Linux/macOS),b877943f-0377-44f4-8477-f79db7f07c4d,sh
 command-and-control,T1572,Protocol Tunneling,7,Cloudflare tunnels (Linux/macOS),228c336a-2f79-4043-8aef-bfa453a611d5,sh
+command-and-control,T1572,Protocol Tunneling,8,Install and Run frpc Reverse Proxy Client,f54179ee-c782-4fe3-b836-213d3bda66a2,sh
+command-and-control,T1572,Protocol Tunneling,9,Install and Run gost Tunnel Proxy,3afc90c4-90b3-44af-8d14-52852abe7258,sh
 command-and-control,T1090.003,Proxy: Multi-hop Proxy,3,Tor Proxy Usage - Debian/Ubuntu/FreeBSD,5ff9d047-6e9c-4357-b39b-5cf89d9b59c7,sh
 command-and-control,T1571,Non-Standard Port,2,Testing usage of uncommonly used port,5db21e1d-dd9c-4a50-b885-b1e748912767,sh
 command-and-control,T1102.002,Web Service: Bidirectional Communication,1,Bidirectional C2 Simulation via paste.rs (sh),ec9ab81c-8053-4957-8c66-0218381ab564,sh
@@ -278,6 +281,7 @@ privilege-escalation,T1037.004,Boot or Logon Initialization Scripts: Rc.common,3
 privilege-escalation,T1543.002,Create or Modify System Process: SysV/Systemd Service,1,Create Systemd Service,d9e4f24f-aa67-4c6e-bcbf-85622b697a7c,bash
 privilege-escalation,T1543.002,Create or Modify System Process: SysV/Systemd Service,2,Create SysV Service,760fe8d2-79d9-494f-905e-a239a3df86f6,sh
 privilege-escalation,T1543.002,Create or Modify System Process: SysV/Systemd Service,3,"Create Systemd Service file,  Enable the service , Modify and Reload the service.",c35ac4a8-19de-43af-b9f8-755da7e89c89,bash
+privilege-escalation,T1543.002,Create or Modify System Process: SysV/Systemd Service,4,TeamPCP Aqua Trivy Persistence,a29738b0-0e14-488c-984f-6a851fcdbcfe,bash
 privilege-escalation,T1053.002,Scheduled Task/Job: At,2,At - Schedule a job,7266d898-ac82-4ec0-97c7-436075d0d08e,sh
 privilege-escalation,T1078.003,Valid Accounts: Local Accounts,8,Create local account (Linux),02a91c34-8a5b-4bed-87af-501103eb5357,bash
 privilege-escalation,T1078.003,Valid Accounts: Local Accounts,9,Reactivate a locked/expired account (Linux),d2b95631-62d7-45a3-aaef-0972cea97931,bash
@@ -317,14 +321,34 @@ credential-access,T1552.004,Unsecured Credentials: Private Keys,5,Copy Private S
 credential-access,T1552.004,Unsecured Credentials: Private Keys,6,Copy Private SSH Keys with rsync (freebsd),922b1080-0b95-42b0-9585-b9a5ea0af044,sh
 credential-access,T1552.004,Unsecured Credentials: Private Keys,7,Copy the users GnuPG directory with rsync,2a5a0601-f5fb-4e2e-aa09-73282ae6afca,sh
 credential-access,T1552.004,Unsecured Credentials: Private Keys,8,Copy the users GnuPG directory with rsync (freebsd),b05ac39b-515f-48e9-88e9-2f141b5bcad0,sh
+credential-access,T1552.004,Unsecured Credentials: Private Keys,15,Enumerate WireGuard interface credentials with wg showconf,e7568442-1b7d-4380-a933-b269d1326b6c,sh
+credential-access,T1552.004,Unsecured Credentials: Private Keys,16,Find WireGuard configuration files,42c55554-3dcb-4df6-8fbb-c8ccacc478d4,sh
+credential-access,T1552.004,Unsecured Credentials: Private Keys,17,Find TLS private key files,5e417277-0ae7-4ad5-a3e8-0fa27c122b29,sh
 credential-access,T1552.003,Unsecured Credentials: Bash History,1,Search Through Bash History,3cfde62b-7c33-4b26-a61e-755d6131c8ce,sh
 credential-access,T1552.003,Unsecured Credentials: Bash History,2,Search Through sh History,d87d3b94-05b4-40f2-a80f-99864ffa6803,sh
+credential-access,T1552.003,Unsecured Credentials: Bash History,3,Search Through Zsh History,8f2765a8-e795-438b-a102-5e25a7adcce1,sh
+credential-access,T1552.003,Unsecured Credentials: Bash History,4,Search Through SQL History,ce64e135-f186-4c4a-85da-75f6ef71e46f,sh
 credential-access,T1552.001,Unsecured Credentials: Credentials In Files,1,Find AWS credentials,37807632-d3da-442e-8c2e-00f44928ff8f,sh
 credential-access,T1552.001,Unsecured Credentials: Credentials In Files,3,Extract passwords with grep,bd4cf0d1-7646-474e-8610-78ccf5a097c4,sh
-credential-access,T1552.001,Unsecured Credentials: Credentials In Files,6,Find and Access Github Credentials,da4f751a-020b-40d7-b9ff-d433b7799803,bash
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,6,Find and Access Github Credentials,da4f751a-020b-40d7-b9ff-d433b7799803,sh
 credential-access,T1552.001,Unsecured Credentials: Credentials In Files,15,Find Azure credentials,a8f6148d-478a-4f43-bc62-5efee9f931a4,sh
 credential-access,T1552.001,Unsecured Credentials: Credentials In Files,16,Find GCP credentials,aa12eb29-2dbb-414e-8b20-33d34af93543,sh
 credential-access,T1552.001,Unsecured Credentials: Credentials In Files,17,Find OCI credentials,9d9c22c9-fa97-4008-a204-478cf68c40af,sh
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,18,Access Travis CI Config File,5312c7c3-775b-4437-a8b0-914b30cfebd4,sh
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,19,Access Gitlab CI Config File,98618067-a2c7-4d4b-9c89-403a90f43656,sh
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,20,Find Terraform credential files,c3372ae9-b9bf-427a-b330-cb04fecb9c1d,sh
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,21,Find Docker credentials,5a668739-3a2f-4265-895f-c0e1e0b09eaa,sh
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,22,Find HashiCorp Vault token files,2951c09f-b4f9-4248-ba75-6373709ebd55,sh
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,23,Access Drone CI Config File,a11f22fb-a037-4cc2-bcfc-a133b287aa1b,sh
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,24,Dump GitHub Actions Runner Environment Variables from procfs,51cde30c-0311-449a-8e15-542b59f95939,bash
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,25,Search for Git Credential Files,c8367142-cbb0-47a4-96c7-ff9969fd64ea,sh
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,26,Find .env Files Containing Application Credentials,bcf8e58a-1cb7-4988-9227-3d3c70751811,sh
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,27,Find database credential files,e62bccc4-0200-47e9-b40a-4ea5328495b3,sh
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,28,Find system database configuration files,d1665562-c389-49fc-9cbe-92236816a105,sh
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,29,Find npm registry credential files,2a24627b-061b-43e6-bece-a5b0638841dd,sh
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,30,Access Jenkinsfile,18318786-e0c0-4bdf-979f-f022e6f5f2ef,sh
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,31,Find Kubernetes user configuration files,14575d1f-16b3-4a0b-8986-540e42e6a6cc,sh
+credential-access,T1552.001,Unsecured Credentials: Credentials In Files,32,Find Kubernetes cluster configuration files,af664fc0-0772-4866-a661-d49a22a13487,sh
 credential-access,T1110.004,Brute Force: Credential Stuffing,1,SSH Credential Stuffing From Linux,4f08197a-2a8a-472d-9589-cd2895ef22ad,bash
 credential-access,T1110.004,Brute Force: Credential Stuffing,3,SSH Credential Stuffing From FreeBSD,a790d50e-7ebf-48de-8daa-d9367e0911d4,sh
 credential-access,T1003.008,"OS Credential Dumping: /etc/passwd, /etc/master.passwd and /etc/shadow",1,Access /etc/shadow (Local),3723ab77-c546-403c-8fb4-bb577033b235,bash
@@ -397,6 +421,7 @@ discovery,T1018,Remote System Discovery,12,Remote System Discovery - ip neighbou
 discovery,T1018,Remote System Discovery,13,Remote System Discovery - ip route,1a4ebe70-31d0-417b-ade2-ef4cb3e7d0e1,sh
 discovery,T1018,Remote System Discovery,14,Remote System Discovery - netstat,d2791d72-b67f-4615-814f-ec824a91f514,sh
 discovery,T1018,Remote System Discovery,15,Remote System Discovery - ip tcp_metrics,6c2da894-0b57-43cb-87af-46ea3b501388,sh
+discovery,T1018,Remote System Discovery,23,Enumerate SSH Configuration,6fc814cb-16d1-43e6-80b3-2ff2a45250d1,bash
 discovery,T1046,Network Service Discovery,1,Port Scan,68e907da-2539-48f6-9fc9-257a78c05540,bash
 discovery,T1046,Network Service Discovery,2,Port Scan Nmap,515942b0-a09f-4163-a7bb-22fefb6f185f,sh
 discovery,T1046,Network Service Discovery,12,Port Scan using nmap (Port range),0d5a2b03-3a26-45e4-96ae-89485b4d1f97,sh

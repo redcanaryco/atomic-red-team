@@ -112,6 +112,12 @@ atomic_tests:
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{local_xsl_file}") -ErrorAction Ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1220/src/wmicscript.xsl" -OutFile "#{local_xsl_file}"
+  - description: |
+      wmic.exe must be present on the system. It is disabled by default on Windows 11, version 24H2 and later, and removed when upgrading to version 25H2.
+    prereq_command: |
+      if (Test-Path "$env:SystemRoot\System32\wbem\wmic.exe") {exit 0} else {exit 1}
+    get_prereq_command: |
+      DISM /Online /Add-Capability /CapabilityName:WMIC~~~~
   executor:
     command: |
       wmic #{wmic_command} /FORMAT:"#{local_xsl_file}"
@@ -131,6 +137,14 @@ atomic_tests:
       description: WMI command to execute using wmic.exe
       type: string
       default: process list
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      wmic.exe must be present on the system. It is disabled by default on Windows 11, version 24H2 and later, and removed when upgrading to version 25H2.
+    prereq_command: |
+      if (Test-Path "$env:SystemRoot\System32\wbem\wmic.exe") {exit 0} else {exit 1}
+    get_prereq_command: |
+      DISM /Online /Add-Capability /CapabilityName:WMIC~~~~
   executor:
     command: |
       wmic #{wmic_command} /FORMAT:"#{remote_xsl_file}"

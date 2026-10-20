@@ -164,3 +164,27 @@ atomic_tests:
       echo "e" > /proc/sysrq-trigger
     name: bash
     elevation_required: true
+- name: Windows - iisreset.exe to stop Internet services
+  auto_generated_guid: 0f752206-61b2-4f2f-b397-e883a503968b
+  description: |
+    Stops Internet services upon running. Used by BlackCat ransomware to release/prevent locks on files to be encrypted.
+  supported_platforms:
+  - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: iireset.exe will not be found if the IIS Windows feature is disabled, which it is by default.
+    prereq_command: 'if((Get-WindowsOptionalFeature -Online -FeatureName IIS-WebServerRole).State -eq "Enabled"){exit 0} else {exit 1}'
+    get_prereq_command: |-
+       Enable-WindowsOptionalFeature -Online -FeatureName IIS-WebServerRole -NoRestart
+       New-Item -Path "$env:TEMP\T1489_enabled" -ItemType File
+  executor:
+    command: |
+      iisreset.exe /stop
+    cleanup_command: |
+      iisreset.exe /start
+      if(Test-Path -Path "$env:TEMP\T1489_enabled"){
+        Disable-WindowsOptionalFeature -Online -FeatureName IIS-WebServerRole -NoRestart
+        Remove-Item "$env:TEMP\T1489_enabled" -Force
+      }
+    name: powershell
+    elevation_required: true

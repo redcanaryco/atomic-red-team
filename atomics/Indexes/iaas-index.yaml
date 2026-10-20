@@ -432,7 +432,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.620Z'
-      name: File/Path Exclusions
+      name: 'Hide Artifacts: File/Path Exclusions'
       description: |-
         Adversaries may attempt to hide their file-based artifacts by writing them to specific folders or file names excluded from antivirus (AV) scanning and other defensive capabilities. AV and other file-based scanners often include exclusions to optimize performance as well as ease installation and legitimate use of applications. These exclusions may be contextual (e.g., scans are only initiated in response to specific triggering events/alerts), but are also often hardcoded strings referencing specific folders and/or files assumed to be trusted and legitimate.(Citation: Microsoft File Folder Exclusions)
 
@@ -451,6 +451,7 @@ stealth:
       - macOS
       - Windows
       x_mitre_version: '2.0'
+      identifier: T1564.012
     atomic_tests: []
   T1216.001:
     technique:
@@ -3872,6 +3873,7 @@ stealth:
       - macOS
       - Windows
       x_mitre_version: '2.0'
+      identifier: T1027.017
     atomic_tests: []
   T1542.002:
     technique:
@@ -7585,7 +7587,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.723Z'
-      name: SyncAppvPublishingServer
+      name: 'System Script Proxy Execution: SyncAppvPublishingServer'
       description: "Adversaries may abuse SyncAppvPublishingServer.vbs to proxy execution
         of malicious [PowerShell](https://attack.mitre.org/techniques/T1059/001) commands.
         SyncAppvPublishingServer.vbs is a Visual Basic script associated with how
@@ -7617,6 +7619,7 @@ stealth:
       x_mitre_platforms:
       - Windows
       x_mitre_version: '2.0'
+      identifier: T1216.002
     atomic_tests: []
   T1027.018:
     technique:
@@ -13276,6 +13279,7 @@ privilege-escalation:
       - macOS
       - Windows
       x_mitre_version: '1.6'
+      identifier: T1068
     atomic_tests: []
   T1546:
     technique:
@@ -15703,7 +15707,7 @@ execution:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:22.302Z'
-      name: Server Software Component
+      name: Shared Modules
       description: |-
         Adversaries may execute malicious payloads via loading shared modules. Shared modules are executable files that are loaded into processes to provide access to reusable code, such as specific custom functions or invoking OS API functions (i.e., [Native API](https://attack.mitre.org/techniques/T1106)).
 
@@ -33903,7 +33907,7 @@ defense-impairment:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.623Z'
-      name: Windows Host Firewall
+      name: 'Disable or Modify System Firewall: Windows Host Firewall'
       description: "Adversaries may disable or modify the Windows host firewall to
         bypass controls limiting network usage. This can include disabling the Windows
         host firewall entirely, suppressing specific profiles (domain, private, public),
@@ -33929,6 +33933,7 @@ defense-impairment:
       x_mitre_platforms:
       - Windows
       x_mitre_version: '1.0'
+      identifier: T1686.003
     atomic_tests: []
   T1689:
     technique:

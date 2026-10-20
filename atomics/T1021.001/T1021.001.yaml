@@ -1,21 +1,21 @@
 attack_technique: T1021.001
 display_name: 'Remote Services: Remote Desktop Protocol'
 atomic_tests:
-- name: RDP to DomainController
+- name: RDP to Remote Host
   auto_generated_guid: 355d4632-8cb9-449d-91ce-b566d0253d3e
   description: |
-    Attempt an RDP session via Remote Desktop Application to a DomainController.
+    Attempt an RDP session via the Remote Desktop Client (mstsc) to an arbitrary remote host.
   supported_platforms:
   - windows
   input_arguments:
-    logonserver:
-      description: ComputerName argument default %logonserver%
+    target_host:
+      description: IP address or hostname of the remote host to RDP into.
       type: string
-      default: $ENV:logonserver.TrimStart("\")
+      default: 127.0.0.1
     domain:
-      description: domain argument default %USERDOMAIN%
+      description: Domain of the account. Leave blank to use a local account (username only).
       type: string
-      default: $Env:USERDOMAIN
+      default: ""
     username:
       description: Username argument default %username%
       type: string
@@ -24,24 +24,18 @@ atomic_tests:
       description: Password
       type: string
       default: 1password2!
-  dependencies:
-  - description: |
-      Computer must be domain joined
-    prereq_command: |
-      if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain) { exit 0} else { exit 1}
-    get_prereq_command: |
-      Write-Host Joining this computer to a domain must be done manually
   executor:
     command: |
-      $Server=#{logonserver}
-      $User = Join-Path #{domain} #{username}
-      $Password="#{password}"
+      $Server = "#{target_host}"
+      $User = if ("#{domain}") { "#{domain}\#{username}" } else { "#{username}" }
+      $Password = "#{password}"
       cmdkey /generic:TERMSRV/$Server /user:$User /pass:$Password
       mstsc /v:$Server
-      echo "RDP connection established"
+      echo "RDP connection attempted"
     cleanup_command: |
       $p=Tasklist /svc /fi "IMAGENAME eq mstsc.exe" /fo csv | convertfrom-csv
       if(-not ([string]::IsNullOrEmpty($p.PID))) { Stop-Process -Id $p.PID }
+      cmdkey /delete:TERMSRV/#{target_host}| Out-Null
     name: powershell
 - name: Changing RDP Port to Non Standard Port via Powershell
   auto_generated_guid: 2f840dd4-8a2e-4f44-beb3-6b2399ea3771
