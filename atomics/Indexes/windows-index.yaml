@@ -2032,6 +2032,42 @@ stealth:
           Remove-Item -Path "#{ved_path}\VEDetector.exe" -Force -ErrorAction SilentlyContinue
 
           Write-Host "[+] Cleaned up VEDetector artifacts"
+    - name: WMIC masquerade as ncv.exe in temp directory
+      auto_generated_guid: 9ce7d442-9b1e-43a3-87ea-55038ce79aa2
+      description: |
+        Copies %SystemRoot%\System32\wbem\wmic.exe to a temporary directory,
+        renames it to ncv.exe, and executes it to retrieve OS version information.
+        This simulates an adversary using a renamed trusted binary from an
+        unexpected location to evade detection.
+      supported_platforms:
+      - windows
+      input_arguments:
+        temp_dir:
+          description: Temporary working directory
+          type: Path
+          default: "$env:TEMP\\T1036_005_test"
+        source_exe:
+          description: Path to the legitimate wmic.exe
+          type: Path
+          default: "$env:SystemRoot\\System32\\wbem\\wmic.exe"
+        masqueraded_name:
+          description: Name of the masqueraded executable
+          type: string
+          default: ncv.exe
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $dir = "#{temp_dir}"
+          $source = "#{source_exe}"
+          $target = Join-Path $dir "#{masqueraded_name}"
+          New-Item -ItemType Directory -Force -Path $dir | Out-Null
+          Copy-Item -Path $source -Destination $target -Force
+          Write-Host "Running masqueraded binary: $target"
+          & $target os get Caption,Version
+        cleanup_command: 'Remove-Item -Recurse -Force "#{temp_dir}" -ErrorAction SilentlyContinue
+
+          '
   T1036.008:
     technique:
       type: attack-pattern
@@ -7882,7 +7918,290 @@ stealth:
       - macOS
       - Windows
       x_mitre_version: '2.0'
-    atomic_tests: []
+      identifier: T1027.017
+    atomic_tests:
+    - name: T1027.017 - Inline JavaScript via Embedded SVG Script Element
+      auto_generated_guid: de3ac2f1-41e7-411a-be75-2ba35354d181
+      description: 'Constructs a standard SVG graphic containing an embedded inline
+        <script> element.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $svgPath = "$env:TEMP\T1027_017_script_element.svg"
+          $svgContent = @"
+          <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200">
+            <circle cx="100" cy="100" r="80" fill="blue" />
+            <script type="text/javascript">
+              var payload = "SVG_Smuggling_Test_Active";
+              console.log(payload);
+            </script>
+          </svg>
+          "@
+          [System.IO.File]::WriteAllText($svgPath,$svgContent)
+          Write-Host "[+] Generated SVG file at: $svgPath"
+        cleanup_command: 'Remove-Item "$env:TEMP\T1027_017_script_element.svg" -Force
+          -ErrorAction SilentlyContinue
+
+          '
+    - name: T1027.017 - Base64 Blob Payload Assembly via SVG JavaScript
+      auto_generated_guid: f976dbcb-d75b-4db8-9bc9-0dadbed2a132
+      description: 'Embeds a Base64-encoded string inside an SVG script that creates
+        a binary Blob download.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $svgPath = "$env:TEMP\T1027_017_base64_blob.svg"
+          $svgContent = @"
+          <svg xmlns="http://www.w3.org/2000/svg">
+            <script type="text/javascript">
+              var b64Payload = "TVqQAAMAAAAEAAAA//8AALgAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAA==";
+              var byteCharacters = atob(b64Payload);
+              var byteNumbers = new Array(byteCharacters.length);
+              for (var i = 0; i < byteCharacters.length; i++) {
+                  byteNumbers[i] = byteCharacters.charCodeAt(i);
+              }
+              var byteArray = new Uint8Array(byteNumbers);
+              var blob = new Blob([byteArray], {type: "application/octet-stream"});
+              var link = document.createElement("a");
+              link.href = window.URL.createObjectURL(blob);
+              link.download = "smuggled_payload.exe";
+            </script>
+          </svg>
+          "@
+          [System.IO.File]::WriteAllText($svgPath,$svgContent)
+          Write-Host "[+] Generated Base64 Blob SVG at: $svgPath"
+        cleanup_command: 'Remove-Item "$env:TEMP\T1027_017_base64_blob.svg" -Force
+          -ErrorAction SilentlyContinue
+
+          '
+    - name: T1027.017 - XML CDATA Section Script Obfuscation
+      auto_generated_guid: 40f594f9-7d95-4710-b516-9b33ad128ac0
+      description: 'Encapsulates executable JavaScript logic inside an XML CDATA section.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $svgPath = "$env:TEMP\T1027_017_cdata_obfuscation.svg"
+          $svgContent = @"
+          <svg xmlns="http://www.w3.org/2000/svg">
+            <script type="text/javascript">
+              <![CDATA[
+                (function(){
+                  var _0x1234 = ["\x53\x56\x47\x5f\x53\x6d\x75\x67\x67\x6c\x69\x6e\x67"];
+                  console.log(_0x1234[0]);
+                })();
+              ]]>
+            </script>
+          </svg>
+          "@
+          [System.IO.File]::WriteAllText($svgPath,$svgContent)
+          Write-Host "[+] Generated CDATA SVG at: $svgPath"
+        cleanup_command: 'Remove-Item "$env:TEMP\T1027_017_cdata_obfuscation.svg"
+          -Force -ErrorAction SilentlyContinue
+
+          '
+    - name: T1027.017 - Root SVG Event Handler Execution (`onload`)
+      auto_generated_guid: da0b0ea1-226c-4b24-a1da-dd5324284bce
+      description: 'Utilizes onload attributes directly on the root SVG element.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $svgPath = "$env:TEMP\T1027_017_onload_handler.svg"
+          $svgContent = @"
+          <svg xmlns="http://www.w3.org/2000/svg" onload="var x='SmuggledViaOnLoad';console.log(x);">
+            <rect width="100" height="100" fill="red" />
+          </svg>
+          "@
+          [System.IO.File]::WriteAllText($svgPath,$svgContent)
+          Write-Host "[+] Generated onload SVG at: $svgPath"
+        cleanup_command: 'Remove-Item "$env:TEMP\T1027_017_onload_handler.svg" -Force
+          -ErrorAction SilentlyContinue
+
+          '
+    - name: T1027.017 - Nested HTML via SVG `<foreignObject>` Smuggling
+      auto_generated_guid: 75748cf2-99e9-4458-a4ca-da7c9170b68f
+      description: 'Leverages the SVG foreignObject tag to embed HTML5 elements and
+        scripts.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $svgPath = "$env:TEMP\T1027_017_foreign_object.svg"
+          $svgContent = @"
+          <svg xmlns="http://www.w3.org/2000/svg" width="400" height="400">
+            <foreignObject width="100%" height="100%">
+              <div xmlns="http://www.w3.org/1999/xhtml">
+                <script type="text/javascript">
+                  var foreignSmuggle = "Payload_Inside_ForeignObject";
+                </script>
+              </div>
+            </foreignObject>
+          </svg>
+          "@
+          [System.IO.File]::WriteAllText($svgPath,$svgContent)
+          Write-Host "[+] Generated foreignObject SVG at: $svgPath"
+        cleanup_command: 'Remove-Item "$env:TEMP\T1027_017_foreign_object.svg" -Force
+          -ErrorAction SilentlyContinue
+
+          '
+    - name: T1027.017 - SVG Animation Element Script Execution (`<animate>`)
+      auto_generated_guid: 3552166b-48b2-429b-8640-737cfc07e394
+      description: 'Uses SVG SMIL animation elements with event handlers like onbegin.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $svgPath = "$env:TEMP\T1027_017_animate_element.svg"
+          $svgContent = @"
+          <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200">
+            <rect width="100" height="100" fill="blue">
+              <animate attributeName="x" from="0" to="50" dur="1s" onbegin="console.log('Animate_Smuggle_Triggered')" />
+            </rect>
+          </svg>
+          "@
+          [System.IO.File]::WriteAllText($svgPath,$svgContent)
+          Write-Host "[+] Generated animate SVG at: $svgPath"
+        cleanup_command: 'Remove-Item "$env:TEMP\T1027_017_animate_element.svg" -Force
+          -ErrorAction SilentlyContinue
+
+          '
+    - name: T1027.017 - XLink / Data URI Script Smuggling in SVG
+      auto_generated_guid: eb1a10f8-7fdd-41c5-ad10-49dbd4a4bb99
+      description: 'Uses the xlink:href attribute combined with a data URI script.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $svgPath = "$env:TEMP\T1027_017_xlink_data_uri.svg"
+          $svgContent = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><script xlink:href="data:text/javascript;base64,Y29uc29sZS5sb2coJ1hMaW5rX1NtdWdnbGVfQ2FsbGJhY2snKTs=" /></svg>'
+          [System.IO.File]::WriteAllText($svgPath,$svgContent)
+          Write-Host "[+] Generated XLink SVG at: $svgPath"
+        cleanup_command: 'Remove-Item "$env:TEMP\T1027_017_xlink_data_uri.svg" -Force
+          -ErrorAction SilentlyContinue
+
+          '
+    - name: T1027.017 - SVG Custom Data Attribute Payload Staging (`data-*`)
+      auto_generated_guid: 81b21afb-46c8-4a8b-8278-c50572889387
+      description: 'Stores obfuscated payload strings inside custom data-* attributes.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $svgPath = "$env:TEMP\T1027_017_data_attribute.svg"
+          $svgContent = @"
+          <svg xmlns="http://www.w3.org/2000/svg" id="stage" data-payload="d2luZG93LnNtdWdnbGVkID0gdHJ1ZTs=">
+            <script type="text/javascript">
+              var encoded = document.getElementById('stage').getAttribute('data-payload');
+              var decoded = atob(encoded);
+              eval(decoded);
+            </script>
+          </svg>
+          "@
+          [System.IO.File]::WriteAllText($svgPath,$svgContent)
+          Write-Host "[+] Generated data-attribute SVG at: $svgPath"
+        cleanup_command: 'Remove-Item "$env:TEMP\T1027_017_data_attribute.svg" -Force
+          -ErrorAction SilentlyContinue
+
+          '
+    - name: T1027.017 - Dynamic DOM Element Construction via SVG JavaScript
+      auto_generated_guid: 32e96d49-46d1-4d16-b5c0-91b7bfc77fd8
+      description: 'Constructs hidden HTML elements dynamically using JavaScript DOM
+        manipulation.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $svgPath = "$env:TEMP\T1027_017_dynamic_dom.svg"
+          $svgContent = @"
+          <svg xmlns="http://www.w3.org/2000/svg">
+            <script type="text/javascript">
+              var iframe = document.createElement("iframe");
+              iframe.style.display = "none";
+              iframe.srcdoc = "<script>console.log('Dynamic_DOM_Smuggle');<\/script>";
+              document.documentElement.appendChild(iframe);
+            </script>
+          </svg>
+          "@
+          [System.IO.File]::WriteAllText($svgPath,$svgContent)
+          Write-Host "[+] Generated dynamic DOM SVG at: $svgPath"
+        cleanup_command: 'Remove-Item "$env:TEMP\T1027_017_dynamic_dom.svg" -Force
+          -ErrorAction SilentlyContinue
+
+          '
+    - name: T1027.017 - Shadow DOM / Web Component SVG Payload Encapsulation
+      auto_generated_guid: 304da677-d590-4f25-b2c6-17139920bbe3
+      description: 'Hides executable JavaScript within a Shadow DOM root attached
+        to a custom component.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $svgPath = "$env:TEMP\T1027_017_shadow_dom.svg"
+          $svgContent = @"
+          <svg xmlns="http://www.w3.org/2000/svg">
+            <foreignObject width="100%" height="100%">
+              <div xmlns="http://www.w3.org/1999/xhtml">
+                <div id="host"></div>
+                <script type="text/javascript">
+                  var host = document.getElementById('host');
+                  if (host && host.attachShadow) {
+                    var shadow = host.attachShadow({mode: 'closed'});
+                    shadow.innerHTML = '<script>console.log("Shadow_DOM_Smuggled");<\/script>';
+                  }
+                </script>
+              </div>
+            </foreignObject>
+          </svg>
+          "@
+          [System.IO.File]::WriteAllText($svgPath,$svgContent)
+          Write-Host "[+] Generated Shadow DOM SVG at: $svgPath"
+        cleanup_command: 'Remove-Item "$env:TEMP\T1027_017_shadow_dom.svg" -Force
+          -ErrorAction SilentlyContinue
+
+          '
   T1542.002:
     technique:
       type: attack-pattern
@@ -80523,6 +80842,24 @@ discovery:
           '
         cleanup_command:
         name: powershell
+        elevation_required: false
+    - name: Enumerate Active Directory Users with csvde
+      auto_generated_guid: 303d67f0-3b7a-4a27-8fc9-995239ae8c51
+      description: 'The following test uses csvde.exe to export a list of Active Directory
+        users and their properties to a CSV file.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        command: 'csvde -f users.csv -r "(&(objectClass=user)(objectCategory=person))"
+          -l "DN,sAMAccountName,userPrincipalName,mail,displayName,description,memberOf"
+
+          '
+        cleanup_command: 'del users.csv >nul 2>&1
+
+          '
+        name: command_prompt
         elevation_required: false
   T1087.001:
     technique:

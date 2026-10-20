@@ -60,3 +60,33 @@ atomic_tests:
     cleanup_command: |
       rm #{file_to_pad}
     name: sh
+
+- name: Pad Binary to Change Hash using PowerShell - Windows
+  description: |
+    Uses PowerShell to add a zero byte and random data to the binary to change the hash.
+
+    Upon successful execution, PowerShell will modify #{file_to_pad}, therefore the expected hash will change.
+  supported_platforms:
+  - windows
+  input_arguments:
+    file_to_pad:
+      description: Path of binary to be padded
+      type: path
+      default: $env:TEMP\evil-binary.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      The binary must exist on disk at specified location (#{file_to_pad})
+    prereq_command: |
+      if (Test-Path "#{file_to_pad}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Copy-Item -Path "C:\Windows\System32\cmd.exe" -Destination "#{file_to_pad}" -Force
+  executor:
+    command: |
+      Add-Content -Path "#{file_to_pad}" -Value ([byte[]](0x00)) -Encoding Byte
+      $randomByte = New-Object byte[] 1
+      (New-Object Random).NextBytes($randomByte)
+      Add-Content -Path "#{file_to_pad}" -Value $randomByte -Encoding Byte
+    cleanup_command: |
+      Remove-Item -Path "#{file_to_pad}" -Force -ErrorAction Ignore
+    name: powershell

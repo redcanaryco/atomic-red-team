@@ -55,6 +55,7 @@
   - Atomic Test #1: Execute a process from a directory masquerading as the current parent directory [macos, linux]
   - Atomic Test #2: Masquerade as a built-in system executable [windows]
   - Atomic Test #3: Masquerading cmd.exe as VEDetector.exe [windows]
+  - Atomic Test #4: WMIC masquerade as ncv.exe in temp directory [windows]
 - [T1036.008 Masquerading: Masquerade File Type](../../T1036.008/T1036.008.md)
   - Atomic Test #1: Linux File Type Masquerading via Extension Change [linux]
 - [T1564 Hide Artifacts](../../T1564/T1564.md)
@@ -239,7 +240,17 @@
 - [T1036.002 Masquerading:Right-to-Left Override](../../T1036.002/T1036.002.md)
   - Atomic Test #1: Masquerading: Right-to-Left Override Batch File Creation and Execution [windows]
   - Atomic Test #2: Masquerading: RTLO Masqueraded File Download and Execution [windows]
-- T1027.017 SVG Smuggling [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1027.017 SVG Smuggling](../../T1027.017/T1027.017.md)
+  - Atomic Test #1: T1027.017 - Inline JavaScript via Embedded SVG Script Element [windows]
+  - Atomic Test #2: T1027.017 - Base64 Blob Payload Assembly via SVG JavaScript [windows]
+  - Atomic Test #3: T1027.017 - XML CDATA Section Script Obfuscation [windows]
+  - Atomic Test #4: T1027.017 - Root SVG Event Handler Execution (`onload`) [windows]
+  - Atomic Test #5: T1027.017 - Nested HTML via SVG `<foreignObject>` Smuggling [windows]
+  - Atomic Test #6: T1027.017 - SVG Animation Element Script Execution (`<animate>`) [windows]
+  - Atomic Test #7: T1027.017 - XLink / Data URI Script Smuggling in SVG [windows]
+  - Atomic Test #8: T1027.017 - SVG Custom Data Attribute Payload Staging (`data-*`) [windows]
+  - Atomic Test #9: T1027.017 - Dynamic DOM Element Construction via SVG JavaScript [windows]
+  - Atomic Test #10: T1027.017 - Shadow DOM / Web Component SVG Payload Encapsulation [windows]
 - T1542.002 Component Firmware [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1070 Indicator Removal on Host](../../T1070/T1070.md)
   - Atomic Test #1: Indicator Removal using FSUtil [windows]
@@ -2639,6 +2650,7 @@
   - Atomic Test #22: Suspicious LAPS Attributes Query with adfind ms-Mcs-AdmPwd [windows]
   - Atomic Test #23: Active Directory Domain Search [linux]
   - Atomic Test #24: Account Enumeration with LDAPDomainDump [linux]
+  - Atomic Test #25: Enumerate Active Directory Users with csvde [windows]
 - [T1087.001 Account Discovery: Local Account](../../T1087.001/T1087.001.md)
   - Atomic Test #1: Enumerate all accounts (Local) [linux]
   - Atomic Test #2: View sudoers access [linux, macos]
