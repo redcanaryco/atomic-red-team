@@ -1,0 +1,45 @@
+attack_technique: T1556.009
+display_name: 'Modify Authentication Process: Conditional Access Policies'
+atomic_tests:
+- name: Disable an Entra ID Conditional Access Policy via Microsoft Graph
+  description: |
+    Uses the Microsoft Graph PowerShell SDK to set an existing Entra ID Conditional Access policy to the "disabled" state, weakening authentication controls (e.g. removing an MFA or device-compliance requirement) to enable persistent access. Cleanup re-enables the policy. Requires the Microsoft.Graph.Identity.SignIns module and a delegated account with Policy.ReadWrite.ConditionalAccess.
+  supported_platforms:
+  - azure-ad
+  input_arguments:
+    policy_id:
+      description: Object ID of the Conditional Access policy to disable
+      type: string
+      default: 00000000-0000-0000-0000-000000000000
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      The Microsoft.Graph.Identity.SignIns PowerShell module must be installed.
+    prereq_command: |
+      if (Get-Module -ListAvailable -Name Microsoft.Graph.Identity.SignIns) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Install-Module Microsoft.Graph.Identity.SignIns -Force -Scope CurrentUser
+  executor:
+    command: |
+      Import-Module Microsoft.Graph.Identity.SignIns
+      Connect-MgGraph -Scopes "Policy.ReadWrite.ConditionalAccess"
+      Update-MgIdentityConditionalAccessPolicy -ConditionalAccessPolicyId "#{policy_id}" -State "disabled"
+      Write-Host "Conditional Access policy #{policy_id} set to disabled"
+    cleanup_command: |
+      Update-MgIdentityConditionalAccessPolicy -ConditionalAccessPolicyId "#{policy_id}" -State "enabled" -ErrorAction Ignore
+    name: powershell
+- name: Remove Source-IP Condition from an AWS IAM Policy
+  description: |
+    Simulates weakening a conditional-access-style guardrail in AWS by publishing a new default version of an IAM policy that omits the aws:SourceIp Condition, so access is no longer restricted by network location. Requires AWS CLI credentials with iam:CreatePolicyVersion.
+  supported_platforms:
+  - iaas:aws
+  executor:
+    steps: |
+      Using AWS CLI credentials that can modify IAM policies:
+      1. Inspect the target policy's default version: aws iam get-policy-version --policy-arn <policy-arn> --version-id <default-version>
+      2. Save the current policy document (with its "Condition" block) to original.json for restoration.
+      3. Create nocondition.json containing the same statements but with the "Condition" element removed.
+      4. Publish it as the new default: aws iam create-policy-version --policy-arn <policy-arn> --policy-document file://nocondition.json --set-as-default
+      5. Verify the source-IP restriction is gone from the active version.
+      6. Cleanup: restore the original with aws iam set-default-policy-version --policy-arn <policy-arn> --version-id <original-version>, then delete the malicious version with aws iam delete-policy-version.
+    name: manual
