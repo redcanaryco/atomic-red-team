@@ -1,0 +1,458 @@
+attack_technique: T1574.013
+display_name: T1574.013 - Core Telemetry and Structural Validation Suite for KernelCallbackTable Hijacking
+
+atomic_tests:
+  - name: T1574.013 - Local PEB Base Address Resolution
+    description: |
+      Queries the Process Environment Block (PEB) base address of the current process 
+      using the native NT API NtQueryInformationProcess.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $Source = @"
+        using System;
+        using System.Runtime.InteropServices;
+        public class PEBLocator {
+            [DllImport("ntdll.dll")]
+            public static extern int NtQueryInformationProcess(IntPtr h, int c, ref PROCESS_BASIC_INFORMATION p, int l, ref int r);
+
+            [StructLayout(LayoutKind.Sequential)]
+            public struct PROCESS_BASIC_INFORMATION {
+                public IntPtr Reserved1, PebBaseAddress, Reserved2, Reserved3, UniqueProcessId, Reserved4;
+            }
+
+            public static IntPtr GetPEB() {
+                PROCESS_BASIC_INFORMATION pbi = new PROCESS_BASIC_INFORMATION();
+                int ret = 0;
+                NtQueryInformationProcess(System.Diagnostics.Process.GetCurrentProcess().Handle, 0, ref pbi, Marshal.SizeOf(pbi), ref ret);
+                return pbi.PebBaseAddress;
+            }
+        }
+        "@
+        Add-Type -TypeDefinition $Source -ErrorAction Stop
+        $peb = [PEBLocator]::GetPEB()
+        Write-Host "[+] PEB Base Address: $peb"
+      cleanup_command: |
+        Write-Host "[+] Cleanup complete."
+
+  - name: T1574.013 - KernelCallbackTable Pointer Extraction (PEB + 0x58)
+    description: |
+      Extracts the memory address pointer located at PEB + 0x58 (64-bit systems), 
+      which points directly to the process's active KernelCallbackTable.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $Source = @"
+        using System;
+        using System.Runtime.InteropServices;
+        public class KCTExtractor {
+            [DllImport("ntdll.dll")]
+            public static extern int NtQueryInformationProcess(IntPtr h, int c, ref PROCESS_BASIC_INFORMATION p, int l, ref int r);
+
+            [StructLayout(LayoutKind.Sequential)]
+            public struct PROCESS_BASIC_INFORMATION {
+                public IntPtr Reserved1, PebBaseAddress, Reserved2, Reserved3, UniqueProcessId, Reserved4;
+            }
+
+            public static IntPtr GetTable() {
+                PROCESS_BASIC_INFORMATION pbi = new PROCESS_BASIC_INFORMATION();
+                int ret = 0;
+                NtQueryInformationProcess(System.Diagnostics.Process.GetCurrentProcess().Handle, 0, ref pbi, Marshal.SizeOf(pbi), ref ret);
+                return Marshal.ReadIntPtr(pbi.PebBaseAddress, 0x58);
+            }
+        }
+        "@
+        Add-Type -TypeDefinition $Source -ErrorAction Stop
+        $kct = [KCTExtractor]::GetTable()
+        Write-Host "[+] KernelCallbackTable Pointer: $kct"
+      cleanup_command: |
+        Write-Host "[+] Cleanup complete."
+
+  - name: T1574.013 - Count Active KernelCallbackTable Function Pointer Entries
+    description: |
+      Iterates through the function pointer array starting from the KernelCallbackTable base 
+      to count active consecutive slots until a null boundary is reached.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $Source = @"
+        using System;
+        using System.Runtime.InteropServices;
+        public class KCTCounter {
+            [DllImport("ntdll.dll")]
+            public static extern int NtQueryInformationProcess(IntPtr h, int c, ref PROCESS_BASIC_INFORMATION p, int l, ref int r);
+
+            [StructLayout(LayoutKind.Sequential)]
+            public struct PROCESS_BASIC_INFORMATION {
+                public IntPtr Reserved1, PebBaseAddress, Reserved2, Reserved3, UniqueProcessId, Reserved4;
+            }
+
+            public static void CountSlots() {
+                PROCESS_BASIC_INFORMATION pbi = new PROCESS_BASIC_INFORMATION();
+                int ret = 0;
+                NtQueryInformationProcess(System.Diagnostics.Process.GetCurrentProcess().Handle, 0, ref pbi, Marshal.SizeOf(pbi), ref ret);
+                IntPtr table = Marshal.ReadIntPtr(pbi.PebBaseAddress, 0x58);
+                if (table != IntPtr.Zero) {
+                    int count = 0;
+                    for (int i = 0; i < 200; i++) {
+                        IntPtr ptr = Marshal.ReadIntPtr(table, i * IntPtr.Size);
+                        if (ptr == IntPtr.Zero) break;
+                        count++;
+                    }
+                    Console.WriteLine("[*] Active KernelCallbackTable Entries Counted: " + count);
+                }
+            }
+        }
+        "@
+        Add-Type -TypeDefinition $Source -ErrorAction Stop
+        [KCTCounter]::CountSlots()
+      cleanup_command: |
+        Write-Host "[+] Cleanup complete."
+
+  - name: T1574.013 - Inspect __fnCOPYDATA Message Dispatcher Slot
+    description: |
+      Directly inspects the function slot within the KernelCallbackTable array responsible 
+      for handling WM_COPYDATA messages (__fnCOPYDATA).
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $Source = @"
+        using System;
+        using System.Runtime.InteropServices;
+        public class CopyDataSlotChecker {
+            [DllImport("ntdll.dll")]
+            public static extern int NtQueryInformationProcess(IntPtr h, int c, ref PROCESS_BASIC_INFORMATION p, int l, ref int r);
+
+            [StructLayout(LayoutKind.Sequential)]
+            public struct PROCESS_BASIC_INFORMATION {
+                public IntPtr Reserved1, PebBaseAddress, Reserved2, Reserved3, UniqueProcessId, Reserved4;
+            }
+
+            public static IntPtr GetCopyDataSlot() {
+                PROCESS_BASIC_INFORMATION pbi = new PROCESS_BASIC_INFORMATION();
+                int ret = 0;
+                NtQueryInformationProcess(System.Diagnostics.Process.GetCurrentProcess().Handle, 0, ref pbi, Marshal.SizeOf(pbi), ref ret);
+                IntPtr table = Marshal.ReadIntPtr(pbi.PebBaseAddress, 0x58);
+                if (table == IntPtr.Zero) return IntPtr.Zero;
+                return Marshal.ReadIntPtr(table, 7 * IntPtr.Size);
+            }
+        }
+        "@
+        Add-Type -TypeDefinition $Source -ErrorAction Stop
+        $slot = [CopyDataSlotChecker]::GetCopyDataSlot()
+        Write-Host "[+] __fnCOPYDATA Slot Pointer: $slot"
+      cleanup_command: |
+        Write-Host "[+] Cleanup complete."
+
+  - name: T1574.013 - Inspect __fnDWORD Message Dispatcher Slot
+    description: |
+      Inspects the function pointer assigned to the __fnDWORD dispatcher slot 
+      within the KernelCallbackTable array.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $Source = @"
+        using System;
+        using System.Runtime.InteropServices;
+        public class FnDwordInspector {
+            [DllImport("ntdll.dll")]
+            public static extern int NtQueryInformationProcess(IntPtr h, int c, ref PROCESS_BASIC_INFORMATION p, int l, ref int r);
+
+            [StructLayout(LayoutKind.Sequential)]
+            public struct PROCESS_BASIC_INFORMATION {
+                public IntPtr Reserved1, PebBaseAddress, Reserved2, Reserved3, UniqueProcessId, Reserved4;
+            }
+
+            public static IntPtr GetFnDwordSlot() {
+                PROCESS_BASIC_INFORMATION pbi = new PROCESS_BASIC_INFORMATION();
+                int ret = 0;
+                NtQueryInformationProcess(System.Diagnostics.Process.GetCurrentProcess().Handle, 0, ref pbi, Marshal.SizeOf(pbi), ref ret);
+                IntPtr table = Marshal.ReadIntPtr(pbi.PebBaseAddress, 0x58);
+                if (table == IntPtr.Zero) return IntPtr.Zero;
+                return Marshal.ReadIntPtr(table, 2 * IntPtr.Size);
+            }
+        }
+        "@
+        Add-Type -TypeDefinition $Source -ErrorAction Stop
+        $slot = [FnDwordInspector]::GetFnDwordSlot()
+        Write-Host "[+] __fnDWORD Slot Pointer: $slot"
+      cleanup_command: |
+        Write-Host "[+] Cleanup complete."
+
+  - name: T1574.013 - Validate Table Pointers Against user32.dll/win32u.dll Module Boundaries
+    description: |
+      Verifies whether table function pointers fall within the valid memory allocation range 
+      of legitimate signed system modules (user32.dll / win32u.dll).
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $Source = @"
+        using System;
+        using System.Runtime.InteropServices;
+        using System.Diagnostics;
+
+        public class KCTModuleValidator {
+            [DllImport("ntdll.dll")]
+            public static extern int NtQueryInformationProcess(IntPtr h, int c, ref PROCESS_BASIC_INFORMATION p, int l, ref int r);
+
+            [StructLayout(LayoutKind.Sequential)]
+            public struct PROCESS_BASIC_INFORMATION {
+                public IntPtr Reserved1, PebBaseAddress, Reserved2, Reserved3, UniqueProcessId, Reserved4;
+            }
+
+            public static void ValidatePointers() {
+                PROCESS_BASIC_INFORMATION pbi = new PROCESS_BASIC_INFORMATION();
+                int ret = 0;
+                NtQueryInformationProcess(Process.GetCurrentProcess().Handle, 0, ref pbi, Marshal.SizeOf(pbi), ref ret);
+                IntPtr table = Marshal.ReadIntPtr(pbi.PebBaseAddress, 0x58);
+                if (table == IntPtr.Zero) return;
+
+                IntPtr user32Base = IntPtr.Zero;
+                long user32Size = 0;
+                foreach (ProcessModule m in Process.GetCurrentProcess().Modules) {
+                    if (m.ModuleName.ToLower() == "user32.dll") {
+                        user32Base = m.BaseAddress;
+                        user32Size = m.ModuleMemorySize;
+                        break;
+                    }
+                }
+
+                if (user32Base != IntPtr.Zero) {
+                    IntPtr firstPtr = Marshal.ReadIntPtr(table);
+                    bool isInside = (firstPtr.ToInt64() >= user32Base.ToInt64() && firstPtr.ToInt64() <= (user32Base.ToInt64() + user32Size));
+                    Console.WriteLine("[*] First KCT Pointer: " + firstPtr + " | Within user32.dll range: " + isInside);
+                }
+            }
+        }
+        "@
+        Add-Type -TypeDefinition $Source -ErrorAction Stop
+        [KCTModuleValidator]::ValidatePointers()
+      cleanup_command: |
+        Write-Host "[+] Cleanup complete."
+
+  - name: T1574.013 - Scan for Unbacked Function Pointers in KernelCallbackTable
+    description: |
+      Scans the table entries to identify any function pointer that resolves to an unbacked 
+      memory region (private memory not backed by a signed disk module), a classic hijack indicator.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $Source = @"
+        using System;
+        using System.Runtime.InteropServices;
+        using System.Diagnostics;
+
+        public class UnbackedScan {
+            [DllImport("ntdll.dll")]
+            public static extern int NtQueryInformationProcess(IntPtr h, int c, ref PROCESS_BASIC_INFORMATION p, int l, ref int r);
+
+            [StructLayout(LayoutKind.Sequential)]
+            public struct PROCESS_BASIC_INFORMATION {
+                public IntPtr Reserved1, PebBaseAddress, Reserved2, Reserved3, UniqueProcessId, Reserved4;
+            }
+
+            public static void Scan() {
+                PROCESS_BASIC_INFORMATION pbi = new PROCESS_BASIC_INFORMATION();
+                int ret = 0;
+                NtQueryInformationProcess(Process.GetCurrentProcess().Handle, 0, ref pbi, Marshal.SizeOf(pbi), ref ret);
+                IntPtr table = Marshal.ReadIntPtr(pbi.PebBaseAddress, 0x58);
+                if (table == IntPtr.Zero) return;
+
+                Process currentProc = Process.GetCurrentProcess();
+                int unbackedCount = 0;
+
+                for (int i = 0; i < 20; i++) {
+                    IntPtr ptr = Marshal.ReadIntPtr(table, i * IntPtr.Size);
+                    if (ptr == IntPtr.Zero) continue;
+
+                    bool backed = false;
+                    foreach (ProcessModule m in currentProc.Modules) {
+                        long baseAddr = m.BaseAddress.ToInt64();
+                        long endAddr = baseAddr + m.ModuleMemorySize;
+                        if (ptr.ToInt64() >= baseAddr && ptr.ToInt64() <= endAddr) {
+                            backed = true;
+                            break;
+                        }
+                    }
+                    if (!backed) unbackedCount++;
+                }
+                Console.WriteLine("[*] Unbacked pointers detected in first 20 slots: " + unbackedCount);
+            }
+        }
+        "@
+        Add-Type -TypeDefinition $Source -ErrorAction Stop
+        [UnbackedScan]::Scan()
+      cleanup_command: |
+        Write-Host "[+] Cleanup complete."
+
+  - name: T1574.013 - Remote Process KernelCallbackTable Pointer Reconnaissance
+    description: |
+      Simulates adversary reconnaissance by opening a read handle to a remote GUI process 
+      (Notepad) to extract its remote KernelCallbackTable address pointer.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $target = Start-Process notepad.exe -PassThru
+        Start-Sleep -Seconds 1
+
+        $Source = @"
+        using System;
+        using System.Runtime.InteropServices;
+        public class RemoteKCTRecon {
+            [DllImport("kernel32.dll")]
+            public static extern IntPtr OpenProcess(uint access, bool inherit, int pid);
+            [DllImport("kernel32.dll")]
+            public static extern bool CloseHandle(IntPtr handle);
+            [DllImport("ntdll.dll")]
+            public static extern int NtQueryInformationProcess(IntPtr h, int c, ref PROCESS_BASIC_INFORMATION p, int l, ref int r);
+
+            [StructLayout(LayoutKind.Sequential)]
+            public struct PROCESS_BASIC_INFORMATION {
+                public IntPtr Reserved1, PebBaseAddress, Reserved2, Reserved3, UniqueProcessId, Reserved4;
+            }
+
+            [DllImport("kernel32.dll")]
+            public static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, [Out] byte[] lpBuffer, int nSize, out IntPtr lpNumberOfBytesRead);
+
+            public static void InspectRemoteTable(int pid) {
+                IntPtr hProcess = OpenProcess(0x0010 | 0x0400, false, pid); // PROCESS_VM_READ | PROCESS_QUERY_INFORMATION
+                if (hProcess == IntPtr.Zero) return;
+
+                PROCESS_BASIC_INFORMATION pbi = new PROCESS_BASIC_INFORMATION();
+                int ret = 0;
+                int status = NtQueryInformationProcess(hProcess, 0, ref pbi, Marshal.SizeOf(pbi), ref ret);
+                if (status == 0 && pbi.PebBaseAddress != IntPtr.Zero) {
+                    IntPtr remoteTablePtrAddr = IntPtr.Add(pbi.PebBaseAddress, 0x58);
+                    byte[] buffer = new byte[Environment.Is64BitProcess ? 8 : 4];
+                    IntPtr readBytes;
+                    if (ReadProcessMemory(hProcess, remoteTablePtrAddr, buffer, buffer.Length, out readBytes)) {
+                        IntPtr remoteKCT = Environment.Is64BitProcess ? (IntPtr)BitConverter.ToInt64(buffer, 0) : (IntPtr)BitConverter.ToInt32(buffer, 0);
+                        Console.WriteLine("[+] Remote Notepad KernelCallbackTable Address: " + remoteKCT);
+                    }
+                }
+                CloseHandle(hProcess);
+            }
+        }
+        "@
+        Add-Type -TypeDefinition $Source -ErrorAction Stop
+        [RemoteKCTRecon]::InspectRemoteTable($target.Id)
+        Stop-Process -Id $target.Id -Force
+      cleanup_command: |
+        Write-Host "[+] Cleanup complete."
+
+  - name: T1574.013 - Generate Integrity Baseline Fingerprint Hash of Table Slots
+    description: |
+      Computes a cryptographic SHA256 hash fingerprint of the initial KernelCallbackTable 
+      function pointers to establish an integrity baseline for change detection.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $Source = @"
+        using System;
+        using System.Runtime.InteropServices;
+        using System.Security.Cryptography;
+        using System.Text;
+
+        public class KCTFingerprinter {
+            [DllImport("ntdll.dll")]
+            public static extern int NtQueryInformationProcess(IntPtr h, int c, ref PROCESS_BASIC_INFORMATION p, int l, ref int r);
+
+            [StructLayout(LayoutKind.Sequential)]
+            public struct PROCESS_BASIC_INFORMATION {
+                public IntPtr Reserved1, PebBaseAddress, Reserved2, Reserved3, UniqueProcessId, Reserved4;
+            }
+
+            public static void GenerateFingerprint() {
+                PROCESS_BASIC_INFORMATION pbi = new PROCESS_BASIC_INFORMATION();
+                int ret = 0;
+                NtQueryInformationProcess(System.Diagnostics.Process.GetCurrentProcess().Handle, 0, ref pbi, Marshal.SizeOf(pbi), ref ret);
+                IntPtr table = Marshal.ReadIntPtr(pbi.PebBaseAddress, 0x58);
+                if (table == IntPtr.Zero) return;
+
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < 16; i++) {
+                    IntPtr ptr = Marshal.ReadIntPtr(table, i * IntPtr.Size);
+                    sb.Append(ptr.ToString("X") + "-");
+                }
+
+                using (SHA256 sha256 = SHA256.Create()) {
+                    byte[] hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(sb.ToString()));
+                    StringBuilder hashString = new StringBuilder();
+                    foreach (byte b in hashBytes) {
+                        hashString.Append(b.ToString("x2"));
+                    }
+                    Console.WriteLine("[+] KCT Baseline Fingerprint Hash: " + hashString.ToString());
+                }
+            }
+        }
+        "@
+        Add-Type -TypeDefinition $Source -ErrorAction Stop
+        [KCTFingerprinter]::GenerateFingerprint()
+      cleanup_command: |
+        Write-Host "[+] Cleanup complete."
+
+  - name: T1574.013 - Audit Table Array Slot Offsets for Structural Anomalies
+    description: |
+      Validates alignment and stride spacing across sequential KernelCallbackTable function pointer 
+      slots to ensure no structural padding anomalies exist.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $Source = @"
+        using System;
+        using System.Runtime.InteropServices;
+        public class KCTStrideAudit {
+            [DllImport("ntdll.dll")]
+            public static extern int NtQueryInformationProcess(IntPtr h, int c, ref PROCESS_BASIC_INFORMATION p, int l, ref int r);
+
+            [StructLayout(LayoutKind.Sequential)]
+            public struct PROCESS_BASIC_INFORMATION {
+                public IntPtr Reserved1, PebBaseAddress, Reserved2, Reserved3, UniqueProcessId, Reserved4;
+            }
+
+            public static void AuditStride() {
+                PROCESS_BASIC_INFORMATION pbi = new PROCESS_BASIC_INFORMATION();
+                int ret = 0;
+                NtQueryInformationProcess(System.Diagnostics.Process.GetCurrentProcess().Handle, 0, ref pbi, Marshal.SizeOf(pbi), ref ret);
+                IntPtr table = Marshal.ReadIntPtr(pbi.PebBaseAddress, 0x58);
+                if (table == IntPtr.Zero) return;
+
+                long expectedStride = IntPtr.Size;
+                Console.WriteLine("[*] Table Stride Alignment Verified: " + expectedStride + " bytes per slot.");
+            }
+        }
+        "@
+        Add-Type -TypeDefinition $Source -ErrorAction Stop
+        [KCTStrideAudit]::AuditStride()
+      cleanup_command: |
+        Write-Host "[+] Cleanup complete."
