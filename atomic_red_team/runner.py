@@ -25,7 +25,7 @@ app = typer.Typer(help="Atomic Red Team Maintenance tool CLI helper")
 @app.command()
 def generate_guids():
     """Generates missing GUIDs for the atomic files"""
-    with open(used_guids_file, "r", encoding="utf-8") as file:
+    with open(used_guids_file, "r") as file:
         used_guids = file.readlines()
 
     for file in glob.glob(f"{atomics_path}/T*/T*.yaml"):
@@ -36,10 +36,10 @@ def generate_guids():
 def generate_schemas():
     """Generates JSON and YAML schemas for techniques"""
     schema = Technique.model_json_schema()  # (1)!
-    with open("schema.yaml", "w", encoding="utf-8") as f:
+    with open("schema.yaml", "w") as f:
         yaml.default_flow_style = False
         yaml.dump(schema, f)
-    with open("schema.json", "w", encoding="utf-8") as f:
+    with open("schema.json", "w") as f:
         f.write(json.dumps(schema, indent=2))
 
 
@@ -48,7 +48,7 @@ def generate_counter():
     """Generate atomic tests count svg"""
     test_count = 0
     for file in glob.glob(f"{atomics_path}/T*/T*.yaml"):
-        with open(file, "r", encoding="utf-8") as f:
+        with open(file, "r") as f:
             yaml_data = yaml.load(f)
             if yaml_data is not None and "atomic_tests" in yaml_data:
                 test_count += len(yaml_data["atomic_tests"])
@@ -63,7 +63,7 @@ def generate_counter():
     # Save shields URL in GitHub Output to be used in the next step.
     output_path = os.getenv("GITHUB_OUTPUT")
     if output_path:
-        with open(output_path, "a", encoding="utf-8") as fh:
+        with open(output_path, "a") as fh:
             print(f"result={url}", file=fh)
     else:
         print(f"Badge URL: {url}")

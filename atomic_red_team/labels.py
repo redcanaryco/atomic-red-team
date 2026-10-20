@@ -159,10 +159,10 @@ class GithubAPI:
                 maintainers += self.maintainers[p]
         os.mkdir("pr")
 
-        with open("pr/changedfiles.json", "w", encoding="utf-8") as f:
+        with open("pr/changedfiles.json", "w") as f:
             x = [{"name": t.technique, "test_number": t.test_number} for t in tests]
             f.write(json.dumps(x))
 
-        with open("pr/labels.json", "w", encoding="utf-8") as f:
+        with open("pr/labels.json", "w") as f:
             j = {"pr": pr, "labels": labels, "maintainers": maintainers}
             f.write(json.dumps(j))

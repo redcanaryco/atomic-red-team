@@ -13,7 +13,7 @@ def get_unique_guid(guids: List[str]):
     # This function should return a unique GUID that's not in the used_guids_file.
     guid = str(uuid.uuid4())
     if guid not in guids:
-        with open(used_guids_file, "a", encoding="utf-8") as f:  # append mode
+        with open(used_guids_file, "a") as f:  # append mode
             f.write(f"{guid}\n")
         return guid
     else:
@@ -21,7 +21,7 @@ def get_unique_guid(guids: List[str]):
 
 
 def generate_guids_for_yaml(path, get_guid):
-    with open(path, "r", encoding="utf-8") as file:
+    with open(path, "r") as file:
         og_text = file.read()
 
     # Add the "auto_generated_guid:" element after the "- name:" element if it isn't already there

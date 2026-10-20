@@ -40,7 +40,7 @@ def format_validation_error(error: ValidationError):
 class Validator:
     def __init__(self):
         used_guids_path = f"{atomics_path}/used_guids.txt"
-        with open(used_guids_path, "r", encoding="utf-8") as f:
+        with open(used_guids_path, "r") as f:
             self.used_guids = [x.strip() for x in f.readlines()]
         self.guids = []
 
@@ -58,7 +58,7 @@ class Validator:
 
     def validate_atomic(self, file: DirEntry):
         """Validates whether the defined input args are used."""
-        with open(file.path, "r", encoding="utf-8") as f:
+        with open(file.path, "r") as f:
             atomic = yaml.load(f)
             technique = Technique(**atomic)
             for index, t in enumerate(technique.atomic_tests):
