@@ -1574,7 +1574,12 @@
   - Atomic Test #3: Append to existing loginwindow for Re-Opened Applications [macos]
 - [T1098.002 Account Manipulation: Additional Email Delegate Permissions](../../T1098.002/T1098.002.md)
   - Atomic Test #1: EXO - Full access mailbox permission granted to a user [office-365]
-- T1653 Power Settings [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1653 Power Settings](../../T1653/T1653.md)
+  - Atomic Test #1: Prevent system sleep via powercfg (AC/DC standby timeout) [windows]
+  - Atomic Test #2: Disable hibernation via powercfg [windows]
+  - Atomic Test #3: Extend console lock display timeout via powercfg [windows]
+  - Atomic Test #4: Impair system shutdown capability by denying execute on shutdown.exe [windows]
+  - Atomic Test #5: Disable Fast Startup via direct registry modification (HiberbootEnabled) [windows]
 - [T1037.001 Boot or Logon Initialization Scripts: Logon Script (Windows)](../../T1037.001/T1037.001.md)
   - Atomic Test #1: Logon Scripts [windows]
 - [T1137.002 Office Application Startup: Office Test](../../T1137.002/T1137.002.md)

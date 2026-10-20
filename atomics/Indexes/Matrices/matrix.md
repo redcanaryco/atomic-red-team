@@ -101,7 +101,7 @@
 |  |  |  |  | XDG Autostart Entries [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  | [Hide Artifacts: Run Virtual Instance](../../T1564.006/T1564.006.md) |  |  |  |  |  |  |  |  |
 |  |  |  |  | [Boot or Logon Autostart Execution: Re-opened Applications](../../T1547.007/T1547.007.md) |  | Polymorphic Code [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |  |
 |  |  |  |  | [Account Manipulation: Additional Email Delegate Permissions](../../T1098.002/T1098.002.md) |  | [Access Token Manipulation: SID-History Injection](../../T1134.005/T1134.005.md) |  |  |  |  |  |  |  |  |
-|  |  |  |  | Power Settings [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  | [System Binary Proxy Execution: Regsvr32](../../T1218.010/T1218.010.md) |  |  |  |  |  |  |  |  |
+|  |  |  |  | [Power Settings](../../T1653/T1653.md) |  | [System Binary Proxy Execution: Regsvr32](../../T1218.010/T1218.010.md) |  |  |  |  |  |  |  |  |
 |  |  |  |  | [Boot or Logon Initialization Scripts: Logon Script (Windows)](../../T1037.001/T1037.001.md) |  | [Masquerading: Rename Legitimate Utilities](../../T1036.003/T1036.003.md) |  |  |  |  |  |  |  |  |
 |  |  |  |  | [Office Application Startup: Office Test](../../T1137.002/T1137.002.md) |  | [Hijack Execution Flow: Path Interception by Unquoted Path](../../T1574.009/T1574.009.md) |  |  |  |  |  |  |  |  |
 |  |  |  |  | [Boot or Logon Autostart Execution: LSASS Driver](../../T1547.008/T1547.008.md) |  | Steganography [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) |  |  |  |  |  |  |  |  |
