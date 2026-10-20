@@ -119,7 +119,7 @@ atomic_tests:
     dllfilename:
       description: It specifies Dll file to run as service
       type: string
-      default: $PathToAtomicsFolder\T1543.003\bin\w64time.dll
+      default: PathToAtomicsFolder\T1543.003\bin\W64Time.dll
   executor:
     command: |-
       copy "#{dllfilename}" %systemroot%\system32\
@@ -128,13 +128,17 @@ atomic_tests:
       sc description W64Time "Maintain date and time synch on all clients and services in the network"
       reg add "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Svchost" /v TimeService /t REG_MULTI_SZ /d "W64Time" /f
       reg add "HKLM\SYSTEM\CurrentControlSet\Services\W64Time\Parameters" /v ServiceDll /t REG_EXPAND_SZ /d "%systemroot%\system32\w64time.dll" /f
+      reg add "HKLM\SYSTEM\CurrentControlSet\Services\W64Time\Parameters" /v Hosts /t REG_SZ /d "127.0.0.1" /f
+      reg add "HKLM\SYSTEM\CurrentControlSet\Services\W64Time\Parameters" /v Security /t REG_SZ /d "127.0.0.1" /f
+      reg add "HKLM\SYSTEM\CurrentControlSet\Services\W64Time\Parameters" /v TimeLong /t REG_DWORD /d 300000 /f
+      reg add "HKLM\SYSTEM\CurrentControlSet\Services\W64Time\Parameters" /v TimeShort /t REG_DWORD /d 5000 /f
       sc start W64Time
     cleanup_command: |-
       sc stop W64Time
       sc.exe delete W64Time
       del %systemroot%\system32\w64time.dll
       reg delete "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Svchost" /v TimeService /f
-      reg delete "HKLM\SYSTEM\CurrentControlSet\Services\W64Time\Parameters" /v ServiceDll /f
+      reg delete "HKLM\SYSTEM\CurrentControlSet\Services\W64Time\Parameters" /f
     name: command_prompt
     elevation_required: true
 - name: Remote Service Installation CMD

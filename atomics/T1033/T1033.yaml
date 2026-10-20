@@ -127,3 +127,20 @@ atomic_tests:
       query user >> %file%
     cleanup_command: |
       del #{output_file_path}\\user_info_*.tmp
+- name: User Discovery - whoami
+  auto_generated_guid: aab580c7-cc30-4a7c-b5a9-46a29066b022
+  description: |
+    Identify the current user account and security context using whoami. Adversaries use this command during initial
+    reconnaissance after gaining access to a system to determine the user and privilege level they are operating under.
+  supported_platforms:
+  - windows
+  input_arguments:
+    whoami_args:
+      description: Arguments to pass to whoami (e.g. /all, /priv, /groups, /user)
+      type: string
+      default: /all
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      whoami #{whoami_args}

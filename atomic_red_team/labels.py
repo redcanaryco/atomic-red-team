@@ -78,13 +78,18 @@ class GithubAPI:
 
     def get_files_for_pr(self, pr):
         """Get new and modified files in the `atomics` directory changed in a PR."""
-        response = requests.get(
-            f"https://api.github.com/repos/{os.getenv('GITHUB_REPOSITORY')}/pulls/{pr}/files",
-            headers=self.headers,
-            timeout=15,
-        )
-        assert response.status_code == 200
-        files = response.json()
+        files = []
+        url = f"https://api.github.com/repos/{os.getenv('GITHUB_REPOSITORY')}/pulls/{pr}/files?per_page=100"
+        while url:
+            response = requests.get(
+                url,
+                headers=self.headers,
+                timeout=15,
+            )
+            assert response.status_code == 200
+            files.extend(response.json())
+            url = response.links.get("next", {}).get("url")
+            
         return filter(
             lambda x: x["status"] in ["added", "modified"]
             and fnmatch.fnmatch(x["filename"], "atomics/T*/T*.yaml"),

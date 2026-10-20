@@ -34,6 +34,12 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
+      WMIC must be installed (deprecated and removed by default in Windows 11 22H2+)
+    prereq_command: |
+      if (Get-Command wmic.exe -ErrorAction SilentlyContinue) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      DISM /Online /Add-Capability /CapabilityName:WMIC~~~~
+  - description: |
       Create volume shadow copy of C:\ .
     prereq_command: |
       if(!(vssadmin.exe list shadows | findstr "No items found that satisfy the query.")) { exit 0 } else { exit 1 }

