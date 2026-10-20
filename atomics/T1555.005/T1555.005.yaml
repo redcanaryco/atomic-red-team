@@ -1,0 +1,165 @@
+attack_technique: T1555.005
+display_name: 'Credentials from Password Stores: Password Managers'
+atomic_tests:
+- name: KeePass Database File (.kdbx / .kdb) Discovery via PowerShell
+  auto_generated_guid: 9d1e3cba-8e4f-4d54-b89b-b705644335b9
+  description: |
+    Adversaries search filesystem directories (such as user profiles, desktop, documents, and temp folders) for KeePass database files (.kdbx, .kdb) which store encrypted credentials and master databases.
+    This test simulates the discovery technique by creating a test database file with KeePass header magic bytes, scanning common directories, and outputting discovered database metadata.
+  supported_platforms:
+  - windows
+  input_arguments:
+    search_path:
+      description: Root folder to search for KeePass databases
+      type: path
+      default: $env:USERPROFILE
+    test_db_path:
+      description: Path to create a simulated KeePass database file
+      type: path
+      default: $env:TEMP\AtomicTest_Vault.kdbx
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      if (-not (Test-Path "#{test_db_path}")) {
+        [IO.File]::WriteAllBytes("#{test_db_path}", [byte[]](0x03, 0xD9, 0xA2, 0x9A, 0x67, 0xFB, 0x4B, 0xB5))
+      }
+      Write-Host "Searching for KeePass databases in #{search_path} and temp..."
+      Get-ChildItem -Path "#{search_path}", $env:TEMP -Include *.kdbx, *.kdb -Recurse -File -ErrorAction SilentlyContinue | Select-Object FullName, Length, LastWriteTime
+    cleanup_command: |
+      Remove-Item -Path "#{test_db_path}" -Force -ErrorAction Ignore
+
+- name: KeePass Database File Discovery via Command Prompt
+  auto_generated_guid: d18d24e0-7374-4698-be6d-4671b4735474
+  description: |
+    Adversaries use native Windows command-line utilities (dir /s /b) to recursively locate .kdbx and .kdb database files across user profiles and system drives.
+  supported_platforms:
+  - windows
+  input_arguments:
+    search_path:
+      description: Root directory to search for KeePass databases
+      type: path
+      default: '%USERPROFILE%'
+    test_db_path:
+      description: Path to simulated KeePass database file
+      type: path
+      default: '%TEMP%\AtomicTest_Vault.kdbx'
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      echo KeePassHeaderSim > "#{test_db_path}"
+      dir /s /b "#{search_path}\*.kdbx" "#{search_path}\*.kdb" "%TEMP%\*.kdbx" 2>nul
+    cleanup_command: |
+      del /f /q "#{test_db_path}" >nul 2>&1
+
+- name: KeePass Configuration and Recent Databases Discovery (KeePass.config.xml)
+  auto_generated_guid: 12e255b1-1c9a-47dd-bbab-7f0c1a8e7ea0
+  description: |
+    KeePass stores recent database file paths, user preferences, and trigger configurations in KeePass.config.xml.
+    Adversaries inspect this configuration file to locate active database paths or identify trigger execution opportunities.
+    This test creates a simulated KeePass.config.xml, reads it to parse the last used database path, and cleans up after execution.
+  supported_platforms:
+  - windows
+  input_arguments:
+    test_config_path:
+      description: Path to create a simulated KeePass configuration XML file (use a test sandbox, never a real KeePass config)
+      type: path
+      default: $env:TEMP\AtomicTest_T1555_005\KeePass.config.xml
+    mock_db_path:
+      description: Database path referenced in simulated configuration
+      type: path
+      default: C:\Users\Public\Documents\Company_Vault.kdbx
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $testConfigPath = "#{test_config_path}"
+      if ((Test-Path $testConfigPath) -and ((Get-Content -Path $testConfigPath -Raw) -notmatch 'AtomicTest T1555\.005')) {
+        throw "Refusing to overwrite non-simulated KeePass config at $testConfigPath"
+      }
+      $configDir = Split-Path $testConfigPath
+      if (-not (Test-Path $configDir)) { New-Item -ItemType Directory -Path $configDir -Force | Out-Null }
+      $mockConfig = @"
+      <?xml version="1.0" encoding="utf-8"?>
+      <!-- AtomicTest T1555.005 simulated configuration -->
+      <Configuration>
+        <Application>
+          <LastUsedFile>
+            <Path>#{mock_db_path}</Path>
+          </LastUsedFile>
+        </Application>
+      </Configuration>
+      "@
+      Set-Content -Path $testConfigPath -Value $mockConfig -Force
+      Write-Host "Inspecting simulated KeePass configuration file at ${testConfigPath}:"
+      [xml]$xml = Get-Content -Path $testConfigPath
+      $discoveredDb = $xml.Configuration.Application.LastUsedFile.Path
+      Write-Host "Discovered last used KeePass database: $discoveredDb"
+    cleanup_command: |
+      $testConfigPath = "#{test_config_path}"
+      if ((Test-Path $testConfigPath) -and ((Get-Content -Path $testConfigPath -Raw) -match 'AtomicTest T1555\.005')) {
+        Remove-Item -Path $testConfigPath -Force -ErrorAction Ignore
+      }
+
+- name: Staging Discovered KeePass Databases for Exfiltration
+  auto_generated_guid: 0b4e0ef1-9c58-426d-ac17-19e718956c22
+  description: |
+    Simulates adversary behavior where discovered KeePass password vaults are copied to a staging directory and compressed into a zip archive prior to exfiltration.
+  supported_platforms:
+  - windows
+  input_arguments:
+    source_db:
+      description: Path to simulated KeePass database file to be staged
+      type: path
+      default: $env:TEMP\AtomicTest_Target.kdbx
+    staging_dir:
+      description: Temporary directory used to stage collected password vaults
+      type: path
+      default: $env:PUBLIC\T1555_005_Staging
+    archive_file:
+      description: Destination zip archive file path
+      type: path
+      default: $env:PUBLIC\T1555_005_Vaults.zip
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      if (-not (Test-Path "#{source_db}")) {
+        [IO.File]::WriteAllBytes("#{source_db}", [byte[]](0x03, 0xD9, 0xA2, 0x9A, 0x67, 0xFB, 0x4B, 0xB5))
+      }
+      if (-not (Test-Path "#{staging_dir}")) {
+        New-Item -ItemType Directory -Path "#{staging_dir}" -Force | Out-Null
+      }
+      Copy-Item -Path "#{source_db}" -Destination "#{staging_dir}\" -Force
+      Write-Host "Staging databases to #{staging_dir}:"
+      Get-ChildItem -Path "#{staging_dir}"
+      if (Test-Path "#{archive_file}") { Remove-Item -Path "#{archive_file}" -Force }
+      Add-Type -Assembly System.IO.Compression.FileSystem
+      [IO.Compression.ZipFile]::CreateFromDirectory("#{staging_dir}", "#{archive_file}")
+      Write-Host "Created archive at #{archive_file}: $((Get-Item '#{archive_file}').Length) bytes"
+    cleanup_command: |
+      Remove-Item -Path "#{source_db}" -Force -ErrorAction Ignore
+      Remove-Item -Path "#{staging_dir}" -Recurse -Force -ErrorAction Ignore
+      Remove-Item -Path "#{archive_file}" -Force -ErrorAction Ignore
+
+- name: KeePass Database Discovery on Linux
+  auto_generated_guid: c6d6d37e-c0d8-44fc-9109-7116dc8d7b22
+  description: |
+    Adversaries locate .kdbx and .kdb password manager databases on Linux systems by scanning common user directories and temporary paths.
+  supported_platforms:
+  - linux
+  input_arguments:
+    test_dir:
+      description: Path to temporary directory simulating user database folder
+      type: path
+      default: /tmp/atomic_t1555_005
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      mkdir -p "#{test_dir}" && touch "#{test_dir}/passwords.kdbx"
+      echo "Searching for KeePass databases in #{test_dir}..."
+      find "#{test_dir}" \( -name "*.kdbx" -o -name "*.kdb" \) -print 2>/dev/null
+    cleanup_command: |
+      rm -rf "#{test_dir}"
