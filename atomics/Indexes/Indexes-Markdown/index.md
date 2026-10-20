@@ -55,6 +55,7 @@
   - Atomic Test #1: Execute a process from a directory masquerading as the current parent directory [macos, linux]
   - Atomic Test #2: Masquerade as a built-in system executable [windows]
   - Atomic Test #3: Masquerading cmd.exe as VEDetector.exe [windows]
+  - Atomic Test #4: WMIC masquerade as ncv.exe in temp directory [windows]
 - [T1036.008 Masquerading: Masquerade File Type](../../T1036.008/T1036.008.md)
   - Atomic Test #1: Linux File Type Masquerading via Extension Change [linux]
 - [T1564 Hide Artifacts](../../T1564/T1564.md)
