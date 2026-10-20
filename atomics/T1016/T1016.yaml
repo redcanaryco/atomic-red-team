@@ -98,7 +98,7 @@ atomic_tests:
       if (Test-Path "#{port_file}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{port_file}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "#{portfile_url}" -OutFile "#{port_file}"
+      Invoke-WebRequest "#{portfile_url}" -OutFile "#{port_file}" -UseBasicParsing
   executor:
     command: |
       $ports = Get-content "#{port_file}"
@@ -150,7 +150,7 @@ atomic_tests:
       if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/bin/AdFind.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe"
+      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/bin/AdFind.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" -UseBasicParsing
   executor:
     command: |
       "PathToAtomicsFolder\..\ExternalPayloads\AdFind.exe" -f (objectcategory=subnet) #{optional_args}
@@ -174,7 +174,7 @@ atomic_tests:
       if (Test-Path "#{recon_commands}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{recon_commands}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1016/src/qakbot.bat" -OutFile "#{recon_commands}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1016/src/qakbot.bat" -OutFile "#{recon_commands}" -UseBasicParsing
   executor:
     command: |
       "#{recon_commands}"

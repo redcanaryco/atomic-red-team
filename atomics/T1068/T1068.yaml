@@ -22,7 +22,7 @@ atomic_tests:
       $parentpath = Split-Path "#{driver_path}"
       New-Item -Type Directory $parentpath -ErrorAction Ignore -Force | Out-Null
       $DriverURL = "https://github.com/magicsword-io/LOLDrivers/blob/main/drivers/c796a92a66ec725b7b7febbdc13dc69b.bin?raw=true"
-      Invoke-WebRequest -Uri $DriverURL -OutFile "#{driver_path}"
+      Invoke-WebRequest -Uri $DriverURL -OutFile "#{driver_path}" -UseBasicParsing
 
   input_arguments:
     driver_path:
@@ -66,7 +66,7 @@ atomic_tests:
       $parentpath = Split-Path "#{driver_path}"
       New-Item -Type Directory $parentpath -ErrorAction Ignore -Force | Out-Null
       $DriverURL = "https://github.com/magicsword-io/LOLDrivers/raw/main/drivers/eaea9ccb40c82af8f3867cd0f4dd5e9d.bin"
-      Invoke-WebRequest -Uri $DriverURL -OutFile "#{driver_path}"
+      Invoke-WebRequest -Uri $DriverURL -OutFile "#{driver_path}" -UseBasicParsing
 
   input_arguments:
     driver_path:

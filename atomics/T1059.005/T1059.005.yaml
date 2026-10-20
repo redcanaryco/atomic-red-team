@@ -21,7 +21,7 @@ atomic_tests:
       if (Test-Path "#{vbscript}") {exit 0} else {exit 1}
     get_prereq_command: |-
       New-Item -ItemType Directory (Split-Path "#{vbscript}") -Force | Out-Null
-      Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.005/src/sys_info.vbs" -OutFile "#{vbscript}"
+      Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.005/src/sys_info.vbs" -OutFile "#{vbscript}" -UseBasicParsing
   executor:
     command: |
       cscript "#{vbscript}" > $env:TEMP\T1059.005.out.txt

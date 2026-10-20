@@ -21,7 +21,7 @@ atomic_tests:
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       $AutoItURL = "https://www.autoitscript.com/cgi-bin/getfile.pl?autoit3/autoit-v3-setup.exe"
       $InstallerPath = "$PathToAtomicsFolder\..\ExternalPayloads\autoit-v3-setup.exe"
-      Invoke-WebRequest -Uri $AutoItURL -OutFile $InstallerPath
+      Invoke-WebRequest -Uri $AutoItURL -OutFile $InstallerPath -UseBasicParsing
       Start-Process -FilePath $InstallerPath -ArgumentList "/S" -Wait
   input_arguments:
     script_path:

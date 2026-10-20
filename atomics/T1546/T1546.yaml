@@ -18,7 +18,7 @@ atomic_tests:
       if (Test-Path PathToAtomicsFolder\T1546\bin\AltWinSock2DLL.dll) { exit 0} else { exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\T1546\bin\" -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546/bin/AltWinSock2DLL.dll" -OutFile "PathToAtomicsFolder\T1546\bin\AltWinSock2DLL.dll"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546/bin/AltWinSock2DLL.dll" -OutFile "PathToAtomicsFolder\T1546\bin\AltWinSock2DLL.dll" -UseBasicParsing
   executor:
     command: |
       Set-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters -Name AutodialDLL -Value PathToAtomicsFolder\T1546\bin\AltWinSock2DLL.dll
@@ -183,7 +183,7 @@ atomic_tests:
       if (Test-Path PathToAtomicsFolder\T1546\src\ErrorHandler.cmd) { exit 0} else { exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\T1546\src\" -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546/src/ErrorHandler.cmd" -OutFile "PathToAtomicsFolder\T1546\src\ErrorHandler.cmd"      
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546/src/ErrorHandler.cmd" -OutFile "PathToAtomicsFolder\T1546\src\ErrorHandler.cmd" -UseBasicParsing      
   executor:
     command: |
       Copy-Item -Path PathToAtomicsFolder\T1546\src\ErrorHandler.cmd -Destination C:\Windows\Setup\Scripts\ErrorHandler.cmd

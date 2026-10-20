@@ -42,7 +42,7 @@ atomic_tests:
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
       IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-FetchFromZip.ps1" -UseBasicParsing) 
       $releases = "https://api.github.com/repos/gentilkiwi/mimikatz/releases"
-      $zipUrl = (Invoke-WebRequest $releases | ConvertFrom-Json)[0].assets.browser_download_url | where-object { $_.endswith(".zip") }
+      $zipUrl = (Invoke-WebRequest $releases -UseBasicParsing | ConvertFrom-Json)[0].assets.browser_download_url | where-object { $_.endswith(".zip") }
       $mimikatz_exe = cmd /c echo #{mimikatz_path}
       $basePath = Split-Path $mimikatz_exe | Split-Path
       Invoke-FetchFromZip $zipUrl "x64/mimikatz.exe" $basePath
@@ -148,7 +148,7 @@ atomic_tests:
     prereq_command: |
       if(Test-Path -Path #{local_folder}\#{local_executable}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-Webrequest -Uri #{rubeus_url} -OutFile #{local_folder}\#{local_executable}
+      Invoke-Webrequest -Uri #{rubeus_url} -OutFile #{local_folder}\#{local_executable} -UseBasicParsing
   executor:
     name: powershell
     elevation_required: false

@@ -459,7 +459,7 @@ atomic_tests:
       if (Test-Path "#{backdoor_dll}") { exit 0 } else { exit 1 }
     get_prereq_command: |
       New-Item -Type Directory (Split-Path "#{backdoor_dll}") -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "#{backdoor_dll_url}" -OutFile "#{backdoor_dll}"
+      Invoke-WebRequest "#{backdoor_dll_url}" -OutFile "#{backdoor_dll}" -UseBasicParsing
       New-Item -ItemType File -Path "$env:TEMP\backdoor_dll_installed_by_atomic" -Force | Out-Null
   executor:
     name: powershell

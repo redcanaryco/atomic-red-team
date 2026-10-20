@@ -82,7 +82,7 @@ atomic_tests:
       if [ "$(uname)" = "Darwin" ] || [ "$(expr substr $(uname) 1 5)" = "Linux" ]; then
         curl "https://aws.amazon.com/cli/" -o "Install-AWSCLI.sh" && sh Install-AWSCLI.sh
       elif [ "$(expr substr $(uname) 1 5)" = "MINGW" ]; then
-        Invoke-WebRequest -Uri "https://aws.amazon.com/cli/" -OutFile "Install-AWSCLI.ps1"; .\Install-AWSCLI.ps1
+        Invoke-WebRequest -Uri "https://aws.amazon.com/cli/" -OutFile "Install-AWSCLI.ps1" -UseBasicParsing; .\Install-AWSCLI.ps1
       fi
   - description: Check if AWS CLI is installed and configured.
     prereq_command: |

@@ -25,7 +25,7 @@ atomic_tests:
     get_prereq_command: |
       Write-Host Downloading radmin installer
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "https://www.radmin.com/download/Radmin_Viewer_3.5.2.1_EN.msi" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\#{radmin_installer}"
+      Invoke-WebRequest "https://www.radmin.com/download/Radmin_Viewer_3.5.2.1_EN.msi" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\#{radmin_installer}" -UseBasicParsing
       Write-Host Install Radmin
       Start-Process msiexec  -Wait -ArgumentList /i , "PathToAtomicsFolder\..\ExternalPayloads\#{radmin_installer}", /qn
   executor:
@@ -58,7 +58,7 @@ atomic_tests:
     get_prereq_command: |
       Write-Host Downloading PDQ Deploy installer
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "https://download.pdq.com/release/19/Deploy_19.3.350.0.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\#{PDQ_Deploy_installer}"
+      Invoke-WebRequest "https://download.pdq.com/release/19/Deploy_19.3.350.0.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\#{PDQ_Deploy_installer}" -UseBasicParsing
       Write-Host Install PDQ Deploy
       Start-Process "PathToAtomicsFolder\..\ExternalPayloads\#{PDQ_Deploy_installer}" -Wait -ArgumentList "/s"
   executor:
@@ -81,7 +81,7 @@ atomic_tests:
       if (Test-Path "${env:ProgramFiles(x86)}\Chocolatey\choco.exe") {exit 0} else {exit 1}
     get_prereq_command: |
       Write-Host Downloading Chocolatey installer
-      Invoke-WebRequest -Uri "https://chocolatey.org/install.ps1" -OutFile "chocolatey-install.ps1"
+      Invoke-WebRequest -Uri "https://chocolatey.org/install.ps1" -OutFile "chocolatey-install.ps1" -UseBasicParsing
       Write-Host Installing Chocolatey
       Start-Process -FilePath "powershell.exe" -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File chocolatey-install.ps1" -Wait
   executor:

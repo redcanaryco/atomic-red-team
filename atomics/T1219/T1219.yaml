@@ -20,7 +20,7 @@ atomic_tests:
     get_prereq_command: |
       $parentpath = Split-Path "#{installer_path}"
       New-Item -Type Directory "$parentpath" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest -Uri #{download_url} -OutFile "#{installer_path}"
+      Invoke-WebRequest -Uri #{download_url} -OutFile "#{installer_path}" -UseBasicParsing
 
 
   input_arguments:
@@ -68,7 +68,7 @@ atomic_tests:
     get_prereq_command: |
       $parentpath = Split-Path "#{installer_path}"
       New-Item -Type Directory "$parentpath" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest -Uri #{download_url} -OutFile "#{installer_path}"
+      Invoke-WebRequest -Uri #{download_url} -OutFile "#{installer_path}" -UseBasicParsing
 
   input_arguments:
     installer_path:
@@ -110,7 +110,7 @@ atomic_tests:
     get_prereq_command: |
       $parentpath = Split-Path "#{installer_path}"
       New-Item -Type Directory "$parentpath" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest -Uri #{download_url} -OutFile "#{installer_path}"
+      Invoke-WebRequest -Uri #{download_url} -OutFile "#{installer_path}" -UseBasicParsing
 
   input_arguments:
     installer_path:
@@ -159,7 +159,7 @@ atomic_tests:
     get_prereq_command: |
       $parentpath = Split-Path "#{installer_path}"
       New-Item -Type Directory "$parentpath" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest -Uri #{download_url} -OutFile "#{installer_path}"
+      Invoke-WebRequest -Uri #{download_url} -OutFile "#{installer_path}" -UseBasicParsing
 
 
   input_arguments:
@@ -211,7 +211,7 @@ atomic_tests:
   executor:
     command: |
       $installer = "C:\Users\$env:username\Downloads\ScreenConnect.msi"
-      Invoke-WebRequest -OutFile $installer "https://d1kuyuqowve5id.cloudfront.net/ScreenConnect_25.1.10.9197_Release.msi"
+      Invoke-WebRequest -OutFile $installer "https://d1kuyuqowve5id.cloudfront.net/ScreenConnect_25.1.10.9197_Release.msi" -UseBasicParsing
       msiexec /i $installer /qn
     cleanup_command: |
       $installer = "C:\Users\$env:username\Downloads\ScreenConnect.msi"
@@ -358,7 +358,7 @@ atomic_tests:
       if (Test-Path #{UltraVNC_Viewer_Path}) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "https://www.uvnc.eu/download/1381/UltraVNC_1_3_81_X64_Setup.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\vncsetup.exe"
+      Invoke-WebRequest "https://www.uvnc.eu/download/1381/UltraVNC_1_3_81_X64_Setup.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\vncsetup.exe" -UseBasicParsing
       start-process "PathToAtomicsFolder\..\ExternalPayloads\vncsetup.exe" /silent
   executor:
     command: |
@@ -391,7 +391,7 @@ atomic_tests:
       if (Test-Path #{MSP360_Connect_Path}) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest -OutFile "PathToAtomicsFolder\..\ExternalPayloads\msp360connect.exe" "#{MSP360_Download_Url}"
+      Invoke-WebRequest -OutFile "PathToAtomicsFolder\..\ExternalPayloads\msp360connect.exe" "#{MSP360_Download_Url}" -UseBasicParsing
       start-process "PathToAtomicsFolder\..\ExternalPayloads\msp360connect.exe" /S    
   executor:
     command: |
@@ -420,7 +420,7 @@ atomic_tests:
     get_prereq_command: |
       $parentpath = Split-Path "#{installer_path}"
       New-Item -Type Directory "$parentpath" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest -Uri #{download_url} -OutFile "#{installer_path}"
+      Invoke-WebRequest -Uri #{download_url} -OutFile "#{installer_path}" -UseBasicParsing
 
 
   input_arguments:
@@ -468,7 +468,7 @@ atomic_tests:
       if (Test-Path "#{Splashtop_Path}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest -OutFile "PathToAtomicsFolder\..\ExternalPayloads\splashtop_install.exe" "https://download.splashtop.com/winclient/STP/Splashtop_Personal_Win_v3.6.6.0.exe"
+      Invoke-WebRequest -OutFile "PathToAtomicsFolder\..\ExternalPayloads\splashtop_install.exe" "https://download.splashtop.com/winclient/STP/Splashtop_Personal_Win_v3.6.6.0.exe" -UseBasicParsing
       start-sleep 30
       start-process "PathToAtomicsFolder\..\ExternalPayloads\splashtop_install.exe" /S  
       start-sleep 30      
@@ -497,7 +497,7 @@ atomic_tests:
     get_prereq_command: |-
       Write-Host Downloading Splashtop Streamer
       New-Item -Type Directory "C:\Temp\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "https://download.splashtop.com/win/Splashtop_Streamer_Win_INSTALLER_v3.6.4.1.exe" -OutFile  "C:\Temp\ExternalPayloads\Splashtop.exe"
+      Invoke-WebRequest "https://download.splashtop.com/win/Splashtop_Streamer_Win_INSTALLER_v3.6.4.1.exe" -OutFile  "C:\Temp\ExternalPayloads\Splashtop.exe" -UseBasicParsing
       Write-Host Installing Splashtop Streamer
       Start-Process "c:\Temp\ExternalPayloads\Splashtop.exe" -Wait -ArgumentList "/s"
   executor:
