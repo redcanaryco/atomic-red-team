@@ -2345,12 +2345,9 @@
   - Atomic Test #1: Dump individual process memory with sh (Local) [linux]
   - Atomic Test #2: Dump individual process memory with sh on FreeBSD (Local) [linux]
   - Atomic Test #3: Dump individual process memory with Python (Local) [linux]
-- [T1555.005 Credentials from Password Stores: Password Managers](../../T1555.005/T1555.005.md)
-  - Atomic Test #1: KeePass Database File (.kdbx / .kdb) Discovery via PowerShell [windows]
-  - Atomic Test #2: KeePass Database File Discovery via Command Prompt [windows]
-  - Atomic Test #3: KeePass Configuration and Recent Databases Discovery (KeePass.config.xml) [windows]
-  - Atomic Test #4: Staging Discovered KeePass Databases for Exfiltration [windows]
-  - Atomic Test #5: KeePass Database Discovery on Linux [linux]
+  - Atomic Test #4: Capture Passwords with MimiPenguin [linux]
+- T1555.005 Password Managers [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #1: Packet Capture Linux using tshark or tcpdump [linux]
   - Atomic Test #2: Packet Capture FreeBSD using tshark or tcpdump [linux]
   - Atomic Test #3: Packet Capture macOS using tcpdump or tshark [macos]
