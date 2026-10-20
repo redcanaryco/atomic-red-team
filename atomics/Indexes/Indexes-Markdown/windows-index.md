@@ -1864,6 +1864,7 @@
   - Atomic Test #20: Suspicious LAPS Attributes Query with Get-ADComputer all properties and SearchScope [windows]
   - Atomic Test #21: Suspicious LAPS Attributes Query with adfind all properties [windows]
   - Atomic Test #22: Suspicious LAPS Attributes Query with adfind ms-Mcs-AdmPwd [windows]
+  - Atomic Test #25: Enumerate Active Directory Users with csvde [windows]
 - [T1087.001 Account Discovery: Local Account](../../T1087.001/T1087.001.md)
   - Atomic Test #8: Enumerate all accounts on Windows (Local) [windows]
   - Atomic Test #9: Enumerate all accounts via PowerShell (Local) [windows]
