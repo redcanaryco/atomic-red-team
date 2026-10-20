@@ -381,7 +381,7 @@ atomic_tests:
           }
 
           public static void make_some_noise() {
-              ProcessStartInfo startInfo = new ProcessStartInfo("cmd", "/c schtasks /create /SC MINUTE /MO 30 /TR \"%localappdata%\\VirtualStore\\certcheck.exe\" /TN VerifiedPublisherCertCheck /F")
+              ProcessStartInfo startInfo = new ProcessStartInfo("cmd", "/c schtasks /create /SC MINUTE /MO 30 /TR %%localappdata%%\\VirtualStore\\certcheck.exe /TN VerifiedPublisherCertCheck /F")
               {
                   CreateNoWindow = true,
                   UseShellExecute = false
