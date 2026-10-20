@@ -219,6 +219,7 @@
 - [T1027.001 Obfuscated Files or Information: Binary Padding](../../T1027.001/T1027.001.md)
   - Atomic Test #1: Pad Binary to Change Hash - Linux/macOS dd [linux, macos]
   - Atomic Test #2: Pad Binary to Change Hash using truncate command - Linux/macOS [linux, macos]
+  - Atomic Test #3: Pad Binary to Change Hash using PowerShell - Windows [windows]
 - [T1078.001 Valid Accounts: Default Accounts](../../T1078.001/T1078.001.md)
   - Atomic Test #1: Enable Guest account with RDP capability and admin privileges [windows]
   - Atomic Test #2: Activate Guest Account [windows]
