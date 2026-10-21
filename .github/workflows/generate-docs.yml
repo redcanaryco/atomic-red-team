@@ -40,6 +40,12 @@ jobs:
         env:
           PYTHONPATH: ${{ github.workspace }}
 
+      - name: Fix atomic display_names to match current ATT&CK technique names
+        run: poetry run python runner.py fix-display-names
+        working-directory: atomic_red_team
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+
       - name: setup ruby
         uses: ruby/setup-ruby@v1
         with:

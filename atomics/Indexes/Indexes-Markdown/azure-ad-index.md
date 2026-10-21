@@ -3,7 +3,7 @@
 - [T1110.001 Brute Force: Password Guessing](../../T1110.001/T1110.001.md)
   - Atomic Test #3: Brute Force Credentials of single Azure AD user [azure-ad]
 - T1110.002 Brute Force: Password Cracking [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- [T1606.002 Forge Web Credentials: SAML token](../../T1606.002/T1606.002.md)
+- [T1606.002 Forge Web Credentials: SAML Tokens](../../T1606.002/T1606.002.md)
   - Atomic Test #1: Golden SAML [azure-ad]
 - T1552 Unsecured Credentials [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1556.007 Hybrid Identity [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -31,7 +31,7 @@
 - T1538 Cloud Service Dashboard [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 
 # defense-impairment
-- [T1484.002 Domain Trust Modification](../../T1484.002/T1484.002.md)
+- [T1484.002 Domain or Tenant Policy Modification: Trust Modification](../../T1484.002/T1484.002.md)
   - Atomic Test #1: Add Federation to Azure AD [azure-ad]
 - T1685.002 Disable or Modify Tools: Disable or Modify Cloud Log [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1556.007 Hybrid Identity [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -41,7 +41,7 @@
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 
 # privilege-escalation
-- [T1484.002 Domain Trust Modification](../../T1484.002/T1484.002.md)
+- [T1484.002 Domain or Tenant Policy Modification: Trust Modification](../../T1484.002/T1484.002.md)
   - Atomic Test #1: Add Federation to Azure AD [azure-ad]
 - [T1098.003 Account Manipulation: Additional Cloud Roles](../../T1098.003/T1098.003.md)
   - Atomic Test #1: Azure AD - Add Company Administrator Role to a user [azure-ad]
