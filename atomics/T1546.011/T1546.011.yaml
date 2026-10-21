@@ -1,5 +1,5 @@
 attack_technique: T1546.011
-display_name: 'Event Triggered Execution: Application Shimming'
+display_name: "Event Triggered Execution: Application Shimming"
 atomic_tests:
 - name: Application Shim Installation
   auto_generated_guid: 9ab27e22-ee62-4211-962b-d36d9a0e6a18
@@ -25,14 +25,14 @@ atomic_tests:
     get_prereq_command: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       New-Item -Type Directory (split-path "#{file_path}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.011/bin/AtomicShimx86.sdb" -OutFile "#{file_path}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.011/bin/AtomicShimx86.sdb" -OutFile "#{file_path}" -UseBasicParsing
   - description: |
       AtomicTest.dll must exist at c:\Tools\AtomicTest.dll
     prereq_command: |
       if (Test-Path c:\Tools\AtomicTest.dll) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path c:\Tools\AtomicTest.dll) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.011/bin/AtomicTest.dll" -OutFile c:\Tools\AtomicTest.dll
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.011/bin/AtomicTest.dll" -OutFile c:\Tools\AtomicTest.dll -UseBasicParsing
   executor:
     command: |
       sdbinst.exe "#{file_path}"

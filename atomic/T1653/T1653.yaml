@@ -1,0 +1,103 @@
+attack_technique: T1653
+display_name: Power Settings
+atomic_tests:
+
+- name: Prevent system sleep via powercfg (AC/DC standby timeout)
+  description: |
+    Sets the active power plan's AC and DC standby timeouts to 0 (never), preventing the system from sleeping. Mirrors adversary abuse of powercfg to keep an infected host active indefinitely.
+    Expected output: system will no longer enter standby on either AC or battery power until cleanup restores the original value.
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      $script:origAC = (powercfg /query SCHEME_CURRENT SUB_SLEEP STANDBYIDLE | Select-String "Current AC Power Setting Index" | ForEach-Object { ($_ -split ": ")[1].Trim() })
+      $script:origDC = (powercfg /query SCHEME_CURRENT SUB_SLEEP STANDBYIDLE | Select-String "Current DC Power Setting Index" | ForEach-Object { ($_ -split ": ")[1].Trim() })
+      powercfg /change standby-timeout-ac 0
+      powercfg /change standby-timeout-dc 0
+    cleanup_command: |
+      if ($script:origAC) { powercfg /setacvalueindex SCHEME_CURRENT SUB_SLEEP STANDBYIDLE $script:origAC; powercfg /setactive SCHEME_CURRENT }
+      if ($script:origDC) { powercfg /setdcvalueindex SCHEME_CURRENT SUB_SLEEP STANDBYIDLE $script:origDC; powercfg /setactive SCHEME_CURRENT }
+
+- name: Disable hibernation via powercfg
+  description: |
+    Disables hibernation entirely using powercfg /hibernate off, removing a disruption point that could terminate malicious activity when the system enters a dormant state.
+    Expected output: hibernation is disabled; hiberfil.sys is removed. Cleanup re-enables hibernation.
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      $script:hibernateWasEnabled = (powercfg /availablesleepstates | Select-String "Hibernate") -ne $null
+      powercfg /hibernate off
+    cleanup_command: |
+      if ($script:hibernateWasEnabled) { powercfg /hibernate on }
+
+- name: Extend console lock display timeout via powercfg
+  description: |
+    Extends the console lock display timeout to a large value, delaying automatic screen-off while the PC is locked and keeping the session's display active longer than the configured policy intends.
+    Expected output: display will not turn off on the lock screen until cleanup restores the original timeout.
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      powercfg -attributes SUB_VIDEO VIDEOCONLOCK -ATTRIB_HIDE
+      $script:origLockAC = (powercfg /query SCHEME_CURRENT SUB_VIDEO VIDEOCONLOCK | Select-String "Current AC Power Setting Index" | ForEach-Object { ($_ -split ": ")[1].Trim() })
+      powercfg /setacvalueindex SCHEME_CURRENT SUB_VIDEO VIDEOCONLOCK 36000
+      powercfg /setactive SCHEME_CURRENT
+    cleanup_command: |
+      if ($script:origLockAC) { powercfg /setacvalueindex SCHEME_CURRENT SUB_VIDEO VIDEOCONLOCK $script:origLockAC; powercfg /setactive SCHEME_CURRENT }
+
+- name: Impair system shutdown capability by denying execute on shutdown.exe
+  description: |
+    Takes ownership of shutdown.exe (required since it's normally owned by TrustedInstaller) and denies the Everyone group execute permission, simulating adversary impairment of a system's ability to shut down without deleting the binary outright. Cleanup restores both the original ACL and ownership.
+    Expected output: running shutdown.exe will fail with access denied until cleanup restores permissions and ownership.
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      $target = "C:\Windows\System32\shutdown.exe"
+      $backupPath = "$env:TEMP\shutdown_acl_backup.txt"
+      Push-Location (Split-Path $target)
+      icacls (Split-Path $target -Leaf) /save $backupPath | Out-Null
+      Pop-Location
+      takeown /f $target | Out-Null
+      icacls $target /grant "*S-1-5-32-544:F" | Out-Null
+      icacls $target /deny Everyone:RX
+    cleanup_command: |
+      $target = "C:\Windows\System32\shutdown.exe"
+      $backupPath = "$env:TEMP\shutdown_acl_backup.txt"
+      icacls $target /remove:d Everyone
+      if (Test-Path $backupPath) {
+        Push-Location (Split-Path $target)
+        icacls . /restore $backupPath | Out-Null
+        Pop-Location
+        Remove-Item $backupPath -Force -ErrorAction Ignore
+      }
+
+- name: Disable Fast Startup via direct registry modification (HiberbootEnabled)
+  description: |
+    Directly modifies HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Power\HiberbootEnabled rather than using the powercfg CLI, altering how the system behaves on shutdown (full shutdown vs. hybrid hibernate-backed fast startup). Exercises the registry-based detection path MITRE cites for this technique (monitoring HKLM\SYSTEM\CurrentControlSet\Control\Power and subkeys), distinct from the CLI-driven tests above.
+    Expected output: Fast Startup is disabled; next shutdown will perform a full shutdown rather than a hybrid hibernate. Cleanup restores the original registry value.
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      $regPath = "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Power"
+      $script:origValue = (Get-ItemProperty -Path $regPath -Name HiberbootEnabled -ErrorAction SilentlyContinue).HiberbootEnabled
+      Set-ItemProperty -Path $regPath -Name HiberbootEnabled -Value 0 -Type DWord
+    cleanup_command: |
+      $regPath = "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Power"
+      if ($null -ne $script:origValue) {
+        Set-ItemProperty -Path $regPath -Name HiberbootEnabled -Value $script:origValue -Type DWord
+      } else {
+        Remove-ItemProperty -Path $regPath -Name HiberbootEnabled -ErrorAction SilentlyContinue
+      }
