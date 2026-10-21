@@ -5,7 +5,7 @@ function Test-Target {
     )
 
     try {
-        Invoke-WebRequest -Uri $Target -ErrorAction Stop -TimeoutSec $Timeout -SkipHttpErrorCheck
+        Invoke-WebRequest -Uri $Target -ErrorAction Stop -TimeoutSec $Timeout -SkipHttpErrorCheck -UseBasicParsing
         return $true
     }
     catch {
@@ -31,7 +31,7 @@ function Invoke-WordlistScan {
 
     foreach ($Word in $Wordlist) {
         $Url = $Target + "/" + $Word
-        $Response = Invoke-WebRequest -Uri "$Url" -Method HEAD -ErrorAction SilentlyContinue -TimeoutSec $Timeout -SkipHttpErrorCheck
+        $Response = Invoke-WebRequest -Uri "$Url" -Method HEAD -ErrorAction SilentlyContinue -TimeoutSec $Timeout -SkipHttpErrorCheck -UseBasicParsing
 
         if ($Response.StatusCode -ge 200 -and $Response.StatusCode -lt 400) {
             $Results += $Url

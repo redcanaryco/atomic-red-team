@@ -1,5 +1,5 @@
 attack_technique: T1082
-display_name: System Information Discovery
+display_name: "System Information Discovery"
 atomic_tests:
 - name: System Information Discovery
   auto_generated_guid: 66703791-c902-4560-8770-42b8a91f7667
@@ -37,15 +37,15 @@ atomic_tests:
       default: /tmp/T1082.txt
   executor:
     command: |
-      uname -a >> #{output_file}
-      if [ -f /etc/lsb-release ]; then cat /etc/lsb-release >> #{output_file}; fi
-      if [ -f /etc/redhat-release ]; then cat /etc/redhat-release >> #{output_file}; fi   
-      if [ -f /etc/issue ]; then cat /etc/issue >> #{output_file}; fi
-      if [ -f /etc/os-release ]; then cat /etc/os-release >> #{output_file}; fi
-      uptime >> #{output_file}
-      cat #{output_file} 2>/dev/null
+      uname -a >> "#{output_file}"
+      if [ -f /etc/lsb-release ]; then cat /etc/lsb-release >> "#{output_file}"; fi
+      if [ -f /etc/redhat-release ]; then cat /etc/redhat-release >> "#{output_file}"; fi
+      if [ -f /etc/issue ]; then cat /etc/issue >> "#{output_file}"; fi
+      if [ -f /etc/os-release ]; then cat /etc/os-release >> "#{output_file}"; fi
+      uptime >> "#{output_file}"
+      cat "#{output_file}" 2>/dev/null
     cleanup_command: |
-      rm #{output_file} 2>/dev/null
+      rm "#{output_file}" 2>/dev/null
     name: sh
 - name: Linux VM Check via Hardware
   auto_generated_guid: 31dad7ad-2286-4c02-ae92-274418c85fec
@@ -143,7 +143,7 @@ atomic_tests:
       if (Test-Path "#{vbscript}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{vbscript}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1082/src/griffon_recon.vbs" -OutFile "#{vbscript}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1082/src/griffon_recon.vbs" -OutFile "#{vbscript}" -UseBasicParsing
   executor:
     command: |
       cscript "#{vbscript}"
@@ -326,7 +326,7 @@ atomic_tests:
       if (test-path "PathToAtomicsFolder\..\ExternalPayloads\AzureStealth.ps1"){exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      invoke-webrequest "https://raw.githubusercontent.com/cyberark/SkyArk/3293ee145e95061a8980dd7b5da0030edc4da5c0/AzureStealth/AzureStealth.ps1" -outfile "PathToAtomicsFolder\..\ExternalPayloads\AzureStealth.ps1"
+      invoke-webrequest "https://raw.githubusercontent.com/cyberark/SkyArk/3293ee145e95061a8980dd7b5da0030edc4da5c0/AzureStealth/AzureStealth.ps1" -outfile "PathToAtomicsFolder\..\ExternalPayloads\AzureStealth.ps1" -UseBasicParsing
   - description: |
       The AzureAD module must be installed.
     prereq_command: |
@@ -473,7 +473,7 @@ atomic_tests:
       if (Test-Path "#{plink_file}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe" -OutFile "#{plink_file}"
+      Invoke-WebRequest "https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe" -OutFile "#{plink_file}" -UseBasicParsing
   executor:
     command: |
        echo "" | "#{plink_file}" "#{vm_host}" -ssh  -l "#{vm_user}" -pw "#{vm_pass}" -m "#{cli_script}"
@@ -515,7 +515,7 @@ atomic_tests:
       if (Test-Path "#{plink_file}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe" -OutFile "#{plink_file}"
+      Invoke-WebRequest "https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe" -OutFile "#{plink_file}" -UseBasicParsing
   executor:
     command: |
        echo "" | "#{plink_file}" "#{vm_host}" -ssh  -l "#{vm_user}" -pw "#{vm_pass}" -m "#{cli_script}"
@@ -606,3 +606,13 @@ atomic_tests:
       reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v CurrentBuildNumber
     name: command_prompt
     elevation_required: false
+- name: Get System Hardware UUID Via wmic.exe
+  auto_generated_guid: cd6fc00d-ad6e-431c-832c-33e97ab9218f
+  description: |
+    Upon execution, displays the system's hardware UUID. Used in BlackCat ransomware to generate a recovery URL.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      wmic csproduct get UUID
+    name: powershell
