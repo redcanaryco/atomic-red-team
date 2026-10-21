@@ -43,8 +43,6 @@ atomic_tests:
       #{mimikatz_path} "privilege::debug" "sid::patch" "sid::add /sid:#{sid_to_inject} /sam:#{sam_account_name}" "exit"
     cleanup_command: |
       #{mimikatz_path} "sid::clear /sam:#{sam_account_name}" "exit"
-# Append this list item to atomic_tests in the upstream T1134.005.yaml.
-# Do not replace the existing test. CI assigns auto_generated_guid.
 - name: SID History Modification via DSInternals RPC
   description: |
     Initiates an intra-domain SID history migration from a Windows endpoint using
