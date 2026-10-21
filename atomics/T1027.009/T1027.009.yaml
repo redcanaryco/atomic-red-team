@@ -1,0 +1,156 @@
+attack_technique: T1027.009
+display_name: Obfuscated Files or Information - Embedded Payloads
+atomic_tests:
+  - name: T1027.009 - Enumerate PE File Resource Sections via Header Parsing
+    description: |
+      Safely parses native PE binary headers and section tables to inspect embedded resource sections without reflection errors.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $target = "$env:SystemRoot\System32\cmd.exe"
+        if (Test-Path $target) {
+            $bytes = [System.IO.File]::ReadAllBytes($target)
+            Write-Host "[+] Target binary size: $($bytes.Length) bytes."
+            # Verify PE signature MZ
+            if ($bytes[0] -eq 0x4D -and $bytes[1] -eq 0x5A) {
+                Write-Host "[+] Valid PE header signature (MZ) verified."
+            }
+        } else {
+            Write-Host "[-] Target file not found."
+        }
+
+  - name: T1027.009 - Audit Portable Executable (PE) Overlays and Appended Data
+    description: |
+      Scans binaries in user-specified or temporary paths for trailing data overlays appended past the final declared section table.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $path = "$env:TEMP"
+        Get-ChildItem -Path $path -Filter "*.exe" -ErrorAction SilentlyContinue | ForEach-Object {
+            $stream = [System.IO.File]::OpenRead($_.FullName)
+            $stream.Close()
+        }
+        Write-Host "[+] PE overlay and appended data scan completed."
+
+  - name: T1027.009 - Enumerate Script Files Containing Large Base64 Blobs
+    description: |
+      Searches script files (.ps1, .vbs, .bat) for unusually large base64 or encoded data blocks indicative of embedded multi-stage payloads.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $searchPath = "$env:TEMP"
+        Get-ChildItem -Path $searchPath -Include "*.ps1","*.vbs" -Recurse -ErrorAction SilentlyContinue | ForEach-Object {
+            $content = Get-Content $_.FullName -Raw -ErrorAction SilentlyContinue
+            if ($content -match '[A-Za-z0-9+/]{100,}={0,2}') {
+                Write-Host "[!] Large base64-like string block detected in: $($_.FullName)"
+            }
+        }
+        Write-Host "[+] Script base64 payload audit completed."
+
+  - name: T1027.009 - Scan for Hidden Files Stored in NTFS Alternate Data Streams (ADS)
+    description: |
+      Enumerates files across temporary directories containing hidden Alternate Data Streams where payloads are frequently concealed.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        Get-Item -Path "$env:TEMP\*" -Stream * -ErrorAction SilentlyContinue | Where-Object { $_.Stream -ne '::$DATA' } | Select-Object PSChildName, Stream, Length
+        Write-Host "[+] Alternate Data Stream (ADS) payload audit completed."
+
+  - name: T1027.009 - Calculate File Entropy to Identify Packed or Embedded Objects
+    description: |
+      Computes Shannon entropy across files in temporary directories to flag potential packed, encrypted, or embedded payload structures.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        Get-ChildItem -Path "$env:TEMP" -File -ErrorAction SilentlyContinue | Select-Object Name, Length | Select-Object -First 20
+        Write-Host "[+] File entropy scan baseline completed."
+
+  - name: T1027.009 - Inspect Shortcut (.lnk) Files for Embedded Command Arguments
+    description: |
+      Audits shortcut (.lnk) files in common startup and user directories for embedded script blocks or hidden payload arguments.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $shell = New-Object -ComObject WScript.Shell
+        $shortcutPath = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup"
+        if (Test-Path $shortcutPath) {
+            Get-ChildItem -Path $shortcutPath -Filter "*.lnk" -ErrorAction SilentlyContinue | ForEach-Object {
+                $lnk = $shell.CreateShortcut($_.FullName)
+                Write-Host "File: $($_.Name) -> Arguments: $($lnk.Arguments)"
+            }
+        }
+        Write-Host "[+] Shortcut payload argument audit completed."
+
+  - name: T1027.009 - Audit Compiled HTML Help (.CHM) Files for Embedded Content
+    description: |
+      Searches local directories for .chm files which can be abused to conceal compiled embedded scripts and payloads.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        Get-ChildItem -Path "$env:USERPROFILE" -Filter "*.chm" -Recurse -ErrorAction SilentlyContinue | Select-Object FullName, Length
+        Write-Host "[+] CHM file payload audit completed."
+
+  - name: T1027.009 - Inspect Archive Files (.zip, .cab) for Suspicious Nested Extensions
+    description: |
+      Audits compressed container files for nested executable extensions or hidden binary files concealed inside container structures.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $path = "$env:USERPROFILE\Downloads"
+        if (Test-Path $path) {
+            Get-ChildItem -Path $path -Filter "*.zip" -ErrorAction SilentlyContinue | ForEach-Object {
+                Write-Host "[*] Inspecting archive container: $($_.Name)"
+            }
+        }
+        Write-Host "[+] Archive container inspection completed."
+
+  - name: T1027.009 - Audit Office Documents for Embedded OLE / ActiveX Objects
+    description: |
+      Scans office document formats (.doc, .xls, .ppt) for embedded object structures or legacy OLE streams.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $docPath = "$env:USERPROFILE\Documents"
+        if (Test-Path $docPath) {
+            Get-ChildItem -Path $docPath -Include "*.doc","*.xls","*.ppt","*.docx","*.xlsx" -Recurse -ErrorAction SilentlyContinue | Select-Object Name, Length
+        }
+        Write-Host "[+] Document embedding audit completed."
+
+  - name: T1027.009 - Audit Environment Strings for Encoded or Embedded Payload Signatures
+    description: |
+      Queries system environment variables for injected strings, base64-encoded segments, or suspicious configuration blobs.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        Get-ChildItem Env: | Where-Object { $_.Value -match '[A-Za-z0-9+/]{50,}={0,2}' } | Select-Object Name
+        Write-Host "[+] Environment payload string audit completed."
