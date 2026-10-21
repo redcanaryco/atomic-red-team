@@ -129,7 +129,6 @@ atomic_tests:
      
 
 - name: Sudo privilege escalation via tar checkpoint action (GTFOBins)
-  auto_generated_guid: 4105c368-0ab9-4a82-8e14-4072492a6d8a
   description: |
     Abuses the tar `--checkpoint-action` option to execute an arbitrary command.
     When `tar` is permitted to run as root via sudo, this leads to command execution as root (GTFOBins).
@@ -154,7 +153,6 @@ atomic_tests:
       sudo tar -cf /dev/null /dev/null --checkpoint=1 --checkpoint-action=exec='sh -c id'
 
 - name: Sudo privilege escalation via tcpdump postrotate command (GTFOBins)
-  auto_generated_guid: e4900401-3717-4cef-b3dd-ab6339e4f15e
   description: |
     Abuses the tcpdump `-z` (postrotate) option to execute a command after a capture file is rotated.
     When `tcpdump` is permitted to run as root via sudo, the specified program runs as root (GTFOBins).
@@ -183,6 +181,6 @@ atomic_tests:
       sleep 1
       ping -c 3 127.0.0.1 > /dev/null 2>&1
       sleep 3
-      sudo kill $TCPDUMP_PID > /dev/null 2>&1
+      sudo kill "$TCPDUMP_PID" > /dev/null 2>&1 || true
     cleanup_command: |
       rm -f /tmp/T1548.003_tcpdump_postrotate.sh 2>/dev/null
