@@ -1,0 +1,133 @@
+attack_technique: T1685.003
+display_name: Modify or Spoof Tool UI
+
+atomic_tests:
+  - name: T1685.003 - Suppress Action Center and Security Notifications via Registry Modification
+    description: |
+      Simulates an adversary modifying registry policies to suppress security alerts and disable notifications within the Action Center UI.
+    supported_platforms:
+      - windows
+    elevation_required: true
+    executor:
+      name: powershell
+      command: |
+        Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings" -Name "NOC_GLOBAL_SETTING_ALLOW_TOAST_WHILE_DND" -Value 0 -ErrorAction SilentlyContinue; Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\PushNotifications" -Name "NoToastApplicationNotification" -Value 1 -ErrorAction SilentlyContinue; Write-Host "[+] Simulated UI notification suppression applied."
+      cleanup_command: |
+        Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings" -Name "NOC_GLOBAL_SETTING_ALLOW_TOAST_WHILE_DND" -ErrorAction SilentlyContinue; Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\PushNotifications" -Name "NoToastApplicationNotification" -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up notification suppression settings."
+
+  - name: T1685.003 - Modify TrayNotify Icon Streams to Simulate Taskbar Icon Spoofing
+    description: |
+      Simulates an adversary tampering with user tray icon stream registry values to hide or manipulate security tool icons in the taskbar.
+    supported_platforms:
+      - windows
+    elevation_required: false
+    executor:
+      name: powershell
+      command: |
+        $regPath = "HKCU:\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\TrayNotify"; if (Test-Path -Path $regPath) { $backup = Get-ItemProperty -Path $regPath -Name "IconStreams" -ErrorAction SilentlyContinue; if ($null -ne $backup) { Set-ItemProperty -Path $regPath -Name "T1685_Backup" -Value $backup.IconStreams }; Set-ItemProperty -Path $regPath -Name "IconStreams" -Value ([byte[]](0..15)) -ErrorAction SilentlyContinue; Write-Host "[+] Simulated tray icon stream modification executed." }
+      cleanup_command: |
+        $regPath = "HKCU:\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\TrayNotify"; if (Test-Path -Path $regPath) { $backup = Get-ItemProperty -Path $regPath -Name "T1685_Backup" -ErrorAction SilentlyContinue; if ($null -ne $backup) { Set-ItemProperty -Path $regPath -Name "IconStreams" -Value $backup.T1685_Backup; Remove-ItemProperty -Path $regPath -Name "T1685_Backup" -ErrorAction SilentlyContinue }; Write-Host "[+] Cleaned up tray icon stream simulation." }
+
+  - name: T1685.003 - Disable Security Center Notifications via WSC Registry Modification
+    description: |
+      Simulates adversary tampering with Action Center settings to disable security alerts and falsify operational status reporting.
+    supported_platforms:
+      - windows
+    elevation_required: true
+    executor:
+      name: powershell
+      command: |
+        $path = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WSC"; if (-not (Test-Path -Path $path)) { New-Item -Path $path -Force | Out-Null }; Set-ItemProperty -Path $path -Name "DisableNotifications" -Value 1 -ErrorAction SilentlyContinue; Write-Host "[+] Simulated Security Center notification disablement executed."
+      cleanup_command: |
+        Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WSC" -Name "DisableNotifications" -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up Security Center notification settings."
+
+  - name: T1685.003 - Modify Explorer Taskbar Tray Notification Policy Flags
+    description: |
+      Simulates adversary modification of explorer taskbar settings to alter icon visibility and override notification states.
+    supported_platforms:
+      - windows
+    elevation_required: false
+    executor:
+      name: powershell
+      command: |
+        $path = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer"; if (Test-Path -Path $path) { Set-ItemProperty -Path $path -Name "EnableAutoTray" -Value 0 -ErrorAction SilentlyContinue; Write-Host "[+] Simulated Explorer auto-tray modification applied." }
+      cleanup_command: |
+        $path = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer"; if (Test-Path -Path $path) { Remove-ItemProperty -Path $path -Name "EnableAutoTray" -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up Explorer auto-tray settings." }
+
+  - name: T1685.003 - Tamper with Security Center Client Notification Level Registry
+    description: |
+      Simulates adversary configuration changes to Security Center alert thresholds to suppress warning dialogs.
+    supported_platforms:
+      - windows
+    elevation_required: true
+    executor:
+      name: powershell
+      command: |
+        $path = "HKLM:\SOFTWARE\Microsoft\Security Center"; if (Test-Path -Path $path) { Set-ItemProperty -Path $path -Name "UINotification" -Value 0 -ErrorAction SilentlyContinue; Write-Host "[+] Simulated Security Center UI notification level altered." }
+      cleanup_command: |
+        $path = "HKLM:\SOFTWARE\Microsoft\Security Center"; if (Test-Path -Path $path) { Remove-ItemProperty -Path $path -Name "UINotification" -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up Security Center UI notification level." }
+
+  - name: T1685.003 - Modify Windows Defender Notification Settings via Registry
+    description: |
+      Simulates adversary modification of Windows Defender UI notification behavior to suppress threat detection popups.
+    supported_platforms:
+      - windows
+    elevation_required: true
+    executor:
+      name: powershell
+      command: |
+        $path = "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\UX Configuration"; if (-not (Test-Path -Path $path)) { New-Item -Path $path -Force | Out-Null }; Set-ItemProperty -Path $path -Name "Notification_Level" -Value 2 -ErrorAction SilentlyContinue; Write-Host "[+] Simulated Defender UX notification modification applied."
+      cleanup_command: |
+        $path = "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\UX Configuration"; if (Test-Path -Path $path) { Remove-ItemProperty -Path $path -Name "Notification_Level" -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up Defender UX notification settings." }
+
+  - name: T1685.003 - Clear PastIconsStream in TrayNotify to Simulate Tray Icon Erasure
+    description: |
+      Simulates an adversary clearing historical tray icon mapping data to blind user visibility of security tool icons.
+    supported_platforms:
+      - windows
+    elevation_required: false
+    executor:
+      name: powershell
+      command: |
+        $regPath = "HKCU:\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\TrayNotify"; if (Test-Path -Path $regPath) { $backup = Get-ItemProperty -Path $regPath -Name "PastIconsStream" -ErrorAction SilentlyContinue; if ($null -ne $backup) { Set-ItemProperty -Path $regPath -Name "T1685_PastBackup" -Value $backup.PastIconsStream }; Remove-ItemProperty -Path $regPath -Name "PastIconsStream" -ErrorAction SilentlyContinue; Write-Host "[+] Simulated PastIconsStream clearance executed." }
+      cleanup_command: |
+        $regPath = "HKCU:\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\TrayNotify"; if (Test-Path -Path $regPath) { $backup = Get-ItemProperty -Path $regPath -Name "T1685_PastBackup" -ErrorAction SilentlyContinue; if ($null -ne $backup) { Set-ItemProperty -Path $regPath -Name "PastIconsStream" -Value $backup.T1685_PastBackup; Remove-ItemProperty -Path $regPath -Name "T1685_PastBackup" -ErrorAction SilentlyContinue }; Write-Host "[+] Cleaned up PastIconsStream simulation." }
+
+  - name: T1685.003 - Modify Action Center Quick Action Settings to Remove Security Tiles
+    description: |
+      Simulates adversary tampering with Action Center quick action configuration to hide security management shortcuts.
+    supported_platforms:
+      - windows
+    elevation_required: false
+    executor:
+      name: powershell
+      command: |
+        $path = "HKCU:\Software\Microsoft\Windows\CurrentVersion\ActionCenter\Quick Actions"; if (-not (Test-Path -Path $path)) { New-Item -Path $path -Force | Out-Null }; Set-ItemProperty -Path $path -Name "PinnedQuickActions" -Value "None" -ErrorAction SilentlyContinue; Write-Host "[+] Simulated Quick Actions pinning modification executed."
+      cleanup_command: |
+        $path = "HKCU:\Software\Microsoft\Windows\CurrentVersion\ActionCenter\Quick Actions"; if (Test-Path -Path $path) { Remove-ItemProperty -Path $path -Name "PinnedQuickActions" -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up Quick Actions pinning settings." }
+
+  - name: T1685.003 - Modify Security Health UI Configuration Registry Keys
+    description: |
+      Simulates adversary modification of SecHealthUI behavior settings to disrupt status reporting pipelines.
+    supported_platforms:
+      - windows
+    elevation_required: true
+    executor:
+      name: powershell
+      command: |
+        $path = "HKLM:\SOFTWARE\Microsoft\Security Health"; if (-not (Test-Path -Path $path)) { New-Item -Path $path -Force | Out-Null }; Set-ItemProperty -Path $path -Name "UIStateOverride" -Value 1 -ErrorAction SilentlyContinue; Write-Host "[+] Simulated Security Health UI override applied."
+      cleanup_command: |
+        $path = "HKLM:\SOFTWARE\Microsoft\Security Health"; if (Test-Path -Path $path) { Remove-ItemProperty -Path $path -Name "UIStateOverride" -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up Security Health UI override." }
+
+  - name: T1685.003 - Modify Security Center CheckInterval to Desynchronize UI Updates
+    description: |
+      Simulates adversary manipulation of Security Center status polling frequency to delay or freeze UI status updates.
+    supported_platforms:
+      - windows
+    elevation_required: true
+    executor:
+      name: powershell
+      command: |
+        $path = "HKLM:\SOFTWARE\Microsoft\Security Center"; if (Test-Path -Path $path) { Set-ItemProperty -Path $path -Name "CheckInterval" -Value 9999 -ErrorAction SilentlyContinue; Write-Host "[+] Simulated Security Center poll interval tampering executed." }
+      cleanup_command: |
+        $path = "HKLM:\SOFTWARE\Microsoft\Security Center"; if (Test-Path -Path $path) { Remove-ItemProperty -Path $path -Name "CheckInterval" -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up Security Center poll interval." }
