@@ -1,156 +1,286 @@
 attack_technique: T1027.009
 display_name: Obfuscated Files or Information - Embedded Payloads
+
 atomic_tests:
-  - name: T1027.009 - Enumerate PE File Resource Sections via Header Parsing
+  - name: Embed Simulated Payload Overlay in Carrier Executable
     description: |
-      Safely parses native PE binary headers and section tables to inspect embedded resource sections without reflection errors.
+      Simulates an adversary appending non-executing payload data as an overlay
+      to a carrier executable file. The appended data is not executed.
     supported_platforms:
       - windows
+    input_arguments:
+      carrier_path:
+        description: Path to the carrier executable file
+        type: path
+        default: "$env:TEMP\\T1027_009_carrier.exe"
+      embedded_payload:
+        description: Simulated non-executing payload data appended to the carrier
+        type: string
+        default: "TVqQAAMAAAAEAAAA//8A"
     executor:
       name: powershell
       elevation_required: false
       command: |
-        $target = "$env:SystemRoot\System32\cmd.exe"
-        if (Test-Path $target) {
-            $bytes = [System.IO.File]::ReadAllBytes($target)
-            Write-Host "[+] Target binary size: $($bytes.Length) bytes."
-            # Verify PE signature MZ
-            if ($bytes[0] -eq 0x4D -and $bytes[1] -eq 0x5A) {
-                Write-Host "[+] Valid PE header signature (MZ) verified."
-            }
-        } else {
-            Write-Host "[-] Target file not found."
-        }
+        if (Test-Path "#{carrier_path}") { Remove-Item "#{carrier_path}" -Force -ErrorAction SilentlyContinue }
+        [System.IO.File]::WriteAllBytes("#{carrier_path}", [byte[]](0..127))
+        [System.IO.File]::AppendAllText("#{carrier_path}", "#{embedded_payload}")
+        Write-Host "Embedded payload overlay appended to #{carrier_path}"
+      cleanup_command: |
+        Remove-Item "#{carrier_path}" -Force -ErrorAction SilentlyContinue
 
-  - name: T1027.009 - Audit Portable Executable (PE) Overlays and Appended Data
+  - name: Embed Simulated Payload Data in Carrier Image File
     description: |
-      Scans binaries in user-specified or temporary paths for trailing data overlays appended past the final declared section table.
+      Simulates an adversary appending non-executing payload data beyond the
+      declared content of a carrier image file. The payload is not executed.
     supported_platforms:
       - windows
+    input_arguments:
+      carrier_path:
+        description: Path to the carrier image file
+        type: path
+        default: "$env:TEMP\\T1027_009_carrier.png"
+      embedded_payload:
+        description: Simulated non-executing payload data appended to the image
+        type: string
+        default: "TVqQAAMAAAAEAAAA//8A"
     executor:
       name: powershell
       elevation_required: false
       command: |
-        $path = "$env:TEMP"
-        Get-ChildItem -Path $path -Filter "*.exe" -ErrorAction SilentlyContinue | ForEach-Object {
-            $stream = [System.IO.File]::OpenRead($_.FullName)
-            $stream.Close()
-        }
-        Write-Host "[+] PE overlay and appended data scan completed."
+        if (Test-Path "#{carrier_path}") { Remove-Item "#{carrier_path}" -Force -ErrorAction SilentlyContinue }
+        [System.IO.File]::WriteAllBytes("#{carrier_path}", [byte[]](137,80,78,71,13,10,26,10,0,0,0,13))
+        [System.IO.File]::AppendAllText("#{carrier_path}", "#{embedded_payload}")
+        Write-Host "Embedded payload data appended to #{carrier_path}"
+      cleanup_command: |
+        Remove-Item "#{carrier_path}" -Force -ErrorAction SilentlyContinue
 
-  - name: T1027.009 - Enumerate Script Files Containing Large Base64 Blobs
+  - name: Embed Simulated Payload Data in Carrier PDF File
     description: |
-      Searches script files (.ps1, .vbs, .bat) for unusually large base64 or encoded data blocks indicative of embedded multi-stage payloads.
+      Simulates an adversary appending non-executing payload data beyond the
+      declared content of a carrier PDF document. The payload is not executed.
     supported_platforms:
       - windows
+    input_arguments:
+      carrier_path:
+        description: Path to the carrier PDF file
+        type: path
+        default: "$env:TEMP\\T1027_009_carrier.pdf"
+      embedded_payload:
+        description: Simulated non-executing payload data appended to the PDF
+        type: string
+        default: "TVqQAAMAAAAEAAAA//8A"
     executor:
       name: powershell
       elevation_required: false
       command: |
-        $searchPath = "$env:TEMP"
-        Get-ChildItem -Path $searchPath -Include "*.ps1","*.vbs" -Recurse -ErrorAction SilentlyContinue | ForEach-Object {
-            $content = Get-Content $_.FullName -Raw -ErrorAction SilentlyContinue
-            if ($content -match '[A-Za-z0-9+/]{100,}={0,2}') {
-                Write-Host "[!] Large base64-like string block detected in: $($_.FullName)"
-            }
-        }
-        Write-Host "[+] Script base64 payload audit completed."
+        if (Test-Path "#{carrier_path}") { Remove-Item "#{carrier_path}" -Force -ErrorAction SilentlyContinue }
+        [System.IO.File]::WriteAllBytes("#{carrier_path}", [byte[]](37,80,68,70,45,49,46,52,10))
+        [System.IO.File]::AppendAllText("#{carrier_path}", "#{embedded_payload}")
+        Write-Host "Embedded payload data appended to #{carrier_path}"
+      cleanup_command: |
+        Remove-Item "#{carrier_path}" -Force -ErrorAction SilentlyContinue
 
-  - name: T1027.009 - Scan for Hidden Files Stored in NTFS Alternate Data Streams (ADS)
+  - name: Embed Base64 Payload String in INI Configuration File
     description: |
-      Enumerates files across temporary directories containing hidden Alternate Data Streams where payloads are frequently concealed.
+      Simulates an adversary embedding a Base64-encoded payload string within
+      an otherwise benign INI configuration file.
     supported_platforms:
       - windows
+    input_arguments:
+      config_path:
+        description: Path to the INI configuration carrier file
+        type: path
+        default: "$env:TEMP\\T1027_009_settings.ini"
+      embedded_payload:
+        description: Base64-encoded simulated payload string
+        type: string
+        default: "TVqQAAMAAAAEAAAA//8A"
     executor:
       name: powershell
       elevation_required: false
       command: |
-        Get-Item -Path "$env:TEMP\*" -Stream * -ErrorAction SilentlyContinue | Where-Object { $_.Stream -ne '::$DATA' } | Select-Object PSChildName, Stream, Length
-        Write-Host "[+] Alternate Data Stream (ADS) payload audit completed."
+        $configContent = @"
+        [Settings]
+        application=legitimate-application
+        update_url=https://example.invalid
+        embedded_payload=#{embedded_payload}
+        "@
+        Set-Content -Path "#{config_path}" -Value $configContent -Force
+        Write-Host "Base64 payload string embedded in #{config_path}"
+      cleanup_command: |
+        Remove-Item "#{config_path}" -Force -ErrorAction SilentlyContinue
 
-  - name: T1027.009 - Calculate File Entropy to Identify Packed or Embedded Objects
+  - name: Embed Base64 Payload String in JSON Configuration File
     description: |
-      Computes Shannon entropy across files in temporary directories to flag potential packed, encrypted, or embedded payload structures.
+      Simulates an adversary embedding a Base64-encoded payload string within
+      an otherwise benign JSON configuration file.
     supported_platforms:
       - windows
+    input_arguments:
+      config_path:
+        description: Path to the JSON configuration carrier file
+        type: path
+        default: "$env:TEMP\\T1027_009_settings.json"
+      embedded_payload:
+        description: Base64-encoded simulated payload string
+        type: string
+        default: "TVqQAAMAAAAEAAAA//8A"
     executor:
       name: powershell
       elevation_required: false
       command: |
-        Get-ChildItem -Path "$env:TEMP" -File -ErrorAction SilentlyContinue | Select-Object Name, Length | Select-Object -First 20
-        Write-Host "[+] File entropy scan baseline completed."
+        $json = @{
+          application = "legitimate-application"
+          update_url = "https://example.invalid"
+          embedded_payload = "#{embedded_payload}"
+        } | ConvertTo-Json
+        Set-Content -Path "#{config_path}" -Value $json -Force
+        Write-Host "Base64 payload string embedded in #{config_path}"
+      cleanup_command: |
+        Remove-Item "#{config_path}" -Force -ErrorAction SilentlyContinue
 
-  - name: T1027.009 - Inspect Shortcut (.lnk) Files for Embedded Command Arguments
+  - name: Embed Base64 Payload String in XML Resource File
     description: |
-      Audits shortcut (.lnk) files in common startup and user directories for embedded script blocks or hidden payload arguments.
+      Simulates an adversary embedding a Base64-encoded payload string within
+      an otherwise benign XML resource file.
     supported_platforms:
       - windows
+    input_arguments:
+      resource_path:
+        description: Path to the XML resource carrier file
+        type: path
+        default: "$env:TEMP\\T1027_009_resource.xml"
+      embedded_payload:
+        description: Base64-encoded simulated payload string
+        type: string
+        default: "TVqQAAMAAAAEAAAA//8A"
     executor:
       name: powershell
       elevation_required: false
       command: |
-        $shell = New-Object -ComObject WScript.Shell
-        $shortcutPath = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup"
-        if (Test-Path $shortcutPath) {
-            Get-ChildItem -Path $shortcutPath -Filter "*.lnk" -ErrorAction SilentlyContinue | ForEach-Object {
-                $lnk = $shell.CreateShortcut($_.FullName)
-                Write-Host "File: $($_.Name) -> Arguments: $($lnk.Arguments)"
-            }
-        }
-        Write-Host "[+] Shortcut payload argument audit completed."
+        $xmlContent = @"
+        <?xml version="1.0" encoding="utf-8"?>
+        <configuration>
+          <application>legitimate-application</application>
+          <embeddedPayload>#{embedded_payload}</embeddedPayload>
+        </configuration>
+        "@
+        Set-Content -Path "#{resource_path}" -Value $xmlContent -Force
+        Write-Host "Base64 payload string embedded in #{resource_path}"
+      cleanup_command: |
+        Remove-Item "#{resource_path}" -Force -ErrorAction SilentlyContinue
 
-  - name: T1027.009 - Audit Compiled HTML Help (.CHM) Files for Embedded Content
+  - name: Embed Base64 Payload String in CSV Data File
     description: |
-      Searches local directories for .chm files which can be abused to conceal compiled embedded scripts and payloads.
+      Simulates an adversary embedding a Base64-encoded payload string within
+      a metadata field of an otherwise benign CSV data file.
     supported_platforms:
       - windows
+    input_arguments:
+      csv_path:
+        description: Path to the CSV data carrier file
+        type: path
+        default: "$env:TEMP\\T1027_009_export.csv"
+      embedded_payload:
+        description: Base64-encoded simulated payload string
+        type: string
+        default: "TVqQAAMAAAAEAAAA//8A"
     executor:
       name: powershell
       elevation_required: false
       command: |
-        Get-ChildItem -Path "$env:USERPROFILE" -Filter "*.chm" -Recurse -ErrorAction SilentlyContinue | Select-Object FullName, Length
-        Write-Host "[+] CHM file payload audit completed."
+        $csvContent = @"
+        id,name,metadata
+        1,legitimate-record,#{embedded_payload}
+        "@
+        Set-Content -Path "#{csv_path}" -Value $csvContent -Force
+        Write-Host "Base64 payload string embedded in #{csv_path}"
+      cleanup_command: |
+        Remove-Item "#{csv_path}" -Force -ErrorAction SilentlyContinue
 
-  - name: T1027.009 - Inspect Archive Files (.zip, .cab) for Suspicious Nested Extensions
+  - name: Embed Base64 Payload String in PowerShell Script Carrier
     description: |
-      Audits compressed container files for nested executable extensions or hidden binary files concealed inside container structures.
+      Simulates an adversary embedding a Base64-encoded payload string within
+      a PowerShell script file. The script is created but not executed.
     supported_platforms:
       - windows
+    input_arguments:
+      script_path:
+        description: Path to the PowerShell script carrier file
+        type: path
+        default: "$env:TEMP\\T1027_009_carrier.ps1"
+      embedded_payload:
+        description: Base64-encoded simulated payload string
+        type: string
+        default: "TVqQAAMAAAAEAAAA//8A"
     executor:
       name: powershell
       elevation_required: false
       command: |
-        $path = "$env:USERPROFILE\Downloads"
-        if (Test-Path $path) {
-            Get-ChildItem -Path $path -Filter "*.zip" -ErrorAction SilentlyContinue | ForEach-Object {
-                Write-Host "[*] Inspecting archive container: $($_.Name)"
-            }
-        }
-        Write-Host "[+] Archive container inspection completed."
+        $scriptContent = "# Simulated embedded payload carrier`r`n" +
+                         "`$embeddedPayload = '#{embedded_payload}'"
+        Set-Content -Path "#{script_path}" -Value $scriptContent -Force
+        Write-Host "Base64 payload string embedded in #{script_path}"
+    cleanup_command: |
+      Remove-Item "#{script_path}" -Force -ErrorAction SilentlyContinue
 
-  - name: T1027.009 - Audit Office Documents for Embedded OLE / ActiveX Objects
+  - name: Embed Base64 Payload String in Windows Script File Carrier
     description: |
-      Scans office document formats (.doc, .xls, .ppt) for embedded object structures or legacy OLE streams.
+      Simulates an adversary embedding a Base64-encoded payload string within
+      a Windows Script File. The script file is created but not executed.
     supported_platforms:
       - windows
+    input_arguments:
+      script_path:
+        description: Path to the Windows Script File carrier
+        type: path
+        default: "$env:TEMP\\T1027_009_carrier.wsf"
+      embedded_payload:
+        description: Base64-encoded simulated payload string
+        type: string
+        default: "TVqQAAMAAAAEAAAA//8A"
     executor:
       name: powershell
       elevation_required: false
       command: |
-        $docPath = "$env:USERPROFILE\Documents"
-        if (Test-Path $docPath) {
-            Get-ChildItem -Path $docPath -Include "*.doc","*.xls","*.ppt","*.docx","*.xlsx" -Recurse -ErrorAction SilentlyContinue | Select-Object Name, Length
-        }
-        Write-Host "[+] Document embedding audit completed."
+        $wsfContent = @"
+        <?xml version="1.0" encoding="utf-8"?>
+        <job>
+          <script language="VBScript">
+            Const embeddedPayload = "#{embedded_payload}"
+          </script>
+        </job>
+        "@
+        Set-Content -Path "#{script_path}" -Value $wsfContent -Force
+        Write-Host "Base64 payload string embedded in #{script_path}"
+      cleanup_command: |
+        Remove-Item "#{script_path}" -Force -ErrorAction SilentlyContinue
 
-  - name: T1027.009 - Audit Environment Strings for Encoded or Embedded Payload Signatures
+  - name: Embed Hex-Encoded Simulated Shellcode String in Text Carrier
     description: |
-      Queries system environment variables for injected strings, base64-encoded segments, or suspicious configuration blobs.
+      Simulates an adversary embedding a hexadecimal representation of
+      simulated shellcode within an otherwise benign text file. The shellcode
+      representation is not decoded or executed.
     supported_platforms:
       - windows
+    input_arguments:
+      text_path:
+        description: Path to the text carrier file
+        type: path
+        default: "$env:TEMP\\T1027_009_notes.txt"
+      embedded_payload:
+        description: Hex-encoded simulated shellcode representation
+        type: string
+        default: "9090909031c050682f2f7368"
     executor:
       name: powershell
       elevation_required: false
       command: |
-        Get-ChildItem Env: | Where-Object { $_.Value -match '[A-Za-z0-9+/]{50,}={0,2}' } | Select-Object Name
-        Write-Host "[+] Environment payload string audit completed."
+        $textContent = @"
+        Meeting notes
+        Reference: #{embedded_payload}
+        "@
+        Set-Content -Path "#{text_path}" -Value $textContent -Force
+        Write-Host "Hex-encoded simulated shellcode string embedded in #{text_path}"
+      cleanup_command: |
+        Remove-Item "#{text_path}" -Force -ErrorAction SilentlyContinue
