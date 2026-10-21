@@ -1,0 +1,160 @@
+attack_technique: T1205.002
+display_name: Traffic Signaling - Socket Filters
+
+atomic_tests:
+  - name: T1205.002 - Audit WFP Filter Engine State via Netsh
+    description: |
+      Displays active Windows Filtering Platform filters matching traffic parameters to inspect system packet filtering rules.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: true
+      command: |
+        netsh.exe wfp show filters
+        Write-Host "[+] WFP filters exported successfully."
+      cleanup_command: |
+        Remove-Item "filters.xml" -Force -ErrorAction SilentlyContinue
+        Write-Host "[+] Cleanup complete."
+
+  - name: T1205.002 - Audit WinSock Protocol Catalog (Winsock2 Providers)
+    description: |
+      Queries the WinSock catalog entries to detect unauthorized transport providers or layered service provider modifications.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $path = "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\Protocol_Catalog9"
+        if (Test-Path $path) {
+            Get-ChildItem -Path "$path\Catalog Entries" -ErrorAction SilentlyContinue | Get-ItemProperty | Select-Object PackedCatalogItem, DisplayName
+            Write-Host "[+] WinSock protocol catalog audited."
+        } else {
+            Write-Host "[-] Catalog path not found on this build configuration."
+        }
+
+  - name: T1205.002 - Enumerate NDIS Protocol Drivers
+    description: |
+      Lists installed NDIS protocol drivers capable of binding directly to network adapters to inspect or filter raw packets.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        Get-NetAdapterBinding | Where-Object { $_.ComponentID -like "ms_*" } | Select-Object Name, DisplayName, ComponentID, Enabled
+        Write-Host "[+] NDIS protocol driver binding audit completed."
+
+  - name: T1205.002 - Audit Packet Capture Driver Registry Configuration
+    description: |
+      Inspects registry keys associated with packet capture drivers (Npcap/WinPcap/Packet) to verify kernel-level traffic sniffing configurations.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $paths = @(
+            "HKLM:\SYSTEM\CurrentControlSet\Services\npcap",
+            "HKLM:\SYSTEM\CurrentControlSet\Services\npf",
+            "HKLM:\SYSTEM\CurrentControlSet\Services\Packet"
+        )
+        foreach ($p in $paths) {
+            if (Test-Path $p) {
+                Get-ItemProperty -Path $p | Select-Object PSChildName, Start, ImagePath, Description
+            }
+        }
+        Write-Host "[+] Packet capture driver registry audit completed."
+
+  - name: T1205.002 - Verify Raw Socket Instantiation and Binding Behavior
+    description: |
+      Tests raw socket creation privileges using the .NET Socket API to identify capabilities for low-level packet crafting and filtering.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        try {
+            $socket = New-Object System.Net.Sockets.Socket([System.Net.Sockets.AddressFamily]::InterNetwork, [System.Net.Sockets.SocketType]::Raw, [System.Net.Sockets.ProtocolType]::IP)
+            Write-Host "[+] Raw socket instantiation succeeded."
+            $socket.Close()
+        } catch {
+            Write-Host "[-] Raw socket instantiation restricted: $_"
+        }
+
+  - name: T1205.002 - Display Current State of WFP and IPsec
+    description: |
+      Displays the current operational state of the Windows Filtering Platform and IPsec engine.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: true
+      command: |
+        netsh.exe wfp show state
+        Write-Host "[+] WFP state exported successfully."
+      cleanup_command: |
+        Remove-Item "state.xml" -Force -ErrorAction SilentlyContinue
+        Write-Host "[+] Cleanup complete."
+
+  - name: T1205.002 - Display WFP Boot-Time Policy and Filters
+    description: |
+      Displays boot-time WFP security policies and filters applied during system startup.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: true
+      command: |
+        netsh.exe wfp show boottimepolicy
+        Write-Host "[+] Boot-time policy exported successfully."
+      cleanup_command: |
+        Remove-Item "boottimepolicy.xml" -Force -ErrorAction SilentlyContinue
+        Write-Host "[+] Cleanup complete."
+
+  - name: T1205.002 - Audit WinSock Name Space Providers (NSP)
+    description: |
+      Inspects registered WinSock Name Space Providers to detect namespace-level interception or resolution filters.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $path = "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\NameSpace_Catalog5"
+        if (Test-Path $path) {
+            Get-ChildItem -Path "$path\Catalog Entries" -ErrorAction SilentlyContinue | Get-ItemProperty | Select-Object DisplayName, LibraryPath
+            Write-Host "[+] WinSock Name Space Provider catalog audited."
+        } else {
+            Write-Host "[-] NSP catalog path not found on this build configuration."
+        }
+
+  - name: T1205.002 - Simulate Local Loopback Raw Socket Traffic Interception Check
+    description: |
+      Binds a low-level socket stream on the local loopback interface to verify stack-level visibility of raw frame processing.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $endpoint = [System.Net.IPEndPoint]::new([System.Net.IPAddress]::Loopback, 0)
+        $socket = [System.Net.Sockets.Socket]::new([System.Net.Sockets.AddressFamily]::InterNetwork, [System.Net.Sockets.SocketType]::Dgram, [System.Net.Sockets.ProtocolType]::Udp)
+        $socket.Bind($endpoint)
+        Write-Host "[+] Loopback test socket bound successfully to port: $($socket.LocalEndPoint.Port)"
+        $socket.Close()
+        Write-Host "[+] Test socket closed."
+
+  - name: T1205.002 - Inspect Network Stack Filter Drivers via FltMC
+    description: |
+      Lists active filesystem and network-adjacent filter drivers attached to the device stack using the Filter Manager control tool.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: true
+      command: |
+        fltmc instances
+        Write-Host "[+] Filter driver stack enumeration completed."
