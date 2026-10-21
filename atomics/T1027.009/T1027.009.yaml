@@ -221,8 +221,8 @@ atomic_tests:
                          "`$embeddedPayload = '#{embedded_payload}'"
         Set-Content -Path "#{script_path}" -Value $scriptContent -Force
         Write-Host "Base64 payload string embedded in #{script_path}"
-    cleanup_command: |
-      Remove-Item "#{script_path}" -Force -ErrorAction SilentlyContinue
+      cleanup_command: |
+        Remove-Item "#{script_path}" -Force -ErrorAction SilentlyContinue
 
   - name: Embed Base64 Payload String in Windows Script File Carrier
     description: |
