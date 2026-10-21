@@ -63,21 +63,22 @@ atomic_tests:
     elevation_required: true
     command: |
       $target = "C:\Windows\System32\shutdown.exe"
-      $script:aclBackup = "$env:TEMP\shutdown_acl_backup.txt"
+      $backupPath = "$env:TEMP\shutdown_acl_backup.txt"
       Push-Location (Split-Path $target)
-      icacls (Split-Path $target -Leaf) /save $script:aclBackup | Out-Null
+      icacls (Split-Path $target -Leaf) /save $backupPath | Out-Null
       Pop-Location
       takeown /f $target | Out-Null
       icacls $target /grant "*S-1-5-32-544:F" | Out-Null
       icacls $target /deny Everyone:RX
     cleanup_command: |
       $target = "C:\Windows\System32\shutdown.exe"
+      $backupPath = "$env:TEMP\shutdown_acl_backup.txt"
       icacls $target /remove:d Everyone
-      if (Test-Path $script:aclBackup) {
+      if (Test-Path $backupPath) {
         Push-Location (Split-Path $target)
-        icacls . /restore $script:aclBackup | Out-Null
+        icacls . /restore $backupPath | Out-Null
         Pop-Location
-        Remove-Item $script:aclBackup -Force -ErrorAction Ignore
+        Remove-Item $backupPath -Force -ErrorAction Ignore
       }
 
 - name: Disable Fast Startup via direct registry modification (HiberbootEnabled)
