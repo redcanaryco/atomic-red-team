@@ -393,3 +393,34 @@ atomic_tests:
     cleanup_command: 'Get-Process -Name Notepad -ErrorAction SilentlyContinue | Stop-Process -Force'
     name: powershell
     elevation_required: true
+- name: Process Injection via lldb (Same-User Process)
+  auto_generated_guid: 269978ab-8013-4fbb-a979-e0b47fe243b1
+  description: |
+    Spawns a benign helper process, then attaches to it with the native `lldb` debugger and uses
+    expression evaluation to invoke `system()` inside the target's address space, causing the target
+    process to execute an arbitrary command under its own PID. Same-user, non-hardened processes can
+    be attached to and manipulated this way without additional entitlements, reflecting macOS process
+    injection techniques that abuse debugging primitives (task_for_pid/ptrace) rather than dylib
+    injection.
+
+    NOTE: on modern macOS the executing terminal/app must have been granted the "Developer Tools"
+    permission (Privacy & Security) for lldb to attach to another process.
+  supported_platforms:
+  - macos
+  input_arguments:
+    marker_file:
+      description: File the injected command creates inside the target process to prove injection succeeded.
+      type: path
+      default: /tmp/T1055_injected.txt
+  executor:
+    command: |
+      sleep 300 &
+      TARGET_PID=$!
+      lldb -p $TARGET_PID -o 'expr (int)system("touch #{marker_file}")' -o 'detach' -o 'quit'
+      ls -la #{marker_file}
+      kill $TARGET_PID
+    cleanup_command: |
+      rm -f #{marker_file}
+      pkill -f "sleep 300" 2>/dev/null
+    name: bash
+    elevation_required: false

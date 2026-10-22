@@ -1,0 +1,23 @@
+attack_technique: T1559.003
+display_name: 'Inter-Process Communication: XPC Services'
+atomic_tests:
+- name: Enumerate Registered XPC Services and Privileged Helper Tools
+  auto_generated_guid: a3d00cd7-fd16-46fe-b506-6c88e18e01af
+  description: |
+    Enumerates the on-disk and currently-registered XPC service attack surface: bundled `.xpc` services
+    inside application bundles, system/library XPC service directories, and Mach services registered
+    with `launchd`. This is the reconnaissance step an adversary performs before targeting a specific
+    privileged XPC service or helper tool for message injection, as described in the ATT&CK
+    sub-technique and in public XPC exploitation research.
+
+    Reference: https://wojciechregula.blog/post/learn-xpc-exploitation-part-3-code-injections/
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+      echo "--- XPC service bundles on disk ---"
+      find /System/Library/XPCServices /Library/XPCServices ~/Library/XPCServices /Applications -maxdepth 4 -type d -name "*.xpc" 2>/dev/null
+      echo "--- registered launchd/Mach services (XPC-related) ---"
+      launchctl list | grep -i xpc || true
+    name: bash
+    elevation_required: false

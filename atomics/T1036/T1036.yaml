@@ -40,3 +40,33 @@ atomic_tests:
       taskkill /IM Calculator.exe /f >$null 2>$null
       Remove-Item "$env:userprofile\Downloads\T1036" -recurse -ErrorAction Ignore
     name: powershell
+- name: Masquerade as a Legitimate macOS System Process
+  auto_generated_guid: e5e5f2a4-e9b5-4cc3-ab3c-1e8dd69516a1
+  description: |
+    Copies a benign binary to a location outside the standard system directories and renames it to
+    match a legitimate-sounding macOS system process name (e.g. a background daemon), then executes
+    it from there. Malware families commonly run under names resembling legitimate macOS processes
+    (such as `mdworker`, `coreaudiod`, or `com.apple.*`) from unusual paths like `/tmp` or a user's
+    Library folder in order to blend in with normal process listings.
+  supported_platforms:
+  - macos
+  input_arguments:
+    source_binary:
+      description: Benign binary to copy and rename.
+      type: path
+      default: /bin/sleep
+    masquerade_path:
+      description: Path/name to masquerade the binary as.
+      type: path
+      default: /tmp/com.apple.coreservices.appleidauthenticationd
+  executor:
+    command: |
+      cp #{source_binary} #{masquerade_path}
+      #{masquerade_path} 30 &
+      sleep 1
+      ps aux | grep "#{masquerade_path}" | grep -v grep
+    cleanup_command: |
+      pkill -f "#{masquerade_path}" 2>/dev/null
+      rm -f #{masquerade_path}
+    name: bash
+    elevation_required: false

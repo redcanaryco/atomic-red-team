@@ -1,0 +1,53 @@
+attack_technique: T1546.016
+display_name: 'Event Triggered Execution: Installer Packages'
+atomic_tests:
+- name: Execute a Malicious postinstall Script via a macOS Installer Package
+  auto_generated_guid: fdf04aed-7eb3-4375-91ec-70aad475d13c
+  description: |
+    Builds a `.pkg` installer package containing a `postinstall` script, then runs `installer` to
+    install it. macOS `postinstall`/`preinstall` scripts run with the same (often elevated) privileges
+    as the installer itself, and legitimate-looking installer packages carrying a malicious
+    `postinstall` script have been used by real macOS malware families such as AppleJeus and EvilQuest
+    to gain execution and establish persistence.
+
+    Reference: https://securelist.com/operation-applejeus/87553/
+  supported_platforms:
+  - macos
+  input_arguments:
+    build_dir:
+      description: Working directory used to stage the package payload and scripts.
+      type: path
+      default: /tmp/T1546.016_build
+    pkg_path:
+      description: Path to write the built installer package.
+      type: path
+      default: /tmp/T1546.016.pkg
+    marker_file:
+      description: File the postinstall script creates to prove it executed.
+      type: path
+      default: /tmp/T1546.016_postinstall_executed
+  dependency_executor_name: bash
+  dependencies:
+  - description: |
+      pkgbuild must be available (ships with Xcode Command Line Tools)
+    prereq_command: |
+      if command -v pkgbuild >/dev/null 2>&1; then exit 0; else exit 1; fi
+    get_prereq_command: |
+      xcode-select --install
+  executor:
+    command: |
+      mkdir -p #{build_dir}/root #{build_dir}/scripts
+      cat << EOF > #{build_dir}/scripts/postinstall
+      #!/bin/bash
+      touch #{marker_file}
+      exit 0
+      EOF
+      chmod +x #{build_dir}/scripts/postinstall
+      pkgbuild --root #{build_dir}/root --scripts #{build_dir}/scripts --identifier com.atomicredteam.t1546016 --version 1.0 --install-location /tmp/T1546.016_install #{pkg_path}
+      sudo installer -pkg #{pkg_path} -target /
+      ls -la #{marker_file}
+    cleanup_command: |
+      sudo pkgutil --forget com.atomicredteam.t1546016 2>/dev/null
+      rm -rf #{build_dir} #{pkg_path} #{marker_file} /tmp/T1546.016_install
+    name: bash
+    elevation_required: true

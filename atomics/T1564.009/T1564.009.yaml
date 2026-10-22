@@ -1,0 +1,37 @@
+attack_technique: T1564.009
+display_name: 'Hide Artifacts: Resource Forking'
+atomic_tests:
+- name: Hide Payload in a File's Resource Fork
+  auto_generated_guid: 92559e77-d471-4488-88fd-172f84cd9ee8
+  description: |
+    Writes hidden data into the resource fork of an otherwise empty, benign-looking file using the
+    `..namedfork/rsrc` path suffix. The main data fork stays empty (so `cat`, `ls -l`, and the Finder
+    preview show nothing), while the payload only appears via resource-fork-aware tools such as
+    `ls -l@`/`xattr -l`. This mirrors the technique observed in Bundlore/mm-install-macos, which
+    stashed a second-stage installer script inside a named fork.
+
+    Reference: https://www.sentinelone.com/labs/resourceful-macos-malware-hides-in-named-fork/
+  supported_platforms:
+  - macos
+  input_arguments:
+    carrier_file:
+      description: Benign, empty-looking file that will carry hidden data in its resource fork.
+      type: path
+      default: /tmp/T1564.009_carrier.txt
+    hidden_payload:
+      description: Data to hide inside the file's resource fork.
+      type: string
+      default: echo "payload executed from resource fork"
+  executor:
+    command: |
+      touch #{carrier_file}
+      echo '#{hidden_payload}' > #{carrier_file}/..namedfork/rsrc
+      echo "--- data fork (empty) ---"
+      cat #{carrier_file}
+      echo "--- resource fork (hidden payload) ---"
+      cat #{carrier_file}/..namedfork/rsrc
+      ls -l@ #{carrier_file}
+    cleanup_command: |
+      rm -f #{carrier_file}
+    name: bash
+    elevation_required: false

@@ -41,3 +41,42 @@ atomic_tests:
       rm "#{file_to_manipulate}"
     name: powershell
     elevation_required: false
+- name: Clear Shell History
+  auto_generated_guid: cfaf8a2a-4f8b-42ca-aed7-a36db536bc19
+  description: |
+    Clears the current user's bash and zsh history files and the in-memory shell history, removing a
+    record of commands the adversary has run. This is a common cleanup step adversaries perform after
+    manual, hands-on-keyboard activity on a compromised macOS host.
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+      cat /dev/null > ~/.bash_history
+      cat /dev/null > ~/.zsh_history
+      history -c 2>/dev/null || true
+    name: bash
+    elevation_required: false
+- name: Clear Quarantine Events Database
+  auto_generated_guid: 53733cf8-726c-484c-8c74-6a322f89a90d
+  description: |
+    Deletes all rows from the user's LaunchServices QuarantineEventsV2 database, which is the same
+    database `com.apple.quarantine` extended attributes reference. Clearing it removes forensic
+    evidence of when and from where files (including the adversary's own payloads) were downloaded,
+    without needing to touch the quarantine attribute on any individual file.
+  supported_platforms:
+  - macos
+  input_arguments:
+    quarantine_db:
+      description: Path to the user's Quarantine Events database.
+      type: path
+      default: $HOME/Library/Preferences/com.apple.LaunchServices.QuarantineEventsV2
+  executor:
+    command: |
+      cp "#{quarantine_db}" /tmp/T1070_QuarantineEventsV2.bak
+      sqlite3 "#{quarantine_db}" "DELETE FROM LSQuarantineEvent;"
+      sqlite3 "#{quarantine_db}" "SELECT count(*) FROM LSQuarantineEvent;"
+    cleanup_command: |
+      cp /tmp/T1070_QuarantineEventsV2.bak "#{quarantine_db}"
+      rm -f /tmp/T1070_QuarantineEventsV2.bak
+    name: bash
+    elevation_required: false

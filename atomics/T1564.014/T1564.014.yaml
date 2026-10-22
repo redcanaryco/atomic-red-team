@@ -1,0 +1,39 @@
+attack_technique: T1564.014
+display_name: 'Hide Artifacts: Extended Attributes'
+atomic_tests:
+- name: Embed and Execute a Payload from a Custom Extended Attribute
+  auto_generated_guid: e3ede63f-4fd5-420a-bdc5-89b2493c0392
+  description: |
+    Embeds a base64-encoded payload into a custom extended attribute (xattr) on an otherwise benign
+    file, then uses a separate "loader" command to retrieve, decode, and execute the payload. Because
+    the file's primary content and hash never change, security tools and integrity checks that do not
+    inspect extended attributes will observe only the original, unmodified file. This mirrors the
+    technique used by the Lazarus Group to evade detection.
+
+    Reference: https://www.group-ib.com/blog/stealthy-attributes-of-apt-lazarus/
+  supported_platforms:
+  - macos
+  input_arguments:
+    carrier_file:
+      description: Benign file that will carry the hidden payload in an extended attribute.
+      type: path
+      default: /tmp/T1564.014_carrier.txt
+    xattr_name:
+      description: Name of the custom extended attribute used to store the payload.
+      type: string
+      default: com.apple.update.cache
+    payload_command:
+      description: Command to be base64-encoded, hidden in the xattr, then decoded and executed.
+      type: string
+      default: touch /tmp/T1564.014_payload_executed
+  executor:
+    command: |
+      touch #{carrier_file}
+      PAYLOAD_B64=$(echo "#{payload_command}" | base64)
+      xattr -w #{xattr_name} "$PAYLOAD_B64" #{carrier_file}
+      xattr -p #{xattr_name} #{carrier_file} | base64 --decode | bash
+    cleanup_command: |
+      rm -f #{carrier_file}
+      rm -f /tmp/T1564.014_payload_executed
+    name: bash
+    elevation_required: false

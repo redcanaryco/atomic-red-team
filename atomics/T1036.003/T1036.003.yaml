@@ -161,3 +161,29 @@ atomic_tests:
       del C:\lsm.exe >nul 2>&1
     name: command_prompt
     elevation_required: true
+- name: Masquerading - macOS system utility renamed to a trusted-sounding name
+  auto_generated_guid: 8479faf5-842d-4281-a5ee-38b1675be6d7
+  description: |
+    Copies a legitimate macOS system utility to a non-standard directory under a name resembling a
+    trusted Apple system process, then executes it from there. Because the copy is the genuine,
+    signed system binary, this can also be used to slip past application allow-listing rules that
+    key off binary name/path rather than code signature.
+  supported_platforms:
+  - macos
+  input_arguments:
+    source_utility:
+      description: Legitimate macOS system utility to copy and rename.
+      type: path
+      default: /usr/bin/curl
+    masquerade_path:
+      description: Path/name to masquerade the utility as.
+      type: path
+      default: /tmp/com.apple.softwareupdated
+  executor:
+    command: |
+      cp #{source_utility} #{masquerade_path}
+      #{masquerade_path} --version
+    cleanup_command: |
+      rm -f #{masquerade_path}
+    name: bash
+    elevation_required: false

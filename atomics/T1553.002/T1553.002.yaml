@@ -1,0 +1,30 @@
+attack_technique: T1553.002
+display_name: 'Subvert Trust Controls: Code Signing'
+atomic_tests:
+- name: Ad-hoc Code Sign a Binary
+  auto_generated_guid: 1ada654e-7db2-44e4-b4dc-f0cd235e6217
+  description: |
+    Copies a benign system binary and ad-hoc (self) signs it using `codesign --sign -`. Ad-hoc signing
+    produces a valid signature that satisfies basic Gatekeeper/first-run checks without requiring a
+    trusted Developer ID certificate, a technique adversaries use to make a malicious binary appear
+    signed without owning or stealing legitimate signing material.
+  supported_platforms:
+  - macos
+  input_arguments:
+    source_binary:
+      description: Benign source binary to copy and sign.
+      type: path
+      default: /bin/cat
+    target_binary:
+      description: Path to write the copied, ad-hoc signed binary.
+      type: path
+      default: /tmp/T1553.002_signed_binary
+  executor:
+    command: |
+      cp #{source_binary} #{target_binary}
+      codesign --sign - --force #{target_binary}
+      codesign -dv #{target_binary}
+    cleanup_command: |
+      rm -f #{target_binary}
+    name: bash
+    elevation_required: false

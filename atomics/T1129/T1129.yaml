@@ -60,3 +60,38 @@ atomic_tests:
        echo "" | "#{plink_file}" "#{vm_host}" -ssh  -l "#{vm_user}" -pw "#{vm_pass}" -m "#{vib_remove}"
     name: command_prompt
     elevation_required: false
+- name: Execute a Shared Module (dylib) via a Generic Loader
+  auto_generated_guid: 85a0c684-e29c-4896-977f-f82a2fe8cf2e
+  description: |
+    Executes arbitrary code from a compiled dylib by loading it with a generic, built-in loader
+    (Python's `ctypes.CDLL`, which calls `dlopen` under the hood) rather than launching it as its own
+    process image. The dylib's constructor function runs automatically as soon as it is loaded,
+    similar to abusing `rundll32` on Windows to execute code from a DLL without a dedicated
+    launcher/dropper binary.
+  supported_platforms:
+  - macos
+  input_arguments:
+    dylib_source:
+      description: Source for the shared module (dylib) to be loaded.
+      type: path
+      default: PathToAtomicsFolder/T1129/src/MacOS/T1129.c
+    dylib_path:
+      description: Path to the compiled shared module.
+      type: path
+      default: /tmp/T1129_module.dylib
+  dependency_executor_name: bash
+  dependencies:
+  - description: |
+      The shared module must be compiled and present at #{dylib_path}
+    prereq_command: |
+      if [ -f #{dylib_path} ]; then exit 0; else exit 1; fi
+    get_prereq_command: |
+      gcc -dynamiclib #{dylib_source} -o #{dylib_path}
+  executor:
+    command: |
+      python3 -c "import ctypes; ctypes.CDLL('#{dylib_path}')"
+      cat /tmp/T1129_module_loaded.txt
+    cleanup_command: |
+      rm -f #{dylib_path} /tmp/T1129_module_loaded.txt
+    name: bash
+    elevation_required: false
