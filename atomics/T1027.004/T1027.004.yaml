@@ -124,6 +124,12 @@ atomic_tests:
   dependency_executor_name: sh
   dependencies:
   - description: |
+      Go must be installed
+    prereq_command: |
+      command -v go >/dev/null 2>&1
+    get_prereq_command: |
+      (sudo apt update && sudo apt install -y golang) || (sudo yum update -y && sudo yum install -y golang) || (sudo pacman -Syu --noconfirm && sudo pacman -S --noconfirm go) || brew install golang
+  - description: |
       the source file must exist on disk at specified location (#{input_file})
     prereq_command: |
       if [ -e  #{input_file} ]; then exit 0; else exit 1; fi

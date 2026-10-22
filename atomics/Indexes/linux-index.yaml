@@ -7670,6 +7670,15 @@ stealth:
           default: PathToAtomicsFolder/T1027.004/src/T1027-004-test.go
       dependency_executor_name: sh
       dependencies:
+      - description: 'Go must be installed
+
+          '
+        prereq_command: 'command -v go >/dev/null 2>&1
+
+          '
+        get_prereq_command: "(sudo apt update && sudo apt install -y golang) || (sudo
+          yum update -y && sudo yum install -y golang) || (sudo pacman -Syu --noconfirm
+          && sudo pacman -S --noconfirm go) || brew install golang\n"
       - description: 'the source file must exist on disk at specified location (#{input_file})
 
           '
