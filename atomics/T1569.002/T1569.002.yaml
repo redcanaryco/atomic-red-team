@@ -1,5 +1,5 @@
 attack_technique: T1569.002
-display_name: 'System Services: Service Execution'
+display_name: "System Services: Service Execution"
 atomic_tests:
 - name: Execute a Command as a Service
   auto_generated_guid: 2382dee2-a75f-49aa-9378-f52df6ed3fb1
@@ -60,7 +60,7 @@ atomic_tests:
       if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe") { exit 0} else { exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\PsTools.zip"
+      Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\PsTools.zip" -UseBasicParsing
       Expand-Archive "PathToAtomicsFolder\..\ExternalPayloads\PsTools.zip" "PathToAtomicsFolder\..\ExternalPayloads\PsTools" -Force
       Copy-Item "PathToAtomicsFolder\..\ExternalPayloads\PsTools\PsExec.exe" "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe" -Force
   executor:
@@ -122,11 +122,17 @@ atomic_tests:
       default: $ENV:COMPUTERNAME
   dependencies:
   - description: |
+      WMIC must be installed (deprecated and removed by default in Windows 11 22H2+)
+    prereq_command: |
+      if (Get-Command wmic.exe -ErrorAction SilentlyContinue) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      DISM /Online /Add-Capability /CapabilityName:WMIC~~~~
+  - description: |
       PsExec must exist on disk at "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe"
     prereq_command: |
       if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe") {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\PsTools.zip"
+      Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\PsTools.zip" -UseBasicParsing
       Expand-Archive "PathToAtomicsFolder\..\ExternalPayloads\PsTools.zip" "PathToAtomicsFolder\..\ExternalPayloads\PsTools" -Force
       New-Item -ItemType Directory (Split-Path "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe") -Force | Out-Null
       Copy-Item "PathToAtomicsFolder\..\ExternalPayloads\PsTools\PsExec.exe" "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe" -Force
@@ -143,9 +149,11 @@ atomic_tests:
       cmd.exe /c "fsutil behavior set SymlinkEvaluation R2L:0" 
       cmd.exe /c "fsutil behavior set SymlinkEvaluation R2R:0"
       rm $env:temp\psexec.exe
+      Remove-Item "PathToAtomicsFolder\..\ExternalPayloads\PsExec.exe" -Force
+      Remove-Item "PathToAtomicsFolder\..\ExternalPayloads\PsTools" -Force -Recurse -ErrorAction SilentlyContinue
+      Remove-Item "PathToAtomicsFolder\..\ExternalPayloads\PsTools.zip" -Force -Recurse -ErrorAction SilentlyContinue
     name: powershell
     elevation_required: true
-    
 - name: Use RemCom to execute a command on a remote host
   auto_generated_guid: a5d8cdeb-be90-43a9-8b26-cc618deac1e0
   description: |
@@ -175,7 +183,7 @@ atomic_tests:
       if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\remcom.exe") { exit 0} else { exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "https://github.com/kavika13/RemCom/raw/master/bin/Release/RemCom.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\remcom.exe"
+      Invoke-WebRequest "https://github.com/kavika13/RemCom/raw/master/bin/Release/RemCom.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\remcom.exe" -UseBasicParsing
   executor:
     command: |
       "PathToAtomicsFolder\..\ExternalPayloads\remcom.exe" \\#{remote_host} /user:#{user_name} /pwd:#{password} cmd.exe
@@ -221,7 +229,7 @@ atomic_tests:
      if (Get-ChildItem -Path C:\ -Include *psexec* -File -Recurse -ErrorAction SilentlyContinue) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "C:\Users\Public\Temp\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "C:\Users\Public\Temp\PSTools.zip"
+      Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "C:\Users\Public\Temp\PSTools.zip" -UseBasicParsing
       Expand-Archive "C:\Users\Public\Temp\PsTools.zip" "C:\Users\Public\Temp\" -Force
   executor:
     command: |-
