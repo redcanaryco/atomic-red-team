@@ -67,3 +67,33 @@ atomic_tests:
       del %TEMP%\T1119_4.txt >nul 2>&1
     name: command_prompt
 
+- name: Enumerate Active Directory Users via PowerShell with csvde
+  auto_generated_guid:
+  description: |
+    Leverages the native Windows administration tool csvde.exe executed via PowerShell to export Active Directory user objects and properties to a custom staging directory with a timestamped filename. 
+    This technique replicates "Living off the Land" discovery, automated collection, and staging tactics historically utilized by the menuPass threat group (G0045) to profile target domains.
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $StageDir = "C:\Users\Public\Libraries\staging"
+      if (-not (Test-Path -Path $StageDir)) {
+          New-Item -ItemType Directory -Path $StageDir | Out-Null
+      }
+      $TS = Get-Date -Format "yyyyMMdd_HHmmss"
+      $OutputFile = Join-Path $StageDir "ad_export_$TS.csv"
+      $CsvdeArgs = @(
+          "-f", $OutputFile,
+          "-r", "(&(objectClass=user)(objectCategory=person))",
+          "-l", "DN,sAMAccountName,userPrincipalName,mail,displayName,description,memberOf"
+      )
+      & csvde.exe @CsvdeArgs
+    cleanup_command: |
+      Remove-Item -Path "C:\Users\Public\Libraries\staging\ad_export_*.csv" -ErrorAction SilentlyContinue
+      if (Test-Path "C:\Users\Public\Libraries\staging") {
+          if ((Get-ChildItem "C:\Users\Public\Libraries\staging").Count -eq 0) {
+              Remove-Item -Path "C:\Users\Public\Libraries\staging" -Force
+          }
+      }
