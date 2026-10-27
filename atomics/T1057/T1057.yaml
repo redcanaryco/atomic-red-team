@@ -104,7 +104,7 @@ atomic_tests:
     get_prereq_command: |-
       Write-Host Downloading Process Hacker
       New-Item -Type Directory "C:\Temp\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "https://versaweb.dl.sourceforge.net/project/processhacker/processhacker2/processhacker-2.39-setup.exe" -OutFile "C:\Temp\ExternalPayloads\processhacker-2.39-setup.exe"
+      Invoke-WebRequest "https://versaweb.dl.sourceforge.net/project/processhacker/processhacker2/processhacker-2.39-setup.exe" -OutFile "C:\Temp\ExternalPayloads\processhacker-2.39-setup.exe" -UseBasicParsing
       Write-Host Installing Process Hacker
       Start-Process "c:\Temp\ExternalPayloads\processhacker-2.39-setup.exe" -Wait -ArgumentList "/s"
   executor:
@@ -129,7 +129,7 @@ atomic_tests:
     get_prereq_command: |-
       Write-Host Downloading PC Hunter
       New-Item -Type Directory "C:\Temp\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "https://www.snapfiles.com/directdl/PCHunter_free.zip" -OutFile "C:\Temp\ExternalPayloads\PCHunter_free.zip"
+      Invoke-WebRequest "https://www.snapfiles.com/directdl/PCHunter_free.zip" -OutFile "C:\Temp\ExternalPayloads\PCHunter_free.zip" -UseBasicParsing
       Expand-Archive -LiteralPath 'C:\Temp\ExternalPayloads\PCHunter_free.zip' -DestinationPath C:\Temp\ExternalPayloads
       Write-Host Unzipping Installing Process Hunter
   executor:

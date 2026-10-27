@@ -132,7 +132,7 @@ atomic_tests:
       if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\LanguageKeyboardLayout.exe") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "PathToAtomicsFolder\..\ExternalPayloads\LanguageKeyboardLayout.exe") -ErrorAction Ignore | Out-Null
-      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1614.001/bin/LanguageKeyboardLayout.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\LanguageKeyboardLayout.exe"
+      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1614.001/bin/LanguageKeyboardLayout.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\LanguageKeyboardLayout.exe" -UseBasicParsing
   executor:
     name: command_prompt
     elevation_required: false

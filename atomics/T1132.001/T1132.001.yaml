@@ -80,5 +80,5 @@ atomic_tests:
       }
       $cyphertext = [system.Text.Encoding]::UTF8.getString($cyphertext)
       [System.Net.ServicePointManager]::Expect100Continue = $false
-      Invoke-WebRequest -Uri #{destination_url} -Method POST -Body $cyphertext -DisableKeepAlive
+      Invoke-WebRequest -Uri #{destination_url} -Method POST -Body $cyphertext -DisableKeepAlive -UseBasicParsing
     name: powershell

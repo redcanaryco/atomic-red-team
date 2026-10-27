@@ -479,7 +479,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{curl_path}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://curl.se/windows/dl-7.79.1/curl-7.79.1-win64-mingw.zip" -Outfile "PathToAtomicsFolder\..\ExternalPayloads\curl.zip"
+      Invoke-WebRequest "https://curl.se/windows/dl-7.79.1/curl-7.79.1-win64-mingw.zip" -Outfile "PathToAtomicsFolder\..\ExternalPayloads\curl.zip" -UseBasicParsing
       Expand-Archive -Path "PathToAtomicsFolder\..\ExternalPayloads\curl.zip" -DestinationPath "PathToAtomicsFolder\..\ExternalPayloads\curl"
       Copy-Item "PathToAtomicsFolder\..\ExternalPayloads\curl\curl-7.79.1-win64-mingw\bin\curl.exe" C:\Windows\System32\Curl.exe
       Remove-Item "PathToAtomicsFolder\..\ExternalPayloads\curl"
@@ -524,7 +524,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{curl_path}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://curl.se/windows/dl-7.79.1/curl-7.79.1-win64-mingw.zip" -Outfile PathToAtomicsFolder\..\ExternalPayloads\curl.zip
+      Invoke-WebRequest "https://curl.se/windows/dl-7.79.1/curl-7.79.1-win64-mingw.zip" -Outfile PathToAtomicsFolder\..\ExternalPayloads\curl.zip -UseBasicParsing
       Expand-Archive -Path "PathToAtomicsFolder\..\ExternalPayloads\curl.zip" -DestinationPath "PathToAtomicsFolder\..\ExternalPayloads\curl"
       Copy-Item "PathToAtomicsFolder\..\ExternalPayloads\curl\curl-7.79.1-win64-mingw\bin\curl.exe" C:\Windows\System32\Curl.exe
       Remove-Item "PathToAtomicsFolder\..\ExternalPayloads\curl"
@@ -569,7 +569,7 @@ atomic_tests:
       if (Test-Path "#{Path_to_file}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{Path_to_file}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1105/src/T1105.bat" -OutFile "#{Path_to_file}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1105/src/T1105.bat" -OutFile "#{Path_to_file}" -UseBasicParsing
   executor:
     command: |
       "#{Path_to_file}" 1>NUL 
@@ -683,7 +683,7 @@ atomic_tests:
       if (Test-Path "#{replace_cab}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{replace_cab}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1105/src/redcanary.cab" -OutFile "#{replace_cab}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1105/src/redcanary.cab" -OutFile "#{replace_cab}" -UseBasicParsing
   executor:
     command: |
       del %TEMP%\redcanary.cab >nul 2>&1
@@ -753,7 +753,7 @@ atomic_tests:
       if (Test-Path "#{vbscript_file}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{vbscript_file}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1105/src/T1105-download-file.vbs" -OutFile "#{vbscript_file}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1105/src/T1105-download-file.vbs" -OutFile "#{vbscript_file}" -UseBasicParsing
   executor:
     command: |
       wscript.exe "#{vbscript_file}"
@@ -809,7 +809,7 @@ atomic_tests:
       if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\nimgrab.exe") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "https://nim-lang.org/download/nim-1.6.6_x64.zip" -Outfile "PathToAtomicsFolder\..\ExternalPayloads\nim.zip"
+      Invoke-WebRequest "https://nim-lang.org/download/nim-1.6.6_x64.zip" -Outfile "PathToAtomicsFolder\..\ExternalPayloads\nim.zip" -UseBasicParsing
       Expand-Archive -Path "PathToAtomicsFolder\..\ExternalPayloads\nim.zip" -DestinationPath "PathToAtomicsFolder\..\ExternalPayloads\nim" -Force
       Copy-Item "PathToAtomicsFolder\..\ExternalPayloads\nim\nim-1.6.6\bin\nimgrab.exe" "PathToAtomicsFolder\..\ExternalPayloads\nimgrab.exe"
 - name: iwr or Invoke Web-Request download
@@ -829,7 +829,7 @@ atomic_tests:
       default: '%temp%\Atomic-license.txt'
   executor:
     command: |
-      powershell.exe iwr -URI #{remote_file} -Outfile #{local_path}
+      powershell.exe iwr -URI #{remote_file} -Outfile #{local_path} -UseBasicParsing
     cleanup_command: |
       del %temp%\Atomic-license.txt >nul 2>&1
     name: command_prompt
@@ -865,7 +865,7 @@ atomic_tests:
     prereq_command: if (Test-Path "#{gup_executable}") {exit 0} else {exit 1}
     get_prereq_command: |-
       New-Item -Type Directory (split-path "#{gup_executable}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1105/bin/GUP.exe" -OutFile "#{gup_executable}"
+      Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1105/bin/GUP.exe" -OutFile "#{gup_executable}" -UseBasicParsing
   executor:
     command: |-
       mkdir "c:\Temp"
@@ -969,7 +969,7 @@ atomic_tests:
       if (Test-Path #{pscp_binary}) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "#{pscp_url}" -Outfile "PathToAtomicsFolder\..\ExternalPayloads\pscp.exe"
+      Invoke-WebRequest "#{pscp_url}" -Outfile "PathToAtomicsFolder\..\ExternalPayloads\pscp.exe" -UseBasicParsing
   executor:
     command: |
       fsutil file createnew C:\Temp\T1105_scp.zip 1048576

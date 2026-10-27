@@ -41,7 +41,7 @@ atomic_tests:
       if (Test-Path "#{rclone_path}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "https://downloads.rclone.org/rclone-current-windows-amd64.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\rclone.zip"
+      Invoke-WebRequest "https://downloads.rclone.org/rclone-current-windows-amd64.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\rclone.zip" -UseBasicParsing
       Expand-archive -path "PathToAtomicsFolder\..\ExternalPayloads\rclone.zip" -destinationpath "PathToAtomicsFolder\..\ExternalPayloads\T1567.002\" -force
   executor:
     command: |
@@ -109,9 +109,9 @@ atomic_tests:
       $arch = ([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture).ToString().ToLower()
       $operatingSystem = ([System.Runtime.InteropServices.RuntimeInformation]::OSDescription).ToString().ToLower()
       if ($operatingSystem -match "darwin") {
-        Invoke-WebRequest "https://downloads.rclone.org/rclone-current-osx-$arch.zip" -OutFile "PathToAtomicsFolder/../ExternalPayloads/rclone.zip"
+        Invoke-WebRequest "https://downloads.rclone.org/rclone-current-osx-$arch.zip" -OutFile "PathToAtomicsFolder/../ExternalPayloads/rclone.zip" -UseBasicParsing
       } elseif ($operatingSystem -match "linux") {
-        Invoke-WebRequest "https://downloads.rclone.org/rclone-current-linux-$arch.zip" -OutFile "PathToAtomicsFolder/../ExternalPayloads/rclone.zip"
+        Invoke-WebRequest "https://downloads.rclone.org/rclone-current-linux-$arch.zip" -OutFile "PathToAtomicsFolder/../ExternalPayloads/rclone.zip" -UseBasicParsing
       }
       Expand-archive -path "PathToAtomicsFolder/../ExternalPayloads/rclone.zip" -DestinationPath "PathToAtomicsFolder/../ExternalPayloads/T1567.002/" -force
   - description:
@@ -123,9 +123,9 @@ atomic_tests:
       $arch = ([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture).ToString().ToLower()
       $operatingSystem = ([System.Runtime.InteropServices.RuntimeInformation]::OSDescription).ToString().ToLower()
       if ($operatingSystem -match "darwin") {
-        Invoke-WebRequest "https://releases.hashicorp.com/terraform/1.10.5/terraform_1.10.5_darwin_$arch.zip" -OutFile "PathToAtomicsFolder/../ExternalPayloads/terraform.zip"
+        Invoke-WebRequest "https://releases.hashicorp.com/terraform/1.10.5/terraform_1.10.5_darwin_$arch.zip" -OutFile "PathToAtomicsFolder/../ExternalPayloads/terraform.zip" -UseBasicParsing
       } elseif ($operatingSystem -match "linux") {
-        Invoke-WebRequest "https://releases.hashicorp.com/terraform/1.10.5/terraform_1.10.5_linux_$arch.zip" -OutFile "PathToAtomicsFolder/../ExternalPayloads/terraform.zip"
+        Invoke-WebRequest "https://releases.hashicorp.com/terraform/1.10.5/terraform_1.10.5_linux_$arch.zip" -OutFile "PathToAtomicsFolder/../ExternalPayloads/terraform.zip" -UseBasicParsing
       }
       Expand-archive -path "PathToAtomicsFolder/../ExternalPayloads/terraform.zip" -DestinationPath "PathToAtomicsFolder/../ExternalPayloads/T1567.002/terraform-v1.10.5/" -force
   - description: |

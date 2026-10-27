@@ -16,7 +16,7 @@ atomic_tests:
       if (Test-Path "PathToAtomicsFolder\T1027.006\bin\T1027_006_Remote.html") { exit 0} else { exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\T1027.006\bin\" -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027.006/bin/T1027_006_Remote.html" -OutFile "PathToAtomicsFolder\T1027.006\bin\T1027_006_Remote.html"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027.006/bin/T1027_006_Remote.html" -OutFile "PathToAtomicsFolder\T1027.006\bin\T1027_006_Remote.html" -UseBasicParsing
   executor:
     command: |
       & "PathToAtomicsFolder\T1027.006\bin\T1027_006_remote.html"

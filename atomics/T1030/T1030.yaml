@@ -60,6 +60,6 @@ atomic_tests:
   
       while ($bytesRead = $file.Read($buffer, 0, $buffer.Length)) {
           $encodedChunk = [Convert]::ToBase64String($buffer, 0, $bytesRead)
-          Invoke-WebRequest -Uri #{destination_url} -Method Post -Body $encodedChunk
+          Invoke-WebRequest -Uri #{destination_url} -Method Post -Body $encodedChunk -UseBasicParsing
       }
       $file.Close()
