@@ -41,10 +41,10 @@ class AtomicRedTeamDocs
 
     generate_index! 'All', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/index.md"
     generate_index! 'Windows', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/windows-index.md", only_platform: /windows/, attack_platform: /windows/
-    generate_index! 'macOS', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/macos-index.md", only_platform: /macos/, attack_platform: /windows/
-    generate_index! 'Linux', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/linux-index.md", only_platform: /linux/, attack_platform: /windows/
-    generate_index! 'IaaS', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/iaas-index.md", only_platform: /iaas/, attack_platform: /windows/
-    generate_index! 'Containers', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/containers-index.md", only_platform: /containers/, attack_platform: /windows/
+    generate_index! 'macOS', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/macos-index.md", only_platform: /macos/, attack_platform: /macos/
+    generate_index! 'Linux', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/linux-index.md", only_platform: /linux/, attack_platform: /linux/
+    generate_index! 'IaaS', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/iaas-index.md", only_platform: /iaas/, attack_platform: /iaas/
+    generate_index! 'Containers', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/containers-index.md", only_platform: /containers/, attack_platform: /containers/
     generate_index! 'Office 365', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/office-365-index.md", only_platform: /office-365/, attack_platform: /office/
     generate_index! 'Google Workspace', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/google-workspace-index.md", only_platform: /google-workspace/, attack_platform: /office/
     generate_index! 'Azure AD', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/azure-ad-index.md", only_platform: /azure-ad/, attack_platform: /identity/
@@ -241,7 +241,7 @@ class AtomicRedTeamDocs
 
     layer = {
       "name" => layer_name,
-      "versions" => {	"attack": "18",	"navigator": "5.3.0",	"layer": "4.5"	},
+      "versions" => {	"attack": "19",	"navigator": "5.3.0",	"layer": "4.5"	},
       "description" => layer_name + " MITRE ATT&CK Navigator Layer",
       "domain" => "enterprise-attack",
       "filters"=> filters,
