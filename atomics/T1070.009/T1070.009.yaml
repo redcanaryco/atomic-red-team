@@ -1,0 +1,118 @@
+attack_technique: T1070.009
+display_name: 'Indicator Removal: Clear Persistence'
+atomic_tests:
+- name: Clear a scheduled task persistence artifact
+  auto_generated_guid: c672ea71-b460-446d-9b78-16e6b7824c88
+  description: |
+    Deletes a scheduled task that was previously established as a persistence mechanism. After
+    achieving their objective, or when a persistence mechanism is no longer required, adversaries
+    may remove the scheduled task to reduce the artifacts available to an investigation.
+
+    The prerequisite registers a marker scheduled task that runs a harmless command, so the test
+    removes only the task it created and never an existing scheduled task on the system.
+
+    Upon successful execution, schtasks reports the task was deleted and a subsequent query for
+    #{task_name} returns "The system cannot find the file specified".
+  supported_platforms:
+  - windows
+  input_arguments:
+    task_name:
+      description: Name of the marker scheduled task that is created and then cleared.
+      type: string
+      default: AtomicRedTeamPersistenceTest
+    task_command:
+      description: Command registered as the scheduled task action. Exits immediately and performs no action.
+      type: string
+      default: cmd.exe /c exit
+  dependencies:
+  - description: |
+      A marker scheduled task named #{task_name} must exist.
+    prereq_command: |
+      schtasks /query /tn "#{task_name}" >nul 2>&1
+    get_prereq_command: |
+      schtasks /create /tn "#{task_name}" /tr "#{task_command}" /sc daily /st 09:00 /f >nul 2>&1
+  executor:
+    command: |
+      schtasks /delete /tn "#{task_name}" /f
+    cleanup_command: |
+      schtasks /delete /tn "#{task_name}" /f >nul 2>&1
+    name: command_prompt
+    elevation_required: false
+- name: Clear a Run key persistence artifact
+  auto_generated_guid: 1c7fb7bf-cb91-4389-877c-dbcee17f8a2d
+  description: |
+    Deletes a registry Run key value that was previously established as a persistence mechanism.
+    Adversaries may remove their own autorun entries once persistence is no longer needed, so that
+    the Run key no longer records how the payload was launched at logon.
+
+    The prerequisite creates a marker value under the current user's Run key, so the test removes
+    only the value it created and never an existing autorun entry.
+
+    Upon successful execution, the #{value_name} value no longer exists under the Run key and a
+    subsequent query reports that the value cannot be found.
+  supported_platforms:
+  - windows
+  input_arguments:
+    registry_key:
+      description: Run key that holds the marker persistence value.
+      type: string
+      default: HKCU\Software\Microsoft\Windows\CurrentVersion\Run
+    value_name:
+      description: Name of the marker Run key value that is created and then cleared.
+      type: string
+      default: AtomicRedTeamPersistenceTest
+    value_data:
+      description: Data written to the marker Run key value. Exits immediately and performs no action.
+      type: string
+      default: cmd.exe /c exit
+  dependencies:
+  - description: |
+      A marker Run key value named #{value_name} must exist under #{registry_key}.
+    prereq_command: |
+      reg query "#{registry_key}" /v #{value_name} >nul 2>&1
+    get_prereq_command: |
+      reg add "#{registry_key}" /v #{value_name} /t REG_SZ /d "#{value_data}" /f >nul 2>&1
+  executor:
+    command: |
+      reg delete "#{registry_key}" /v #{value_name} /f
+    cleanup_command: |
+      reg delete "#{registry_key}" /v #{value_name} /f >nul 2>&1
+    name: command_prompt
+    elevation_required: false
+- name: Clear a Windows service persistence artifact
+  auto_generated_guid: c9e84874-29ce-4498-9f83-7b182cf27780
+  description: |
+    Deletes a Windows service that was previously created as a persistence mechanism. Adversaries
+    may remove a service they installed so that the service registration no longer appears in the
+    service control manager or under the Services registry key.
+
+    The prerequisite creates a marker service that is never started, so the test removes only the
+    service it created and never an existing service on the system.
+
+    Upon successful execution, sc reports DeleteService SUCCESS and a subsequent query for
+    #{service_name} reports that the service does not exist as an installed service.
+  supported_platforms:
+  - windows
+  input_arguments:
+    service_name:
+      description: Name of the marker Windows service that is created and then cleared.
+      type: string
+      default: AtomicRedTeamPersistenceTest
+    service_binary:
+      description: Binary path registered for the marker service. Exits immediately and performs no action.
+      type: string
+      default: cmd.exe /c exit
+  dependencies:
+  - description: |
+      A marker Windows service named #{service_name} must exist.
+    prereq_command: |
+      sc query #{service_name} >nul 2>&1
+    get_prereq_command: |
+      sc create #{service_name} binPath= "#{service_binary}" >nul 2>&1
+  executor:
+    command: |
+      sc delete #{service_name}
+    cleanup_command: |
+      sc delete #{service_name} >nul 2>&1
+    name: command_prompt
+    elevation_required: true
