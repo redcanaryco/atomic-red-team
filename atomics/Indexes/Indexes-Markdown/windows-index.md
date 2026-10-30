@@ -43,7 +43,17 @@
   - Atomic Test #1: Service Registry Permissions Weakness [windows]
   - Atomic Test #2: Service ImagePath Change with reg.exe [windows]
 - T1542.003 Bootkit [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1218.013 Mavinject [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1218.013 System Binary Proxy Execution: Mavinject](../../T1218.013/T1218.013.md)
+  - Atomic Test #1: T1218.013 - Inject DLL into Target Process via Mavinject /INJECTRUNNING [windows]
+  - Atomic Test #2: T1218.013 - Mavinject Process Injection with Module Index Offset Parsing [windows]
+  - Atomic Test #3: T1218.013 - Proxy Execution via Mavinject /STARTAPP Virtual Package Trigger [windows]
+  - Atomic Test #4: T1218.013 - Mavinject Injection Using Alternate Environment Executable Path [windows]
+  - Atomic Test #5: T1218.013 - Mavinject Process Injection from Staged Temporary Subdirectory [windows]
+  - Atomic Test #6: T1218.013 - Mavinject Command Interpreter Subshell Invocation [windows]
+  - Atomic Test #7: T1218.013 - Sequential Dual-Process Mavinject Injection Trigger [windows]
+  - Atomic Test #8: T1218.013 - Mavinject Execution with App-V Environment Policy Switch [windows]
+  - Atomic Test #9: T1218.013 - Mavinject Process Injection targeting App Container Host [windows]
+  - Atomic Test #10: T1218.013 - Mavinject Injection with NTFS Alternate Data Stream (ADS) Carrier [windows]
 - [T1036.005 Masquerading: Match Legitimate Resource Name or Location](../../T1036.005/T1036.005.md)
   - Atomic Test #2: Masquerade as a built-in system executable [windows]
   - Atomic Test #3: Masquerading cmd.exe as VEDetector.exe [windows]
