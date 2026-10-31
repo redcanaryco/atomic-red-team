@@ -1,0 +1,30 @@
+attack_technique: T1548.004
+display_name: 'Abuse Elevation Control Mechanism: Elevated Execution with Prompt'
+atomic_tests:
+- name: Elevate Privileges via osascript administrator privileges prompt
+  auto_generated_guid: 56478b2c-3065-46cc-b4c7-721c87551e94
+  description: |
+    Uses AppleScript's `do shell script ... with administrator privileges` clause, which is backed by
+    the same `AuthorizationExecuteWithPrivileges` API abused by adversaries such as Shlayer and
+    Coldroot, to prompt the current user for credentials and execute a command as root. The API
+    performs no validation of the calling program's origin or integrity, so any process able to invoke
+    it can obtain root execution once the user approves the prompt.
+
+    NOTE: this test requires interactive user input to approve the macOS authentication dialog.
+
+    Reference: https://objective-see.com/blog/blog_0x2A.html
+  supported_platforms:
+  - macos
+  input_arguments:
+    command_to_run:
+      description: Command to execute with elevated privileges once the user approves the prompt.
+      type: string
+      default: whoami > /tmp/T1548.004_elevated_output.txt
+  executor:
+    command: |
+      osascript -e 'do shell script "#{command_to_run}" with administrator privileges'
+      cat /tmp/T1548.004_elevated_output.txt
+    cleanup_command: |
+      rm -f /tmp/T1548.004_elevated_output.txt
+    name: bash
+    elevation_required: false

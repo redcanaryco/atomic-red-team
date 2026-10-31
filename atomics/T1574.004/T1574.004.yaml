@@ -1,0 +1,53 @@
+attack_technique: T1574.004
+display_name: 'Hijack Execution Flow: Dylib Hijacking'
+atomic_tests:
+- name: Dylib Hijacking via Writable @rpath
+  auto_generated_guid: d99313d5-b4d3-488a-bf34-34cd7d8ac7af
+  description: |
+    Builds a small "victim" binary that is linked against a dylib via `@rpath`, with an `LC_RPATH`
+    pointing at a writable directory (a stand-in for a real application shipping a dylib dependency
+    outside its bundle's protected `Frameworks` folder, as documented by Patrick Wardle). The attack
+    step then overwrites the dylib at that writable path with a malicious version exporting the same
+    symbols, so that the next time the victim binary runs, `dyld` loads and executes the attacker's
+    code with the victim process's privileges instead of the legitimate library.
+
+    Reference: https://www.virusbulletin.com/uploads/pdf/magazine/2015/vb201503-dylib-hijacking.pdf
+  supported_platforms:
+  - macos
+  input_arguments:
+    work_dir:
+      description: Working directory used to build and host the victim binary and dylib.
+      type: path
+      default: /tmp/T1574.004
+    legit_dylib_source:
+      description: Source for the legitimate dylib the victim binary is linked against.
+      type: path
+      default: PathToAtomicsFolder/T1574.004/src/MacOS/legit.c
+    victim_source:
+      description: Source for the victim binary that loads the dylib via @rpath.
+      type: path
+      default: PathToAtomicsFolder/T1574.004/src/MacOS/victim.c
+    evil_dylib_source:
+      description: Source for the malicious dylib that hijacks the victim's dylib load.
+      type: path
+      default: PathToAtomicsFolder/T1574.004/src/MacOS/evil.c
+  dependency_executor_name: bash
+  dependencies:
+  - description: |
+      The victim binary and its legitimate dylib dependency must be built at #{work_dir}
+    prereq_command: |
+      if [ -f #{work_dir}/victim ] && [ -f #{work_dir}/libhijack.dylib ]; then exit 0; else exit 1; fi
+    get_prereq_command: |
+      mkdir -p #{work_dir}
+      gcc -dynamiclib #{legit_dylib_source} -o #{work_dir}/libhijack.dylib -install_name @rpath/libhijack.dylib
+      gcc #{victim_source} -o #{work_dir}/victim -L#{work_dir} -lhijack -Wl,-rpath,#{work_dir}
+  executor:
+    command: |
+      gcc -dynamiclib #{evil_dylib_source} -o #{work_dir}/libhijack.dylib -install_name @rpath/libhijack.dylib
+      #{work_dir}/victim
+      cat /tmp/T1574.004_hijacked.txt
+    cleanup_command: |
+      rm -rf #{work_dir}
+      rm -f /tmp/T1574.004_hijacked.txt
+    name: bash
+    elevation_required: false
