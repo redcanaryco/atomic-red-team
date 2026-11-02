@@ -21,7 +21,17 @@
   - Atomic Test #14: Running DLL with .init extension and function [windows]
   - Atomic Test #15: Rundll32 execute command via FileProtocolHandler [windows]
   - Atomic Test #16: Rundll32 execute payload by calling RouteTheCall [windows]
-- T1027.009 Embedded Payloads [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1027.009 Obfuscated Files or Information: Embedded Payloads](../../T1027.009/T1027.009.md)
+  - Atomic Test #1: Embed Simulated Payload Overlay in Carrier Executable [windows]
+  - Atomic Test #2: Embed Simulated Payload Data in Carrier Image File [windows]
+  - Atomic Test #3: Embed Simulated Payload Data in Carrier PDF File [windows]
+  - Atomic Test #4: Embed Base64 Payload String in INI Configuration File [windows]
+  - Atomic Test #5: Embed Base64 Payload String in JSON Configuration File [windows]
+  - Atomic Test #6: Embed Base64 Payload String in XML Resource File [windows]
+  - Atomic Test #7: Embed Base64 Payload String in CSV Data File [windows]
+  - Atomic Test #8: Embed Base64 Payload String in PowerShell Script Carrier [windows]
+  - Atomic Test #9: Embed Base64 Payload String in Windows Script File Carrier [windows]
+  - Atomic Test #10: Embed Hex-Encoded Simulated Shellcode String in Text Carrier [windows]
 - [T1564.012 Hide Artifacts: File/Path Exclusions](../../T1564.012/T1564.012.md)
   - Atomic Test #1: Stage and execute a payload from a Windows Defender excluded path [windows]
 - [T1216.001 System Script Proxy Execution: PubPrn](../../T1216.001/T1216.001.md)
