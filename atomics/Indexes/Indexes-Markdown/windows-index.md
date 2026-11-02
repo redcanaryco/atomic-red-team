@@ -2,7 +2,17 @@
 # stealth
 - [T1055.011 Process Injection: Extra Window Memory Injection](../../T1055.011/T1055.011.md)
   - Atomic Test #1: Process Injection via Extra Window Memory (EWM) x64 executable [windows]
-- T1205.002 Socket Filters [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1205.002 Traffic Signaling: Socket Filters](../../T1205.002/T1205.002.md)
+  - Atomic Test #1: T1205.002 - Add Custom Firewall Rule for Traffic Signaling Simulation [windows]
+  - Atomic Test #2: T1205.002 - Register Custom WinSock Protocol Catalog Entry [windows]
+  - Atomic Test #3: T1205.002 - Register Custom WinSock Name Space Provider (NSP) Stub [windows]
+  - Atomic Test #4: T1205.002 - Simulate Packet Capture Driver Service Registration [windows]
+  - Atomic Test #5: T1205.002 - Register Custom WFP Callout Provider Registry Key [windows]
+  - Atomic Test #6: T1205.002 - Modify TCPIP Parameter Registry for Raw Socket Behavior [windows]
+  - Atomic Test #7: T1205.002 - Register Winsock Transport Filter Layer Provider [windows]
+  - Atomic Test #8: T1205.002 - Inject Simulated Socket Filter Helper Key in NetworkStack [windows]
+  - Atomic Test #9: T1205.002 - Register Custom WFP Sublayer Registry Key [windows]
+  - Atomic Test #10: T1205.002 - Create Raw Socket Binding Persistence Hook Registry [windows]
 - T1027.011 Fileless Storage [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1218.011 System Binary Proxy Execution: Rundll32](../../T1218.011/T1218.011.md)
   - Atomic Test #1: Rundll32 execute JavaScript Remote Payload With GetObject [windows]
@@ -879,7 +889,17 @@
   - Atomic Test #12: Scheduled Task Persistence via Eventviewer.msc [windows]
   - Atomic Test #13: Turla Topinambour Dropper and Scheduled Task Persistence [windows]
   - Atomic Test #14: Turla KopiLuwak Scheduled Task for JavaScript Stager [windows]
-- T1205.002 Socket Filters [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1205.002 Traffic Signaling: Socket Filters](../../T1205.002/T1205.002.md)
+  - Atomic Test #1: T1205.002 - Add Custom Firewall Rule for Traffic Signaling Simulation [windows]
+  - Atomic Test #2: T1205.002 - Register Custom WinSock Protocol Catalog Entry [windows]
+  - Atomic Test #3: T1205.002 - Register Custom WinSock Name Space Provider (NSP) Stub [windows]
+  - Atomic Test #4: T1205.002 - Simulate Packet Capture Driver Service Registration [windows]
+  - Atomic Test #5: T1205.002 - Register Custom WFP Callout Provider Registry Key [windows]
+  - Atomic Test #6: T1205.002 - Modify TCPIP Parameter Registry for Raw Socket Behavior [windows]
+  - Atomic Test #7: T1205.002 - Register Winsock Transport Filter Layer Provider [windows]
+  - Atomic Test #8: T1205.002 - Inject Simulated Socket Filter Helper Key in NetworkStack [windows]
+  - Atomic Test #9: T1205.002 - Register Custom WFP Sublayer Registry Key [windows]
+  - Atomic Test #10: T1205.002 - Create Raw Socket Binding Persistence Hook Registry [windows]
 - T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.013 Event Triggered Execution: PowerShell Profile](../../T1546.013/T1546.013.md)
   - Atomic Test #1: Append malicious start-process cmdlet [windows]
@@ -1205,7 +1225,17 @@
   - Atomic Test #13: Use PsExec to elevate to NT Authority\SYSTEM account [windows]
 
 # command-and-control
-- T1205.002 Socket Filters [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1205.002 Traffic Signaling: Socket Filters](../../T1205.002/T1205.002.md)
+  - Atomic Test #1: T1205.002 - Add Custom Firewall Rule for Traffic Signaling Simulation [windows]
+  - Atomic Test #2: T1205.002 - Register Custom WinSock Protocol Catalog Entry [windows]
+  - Atomic Test #3: T1205.002 - Register Custom WinSock Name Space Provider (NSP) Stub [windows]
+  - Atomic Test #4: T1205.002 - Simulate Packet Capture Driver Service Registration [windows]
+  - Atomic Test #5: T1205.002 - Register Custom WFP Callout Provider Registry Key [windows]
+  - Atomic Test #6: T1205.002 - Modify TCPIP Parameter Registry for Raw Socket Behavior [windows]
+  - Atomic Test #7: T1205.002 - Register Winsock Transport Filter Layer Provider [windows]
+  - Atomic Test #8: T1205.002 - Inject Simulated Socket Filter Helper Key in NetworkStack [windows]
+  - Atomic Test #9: T1205.002 - Register Custom WFP Sublayer Registry Key [windows]
+  - Atomic Test #10: T1205.002 - Create Raw Socket Binding Persistence Hook Registry [windows]
 - [T1132.001 Data Encoding: Standard Encoding](../../T1132.001/T1132.001.md)
   - Atomic Test #3: XOR Encoded data. [windows]
 - T1568.002 Dynamic Resolution: Domain Generation Algorithms [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
