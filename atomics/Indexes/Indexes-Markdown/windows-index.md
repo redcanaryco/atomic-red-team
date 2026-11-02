@@ -217,7 +217,12 @@
   - Atomic Test #1: Process Injection via C# [windows]
   - Atomic Test #2: EarlyBird APC Queue Injection in Go [windows]
   - Atomic Test #3: Remote Process Injection with Go using NtQueueApcThreadEx WinAPI [windows]
-- T1127.003 JamPlus [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1127.003 Trusted Developer Utilities Proxy Execution: JamPlus](../../T1127.003/T1127.003.md)
+  - Atomic Test #1: JamPlus proxy execution - launch calc.exe via Jamfile.jam action [windows]
+  - Atomic Test #2: JamPlus proxy execution - launch PowerShell via Jamfile.jam action [windows]
+  - Atomic Test #3: JamPlus proxy execution - payload injected via command-line variable substitution [windows]
+  - Atomic Test #4: JamPlus proxy execution - command execution via explicitly named Jamfile [windows]
+  - Atomic Test #5: JamPlus proxy execution - payload download and execute via jam build action [windows]
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1055.002 Process Injection: Portable Executable Injection](../../T1055.002/T1055.002.md)
   - Atomic Test #1: Portable Executable Injection [windows]
@@ -756,7 +761,12 @@
 - [T1059 Command and Scripting Interpreter](../../T1059/T1059.md)
   - Atomic Test #1: AutoIt Script Execution [windows]
 - T1204.005 Malicious Library [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1127.003 JamPlus [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1127.003 Trusted Developer Utilities Proxy Execution: JamPlus](../../T1127.003/T1127.003.md)
+  - Atomic Test #1: JamPlus proxy execution - launch calc.exe via Jamfile.jam action [windows]
+  - Atomic Test #2: JamPlus proxy execution - launch PowerShell via Jamfile.jam action [windows]
+  - Atomic Test #3: JamPlus proxy execution - payload injected via command-line variable substitution [windows]
+  - Atomic Test #4: JamPlus proxy execution - command execution via explicitly named Jamfile [windows]
+  - Atomic Test #5: JamPlus proxy execution - payload download and execute via jam build action [windows]
 - T1204 User Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1072 Software Deployment Tools](../../T1072/T1072.md)
   - Atomic Test #1: Radmin Viewer Utility [windows]
