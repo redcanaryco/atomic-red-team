@@ -275,7 +275,12 @@
   - Atomic Test #1: Process Injection via C# [windows]
   - Atomic Test #2: EarlyBird APC Queue Injection in Go [windows]
   - Atomic Test #3: Remote Process Injection with Go using NtQueueApcThreadEx WinAPI [windows]
-- T1127.003 JamPlus [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1127.003 Trusted Developer Utilities Proxy Execution: JamPlus](../../T1127.003/T1127.003.md)
+  - Atomic Test #1: JamPlus proxy execution - launch calc.exe via Jamfile.jam action [windows]
+  - Atomic Test #2: JamPlus proxy execution - launch PowerShell via Jamfile.jam action [windows]
+  - Atomic Test #3: JamPlus proxy execution - payload injected via command-line variable substitution [windows]
+  - Atomic Test #4: JamPlus proxy execution - command execution via explicitly named Jamfile [windows]
+  - Atomic Test #5: JamPlus proxy execution - payload download and execute via jam build action [windows]
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1612 Build Image on Host](../../T1612/T1612.md)
   - Atomic Test #1: Build Image On Host [containers]
@@ -1031,7 +1036,12 @@
 - [T1609 Container Administration Command](../../T1609/T1609.md)
   - Atomic Test #1: ExecIntoContainer [containers]
   - Atomic Test #2: Docker Exec Into Container [containers]
-- T1127.003 JamPlus [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1127.003 Trusted Developer Utilities Proxy Execution: JamPlus](../../T1127.003/T1127.003.md)
+  - Atomic Test #1: JamPlus proxy execution - launch calc.exe via Jamfile.jam action [windows]
+  - Atomic Test #2: JamPlus proxy execution - launch PowerShell via Jamfile.jam action [windows]
+  - Atomic Test #3: JamPlus proxy execution - payload injected via command-line variable substitution [windows]
+  - Atomic Test #4: JamPlus proxy execution - command execution via explicitly named Jamfile [windows]
+  - Atomic Test #5: JamPlus proxy execution - payload download and execute via jam build action [windows]
 - [T1569.001 System Services: Launchctl](../../T1569.001/T1569.001.md)
   - Atomic Test #1: Launchctl [macos]
 - T1059.008 Network Device CLI [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
