@@ -46,7 +46,7 @@ DomainName = Annotated[
 ]
 
 AttackTechniqueID = Annotated[
-    str, StringConstraints(pattern=r"T\d{4}(?:\.\d{3})?", min_length=5)
+    str, StringConstraints(pattern=r"^T\d{4}(?:\.\d{3})?$", min_length=5)
 ]
 
 
