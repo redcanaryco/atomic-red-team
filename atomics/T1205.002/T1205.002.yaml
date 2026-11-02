@@ -1,0 +1,113 @@
+attack_technique: T1205.002
+display_name: Traffic Signaling - Socket Filters
+
+atomic_tests:
+  - name: T1205.002 - Add Custom Firewall Rule for Traffic Signaling Simulation
+    description: |
+      Simulates an adversary creating a custom inbound firewall rule designed to act as a traffic signaling trigger for backdoor activation.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: true
+      command: New-NetFirewallRule -DisplayName "T1205_Signal_Knock_Rule" -Direction Inbound -Protocol TCP -LocalPort 31337 -Action Allow -Description "Simulated traffic signaling trigger rule"; Write-Host "[+] Simulated port knocking signal rule created."
+      cleanup_command: Remove-NetFirewallRule -DisplayName "T1205_Signal_Knock_Rule" -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up signal firewall rule."
+
+  - name: T1205.002 - Register Custom WinSock Protocol Catalog Entry
+    description: |
+      Simulates an adversary modifying WinSock protocol catalogs (`Protocol_Catalog9`) to register a custom packet interception provider.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: true
+      command: New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\Protocol_Catalog9\Catalog Entries\000000000099" -Force; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\Protocol_Catalog9\Catalog Entries\000000000099" -Name "PackedCatalogItem" -Value ([byte[]](0..31)) -ErrorAction SilentlyContinue; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\Protocol_Catalog9\Catalog Entries\000000000099" -Name "DisplayName" -Value "Simulated Filter Provider" -ErrorAction SilentlyContinue; Write-Host "[+] Simulated WinSock protocol catalog modification executed."
+      cleanup_command: Remove-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\Protocol_Catalog9\Catalog Entries\000000000099" -Recurse -Force -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up simulated WinSock catalog entry."
+
+  - name: T1205.002 - Register Custom WinSock Name Space Provider (NSP) Stub
+    description: |
+      Simulates an adversary adding a custom WinSock Name Space Provider to intercept name resolution and socket binding requests.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: true
+      command: New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\NameSpace_Catalog5\Catalog Entries\000000000099" -Force; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\NameSpace_Catalog5\Catalog Entries\000000000099" -Name "DisplayName" -Value "Simulated NSP Filter" -ErrorAction SilentlyContinue; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\NameSpace_Catalog5\Catalog Entries\000000000099" -Name "LibraryPath" -Value "C:\Windows\System32\simulated_nsp.dll" -ErrorAction SilentlyContinue; Write-Host "[+] Simulated WinSock NSP catalog injection executed."
+      cleanup_command: Remove-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\NameSpace_Catalog5\Catalog Entries\000000000099" -Recurse -Force -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up simulated WinSock NSP entry."
+
+  - name: T1205.002 - Simulate Packet Capture Driver Service Registration
+    description: |
+      Simulates an adversary registering a rogue kernel-level packet capture driver service to intercept raw network traffic.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: true
+      command: New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\T1205PacketCapture" -Force; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\T1205PacketCapture" -Name "ImagePath" -Value "system32\drivers\simulated_capture.sys" -ErrorAction SilentlyContinue; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\T1205PacketCapture" -Name "Type" -Value 1 -ErrorAction SilentlyContinue; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\T1205PacketCapture" -Name "Start" -Value 3 -ErrorAction SilentlyContinue; Write-Host "[+] Simulated packet capture driver service registered."
+      cleanup_command: Remove-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\T1205PacketCapture" -Recurse -Force -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up simulated driver service registration."
+
+  - name: T1205.002 - Register Custom WFP Callout Provider Registry Key
+    description: |
+      Simulates an adversary registering a Windows Filtering Platform callout provider registry configuration to hook deep packet inspection points.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: true
+      command: New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\BFE\Parameters\Policy\Providers\{11111111-2222-3333-4444-555555555555}" -Force; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\BFE\Parameters\Policy\Providers\{11111111-2222-3333-4444-555555555555}" -Name "DisplayName" -Value "T1205_Simulated_Callout_Provider" -ErrorAction SilentlyContinue; Write-Host "[+] Simulated WFP callout provider registry key added."
+      cleanup_command: Remove-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\BFE\Parameters\Policy\Providers\{11111111-2222-3333-4444-555555555555}" -Recurse -Force -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up simulated WFP callout provider."
+
+  - name: T1205.002 - Modify TCPIP Parameter Registry for Raw Socket Behavior
+    description: |
+      Simulates adversary adjustment of network stack registry configurations to alter raw socket handling and packet inspection thresholds.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: true
+      command: Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -Name "MaxRawSockets" -Value 500 -ErrorAction SilentlyContinue; Write-Host "[+] Simulated TCPIP raw socket parameter modified."
+      cleanup_command: Remove-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -Name "MaxRawSockets" -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up TCPIP raw socket parameter."
+
+  - name: T1205.002 - Register Winsock Transport Filter Layer Provider
+    description: |
+      Simulates adversary registration of a Winsock Layered Service Provider (LSP) or transport filter key in the networking stack.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: true
+      command: $val = (Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\ProviderOrder" -Name "ProviderOrder" -ErrorAction SilentlyContinue).ProviderOrder; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\ProviderOrder" -Name "T1205_BackupOrder" -Value $val -ErrorAction SilentlyContinue; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\ProviderOrder" -Name "ProviderOrder" -Value "$val,SimulatedProvider" -ErrorAction SilentlyContinue; Write-Host "[+] Simulated Winsock provider order modification applied."
+      cleanup_command: $backup = (Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\ProviderOrder" -Name "T1205_BackupOrder" -ErrorAction SilentlyContinue).T1205_BackupOrder; if ($null -ne $backup) { Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\ProviderOrder" -Name "ProviderOrder" -Value $backup }; Remove-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\ProviderOrder" -Name "T1205_BackupOrder" -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up Winsock provider order."
+
+  - name: T1205.002 - Inject Simulated Socket Filter Helper Key in NetworkStack
+    description: |
+      Simulates an adversary injecting network stack helper configuration keys to monitor raw socket states for trigger packets.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: true
+      command: New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\NetworkInformation" -Force; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\NetworkInformation" -Name "SimulatedFilterState" -Value 1 -ErrorAction SilentlyContinue; Write-Host "[+] Simulated network stack helper key injected."
+      cleanup_command: Remove-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\NetworkInformation" -Name "SimulatedFilterState" -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up simulated network stack helper key."
+
+  - name: T1205.002 - Register Custom WFP Sublayer Registry Key
+    description: |
+      Simulates an adversary creating a custom WFP sublayer registry configuration to manage high-priority packet filtering rules.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: true
+      command: New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\BFE\Parameters\Policy\SubLayers\{99999999-8888-7777-6666-555555555555}" -Force; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\BFE\Parameters\Policy\SubLayers\{99999999-8888-7777-6666-555555555555}" -Name "DisplayName" -Value "T1205_Simulated_Sublayer" -ErrorAction SilentlyContinue; Write-Host "[+] Simulated WFP sublayer registry key added."
+      cleanup_command: Remove-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\BFE\Parameters\Policy\SubLayers\{99999999-8888-7777-6666-555555555555}" -Recurse -Force -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up simulated WFP sublayer."
+
+  - name: T1205.002 - Create Raw Socket Binding Persistence Hook Registry
+    description: |
+      Simulates an adversary adding a networking hook parameter registry entry to initialize custom socket filter hooks at system startup.
+    supported_platforms:
+      - windows
+    executor:
+      name: powershell
+      elevation_required: true
+      command: Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkCards" -Name "T1205_HookState" -Value 1 -ErrorAction SilentlyContinue; Write-Host "[+] Simulated network card hook key created."
+      cleanup_command: Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkCards" -Name "T1205_HookState" -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up network card hook key."
