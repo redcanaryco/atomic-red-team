@@ -562,7 +562,7 @@
 
 # defense-impairment
 - T1687 Exploitation for Defense Impairment [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1685.003 Modify or Spoof Tool UI [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- T1685.003 Disable or Modify Tools: Modify or Spoof Tool UI [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1685.001 Disable or Modify Tools: Disable or Modify Windows Event Log [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1484.002 Domain or Tenant Policy Modification: Trust Modification [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - T1686.003 Disable or Modify System Firewall: Windows Host Firewall [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)

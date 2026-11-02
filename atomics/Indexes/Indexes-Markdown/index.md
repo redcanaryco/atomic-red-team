@@ -1976,7 +1976,17 @@
   - Atomic Test #13: Chown through c script [macos, linux]
   - Atomic Test #14: Chown through c script (freebsd) [linux]
 - T1666 Modify Cloud Resource Hierarchy [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1685.003 Modify or Spoof Tool UI [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1685.003 Disable or Modify Tools: Modify or Spoof Tool UI](../../T1685.003/T1685.003.md)
+  - Atomic Test #1: T1685.003 - Suppress Action Center and Security Notifications via Registry Modification [windows]
+  - Atomic Test #2: T1685.003 - Modify TrayNotify Icon Streams to Simulate Taskbar Icon Spoofing [windows]
+  - Atomic Test #3: T1685.003 - Disable Security Center Notifications via WSC Registry Modification [windows]
+  - Atomic Test #4: T1685.003 - Modify Explorer Taskbar Tray Notification Policy Flags [windows]
+  - Atomic Test #5: T1685.003 - Tamper with Security Center Client Notification Level Registry [windows]
+  - Atomic Test #6: T1685.003 - Modify Windows Defender Notification Settings via Registry [windows]
+  - Atomic Test #7: T1685.003 - Clear PastIconsStream in TrayNotify to Simulate Tray Icon Erasure [windows]
+  - Atomic Test #8: T1685.003 - Modify Action Center Quick Action Settings to Remove Security Tiles [windows]
+  - Atomic Test #9: T1685.003 - Modify Security Health UI Configuration Registry Keys [windows]
+  - Atomic Test #10: T1685.003 - Modify Security Center CheckInterval to Desynchronize UI Updates [windows]
 - [T1685.001 Disable or Modify Tools: Disable or Modify Windows Event Log](../../T1685.001/T1685.001.md)
   - Atomic Test #1: Disable Windows IIS HTTP Logging [windows]
   - Atomic Test #2: Disable Windows IIS HTTP Logging via PowerShell [windows]
