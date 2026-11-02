@@ -1,0 +1,286 @@
+attack_technique: T1027.009
+display_name: Obfuscated Files or Information - Embedded Payloads
+
+atomic_tests:
+  - name: Embed Simulated Payload Overlay in Carrier Executable
+    description: |
+      Simulates an adversary appending non-executing payload data as an overlay
+      to a carrier executable file. The appended data is not executed.
+    supported_platforms:
+      - windows
+    input_arguments:
+      carrier_path:
+        description: Path to the carrier executable file
+        type: path
+        default: "$env:TEMP\\T1027_009_carrier.exe"
+      embedded_payload:
+        description: Simulated non-executing payload data appended to the carrier
+        type: string
+        default: "TVqQAAMAAAAEAAAA//8A"
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        if (Test-Path "#{carrier_path}") { Remove-Item "#{carrier_path}" -Force -ErrorAction SilentlyContinue }
+        [System.IO.File]::WriteAllBytes("#{carrier_path}", [byte[]](0..127))
+        [System.IO.File]::AppendAllText("#{carrier_path}", "#{embedded_payload}")
+        Write-Host "Embedded payload overlay appended to #{carrier_path}"
+      cleanup_command: |
+        Remove-Item "#{carrier_path}" -Force -ErrorAction SilentlyContinue
+
+  - name: Embed Simulated Payload Data in Carrier Image File
+    description: |
+      Simulates an adversary appending non-executing payload data beyond the
+      declared content of a carrier image file. The payload is not executed.
+    supported_platforms:
+      - windows
+    input_arguments:
+      carrier_path:
+        description: Path to the carrier image file
+        type: path
+        default: "$env:TEMP\\T1027_009_carrier.png"
+      embedded_payload:
+        description: Simulated non-executing payload data appended to the image
+        type: string
+        default: "TVqQAAMAAAAEAAAA//8A"
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        if (Test-Path "#{carrier_path}") { Remove-Item "#{carrier_path}" -Force -ErrorAction SilentlyContinue }
+        [System.IO.File]::WriteAllBytes("#{carrier_path}", [byte[]](137,80,78,71,13,10,26,10,0,0,0,13))
+        [System.IO.File]::AppendAllText("#{carrier_path}", "#{embedded_payload}")
+        Write-Host "Embedded payload data appended to #{carrier_path}"
+      cleanup_command: |
+        Remove-Item "#{carrier_path}" -Force -ErrorAction SilentlyContinue
+
+  - name: Embed Simulated Payload Data in Carrier PDF File
+    description: |
+      Simulates an adversary appending non-executing payload data beyond the
+      declared content of a carrier PDF document. The payload is not executed.
+    supported_platforms:
+      - windows
+    input_arguments:
+      carrier_path:
+        description: Path to the carrier PDF file
+        type: path
+        default: "$env:TEMP\\T1027_009_carrier.pdf"
+      embedded_payload:
+        description: Simulated non-executing payload data appended to the PDF
+        type: string
+        default: "TVqQAAMAAAAEAAAA//8A"
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        if (Test-Path "#{carrier_path}") { Remove-Item "#{carrier_path}" -Force -ErrorAction SilentlyContinue }
+        [System.IO.File]::WriteAllBytes("#{carrier_path}", [byte[]](37,80,68,70,45,49,46,52,10))
+        [System.IO.File]::AppendAllText("#{carrier_path}", "#{embedded_payload}")
+        Write-Host "Embedded payload data appended to #{carrier_path}"
+      cleanup_command: |
+        Remove-Item "#{carrier_path}" -Force -ErrorAction SilentlyContinue
+
+  - name: Embed Base64 Payload String in INI Configuration File
+    description: |
+      Simulates an adversary embedding a Base64-encoded payload string within
+      an otherwise benign INI configuration file.
+    supported_platforms:
+      - windows
+    input_arguments:
+      config_path:
+        description: Path to the INI configuration carrier file
+        type: path
+        default: "$env:TEMP\\T1027_009_settings.ini"
+      embedded_payload:
+        description: Base64-encoded simulated payload string
+        type: string
+        default: "TVqQAAMAAAAEAAAA//8A"
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $configContent = @"
+        [Settings]
+        application=legitimate-application
+        update_url=https://example.invalid
+        embedded_payload=#{embedded_payload}
+        "@
+        Set-Content -Path "#{config_path}" -Value $configContent -Force
+        Write-Host "Base64 payload string embedded in #{config_path}"
+      cleanup_command: |
+        Remove-Item "#{config_path}" -Force -ErrorAction SilentlyContinue
+
+  - name: Embed Base64 Payload String in JSON Configuration File
+    description: |
+      Simulates an adversary embedding a Base64-encoded payload string within
+      an otherwise benign JSON configuration file.
+    supported_platforms:
+      - windows
+    input_arguments:
+      config_path:
+        description: Path to the JSON configuration carrier file
+        type: path
+        default: "$env:TEMP\\T1027_009_settings.json"
+      embedded_payload:
+        description: Base64-encoded simulated payload string
+        type: string
+        default: "TVqQAAMAAAAEAAAA//8A"
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $json = @{
+          application = "legitimate-application"
+          update_url = "https://example.invalid"
+          embedded_payload = "#{embedded_payload}"
+        } | ConvertTo-Json
+        Set-Content -Path "#{config_path}" -Value $json -Force
+        Write-Host "Base64 payload string embedded in #{config_path}"
+      cleanup_command: |
+        Remove-Item "#{config_path}" -Force -ErrorAction SilentlyContinue
+
+  - name: Embed Base64 Payload String in XML Resource File
+    description: |
+      Simulates an adversary embedding a Base64-encoded payload string within
+      an otherwise benign XML resource file.
+    supported_platforms:
+      - windows
+    input_arguments:
+      resource_path:
+        description: Path to the XML resource carrier file
+        type: path
+        default: "$env:TEMP\\T1027_009_resource.xml"
+      embedded_payload:
+        description: Base64-encoded simulated payload string
+        type: string
+        default: "TVqQAAMAAAAEAAAA//8A"
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $xmlContent = @"
+        <?xml version="1.0" encoding="utf-8"?>
+        <configuration>
+          <application>legitimate-application</application>
+          <embeddedPayload>#{embedded_payload}</embeddedPayload>
+        </configuration>
+        "@
+        Set-Content -Path "#{resource_path}" -Value $xmlContent -Force
+        Write-Host "Base64 payload string embedded in #{resource_path}"
+      cleanup_command: |
+        Remove-Item "#{resource_path}" -Force -ErrorAction SilentlyContinue
+
+  - name: Embed Base64 Payload String in CSV Data File
+    description: |
+      Simulates an adversary embedding a Base64-encoded payload string within
+      a metadata field of an otherwise benign CSV data file.
+    supported_platforms:
+      - windows
+    input_arguments:
+      csv_path:
+        description: Path to the CSV data carrier file
+        type: path
+        default: "$env:TEMP\\T1027_009_export.csv"
+      embedded_payload:
+        description: Base64-encoded simulated payload string
+        type: string
+        default: "TVqQAAMAAAAEAAAA//8A"
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $csvContent = @"
+        id,name,metadata
+        1,legitimate-record,#{embedded_payload}
+        "@
+        Set-Content -Path "#{csv_path}" -Value $csvContent -Force
+        Write-Host "Base64 payload string embedded in #{csv_path}"
+      cleanup_command: |
+        Remove-Item "#{csv_path}" -Force -ErrorAction SilentlyContinue
+
+  - name: Embed Base64 Payload String in PowerShell Script Carrier
+    description: |
+      Simulates an adversary embedding a Base64-encoded payload string within
+      a PowerShell script file. The script is created but not executed.
+    supported_platforms:
+      - windows
+    input_arguments:
+      script_path:
+        description: Path to the PowerShell script carrier file
+        type: path
+        default: "$env:TEMP\\T1027_009_carrier.ps1"
+      embedded_payload:
+        description: Base64-encoded simulated payload string
+        type: string
+        default: "TVqQAAMAAAAEAAAA//8A"
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $scriptContent = "# Simulated embedded payload carrier`r`n" +
+                         "`$embeddedPayload = '#{embedded_payload}'"
+        Set-Content -Path "#{script_path}" -Value $scriptContent -Force
+        Write-Host "Base64 payload string embedded in #{script_path}"
+      cleanup_command: |
+        Remove-Item "#{script_path}" -Force -ErrorAction SilentlyContinue
+
+  - name: Embed Base64 Payload String in Windows Script File Carrier
+    description: |
+      Simulates an adversary embedding a Base64-encoded payload string within
+      a Windows Script File. The script file is created but not executed.
+    supported_platforms:
+      - windows
+    input_arguments:
+      script_path:
+        description: Path to the Windows Script File carrier
+        type: path
+        default: "$env:TEMP\\T1027_009_carrier.wsf"
+      embedded_payload:
+        description: Base64-encoded simulated payload string
+        type: string
+        default: "TVqQAAMAAAAEAAAA//8A"
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $wsfContent = @"
+        <?xml version="1.0" encoding="utf-8"?>
+        <job>
+          <script language="VBScript">
+            Const embeddedPayload = "#{embedded_payload}"
+          </script>
+        </job>
+        "@
+        Set-Content -Path "#{script_path}" -Value $wsfContent -Force
+        Write-Host "Base64 payload string embedded in #{script_path}"
+      cleanup_command: |
+        Remove-Item "#{script_path}" -Force -ErrorAction SilentlyContinue
+
+  - name: Embed Hex-Encoded Simulated Shellcode String in Text Carrier
+    description: |
+      Simulates an adversary embedding a hexadecimal representation of
+      simulated shellcode within an otherwise benign text file. The shellcode
+      representation is not decoded or executed.
+    supported_platforms:
+      - windows
+    input_arguments:
+      text_path:
+        description: Path to the text carrier file
+        type: path
+        default: "$env:TEMP\\T1027_009_notes.txt"
+      embedded_payload:
+        description: Hex-encoded simulated shellcode representation
+        type: string
+        default: "9090909031c050682f2f7368"
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $textContent = @"
+        Meeting notes
+        Reference: #{embedded_payload}
+        "@
+        Set-Content -Path "#{text_path}" -Value $textContent -Force
+        Write-Host "Hex-encoded simulated shellcode string embedded in #{text_path}"
+      cleanup_command: |
+        Remove-Item "#{text_path}" -Force -ErrorAction SilentlyContinue
