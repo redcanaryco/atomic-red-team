@@ -21,7 +21,17 @@
   - Atomic Test #14: Running DLL with .init extension and function [windows]
   - Atomic Test #15: Rundll32 execute command via FileProtocolHandler [windows]
   - Atomic Test #16: Rundll32 execute payload by calling RouteTheCall [windows]
-- T1027.009 Embedded Payloads [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1027.009 Obfuscated Files or Information: Embedded Payloads](../../T1027.009/T1027.009.md)
+  - Atomic Test #1: Embed Simulated Payload Overlay in Carrier Executable [windows]
+  - Atomic Test #2: Embed Simulated Payload Data in Carrier Image File [windows]
+  - Atomic Test #3: Embed Simulated Payload Data in Carrier PDF File [windows]
+  - Atomic Test #4: Embed Base64 Payload String in INI Configuration File [windows]
+  - Atomic Test #5: Embed Base64 Payload String in JSON Configuration File [windows]
+  - Atomic Test #6: Embed Base64 Payload String in XML Resource File [windows]
+  - Atomic Test #7: Embed Base64 Payload String in CSV Data File [windows]
+  - Atomic Test #8: Embed Base64 Payload String in PowerShell Script Carrier [windows]
+  - Atomic Test #9: Embed Base64 Payload String in Windows Script File Carrier [windows]
+  - Atomic Test #10: Embed Hex-Encoded Simulated Shellcode String in Text Carrier [windows]
 - [T1564.012 Hide Artifacts: File/Path Exclusions](../../T1564.012/T1564.012.md)
   - Atomic Test #1: Stage and execute a payload from a Windows Defender excluded path [windows]
 - [T1216.001 System Script Proxy Execution: PubPrn](../../T1216.001/T1216.001.md)
@@ -43,7 +53,17 @@
   - Atomic Test #1: Service Registry Permissions Weakness [windows]
   - Atomic Test #2: Service ImagePath Change with reg.exe [windows]
 - T1542.003 Bootkit [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1218.013 Mavinject [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1218.013 System Binary Proxy Execution: Mavinject](../../T1218.013/T1218.013.md)
+  - Atomic Test #1: T1218.013 - Inject DLL into Target Process via Mavinject /INJECTRUNNING [windows]
+  - Atomic Test #2: T1218.013 - Mavinject Process Injection with Module Index Offset Parsing [windows]
+  - Atomic Test #3: T1218.013 - Proxy Execution via Mavinject /STARTAPP Virtual Package Trigger [windows]
+  - Atomic Test #4: T1218.013 - Mavinject Injection Using Alternate Environment Executable Path [windows]
+  - Atomic Test #5: T1218.013 - Mavinject Process Injection from Staged Temporary Subdirectory [windows]
+  - Atomic Test #6: T1218.013 - Mavinject Command Interpreter Subshell Invocation [windows]
+  - Atomic Test #7: T1218.013 - Sequential Dual-Process Mavinject Injection Trigger [windows]
+  - Atomic Test #8: T1218.013 - Mavinject Execution with App-V Environment Policy Switch [windows]
+  - Atomic Test #9: T1218.013 - Mavinject Process Injection targeting App Container Host [windows]
+  - Atomic Test #10: T1218.013 - Mavinject Injection with NTFS Alternate Data Stream (ADS) Carrier [windows]
 - [T1036.005 Masquerading: Match Legitimate Resource Name or Location](../../T1036.005/T1036.005.md)
   - Atomic Test #2: Masquerade as a built-in system executable [windows]
   - Atomic Test #3: Masquerading cmd.exe as VEDetector.exe [windows]
@@ -207,7 +227,12 @@
   - Atomic Test #1: Process Injection via C# [windows]
   - Atomic Test #2: EarlyBird APC Queue Injection in Go [windows]
   - Atomic Test #3: Remote Process Injection with Go using NtQueueApcThreadEx WinAPI [windows]
-- T1127.003 JamPlus [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1127.003 Trusted Developer Utilities Proxy Execution: JamPlus](../../T1127.003/T1127.003.md)
+  - Atomic Test #1: JamPlus proxy execution - launch calc.exe via Jamfile.jam action [windows]
+  - Atomic Test #2: JamPlus proxy execution - launch PowerShell via Jamfile.jam action [windows]
+  - Atomic Test #3: JamPlus proxy execution - payload injected via command-line variable substitution [windows]
+  - Atomic Test #4: JamPlus proxy execution - command execution via explicitly named Jamfile [windows]
+  - Atomic Test #5: JamPlus proxy execution - payload download and execute via jam build action [windows]
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1055.002 Process Injection: Portable Executable Injection](../../T1055.002/T1055.002.md)
   - Atomic Test #1: Portable Executable Injection [windows]
@@ -746,7 +771,12 @@
 - [T1059 Command and Scripting Interpreter](../../T1059/T1059.md)
   - Atomic Test #1: AutoIt Script Execution [windows]
 - T1204.005 Malicious Library [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1127.003 JamPlus [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1127.003 Trusted Developer Utilities Proxy Execution: JamPlus](../../T1127.003/T1127.003.md)
+  - Atomic Test #1: JamPlus proxy execution - launch calc.exe via Jamfile.jam action [windows]
+  - Atomic Test #2: JamPlus proxy execution - launch PowerShell via Jamfile.jam action [windows]
+  - Atomic Test #3: JamPlus proxy execution - payload injected via command-line variable substitution [windows]
+  - Atomic Test #4: JamPlus proxy execution - command execution via explicitly named Jamfile [windows]
+  - Atomic Test #5: JamPlus proxy execution - payload download and execute via jam build action [windows]
 - T1204 User Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1072 Software Deployment Tools](../../T1072/T1072.md)
   - Atomic Test #1: Radmin Viewer Utility [windows]
@@ -1402,7 +1432,17 @@
 
 # defense-impairment
 - T1687 Exploitation for Defense Impairment [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1685.003 Modify or Spoof Tool UI [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1685.003 Disable or Modify Tools: Modify or Spoof Tool UI](../../T1685.003/T1685.003.md)
+  - Atomic Test #1: T1685.003 - Suppress Action Center and Security Notifications via Registry Modification [windows]
+  - Atomic Test #2: T1685.003 - Modify TrayNotify Icon Streams to Simulate Taskbar Icon Spoofing [windows]
+  - Atomic Test #3: T1685.003 - Disable Security Center Notifications via WSC Registry Modification [windows]
+  - Atomic Test #4: T1685.003 - Modify Explorer Taskbar Tray Notification Policy Flags [windows]
+  - Atomic Test #5: T1685.003 - Tamper with Security Center Client Notification Level Registry [windows]
+  - Atomic Test #6: T1685.003 - Modify Windows Defender Notification Settings via Registry [windows]
+  - Atomic Test #7: T1685.003 - Clear PastIconsStream in TrayNotify to Simulate Tray Icon Erasure [windows]
+  - Atomic Test #8: T1685.003 - Modify Action Center Quick Action Settings to Remove Security Tiles [windows]
+  - Atomic Test #9: T1685.003 - Modify Security Health UI Configuration Registry Keys [windows]
+  - Atomic Test #10: T1685.003 - Modify Security Center CheckInterval to Desynchronize UI Updates [windows]
 - [T1685.001 Disable or Modify Tools: Disable or Modify Windows Event Log](../../T1685.001/T1685.001.md)
   - Atomic Test #1: Disable Windows IIS HTTP Logging [windows]
   - Atomic Test #2: Disable Windows IIS HTTP Logging via PowerShell [windows]
