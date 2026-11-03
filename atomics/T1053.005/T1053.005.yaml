@@ -79,12 +79,12 @@ atomic_tests:
   description: |
     Create an atomic scheduled task that leverages native powershell cmdlets.
 
-    Upon successful execution, powershell.exe will create a scheduled task to spawn cmd.exe at 20:10.
+    Upon successful execution, powershell.exe will create a scheduled task to spawn calc.exe at Logon.
   supported_platforms:
   - windows
   executor:
     name: powershell
-    elevation_required: false
+    elevation_required: true
     command: |
       $Action = New-ScheduledTaskAction -Execute "calc.exe"
       $Trigger = New-ScheduledTaskTrigger -AtLogon
