@@ -1,0 +1,55 @@
+attack_technique: T1518.002
+display_name: 'Software Discovery: Backup Software Discovery'
+atomic_tests:
+- name: Discover Windows Server Backup configuration
+  description: |
+    Uses built-in Windows Server PowerShell cmdlets and `wbadmin.exe` to discover whether Windows Server Backup is installed and, when present, enumerate its configured backup policy and locally cataloged backup versions. Adversaries may use backup software and configuration details to plan follow-on impact activity.
+
+    This test is read-only and is intended for Windows Server. Upon successful execution, PowerShell displays the Windows Server Backup feature state. If the feature is installed, it also displays the current backup policy and the output of `wbadmin.exe get versions`; systems without a configured policy or backup catalog report that condition instead.
+
+    References:
+    - https://attack.mitre.org/techniques/T1518/002/
+    - https://learn.microsoft.com/en-us/powershell/module/windowsserverbackup/get-wbpolicy
+    - https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/wbadmin-get-versions
+  supported_platforms:
+  - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      This test must run on Windows Server with the built-in ServerManager PowerShell module available.
+    prereq_command: |
+      if (Get-Command Get-WindowsFeature -ErrorAction SilentlyContinue) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      Write-Host 'Run this atomic on Windows Server, where the ServerManager PowerShell module is available.'
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      $feature = Get-WindowsFeature -Name Windows-Server-Backup -ErrorAction Stop
+      $feature | Select-Object Name, DisplayName, InstallState | Format-List
+
+      if ($feature.InstallState -eq 'Installed') {
+        Import-Module WindowsServerBackup -ErrorAction Stop
+
+        Write-Output 'Windows Server Backup policy:'
+        try {
+          $policy = Get-WBPolicy -ErrorAction Stop
+          if ($null -eq $policy) {
+            Write-Output 'No Windows Server Backup policy is configured.'
+          } else {
+            $policy | Format-List *
+          }
+        } catch {
+          Write-Output "Windows Server Backup policy query returned: $($_.Exception.Message)"
+        }
+
+        Write-Output 'Locally cataloged Windows Server Backup versions:'
+        $wbadminOutput = & "$env:SystemRoot\System32\wbadmin.exe" get versions 2>&1
+        $wbadminExitCode = $LASTEXITCODE
+        $wbadminOutput | ForEach-Object { Write-Output $_ }
+        if ($wbadminExitCode -ne 0) {
+          Write-Warning "wbadmin get versions returned exit code $wbadminExitCode. This can indicate an empty local catalog or another query error; review the preceding wbadmin output."
+        }
+      } else {
+        Write-Output 'Windows Server Backup is not installed; no policy or local backup catalog was queried.'
+      }
