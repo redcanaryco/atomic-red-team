@@ -780,7 +780,8 @@
 - T1574.005 Executable Installer File Permissions Weakness [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1059 Command and Scripting Interpreter](../../T1059/T1059.md)
   - Atomic Test #1: AutoIt Script Execution [windows]
-- T1204.005 Malicious Library [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1204.005 User Execution: Malicious Library](../../T1204.005/T1204.005.md)
+  - Atomic Test #1: Execute a synthetic npm package postinstall script [windows]
 - [T1127.003 Trusted Developer Utilities Proxy Execution: JamPlus](../../T1127.003/T1127.003.md)
   - Atomic Test #1: JamPlus proxy execution - launch calc.exe via Jamfile.jam action [windows]
   - Atomic Test #2: JamPlus proxy execution - launch PowerShell via Jamfile.jam action [windows]
