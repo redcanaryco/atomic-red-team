@@ -1,5 +1,5 @@
 attack_technique: T1176
-display_name: Browser Extensions
+display_name: "Software Extensions"
 atomic_tests:
   - name: Chrome/Chromium (Developer Mode)
     auto_generated_guid: 3ecd790d-2617-4abf-9a8c-4e8d47da9ee1
@@ -80,8 +80,8 @@ atomic_tests:
         Set-Location "#{working_dir}"
 
         Set-Variable ProgressPreference SilentlyContinue
-        Invoke-WebRequest -URI $chromium -OutFile "#{working_dir}\chrome.zip"
-        Invoke-WebRequest -URI $extension -OutFile "#{working_dir}\extension.zip"
+        Invoke-WebRequest -URI $chromium -OutFile "#{working_dir}\chrome.zip" -UseBasicParsing
+        Invoke-WebRequest -URI $extension -OutFile "#{working_dir}\extension.zip" -UseBasicParsing
 
 
         Expand-Archive chrome.zip -DestinationPath "#{working_dir}" -Force
