@@ -142,6 +142,7 @@
 - [T1036 Masquerading](../../T1036/T1036.md)
   - Atomic Test #1: System File Copied to Unusual Location [windows]
   - Atomic Test #2: Malware Masquerading and Execution from Zip File [windows]
+  - Atomic Test #3: Masquerading File Extension Restoration via PowerShell and esentutl [windows]
 - [T1070.008 Indicator Removal: Clear Mailbox Data](../../T1070.008/T1070.008.md)
   - Atomic Test #1: Copy and Delete Mailbox Data on Windows [windows]
   - Atomic Test #4: Copy and Modify Mailbox Data on Windows [windows]
