@@ -2,6 +2,7 @@ attack_technique: T1555.005
 display_name: "Credentials from Password Stores: Password Managers"
 atomic_tests:
 - name: KeePass Database File (.kdbx / .kdb) Discovery via PowerShell
+  auto_generated_guid: f8431722-3973-4a60-8da8-a53939b19872
   description: |
     Adversaries search filesystem directories (such as user documents, desktop, and temporary folders) for KeePass database files (.kdbx, .kdb) which store encrypted credentials and master databases.
     This test simulates the discovery technique by creating a test database file with KeePass header magic bytes, scanning the target directory and %TEMP%, and outputting discovered database metadata.
@@ -34,6 +35,7 @@ atomic_tests:
       Remove-Item -LiteralPath "#{test_db_path}" -Force -ErrorAction Ignore
 
 - name: KeePass Database File Discovery via Command Prompt
+  auto_generated_guid: 804d3fbc-5983-4fb8-9b93-3e43e827f71a
   description: |
     Adversaries use native Windows command-line utilities (dir /s /b) to recursively locate .kdbx and .kdb database files across user directories and temporary paths.
   supported_platforms:
@@ -60,6 +62,7 @@ atomic_tests:
       rd "#{test_db_path}\.." >nul 2>&1
 
 - name: KeePass Configuration and Recent Databases Discovery (KeePass.config.xml)
+  auto_generated_guid: 18306e0d-acd6-4a4d-97d9-d4cfce30103b
   description: |
     KeePass stores recent database file paths, user preferences, and trigger configurations in KeePass.config.xml.
     Adversaries inspect this configuration file to locate active database paths or identify trigger execution opportunities.
@@ -112,6 +115,7 @@ atomic_tests:
       }
 
 - name: Staging Discovered KeePass Databases for Exfiltration
+  auto_generated_guid: 8df395f6-3568-4b02-b1c5-fd26b25a41df
   description: |
     Simulates adversary behavior where discovered KeePass password vaults are copied to a staging directory and compressed into a zip archive prior to exfiltration.
   supported_platforms:
@@ -155,6 +159,7 @@ atomic_tests:
       Remove-Item -LiteralPath "#{archive_file}" -Force -ErrorAction Ignore
 
 - name: KeePass Database Discovery on Linux
+  auto_generated_guid: 13084353-4ffc-4655-a790-07fddd2ae720
   description: |
     Adversaries locate .kdbx and .kdb password manager databases on Linux systems by scanning common user directories and temporary paths.
   supported_platforms:
