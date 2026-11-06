@@ -148,7 +148,7 @@ Invoke-DownloadCradle -Type Powershell -Command $Command
 
 "Powershell Invoke-WebRequest"
 If ($PSVersionTable.PSVersion.Major -gt 2){
-    $Command = "(`'" + $Url[0] + "`'|ForEach-Object{(IWR (Item Variable:\_).Value)}) | IEX"
+    $Command = "(`'" + $Url[0] + "`'|ForEach-Object{(IWR (Item Variable:\_).Value -UseBasicParsing)}) | IEX"
     Invoke-DownloadCradle -Type Powershell -Command $Command
 }
 Else{"`tMethod supported on Powershell 3.0 and above only`n"}

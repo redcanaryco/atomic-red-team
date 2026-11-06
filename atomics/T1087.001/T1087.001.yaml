@@ -1,5 +1,5 @@
 attack_technique: T1087.001
-display_name: 'Account Discovery: Local Account'
+display_name: "Account Discovery: Local Account"
 atomic_tests:
 - name: Enumerate all accounts (Local)
   auto_generated_guid: f8aab3dd-5990-4bf8-b8ab-2226c951696f
@@ -207,7 +207,7 @@ atomic_tests:
       if (Test-Path "#{plink_file}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe" -OutFile "#{plink_file}"
+      Invoke-WebRequest "https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe" -OutFile "#{plink_file}" -UseBasicParsing
   executor:
     command: |
       echo "" | "#{plink_file}" -batch "#{vm_host}" -ssh -l #{vm_user} -pw "#{vm_pass}" "esxcli system account list"

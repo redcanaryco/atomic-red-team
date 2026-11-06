@@ -1,5 +1,5 @@
 attack_technique: T1560.001
-display_name: 'Archive Collected Data: Archive via Utility'
+display_name: "Archive Collected Data: Archive via Utility"
 atomic_tests:
 - name: Compress Data for Exfiltration With Rar
   auto_generated_guid: 02ea31cb-3b4c-4a2d-9bf1-e4e70ebcf5d0
@@ -346,7 +346,7 @@ atomic_tests:
       if (Test-Path "#{plink_file}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe" -OutFile "#{plink_file}"
+      Invoke-WebRequest "https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe" -OutFile "#{plink_file}" -UseBasicParsing
   executor:
     command: |
       # Extract line with IP address from the syslog configuration output

