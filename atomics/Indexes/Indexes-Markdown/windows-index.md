@@ -2,7 +2,17 @@
 # stealth
 - [T1055.011 Process Injection: Extra Window Memory Injection](../../T1055.011/T1055.011.md)
   - Atomic Test #1: Process Injection via Extra Window Memory (EWM) x64 executable [windows]
-- T1205.002 Socket Filters [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1205.002 Traffic Signaling: Socket Filters](../../T1205.002/T1205.002.md)
+  - Atomic Test #1: T1205.002 - Add Custom Firewall Rule for Traffic Signaling Simulation [windows]
+  - Atomic Test #2: T1205.002 - Register Custom WinSock Protocol Catalog Entry [windows]
+  - Atomic Test #3: T1205.002 - Register Custom WinSock Name Space Provider (NSP) Stub [windows]
+  - Atomic Test #4: T1205.002 - Simulate Packet Capture Driver Service Registration [windows]
+  - Atomic Test #5: T1205.002 - Register Custom WFP Callout Provider Registry Key [windows]
+  - Atomic Test #6: T1205.002 - Modify TCPIP Parameter Registry for Raw Socket Behavior [windows]
+  - Atomic Test #7: T1205.002 - Register Winsock Transport Filter Layer Provider [windows]
+  - Atomic Test #8: T1205.002 - Inject Simulated Socket Filter Helper Key in NetworkStack [windows]
+  - Atomic Test #9: T1205.002 - Register Custom WFP Sublayer Registry Key [windows]
+  - Atomic Test #10: T1205.002 - Create Raw Socket Binding Persistence Hook Registry [windows]
 - T1027.011 Fileless Storage [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1218.011 System Binary Proxy Execution: Rundll32](../../T1218.011/T1218.011.md)
   - Atomic Test #1: Rundll32 execute JavaScript Remote Payload With GetObject [windows]
@@ -21,7 +31,17 @@
   - Atomic Test #14: Running DLL with .init extension and function [windows]
   - Atomic Test #15: Rundll32 execute command via FileProtocolHandler [windows]
   - Atomic Test #16: Rundll32 execute payload by calling RouteTheCall [windows]
-- T1027.009 Embedded Payloads [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1027.009 Obfuscated Files or Information: Embedded Payloads](../../T1027.009/T1027.009.md)
+  - Atomic Test #1: Embed Simulated Payload Overlay in Carrier Executable [windows]
+  - Atomic Test #2: Embed Simulated Payload Data in Carrier Image File [windows]
+  - Atomic Test #3: Embed Simulated Payload Data in Carrier PDF File [windows]
+  - Atomic Test #4: Embed Base64 Payload String in INI Configuration File [windows]
+  - Atomic Test #5: Embed Base64 Payload String in JSON Configuration File [windows]
+  - Atomic Test #6: Embed Base64 Payload String in XML Resource File [windows]
+  - Atomic Test #7: Embed Base64 Payload String in CSV Data File [windows]
+  - Atomic Test #8: Embed Base64 Payload String in PowerShell Script Carrier [windows]
+  - Atomic Test #9: Embed Base64 Payload String in Windows Script File Carrier [windows]
+  - Atomic Test #10: Embed Hex-Encoded Simulated Shellcode String in Text Carrier [windows]
 - [T1564.012 Hide Artifacts: File/Path Exclusions](../../T1564.012/T1564.012.md)
   - Atomic Test #1: Stage and execute a payload from a Windows Defender excluded path [windows]
 - [T1216.001 System Script Proxy Execution: PubPrn](../../T1216.001/T1216.001.md)
@@ -217,7 +237,12 @@
   - Atomic Test #1: Process Injection via C# [windows]
   - Atomic Test #2: EarlyBird APC Queue Injection in Go [windows]
   - Atomic Test #3: Remote Process Injection with Go using NtQueueApcThreadEx WinAPI [windows]
-- T1127.003 JamPlus [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1127.003 Trusted Developer Utilities Proxy Execution: JamPlus](../../T1127.003/T1127.003.md)
+  - Atomic Test #1: JamPlus proxy execution - launch calc.exe via Jamfile.jam action [windows]
+  - Atomic Test #2: JamPlus proxy execution - launch PowerShell via Jamfile.jam action [windows]
+  - Atomic Test #3: JamPlus proxy execution - payload injected via command-line variable substitution [windows]
+  - Atomic Test #4: JamPlus proxy execution - command execution via explicitly named Jamfile [windows]
+  - Atomic Test #5: JamPlus proxy execution - payload download and execute via jam build action [windows]
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1055.002 Process Injection: Portable Executable Injection](../../T1055.002/T1055.002.md)
   - Atomic Test #1: Portable Executable Injection [windows]
@@ -755,8 +780,14 @@
 - T1574.005 Executable Installer File Permissions Weakness [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1059 Command and Scripting Interpreter](../../T1059/T1059.md)
   - Atomic Test #1: AutoIt Script Execution [windows]
-- T1204.005 Malicious Library [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1127.003 JamPlus [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1204.005 User Execution: Malicious Library](../../T1204.005/T1204.005.md)
+  - Atomic Test #1: Execute a synthetic npm package postinstall script [windows]
+- [T1127.003 Trusted Developer Utilities Proxy Execution: JamPlus](../../T1127.003/T1127.003.md)
+  - Atomic Test #1: JamPlus proxy execution - launch calc.exe via Jamfile.jam action [windows]
+  - Atomic Test #2: JamPlus proxy execution - launch PowerShell via Jamfile.jam action [windows]
+  - Atomic Test #3: JamPlus proxy execution - payload injected via command-line variable substitution [windows]
+  - Atomic Test #4: JamPlus proxy execution - command execution via explicitly named Jamfile [windows]
+  - Atomic Test #5: JamPlus proxy execution - payload download and execute via jam build action [windows]
 - T1204 User Execution [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1072 Software Deployment Tools](../../T1072/T1072.md)
   - Atomic Test #1: Radmin Viewer Utility [windows]
@@ -859,7 +890,17 @@
   - Atomic Test #12: Scheduled Task Persistence via Eventviewer.msc [windows]
   - Atomic Test #13: Turla Topinambour Dropper and Scheduled Task Persistence [windows]
   - Atomic Test #14: Turla KopiLuwak Scheduled Task for JavaScript Stager [windows]
-- T1205.002 Socket Filters [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1205.002 Traffic Signaling: Socket Filters](../../T1205.002/T1205.002.md)
+  - Atomic Test #1: T1205.002 - Add Custom Firewall Rule for Traffic Signaling Simulation [windows]
+  - Atomic Test #2: T1205.002 - Register Custom WinSock Protocol Catalog Entry [windows]
+  - Atomic Test #3: T1205.002 - Register Custom WinSock Name Space Provider (NSP) Stub [windows]
+  - Atomic Test #4: T1205.002 - Simulate Packet Capture Driver Service Registration [windows]
+  - Atomic Test #5: T1205.002 - Register Custom WFP Callout Provider Registry Key [windows]
+  - Atomic Test #6: T1205.002 - Modify TCPIP Parameter Registry for Raw Socket Behavior [windows]
+  - Atomic Test #7: T1205.002 - Register Winsock Transport Filter Layer Provider [windows]
+  - Atomic Test #8: T1205.002 - Inject Simulated Socket Filter Helper Key in NetworkStack [windows]
+  - Atomic Test #9: T1205.002 - Register Custom WFP Sublayer Registry Key [windows]
+  - Atomic Test #10: T1205.002 - Create Raw Socket Binding Persistence Hook Registry [windows]
 - T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
 - [T1546.013 Event Triggered Execution: PowerShell Profile](../../T1546.013/T1546.013.md)
   - Atomic Test #1: Append malicious start-process cmdlet [windows]
@@ -1185,7 +1226,17 @@
   - Atomic Test #13: Use PsExec to elevate to NT Authority\SYSTEM account [windows]
 
 # command-and-control
-- T1205.002 Socket Filters [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1205.002 Traffic Signaling: Socket Filters](../../T1205.002/T1205.002.md)
+  - Atomic Test #1: T1205.002 - Add Custom Firewall Rule for Traffic Signaling Simulation [windows]
+  - Atomic Test #2: T1205.002 - Register Custom WinSock Protocol Catalog Entry [windows]
+  - Atomic Test #3: T1205.002 - Register Custom WinSock Name Space Provider (NSP) Stub [windows]
+  - Atomic Test #4: T1205.002 - Simulate Packet Capture Driver Service Registration [windows]
+  - Atomic Test #5: T1205.002 - Register Custom WFP Callout Provider Registry Key [windows]
+  - Atomic Test #6: T1205.002 - Modify TCPIP Parameter Registry for Raw Socket Behavior [windows]
+  - Atomic Test #7: T1205.002 - Register Winsock Transport Filter Layer Provider [windows]
+  - Atomic Test #8: T1205.002 - Inject Simulated Socket Filter Helper Key in NetworkStack [windows]
+  - Atomic Test #9: T1205.002 - Register Custom WFP Sublayer Registry Key [windows]
+  - Atomic Test #10: T1205.002 - Create Raw Socket Binding Persistence Hook Registry [windows]
 - [T1132.001 Data Encoding: Standard Encoding](../../T1132.001/T1132.001.md)
   - Atomic Test #3: XOR Encoded data. [windows]
 - T1568.002 Dynamic Resolution: Domain Generation Algorithms [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
@@ -1335,6 +1386,7 @@
   - Atomic Test #2: Automated Collection PowerShell [windows]
   - Atomic Test #3: Recon information for export with PowerShell [windows]
   - Atomic Test #4: Recon information for export with Command Prompt [windows]
+  - Atomic Test #5: Enumerate Active Directory Users via PowerShell with csvde [windows]
 - [T1115 Clipboard Data](../../T1115/T1115.md)
   - Atomic Test #1: Utilize Clipboard to store or execute commands from [windows]
   - Atomic Test #2: Execute Commands from Clipboard using PowerShell [windows]
@@ -1412,7 +1464,17 @@
 
 # defense-impairment
 - T1687 Exploitation for Defense Impairment [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1685.003 Modify or Spoof Tool UI [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1685.003 Disable or Modify Tools: Modify or Spoof Tool UI](../../T1685.003/T1685.003.md)
+  - Atomic Test #1: T1685.003 - Suppress Action Center and Security Notifications via Registry Modification [windows]
+  - Atomic Test #2: T1685.003 - Modify TrayNotify Icon Streams to Simulate Taskbar Icon Spoofing [windows]
+  - Atomic Test #3: T1685.003 - Disable Security Center Notifications via WSC Registry Modification [windows]
+  - Atomic Test #4: T1685.003 - Modify Explorer Taskbar Tray Notification Policy Flags [windows]
+  - Atomic Test #5: T1685.003 - Tamper with Security Center Client Notification Level Registry [windows]
+  - Atomic Test #6: T1685.003 - Modify Windows Defender Notification Settings via Registry [windows]
+  - Atomic Test #7: T1685.003 - Clear PastIconsStream in TrayNotify to Simulate Tray Icon Erasure [windows]
+  - Atomic Test #8: T1685.003 - Modify Action Center Quick Action Settings to Remove Security Tiles [windows]
+  - Atomic Test #9: T1685.003 - Modify Security Health UI Configuration Registry Keys [windows]
+  - Atomic Test #10: T1685.003 - Modify Security Center CheckInterval to Desynchronize UI Updates [windows]
 - [T1685.001 Disable or Modify Tools: Disable or Modify Windows Event Log](../../T1685.001/T1685.001.md)
   - Atomic Test #1: Disable Windows IIS HTTP Logging [windows]
   - Atomic Test #2: Disable Windows IIS HTTP Logging via PowerShell [windows]
@@ -1679,7 +1741,11 @@
   - Atomic Test #1: Dumping LSA Secrets [windows]
   - Atomic Test #2: Dump Kerberos Tickets from LSA using dumper.ps1 [windows]
 - T1606.002 Forge Web Credentials: SAML Tokens [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
-- T1555.005 Password Managers [CONTRIBUTE A TEST](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing)
+- [T1555.005 Credentials from Password Stores: Password Managers](../../T1555.005/T1555.005.md)
+  - Atomic Test #1: KeePass Database File (.kdbx / .kdb) Discovery via PowerShell [windows]
+  - Atomic Test #2: KeePass Database File Discovery via Command Prompt [windows]
+  - Atomic Test #3: KeePass Configuration and Recent Databases Discovery (KeePass.config.xml) [windows]
+  - Atomic Test #4: Staging Discovered KeePass Databases for Exfiltration [windows]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #4: Packet Capture Windows Command Prompt [windows]
   - Atomic Test #5: Windows Internal Packet Capture [windows]
