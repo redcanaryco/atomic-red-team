@@ -1681,6 +1681,7 @@
   - Atomic Test #76: Block Cybersecurity communication by leveraging Windows Name Resolution Policy Table [windows]
   - Atomic Test #77: Throttle Cybersecurity Agent Network Traffic via QoS Policy [windows]
   - Atomic Test #78: AMSI Bypass - Patching AmsiScanBuffer [windows]
+  - Atomic Test #79: Impair Windows Defender via Disk Space Exhaustion using fsutil [windows]
 - [T1553.004 Subvert Trust Controls: Install Root Certificate](../../T1553.004/T1553.004.md)
   - Atomic Test #5: Install root CA on Windows [windows]
   - Atomic Test #6: Install root CA on Windows with certutil [windows]

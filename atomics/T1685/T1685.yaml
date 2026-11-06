@@ -1776,6 +1776,7 @@ atomic_tests:
       [System.Runtime.InteropServices.Marshal]::Copy($patch, 0, $addr, $patch.Length)
       [AMSI.Win32]::VirtualProtect($addr, [UIntPtr]::new($patch.Length), $oldProtect, [ref]$oldProtect) | Out-Null
 - name: Impair Windows Defender via Disk Space Exhaustion using fsutil
+  auto_generated_guid: 0486ee68-cfde-41a3-823f-7a0d96fa84a1
   description: |
     Simulates defense impairment by leveraging the built-in Windows utility fsutil.exe to create an arbitrary oversized hidden file in the user %TEMP% directory.
     In real-world evasion (e.g., BigDiskBuster technique), adversaries size a hidden GUID-named file to consume all available free disk space on the system drive. This condition causes Microsoft Defender Antivirus platform updates and dynamic signature downloads to fail due to disk exhaustion (ERROR_DISK_FULL / 0x80070070), freezing definition updates while keeping nominal services running.
