@@ -1,0 +1,41 @@
+attack_technique: T1059.011
+display_name: 'Command and Scripting Interpreter: Lua'
+atomic_tests:
+- name: Run a command using the Lua interpreter
+  auto_generated_guid: 53c314df-f685-4826-b40d-2498319daad3
+  description: |
+    This test uses the Lua interpreter (lua.exe) to run a small script.
+    Lua is not a common scripting language on Windows, so most security tools do not watch for it.
+    Attackers can use this to run commands without being noticed.
+
+    This test is safe. It only opens Calculator and writes one small text file.
+
+    After the test runs, you should see:
+    - Calculator open on the screen.
+    - A file at $env:TEMP\T1059.011_lua_marker.txt with some text in it.
+  supported_platforms:
+  - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      The Lua interpreter (lua.exe) must be installed and available on the PATH.
+    prereq_command: |
+      if (Get-Command "#{lua_path}" -ErrorAction SilentlyContinue) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      winget install --id DEVCOM.Lua --exact --accept-source-agreements --accept-package-agreements
+  input_arguments:
+    lua_path:
+      description: Path to the Lua interpreter (lua.exe)
+      type: path
+      default: lua.exe
+    script_path:
+      description: Path to the Lua script that this test will run
+      type: path
+      default: PathToAtomicsFolder\T1059.011\src\execute_command.lua
+  executor:
+    command: |
+      & "#{lua_path}" "#{script_path}"
+    cleanup_command: |
+      Remove-Item "$env:TEMP\T1059.011_lua_marker.txt" -Force -ErrorAction Ignore
+      Get-Process -Name calc, CalculatorApp -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction Ignore
+    name: powershell
