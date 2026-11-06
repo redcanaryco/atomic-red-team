@@ -1,0 +1,116 @@
+attack_technique: T1204.005
+display_name: Malicious Library
+atomic_tests:
+  - name: Execute a synthetic npm package postinstall script
+    description: |
+      Simulates user execution of a malicious library by installing a local, synthetic npm package whose
+      `postinstall` lifecycle script executes JavaScript and creates a harmless marker file. This behavior
+      represents the package-install execution pattern associated with malicious npm packages and campaigns
+      such as the DPRK-linked Contagious Interview activity.
+
+      The test does not contact an npm registry, download code, collect credentials, establish persistence,
+      or execute an operator-supplied payload. Expected output includes npm reporting execution of the
+      package's `postinstall` script, creation of the T1204.005 marker file, and a success message containing
+      the marker contents.
+
+      References:
+
+      - https://attack.mitre.org/techniques/T1204/005/
+      - https://cloud.google.com/blog/topics/threat-intelligence/mitigation-guidance-for-supply-chain-compromise
+    supported_platforms:
+      - windows
+    input_arguments:
+      npm_path:
+        description: npm command or full path to npm.cmd
+        type: path
+        default: npm.cmd
+      package_path:
+        description: Path to the local synthetic npm package included with this atomic
+        type: path
+        default: PathToAtomicsFolder\T1204.005\src\atomic-npm-package
+      working_directory:
+        description: Disposable directory used for the local npm installation and cache
+        type: path
+        default: $env:TEMP\T1204.005-Atomic-Npm
+      marker_path:
+        description: Marker file created by the synthetic package postinstall script
+        type: path
+        default: $env:TEMP\T1204.005-Atomic-Npm\T1204.005-npm-postinstall.txt
+    dependency_executor_name: powershell
+    dependencies:
+      - description: |
+          Node.js and npm must be installed and the configured npm command must be available.
+        prereq_command: |
+          $npmPath = [Environment]::ExpandEnvironmentVariables("#{npm_path}")
+          if (Get-Command $npmPath -ErrorAction SilentlyContinue) { exit 0 }
+          exit 1
+        get_prereq_command: |
+          Write-Host 'Install a supported Node.js release from https://nodejs.org/ and ensure npm.cmd is available in PATH.'
+      - description: |
+          The synthetic npm package source files must exist in the configured package directory.
+        prereq_command: |
+          $packagePath = [Environment]::ExpandEnvironmentVariables("#{package_path}")
+          $packageJson = Join-Path $packagePath 'package.json'
+          $postinstallScript = Join-Path $packagePath 'postinstall.js'
+          if ((Test-Path -LiteralPath $packageJson -PathType Leaf) -and (Test-Path -LiteralPath $postinstallScript -PathType Leaf)) { exit 0 }
+          exit 1
+        get_prereq_command: |
+          Write-Host 'Restore package.json and postinstall.js under T1204.005\src\atomic-npm-package.'
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        $ErrorActionPreference = 'Stop'
+        $npmPath = [Environment]::ExpandEnvironmentVariables("#{npm_path}")
+        $packagePath = [Environment]::ExpandEnvironmentVariables("#{package_path}")
+        $workingDirectory = [Environment]::ExpandEnvironmentVariables("#{working_directory}")
+        $markerPath = [Environment]::ExpandEnvironmentVariables("#{marker_path}")
+
+        if (Test-Path -LiteralPath $workingDirectory) {
+          throw "Refusing to use pre-existing working directory: $workingDirectory"
+        }
+
+        New-Item -ItemType Directory -Path $workingDirectory -Force | Out-Null
+        $env:ART_T1204_005_MARKER = $markerPath
+
+        try {
+          $npmArguments = @(
+            'install'
+            $packagePath
+            '--prefix', $workingDirectory
+            '--cache', (Join-Path $workingDirectory '.npm-cache')
+            '--no-audit'
+            '--no-fund'
+            '--ignore-scripts=false'
+            '--foreground-scripts'
+          )
+
+          & $npmPath @npmArguments
+          $npmExitCode = $LASTEXITCODE
+
+          if ($npmExitCode -ne 0) {
+            throw "npm install failed with exit code $npmExitCode"
+          }
+
+          if (-not (Test-Path -LiteralPath $markerPath -PathType Leaf)) {
+            throw "npm completed without creating the expected marker: $markerPath"
+          }
+
+          $markerContent = Get-Content -LiteralPath $markerPath -Raw
+          if ($markerContent -notmatch 'Atomic Red Team T1204\.005') {
+            throw 'The marker file did not contain the expected Atomic Red Team identifier.'
+          }
+
+          Write-Host 'T1204.005 synthetic npm postinstall execution succeeded.'
+          Write-Output $markerContent.Trim()
+        }
+        finally {
+          Remove-Item Env:\ART_T1204_005_MARKER -ErrorAction SilentlyContinue
+        }
+      cleanup_command: |
+        $workingDirectory = [Environment]::ExpandEnvironmentVariables("#{working_directory}")
+        $markerPath = [Environment]::ExpandEnvironmentVariables("#{marker_path}")
+        Remove-Item Env:\ART_T1204_005_MARKER -ErrorAction SilentlyContinue
+        Remove-Item -LiteralPath $markerPath -Force -ErrorAction SilentlyContinue
+        Remove-Item -LiteralPath $workingDirectory -Recurse -Force -ErrorAction SilentlyContinue
+
