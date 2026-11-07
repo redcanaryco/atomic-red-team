@@ -23,7 +23,7 @@ atomic_tests:
     working_dir:
       description: Working directory used to hold copied source files and compiled binaries
       type: Path
-      default: '%TEMP%\T1574.014_AppDomainManager'
+      default: $env:TEMP\T1574.014_AppDomainManager
     source_dir:
       description: Directory containing the AppDomainManagerAtomic.cs and TriggerApp.cs source files
       type: Path
@@ -35,7 +35,7 @@ atomic_tests:
     marker_file:
       description: Marker file written by the custom AppDomainManager to confirm it was loaded
       type: Path
-      default: '%TEMP%\T1574.014_AppDomainManager_Atomic.txt'
+      default: $env:TEMP\T1574.014_AppDomainManager_Atomic.txt
     appdomain_manager_asm:
       description: Assembly name set via the APPDOMAIN_MANAGER_ASM environment variable
       type: String
@@ -64,7 +64,7 @@ atomic_tests:
       $env:APPDOMAIN_MANAGER_TYPE = "#{appdomain_manager_type}"
 
       Push-Location "#{working_dir}"
-      & "#{working_dir}\TriggerApp.exe"
+      .\TriggerApp.exe
       Pop-Location
 
       if (Test-Path "#{marker_file}") {
