@@ -36,6 +36,7 @@ atomic_tests:
     name: sh
     elevation_required: false
     command: |
+      which_gpg=`which gpg`
       echo "#{pwd_for_encrypted_file}" | $which_gpg --batch --yes --passphrase-fd 0 --cipher-algo #{encryption_alg} -o #{encrypted_file_path} -c #{input_file_path}
     cleanup_command: |
       rm #{encrypted_file_path}
@@ -71,8 +72,10 @@ atomic_tests:
     name: sh
     elevation_required: false
     command: |
+      which_7z=`which 7z`
       $which_7z a -p#{pwd_for_encrypted_file} #{encrypted_file_path} #{input_file_path}
     cleanup_command: |
+      which_7z=`which 7z`
       $which_7z e #{encrypted_file_path}
       rm #{encrypted_file_path}
 
@@ -157,6 +160,7 @@ atomic_tests:
       $which_openssl rsa -in #{private_key_path} -pubout -out #{public_key_path}
       $which_openssl rsautl -encrypt -inkey #{public_key_path} -pubin -in #{input_file_path} -out #{encrypted_file_path}
     cleanup_command: |
+      which_openssl=`which openssl`
       $which_openssl rsautl -decrypt -inkey #{private_key_path} -in #{encrypted_file_path}
       rm #{encrypted_file_path}
 
