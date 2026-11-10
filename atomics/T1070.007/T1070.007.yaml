@@ -2,7 +2,6 @@ attack_technique: T1070.007
 display_name: 'Indicator Removal: Clear Network Connection History and Configurations'
 atomic_tests:
 - name: Clear mapped network drive history from the registry
-  auto_generated_guid: c056b5dd-ea97-49c3-a279-2892121db694
   description: |
     Removes the registry artifact left behind by a persistent mapped network drive. Windows records
     each persistent drive mapping under HKCU\Network\<DriveLetter>, including the UNC path of the
@@ -41,7 +40,6 @@ atomic_tests:
     name: powershell
     elevation_required: false
 - name: Clear saved PuTTY session history from the registry
-  auto_generated_guid: 63d9edc6-59af-4834-8516-ab079a1eee43
   description: |
     Removes saved PuTTY session entries stored under
     HKCU\Software\SimonTatham\PuTTY\Sessions. Each saved session records the remote host in the
@@ -82,7 +80,6 @@ atomic_tests:
     name: powershell
     elevation_required: false
 - name: Clear the ARP cache using netsh
-  auto_generated_guid: 852aab0b-8744-4309-a815-54f151136555
   description: |
     Flushes the local ARP cache with netsh. The ARP cache records the IP and MAC addresses of hosts
     the system has recently communicated with on the local network, so it is a useful source of
