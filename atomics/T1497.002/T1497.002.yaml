@@ -2,7 +2,6 @@ attack_technique: T1497.002
 display_name: 'Virtualization/Sandbox Evasion: User Activity Based Checks'
 atomic_tests:
 - name: Detect analysis environment via count of recently accessed files
-  auto_generated_guid: 09303410-8747-4930-bf15-f26f640f6d3d
   description: |
     Enumerates the current user's Recent Items folder (%APPDATA%\Microsoft\Windows\Recent) and reports
     how many recently accessed items exist. Automated malware analysis sandboxes are typically freshly
@@ -32,7 +31,6 @@ atomic_tests:
     name: powershell
     elevation_required: false
 - name: Detect analysis environment via user idle time
-  auto_generated_guid: 9240f157-17e2-464c-9184-e17ed845743f
   description: |
     Queries the time since the last user input (keyboard or mouse) using the GetLastInputInfo Windows
     API, and reports the idle duration. Automated sandboxes commonly run with no interactive user, so a
