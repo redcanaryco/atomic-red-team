@@ -1,0 +1,74 @@
+attack_technique: T1497.002
+display_name: 'Virtualization/Sandbox Evasion: User Activity Based Checks'
+atomic_tests:
+- name: Detect analysis environment via count of recently accessed files
+  description: |
+    Enumerates the current user's Recent Items folder (%APPDATA%\Microsoft\Windows\Recent) and reports
+    how many recently accessed items exist. Automated malware analysis sandboxes are typically freshly
+    provisioned and lack the document and file history that accumulates on a genuine user's endpoint, so
+    a very low count is a signal that the host may be an analysis environment. Adversaries use checks
+    like this to decide whether to continue execution or to lie dormant to evade dynamic analysis.
+
+    This test only reads the count; it does not alter execution flow. Upon successful execution, the
+    number of recent items is written to the output and compared against a configurable threshold.
+  supported_platforms:
+  - windows
+  input_arguments:
+    threshold:
+      description: Recent-item count below which the host is flagged as a likely analysis environment.
+      type: integer
+      default: 10
+  executor:
+    command: |
+      $recent = Get-ChildItem -Path "$env:APPDATA\Microsoft\Windows\Recent" -File -Force -ErrorAction SilentlyContinue
+      $count = ($recent | Measure-Object).Count
+      Write-Host "Recently accessed items: $count"
+      if ($count -lt #{threshold}) {
+        Write-Host "Low user activity (< #{threshold}) - host resembles an automated analysis environment"
+      } else {
+        Write-Host "User activity present (>= #{threshold}) - host resembles a genuine user endpoint"
+      }
+    name: powershell
+    elevation_required: false
+- name: Detect analysis environment via user idle time
+  description: |
+    Queries the time since the last user input (keyboard or mouse) using the GetLastInputInfo Windows
+    API, and reports the idle duration. Automated sandboxes commonly run with no interactive user, so a
+    large or continuously increasing idle time is a signal that the host may be an unattended analysis
+    environment. Adversaries use user-idle checks to withhold malicious behaviour until genuine human
+    interaction is observed, evading dynamic analysis.
+
+    This test only reads the idle time; it does not alter execution flow. Upon successful execution, the
+    idle time in milliseconds is written to the output and compared against a configurable threshold.
+  supported_platforms:
+  - windows
+  input_arguments:
+    idle_threshold_ms:
+      description: Idle time in milliseconds above which the host is flagged as likely unattended.
+      type: integer
+      default: 300000
+  executor:
+    command: |
+      Add-Type @"
+      using System;
+      using System.Runtime.InteropServices;
+      public class ART_Idle {
+        [DllImport("user32.dll")] public static extern bool GetLastInputInfo(ref LASTINPUTINFO plii);
+        [StructLayout(LayoutKind.Sequential)] public struct LASTINPUTINFO { public uint cbSize; public uint dwTime; }
+        public static uint IdleMs() {
+          LASTINPUTINFO lii = new LASTINPUTINFO();
+          lii.cbSize = (uint)Marshal.SizeOf(lii);
+          GetLastInputInfo(ref lii);
+          return ((uint)Environment.TickCount - lii.dwTime);
+        }
+      }
+      "@
+      $idle = [ART_Idle]::IdleMs()
+      Write-Host "User idle time (ms): $idle"
+      if ($idle -gt #{idle_threshold_ms}) {
+        Write-Host "Idle beyond threshold (> #{idle_threshold_ms} ms) - host resembles an unattended analysis environment"
+      } else {
+        Write-Host "Recent user input detected (<= #{idle_threshold_ms} ms) - host resembles an attended endpoint"
+      }
+    name: powershell
+    elevation_required: false
