@@ -1,0 +1,35 @@
+attack_technique: T1559.001
+display_name: 'Inter-Process Communication: Component Object Model'
+atomic_tests:
+- name: Execute a process via the ShellWindows COM object
+  auto_generated_guid: 5fcc1250-6b44-40ea-b5e2-0e6a328192de
+  description: |
+    Uses the ShellWindows COM object (CLSID 9BA05972-F6A8-11CF-A442-00A0C90A8F39) to obtain a reference
+    to an existing explorer.exe shell instance and invoke its ShellExecute method. Because execution is
+    brokered by the out-of-process explorer.exe COM server, the launched process is spawned as a child
+    of explorer.exe rather than of the calling PowerShell process. Adversaries abuse Component Object
+    Model objects such as ShellWindows for inter-process communication to execute code while breaking
+    the expected parent-child process relationship and evading parent-process-based detections.
+
+    This is a local use of the COM object as an execution broker; it does not rely on COM hijacking
+    (T1546.015) or on remote/DCOM invocation (T1021.003). An interactive explorer.exe session is
+    required for the ShellWindows collection to return a shell window.
+
+    Upon successful execution, #{process} is launched as a child of explorer.exe. By default calc.exe
+    opens.
+  supported_platforms:
+  - windows
+  input_arguments:
+    process:
+      description: Process to launch via the ShellWindows COM object.
+      type: string
+      default: calc.exe
+  executor:
+    command: |
+      $com = [Type]::GetTypeFromCLSID('9BA05972-F6A8-11CF-A442-00A0C90A8F39')
+      $obj = [System.Activator]::CreateInstance($com)
+      $obj.Item().Document.Application.ShellExecute("#{process}", "", "C:\Windows\System32", "", 1)
+    cleanup_command: |
+      Stop-Process -Name CalculatorApp,Calculator,win32calc,calc -Force -ErrorAction Ignore
+    name: powershell
+    elevation_required: false
