@@ -1,0 +1,82 @@
+attack_technique: T1027.011
+display_name: 'Obfuscated Files or Information: Fileless Storage'
+atomic_tests:
+- name: Execute Payload Stored in Environment Variable (Fileless Storage) - Linux
+  description: |
+    Simulates adversaries storing obfuscated or encoded payloads within system environment variables to avoid writing scripts directly to disk.
+    The payload is retrieved from the environment variable, decoded, and executed in-memory using bash.
+  supported_platforms:
+  - linux
+  input_arguments:
+    env_var_name:
+      description: Name of the environment variable used to store the payload
+      type: string
+      default: ATOMIC_FILELESS_STORAGE
+    payload_command:
+      description: Plain-text command that will be Base64-encoded and stored in the environment variable before execution
+      type: string
+      default: echo Atomic Red Team - T1027.011 Linux Fileless Storage Test Executed Successfully
+  executor:
+    command: |
+      export #{env_var_name}=$(printf '%s' '#{payload_command}' | base64 -w 0); printenv #{env_var_name} | base64 -d | bash
+    cleanup_command: |
+      unset #{env_var_name}
+    name: bash
+
+- name: Execute Payload Stored in Plist Preferences (Fileless Storage) - macOS
+  description: |
+    Simulates storing an obfuscated payload inside macOS user preferences (plist) using the 'defaults' command.
+    The payload is retrieved from the preference domain, decoded, and executed in-memory.
+  supported_platforms:
+  - macos
+  input_arguments:
+    domain_name:
+      description: Domain name for the defaults key
+      type: string
+      default: com.atomicredteam.test
+    payload_command:
+      description: Plain-text command that will be Base64-encoded and stored in the preference domain before execution
+      type: string
+      default: echo "Atomic Red Team - T1027.011 macOS Fileless Storage Test Executed Successfully"
+  executor:
+    command: |
+      defaults write #{domain_name} Payload "$(printf '%s' '#{payload_command}' | base64)"
+      RETRIEVED=$(defaults read #{domain_name} Payload)
+      echo "$RETRIEVED" | base64 -D | sh
+    cleanup_command: |
+      defaults delete #{domain_name}
+    name: sh
+
+- name: Execute Payload Stored in Windows Registry (Fileless Storage) - Windows
+  description: |
+    Simulates adversaries storing obfuscated or encoded payloads directly within non-volatile system locations such as the Windows Registry to bypass traditional disk-based detection mechanisms.
+    In this test, a Base64-encoded command is written to a custom registry key under HKCU, retrieved dynamically via PowerShell, decoded, and executed in-memory.
+  supported_platforms:
+  - windows
+  input_arguments:
+    registry_path:
+      description: Registry key path used to store the payload
+      type: string
+      default: HKCU:\Software\AtomicRedTeam
+    registry_value:
+      description: Registry value name containing the encoded payload
+      type: string
+      default: FilelessStoragePayload
+    payload_command:
+      description: Plain-text PowerShell command that will be Base64-encoded and stored in the registry before execution
+      type: string
+      default: Write-Host "Atomic Red Team - T1027.011 Windows Fileless Storage Test Executed Successfully"
+  executor:
+    command: |
+      $EncodedPayload = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes('#{payload_command}'))
+      New-Item -Path "#{registry_path}" -Force | Out-Null
+      Set-ItemProperty -Path "#{registry_path}" -Name "#{registry_value}" -Value $EncodedPayload -Type String
+
+      $RetrievedPayload = (Get-ItemProperty -Path "#{registry_path}")."#{registry_value}"
+      $DecodedScript = [System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($RetrievedPayload))
+      Invoke-Expression $DecodedScript
+    cleanup_command: |
+      Remove-ItemProperty -Path "#{registry_path}" -Name "#{registry_value}" -ErrorAction SilentlyContinue
+      Remove-Item -Path "#{registry_path}" -ErrorAction SilentlyContinue
+    name: powershell
+
