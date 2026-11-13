@@ -534,13 +534,16 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{file_path}) {exit 0} else {exit 1}
     get_prereq_command: |
-      echo "This is an Atomic Test File" > #{file_path}
+      New-Item -Type Directory (Split-Path "#{file_path}") -ErrorAction Ignore | Out-Null
+      echo "This is an Atomic Test File" > "#{file_path}"
   executor:
     command: |
       #{curl_path} -T #{file_path} #{remote_destination}
       #{curl_path} --upload-file #{file_path} #{remote_destination}
       #{curl_path} -d #{file_path} #{remote_destination}
       #{curl_path} --data #{file_path} #{remote_destination}
+    cleanup_command: |
+      del "#{file_path}" >nul 2>&1
     name: command_prompt
 
 - name: Download a file with Microsoft Connection Manager Auto-Download
