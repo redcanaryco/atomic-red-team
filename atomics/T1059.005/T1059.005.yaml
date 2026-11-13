@@ -95,3 +95,30 @@ atomic_tests:
     cleanup_command: |
       Remove-Item "$env:TEMP\atomic_t1059_005_test_output.bin" -ErrorAction Ignore
     name: powershell
+- name: RMM client spawns a staged VBScript chain (rogue ScreenConnect pattern)
+  description: |-
+    Emulates the process telemetry Huntress reported for rogue ScreenConnect clients (Sep 2026): a process named
+    ScreenConnect.WindowsClient.exe (a renamed copy of powershell.exe) launches wscript.exe several times to run
+    numbered VBScripts (1.vbs..4.vbs) from a ScreenConnect temp folder. The scripts are harmless and only write a marker file.
+    Expected telemetry: process creation with ParentImage ending in ScreenConnect.WindowsClient.exe and Image wscript.exe.
+    Reference: https://www.huntress.com/blog/rogue-screenconnect-installations
+  supported_platforms:
+  - windows
+  input_arguments:
+    script_count:
+      description: Number of numbered VBScripts to run
+      type: integer
+      default: 4
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      $dir = "${env:ProgramFiles(x86)}\ScreenConnect Client (atomic)"; $stage = "$env:TEMP\ScreenConnect\atomic"
+      New-Item $dir, $stage -ItemType Directory -Force | Out-Null
+      Copy-Item "$PSHOME\powershell.exe" "$dir\ScreenConnect.WindowsClient.exe" -Force
+      1..#{script_count} | ForEach-Object { Set-Content "$stage\$_.vbs" 'CreateObject("Scripting.FileSystemObject").CreateTextFile(CreateObject("WScript.Shell").ExpandEnvironmentStrings("%TEMP%\atomic-t1059005.txt"), True).WriteLine "ran"' -Encoding ascii }
+      $cmd = "1..#{script_count} | ForEach-Object { Start-Process wscript.exe -ArgumentList ('//B //Nologo `"$stage\' + `$_ + '.vbs`"') -Wait }"
+      & "$dir\ScreenConnect.WindowsClient.exe" -NoProfile -EncodedCommand ([Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($cmd)))
+    cleanup_command: |
+      Remove-Item "${env:ProgramFiles(x86)}\ScreenConnect Client (atomic)", "$env:TEMP\ScreenConnect\atomic", "$env:TEMP\atomic-t1059005.txt" -Recurse -Force -ErrorAction Ignore
+      if (-not (Get-ChildItem "$env:TEMP\ScreenConnect" -Force -ErrorAction Ignore)) { Remove-Item "$env:TEMP\ScreenConnect" -Force -ErrorAction Ignore }
