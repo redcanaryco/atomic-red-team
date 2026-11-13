@@ -1,3 +1,5 @@
+import pytest
+from pydantic import ValidationError
 from hypothesis import given, strategies as st, settings, HealthCheck
 from hypothesis.provisional import urls
 from pydantic import AnyUrl
@@ -123,3 +125,101 @@ def test_property(instance):
     for test in instance.atomic_tests:
         assert isinstance(test, Atomic)
         assert test.executor.name in ExecutorType.__args__
+
+
+def test_elevation_required_not_triggered_by_sudo_substring():
+    """A command that merely references a path/word containing 'sudo' (e.g. /etc/sudoers)
+    without invoking sudo must not require elevation_required."""
+    technique = Technique(
+        attack_technique="T9999",
+        display_name="Substring sudo probe",
+        atomic_tests=[
+            {
+                "name": "reads sudoers config without sudo",
+                "description": "Reads the sudoers configuration.",
+                "supported_platforms": ["linux"],
+                "executor": {
+                    "name": "sh",
+                    "command": "cat /etc/sudoers | grep -v '^#'",
+                },
+            }
+        ],
+    )
+    assert technique.atomic_tests[0].executor.elevation_required is False
+
+
+def test_elevation_required_still_triggered_by_sudo_invocation():
+    """A command that actually invokes sudo still requires elevation_required."""
+    with pytest.raises(ValidationError) as exc_info:
+        Technique(
+            attack_technique="T9999",
+            display_name="Substring sudo probe",
+            atomic_tests=[
+                {
+                    "name": "invokes sudo",
+                    "description": "Runs a privileged command.",
+                    "supported_platforms": ["linux"],
+                    "executor": {"name": "sh", "command": "sudo cat /etc/shadow"},
+                }
+            ],
+        )
+    assert "elevation_required_but_not_provided" in [
+        e["type"] for e in exc_info.value.errors()
+    ]
+
+
+def test_elevation_required_triggered_by_sudoedit():
+    """sudoedit is a real elevation binary and must still require elevation_required."""
+    with pytest.raises(ValidationError) as exc_info:
+        Technique(
+            attack_technique="T9999",
+            display_name="Substring sudo probe",
+            atomic_tests=[
+                {
+                    "name": "edits a config with sudoedit",
+                    "description": "Edits a privileged file.",
+                    "supported_platforms": ["linux"],
+                    "executor": {"name": "sh", "command": "sudoedit /etc/ssh/sshd_config"},
+                }
+            ],
+        )
+    assert "elevation_required_but_not_provided" in [
+        e["type"] for e in exc_info.value.errors()
+    ]
+
+
+def test_elevation_required_triggered_by_sudo_with_flags():
+    """sudo with flags still invokes elevation."""
+    with pytest.raises(ValidationError) as exc_info:
+        Technique(
+            attack_technique="T9999",
+            display_name="Substring sudo probe",
+            atomic_tests=[
+                {
+                    "name": "runs sudo with flags",
+                    "description": "Runs a privileged command with flags.",
+                    "supported_platforms": ["linux"],
+                    "executor": {"name": "sh", "command": "sudo -n true"},
+                }
+            ],
+        )
+    assert "elevation_required_but_not_provided" in [
+        e["type"] for e in exc_info.value.errors()
+    ]
+
+
+def test_elevation_required_not_triggered_by_visudo():
+    """visudo only contains 'sudo' as a substring; it does not invoke sudo/sudoedit."""
+    technique = Technique(
+        attack_technique="T9999",
+        display_name="Substring sudo probe",
+        atomic_tests=[
+            {
+                "name": "checks sudoers syntax",
+                "description": "Checks the sudoers file syntax.",
+                "supported_platforms": ["linux"],
+                "executor": {"name": "sh", "command": "visudo -c"},
+            }
+        ],
+    )
+    assert technique.atomic_tests[0].executor.elevation_required is False
