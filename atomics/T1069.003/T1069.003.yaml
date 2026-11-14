@@ -1,0 +1,154 @@
+attack_technique: T1069.003
+display_name: "Permission Groups Discovery: Cloud Groups"
+atomic_tests:
+- name: AWS - Enumerate IAM Groups, Members and Attached Policies via AWS CLI
+  description: |
+    Simulates an adversary with stolen AWS credentials enumerating cloud permission groups.
+    The test lists every IAM group, its members, and its attached managed and inline policies using
+    read-only IAM API calls (iam:ListGroups, iam:GetGroup, iam:ListAttachedGroupPolicies, iam:ListGroupPolicies),
+    then writes the results to a local file.
+    Detection: look for a burst of these IAM group calls from a single principal in CloudTrail.
+    No cloud resources are created or modified.
+  supported_platforms:
+  - iaas:aws
+  input_arguments:
+    output_file:
+      description: Local file the enumeration results are written to
+      type: path
+      default: /tmp/T1069.003_aws_groups.txt
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      The AWS CLI must be installed.
+    prereq_command: |
+      if command -v aws >/dev/null 2>&1; then exit 0; else exit 1; fi
+    get_prereq_command: |
+      echo "Install the AWS CLI: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html"
+  - description: |
+      The AWS CLI must have valid credentials configured (aws configure, SSO or environment variables).
+    prereq_command: |
+      aws sts get-caller-identity >/dev/null 2>&1
+    get_prereq_command: |
+      echo "Configure AWS credentials with: aws configure (or aws sso login)"
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      {
+        echo "== IAM groups"
+        aws iam list-groups --query 'Groups[].[GroupName,Arn]' --output table
+        for g in $(aws iam list-groups --query 'Groups[].GroupName' --output text); do
+          echo "== Group: $g"
+          echo "-- Members"
+          aws iam get-group --group-name "$g" --query 'Users[].UserName' --output text
+          echo "-- Attached managed policies"
+          aws iam list-attached-group-policies --group-name "$g" --query 'AttachedPolicies[].PolicyArn' --output text
+          echo "-- Inline policies"
+          aws iam list-group-policies --group-name "$g" --query 'PolicyNames' --output text
+        done
+      } > "#{output_file}" 2>&1
+      cat "#{output_file}"
+    cleanup_command: |
+      rm -f "#{output_file}"
+- name: Azure - Enumerate Entra ID Groups, Members and Directory Roles via Azure CLI
+  description: |
+    Simulates an adversary with a compromised Entra ID (Azure AD) session enumerating cloud permission groups.
+    The test lists all groups, lists the members of the first max_groups groups (one Graph call per group,
+    capped so the test finishes quickly in large tenants), then lists activated directory roles (for example
+    Global Administrator) and their members through Microsoft Graph, and writes the results to a local file.
+    Detection: Entra ID / Microsoft Graph activity logs show bulk GET requests to /groups and /directoryRoles.
+    No cloud resources are created or modified.
+  supported_platforms:
+  - azure-ad
+  input_arguments:
+    output_file:
+      description: Local file the enumeration results are written to
+      type: path
+      default: /tmp/T1069.003_entra_groups.txt
+    max_groups:
+      description: Maximum number of groups whose members are listed (one Graph call per group)
+      type: integer
+      default: 25
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      The Azure CLI must be installed.
+    prereq_command: |
+      if command -v az >/dev/null 2>&1; then exit 0; else exit 1; fi
+    get_prereq_command: |
+      echo "Install the Azure CLI: https://learn.microsoft.com/cli/azure/install-azure-cli"
+  - description: |
+      The Azure CLI must have a valid (non-expired) Microsoft Graph token for the target tenant.
+    prereq_command: |
+      az account get-access-token --resource-type ms-graph >/dev/null 2>&1
+    get_prereq_command: |
+      echo "Log in with: az login (use --allow-no-subscriptions for a tenant without subscriptions)"
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      {
+        echo "== Groups"
+        az ad group list --query "[].{Name:displayName,Id:id,Security:securityEnabled,Mail:mailEnabled}" -o table
+        for g in $(az ad group list --query "[0:#{max_groups}].id" -o tsv); do
+          echo "== Members of group $g"
+          az ad group member list --group "$g" --query "[].userPrincipalName" -o tsv
+        done
+        echo "== Activated directory roles and members"
+        az rest --method GET --url 'https://graph.microsoft.com/v1.0/directoryRoles?$expand=members' \
+          --query "value[].{Role:displayName,Members:members[].userPrincipalName}" -o json
+      } > "#{output_file}" 2>&1
+      cat "#{output_file}"
+    cleanup_command: |
+      rm -f "#{output_file}"
+- name: GCP - Enumerate IAM Role Bindings, Groups and Custom Roles via gcloud
+  description: |
+    Simulates an adversary with compromised GCP credentials enumerating cloud permission groups in a project.
+    The test lists every role binding in the project IAM policy, the Google groups that hold roles,
+    and the project's custom roles, then writes the results to a local file.
+    If gcp_project is left empty, the active gcloud project is used.
+    Detection: Cloud Audit Logs show GetIamPolicy and iam.roles.list calls.
+    No cloud resources are created or modified.
+  supported_platforms:
+  - iaas:gcp
+  input_arguments:
+    gcp_project:
+      description: GCP project ID to enumerate (empty uses the active gcloud project)
+      type: string
+      default: ""
+    output_file:
+      description: Local file the enumeration results are written to
+      type: path
+      default: /tmp/T1069.003_gcp_groups.txt
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      The gcloud CLI must be installed.
+    prereq_command: |
+      if command -v gcloud >/dev/null 2>&1; then exit 0; else exit 1; fi
+    get_prereq_command: |
+      echo "Install the Google Cloud CLI: https://cloud.google.com/sdk/docs/install"
+  - description: |
+      gcloud must have an active account with valid (non-expired) credentials.
+    prereq_command: |
+      gcloud auth print-access-token >/dev/null 2>&1
+    get_prereq_command: |
+      echo "Log in with: gcloud auth login && gcloud config set project <PROJECT_ID>"
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      PROJECT="#{gcp_project}"
+      [ -z "$PROJECT" ] && PROJECT=$(gcloud config get-value project 2>/dev/null)
+      {
+        echo "== Project: $PROJECT"
+        echo "== Role bindings (role -> member)"
+        gcloud projects get-iam-policy "$PROJECT" --flatten="bindings[].members" --format="table(bindings.role,bindings.members)"
+        echo "== Google groups holding project roles"
+        gcloud projects get-iam-policy "$PROJECT" --flatten="bindings[].members" --filter="bindings.members:group:" --format="table(bindings.members,bindings.role)"
+        echo "== Custom project roles"
+        gcloud iam roles list --project "$PROJECT" --format="table(name.basename(),title,stage)"
+      } > "#{output_file}" 2>&1
+      cat "#{output_file}"
+    cleanup_command: |
+      rm -f "#{output_file}"
