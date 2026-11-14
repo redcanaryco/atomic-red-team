@@ -1,0 +1,51 @@
+attack_technique: T1090.002
+display_name: 'Proxy: External Proxy'
+atomic_tests:
+- name: Configure a system-wide external proxy via netsh (WinHTTP)
+  description: |
+    Sets the WinHTTP system-wide proxy to an external proxy server. Adversaries configure an
+    external proxy to route command-and-control traffic through an intermediary and hide the true
+    C2 destination. This test only sets the configuration; it sends no traffic. The proxy
+    configuration is reverted during cleanup.
+
+    Successful execution sets the WinHTTP proxy, which can be confirmed with `netsh winhttp show proxy`.
+  supported_platforms:
+    - windows
+  input_arguments:
+    proxy_server:
+      description: External proxy server as host:port. Default is a non-routable placeholder for lab safety.
+      type: string
+      default: 10.10.10.10:8080
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      netsh winhttp set proxy proxy-server="#{proxy_server}"
+      netsh winhttp show proxy
+    cleanup_command: |
+      netsh winhttp reset proxy
+- name: Configure an external proxy via WinINET registry (current user)
+  description: |
+    Enables a per-user WinINET proxy pointing at an external server by writing ProxyServer and
+    ProxyEnable under Internet Settings. This is a non-elevated way to route a user's web traffic
+    through an external proxy. This test only sets the configuration; it sends no traffic. The
+    values are reverted during cleanup.
+
+    Successful execution writes the ProxyServer and ProxyEnable registry values, which can be
+    confirmed with `reg query "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings"`.
+  supported_platforms:
+    - windows
+  input_arguments:
+    proxy_server:
+      description: External proxy server as host:port. Default is a non-routable placeholder for lab safety.
+      type: string
+      default: 10.10.10.10:8080
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyServer /t REG_SZ /d "#{proxy_server}" /f
+      reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyEnable /t REG_DWORD /d 1 /f
+    cleanup_command: |
+      reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyEnable /t REG_DWORD /d 0 /f >nul 2>&1
+      reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyServer /f >nul 2>&1
