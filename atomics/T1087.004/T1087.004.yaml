@@ -1,0 +1,150 @@
+attack_technique: T1087.004
+display_name: "Account Discovery: Cloud Account"
+atomic_tests:
+- name: AWS - Enumerate IAM Users, Roles and Access Keys via AWS CLI
+  description: |
+    Simulates an adversary with stolen AWS credentials enumerating cloud accounts in the victim AWS account.
+    The test runs read-only IAM API calls (sts:GetCallerIdentity, iam:ListAccountAliases, iam:ListUsers,
+    iam:ListAccessKeys, iam:ListRoles) and writes the results to a local file.
+    Detection: look for a burst of these IAM List* calls from a single principal in CloudTrail.
+    No cloud resources are created or modified.
+  supported_platforms:
+  - iaas:aws
+  input_arguments:
+    output_file:
+      description: Local file the enumeration results are written to
+      type: path
+      default: /tmp/T1087.004_aws_accounts.txt
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      The AWS CLI must be installed.
+    prereq_command: |
+      if command -v aws >/dev/null 2>&1; then exit 0; else exit 1; fi
+    get_prereq_command: |
+      echo "Install the AWS CLI: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html"
+  - description: |
+      The AWS CLI must have valid credentials configured (aws configure, SSO or environment variables).
+    prereq_command: |
+      aws sts get-caller-identity >/dev/null 2>&1
+    get_prereq_command: |
+      echo "Configure AWS credentials with: aws configure (or aws sso login)"
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      {
+        echo "== Caller identity"
+        aws sts get-caller-identity --output table
+        echo "== Account aliases"
+        aws iam list-account-aliases --output text
+        echo "== IAM users"
+        aws iam list-users --query 'Users[].[UserName,Arn,CreateDate,PasswordLastUsed]' --output table
+        echo "== Access keys per user"
+        for u in $(aws iam list-users --query 'Users[].UserName' --output text); do
+          aws iam list-access-keys --user-name "$u" --query 'AccessKeyMetadata[].[UserName,AccessKeyId,Status,CreateDate]' --output text
+        done
+        echo "== IAM roles"
+        aws iam list-roles --query 'Roles[].[RoleName,Arn]' --output table
+      } > "#{output_file}" 2>&1
+      cat "#{output_file}"
+    cleanup_command: |
+      rm -f "#{output_file}"
+- name: Azure - Enumerate Entra ID Users, Guests and Service Principals via Azure CLI
+  description: |
+    Simulates an adversary with a compromised Entra ID (Azure AD) session enumerating cloud accounts in the tenant.
+    The test lists member users, guest (external) users and service principals through Microsoft Graph using the
+    Azure CLI, then writes the results to a local file.
+    Detection: Entra ID / Microsoft Graph activity logs show bulk GET requests to /users and /servicePrincipals.
+    No cloud resources are created or modified.
+  supported_platforms:
+  - azure-ad
+  input_arguments:
+    output_file:
+      description: Local file the enumeration results are written to
+      type: path
+      default: /tmp/T1087.004_entra_accounts.txt
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      The Azure CLI must be installed.
+    prereq_command: |
+      if command -v az >/dev/null 2>&1; then exit 0; else exit 1; fi
+    get_prereq_command: |
+      echo "Install the Azure CLI: https://learn.microsoft.com/cli/azure/install-azure-cli"
+  - description: |
+      The Azure CLI must have a valid (non-expired) Microsoft Graph token for the target tenant.
+    prereq_command: |
+      az account get-access-token --resource-type ms-graph >/dev/null 2>&1
+    get_prereq_command: |
+      echo "Log in with: az login (use --allow-no-subscriptions for a tenant without subscriptions)"
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      {
+        echo "== Signed-in user"
+        az ad signed-in-user show --query '{UPN:userPrincipalName,Id:id}' -o table
+        echo "== Member users"
+        az ad user list --query "[].{UPN:userPrincipalName,Name:displayName,Enabled:accountEnabled}" -o table
+        echo "== Guest users"
+        az ad user list --filter "userType eq 'Guest'" --query "[].{UPN:userPrincipalName,Mail:mail}" -o table
+        echo "== Service principals"
+        az ad sp list --all --query "[].{Name:displayName,AppId:appId,Type:servicePrincipalType}" -o table
+      } > "#{output_file}" 2>&1
+      cat "#{output_file}"
+    cleanup_command: |
+      rm -f "#{output_file}"
+- name: GCP - Enumerate Service Accounts and IAM Principals via gcloud
+  description: |
+    Simulates an adversary with compromised GCP credentials enumerating cloud accounts in a project.
+    The test lists service accounts and their user-managed keys, and extracts every unique principal
+    (user:, serviceAccount:, group:, domain:) that appears in the project IAM policy.
+    If gcp_project is left empty, the active gcloud project is used.
+    Detection: Cloud Audit Logs show iam.serviceAccounts.list, iam.serviceAccountKeys.list and GetIamPolicy calls.
+    No cloud resources are created or modified.
+  supported_platforms:
+  - iaas:gcp
+  input_arguments:
+    gcp_project:
+      description: GCP project ID to enumerate (empty uses the active gcloud project)
+      type: string
+      default: ""
+    output_file:
+      description: Local file the enumeration results are written to
+      type: path
+      default: /tmp/T1087.004_gcp_accounts.txt
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      The gcloud CLI must be installed.
+    prereq_command: |
+      if command -v gcloud >/dev/null 2>&1; then exit 0; else exit 1; fi
+    get_prereq_command: |
+      echo "Install the Google Cloud CLI: https://cloud.google.com/sdk/docs/install"
+  - description: |
+      gcloud must have an active account with valid (non-expired) credentials.
+    prereq_command: |
+      gcloud auth print-access-token >/dev/null 2>&1
+    get_prereq_command: |
+      echo "Log in with: gcloud auth login && gcloud config set project <PROJECT_ID>"
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      PROJECT="#{gcp_project}"
+      [ -z "$PROJECT" ] && PROJECT=$(gcloud config get-value project 2>/dev/null)
+      {
+        echo "== Project: $PROJECT"
+        echo "== Service accounts"
+        gcloud iam service-accounts list --project "$PROJECT" --format="table(email,displayName,disabled)"
+        echo "== User-managed keys per service account"
+        for sa in $(gcloud iam service-accounts list --project "$PROJECT" --format="value(email)"); do
+          gcloud iam service-accounts keys list --iam-account "$sa" --managed-by=user --format="table[no-heading](name.basename(),validAfterTime)" | sed "s|^|$sa |"
+        done
+        echo "== Principals in project IAM policy"
+        gcloud projects get-iam-policy "$PROJECT" --flatten="bindings[].members" --format="value(bindings.members)" | sort -u
+      } > "#{output_file}" 2>&1
+      cat "#{output_file}"
+    cleanup_command: |
+      rm -f "#{output_file}"
