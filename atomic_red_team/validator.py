@@ -13,28 +13,25 @@ yaml = YAML(typ="safe")
 
 
 def format_validation_error(error: ValidationError):
-    if len(error.errors()) == 1:
-        err = error.errors()[0]
+    entries = []
+    for err in error.errors():
+        location = tuple(err.get("loc", ()))
         message = ""
         if err["type"] == "elevation_required_but_not_provided":
-            return {err["msg"]: list(err.get("loc")) + err.get("ctx").get("loc")}
-        if err["input"] and err["type"] != "unused_input_argument":
+            location += tuple(err.get("ctx", {}).get("loc", ()))
+        elif err.get("input") is not None and err["type"] != "unused_input_argument":
             message += f"{err['input']} - "
-        return {message + err["msg"]: err.get("loc")}
-    inputs = collections.defaultdict(set)
-    for e in error.errors():
-        if e["type"] == "elevation_required_but_not_provided":
-            return {e["msg"]: e.get("loc") + e.get("ctx").get("loc")}
-        # If it's a union type, then it generates multiple errors for the same input arguments.
-        # Here we collect only the common paths. For example,
-        # [( input_arguments, url_parsing),(input_arguments, string_mismatch)] => (input_arguments)
-        if len(inputs[e["input"]]) == 0:
-            inputs[e["input"]] = e.get("loc", tuple())
-        else:
-            inputs[e["input"]] = tuple(
-                [x for x in inputs[e["input"]] if x in e.get("loc", tuple())]
-            )
-    return dict(inputs)
+        entries.append((message + err["msg"], location))
+
+    # Identical invalid values can occur at different fields. Keep each location
+    # instead of grouping by input, which can also be an unhashable list or dict.
+    counts = collections.Counter(message for message, _ in entries)
+    formatted = {}
+    for message, location in entries:
+        if counts[message] > 1:
+            message += f" ({'.'.join(map(str, location))})"
+        formatted[message] = location
+    return formatted
 
 
 class Validator:
