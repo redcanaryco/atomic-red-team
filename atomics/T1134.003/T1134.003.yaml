@@ -1,0 +1,162 @@
+attack_technique: T1134.003
+display_name: 'Access Token Manipulation: Make and Impersonate Token'
+atomic_tests:
+- name: Make and impersonate a token for a local user with LogonUser
+  description: |
+    Creates a new logon session and access token for a local account by calling the LogonUser API
+    with plaintext credentials, then applies that token to the current thread with
+    ImpersonateLoggedOnUser. This is the "make token" primitive used by post-exploitation
+    frameworks to act as another user without spawning a new process or knowing more than the
+    account's password.
+
+    The prerequisite creates a dedicated local marker account so that the test never uses an
+    operator's real credentials. The LogonUser and impersonation calls themselves do not require
+    elevation; administrator rights are only needed to create and remove the marker account.
+
+    Upon successful execution, the test prints the thread identity before, during and after
+    impersonation. During impersonation the identity is the marker account, and it reverts to the
+    original user afterwards.
+  supported_platforms:
+  - windows
+  input_arguments:
+    user_name:
+      description: Local marker account created for the test and impersonated.
+      type: string
+      default: AtomicTokenUser
+    password:
+      description: Password set on the local marker account.
+      type: string
+      default: AtomicT1134!pw
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      The local marker account #{user_name} must exist.
+    prereq_command: |
+      if (Get-LocalUser -Name "#{user_name}" -ErrorAction SilentlyContinue) {exit 0} else {exit 1}
+    get_prereq_command: |
+      net.exe user "#{user_name}" "#{password}" /add /y /comment:"Atomic Red Team T1134.003 marker account" | Out-Null
+  executor:
+    command: |
+      Add-Type -TypeDefinition @'
+      using System;
+      using System.ComponentModel;
+      using System.Runtime.InteropServices;
+      using System.Security.Principal;
+      public static class AtomicMakeToken
+      {
+          [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+          static extern bool LogonUser(string user, string domain, string password, int logonType, int logonProvider, out IntPtr token);
+          [DllImport("advapi32.dll", SetLastError = true)]
+          static extern bool ImpersonateLoggedOnUser(IntPtr token);
+          [DllImport("advapi32.dll", SetLastError = true)]
+          static extern bool RevertToSelf();
+          [DllImport("kernel32.dll", SetLastError = true)]
+          static extern bool CloseHandle(IntPtr handle);
+          public static string Run(string user, string domain, string password, int logonType, int logonProvider)
+          {
+              string before = WindowsIdentity.GetCurrent().Name;
+              IntPtr token;
+              if (!LogonUser(user, domain, password, logonType, logonProvider, out token))
+                  throw new Win32Exception(Marshal.GetLastWin32Error());
+              try
+              {
+                  if (!ImpersonateLoggedOnUser(token))
+                      throw new Win32Exception(Marshal.GetLastWin32Error());
+                  string during = WindowsIdentity.GetCurrent().Name;
+                  RevertToSelf();
+                  return "Before: " + before + " | Impersonating: " + during + " | After: " + WindowsIdentity.GetCurrent().Name;
+              }
+              finally
+              {
+                  CloseHandle(token);
+              }
+          }
+      }
+      '@
+      Write-Host ([AtomicMakeToken]::Run("#{user_name}", ".", "#{password}", 2, 0))
+    cleanup_command: |
+      net.exe user "#{user_name}" /delete /y 2>&1 | Out-Null
+    name: powershell
+    elevation_required: true
+- name: Make a network-only token with LogonUser (LOGON32_LOGON_NEW_CREDENTIALS)
+  description: |
+    Creates a network-only token by calling LogonUser with logon type 9 (LOGON32_LOGON_NEW_CREDENTIALS)
+    and the WINNT50 logon provider, then impersonates it. This is the API behind "runas /netonly" and
+    the make_token command of common command-and-control frameworks. The supplied credentials are
+    not validated locally: the local identity is unchanged, and the alternate credentials are only
+    presented when the thread authenticates to a remote host. Because the credentials are never
+    validated, the defaults are fictitious and no account is created.
+
+    Upon successful execution, the test shows that the local identity does not change during
+    impersonation, then queries the Security log for the resulting event 4624 with logon type 9 and
+    the fictitious account as the network account name. Because LogonUser is called directly, the
+    event records the logon process as Advapi rather than the seclogo value produced by
+    runas /netonly, so detections keyed only on seclogo do not cover this variant. Reading the
+    Security log requires elevation.
+  supported_platforms:
+  - windows
+  input_arguments:
+    user_name:
+      description: Fictitious outbound user name placed in the network-only token.
+      type: string
+      default: atomic-netonly-user
+    domain:
+      description: Fictitious outbound domain placed in the network-only token.
+      type: string
+      default: ATOMICTEST
+    password:
+      description: Fictitious password placed in the network-only token. It is never validated.
+      type: string
+      default: NotARealPassword1!
+  executor:
+    command: |
+      Add-Type -TypeDefinition @'
+      using System;
+      using System.ComponentModel;
+      using System.Runtime.InteropServices;
+      using System.Security.Principal;
+      public static class AtomicMakeToken
+      {
+          [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+          static extern bool LogonUser(string user, string domain, string password, int logonType, int logonProvider, out IntPtr token);
+          [DllImport("advapi32.dll", SetLastError = true)]
+          static extern bool ImpersonateLoggedOnUser(IntPtr token);
+          [DllImport("advapi32.dll", SetLastError = true)]
+          static extern bool RevertToSelf();
+          [DllImport("kernel32.dll", SetLastError = true)]
+          static extern bool CloseHandle(IntPtr handle);
+          public static string Run(string user, string domain, string password, int logonType, int logonProvider)
+          {
+              string before = WindowsIdentity.GetCurrent().Name;
+              IntPtr token;
+              if (!LogonUser(user, domain, password, logonType, logonProvider, out token))
+                  throw new Win32Exception(Marshal.GetLastWin32Error());
+              try
+              {
+                  if (!ImpersonateLoggedOnUser(token))
+                      throw new Win32Exception(Marshal.GetLastWin32Error());
+                  string during = WindowsIdentity.GetCurrent().Name;
+                  RevertToSelf();
+                  return "Before: " + before + " | Impersonating: " + during + " | After: " + WindowsIdentity.GetCurrent().Name;
+              }
+              finally
+              {
+                  CloseHandle(token);
+              }
+          }
+      }
+      '@
+      $start = (Get-Date).AddSeconds(-5)
+      Write-Host ([AtomicMakeToken]::Run("#{user_name}", "#{domain}", "#{password}", 9, 3))
+      Start-Sleep -Seconds 2
+      $events = Get-WinEvent -FilterHashtable @{LogName = 'Security'; Id = 4624; StartTime = $start} -ErrorAction SilentlyContinue | Where-Object {
+        $data = ([xml]$_.ToXml()).Event.EventData.Data
+        ($data | Where-Object Name -eq 'LogonType').'#text' -eq '9' -and ($data | Where-Object Name -eq 'TargetOutboundUserName').'#text' -eq '#{user_name}'
+      }
+      if ($events) {
+        Write-Host "Found $(@($events).Count) Security 4624 event(s) with logon type 9 for outbound user #{domain}\#{user_name}"
+      } else {
+        Write-Host "No matching 4624 logon type 9 event found - check that 'Audit Logon' success auditing is enabled"
+      }
+    name: powershell
+    elevation_required: true
