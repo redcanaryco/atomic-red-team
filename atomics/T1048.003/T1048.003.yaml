@@ -8,6 +8,7 @@ atomic_tests:
 
     Upon successful execution, sh will be used to make a directory (/tmp/victim-staging-area), write a txt file, and host the directory with Python on port 1337, to be later downloaded.
   supported_platforms:
+  - macos
   - linux
   executor:
     steps: |
@@ -19,7 +20,7 @@ atomic_tests:
       2. Using Python to establish a one-line HTTP server on victim system:
 
           cd /tmp/victim-staging-area
-          python -m SimpleHTTPServer 1337
+          python3 -m http.server 1337
 
       3. To retrieve the data from an adversary system:
 
