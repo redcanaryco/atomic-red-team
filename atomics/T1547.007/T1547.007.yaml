@@ -18,26 +18,6 @@ atomic_tests:
     cleanup_command: |
       rm -f ~/Library/Preferences/ByHost/com.apple.loginwindow.plist
     name: sh
-- name: Re-Opened Applications using LoginHook
-  auto_generated_guid: 5f5b71da-e03f-42e7-ac98-d63f9e0465cb
-  description: |
-    Mac Defaults
-
-    [Reference](https://developer.apple.com/library/content/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CustomLogin.html)
-  supported_platforms:
-  - macos
-  input_arguments:
-    script:
-      description: path to script
-      type: path
-      default: /path/to/script
-  executor:
-    command: |
-      sudo defaults write com.apple.loginwindow LoginHook #{script}
-    cleanup_command: |
-      sudo defaults delete com.apple.loginwindow LoginHook
-    elevation_required: true
-    name: sh
 - name: Append to existing loginwindow for Re-Opened Applications
   auto_generated_guid: 766b6c3c-9353-4033-8b7e-38b309fa3a93
   description: |
