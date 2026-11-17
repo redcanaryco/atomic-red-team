@@ -1,0 +1,50 @@
+attack_technique: T1686.001
+display_name: 'Disable or Modify System Firewall: Cloud Firewall'
+atomic_tests:
+- name: AWS - Add Permissive Network ACL Entry and Default Route in a Throwaway VPC
+  auto_generated_guid: 6dd4b06a-0c5c-4340-b4d1-3a7dad40bae8
+  description: |
+    Creates a disposable VPC, then adds a Network ACL entry allowing all inbound traffic from
+    0.0.0.0/0 and a default route to a fresh internet gateway. This emulates weakening cloud
+    network controls (Disable or Modify Cloud Firewall) and exercises detections such as the
+    Sigma rules aws_cloudtrail_new_acl_entries.yml and aws_cloudtrail_new_route_added.yml.
+    All resources are tagged atomic-t1686-001 and removed by cleanup; nothing existing is modified.
+  supported_platforms:
+  - iaas:aws
+  input_arguments:
+    aws_region:
+      description: AWS region
+      type: string
+      default: us-east-1
+    vpc_cidr:
+      description: CIDR block for the throwaway VPC
+      type: string
+      default: 10.254.0.0/16
+  dependency_executor_name: sh
+  dependencies:
+  - description: AWS CLI must be installed and configured with credentials.
+    prereq_command: aws sts get-caller-identity >/dev/null 2>&1
+    get_prereq_command: echo "Install the AWS CLI and run 'aws configure' with valid credentials."
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      TAG='Tags=[{Key=Name,Value=atomic-t1686-001}]'
+      VPC=$(aws ec2 create-vpc --region #{aws_region} --cidr-block #{vpc_cidr} --tag-specifications "ResourceType=vpc,$TAG" --query Vpc.VpcId --output text)
+      ACL=$(aws ec2 create-network-acl --region #{aws_region} --vpc-id $VPC --tag-specifications "ResourceType=network-acl,$TAG" --query NetworkAcl.NetworkAclId --output text)
+      aws ec2 create-network-acl-entry --region #{aws_region} --network-acl-id $ACL --ingress --rule-number 100 --protocol -1 --cidr-block 0.0.0.0/0 --rule-action allow
+      IGW=$(aws ec2 create-internet-gateway --region #{aws_region} --tag-specifications "ResourceType=internet-gateway,$TAG" --query InternetGateway.InternetGatewayId --output text)
+      aws ec2 attach-internet-gateway --region #{aws_region} --vpc-id $VPC --internet-gateway-id $IGW
+      RTB=$(aws ec2 create-route-table --region #{aws_region} --vpc-id $VPC --tag-specifications "ResourceType=route-table,$TAG" --query RouteTable.RouteTableId --output text)
+      aws ec2 create-route --region #{aws_region} --route-table-id $RTB --destination-cidr-block 0.0.0.0/0 --gateway-id $IGW
+    cleanup_command: |
+      F='Name=tag:Name,Values=atomic-t1686-001'
+      for VPC in $(aws ec2 describe-vpcs --region #{aws_region} --filters $F --query 'Vpcs[].VpcId' --output text); do
+        for RTB in $(aws ec2 describe-route-tables --region #{aws_region} --filters $F --query 'RouteTables[].RouteTableId' --output text); do aws ec2 delete-route-table --region #{aws_region} --route-table-id $RTB; done
+        for IGW in $(aws ec2 describe-internet-gateways --region #{aws_region} --filters $F --query 'InternetGateways[].InternetGatewayId' --output text); do
+          aws ec2 detach-internet-gateway --region #{aws_region} --vpc-id $VPC --internet-gateway-id $IGW
+          aws ec2 delete-internet-gateway --region #{aws_region} --internet-gateway-id $IGW
+        done
+        for ACL in $(aws ec2 describe-network-acls --region #{aws_region} --filters $F --query 'NetworkAcls[?IsDefault==`false`].NetworkAclId' --output text); do aws ec2 delete-network-acl --region #{aws_region} --network-acl-id $ACL; done
+        aws ec2 delete-vpc --region #{aws_region} --vpc-id $VPC
+      done
