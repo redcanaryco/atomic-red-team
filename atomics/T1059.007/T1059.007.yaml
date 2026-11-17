@@ -18,7 +18,7 @@ atomic_tests:
       if (Test-Path "#{jscript}") {exit 0} else {exit 1}
     get_prereq_command: |-
       New-Item -ItemType Directory (Split-Path "#{jscript}") -Force | Out-Null
-      Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.007/src/sys_info.js" -OutFile "#{jscript}"
+      Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.007/src/sys_info.js" -OutFile "#{jscript}" -UseBasicParsing
   executor:
     command: |
       cscript "#{jscript}" > %tmp%\T1059.007.out.txt
@@ -41,7 +41,7 @@ atomic_tests:
       if (Test-Path "#{jscript}") {exit 0} else {exit 1}
     get_prereq_command: |-
       New-Item -ItemType Directory (Split-Path "#{jscript}") -Force | Out-Null
-      Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.007/src/sys_info.js" -OutFile "#{jscript}"
+      Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.007/src/sys_info.js" -OutFile "#{jscript}" -UseBasicParsing
   executor:
     command: |
       wscript "#{jscript}"
@@ -68,7 +68,7 @@ atomic_tests:
       if (Test-Path "#{jscript}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -ItemType Directory (Split-Path "#{jscript}") -Force | Out-Null
-      Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.007/src/xpexplore.js" -OutFile "#{jscript}"
+      Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.007/src/xpexplore.js" -OutFile "#{jscript}" -UseBasicParsing
   executor:
     name: command_prompt
     elevation_required: false
@@ -99,7 +99,7 @@ atomic_tests:
       if (Test-Path "#{chkdsk_path}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -ItemType Directory (Split-Path "#{chkdsk_path}") -Force | Out-Null
-      Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.007/src/Chkdsk.js" -OutFile "#{chkdsk_path}"
+      Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.007/src/Chkdsk.js" -OutFile "#{chkdsk_path}" -UseBasicParsing
   executor:
     name: command_prompt
     elevation_required: false
@@ -133,7 +133,7 @@ atomic_tests:
       if (Test-Path "#{registry_script}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -ItemType Directory (Split-Path "#{registry_script}") -Force | Out-Null
-      Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.007/src/registry_payload.js" -OutFile "#{registry_script}"
+      Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.007/src/registry_payload.js" -OutFile "#{registry_script}" -UseBasicParsing
   - description: Backup existing Maintenance registry key if present
     prereq_command: |
       if (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Maintenance") -or (Test-Path "$env:TEMP\T1059.007_Maintenance.reg")) {exit 0} else {exit 1}

