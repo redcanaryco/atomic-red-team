@@ -1,5 +1,5 @@
 attack_technique: T1547.015
-display_name: 'Boot or Logon Autostart Execution: Login Items'
+display_name: "Boot or Logon Autostart Execution: Login Items"
 atomic_tests:
 - name: Persistence by modifying Windows Terminal profile
   auto_generated_guid: ec5d76ef-82fe-48da-b931-bdb25a62bc65
@@ -34,7 +34,7 @@ atomic_tests:
   executor:
     command: |
       mv #{settings_json_def} #{settings_json_tmp}
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1547.015/src/settings.json?raw=true" -OutFile "#{settings_json_def}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1547.015/src/settings.json?raw=true" -OutFile "#{settings_json_def}" -UseBasicParsing
       wt.exe
     cleanup_command: |
       mv -Force #{settings_json_tmp} #{settings_json_def}

