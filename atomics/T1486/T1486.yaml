@@ -75,9 +75,7 @@ atomic_tests:
       which_7z=`which 7z`
       $which_7z a -p#{pwd_for_encrypted_file} #{encrypted_file_path} #{input_file_path}
     cleanup_command: |
-      which_7z=`which 7z`
-      $which_7z e #{encrypted_file_path}
-      rm #{encrypted_file_path}
+      rm -f #{encrypted_file_path}
 
 - name: Encrypt files using ccrypt (FreeBSD/Linux)
   auto_generated_guid: 08cbf59f-85da-4369-a5f4-049cffd7709f
@@ -158,11 +156,11 @@ atomic_tests:
       which_openssl=`which openssl`
       $which_openssl genrsa -out #{private_key_path} #{encryption_bit_size}
       $which_openssl rsa -in #{private_key_path} -pubout -out #{public_key_path}
-      $which_openssl rsautl -encrypt -inkey #{public_key_path} -pubin -in #{input_file_path} -out #{encrypted_file_path}
+      head -c 200 #{input_file_path} | $which_openssl rsautl -encrypt -inkey #{public_key_path} -pubin -out #{encrypted_file_path}
     cleanup_command: |
       which_openssl=`which openssl`
-      $which_openssl rsautl -decrypt -inkey #{private_key_path} -in #{encrypted_file_path}
-      rm #{encrypted_file_path}
+      $which_openssl rsautl -decrypt -inkey #{private_key_path} -in #{encrypted_file_path} -out /dev/null
+      rm -f #{encrypted_file_path} #{private_key_path} #{public_key_path}
 
 - name: PureLocker Ransom Note
   auto_generated_guid: 649349c7-9abf-493b-a7a2-b1aa4d141528
