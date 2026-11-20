@@ -1,0 +1,34 @@
+attack_technique: T1547.013
+display_name: "Boot or Logon Autostart Execution: XDG Autostart Entries"
+atomic_tests:
+  - name: Create User XDG Autostart Entry
+    description: |
+      Creates a user-level XDG Autostart (.desktop) entry under ~/.config/autostart
+      to simulate persistence via logon autostart execution using a harmless marker command.
+    supported_platforms:
+      - linux
+    input_arguments:
+      desktop_filename:
+        description: Name of the test .desktop file created in the user autostart folder
+        type: string
+        default: atomic-t1547-013.desktop
+      output_file:
+        description: Path to the output file written when the test command runs
+        type: path
+        default: /tmp/atomic-t1547-013.log
+    executor:
+      name: bash
+      elevation_required: false
+      command: |
+        AUTOSTART_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/autostart"
+        mkdir -p "$AUTOSTART_DIR"
+        echo '[Desktop Entry]' > "$AUTOSTART_DIR/#{desktop_filename}"
+        echo 'Type=Application' >> "$AUTOSTART_DIR/#{desktop_filename}"
+        echo 'Name=Atomic T1547.013 Test' >> "$AUTOSTART_DIR/#{desktop_filename}"
+        echo 'Comment=Harmless test entry for XDG Autostart persistence detection' >> "$AUTOSTART_DIR/#{desktop_filename}"
+        echo 'Exec=/bin/sh -c "date -Iseconds >> #{output_file}"' >> "$AUTOSTART_DIR/#{desktop_filename}"
+        echo 'Terminal=false' >> "$AUTOSTART_DIR/#{desktop_filename}"
+        echo 'X-GNOME-Autostart-enabled=true' >> "$AUTOSTART_DIR/#{desktop_filename}"
+      cleanup_command: |
+        AUTOSTART_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/autostart"
+        rm -f "$AUTOSTART_DIR/#{desktop_filename}" "#{output_file}"

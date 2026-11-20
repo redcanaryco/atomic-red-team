@@ -1,0 +1,45 @@
+attack_technique: T1546.017
+display_name: "Event Triggered Execution: Udev Rules"
+atomic_tests:
+  - name: Execute Script via Custom Udev Rule
+    description: |
+      Writes a shell script and adds a udev rule under /etc/udev/rules.d/ that invokes it
+      through RUN+= on a device change event. Reloads udev and triggers a change event 
+      so systemd-udevd runs the script as root.
+    supported_platforms:
+      - linux
+    input_arguments:
+      rule_file:
+        description: Path to the custom udev rule file
+        type: path
+        default: /etc/udev/rules.d/99-t1546-017.rules
+      script_path:
+        description: Path to the shell script executed by the udev rule
+        type: path
+        default: /tmp/t1546_017_script.sh
+      output_file:
+        description: File written by the script to confirm execution
+        type: path
+        default: /tmp/t1546_017.txt
+    dependency_executor_name: sh
+    dependencies:
+      - description: |
+          udevadm and an active udev control socket must be present
+        prereq_command: |
+          command -v udevadm >/dev/null 2>&1 && [ -S /run/udev/control ]
+        get_prereq_command: |
+          echo "Install systemd-udev and ensure the udevd daemon is running."
+          exit 1
+    executor:
+      name: sh
+      elevation_required: true
+      command: |
+        echo '#!/bin/sh' > "#{script_path}"
+        echo 'id > "#{output_file}"' >> "#{script_path}"
+        echo 'ACTION=="change", SUBSYSTEM=="mem", KERNEL=="zero", RUN+="/bin/sh #{script_path}"' > "#{rule_file}"
+        udevadm control --reload-rules
+        udevadm trigger --settle --action=change --subsystem-match=mem --sysname-match=zero
+        cat "#{output_file}"
+      cleanup_command: |
+        rm -f "#{rule_file}" "#{script_path}" "#{output_file}"
+        udevadm control --reload-rules >/dev/null 2>&1 || true
