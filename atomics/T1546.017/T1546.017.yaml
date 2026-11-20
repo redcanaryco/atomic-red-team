@@ -38,8 +38,7 @@ atomic_tests:
         echo 'id > "#{output_file}"' >> "#{script_path}"
         echo 'ACTION=="change", SUBSYSTEM=="mem", KERNEL=="zero", RUN+="/bin/sh #{script_path}"' > "#{rule_file}"
         udevadm control --reload-rules
-        udevadm trigger --action=change --subsystem-match=mem --sysname-match=zero
-        udevadm settle
+        udevadm trigger --settle --action=change --subsystem-match=mem --sysname-match=zero
         cat "#{output_file}"
       cleanup_command: |
         rm -f "#{rule_file}" "#{script_path}" "#{output_file}"
