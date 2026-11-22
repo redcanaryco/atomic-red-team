@@ -106,4 +106,181 @@ atomic_tests:
       [System.Windows.Forms.SendKeys]::SendWait('^v')
       Start-Sleep -Milliseconds 500
       [System.Windows.Forms.SendKeys]::SendWait('{ENTER}')
-  
+- name: Indirect Command Execution - ssh.exe KnownHostsCommand (CLI)
+  description: |
+    Uses the native Windows OpenSSH client (ssh.exe) with the KnownHostsCommand option passed on the command line to execute an arbitrary local command prior to user authentication during SSH key exchange.
+    To run deterministically without outbound internet access or an sshd service, the test starts a temporary loopback TCP listener that sends an SSH protocol banner, waits for KnownHostsCommand to execute, and stops the listener.
+    Upon successful execution, the output file is created in TEMP and its contents are displayed.
+    References:
+    - https://lolbas-project.github.io/lolbas/Binaries/Ssh/
+  supported_platforms:
+  - windows
+  input_arguments:
+    ssh_path:
+      description: Path to Windows OpenSSH client binary
+      type: path
+      default: C:\Windows\System32\OpenSSH\ssh.exe
+    output_file:
+      description: Path to the marker file written by the indirect command
+      type: path
+      default: $env:TEMP\atomic_t1202_knownhosts_cli.txt
+    payload_command:
+      description: Command executed by cmd.exe through KnownHostsCommand
+      type: string
+      default: echo Atomic_T1202_KnownHostsCommand_CLI
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Windows OpenSSH client (ssh.exe) must exist at #{ssh_path}
+    prereq_command: |
+      if (Test-Path -LiteralPath "#{ssh_path}") { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $outFile = [System.IO.Path]::GetFullPath("#{output_file}")
+      Remove-Item -LiteralPath $outFile -Force -ErrorAction Ignore
+      $listener = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Loopback, 0)
+      $listener.Start()
+      $port = $listener.LocalEndpoint.Port
+      $proc = $null
+      try {
+        $acceptTask = $listener.AcceptTcpClientAsync()
+        $psi = [System.Diagnostics.ProcessStartInfo]::new("#{ssh_path}")
+        $psi.Arguments = "-o BatchMode=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=NUL -o ConnectTimeout=5 -o `"KnownHostsCommand=C:\Windows\System32\cmd.exe /c #{payload_command} > \`"$outFile\`"`" -p $port atomic@127.0.0.1"
+        $psi.UseShellExecute = $false
+        $psi.RedirectStandardOutput = $true
+        $psi.RedirectStandardError = $true
+        $psi.CreateNoWindow = $true
+        $proc = [System.Diagnostics.Process]::Start($psi)
+        $outTask = $proc.StandardOutput.ReadToEndAsync()
+        $errTask = $proc.StandardError.ReadToEndAsync()
+        if ($acceptTask.Wait(5000)) {
+          $client = $acceptTask.Result
+          try {
+            $bytes = [System.Text.Encoding]::ASCII.GetBytes("SSH-2.0-OpenSSH_9.5`r`n")
+            $stream = $client.GetStream()
+            $stream.Write($bytes, 0, $bytes.Length)
+            $stream.Flush()
+            Start-Sleep -Milliseconds 1000
+          } finally {
+            $client.Close()
+          }
+        }
+        if (-not $proc.WaitForExit(5000)) {
+          $proc.Kill()
+          $proc.WaitForExit()
+        }
+        $null = $outTask.Result
+        $null = $errTask.Result
+      } finally {
+        $listener.Stop()
+        if ($proc -and -not $proc.HasExited) {
+          $proc.Kill()
+          $proc.WaitForExit()
+        }
+      }
+      Get-Content -LiteralPath $outFile -ErrorAction Stop
+    cleanup_command: |
+      Remove-Item -LiteralPath "#{output_file}" -Force -ErrorAction Ignore
+- name: Indirect Command Execution - ssh.exe KnownHostsCommand via Config File (-F)
+  description: |
+    Uses the native Windows OpenSSH client (ssh.exe) with a custom configuration file (-F) containing the KnownHostsCommand directive so that the execution directive does not appear on the ssh.exe command line.
+    This exercises parent-child process tree detection (ssh.exe spawning cmd.exe) when command-line keyword matching is evaded via SSH config files.
+    To run deterministically without outbound internet access or an sshd service, the test starts a temporary loopback TCP listener that sends an SSH protocol banner, waits for KnownHostsCommand to execute, and stops the listener.
+    Upon successful execution, the output file is created in TEMP and its contents are displayed.
+    References:
+    - https://lolbas-project.github.io/lolbas/Binaries/Ssh/
+    - https://www.microsoft.com/en-us/security/blog/2026/09/29/star-blizzard-refines-phishing-and-malware-delivery-with-the-redflick-technique/
+  supported_platforms:
+  - windows
+  input_arguments:
+    ssh_path:
+      description: Path to Windows OpenSSH client binary
+      type: path
+      default: C:\Windows\System32\OpenSSH\ssh.exe
+    ssh_config_path:
+      description: Path to the temporary SSH configuration file
+      type: path
+      default: $env:TEMP\atomic_t1202_ssh_config
+    output_file:
+      description: Path to the marker file written by the indirect command
+      type: path
+      default: $env:TEMP\atomic_t1202_knownhosts_config.txt
+    payload_command:
+      description: Command executed by cmd.exe through KnownHostsCommand
+      type: string
+      default: echo Atomic_T1202_KnownHostsCommand_Config
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Windows OpenSSH client (ssh.exe) must exist at #{ssh_path}
+    prereq_command: |
+      if (Test-Path -LiteralPath "#{ssh_path}") { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $outFile = [System.IO.Path]::GetFullPath("#{output_file}")
+      $cfgFile = [System.IO.Path]::GetFullPath("#{ssh_config_path}")
+      Remove-Item -LiteralPath $outFile,$cfgFile -Force -ErrorAction Ignore
+      $listener = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Loopback, 0)
+      $listener.Start()
+      $port = $listener.LocalEndpoint.Port
+      $proc = $null
+      try {
+        $cfgLines = @(
+          "Host atomic-t1202",
+          "  HostName 127.0.0.1",
+          "  Port $port",
+          "  User atomic",
+          "  BatchMode yes",
+          "  StrictHostKeyChecking no",
+          "  UserKnownHostsFile NUL",
+          "  ConnectTimeout 5",
+          "  KnownHostsCommand C:\Windows\System32\cmd.exe /c #{payload_command} > `"$outFile`""
+        )
+        [System.IO.File]::WriteAllText($cfgFile, ($cfgLines -join "`r`n"), [System.Text.Encoding]::ASCII)
+        $acceptTask = $listener.AcceptTcpClientAsync()
+        $psi = [System.Diagnostics.ProcessStartInfo]::new("#{ssh_path}")
+        $psi.Arguments = "-F `"$cfgFile`" atomic-t1202"
+        $psi.UseShellExecute = $false
+        $psi.RedirectStandardOutput = $true
+        $psi.RedirectStandardError = $true
+        $psi.CreateNoWindow = $true
+        $proc = [System.Diagnostics.Process]::Start($psi)
+        $outTask = $proc.StandardOutput.ReadToEndAsync()
+        $errTask = $proc.StandardError.ReadToEndAsync()
+        if ($acceptTask.Wait(5000)) {
+          $client = $acceptTask.Result
+          try {
+            $bytes = [System.Text.Encoding]::ASCII.GetBytes("SSH-2.0-OpenSSH_9.5`r`n")
+            $stream = $client.GetStream()
+            $stream.Write($bytes, 0, $bytes.Length)
+            $stream.Flush()
+            Start-Sleep -Milliseconds 1000
+          } finally {
+            $client.Close()
+          }
+        }
+        if (-not $proc.WaitForExit(5000)) {
+          $proc.Kill()
+          $proc.WaitForExit()
+        }
+        $null = $outTask.Result
+        $null = $errTask.Result
+      } finally {
+        $listener.Stop()
+        if ($proc -and -not $proc.HasExited) {
+          $proc.Kill()
+          $proc.WaitForExit()
+        }
+      }
+      Get-Content -LiteralPath $outFile -ErrorAction Stop
+    cleanup_command: |
+      Remove-Item -LiteralPath "#{output_file}" -Force -ErrorAction Ignore
+      Remove-Item -LiteralPath "#{ssh_config_path}" -Force -ErrorAction Ignore
