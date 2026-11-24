@@ -177,6 +177,7 @@
 - [T1036 Masquerading](../../T1036/T1036.md)
   - Atomic Test #1: System File Copied to Unusual Location [windows]
   - Atomic Test #2: Malware Masquerading and Execution from Zip File [windows]
+  - Atomic Test #3: Masquerading File Extension Restoration via PowerShell and esentutl [windows]
 - [T1070.008 Indicator Removal: Clear Mailbox Data](../../T1070.008/T1070.008.md)
   - Atomic Test #1: Copy and Delete Mailbox Data on Windows [windows]
   - Atomic Test #2: Copy and Delete Mailbox Data on Linux [linux]
@@ -2311,6 +2312,7 @@
   - Atomic Test #76: Block Cybersecurity communication by leveraging Windows Name Resolution Policy Table [windows]
   - Atomic Test #77: Throttle Cybersecurity Agent Network Traffic via QoS Policy [windows]
   - Atomic Test #78: AMSI Bypass - Patching AmsiScanBuffer [windows]
+  - Atomic Test #79: Impair Windows Defender via Disk Space Exhaustion using fsutil [windows]
 - [T1553.004 Subvert Trust Controls: Install Root Certificate](../../T1553.004/T1553.004.md)
   - Atomic Test #1: Install root CA on CentOS/RHEL [linux]
   - Atomic Test #2: Install root CA on FreeBSD [linux]
