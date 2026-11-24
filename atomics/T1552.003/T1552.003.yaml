@@ -101,3 +101,45 @@ atomic_tests:
     cleanup_command: |
       rm -f #{output_file}
     name: sh
+- name: Search for Passwords in Powershell History
+  auto_generated_guid: f9c3d0ab-479b-4019-945f-22ace2b1731a
+  description: |
+    Find passwords in the powershell history files
+    Searching for following strings: "password", "-p", "key", "pwd", "pass"
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      ls -R C:\Users\*\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt | Select-String "password", "-p", "key", "pwd", "pass"
+    name: powershell
+    elevation_required: true
+- name: Dump full PowerShell console history via PSReadLine
+  auto_generated_guid: 633dbd0a-10ff-412e-9576-34b99393c62d
+  description: |
+    Reads the full contents of the current user's PowerShell console history file maintained by the
+    PSReadLine module and writes it to a loot file. Unlike searching for specific password strings,
+    dumping the entire history captures every command typed at the prompt, which commonly includes
+    credentials, connection strings, API keys and internal hostnames. The history file location is
+    resolved dynamically via Get-PSReadLineOption so it is found regardless of the PowerShell edition
+    or a customised history path, rather than relying on a hardcoded path. This does not require
+    elevation, as it reads the invoking user's own history.
+
+    Upon successful execution, the console history is written to the output file.
+  supported_platforms:
+  - windows
+  input_arguments:
+    output_file:
+      description: Path where the captured history will be written.
+      type: path
+      default: $env:TEMP\T1552.003-history-loot.txt
+  executor:
+    command: |
+      Import-Module PSReadLine -ErrorAction SilentlyContinue
+      $historyPath = (Get-PSReadLineOption -ErrorAction SilentlyContinue).HistorySavePath
+      if (-not $historyPath) { $historyPath = "$env:APPDATA\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt" }
+      Write-Host "Reading PowerShell console history from: $historyPath"
+      Get-Content -Path $historyPath -ErrorAction SilentlyContinue | Out-File -FilePath #{output_file}
+    cleanup_command: |
+      Remove-Item -Path #{output_file} -ErrorAction Ignore
+    name: powershell
+    elevation_required: false
