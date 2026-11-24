@@ -1,0 +1,107 @@
+attack_technique: T1036.011
+display_name: 'Masquerading: Overwrite Process Arguments'
+atomic_tests:
+- name: Overwrite process arguments with Perl $0
+  description: |
+    Starts a background Perl process that assigns a spoofed value to $0. On Linux, Perl writes this value into the
+    process's original argv memory, so /proc/<pid>/cmdline and `ps` show the spoofed name (by default a kernel-worker
+    style name) instead of the real command line. No elevated privileges are required.
+
+    The test checks /proc/<pid>/cmdline and exits 1 if the spoofed name is not shown. Process-creation telemetry
+    captured at exec time (auditd EXECVE, Sysmon for Linux EID 1, eBPF exec events) still records the original
+    `perl -e ...` command line, which is the basis for detection.
+  supported_platforms:
+  - linux
+  input_arguments:
+    spoofed_name:
+      description: Name the process will present in /proc/<pid>/cmdline and ps
+      type: string
+      default: '[kworker/u8:2-events_unbound]'
+    duration:
+      description: Seconds the masquerading process stays alive
+      type: integer
+      default: 60
+    pid_file:
+      description: File used to record the PID of the masquerading process for cleanup
+      type: path
+      default: /tmp/T1036.011_perl.pid
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      perl must be installed.
+    prereq_command: |
+      command -v perl >/dev/null 2>&1
+    get_prereq_command: |
+      (command -v apt-get >/dev/null 2>&1 && sudo apt-get install -y perl) || (command -v dnf >/dev/null 2>&1 && sudo dnf install -y perl) || (command -v yum >/dev/null 2>&1 && sudo yum install -y perl)
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      perl -e '$0 = $ARGV[0]; sleep $ARGV[1];' '#{spoofed_name}' #{duration} >/dev/null 2>&1 & echo $! > #{pid_file}
+      sleep 1
+      PID=$(cat #{pid_file})
+      echo "Process $PID cmdline now shows:"
+      tr '\0' ' ' < /proc/$PID/cmdline; echo
+      ps -o pid,args -p $PID
+      if ! tr '\0' ' ' < /proc/$PID/cmdline | grep -qF '#{spoofed_name}'; then echo "Spoofed name NOT found in /proc/$PID/cmdline" && exit 1; fi
+    cleanup_command: |
+      kill $(cat #{pid_file} 2>/dev/null) 2>/dev/null || true
+      rm -f #{pid_file}
+- name: Erase all process arguments and spoof argv[0] (C program)
+  description: |
+    Compiles and runs a small C program that zeroes the memory holding every one of its command-line arguments and
+    then writes a spoofed string into the space argv[0] used, as described for BPFDoor and XorDdos. It is launched
+    with extra arguments that look like C2 settings, so you can confirm they disappear from /proc/<pid>/cmdline and
+    `ps` while the process presents as the spoofed name (by default `/sbin/udevd -d`). No elevated privileges are
+    required.
+
+    The test exits 1 if the spoofed name is not shown or the original arguments are still visible. Process-creation
+    telemetry captured at exec time still records the original command line, and the process's executable
+    (/proc/<pid>/exe) does not match the spoofed name.
+  supported_platforms:
+  - linux
+  input_arguments:
+    exe_path:
+      description: Path of the compiled test binary
+      type: path
+      default: /tmp/T1036.011_argv_overwrite
+    spoofed_name:
+      description: String written over argv[0] after all arguments are erased
+      type: string
+      default: /sbin/udevd -d
+    erased_args:
+      description: Extra arguments passed at launch that the program erases from its argv memory
+      type: string
+      default: --c2 127.0.0.1 --port 4444
+    duration:
+      description: Seconds the masquerading process stays alive
+      type: integer
+      default: 60
+    pid_file:
+      description: File used to record the PID of the masquerading process for cleanup
+      type: path
+      default: /tmp/T1036.011_argv.pid
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      The test binary must exist at #{exe_path}.
+    prereq_command: |
+      test -x #{exe_path}
+    get_prereq_command: |
+      cc -o #{exe_path} PathToAtomicsFolder/T1036.011/src/argv_overwrite.c
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      #{exe_path} '#{spoofed_name}' #{duration} #{erased_args} >/dev/null 2>&1 & echo $! > #{pid_file}
+      sleep 1
+      PID=$(cat #{pid_file})
+      echo "Process $PID cmdline now shows:"
+      tr '\0' ' ' < /proc/$PID/cmdline; echo
+      ps -o pid,args -p $PID
+      echo "Actual executable: $(readlink /proc/$PID/exe)"
+      if ! tr '\0' ' ' < /proc/$PID/cmdline | grep -qF '#{spoofed_name}'; then echo "Spoofed name NOT found in /proc/$PID/cmdline" && exit 1; fi
+      if tr '\0' ' ' < /proc/$PID/cmdline | grep -qF -- '#{erased_args}'; then echo "Original arguments still visible" && exit 1; fi
+    cleanup_command: |
+      kill $(cat #{pid_file} 2>/dev/null) 2>/dev/null || true
+      rm -f #{pid_file} #{exe_path}
