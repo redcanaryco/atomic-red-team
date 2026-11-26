@@ -1291,10 +1291,11 @@ stealth:
         elevation_required: false
         command: |
           mkdir $HOME/...
-          cp $(which sh) $HOME/...
-          $HOME/.../sh -c "echo #{test_message}"
+          echo "echo '#{test_message}'" > $HOME/.../T1036.005.sh
+          chmod +x $HOME/.../T1036.005.sh
+          $HOME/.../T1036.005.sh
         cleanup_command: |
-          rm -f $HOME/.../sh
+          rm -f $HOME/.../T1036.005.sh
           rmdir $HOME/.../
   T1036.008:
     technique:
