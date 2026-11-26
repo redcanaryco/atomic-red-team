@@ -99,41 +99,41 @@ class GithubAPI:
     def get_tests_changed(self, pr: str):
         """Get all the tests changed in a PR"""
         tests = []
-        start = 0
         files = self.get_files_for_pr(pr)
         for file in files:
             data = self.get_atomic_with_lines(file["raw_url"])
             technique = get_technique_from_filename(file["filename"])
-            if file["status"] == "added":
-                # New file; run the entire technique; Invoke-AtomicTest Txxxx
+            if file["status"] == "added" or not file.get("patch"):
+                # Without a patch, conservatively include the entire technique.
                 tests += [
                     ChangedAtomic(technique=technique, test_number=index + 1, data=t)
                     for index, t in enumerate(data["atomic_tests"])
                 ]
             else:
                 changed_lines = []
-                count = 0
+                new_line = 0
                 for line in file["patch"].split("\n"):
                     if line.startswith("@@"):
-                        x, y = re.findall(r"\d{1,3},\d{1,3}", line)
-                        start = int(x.split(",")[0])
-                        count = -1
-                    elif line.startswith("+"):  # only take count of added lines
-                        changed_lines.append(start + count)
-                    elif line.startswith("-"):
-                        count -= 1
-                    count += 1
+                        match = re.match(r"@@ -\d+(?:,\d+)? \+(\d+)(?:,\d+)? @@", line)
+                        if match is None:
+                            raise ValueError(f"Invalid diff hunk header: {line}")
+                        new_line = int(match.group(1))
+                    elif line.startswith("+"):
+                        changed_lines.append(new_line)
+                        new_line += 1
+                    elif line.startswith(" "):
+                        new_line += 1
                 atomics = data["atomic_tests"]
                 for index, t in enumerate(atomics):
                     curr_atomic_start = atomics[index]["__line__"]
                     if index + 1 < len(atomics):
                         curr_atomic_end = atomics[index + 1]["__line__"]
                     else:
-                        curr_atomic_end = start + 60
+                        curr_atomic_end = float("inf")
                     changes_in_current_atomic = [
                         i
                         for i in changed_lines
-                        if i > curr_atomic_start and i < curr_atomic_end
+                        if curr_atomic_start <= i < curr_atomic_end
                     ]
                     if len(changes_in_current_atomic) > 0:
                         tests.append(
